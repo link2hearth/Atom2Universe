@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_leaves_blossom">Feuillage fleuri</string>
+    <string name="cave_block_leaves_apple">Feuillage de pommier</string>
+    <string name="cave_block_leaves_pear">Feuillage de poirier</string>
+    <string name="cave_block_leaves_cherry">Feuillage de cerisier</string>
+    <string name="cave_block_apple">Pomme</string>
+    <string name="cave_block_pear">Poire</string>
+    <string name="cave_block_cherry">Cerises</string>
+    <string name="cave_showcase_tree_caption">Arbres · %1$s</string>
+    <string-array name="cave_showcase_tree_names">
+        <item>Chêne</item>
+        <item>Bouleau</item>
+        <item>Sapin</item>
+        <item>Arbre des forêts sombres</item>
+        <item>Arbre de jungle</item>
+        <item>Séquoia</item>
+        <item>Pommier</item>
+        <item>Poirier</item>
+        <item>Cerisier</item>
+        <item>Feuillage mauve</item>
+        <item>Feuillage bleu-vert</item>
+        <item>Feuillage doré</item>
+        <item>Séquoia géant · tronc 2×2</item>
+        <item>Grand pin · tronc 2×2</item>
+        <item>Chêne large et bas</item>
+        <item>Baobab creux</item>
+        <item>Acacia parasol</item>
+        <item>Saule pleureur</item>
+    </string-array>
+</resources>

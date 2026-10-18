@@ -1,0 +1,228 @@
+{
+  "id": "geophagus_brokopondo",
+  "scientific": "Geophagus brokopondo",
+  "group": "fish",
+  "name": {
+    "en": "Brokopondo eartheater",
+    "fr": "Géophage du Brokopondo"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Guianan cichlid was described from Suriname and is known from the Suriname River drainage. ITIS accepts the name established by Kullander and Nijssen in 1989.",
+      "fr": "Ce cichlidé des Guyanes a été décrit du Suriname et est connu du bassin du fleuve Suriname. ITIS valide le nom établi par Kullander et Nijssen en 1989."
+    },
+    "identification": {
+      "en": "Six flank bars, the last extending onto the caudal peduncle, help distinguish it from G. abalios.",
+      "fr": "Six barres latérales, dont la dernière atteint le pédoncule caudal, aident à le distinguer de G. abalios."
+    },
+    "habitat": {
+      "en": "It occurs in clear, lightly stained or black waters along gently sloping sandy margins.",
+      "fr": "Il vit dans des eaux claires, légèrement teintées ou noires, le long de rives sableuses en pente douce."
+    },
+    "diet": {
+      "en": "Like other Geophagus, it sifts substrate; the broader genus diet includes invertebrates, plant matter, seeds and detritus.",
+      "fr": "Comme les autres Geophagus, il filtre le substrat ; le régime général du genre comprend invertébrés, matières végétales, graines et détritus."
+    },
+    "behavior": {
+      "en": "It is gregarious outside breeding, with juveniles especially prone to form groups.",
+      "fr": "Hors période de reproduction, il est grégaire et les jeunes ont particulièrement tendance à former des groupes."
+    },
+    "reproduction": {
+      "en": "Its breeding mode is unconfirmed and should not be inferred from other members of the surinamensis group.",
+      "fr": "Son mode de reproduction n’est pas confirmé et ne doit pas être déduit de celui des autres membres du groupe surinamensis."
+    },
+    "ecology": {
+      "en": "Unlike Xingu-basin G. argyrostictus, this species is in the G. surinamensis group. The lot also includes Panamanian G. crassilabris.",
+      "fr": "Contrairement à G. argyrostictus du bassin du Xingu, cette espèce appartient au groupe G. surinamensis. Le lot comprend aussi G. crassilabris, du Panama."
+    },
+    "conservation": {
+      "en": "FishBase lists Least Concern, assessed on 27 December 2020; this global category does not establish that every local population is secure.",
+      "fr": "FishBase indique la catégorie « préoccupation mineure », évaluée le 27 décembre 2020 ; cette catégorie mondiale ne prouve pas que toutes les populations locales sont à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus brokopondo — Seriously Fish",
+        "fr": "Geophagus brokopondo — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/geophagus-brokopondo",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account describes identification, habitat, group diet, behavior and uncertainty about breeding."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus brokopondo — FishBase (Spanish-language summary)",
+        "fr": "Geophagus brokopondo — FishBase (Spanish-language summary)"
+      },
+      "url": "https://www.fishbase.se/summary/46935",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish FishBase summary gives drainage and LC assessment dated 2020-12-27."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus brokopondo — ITIS taxon report",
+        "fr": "Geophagus brokopondo — ITIS taxon report"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=648466",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS accepts Geophagus brokopondo Kullander & Nijssen, 1989 as valid."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus argyrostictus — Cybium original description",
+        "fr": "Geophagus argyrostictus — description originale, Cybium"
+      },
+      "url": "https://sfi-cybium.fr/en/geophagus-argyrostictus-new-species-cichlid-fish-rio-xingu-brazil",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Xingu species is documented as substrate-brooding, unlike the unconfirmed mode in G. brokopondo."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus crassilabris summary — FishBase",
+        "fr": "Résumé de Geophagus crassilabris — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/geophagus-crassilabris.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase places G. crassilabris in Panama, geographically distinct from G. brokopondo in Suriname."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Diet evidence is at genus level, not a species-specific stomach analysis.",
+    "Seriously Fish explicitly states that the exact reproductive mode has not been confirmed.",
+    "FishBase global conservation status is dated 2020."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-references treat the three as congeners, not necessarily closest relatives; brokopondo is in the surinamensis group and its reproductive mode is unconfirmed."
+}

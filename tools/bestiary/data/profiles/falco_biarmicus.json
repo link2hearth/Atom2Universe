@@ -1,0 +1,166 @@
+{
+  "id": "falco_biarmicus",
+  "scientific": "Falco biarmicus",
+  "group": "birds",
+  "name": {
+    "en": "Lanner Falcon",
+    "fr": "Faucon lanier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lanner falcon is a medium-large falcon occurring across much of Africa, parts of southern Europe and southwest Asia.",
+      "fr": "Le Faucon lanier est un faucon de taille moyenne à grande, présent dans une grande partie de l’Afrique, le sud de l’Europe et le sud-ouest de l’Asie."
+    },
+    "identification": {
+      "en": "Spain’s environment ministry describes a medium-sized falcon reaching up to 46 cm. Its plumage is paler than a peregrine’s, with a rufous crown and longer tail.",
+      "fr": "Le ministère espagnol de l’Environnement décrit un faucon de taille moyenne atteignant 46 cm. Son plumage est plus clair que celui du Pèlerin, avec une calotte rousse et une queue plus longue."
+    },
+    "habitat": {
+      "en": "It frequents steppe and desert as well as dry savanna; it usually nests on cliffs but may also use trees.",
+      "fr": "Il fréquente steppes, déserts et savanes sèches; il niche généralement sur les falaises, mais peut aussi utiliser des arbres."
+    },
+    "diet": {
+      "en": "It hunts mainly birds, including pigeons and corvids, but also takes small mammals, reptiles and large insects.",
+      "fr": "Il chasse surtout des oiseaux, notamment pigeons et corvidés, mais capture aussi de petits mammifères, des reptiles et de grands insectes."
+    },
+    "behavior": {
+      "en": "Pairs may hunt cooperatively, with one bird flushing prey while its partner waits to strike; populations are resident or partly migratory.",
+      "fr": "Les couples peuvent chasser ensemble, l’un délogeant les proies pendant que l’autre attend pour frapper; les populations sont sédentaires ou partiellement migratrices."
+    },
+    "reproduction": {
+      "en": "It usually reuses an old corvid or raptor nest on a cliff ledge or tree; clutches contain two to five eggs.",
+      "fr": "Il réutilise généralement un ancien nid de corvidé ou de rapace sur une corniche ou un arbre; la ponte compte deux à cinq œufs."
+    },
+    "ecology": {
+      "en": "Molecular research places it among the closely related hierofalcons and distinguishes its relationship to the peregrine from older classifications. The bestiary also profiles the Eurasian hobby, Falco subbuteo, another member of genus Falco.",
+      "fr": "Les études moléculaires le placent parmi les hiérofaucons étroitement apparentés et nuancent sa relation au Pèlerin par rapport aux anciennes classifications. Le bestiaire présente aussi le Faucon hobereau, Falco subbuteo, une autre espèce du genre Falco."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment is Least Concern, although the 2021 assessment reports a decreasing population trend.",
+      "fr": "L’évaluation mondiale de l’UICN classe l’espèce en préoccupation mineure, tout en signalant une tendance démographique décroissante en 2021."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lanner Falcon — IUCN Red List",
+        "fr": "Faucon lanier — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22696487A200013311.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International assessed the species globally as Least Concern in 2021 while reporting a decreasing population trend."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 17,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Faucon lanier — Oiseaux.net",
+        "fr": "Faucon lanier — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/faucon.lanier.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French species account describes field marks, size, range, diet, pair hunting, nesting and close relatives."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 15,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Out of Africa? Phylogenetic relationships between Falco biarmicus and the other hierofalcons",
+        "fr": "Origine africaine ? Relations phylogénétiques entre Falco biarmicus et les autres hiérofaucons"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1439-0469.2005.00326.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Mitochondrial DNA study compares the lanner and other hierofalcons and reports close relationships plus uncertain boundaries in the complex."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 19,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Halcón borní — Spanish Ministry for Ecological Transition and Demographic Challenge",
+        "fr": "Faucon lanier — ministère espagnol de la Transition écologique"
+      },
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/recursos-geneticos/falcobiarmicushalconborni_tcm30-478453.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Spanish government account gives size, traditional range and subspecies, dry-country association and nesting on cliffs or trees."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 17,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 2021 global IUCN/BirdLife assessment with a French species account that cites contemporary falcon research. Close relatives follow the account’s phylogenetic summary; conservation category and trend are kept distinct."
+}

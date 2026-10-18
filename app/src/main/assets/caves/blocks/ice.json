@@ -1,0 +1,16 @@
+{
+  "id": 5000,
+  "name": "ice",
+  "texture_top": "cozy:utility:11",
+  "texture_side": "cozy:utility:11",
+  "texture_bottom": "cozy:utility:11",
+  "color": "#B1D3DC",
+  "hardness": 1.0,
+  "transparent": true,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

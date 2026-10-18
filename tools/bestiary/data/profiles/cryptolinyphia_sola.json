@@ -1,0 +1,123 @@
+{
+  "id": "cryptolinyphia_sola",
+  "scientific": "Cryptolinyphia sola",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cryptolinyphia Sola Sheet Weaver",
+    "fr": "Araignée tisseuse Cryptolinyphia sola"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American sheet-weaver is the sole accepted species in the genus Cryptolinyphia.",
+      "fr": "Cette araignée tisseuse sud-américaine est la seule espèce actuellement reconnue dans le genre Cryptolinyphia."
+    },
+    "identification": {
+      "en": "The original 1991 description is based on a female specimen and illustrates diagnostic anatomy.",
+      "fr": "La description originale de 1991 repose sur un spécimen femelle et illustre des caractères anatomiques distinctifs."
+    },
+    "habitat": {
+      "en": "The World Spider Catalog records the species from Colombia, but does not summarize its finer habitat.",
+      "fr": "Le World Spider Catalog signale l’espèce en Colombie, sans préciser ses habitats à une échelle plus fine."
+    },
+    "diet": {
+      "en": "Species-specific prey observations were not found in the catalog entry or original description.",
+      "fr": "Les sources consultées ne rapportent pas d’observations de proies propres à cette espèce."
+    },
+    "behavior": {
+      "en": "Published material is taxonomic, and the sources reviewed do not establish its daily activity pattern.",
+      "fr": "Les publications consultées sont taxonomiques et ne permettent pas d’établir son rythme d’activité quotidien."
+    },
+    "reproduction": {
+      "en": "Only a female is known from the original description; courtship, egg production and development are undocumented.",
+      "fr": "La description originale ne connaît qu’une femelle; parade, ponte et développement ne sont pas documentés."
+    },
+    "ecology": {
+      "en": "Its only genus-level comparison is with other Linyphiidae; no living congener is currently accepted.",
+      "fr": "Ses comparaisons au niveau du genre concernent d’autres Linyphiidae; aucune autre espèce du genre n’est actuellement reconnue."
+    },
+    "conservation": {
+      "en": "The consulted sources provide no conservation assessment; missing assessment data do not establish safety.",
+      "fr": "Les sources consultées ne donnent aucune évaluation de conservation; l’absence d’évaluation ne prouve pas une situation sûre."
+    }
+  },
+  "uncertainties": [
+    "Species-level ecology and population information are sparse; the available catalog chiefly records taxonomy and Colombian distribution."
+  ],
+  "review_note": "Kept the account deliberately limited to the World Spider Catalog and Millidge’s original description, which offer little natural-history information; the original description records only a female.",
+  "sources": [
+    {
+      "title": {
+        "en": "Cryptolinyphia sola — World Spider Catalog",
+        "fr": "Cryptolinyphia sola — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/21560",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The World Spider Catalog treats C. sola as valid, the type species of a monotypic genus, and records Colombia; it supplies no conservation category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 24,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Further linyphiid spiders from South America — A. F. Millidge",
+        "fr": "Nouvelles araignées Linyphiidae d’Amérique du Sud — A. F. Millidge"
+      },
+      "url": "https://citeseerx.ist.psu.edu/document?doi=894efebe60dc310f0562c6b9c0f2277ea0dc793e&repid=rep1&type=pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original 1991 taxonomic paper describes Cryptolinyphia sola from a female specimen and provides anatomical figures, without an ecological account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 19,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

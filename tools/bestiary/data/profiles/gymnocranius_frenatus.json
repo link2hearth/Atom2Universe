@@ -1,0 +1,143 @@
+{
+  "id": "gymnocranius_frenatus",
+  "scientific": "Gymnocranius frenatus",
+  "group": "fish",
+  "name": {
+    "en": "Yellowsnout large-eye bream",
+    "fr": "Pagre à grand œil à museau jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The yellowsnout large-eye bream is a western Pacific lethrinid congener of the Australian Gymnocranius audleyi.",
+      "fr": "Le pagre à grand œil à museau jaune est un léthrinidé du Pacifique occidental, congénère de Gymnocranius audleyi, présent en Australie."
+    },
+    "identification": {
+      "en": "It is silvery with about five to seven narrow, irregular flank bars, a yellow band edged in blue from the eye to the upper lip, and blue cheek stripes. It reaches about 35 cm total length, commonly around 30 cm.",
+      "fr": "Il est argenté, avec environ cinq à sept barres latérales étroites et irrégulières, une bande jaune bordée de bleu entre l’œil et la lèvre supérieure, et des lignes bleues sur la joue. Il atteint environ 35 cm de longueur totale, généralement près de 30 cm."
+    },
+    "habitat": {
+      "en": "It lives over sand, mud, or rubble, usually at depths of about 20–80 m, in the Indo-Malaysian Archipelago and South China Sea.",
+      "fr": "Il vit sur le sable, la vase ou les débris, généralement entre 20 et 80 m de profondeur, dans l’archipel indo-malais et la mer de Chine méridionale."
+    },
+    "diet": {
+      "en": "Small bottom-dwelling gastropods form its main reported food.",
+      "fr": "Les petits gastéropodes benthiques constituent sa principale nourriture documentée."
+    },
+    "behavior": {
+      "en": "The available species accounts describe a reef-associated, non-migratory fish; they provide little detail on social behavior.",
+      "fr": "Les fiches consultées le décrivent comme un poisson associé aux récifs et non migrateur, mais donnent peu de détails sur son comportement social."
+    },
+    "reproduction": {
+      "en": "The consulted catalogue does not give species-specific breeding dates or clutch information.",
+      "fr": "Le catalogue consulté ne donne ni période de reproduction ni données sur les pontes propres à l’espèce."
+    },
+    "ecology": {
+      "en": "It forages on small benthic snails over unconsolidated seabeds, rather than depending on a single coral substrate.",
+      "fr": "Il recherche de petits escargots benthiques sur des fonds meubles et ne dépend donc pas d’un substrat corallien unique."
+    },
+    "conservation": {
+      "en": "FishBase reports an IUCN assessment of Least Concern dated 2023.",
+      "fr": "FishBase rapporte une évaluation UICN de préoccupation mineure datée de 2023."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FAO species catalogue, Gymnocranius frenatus",
+        "fr": "Catalogue FAO, Gymnocranius frenatus"
+      },
+      "url": "https://www.fao.org/4/y0770e/y0770e25.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The FAO species account describes its markings, size, substrate, depth, distribution and food."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 13,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnocranius frenatus summary — FishBase",
+        "fr": "Résumé de Gymnocranius frenatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Gymnocranius-frenatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the reef association and Least Concern status; the species account has no detailed breeding report."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 17,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS report: Gymnocranius frenatus",
+        "fr": "Rapport ITIS : Gymnocranius frenatus"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550896",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS accepts Gymnocranius frenatus as a valid species in the genus Gymnocranius."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted sources provide no species-specific reproductive schedule or clutch size."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared with the FAO species catalogue and FishBase; reciprocal comparison with Gymnocranius audleyi distinguishes the genera-level relationship from field identification features."
+}

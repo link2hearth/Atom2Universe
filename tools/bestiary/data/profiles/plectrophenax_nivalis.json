@@ -1,0 +1,190 @@
+{
+  "id": "plectrophenax_nivalis",
+  "scientific": "Plectrophenax nivalis",
+  "group": "birds",
+  "name": {
+    "en": "Snow Bunting",
+    "fr": "Bruant des neiges"
+  },
+  "sections": {
+    "overview": {
+      "en": "Plectrophenax nivalis is a small passerine that breeds across the Arctic and winters farther south. Its closest species-level relative is McKay’s Bunting (Plectrophenax hyperboreus), and phylogenetic work treats the pair as sister species.",
+      "fr": "Plectrophenax nivalis est un petit passereau qui se reproduit dans l’Arctique et hiverne plus au sud. Son plus proche parent au niveau de l’espèce est le Bruant de McKay (Plectrophenax hyperboreus), avec lequel il forme une paire d’espèces sœurs selon les études phylogénétiques."
+    },
+    "identification": {
+      "en": "The plumage is strongly patterned in black and white during the breeding season and becomes browner in winter; the sexes also differ in appearance.",
+      "fr": "Le plumage est très contrasté, noir et blanc, pendant la saison de reproduction, puis devient plus brun en hiver ; les sexes diffèrent aussi par leur apparence."
+    },
+    "habitat": {
+      "en": "It nests in rocky tundra and crevices across circumpolar Arctic regions, then uses open fields, coasts and other barren ground in winter.",
+      "fr": "Il niche dans la toundra rocheuse et les anfractuosités de l’Arctique circumpolaire, puis fréquente en hiver les champs ouverts, les côtes et d’autres terrains dégagés."
+    },
+    "diet": {
+      "en": "It takes seeds and other plant material for much of the year, adding small invertebrates during the breeding season.",
+      "fr": "Il consomme des graines et d’autres végétaux une grande partie de l’année, et ajoute de petits invertébrés pendant la reproduction."
+    },
+    "behavior": {
+      "en": "Outside the breeding season it often forages and roosts in flocks, sometimes gathering in large groups.",
+      "fr": "Hors de la période de reproduction, il cherche souvent sa nourriture et se repose en groupes, parfois nombreux."
+    },
+    "reproduction": {
+      "en": "It places a grass-and-moss nest deep in a rock crevice, where the female incubates while the male brings food.",
+      "fr": "Il installe un nid d’herbes et de mousses au fond d’une fissure rocheuse ; la femelle couve tandis que le mâle lui apporte de la nourriture."
+    },
+    "ecology": {
+      "en": "Its seasonal movements link Arctic breeding habitat with temperate wintering areas; in winter it feeds mainly on seeds on the ground.",
+      "fr": "Ses déplacements saisonniers relient les sites de reproduction arctiques aux zones tempérées d’hivernage ; en hiver, il se nourrit surtout de graines au sol."
+    },
+    "conservation": {
+      "en": "The latest IUCN assessment available in the consulted account lists it as Least Concern, with a decreasing global trend noted.",
+      "fr": "La dernière évaluation de l’UICN consultée le classe en « Préoccupation mineure », tout en signalant une tendance mondiale à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Snow Bunting — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Bruant des neiges — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Snow_Bunting/overview",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell notes winter flocks, Arctic rocky-crevice nests and male provisioning during incubation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 12,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bruant des neiges — Oiseaux.net",
+        "fr": "Bruant des neiges — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/bruant.des.neiges.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "French account describes seasonal plumage, Arctic rocky habitat and winter flocks; it confirms seeds and insects."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 16,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snow Bunting — IUCN Red List assessment",
+        "fr": "Bruant des neiges — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22721043A89345729.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2016 global assessment lists Least Concern and reports a decreasing population trend; the IUCN page notes a later assessment in 2025, also Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 25,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plectrophenax nivalis — Office québécois de la langue française",
+        "fr": "Plectrophenax nivalis — Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/9488624/plectrophane-des-neiges",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The OQLF records both Bruant des neiges and Plectrophane des neiges as French names and describes the species as circumpolar Arctic-breeding."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Longspurs and snow buntings: phylogeny and biogeography of a high-latitude clade — Molecular Phylogenetics and Evolution",
+        "fr": "Bruants et plectrophanes : phylogénie et biogéographie d’un clade de hautes latitudes — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://doi.org/10.1016/S1055-7903(02)00360-3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Mitochondrial phylogenetic analysis places Plectrophenax nivalis and P. hyperboreus as sister species."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 12,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The latest IUCN assessment is listed as 2025 while the accessible detailed assessment text consulted is the 2016 assessment; the category remains Least Concern, but trend statements should be tied to an assessment date."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined Cornell’s species overview with French Oiseaux.net and OQLF references, the IUCN record and a phylogenetic study identifying McKay’s Bunting as its sister species; no profile for that relative exists in this inventory."
+}

@@ -1,0 +1,229 @@
+{
+  "id": "apistogramma_pulchra",
+  "scientific": "Apistogramma pulchra",
+  "group": "fish",
+  "name": {
+    "en": "Handsome Dwarf Cichlid",
+    "fr": "Apistogramme élégant"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma pulchra is a small South American dwarf cichlid described by Sven Kullander in 1980. It is recorded from the Madeira River basin in Brazil, within the broader Amazon system.",
+      "fr": "Apistogramma pulchra est un petit cichlidé nain sud-américain décrit par Sven Kullander en 1980. Il est signalé dans le bassin du rio Madeira, au Brésil, au sein du vaste réseau amazonien."
+    },
+    "identification": {
+      "en": "FishBase lists a maximum standard length of 3.2 cm for male or unsexed fish; no reliable female maximum, mass, width or body-height measurement was found. The name pulchra means handsome and alludes to its blended color pattern and slender form.",
+      "fr": "FishBase indique une longueur standard maximale de 3,2 cm pour les mâles ou individus non sexés ; aucune longueur maximale fiable des femelles, masse, largeur ou hauteur corporelle n’a été trouvée. Le nom pulchra signifie « élégante » et évoque son motif coloré nuancé et sa silhouette fine."
+    },
+    "habitat": {
+      "en": "The confirmed range is the Madeira River basin, with the type locality on the Rio Preto, a tributary of the Candeias near Porto Velho. Specialist accounts associate the pulchra complex with mostly blackwater habitats, though conditions vary among tributaries.",
+      "fr": "L’aire confirmée couvre le bassin du rio Madeira, avec une localité type sur le rio Preto, affluent du Candeias près de Porto Velho. Des sources spécialisées associent le complexe pulchra surtout à des milieux d’eau noire, même si les conditions varient entre affluents."
+    },
+    "diet": {
+      "en": "No direct diet study for this species was located. Small Apistogramma generally pick tiny invertebrates from the bottom, but that genus-level expectation should not be mistaken for measured evidence on A. pulchra.",
+      "fr": "Aucune étude directe du régime de cette espèce n’a été retrouvée. Les petits Apistogramma prélèvent généralement de minuscules invertébrés sur le fond, mais cette attente fondée sur le genre ne constitue pas une mesure propre à A. pulchra."
+    },
+    "behavior": {
+      "en": "FishBase reports cave spawning and female care of eggs and larvae in its species summary, but wild group behavior is little documented.",
+      "fr": "FishBase rapporte dans sa fiche une ponte en cavité et les soins des œufs et des larves par la femelle, mais les groupes sauvages sont peu étudiés."
+    },
+    "reproduction": {
+      "en": "The eggs are laid on the ceiling of a cave and tended by the female. The consulted species summary gives no reliable clutch-size range for Apistogramma pulchra.",
+      "fr": "Les œufs sont déposés au plafond d’une cavité et surveillés par la femelle. La fiche d’espèce consultée ne fournit pas de fourchette fiable du nombre d’œufs chez Apistogramma pulchra."
+    },
+    "ecology": {
+      "en": "Specialist classifications place pulchra in the informal pulchra complex within the broader agassizii group. It is therefore a useful comparison with A. agassizii, but color forms and uncertain lookalikes should not be assigned by appearance alone.",
+      "fr": "Les classifications spécialisées placent pulchra dans le complexe informel pulchra, au sein du groupe plus large agassizii. La comparaison avec A. agassizii est donc utile, mais les formes colorées et ressemblances incertaines ne doivent pas être identifiées sur la seule apparence."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern, assessed on 29 October 2020. That summary is the latest assessment date available in the cited species account.",
+      "fr": "FishBase rapporte la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020. Cette fiche fournit la date d’évaluation la plus récente dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma pulchra — FishBase species summary",
+        "fr": "Apistogramma pulchra — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-pulchra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists length, Madeira distribution, cave spawning and IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 10,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kullander 1980 — taxonomic study of Apistogramma",
+        "fr": "Kullander 1980 — étude taxonomique d’Apistogramma"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The original monograph describes A. pulchra and its Rio Preto type locality."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 12,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: etymology of Cichlidae",
+        "fr": "ETYFish : étymologie des Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Pulchra means handsome and refers to the blended color pattern and slender body."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 13,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma agassizii group and pulchra complex",
+        "fr": "Groupe Apistogramma agassizii et complexe pulchra"
+      },
+      "url": "https://tomc.no/page.aspx?PageID=116",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The specialist classification places the pulchra complex within the broader agassizii group and describes its blackwater distribution."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 17,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pulchra — FishBase field guide",
+        "fr": "Apistogramma pulchra — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=pulchra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The field guide reports Least Concern, assessed 29 October 2020."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 10,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pulchra — Fishipedia French species account",
+        "fr": "Apistogramma pulchra — fiche française Fishipédia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-pulchra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "French species card offers an independent cross-language species reference; species-specific diet evidence was not found."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 15,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a slender miniature cichlid from the Madeira basin with nuanced, blended coloration rather than a fixed aquarium color morph. Place it over a shaded blackwater stream margin.",
+  "uncertainties": [
+    "The 3.2 cm figure is standard length for male or unsexed fish. No reliable female maximum, body mass, width or height was located; do not convert a genus-level length-weight model into a measured weight.",
+    "Color forms and aquarium labels within the pulchra complex can be confused; locality and morphology are needed for confident identification.",
+    "Diet and wild social behavior lack species-specific field studies in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase with Kullander’s original description, an etymology reference, a specialist complex classification and a French species card. Kept the complex label informal and did not treat color forms as separate diagnoses."
+}

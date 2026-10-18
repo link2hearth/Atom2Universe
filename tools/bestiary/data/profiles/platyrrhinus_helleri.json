@@ -1,0 +1,148 @@
+{
+  "id": "platyrrhinus_helleri",
+  "scientific": "Platyrrhinus helleri",
+  "group": "mammals",
+  "name": {
+    "en": "Heller’s broad-nosed bat",
+    "fr": "Sténoderme de Heller"
+  },
+  "sections": {
+    "overview": {
+      "en": "Platyrrhinus helleri is a fruit-eating leaf-nosed bat of Central America and northern South America.",
+      "fr": "Platyrrhinus helleri est une chauve-souris frugivore à feuille nasale d’Amérique centrale et du nord de l’Amérique du Sud."
+    },
+    "identification": {
+      "en": "Older specimens identified as P. helleri included close species now recognized separately, notably P. incarum, P. angustirostris and P. fusciventris, so identification within this group may require specialist characters.",
+      "fr": "D’anciens spécimens identifiés comme P. helleri comprenaient des espèces proches désormais reconnues séparément, notamment P. incarum, P. angustirostris et P. fusciventris ; l’identification dans ce groupe peut donc nécessiter des critères spécialisés."
+    },
+    "habitat": {
+      "en": "It uses a range of moist and seasonally dry habitats, including evergreen, semi-deciduous and dry forests, forest edges and fruit groves.",
+      "fr": "Elle fréquente divers milieux humides ou soumis à une saison sèche, notamment les forêts sempervirentes, semi-décidues ou sèches, leurs lisières et les vergers."
+    },
+    "diet": {
+      "en": "Its diet is mainly fruit, especially figs and fruits of Cecropia and Acnistus; insects are eaten occasionally.",
+      "fr": "Son régime est surtout composé de fruits, notamment de figues et de fruits de Cecropia et d’Acnistus ; elle consomme parfois des insectes."
+    },
+    "behavior": {
+      "en": "It roosts in pairs or small groups in tree crowns, caves, buildings, hollow trees or foliage; whether it builds leaf tents is not consistently documented.",
+      "fr": "Elle se repose en couple ou en petits groupes dans les cimes, des grottes, des bâtiments, des arbres creux ou le feuillage ; la construction de tentes de feuilles n’est pas clairement établie."
+    },
+    "reproduction": {
+      "en": "Breeding is generally associated with the start of the rainy season, though timing varies among local populations.",
+      "fr": "La reproduction coïncide généralement avec le début de la saison des pluies, mais sa période varie selon les populations locales."
+    },
+    "ecology": {
+      "en": "As a fruit-eater, it likely transports seeds between feeding and roosting places; the IUCN account documents its use of both natural and human-modified habitats.",
+      "fr": "En consommant des fruits, elle contribue probablement au transport des graines entre ses lieux d’alimentation et de repos ; la fiche de l’UICN indique qu’elle utilise aussi bien des milieux naturels que modifiés par l’humain."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Least Concern, citing its broad range, presumed large population and tolerance of varied habitats.",
+      "fr": "L’évaluation de l’UICN la classe en « Préoccupation mineure », en raison de sa vaste aire, de sa population supposée importante et de sa tolérance à divers habitats."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Platyrrhinus helleri — IUCN Red List assessment",
+        "fr": "Platyrrhinus helleri — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T88159886A88159952.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN describes wide distribution, frugivory, varied roosts and locally variable breeding."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 11,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Systematics of the Platyrrhinus helleri species complex — Zoological Journal of the Linnean Society",
+        "fr": "Systématique du complexe Platyrrhinus helleri — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1096-3642.2009.00610.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Revision separated P. incarum and described P. angustirostris and P. fusciventris from former P. helleri specimens."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 16,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Murciélago de nariz ancha de Heller — Red Latinoamericana para la Conservación de los Murciélagos",
+        "fr": "Chauve-souris à nez large de Heller — Réseau latino-américain pour la conservation des chauves-souris"
+      },
+      "url": "https://relcomlatinoamerica.net/aicoms/riomanso/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language RELCOM corroborates range, habitats, fruit diet, roosting and Least Concern; it mentions tent roosts, unlike IUCN."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 17,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The geographic limits and identification of P. helleri depend on taxonomic splits within the former species complex.",
+    "Diet and breeding summaries reflect sampled populations and should not be assumed identical throughout the range.",
+    "Sources differ on leaf-tent roosts: the IUCN account says this behavior is not known, while the Spanish RELCOM account reports tent roosts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined an IUCN species assessment, the primary taxonomic revision of the P. helleri complex and a Spanish-language regional conservation account. No fiche for the closest split taxa exists in the current inventory."
+}

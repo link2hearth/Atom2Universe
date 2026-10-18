@@ -1,0 +1,162 @@
+{
+  "id": "blatta_orientalis",
+  "scientific": "Blatta orientalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Oriental Cockroach",
+    "fr": "Blatte orientale"
+  },
+  "sections": {
+    "overview": {
+      "en": "Blatta orientalis is a widespread cockroach associated with cool, damp, sheltered places. It differs from the smaller German cockroach Blattella germanica in body form and typical breeding sites.",
+      "fr": "Blatta orientalis est une blatte largement répandue, associée aux lieux frais, humides et abrités. Sa morphologie et ses sites de reproduction typiques la distinguent de la petite blatte germanique Blattella germanica."
+    },
+    "identification": {
+      "en": "Adults are dark brown to nearly black and roughly 2 to 3 cm long. Both sexes are flightless; males have longer wings than the short vestigial wings of females.",
+      "fr": "Les adultes sont brun foncé à presque noirs et mesurent environ 2 à 3 cm. Les deux sexes ne volent pas; les ailes des mâles sont plus longues que celles, vestigiales, des femelles."
+    },
+    "habitat": {
+      "en": "It shelters outdoors under debris and in damp shade, and can enter buildings through drains, foundations and crawl spaces. Indoors it is common in basements, near plumbing and other cool humid refuges.",
+      "fr": "Elle s’abrite dehors sous les débris et dans les endroits ombragés et humides; elle peut entrer dans les bâtiments par les drains, fondations et vides sanitaires. À l’intérieur, elle fréquente souvent les caves et autres refuges frais et humides."
+    },
+    "diet": {
+      "en": "It is an opportunistic scavenger that consumes varied organic matter. Its use of decomposing material helps explain its association with refuse and damp service areas.",
+      "fr": "C’est une charognarde opportuniste qui consomme diverses matières organiques. L’utilisation de matières en décomposition explique en partie sa présence près des déchets et des locaux techniques humides."
+    },
+    "behavior": {
+      "en": "It is mainly active at night and tends to remain near humid refuges. Compared with German cockroaches, oriental cockroaches are more closely associated with drains and cooler, wetter sites.",
+      "fr": "Elle est surtout active la nuit et reste près de refuges humides. Par rapport aux blattes germaniques, les blattes orientales sont davantage associées aux drains et aux lieux frais et mouillés."
+    },
+    "reproduction": {
+      "en": "A female produces oothecae with about 16 eggs and deposits them in a sheltered site after carrying each capsule briefly. Development to adulthood may take about a year; the female does not care for the young.",
+      "fr": "La femelle produit des oothèques d’environ 16 œufs et dépose chaque capsule dans un abri après l’avoir portée brièvement. Le développement jusqu’à l’âge adulte peut prendre environ un an; la femelle ne s’occupe pas des jeunes."
+    },
+    "ecology": {
+      "en": "As a scavenger it recycles organic waste, but it can also move through unsanitary areas and contaminate indoor surfaces. Its association with moisture distinguishes it from more indoor-adapted relatives such as B. germanica.",
+      "fr": "Charognarde, elle recycle les déchets organiques, mais peut aussi circuler dans des lieux insalubres et contaminer des surfaces intérieures. Son lien avec l’humidité la distingue de proches plus adaptés à l’intérieur, comme B. germanica."
+    },
+    "conservation": {
+      "en": "It is a common synanthropic insect rather than wildlife listed as threatened in the sources consulted. Its significance to people is mainly as a household pest and potential mechanical carrier of contaminants.",
+      "fr": "C’est un insecte synanthrope courant plutôt qu’une espèce sauvage classée menacée par les sources consultées. Son importance tient surtout à son statut de nuisible domestique et de vecteur mécanique potentiel de contaminants."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oriental Cockroach — University of Florida IFAS Extension",
+        "fr": "Blatte orientale — service de vulgarisation UF/IFAS"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN316",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "UF/IFAS describes wing differences, egg capsules, development time and damp shelters."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 11,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cockroaches — University of California Statewide Integrated Pest Management Program",
+        "fr": "Blattes — programme intégré de lutte antiparasitaire de l’Université de Californie"
+      },
+      "url": "https://ipm.ucanr.edu/home-and-landscape/cockroaches/",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UC IPM compares common household cockroaches."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 6,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plagas: fundamentos biológicos — Universidad de la República",
+        "fr": "Ravageurs : bases biologiques — Université de la République"
+      },
+      "url": "https://www.colibri.udelar.edu.uy/jspui/bitstream/20.500.12008/44110/1/1999%20N18.pdf",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language university document discusses cockroach feeding on decomposing organic matter."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 10,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Development time varies with temperature and food; the one-year figure is contextual, not universal.",
+    "Pathogen transmission depends on local conditions and is not quantified here."
+  ],
+  "review_note": "Cross-checked UF/IFAS, a Spanish-language university publication and UC IPM; compared damp-site ecology with Blattella germanica.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

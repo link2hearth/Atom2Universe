@@ -1,0 +1,438 @@
+{
+  "id": "robin",
+  "scientific": "Erithacus rubecula",
+  "group": "birds",
+  "name": {
+    "en": "European robin",
+    "fr": "Rougegorge familier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European robin is a small, upright songbird of Europe, western Asia and parts of North Africa, where its range spans woodland, scrub and settled landscapes. It is the robin of European gardens, a member of the Old World flycatcher family, Muscicapidae. The similarly orange-breasted American robin is a different species, Turdus migratorius, in the thrush family; the shared English name reflects appearance, not close relationship. Many robins stay near their breeding range, while birds from colder northern and eastern populations move south or west for winter.",
+      "fr": "Le Rougegorge familier est un petit passereau d’Europe, d’Asie occidentale et d’Afrique du Nord, présent dans les bois, fourrés et zones habitées. Il appartient aux Muscicapidés, famille qui comprend les gobemouches de l’Ancien Monde. Le Merle d’Amérique, Turdus migratorius, a lui aussi la poitrine orangée, mais appartient aux Turdidés : leur nom anglais commun évoque l’apparence, pas une parenté proche. Beaucoup de rougegorges restent près de leurs sites de reproduction ; ceux des régions nordiques et orientales gagnent le sud ou l’ouest en hiver."
+    },
+    "identification": {
+      "en": "Adults of both sexes look alike: a bright orange-red face and breast form a bib against a grey-blue border, brown upperparts and a pale belly. At about 14 centimetres long, adults weigh roughly 14–25 grams across published reference ranges; it has a short, fine bill and long legs for its upright, quick-hopping gait. Newly fledged birds lack orange and are mottled brown with golden spots, a less conspicuous pattern that blends into leaf litter. In a partial post-juvenile moult during summer, some feathers are replaced and orange-red feathers begin to appear on the breast. The sexes remain difficult to tell apart by sight.",
+      "fr": "Mâles et femelles adultes se ressemblent : face et poitrine orange bordées de gris bleuté, dos brun et ventre clair. Long d’environ 14 cm, l’adulte pèse de 14 à 25 g selon les sources ; son bec fin et ses longues pattes accompagnent une démarche dressée et bondissante. Les jeunes sortis du nid sont brun moucheté de doré, sans orange, ce qui les camoufle dans les feuilles. Lors d’une mue postjuvénile partielle en été, certaines plumes sont remplacées et des plumes orange rouge apparaissent sur la poitrine. Les sexes restent difficiles à distinguer à l’œil."
+    },
+    "habitat": {
+      "en": "Robins use cool, shaded places with low cover, such as deciduous woods, hedges, scrub, parks and gardens. Dense vegetation gives shelter and song perches, while patches of open soil or leaf litter make small prey accessible. Nests occupy sheltered sites, from natural cover to unusual human-made places such as flower pots. Their comfort around people is especially familiar in Britain and Ireland; elsewhere in Europe they can be more wary, so garden behaviour is not universal.",
+      "fr": "Le rougegorge fréquente les lieux frais et ombragés : bois de feuillus, haies, broussailles, parcs et jardins. La végétation dense abrite l’oiseau et offre des perchoirs ; terre et feuilles dégagées lui donnent accès aux proies. Le nid se trouve à l’abri, dans la végétation ou parfois dans des lieux humains insolites, comme un pot de fleurs. Familier des personnes en Grande-Bretagne et en Irlande, le rougegorge se montre parfois plus méfiant ailleurs en Europe."
+    },
+    "diet": {
+      "en": "Most of the year, robins hunt small invertebrates such as insects and earthworms at ground level. From a low perch, one may drop onto visible prey and return to cover, or hop across litter and seize prey after a brief pause. In autumn and winter, berries and other fruits can also supplement animal food; the balance varies by season and region.",
+      "fr": "La majeure partie de l’année, le rougegorge chasse au sol de petits invertébrés, comme les insectes et les vers. D’un perchoir bas, il fond sur une proie visible, ou bondit dans les feuilles et la saisit après une pause. En automne et en hiver, baies et fruits peuvent aussi compléter les proies animales ; leur part varie selon la saison et la région."
+    },
+    "behavior": {
+      "en": "Outside breeding season, a robin is usually solitary and defends feeding space from others. Both sexes can hold territories and sing during winter, when the song is often more plaintive and drawn out than the breeding song. This year-round defence helps secure familiar cover and safe feeding patches as well as food. The species is partly migratory: some populations are resident, some move only in part, and northern or eastern breeders travel to western Europe and North Africa. In Britain, local birds are joined by winter visitors from farther north and east; migration varies among populations.",
+      "fr": "Hors période de reproduction, le rougegorge vit généralement seul et défend son espace d’alimentation. Les deux sexes chantent et défendent des territoires en hiver ; leur chant est souvent plus plaintif et prolongé qu’au printemps. Cela protège un couvert familier et des lieux d’alimentation sûrs. Les déplacements varient : certaines populations restent sur place, d’autres migrent partiellement ou gagnent l’Europe occidentale et l’Afrique du Nord depuis le nord et l’est. En Grande-Bretagne, les sédentaires côtoient des visiteurs hivernaux du nord et de l’est ; les migrations varient selon les populations."
+    },
+    "reproduction": {
+      "en": "The female builds a cup of moss, leaves and grass, lined with hair or plant fibres, in a cavity or other sheltered site. In Britain, four or five eggs are typical; she incubates them for about 14–16 days. The chicks are altricial, meaning they hatch helpless and need parental warmth and food. Both parents feed chicks until they fledge at about two weeks; the male may keep feeding them when the female starts a second brood. A pair often raises a second brood when conditions permit.",
+      "fr": "La femelle bâtit une coupe de mousse, feuilles et herbes, garnie de poils ou de fibres, dans un abri. En Grande-Bretagne, elle pond généralement quatre ou cinq œufs et les couve 14 à 16 jours. Les poussins nidicoles naissent sans autonomie et ont besoin de chaleur et de nourriture. Les deux parents nourrissent les jeunes jusqu’à l’envol, vers deux semaines ; le mâle peut continuer à les nourrir quand la femelle commence une seconde nichée. Un couple élève souvent une seconde nichée si les conditions le permettent."
+    },
+    "ecology": {
+      "en": "By taking insects and other invertebrates, robins are small predators in leaf litter and low vegetation; adults can in turn be hunted by birds of prey. A Lithuanian nest-box study recorded pine martens and dormice as nest predators; other observations describe cuckoo chicks ejecting host eggs or young. In southern France, a winter study documented seasonal fruit eating and inferred that robins may contribute to seed dispersal in Mediterranean scrub. When gardeners dig, robins seize worms and grubs exposed in the soil.",
+      "fr": "En consommant des invertébrés, le rougegorge est un petit prédateur de la litière ; adulte, il peut aussi devenir la proie de rapaces. Une étude lituanienne de nichoirs a relevé martres et loirs comme prédateurs des nids ; d’autres observations décrivent des poussins de coucou éjectant les œufs ou jeunes de l’hôte. Dans le sud de la France, une étude hivernale a relevé une consommation saisonnière de fruits et en déduit que le rougegorge pourrait contribuer à la dispersion des graines en garrigue . Quand les jardiniers bêchent, les rougegorges capturent vers et larves mis à découvert ."
+    },
+    "conservation": {
+      "en": "BirdLife International’s 2018 global assessment classified the European robin as Least Concern, reflecting its very large range and population. Global security does not mean every local population is stable. In the UK, Birds of Conservation Concern 5 (2021) places the robin on the Green List. Monitoring shows a long-term increase, interrupted by falls after severe winters and local declines in earlier atlas comparisons. Cold spells can reduce survival by making food harder to find.",
+      "fr": "BirdLife International l’a classé en préoccupation mineure dans son évaluation mondiale de 2018, en raison de son aire et de sa population très vastes. Ce statut mondial ne décrit pas chaque population locale. Au Royaume-Uni, Birds of Conservation Concern 5 (2021) classe le rougegorge sur la liste verte. Les suivis montrent une hausse à long terme, malgré des baisses après des hivers rigoureux et des déclins locaux relevés dans d’anciens atlas. Le froid peut réduire la survie en rendant la nourriture moins accessible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Robin — Natural History Museum, London",
+        "fr": "Rougegorge — Natural History Museum de Londres"
+      },
+      "url": "https://www.nhm.ac.uk/discover/robin-erithacus-rubecula.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Adult size, juvenile plumage and garden feeding."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5",
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 7,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Robin Identification — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Identification du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Lists adult length and a 14–25 g mass range."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 9,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Robin overview — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Présentation du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/European_Robin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Distinguishes European from American robins."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.2",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 5,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Robin Life History — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Histoire naturelle du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Woodland and foraging."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 3,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Robin BirdFacts — British Trust for Ornithology",
+        "fr": "Fiche BirdFacts du Rougegorge — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/robin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British records show breeding timing and local trends."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 8,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Robin range map — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Carte de répartition du Rougegorge — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/maps-range",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Populations differ in winter movements."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.en.5",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "behavior.fr.5",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 5,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Is nesting in closed nestboxes advantageous for the European Robin? — Avian Research",
+        "fr": "Les nichoirs fermés favorisent-ils la nidification du Rougegorge ? — Avian Research"
+      },
+      "url": "https://doi.org/10.1186/s40657-021-00263-8",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Lithuanian study documents mammal predation on nests."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 7,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Non-breeding European robins adjust their song in noisy environments — Behavioral Ecology",
+        "fr": "Les Rougegorges adaptent leur chant en hiver aux environnements bruyants — Behavioral Ecology"
+      },
+      "url": "https://academic.oup.com/beheco/article/36/4/araf070/8160918",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Reports winter territorial song by both sexes."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 7,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Erithacus rubecula — IUCN Red List assessment 2018, BirdLife International",
+        "fr": "Erithacus rubecula — évaluation 2018 de la Liste rouge de l’UICN, BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22709675A131953953.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global Least Concern assessment dates to 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 7,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Robin — Royal Society for the Protection of Birds",
+        "fr": "Rougegorge — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/robin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "RSPB describes nest sites and garden feeding."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 7,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Identifying young birds — British Trust for Ornithology",
+        "fr": "Identifier les jeunes oiseaux — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/skills/bird-identification/young-birds",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Robin juveniles replace body feathers during a post-juvenile summer moult."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 10,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Frugivory of transient and wintering European robins — Ecography",
+        "fr": "Frugivorie des Rougegorges migrateurs et hivernants — Ecography"
+      },
+      "url": "https://doi.org/10.1111/j.1600-0587.1985.tb01166.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Southern French winter study documented robin fruit consumption and seed dispersal."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 11,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Birds of Conservation Concern 5 — British Trust for Ornithology and partners",
+        "fr": "Birds of Conservation Concern 5 — British Trust for Ornithology et partenaires"
+      },
+      "url": "https://www.bto.org/our-work/science/publications/reports/birds-conservation-concern",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2021 UK review places the robin on the Green List."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Conserver l’illustration originale déjà associée à l’espèce.",
+  "uncertainties": [
+    "Les mensurations sont des repères d’adultes issus de sources britanniques ou muséales ; masse et déplacements varient selon la saison, l’état et la population.",
+    "Les résultats sur les nids prédateurs proviennent d’études régionales, et le statut mondial daté de 2018 ne décrit pas chaque tendance locale."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Verified actual Cornell European Robin pages, clarified Muscicapidae/Turdidae, variable dimensions and partial juvenile moult, winter song evidence, post-fledging male care, inferred seed dispersal and bird beneficiary of gardening. Removed duplicated nest-predator material and editorial caveats, scoped UKBoCC5 versus2018 global assessment. Original adult illustration retained after root visual check."
+}

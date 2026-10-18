@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">2048 Quantique</string>
+    <string name="game2048_description">Fusionnez les tuiles pour atteindre l\'objectif !</string>
+    <string name="game2048_score_label">SCORE</string>
+    <string name="game2048_best_label">MEILLEUR</string>
+    <string name="game2048_universes_label">UNIVERS</string>
+    <string name="game2048_size_label">Grille :</string>
+    <string name="game2048_target_label">Objectif :</string>
+    <string name="game2048_new">Nouveau</string>
+    <string name="game2048_status_play">Glissez pour déplacer les tuiles</string>
+    <string name="game2048_status_win">Bravo ! Tuile %1$d atteinte ! Nouvel univers…</string>
+    <string name="game2048_status_over">Bloqué à %1$d. Nouvel univers…</string>
+    <string name="game2048_confirm_title">Nouvelle partie ?</string>
+    <string name="game2048_confirm_message">La partie en cours sera perdue. Continuer ?</string>
+    <string name="game2048_quantum_mode">🐱 Mode Quantique</string>
+    <string name="game2048_joker_active">🐱 ⚡ ACTIF</string>
+    <string name="game2048_difficulty_easy">Facile</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Difficile</string>
+    <string name="game2048_difficulty_random">Aléatoire</string>
+</resources>

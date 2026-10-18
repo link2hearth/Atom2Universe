@@ -1,0 +1,16 @@
+{
+  "id": 2503,
+  "name": "slab_plank_jungle",
+  "texture_top": "cozy:material:9:91A06A",
+  "texture_side": "cozy:material:9:91A06A",
+  "texture_bottom": "cozy:material:9:91A06A",
+  "color": "#91A06A",
+  "hardness": 1.5,
+  "drop": "slab_plank_jungle",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

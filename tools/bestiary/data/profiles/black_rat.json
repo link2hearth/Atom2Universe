@@ -1,0 +1,210 @@
+{
+  "id": "black_rat",
+  "scientific": "Rattus rattus",
+  "group": "mammals",
+  "name": {
+    "en": "Black rat",
+    "fr": "Rat noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black rat, also called the roof or ship rat, is a small, adaptable rodent whose fortunes have travelled with people. The IUCN assessment describes its original range as Indomalayan; maritime trade carried it far beyond that region, and established populations now occur on many continents and islands. It thrives in settlements as well as forests, so “house rat” describes an association, not a habitat limit.",
+      "fr": "Le rat noir, aussi appelé rat des toits ou rat des navires, est un petit rongeur adaptable dont l’histoire accompagne celle des humains. L’évaluation de l’UICN situe son aire d’origine dans la région indomalaise ; le commerce maritime l’a propagé bien au-delà, et des populations établies vivent aujourd’hui sur plusieurs continents et îles. Il prospère dans les villages comme en forêt : « rat des maisons » décrit une proximité, pas une limite d’habitat."
+    },
+    "identification": {
+      "en": "A black rat is usually slender, with a pointed muzzle, prominent thin ears and a tail longer than its head and body together. Coat colour is variable: animals may be blackish, charcoal, brown or lighter above, often paler below. The brown rat (Rattus norvegicus) is generally heavier and stockier, with a shorter, thicker tail and a blunter muzzle. Colour alone is unreliable, and young rats can be hard to identify. Adults have a head-and-body length of about 16.5–20.5 cm, a tail of 18.5–25.5 cm and a reported mass of 95–340 g; these ranges are not separated by sex.",
+      "fr": "Le rat noir est généralement élancé, avec un museau pointu, de grandes oreilles fines et une queue plus longue que la tête et le corps réunis. Son pelage varie du noirâtre au gris charbon ou au brun, parfois plus clair sur le dos, et souvent pâle dessous. Le rat brun (Rattus norvegicus) est en général plus lourd et trapu ; sa queue est plus courte et épaisse, son museau plus obtus. La couleur seule ne suffit pas et les jeunes sont difficiles à identifier. Les adultes ont une longueur tête-corps d’environ 16,5 à 20,5 cm, une queue de 18,5 à 25,5 cm et une masse publiée de 95 à 340 g ; ces plages ne sont pas distinguées selon le sexe."
+    },
+    "habitat": {
+      "en": "This species uses warm coastal districts, farms, gardens, woodland and buildings, especially where food and shelter occur together. Its climbing ability makes shrubs, tree crowns, vines, fences, wires and roof spaces accessible; nests can be built above ground in vegetation or structures. In California, roof rats often nest in trees and dense landscaping, but also descend to the ground to forage or feed within trees. They may burrow or use ground-level shelter when elevated sites are scarce, so arboreality is a tendency rather than a rule.",
+      "fr": "L’espèce fréquente les régions côtières chaudes, les fermes, jardins, boisements et bâtiments, surtout lorsque nourriture et abris sont proches. Son agilité lui ouvre les arbustes, cimes, lianes, clôtures, câbles et combles ; elle peut nicher en hauteur dans la végétation ou les constructions. En Californie, les rats des toits nichent souvent dans les arbres et les jardins denses, mais descendent aussi au sol pour chercher leur nourriture ou se nourrissent dans les arbres. Ils peuvent creuser ou s’abriter au sol si les sites élevés manquent : l’arboricolie est une tendance, pas une règle."
+    },
+    "diet": {
+      "en": "Black rats eat a broad range of foods, usually with a strong plant component: fruit, berries, seeds, nuts, grain, leaves and other vegetation. They also take invertebrates and, where available, eggs or small animals. In four Galápagos petrel colonies sampled on San Cristóbal in June 2013, stomach contents were mostly plant material and arthropods; seeds of the native tree Miconia robinsoniana were especially common. That snapshot is local and seasonal, not a universal menu. The species can shift toward foods that are abundant at a particular site.",
+      "fr": "Le rat noir consomme des aliments variés, généralement avec une forte composante végétale : fruits, baies, graines, noix, céréales, feuilles et autres végétaux. Il prend aussi des invertébrés et, quand ils sont accessibles, des œufs ou de petits animaux. Dans quatre colonies de pétrels des Galápagos échantillonnées en juin 2013 sur San Cristóbal, les contenus stomacaux étaient surtout végétaux, avec des arthropodes ; les graines de l’arbre indigène Miconia robinsoniana étaient particulièrement fréquentes. Ce résultat ponctuel dépend du lieu et de la saison. Le rat peut privilégier les ressources localement abondantes."
+    },
+    "behavior": {
+      "en": "Black rats are mainly active at night, when darkness helps them forage while reducing exposure to many daytime predators. They are not invariably solitary: species accounts report groups containing several males and females, with dominance affecting access to mates and defended food territories. The available descriptions do not establish one social structure for every population. Calls, scent deposits and postures provide cues during social contact. Daily routes link nests to food patches, running along branches, fences and overhead lines as well as across the ground.",
+      "fr": "Le rat noir est surtout actif la nuit : l’obscurité lui permet de chercher sa nourriture tout en réduisant son exposition aux prédateurs diurnes. Il n’est pas toujours solitaire : les descriptions de l’espèce signalent des groupes de plusieurs mâles et femelles, où la dominance influe sur l’accès aux partenaires et aux territoires nourriciers défendus. Elles ne permettent pas de fixer une organisation sociale valable pour toutes les populations. Cris, dépôts odorants et postures accompagnent les interactions. Les trajets relient les nids aux ressources, par les branches, clôtures, câbles ou le sol."
+    },
+    "reproduction": {
+      "en": "Where food and shelter remain available, black rats can breed repeatedly; gestation is short, about three to four weeks, and a litter commonly contains several young. Newborns are helpless, naked and blind. The mother nurses and protects them in a nest; fur and mobility develop during the first weeks, and weaning follows after roughly three to four weeks. Young may become reproductively mature within a few months, allowing numbers to rebound quickly. Yet reproduction is not equally continuous everywhere: a 2024 study across Madagascar found strong seasonal variation inside and outside homes, associated partly with rainfall, habitat and rat density.",
+      "fr": "Lorsque nourriture et abris restent disponibles, les rats noirs peuvent avoir plusieurs portées ; la gestation est brève, d’environ trois à quatre semaines, et une portée compte généralement plusieurs petits. Nouveau-nés, ils sont nus, aveugles et dépendants. La mère les allaite et les protège au nid ; pelage et mobilité se développent durant les premières semaines, puis vient le sevrage, vers trois ou quatre semaines. Les jeunes peuvent atteindre la maturité sexuelle en quelques mois, ce qui permet un rétablissement rapide des effectifs. La reproduction n’est toutefois pas continue partout : une étude menée à Madagascar et publiée en 2024 a relevé une forte saisonnalité, liée en partie aux pluies, à l’habitat et à la densité des rats."
+    },
+    "ecology": {
+      "en": "The rat’s climbing and omnivory connect it to food webs both above and below ground. It may disperse some seeds after eating fruit, but it also consumes seeds and can damage seedlings; whether its net effect benefits a plant depends on the species and setting. In Sydney’s urban bushland remnants, a field experiment found that black rats attacked bird nests, adding a source of nest mortality where they had replaced native bush rats. Their greater use of trees, aided by a longer tail that improves balance, can expose arboreal nests and other tree-dwelling animals to predation.",
+      "fr": "Son aptitude à grimper et son régime omnivore relient le rat noir aux réseaux alimentaires des arbres comme du sol. Il peut disperser certaines graines après avoir mangé des fruits, mais en consomme aussi et peut abîmer les jeunes plants : l’effet net dépend de la plante et du milieu. Dans des fragments de boisements urbains de Sydney, une expérience de terrain a montré que les rats noirs attaquaient des nids d’oiseaux, ajoutant une cause de mortalité là où ils avaient remplacé le rat buissonnier indigène. Plus arboricoles, et aidés par une longue queue qui stabilise leur équilibre, ils atteignent les nids en hauteur et d’autres animaux des arbres."
+    },
+    "conservation": {
+      "en": "The amended IUCN global assessment, published in 2021 from an assessment dated 7 September 2016, lists the species as Least Concern because it is widespread and abundant. This global category does not mean harmless: introductions can severely affect local wildlife. On Lord Howe Island, Australia, the black rat arrived after a shipwreck in 1918; a 2000 state scientific determination linked it to losses of endemic birds and the disappearance of the Lord Howe Island stick insect from the main island, threats to native land snails, and reduced palm seed yields. Management concerns are therefore local ecosystem impacts, not global extinction risk. The Island Board’s November 2025 final report confirmed successful rodent eradication and emphasized continued biosecurity to prevent reintroduction.",
+      "fr": "L’évaluation mondiale amendée de l’UICN, publiée en 2021 à partir d’une évaluation datée du 7 septembre 2016, classe l’espèce en préoccupation mineure, car elle est répandue et abondante. Cette catégorie mondiale ne signifie pas qu’elle est inoffensive : son introduction peut fortement affecter la faune locale. Sur l’île Lord Howe, en Australie, le rat noir est arrivé après un naufrage en 1918 ; en 2000, un comité scientifique de l’État l’a mis en cause dans les pertes d’oiseaux endémiques et la disparition du phasme de Lord Howe de l’île principale, les menaces pour les escargots indigènes et la diminution des graines de palmiers. Les enjeux de gestion sont donc locaux, liés aux écosystèmes, et non au risque mondial d’extinction. Le rapport final du conseil de l’île, publié en novembre 2025, confirme l’éradication réussie des rongeurs et souligne la nécessité de maintenir la biosécurité pour éviter leur réintroduction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rattus rattus — IUCN Red List of Threatened Species, amended 2016 assessment (published 2021)",
+        "fr": "Rattus rattus — Liste rouge de l’UICN, évaluation de 2016 amendée (publiée en 2021)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T19360A192565917.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment was last assessed on 7 September 2016 and lists the species as Least Concern; the amended record was published in 2021.",
+        "The assessment describes it as widespread and abundant and traces its broad introductions to human activity."
+      ]
+    },
+    {
+      "title": {
+        "en": "Is it a rat? — Australian Museum",
+        "fr": "Est-ce un rat ? — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/species-identification/ask-an-expert/is-it-a-rat/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Describes the black rat as sleek, variably coloured, large-eared and long-tailed, with the tail longer than body length; colour alone is unreliable.",
+        "Contrasts it with the generally stockier brown rat, whose tail is shorter and thicker and muzzle blunter; climbing and roof nesting are characteristic."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rats — UC Statewide Integrated Pest Management Program, University of California Agriculture and Natural Resources",
+        "fr": "Rats — programme intégré de lutte antiparasitaire de l’Université de Californie (Agriculture et ressources naturelles)"
+      },
+      "url": "https://ipm.ucanr.edu/home-and-landscape/rats/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "In California, roof rats are smaller and more slender than Norway rats, climb readily and commonly nest above ground in trees, shrubs or buildings.",
+        "Reported foods include fruit, nuts, berries, invertebrates, bird eggs and young birds; long tails help balance during climbing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rattus rattus (house rat) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Rattus rattus (rat des maisons) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Rattus_rattus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The account describes nocturnal activity, mixed-sex groups, dominance relationships, scent marking, nests and a long tail used for balance.",
+        "It reports typical litters of about eight (range six to twelve), gestation of 21–29 days, weaning at three to four weeks, maturity at three to five months and female care; these are species-account ranges, not fixed outcomes everywhere."
+      ]
+    },
+    {
+      "title": {
+        "en": "Reproductive ecology of the black rat in Madagascar — Integrative Zoology",
+        "fr": "Écologie reproductive du rat noir à Madagascar — Integrative Zoology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10952345/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "A 2024 study using domestic and agricultural captures across Madagascar found strong seasonal variation in reproduction; patterns differed by habitat and were partly associated with rainfall and rat density.",
+        "The study cautions against assuming one breeding calendar across habitats and regions."
+      ]
+    },
+    {
+      "title": {
+        "en": "Feeding Habits of Introduced Black Rats in Galápagos Petrel Colonies — PLOS ONE",
+        "fr": "Régime alimentaire de rats noirs introduits dans des colonies de pétrels des Galápagos — PLOS ONE"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0127901",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "In four San Cristóbal petrel-colony sites sampled in June 2013, black rat stomach contents were mainly plant material and arthropods; Miconia robinsoniana seeds were frequent.",
+        "The authors found no petrel remains in sampled stomachs and cautioned that this site-specific diet snapshot cannot resolve all possible predation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nest Predation by Commensal Rodents in Urban Bushland Remnants — field study, available via PubMed Central",
+        "fr": "Prédation des nids par les rongeurs commensaux dans des fragments boisés urbains — étude de terrain, disponible sur PubMed Central"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4905641/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "In Sydney remnants where black rats replaced native bush rats, field experiments found black rats contributed to bird-nest attacks and nest mortality.",
+        "Tracking evidence supported greater arboreal activity by black rats, plausibly aided by their longer tails and balance. Effects are specific to these urban remnants."
+      ]
+    },
+    {
+      "title": {
+        "en": "Predation by the ship rat on Lord Howe Island — NSW Threatened Species Scientific Committee, final determination (2000)",
+        "fr": "Prédation du rat des navires sur l’île Lord Howe — comité scientifique des espèces menacées de Nouvelle-Galles du Sud, décision finale (2000)"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/threatened-species/nsw-threatened-species-scientific-committee/determinations/final-determinations/2000-2003/predation-by-the-ship-rat-on-lord-howe-island-key-threatening-process-listing",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The committee records introduction to Lord Howe Island after a 1918 shipwreck and implicates the rat in declines or extinctions of named endemic birds, snails and an insect.",
+        "It also documents damage to vegetation and depleted seed yields in two local palm species; these are island-specific findings and the determination dates to 2000."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rodent eradication: final report and lessons learned (2025) — Lord Howe Island Board",
+        "fr": "Éradication des rongeurs : rapport final et enseignements (2025) — Lord Howe Island Board"
+      },
+      "url": "https://www.lhib.nsw.gov.au/environment/rodent-eradication-project/final-report-2025",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Final report released in November 2025 confirms successful rodent removal and stresses continuing biosecurity to maintain rodent-free status."
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Rat — Australian Museum",
+        "fr": "Rat noir — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/black-rat/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Body 165–205 mm, tail 185–255 mm, mass 95–340 g; no sex-specific values given."
+      ]
+    }
+  ],
+  "illustration_notes": "Existing validated image: one adult black rat, sex unspecified, shown with a slender body, pointed muzzle, prominent thin ears, dark charcoal-to-brown coat with a paler underside, and a long sparsely haired scaly tail visibly longer than head and body together. Natural proportions, four feet and whiskers. Pure uniform white #FFFFFF background, no scenery, props, text, frame or watermark.",
+  "uncertainties": [
+    "Wild social organization is less completely documented than climbing and feeding ecology; group structure and nest sharing vary with habitat, and some descriptions rely on older species accounts.",
+    "The 2016 global IUCN assessment records a widespread species, while harmful impacts are strongly local and documented here specifically for San Cristóbal, Sydney and Lord Howe Island.",
+    "Breeding season, diet and nesting height shift among climates and sites; the numerical examples here are explicitly tied to their study locations."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review; ground/tree foraging clarified, historical Lord Howe impacts distinguished by taxon and updated with 2025 eradication report."
+}

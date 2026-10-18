@@ -1,0 +1,145 @@
+{
+  "id": "dasyatis_izuensis",
+  "scientific": "Dasyatis izuensis",
+  "group": "fish",
+  "name": {
+    "en": "Izu Stingray",
+    "fr": "Pasténague d’Izu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Izu stingray is restricted to Japan’s Izu Peninsula and is currently placed in Hemitrygon. The H. marianae profile shares its former Dasyatis label but is now placed in a different genus.",
+      "fr": "La pasténague d’Izu est limitée à la péninsule japonaise d’Izu et appartient aujourd’hui au genre Hemitrygon. La fiche de H. marianae partage son ancien nom de genre Dasyatis, mais cette espèce est désormais classée dans un autre genre."
+    },
+    "identification": {
+      "en": "Its smooth, golden-brown diamond-shaped disc and white ventral tail fold distinguish it from other described Dasyatidae.",
+      "fr": "Son disque lisse, brun doré et losangique, ainsi que le repli blanc sous la queue, la distinguent des autres Dasyatidae décrites."
+    },
+    "habitat": {
+      "en": "The original specimens came from shallow coastal waters at about 10–20 m off Izu.",
+      "fr": "Les spécimens originaux provenaient d’eaux côtières peu profondes, vers 10–20 m au large d’Izu."
+    },
+    "diet": {
+      "en": "The sources consulted provide no species-specific prey list.",
+      "fr": "Les sources consultées ne donnent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Species-specific activity and social behavior are poorly documented in the sources reviewed.",
+      "fr": "Les sources examinées documentent peu l’activité et le comportement social propres à l’espèce."
+    },
+    "reproduction": {
+      "en": "FishBase records the Izu stingray as ovoviviparous.",
+      "fr": "FishBase indique que la pasténague d’Izu est ovovivipare."
+    },
+    "ecology": {
+      "en": "Its range is confined to shallow coastal waters around Izu.",
+      "fr": "Son aire se limite aux eaux côtières peu profondes autour d’Izu."
+    },
+    "conservation": {
+      "en": "FishBase reports a 2019 IUCN assessment of Vulnerable.",
+      "fr": "FishBase rapporte une évaluation UICN de 2019 en catégorie vulnérable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A new species of Dasyatis from the Izu Peninsula — Japanese Journal of Ichthyology",
+        "fr": "Une nouvelle espèce de Dasyatis de la péninsule d’Izu — Japanese Journal of Ichthyology"
+      },
+      "url": "https://www.jstage.jst.go.jp/article/jji1950/35/3/35_3_227/_article/-char/ja",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The 1988 Japanese description diagnoses the species and records specimens from 10–20 m off Izu."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 15,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hemitrygon izuensis — FishBase",
+        "fr": "Hemitrygon izuensis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Hemitrygon-izuensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives Hemitrygon, ovoviviparity, restricted range and the 2019 IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 11,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dasyatis names and accepted combinations — WoRMS",
+        "fr": "Noms Dasyatis et combinaisons acceptées — WoRMS"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Dasyatis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "WoRMS accepts Hemitrygon izuensis; IUCN places the former Dasyatis marianae in Hypanus."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 12,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "ITIS still displays Dasyatis izuensis as valid, whereas WoRMS and FishBase use Hemitrygon izuensis; taxonomy is therefore noted as authority-dependent.",
+    "Diet and behavior remain poorly covered in accessible species-specific sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the original Japanese description, FishBase, and WoRMS; uses the current marine-checklist combination while retaining the bestiary’s historic Dasyatis identifier and linking the Brazilian H. marianae account."
+}

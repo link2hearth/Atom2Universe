@@ -1,0 +1,249 @@
+{
+  "id": "ailurus_fulgens",
+  "scientific": "Ailurus fulgens",
+  "group": "mammals",
+  "name": {
+    "en": "Western red panda",
+    "fr": "Panda roux de l’Himalaya"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ailurus fulgens is the western, Himalayan red panda, a small carnivoran in the family Ailuridae. Mammal taxonomies now commonly list it separately from the Chinese red panda, A. styani, although the species rank of these lineages remains debated.",
+      "fr": "Ailurus fulgens est le panda roux occidental, ou panda roux de l’Himalaya, un petit Carnivore de la famille des Ailuridés. Les référentiels mammalogiques actuels le distinguent généralement du panda roux chinois, A. styani, même si le rang d’espèce de ces lignées reste discuté."
+    },
+    "identification": {
+      "en": "Look for a rusty-red back, dark underside, pale face with reddish tear marks, pointed ears and a thick ringed tail. Fur covers the feet; five toes bear semi-retractile claws, and an enlarged wrist bone forms a gripping pseudo-thumb. The Smithsonian reports adults at 56–62.5 cm in body length plus a 37–47.2 cm tail, weighing 3.6–7.7 kg. The sources give no standard body height or width, nor separate adult dimensions for males and females. Compared with A. styani, A. fulgens tends to have a paler, more white-marked face and less distinct tail rings.",
+      "fr": "On le reconnaît à son dos roux, son ventre sombre, son visage clair marqué de traits roux sous les yeux, ses oreilles pointues et sa grosse queue annelée. Les pieds sont couverts de fourrure; leurs cinq doigts portent des griffes semi-rétractiles et un os du poignet élargi forme un faux pouce préhensile. Le Smithsonian indique un corps de 56 à 62,5 cm, une queue de 37 à 47,2 cm et une masse adulte de 3,6 à 7,7 kg. Les sources ne donnent ni hauteur ni largeur corporelle standard, ni mensurations adultes séparées entre mâles et femelles. Par rapport à A. styani, A. fulgens tend à avoir le visage plus clair et plus blanc, ainsi que des anneaux caudaux moins nets."
+    },
+    "habitat": {
+      "en": "It occupies cool, temperate mountain forests with bamboo in the understory, in the eastern Himalaya and adjoining highlands. Field studies record it mainly at roughly 2,100–4,325 m; the exact elevations and forest structure used vary across the range.",
+      "fr": "Il fréquente les forêts tempérées fraîches de montagne dont le sous-bois contient du bambou, dans l’est de l’Himalaya et les hautes terres voisines. Des études de terrain le relèvent surtout vers 2 100–4 325 m; l’altitude et la structure forestière utilisées varient selon les régions."
+    },
+    "diet": {
+      "en": "Bamboo leaves and young shoots dominate its food, although estimates vary among studies and sites. It selects nutritious parts and may supplement them with roots, grasses, fruit, insects, eggs and small vertebrates.",
+      "fr": "Les feuilles et jeunes pousses de bambou dominent son alimentation, mais leur proportion varie selon les études et les sites. Il sélectionne les parties les plus nutritives et peut compléter ce régime par des racines, des herbes, des fruits, des insectes, des œufs et de petits vertébrés."
+    },
+    "behavior": {
+      "en": "Field accounts from Nepal describe solitary animals outside the breeding season, most active in the early morning and evening, and resting in branches or tree hollows during the day.",
+      "fr": "Des observations au Népal décrivent des animaux solitaires hors de la période de reproduction, surtout actifs tôt le matin et le soir, qui se reposent le jour dans les branches ou les cavités des arbres."
+    },
+    "reproduction": {
+      "en": "In the Northern Hemisphere, mating usually occurs from January to March. Delayed implantation makes the interval to birth variable, roughly 93–156 days; females den in cavities or dense cover and typically raise two furred cubs, which remain with their mother for about a year.",
+      "fr": "Dans l’hémisphère Nord, les accouplements ont généralement lieu de janvier à mars. La nidation différée rend l’intervalle avant la naissance variable, autour de 93 à 156 jours; la femelle met bas dans une cavité ou un couvert dense et élève généralement deux petits déjà couverts de fourrure, qui restent auprès d’elle environ un an."
+    },
+    "ecology": {
+      "en": "This is a bamboo and cool-forest specialist: surveys in Nepal found bamboo abundance to be a consistent predictor of its occurrence, with water, canopy and other forest features also mattering by region. Because bamboo is relatively low in energy, the animal spends much of its active time feeding and selects tender leaves and shoots.",
+      "fr": "C’est un spécialiste du bambou et des forêts fraîches : des inventaires au Népal ont trouvé que l’abondance du bambou prédisait régulièrement sa présence, tandis que l’eau, le couvert arboré et d’autres caractéristiques forestières comptaient aussi selon les régions. Le bambou étant relativement pauvre en énergie, l’animal consacre une grande part de son activité à se nourrir et choisit les feuilles tendres et les pousses."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists A. fulgens as Endangered. Habitat loss and fragmentation threaten this forest specialist. Other documented pressures include livestock competition, habitat degradation, poaching and disease transmitted by dogs.",
+      "fr": "La Mammal Diversity Database classe A. fulgens parmi les espèces En danger. La perte et la fragmentation de l’habitat menacent ce spécialiste forestier. D’autres pressions documentées sont la concurrence du bétail, la dégradation du milieu, le braconnage et les maladies transmises par les chiens."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ailurus fulgens — ASM Mammal Diversity Database",
+        "fr": "Ailurus fulgens — base de données de diversité des mammifères de l’ASM"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005802/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Current taxonomy uses Western Red Panda for A. fulgens, lists A. styani separately, notes continuing debate, and records IUCN status Endangered."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 21,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red panda — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Panda roux — zoo national et institut de biologie de conservation du Smithsonian"
+      },
+      "url": "https://nationalzoo.si.edu/animals/red-panda",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Morphology, measurements, feeding, reproduction and threats."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 6,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red panda habitat selection along a Central Himalayan gradient — Ecology and Evolution",
+        "fr": "Sélection de l’habitat du panda roux selon un gradient himalayen — Ecology and Evolution"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6509368/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Nepal study: elevational and habitat gradients; bamboo and forest factors."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 10,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red panda — Zoo de La Palmyre",
+        "fr": "Panda roux — Zoo de La Palmyre"
+      },
+      "url": "https://www.zoo-palmyre.fr/fr/panda-roux",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French zoo account gives general measurements, diet, habitat and breeding."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 10,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genomic evidence for two phylogenetic species in red pandas — Science Advances",
+        "fr": "Preuves génomiques de deux espèces phylogénétiques de pandas roux — Science Advances"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7043915/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Genomic study supports A. fulgens and A. styani as separate lineages; the Himalayan form tends to have a whiter face and less distinct tail rings than the Chinese form, though taxonomy remains debated."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 33,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution and habitat use of red panda in Nepal — PLOS ONE",
+        "fr": "Répartition et usage de l’habitat du panda roux au Népal — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0178797",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Nepal study describes habitat, feeding, activity and breeding."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 8,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult western red panda (Ailurus fulgens), isolated full-body naturalistic field-guide view on a pure white background: compact arboreal mammal, vivid rusty-red back and head, pale cream-white cheeks and muzzle with dark reddish tear stripes, dark brown-black belly and legs, dense coat, rounded head, pointed ears, thick bushy tail with muted red and buff rings, short limbs, five toes with curved semi-retractile claws and subtle enlarged wrist pseudo-thumb. Face less intensely red and tail bands less sharply contrasting than in Ailurus styani. No black-and-white giant-panda markings, bear-like bulk, raccoon mask, or feline tail. Accurate mammalian anatomy.",
+  "uncertainties": [
+    "The generic red-panda name has historically covered both Himalayan and Chinese lineages; their treatment as one or two species remains debated, although the ASM Mammal Diversity Database currently recognizes A. fulgens and A. styani separately.",
+    "The IUCN status displayed by the ASM Mammal Diversity Database is Endangered; older red-panda assessments predate the taxonomic split and do not resolve the status of every lineage independently.",
+    "Adult length and mass ranges vary by source; the Smithsonian provides body length and tail length separately, but neither a standard body height or width nor sex-specific adult ranges were available in the consulted sources.",
+    "Diet proportions and habitat elevations vary by study site and should not be treated as uniform across the species’ range."
+  ],
+  "reviewed": true,
+  "review_note": "Profile limited to Ailurus fulgens under the currently used western/Himalayan red panda concept; taxonomy, bilingual equivalence, measurements and source allocations checked against mammalogy database, zoo and field-study sources.",
+  "source_audit_version": 1
+}

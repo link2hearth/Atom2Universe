@@ -1,0 +1,232 @@
+{
+  "id": "amphimedon_queenslandica",
+  "scientific": "Amphimedon queenslandica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Blue sponge",
+    "fr": "Éponge bleue"
+  },
+  "sections": {
+    "overview": {
+      "en": "Amphimedon queenslandica is a marine demosponge in the family Niphatidae, described from Heron and One Tree islands on Australia’s southern Great Barrier Reef. It became a prominent research species after its genome was sequenced.",
+      "fr": "Amphimedon queenslandica est une dém éponge marine de la famille des Niphatidae, décrite des îles Heron et One Tree, dans le sud de la Grande Barrière australienne. Son génome séquencé en a fait une espèce de recherche importante."
+    },
+    "identification": {
+      "en": "Its body grows as a blue-green encrusting base with rounded, lobed or finger-like projections. Large openings sit on raised tips; the outer surface is smooth and translucent, with spongin-rich fibres and small, slightly curved siliceous spicules. A French natural-history guide reports 7–15 cm, without defining the measurement. A Heron Island study instead measured adults at about 1–112 cm² of surface area, not standard length, height or mass.",
+      "fr": "Elle forme une base encroûtante bleu-vert portant des bosses arrondies, lobées ou digitées. De grands orifices s’ouvrent au sommet des reliefs; la surface est lisse et translucide, avec des fibres riches en spongine et de petites spicules siliceuses légèrement courbes. Un guide naturaliste français indique 7 à 15 cm sans préciser la mesure. À Heron Island, une étude a plutôt mesuré 1 à 112 cm² de surface occupée, pas une longueur standard, une hauteur ou une masse."
+    },
+    "habitat": {
+      "en": "It attaches to hard material such as coral rubble and rock on shallow reef flats and crests. On the southern Great Barrier Reef it occurs patchily, often beneath boulders or in crevices and sandy gaps, especially where water flow is low.",
+      "fr": "Elle se fixe sur des supports durs, notamment débris coralliens et rochers, dans les platiers et crêtes récifales peu profonds. Au sud de la Grande Barrière, sa répartition est discontinue; elle se cache sous des blocs, dans des fissures ou des poches sableuses, souvent là où le courant est faible."
+    },
+    "diet": {
+      "en": "It filters microbes and particulate organic matter from seawater drawn through pores and internal chambers by flagellated collar cells, a suspension-feeding system typical of sponges.",
+      "fr": "Elle filtre les microbes et les particules organiques en suspension dans l’eau de mer, aspirée par ses pores et ses chambres internes grâce aux cellules à collerette flagellées, comme les autres éponges."
+    },
+    "behavior": {
+      "en": "Adults attach to hard surfaces and remain in place, pumping water through a porous network of chambers and canals. Their dynamic tissues can remodel the body, while internal flow supplies food and oxygen and removes waste.",
+      "fr": "Les adultes se fixent aux surfaces dures et restent en place, faisant circuler l’eau dans un réseau poreux de chambres et de canaux. Leurs tissus dynamiques remanient le corps; le courant interne apporte nourriture et oxygène, puis évacue les déchets."
+    },
+    "reproduction": {
+      "en": "Individuals are simultaneous hermaphrodites: they release sperm into seawater but retain eggs and embryos in brood chambers. Larvae are released throughout the year; after a planktonic phase they settle and metamorphose when they become responsive to reef signals.",
+      "fr": "Chaque individu est hermaphrodite simultané: il libère des spermatozoïdes dans l’eau, mais garde les ovules et les embryons dans des chambres incubatrices. Des larves sont relâchées toute l’année; après une phase planctonique, elles se fixent et se métamorphosent en réponse aux signaux du récif."
+    },
+    "ecology": {
+      "en": "Adult sponges host commensal microbes, and one bacterial genome was recovered alongside the sponge genome project. The species is also a model for studying animal origins because its genome preserves many cell-signalling and developmental genes shared across animals.",
+      "fr": "Les adultes hébergent des microbes commensaux; un génome bactérien a d’ailleurs été récupéré avec celui de l’éponge lors du projet génomique. L’espèce sert aussi de modèle pour étudier les origines animales, car son génome conserve de nombreux gènes de signalisation et de développement communs aux animaux."
+    },
+    "conservation": {
+      "en": "At studied southern Great Barrier Reef sites it is locally common but patchily distributed; these records do not estimate abundance across its full range.",
+      "fr": "Dans les sites étudiés du sud de la Grande Barrière, elle est localement commune mais distribuée par taches; ces observations ne mesurent pas son abondance sur toute son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A new species of Amphimedon from the Great Barrier Reef — Zootaxa, 2006",
+        "fr": "Une nouvelle espèce d’Amphimedon de la Grande Barrière — Zootaxa, 2006"
+      },
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.1314.1.2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Original taxonomic description: form, colour, skeletal fibres and type localities."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 10,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Remarkable consistency of larval release in a spermcast-mating demosponge — Open Marine Biology Journal, 2010",
+        "fr": "Régularité remarquable de la libération larvaire chez une éponge à fécondation par spermatozoïdes — Open Marine Biology Journal, 2010"
+      },
+      "url": "https://doi.org/10.2174/1874450801004010057",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Heron Island adults: 1–112 cm² surface area."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 7,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphimedon queenslandica — French sponge field guide, Nomadica",
+        "fr": "Amphimedon queenslandica — guide français des éponges, Nomadica"
+      },
+      "url": "https://nomadica.jimdofree.com/spongiaires/eponges-bleues-mauves/amphimedon-queenslandica/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "French guide: blue-green form and an unqualified 7–15 cm size report."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 11,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphimedon queenslandica genome and the evolution of animal complexity — Nature, 2010",
+        "fr": "Génome d’Amphimedon queenslandica et évolution de la complexité animale — Nature, 2010"
+      },
+      "url": "https://doi.org/10.1038/nature09201",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Nature genome paper: filtered food, collar cells, commensal microbes and animal developmental genes."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 13,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphimedon queenslandica — Great Barrier Reef species fact sheet",
+        "fr": "Amphimedon queenslandica — fiche d’espèce de la Grande Barrière"
+      },
+      "url": "https://www.gbri.org.au/Species/Amphimedonqueenslandica.aspx?PageContentID=1271",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "GBR observations."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 2,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The initiation of metamorphosis as an ancient polyphenic trait — Philosophical Transactions of the Royal Society B, 2010",
+        "fr": "L’initiation de la métamorphose comme trait polyphénique ancestral — Philosophical Transactions of the Royal Society B, 2010"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2817140/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Experimental study: larvae settle after developing competence to respond to benthic cues."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 12,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult blue-green Amphimedon queenslandica as a low encrusting base on coral rubble, with rounded or finger-like lobes and conspicuous openings on raised tips. Keep it attached to reef substrate; do not depict it as a free-swimming animal or a tall branching sponge.",
+  "uncertainties": [
+    "A French field guide reports 7–15 cm without defining the axis or measurement method. A Heron Island study instead gives 1–112 cm² of surface area; no reliable sex-specific size, height, width or mass measurements were located.",
+    "The French guide lists Indo-Pacific observations, while the formal species description is based on the southern Great Barrier Reef; the profile uses the formal description and local reef studies for distribution.",
+    "The consulted sources report local patchiness but do not provide a global population trend or formal conservation category."
+  ],
+  "reviewed": true,
+  "review_note": "Profile uses the original taxonomic description, a Heron Island reproductive study, a French natural-history guide with its size limitations stated, a Nature genome paper, and Great Barrier Reef field observations."
+}

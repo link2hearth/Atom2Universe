@@ -1,0 +1,213 @@
+{
+  "id": "giraffa_camelopardalis",
+  "scientific": "Giraffa camelopardalis",
+  "group": "mammals",
+  "name": {
+    "en": "Northern Giraffe",
+    "fr": "Girafe du Nord"
+  },
+  "sections": {
+    "overview": {
+      "en": "Since an IUCN specialist-group review in 2025, Giraffa camelopardalis is treated as the Northern Giraffe, one of four recognized giraffe species. The older one-species classification has therefore been superseded in this specialist framework.",
+      "fr": "Depuis la révision du groupe de spécialistes de l’UICN en 2025, Giraffa camelopardalis désigne la girafe du Nord, l’une des quatre espèces reconnues. Cette classification antérieure à une seule espèce est donc remplacée dans ce cadre spécialisé."
+    },
+    "identification": {
+      "en": "It is the world’s tallest living land mammal, with a long neck and legs and a coat patterned in irregular patches.",
+      "fr": "C’est le plus grand mammifère terrestre vivant, avec un long cou, de longues pattes et un pelage couvert de taches irrégulières."
+    },
+    "habitat": {
+      "en": "Northern giraffes persist in scattered populations across parts of northern and central Africa, including the Sahel and East-Central Africa.",
+      "fr": "Les girafes du Nord subsistent en populations dispersées dans certaines régions d’Afrique du Nord et centrale, notamment au Sahel et en Afrique centro-orientale."
+    },
+    "diet": {
+      "en": "Giraffes browse leaves and shoots, especially from trees such as acacias; the neck and prehensile tongue help them reach foliage.",
+      "fr": "Les girafes broutent feuilles et pousses, notamment dans les acacias ; leur cou et leur langue préhensile les aident à atteindre le feuillage."
+    },
+    "behavior": {
+      "en": "They move between feeding and resting sites and may form loose, changing groups rather than fixed herds.",
+      "fr": "Elles circulent entre les sites d’alimentation et de repos et peuvent former des groupes lâches et changeants plutôt que des troupeaux fixes."
+    },
+    "reproduction": {
+      "en": "Giraffes give birth to a single calf after a long gestation; this general giraffe pattern is not a Northern-giraffe-specific measure.",
+      "fr": "Les girafes donnent naissance à un seul petit après une longue gestation ; cette caractéristique générale n’est pas une mesure propre à la girafe du Nord."
+    },
+    "ecology": {
+      "en": "The 2025 taxonomic change separates Northern giraffes from reticulated, Masai and southern giraffes, whose ranges and conservation needs differ. The Spanish report likewise contrasts their ranges and conservation needs.",
+      "fr": "La révision taxonomique de 2025 sépare les girafes du Nord des girafes réticulées, masaï et du Sud, dont les aires et besoins de conservation diffèrent. Le compte rendu espagnol distingue également leurs aires et leurs besoins de conservation."
+    },
+    "conservation": {
+      "en": "The Giraffe Conservation Foundation estimated 7,037 Northern giraffes in its 2025 report; this is a compiled estimate, not a new IUCN Red List assessment.",
+      "fr": "La Giraffe Conservation Foundation estimait 7,037 girafes du Nord dans son rapport 2025 ; il s’agit d’une estimation compilée, et non d’une nouvelle évaluation de la Liste rouge de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Four giraffe species officially recognised — IUCN SSC Giraffe and Okapi Specialist Group",
+        "fr": "Four giraffe species officially recognised — IUCN SSC Giraffe and Okapi Specialist Group"
+      },
+      "url": "https://iucn.org/press-release/202508/four-giraffe-species-officially-recognised-major-conservation-reclassification",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "IUCN specialist group announced four recognized giraffe species in 2025, including Northern Giraffe Giraffa camelopardalis."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "State of Giraffe 2025 — Giraffe Conservation Foundation",
+        "fr": "State of Giraffe 2025 — Giraffe Conservation Foundation"
+      },
+      "url": "https://giraffeconservation.org/wp-content/uploads/2025/06/State-of-Giraffe-2025-Report-v5.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "GCF report gives northern giraffe population estimate and distribution/trends."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Giraffe — San Diego Zoo Animals & Plants",
+        "fr": "Giraffe — San Diego Zoo Animals & Plants"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/giraffe?qt-animals_page_content_tabs=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Zoo account describes giraffe form, feeding, general behaviour and reproduction."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Una reclasificación científica histórica descubre que existen cuatro especies de jirafas — El País",
+        "fr": "Una reclasificación científica histórica descubre que existen cuatro especies de jirafas — El País"
+      },
+      "url": "https://elpais.com/ciencia/2025-08-21/una-reclasificacion-cientifica-historica-descubre-que-existen-cuatro-especies-de-jirafas.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Spanish-language report independently explains the 2025 split and distinguishes Northern Giraffe."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Older sources and the 2016 Red List treatment use Giraffa camelopardalis for giraffes broadly; the 2025 taxonomy reassigns that name to Northern Giraffe.",
+    "Diet, behaviour and reproduction statements describe giraffes generally, not traits measured specifically in Northern Giraffes.",
+    "The GCF estimate is not an IUCN Red List category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference is to the three other giraffe species recognized in the 2025 IUCN specialist-group framework; older single-species treatments are historical."
+}

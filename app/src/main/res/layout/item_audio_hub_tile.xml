@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.Atom2Universe.app.OrnamentMaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tile_card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="?attr/a2uCorner20"
+    app:cardElevation="?attr/a2uElevation6">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/tile_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:importantForAccessibility="no"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tile_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:alpha="0.8"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</com.Atom2Universe.app.OrnamentMaterialCardView>

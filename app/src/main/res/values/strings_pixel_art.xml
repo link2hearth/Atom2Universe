@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Back</string>
+    <string name="pixel_art_color_hue">Hue</string>
+    <string name="pixel_art_color_saturation">Saturation</string>
+    <string name="pixel_art_color_brightness">Brightness</string>
+    <string name="pixel_art_color_alpha">Alpha</string>
+    <string name="pixel_art_color_presets">Quick colors</string>
+</resources>

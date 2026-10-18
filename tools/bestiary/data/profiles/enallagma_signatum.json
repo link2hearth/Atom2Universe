@@ -1,0 +1,178 @@
+{
+  "id": "enallagma_signatum",
+  "scientific": "Enallagma signatum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Orange Bluet",
+    "fr": "Agrion orangé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Enallagma signatum is an eastern North American bluet whose mature males are conspicuously orange.",
+      "fr": "Enallagma signatum est un agrion de l’est de l’Amérique du Nord dont le mâle adulte est nettement orangé."
+    },
+    "identification": {
+      "en": "Adults are 25–38 mm; males have orange eyes and thorax and a black abdomen banded orange, while females vary in color.",
+      "fr": "L’adulte mesure 25 à 38 mm ; le mâle a les yeux et le thorax orange et l’abdomen noir barré d’orange, tandis que la femelle varie."
+    },
+    "habitat": {
+      "en": "It uses lakes, ponds and slow streams with floating plants, especially water lilies.",
+      "fr": "Elle fréquente les lacs, étangs et cours d’eau lents à plantes flottantes, surtout les nénuphars."
+    },
+    "diet": {
+      "en": "The accounts consulted provide no prey list specific to this species.",
+      "fr": "Les fiches consultées ne donnent pas de liste de proies propre à cette espèce."
+    },
+    "behavior": {
+      "en": "Illinois observations note activity near dusk and paired flight by the water.",
+      "fr": "Dans l’Illinois, l’espèce est active près du crépuscule et les couples volent près de l’eau."
+    },
+    "reproduction": {
+      "en": "Males accompany females as they lay eggs in aquatic plants.",
+      "fr": "Le mâle accompagne la femelle qui pond dans les plantes aquatiques."
+    },
+    "ecology": {
+      "en": "Compare Enallagma annexum and E. carunculatum: mature E. signatum males are orange.",
+      "fr": "Comparez Enallagma annexum et E. carunculatum : le mâle adulte d’E. signatum est orangé."
+    },
+    "conservation": {
+      "en": "The Illinois Department of Natural Resources describes it as common and native in Illinois; that state-level account is not a global population assessment.",
+      "fr": "Le département des Ressources naturelles de l’Illinois le décrit comme commun et indigène dans cet État ; cette donnée régionale n’est pas une évaluation mondiale de population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orange Bluet — Illinois Department of Natural Resources",
+        "fr": "Agrion orangé — département des Ressources naturelles de l’Illinois"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdamselflies/family-coenagrionidae/wadforangebluet.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "DNR gives male colour, habitat, egg-laying and no prey list."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Enallagma signatum — Savoirs.Québec",
+        "fr": "Enallagma signatum — Savoirs.Québec"
+      },
+      "url": "https://savoirs.quebec/vivant/enallagma-signatum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "French-language species synthesis identifies the orange bluet, its eastern North American range, floating-plant habitat and life cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata — Odonata Central",
+        "fr": "Liste des odonates nord-américains — Odonata Central"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2018.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Checklist gives the accepted name and range of Enallagma signatum in North America."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference to Enallagma annexum is reciprocal; Enallagma carunculatum is discussed in its own neighboring profile for a second comparison."
+}

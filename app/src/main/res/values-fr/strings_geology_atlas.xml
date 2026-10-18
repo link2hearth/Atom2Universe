@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="geo_atlas">Atlas des scènes</string>
+    <string name="geo_scene_position">%1$d / %2$d · %3$s</string>
+    <string name="geo_choose_scene">Choisir une scène</string>
+    <string name="geo_understand">Comprendre cette scène</string>
+    <string name="geo_observe">À observer</string>
+    <string name="geo_wonder">La question à se poser</string>
+    <string name="geo_reveal">Découvrir la réponse</string>
+    <string name="geo_hide_answer">Masquer la réponse</string>
+    <string name="geo_previous">Précédente</string>
+    <string name="geo_next">Scène suivante</string>
+    <string name="geo_evolution">Évolution auto.</string>
+    <string name="geo_restart">Recommencer</string>
+    <string name="geo_stage_caption">%1$s · %2$d%%</string>
+    <string name="geo_save">Garder cette fiche</string>
+    <string name="geo_saved">Fiche enregistrée</string>
+    <string name="geo_all_entries">Toutes les fiches</string>
+    <string name="geo_saved_entries">Enregistrées</string>
+    <string name="geo_saved_empty">Aucune fiche enregistrée. Ouvre une fiche et garde-la pour la retrouver ici.</string>
+    <string name="geo_results_count">%1$d fiches</string>
+    <string name="geo_marker_number">%1$d</string>
+    <string name="geo_marker_title">%1$d · %2$s</string>
+    <string name="geo_diagram_note">Mouvements illustratifs · touche un repère</string>
+    <string name="geo_time_read">Explorer un intervalle</string>
+    <string name="geo_time_help">Lire le temps géologique</string>
+    <string name="geo_scale_expanded_note">Couches agrandies pour la lecture · rayons non proportionnels.</string>
+    <string name="geo_scene_menu_hint">Ouvrir l’atlas illustré des scènes</string>
+    <string name="geo_globe_summary">La Terre est organisée par composition : une croûte et un manteau rocheux entourent un noyau métallique. La température ne suffit pas à déterminer si une couche est solide ou liquide : la pression compte aussi. Cette coupe dévoile une structure étudiée surtout grâce aux ondes sismiques.</string>
+    <string name="geo_globe_observe">Compare la minceur de la croûte à l’épaisseur du manteau. Les options permettent d’agrandir les couches.</string>
+    <string name="geo_globe_question">Le manteau est-il un océan de magma ?</string>
+    <string name="geo_globe_answer">Non. Il est essentiellement rocheux et solide, mais peut se déformer sur des durées géologiques. Les points mobiles illustrent une circulation lente, pas un liquide en ébullition.</string>
+    <string name="geo_shell_summary">Deux découpages de la Terre se superposent ici. Croûte et manteau décrivent les matériaux ; lithosphère et asthénosphère décrivent leur comportement mécanique. Suis la limite claire sous la croûte, puis la base plus profonde de la plaque rigide : ce sont deux limites différentes.</string>
+    <string name="geo_shell_observe">Suis la croûte sous l’océan et le continent. La plaque rigide comprend aussi du manteau.</string>
+    <string name="geo_shell_question">Une plaque tectonique est-elle faite uniquement de croûte ?</string>
+    <string name="geo_shell_answer">Non. Une plaque comprend la croûte et le sommet rigide du manteau. Le Moho marque un changement de composition à l’intérieur de cette plaque.</string>
+    <string name="geo_ridge_summary">À la dorsale, les plaques s’écartent. Le manteau qui remonte fond partiellement lorsque la pression diminue ; le magma fournit une nouvelle croûte océanique. En refroidissant, les roches s’éloignent de part et d’autre et enregistrent la création successive des fonds.</string>
+    <string name="geo_ridge_observe">Suis la remontée centrale, puis les flèches qui s’éloignent de la dorsale.</string>
+    <string name="geo_ridge_question">Où chercher la croûte océanique la plus jeune ?</string>
+    <string name="geo_ridge_answer">Près de l’axe de la dorsale. En s’en éloignant, le fond est généralement plus ancien. Les bandes sont côte à côte : ce ne sont pas des couches sédimentaires empilées.</string>
+    <string name="geo_subduction_summary">Suis la plaque océanique depuis la fosse jusqu’au manteau. Les fluides libérés en profondeur favorisent la fusion partielle du manteau situé au-dessus. Du magma peut remonter vers un arc volcanique, tandis que des séismes jalonnent certaines parties de la plaque plongeante.</string>
+    <string name="geo_subduction_observe">Repère la fosse, la plaque inclinée et le volcan en retrait. Observe les anneaux des ondes sismiques.</string>
+    <string name="geo_subduction_question">Toute la plaque plongeante fond-elle pour alimenter le volcan ?</string>
+    <string name="geo_subduction_answer">Non. Les fluides libérés favorisent surtout la fusion du manteau au-dessus de la plaque. Cela explique le décalage entre fosse et arc volcanique.</string>
+    <string name="geo_collision_summary">Après la fermeture d’un océan, des domaines continentaux peuvent converger. Les roches se raccourcissent, se plissent et se chevauchent. La chaîne grandit au-dessus d’une croûte épaissie : les sommets visibles ne sont qu’une partie de la structure.</string>
+    <string name="geo_collision_observe">Déplace le curseur d’évolution : compare le relief en surface à la racine en profondeur.</string>
+    <string name="geo_collision_question">L’âge d’une montagne est-il celui de toutes ses roches ?</string>
+    <string name="geo_collision_answer">Non. Les roches peuvent être bien plus anciennes que leur déformation et leur soulèvement. Un calcaire marin peut rejoindre une montagne longtemps après son dépôt.</string>
+    <string name="geo_transform_summary">Ces deux blocs coulissent l’un contre l’autre. Une ligne qui traverse la faille se décale : elle permet de lire le déplacement. Dans la nature, le frottement peut bloquer temporairement une faille pendant que la déformation s’accumule autour d’elle.</string>
+    <string name="geo_transform_observe">Compare les bandes correspondantes de chaque côté en déplaçant le curseur.</string>
+    <string name="geo_transform_question">Le coulissement crée-t-il ici un nouveau fond océanique ?</string>
+    <string name="geo_transform_answer">Non. Une frontière transformante permet surtout un déplacement latéral. À la différence d’une dorsale, elle ne crée pas directement de lithosphère.</string>
+    <string name="geo_hotspot_summary">Une plaque en mouvement emporte les édifices volcaniques loin d’une source active. De nouveaux volcans se construisent près de la source ; les anciens s’érodent et peuvent passer sous le niveau marin. Une chaîne peut ainsi conserver une trace du mouvement de la plaque.</string>
+    <string name="geo_hotspot_observe">Pars du volcan actif à droite et suis la plaque vers les édifices plus anciens.</string>
+    <string name="geo_hotspot_question">Tous les volcans sont-ils situés aux frontières des plaques ?</string>
+    <string name="geo_hotspot_answer">Non. Le volcanisme de point chaud peut se produire au sein d’une plaque. La source est dessinée fixe pour simplifier ; les points chauds réels peuvent aussi se déplacer.</string>
+    <string name="geo_folds_summary">Imagine suivre une même couche à travers la montagne. Ses courbures révèlent les plis ; les ruptures et les recouvrements révèlent les failles. Une coupe géologique assemble ces indices pour reconstituer la déformation, au-delà de la seule silhouette des sommets.</string>
+    <string name="geo_folds_observe">Suis une couche claire de gauche à droite et observe l’évolution de sa courbure.</string>
+    <string name="geo_folds_question">Une roche ancienne peut-elle recouvrir une roche plus jeune ?</string>
+    <string name="geo_folds_answer">Oui. Un chevauchement peut transporter un ensemble ancien au-dessus d’un ensemble plus jeune. Des plis renversés peuvent aussi inverser l’ordre initial des couches.</string>
+    <string name="geo_faults_summary">L’étirement fragmente la croûte en blocs séparés par des failles normales. Certains s’abaissent par rapport à leurs voisins et forment des bassins bordés d’escarpements. Un relief peut donc se développer là où la croûte s’étire.</string>
+    <string name="geo_faults_observe">Abaisse le bloc central avec le curseur et suis le décalage des couches.</string>
+    <string name="geo_faults_question">Toute montagne nécessite-t-elle une collision continentale ?</string>
+    <string name="geo_faults_answer">Non. Les failles en extension peuvent créer des reliefs et des dépressions relatifs. Le fossé central représenté ici est un graben.</string>
+    <string name="geo_landscape_summary">L’eau et la glace remodèlent une montagne après sa formation, mais aussi pendant sa croissance. Un glacier occupe une vallée, les rivières emportent les débris et les sédiments gagnent les zones basses. Le retrait de matière peut aussi entraîner un lent réajustement isostatique.</string>
+    <string name="geo_landscape_observe">Suis le glacier jusqu’à la rivière, puis les grains mobiles vers le bassin sédimentaire.</string>
+    <string name="geo_landscape_question">Une montagne qui s’érode cesse-t-elle forcément de se soulever ?</string>
+    <string name="geo_landscape_answer">Non. L’érosion et le soulèvement peuvent agir ensemble. La hauteur de la surface dépend des deux processus, sans qu’ils se compensent forcément.</string>
+    <string name="geo_strata_summary">Une archive sédimentaire se construit dépôt après dépôt. Sable, boue et matériaux carbonatés forment des couches différentes ; enfouissement, compaction et cimentation peuvent les transformer en roche. Fossiles et textures renseignent sur les anciens milieux.</string>
+    <string name="geo_strata_observe">Construis la série avec le curseur. Observe les nouveaux matériaux se déposer au-dessus des précédents.</string>
+    <string name="geo_strata_question">Une couche plus épaisse représente-t-elle toujours plus de temps ?</string>
+    <string name="geo_strata_answer">Non. Les vitesses de dépôt varient et l’érosion peut retirer des dépôts. L’épaisseur seule ne donne pas la durée représentée.</string>
+    <string name="geo_cycle_summary">Suis plusieurs voyages possibles dans le paysage : l’érosion fournit des sédiments, l’enfouissement transforme les roches et la fusion produit du magma. Son refroidissement donne une roche magmatique ; une transformation à l’état solide donne une roche métamorphique. Les chemins se croisent sans imposer de parcours unique.</string>
+    <string name="geo_cycle_observe">Compare la poche de magma, les roches métamorphiques rubanées et les dépôts de surface.</string>
+    <string name="geo_cycle_question">Une roche doit-elle fondre pour devenir métamorphique ?</string>
+    <string name="geo_cycle_answer">Non. Le métamorphisme modifie les minéraux et les textures dans une roche solide. La fusion est un autre processus, qui produit du magma.</string>
+    <string name="geo_archive_summary">Lis cette coupe comme une suite d’événements. Des couches anciennes se sont déposées, ont basculé puis ont été érodées avant d’être recouvertes de couches horizontales. Une intrusion plus récente en recoupe certaines. Chaque contact est un indice ; une absence de roche peut cacher du temps manquant.</string>
+    <string name="geo_archive_observe">Repère les couches inclinées, la surface d’érosion horizontale et l’intrusion orange qui les recoupe.</string>
+    <string name="geo_archive_question">L’ordre des événements donne-t-il leurs dates exactes ?</string>
+    <string name="geo_archive_answer">Non. Recoupement et superposition établissent un ordre relatif. Un âge numérique demande une méthode adaptée et un événement précisément identifié à dater.</string>
+    <string-array name="geo_collision_steps">
+        <item>Relief initial</item>
+        <item>Épaississement</item>
+        <item>Chaîne développée</item>
+    </string-array>
+    <string-array name="geo_transform_steps">
+        <item>Position initiale</item>
+        <item>Repères alignés</item>
+        <item>Repères décalés</item>
+    </string-array>
+    <string-array name="geo_faults_steps">
+        <item>Couches alignées</item>
+        <item>Décalage progressif</item>
+        <item>Bloc central abaissé</item>
+    </string-array>
+    <string-array name="geo_landscape_steps">
+        <item>Relief élevé</item>
+        <item>Vallées creusées</item>
+        <item>Relief atténué</item>
+    </string-array>
+    <string-array name="geo_strata_steps">
+        <item>Premiers dépôts</item>
+        <item>Enfouissement</item>
+        <item>Série constituée</item>
+    </string-array>
+</resources>

@@ -1,0 +1,224 @@
+{
+  "id": "anophthalmus_hitleri",
+  "scientific": "Anophthalmus hitleri",
+  "group": "invertebrates",
+  "name": {
+    "en": "Slovenian blind cave beetle",
+    "fr": "Carabe aveugle des grottes slovènes"
+  },
+  "sections": {
+    "overview": {
+      "en": "Anophthalmus hitleri is a flightless ground beetle known from caves in Slovenia’s Savinja region. Its name, published in 1937, honours Adolf Hitler and has since drawn attention from collectors of Nazi memorabilia.",
+      "fr": "Anophthalmus hitleri est un carabe incapable de voler, connu dans des grottes de la région slovène de la Savinja. Son nom, publié en 1937, rend hommage à Adolf Hitler et attire depuis l’attention de collectionneurs de souvenirs nazis."
+    },
+    "identification": {
+      "en": "This eyeless, reddish-brown beetle is 5–5.5 mm long, with long legs; width, height and mass are unreported. Male genitalia aid identification, but no reliable external sex difference or size dimorphism was found.",
+      "fr": "Ce carabe brun rougeâtre et aveugle mesure 5–5,5 mm; largeur, hauteur et masse ne sont pas rapportées. Les genitalia mâles aident à l’identifier, mais aucune différence externe ou de taille entre sexes n’est établie."
+    },
+    "habitat": {
+      "en": "Records are concentrated in a few dark, humid caves near Celje, in Slovenia’s Savinja region. A 2012 cave survey recorded eight individuals in one cave, 11–66 m from its entrance and 8–25 m below the surface.",
+      "fr": "Les observations se concentrent dans quelques grottes sombres et humides près de Celje, dans la région slovène de la Savinja. Un inventaire de 2012 a relevé huit individus dans une grotte, à 11–66 m de l’entrée et 8–25 m sous la surface."
+    },
+    "diet": {
+      "en": "This predatory carabid feeds on tiny cave insects, though detailed prey records remain scarce for this species.",
+      "fr": "Ce carabe prédateur consomme de petits insectes cavernicoles, mais les données précises sur ses proies restent rares."
+    },
+    "behavior": {
+      "en": "Like other cave-specialized Anophthalmus, it has lost functional eyesight and flight; the genus runs rapidly over cave floors. In a small cold-tolerance experiment, lower lethal temperature averaged −3 °C in summer and −4.5 °C in winter, with two individuals sampled per season.",
+      "fr": "Comme d’autres Anophthalmus cavernicoles, il a perdu la vue fonctionnelle et le vol; le genre court rapidement au sol. Dans une petite étude de tolérance au froid, la température létale basse moyenne était de −3 °C en été et −4,5 °C en hiver, avec deux individus par saison."
+    },
+    "reproduction": {
+      "en": "The 1937 description focuses on adults and male genitalia; species-specific egg or development data were not found.",
+      "fr": "La description de 1937 porte sur les adultes et les genitalia mâles; aucune donnée propre à l’espèce sur les œufs ou le développement n’a été trouvée."
+    },
+    "ecology": {
+      "en": "It resembles the cave congener Anophthalmus schaumi knirschi, which can be difficult for non-specialists to distinguish; male genital structures help experts tell them apart.",
+      "fr": "Il ressemble au congénère cavernicole Anophthalmus schaumi knirschi, parfois difficile à distinguer pour un non-spécialiste; les genitalia mâles aident les experts à les différencier."
+    },
+    "conservation": {
+      "en": "Slovenia’s 2002 beetle Red List places it in category V, Vulnerable; that dated assessment does not by itself describe current population trends. Its name has drawn attention from Nazi-memorabilia collectors, but the scale and effect of illegal collecting in caves remain uncertain.",
+      "fr": "La liste rouge slovène des coléoptères de 2002 le classe V, vulnérable; cette évaluation ancienne ne décrit pas à elle seule l’évolution actuelle des populations. Son nom attire des collectionneurs de souvenirs nazis, mais l’ampleur et l’effet des prélèvements illégaux dans les grottes restent incertains."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A brown beetle named Hitler — Süddeutsche Zeitung",
+        "fr": "Un coléoptère brun nommé Hitler — Süddeutsche Zeitung"
+      },
+      "url": "https://www.sueddeutsche.de/muenchen/serie-ein-brauner-kaefer-namens-hitler-1.2803036",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "German article quotes Scheibel on length and diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 8,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Duality of terrestrial subterranean fauna — Digital Library of the University of Maribor",
+        "fr": "Dualité de la faune terrestre souterraine — Bibliothèque numérique de l’Université de Maribor"
+      },
+      "url": "https://www.matjazperc.com/publications/InternationalJournalSpeleology_41_181.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Slovenian university repository provides the peer-reviewed 2012 cavern-fauna study and its DOI."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 12,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hidden life underground — Slovenian subterranean fauna exhibition",
+        "fr": "La vie cachée sous terre — exposition slovène sur la faune souterraine"
+      },
+      "url": "https://razstava.podzemlje.si/razstava?id=2&morecontent=True",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Slovenian specialist exhibition describes the Anophthalmus genus, cave adaptations, and collector attention to this species."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 15,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cold tolerance in terrestrial invertebrates inhabiting subterranean habitats — International Journal of Speleology",
+        "fr": "Tolérance au froid des invertébrés terrestres des habitats souterrains — International Journal of Speleology"
+      },
+      "url": "https://digitalcommons.usf.edu/ijs/vol43/iss3/3/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The experimental table reports lower lethal temperatures for two summer and two winter Anophthalmus hitleri specimens."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 16,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red List of beetles — Official Gazette of the Republic of Slovenia, 2002",
+        "fr": "Liste rouge des coléoptères — Journal officiel de la République de Slovénie, 2002"
+      },
+      "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2002-01-4055?sop=2002-01-4055",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Official 2002 Slovenian Red List records Anophthalmus hitleri as V; the regulation defines V as Vulnerable."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 16,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Should offensive species names be changed? — Nature",
+        "fr": "Faut-il changer les noms scientifiques offensants? — Nature"
+      },
+      "url": "https://www.nature.com/articles/d41586-024-04200-9",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Nature’s expert interview describes collector interest and says the extent of wild-population impact is uncertain."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 15,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a narrow reddish-brown, eyeless ground beetle with long slender legs and antennae on a damp cave floor. Avoid depicting wings or daylight habitat; include a scale bar at 5 mm and a small cave-passage inset.",
+  "uncertainties": [
+    "The 5–5.5 mm range comes from Scheibel’s original species description as quoted by a German source; no reliable species-specific width, height, mass, or sex comparison was located.",
+    "Detailed diet, reproduction, and seasonal behaviour are poorly documented; keep claims about prey and life history cautious.",
+    "The Slovenian Vulnerable category cited here is from the 2002 national Red List; it is not a recent global IUCN assessment. Reports of collector interest do not quantify population impact."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked the original 1937 description as quoted in German, a Slovenian university cave-fauna study, a Slovenian subterranean-biodiversity exhibition, the Slovenian official Red List, and a Nature expert interview. Conservation claims distinguish documented status from uncertain collection impacts."
+}

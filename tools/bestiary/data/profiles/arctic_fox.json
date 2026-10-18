@@ -1,0 +1,143 @@
+{
+  "id": "arctic_fox",
+  "scientific": "Vulpes lagopus",
+  "group": "mammals",
+  "name": {
+    "en": "Arctic fox",
+    "fr": "Renard arctique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Arctic fox is a small northern canid whose circumpolar range follows treeless tundra from North America and Greenland across Eurasia to Iceland and other Arctic islands. Compact proportions, dense fur and furry feet help it remain active through severe winters.",
+      "fr": "Le renard arctique est un petit canidé dont l’aire circumpolaire suit la toundra, de l’Amérique du Nord et du Groenland à l’Eurasie, l’Islande et d’autres îles arctiques. Son corps compact, sa fourrure dense et ses pieds velus l’aident durant les hivers rigoureux."
+    },
+    "identification": {
+      "en": "Short ears, a short muzzle, low-set legs and a very full tail give it a rounded outline. Most foxes moult between a brownish summer coat and thick white winter fur; the blue morph stays charcoal or brown-grey year-round, lightening somewhat in winter. Fur also covers the foot soles. The Norwegian Polar Institute reports a body length of about 60 cm plus a tail near 30 cm, and a body mass of 2.5–5 kg. The account gives no sex-specific adult range or body width.",
+      "fr": "Ses oreilles courtes, son museau bref, ses pattes basses et sa queue fournie lui donnent une silhouette arrondie. La plupart muent entre pelage estival brunâtre et fourrure blanche épaisse en hiver ; la forme bleue reste charbonnée ou brun-gris toute l’année et s’éclaircit en hiver. Les plantes des pieds sont velues. Le Norwegian Polar Institute indique une longueur corporelle d’environ 60 cm, plus une queue proche de 30 cm, et une masse de 2,5 à 5 kg. La fiche ne distingue pas les adultes selon le sexe et ne donne pas de largeur corporelle."
+    },
+    "habitat": {
+      "en": "It occupies Arctic and alpine tundra, from inland valleys to coasts, barren islands and, seasonally, sea ice. Dens are excavated in raised, well-drained ground and may be reused for generations. In Svalbard, foxes range from mountain ridges to shorelines and drifting ice.",
+      "fr": "Il fréquente la toundra arctique et alpine, des vallées aux côtes, îles dénudées et, selon la saison, banquise. Les terriers sont creusés dans des terrains surélevés et bien drainés ; certaines tanières servent des générations. Au Svalbard, les renards parcourent crêtes, rivages et glace dérivante."
+    },
+    "diet": {
+      "en": "Food changes with place and season. Inland lemming foxes depend heavily on cyclic lemmings and voles; coastal foxes also take seabirds, eggs, fish, marine carrion and terrestrial prey. Berries and cached food add variety. Coastal supplies peak in summer and become scarcer in winter.",
+      "fr": "L’alimentation change selon le lieu et la saison. À l’intérieur, les renards à lemmings dépendent des cycles de lemmings et campagnols ; sur les côtes, ils prennent aussi oiseaux marins, œufs, poissons, charognes et proies terrestres. Baies et réserves complètent le régime. Les ressources côtières abondent en été puis diminuent."
+    },
+    "behavior": {
+      "en": "Breeding pairs defend territories around dens, but Arctic foxes can roam widely when food is scarce and travel over sea ice. They scavenge as well as hunt, and may hide surplus food among rocks or in dens. Outside the breeding season, individuals often forage alone.",
+      "fr": "Les couples reproducteurs défendent un territoire autour de leur tanière, mais les renards arctiques parcourent de grandes distances quand la nourriture manque et voyagent sur la banquise. Ils chassent et récupèrent des charognes ; ils cachent parfois leurs surplus parmi rochers ou terriers. Hors reproduction, ils cherchent souvent seuls leur nourriture."
+    },
+    "reproduction": {
+      "en": "Mating generally occurs in late winter or early spring; after about 52–54 days, pups are born in a den in May or June. They first emerge at three to four weeks and are weaned around four to six weeks. Litter size responds strongly to food: inland lemming populations fluctuate more than coastal ones.",
+      "fr": "L’accouplement a généralement lieu en fin d’hiver ou début de printemps ; après environ 52 à 54 jours, les petits naissent au terrier en mai ou juin. Ils en sortent vers trois ou quatre semaines et sont sevrés vers quatre à six semaines. La taille des portées dépend de la nourriture : elle varie davantage à l’intérieur qu’aux côtes."
+    },
+    "ecology": {
+      "en": "As both predator and scavenger, the fox links tundra and marine food webs. Inland populations follow rodent cycles, while coastal populations can use seabird colonies and reindeer carcasses; these alternative foods can stabilize numbers. Predation may affect ground-nesting birds, with effects depending on local prey and conditions.",
+      "fr": "Prédateur et charognard, le renard relie les réseaux alimentaires de la toundra et de la mer. Les populations intérieures suivent les cycles des rongeurs ; celles des côtes exploitent parfois colonies d’oiseaux marins et carcasses de rennes, pouvant stabiliser leurs effectifs. La prédation peut affecter les oiseaux nichant au sol, selon les proies et conditions locales."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment, last assessed in 2023 and published in 2025, lists the species as Least Concern. This broad category masks sharp regional differences: the 2021 Norwegian Red List classified mainland Norway’s population as Critically Endangered, while Svalbard’s was Least Concern. Fennoscandian populations receive intensive conservation measures.",
+      "fr": "L’évaluation mondiale de l’UICN, réalisée en 2023 et publiée en 2025, classe l’espèce en Préoccupation mineure. Cette catégorie masque des différences régionales : la Liste rouge norvégienne de 2021 classait la population continentale en danger critique, celle du Svalbard en Préoccupation mineure. Les populations de Fennoscandie bénéficient de mesures de conservation intensives."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Arctic Fox Species Profile",
+        "fr": "Profil de l’espèce : renard arctique"
+      },
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=arcticfox.printerfriendly",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Deux mues annuelles; forme blanche à pelage estival brun et hiver blanc, forme bleue restant sombre.",
+        "En Alaska, petits rongeurs, oiseaux marins, baies, œufs et charognes; réserves cachées; mobilité sur la banquise.",
+        "Dans le nord de l’Amérique, accouplement au début du printemps, gestation de 52 jours, émergence des petits vers trois semaines et sevrage vers six semaines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arctic fox – Norwegian Polar Institute",
+        "fr": "Renard arctique – Institut polaire norvégien"
+      },
+      "url": "https://npolar.no/en/species/arctic-fox/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology",
+        "habitat",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Répartition circumpolaire; morphes blancs et bleus; habitat de toundra.",
+        "Écotypes intérieurs dépendants des cycles de lemmings et écotypes côtiers généralistes; portées plus variables à l’intérieur.",
+        "Prédateur et charognard; couples territoriaux en période de reproduction.",
+        "Faibles effectifs régionaux en Fennoscandie comparés à la vaste aire mondiale.",
+        "About 60 cm body length, 30 cm tail, 2.5–5 kg; no adult sex-specific range is given."
+      ]
+    },
+    {
+      "title": {
+        "en": "Vulpes lagopus – Animal Diversity Web",
+        "fr": "Vulpes lagopus – Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Vulpes_lagopus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Présence dans les toundras arctiques d’Eurasie, d’Amérique du Nord, du Groenland et d’Islande; régime opportuniste incluant petits mammifères et ressources marines en hiver."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arctic fox – MOSJ environmental monitoring",
+        "fr": "Renard arctique – suivi environnemental MOSJ"
+      },
+      "url": "https://mosj.no/en/indikator/fauna/terrestrial-fauna/arctic-fox/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "La Liste rouge norvégienne 2021 classe la population continentale en danger critique et celle du Svalbard en préoccupation mineure.",
+        "Les carcasses de rennes et colonies d’oiseaux marins influencent reproduction et dynamique au Svalbard."
+      ]
+    },
+    {
+      "title": {
+        "en": "Vulpes lagopus – IUCN Red List, global assessment",
+        "fr": "Vulpes lagopus – Liste rouge de l’UICN, évaluation mondiale"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-1.RLTS.T899A223595394.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "L’extrait consulté de la fiche indique une évaluation mondiale datée du 1er février 2023, publiée en 2025, catégorie Préoccupation mineure; la fiche complète refusait l’accès direct (403)."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Arctic fox, sex unspecified, white winter coat, accurate compact natural morphology, standing in three-quarter side view on a PURE WHITE background.",
+  "uncertainties": [
+    "The full IUCN page returned HTTP 403; its search-indexed result supplied the 2023 global assessment date and Least Concern category, but not a population trend. Regional categories cited here refer to different assessment scopes and dates.",
+    "Litter size, food use and population fluctuations differ between inland lemming-dependent and coastal populations; no single local pattern represents the entire species."
+  ],
+  "reviewed": true,
+  "review_note": "Independent full EN/FR/source coherence critique passed; French punctuation normalized. Existing accepted individual illustration retained."
+}

@@ -1,0 +1,142 @@
+{
+  "id": "bradypus_variegatus",
+  "scientific": "Bradypus variegatus",
+  "group": "mammals",
+  "name": {
+    "en": "Brown-throated Three-toed Sloth",
+    "fr": "Paresseux à gorge brune"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread Central and South American tree sloth belongs to Bradypus, the three-toed sloth genus; all four limbs bear three long claws.",
+      "fr": "Ce paresseux arboricole répandu en Amérique centrale et du Sud appartient à Bradypus, le genre des paresseux tridactyles ; ses quatre membres portent trois longues griffes."
+    },
+    "identification": {
+      "en": "Adults average about 58 cm long and 4.6 kg; a brown throat and face, long limbs and coarse green-tinged fur help identify it.",
+      "fr": "Les adultes mesurent environ 58 cm et pèsent 4,6 kg en moyenne ; la gorge et le visage bruns, les longs membres et le pelage rêche parfois verdâtre aident à l’identifier."
+    },
+    "habitat": {
+      "en": "It lives mainly in the canopy of tropical and subtropical forests, including rain forest, dry forest and swamp forest.",
+      "fr": "Il vit surtout dans la canopée des forêts tropicales et subtropicales, notamment pluviales, sèches et marécageuses."
+    },
+    "diet": {
+      "en": "It is a strict herbivore, browsing leaves, flowers and fruit, often from Cecropia trees; plants provide much of its water.",
+      "fr": "Il est strictement herbivore et broute feuilles, fleurs et fruits, souvent sur des Cecropia ; les plantes lui apportent une grande part de son eau."
+    },
+    "behavior": {
+      "en": "Slow movement and algae growing in the fur provide camouflage; it can swim and only occasionally descends to the ground.",
+      "fr": "Ses déplacements lents et les algues de son pelage le camouflent ; il sait nager et ne descend qu’occasionnellement au sol."
+    },
+    "reproduction": {
+      "en": "Females generally give birth to one young after roughly six months of gestation, and the young clings to its mother while developing.",
+      "fr": "Les femelles mettent généralement bas un seul petit après environ six mois de gestation ; celui-ci reste accroché à sa mère pendant son développement."
+    },
+    "ecology": {
+      "en": "It shares Bradypus with B. tridactylus and the more restricted B. torquatus; B. variegatus and B. tridactylus overlap near Manaus and documented hybrids caution against oversimplified identification.",
+      "fr": "Il partage Bradypus avec B. tridactylus et B. torquatus, à aire plus restreinte ; B. variegatus et B. tridactylus se rencontrent près de Manaus et des hybrides documentés invitent à la prudence."
+    },
+    "conservation": {
+      "en": "Globally assessed as Least Concern, it can still face local forest loss, road mortality, capture for pets and disturbance by tourism.",
+      "fr": "Classé en préoccupation mineure dans le monde, il peut néanmoins souffrir localement de déforestation, de collisions routières, de capture pour le commerce d’animaux et de dérangement touristique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bradypus variegatus — Brazilian national extinction-risk assessment, ICMBio",
+        "fr": "Bradypus variegatus — Évaluation brésilienne du risque d’extinction, ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/assuntos/centros-de-pesquisa/primatas-brasileiros/arquivos/fichas_xenathra/fichas_2019_2021/cingulata/dasypodidae/pilosa/bradypodidae/ficha-bradypus-variegatus.pdf",
+      "supports": [
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "ICMBio documents morphology, reproduction, close Bradypus relatives and hybridization in Brazil."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 11,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bradypus variegatus — Animal Diversity Web",
+        "fr": "Bradypus variegatus — Animal Diversity Web (fiche en anglais)"
+      },
+      "url": "https://animaldiversity.org/accounts/Bradypus_variegatus/",
+      "supports": [
+        "diet",
+        "behavior",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "University species account describes geographic range, tropical forest habitats, canopy life, diet, morphology and swimming."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 15,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bradypus variegatus — IUCN Red List assessment",
+        "fr": "Bradypus variegatus — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T3038A210442893.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Red List page identifies Least Concern as the global category and gives 2022 as the latest assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 18,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Gestation and lifespan vary in the source literature and are not equally measured across populations.",
+    "The ICMBio document summarizes earlier threat assessments; local pressures differ by region."
+  ],
+  "review_note": "Cross-checked ICMBio’s Portuguese assessment and Animal Diversity Web. Named B. tridactylus and B. torquatus as close congeners; qualified shared data.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,191 @@
+{
+  "id": "ceratina_cyanea",
+  "scientific": "Ceratina cyanea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Blue Carpenter Bee",
+    "fr": "Cératine bleue"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small, metallic blue-black carpenter bee occurs across much of Europe and is a solitary stem-nesting bee, unlike the much larger wood-boring Xylocopa carpenter bees.",
+      "fr": "Cette petite abeille charpentière bleu-noir métallique vit dans une grande partie de l’Europe et niche dans les tiges ; elle est différente des grands xylocopes qui forent le bois."
+    },
+    "identification": {
+      "en": "It is only about 7–9 mm long; the male usually has a pale clypeus while the female’s is dark, and its compact metallic body separates it from larger Xylocopa.",
+      "fr": "Elle ne mesure qu’environ 7 à 9 mm ; le clypéus du mâle est généralement pâle, celui de la femelle sombre, et son petit corps métallique la distingue des grands Xylocopa."
+    },
+    "habitat": {
+      "en": "It frequents sunny flower-rich places where dead pithy stems remain available for nesting, including bramble, mullein and other hollow or soft-centred plants.",
+      "fr": "Elle fréquente les lieux ensoleillés riches en fleurs où subsistent des tiges mortes à moelle, notamment des ronces, molènes et autres plantes creuses ou tendres."
+    },
+    "diet": {
+      "en": "The females collect pollen from many plant families rather than relying on one host flower, and adults also take nectar.",
+      "fr": "Les femelles récoltent le pollen de nombreuses familles végétales au lieu de dépendre d’une seule fleur, et les adultes consomment également du nectar."
+    },
+    "behavior": {
+      "en": "Females excavate a linear nest tunnel in a pithy stem; adults overwinter in stems, and the species is usually solitary, although social nesting occurs in some other Ceratina.",
+      "fr": "Les femelles creusent un tunnel de nidification linéaire dans une tige à moelle ; les adultes hivernent dans les tiges et l’espèce est généralement solitaire, bien que d’autres Ceratina puissent nicher en groupe."
+    },
+    "reproduction": {
+      "en": "After mating in spring, a female provisions a row of brood cells with pollen and nectar for the developing larvae; the species normally has one generation per year.",
+      "fr": "Après l’accouplement au printemps, la femelle approvisionne une rangée de cellules avec du pollen et du nectar pour les larves ; l’espèce produit normalement une génération par an."
+    },
+    "ecology": {
+      "en": "It is a close European congener of C. cucurbitina: German bee specialists note that C. cyanea appears earlier and is metallic, whereas C. cucurbitina lacks that metallic sheen.",
+      "fr": "C’est une proche congénère européenne de C. cucurbitina : des spécialistes allemands des abeilles indiquent que C. cyanea apparaît plus tôt et brille d’un éclat métallique absent chez C. cucurbitina."
+    },
+    "conservation": {
+      "en": "The European Red List assesses it as Least Concern; retaining dead hollow stems in sunny sites nevertheless supports its nesting opportunities.",
+      "fr": "La Liste rouge européenne la classe en préoccupation mineure ; conserver des tiges mortes creuses dans les lieux ensoleillés maintient toutefois des possibilités de nidification."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ceratina cyanea — Wildbienen (German wild bee specialist)",
+        "fr": "Ceratina cyanea — Wildbienen (spécialiste allemand des abeilles sauvages)"
+      },
+      "url": "https://www.wildbienen.de/eb-ccyan.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Expert account documents body size, sexual difference, nesting stems, pollen range, overwintering and comparison with C. cucurbitina."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ceratina cyanea, blue carpenter bee — Fraction d’instant",
+        "fr": "Ceratina cyanea, abeille charpentière bleue — Fraction d’instant"
+      },
+      "url": "https://fractiondinstant.fr/ceratina-cyanea/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "French natural-history account records 7–9 mm body size and nesting in dead bramble, euphorbia and vine stems."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "European Red List of Bees — IUCN",
+        "fr": "Liste rouge européenne des abeilles — UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "European assessment table lists Ceratina cyanea as Least Concern."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evidence of sociality in European small carpenter bees — Apidologie",
+        "fr": "Indices de sociabilité chez les petites abeilles charpentières européennes — Apidologie"
+      },
+      "url": "https://doi.org/10.1007/s13592-022-00931-8",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study shows facultative social nesting occurs in some Ceratina species, not as a universal genus trait."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The behavioral study of facultative sociality concerns other Ceratina species; it is included to distinguish genus-level exceptions from the usual solitary account of C. cyanea."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an expert German species profile, French field account, European IUCN Red List and peer-reviewed study of sociality in congeners; compared explicitly with C. cucurbitina and Xylocopa."
+}

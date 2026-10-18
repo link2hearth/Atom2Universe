@@ -1,0 +1,167 @@
+{
+  "id": "sula_granti",
+  "scientific": "Sula granti",
+  "group": "birds",
+  "name": {
+    "en": "Nazca Booby",
+    "fr": "Fou de Grant"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Nazca booby is an eastern Pacific seabird, now recognized as distinct from the masked booby.",
+      "fr": "Le Fou de Grant est un oiseau marin du Pacifique oriental, aujourd’hui reconnu comme distinct du Fou masqué."
+    },
+    "identification": {
+      "en": "Adults are mostly white with dark wings and tail; the orange-pink bill helps distinguish it from the yellow-billed masked booby.",
+      "fr": "Les adultes sont surtout blancs, avec les ailes et la queue sombres ; le bec orange rosé aide à le distinguer du Fou masqué au bec jaune."
+    },
+    "habitat": {
+      "en": "It forages over tropical open ocean and breeds on remote islands, including the Galápagos.",
+      "fr": "Il cherche sa nourriture au-dessus des eaux tropicales du large et niche sur des îles éloignées, notamment aux Galápagos."
+    },
+    "diet": {
+      "en": "It is a fish-eating predator that catches prey by plunging into the sea.",
+      "fr": "C’est un prédateur piscivore qui capture ses proies en plongeant dans la mer."
+    },
+    "behavior": {
+      "en": "It spends much of its time at sea and returns to islands to breed.",
+      "fr": "Il passe une grande partie de son temps en mer et revient sur les îles pour se reproduire."
+    },
+    "reproduction": {
+      "en": "It nests on open ground or cliffs on oceanic islands.",
+      "fr": "Il niche au sol dégagé ou sur des falaises d’îles océaniques."
+    },
+    "ecology": {
+      "en": "The Nazca booby was formerly treated as a subspecies of the masked booby; studies support its recognition as a separate species.",
+      "fr": "Le Fou de Grant était autrefois traité comme une sous-espèce du Fou masqué ; des études appuient sa reconnaissance comme espèce distincte."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern, while reporting a decreasing population trend.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en Préoccupation mineure, tout en signalant une tendance démographique à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nazca Booby — IUCN Red List assessment",
+        "fr": "Nazca Booby — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22728990A132659882.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 global assessment lists Least Concern and a decreasing trend; range is the eastern Pacific."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 16,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Galapagos Species Database — Charles Darwin Foundation",
+        "fr": "Galapagos Species Database — Charles Darwin Foundation"
+      },
+      "url": "https://datazone.darwinfoundation.org/en/checklist/?species=16141",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Taxonomic history, accepted species status, piscivory and breeding throughout the Galápagos archipelago."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 12,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nazca Booby — Oiseaux.net",
+        "fr": "Nazca Booby — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/nazca.booby.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Species account documents pelagic habitat, island nesting and plunge-diving diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 10,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meet the Booby Family — Smithsonian Ocean",
+        "fr": "Meet the Booby Family — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/seabirds/meet-booby-family",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Nazca and masked boobies resemble one another; the Nazca typically has a more orange-pink bill."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 15,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The global assessment cited is the 2018 assessment; local Galápagos or national categories can differ."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomic distinction is cross-checked against the Charles Darwin Foundation species database; conservation wording is explicitly global and dated."
+}

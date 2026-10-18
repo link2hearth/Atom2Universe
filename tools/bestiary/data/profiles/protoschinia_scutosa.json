@@ -1,0 +1,144 @@
+{
+  "id": "protoschinia_scutosa",
+  "scientific": "Protoschinia scutosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Spotted clover moth",
+    "fr": "Noctuelle de la luzerne"
+  },
+  "sections": {
+    "overview": {
+      "en": "Protoschinia scutosa is a noctuid moth found across warm parts of the Holarctic, with occasional records farther north.",
+      "fr": "Protoschinia scutosa est une noctuelle présente dans les régions chaudes de l’Holarctique, avec des observations occasionnelles plus au nord."
+    },
+    "identification": {
+      "en": "It is a member of Noctuidae. Specialist moth accounts use both Protoschinia scutosa and Schinia scutosa for this species.",
+      "fr": "Elle appartient aux Noctuidae. Des sources spécialisées emploient pour cette espèce les noms Protoschinia scutosa et Schinia scutosa."
+    },
+    "habitat": {
+      "en": "It is associated with warm, dry habitats, including steppe-like areas with Artemisia.",
+      "fr": "Elle est associée aux milieux chauds et secs, notamment aux steppes où poussent des armoises."
+    },
+    "diet": {
+      "en": "The caterpillars feed mainly on Artemisia (mugworts and wormwoods), in the daisy family.",
+      "fr": "Les chenilles se nourrissent surtout d’Artemisia (armoise et absinthe), des plantes de la famille des Astéracées."
+    },
+    "behavior": {
+      "en": "Adults may fly in several generations from spring to autumn in parts of its range; timing varies with region and climate.",
+      "fr": "Dans certaines régions, les adultes peuvent voler en plusieurs générations du printemps à l’automne; le calendrier varie selon la région et le climat."
+    },
+    "reproduction": {
+      "en": "The reviewed sources describe the larval host plants but do not give a consistent species-wide account of egg laying or overwintering.",
+      "fr": "Les sources examinées décrivent les plantes hôtes des chenilles, mais ne donnent pas de synthèse cohérente sur la ponte ou l’hivernation à l’échelle de l’espèce."
+    },
+    "ecology": {
+      "en": "Its caterpillars depend chiefly on mugworts and wormwoods, linking the moth to open, dry plant communities where these hosts grow.",
+      "fr": "Ses chenilles dépendent surtout des armoises, ce qui relie la noctuelle aux milieux ouverts et secs où poussent ces plantes hôtes."
+    },
+    "conservation": {
+      "en": "The sources consulted do not provide a global conservation assessment for this moth.",
+      "fr": "Les sources consultées ne fournissent pas d’évaluation mondiale de conservation pour cette noctuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Protoschinia — European Lepidoptera and their ecology",
+        "fr": "Protoschinia — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://www.pyrgus.de/Protoschinia_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The account gives the broad warm-range distribution, dry Artemisia-steppe habitat, host plants and variable multi-generation flight period."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 17,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Protoschinia scutosa — LepiWiki",
+        "fr": "Protoschinia scutosa — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Protoschinia_scutosa",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The German specialist reference lists the species under Protoschinia and gives Schinia scutosa as an alternative combination."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 17,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Database of Insects and their Food Plants: Protoschinia scutosa",
+        "fr": "Base de données des insectes et de leurs plantes hôtes : Protoschinia scutosa"
+      },
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=5292&insectid=7146",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The British database records one historical larval host association, flagged as unreliable; it is not used for the main host-plant statement."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight periods and the number of generations vary geographically; global conservation status was not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Host-plant claim comes from a specialist ecological account; a historical database interaction flagged unreliable was not treated as established."
+}

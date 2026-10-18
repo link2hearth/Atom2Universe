@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="zc_title">Infinite Canvas</string>
+    <string name="zc_library_empty">No infinite canvas yet.\nCreate one, draw, then zoom in to draw inside your drawing.</string>
+    <string name="zc_untitled_n">Canvas %1$d</string>
+    <string name="zc_new_title">New infinite canvas</string>
+    <string name="zc_name">Name</string>
+    <string name="zc_project_info">%1$s · %2$s · %3$s</string>
+    <string name="zc_create">Create</string>
+    <string name="zc_open_failed">Couldn\'t open this canvas</string>
+    <string name="zc_level">Level %1$s</string>
+    <string name="zc_layers_title">Drawn layers</string>
+    <string name="zc_layers_none">Nothing drawn yet.</string>
+    <string name="zc_layers_hint">Zooming is enough to go from one layer to the next: each one is %1$d times smaller than the one above.</string>
+    <string name="zc_tool_pen">Pencil</string>
+    <string name="zc_tool_brush">Brush</string>
+    <string name="zc_tool_marker">Marker</string>
+    <string name="zc_less">Less</string>
+    <string name="zc_more">More</string>
+    <string name="zc_zoom_lock">Lock the zoom</string>
+    <string name="zc_zoom_unlock">Unlock the zoom</string>
+    <string name="zc_tool_eraser">Eraser</string>
+    <string name="zc_tool_hand">Move the view</string>
+    <string name="zc_tool_move_layer">Realign the layer below</string>
+    <string name="zc_move_layer_hint">Drag to slide the layer below (and everything inside it) under this one.</string>
+    <string name="zc_no_layer_below">Nothing to realign: there is no drawing in the layer below yet.</string>
+    <plurals name="zc_layers_count">
+        <item quantity="one">%1$d layer</item>
+        <item quantity="other">%1$d layers</item>
+    </plurals>
+    <string name="zc_tool_select">Select and edit</string>
+    <string name="zc_import_image">Import an image</string>
+    <string name="zc_import_failed">Couldn\'t open this image</string>
+    <string name="zc_deselect">Deselect</string>
+    <plurals name="zc_items_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="zc_tool_text">Text</string>
+    <string name="zc_text_title">Text</string>
+    <string name="zc_text_edit">Edit the text</string>
+    <string name="zc_font">Font</string>
+    <string name="zc_font_default">Default</string>
+    <string name="zc_bold">Bold</string>
+    <string name="zc_italic">Italic</string>
+    <string name="zc_duplicate">Duplicate</string>
+    <string name="zc_recolor">Apply the colors</string>
+    <string name="zc_order_front">Bring to front</string>
+    <string name="zc_order_forward">Bring forward</string>
+    <string name="zc_order_backward">Send backward</string>
+    <string name="zc_order_back">Send to back</string>
+    <string name="zc_order_position">%1$d / %2$d</string>
+    <string name="zc_eraser_edit_done">Done</string>
+    <!-- Le « Canvas » : la même toile, une seule couche -->
+    <string name="cv_library_empty">No canvas yet.\nCreate one, then draw, write and slide the view as far as you like: there are no edges.</string>
+    <string name="cv_view_title">View</string>
+    <string name="cv_zoom_reset">Reset the zoom</string>
+    <string name="cv_fit_content">Fit to the drawing</string>
+    <string name="cv_grid">Grid</string>
+    <string name="cv_export_view">Save the view as an image</string>
+    <string name="cv_new_title">New canvas</string>
+    <!-- La couche de pixels du « Canvas » -->
+    <string name="cv_tool_pixels">Pixel layer</string>
+    <string name="cv_tool_pixel_pen">Pixel brush</string>
+    <string name="cv_tool_pixel_eraser">Pixel eraser</string>
+    <string name="cv_pixels_behind">Pixels behind</string>
+    <string name="cv_pixels_front">Pixels in front</string>
+    <string name="cv_pixels_to_behind">Put the pixels behind the drawing</string>
+    <string name="cv_pixels_to_front">Put the pixels in front of the drawing</string>
+    <string name="cv_pixel_grid">Pixel grid</string>
+    <string name="cv_pixel_snap">Snap the zoom to the pixels</string>
+    <string name="cv_project_info">%1$s · %2$s</string>
+</resources>

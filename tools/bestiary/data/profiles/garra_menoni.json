@@ -1,0 +1,186 @@
+{
+  "id": "garra_menoni",
+  "scientific": "Garra menoni",
+  "group": "fish",
+  "name": {
+    "en": "Menon’s Garra",
+    "fr": "Garra de Menon"
+  },
+  "sections": {
+    "overview": {
+      "en": "Garra menoni is a small cyprinid described in 1984 from the Kunthi River in Kerala’s Silent Valley, India. The Catalog of Fishes confirms it as a valid species.",
+      "fr": "Garra menoni est un petit cyprinidé décrit en 1984 dans la rivière Kunthi, dans la vallée de Silent Valley au Kerala, en Inde. Le Catalog of Fishes confirme sa validité comme espèce."
+    },
+    "identification": {
+      "en": "The type description notes a developed adhesive mental disc, two pairs of short barbels and 32–36 lateral-line scales.",
+      "fr": "La description originale signale un disque adhésif mentonnier développé, deux paires de courts barbillons et 32 à 36 écailles sur la ligne latérale."
+    },
+    "habitat": {
+      "en": "It inhabits freshwater mountain streams; the original specimens came from the forested Kunthi River in the Western Ghats.",
+      "fr": "Elle vit dans les cours d’eau de montagne ; les spécimens originaux provenaient de la rivière forestière Kunthi, dans les Ghâts occidentaux."
+    },
+    "diet": {
+      "en": "The species accounts consulted do not report a diet or prey list specific to G. menoni.",
+      "fr": "Les fiches consultées ne donnent ni régime ni liste de proies propres à G. menoni."
+    },
+    "behavior": {
+      "en": "FishBase classifies it as benthopelagic, but detailed species-specific behavior is poorly documented.",
+      "fr": "FishBase la classe comme benthopélagique, mais son comportement propre est peu documenté."
+    },
+    "reproduction": {
+      "en": "The reviewed species-level sources do not describe spawning or parental care.",
+      "fr": "Les sources spécifiques à l’espèce examinées ne décrivent ni la ponte ni les soins parentaux."
+    },
+    "ecology": {
+      "en": "The 1984 authors compared it with Garra mullya and G. lissorhynchus, distinguishing the new species by its morphology.",
+      "fr": "Les auteurs de 1984 l’ont comparée à Garra mullya et G. lissorhynchus, distinguant la nouvelle espèce par sa morphologie."
+    },
+    "conservation": {
+      "en": "FishBase displays Vulnerable (D2) from a 2010 assessment; this dated category should not be treated as a current reassessment.",
+      "fr": "FishBase affiche la catégorie Vulnérable (D2), issue d’une évaluation de 2010 ; cette donnée datée ne constitue pas une réévaluation récente."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Garra menoni, a new cyprinid fish from Silent Valley — Zoological Survey of India",
+        "fr": "Garra menoni, a new cyprinid fish from Silent Valley — Zoological Survey of India"
+      },
+      "url": "https://faunaofindia.nic.in/PDFVolumes/bulletin/005/02-03/index.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Original 1984 description gives type locality, morphology and comparisons with G. mullya and G. lissorhynchus."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Garra menoni summary — FishBase",
+        "fr": "Garra menoni summary — FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/Garra_menoni.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports size, Indian distribution, mountain-stream habitat, benthopelagic ecology and a 2010 IUCN status."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Garra menoni — Catalog of Fishes",
+        "fr": "Garra menoni — Catalog of Fishes"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Garra&tbl=species",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Eschmeyer’s catalog confirms valid status and the Kunthi River type locality."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Diet and reproductive biology are not described in the sources reviewed; the FishBase conservation assessment is dated 2010."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The original description compares the taxon with Garra mullya and G. lissorhynchus; no matching profiles from those species were located in the catalog."
+}

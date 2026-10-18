@@ -1,0 +1,186 @@
+{
+  "id": "heliothis_peltigera",
+  "scientific": "Heliothis peltigera",
+  "group": "invertebrates",
+  "name": {
+    "en": "Bordered Straw",
+    "fr": "Noctuelle peltigère"
+  },
+  "sections": {
+    "overview": {
+      "en": "This noctuid migrates to Britain; arrivals vary greatly by year. The Belgian catalogue also describes it as a rare migrant there.",
+      "fr": "Cette noctuelle migre en Grande-Bretagne ; les arrivées varient beaucoup selon les années. Le catalogue belge la décrit également comme une migratrice rare dans ce pays."
+    },
+    "identification": {
+      "en": "The adult is variable in appearance; the British field account gives a wingspan of 34–42 mm.",
+      "fr": "L’aspect de l’adulte est variable ; la fiche britannique indique une envergure de 34–42 mm."
+    },
+    "habitat": {
+      "en": "A German species account associates it with warm, dry places that have abundant herbaceous vegetation.",
+      "fr": "Une fiche allemande l’associe aux milieux chauds et secs riches en végétation herbacée."
+    },
+    "diet": {
+      "en": "The caterpillars feed on several herbaceous plants, including marigolds in the genus Calendula.",
+      "fr": "Les chenilles consomment plusieurs plantes herbacées, notamment des soucis du genre Calendula."
+    },
+    "behavior": {
+      "en": "In Britain, the main arrival period is June to August, while large influxes do not occur every year.",
+      "fr": "En Grande-Bretagne, les arrivées principales ont lieu de juin à août, mais les afflux importants ne se produisent pas chaque année."
+    },
+    "reproduction": {
+      "en": "The British account notes that caterpillars are often found in good migration years, especially in southern coastal districts.",
+      "fr": "La fiche britannique indique que les chenilles sont souvent observées lors des bonnes années migratoires, surtout sur les côtes du sud."
+    },
+    "ecology": {
+      "en": "Its polyphagous larvae use wild and cultivated herbaceous hosts, including garden marigolds.",
+      "fr": "Ses chenilles polyphages utilisent des plantes herbacées sauvages ou cultivées, dont les soucis de jardin."
+    },
+    "conservation": {
+      "en": "A Belgian catalogue calls it a rare migrant locally; this regional description is not a global threat category.",
+      "fr": "Un catalogue belge la qualifie de migratrice rare dans la région ; cette description locale n’est pas une catégorie mondiale de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bordered Straw — UKMoths",
+        "fr": "Noctuelle peltigère — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/heliothis-peltigera/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "British account covers appearance, size, migration and host plants."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Heliothis peltigera — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Heliothis peltigera — catalogue des lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/3909/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian catalogue supplies common names in several languages and calls the species a widespread but rare migrant in Belgium."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Bilsenkraut-Blüteneule — Naturspektrum",
+        "fr": "Noctuelle peltigère — Naturspektrum"
+      },
+      "url": "https://www.naturspektrum.de/db/m_spezies.php?art=heliothis_peltigera",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "German species account describes warm dry habitat with herbaceous vegetation."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Migration and abundance statements refer to northern Europe; they do not imply that populations are absent in years without large influxes."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Separated regional migration records from the species’ broader ecology and conservation status."
+}

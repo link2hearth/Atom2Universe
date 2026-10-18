@@ -1,0 +1,142 @@
+{
+  "id": "stygiomedusa_gigantea",
+  "scientific": "Stygiomedusa gigantea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Giant phantom jelly",
+    "fr": "Méduse fantôme géante"
+  },
+  "sections": {
+    "overview": {
+      "en": "The giant phantom jelly is a large scyphozoan of the deep open ocean.",
+      "fr": "La méduse fantôme géante est une grande scyphozoaire de la haute mer profonde."
+    },
+    "identification": {
+      "en": "Its bell can exceed one metre across, with four ribbon-like oral arms reaching about ten metres.",
+      "fr": "Sa cloche peut dépasser un mètre de diamètre et ses quatre bras buccaux rubanés atteindre environ dix mètres."
+    },
+    "habitat": {
+      "en": "It has been observed from near the surface to about 6700 metres, across oceans except the Arctic.",
+      "fr": "Elle a été observée de la surface jusqu’à environ 6700 mètres, dans les océans sauf l’Arctique."
+    },
+    "diet": {
+      "en": "Its likely prey include plankton and small fishes, which its broad oral arms can hold.",
+      "fr": "Ses proies probables comprennent le plancton et de petits poissons, retenus par ses larges bras buccaux."
+    },
+    "behavior": {
+      "en": "It is rarely seen; a 2019 dataset compiled just over a century of sparse observations.",
+      "fr": "Elle est rarement observée ; un jeu de données de 2019 rassemble un peu plus d’un siècle de signalements dispersés."
+    },
+    "reproduction": {
+      "en": "The consulted field accounts do not describe its reproductive cycle.",
+      "fr": "Les fiches naturalistes consultées ne décrivent pas son cycle reproductif."
+    },
+    "ecology": {
+      "en": "A fish has been filmed sheltering among its oral arms, an unusual deep-sea association.",
+      "fr": "Un poisson a été filmé à l’abri parmi ses bras buccaux, une association inhabituelle des grands fonds."
+    },
+    "conservation": {
+      "en": "The sources describe its rarity of observation but provide no global threat assessment.",
+      "fr": "Les sources signalent sa rareté d’observation, mais ne donnent pas d’évaluation mondiale des menaces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "MBARI — Giant phantom jelly",
+        "fr": "MBARI — Méduse fantôme géante"
+      },
+      "url": "https://www.mbari.org/animal/giant-phantom-jelly/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "MBARI gives body and arm dimensions, depth and ocean range, likely diet, and observations of a fish associating with the jelly."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 21,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "OBIS — In situ observations of Stygiomedusa gigantea",
+        "fr": "OBIS — Observations in situ de Stygiomedusa gigantea"
+      },
+      "url": "https://obis.org/dataset/9dda6bd7-c159-44ba-aa3f-6c01914d7f78",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The research dataset summarizes global records collected over 1899–2009 and depth patterns; it documents observation scarcity, not a conservation rank."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 20,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "National Geographic France — Rare giant phantom jelly observation",
+        "fr": "National Geographic France — Rare observation d’une méduse fantôme géante"
+      },
+      "url": "https://www.nationalgeographic.fr/animaux/2023/02/un-specimen-rare-de-meduse-geante-apercu-en-antarctique",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French report discusses a rare Antarctic sighting and the limited knowledge of the animal; the cited field sources do not establish reproduction."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 23,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Reproductive biology and population trends remain poorly documented in the sources cited here."
+  ],
+  "review_note": "Used institutional and biodiversity-observation records plus a French-language account of a rare Antarctic sighting; avoided inferring population status from sighting counts.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

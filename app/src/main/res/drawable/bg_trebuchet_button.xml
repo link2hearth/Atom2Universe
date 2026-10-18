@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Les boutons secondaires du bandeau : un rectangle à coins arrondis, creusé dans la
+    terre plutôt que posé dessus. Le liseré vert pâle les rattache au sol.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33C8E6C0">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <solid android:color="#59101A12" />
+            <stroke
+                android:width="1dp"
+                android:color="#4C6E8C5A" />
+        </shape>
+    </item>
+</ripple>

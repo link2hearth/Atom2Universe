@@ -1,0 +1,141 @@
+{
+  "id": "sminthopsis_hirtipes",
+  "scientific": "Sminthopsis hirtipes",
+  "group": "mammals",
+  "name": {
+    "en": "Hairy-footed Dunnart",
+    "fr": "Sminthopsis hirtipes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The hairy-footed dunnart is an arid-zone marsupial of Australia in the family Dasyuridae.",
+      "fr": "Le dunnart aux pieds velus est un marsupial des zones arides d’Australie, dans la famille des Dasyuridae."
+    },
+    "identification": {
+      "en": "Fine silvery hairs fringe its broad hind feet, a useful distinction from other dunnarts.",
+      "fr": "De fins poils argentés bordent ses larges pieds postérieurs, un caractère utile pour le distinguer des autres dunnarts."
+    },
+    "habitat": {
+      "en": "It uses sandy plains and dunes with open woodland, shrubland or hummock grassland.",
+      "fr": "Il fréquente les plaines et dunes sableuses portant des boisements ouverts, des formations arbustives ou des herbes en touffes."
+    },
+    "diet": {
+      "en": "In a central Australian field study, ants were an important part of its diet.",
+      "fr": "Dans une étude de terrain menée en Australie centrale, les fourmis occupaient une place importante dans son régime."
+    },
+    "behavior": {
+      "en": "It is nocturnal; its tail stores fat when food is plentiful and can supply energy in lean periods.",
+      "fr": "Il est nocturne ; sa queue stocke des graisses lorsque la nourriture abonde et peut fournir de l’énergie pendant les périodes difficiles."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted give little detail about its breeding cycle.",
+      "fr": "Les fiches spécifiques consultées donnent peu de détails sur son cycle reproducteur."
+    },
+    "ecology": {
+      "en": "The ant-rich diet reported for this species also links it ecologically with Sminthopsis psammophila; see that profile.",
+      "fr": "Le régime riche en fourmis signalé chez cette espèce la rapproche aussi, sur le plan écologique, de Sminthopsis psammophila ; voir cette fiche."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports a global IUCN status of Least Concern.",
+      "fr": "La Mammal Diversity Database rapporte un statut mondial UICN de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sminthopsis hirtipes — Plazi TreatmentBank species account",
+        "fr": "Sminthopsis hirtipes — Plazi TreatmentBank species account"
+      },
+      "url": "https://tb.plazi.org/GgServer/html/EA7087C1FF90247DFF0BFD3B09C50480/1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The species account describes its sandy habitats, fringed silvery feet, nocturnal habits and fat-storing tail."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 15,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foragers choose high-quality habitats in lean times — Journal of Animal Ecology (PMC)",
+        "fr": "Foragers choose high-quality habitats in lean times — Journal of Animal Ecology (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4734440/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "A central Australian field study found ants to be an important diet component for both S. hirtipes and S. psammophila."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 20,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sminthopsis hirtipes — Mammal Diversity Database",
+        "fr": "Sminthopsis hirtipes — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000209/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "MDD recognizes the species and lists the global IUCN category as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 13,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific breeding details are sparse in the sources used; dietary comparison is limited to the cited central Australian study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; reciprocal comparison with S. psammophila is limited to the shared ant-rich diet reported in one field study."
+}

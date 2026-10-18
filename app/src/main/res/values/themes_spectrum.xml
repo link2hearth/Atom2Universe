@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GÉNÉRÉ par tools/theme/generate_spectrum_themes.py : ne pas modifier à la main. -->
+<!-- Les thèmes de couleur libre : 36 teintes (une tous les 10°) × 3 intensités. -->
+<resources>
+    <style name="Theme.A2U.Spectrum.Vivid.00" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D45757</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F76565</item>
+        <item name="a2uMusicAccentDim">#47272E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.01" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D45940</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F6684B</item>
+        <item name="a2uMusicAccentDim">#472827</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.02" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D25D22</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F46C27</item>
+        <item name="a2uMusicAccentDim">#47291F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.03" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#C5670A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#E5780C</item>
+        <item name="a2uMusicAccentDim">#432C18</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.04" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#AC7609</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C8890B</item>
+        <item name="a2uMusicAccentDim">#3C3018</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.05" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#967E08</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#AF9309</item>
+        <item name="a2uMusicAccentDim">#363217</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.06" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#858507</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9B9B08</item>
+        <item name="a2uMusicAccentDim">#313417</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.07" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#738A07</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#86A008</item>
+        <item name="a2uMusicAccentDim">#2C3617</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.08" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#608D08</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#70A409</item>
+        <item name="a2uMusicAccentDim">#273717</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.09" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#4C9008</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#58A809</item>
+        <item name="a2uMusicAccentDim">#213817</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.10" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#369308</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#3FAB09</item>
+        <item name="a2uMusicAccentDim">#1B3817</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.11" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#1F9508</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#24AD09</item>
+        <item name="a2uMusicAccentDim">#153917</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.12" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#089608</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09AE09</item>
+        <item name="a2uMusicAccentDim">#0E3917</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.13" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#08951F</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09AD24</item>
+        <item name="a2uMusicAccentDim">#0E391E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.14" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#089537</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09AD40</item>
+        <item name="a2uMusicAccentDim">#0E3925</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.15" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#08944D</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09AC5A</item>
+        <item name="a2uMusicAccentDim">#0E382B</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.16" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#089264</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09AA74</item>
+        <item name="a2uMusicAccentDim">#0E3831</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.17" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#08907A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09A88E</item>
+        <item name="a2uMusicAccentDim">#0E3837</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.18" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#088F8F</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#09A6A6</item>
+        <item name="a2uMusicAccentDim">#0E373D</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.19" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#098CA6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#0AA3C1</item>
+        <item name="a2uMusicAccentDim">#0F3644</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.20" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#0A88C6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#0C9EE6</item>
+        <item name="a2uMusicAccentDim">#0F354C</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.21" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#3483D3</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#3C98F5</item>
+        <item name="a2uMusicAccentDim">#1B3450</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.22" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#537ED4</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#6093F7</item>
+        <item name="a2uMusicAccentDim">#233251</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.23" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#677AD5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#788EF8</item>
+        <item name="a2uMusicAccentDim">#293151</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.24" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#7676D6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#8989F9</item>
+        <item name="a2uMusicAccentDim">#2D3051</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.25" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#8372D6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9884F9</item>
+        <item name="a2uMusicAccentDim">#312F51</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.26" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#906DD5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#A77FF8</item>
+        <item name="a2uMusicAccentDim">#342E51</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.27" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#9D66D5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#B777F8</item>
+        <item name="a2uMusicAccentDim">#382C51</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.28" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#AD5ED4</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C96DF7</item>
+        <item name="a2uMusicAccentDim">#3C2951</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.29" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#BE51D4</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#DD5EF7</item>
+        <item name="a2uMusicAccentDim">#412651</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.30" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D33AD3</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F543F5</item>
+        <item name="a2uMusicAccentDim">#471F50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.31" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D443BB</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F64EDA</item>
+        <item name="a2uMusicAccentDim">#47224A</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.32" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D44AA6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F656C1</item>
+        <item name="a2uMusicAccentDim">#472444</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.33" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D44F91</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F65CA9</item>
+        <item name="a2uMusicAccentDim">#47253E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.34" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D4527D</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F75F91</item>
+        <item name="a2uMusicAccentDim">#472638</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Vivid.35" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D4556A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F7637B</item>
+        <item name="a2uMusicAccentDim">#472733</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.00" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B47272</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#D18585</item>
+        <item name="a2uMusicAccentDim">#3E2F35</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.01" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B0756A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CD887B</item>
+        <item name="a2uMusicAccentDim">#3D3033</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.02" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#AC785E</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C88C6D</item>
+        <item name="a2uMusicAccentDim">#3C312F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.03" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#A77C50</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C2905D</item>
+        <item name="a2uMusicAccentDim">#3B322C</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.04" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#A07F3E</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#BA9448</item>
+        <item name="a2uMusicAccentDim">#393327</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.05" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#938438</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#AB9A41</item>
+        <item name="a2uMusicAccentDim">#353425</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.06" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#888834</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9E9E3C</item>
+        <item name="a2uMusicAccentDim">#323524</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.07" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#7D8B34</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#91A23D</item>
+        <item name="a2uMusicAccentDim">#2F3624</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.08" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#708E35</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#82A53E</item>
+        <item name="a2uMusicAccentDim">#2B3724</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.09" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#649037</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#74A840</item>
+        <item name="a2uMusicAccentDim">#283825</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.10" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#569338</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#64AB41</item>
+        <item name="a2uMusicAccentDim">#243825</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.11" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#479538</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#53AD41</item>
+        <item name="a2uMusicAccentDim">#203925</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.12" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#399639</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#42AF42</item>
+        <item name="a2uMusicAccentDim">#1C3925</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.13" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#399648</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#42AE54</item>
+        <item name="a2uMusicAccentDim">#1C3929</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.14" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#399558</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#42AD66</item>
+        <item name="a2uMusicAccentDim">#1C392E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.15" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#389566</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#41AD77</item>
+        <item name="a2uMusicAccentDim">#1C3932</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.16" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#389375</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#41AB88</item>
+        <item name="a2uMusicAccentDim">#1C3836</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.17" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#379283</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#40AA98</item>
+        <item name="a2uMusicAccentDim">#1C383A</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.18" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#379191</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#40A9A9</item>
+        <item name="a2uMusicAccentDim">#1C383E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.19" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#3C8F9F</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#46A6B9</item>
+        <item name="a2uMusicAccentDim">#1D3742</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.20" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#538BA8</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#60A2C3</item>
+        <item name="a2uMusicAccentDim">#233644</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.21" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#6288AD</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#729EC9</item>
+        <item name="a2uMusicAccentDim">#283546</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.22" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#6D84B1</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#7F9ACE</item>
+        <item name="a2uMusicAccentDim">#2B3447</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.23" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#7782B5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#8A97D3</item>
+        <item name="a2uMusicAccentDim">#2D3348</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.24" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#7F7FB8</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9494D6</item>
+        <item name="a2uMusicAccentDim">#303349</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.25" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#867DB7</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9C91D5</item>
+        <item name="a2uMusicAccentDim">#323248</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.26" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#8E7AB6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#A58ED4</item>
+        <item name="a2uMusicAccentDim">#343148</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.27" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#9678B5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#AF8BD3</item>
+        <item name="a2uMusicAccentDim">#363148</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.28" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#9E74B4</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#B887D1</item>
+        <item name="a2uMusicAccentDim">#383047</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.29" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#A870B2</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C382CF</item>
+        <item name="a2uMusicAccentDim">#3B2E47</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.30" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B16CB1</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CE7DCE</item>
+        <item name="a2uMusicAccentDim">#3E2D47</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.31" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B16DA6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CE7FC1</item>
+        <item name="a2uMusicAccentDim">#3E2E44</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.32" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B26E9C</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CF80B5</item>
+        <item name="a2uMusicAccentDim">#3E2E41</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.33" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B27090</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CF82A8</item>
+        <item name="a2uMusicAccentDim">#3E2E3E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.34" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B37186</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#D0839C</item>
+        <item name="a2uMusicAccentDim">#3E2F3B</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Soft.35" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B4727D</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#D18491</item>
+        <item name="a2uMusicAccentDim">#3E2F38</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.00" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D09D9D</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F2B7B7</item>
+        <item name="a2uMusicAccentDim">#463B41</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.01" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#CF9F95</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F1B9AD</item>
+        <item name="a2uMusicAccentDim">#463C3F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.02" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#CDA18A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#EEBBA1</item>
+        <item name="a2uMusicAccentDim">#453C3C</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.03" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#CAA37A</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#EBBD8E</item>
+        <item name="a2uMusicAccentDim">#453D37</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.04" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#C7A664</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#E7C174</item>
+        <item name="a2uMusicAccentDim">#443E31</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.05" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#C0A93D</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#DFC547</item>
+        <item name="a2uMusicAccentDim">#423E26</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.06" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#AFAF1F</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CCCC24</item>
+        <item name="a2uMusicAccentDim">#3D401E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.07" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#9CB520</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#B5D225</item>
+        <item name="a2uMusicAccentDim">#38421E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.08" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#86BA21</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#9CD826</item>
+        <item name="a2uMusicAccentDim">#32431E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.09" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#74BC2B</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#87DB32</item>
+        <item name="a2uMusicAccentDim">#2D4421</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.10" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#65BF38</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#75DE41</item>
+        <item name="a2uMusicAccentDim">#284425</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.11" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#56C041</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#64DF4C</item>
+        <item name="a2uMusicAccentDim">#244528</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.12" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#47C247</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#52E152</item>
+        <item name="a2uMusicAccentDim">#204529</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.13" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#45C159</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#50E068</item>
+        <item name="a2uMusicAccentDim">#1F452E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.14" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#42C16C</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#4DE07E</item>
+        <item name="a2uMusicAccentDim">#1F4534</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.15" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#3DC07E</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#47DF93</item>
+        <item name="a2uMusicAccentDim">#1D4539</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.16" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#38BF91</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#41DEA9</item>
+        <item name="a2uMusicAccentDim">#1C443E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.17" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#33BDA7</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#3BDCC2</item>
+        <item name="a2uMusicAccentDim">#1A4444</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.18" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#29BCBC</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#30DBDB</item>
+        <item name="a2uMusicAccentDim">#18444A</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.19" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#64B5C6</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#74D3E6</item>
+        <item name="a2uMusicAccentDim">#28424C</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.20" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#7DB1CB</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#91CEEC</item>
+        <item name="a2uMusicAccentDim">#2F414E</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.21" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#8DAECE</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#A4CAEF</item>
+        <item name="a2uMusicAccentDim">#34404F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.22" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#98AACF</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#B1C6F1</item>
+        <item name="a2uMusicAccentDim">#373F4F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.23" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#A0A9D1</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#BAC4F3</item>
+        <item name="a2uMusicAccentDim">#393E50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.24" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#A6A6D2</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C1C1F4</item>
+        <item name="a2uMusicAccentDim">#3A3E50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.25" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#ACA4D2</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#C8BFF4</item>
+        <item name="a2uMusicAccentDim">#3C3D50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.26" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B2A3D1</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#CFBDF3</item>
+        <item name="a2uMusicAccentDim">#3E3D50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.27" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#B9A0D1</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#D7BAF3</item>
+        <item name="a2uMusicAccentDim">#403C50</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.28" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#C09ED0</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#DFB8F2</item>
+        <item name="a2uMusicAccentDim">#423B4F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.29" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#C79BD0</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#E7B4F2</item>
+        <item name="a2uMusicAccentDim">#443A4F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.30" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#CF97CF</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F1B0F1</item>
+        <item name="a2uMusicAccentDim">#46394F</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.31" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#CF99C7</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F1B2E7</item>
+        <item name="a2uMusicAccentDim">#463A4D</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.32" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D09ABE</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F2B3DD</item>
+        <item name="a2uMusicAccentDim">#463A4A</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.33" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D09BB5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F2B4D3</item>
+        <item name="a2uMusicAccentDim">#463A48</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.34" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D09CAD</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F2B5C9</item>
+        <item name="a2uMusicAccentDim">#463B46</item>
+    </style>
+    <style name="Theme.A2U.Spectrum.Pastel.35" parent="Theme.A2U">
+        <item name="a2uMidiAccent">#D09DA5</item>
+        <item name="a2uMidiAccentOnText">#000000</item>
+        <item name="a2uMusicAccent">#F2B6C0</item>
+        <item name="a2uMusicAccentDim">#463B43</item>
+    </style>
+</resources>

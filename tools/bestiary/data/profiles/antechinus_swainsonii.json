@@ -1,0 +1,283 @@
+{
+  "id": "antechinus_swainsonii",
+  "scientific": "Antechinus swainsonii",
+  "group": "mammals",
+  "name": {
+    "en": "Tasmanian Dusky Antechinus",
+    "fr": "Antechine sombre de Tasmanie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Tasmanian Dusky Antechinus is a small, ground-dwelling carnivorous marsupial. Current taxonomy restricts Antechinus swainsonii to Tasmania; mainland animals once included under this name are now A. mimetes.",
+      "fr": "L’Antechine sombre de Tasmanie est un petit marsupial carnivore qui vit au sol. La taxonomie actuelle limite Antechinus swainsonii à la Tasmanie; les animaux continentaux autrefois inclus sous ce nom sont désormais A. mimetes."
+    },
+    "identification": {
+      "en": "Its fur is grey-brown to dark brown above and pale grey underneath; the ears are small and the muzzle pointed. The long, tapering tail approaches body length. In the 2015 Tasmanian sample, males averaged 63.2 g and 13.4 cm head-body length, while females averaged 41.6 g and 11.7 cm. Body height and width were not reported.",
+      "fr": "Son pelage va du gris-brun au brun foncé sur le dessus et devient gris pâle dessous; ses oreilles sont petites et son museau pointu. Sa longue queue effilée approche la longueur du corps. Dans l’échantillon tasmanien de 2015, les mâles pesaient en moyenne 63,2 g et mesuraient 13,4 cm de la tête au corps, contre 41,6 g et 11,7 cm chez les femelles. La hauteur et la largeur du corps ne sont pas rapportées."
+    },
+    "habitat": {
+      "en": "It is found across most of Tasmania, except the far south-east of the Tasman Peninsula. It uses forest with dense ground cover, including wet or dry sclerophyll forest and rainforest, where fallen leaves, logs, and shallow shelter sites provide cover.",
+      "fr": "Elle est présente dans presque toute la Tasmanie, sauf l’extrême sud-est de la presqu’île de Tasman. Elle fréquente les forêts à couvert dense au sol, qu’elles soient sclérophylles humides ou sèches, ou pluviales; les feuilles mortes, les troncs et les abris peu profonds lui offrent des refuges."
+    },
+    "diet": {
+      "en": "It searches the forest floor for invertebrates, especially insects and worms, and also takes small lizards. Small vertebrates or fruit may supplement this mainly animal-based diet, but they are not its principal food.",
+      "fr": "Elle fouille le sol forestier à la recherche d’invertébrés, surtout des insectes et des vers, et capture aussi de petits lézards. De petits vertébrés ou des fruits peuvent compléter ce régime principalement animal, sans en constituer la nourriture principale."
+    },
+    "behavior": {
+      "en": "Unlike many small mammals, it can be active both by day and at night. It forages on the ground through leaf litter and shelters in nests made from leaves, shallow burrows, or other protected ground-level sites.",
+      "fr": "Contrairement à de nombreux petits mammifères, elle peut être active le jour comme la nuit. Elle cherche sa nourriture au sol dans la litière de feuilles et s’abrite dans des nids de feuilles, des terriers peu profonds ou d’autres refuges protégés au niveau du sol."
+    },
+    "reproduction": {
+      "en": "Breeding is tightly seasonal in winter, with mating recorded from July to September in natural populations. Males sharply increase activity during this short period and usually die synchronously soon afterward; some females survive to breed again in a later year.",
+      "fr": "La reproduction est fortement saisonnière, en hiver, et les accouplements ont été observés de juillet à septembre dans des populations sauvages. Les mâles augmentent fortement leur activité pendant cette courte période et meurent généralement de façon synchronisée peu après; certaines femelles survivent et peuvent se reproduire une autre année."
+    },
+    "ecology": {
+      "en": "The 2015 revision separated this species from the Mainland Dusky Antechinus, A. mimetes, and the Tasman Peninsula Dusky Antechinus, A. vandycki. A. swainsonii occurs across most of Tasmania, while A. vandycki is restricted to the Tasman Peninsula. The related Swamp Antechinus, A. minimus, is generally more squat and shorter-tailed.",
+      "fr": "La révision de 2015 a séparé cette espèce de l’Antechine sombre continentale, A. mimetes, et de l’Antechine sombre de la presqu’île de Tasman, A. vandycki. A. swainsonii occupe presque toute la Tasmanie, tandis qu’A. vandycki est limité à la presqu’île de Tasman. L’Antechine des marais, A. minimus, est une proche parente généralement plus trapue et à queue plus courte."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists Antechinus swainsonii as Least Concern. Its range is much narrower than older references suggested because the mainland populations were reassigned to A. mimetes in 2015.",
+      "fr": "La Mammal Diversity Database classe Antechinus swainsonii en préoccupation mineure. Son aire est bien plus restreinte que ne le suggéraient les anciennes références, puisque les populations continentales ont été réattribuées à A. mimetes en 2015."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A taxonomic assessment of the Australian Dusky Antechinus Complex — Memoirs of the Queensland Museum",
+        "fr": "Révision taxonomique du complexe des antechines sombres d’Australie — Memoirs of the Queensland Museum"
+      },
+      "url": "https://doi.org/10.17082/j.2204-1478.59.2015.2014-10",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed 2015 revision and measurements."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 5,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antechinus swainsonii — Mammal Diversity Database",
+        "fr": "Antechinus swainsonii — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000180/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Mammal Diversity Database accepts the Tasmanian taxon and lists Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 12,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antechinus swainsonii — Museums Victoria Field Guide",
+        "fr": "Antechinus swainsonii — guide de terrain de Museums Victoria"
+      },
+      "url": "https://collections.museumsvictoria.com.au/species/8428",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Museum field account describes dimensions, diet, activity, and ground-level shelters."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 10,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Effects of photoperiod and endogenous control on timing of reproduction in Antechinus — Journal of Zoology",
+        "fr": "Effets de la photopériode et du contrôle endogène sur le calendrier de reproduction des Antechinus — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1985.tb03555.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Field and laboratory comparisons report austral-winter reproduction in A. swainsonii, including July–September mating."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 13,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sleep architecture and regulation of male Dusky Antechinus — Current Biology",
+        "fr": "Architecture et régulation du sommeil chez le mâle Antechinus sombre — Current Biology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9366648/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Recent field study of Tasmanian dusky antechinus describes the male seasonal lifespan and synchronised post-breeding mortality."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 16,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antechinus swainsonii — Antechine sombre, French-language summary",
+        "fr": "Antechinus swainsonii — résumé francophone sur l’antechine sombre"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Antechinus_swainsonii",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French-language page supplies the vernacular French name; its older mainland range predates the current species split and was not retained."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antequino sombrío — Spanish-language marsupial reference",
+        "fr": "Antequino sombrío — référence hispanophone sur les marsupiaux"
+      },
+      "url": "https://lib.ysu.am/disciplines_bk/036df0ca668104750d45dee045799730.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Spanish-language reference describes coat, dense forest habitat, and diet; its range predates the taxonomic split."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 15,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomy and redescription of the Swamp Antechinus — Memoirs of the Queensland Museum",
+        "fr": "Taxonomie et redescription de l’Antechine des marais — Memoirs of the Queensland Museum"
+      },
+      "url": "https://doi.org/10.17082/j.2204-1478.59.2015.2014-11",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed comparison describes A. minimus as shorter-tailed and more squat than Dusky Antechinus species."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 14,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the current Tasmanian species: a dark grey-brown, shrew-faced marsupial with small ears, pale underside, and a long tapering tail. A small comparison inset may contrast the more squat, shorter-tailed Swamp Antechinus; avoid indicating a mainland range for A. swainsonii.",
+  "uncertainties": [
+    "The 2015 measurements are museum-series samples: mass and head-body means use 11 males and 15 females. They are not a claim that every individual reaches those values.",
+    "Older French, Spanish, and museum summaries use the former broad species concept and include mainland animals now assigned to Antechinus mimetes; current distribution follows the post-2015 revision.",
+    "Mating dates vary among populations and elevations; July–September is the broad natural-population window reported in the cited study."
+  ],
+  "reviewed": true,
+  "review_note": "Used the peer-reviewed Queensland Museum revision to follow the current species boundary and sex-specific measures. Cross-checked the Mammal Diversity Database, Museums Victoria, a recent sleep study, and English, French, and Spanish online references; older non-English range accounts were not treated as current after the 2015 taxonomic split."
+}

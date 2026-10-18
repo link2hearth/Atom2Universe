@@ -1,0 +1,167 @@
+{
+  "id": "protobothrops_mangshanensis",
+  "scientific": "Protobothrops mangshanensis",
+  "group": "reptiles",
+  "name": {
+    "en": "Mangshan pit viper",
+    "fr": "Vipère de Mangshan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Mangshan pit viper is a venomous snake restricted to a small area of the Nanling Mountains in southern China.",
+      "fr": "La vipère de Mangshan est un serpent venimeux limité à une petite région des monts Nanling, dans le sud de la Chine."
+    },
+    "identification": {
+      "en": "It is a member of Viperidae, subfamily Crotalinae, the pit vipers.",
+      "fr": "Elle appartient aux Viperidae, sous-famille des Crotalinae, qui regroupe les vipères à fossettes."
+    },
+    "habitat": {
+      "en": "Accounts place it in moist subtropical forest around Mount Mang and nearby parts of the Nanling range, in Hunan and Guangdong.",
+      "fr": "Les sources la situent dans les forêts subtropicales humides autour du mont Mang et des secteurs voisins des Nanling, au Hunan et au Guangdong."
+    },
+    "diet": {
+      "en": "The sources used here do not provide enough species-specific evidence for a reliable summary of its wild diet.",
+      "fr": "Les sources utilisées ici ne donnent pas assez d’informations propres à l’espèce pour résumer de façon fiable son régime dans la nature."
+    },
+    "behavior": {
+      "en": "A telemetry study documents seasonal activity and habitat use, but this brief account does not generalize its findings beyond the monitored snakes and study area.",
+      "fr": "Une étude par télémétrie documente son activité saisonnière et l’usage de l’habitat, mais cette fiche ne généralise pas ses résultats au-delà des serpents suivis et du site étudié."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not establish a sufficiently detailed account of reproduction for this profile.",
+      "fr": "Les sources consultées ne permettent pas de décrire sa reproduction avec assez de précision dans cette fiche."
+    },
+    "ecology": {
+      "en": "Its narrow range and habitat pressures make protection of the remaining forest important; collection for the wildlife trade has also been identified as a threat.",
+      "fr": "Son aire restreinte et les pressions sur son habitat rendent importante la protection des forêts restantes; les prélèvements pour le commerce d’animaux sauvages ont aussi été identifiés comme une menace."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Endangered. China also includes it among its highest-level nationally protected wildlife.",
+      "fr": "L’UICN la classe En danger. La Chine l’inscrit aussi parmi les espèces sauvages bénéficiant du plus haut niveau de protection nationale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Population status, distribution and conservation needs of the Mangshan pit viper — Oryx",
+        "fr": "Statut, répartition et besoins de conservation de la vipère de Mangshan — Oryx"
+      },
+      "url": "https://www.cambridge.org/core/journals/oryx/article/population-status-distribution-and-conservation-needs-of-the-endangered-mangshan-pit-viper-protobothrops-mangshanensis-of-china/FF6D297B4215317EF2FCF8E992B49062",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Research account: range, habitat and conservation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 6,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "National List of Key Protected Wild Animals — Shanghai Municipal Government",
+        "fr": "Liste nationale des espèces sauvages protégées — gouvernement municipal de Shanghai"
+      },
+      "url": "https://lhsr.sh.gov.cn/gjzdbhysdwml/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Chinese government list: highest protection class."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 6,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal microhabitat selection of the critically endangered Mangshan pit viper",
+        "fr": "Sélection saisonnière du microhabitat par la vipère de Mangshan, espèce en danger critique"
+      },
+      "url": "https://www.kiz.ac.cn/gre/gre1/gre14/201710/P020171024410267867684.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Chinese field research at Mangshan Nature Reserve measured seasonal microhabitat use in monitored snakes."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 14,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS: Protobothrops mangshanensis",
+        "fr": "ITIS : Protobothrops mangshanensis"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1058430",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "ITIS verifies the valid taxon within the viper family."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 9,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Studies and records are concentrated in a restricted part of southern China; ecological information remains incomplete."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Conservation category follows the cited assessment; telemetry results are not generalized beyond the studied animals."
+}

@@ -1,0 +1,7472 @@
+{
+ "source": "IAEA LiveChart of Nuclides, ground states (nds.iaea.org/relnsd/v1), extracted 2023-10-18",
+ "nuclides": [
+  {
+   "Z": 1,
+   "N": 0,
+   "A": 1,
+   "symbol": "H",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 0.0
+  },
+  {
+   "Z": 1,
+   "N": 1,
+   "A": 2,
+   "symbol": "H",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 1.1123
+  },
+  {
+   "Z": 1,
+   "N": 2,
+   "A": 3,
+   "symbol": "H",
+   "stable": false,
+   "halfLife": "12.32",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 2.8273
+  },
+  {
+   "Z": 1,
+   "N": 3,
+   "A": 4,
+   "symbol": "H",
+   "stable": false,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "n",
+     "percent": "100"
+    }
+   ],
+   "spin": "2-",
+   "bindingEnergyPerNucleon": 1.7204
+  },
+  {
+   "Z": 2,
+   "N": 1,
+   "A": 3,
+   "symbol": "He",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 2.5727
+  },
+  {
+   "Z": 2,
+   "N": 2,
+   "A": 4,
+   "symbol": "He",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.0739
+  },
+  {
+   "Z": 2,
+   "N": 4,
+   "A": 6,
+   "symbol": "He",
+   "stable": false,
+   "halfLife": "806.7",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 4.8785
+  },
+  {
+   "Z": 2,
+   "N": 6,
+   "A": 8,
+   "symbol": "He",
+   "stable": false,
+   "halfLife": "119.1",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "16"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 3.9245
+  },
+  {
+   "Z": 2,
+   "N": 8,
+   "A": 10,
+   "symbol": "He",
+   "stable": false,
+   "halfLife": "1.52e-21",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "n",
+     "percent": "100"
+    }
+   ],
+   "spin": "(0+)",
+   "bindingEnergyPerNucleon": 2.9951
+  },
+  {
+   "Z": 3,
+   "N": 1,
+   "A": 4,
+   "symbol": "Li",
+   "stable": false,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "p",
+     "percent": "100"
+    }
+   ],
+   "spin": "2-",
+   "bindingEnergyPerNucleon": 1.1538
+  },
+  {
+   "Z": 3,
+   "N": 3,
+   "A": 6,
+   "symbol": "Li",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 5.3323
+  },
+  {
+   "Z": 3,
+   "N": 4,
+   "A": 7,
+   "symbol": "Li",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 5.6064
+  },
+  {
+   "Z": 3,
+   "N": 5,
+   "A": 8,
+   "symbol": "Li",
+   "stable": false,
+   "halfLife": "839.9",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-α",
+     "percent": "100"
+    },
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "2+",
+   "bindingEnergyPerNucleon": 5.1597
+  },
+  {
+   "Z": 3,
+   "N": 6,
+   "A": 9,
+   "symbol": "Li",
+   "stable": false,
+   "halfLife": "178.3",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "50.8"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 5.0378
+  },
+  {
+   "Z": 3,
+   "N": 8,
+   "A": 11,
+   "symbol": "Li",
+   "stable": false,
+   "halfLife": "8.75",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": null
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 4.1554
+  },
+  {
+   "Z": 4,
+   "N": 3,
+   "A": 7,
+   "symbol": "Be",
+   "stable": false,
+   "halfLife": "53.22",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 5.3715
+  },
+  {
+   "Z": 4,
+   "N": 5,
+   "A": 9,
+   "symbol": "Be",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 6.4627
+  },
+  {
+   "Z": 4,
+   "N": 6,
+   "A": 10,
+   "symbol": "Be",
+   "stable": false,
+   "halfLife": "1.51E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 6.4976
+  },
+  {
+   "Z": 4,
+   "N": 7,
+   "A": 11,
+   "symbol": "Be",
+   "stable": false,
+   "halfLife": "13.76",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-α",
+     "percent": "3.1"
+    },
+    {
+     "mode": "β-p",
+     "percent": "0.00083"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 5.9525
+  },
+  {
+   "Z": 4,
+   "N": 8,
+   "A": 12,
+   "symbol": "Be",
+   "stable": false,
+   "halfLife": "21.46",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "0.5"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 5.7207
+  },
+  {
+   "Z": 5,
+   "N": 5,
+   "A": 10,
+   "symbol": "B",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 6.4751
+  },
+  {
+   "Z": 5,
+   "N": 6,
+   "A": 11,
+   "symbol": "B",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 6.9277
+  },
+  {
+   "Z": 5,
+   "N": 7,
+   "A": 12,
+   "symbol": "B",
+   "stable": false,
+   "halfLife": "20.20",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-α",
+     "percent": "0.6"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 6.6312
+  },
+  {
+   "Z": 5,
+   "N": 8,
+   "A": 13,
+   "symbol": "B",
+   "stable": false,
+   "halfLife": "17.33",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "0.286"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 6.4964
+  },
+  {
+   "Z": 5,
+   "N": 9,
+   "A": 14,
+   "symbol": "B",
+   "stable": false,
+   "halfLife": "12.5",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "6.1"
+    }
+   ],
+   "spin": "2-",
+   "bindingEnergyPerNucleon": 6.1016
+  },
+  {
+   "Z": 6,
+   "N": 5,
+   "A": 11,
+   "symbol": "C",
+   "stable": false,
+   "halfLife": "20.364",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 6.6765
+  },
+  {
+   "Z": 6,
+   "N": 6,
+   "A": 12,
+   "symbol": "C",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.6801
+  },
+  {
+   "Z": 6,
+   "N": 7,
+   "A": 13,
+   "symbol": "C",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.4698
+  },
+  {
+   "Z": 6,
+   "N": 8,
+   "A": 14,
+   "symbol": "C",
+   "stable": false,
+   "halfLife": "5700",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5203
+  },
+  {
+   "Z": 6,
+   "N": 9,
+   "A": 15,
+   "symbol": "C",
+   "stable": false,
+   "halfLife": "2.449",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.1002
+  },
+  {
+   "Z": 6,
+   "N": 10,
+   "A": 16,
+   "symbol": "C",
+   "stable": false,
+   "halfLife": "0.747",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "99"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 6.9221
+  },
+  {
+   "Z": 6,
+   "N": 14,
+   "A": 20,
+   "symbol": "C",
+   "stable": false,
+   "halfLife": "16.3",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "65"
+    },
+    {
+     "mode": "β-2n",
+     "percent": "18.6"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 5.9614
+  },
+  {
+   "Z": 7,
+   "N": 6,
+   "A": 13,
+   "symbol": "N",
+   "stable": false,
+   "halfLife": "9.965",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.2389
+  },
+  {
+   "Z": 7,
+   "N": 7,
+   "A": 14,
+   "symbol": "N",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 7.4756
+  },
+  {
+   "Z": 7,
+   "N": 8,
+   "A": 15,
+   "symbol": "N",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.6995
+  },
+  {
+   "Z": 7,
+   "N": 9,
+   "A": 16,
+   "symbol": "N",
+   "stable": false,
+   "halfLife": "7.13",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-α",
+     "percent": "0.0012"
+    }
+   ],
+   "spin": "2-",
+   "bindingEnergyPerNucleon": 7.3738
+  },
+  {
+   "Z": 7,
+   "N": 10,
+   "A": 17,
+   "symbol": "N",
+   "stable": false,
+   "halfLife": "4.173",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "95.1"
+    },
+    {
+     "mode": "β-α",
+     "percent": "0.0025"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.2862
+  },
+  {
+   "Z": 8,
+   "N": 7,
+   "A": 15,
+   "symbol": "O",
+   "stable": false,
+   "halfLife": "122.24",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.4637
+  },
+  {
+   "Z": 8,
+   "N": 8,
+   "A": 16,
+   "symbol": "O",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9762
+  },
+  {
+   "Z": 8,
+   "N": 9,
+   "A": 17,
+   "symbol": "O",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.7507
+  },
+  {
+   "Z": 8,
+   "N": 10,
+   "A": 18,
+   "symbol": "O",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.7671
+  },
+  {
+   "Z": 8,
+   "N": 11,
+   "A": 19,
+   "symbol": "O",
+   "stable": false,
+   "halfLife": "26.88",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.5665
+  },
+  {
+   "Z": 8,
+   "N": 12,
+   "A": 20,
+   "symbol": "O",
+   "stable": false,
+   "halfLife": "13.51",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5686
+  },
+  {
+   "Z": 9,
+   "N": 9,
+   "A": 18,
+   "symbol": "F",
+   "stable": false,
+   "halfLife": "109.77",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 7.6316
+  },
+  {
+   "Z": 9,
+   "N": 10,
+   "A": 19,
+   "symbol": "F",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.779
+  },
+  {
+   "Z": 9,
+   "N": 11,
+   "A": 20,
+   "symbol": "F",
+   "stable": false,
+   "halfLife": "11.07",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "2+",
+   "bindingEnergyPerNucleon": 7.7201
+  },
+  {
+   "Z": 9,
+   "N": 12,
+   "A": 21,
+   "symbol": "F",
+   "stable": false,
+   "halfLife": "4.158",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.7383
+  },
+  {
+   "Z": 10,
+   "N": 8,
+   "A": 18,
+   "symbol": "Ne",
+   "stable": false,
+   "halfLife": "1672",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.3413
+  },
+  {
+   "Z": 10,
+   "N": 10,
+   "A": 20,
+   "symbol": "Ne",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0322
+  },
+  {
+   "Z": 10,
+   "N": 11,
+   "A": 21,
+   "symbol": "Ne",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9717
+  },
+  {
+   "Z": 10,
+   "N": 12,
+   "A": 22,
+   "symbol": "Ne",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0805
+  },
+  {
+   "Z": 10,
+   "N": 13,
+   "A": 23,
+   "symbol": "Ne",
+   "stable": false,
+   "halfLife": "37.25",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.9553
+  },
+  {
+   "Z": 10,
+   "N": 14,
+   "A": 24,
+   "symbol": "Ne",
+   "stable": false,
+   "halfLife": "3.38",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9933
+  },
+  {
+   "Z": 11,
+   "N": 11,
+   "A": 22,
+   "symbol": "Na",
+   "stable": false,
+   "halfLife": "2.6018",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 7.9157
+  },
+  {
+   "Z": 11,
+   "N": 12,
+   "A": 23,
+   "symbol": "Na",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.1115
+  },
+  {
+   "Z": 11,
+   "N": 13,
+   "A": 24,
+   "symbol": "Na",
+   "stable": false,
+   "halfLife": "14.956",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "4+",
+   "bindingEnergyPerNucleon": 8.0635
+  },
+  {
+   "Z": 11,
+   "N": 14,
+   "A": 25,
+   "symbol": "Na",
+   "stable": false,
+   "halfLife": "59.1",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.1014
+  },
+  {
+   "Z": 11,
+   "N": 15,
+   "A": 26,
+   "symbol": "Na",
+   "stable": false,
+   "halfLife": "1.07128",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 8.0042
+  },
+  {
+   "Z": 12,
+   "N": 11,
+   "A": 23,
+   "symbol": "Mg",
+   "stable": false,
+   "halfLife": "11.3046",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9011
+  },
+  {
+   "Z": 12,
+   "N": 12,
+   "A": 24,
+   "symbol": "Mg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2607
+  },
+  {
+   "Z": 12,
+   "N": 13,
+   "A": 25,
+   "symbol": "Mg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.2235
+  },
+  {
+   "Z": 12,
+   "N": 14,
+   "A": 26,
+   "symbol": "Mg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3339
+  },
+  {
+   "Z": 12,
+   "N": 15,
+   "A": 27,
+   "symbol": "Mg",
+   "stable": false,
+   "halfLife": "9.458",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.2639
+  },
+  {
+   "Z": 12,
+   "N": 16,
+   "A": 28,
+   "symbol": "Mg",
+   "stable": false,
+   "halfLife": "20.915",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2725
+  },
+  {
+   "Z": 13,
+   "N": 13,
+   "A": 26,
+   "symbol": "Al",
+   "stable": false,
+   "halfLife": "7.17E+5",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "5+",
+   "bindingEnergyPerNucleon": 8.1498
+  },
+  {
+   "Z": 13,
+   "N": 14,
+   "A": 27,
+   "symbol": "Al",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.3316
+  },
+  {
+   "Z": 13,
+   "N": 15,
+   "A": 28,
+   "symbol": "Al",
+   "stable": false,
+   "halfLife": "2.245",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 8.3099
+  },
+  {
+   "Z": 13,
+   "N": 16,
+   "A": 29,
+   "symbol": "Al",
+   "stable": false,
+   "halfLife": "6.56",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.3485
+  },
+  {
+   "Z": 13,
+   "N": 17,
+   "A": 30,
+   "symbol": "Al",
+   "stable": false,
+   "halfLife": "3.62",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 8.2611
+  },
+  {
+   "Z": 14,
+   "N": 14,
+   "A": 28,
+   "symbol": "Si",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4477
+  },
+  {
+   "Z": 14,
+   "N": 15,
+   "A": 29,
+   "symbol": "Si",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.4486
+  },
+  {
+   "Z": 14,
+   "N": 16,
+   "A": 30,
+   "symbol": "Si",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5207
+  },
+  {
+   "Z": 14,
+   "N": 18,
+   "A": 32,
+   "symbol": "Si",
+   "stable": false,
+   "halfLife": "157",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4815
+  },
+  {
+   "Z": 14,
+   "N": 20,
+   "A": 34,
+   "symbol": "Si",
+   "stable": false,
+   "halfLife": "2.77",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3372
+  },
+  {
+   "Z": 15,
+   "N": 15,
+   "A": 30,
+   "symbol": "P",
+   "stable": false,
+   "halfLife": "2.498",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.3535
+  },
+  {
+   "Z": 15,
+   "N": 16,
+   "A": 31,
+   "symbol": "P",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.4812
+  },
+  {
+   "Z": 15,
+   "N": 17,
+   "A": 32,
+   "symbol": "P",
+   "stable": false,
+   "halfLife": "14.268",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.4641
+  },
+  {
+   "Z": 15,
+   "N": 18,
+   "A": 33,
+   "symbol": "P",
+   "stable": false,
+   "halfLife": "25.35",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.5138
+  },
+  {
+   "Z": 15,
+   "N": 19,
+   "A": 34,
+   "symbol": "P",
+   "stable": false,
+   "halfLife": "12.43",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.4482
+  },
+  {
+   "Z": 16,
+   "N": 16,
+   "A": 32,
+   "symbol": "S",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4931
+  },
+  {
+   "Z": 16,
+   "N": 17,
+   "A": 33,
+   "symbol": "S",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.4976
+  },
+  {
+   "Z": 16,
+   "N": 18,
+   "A": 34,
+   "symbol": "S",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5835
+  },
+  {
+   "Z": 16,
+   "N": 20,
+   "A": 36,
+   "symbol": "S",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5754
+  },
+  {
+   "Z": 16,
+   "N": 21,
+   "A": 37,
+   "symbol": "S",
+   "stable": false,
+   "halfLife": "5.05",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.4599
+  },
+  {
+   "Z": 16,
+   "N": 22,
+   "A": 38,
+   "symbol": "S",
+   "stable": false,
+   "halfLife": "170.3",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4488
+  },
+  {
+   "Z": 17,
+   "N": 18,
+   "A": 35,
+   "symbol": "Cl",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.5203
+  },
+  {
+   "Z": 17,
+   "N": 20,
+   "A": 37,
+   "symbol": "Cl",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.5703
+  },
+  {
+   "Z": 17,
+   "N": 21,
+   "A": 38,
+   "symbol": "Cl",
+   "stable": false,
+   "halfLife": "37.230",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "2-",
+   "bindingEnergyPerNucleon": 8.5055
+  },
+  {
+   "Z": 17,
+   "N": 22,
+   "A": 39,
+   "symbol": "Cl",
+   "stable": false,
+   "halfLife": "56.2",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.4944
+  },
+  {
+   "Z": 18,
+   "N": 18,
+   "A": 36,
+   "symbol": "Ar",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5199
+  },
+  {
+   "Z": 18,
+   "N": 20,
+   "A": 38,
+   "symbol": "Ar",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6143
+  },
+  {
+   "Z": 18,
+   "N": 22,
+   "A": 40,
+   "symbol": "Ar",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5953
+  },
+  {
+   "Z": 18,
+   "N": 24,
+   "A": 42,
+   "symbol": "Ar",
+   "stable": false,
+   "halfLife": "32.9",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5556
+  },
+  {
+   "Z": 19,
+   "N": 20,
+   "A": 39,
+   "symbol": "K",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.557
+  },
+  {
+   "Z": 19,
+   "N": 21,
+   "A": 40,
+   "symbol": "K",
+   "stable": false,
+   "halfLife": "1.248E+9",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "89.28"
+    },
+    {
+     "mode": "β+/EC",
+     "percent": "10.72"
+    }
+   ],
+   "spin": "4-",
+   "bindingEnergyPerNucleon": 8.5381
+  },
+  {
+   "Z": 19,
+   "N": 22,
+   "A": 41,
+   "symbol": "K",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.5761
+  },
+  {
+   "Z": 19,
+   "N": 24,
+   "A": 43,
+   "symbol": "K",
+   "stable": false,
+   "halfLife": "22.3",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.5762
+  },
+  {
+   "Z": 20,
+   "N": 20,
+   "A": 40,
+   "symbol": "Ca",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5513
+  },
+  {
+   "Z": 20,
+   "N": 22,
+   "A": 42,
+   "symbol": "Ca",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6166
+  },
+  {
+   "Z": 20,
+   "N": 23,
+   "A": 43,
+   "symbol": "Ca",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.6007
+  },
+  {
+   "Z": 20,
+   "N": 24,
+   "A": 44,
+   "symbol": "Ca",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6582
+  },
+  {
+   "Z": 20,
+   "N": 28,
+   "A": 48,
+   "symbol": "Ca",
+   "stable": false,
+   "halfLife": "2.9E19",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "78"
+    },
+    {
+     "mode": "2β-",
+     "percent": "74"
+    },
+    {
+     "mode": "β-",
+     "percent": "22"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6667
+  },
+  {
+   "Z": 20,
+   "N": 31,
+   "A": 51,
+   "symbol": "Ca",
+   "stable": false,
+   "halfLife": "10.0",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": null
+    }
+   ],
+   "spin": "3/2(-)",
+   "bindingEnergyPerNucleon": 8.4769
+  },
+  {
+   "Z": 21,
+   "N": 24,
+   "A": 45,
+   "symbol": "Sc",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.6189
+  },
+  {
+   "Z": 22,
+   "N": 24,
+   "A": 46,
+   "symbol": "Ti",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6565
+  },
+  {
+   "Z": 22,
+   "N": 25,
+   "A": 47,
+   "symbol": "Ti",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.6612
+  },
+  {
+   "Z": 22,
+   "N": 26,
+   "A": 48,
+   "symbol": "Ti",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.723
+  },
+  {
+   "Z": 22,
+   "N": 27,
+   "A": 49,
+   "symbol": "Ti",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.7112
+  },
+  {
+   "Z": 22,
+   "N": 28,
+   "A": 50,
+   "symbol": "Ti",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7557
+  },
+  {
+   "Z": 23,
+   "N": 27,
+   "A": 50,
+   "symbol": "V",
+   "stable": false,
+   "halfLife": "2.65E+17",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "99.3"
+    },
+    {
+     "mode": "β-",
+     "percent": "0.7"
+    }
+   ],
+   "spin": "6+",
+   "bindingEnergyPerNucleon": 8.6959
+  },
+  {
+   "Z": 23,
+   "N": 28,
+   "A": 51,
+   "symbol": "V",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.7421
+  },
+  {
+   "Z": 23,
+   "N": 29,
+   "A": 52,
+   "symbol": "V",
+   "stable": false,
+   "halfLife": "3.743",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3+",
+   "bindingEnergyPerNucleon": 8.7146
+  },
+  {
+   "Z": 24,
+   "N": 26,
+   "A": 50,
+   "symbol": "Cr",
+   "stable": false,
+   "halfLife": "1.3E+18",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "2EC",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.701
+  },
+  {
+   "Z": 24,
+   "N": 28,
+   "A": 52,
+   "symbol": "Cr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.776
+  },
+  {
+   "Z": 24,
+   "N": 29,
+   "A": 53,
+   "symbol": "Cr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7602
+  },
+  {
+   "Z": 24,
+   "N": 30,
+   "A": 54,
+   "symbol": "Cr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.778
+  },
+  {
+   "Z": 24,
+   "N": 32,
+   "A": 56,
+   "symbol": "Cr",
+   "stable": false,
+   "halfLife": "5.94",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7233
+  },
+  {
+   "Z": 25,
+   "N": 30,
+   "A": 55,
+   "symbol": "Mn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.765
+  },
+  {
+   "Z": 25,
+   "N": 32,
+   "A": 57,
+   "symbol": "Mn",
+   "stable": false,
+   "halfLife": "85.4",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.7367
+  },
+  {
+   "Z": 25,
+   "N": 34,
+   "A": 59,
+   "symbol": "Mn",
+   "stable": false,
+   "halfLife": "4.59",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.6809
+  },
+  {
+   "Z": 26,
+   "N": 28,
+   "A": 54,
+   "symbol": "Fe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7364
+  },
+  {
+   "Z": 26,
+   "N": 30,
+   "A": 56,
+   "symbol": "Fe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7904
+  },
+  {
+   "Z": 26,
+   "N": 32,
+   "A": 58,
+   "symbol": "Fe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7923
+  },
+  {
+   "Z": 26,
+   "N": 33,
+   "A": 59,
+   "symbol": "Fe",
+   "stable": false,
+   "halfLife": "44.490",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7548
+  },
+  {
+   "Z": 26,
+   "N": 34,
+   "A": 60,
+   "symbol": "Fe",
+   "stable": false,
+   "halfLife": "2.62E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7559
+  },
+  {
+   "Z": 26,
+   "N": 36,
+   "A": 62,
+   "symbol": "Fe",
+   "stable": false,
+   "halfLife": "68",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6929
+  },
+  {
+   "Z": 27,
+   "N": 31,
+   "A": 58,
+   "symbol": "Co",
+   "stable": false,
+   "halfLife": "70.86",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "2+",
+   "bindingEnergyPerNucleon": 8.739
+  },
+  {
+   "Z": 27,
+   "N": 32,
+   "A": 59,
+   "symbol": "Co",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.768
+  },
+  {
+   "Z": 27,
+   "N": 33,
+   "A": 60,
+   "symbol": "Co",
+   "stable": false,
+   "halfLife": "1925.28",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5+",
+   "bindingEnergyPerNucleon": 8.7468
+  },
+  {
+   "Z": 27,
+   "N": 36,
+   "A": 63,
+   "symbol": "Co",
+   "stable": false,
+   "halfLife": "27.4",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.7178
+  },
+  {
+   "Z": 28,
+   "N": 28,
+   "A": 56,
+   "symbol": "Ni",
+   "stable": false,
+   "halfLife": "6.075",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6428
+  },
+  {
+   "Z": 28,
+   "N": 30,
+   "A": 58,
+   "symbol": "Ni",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7321
+  },
+  {
+   "Z": 28,
+   "N": 31,
+   "A": 59,
+   "symbol": "Ni",
+   "stable": false,
+   "halfLife": "7.6E+4",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7366
+  },
+  {
+   "Z": 28,
+   "N": 32,
+   "A": 60,
+   "symbol": "Ni",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7808
+  },
+  {
+   "Z": 28,
+   "N": 34,
+   "A": 62,
+   "symbol": "Ni",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7946
+  },
+  {
+   "Z": 28,
+   "N": 36,
+   "A": 64,
+   "symbol": "Ni",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7775
+  },
+  {
+   "Z": 29,
+   "N": 34,
+   "A": 63,
+   "symbol": "Cu",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7521
+  },
+  {
+   "Z": 29,
+   "N": 35,
+   "A": 64,
+   "symbol": "Cu",
+   "stable": false,
+   "halfLife": "12.7006",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "61.5"
+    },
+    {
+     "mode": "β-",
+     "percent": "38.5"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.7391
+  },
+  {
+   "Z": 29,
+   "N": 36,
+   "A": 65,
+   "symbol": "Cu",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7571
+  },
+  {
+   "Z": 29,
+   "N": 38,
+   "A": 67,
+   "symbol": "Cu",
+   "stable": false,
+   "halfLife": "61.83",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7375
+  },
+  {
+   "Z": 30,
+   "N": 34,
+   "A": 64,
+   "symbol": "Zn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7359
+  },
+  {
+   "Z": 30,
+   "N": 36,
+   "A": 66,
+   "symbol": "Zn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7596
+  },
+  {
+   "Z": 30,
+   "N": 37,
+   "A": 67,
+   "symbol": "Zn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.7342
+  },
+  {
+   "Z": 30,
+   "N": 38,
+   "A": 68,
+   "symbol": "Zn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7557
+  },
+  {
+   "Z": 30,
+   "N": 40,
+   "A": 70,
+   "symbol": "Zn",
+   "stable": false,
+   "halfLife": "3.8E18",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": "≥",
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    },
+    {
+     "mode": "2β-",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7298
+  },
+  {
+   "Z": 30,
+   "N": 42,
+   "A": 72,
+   "symbol": "Zn",
+   "stable": false,
+   "halfLife": "46.5",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6918
+  },
+  {
+   "Z": 31,
+   "N": 38,
+   "A": 69,
+   "symbol": "Ga",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7246
+  },
+  {
+   "Z": 31,
+   "N": 40,
+   "A": 71,
+   "symbol": "Ga",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7176
+  },
+  {
+   "Z": 31,
+   "N": 42,
+   "A": 73,
+   "symbol": "Ga",
+   "stable": false,
+   "halfLife": "4.86",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.6939
+  },
+  {
+   "Z": 32,
+   "N": 38,
+   "A": 70,
+   "symbol": "Ge",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7217
+  },
+  {
+   "Z": 32,
+   "N": 40,
+   "A": 72,
+   "symbol": "Ge",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7317
+  },
+  {
+   "Z": 32,
+   "N": 41,
+   "A": 73,
+   "symbol": "Ge",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.705
+  },
+  {
+   "Z": 32,
+   "N": 42,
+   "A": 74,
+   "symbol": "Ge",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7252
+  },
+  {
+   "Z": 32,
+   "N": 44,
+   "A": 76,
+   "symbol": "Ge",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7052
+  },
+  {
+   "Z": 32,
+   "N": 46,
+   "A": 78,
+   "symbol": "Ge",
+   "stable": false,
+   "halfLife": "88.0",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6717
+  },
+  {
+   "Z": 33,
+   "N": 42,
+   "A": 75,
+   "symbol": "As",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.7009
+  },
+  {
+   "Z": 33,
+   "N": 44,
+   "A": 77,
+   "symbol": "As",
+   "stable": false,
+   "halfLife": "38.79",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.696
+  },
+  {
+   "Z": 34,
+   "N": 40,
+   "A": 74,
+   "symbol": "Se",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6877
+  },
+  {
+   "Z": 34,
+   "N": 42,
+   "A": 76,
+   "symbol": "Se",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7115
+  },
+  {
+   "Z": 34,
+   "N": 43,
+   "A": 77,
+   "symbol": "Se",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.6947
+  },
+  {
+   "Z": 34,
+   "N": 44,
+   "A": 78,
+   "symbol": "Se",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7178
+  },
+  {
+   "Z": 34,
+   "N": 46,
+   "A": 80,
+   "symbol": "Se",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7108
+  },
+  {
+   "Z": 34,
+   "N": 48,
+   "A": 82,
+   "symbol": "Se",
+   "stable": false,
+   "halfLife": "9.6E+19",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6932
+  },
+  {
+   "Z": 35,
+   "N": 44,
+   "A": 79,
+   "symbol": "Br",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.6876
+  },
+  {
+   "Z": 35,
+   "N": 46,
+   "A": 81,
+   "symbol": "Br",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.6959
+  },
+  {
+   "Z": 35,
+   "N": 48,
+   "A": 83,
+   "symbol": "Br",
+   "stable": false,
+   "halfLife": "2.374",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.6934
+  },
+  {
+   "Z": 36,
+   "N": 44,
+   "A": 80,
+   "symbol": "Kr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6929
+  },
+  {
+   "Z": 36,
+   "N": 46,
+   "A": 82,
+   "symbol": "Kr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7107
+  },
+  {
+   "Z": 36,
+   "N": 47,
+   "A": 83,
+   "symbol": "Kr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.6957
+  },
+  {
+   "Z": 36,
+   "N": 48,
+   "A": 84,
+   "symbol": "Kr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7174
+  },
+  {
+   "Z": 36,
+   "N": 50,
+   "A": 86,
+   "symbol": "Kr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.712
+  },
+  {
+   "Z": 36,
+   "N": 58,
+   "A": 94,
+   "symbol": "Kr",
+   "stable": false,
+   "halfLife": "212",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "β-n",
+     "percent": "1.11"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4243
+  },
+  {
+   "Z": 37,
+   "N": 48,
+   "A": 85,
+   "symbol": "Rb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.6974
+  },
+  {
+   "Z": 37,
+   "N": 50,
+   "A": 87,
+   "symbol": "Rb",
+   "stable": false,
+   "halfLife": "4.97E+10",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.711
+  },
+  {
+   "Z": 37,
+   "N": 52,
+   "A": 89,
+   "symbol": "Rb",
+   "stable": false,
+   "halfLife": "15.32",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.6642
+  },
+  {
+   "Z": 38,
+   "N": 46,
+   "A": 84,
+   "symbol": "Sr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6775
+  },
+  {
+   "Z": 38,
+   "N": 48,
+   "A": 86,
+   "symbol": "Sr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7085
+  },
+  {
+   "Z": 38,
+   "N": 50,
+   "A": 88,
+   "symbol": "Sr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.7326
+  },
+  {
+   "Z": 38,
+   "N": 52,
+   "A": 90,
+   "symbol": "Sr",
+   "stable": false,
+   "halfLife": "28.91",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.696
+  },
+  {
+   "Z": 39,
+   "N": 50,
+   "A": 89,
+   "symbol": "Y",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.714
+  },
+  {
+   "Z": 39,
+   "N": 52,
+   "A": 91,
+   "symbol": "Y",
+   "stable": false,
+   "halfLife": "58.51",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.6849
+  },
+  {
+   "Z": 40,
+   "N": 50,
+   "A": 90,
+   "symbol": "Zr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.71
+  },
+  {
+   "Z": 40,
+   "N": 51,
+   "A": 91,
+   "symbol": "Zr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.6933
+  },
+  {
+   "Z": 40,
+   "N": 52,
+   "A": 92,
+   "symbol": "Zr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6927
+  },
+  {
+   "Z": 40,
+   "N": 54,
+   "A": 94,
+   "symbol": "Zr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6668
+  },
+  {
+   "Z": 40,
+   "N": 56,
+   "A": 96,
+   "symbol": "Zr",
+   "stable": false,
+   "halfLife": "2.0E+19",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6353
+  },
+  {
+   "Z": 41,
+   "N": 52,
+   "A": 93,
+   "symbol": "Nb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.6642
+  },
+  {
+   "Z": 41,
+   "N": 54,
+   "A": 95,
+   "symbol": "Nb",
+   "stable": false,
+   "halfLife": "34.991",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.6472
+  },
+  {
+   "Z": 42,
+   "N": 52,
+   "A": 94,
+   "symbol": "Mo",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6623
+  },
+  {
+   "Z": 42,
+   "N": 53,
+   "A": 95,
+   "symbol": "Mo",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.6487
+  },
+  {
+   "Z": 42,
+   "N": 54,
+   "A": 96,
+   "symbol": "Mo",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.654
+  },
+  {
+   "Z": 42,
+   "N": 55,
+   "A": 97,
+   "symbol": "Mo",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.6351
+  },
+  {
+   "Z": 42,
+   "N": 56,
+   "A": 98,
+   "symbol": "Mo",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6352
+  },
+  {
+   "Z": 42,
+   "N": 58,
+   "A": 100,
+   "symbol": "Mo",
+   "stable": false,
+   "halfLife": "7.01E+18",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    },
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6047
+  },
+  {
+   "Z": 42,
+   "N": 60,
+   "A": 102,
+   "symbol": "Mo",
+   "stable": false,
+   "halfLife": "11.3",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5684
+  },
+  {
+   "Z": 43,
+   "N": 55,
+   "A": 98,
+   "symbol": "Tc",
+   "stable": false,
+   "halfLife": "4.2E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "(6)+",
+   "bindingEnergyPerNucleon": 8.61
+  },
+  {
+   "Z": 43,
+   "N": 57,
+   "A": 100,
+   "symbol": "Tc",
+   "stable": false,
+   "halfLife": "15.65",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "99.9974"
+    },
+    {
+     "mode": "EC",
+     "percent": "0.0026"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.5951
+  },
+  {
+   "Z": 44,
+   "N": 52,
+   "A": 96,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6094
+  },
+  {
+   "Z": 44,
+   "N": 54,
+   "A": 98,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6203
+  },
+  {
+   "Z": 44,
+   "N": 55,
+   "A": 99,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.6087
+  },
+  {
+   "Z": 44,
+   "N": 56,
+   "A": 100,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6194
+  },
+  {
+   "Z": 44,
+   "N": 57,
+   "A": 101,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.6014
+  },
+  {
+   "Z": 44,
+   "N": 58,
+   "A": 102,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.6074
+  },
+  {
+   "Z": 44,
+   "N": 60,
+   "A": 104,
+   "symbol": "Ru",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5874
+  },
+  {
+   "Z": 45,
+   "N": 58,
+   "A": 103,
+   "symbol": "Rh",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.5842
+  },
+  {
+   "Z": 45,
+   "N": 60,
+   "A": 105,
+   "symbol": "Rh",
+   "stable": false,
+   "halfLife": "35.341",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.5727
+  },
+  {
+   "Z": 46,
+   "N": 56,
+   "A": 102,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5803
+  },
+  {
+   "Z": 46,
+   "N": 58,
+   "A": 104,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5848
+  },
+  {
+   "Z": 46,
+   "N": 59,
+   "A": 105,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.5707
+  },
+  {
+   "Z": 46,
+   "N": 60,
+   "A": 106,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.58
+  },
+  {
+   "Z": 46,
+   "N": 62,
+   "A": 108,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.567
+  },
+  {
+   "Z": 46,
+   "N": 64,
+   "A": 110,
+   "symbol": "Pd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5472
+  },
+  {
+   "Z": 47,
+   "N": 60,
+   "A": 107,
+   "symbol": "Ag",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.5539
+  },
+  {
+   "Z": 47,
+   "N": 62,
+   "A": 109,
+   "symbol": "Ag",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.5479
+  },
+  {
+   "Z": 47,
+   "N": 65,
+   "A": 112,
+   "symbol": "Ag",
+   "stable": false,
+   "halfLife": "3.130",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "2(-)",
+   "bindingEnergyPerNucleon": 8.5161
+  },
+  {
+   "Z": 47,
+   "N": 66,
+   "A": 113,
+   "symbol": "Ag",
+   "stable": false,
+   "halfLife": "5.37",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.5161
+  },
+  {
+   "Z": 48,
+   "N": 60,
+   "A": 108,
+   "symbol": "Cd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.55
+  },
+  {
+   "Z": 48,
+   "N": 62,
+   "A": 110,
+   "symbol": "Cd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5513
+  },
+  {
+   "Z": 48,
+   "N": 64,
+   "A": 112,
+   "symbol": "Cd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5447
+  },
+  {
+   "Z": 48,
+   "N": 65,
+   "A": 113,
+   "symbol": "Cd",
+   "stable": false,
+   "halfLife": "8.04E15",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.527
+  },
+  {
+   "Z": 48,
+   "N": 66,
+   "A": 114,
+   "symbol": "Cd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5315
+  },
+  {
+   "Z": 48,
+   "N": 68,
+   "A": 116,
+   "symbol": "Cd",
+   "stable": false,
+   "halfLife": "3.3E+19",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5124
+  },
+  {
+   "Z": 48,
+   "N": 70,
+   "A": 118,
+   "symbol": "Cd",
+   "stable": false,
+   "halfLife": "50.3",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4878
+  },
+  {
+   "Z": 49,
+   "N": 64,
+   "A": 113,
+   "symbol": "In",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.5229
+  },
+  {
+   "Z": 49,
+   "N": 66,
+   "A": 115,
+   "symbol": "In",
+   "stable": false,
+   "halfLife": "4.41E+14",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.5165
+  },
+  {
+   "Z": 49,
+   "N": 68,
+   "A": 117,
+   "symbol": "In",
+   "stable": false,
+   "halfLife": "43.2",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.5039
+  },
+  {
+   "Z": 50,
+   "N": 62,
+   "A": 112,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5136
+  },
+  {
+   "Z": 50,
+   "N": 64,
+   "A": 114,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5226
+  },
+  {
+   "Z": 50,
+   "N": 65,
+   "A": 115,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.5141
+  },
+  {
+   "Z": 50,
+   "N": 66,
+   "A": 116,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5231
+  },
+  {
+   "Z": 50,
+   "N": 67,
+   "A": 117,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.5096
+  },
+  {
+   "Z": 50,
+   "N": 68,
+   "A": 118,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5165
+  },
+  {
+   "Z": 50,
+   "N": 69,
+   "A": 119,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.4994
+  },
+  {
+   "Z": 50,
+   "N": 70,
+   "A": 120,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.5045
+  },
+  {
+   "Z": 50,
+   "N": 72,
+   "A": 122,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4879
+  },
+  {
+   "Z": 50,
+   "N": 74,
+   "A": 124,
+   "symbol": "Sn",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4674
+  },
+  {
+   "Z": 51,
+   "N": 70,
+   "A": 121,
+   "symbol": "Sb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.4821
+  },
+  {
+   "Z": 51,
+   "N": 72,
+   "A": 123,
+   "symbol": "Sb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.4723
+  },
+  {
+   "Z": 51,
+   "N": 74,
+   "A": 125,
+   "symbol": "Sb",
+   "stable": false,
+   "halfLife": "2.75856",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.4582
+  },
+  {
+   "Z": 52,
+   "N": 68,
+   "A": 120,
+   "symbol": "Te",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.477
+  },
+  {
+   "Z": 52,
+   "N": 70,
+   "A": 122,
+   "symbol": "Te",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4781
+  },
+  {
+   "Z": 52,
+   "N": 71,
+   "A": 123,
+   "symbol": "Te",
+   "stable": false,
+   "halfLife": "9.2E+16",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.4655
+  },
+  {
+   "Z": 52,
+   "N": 72,
+   "A": 124,
+   "symbol": "Te",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4733
+  },
+  {
+   "Z": 52,
+   "N": 74,
+   "A": 126,
+   "symbol": "Te",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4632
+  },
+  {
+   "Z": 52,
+   "N": 76,
+   "A": 128,
+   "symbol": "Te",
+   "stable": false,
+   "halfLife": "7.7E+24",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4488
+  },
+  {
+   "Z": 52,
+   "N": 78,
+   "A": 130,
+   "symbol": "Te",
+   "stable": false,
+   "halfLife": "0.79E+21",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4303
+  },
+  {
+   "Z": 53,
+   "N": 74,
+   "A": 127,
+   "symbol": "I",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.4455
+  },
+  {
+   "Z": 53,
+   "N": 75,
+   "A": 128,
+   "symbol": "I",
+   "stable": false,
+   "halfLife": "24.99",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "93.1"
+    },
+    {
+     "mode": "β+/EC",
+     "percent": "6.9"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.4328
+  },
+  {
+   "Z": 53,
+   "N": 78,
+   "A": 131,
+   "symbol": "I",
+   "stable": false,
+   "halfLife": "8.0252",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.4223
+  },
+  {
+   "Z": 53,
+   "N": 80,
+   "A": 133,
+   "symbol": "I",
+   "stable": false,
+   "halfLife": "20.83",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.4051
+  },
+  {
+   "Z": 54,
+   "N": 70,
+   "A": 124,
+   "symbol": "Xe",
+   "stable": false,
+   "halfLife": "1.6E+14",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": "≥",
+   "decayModes": [
+    {
+     "mode": "2β+",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4376
+  },
+  {
+   "Z": 54,
+   "N": 75,
+   "A": 129,
+   "symbol": "Xe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.4314
+  },
+  {
+   "Z": 54,
+   "N": 76,
+   "A": 130,
+   "symbol": "Xe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4377
+  },
+  {
+   "Z": 54,
+   "N": 77,
+   "A": 131,
+   "symbol": "Xe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.4237
+  },
+  {
+   "Z": 54,
+   "N": 78,
+   "A": 132,
+   "symbol": "Xe",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4276
+  },
+  {
+   "Z": 54,
+   "N": 80,
+   "A": 134,
+   "symbol": "Xe",
+   "stable": false,
+   "halfLife": "5.8E+22",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "0"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4137
+  },
+  {
+   "Z": 54,
+   "N": 82,
+   "A": 136,
+   "symbol": "Xe",
+   "stable": false,
+   "halfLife": "2.165E21",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3962
+  },
+  {
+   "Z": 54,
+   "N": 84,
+   "A": 138,
+   "symbol": "Xe",
+   "stable": false,
+   "halfLife": "14.14",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3447
+  },
+  {
+   "Z": 55,
+   "N": 78,
+   "A": 133,
+   "symbol": "Cs",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.41
+  },
+  {
+   "Z": 55,
+   "N": 80,
+   "A": 135,
+   "symbol": "Cs",
+   "stable": false,
+   "halfLife": "2.3E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.4013
+  },
+  {
+   "Z": 55,
+   "N": 82,
+   "A": 137,
+   "symbol": "Cs",
+   "stable": false,
+   "halfLife": "30.08",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.389
+  },
+  {
+   "Z": 56,
+   "N": 78,
+   "A": 134,
+   "symbol": "Ba",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4082
+  },
+  {
+   "Z": 56,
+   "N": 79,
+   "A": 135,
+   "symbol": "Ba",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.3975
+  },
+  {
+   "Z": 56,
+   "N": 80,
+   "A": 136,
+   "symbol": "Ba",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.4028
+  },
+  {
+   "Z": 56,
+   "N": 81,
+   "A": 137,
+   "symbol": "Ba",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.3918
+  },
+  {
+   "Z": 56,
+   "N": 82,
+   "A": 138,
+   "symbol": "Ba",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3934
+  },
+  {
+   "Z": 56,
+   "N": 84,
+   "A": 140,
+   "symbol": "Ba",
+   "stable": false,
+   "halfLife": "12.751",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3531
+  },
+  {
+   "Z": 56,
+   "N": 88,
+   "A": 144,
+   "symbol": "Ba",
+   "stable": false,
+   "halfLife": "11.5",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2655
+  },
+  {
+   "Z": 57,
+   "N": 81,
+   "A": 138,
+   "symbol": "La",
+   "stable": false,
+   "halfLife": "1.03E+11",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "65.5"
+    },
+    {
+     "mode": "β-",
+     "percent": "34.5"
+    }
+   ],
+   "spin": "5+",
+   "bindingEnergyPerNucleon": 8.3751
+  },
+  {
+   "Z": 57,
+   "N": 82,
+   "A": 139,
+   "symbol": "La",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.378
+  },
+  {
+   "Z": 58,
+   "N": 78,
+   "A": 136,
+   "symbol": "Ce",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2EC",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3738
+  },
+  {
+   "Z": 58,
+   "N": 80,
+   "A": 138,
+   "symbol": "Ce",
+   "stable": false,
+   "halfLife": "4.4E+16",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "2EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.377
+  },
+  {
+   "Z": 58,
+   "N": 82,
+   "A": 140,
+   "symbol": "Ce",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3763
+  },
+  {
+   "Z": 58,
+   "N": 84,
+   "A": 142,
+   "symbol": "Ce",
+   "stable": false,
+   "halfLife": "5E+16",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3471
+  },
+  {
+   "Z": 58,
+   "N": 86,
+   "A": 144,
+   "symbol": "Ce",
+   "stable": false,
+   "halfLife": "284.91",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3148
+  },
+  {
+   "Z": 59,
+   "N": 82,
+   "A": 141,
+   "symbol": "Pr",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.354
+  },
+  {
+   "Z": 60,
+   "N": 82,
+   "A": 142,
+   "symbol": "Nd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.346
+  },
+  {
+   "Z": 60,
+   "N": 83,
+   "A": 143,
+   "symbol": "Nd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.3305
+  },
+  {
+   "Z": 60,
+   "N": 84,
+   "A": 144,
+   "symbol": "Nd",
+   "stable": false,
+   "halfLife": "2.29E+15",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3269
+  },
+  {
+   "Z": 60,
+   "N": 85,
+   "A": 145,
+   "symbol": "Nd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.3092
+  },
+  {
+   "Z": 60,
+   "N": 86,
+   "A": 146,
+   "symbol": "Nd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3041
+  },
+  {
+   "Z": 60,
+   "N": 88,
+   "A": 148,
+   "symbol": "Nd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2772
+  },
+  {
+   "Z": 61,
+   "N": 84,
+   "A": 145,
+   "symbol": "Pm",
+   "stable": false,
+   "halfLife": "17.7",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    },
+    {
+     "mode": "α",
+     "percent": "0.00000028"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.3027
+  },
+  {
+   "Z": 61,
+   "N": 86,
+   "A": 147,
+   "symbol": "Pm",
+   "stable": false,
+   "halfLife": "2.6234",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.2844
+  },
+  {
+   "Z": 62,
+   "N": 82,
+   "A": 144,
+   "symbol": "Sm",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.3037
+  },
+  {
+   "Z": 62,
+   "N": 83,
+   "A": 145,
+   "symbol": "Sm",
+   "stable": false,
+   "halfLife": "340",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.293
+  },
+  {
+   "Z": 62,
+   "N": 85,
+   "A": 147,
+   "symbol": "Sm",
+   "stable": false,
+   "halfLife": "1.073E11",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.2806
+  },
+  {
+   "Z": 62,
+   "N": 86,
+   "A": 148,
+   "symbol": "Sm",
+   "stable": false,
+   "halfLife": "7E+15",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2796
+  },
+  {
+   "Z": 62,
+   "N": 87,
+   "A": 149,
+   "symbol": "Sm",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.2635
+  },
+  {
+   "Z": 62,
+   "N": 88,
+   "A": 150,
+   "symbol": "Sm",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2616
+  },
+  {
+   "Z": 62,
+   "N": 90,
+   "A": 152,
+   "symbol": "Sm",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2441
+  },
+  {
+   "Z": 63,
+   "N": 88,
+   "A": 151,
+   "symbol": "Eu",
+   "stable": false,
+   "halfLife": "1.7E+18",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": "≥",
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": null
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.2393
+  },
+  {
+   "Z": 63,
+   "N": 90,
+   "A": 153,
+   "symbol": "Eu",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.2287
+  },
+  {
+   "Z": 64,
+   "N": 88,
+   "A": 152,
+   "symbol": "Gd",
+   "stable": false,
+   "halfLife": "1.08E14",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2334
+  },
+  {
+   "Z": 64,
+   "N": 90,
+   "A": 154,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2248
+  },
+  {
+   "Z": 64,
+   "N": 91,
+   "A": 155,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.2133
+  },
+  {
+   "Z": 64,
+   "N": 92,
+   "A": 156,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2153
+  },
+  {
+   "Z": 64,
+   "N": 93,
+   "A": 157,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.2035
+  },
+  {
+   "Z": 64,
+   "N": 94,
+   "A": 158,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.2018
+  },
+  {
+   "Z": 64,
+   "N": 96,
+   "A": 160,
+   "symbol": "Gd",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.183
+  },
+  {
+   "Z": 65,
+   "N": 94,
+   "A": 159,
+   "symbol": "Tb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 8.1888
+  },
+  {
+   "Z": 66,
+   "N": 90,
+   "A": 156,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2EC",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1924
+  },
+  {
+   "Z": 66,
+   "N": 92,
+   "A": 158,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1901
+  },
+  {
+   "Z": 66,
+   "N": 93,
+   "A": 159,
+   "symbol": "Dy",
+   "stable": false,
+   "halfLife": "144.4",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 8.1816
+  },
+  {
+   "Z": 66,
+   "N": 94,
+   "A": 160,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1841
+  },
+  {
+   "Z": 66,
+   "N": 95,
+   "A": 161,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": null
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 8.1733
+  },
+  {
+   "Z": 66,
+   "N": 96,
+   "A": 162,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1735
+  },
+  {
+   "Z": 66,
+   "N": 98,
+   "A": 164,
+   "symbol": "Dy",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1587
+  },
+  {
+   "Z": 67,
+   "N": 98,
+   "A": 165,
+   "symbol": "Ho",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 8.147
+  },
+  {
+   "Z": 68,
+   "N": 94,
+   "A": 162,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1524
+  },
+  {
+   "Z": 68,
+   "N": 96,
+   "A": 164,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.149
+  },
+  {
+   "Z": 68,
+   "N": 97,
+   "A": 165,
+   "symbol": "Er",
+   "stable": false,
+   "halfLife": "10.36",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.1399
+  },
+  {
+   "Z": 68,
+   "N": 98,
+   "A": 166,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1419
+  },
+  {
+   "Z": 68,
+   "N": 99,
+   "A": 167,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.1317
+  },
+  {
+   "Z": 68,
+   "N": 100,
+   "A": 168,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1296
+  },
+  {
+   "Z": 68,
+   "N": 102,
+   "A": 170,
+   "symbol": "Er",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.112
+  },
+  {
+   "Z": 69,
+   "N": 100,
+   "A": 169,
+   "symbol": "Tm",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.1145
+  },
+  {
+   "Z": 69,
+   "N": 102,
+   "A": 171,
+   "symbol": "Tm",
+   "stable": false,
+   "halfLife": "1.92",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 8.1019
+  },
+  {
+   "Z": 70,
+   "N": 98,
+   "A": 168,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1119
+  },
+  {
+   "Z": 70,
+   "N": 100,
+   "A": 170,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.1066
+  },
+  {
+   "Z": 70,
+   "N": 101,
+   "A": 171,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.0979
+  },
+  {
+   "Z": 70,
+   "N": 102,
+   "A": 172,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0974
+  },
+  {
+   "Z": 70,
+   "N": 103,
+   "A": 173,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 8.0874
+  },
+  {
+   "Z": 70,
+   "N": 104,
+   "A": 174,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0838
+  },
+  {
+   "Z": 70,
+   "N": 106,
+   "A": 176,
+   "symbol": "Yb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0641
+  },
+  {
+   "Z": 71,
+   "N": 104,
+   "A": 175,
+   "symbol": "Lu",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.0691
+  },
+  {
+   "Z": 71,
+   "N": 105,
+   "A": 176,
+   "symbol": "Lu",
+   "stable": false,
+   "halfLife": "3.76E+10",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7-",
+   "bindingEnergyPerNucleon": 8.059
+  },
+  {
+   "Z": 71,
+   "N": 106,
+   "A": 177,
+   "symbol": "Lu",
+   "stable": false,
+   "halfLife": "6.6443",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.0534
+  },
+  {
+   "Z": 72,
+   "N": 104,
+   "A": 176,
+   "symbol": "Hf",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0614
+  },
+  {
+   "Z": 72,
+   "N": 106,
+   "A": 178,
+   "symbol": "Hf",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0494
+  },
+  {
+   "Z": 72,
+   "N": 107,
+   "A": 179,
+   "symbol": "Hf",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "9/2+",
+   "bindingEnergyPerNucleon": 8.0385
+  },
+  {
+   "Z": 72,
+   "N": 108,
+   "A": 180,
+   "symbol": "Hf",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0349
+  },
+  {
+   "Z": 72,
+   "N": 109,
+   "A": 181,
+   "symbol": "Hf",
+   "stable": false,
+   "halfLife": "42.39",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 8.022
+  },
+  {
+   "Z": 72,
+   "N": 110,
+   "A": 182,
+   "symbol": "Hf",
+   "stable": false,
+   "halfLife": "8.90E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0148
+  },
+  {
+   "Z": 73,
+   "N": 107,
+   "A": 180,
+   "symbol": "Ta",
+   "stable": false,
+   "halfLife": "8.154",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "85"
+    },
+    {
+     "mode": "β-",
+     "percent": "15"
+    }
+   ],
+   "spin": "1+",
+   "bindingEnergyPerNucleon": 8.0259
+  },
+  {
+   "Z": 73,
+   "N": 108,
+   "A": 181,
+   "symbol": "Ta",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.0234
+  },
+  {
+   "Z": 73,
+   "N": 110,
+   "A": 183,
+   "symbol": "Ta",
+   "stable": false,
+   "halfLife": "5.1",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 8.0067
+  },
+  {
+   "Z": 74,
+   "N": 106,
+   "A": 180,
+   "symbol": "W",
+   "stable": false,
+   "halfLife": "1.8E18",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0254
+  },
+  {
+   "Z": 74,
+   "N": 108,
+   "A": 182,
+   "symbol": "W",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0183
+  },
+  {
+   "Z": 74,
+   "N": 110,
+   "A": 184,
+   "symbol": "W",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 8.0051
+  },
+  {
+   "Z": 74,
+   "N": 112,
+   "A": 186,
+   "symbol": "W",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9886
+  },
+  {
+   "Z": 74,
+   "N": 114,
+   "A": 188,
+   "symbol": "W",
+   "stable": false,
+   "halfLife": "69.78",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9691
+  },
+  {
+   "Z": 74,
+   "N": 116,
+   "A": 190,
+   "symbol": "W",
+   "stable": false,
+   "halfLife": "30.0",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9475
+  },
+  {
+   "Z": 75,
+   "N": 110,
+   "A": 185,
+   "symbol": "Re",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.991
+  },
+  {
+   "Z": 75,
+   "N": 112,
+   "A": 187,
+   "symbol": "Re",
+   "stable": false,
+   "halfLife": "4.33E+10",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "α",
+     "percent": "0.0001"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.978
+  },
+  {
+   "Z": 75,
+   "N": 114,
+   "A": 189,
+   "symbol": "Re",
+   "stable": false,
+   "halfLife": "24.3",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.9618
+  },
+  {
+   "Z": 76,
+   "N": 108,
+   "A": 184,
+   "symbol": "Os",
+   "stable": false,
+   "halfLife": "5.6E13",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": ">",
+   "decayModes": [
+    {
+     "mode": "2β+",
+     "percent": null
+    },
+    {
+     "mode": "α",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9887
+  },
+  {
+   "Z": 76,
+   "N": 110,
+   "A": 186,
+   "symbol": "Os",
+   "stable": false,
+   "halfLife": "2.0E+15",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9828
+  },
+  {
+   "Z": 76,
+   "N": 111,
+   "A": 187,
+   "symbol": "Os",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.9738
+  },
+  {
+   "Z": 76,
+   "N": 112,
+   "A": 188,
+   "symbol": "Os",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9739
+  },
+  {
+   "Z": 76,
+   "N": 114,
+   "A": 190,
+   "symbol": "Os",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9621
+  },
+  {
+   "Z": 76,
+   "N": 116,
+   "A": 192,
+   "symbol": "Os",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9485
+  },
+  {
+   "Z": 76,
+   "N": 118,
+   "A": 194,
+   "symbol": "Os",
+   "stable": false,
+   "halfLife": "6.0",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.932
+  },
+  {
+   "Z": 77,
+   "N": 114,
+   "A": 191,
+   "symbol": "Ir",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9481
+  },
+  {
+   "Z": 77,
+   "N": 116,
+   "A": 193,
+   "symbol": "Ir",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9381
+  },
+  {
+   "Z": 77,
+   "N": 118,
+   "A": 195,
+   "symbol": "Ir",
+   "stable": false,
+   "halfLife": "2.29",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9249
+  },
+  {
+   "Z": 78,
+   "N": 112,
+   "A": 190,
+   "symbol": "Pt",
+   "stable": false,
+   "halfLife": "4.97E11",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9465
+  },
+  {
+   "Z": 78,
+   "N": 114,
+   "A": 192,
+   "symbol": "Pt",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9425
+  },
+  {
+   "Z": 78,
+   "N": 116,
+   "A": 194,
+   "symbol": "Pt",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9359
+  },
+  {
+   "Z": 78,
+   "N": 117,
+   "A": 195,
+   "symbol": "Pt",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.9266
+  },
+  {
+   "Z": 78,
+   "N": 118,
+   "A": 196,
+   "symbol": "Pt",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9265
+  },
+  {
+   "Z": 78,
+   "N": 120,
+   "A": 198,
+   "symbol": "Pt",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "2β-",
+     "percent": null
+    },
+    {
+     "mode": "2β-",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9142
+  },
+  {
+   "Z": 78,
+   "N": 122,
+   "A": 200,
+   "symbol": "Pt",
+   "stable": false,
+   "halfLife": "12.6",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8992
+  },
+  {
+   "Z": 79,
+   "N": 116,
+   "A": 195,
+   "symbol": "Au",
+   "stable": false,
+   "halfLife": "186.01",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9214
+  },
+  {
+   "Z": 79,
+   "N": 118,
+   "A": 197,
+   "symbol": "Au",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9157
+  },
+  {
+   "Z": 79,
+   "N": 120,
+   "A": 199,
+   "symbol": "Au",
+   "stable": false,
+   "halfLife": "3.139",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.9069
+  },
+  {
+   "Z": 79,
+   "N": 122,
+   "A": 201,
+   "symbol": "Au",
+   "stable": false,
+   "halfLife": "26.0",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2+",
+   "bindingEnergyPerNucleon": 7.8952
+  },
+  {
+   "Z": 80,
+   "N": 116,
+   "A": 196,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9144
+  },
+  {
+   "Z": 80,
+   "N": 118,
+   "A": 198,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9116
+  },
+  {
+   "Z": 80,
+   "N": 119,
+   "A": 199,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.9053
+  },
+  {
+   "Z": 80,
+   "N": 120,
+   "A": 200,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.9059
+  },
+  {
+   "Z": 80,
+   "N": 121,
+   "A": 201,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.8976
+  },
+  {
+   "Z": 80,
+   "N": 122,
+   "A": 202,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8969
+  },
+  {
+   "Z": 80,
+   "N": 124,
+   "A": 204,
+   "symbol": "Hg",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8855
+  },
+  {
+   "Z": 81,
+   "N": 122,
+   "A": 203,
+   "symbol": "Tl",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.8861
+  },
+  {
+   "Z": 81,
+   "N": 124,
+   "A": 205,
+   "symbol": "Tl",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.8784
+  },
+  {
+   "Z": 81,
+   "N": 126,
+   "A": 207,
+   "symbol": "Tl",
+   "stable": false,
+   "halfLife": "4.77",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.8668
+  },
+  {
+   "Z": 82,
+   "N": 122,
+   "A": 204,
+   "symbol": "Pb",
+   "stable": false,
+   "halfLife": "1.4E+17",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": "≥",
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": null
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8799
+  },
+  {
+   "Z": 82,
+   "N": 124,
+   "A": 206,
+   "symbol": "Pb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8754
+  },
+  {
+   "Z": 82,
+   "N": 125,
+   "A": 207,
+   "symbol": "Pb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.8699
+  },
+  {
+   "Z": 82,
+   "N": 126,
+   "A": 208,
+   "symbol": "Pb",
+   "stable": true,
+   "halfLife": null,
+   "halfLifeUnit": null,
+   "halfLifeOperator": null,
+   "decayModes": [],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8675
+  },
+  {
+   "Z": 82,
+   "N": 128,
+   "A": 210,
+   "symbol": "Pb",
+   "stable": false,
+   "halfLife": "22.20",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    },
+    {
+     "mode": "α",
+     "percent": "0.0000019"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.836
+  },
+  {
+   "Z": 82,
+   "N": 130,
+   "A": 212,
+   "symbol": "Pb",
+   "stable": false,
+   "halfLife": "10.622",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8043
+  },
+  {
+   "Z": 83,
+   "N": 125,
+   "A": 208,
+   "symbol": "Bi",
+   "stable": false,
+   "halfLife": "3.68E+5",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "100"
+    }
+   ],
+   "spin": "5+",
+   "bindingEnergyPerNucleon": 7.8499
+  },
+  {
+   "Z": 83,
+   "N": 126,
+   "A": 209,
+   "symbol": "Bi",
+   "stable": false,
+   "halfLife": "2.01E19",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "9/2-",
+   "bindingEnergyPerNucleon": 7.848
+  },
+  {
+   "Z": 83,
+   "N": 128,
+   "A": 211,
+   "symbol": "Bi",
+   "stable": false,
+   "halfLife": "2.14",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "99.724"
+    },
+    {
+     "mode": "β-",
+     "percent": "0.276"
+    }
+   ],
+   "spin": "9/2-",
+   "bindingEnergyPerNucleon": 7.8198
+  },
+  {
+   "Z": 84,
+   "N": 125,
+   "A": 209,
+   "symbol": "Po",
+   "stable": false,
+   "halfLife": "124",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "99.546"
+    },
+    {
+     "mode": "β+/EC",
+     "percent": "0.454"
+    }
+   ],
+   "spin": "1/2-",
+   "bindingEnergyPerNucleon": 7.8352
+  },
+  {
+   "Z": 84,
+   "N": 126,
+   "A": 210,
+   "symbol": "Po",
+   "stable": false,
+   "halfLife": "138.376",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8343
+  },
+  {
+   "Z": 84,
+   "N": 128,
+   "A": 212,
+   "symbol": "Po",
+   "stable": false,
+   "halfLife": "294.3",
+   "halfLifeUnit": "ns",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.8102
+  },
+  {
+   "Z": 85,
+   "N": 124,
+   "A": 209,
+   "symbol": "At",
+   "stable": false,
+   "halfLife": "5.42",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β+/EC",
+     "percent": "95.9"
+    },
+    {
+     "mode": "α",
+     "percent": "4.1"
+    }
+   ],
+   "spin": "9/2-",
+   "bindingEnergyPerNucleon": 7.8148
+  },
+  {
+   "Z": 85,
+   "N": 126,
+   "A": 211,
+   "symbol": "At",
+   "stable": false,
+   "halfLife": "7.214",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "EC",
+     "percent": "58.2"
+    },
+    {
+     "mode": "α",
+     "percent": "41.8"
+    }
+   ],
+   "spin": "9/2-",
+   "bindingEnergyPerNucleon": 7.8114
+  },
+  {
+   "Z": 86,
+   "N": 134,
+   "A": 220,
+   "symbol": "Rn",
+   "stable": false,
+   "halfLife": "55.6",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.7173
+  },
+  {
+   "Z": 86,
+   "N": 136,
+   "A": 222,
+   "symbol": "Rn",
+   "stable": false,
+   "halfLife": "3.8235",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.6945
+  },
+  {
+   "Z": 87,
+   "N": 136,
+   "A": 223,
+   "symbol": "Fr",
+   "stable": false,
+   "halfLife": "22.00",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "99.994"
+    },
+    {
+     "mode": "α",
+     "percent": "0.006"
+    }
+   ],
+   "spin": "3/2(-)",
+   "bindingEnergyPerNucleon": 7.6837
+  },
+  {
+   "Z": 87,
+   "N": 138,
+   "A": 225,
+   "symbol": "Fr",
+   "stable": false,
+   "halfLife": "3.95",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.6629
+  },
+  {
+   "Z": 88,
+   "N": 138,
+   "A": 226,
+   "symbol": "Ra",
+   "stable": false,
+   "halfLife": "1600",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "¹⁴C",
+     "percent": "0.0000000032"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.662
+  },
+  {
+   "Z": 88,
+   "N": 140,
+   "A": 228,
+   "symbol": "Ra",
+   "stable": false,
+   "halfLife": "5.75",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.6424
+  },
+  {
+   "Z": 89,
+   "N": 138,
+   "A": 227,
+   "symbol": "Ac",
+   "stable": false,
+   "halfLife": "21.772",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "98.62"
+    },
+    {
+     "mode": "α",
+     "percent": "1.38"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.6507
+  },
+  {
+   "Z": 89,
+   "N": 140,
+   "A": 229,
+   "symbol": "Ac",
+   "stable": false,
+   "halfLife": "62.7",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "(3/2+)",
+   "bindingEnergyPerNucleon": 7.6332
+  },
+  {
+   "Z": 90,
+   "N": 140,
+   "A": 230,
+   "symbol": "Th",
+   "stable": false,
+   "halfLife": "7.54E+4",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "²⁴Ne",
+     "percent": "0.000000000058"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000000000004"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.631
+  },
+  {
+   "Z": 90,
+   "N": 142,
+   "A": 232,
+   "symbol": "Th",
+   "stable": false,
+   "halfLife": "1.40E10",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000000011"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.615
+  },
+  {
+   "Z": 91,
+   "N": 140,
+   "A": 231,
+   "symbol": "Pa",
+   "stable": false,
+   "halfLife": "32570",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000000003"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.6184
+  },
+  {
+   "Z": 91,
+   "N": 142,
+   "A": 233,
+   "symbol": "Pa",
+   "stable": false,
+   "halfLife": "26.975",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.6049
+  },
+  {
+   "Z": 92,
+   "N": 142,
+   "A": 234,
+   "symbol": "U",
+   "stable": false,
+   "halfLife": "2.455E+5",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.00000000164"
+    },
+    {
+     "mode": "Mg",
+     "percent": "0.000000000014"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.6007
+  },
+  {
+   "Z": 92,
+   "N": 143,
+   "A": 235,
+   "symbol": "U",
+   "stable": false,
+   "halfLife": "7.04E+8",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000000007"
+    },
+    {
+     "mode": "²⁵Ne",
+     "percent": "0.0000000008"
+    }
+   ],
+   "spin": "7/2-",
+   "bindingEnergyPerNucleon": 7.5909
+  },
+  {
+   "Z": 92,
+   "N": 144,
+   "A": 236,
+   "symbol": "U",
+   "stable": false,
+   "halfLife": "2.342E7",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000000094"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5865
+  },
+  {
+   "Z": 92,
+   "N": 146,
+   "A": 238,
+   "symbol": "U",
+   "stable": false,
+   "halfLife": "4.468E9",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000545"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5701
+  },
+  {
+   "Z": 93,
+   "N": 144,
+   "A": 237,
+   "symbol": "Np",
+   "stable": false,
+   "halfLife": "2.144E+6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000000002"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.575
+  },
+  {
+   "Z": 93,
+   "N": 146,
+   "A": 239,
+   "symbol": "Np",
+   "stable": false,
+   "halfLife": "2.356",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "100"
+    }
+   ],
+   "spin": "5/2+",
+   "bindingEnergyPerNucleon": 7.5606
+  },
+  {
+   "Z": 94,
+   "N": 145,
+   "A": 239,
+   "symbol": "Pu",
+   "stable": false,
+   "halfLife": "24110",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.00000000031"
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.5603
+  },
+  {
+   "Z": 94,
+   "N": 146,
+   "A": 240,
+   "symbol": "Pu",
+   "stable": false,
+   "halfLife": "6561",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000057"
+    },
+    {
+     "mode": "³⁴Si",
+     "percent": "0.000000000013"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.556
+  },
+  {
+   "Z": 94,
+   "N": 148,
+   "A": 242,
+   "symbol": "Pu",
+   "stable": false,
+   "halfLife": "3.73E+5",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000553"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5413
+  },
+  {
+   "Z": 94,
+   "N": 150,
+   "A": 244,
+   "symbol": "Pu",
+   "stable": false,
+   "halfLife": "8.13E+7",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "99.877"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.123"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.5248
+  },
+  {
+   "Z": 95,
+   "N": 146,
+   "A": 241,
+   "symbol": "Am",
+   "stable": false,
+   "halfLife": "432.6",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.00000000036"
+    }
+   ],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 7.5433
+  },
+  {
+   "Z": 95,
+   "N": 148,
+   "A": 243,
+   "symbol": "Am",
+   "stable": false,
+   "halfLife": "7364",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0000000037"
+    }
+   ],
+   "spin": "5/2-",
+   "bindingEnergyPerNucleon": 7.5302
+  },
+  {
+   "Z": 96,
+   "N": 148,
+   "A": 244,
+   "symbol": "Cm",
+   "stable": false,
+   "halfLife": "18.11",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000137"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.524
+  },
+  {
+   "Z": 96,
+   "N": 151,
+   "A": 247,
+   "symbol": "Cm",
+   "stable": false,
+   "halfLife": "1.56E+7",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "9/2-",
+   "bindingEnergyPerNucleon": 7.5019
+  },
+  {
+   "Z": 97,
+   "N": 150,
+   "A": 247,
+   "symbol": "Bk",
+   "stable": false,
+   "halfLife": "1380",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "3/2-",
+   "bindingEnergyPerNucleon": 7.4989
+  },
+  {
+   "Z": 97,
+   "N": 152,
+   "A": 249,
+   "symbol": "Bk",
+   "stable": false,
+   "halfLife": "330",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "99.99855"
+    },
+    {
+     "mode": "α",
+     "percent": "0.00145"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000000047"
+    }
+   ],
+   "spin": "7/2+",
+   "bindingEnergyPerNucleon": 7.486
+  },
+  {
+   "Z": 98,
+   "N": 153,
+   "A": 251,
+   "symbol": "Cf",
+   "stable": false,
+   "halfLife": "898",
+   "halfLifeUnit": "a",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": null
+    }
+   ],
+   "spin": "1/2+",
+   "bindingEnergyPerNucleon": 7.4705
+  },
+  {
+   "Z": 98,
+   "N": 155,
+   "A": 253,
+   "symbol": "Cf",
+   "stable": false,
+   "halfLife": "17.81",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "β-",
+     "percent": "99.69"
+    },
+    {
+     "mode": "α",
+     "percent": "0.31"
+    }
+   ],
+   "spin": "(7/2+)",
+   "bindingEnergyPerNucleon": 7.4548
+  },
+  {
+   "Z": 99,
+   "N": 153,
+   "A": 252,
+   "symbol": "Es",
+   "stable": false,
+   "halfLife": "471.7",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "78"
+    },
+    {
+     "mode": "EC",
+     "percent": "22"
+    }
+   ],
+   "spin": "(5-)",
+   "bindingEnergyPerNucleon": 7.4572
+  },
+  {
+   "Z": 99,
+   "N": 155,
+   "A": 254,
+   "symbol": "Es",
+   "stable": false,
+   "halfLife": "275.7",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "β-",
+     "percent": "0.000174"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.000003"
+    }
+   ],
+   "spin": "(7+)",
+   "bindingEnergyPerNucleon": 7.4436
+  },
+  {
+   "Z": 100,
+   "N": 152,
+   "A": 252,
+   "symbol": "Fm",
+   "stable": false,
+   "halfLife": "25.39",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "99.9977"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.0023"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.456
+  },
+  {
+   "Z": 100,
+   "N": 157,
+   "A": 257,
+   "symbol": "Fm",
+   "stable": false,
+   "halfLife": "100.5",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "99.79"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.21"
+    }
+   ],
+   "spin": "(9/2+)",
+   "bindingEnergyPerNucleon": 7.4222
+  },
+  {
+   "Z": 101,
+   "N": 157,
+   "A": 258,
+   "symbol": "Md",
+   "stable": false,
+   "halfLife": "51.50",
+   "halfLifeUnit": "d",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": "(8-)",
+   "bindingEnergyPerNucleon": 7.4097
+  },
+  {
+   "Z": 101,
+   "N": 158,
+   "A": 259,
+   "symbol": "Md",
+   "stable": false,
+   "halfLife": "1.60",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "100"
+    },
+    {
+     "mode": "α",
+     "percent": "1.3"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.405
+  },
+  {
+   "Z": 102,
+   "N": 152,
+   "A": 254,
+   "symbol": "No",
+   "stable": false,
+   "halfLife": "51.2",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "90"
+    },
+    {
+     "mode": "EC",
+     "percent": "10"
+    },
+    {
+     "mode": "SF",
+     "percent": "0.17"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.4236
+  },
+  {
+   "Z": 102,
+   "N": 157,
+   "A": 259,
+   "symbol": "No",
+   "stable": false,
+   "halfLife": "58",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "75"
+    },
+    {
+     "mode": "β+/EC",
+     "percent": "25"
+    },
+    {
+     "mode": "SF",
+     "percent": "10"
+    }
+   ],
+   "spin": "(9/2+)",
+   "bindingEnergyPerNucleon": 7.4
+  },
+  {
+   "Z": 103,
+   "N": 157,
+   "A": 260,
+   "symbol": "Lr",
+   "stable": false,
+   "halfLife": "180",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "80"
+    },
+    {
+     "mode": "EC",
+     "percent": "40"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.383
+  },
+  {
+   "Z": 103,
+   "N": 159,
+   "A": 262,
+   "symbol": "Lr",
+   "stable": false,
+   "halfLife": "4",
+   "halfLifeUnit": "h",
+   "halfLifeOperator": "~",
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "10"
+    },
+    {
+     "mode": "α",
+     "percent": null
+    },
+    {
+     "mode": "β+/EC",
+     "percent": null
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.374
+  },
+  {
+   "Z": 104,
+   "N": 153,
+   "A": 257,
+   "symbol": "Rf",
+   "stable": false,
+   "halfLife": "4.4",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "79.3"
+    },
+    {
+     "mode": "EC",
+     "percent": "19.4"
+    },
+    {
+     "mode": "SF",
+     "percent": "1.3"
+    }
+   ],
+   "spin": "(1/2+)",
+   "bindingEnergyPerNucleon": 7.3817
+  },
+  {
+   "Z": 104,
+   "N": 157,
+   "A": 261,
+   "symbol": "Rf",
+   "stable": false,
+   "halfLife": "68",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.3714
+  },
+  {
+   "Z": 105,
+   "N": 157,
+   "A": 262,
+   "symbol": "Db",
+   "stable": false,
+   "halfLife": "35",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "67"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.352
+  },
+  {
+   "Z": 106,
+   "N": 160,
+   "A": 266,
+   "symbol": "Sg",
+   "stable": false,
+   "halfLife": "0.34",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "100"
+    },
+    {
+     "mode": "α",
+     "percent": "18"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.332
+  },
+  {
+   "Z": 107,
+   "N": 163,
+   "A": 270,
+   "symbol": "Bh",
+   "stable": false,
+   "halfLife": "1.0",
+   "halfLifeUnit": "min",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": null
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.301
+  },
+  {
+   "Z": 108,
+   "N": 161,
+   "A": 269,
+   "symbol": "Hs",
+   "stable": false,
+   "halfLife": "13",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.294
+  },
+  {
+   "Z": 108,
+   "N": 165,
+   "A": 273,
+   "symbol": "Hs",
+   "stable": false,
+   "halfLife": "0.51",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "12.5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.279
+  },
+  {
+   "Z": 109,
+   "N": 165,
+   "A": 274,
+   "symbol": "Mt",
+   "stable": false,
+   "halfLife": "0.44",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": null
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.259
+  },
+  {
+   "Z": 109,
+   "N": 167,
+   "A": 276,
+   "symbol": "Mt",
+   "stable": false,
+   "halfLife": "0.69",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.25
+  },
+  {
+   "Z": 110,
+   "N": 169,
+   "A": 279,
+   "symbol": "Ds",
+   "stable": false,
+   "halfLife": "0.216",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "88.5"
+    },
+    {
+     "mode": "α",
+     "percent": "12.5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.229
+  },
+  {
+   "Z": 110,
+   "N": 171,
+   "A": 281,
+   "symbol": "Ds",
+   "stable": false,
+   "halfLife": "12",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "94"
+    },
+    {
+     "mode": "α",
+     "percent": "6"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.22
+  },
+  {
+   "Z": 111,
+   "N": 170,
+   "A": 281,
+   "symbol": "Rg",
+   "stable": false,
+   "halfLife": "15",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "SF",
+     "percent": "82"
+    },
+    {
+     "mode": "α",
+     "percent": "18"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.209
+  },
+  {
+   "Z": 112,
+   "N": 165,
+   "A": 277,
+   "symbol": "Cn",
+   "stable": false,
+   "halfLife": "0.61",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "17"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.205
+  },
+  {
+   "Z": 112,
+   "N": 173,
+   "A": 285,
+   "symbol": "Cn",
+   "stable": false,
+   "halfLife": "33",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "6"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.185
+  },
+  {
+   "Z": 113,
+   "N": 172,
+   "A": 285,
+   "symbol": "Nh",
+   "stable": false,
+   "halfLife": "0.93",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.172
+  },
+  {
+   "Z": 113,
+   "N": 173,
+   "A": 286,
+   "symbol": "Nh",
+   "stable": false,
+   "halfLife": "9.5",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": null
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.168
+  },
+  {
+   "Z": 114,
+   "N": 173,
+   "A": 287,
+   "symbol": "Fl",
+   "stable": false,
+   "halfLife": "0.40",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.155
+  },
+  {
+   "Z": 114,
+   "N": 175,
+   "A": 289,
+   "symbol": "Fl",
+   "stable": false,
+   "halfLife": "2.4",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "6"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.149
+  },
+  {
+   "Z": 115,
+   "N": 174,
+   "A": 289,
+   "symbol": "Mc",
+   "stable": false,
+   "halfLife": "296",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.135
+  },
+  {
+   "Z": 115,
+   "N": 175,
+   "A": 290,
+   "symbol": "Mc",
+   "stable": false,
+   "halfLife": "0.65",
+   "halfLifeUnit": "s",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": null
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.131
+  },
+  {
+   "Z": 116,
+   "N": 177,
+   "A": 293,
+   "symbol": "Lv",
+   "stable": false,
+   "halfLife": "95",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "12.5"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.111
+  },
+  {
+   "Z": 117,
+   "N": 176,
+   "A": 293,
+   "symbol": "Ts",
+   "stable": false,
+   "halfLife": "21",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "6"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.095
+  },
+  {
+   "Z": 117,
+   "N": 177,
+   "A": 294,
+   "symbol": "Ts",
+   "stable": false,
+   "halfLife": "51",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    }
+   ],
+   "spin": null,
+   "bindingEnergyPerNucleon": 7.092
+  },
+  {
+   "Z": 118,
+   "N": 176,
+   "A": 294,
+   "symbol": "Og",
+   "stable": false,
+   "halfLife": "0.58",
+   "halfLifeUnit": "ms",
+   "halfLifeOperator": null,
+   "decayModes": [
+    {
+     "mode": "α",
+     "percent": "100"
+    },
+    {
+     "mode": "SF",
+     "percent": "20"
+    }
+   ],
+   "spin": "0+",
+   "bindingEnergyPerNucleon": 7.079
+  }
+ ]
+}

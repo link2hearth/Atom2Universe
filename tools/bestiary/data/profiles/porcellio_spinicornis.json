@@ -1,0 +1,120 @@
+{
+  "id": "porcellio_spinicornis",
+  "scientific": "Porcellio spinicornis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Painted woodlouse",
+    "fr": "Cloporte peint"
+  },
+  "sections": {
+    "overview": {
+      "en": "In Canada, P. spinicornis is documented as an introduced species.",
+      "fr": "Au Canada, P. spinicornis est documenté comme une espèce introduite."
+    },
+    "identification": {
+      "en": "A dark stripe with yellow mottling distinguishes it from the randomly mottled P. scaber; it reaches about 12 mm.",
+      "fr": "Une bande sombre bordée de jaune le distingue des taches irrégulières de P. scaber ; il atteint environ 12 mm."
+    },
+    "habitat": {
+      "en": "It favours dry, exposed limestone and old lime-mortared walls.",
+      "fr": "Il préfère les calcaires secs et dégagés ainsi que les vieux murs au mortier de chaux."
+    },
+    "diet": {
+      "en": "Unreported in these accounts.",
+      "fr": "Non précisé dans ces fiches."
+    },
+    "behavior": {
+      "en": "It is often found active on walls at night.",
+      "fr": "Il est souvent actif sur les murs la nuit."
+    },
+    "reproduction": {
+      "en": "Unreported in these accounts.",
+      "fr": "Non précisée dans ces fiches."
+    },
+    "ecology": {
+      "en": "Its calcareous-wall preference contrasts with the broader habitat range of P. scaber.",
+      "fr": "Sa préférence pour les murs calcaires contraste avec les habitats plus variés de P. scaber."
+    },
+    "conservation": {
+      "en": "The British group records it widely in Britain and Ireland and lists it as Least Concern there.",
+      "fr": "Le groupe britannique le signale largement en Grande-Bretagne et en Irlande et le classe en préoccupation mineure dans cette région."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Porcellio spinicornis — British Myriapod and Isopod Group",
+        "fr": "Porcellio spinicornis — British Myriapod and Isopod Group"
+      },
+      "url": "https://bmig.org.uk/species/Porcellio-spinicornis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist account gives appearance, calcareous habitat, night activity and British status; it contrasts pattern and habitat with P. scaber."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 19,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Terrestrial isopods in Canada — The Canadian Entomologist",
+        "fr": "Isopodes terrestres du Canada — The Canadian Entomologist"
+      },
+      "url": "https://www.cambridge.org/core/journals/canadian-entomologist/article/distribution-and-diversity-of-terrestrial-isopods-isopoda-oniscidea-in-canada-including-new-records-and-a-species-checklist/C413A7873A1E0F943D684431096688EC",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Peer-reviewed checklist documents introduced records in Canada."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 7,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Least Concern applies to Great Britain only.",
+    "Diet and reproduction details were not available in specialist sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the British specialist group and a peer-reviewed Canadian paper; comparison with P. scaber is reciprocal and limited to documented differences."
+}

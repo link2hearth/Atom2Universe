@@ -1,0 +1,142 @@
+{
+  "id": "ecnomiohyla_rabborum",
+  "scientific": "Ecnomiohyla rabborum",
+  "group": "amphibians",
+  "name": {
+    "en": "Rabb’s Fringe-limbed Treefrog",
+    "fr": "Rainette de Rabbs à franges"
+  },
+  "sections": {
+    "overview": {
+      "en": "Rabb’s Fringe-limbed Treefrog is known from the mountains around El Valle de Antón in central Panama.",
+      "fr": "La Rainette de Rabbs à franges est connue des montagnes autour d’El Valle de Antón, dans le centre du Panama."
+    },
+    "identification": {
+      "en": "It is a large treefrog with extensive webbing on the hands and feet, enabling short glides.",
+      "fr": "C’est une grande rainette aux mains et aux pieds largement palmés, ce qui lui permet de planer sur de courtes distances."
+    },
+    "habitat": {
+      "en": "It inhabits premontane forest around El Valle de Antón, at roughly 900–1150 m elevation.",
+      "fr": "Elle vit dans les forêts prémontagnardes autour d’El Valle de Antón, vers 900 à 1 150 m d’altitude."
+    },
+    "diet": {
+      "en": "The species account provides no specific prey list.",
+      "fr": "La fiche de l’espèce ne fournit pas de liste de proies précise."
+    },
+    "behavior": {
+      "en": "Males call from tree holes and guard the eggs and tadpoles.",
+      "fr": "Les mâles chantent depuis des cavités d’arbres et gardent les œufs et les têtards."
+    },
+    "reproduction": {
+      "en": "Females lay clutches of about 60–200 eggs above water inside tree holes, and males attend the eggs and tadpoles.",
+      "fr": "Les femelles pondent des grappes d’environ 60 à 200 œufs au-dessus de l’eau dans des cavités d’arbres; les mâles veillent sur les œufs et les têtards."
+    },
+    "ecology": {
+      "en": "A 2025 acoustic survey found no evidence of the frog, while the IUCN assessment records continuing habitat decline and possible disease impacts.",
+      "fr": "Une étude acoustique de 2025 n’a trouvé aucun indice de présence; l’UICN relève un déclin continu de l’habitat et des effets possibles d’une maladie."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Critically Endangered (Possibly Extinct); the last known captive individual died in 2016.",
+      "fr": "L’UICN la classe en danger critique (peut-être éteinte); le dernier individu captif connu est mort en 2016."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — Ecnomiohyla rabborum",
+        "fr": "Liste rouge de l’UICN — Ecnomiohyla rabborum"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T85341796A54357363.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "2018 global assessment, range, habitat, gliding adaptations, breeding ecology, decline and possibly-extinct status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 13,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spectacular New Gliding Species of Ecnomiohyla from Central Panama — Journal of Herpetology",
+        "fr": "Nouvelle espèce planeuse d’Ecnomiohyla du Panama central — Journal of Herpetology"
+      },
+      "url": "https://doi.org/10.1670/08-025R1.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original species description; morphology and tree-hole breeding details."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 8,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Panamanian acoustic surveys for frogs of conservation concern — Frontiers (2025)",
+        "fr": "Prospections acoustiques de grenouilles menacées au Panama — Frontiers (2025)"
+      },
+      "url": "https://www.frontiersin.org/journals/amphibian-and-reptile-science/articles/10.3389/famrs.2025.1736880/full",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "2022/2024 surveys in Panama found no evidence for E. rabborum."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 10,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN category is based on its 2018 assessment; non-detection in later surveys does not prove extinction.",
+    "The recent survey found no evidence of this frog but was not a global census."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the IUCN assessment, the original species description and a 2025 Panamanian acoustic-survey paper. Retained the formal possibly-extinct qualifier and did not convert non-detection into confirmation of extinction."
+}

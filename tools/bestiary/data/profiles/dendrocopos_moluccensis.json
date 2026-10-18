@@ -1,0 +1,141 @@
+{
+  "id": "dendrocopos_moluccensis",
+  "scientific": "Dendrocopos moluccensis",
+  "group": "birds",
+  "name": {
+    "en": "Sunda Pygmy Woodpecker",
+    "fr": "Pic pygmée de la Sonde"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sunda Pygmy Woodpecker is a very small resident of the Thai-Malay Peninsula, Borneo and the Sunda Islands; many current lists use Yungipicus moluccensis.",
+      "fr": "Le Pic pygmée de la Sonde est un très petit résident de la péninsule thaïo-malaise, de Bornéo et des îles de la Sonde; de nombreuses listes actuelles emploient Yungipicus moluccensis."
+    },
+    "identification": {
+      "en": "It has brown upperparts marked with white and pale, dark-streaked underparts; a red streak on the male’s hindcrown can be difficult to see.",
+      "fr": "Son dessus brun est marqué de blanc et son dessous clair est strié de sombre; chez le mâle, une marque rouge sur l’arrière de la calotte peut être discrète."
+    },
+    "habitat": {
+      "en": "In Singapore, it uses coastal parks and gardens in urban areas.",
+      "fr": "À Singapour, il fréquente les parcs côtiers et les jardins urbains."
+    },
+    "diet": {
+      "en": "It gleans and probes bark on slender dead branches and twigs for insects and other small invertebrates; it also forages on trees favored for food.",
+      "fr": "Il glane et sonde l’écorce des branches mortes fines et des rameaux pour y trouver insectes et petits invertébrés; il cherche aussi sa nourriture sur des arbres privilégiés."
+    },
+    "behavior": {
+      "en": "It is usually encountered alone or in pairs and moves slowly while searching along bark and branches.",
+      "fr": "On l’observe généralement seul ou en couple; il se déplace lentement en inspectant l’écorce et les branches."
+    },
+    "reproduction": {
+      "en": "Like other woodpeckers, it nests in tree cavities; Singapore’s parks authority installed nest boxes because natural nesting holes can be limited.",
+      "fr": "Comme les autres pics, il niche dans des cavités d’arbres; les autorités des parcs de Singapour ont installé des nichoirs car les cavités naturelles peuvent manquer."
+    },
+    "ecology": {
+      "en": "It can persist in modified urban landscapes where suitable trees remain.",
+      "fr": "Il peut persister dans les paysages urbains modifiés lorsqu’il reste des arbres favorables."
+    },
+    "conservation": {
+      "en": "The Singapore Red Data Book lists the native species as Least Concern locally; that national category is not a substitute for a global assessment.",
+      "fr": "Le Livre rouge de Singapour classe localement cette espèce indigène en préoccupation mineure; cette catégorie nationale ne remplace pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sunda Pygmy Woodpecker — NParks Garden Bird Watch",
+        "fr": "Pic pygmée de la Sonde — relevé des oiseaux des jardins de NParks"
+      },
+      "url": "https://www.nparks.gov.sg/-/media/nparks-real-content/about-us/publications/garden_bird_watch_lowres.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Singapore National Parks Board account gives plumage, favored nesting trees, park use and nesting-hole context."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 15,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sunda Pygmy Woodpecker — Birds of Singapore",
+        "fr": "Pic pygmée de la Sonde — Birds of Singapore"
+      },
+      "url": "https://singaporebirds.com/species/sunda-pygmy-woodpecker/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Singapore bird society account: range, habits, feeding and parks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 9,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Birds of Singapore — NParks species list",
+        "fr": "Oiseaux de Singapour — liste des espèces de NParks"
+      },
+      "url": "https://www.nparks.gov.sg/nature/species-list/birds",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The official Singapore bird list records Yungipicus moluccensis as native and locally Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 14,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic treatments differ in generic placement; the profile retains the requested name and notes the widely used combination Yungipicus moluccensis."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Singapore’s NParks accounts with the Bird Society of Singapore profile; retained both generic combinations because taxonomic checklists do not all place this species alike."
+}

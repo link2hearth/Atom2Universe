@@ -1,0 +1,116 @@
+{
+  "id": "eumorpha_anchemolus",
+  "scientific": "Eumorpha anchemolus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Anchemola sphinx",
+    "fr": "Sphinx d’Anchemolus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eumorpha anchemolus is a Neotropical sphinx moth and a congener of E. fasciatus and E. labruscae, described in their profiles.",
+      "fr": "Eumorpha anchemolus est un sphinx néotropical, congénère d’E. fasciatus et d’E. labruscae, décrits dans leurs fiches."
+    },
+    "identification": {
+      "en": "This large sphinx moth has forewing and hindwing patterning useful for identification; consult the linked regional identification account for detailed marks.",
+      "fr": "Ce grand sphinx présente des motifs aux ailes antérieures et postérieures utiles à l’identification; consulter le compte rendu régional lié pour les détails."
+    },
+    "habitat": {
+      "en": "The moth is recorded from South America north through Central America and Mexico; occasional northern records should not imply a resident range.",
+      "fr": "Le papillon est signalé d’Amérique du Sud jusqu’en Amérique centrale et au Mexique; les mentions plus septentrionales ne prouvent pas une aire résidente."
+    },
+    "diet": {
+      "en": "Published host records include grape-family vines such as Cissus, Vitis and Ampelopsis.",
+      "fr": "Les plantes-hôtes publiées comprennent des lianes de la famille de la vigne, notamment Cissus, Vitis et Ampelopsis."
+    },
+    "behavior": {
+      "en": "BAMONA reports nectar use but provides no flight period, so seasonal activity remains poorly summarized.",
+      "fr": "BAMONA signale une consommation de nectar, mais ne précise pas la période de vol; l’activité saisonnière reste donc peu documentée."
+    },
+    "reproduction": {
+      "en": "Caterpillars pupate in shallow chambers or burrows in the soil; detailed egg-laying schedules are not summarized in the sources used.",
+      "fr": "Les chenilles se nymphosent dans des chambres peu profondes du sol; les sources utilisées ne précisent pas le calendrier de ponte."
+    },
+    "ecology": {
+      "en": "The three profiles are congeners, but their recorded larval hosts differ: this species uses the plant groups described above.",
+      "fr": "Les trois fiches concernent des congénères, mais leurs plantes-hôtes larvaires documentées diffèrent : cette espèce utilise les groupes indiqués plus haut."
+    },
+    "conservation": {
+      "en": "Available regional accounts provide limited species-specific information on population trends or conservation status.",
+      "fr": "BAMONA indique un statut mondial sécurisé, même si l’espèce peut être rare aux marges de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Anchemola sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx d’Anchemolus — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Eumorpha-anchemolus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BAMONA species account summarizes identification, nectar use, pupation, and regional conservation category; it does not give a flight period."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 19,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eumorpha anchemolus — Moth Photographers Group",
+        "fr": "Eumorpha anchemolus — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7857",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic and host-plant catalogue supports congeneric placement, range context, and reported larval host genera."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 14,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced the three Eumorpha profiles as congeners and distinguished them by reported host families and regional ranges. Broad range maps include vagrants, and global secure categories do not imply equal local abundance."
+}

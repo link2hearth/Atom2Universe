@@ -1,0 +1,151 @@
+{
+  "id": "sphinx_chisoya",
+  "scientific": "Sphinx chisoya",
+  "group": "invertebrates",
+  "name": {
+    "en": "Chisoya sphinx",
+    "fr": "Sphinx chisoya"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Sphingidae moth ranges from southern Texas into Mexico.",
+      "fr": "Ce Sphingidae est présent du sud du Texas jusqu’au Mexique."
+    },
+    "identification": {
+      "en": "Grey-blue wings bear dark marks; wingspan is about 7–8.2 cm.",
+      "fr": "Ses ailes gris-bleu portent des marques sombres ; envergure : environ 7 à 8,2 cm."
+    },
+    "habitat": {
+      "en": "It occurs in tropical and subtropical lowlands.",
+      "fr": "Il fréquente les basses terres tropicales et subtropicales."
+    },
+    "diet": {
+      "en": "Host plants are unreported; adults probably take flower nectar.",
+      "fr": "Les plantes hôtes sont inconnues ; les adultes prendraient du nectar floral."
+    },
+    "behavior": {
+      "en": "The consulted account does not report its flight season.",
+      "fr": "La fiche consultée ne précise pas sa période de vol."
+    },
+    "reproduction": {
+      "en": "Mature caterpillars pupate in underground chambers.",
+      "fr": "Les chenilles arrivées à maturité se nymphosent sous terre."
+    },
+    "ecology": {
+      "en": "It is one of the recognized species in genus Sphinx. It ranges from south Texas into Mexico. Its congener Sphinx canadensis reaches Arkansas from Canada.",
+      "fr": "C’est une espèce reconnue du genre Sphinx. Elle va du sud du Texas jusqu’au Mexique. Son congénère Sphinx canadensis atteint l’Arkansas depuis le Canada."
+    },
+    "conservation": {
+      "en": "BAMONA calls it a rare stray in the United States only.",
+      "fr": "BAMONA la décrit seulement comme visiteuse rare aux États-Unis."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Butterflies and Moths of North America — Chisoya sphinx",
+        "fr": "Butterflies and Moths of North America — Chisoya sphinx"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-chisoya",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "BAMONA lists range, appearance, size, habitat, known gaps in host and flight records, pupation and its limited U.S. conservation note.",
+        "BAMONA provides the tropical lowland habitat and Mexico range used to distinguish it from Sphinx canadensis.",
+        "BAMONA gives the species range from south Texas into Mexico."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 46,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. Fish and Wildlife Service — Chisoya sphinx",
+        "fr": "U.S. Fish and Wildlife Service — Chisoya sphinx"
+      },
+      "url": "https://www.fws.gov/species/sphinx-chisoya-sphinx-chisoya",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The U.S. agency classifies Sphinx chisoya within genus Sphinx."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 9,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BAMONA — Canadian sphinx",
+        "fr": "BAMONA — Sphinx du Canada"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-canadensis",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BAMONA reports the Canadian sphinx range from Canada south to Arkansas, contrasting with the Mexico-reaching Sphinx chisoya."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 17,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "BAMONA labels the species a rare stray in the United States; no range-wide conservation conclusion is inferred from that statement.",
+    "The species account does not report host plants or flight dates."
+  ],
+  "review_note": "Kept this profile short because publicly available life-history data in the consulted accounts are limited.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,110 @@
+{
+  "id": "daphnia_magna",
+  "scientific": "Daphnia magna",
+  "group": "invertebrates",
+  "name": {
+    "en": "Water Flea",
+    "fr": "Grande daphnie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Daphnia magna is a small freshwater crustacean, the largest of the European water fleas, that drifts in ponds and lakes. It is mostly transparent, reproduces mainly by clones, and is one of the most widely used animals in ecology, genetics and toxicity testing.",
+      "fr": "Daphnia magna est un petit crustacé d’eau douce, la plus grande des daphnies d’Europe, qui dérive dans les étangs et les lacs. Elle est presque transparente, se reproduit surtout par clonage et compte parmi les animaux les plus utilisés en écologie, en génétique et dans les tests de toxicité."
+    },
+    "identification": {
+      "en": "Females measure about 3 to 5 mm and males about 2 mm. The body is bean-shaped and enclosed in a transparent carapace, with one large dark compound eye at the front and two pairs of antennae; the large, branched second pair drives swimming. Males have longer first antennae and a hooked first leg used to clasp females. Reliable body-mass figures were not found in the consulted sources; the published adult measurements are lengths and vary strongly with sex and environment.",
+      "fr": "Les femelles mesurent environ 3 à 5 mm et les mâles environ 2 mm. Le corps, en forme de haricot, est enfermé dans une carapace transparente, avec un grand œil composé sombre à l’avant et deux paires d’antennes; la grande paire postérieure, ramifiée, assure la nage. Les mâles ont des antennules plus longues et une première patte en crochet pour retenir les femelles. Les sources consultées ne donnent pas de masse fiable ; les mensurations adultes publiées sont des longueurs et varient fortement selon le sexe et le milieu."
+    },
+    "habitat": {
+      "en": "It lives in standing fresh and brackish water, from temporary pools to lakes, tolerating salinity up to about 8 parts per thousand and preferring roughly 18 to 22 °C. It is native to the Nearctic and Palearctic regions, with records in western Europe, around the Black Sea and in coastal rock pools of the north-eastern United States.",
+      "fr": "Elle vit dans les eaux douces et saumâtres stagnantes, des mares temporaires aux lacs, supporte une salinité d’environ 8 pour mille et préfère à peu près 18 à 22 °C. Elle est native des régions néarctique et paléarctique, avec des signalements en Europe de l’Ouest, autour de la mer Noire et dans des cuvettes rocheuses côtières du nord-est des États-Unis."
+    },
+    "diet": {
+      "en": "It is a filter feeder. Hairs on its thoracic legs strain particles, generally smaller than 50 micrometres, from the water: algae, bacteria, detritus and fungal spores.",
+      "fr": "C’est un filtreur. Les soies de ses pattes thoraciques retiennent dans l’eau des particules, en général de moins de 50 micromètres : algues, bactéries, détritus et spores de champignons."
+    },
+    "behavior": {
+      "en": "It swims in quick, jerky jumps driven by its large second antennae. In lakes it can perform a daily vertical migration, rising to the upper water at night to feed and sinking by day to avoid predators. It lives in dense groups with no social hierarchy.",
+      "fr": "Elle nage par petits bonds saccadés, propulsée par ses grandes secondes antennes. Dans les lacs, elle peut effectuer une migration verticale quotidienne, montant vers les eaux superficielles la nuit pour se nourrir et redescendant le jour pour échapper aux prédateurs. Elle vit en groupes denses, sans hiérarchie sociale."
+    },
+    "reproduction": {
+      "en": "It is a cyclic parthenogen: most of the time females produce diploid eggs that develop into female clones, with a brood of about 8 eggs on average, held in the brood pouch for 1 to 4 days. Under stress such as low food, extreme temperature or crowding, males appear and fertilised eggs are enclosed in a protective case called an ephippium, which can remain dormant for years. Young reach maturity in 6 to 10 days.",
+      "fr": "C’est un parthénogène cyclique : le plus souvent, les femelles produisent des œufs diploïdes qui deviennent des clones femelles, avec une portée moyenne d’environ 8 œufs, gardés dans la poche incubatrice pendant 1 à 4 jours. En cas de stress, comme un manque de nourriture, une température extrême ou la surpopulation, des mâles apparaissent et les œufs fécondés sont enfermés dans une enveloppe protectrice appelée éphippie, qui peut rester dormante pendant des années. Les jeunes atteignent la maturité en 6 à 10 jours."
+    },
+    "ecology": {
+      "en": "Daphnia are often keystone grazers in ponds and lakes, the main consumers of unicellular algae, and they link primary production to fish and invertebrate predators. D. magna is eaten by fish such as roach and perch and by insect larvae and backswimmers, and in some habitats it can be displaced by competing Daphnia species.",
+      "fr": "Les daphnies sont souvent des brouteuses clés des étangs et des lacs, principales consommatrices d’algues unicellulaires, et relient la production primaire aux poissons et aux invertébrés prédateurs. D. magna est mangée par des poissons comme le gardon et la perche, par des larves d’insectes et des notonectes, et peut être supplantée dans certains milieux par des daphnies concurrentes."
+    },
+    "conservation": {
+      "en": "The Animal Diversity Web states that the species has not been evaluated by the IUCN and has no special protection status. It is easy to culture and widespread, and no specific threat was found in the sources consulted.",
+      "fr": "L’Animal Diversity Web indique que l’espèce n’a pas été évaluée par l’UICN et ne bénéficie d’aucun statut de protection particulier. Elle est facile à élever et répandue, et aucune menace précise n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Daphnia magna — Animal Diversity Web, University of Michigan",
+        "fr": "Daphnia magna — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Daphnia_magna/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Females 3–5 mm, males about 2 mm; transparent carapace, one compound eye; brackish water up to 8 ppt; filter feeder on particles under 50 micrometres; swims in jumps; diel vertical migration.",
+        "Cyclic parthenogen; ephippial eggs; brood about 8 on average, 1–4 days in brood pouch, maturity in 6–10 days; eaten by fish and insects; IUCN: not evaluated.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Daphnia as a versatile model system in ecology and evolution (PubMed Central)",
+        "fr": "Daphnia, un système modèle polyvalent en écologie et en évolution (PubMed Central)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9360664/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cyclic parthenogenesis; stress brings males and ephippia that can survive many years; standing fresh and brackish water from temporary pools to lakes.",
+        "Often a keystone species and main primary consumer; prey for fish and invertebrates; D. magna used in routine crosses and standard ecotoxicology tests."
+      ]
+    },
+    {
+      "title": {
+        "en": "Photographing Water-fleas, Daphnia — The Canadian Nature Photographer",
+        "fr": "Photographier les daphnies — The Canadian Nature Photographer"
+      },
+      "url": "https://www.canadiannaturephotographer.com/daphnia.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Large secondary antennae drive swimming in jumps; males smaller with larger antennules and a hooked first leg; resting eggs in a dark saddle-like ephippium; young stay about 3 days in the brood pouch.",
+        "General genus-level observations, not specific to D. magna."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account cites a lifespan of 1 to 56 days and brood sizes of 1 to 100, which vary strongly with temperature and food; they are not used or given only as an average.",
+    "Some anatomy and behaviour details come from a genus-level source and from the Animal Diversity Web, whose conservation statements can be out of date; the IUCN Red List page could not be opened.",
+    "Geographic scope is the species’ native range in the Northern Hemisphere; introduced populations are not covered."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

@@ -1,0 +1,191 @@
+{
+  "id": "peribatodes_ilicaria",
+  "scientific": "Peribatodes ilicaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Lydd beauty",
+    "fr": "Boarmie de l’Yeuse"
+  },
+  "sections": {
+    "overview": {
+      "en": "Peribatodes ilicaria is a geometrid moth found in Europe; in Britain it is a rare migrant, while it is established in parts of continental Europe.",
+      "fr": "Peribatodes ilicaria est un papillon géométridé présent en Europe ; rare migrateur en Grande-Bretagne, il est établi dans certaines régions du continent."
+    },
+    "identification": {
+      "en": "It is similar to the Willow Beauty, P. rhomboidaria, but usually has heavier, more distinct speckling.",
+      "fr": "Elle ressemble à la Boarmie rhomboïdale, P. rhomboidaria, mais présente généralement un moucheté plus marqué et contrasté."
+    },
+    "habitat": {
+      "en": "It favors warm, dry wooded places and scrub; in France it is more frequent in the Centre and South than in the North.",
+      "fr": "Elle affectionne les bois et friches broussailleuses, secs et chauds ; en France, elle est plus fréquente dans le Centre et le Sud que dans le Nord."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on a range of trees and shrubs, with French accounts noting lichens and records from oak, holly, juniper and pine.",
+      "fr": "Ses chenilles consomment divers arbres et arbustes ; les sources françaises signalent notamment des lichens et des observations sur chêne, houx, genévrier et pin."
+    },
+    "behavior": {
+      "en": "Adults fly mainly in summer; British records are too few to define a reliable flight period there.",
+      "fr": "Les adultes volent surtout en été ; les observations britanniques sont trop peu nombreuses pour y établir une période de vol fiable."
+    },
+    "reproduction": {
+      "en": "It usually has one generation per year, and the caterpillar overwinters; a second spring generation is reported exceptionally in southern France.",
+      "fr": "Elle a généralement une génération par an et la chenille hiverne ; une deuxième génération printanière est signalée exceptionnellement dans le sud de la France."
+    },
+    "ecology": {
+      "en": "The Willow Beauty is its close congener and a useful identification comparison, but the two remain separate species with different reported patterns.",
+      "fr": "La Boarmie rhomboïdale est une proche congénère et un bon élément de comparaison pour l’identification, mais les deux restent des espèces distinctes aux motifs différents."
+    },
+    "conservation": {
+      "en": "A 2022 Île-de-France survey calls its regional status threatened. A separate French data portal says it has no Red List assessment, so these local sources do not establish a global category.",
+      "fr": "Un inventaire d’Île-de-France de 2022 la qualifie de menacée à l’échelle régionale. Un autre portail français indique qu’elle n’a pas été évaluée en Liste rouge ; ces sources locales ne déterminent donc pas une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lydd Beauty — UKMoths",
+        "fr": "Lydd Beauty — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/peribatodes-ilicaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "UK account describes its European range, rarity in Britain, similarity to P. rhomboidaria and limited local flight records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 18,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La Boarmie de l’Yeuse — Lepinet",
+        "fr": "La Boarmie de l’Yeuse — Lepinet"
+      },
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?id=37080",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "French moth account supplies the common name, distribution, host plants and seasonal records."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 13,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peribatodes ilicaria — Observatoire FAUNA",
+        "fr": "Peribatodes ilicaria — Observatoire FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248894",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The French regional portal records an absence of Red List evaluation and warns that its taxon record is automatically generated."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 20,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lepidoptera inventory of Buttes gréseuses — OPIE / French regional environmental directorate",
+        "fr": "Inventaire des Lépidoptères des Buttes gréseuses — OPIE / DRIEAT Île-de-France"
+      },
+      "url": "https://www.drieat.ile-de-france.developpement-durable.gouv.fr/IMG/pdf/opie_2022_rapport_inventaire_lepidopteres_buttesgreseuses_ab.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation",
+        "conservation"
+      ],
+      "facts": [
+        "2022 regional survey calls the moth rare in northern France, more frequent centrally and southward, and cites a threatened regional status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 21,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peribatodes ilicaria — Papillons de Poitou-Charentes",
+        "fr": "Peribatodes ilicaria — Papillons de Poitou-Charentes"
+      },
+      "url": "https://www.papillon-poitou-charentes.org/Peribatodes-ilicaria-Geyer-1833.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "French account lists host plants, caterpillar overwintering and the usual single annual generation with an exceptional southern second generation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 19,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional conservation labels differ by place, list and year; none of the cited French data sets establishes a global status.",
+    "British adult flight-period data are explicitly too sparse for a reliable local calendar."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French Lepinet, an Île-de-France ecological survey and regional FAUNA data with UKMoths. Reciprocal P. rhomboidaria profile does not exist in the current catalogue."
+}

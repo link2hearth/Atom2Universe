@@ -1,0 +1,195 @@
+{
+  "id": "amphilophus_macracanthus",
+  "scientific": "Amphilophus macracanthus",
+  "group": "fish",
+  "name": {
+    "en": "Blackthroat cichlid",
+    "fr": "Cichlidé à gorge noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Pacific-slope Central American cichlid is known in Spanish as mojarra negra or mojarra de Guamuchal. Although the tree retains Amphilophus macracanthus, current catalogues accept Astatheros macracanthus.",
+      "fr": "Ce Cichlidé d’Amérique centrale du versant pacifique est appelé en espagnol mojarra negra ou mojarra de Guamuchal. L’arbre conserve Amphilophus macracanthus, mais les catalogues actuels retiennent Astatheros macracanthus."
+    },
+    "identification": {
+      "en": "It is a robust, deep-bodied grey fish with five dark bars; the first and some middle bars may fork into Y shapes, with dark flank blotches beneath them. The breeding male develops a black throat patch that can extend down the belly. FishBase gives a maximum of 25 cm standard length. A Salvadoran report lists 20 cm but does not specify the length type. Reliable height, width, mass or sex-specific size ranges were not located.",
+      "fr": "C’est un poisson gris, robuste et haut de corps, marqué de cinq barres sombres; la première et certaines barres médianes peuvent se diviser en Y, avec des taches latérales dessous. En période de reproduction, le mâle développe une gorge noire qui peut s’étendre au ventre. FishBase indique un maximum de 25 cm de longueur standard. Une étude salvadorienne indique 20 cm sans préciser le type de longueur. Aucune hauteur, largeur, masse ou taille par sexe fiable n’a été trouvée."
+    },
+    "habitat": {
+      "en": "It occurs on the Pacific slope from southern Mexico through Guatemala to El Salvador, in streams, rivers, lakes and coastal lagoons. It uses freshwater and brackish reaches, often over soft sand or mud, in warm water around 26–30 °C.",
+      "fr": "Il vit sur le versant pacifique, du sud du Mexique au Salvador en passant par le Guatemala, dans les ruisseaux, rivières, lacs et lagunes côtières. Il fréquente l’eau douce et saumâtre, souvent sur des fonds meubles de sable ou de vase, dans une eau chaude de 26–30 °C."
+    },
+    "diet": {
+      "en": "FishBase classifies it as a benthic omnivore. It sifts the bottom for small animal prey and plant material; a reliable, detailed wild prey inventory was not located.",
+      "fr": "FishBase le classe comme omnivore benthique. Il fouille le fond à la recherche de petites proies et de matière végétale; aucune liste détaillée et fiable de ses aliments sauvages n’a été trouvée."
+    },
+    "behavior": {
+      "en": "The species is bottom-oriented and feeds close to the substrate. The dark throat of a breeding male is a useful field clue, but the sources consulted do not establish a sex-specific difference in body size.",
+      "fr": "L’espèce vit près du fond et se nourrit au contact du substrat. La gorge sombre du mâle reproducteur est un bon indice d’identification, mais les sources consultées n’établissent pas de différence de taille corporelle entre les sexes."
+    },
+    "reproduction": {
+      "en": "FishBase reports breeding from April to August. Detailed wild courtship, nest and clutch-size data were not found in the consulted scientific sources, so a more exact account would be speculative.",
+      "fr": "FishBase signale une reproduction d’avril à août. Les sources scientifiques consultées ne donnent pas de détails fiables sur la parade, le nid ou le nombre d’œufs dans la nature; les préciser serait spéculatif."
+    },
+    "ecology": {
+      "en": "It is a Pacific-slope fish that can enter brackish coastal waters as well as rivers and lakes. A Salvadoran biodiversity survey documented a specimen from the Río Paz in 2019.",
+      "fr": "Ce poisson du versant pacifique fréquente aussi bien les rivières et les lacs que des eaux côtières saumâtres. Une étude salvadorienne sur la biodiversité a documenté un spécimen du Río Paz en 2019."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists Astatheros macracanthus as Least Concern (LC), assessed in 2018. That category is a global assessment and should not be read as a measurement of abundance at every local site.",
+      "fr": "L’évaluation de l’UICN classe Astatheros macracanthus en « préoccupation mineure » (LC), évaluation de 2018. Cette catégorie est mondiale et ne mesure pas l’abondance de l’espèce sur chaque site."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer's Catalog of Fishes — Astatheros macracanthus",
+        "fr": "Catalog of Fishes d’Eschmeyer — Astatheros macracanthus"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37541",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "The current catalogue accepts Astatheros macracanthus; Amphilophus macracanthus is a previous generic combination."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 13,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Astatheros macracanthus — Shorefishes of the Eastern Pacific, Smithsonian Tropical Research Institute",
+        "fr": "Astatheros macracanthus — Shorefishes of the Eastern Pacific, Smithsonian Tropical Research Institute"
+      },
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/5464",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Smithsonian account describes the fish’s deep body, bars, male throat, and bottom-oriented habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.5",
+        "identification.fr.5",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 13,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Astatheros macracanthus — FishBase species summary",
+        "fr": "Astatheros macracanthus — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Astatheros_macracanthus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports length, diet, breeding season and 2018 IUCN status."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 10,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biodiversity survey of El Salvador — species account 5.2, Mojarra negra",
+        "fr": "Étude de biodiversité du Salvador — notice 5.2, mojarra negra"
+      },
+      "url": "https://www.aecid.sv/wp-content/uploads/2022/09/Producto_2_Estudio_de_Biodiversidad.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Spanish-language survey records a Río Paz specimen in 2019 and describes local freshwater-to-brackish habitats and temperatures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 16,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a robust, deep-bodied adult Astatheros macracanthus from a Pacific-slope river or lagoon: grey head and body, five vertical dark bars, mid-flank blotches and stout caudal peduncle. If showing a breeding male, give it a distinct black throat patch extending toward the belly. Avoid a bright unrelated Amphilophus form or labels.",
+  "uncertainties": [
+    "FishBase's 25 cm figure is standard length for male or unsexed fish. The Smithsonian account says 32 cm without specifying measurement type; do not merge the values.",
+    "Reliable adult body-height, width, mass and sex-specific length ranges were not located.",
+    "The black throat is a male breeding character; no supported size difference between sexes was found.",
+    "Species-specific detailed courtship, nest and clutch data remain sparse in the consulted sources."
+  ],
+  "reviewed": true,
+  "review_note": "The tree’s Amphilophus combination is reconciled with the current Eschmeyer catalogue. Smithsonian species data, FishBase and an El Salvador survey support identification and ecology; length type, local records and missing body-mass data are made explicit."
+}

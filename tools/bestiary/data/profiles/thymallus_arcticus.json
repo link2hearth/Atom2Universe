@@ -1,0 +1,91 @@
+{
+  "id": "thymallus_arcticus",
+  "scientific": "Thymallus arcticus",
+  "group": "fish",
+  "name": {
+    "en": "Arctic Grayling",
+    "fr": "Ombre arctique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Arctic grayling is a cold-water freshwater fish of northern North America and Siberia, known for a huge sail-like dorsal fin. Among salmonids it needs some of the coldest water, and it makes long seasonal migrations between wintering, spawning and feeding areas.",
+      "fr": "L’ombre arctique est un poisson d’eau douce froide du nord de l’Amérique du Nord et de la Sibérie, reconnaissable à son immense nageoire dorsale en voile. Parmi les salmonidés, il exige l’une des eaux les plus froides, et il effectue de longues migrations saisonnières entre ses zones d’hivernage, de reproduction et d’alimentation."
+    },
+    "identification": {
+      "en": "The dorsal fin is greatly enlarged, with 17–25 rays, especially in males. The back is dark purple to blue-black, the sides grey to dark blue with pinkish iridescence, and the belly grey to white, with scattered dark spots. The mouth is small. Common length is about 34 cm, and the maximum is about 76 cm and 3.8 kg.",
+      "fr": "La nageoire dorsale est très agrandie, avec 17 à 25 rayons, surtout chez les mâles. Le dos est violet foncé à noir bleuté, les flancs gris à bleu foncé avec des reflets rosés, et le ventre gris à blanc, avec des taches sombres éparses. La bouche est petite. La longueur courante est d’environ 34 cm, et le maximum d’environ 76 cm et 3,8 kg."
+    },
+    "habitat": {
+      "en": "Adults live in the open water of clear, cold, medium to large rivers and lakes, from Hudson Bay to Alaska and south into Canada and the upper Missouri River in Montana; in Eurasia it occurs from the Ob to the Yenisei. Temperatures above 15 °C are stressful, and above 20 °C they cannot be tolerated for long. A population in Michigan has disappeared.",
+      "fr": "Les adultes vivent en eau libre dans des rivières et des lacs clairs, froids, de taille moyenne à grande, de la baie d’Hudson à l’Alaska et vers le sud au Canada et dans le haut Missouri, au Montana; en Eurasie, on le trouve de l’Ob à l’Ienisseï. Les températures supérieures à 15 °C sont pénibles, et au-delà de 20 °C il ne les supporte pas longtemps. Une population du Michigan a disparu."
+    },
+    "diet": {
+      "en": "Young fish feed on zooplankton and gradually switch to immature insects. Adults feed mainly on insects at the surface, but also eat fishes, fish eggs, planktonic crustaceans and lemmings.",
+      "fr": "Les jeunes se nourrissent de zooplancton, puis passent peu à peu aux insectes immatures. Les adultes mangent surtout des insectes de surface, mais aussi des poissons, des œufs de poisson, des crustacés planctoniques et des lemmings."
+    },
+    "behavior": {
+      "en": "Each year it moves between overwintering sites, spawning streams and summer feeding areas, sometimes covering well over 100 miles. In autumn it leaves many small tributaries before they freeze or dry. Adults hold in swifter water, and larger fish tend to stay in the cooler upper reaches of a river.",
+      "fr": "Chaque année, il se déplace entre ses sites d’hivernage, ses cours d’eau de frai et ses zones d’alimentation d’été, parcourant parfois bien plus de 100 miles. À l’automne, il quitte beaucoup de petits affluents avant qu’ils ne gèlent ou s’assèchent. Les adultes se tiennent dans les eaux plus rapides, et les plus gros poissons restent plutôt dans les cours supérieurs, plus frais."
+    },
+    "reproduction": {
+      "en": "Spawning takes place in spring, around ice breakup, over shallow riffles of small gravel. The fish build no nest; vibrations of the spawning pair’s tails leave a slight depression. A female lays 1,500–30,000 eggs of about 2.5 mm, which hatch in about two and a half weeks, and fish mature at roughly three to four years. Males defend a spawning area for up to a week and display their fins to females.",
+      "fr": "Le frai a lieu au printemps, vers la débâcle, sur des radiers peu profonds de petit gravier. Les poissons ne construisent pas de nid; les vibrations de la queue du couple en frai laissent une légère dépression. Une femelle pond de 1 500 à 30 000 œufs d’environ 2,5 mm, qui éclosent en deux semaines et demie environ, et les poissons mûrissent vers trois à quatre ans. Les mâles défendent une zone de frai jusqu’à une semaine et déploient leur nageoire devant les femelles."
+    },
+    "ecology": {
+      "en": "Its summer distribution is shaped by water temperature and by competitors such as rainbow trout. It is preyed on by pike, trout, bald eagles, ospreys, river otters and mink.",
+      "fr": "Sa répartition estivale est déterminée par la température de l’eau et par des concurrents comme la truite arc-en-ciel. Il est la proie de brochets, de truites, de pygargues à tête blanche, de balbuzards, de loutres de rivière et de visons."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Least Concern (assessed 2008, as reported by FishBase). In Alaska it is abundant and widespread, though populations near Nome are considered vulnerable, and slow turnover on the Seward Peninsula leaves small populations slow to recover. Mining, roads, dewatering and sedimentation are the main habitat concerns, and North American populations have been described as declining.",
+      "fr": "L’UICN le classe en préoccupation mineure (évaluation de 2008, d’après FishBase). En Alaska, il est abondant et répandu, bien que les populations près de Nome soient jugées vulnérables, et le faible renouvellement de la péninsule de Seward laisse de petites populations lentes à se rétablir. L’exploitation minière, les routes, l’assèchement et l’ensablement sont les principales menaces pour son habitat, et les populations nord-américaines ont été décrites comme en déclin."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Thymallus arcticus, Arctic grayling — FishBase",
+        "fr": "Thymallus arcticus, ombre arctique — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Thymallus-arcticus.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "conservation"],
+      "facts": [
+        "Max 76 cm TL and 3.8 kg, common 34.3 cm; 17–25 dorsal rays; dark purple to blue-black back, pinkish iridescence on the sides, scattered dark spots; range from Hudson Bay to Alaska, upper Missouri, Ob to Yenisei; formerly Michigan.",
+        "Young eat zooplankton then insects, adults mainly surface insects, also fish, fish eggs and lemmings; no redd, tail vibrations leave a depression. IUCN Least Concern, assessed 1 January 2008."
+      ]
+    },
+    {
+      "title": {
+        "en": "Thymallus arcticus — Animal Diversity Web, University of Michigan",
+        "fr": "Thymallus arcticus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Thymallus_arcticus/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "1,500–30,000 eggs of about 2.5 mm hatching in about 2.5 weeks; maturity at 3–4 years; males defend spawning areas up to 7 days and display the dorsal fin; predators include pike, trout, bald eagles, osprey, otters and mink.",
+        "North American populations steadily declining; threats include overfishing, culverts, mining, agriculture, forestry and pollution."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arctic grayling species status review — Western Native Trout Initiative, with Alaska Department of Fish & Game data (2013)",
+        "fr": "Examen du statut de l’ombre arctique — Western Native Trout Initiative, avec données du Département de la pêche et du gibier de l’Alaska (2013)"
+      },
+      "url": "https://westernnativetrout.org/wp-content/uploads/2019/07/wnti-species_assessment_arctic-grayling_adfg_20130318.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Requires colder water than most salmonids; above 15 °C stressful, above 20 °C not tolerated for long; spawning over shallow riffles of pea-sized gravel just before and after breakup; annual migrations of well over 100 miles.",
+        "Abundant and widespread in Alaska; Nome River populations vulnerable; Seward Peninsula populations small with high adult survival and low recruitment; habitat concerns include mining, dewatering and sedimentation."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The sources give different migration distances (well over 100 miles in the Alaska report, over 160 km in a year in Animal Diversity Web); the text uses the first.",
+    "Egg counts and maturity ages come from a general account and can differ by region; the Alaska report gives no figures for them.",
+    "The IUCN category is taken from the FishBase page; the IUCN site could not be opened. The decline of North American populations is stated by Animal Diversity Web and is not quantified."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

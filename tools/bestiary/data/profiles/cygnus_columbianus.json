@@ -1,0 +1,207 @@
+{
+  "id": "cygnus_columbianus",
+  "scientific": "Cygnus columbianus",
+  "group": "birds",
+  "name": {
+    "en": "Tundra swan",
+    "fr": "Cygne siffleur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Tundra Swan is an Arctic-breeding swan whose North American populations winter along both Pacific and Atlantic flyways.",
+      "fr": "Le cygne siffleur niche dans l’Arctique ; ses populations nord-américaines hivernent le long des voies du Pacifique et de l’Atlantique."
+    },
+    "identification": {
+      "en": "The bill is mostly black with a variable yellow mark; Eurasian Bewick’s Swans usually show more yellow than North American birds.",
+      "fr": "Le bec est surtout noir et porte une marque jaune variable ; les cygnes de Bewick eurasiens en montrent généralement davantage que les oiseaux nord-américains."
+    },
+    "habitat": {
+      "en": "It breeds on wet Arctic tundra near lakes and rivers, then uses lakes, marshes, estuaries and sometimes fields during migration and winter.",
+      "fr": "Il se reproduit dans la toundra arctique humide près des lacs et rivières, puis fréquente lacs, marais, estuaires et parfois champs pendant la migration et l’hiver."
+    },
+    "diet": {
+      "en": "In summer it grazes aquatic vegetation; on migration and wintering grounds it also feeds on leftover crops and winter cereals.",
+      "fr": "En été, il broute la végétation aquatique ; lors des migrations et de l’hivernage, il consomme aussi des résidus de cultures et des céréales d’hiver."
+    },
+    "behavior": {
+      "en": "Families migrate together, while breeding birds form pairs that defend nesting territories and generally remain paired across years.",
+      "fr": "Les familles migrent ensemble ; pendant la reproduction, les couples défendent leur territoire et restent généralement unis d’une année à l’autre."
+    },
+    "reproduction": {
+      "en": "Both parents build a mound of vegetation near water, and the female lays a clutch of several eggs.",
+      "fr": "Les deux parents bâtissent près de l’eau un nid en monticule végétal, où la femelle pond plusieurs œufs."
+    },
+    "ecology": {
+      "en": "The species includes the North American columbianus and Eurasian bewickii forms in many taxonomies; compare the catalogue’s Mute Swan and Whooper Swan profiles.",
+      "fr": "De nombreuses classifications distinguent les formes nord-américaine columbianus et eurasienne bewickii ; comparez les profils du cygne tuberculé et du cygne chanteur du catalogue."
+    },
+    "conservation": {
+      "en": "Canada’s 2025 report estimated 77 200 birds in the eastern population and 72 900 in the western population.",
+      "fr": "Le rapport canadien de 2025 estimait à 77 200 individus la population de l’Est et à 72 900 celle de l’Ouest."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tundra Swan — U.S. Fish and Wildlife Service",
+        "fr": "Cygne siffleur — Service américain de la pêche et de la faune"
+      },
+      "url": "https://www.fws.gov/species/tundra-swan-cygnus-columbianus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The federal species profile covers seasonal food, flock and family movements, pair behavior and nesting."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cygne siffleur — Office québécois de la langue française",
+        "fr": "Cygne siffleur — Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/9472933/cygne-siffleur",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The French terminology record gives the common name and tundra-and-water habitat, and distinguishes the North American columbianus and Eurasian bewickii subspecies."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Population Status of Migratory Game Birds in Canada, 2025 — Environment and Climate Change Canada",
+        "fr": "Situation des populations d’oiseaux migrateurs considérés comme gibier au Canada, 2025 — Environnement et Changement climatique Canada"
+      },
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/mbr-report-series-serie-rapports-rcom/report-series-population-status-2025/population-status-of-migratory-game-birds-in-canada-2025.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2025 report treats eastern and western Tundra Swan populations separately and reports estimates of 77,200 and 72,900 birds."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tundra Swan — U.S. Forest Service Fire Effects Information System",
+        "fr": "Cygne siffleur — système d’information sur les effets du feu du Service des forêts des États-Unis"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/cyco",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The review describes the historical two-subspecies treatment and Eurasian range of bewickii."
+      ],
+      "prose_claims": []
+    },
+    {
+      "title": {
+        "en": "Tundra Swan Identification — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Identification du Cygne siffleur — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Tundra_Swan/id",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Cornell compares North American Whistling Swans with Eurasian Bewick’s Swans and notes the latter’s more extensive yellow on the bill."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic authorities differ in whether the Eurasian Bewick’s Swan is treated as a subspecies of C. columbianus or as a separate species; this entry follows the supplied species-level inventory name.",
+    "Mute Swan and Whooper Swan are comparison species in the catalogue, not asserted as the closest relatives."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared U.S. Fish and Wildlife natural-history guidance with Québec French terminology, Cornell comparative identification, and the newer 2025 Canadian population report. The Eurasian Bewick form’s taxonomic treatment varies among authorities."
+}

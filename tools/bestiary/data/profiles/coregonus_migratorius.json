@@ -1,0 +1,177 @@
+{
+  "id": "coregonus_migratorius",
+  "scientific": "Coregonus migratorius",
+  "group": "fish",
+  "name": {
+    "en": "Baikal omul",
+    "fr": "Omoul du Baïkal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Baikal omul is a whitefish endemic to Lake Baikal and its tributaries, historically also called Coregonus autumnalis migratorius.",
+      "fr": "L’omoul du Baïkal est un corégone endémique du lac Baïkal et de ses affluents, autrefois aussi nommé Coregonus autumnalis migratorius."
+    },
+    "identification": {
+      "en": "It is a pelagic, schooling member of the salmon family; the sources consulted do not establish a single field mark that reliably separates all populations.",
+      "fr": "C’est un poisson pélagique vivant en bancs, de la famille des Salmonidés ; les sources consultées ne donnent pas de critère unique permettant d’identifier sûrement toutes les populations."
+    },
+    "habitat": {
+      "en": "It feeds and grows in the lake, using different depths with season and food availability, then enters tributary rivers to reproduce.",
+      "fr": "Il se nourrit et grandit dans le lac, à des profondeurs variables selon la saison et les ressources, puis gagne les affluents pour se reproduire."
+    },
+    "diet": {
+      "en": "Its principal food is the endemic zooplankton Epischura baikalensis, supplemented by small fish and other invertebrates.",
+      "fr": "Sa principale nourriture est le zooplancton endémique Epischura baikalensis, complété par de petits poissons et d’autres invertébrés."
+    },
+    "behavior": {
+      "en": "Spawning migrants enter rivers in autumn, and the fish is also an important prey of the Baikal seal.",
+      "fr": "Les reproducteurs remontent les rivières en automne, et ce poisson constitue aussi une proie importante du phoque du Baïkal."
+    },
+    "reproduction": {
+      "en": "It spawns over gravelly river riffles; eggs develop through winter and newly hatched fish drift back toward the lake in spring.",
+      "fr": "Il pond sur des radiers graveleux des rivières ; les œufs se développent pendant l’hiver et les jeunes dérivent vers le lac au printemps."
+    },
+    "ecology": {
+      "en": "This lake-and-river life cycle links pelagic feeding grounds with tributary spawning habitat and the lake’s native predator, the Baikal seal.",
+      "fr": "Son cycle entre lac et rivières relie les zones d’alimentation pélagiques, les frayères des affluents et un prédateur indigène du lac, le phoque du Baïkal."
+    },
+    "conservation": {
+      "en": "The cited global assessment classifies it as Least Concern, while fisheries management still monitors the lake’s spawning runs and catches.",
+      "fr": "L’évaluation mondiale citée le classe en préoccupation mineure, tandis que la gestion des pêcheries suit les remontées de frai et les captures du lac."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Baikal omul (Coregonus migratorius) — Baikal Fisheries Basin Research Institute (VNIRO)",
+        "fr": "Omoul du Baïkal (Coregonus migratorius) — Institut de recherche halieutique du bassin du Baïkal (VNIRO)"
+      },
+      "url": "https://baikal.vniro.ru/images/%D0%B1%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB_%D0%BE%D0%B4%D1%83_2024_%D0%B4%D0%BB%D1%8F_%D0%BE%D1%81.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The Russian basin report describes a lake-river migratory whitefish feeding in Baikal and spawning in tributaries."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Baikal omul — Barguzinsky Nature Reserve",
+        "fr": "Omoul du Baïkal — réserve naturelle de Bargouzine"
+      },
+      "url": "https://barguzinsky.ru/species/omul",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The reserve account gives seasonal depth use, Epischura-based diet, autumn spawning migration, gravel riffles, spring drift of larvae, longevity and seal predation."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Coregonus migratorius — FishBase Field Guide",
+        "fr": "Coregonus migratorius — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=643&genusname=Coregonus&speciesname=migratorius",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the English common name Baikal omul and a global IUCN Least Concern assessment dated 27 October 2020."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Older sources sometimes treated the Baikal fish as a subspecies of the Arctic cisco; the current draft follows the species-level usage of VNIRO and FishBase.",
+    "No catalogue profile for another Coregonus species was found for a meaningful direct bestiary cross-reference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Russian basin fisheries report and reserve account against the English FishBase field guide; distinguished global assessment from fishery monitoring and kept the historical name explicit."
+}

@@ -1,0 +1,119 @@
+{
+  "id": "ptychocheilus_oregonensis",
+  "scientific": "Ptychocheilus oregonensis",
+  "group": "fish",
+  "name": {
+    "en": "Northern pikeminnow",
+    "fr": "Ménomini du Nord"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large minnow is native to western North America, including the Columbia River and its tributaries.",
+      "fr": "Ce grand cyprinidé est indigène de l’ouest de l’Amérique du Nord, notamment du bassin du Columbia et de ses affluents."
+    },
+    "identification": {
+      "en": "It has a long snout and large mouth, a greenish back and sides, a pale belly and opaque fins.",
+      "fr": "Il a un museau long et une grande bouche, le dos et les flancs verdâtres, le ventre clair et les nageoires opaques."
+    },
+    "habitat": {
+      "en": "It occurs in the Columbia and Snake rivers and in lakes and streams across the region.",
+      "fr": "Il vit dans les rivières Columbia et Snake, ainsi que dans des lacs et cours d’eau de la région."
+    },
+    "diet": {
+      "en": "Larger fish are opportunistic predators of aquatic invertebrates and fishes, including young salmon and steelhead.",
+      "fr": "Les grands individus sont des prédateurs opportunistes d’invertébrés aquatiques et de poissons, dont les jeunes saumons et truites arc-en-ciel anadromes."
+    },
+    "behavior": {
+      "en": "It is a well-studied native predator in the Columbia and Snake river systems.",
+      "fr": "C’est un prédateur indigène bien étudié dans les systèmes fluviaux du Columbia et de la Snake."
+    },
+    "reproduction": {
+      "en": "The consulted species summaries did not provide reproductive details.",
+      "fr": "Les résumés d’espèce consultés ne donnent pas de détails sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Its predation on juvenile salmonids has prompted research and management programs, without implying that the native fish should be eradicated.",
+      "fr": "Sa prédation sur les jeunes salmonidés a suscité des recherches et des programmes de gestion, sans que cela implique l’éradication de ce poisson indigène."
+    },
+    "conservation": {
+      "en": "No global conservation category was given in the consulted accounts.",
+      "fr": "Les fiches consultées ne donnent pas de catégorie mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "USGS Columbia River Research Laboratory — species account",
+        "fr": "USGS Columbia River Research Laboratory — fiche de l’espèce"
+      },
+      "url": "https://www.usgs.gov/labs/columbia-river-research-laboratory/science/northern-pikeminnow-ptychocheilus-oregonensis-crrl",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "USGS gives the range, appearance and opportunistic diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 8,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Washington Department of Fish and Wildlife — species page",
+        "fr": "Washington Department of Fish and Wildlife — fiche de l’espèce"
+      },
+      "url": "https://wdfw.wa.gov/species-habitats/species/ptychocheilus-oregonensis",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "WDFW records this native predator in Columbia–Snake waters and discusses the salmon-focused management program."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 14,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The common name in French is descriptive. The account summarizes the USGS species page and does not add unverified life-history details."
+  ],
+  "review_note": "Cross-checked the institutional USGS account with Washington’s wildlife agency; kept the role as salmon predator factual and region-specific.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

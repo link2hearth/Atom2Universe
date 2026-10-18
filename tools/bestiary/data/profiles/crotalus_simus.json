@@ -1,0 +1,144 @@
+{
+  "id": "crotalus_simus",
+  "scientific": "Crotalus simus",
+  "group": "reptiles",
+  "name": {
+    "en": "Central American Rattlesnake",
+    "fr": "Crotale d’Amérique centrale"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large rattlesnake ranges from southern Mexico through Central America to Costa Rica.",
+      "fr": "Ce grand crotale s’étend du sud du Mexique à l’Amérique centrale jusqu’au Costa Rica."
+    },
+    "identification": {
+      "en": "Its robust body often bears dark diamond-shaped dorsal markings and a conspicuous rattle.",
+      "fr": "Son corps robuste porte souvent des marques dorsales en losanges sombres et un hochet bien visible."
+    },
+    "habitat": {
+      "en": "It uses dry forests, thorn scrub, savannas and some open pine-oak landscapes, avoiding dense wet forest.",
+      "fr": "Il fréquente les forêts sèches, brousses épineuses, savanes et certains paysages ouverts de pins et chênes; il évite les forêts humides denses."
+    },
+    "diet": {
+      "en": "It eats rodents and other small vertebrates, including lizards; prey records vary among local populations.",
+      "fr": "Il consomme des rongeurs et d’autres petits vertébrés, dont des lézards; les proies signalées varient selon les populations."
+    },
+    "behavior": {
+      "en": "Adults are often crepuscular or nocturnal, sheltering beneath rocks, logs or in abandoned burrows by day.",
+      "fr": "Les adultes sont souvent crépusculaires ou nocturnes et se cachent le jour sous les rochers, troncs ou dans d’anciens terriers."
+    },
+    "reproduction": {
+      "en": "This rattlesnake is viviparous; reports describe mating in winter and births during the warmer season.",
+      "fr": "Ce crotale est vivipare; des observations rapportent des accouplements en hiver et des naissances pendant la saison chaude."
+    },
+    "ecology": {
+      "en": "Older treatments grouped C. culminatus and C. tzabcan within C. simus; subsequent studies recognize them separately.",
+      "fr": "D’anciennes classifications incluaient C. culminatus et C. tzabcan dans C. simus; des études ultérieures les reconnaissent séparément."
+    },
+    "conservation": {
+      "en": "Habitat conversion and deliberate killing are documented pressures, particularly where snakes enter farms and settlements.",
+      "fr": "La transformation des habitats et les destructions volontaires sont des pressions documentées, notamment près des cultures et villages."
+    }
+  },
+  "uncertainties": [
+    "Taxonomic boundaries within the former Crotalus durissus complex have changed, so older range and status summaries may combine species."
+  ],
+  "review_note": "Compared the Mexican Redtox species profile and CONANP habitat account with peer-reviewed revisions of the C. durissus complex; avoided transferring old combined-species ranges wholesale.",
+  "sources": [
+    {
+      "title": {
+        "en": "Crotalus simus — Redtox",
+        "fr": "Crotalus simus — Redtox"
+      },
+      "url": "https://redtoxdev.nmn.mx/especies/crotalus-simus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Redtox summarizes appearance, prey, activity, reproduction and human pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 9,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "PACE: Serpientes de Cascabel — CONANP",
+        "fr": "PACE : crotales — CONANP"
+      },
+      "url": "https://www.conanp.gob.mx/pace/PACE_Serpientes_de_Cascabel.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Federal plan describes dry and open habitats and gives a distribution summary whose older taxonomic limits require care."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 18,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tracing an invasion: phylogeography of the Crotalus durissus complex",
+        "fr": "Phylogéographie du complexe Crotalus durissus"
+      },
+      "url": "https://herp.mx/pubs/2005-Wuster-Crotalus-durissus.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Molecular study separated C. culminatus and C. tzabcan from the broad historical C. simus concept while noting remaining taxonomic questions."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 20,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

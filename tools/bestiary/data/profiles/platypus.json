@@ -1,0 +1,193 @@
+{
+  "id": "platypus",
+  "scientific": "Ornithorhynchus anatinus",
+  "group": "mammals",
+  "name": {
+    "en": "Platypus",
+    "fr": "Ornithorynque"
+  },
+  "sections": {
+    "overview": {
+      "en": "The platypus is a semi-aquatic Australian mammal and a monotreme: a mammal that lays eggs. Its streamlined, furred body, broad tail and sensitive bill suit a life of searching freshwater beds for food and resting in bank burrows. Females produce milk for their young despite having no nipples. The species occurs naturally in eastern Australia, including Tasmania, in varied freshwater habitats.",
+      "fr": "L’ornithorynque est un mammifère semi-aquatique australien et un monotrème, c’est-à-dire un mammifère qui pond des œufs. Son corps fuselé et fourré, sa large queue et son bec sensible conviennent à la recherche de nourriture sur les fonds d’eau douce et au repos dans des terriers de berge. Les femelles produisent du lait sans mamelons. L’espèce vit naturellement dans l’est australien, Tasmanie comprise."
+    },
+    "identification": {
+      "en": "Adults have dense waterproof fur, usually dark brown above and lighter below, a flattened bill and a broad tail. The tail stores fat and helps steer. Webbed forefeet provide propulsion; their webs fold back around the claws on land. Hind feet are less webbed and help steer underwater. Males have a sharp hind-ankle spur connected to a venom gland; females lack this functional apparatus. Southern animals tend to be larger than northern ones. Adults measure 400–630 mm in males and 370–550 mm in females, including bill and tail. Reported masses are 0.8–3.0 kg for males and 0.6–1.7 kg for females; animals from cooler southern populations tend to be larger. No reliable body-width measurement was found.",
+      "fr": "L’adulte porte une fourrure dense et imperméable, généralement brune dessus et plus claire dessous, un bec aplati et une large queue. Celle-ci stocke de la graisse et aide à diriger. Les pattes avant palmées propulsent l’animal ; à terre, leur palmure se replie autour des griffes. Les pattes arrière, moins palmées, contribuent à la direction sous l’eau. Les mâles possèdent un éperon à venin aux chevilles arrière ; les femelles n’ont pas cet appareil fonctionnel. Les individus du sud sont généralement plus grands. L’adulte mesure de 400 à 630 mm chez le mâle et de 370 à 550 mm chez la femelle, bec et queue compris. Les masses rapportées sont de 0,8 à 3,0 kg chez le mâle et de 0,6 à 1,7 kg chez la femelle; les populations méridionales, plus froides, tendent à être plus grandes. Je n’ai pas trouvé de mesure fiable de largeur du corps."
+    },
+    "habitat": {
+      "en": "The species ranges through eastern Australia, from tropical Queensland to Tasmania and the Australian Alps. It uses rivers, streams, lakes and farm dams, but needs freshwater for feeding and earthen banks for burrows. Root-stabilised banks offer resting and nesting sites; shaded pools, riffles and gravel or cobble beds support aquatic invertebrates. Platypuses sometimes cross land between water bodies, making catchment connectivity relevant to habitat use.",
+      "fr": "L’espèce parcourt l’est australien, du Queensland tropical à la Tasmanie et aux Alpes australiennes. Elle fréquente rivières, ruisseaux, lacs et retenues agricoles, mais a besoin d’eau douce pour s’alimenter et de berges terreuses pour creuser. Les racines stabilisent les sites de repos et de nidification ; vasques ombragées, rapides et fonds de graviers ou de galets abritent des invertébrés aquatiques. L’ornithorynque traverse parfois la terre entre deux eaux, ce qui rend importante la continuité des bassins versants."
+    },
+    "diet": {
+      "en": "It hunts small animals, especially bottom-dwelling insect larvae, worms, crustaceans and molluscs. Underwater it closes its eyes, ears and nostrils, locating prey with bill receptors that detect water movement and weak electrical fields from prey muscles. Sweeping its head from side to side helps it orient in murky water. It stores small prey in cheek pouches and grinds food at the surface with horny pads rather than teeth.",
+      "fr": "Il chasse de petits animaux, surtout des larves d’insectes du fond, des vers, crustacés et mollusques. Sous l’eau, il ferme yeux, oreilles et narines ; les récepteurs du bec détectent mouvements de l’eau et faibles champs électriques produits par les muscles des proies. En balayant la tête latéralement, il s’oriente en eau trouble. Il garde les petites prises dans ses abajoues et broie sa nourriture en surface avec des plaques cornées plutôt qu’avec des dents."
+    },
+    "behavior": {
+      "en": "Adults are mostly solitary and generally occupy separate resting burrows, although several may use one stretch of water. Activity often peaks from dusk through the night. Forelimbs power swimming, while hind limbs and tail steer; on land, the splayed limbs make walking less efficient. Repeated dives separated by brief surface pauses allow long foraging periods. Grooming maintains the insulating coat needed during extended time in water.",
+      "fr": "Les adultes sont surtout solitaires et occupent généralement des terriers distincts, même si plusieurs fréquentent le même secteur aquatique. L’activité culmine souvent du crépuscule à la nuit. Les pattes avant propulsent l’animal, tandis que pattes arrière et queue dirigent sa nage ; à terre, ses membres écartés rendent la marche moins efficace. Des plongées entrecoupées de brèves pauses permettent de longues périodes de recherche alimentaire. Le toilettage entretient la fourrure isolante nécessaire aux séjours dans l’eau."
+    },
+    "reproduction": {
+      "en": "Breeding is seasonal and earlier in northern populations. The female lays one to three soft-shelled eggs in a long bank burrow, which she plugs with soil. Embryos develop partly before laying; external incubation lasts about a week to ten days. Hatchlings are tiny and dependent. The mother secretes milk onto abdominal skin, and young lap it from her fur because she has no nipples. They feed on milk in the burrow and commonly emerge after three to four months, with timing varying by region.",
+      "fr": "La reproduction est saisonnière et commence plus tôt dans les populations du nord. La femelle pond un à trois œufs à coquille souple dans une longue galerie de berge, qu’elle ferme avec de la terre. Les embryons se développent en partie avant la ponte ; l’incubation externe dure environ une semaine à dix jours. Les nouveau-nés sont minuscules et dépendants. La mère sécrète du lait sur la peau abdominale, que les petits lèchent dans sa fourrure puisqu’elle n’a pas de mamelons. Ils s’alimentent de lait au terrier et en sortent souvent après trois ou quatre mois, selon la région."
+    },
+    "ecology": {
+      "en": "As predators of bottom-dwelling invertebrates, platypuses are part of stream food webs. An Australian field experiment found that their feeding affected invertebrate communities differently in flowing streams and still-water habitats, so ecosystem effects depend on setting. Their reliance on aquatic prey ties them to productive waterways, while bank burrows depend on stable margins. Movement overland may connect catchments, although barriers and dry periods can interrupt dispersal.",
+      "fr": "Prédateur d’invertébrés du fond, l’ornithorynque appartient aux réseaux trophiques des cours d’eau. Une expérience australienne a montré que son alimentation affectait différemment les communautés d’invertébrés des eaux courantes et stagnantes : les effets écologiques dépendent donc du milieu. Sa dépendance aux proies aquatiques le lie à des eaux productives, tandis que ses terriers nécessitent des berges stables. Les déplacements terrestres peuvent relier des bassins, mais obstacles et sécheresses interrompent parfois cette dispersion."
+    },
+    "conservation": {
+      "en": "A 2022 Australian government report cites the IUCN global category as Near Threatened; this reports a dated assessment record, not a new population estimate. The same report said the platypus was not then listed as nationally threatened under federal or New South Wales law, while relaying a 2020 UNSW review that recommended Vulnerable status. It names threats including bank clearing, altered flows, pollution, fishing by-catch, disease, drought, fire and floods. Victoria listed the species as Vulnerable in 2021. These categories refer to different dates and geographic scales.",
+      "fr": "Un rapport australien de 2022 cite la catégorie mondiale Quasi menacée de l’UICN ; il rapporte une évaluation datée et ne constitue pas une nouvelle estimation de population. Le même rapport indiquait qu’alors l’ornithorynque n’était inscrit comme menacé ni par la loi fédérale ni par celle de Nouvelle-Galles du Sud, tout en relayant l’avis d’un examen de l’UNSW de 2020 recommandant Vulnérable. Il cite le défrichement des berges, la modification des débits, la pollution, les prises accessoires, les maladies, les sécheresses, incendies et inondations. Le Victoria a classé l’espèce Vulnérable en 2021. Ces statuts portent sur des dates et échelles différentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Platypus in Tasmania — Tasmanian environment department",
+        "fr": "L’ornithorynque en Tasmanie — ministère tasmanien de l’Environnement"
+      },
+      "url": "https://nre.tas.gov.au/wildlife-management/fauna-of-tasmania/mammals/echidnas-and-platypus/platypus/platypus-in-tasmania",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Range, body form, burrows, swimming mechanics, diet, solitary activity and monotreme reproduction in eastern Australia."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus electroreception — American Museum of Natural History",
+        "fr": "Électroréception de l’ornithorynque — Muséum américain d’histoire naturelle"
+      },
+      "url": "https://www.amnh.org/explore/news-blogs/platypus-electroreception-hunting",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Closed sensory openings, bill electroreception and mechanoreception, head sweeps, and aquatic invertebrate prey."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus — The Australian Museum",
+        "fr": "Ornithorynque — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/platypus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Anatomy, aquatic habitat, diet, activity, reproduction and regional variation in size and breeding season."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ecology and evolution — Platypus Conservation Initiative, UNSW Sydney",
+        "fr": "Écologie et évolution — initiative de conservation de l’ornithorynque, université UNSW Sydney"
+      },
+      "url": "https://www.unsw.edu.au/research/platypus-conservation-initiative/ecology-and-evolution",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Stream habitat, burrow banks, prey, seasonal reproduction and overland dispersal."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emergency flood recovery assessments — Australian environment department",
+        "fr": "Évaluations après les inondations — ministère australien de l’Environnement"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/emergency-flood-recovery-wildlife-habitat-impact-assessments-emergency-flood-recovery-wildlife-habitat.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2022 report records then-current federal and NSW law, IUCN category, a 2020 review, threats and flood impacts."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus reproduction — Australian Platypus Conservancy",
+        "fr": "Reproduction de l’ornithorynque — Australian Platypus Conservancy"
+      },
+      "url": "https://platypus.asn.au/platypus-reproduction/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Egg incubation, nipple-free lactation and dependent young in nesting burrows."
+      ]
+    },
+    {
+      "title": {
+        "en": "Protecting Our Precious Platys — Premier of Victoria",
+        "fr": "Protéger nos précieux ornithorynques — Premier ministre du Victoria"
+      },
+      "url": "https://www.premier.vic.gov.au/protecting-our-precious-platys",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Victoria listed the platypus as Vulnerable in 2021 and announced habitat restoration and a long-term action plan."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus predation in stream and lake ecosystems — field study",
+        "fr": "Prédation de l’ornithorynque en rivière et en lac — étude de terrain"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7398909/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Experimental comparison found differing invertebrate effects in flowing and still-water habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus vital statistics | Australian Platypus Conservancy",
+        "fr": "Platypus vital statistics | Australian Platypus Conservancy"
+      },
+      "url": "https://platypus.asn.au/platypus-vital-statistics/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Provides sex-specific adult length and mass ranges and notes geographic size variation."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult platypus, sex unspecified, with exact natural anatomy: streamlined dark-brown waterproof fur, flat broad tail, leathery flattened bill, short limbs and correct forefoot webbing. On a pure uniform white background (#FFFFFF), with no water, scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "The IUCN assessment record is cited in institutional accounts as Near Threatened and published in 2016, but the IUCN species page returned HTTP 403 during this check; the assessment date was therefore not independently confirmed.",
+    "Breeding season, clutch size, incubation and emergence timing vary by latitude and study setting; broad durations here are qualified and regional dates are not generalized.",
+    "The 2022 Australian government report describes legal listing at that date; Victoria’s later Vulnerable listing is a separate state-scale status."
+  ],
+  "reviewed": true,
+  "review_note": "Independent zoological, primary-source and bilingual review; electroreception, monotreme development and lactation verified, 2022 legal report kept historical and Victoria 2021 listing separated."
+}

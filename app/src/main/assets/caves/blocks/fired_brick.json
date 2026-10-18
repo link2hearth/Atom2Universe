@@ -1,0 +1,18 @@
+{
+  "id": 3119,
+  "name": "fired_brick",
+  "texture_top": "cozy:resource:19:BD8873",
+  "texture_side": "cozy:resource:19:BD8873",
+  "texture_bottom": "cozy:resource:19:BD8873",
+  "color": "#BD8873",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "fired_brick",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

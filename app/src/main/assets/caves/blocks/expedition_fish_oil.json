@@ -1,0 +1,12 @@
+{
+  "id": 9899,
+  "name": "expedition_fish_oil",
+  "texture_top": "expedition:9899:top",
+  "texture_side": "expedition:9899:side",
+  "texture_bottom": "expedition:9899:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_fish_oil",
+  "creative_tab": "resources",
+  "placeable": false
+}

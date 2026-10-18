@@ -1,0 +1,13 @@
+{
+  "id": 9301,
+  "name": "hoe",
+  "texture_top": "farm_soil:hoe",
+  "texture_side": "farm_soil:hoe",
+  "texture_bottom": "farm_soil:hoe",
+  "color": "#71888B",
+  "hardness": 1.0,
+  "placeable": false,
+  "harvest_category": "technical",
+  "creative_tab": "functional",
+  "tags": ["tool"]
+}

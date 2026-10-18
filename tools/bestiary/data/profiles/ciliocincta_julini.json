@@ -1,0 +1,191 @@
+{
+  "id": "ciliocincta_julini",
+  "scientific": "Ciliocincta julini",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ciliocincta julini",
+    "fr": "Ciliocincta julini"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ciliocincta julini is a microscopic marine orthonectid parasite recorded from the spionid polychaete Scolelepis fuliginosa on the French Atlantic coast.",
+      "fr": "Ciliocincta julini est un orthonectide marin microscopique signalé chez le polychète spionidé Scolelepis fuliginosa, sur la côte atlantique française."
+    },
+    "identification": {
+      "en": "The free reproductive stages have a ciliated, ringed body, but reliable field identification is difficult because the animals are minute and live within a host.",
+      "fr": "Les stades reproducteurs libres ont un corps cilié et annelé, mais leur identification sur le terrain est difficile car ces animaux minuscules vivent à l’intérieur d’un hôte."
+    },
+    "habitat": {
+      "en": "Its known host record comes from a marine polychaete at Anse Saint-Martin, Cap de la Hague; the available record does not establish a broad range.",
+      "fr": "Son hôte connu est un polychète marin observé à l’Anse Saint-Martin, au cap de la Hague ; cette donnée ne permet pas d’établir une aire étendue."
+    },
+    "diet": {
+      "en": "As an internal parasite, it uses host tissues rather than hunting independent prey; species-specific nutritional details remain undescribed.",
+      "fr": "Parasite interne, il utilise les tissus de son hôte plutôt que de chasser des proies autonomes ; son alimentation précise n’est pas décrite pour l’espèce."
+    },
+    "behavior": {
+      "en": "The ciliated sexual stages leave the host, a life-history pattern reported for orthonectids as a group; the timing and behavior of C. julini are poorly known.",
+      "fr": "Les stades sexués ciliés quittent l’hôte, un cycle décrit chez les orthonectides en général ; le calendrier et le comportement de C. julini restent peu connus."
+    },
+    "reproduction": {
+      "en": "The 1992 redescription places this species in Ciliocincta and identifies its polychaete host, while the reproductive cycle is known mainly from broader orthonectid studies.",
+      "fr": "La redescription de 1992 place cette espèce dans le genre Ciliocincta et identifie son hôte polychète ; son cycle reproducteur est surtout compris à partir d’études générales sur les orthonectides."
+    },
+    "ecology": {
+      "en": "Its ecological existence depends on a particular marine worm host; it can be compared directly with C. sabellariae, described from a different polychaete host.",
+      "fr": "Son existence écologique dépend d’un hôte marin précis ; on peut la comparer directement à C. sabellariae, décrite chez un autre polychète."
+    },
+    "conservation": {
+      "en": "No species-level population trend or conservation assessment was found; the single historical locality and host record leave its status uncertain.",
+      "fr": "Aucune tendance démographique ni évaluation de conservation propre à l’espèce n’a été trouvée ; l’unique localité et l’hôte historiques laissent son statut incertain."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The genera of the phylum Orthonectida (Mesozoa) — peer-reviewed study",
+        "fr": "Les genres du phylum Orthonectida (Mesozoa) — étude évaluée par les pairs"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kozloff’s taxonomic study assigns Ciliocincta julini to the genus and records its host as Scolelepis fuliginosa at Cap de la Hague."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Orthonectida life cycles and body-plan simplification — Frontiers in Genetics",
+        "fr": "Cycles de vie et simplification du plan corporel des orthonectides — Frontiers in Genetics"
+      },
+      "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00443/full",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Review describes orthonectid parasitic plasmodia in hosts and ciliated reproductive stages released from them; applied here only as group-level context."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ciliocincta julini — World Register of Marine Species",
+        "fr": "Ciliocincta julini — Registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?id=119166&p=taxdetails",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "WoRMS accepts the name Ciliocincta julini and lists Rhopalura julini as a synonym."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ciliocincta julini — Ocean Biodiversity Information System",
+        "fr": "Ciliocincta julini — Système d’information sur la biodiversité océanique"
+      },
+      "url": "https://obis.org/taxon/119166",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "OBIS taxon and occurrence coverage is sparse and does not provide a population assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet, life-cycle timing, distribution beyond the cited collection record and population status remain poorly studied; group-level orthonectid biology is explicitly labeled as such."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked species-level host and taxonomy records against original/peer-reviewed descriptions and a modern review of orthonectid life history; compared directly with the other Ciliocincta entry."
+}

@@ -1,0 +1,18 @@
+{
+  "id": 9865,
+  "name": "frontier_crucible",
+  "texture_top": "frontier:9865:top",
+  "texture_side": "frontier:9865:side",
+  "texture_bottom": "frontier:9865:top",
+  "color": "#8C4A34",
+  "hardness": 1.5,
+  "drop": "frontier_crucible",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "kinetic": "machine"
+}

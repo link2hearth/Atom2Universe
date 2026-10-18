@@ -1,0 +1,141 @@
+{
+  "id": "rynchops_flavirostris",
+  "scientific": "Rynchops flavirostris",
+  "group": "birds",
+  "name": {
+    "en": "African Skimmer",
+    "fr": "Bec-en-ciseaux d’Afrique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The African Skimmer is a waterbird of broad rivers, lakes and lagoons across sub-Saharan Africa.",
+      "fr": "Le Bec-en-ciseaux d’Afrique fréquente les grands cours d’eau, lacs et lagunes d’Afrique subsaharienne."
+    },
+    "identification": {
+      "en": "Its orange bill has a lower mandible longer than the upper one, a distinctive adaptation for skimming the water surface.",
+      "fr": "Son bec orangé possède une mandibule inférieure plus longue que la supérieure, adaptation caractéristique à la pêche en surface."
+    },
+    "habitat": {
+      "en": "It forages over calm, shallow water and uses exposed sandbars along rivers and lakes, especially for nesting.",
+      "fr": "Il pêche au-dessus d’eaux calmes et peu profondes et utilise les bancs de sable émergés des rivières et des lacs, notamment pour nicher."
+    },
+    "diet": {
+      "en": "It catches small fish by flying low and dragging its lower mandible through the water; it can close its bill when it contacts prey.",
+      "fr": "Il capture de petits poissons en volant près de l’eau, mandibule inférieure immergée, et referme le bec au contact d’une proie."
+    },
+    "behavior": {
+      "en": "Outside the breeding season, African Skimmers may gather in large flocks; seasonal movements follow river and lake systems.",
+      "fr": "Hors période de reproduction, les Bec-en-ciseaux d’Afrique peuvent se rassembler en grandes bandes; leurs déplacements saisonniers suivent les réseaux de rivières et de lacs."
+    },
+    "reproduction": {
+      "en": "It lays its eggs in shallow scrapes on bare sand, often in small colonies; both parents incubate and care for the young.",
+      "fr": "Il pond dans de simples dépressions creusées dans le sable nu, souvent en petites colonies; les deux parents couvent et s’occupent des jeunes."
+    },
+    "ecology": {
+      "en": "Breeding is timed to low water, when exposed sandbars provide nesting ground beside feeding areas.",
+      "fr": "La reproduction coïncide avec les basses eaux, qui découvrent des bancs de sable près des zones d’alimentation."
+    },
+    "conservation": {
+      "en": "BirdLife lists the global population as Least Concern, but the species is assessed as Not Applicable in South Africa, where it remains very scarce.",
+      "fr": "BirdLife classe la population mondiale en Préoccupation mineure, mais l’évaluation sud-africaine est « non applicable », l’espèce y restant très rare."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "African Skimmer — BirdLife South Africa Red Data Book",
+        "fr": "Bec-en-ciseaux d’Afrique — Livre rouge de BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/african-skimmer/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife records a sub-Saharan range, characteristic bill, global LC category and distinct South African NA regional status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 17,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution and breeding biology of the African Skimmer on the upper and middle Zambezi River",
+        "fr": "Distribution et biologie de reproduction du Bec-en-ciseaux d’Afrique sur le haut et moyen Zambèze"
+      },
+      "url": "https://doi.org/10.1080/00306525.1988.9633707",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Field observations on the Zambezi documented seasonal distribution, sandbar colonies and breeding biology."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 13,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bec-en-ciseaux d’Afrique — Oiseaux.net (French)",
+        "fr": "Bec-en-ciseaux d’Afrique — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/bec-en-ciseaux.d.afrique.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "French-language species account describes its aquatic habitat and fish-eating habits."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 10,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Population movements and breeding dates vary among river systems; the South African regional category is distinct from the global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. English authoritative assessment, a primary Zambezi breeding study and a French-language account were cross-checked; status is explicitly separated by scale."
+}

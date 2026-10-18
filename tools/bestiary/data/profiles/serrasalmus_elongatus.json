@@ -1,0 +1,141 @@
+{
+  "id": "serrasalmus_elongatus",
+  "scientific": "Serrasalmus elongatus",
+  "group": "fish",
+  "name": {
+    "en": "Slender piranha",
+    "fr": "Piranha allongé"
+  },
+  "sections": {
+    "overview": {
+      "en": "This slender-bodied piranha occurs in the Amazon and Orinoco river basins.",
+      "fr": "Ce piranha au corps allongé vit dans les bassins de l’Amazone et de l’Orénoque."
+    },
+    "identification": {
+      "en": "The species reaches about 30 cm total length in the records summarized by FishBase.",
+      "fr": "Les données synthétisées par FishBase indiquent une longueur totale maximale d’environ 30 cm."
+    },
+    "habitat": {
+      "en": "It is a tropical freshwater, benthopelagic fish.",
+      "fr": "C’est un poisson d’eau douce tropical et benthopélagique."
+    },
+    "diet": {
+      "en": "Studies describe adults as specialized fin- and scale-feeders, though they may also consume other fish material and aquatic insects.",
+      "fr": "Les études décrivent les adultes comme spécialisés dans la consommation de nageoires et d’écailles, tout en mangeant aussi d’autres tissus de poissons et des insectes aquatiques."
+    },
+    "behavior": {
+      "en": "The species summaries consulted provide little detail on social or daily behavior.",
+      "fr": "Les résumés consultés donnent peu de détails sur son comportement social ou quotidien."
+    },
+    "reproduction": {
+      "en": "The species-level summaries consulted do not give verified reproductive details.",
+      "fr": "Les résumés consultés ne donnent pas de données vérifiées sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Its fin- and scale-feeding is a distinctive trophic niche among piranhas.",
+      "fr": "La consommation de nageoires et d’écailles constitue une niche alimentaire particulière parmi les piranhas."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN « Préoccupation mineure », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Serrasalmus elongatus species summary",
+        "fr": "FishBase — résumé de Serrasalmus elongatus"
+      },
+      "url": "https://www.fishbase.se/summary/11964",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records maximum length, freshwater benthopelagic habitat and the dated IUCN category; species-specific behavior and reproduction fields are sparse."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 19,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nico & de Morales (1994), Nutrient content of piranha prey items — Copeia",
+        "fr": "Nico & de Morales (1994), Nutrient content of piranha prey items — Copeia"
+      },
+      "url": "https://doi.org/10.2307/1446694",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The study identifies S. elongatus among adult piranhas that feed heavily on fish fins or scales."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 16,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reis, Kullander & Ferraris (eds.), Checklist of Freshwater Fishes of South and Central America — IRD edition",
+        "fr": "Reis, Kullander & Ferraris (dir.), Checklist of Freshwater Fishes of South and Central America — édition IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers19-12/010036914.pdf",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The taxonomic checklist records the Amazon and Orinoco distribution and maximum total length of 30 cm."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 16,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN category shown by FishBase is dated 2020; diet varies with size and locality."
+  ],
+  "review_note": "Compared FishBase and a peer-reviewed feeding study with the IRD-hosted taxonomic checklist; left sparse life-history details unspecified.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

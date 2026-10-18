@@ -1,0 +1,254 @@
+{
+  "id": "apistogramma_gephyra",
+  "scientific": "Apistogramma gephyra",
+  "group": "fish",
+  "name": {
+    "en": "Redseam Dwarf Cichlid",
+    "fr": "Apistogramma gephyra"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma gephyra is a small dwarf cichlid from Brazil’s lower Rio Negro basin. Its type locality lies in the Anavilhanas archipelago, and later records include sites farther downstream along the Negro.",
+      "fr": "Apistogramma gephyra est un petit cichlidé nain du bas bassin du rio Negro, au Brésil. Sa localité type se trouve dans l’archipel des Anavilhanas, et des données ultérieures le signalent plus en aval le long du Negro."
+    },
+    "identification": {
+      "en": "The body is slender and laterally compressed, with a dark side band and a red edge on the dorsal fin; the caudal fin is rounded to slightly pointed. FishBase lists maximum standard lengths of 3.3 cm for male or unsexed fish and 4 cm for females; no dependable body mass or width was found. A French Fishipedia card gives an approximate 3–4 cm range, broadly consistent with those figures, but does not provide separate total lengths by sex.",
+      "fr": "Le corps est allongé et comprimé latéralement, avec une bande sombre sur le flanc et un bord rouge à la nageoire dorsale ; la caudale est arrondie à légèrement pointue. FishBase donne des longueurs standard maximales de 3,3 cm pour les individus mâles ou non sexés et de 4 cm pour les femelles ; aucune masse ni largeur corporelle fiable n’a été trouvée. Une fiche française de Fishipedia indique une fourchette approximative de 3 à 4 cm, globalement cohérente avec ces valeurs, sans distinguer longueur totale et sexe."
+    },
+    "habitat": {
+      "en": "It occurs in the lower Rio Negro, including the Anavilhanas region, in Brazil’s Amazonas state. A Swedish cichlid-society account describes slow or nearly still sites with branches and partly decomposed leaves, in soft, acidic water; those habitat details are useful context, not measurements for every locality.",
+      "fr": "Il vit dans le bas rio Negro, notamment dans la région des Anavilhanas, dans l’État brésilien d’Amazonas. Une fiche d’une association suédoise de cichlidés décrit des sites lents ou presque stagnants, avec branches et feuilles en décomposition, dans une eau douce et acide ; ces éléments sont indicatifs et ne valent pas pour chaque localité."
+    },
+    "diet": {
+      "en": "A German fish lexicon reports small insects, crustaceans and other zooplankton as natural prey, but I found no species-specific stomach study to verify that list, so it should be read as a secondary account rather than a measured diet.",
+      "fr": "Un lexique allemand des poissons indique de petits insectes, des crustacés et d’autres éléments du zooplancton comme proies naturelles, mais aucune étude stomacale propre à l’espèce n’a été trouvée pour vérifier cette liste ; il faut donc la lire comme une source secondaire, et non comme un régime mesuré."
+    },
+    "behavior": {
+      "en": "A French species card, explicitly marked as work in progress, characterizes it as a bottom-oriented territorial fish that lives in pairs; this preliminary summary is not a detailed field study of social behavior.",
+      "fr": "Une fiche française, explicitement signalée comme en cours de rédaction, le décrit comme un poisson territorial de fond vivant en couple ; cette synthèse préliminaire ne constitue pas une étude détaillée du comportement social sur le terrain."
+    },
+    "reproduction": {
+      "en": "FishBase reports that eggs are attached to the roof of a cave and tended by the female, with a maximum clutch of about 200 eggs; its summary does not detail the wild observation context.",
+      "fr": "FishBase indique que les œufs sont fixés au plafond d’une cavité et surveillés par la femelle, avec une ponte maximale d’environ 200 œufs ; sa synthèse ne détaille pas le contexte des observations sauvages."
+    },
+    "ecology": {
+      "en": "Apistogramma gephyra belongs to the agassizii species group and is closely related to A. agassizii. Aquarium Glaser notes that the red margin along the dorsal fin is a useful distinction from A. agassizii, while color can change with stress and should be checked together with body pattern and locality.",
+      "fr": "Apistogramma gephyra appartient au groupe d’espèces agassizii et est proche d’A. agassizii. Aquarium Glaser indique que le liseré rouge de la nageoire dorsale aide à le distinguer d’A. agassizii ; comme la coloration peut changer sous l’effet du stress, il faut aussi examiner le motif du corps et la provenance."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 7 November 2018. The species is known from a limited part of the lower Negro basin, so the broad status should not be taken as evidence that every local habitat is free from pressure.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure, datée du 7 novembre 2018. L’espèce n’est connue que d’une partie limitée du bassin du bas Negro ; ce statut général ne prouve donc pas que chaque habitat local soit exempt de pression."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma gephyra — FishBase species summary and field guide",
+        "fr": "Apistogramma gephyra — synthèse et guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-gephyra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the lower Negro distribution, 3.3 cm male or unsexed and 4 cm female maximum standard lengths, cave spawning with female care, about 200 eggs, and Least Concern assessed 2018-11-07."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 31,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A taxonomic study of the genus Apistogramma — Bonner Zoologische Monographien",
+        "fr": "Étude taxonomique du genre Apistogramma — Bonner Zoologische Monographien"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s 1980 monograph describes A. gephyra and gives the type locality in the Anavilhanas archipelago of the Rio Negro."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 19,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cichlidae — Checklist of the Freshwater Fishes of South and Central America",
+        "fr": "Cichlidae — liste des poissons d’eau douce d’Amérique centrale et du Sud"
+      },
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The catalog entry records the valid name, type locality, maximum 3.3 cm standard length and lower Rio Negro distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 19,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gephyra — German Fischlexikon species account",
+        "fr": "Apistogramma gephyra — fiche allemande Fischlexikon"
+      },
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002228",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "German account describes the red dorsal edge, stress-related change in the lateral band, lower-Negro margins, leaf litter and an acidic soft-water locality."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 22,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gephyra wild — Aquarium Glaser",
+        "fr": "Apistogramma gephyra sauvage — Aquarium Glaser"
+      },
+      "url": "https://www.aquariumglaser.de/fischarchiv/apistogramma-gephyra-wild/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "German trade account discusses its close relationship with A. agassizii and identifies the red dorsal-fin margin as a practical distinguishing trait."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 21,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gephyra — Fishipedia French species account",
+        "fr": "Apistogramma gephyra — fiche française Fishipedia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-gephyra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French account gives an approximate 3–4 cm size, but explicitly says its text is still being developed, so it is used only as a secondary size cross-check."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 28,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gephyra — Nordiska Ciklidsällskapet species register",
+        "fr": "Apistogramma gephyra — registre des espèces de l’association nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=263",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Swedish-language cichlid society account describes slow or still water with leaves and branches, as well as soft low-pH water."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 19,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a small slender dwarf cichlid with a laterally compressed body, dark lateral band, red dorsal-fin margin, and oval to slightly pointed tail. Show the dark band fading under stress; natural scene should evoke a shaded, slow lower-Rio-Negro margin with submerged leaves and branches.",
+  "uncertainties": [
+    "FishBase and the 2003 checklist list 3.3 cm SL for males or unsexed fish and 4 cm SL for females; a French aquarium card also summarizes 3–4 cm, but sex-specific field measurements are sparse. No reliable weight or width data were found.",
+    "A 2005 collection list reports a 48.9 mm standard-length specimen under this name, much larger than the catalog maximum. Because this record is an outlier and was not accompanied by a redescription, it is not treated as a verified species maximum.",
+    "Natural diet and detailed wild social behavior remain poorly documented; aquarium feeding and behavior notes are not presented as field observations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase, Kullander’s monograph and catalog, a French species card, and German field and aquarium accounts. Preserved the conflict between the catalog size and the isolated 2005 specimen record, and framed the A. agassizii comparison around the reported red dorsal margin."
+}

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Retour</string>
+    <string name="pixel_art_color_hue">Teinte</string>
+    <string name="pixel_art_color_saturation">Saturation</string>
+    <string name="pixel_art_color_brightness">Luminosité</string>
+    <string name="pixel_art_color_alpha">Transparence</string>
+    <string name="pixel_art_color_presets">Couleurs rapides</string>
+</resources>

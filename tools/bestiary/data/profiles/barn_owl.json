@@ -1,0 +1,144 @@
+{
+  "id": "barn_owl",
+  "scientific": "Tyto alba",
+  "group": "birds",
+  "name": {
+    "en": "Western barn owl",
+    "fr": "Effraie des clochers"
+  },
+  "sections": {
+    "overview": {
+      "en": "The western barn owl is a pale, mostly nocturnal owl that hunts over open country.",
+      "fr": "L’effraie des clochers est une chouette claire, surtout nocturne, qui chasse dans les milieux ouverts."
+    },
+    "identification": {
+      "en": "Its heart-shaped facial disc, dark eyes and pale underside make it distinctive.",
+      "fr": "Son disque facial en forme de cœur, ses yeux sombres et son dessous clair la distinguent."
+    },
+    "habitat": {
+      "en": "It hunts over farmland, grassland and wetlands and often roosts or nests in barns, lofts and church towers.",
+      "fr": "Elle chasse dans les terres agricoles, prairies et zones humides, et se repose ou niche souvent dans les granges, greniers et clochers."
+    },
+    "diet": {
+      "en": "In Europe, small mammals—especially voles—make up most of its prey.",
+      "fr": "En Europe, les petits mammifères, notamment les campagnols, constituent l’essentiel de ses proies."
+    },
+    "behavior": {
+      "en": "It can locate prey by sound and regurgitates indigestible remains as pellets.",
+      "fr": "Elle peut localiser ses proies au son et rejette les éléments indigestes sous forme de pelotes."
+    },
+    "reproduction": {
+      "en": "It nests in dark cavities or buildings, and the number of eggs can vary with food availability.",
+      "fr": "Elle niche dans des cavités sombres ou des bâtiments, et le nombre d’œufs peut varier selon la nourriture disponible."
+    },
+    "ecology": {
+      "en": "Its dependence on small mammals links it closely to open agricultural mosaics and grasslands.",
+      "fr": "Sa dépendance aux petits mammifères la relie aux mosaïques agricoles ouvertes et aux prairies."
+    },
+    "conservation": {
+      "en": "Closing access to old barns and towers can remove nesting sites, so suitable cavities and nest boxes can help locally.",
+      "fr": "La fermeture des accès aux vieilles granges et aux clochers peut supprimer des sites de nidification ; des cavités adaptées et des nichoirs peuvent aider localement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Natural History Museum — Barn owl",
+        "fr": "Natural History Museum — Effraie des clochers"
+      },
+      "url": "https://www.nhm.ac.uk/discover/barn-owl-tyto-alba.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The museum account describes the pale heart-shaped face, nocturnal hunting over farmland, and small-mammal prey."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 15,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LPO — Effraie des clochers",
+        "fr": "LPO — Effraie des clochers"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/effraie-des-clochers",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The LPO account covers open habitats, micro-mammal prey, sound-based hunting, pellets, nesting in buildings and cavities, variable clutch size and blocked access to nest sites."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 25,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LPO Alsace — Barn owl survey",
+        "fr": "LPO Alsace — Suivi de l’Effraie des clochers"
+      },
+      "url": "https://alsace.lpo.fr/index.php/actions-par-espece/effraie-des-clochers",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Pellet analysis is used to study the owl’s diet and document local prey."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 13,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "This profile follows the project taxon Tyto alba and does not summarize regional status as a global trend."
+  ],
+  "review_note": "Used the western barn-owl name and restricted the prey statement to Europe, where the French source reports it.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

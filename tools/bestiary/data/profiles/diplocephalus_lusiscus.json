@@ -1,0 +1,201 @@
+{
+  "id": "diplocephalus_lusiscus",
+  "scientific": "Diplocephalus lusiscus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cave Sheet-weaver",
+    "fr": "Linyphie cavernicole (nom descriptif)"
+  },
+  "sections": {
+    "overview": {
+      "en": "This minute sheet-weaver spider is recorded from Spain, France, Belgium and Germany; it is described as troglophilic, using subterranean habitats without being established as an obligate cave species.",
+      "fr": "Cette minuscule linyphie est signalée d’Espagne, de France, de Belgique et d’Allemagne ; elle est qualifiée de troglophile, fréquentant les milieux souterrains sans être reconnue comme strictement cavernicole."
+    },
+    "identification": {
+      "en": "Adults are tiny: the European spider database reports males at 1.7 mm and females at 1.9 mm in body length; male and female genital structures are used for diagnosis.",
+      "fr": "Les adultes sont minuscules : la base européenne des araignées indique une longueur corporelle de 1,7 mm chez le mâle et 1,9 mm chez la femelle ; les organes génitaux servent au diagnostic."
+    },
+    "habitat": {
+      "en": "Published French records include caves and damp moss, while recent European synthesis classifies the species as troglophilic.",
+      "fr": "Les mentions françaises publiées comprennent des grottes et des mousses humides, tandis qu’une synthèse européenne récente qualifie l’espèce de troglophile."
+    },
+    "diet": {
+      "en": "The sources consulted provide no species-specific prey list; like other spiders it is a predator, but a more detailed diet cannot be established from these records.",
+      "fr": "Les sources consultées ne donnent pas de liste de proies propre à l’espèce ; comme les autres araignées, elle est prédatrice, mais ces références ne permettent pas de préciser davantage son régime."
+    },
+    "behavior": {
+      "en": "Its presence in subterranean settings is documented, but the reviewed taxonomic and distribution accounts do not describe a distinctive hunting or social behavior.",
+      "fr": "Sa présence dans les milieux souterrains est documentée, mais les fiches taxonomiques et de répartition examinées ne décrivent aucun comportement de chasse ou comportement social particulier."
+    },
+    "reproduction": {
+      "en": "The consulted species accounts contain no specific information on courtship, egg sacs or breeding season.",
+      "fr": "Les fiches d’espèce consultées ne donnent pas d’information spécifique sur la parade, les cocons ou la période de reproduction."
+    },
+    "ecology": {
+      "en": "It belongs to Linyphiidae, the sheet-weaver spider family; the available records indicate a patchy western and central European distribution rather than a complete ecological range description.",
+      "fr": "Elle appartient aux Linyphiidae, famille des araignées tisseuses de nappes ; les données disponibles indiquent une répartition ponctuée en Europe occidentale et centrale, sans décrire complètement son écologie."
+    },
+    "conservation": {
+      "en": "The German Red List describes it as very rare nationally and threatened to an unknown extent; this is a country-level assessment, not a global category.",
+      "fr": "La Liste rouge allemande la décrit comme très rare dans le pays et menacée à un degré inconnu ; il s’agit d’une évaluation nationale, non d’une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spiders of Europe — Diplocephalus lusiscus",
+        "fr": "Araignées d’Europe — Diplocephalus lusiscus"
+      },
+      "url": "https://araneae.nmbe.ch/data/781",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "European database gives body size, troglophilic classification, distribution and diagnostic figures."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Catalogue and distribution of the spiders of France — Linyphiidae",
+        "fr": "Catalogue et répartition des araignées de France — Linyphiidae"
+      },
+      "url": "https://www.araneae.nmbe.ch/pdfs/49519_Le_Peru_2007_RevArachnol_16_p1-468.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "French catalogue records cave habitat and damp moss for this species."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "German Red List — Diplocephalus lusiscus",
+        "fr": "Liste rouge allemande — Diplocephalus lusiscus"
+      },
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=17f5a8e3-d0c8-49f1-98a8-ac298cbf20cc",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "German assessment calls it very rare and threatened to an unknown extent within Germany."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "World Spider Catalog — Diplocephalus",
+        "fr": "World Spider Catalog — Diplocephalus"
+      },
+      "url": "https://wsc.nmbe.ch/species-list/1440/Diplocephalus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "diet",
+        "behavior",
+        "reproduction",
+        "diet",
+        "behavior",
+        "reproduction",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "WSC accepts this name."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The descriptive French label is not asserted as a standardized vernacular name. Lack of species-specific behavior, diet and reproductive data in reviewed sources is not evidence that such research does not exist."
+}

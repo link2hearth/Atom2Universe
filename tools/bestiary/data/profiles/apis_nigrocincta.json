@@ -1,0 +1,91 @@
+{
+  "id": "apis_nigrocincta",
+  "scientific": "Apis nigrocincta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Black-banded honey bee",
+    "fr": "Abeille à bandes noires"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apis nigrocincta is a cavity-nesting honey bee native to Southeast Asia. It is part of the Asian cavity-nesting honey-bee group and is especially associated with the Philippines and nearby Indonesian islands. The species has received less biological study than the widely managed western honey bee, so many details of its ecology remain poorly known.",
+      "fr": "Apis nigrocincta est une abeille mellifère qui niche dans des cavités et vit en Asie du Sud-Est. Elle appartient au groupe des abeilles asiatiques nichant dans des cavités et est notamment associée aux Philippines et aux îles indonésiennes voisines. Sa biologie est moins étudiée que celle de l’abeille domestique occidentale, et de nombreux aspects de son écologie restent mal connus."
+    },
+    "identification": {
+      "en": "It is a social honey bee with the familiar three-part insect body, two pairs of wings, pollen-carrying hind legs in workers and a banded abdomen. Its forewings measure about 7–9 mm; a reliable range for whole-body length has not been documented, and no sex-specific body-size figures were found. Identification within Asian cavity-nesting Apis is difficult from appearance alone: researchers use a combination of morphology, nest traits and genetic evidence to separate close species. A photograph without locality or close diagnostic detail may therefore be insufficient for confident identification. No reliable adult body-mass figure or sex-specific mass difference was found in the consulted species sources.",
+      "fr": "C’est une abeille sociale au corps d’insecte en trois parties, avec deux paires d’ailes, et, chez les ouvrières, des pattes postérieures adaptées au transport du pollen. Ses ailes antérieures mesurent environ 7 à 9 mm ; aucune plage fiable de longueur totale du corps ni mesure comparative par sexe n’a été publiée dans les sources consultées. L’identification au sein des Apis asiatiques nichant en cavité est délicate à la seule apparence : les chercheurs combinent morphologie, caractères du nid et données génétiques pour distinguer les espèces proches. Une photographie sans lieu d’observation ni détail diagnostique peut donc ne pas suffire à une identification certaine. Les sources consultées sur l’espèce ne fournissent ni masse adulte fiable ni différence de masse documentée entre les sexes."
+    },
+    "habitat": {
+      "en": "Published accounts place the species in the Philippines and Indonesia, including Sulawesi and the Sangihe Islands. It nests in enclosed cavities rather than building the exposed single-comb nests characteristic of some other honey bees. Available sources provide a regional distribution, but do not establish a complete, fine-scale map of occupied habitats.",
+      "fr": "Les publications situent l’espèce aux Philippines et en Indonésie, notamment à Sulawesi et dans les îles Sangihe. Elle niche dans des cavités fermées, plutôt que de construire les rayons exposés caractéristiques de certaines autres abeilles mellifères. Les sources disponibles donnent une répartition régionale, sans cartographier précisément tous les habitats occupés."
+    },
+    "diet": {
+      "en": "Like other honey bees, workers collect floral nectar and pollen to provision the colony. The species-specific studies retrieved for this profile focus on distribution, nesting and relationships among Asian honey bees; they do not provide a detailed, quantified account of its preferred flowers or seasonal diet.",
+      "fr": "Comme les autres abeilles mellifères, les ouvrières récoltent le nectar et le pollen des fleurs pour approvisionner la colonie. Les études propres à cette espèce consultées ici portent surtout sur la répartition, la nidification et les relations entre abeilles asiatiques ; elles ne donnent pas de bilan détaillé et quantifié des fleurs préférées ou du régime saisonnier."
+    },
+    "behavior": {
+      "en": "The species lives in colonies and uses cavity nests. Research on Asian cavity-nesting honey bees distinguishes A. nigrocincta from close relatives through nest and brood-cell characteristics as well as genetic markers. Detailed field observations of its foraging, swarming and communication are sparse in the sources reviewed here.",
+      "fr": "L’espèce vit en colonie et occupe des cavités. Les recherches sur les abeilles asiatiques nichant en cavité distinguent A. nigrocincta de ses proches parentes à l’aide de caractères du nid et des cellules de couvain, ainsi que de marqueurs génétiques. Les sources examinées ici livrent peu d’observations de terrain détaillées sur son butinage, son essaimage et sa communication."
+    },
+    "reproduction": {
+      "en": "Colony reproduction in honey bees involves production of new queens and the departure of a queen with workers to establish another colony. For A. nigrocincta, the sources used here do not provide a well-supported species-specific schedule, mating range or colony-founding rate, so those values are not supplied.",
+      "fr": "Chez les abeilles mellifères, la reproduction des colonies passe par la production de nouvelles reines et le départ d’une reine accompagnée d’ouvrières pour fonder une autre colonie. Les sources retenues ici ne donnent pas de calendrier, de distance d’accouplement ni de taux de fondation propres à A. nigrocincta suffisamment étayés ; ces valeurs ne sont donc pas indiquées."
+    },
+    "ecology": {
+      "en": "As a native social bee, A. nigrocincta visits flowering plants and can contribute to pollination. Its cavity-nesting biology makes suitable nest sites part of its habitat requirements. The reviewed research emphasizes how little is known about the ecology and conservation of several Asian honey bees; it does not quantify this species’ pollination contribution or population trend.",
+      "fr": "Abeille sociale indigène, A. nigrocincta visite les plantes en fleurs et peut contribuer à leur pollinisation. Sa nidification en cavité rend la disponibilité des sites de nidification importante pour son habitat. Les études consultées soulignent le manque de connaissances sur l’écologie et la conservation de plusieurs abeilles asiatiques ; elles ne quantifient ni sa contribution à la pollinisation ni la tendance de sa population."
+    },
+    "conservation": {
+      "en": "No current global Red List category or population trend was confirmed in the sources used for this account. The absence of a verified status should not be read as evidence that the species is secure; the research literature specifically notes substantial knowledge gaps for Asian honey bees.",
+      "fr": "Aucune catégorie mondiale récente de Liste rouge ni tendance de population n’a été confirmée dans les sources utilisées pour cette fiche. L’absence de statut vérifié ne signifie pas que l’espèce est à l’abri ; la littérature scientifique signale précisément d’importantes lacunes de connaissance sur les abeilles asiatiques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Asian cavity-nesting honeybees — University of Florida IFAS Extension",
+        "fr": "Abeilles mellifères asiatiques nichant en cavité — service de vulgarisation IFAS de l’université de Floride"
+      },
+      "url": "https://edis.ifas.ufl.edu/publication/IN1353",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Describes Apis nigrocincta as a cavity-nesting honey bee native to the Philippines and Indonesia; calls it medium-sized, slightly larger than A. cerana, notes that whole-body length ranges have not been documented, and gives forewing length as 7–9 mm.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Phylogeography and species delimitation of the Asian cavity-nesting honeybees — Insect Systematics and Diversity",
+        "fr": "Phylogéographie et délimitation des espèces d’abeilles asiatiques nichant en cavité — Insect Systematics and Diversity"
+      },
+      "url": "https://academic.oup.com/isd/article/7/4/5/7235953",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Uses genetic and morphological evidence to distinguish A. nigrocincta among closely related Asian cavity-nesting honey bees."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Apis nigrocincta, realistic worker honey bee with dark transverse abdominal bands, two pairs of transparent wings, pollen-bearing hind legs; accurate bee anatomy on white background.",
+  "uncertainties": [
+    "Species-specific data on diet, colony behavior, reproduction and population trend are sparse in the reviewed sources.",
+    "The sources give regional occurrence, not a complete range map or current global conservation assessment."
+  ],
+  "reviewed": true,
+  "review_note": "Profile deliberately limits species-specific claims to published sources; broad honey-bee traits are identified as group-level context."
+}

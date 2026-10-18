@@ -1,0 +1,257 @@
+{
+  "id": "apistogramma_similis",
+  "scientific": "Apistogramma similis",
+  "group": "fish",
+  "name": {
+    "en": "Similis Dwarf Cichlid",
+    "fr": "Apistogramme similis"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma similis is a small South American dwarf cichlid described by Wolfgang Staeck in 2003 from Bolivia. Its original locality is a forest brook beside Laguna La Brava in the río Yata system, within Beni Department.",
+      "fr": "Apistogramma similis est un petit cichlidé nain sud-américain décrit par Wolfgang Staeck en 2003 en Bolivie. Sa localité d’origine est un ruisseau forestier près de la Laguna La Brava, dans le système du río Yata, au département du Beni."
+    },
+    "identification": {
+      "en": "The holotype measured 3.8 cm in standard length, but this single specimen is not a reliable adult maximum. FishBase gives no maximum or sex-specific length, mass, body width or height.",
+      "fr": "L’holotype mesurait 3,8 cm de longueur standard, mais cet individu unique ne donne pas une taille maximale adulte fiable. FishBase ne fournit ni maximum ni longueur selon le sexe, ni masse, largeur ou hauteur corporelle."
+    },
+    "habitat": {
+      "en": "The type specimen came from a forest stream at Laguna La Brava, but later records extend well beyond that single site. A survey near Santa Ana del Yacuma recorded the species in the río Mamoré subdrainage of the Bolivian Amazon.",
+      "fr": "Le spécimen type provient d’un ruisseau forestier de la Laguna La Brava, mais des données ultérieures dépassent largement ce site unique. Un inventaire près de Santa Ana del Yacuma a recensé l’espèce dans le sous-bassin du río Mamoré, en Amazonie bolivienne."
+    },
+    "diet": {
+      "en": "A species-specific diet study was not found in the consulted references. It is safest to describe its feeding ecology as insufficiently documented rather than assign it a precise prey list from aquarium observations or genus-level assumptions.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été trouvée dans les références consultées. Il est plus prudent de dire que son régime est insuffisamment documenté que de lui attribuer une liste précise de proies tirée d’observations d’aquarium ou d’hypothèses sur le genre."
+    },
+    "behavior": {
+      "en": "Direct observations of its behavior in the wild remain sparse in the available species accounts. Specialist cichlid records classify it as a harem-forming cave brooder, a useful reproductive pattern that should not be mistaken for a detailed field study.",
+      "fr": "Les observations directes de son comportement sauvage restent rares dans les fiches d’espèce disponibles. Les registres spécialisés sur les cichlidés le classent comme reproducteur en harem et pondeur en cavité, un schéma utile qui ne constitue pas une étude détaillée sur le terrain."
+    },
+    "reproduction": {
+      "en": "The Cichlid Room Companion records substrate cave spawning and polygynous harem breeding for this species. Reliable field measurements of clutch size, incubation time and parental roles were not found in the consulted sources.",
+      "fr": "Le Cichlid Room Companion indique une ponte dans une cavité du substrat et une reproduction polygame en harem. Les sources consultées ne donnent pas de mesures fiables sur la taille des pontes, l’incubation ou le partage des soins parentaux sur le terrain."
+    },
+    "ecology": {
+      "en": "The name similis means similar and refers to its close visual resemblance to the Bolivian A. inconspicua and A. linkei. The Cichlid Room places it in the regani group, so A. bitaeniata should not be assumed to be a close relative.",
+      "fr": "Le nom similis signifie « semblable » et renvoie à sa forte ressemblance avec les Boliviens A. inconspicua et A. linkei. Le Cichlid Room le place dans le groupe regani ; A. bitaeniata ne doit donc pas être considéré d’emblée comme un proche parent."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists Apistogramma similis as Least Concern, assessed on 23 April 2014 and published in 2016. The assessment and later records show a broader Bolivian lowland distribution than the original type locality alone suggests.",
+      "fr": "L’évaluation de l’UICN classe Apistogramma similis en préoccupation mineure, avec une évaluation datée du 23 avril 2014 et publiée en 2016. Cette évaluation et les données ultérieures indiquent une aire plus vaste dans les basses terres boliviennes que ne le laissait penser la seule localité type."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma similis — FishBase species summary",
+        "fr": "Apistogramma similis — fiche de synthèse FishBase"
+      },
+      "url": "https://fishbase.se/summary/62414",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the accepted scientific name, Bolivia distribution and IUCN status; it gives no maximum length or weight for this species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 21,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma similis — Aquarist Atlas species account",
+        "fr": "Apistogramma similis — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-similis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The account gives the holotype standard length, type locality, resemblance to A. inconspicua and A. linkei, and later Mamoré lowland records."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 21,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Preliminary fish survey near Santa Ana del Yacuma, Bolivia",
+        "fr": "Inventaire préliminaire des poissons près de Santa Ana del Yacuma, Bolivie"
+      },
+      "url": "https://www.redalyc.org/pdf/1991/199125295019.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Hablützel's 2012 survey records A. similis in the Mamoré subdrainage near Santa Ana del Yacuma; the paper includes English and Spanish summaries."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 22,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma similis — Cichlid Room Companion species record",
+        "fr": "Apistogramma similis — fiche du Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=619&lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The specialist record identifies the species as a harem breeder and substrate cave spawner."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 14,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma similis — Cichlid Room Companion, Italian record",
+        "fr": "Apistogramma similis — notice italienne du Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=619&lang=it",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Italian-language species record classifies A. similis in the Regani group."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 11,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List assessment of Apistogramma similis",
+        "fr": "Évaluation UICN d’Apistogramma similis"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language 2016 IUCN report lists Apistogramma similis as Least Concern; the assessment date is 23 April 2014."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 18,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catalog of Fishes: Apistogramma similis nomenclatural record",
+        "fr": "Catalog of Fishes : notice nomenclaturale d’Apistogramma similis"
+      },
+      "url": "https://www.calacademy.org/scientists/projects/catalog-of-fishes",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The catalog indexes Staeck's 2003 description and the type locality in the río Yata system; the original book is in German."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a small, rather plain Bolivian Apistogramma with a continuous dark lateral band and natural subdued coloration; avoid inventing vivid species-specific colors not supported by the reference specimen or field accounts.",
+  "uncertainties": [
+    "The 3.8 cm measurement is the standard length of the holotype, not a verified maximum; no reliable maximum by sex, mass, width or body height was located.",
+    "The species resembles A. inconspicua and A. linkei, and detailed distinctions require comparison with the original description; broad color impressions alone are not enough.",
+    "Diet and detailed wild breeding behavior remain poorly documented; the cave-brooding classification is a specialist record rather than a quantitative field study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase, the Spanish-language IUCN report, a bilingual scientific survey, and specialist cichlid records. Kept the holotype measurement distinct from a species maximum and described behavioral and diet gaps explicitly."
+}

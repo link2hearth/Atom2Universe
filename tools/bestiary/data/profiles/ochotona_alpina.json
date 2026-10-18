@@ -1,0 +1,158 @@
+{
+  "id": "ochotona_alpina",
+  "scientific": "Ochotona alpina",
+  "group": "mammals",
+  "name": {
+    "en": "Alpine pika",
+    "fr": "Pika de l’Altaï"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Alpine pika is a small, plant-eating lagomorph of the Altai and Sayan mountain region of Central and East Asia.",
+      "fr": "Le pika de l’Altaï est un petit lagomorphe herbivore des régions montagneuses de l’Altaï et des monts Saïan, en Asie centrale et orientale."
+    },
+    "identification": {
+      "en": "It is a compact, short-eared mammal with a brown summer coat that becomes greyer in winter. Distinguishing it from other *Ochotona* may require careful taxonomic work, since related pikas occur across the region.",
+      "fr": "C’est un mammifère trapu aux oreilles courtes, au pelage brun en été qui devient plus gris en hiver. Le distinguer des autres *Ochotona* peut demander une étude taxonomique attentive, car des pikas apparentés vivent dans la région."
+    },
+    "habitat": {
+      "en": "It occupies rocky slopes and talus with nearby vegetation, across mountain ranges in Russia, Mongolia, Kazakhstan and northern China. Patches of suitable rock habitat are naturally fragmented.",
+      "fr": "Il fréquente les pentes rocheuses et les éboulis proches de la végétation, dans les massifs de Russie, de Mongolie, du Kazakhstan et du nord de la Chine. Les zones rocheuses qui lui conviennent sont naturellement fragmentées."
+    },
+    "diet": {
+      "en": "It is a generalist herbivore. Pikas gather and store plants in haypiles for winter, when snow limits access to fresh forage.",
+      "fr": "C’est un herbivore généraliste. Les pikas récoltent et stockent des plantes en meules de foin pour l’hiver, lorsque la neige limite l’accès à la nourriture fraîche."
+    },
+    "behavior": {
+      "en": "It is mainly active by day and gives sharp calls. Haypiles can also provide winter food for other herbivores when snow is deep.",
+      "fr": "Il est surtout actif le jour et émet des cris aigus. Lorsque la neige est profonde, ses réserves de foin peuvent aussi nourrir d’autres herbivores en hiver."
+    },
+    "reproduction": {
+      "en": "A species account reports two litters a year, averaging about three young per litter, but reproductive data are limited and should not be generalized to every population.",
+      "fr": "Une synthèse consacrée à l’espèce rapporte deux portées par an, d’environ trois petits chacune, mais les données de reproduction sont limitées et ne doivent pas être généralisées à toutes les populations."
+    },
+    "ecology": {
+      "en": "Its feeding and haypiles can influence local vegetation and provide food for other animals. These interactions are reported for particular sites, rather than measured across the whole range.",
+      "fr": "Son alimentation et ses réserves de foin peuvent influencer la végétation locale et nourrir d’autres animaux. Ces interactions sont rapportées dans certains sites, sans avoir été mesurées sur toute son aire."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2016 classified it as Least Concern and described the trend as stable, while noting sparse population information and possible fluctuations in isolated populations.",
+      "fr": "L’évaluation de l’UICN publiée en 2016 le classe en préoccupation mineure et indique une tendance stable, tout en signalant le manque de données sur la population et des fluctuations possibles dans les groupes isolés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Alpine Pika — IUCN Red List assessment",
+        "fr": "Pika de l’Altaï — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T41255A45182115.en",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Range includes China, Kazakhstan, Mongolia and Russia; occupies rocky habitat; generalist herbivore that builds haypiles; some sites show effects on vegetation and use of haypiles by other herbivores; 2016 global assessment Least Concern, stable trend, but limited population data."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 39,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alpine pika species account — Wild Mammals of North America, 3rd ed.",
+        "fr": "Compte rendu du pika de l’Altaï — Wild Mammals of North America, 3e éd."
+      },
+      "url": "https://www.asau.ru/files/pdf/1501160.pdf",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Handbook species account discusses pelage, taxonomic distinction among pikas and reports two litters averaging about three young."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 17,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Species of the World — Alpine pika taxonomy and range",
+        "fr": "Mammal Species of the World — taxonomie et répartition du pika de l’Altaï"
+      },
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13500007",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Recognizes Ochotona alpina as a species in subgenus Pika and discusses its Altai, Sayan and Mongolian range alongside former taxonomic inclusions and separations."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 23,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN assessment is from 2016; no newer global assessment was found.",
+    "Reproductive and haypile details come from a handbook or site-level reports, not range-wide population estimates."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the IUCN assessment with a mammal handbook and taxonomic reference; avoids precise claims beyond available field data."
+}

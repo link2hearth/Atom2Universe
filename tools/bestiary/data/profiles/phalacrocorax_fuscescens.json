@@ -1,0 +1,147 @@
+{
+  "id": "phalacrocorax_fuscescens",
+  "scientific": "Phalacrocorax fuscescens",
+  "group": "birds",
+  "name": {
+    "en": "Black-faced Cormorant",
+    "fr": "Cormoran de Tasmanie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phalacrocorax fuscescens, the Black-faced Cormorant, is a cormorant endemic to southern Australia.",
+      "fr": "Phalacrocorax fuscescens, le Cormoran de Tasmanie, est un cormoran endémique du sud de l’Australie."
+    },
+    "identification": {
+      "en": "It is a medium-to-large black-and-white cormorant.",
+      "fr": "C’est un cormoran noir et blanc de taille moyenne à grande."
+    },
+    "habitat": {
+      "en": "It forages in coastal waters and sheltered bays.",
+      "fr": "Il s’alimente dans les eaux côtières et les baies abritées."
+    },
+    "diet": {
+      "en": "It eats fish; one study found mostly benthic prey at a breeding site.",
+      "fr": "Il mange des poissons ; une étude a relevé surtout des proies benthiques sur un site de reproduction."
+    },
+    "behavior": {
+      "en": "It dives to forage and rests on offshore islets during trips.",
+      "fr": "Il plonge pour se nourrir et se repose sur des îlots au large."
+    },
+    "reproduction": {
+      "en": "It nests colonially on rocky islands and cliffs; breeding season varies regionally.",
+      "fr": "Il niche en colonies sur des îles rocheuses et des falaises ; la saison varie selon les régions."
+    },
+    "ecology": {
+      "en": "This species is endemic to southern Australian coasts. P. varius also uses eastern inland wetlands.",
+      "fr": "Cette espèce est endémique des côtes du sud de l’Australie. P. varius fréquente aussi les zones humides intérieures de l’est."
+    },
+    "conservation": {
+      "en": "Population trends are uncertain; oil spills and marine debris pose risks.",
+      "fr": "L’évolution de la population est incertaine ; les marées noires et déchets marins présentent des risques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wildlife Conservation Plan for Seabirds — Australian Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Plan de conservation des oiseaux marins — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/wildlife-conservation-plan-for-seabirds.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Southern endemic; black-and-white; rocky island and cliff colonies; uncertain population trend; oil and debris risks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 15,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging behaviour and habitat use during chick-rearing in the Australian endemic black-faced cormorant — Biology Open",
+        "fr": "Comportement alimentaire et usage de l’habitat pendant l’élevage des jeunes chez le Cormoran de Tasmanie — Biology Open"
+      },
+      "url": "https://journals.biologists.com/bio/article/13/5/bio060336/347525/Foraging-behaviour-and-habitat-use-during-chick",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study finds marine foraging and mostly benthic prey at the studied site; birds also roosted on islands and islets."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 20,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pied Cormorant — BirdLife Australia",
+        "fr": "Cormoran varié — BirdLife Australia"
+      },
+      "url": "https://birdlife.org.au/bird-profiles/pied-cormorant/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Comparison species account reports that Phalacrocorax varius also occupies large inland wetlands in eastern Australia."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 15,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The recent foraging study samples one breeding site and season, so its detailed prey and habitat results should not be generalized to every colony."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared an Australian government seabird plan and a recent peer-reviewed study; the reciprocal P. varius comparison is limited to documented habitat differences."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "rangifer_tarandus",
+  "scientific": "Rangifer tarandus",
+  "group": "mammals",
+  "name": {
+    "en": "Reindeer",
+    "fr": "Renne"
+  },
+  "sections": {
+    "overview": {
+      "en": "Reindeer, called caribou for wild populations in North America, are circumpolar deer of Arctic and subarctic regions.",
+      "fr": "Le renne, appelé caribou pour les populations sauvages d’Amérique du Nord, est un cervidé circumpolaire des régions arctiques et subarctiques."
+    },
+    "identification": {
+      "en": "Unlike most deer, both sexes can grow antlers, which are shed and regrown seasonally.",
+      "fr": "Contrairement à la plupart des cervidés, les deux sexes peuvent porter des bois, qui tombent puis repoussent au fil des saisons."
+    },
+    "habitat": {
+      "en": "Depending on population and season, reindeer use woodland, forest edges and open Arctic tundra.",
+      "fr": "Selon les populations et la saison, les rennes fréquentent les bois, les lisières forestières et la toundra arctique ouverte."
+    },
+    "diet": {
+      "en": "They browse and graze on plants; lichens and fungi become important winter foods.",
+      "fr": "Ils broutent et pâturent des végétaux ; les lichens et les champignons comptent parmi leurs aliments importants en hiver."
+    },
+    "behavior": {
+      "en": "Some populations make long seasonal movements between winter woodland and summer tundra.",
+      "fr": "Certaines populations effectuent de longs déplacements saisonniers entre les bois d’hiver et la toundra d’été."
+    },
+    "reproduction": {
+      "en": "The consulted references do not provide a single breeding schedule applicable to this geographically varied species.",
+      "fr": "Les références consultées ne donnent pas de calendrier reproductif unique applicable à cette espèce répartie sur de vastes régions."
+    },
+    "ecology": {
+      "en": "The name reindeer is common in Europe, whereas North American usage distinguishes wild caribou from domesticated reindeer.",
+      "fr": "Le nom « renne » est courant en Europe, tandis qu’en Amérique du Nord l’usage distingue le caribou sauvage du renne domestiqué."
+    },
+    "conservation": {
+      "en": "Conservation status varies among populations and subspecies, so this profile does not assign a single global category.",
+      "fr": "Le statut de conservation varie selon les populations et sous-espèces ; cette fiche ne leur attribue donc pas une catégorie mondiale unique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Caribou/Reindeer review",
+        "fr": "British Trust for Ornithology — synthèse sur le caribou et le renne"
+      },
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2005/rr414.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The report describes circumpolar range, woodland/tundra use and seasonal migration; its short account gives no single breeding schedule."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 18,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. FDA — Reindeer and caribou facts",
+        "fr": "FDA des États-Unis — faits sur le renne et le caribou"
+      },
+      "url": "https://www.fda.gov/animal-veterinary/animal-health-literacy/fun-facts-about-reindeer-and-caribou",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The FDA uses Rangifer tarandus for both names, explains North American versus European usage, notes antlers in both sexes and seasonal shedding, and lists plant foods including winter lichen and fungi."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 31,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Artsdatabanken — Norwegian Red List assessment",
+        "fr": "Artsdatabanken — évaluation de la liste rouge norvégienne"
+      },
+      "url": "https://lister.artsdatabanken.no/rodlisteforarter/2021/19057",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Norway’s 2021 Red List rates its local population Near Threatened, showing status varies by region."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 15,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Rangifer includes diverse wild and managed populations; conservation assessments are local or taxon-specific and may differ."
+  ],
+  "review_note": "Used a broad review, a government explainer and a Norwegian assessment; avoided presenting regional status as global.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,17 @@
+{
+  "id": 9827,
+  "name": "frontier_brick_mold",
+  "texture_top": "frontier:9827:top",
+  "texture_side": "frontier:9827:side",
+  "texture_bottom": "frontier:9827:top",
+  "color": "#B48A56",
+  "hardness": 1.0,
+  "drop": "frontier_brick_mold",
+  "creative_tab": "functional",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

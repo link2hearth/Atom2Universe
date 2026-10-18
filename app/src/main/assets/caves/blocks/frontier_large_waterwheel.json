@@ -1,0 +1,19 @@
+{
+  "id": 9823,
+  "name": "frontier_large_waterwheel",
+  "texture_top": "frontier:9823:top",
+  "texture_side": "frontier:9823:side",
+  "texture_bottom": "frontier:9823:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_large_waterwheel",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "kinetic": "plate",
+  "orient_mode": "axis"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "apistogramma_meinkeni",
+  "scientific": "Apistogramma meinkeni",
+  "group": "fish",
+  "name": {
+    "en": "Meinken’s Dwarf Cichlid",
+    "fr": "Apistogramme de Meinken"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma meinkeni is a small dwarf cichlid known from the Rio Uaupés basin in Brazil’s upper Rio Negro drainage. Its type locality is a small tributary near Trovão, about 20 km upstream from the Uaupés mouth. Its French common name is Apistogramme de Meinken.",
+      "fr": "Apistogramma meinkeni est un petit cichlidé nain connu du bassin du rio Uaupés, dans le haut bassin du rio Negro au Brésil. Sa localité type est un petit affluent près de Trovão, à environ 20 km en amont de l’embouchure de l’Uaupés. Son nom français est Apistogramme de Meinken."
+    },
+    "identification": {
+      "en": "The tail bears broken dark bars, with those on the upper lobe offset from the lower, unlike the pattern of similar Apistogramma pertensis. FishBase lists maximum standard lengths of 3.5 cm for males or unsexed fish and 4.5 cm for females, plus a separate 6 cm total-length record. The cited accounts give no mass, width or body-height measurement.",
+      "fr": "La caudale porte des barres sombres interrompues, décalées entre les lobes supérieur et inférieur, contrairement au motif d’Apistogramma pertensis. FishBase indique des longueurs standard maximales de 3,5 cm pour les mâles ou individus non sexés et de 4,5 cm pour les femelles, ainsi qu’une valeur distincte de 6 cm en longueur totale. Les sources consultées ne donnent ni masse, ni largeur, ni hauteur du corps."
+    },
+    "habitat": {
+      "en": "The documented range is centered on the Uaupés and its tributaries in Amazonas State, Brazil, within the upper Rio Negro basin. The type locality is a small tributary near Trovão.",
+      "fr": "L’aire documentée est centrée sur l’Uaupés et ses affluents, dans l’État d’Amazonas au Brésil, au sein du bassin du haut rio Negro. La localité type est un petit affluent près de Trovão."
+    },
+    "diet": {
+      "en": "No species-specific diet study was found; a specialist synthesis infers small-invertebrate feeding from related Apistogramma. This is an inference, not a measured diet for this species.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été trouvée ; une synthèse spécialisée lui attribue un régime de petits invertébrés par comparaison avec des Apistogramma apparentés. C’est une inférence, et non une mesure du régime de cette espèce."
+    },
+    "behavior": {
+      "en": "Aquarium accounts describe territorial males, but the social structure of wild groups remains poorly documented. Captive observations therefore provide context rather than a complete field account.",
+      "fr": "Des fiches d’aquariophilie décrivent des mâles territoriaux, mais la structure sociale des groupes sauvages est mal documentée. Les observations en captivité donnent donc un contexte, pas un tableau complet sur le terrain."
+    },
+    "reproduction": {
+      "en": "The female lays eggs on a cave ceiling and cares for them and the larvae; FishBase reports clutches of about 30–50 eggs.",
+      "fr": "La femelle pond au plafond d’une cavité et s’occupe des œufs puis des larves ; FishBase rapporte des pontes d’environ 30 à 50 œufs."
+    },
+    "ecology": {
+      "en": "Kullander placed Apistogramma meinkeni in the informal Apistogramma pertensis group, a useful comparison group whose boundaries are not established as a true lineage. Compared with Apistogramma pertensis, it has longer pelvic fins and different dorsal-fin lappets.",
+      "fr": "Kullander a placé Apistogramma meinkeni dans le groupe informel Apistogramma pertensis, utile pour les comparaisons mais sans limites établies comme véritable lignée. Par rapport à Apistogramma pertensis, ses nageoires pelviennes sont plus longues et ses membranes dorsales diffèrent."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 7 November 2018, for this species.",
+      "fr": "FishBase rapporte pour cette espèce une évaluation mondiale de l’UICN en préoccupation mineure, datée du 7 novembre 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A taxonomic study of the genus Apistogramma — Bonner Zoologische Monographien",
+        "fr": "Étude taxonomique du genre Apistogramma — Bonner Zoologische Monographien"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s 1980 monograph describes A. meinkeni, its type locality, and the distinguishing morphology used in comparisons with related species."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 19,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma meinkeni — FishBase species summary",
+        "fr": "Apistogramma meinkeni — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-meinkeni",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives size, cave spawning and IUCN status."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 8,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma meinkeni — Aquarist Atlas species account",
+        "fr": "Apistogramma meinkeni — fiche espèce Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-meinkeni/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The synthesis discusses diet, social grouping and identification."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 8,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma meinkeni — Swedish cichlid society species register",
+        "fr": "Apistogramma meinkeni — registre suédois des espèces de cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1573",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The Swedish cichlid register gives the Uaupés drainage and a type locality near Trovão in Amazonas, Brazil."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 17,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma meinkeni — French AquaVerse species card",
+        "fr": "Apistogramma meinkeni — fiche française AquaVerse"
+      },
+      "url": "https://www.aquaverse.fr/specimen/apistogramma-meinkeni/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language aquarium card calls it Apistogramme de Meinken and lists about 4 cm average and 5 cm maximum, without specifying the length convention."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 15,
+        "notes_words": 23,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an elongate, laterally compressed dwarf cichlid with a dark lateral band, conspicuous flank spot and broken caudal barring; the upper-lobe bars should be offset from those on the lower lobe. Mature males have elongated pelvic fins and distinctive dorsal lappets, while females may be slightly larger in standard length. Use a quiet, leaf-littered Uaupés tributary.",
+  "uncertainties": [
+    "FishBase lists 3.5 cm SL for male or unsexed fish and 4.5 cm for females, plus a separate 6 cm TL record. No reliable mass, width or height data were found.",
+    "The diet is inferred from the genus, not established by a stomach-content study for A. meinkeni. Captive social and breeding reports are not equivalent to a detailed field study.",
+    "The pertensis group is an informal comparison group and may not be monophyletic; trade specimens sold under similar names can be difficult to assign without locality and caudal-fin pattern."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase and the 1980 taxonomic monograph with a specialist synthesis and Swedish cichlid register. Kept standard and total length apart, and identified diet and group behavior as inferred or aquarium-reported where appropriate."
+}

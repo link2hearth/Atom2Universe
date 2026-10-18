@@ -1,0 +1,281 @@
+{
+  "id": "apistogramma_staecki",
+  "scientific": "Apistogramma staecki",
+  "group": "fish",
+  "name": {
+    "en": "Staeck’s Dwarf Cichlid",
+    "fr": "Apistogramme de Staeck"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma staecki is a small South American cichlid described by Ingo Koslowski in 1985 from shallow lagoons near Trinidad, Bolivia. The type series was collected in the Mamoré drainage, and later records place it in the neighboring Guaporé basin as well.",
+      "fr": "Apistogramma staecki est un petit cichlidé sud-américain décrit par Ingo Koslowski en 1985 à partir de lagunes peu profondes près de Trinidad, en Bolivie. La série type vient du bassin du Mamoré, et des données ultérieures le signalent aussi dans le bassin voisin du Guaporé."
+    },
+    "identification": {
+      "en": "Wild type specimens measured about 15–21 mm in standard length. Aquarium-raised males reached 32 mm SL and females about 27 mm SL, while FishBase lists 21 mm for males and 40 mm for females; no reliable mass, width or body height is reported.",
+      "fr": "Les spécimens types sauvages mesuraient environ 15 à 21 mm de longueur standard. Des mâles élevés en aquarium atteignaient 32 mm LS et les femelles environ 27 mm LS, tandis que FishBase indique 21 mm pour les mâles et 40 mm pour les femelles ; aucune masse, largeur ou hauteur corporelle fiable n’est indiquée."
+    },
+    "habitat": {
+      "en": "Koslowski found the fish in shallow water among dead leaves and wood, or near floating-plant roots where lagoons were deeper. The sampled water was warm, soft and acidic, but these local readings do not establish its full tolerance range.",
+      "fr": "Koslowski a trouvé le poisson dans des eaux peu profondes, parmi les feuilles mortes et le bois, ou près des racines de plantes flottantes dans les lagunes plus profondes. L’eau étudiée était chaude, douce et acide, mais ces mesures locales ne définissent pas toute sa plage de tolérance."
+    },
+    "diet": {
+      "en": "A species-specific stomach-content study was not located. FishBase gives a modelled trophic estimate based on close relatives, so small benthic invertebrates are a reasonable micropredator inference, not a directly measured menu for this fish.",
+      "fr": "Aucune étude de contenu stomacal propre à l’espèce n’a été retrouvée. FishBase fournit une estimation trophique modélisée à partir de proches parents ; les petits invertébrés benthiques constituent donc une hypothèse plausible de micropredation, et non un régime mesuré directement chez ce poisson."
+    },
+    "behavior": {
+      "en": "Males defend territories and may associate with multiple females in aquaria, but females alone tend the eggs and fry.",
+      "fr": "Les mâles défendent leur territoire et peuvent s’associer à plusieurs femelles en aquarium, mais seules les femelles gardent les œufs et les alevins."
+    },
+    "reproduction": {
+      "en": "Pairs attach roughly 50–100 eggs to the underside of a leaf or the roof of a small cave; at 24°C, hatching took about three days in the reported observations. Fry became free swimming about six days later, and the female cared for them.",
+      "fr": "Les couples fixent environ 50 à 100 œufs sous une feuille ou au plafond d’une petite cavité ; à 24 °C, l’éclosion survenait après environ trois jours dans les observations rapportées. Les alevins nageaient librement environ six jours plus tard, et la femelle s’en occupait."
+    },
+    "ecology": {
+      "en": "Koslowski described it alongside the close regional congener A. linkei, which shares some localities but was also collected in less acidic water. Later taxonomic work separated Guaporé fish often confused with A. staecki as A. sororcula, so basin and diagnostic markings matter when comparing look-alikes.",
+      "fr": "Koslowski l’a décrit avec son proche congénère régional A. linkei, présent dans certains des mêmes sites mais aussi capturé dans des eaux moins acides. Des travaux ultérieurs ont séparé sous le nom A. sororcula des poissons du Guaporé souvent confondus avec A. staecki ; le bassin et les marques diagnostiques comptent donc pour distinguer ces espèces proches."
+    },
+    "conservation": {
+      "en": "FishBase reports the global IUCN category Least Concern, assessed on 29 October 2020. The record spans parts of the Mamoré and Guaporé systems, but the sources consulted do not provide a recent population trend or a detailed threat assessment.",
+      "fr": "FishBase rapporte la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020. Les données couvrent des secteurs des bassins du Mamoré et du Guaporé, mais les sources consultées ne donnent ni tendance récente des effectifs ni analyse détaillée des menaces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Descriptions of new Apistogramma from the Rio Mamoré system in Bolivia",
+        "fr": "Description de nouveaux Apistogramma du système du rio Mamoré en Bolivie"
+      },
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_36_1_2/145_162_BZB36_1_2_Koslowski_Ingo.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Koslowski's primary 1985 description documents the types, measured lengths, habitat, reproduction and co-occurring species."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 14,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma staecki — FishBase species summary",
+        "fr": "Apistogramma staecki — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-staecki.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists a sex-specific length entry, IUCN status and date, and a trophic model based on relatives rather than direct diet data."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 22,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma staecki — Aquarist Atlas species account",
+        "fr": "Apistogramma staecki — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-staecki/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The account compares original and later size reports, describes diagnostic flank markings and notes the separation of A. sororcula."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 19,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma staecki — Nordiska Ciklidsällskapet species register",
+        "fr": "Apistogramma staecki — registre de la société nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=287",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The Swedish cichlid society reports the Trinidad type locality, Mamoré and Guaporé river basins, and a size near 3 cm."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 20,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catálogo de los peces de la cuenca Iténez",
+        "fr": "Catalogue des poissons du bassin de l’Iténez"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/2025-09/010059871.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish-language catalogue records the species and type locality south of Trinidad in the Mamoré–Guaporé region."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Koslowski 1985 — archive copy of the original habitat account",
+        "fr": "Koslowski 1985 — copie d’archive de la description des habitats"
+      },
+      "url": "https://www.zobodat.at/pdf/Bonner-Zoologische-Beitraege_36_0145-0162.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The archive copy contains Koslowski's habitat observations for Apistogramma staecki in Bolivian lagoons."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 13,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma sororcula — description of a Guaporé dwarf cichlid",
+        "fr": "Apistogramma sororcula — description d’un cichlidé nain du Guaporé"
+      },
+      "url": "https://pdfs.semanticscholar.org/fe9b/dc3420cdde92a354ab7fc9f791147a8f84bc.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2016 description of A. sororcula compares it with A. staecki and clarifies the separate Guaporé species."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 17,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List assessment of Apistogramma staecki",
+        "fr": "Évaluation UICN d’Apistogramma staecki"
+      },
+      "url": "https://www.iucnredlist.org/species/49830190/159047010",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN assessment records Least Concern on 29 October 2020 and an unknown population trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 15,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the slender-bodied dwarf cichlid with broken vertical bars on the rear flanks; an adult male has longer fin extensions and a truncate tail, while a breeding female is yellow with bold dark markings.",
+  "uncertainties": [
+    "Length reports conflict: the original paper records wild specimens mostly around 1.5–2.1 cm SL and larger aquarium-raised males, while FishBase lists a 4 cm female without clearly stating the measurement convention.",
+    "No reliable mass, body width or body height was found. Dietary claims remain an inference from a FishBase model and general micropredator ecology.",
+    "Some historical Guaporé records under A. staecki may refer to A. sororcula; locality alone should not replace morphological identification."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Koslowski's original description, FishBase, Swedish and Spanish-language records, and the later A. sororcula description. Preserved the disagreement between the original sexed size series and FishBase instead of presenting a false single maximum."
+}

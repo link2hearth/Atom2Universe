@@ -1,0 +1,188 @@
+{
+  "id": "estrandia_grandaeva",
+  "scientific": "Estrandia grandaeva",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ancient sheetweaver",
+    "fr": "Linyphie séculaire"
+  },
+  "sections": {
+    "overview": {
+      "en": "This accepted sheet-web spider belongs to the family Linyphiidae, with a broad catalogued range but patchy regional records.",
+      "fr": "Cette araignée à toile en nappe reconnue appartient aux Linyphiidae ; son aire cataloguée est vaste, mais les mentions régionales restent lacunaires."
+    },
+    "identification": {
+      "en": "It is minute: the European spider catalogue gives adult body lengths of about 2.5 mm for males and 2.4–2.8 mm for females; identification relies on adult genital characters in specialist keys.",
+      "fr": "C’est une araignée minuscule : le catalogue européen indique une longueur adulte d’environ 2,5 mm chez le mâle et de 2,4 à 2,8 mm chez la femelle ; l’identification repose sur les caractères génitaux des adultes dans les clés spécialisées."
+    },
+    "habitat": {
+      "en": "Alberta survey records place it in varied wooded settings, including aspen–birch forest, black spruce, open burns and lake shores; these are regional collection habitats, not a full ecological profile.",
+      "fr": "Des relevés de l’Alberta la situent dans divers milieux boisés, dont des forêts de peupliers et bouleaux, des pessières noires, des brûlis ouverts et des rives de lac ; ce sont des habitats de collecte régionaux, pas un profil écologique complet."
+    },
+    "diet": {
+      "en": "The species-specific sources consulted do not describe its prey or feeding ecology.",
+      "fr": "Les sources consultées propres à l’espèce ne décrivent ni ses proies ni son alimentation."
+    },
+    "behavior": {
+      "en": "Species-specific activity and web-use behaviour are not detailed in the catalogues and regional records consulted.",
+      "fr": "L’activité et l’usage de la toile propres à l’espèce ne sont pas détaillés dans les catalogues et relevés régionaux consultés."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not report a species-specific reproductive cycle.",
+      "fr": "Les sources consultées ne décrivent pas de cycle reproducteur propre à l’espèce."
+    },
+    "ecology": {
+      "en": "Its broad mapped distribution contrasts with sparse regional documentation. The Northwest Territories entry reports no published territorial records and assigns no regional status.",
+      "fr": "Son aire cartographiée étendue contraste avec une documentation régionale lacunaire. La fiche des Territoires du Nord-Ouest ne relève aucune mention publiée dans le territoire et ne lui attribue pas de statut régional."
+    },
+    "conservation": {
+      "en": "The Northwest Territories lists its regional status as Undetermined; this reflects limited regional information and is not a global threat category.",
+      "fr": "Les Territoires du Nord-Ouest indiquent un statut régional indéterminé ; cela reflète le manque d’information locale et ne constitue pas une catégorie mondiale de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog: Estrandia grandaeva",
+        "fr": "World Spider Catalog : Estrandia grandaeva"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/22007",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The World Spider Catalog accepts E. grandaeva in Linyphiidae and maps it across North America, northern Europe, Russia, China and Japan."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 21,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Estrandia grandaeva — Spiders of Europe",
+        "fr": "Estrandia grandaeva — Araignées d’Europe"
+      },
+      "url": "https://araneae.nmbe.ch/data/3320/Estrandia_grandaeva?lang=de",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The German-language spider catalogue gives adult lengths of 2.5 mm for males and 2.4–2.8 mm for females; its record focuses on morphology and distribution rather than feeding, behaviour or reproduction."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 30,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spiders of Birch Mountains Wildland Park",
+        "fr": "Araignées du parc naturel de Birch Mountains"
+      },
+      "url": "https://www.albertaparks.ca/media/3194851/holmbergandbuckle2008spidersbirchmountainswildlandpark-dec2008-final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Alberta survey lists E. grandaeva from aspen–birch, black-spruce, open-burn and lakeshore collection settings."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 14,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Estrandia grandaeva — Northwest Territories Species Search",
+        "fr": "Estrandia grandaeva — recherche sur les espèces des Territoires du Nord-Ouest"
+      },
+      "url": "https://www.gov.nt.ca/species-search/estrandia-grandaeva",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The territorial entry reports no published NWT records, notes uncertain information and gives regional status as Undetermined."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 17,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "TERMIUM Plus: Estrandia grandaeva",
+        "fr": "TERMIUM Plus : Estrandia grandaeva"
+      },
+      "url": "https://www.btb.termiumplus.gc.ca/tpv2alpha/alpha-eng.html?i=&index=ent&lang=eng&srchtxt=ESTRANDIA+GRANDAEVA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Canadian terminology record gives the English common name ancient sheetweaver and the French name linyphie séculaire."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published species-specific information on prey, behaviour and reproduction was not found in the catalogues and regional surveys consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept biological sections short because the species sources are mainly taxonomic and regional-occurrence records; regional status is clearly bounded to the Northwest Territories."
+}

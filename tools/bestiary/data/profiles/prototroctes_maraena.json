@@ -1,0 +1,142 @@
+{
+  "id": "prototroctes_maraena",
+  "scientific": "Prototroctes maraena",
+  "group": "fish",
+  "name": {
+    "en": "Australian grayling",
+    "fr": "Prototrocte austral"
+  },
+  "sections": {
+    "overview": {
+      "en": "Prototroctes maraena is a slender, silvery fish endemic to south-eastern Australia.",
+      "fr": "Prototroctes maraena est un poisson élancé et argenté endémique du sud-est de l’Australie."
+    },
+    "identification": {
+      "en": "Its fins have soft rays and no spines.",
+      "fr": "Ses nageoires ont des rayons mous, sans épines."
+    },
+    "habitat": {
+      "en": "Adults live in freshwater rivers and streams; larvae and juveniles use estuaries and coastal waters.",
+      "fr": "Les adultes vivent dans les rivières et ruisseaux d’eau douce ; les larves et les juvéniles fréquentent les estuaires et les eaux côtières."
+    },
+    "diet": {
+      "en": "The Victorian fisheries authority describes its diet as probably omnivorous, including insect larvae, small crustaceans and plant matter.",
+      "fr": "L’autorité des pêches du Victoria décrit un régime probablement omnivore, comprenant des larves d’insectes, de petits crustacés et des végétaux."
+    },
+    "behavior": {
+      "en": "It migrates between freshwater and the sea during its life cycle.",
+      "fr": "Son cycle de vie comprend des déplacements entre l’eau douce et la mer."
+    },
+    "reproduction": {
+      "en": "Spawning occurs in freshwater; early stages drift downstream before juveniles return upstream.",
+      "fr": "La ponte a lieu en eau douce ; les premiers stades dérivent vers l’aval avant que les juvéniles ne remontent le cours d’eau."
+    },
+    "ecology": {
+      "en": "Barriers to movement and altered river flows can disrupt this migration and are recognised conservation pressures.",
+      "fr": "Les obstacles aux déplacements et la modification des débits peuvent perturber cette migration et constituent des pressions reconnues."
+    },
+    "conservation": {
+      "en": "It is listed as Vulnerable nationally in Australia and Endangered in New South Wales.",
+      "fr": "L’espèce est classée Vulnérable à l’échelle nationale en Australie et En danger dans la Nouvelle-Galles du Sud."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "National Recovery Plan for the Australian Grayling — Australian Government DCCEEW",
+        "fr": "National Recovery Plan for the Australian Grayling — Australian Government DCCEEW"
+      },
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/recovery-plans/national-recovery-plan-australian-grayling-prototroctes-maraena",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The national recovery plan describes the species, range, life-cycle migration and national Vulnerable listing."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 14,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Grayling — Victorian Fisheries Authority",
+        "fr": "Australian Grayling — Victorian Fisheries Authority"
+      },
+      "url": "https://vfa.vic.gov.au/education/fish-species/australian-grayling",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The agency summarizes its likely diet, freshwater spawning, downstream drift and juvenile return migration."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 14,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Grayling — NSW Department of Primary Industries and Regional Development",
+        "fr": "Australian Grayling — NSW Department of Primary Industries and Regional Development"
+      },
+      "url": "https://www.dpird.nsw.gov.au/dpi/fishing/estuary-asset-protection-program/threatened-species-resilience/australian-grayling",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NSW listing and identified pressures include barriers, habitat loss and altered flow."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 12,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet is described as probable, not established with certainty.",
+    "The national and New South Wales conservation categories are jurisdiction-specific."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Australian government and state fisheries sources; migratory stages and status are explicitly jurisdiction-qualified."
+}

@@ -1,0 +1,14 @@
+{
+  "name": "atom2universe-anatomy-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "optimize": "node optimize_mobile.mjs",
+    "validate": "node optimize_mobile.mjs --validate"
+  },
+  "dependencies": {
+    "draco3dgltf": "1.5.7",
+    "gltf-validator": "2.0.0-dev.3.10",
+    "meshoptimizer": "1.3.0"
+  }
+}

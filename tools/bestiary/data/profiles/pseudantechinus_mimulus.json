@@ -1,0 +1,142 @@
+{
+  "id": "pseudantechinus_mimulus",
+  "scientific": "Pseudantechinus mimulus",
+  "group": "mammals",
+  "name": {
+    "en": "Carpentarian pseudantechinus",
+    "fr": "Pseudantechinus carpentarien"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudantechinus mimulus is a recognized dasyurid species from northern Australia.",
+      "fr": "Pseudantechinus mimulus est une espèce reconnue de dasyuridé du nord de l’Australie."
+    },
+    "identification": {
+      "en": "It resembles P. bilarni and P. macdonnellensis; the 2024 study cautions that camera-trap images may not reliably separate them.",
+      "fr": "Il ressemble à P. bilarni et P. macdonnellensis ; l’étude de 2024 avertit que les images de pièges photographiques ne permettent pas toujours de les distinguer."
+    },
+    "habitat": {
+      "en": "Confirmed records are from rocky outcrops in Queensland and the Northern Territory.",
+      "fr": "Les observations confirmées proviennent d’affleurements rocheux du Queensland et du Territoire du Nord."
+    },
+    "diet": {
+      "en": "The reviewed distribution study does not establish a species-specific prey list.",
+      "fr": "L’étude de répartition consultée n’établit pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Movements are poorly known; one male moved about 2 km in 24 h.",
+      "fr": "Ses déplacements sont mal connus ; un mâle a parcouru environ 2 km en 24 h."
+    },
+    "reproduction": {
+      "en": "Reproductive biology is not detailed in the study reviewed here.",
+      "fr": "La biologie de la reproduction n’est pas détaillée dans l’étude consultée ici."
+    },
+    "ecology": {
+      "en": "In the Mount Isa Inlier it uses varied rocky outcrops; habitat links elsewhere remain uncertain.",
+      "fr": "Dans le Mount Isa Inlier, il fréquente divers affleurements rocheux ; ses liens à l’habitat restent incertains ailleurs."
+    },
+    "conservation": {
+      "en": "The 2024 authors report an IUCN Near Threatened category; they recommend Data Deficient for Australian assessment pending more data.",
+      "fr": "Les auteurs de 2024 rapportent la catégorie quasi menacée de l’UICN ; ils recommandent données insuffisantes pour l’évaluation australienne dans l’attente de données supplémentaires."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barnes et al. (2024), distribution, habitat and status of P. mimulus — Austral Ecology",
+        "fr": "Barnes et al. (2024), distribution, habitat and status of P. mimulus — Austral Ecology"
+      },
+      "url": "https://doi.org/10.1111/aec.13557",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Peer-reviewed study documents range, habitat and status limits."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 8,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudantechinus mimulus — Australian Faunal Directory via Atlas of Living Australia",
+        "fr": "Pseudantechinus mimulus — Australian Faunal Directory via Atlas of Living Australia"
+      },
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/c2a7a31d-a80f-4ea4-8ccc-d3e966a24356",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Australian Faunal Directory taxonomy record confirms this accepted species name."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 10,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudantechinus mimulus — Mammal Diversity Database",
+        "fr": "Pseudantechinus mimulus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000163/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "MDD lists its global assessment category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 6,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The study identifies possible uncertainty about whether some northern records belong to P. mimulus or another Pseudantechinus taxon.",
+    "IUCN Near Threatened and the authors’ Australian Data Deficient recommendation refer to different assessment contexts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the 2024 peer-reviewed distribution study as the main authority; comparison to bilarni is reciprocal and limited to documented identification uncertainty."
+}

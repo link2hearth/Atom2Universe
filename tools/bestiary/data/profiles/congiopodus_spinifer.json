@@ -1,0 +1,163 @@
+{
+  "id": "congiopodus_spinifer",
+  "scientific": "Congiopodus spinifer",
+  "group": "fish",
+  "name": {
+    "en": "Spinenose Horsefish",
+    "fr": "Cacique hérisson"
+  },
+  "sections": {
+    "overview": {
+      "en": "This southern African bottom-dwelling fish belongs to Congiopodidae, a family often called horsefishes or pigfishes.",
+      "fr": "Ce poisson benthique d’Afrique australe appartient aux Congiopodidae, famille souvent appelée horsefishes ou pigfishes."
+    },
+    "identification": {
+      "en": "Its compressed, rough-skinned body has a protruding snout with strong spines and a brown, dark-spotted pattern.",
+      "fr": "Son corps comprimé à peau rugueuse porte un museau proéminent armé d’épines et une livrée brune tachetée de sombre."
+    },
+    "habitat": {
+      "en": "It lives off southern Africa from Walvis Bay to KwaZulu-Natal, over rocky reefs and sandy bottoms.",
+      "fr": "Il vit au large de l’Afrique australe, de Walvis Bay au KwaZulu-Natal, sur des récifs rocheux et des fonds sableux."
+    },
+    "diet": {
+      "en": "It feeds on bottom-dwelling invertebrates, including crustaceans, molluscs, sea urchins, brittle stars and worms.",
+      "fr": "Il mange des invertébrés benthiques, dont des crustacés, mollusques, oursins, ophiures et vers."
+    },
+    "behavior": {
+      "en": "It is demersal and often caught incidentally by bottom trawlers; aquarium observations suggest greater activity at night.",
+      "fr": "Il vit près du fond et est souvent capturé accidentellement par les chalutiers de fond; des observations en aquarium suggèrent une activité nocturne accrue."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive details were not available in the regional identification and aquarium sources consulted.",
+      "fr": "Les sources régionales d’identification et d’aquarium consultées ne fournissent pas de détails propres à la reproduction de l’espèce."
+    },
+    "ecology": {
+      "en": "It is readily distinguished from the smooth horsefish, Congiopodus torvus, by the spined snout and rough skin.",
+      "fr": "Il se distingue du Cacique lisse, Congiopodus torvus, par son museau épineux et sa peau rugueuse."
+    },
+    "conservation": {
+      "en": "The aquarium account does not consider it threatened, but notes pollution and trawl bycatch among potential pressures.",
+      "fr": "La fiche d’aquarium ne le considère pas menacé, mais cite la pollution et les prises accessoires au chalut parmi les pressions possibles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FAO species identification sheet: Congiopodus spinifer",
+        "fr": "Fiche FAO d’identification : Congiopodus spinifer"
+      },
+      "url": "https://www.fao.org/4/ad468e/ad468eDC.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO gives English, French and Spanish names plus diagnostic spines, compressed body and mottled coloration."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 15,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spinenose Horsefish — Two Oceans Aquarium",
+        "fr": "Cacique hérisson — Two Oceans Aquarium"
+      },
+      "url": "https://www.aquarium.co.za/animals/spinynose-horsefish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Aquarium account gives identity, prey, incidental capture, night activity and regional pressure observations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 13,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Congiopodus spinifer — FishBase",
+        "fr": "Congiopodus spinifer — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Congiopodus-spinifer",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Species summary focuses on distribution and morphology and provides no reproductive details."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 12,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Congiopodidae key and species account — Fishes of the World, SAIAB",
+        "fr": "Clé des Congiopodidae et fiche espèce — Fishes of the World, SAIAB"
+      },
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_2_text.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Regional fish guide distinguishes C. spinifer from C. torvus by snout spines, skin and anal-fin rays."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 16,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Available sources differ on depth and maximum size; conservation comments are regional, not a global IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the multilingual FAO identification sheet and ITIS taxonomy with FishBase and the Two Oceans Aquarium account; contrasted the spiny fish with Congiopodus torvus."
+}

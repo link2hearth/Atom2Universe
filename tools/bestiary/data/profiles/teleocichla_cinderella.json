@@ -1,0 +1,144 @@
+{
+  "id": "teleocichla_cinderella",
+  "scientific": "Teleocichla cinderella",
+  "group": "fish",
+  "name": {
+    "en": "Cinderella cichlid",
+    "fr": "Teleocichla cinderella"
+  },
+  "sections": {
+    "overview": {
+      "en": "Teleocichla cinderella is a freshwater cichlid described from the lower Tocantins River in Brazil.",
+      "fr": "Teleocichla cinderella est un cichlidé d’eau douce décrit du cours inférieur du rio Tocantins, au Brésil."
+    },
+    "identification": {
+      "en": "It is a small, elongated member of a genus adapted to life in fast-flowing water.",
+      "fr": "C’est un petit poisson allongé d’un genre adapté aux eaux à courant rapide."
+    },
+    "habitat": {
+      "en": "The genus is associated with rapids and other strong-current habitats; the species’ type locality was at Tucuruí on the Tocantins.",
+      "fr": "Le genre est associé aux rapides et aux autres milieux à fort courant ; la localité type de l’espèce se trouvait à Tucuruí, sur le Tocantins."
+    },
+    "diet": {
+      "en": "Species-specific diet details are not given in the primary description or summary sources consulted.",
+      "fr": "Les sources consultées, dont la description originale, ne précisent pas le régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Its rheophilic body form is associated with life in flowing water, but detailed behavior is poorly documented.",
+      "fr": "Sa morphologie rhéophile est liée à la vie en eau courante, mais son comportement détaillé est peu documenté."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide reliable species-specific breeding information.",
+      "fr": "Les sources consultées ne fournissent pas d’informations fiables sur la reproduction propre à l’espèce."
+    },
+    "ecology": {
+      "en": "Its known distribution is restricted to the lower Tocantins basin, where fast-water habitat has been heavily altered by dams.",
+      "fr": "Sa répartition connue est limitée au bassin inférieur du Tocantins, où les habitats de courant rapide ont été fortement transformés par les barrages."
+    },
+    "conservation": {
+      "en": "FishBase reports the 2018 global IUCN assessment as Endangered.",
+      "fr": "FishBase rapporte que l’évaluation mondiale de l’UICN de 2018 classe l’espèce En danger."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Catalog of Fishes — California Academy of Sciences",
+        "fr": "Catalog of Fishes — California Academy of Sciences"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56960",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The catalog accepts the species and gives its type locality as the Tocantins at Tucuruí, Pará, Brazil, and its distribution in the Tocantins drainage."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 24,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kullander 1988, original genus/species description — Cichlidae.com reference record",
+        "fr": "Kullander 1988, original genus/species description — Cichlidae.com reference record"
+      },
+      "url": "https://cichlidae.com/reference.php?id=961",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original description characterizes Teleocichla as small rheophilic cichlids adapted to rapids and gives diagnostic morphology; it contains limited species-specific diet and breeding information."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 23,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Teleocichla cinderella — FishBase species summary",
+        "fr": "Teleocichla cinderella — FishBase species summary"
+      },
+      "url": "https://www.fishbase.se/summary/Teleocichla-cinderella",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the IUCN Endangered category from the 2018 assessment and notes the restricted Tocantins rapids distribution and dam-related habitat threat."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 21,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The distribution is known from a restricted lower-Tocantins area; do not infer that all historical sites remain occupied.",
+    "Diet and reproduction are not well described in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Species range and type locality checked against the California Academy of Sciences catalogue; conservation category tied to the dated IUCN assessment."
+}

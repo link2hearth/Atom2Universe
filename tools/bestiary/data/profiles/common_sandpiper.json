@@ -1,0 +1,78 @@
+{
+  "id": "common_sandpiper",
+  "scientific": "Actitis hypoleucos",
+  "group": "birds",
+  "name": {
+    "en": "Common Sandpiper",
+    "fr": "Chevalier guignette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common sandpiper is a small wader that nests beside fast-flowing water and migrates to Africa and beyond for the winter. It is easily recognised by its constant bobbing and its low flight over the water.",
+      "fr": "Le chevalier guignette est un petit limicole qui niche au bord des eaux vives et migre vers l’Afrique et au-delà pour l’hiver. On le reconnaît à son balancement constant et à son vol bas au ras de l’eau."
+    },
+    "identification": {
+      "en": "In Britain adults weigh about 58 g, with a wing near 112 mm; females are slightly bigger than males. The upperparts are brown, with a sharply defined white breast, and the tail is relatively long. It bobs its head and tail when walking, and flies low with stiff, bowed wings, flicking them.",
+      "fr": "En Grande-Bretagne, les adultes pèsent environ 58 g, avec une aile d’environ 112 mm; les femelles sont un peu plus grandes que les mâles. Le dessus est brun, avec une poitrine blanche nettement délimitée, et la queue est relativement longue. Il balance la tête et la queue en marchant, et vole bas, les ailes raides et arquées, en les faisant vibrer."
+    },
+    "habitat": {
+      "en": "In Britain it breeds mainly along upland rivers and lochs, nesting in vegetation beside the water. Across its wider range it also uses sandy coasts and riverbanks, and in winter it visits ponds, rivers, estuaries and mangroves.",
+      "fr": "En Grande-Bretagne, il niche surtout le long des rivières et des lochs de montagne, dans la végétation au bord de l’eau. Sur l’ensemble de son aire, il fréquente aussi les côtes sableuses et les berges, et en hiver les étangs, les rivières, les estuaires et les mangroves."
+    },
+    "diet": {
+      "en": "It eats mainly small invertebrates such as insects, worms, spiders and crustaceans, picked up as it runs along the shoreline. It occasionally takes small amphibians or fish.",
+      "fr": "Il mange surtout de petits invertébrés comme des insectes, des vers, des araignées et des crustacés, saisis en courant le long du rivage. Il prend parfois de petits amphibiens ou poissons."
+    },
+    "behavior": {
+      "en": "Pairs hold long, narrow territories along the water and defend them with noisy display flights. Males defend territory and mate with threat displays. It is a long-distance migrant: tracked Scottish birds wintered mainly on the coast of Guinea-Bissau.",
+      "fr": "Les couples occupent de longs territoires étroits le long de l’eau et les défendent par des vols de parade bruyants. Les mâles défendent territoire et partenaire par des postures de menace. C’est un migrateur au long cours : des oiseaux écossais suivis par balise ont hiverné surtout sur la côte de la Guinée-Bissau."
+    },
+    "reproduction": {
+      "en": "In Britain a clutch is typically four eggs, incubated for 21–22 days by both parents. The downy chicks leave the nest soon after hatching and feed themselves, fledging at about 19 days. Birds first breed at about two years old.",
+      "fr": "En Grande-Bretagne, une couvée compte typiquement quatre œufs, couvés pendant 21 à 22 jours par les deux parents. Les poussins couverts de duvet quittent le nid peu après l’éclosion et se nourrissent seuls, puis volent vers 19 jours. Les oiseaux se reproduisent pour la première fois vers deux ans."
+    },
+    "ecology": {
+      "en": "The common sandpiper preys on small invertebrates along waterways and is itself eaten by animals such as foxes, weasels and gulls. Its mottled brown back provides camouflage on stony and muddy shores, and it often carries blood parasites.",
+      "fr": "Le chevalier guignette chasse de petits invertébrés le long des cours d’eau et est lui-même la proie d’animaux comme les renards, les belettes et les goélands. Son dos brun moucheté le camoufle sur les rives pierreuses et boueuses, et il porte souvent des parasites sanguins."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide. In the UK it is Amber-listed, with about 13,000 breeding pairs in 2016. The oldest ringed bird reached 15 years, though a typical breeding-age adult lives about 8.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale. Au Royaume-Uni, elle figure sur la liste ambre, avec environ 13 000 couples nicheurs en 2016. Le plus vieil oiseau bagué a atteint 15 ans, mais un adulte en âge de se reproduire vit en général environ 8 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Sandpiper — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Chevalier guignette — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/common-sandpiper",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults 58 g, wing 112 mm; brown above with white breast; upland rivers and lochs; clutch typically 4; incubation 21–22 days shared; fledging about 19 days; first breeding at 2 years.",
+        "UK about 13,000 pairs (2016); Amber-listed; IUCN Least Concern; record age 15 years; Scottish birds tracked to Guinea-Bissau."
+      ]
+    },
+    {
+      "title": {
+        "en": "Actitis hypoleucos — Animal Diversity Web, University of Michigan",
+        "fr": "Actitis hypoleucos — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Actitis_hypoleucos/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology"],
+      "facts": [
+        "Eats insects, worms, spiders and crustaceans while running along shorelines; teeters when walking; males defend territory with threat displays.",
+        "Predators include foxes, weasels and gulls; brown mottled colouring gives camouflage; often carries blood parasites."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives about 40 g for adults, well below the BTO ringing mean of 58 g; the BTO figure was used.",
+    "BirdFacts lists the UK trend both as stable and as −21% (1995–2024), so no trend is stated here.",
+    "Breeding figures are British; timing and clutch size vary across the wide range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW used for qualitative facts only; illustration checked against sources."
+}

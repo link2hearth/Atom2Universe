@@ -1,0 +1,164 @@
+{
+  "id": "scenopoeetes_dentirostris",
+  "scientific": "Scenopoeetes dentirostris",
+  "group": "birds",
+  "name": {
+    "en": "Tooth-billed bowerbird",
+    "fr": "Jardinier à bec denté"
+  },
+  "sections": {
+    "overview": {
+      "en": "This bowerbird is endemic to Queensland’s Wet Tropics in Australia.",
+      "fr": "Ce jardinier est endémique des tropiques humides du Queensland, en Australie."
+    },
+    "identification": {
+      "en": "Both sexes have a notched, tooth-like bill; males use it to cut leaves.",
+      "fr": "Les deux sexes ont un bec dentelé ; le mâle s’en sert pour couper des feuilles."
+    },
+    "habitat": {
+      "en": "It lives mainly in upland rainforest, with some display sites in regrowth forest.",
+      "fr": "Il vit surtout dans la forêt pluviale d’altitude, mais certains sites de parade sont en forêt secondaire."
+    },
+    "diet": {
+      "en": "It eats fruit and leaves, with leaves especially important when fruit is scarce.",
+      "fr": "Il mange des fruits et des feuilles, ces dernières prenant de l’importance lorsque les fruits se raréfient."
+    },
+    "behavior": {
+      "en": "Males clear and decorate ground courts with fresh leaves for display.",
+      "fr": "Les mâles dégagent et décorent au sol une aire de parade avec des feuilles fraîches."
+    },
+    "reproduction": {
+      "en": "The female lays one or two eggs in a cup nest placed high in tangled vines.",
+      "fr": "La femelle pond un ou deux œufs dans un nid en coupe installé en hauteur, parmi des lianes enchevêtrées."
+    },
+    "ecology": {
+      "en": "Males disperse seeds in piles beneath their favoured calling perches after eating fleshy fruits.",
+      "fr": "Après avoir mangé des fruits charnus, les mâles dispersent des graines en tas sous leurs perchoirs de chant favoris."
+    },
+    "conservation": {
+      "en": "BirdLife lists it as Near Threatened (2022), with climate change a suspected ongoing pressure.",
+      "fr": "BirdLife le classe Quasi menacé (2022) ; le changement climatique est considéré comme une pression persistante probable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tooth-billed Bowerbird — BirdLife DataZone",
+        "fr": "Jardinier à bec denté — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/tooth-billed-bowerbird-scenopoeetes-dentirostris",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife describes a resident endemic of north Queensland rainforest, its fruit-and-leaf diet, one- to two-egg clutch and Near Threatened assessment in 2022."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 22,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tooth-billed Bowerbird — Australian Museum",
+        "fr": "Jardinier à bec denté — Australian Museum"
+      },
+      "url": "https://museum-publications.australian.museum/media/dd/documents/AMS389_26_10_2000_LowRes.0acc8f1.pdf",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The museum account describes the notched bill and the leaf-decorated court; it reports that leaves supplement the birds’ diet, especially in winter."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 22,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seed dispersal by male tooth-billed bowerbirds — James Cook University",
+        "fr": "Dispersion des graines par les mâles — James Cook University"
+      },
+      "url": "https://researchonline.jcu.edu.au/33787/",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A field study recorded males consuming fleshy fruits and depositing seeds beneath favoured calling perches."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 15,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jardinier à bec denté — Oiseaux.net",
+        "fr": "Jardinier à bec denté — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/jardinier.a.bec.dente.html",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The French-language account describes forest habitat and male display courts, providing a language-cross-check of the species account."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "BirdLife notes uncertainty in the magnitude and causes of population change; the category is retained as reported in its 2022 assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

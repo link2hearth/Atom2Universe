@@ -1,0 +1,194 @@
+{
+  "id": "libellula_forensis",
+  "scientific": "Libellula forensis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Eight-spotted Skimmer",
+    "fr": "L’élégante"
+  },
+  "sections": {
+    "overview": {
+      "en": "This skimmer dragonfly is native to western North America, where it is associated mainly with ponds and lakes.",
+      "fr": "Cette libellule est indigène de l’ouest de l’Amérique du Nord, où elle fréquente surtout les étangs et les lacs."
+    },
+    "identification": {
+      "en": "Two dark spots on each of its four wings give the species its English name. The similar-looking Twelve-spotted Skimmer (Libellula pulchella) has additional dark marks near the wing tips. This bestiary also describes the eastern Slaty Skimmer (L. incesta) and the more widely distributed Widow Skimmer (L. luctuosa).",
+      "fr": "Deux taches sombres sur chacune de ses quatre ailes expliquent son nom anglais. La Libellule gracieuse (Libellula pulchella), qui lui ressemble, présente en plus des marques sombres près des extrémités des ailes. Ce bestiaire décrit aussi la Voluptueuse de l’est (L. incesta) et la Mélancolique, à répartition plus étendue (L. luctuosa)."
+    },
+    "habitat": {
+      "en": "Field accounts record it at ponds, lakes and slow streams.",
+      "fr": "Les fiches de terrain la signalent dans les étangs, les lacs et les cours d’eau lents."
+    },
+    "diet": {
+      "en": "Adults catch soft-bodied flying insects; aquatic larvae ambush other invertebrates and may take small fish or tadpoles.",
+      "fr": "Les adultes capturent des insectes volants au corps mou ; les larves aquatiques tendent des embuscades à d’autres invertébrés et peuvent prendre de petits poissons ou des têtards."
+    },
+    "behavior": {
+      "en": "Adults hunt from perches, while larvae wait among submerged vegetation and mud for prey to pass.",
+      "fr": "Les adultes chassent depuis un perchoir, tandis que les larves attendent le passage de proies parmi la végétation immergée et la vase."
+    },
+    "reproduction": {
+      "en": "Females lay eggs by dipping the tip of the abdomen into shallow pond or lake water.",
+      "fr": "Les femelles pondent en plongeant l’extrémité de l’abdomen dans les eaux peu profondes des étangs ou des lacs."
+    },
+    "ecology": {
+      "en": "Its western range contrasts with the eastern range of L. incesta, while L. luctuosa occurs across a broader part of North America; all three belong to Libellula.",
+      "fr": "Son aire occidentale contraste avec celle, orientale, de L. incesta, tandis que L. luctuosa occupe une plus vaste partie de l’Amérique du Nord ; toutes trois appartiennent au genre Libellula."
+    },
+    "conservation": {
+      "en": "The 2024 Canadian Odonata checklist records provincial rank S4 for British Columbia; this regional rank is not a global population assessment.",
+      "fr": "La liste canadienne des Odonates de 2024 donne le rang provincial S4 pour la Colombie-Britannique ; ce rang régional n’est pas une évaluation mondiale de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eight-spotted Skimmer — Idaho State University Digital Atlas",
+        "fr": "Eight-spotted Skimmer — atlas numérique de l’université d’État de l’Idaho"
+      },
+      "url": "https://www.isu.edu/digitalatlas/biology/dragonflies/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "University field guide documents spots and breeding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 7,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Libellula forensis — Nebraska Dragonflies and Damselflies, University of Nebraska",
+        "fr": "Libellula forensis — libellules du Nebraska, université du Nebraska"
+      },
+      "url": "https://unsm-ento.unl.edu/Odonata/lifo.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Nebraska account confirms a western species reaching the Plains margin and lists ponds, lakes and slow streams; temporary records there may be vagrants."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 23,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024 — OdonataCentral",
+        "fr": "Liste des Odonates d’Amérique du Nord, 2024 — OdonataCentral"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Checklist documents a western North American range and contrasts it with the eastern L. incesta and broader-ranging L. luctuosa."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 19,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "List of the Odonata of Canada — OdonataCentral",
+        "fr": "Liste des Odonates du Canada — OdonataCentral"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/Canada_Odonata_Checklist_April2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Canadian checklist records the English and French common names of the North American Libellula species."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 15,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Dragonflies and Damselflies of Canada — Zootaxa 2024",
+        "fr": "Les libellules et demoiselles du Canada — Zootaxa 2024"
+      },
+      "url": "https://mapress.com/zt/article/download/zootaxa.5410.1.1/52869",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2024 Canadian checklist table assigns Libellula forensis provincial rank S4 in British Columbia. The entry gives ranks, not a species-wide population trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 23,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The S4 rank applies only to British Columbia; it does not describe abundance throughout the species’ North American range. Range-edge records and temporary occurrences in Nebraska also warrant caution."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked university field guides, North American and Canadian Odonata checklists, and the British Columbia conservation data record. Ranks are labelled as regional; comparisons with L. incesta and L. luctuosa are reciprocal."
+}

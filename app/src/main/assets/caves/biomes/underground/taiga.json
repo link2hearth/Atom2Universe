@@ -1,0 +1,32 @@
+{
+  "id": "us_taiga",
+  "noise_offsets": [1600, 0, 1500],
+  "surface_blocks": [
+    {"block": "dirt_snow", "noise_min": 0.2},
+    {"block": "grass", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.06,
+  "surface_variety_offset": 50,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 5.0,
+  "height_amplitude": 16.0,
+  "height_roughness": 4.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.25,
+  "tree_density_noise_scale": 0.18,
+  "tree_type": "sapin",
+  "tree_min_height": 7,
+  "tree_max_height": 12,
+  "canopy_radius": 3,
+  "bush_density": 0.03,
+  "bush_block": "snow",
+  "decoration_density": 0.01,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.08,
+  "vegetation_blocks": [
+    {"block": "grass_wild1", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="bot_sort_name">Common name</string>
+<string name="bot_sort_latin">Scientific name</string>
+<string name="bot_view_habit">Habit</string>
+<string name="bot_view_leaf">Leaf and twig</string>
+<string name="bot_view_flower">Flowers</string>
+<string name="bot_view_fruit">Fruits</string>
+<string name="bot_tilia_name">Small-leaved lime</string>
+<string name="bot_tilia_latin" translatable="false">Tilia cordata</string>
+<string name="bot_tilia_aliases">Tilleul à petites feuilles</string>
+<string name="bot_tilia_description">Heart-shaped leaves with an asymmetric base; small rusty hair tufts below vein junctions. Flowers and fruits are attached to a long pale bract.</string>
+<string name="bot_tilia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_sorbus_name">Rowan</string>
+<string name="bot_sorbus_latin" translatable="false">Sorbus aucuparia</string>
+<string name="bot_sorbus_aliases">Sorbier des oiseleurs</string>
+<string name="bot_sorbus_description">Alternate leaves, usually with 9–15 toothed leaflets. White flowers in dense clusters. Small orange-red pomes, not true botanical berries.</string>
+<string name="bot_sorbus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_spinosa_name">Blackthorn</string>
+<string name="bot_spinosa_latin" translatable="false">Prunus spinosa</string>
+<string name="bot_spinosa_aliases">Prunellier</string>
+<string name="bot_spinosa_description">Shrub with many thorny twigs. Small toothed leaves. White flowers often precede the leaves; blue-black sloes have a pale waxy bloom.</string>
+<string name="bot_spinosa_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_sambucus_name">Common elder</string>
+<string name="bot_sambucus_latin" translatable="false">Sambucus nigra</string>
+<string name="bot_sambucus_aliases">Sureau noir</string>
+<string name="bot_sambucus_description">Opposite leaves with 5–7 toothed leaflets. Broad flat clusters of tiny cream flowers. Black fruits in drooping clusters when ripe; twigs have white pith.</string>
+<string name="bot_sambucus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_viburnum_name">Guelder rose</string>
+<string name="bot_viburnum_latin" translatable="false">Viburnum opulus</string>
+<string name="bot_viburnum_aliases">Viorne obier</string>
+<string name="bot_viburnum_description">Opposite three-lobed leaves. Large sterile flowers surround small fertile central flowers. Translucent red fruits; the wild form differs from snowball cultivars.</string>
+<string name="bot_viburnum_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_ulex_name">Common gorse</string>
+<string name="bot_ulex_latin" translatable="false">Ulex europaeus</string>
+<string name="bot_ulex_aliases">Ajonc d’Europe</string>
+<string name="bot_ulex_description">Dense shrub with many spiny shoots and spine-like leaves. Yellow flowers with a hairy calyx; short hairy pods. Flowering may extend well beyond the main season.</string>
+<string name="bot_ulex_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_viola_name">Sweet violet</string>
+<string name="bot_viola_latin" translatable="false">Viola odorata</string>
+<string name="bot_viola_aliases">Violette odorante</string>
+<string name="bot_viola_description">Heart-shaped leaves; flowers have five unequal petals and a rear spur. A creeping, stolon-forming plant, usually with scented flowers. Other violets require examination of stipules and hairs.</string>
+<string name="bot_viola_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_trifolium_pratense_name">Red clover</string>
+<string name="bot_trifolium_pratense_latin" translatable="false">Trifolium pratense</string>
+<string name="bot_trifolium_pratense_aliases">Trèfle des prés</string>
+<string name="bot_trifolium_pratense_description">Three oval leaflets, often with a pale chevron. Upright hairy stems. Pink to purple pea flowers form dense heads close to the upper leaves.</string>
+<string name="bot_trifolium_pratense_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_trifolium_repens_name">White clover</string>
+<string name="bot_trifolium_repens_latin" translatable="false">Trifolium repens</string>
+<string name="bot_trifolium_repens_aliases">Trèfle blanc</string>
+<string name="bot_trifolium_repens_description">Creeping stems root at the nodes. Three rounded leaflets, often pale-marked. White flower heads on long stalks; older flowers bend downwards.</string>
+<string name="bot_trifolium_repens_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_vicia_name">Tufted vetch</string>
+<string name="bot_vicia_latin" translatable="false">Vicia cracca</string>
+<string name="bot_vicia_aliases">Vesce cracca</string>
+<string name="bot_vicia_description">Leaves have many narrow leaflets and end in a branched tendril. Climbs through surrounding vegetation. Long one-sided racemes of violet flowers; flattened pods.</string>
+<string name="bot_vicia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_urtica_name">Stinging nettle</string>
+<string name="bot_urtica_latin" translatable="false">Urtica dioica</string>
+<string name="bot_urtica_aliases">Grande ortie</string>
+<string name="bot_urtica_description">Opposite coarsely toothed leaves; stems and leaves bear stinging hairs. Tiny greenish flowers in axillary clusters; male and female flowers usually on separate plants.</string>
+<string name="bot_urtica_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_salvia_name">Meadow sage</string>
+<string name="bot_salvia_latin" translatable="false">Salvia pratensis</string>
+<string name="bot_salvia_aliases">Sauge des prés</string>
+<string name="bot_salvia_description">Large wrinkled basal leaves and opposite stem leaves. Blue-violet flowers have an arched upper lip and form spaced tiers; two fertile stamens.</string>
+<string name="bot_salvia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_tilia_platyphyllos_latin" translatable="false">Tilia platyphyllos</string>
+<string name="bot_tilia_platyphyllos_name">Large-leaved lime</string>
+<string name="bot_tilia_platyphyllos_aliases">Tilleul à larges feuilles; large leaved linden</string>
+<string name="bot_tilia_platyphyllos_description">Large heart-shaped leaves are hairy beneath, with pale hair tufts at vein junctions. Hanging flowers share an elongated bract. The small, hard fruits have five prominent ribs.</string>
+<string name="bot_tilia_platyphyllos_distribution">Ravine woods, cool slopes and mountains; also planted in parks and villages.</string>
+<string name="bot_salix_alba_latin" translatable="false">Salix alba</string>
+<string name="bot_salix_alba_name">White willow</string>
+<string name="bot_salix_alba_aliases">Saule argenté; silver willow</string>
+<string name="bot_salix_alba_description">Long, finely toothed lanceolate leaves have silky hairs, especially beneath. Catkins appear with the leaves. Male and female trees are separate; capsules release seeds with long hairs.</string>
+<string name="bot_salix_alba_distribution">Riverbanks, ditches and floodplains across much of France.</string>
+<string name="bot_ulmus_minor_latin" translatable="false">Ulmus minor</string>
+<string name="bot_ulmus_minor_name">Field elm</string>
+<string name="bot_ulmus_minor_aliases">Ormeau; smooth-leaved elm</string>
+<string name="bot_ulmus_minor_description">Short-stalked leaves have strongly unequal bases and double teeth. Small flowers without petals appear before the leaves. Rounded samaras are notched at the tip, with the seed near the notch; suckering is frequent.</string>
+<string name="bot_ulmus_minor_distribution">Hedges, woods and valleys; often survives as young suckers where Dutch elm disease has removed mature trees.</string>
+<string name="bot_viburnum_lantana_latin" translatable="false">Viburnum lantana</string>
+<string name="bot_viburnum_lantana_name">Wayfaring tree</string>
+<string name="bot_viburnum_lantana_aliases">Mancienne; viorne mancienne; wayfaring tree</string>
+<string name="bot_viburnum_lantana_description">Opposite, thick, wrinkled oval leaves are felted beneath. All the small flowers in the cluster are fertile. Drupes turn from green to red and then black, often at different stages within one cluster.</string>
+<string name="bot_viburnum_lantana_distribution">Rather dry hedges and woodland edges, especially on limestone.</string>
+<string name="bot_salix_caprea_latin" translatable="false">Salix caprea</string>
+<string name="bot_salix_caprea_name">Goat willow</string>
+<string name="bot_salix_caprea_aliases">Marsault; saule des chèvres; pussy willow</string>
+<string name="bot_salix_caprea_description">A large shrub or small tree with broad, wrinkled leaves, felted beneath. Oval male catkins turn from silver to yellow before the leaves emerge. Female plants later bear capsules with silky seeds.</string>
+<string name="bot_salix_caprea_distribution">Woodland edges, clearings and fresh soils; tolerates drier ground than many willows.</string>
+<string name="bot_vaccinium_latin" translatable="false">Vaccinium myrtillus</string>
+<string name="bot_vaccinium_name">Bilberry</string>
+<string name="bot_vaccinium_aliases">Brimbelle; airelle myrtille; European blueberry</string>
+<string name="bot_vaccinium_description">A small deciduous shrub with angular green stems. Leaves are finely toothed; solitary urn-shaped flowers are pinkish to greenish. Bloom-coated blue-black berries have coloured flesh, unlike many large cultivated blueberries.</string>
+<string name="bot_vaccinium_distribution">Acidic woodland, heaths and mountains; scarce on lowland limestone.</string>
+<string name="bot_silene_dioica_latin" translatable="false">Silene dioica</string>
+<string name="bot_silene_dioica_name">Red campion</string>
+<string name="bot_silene_dioica_aliases">Silène dioïque; Lychnis dioica; red campion</string>
+<string name="bot_silene_dioica_description">A hairy plant with opposite leaves. Five deeply notched pink petals emerge from a fused calyx; male and female flowers are on separate plants. The plate shows a female flower with five styles. Capsules open by ten rolled-back teeth.</string>
+<string name="bot_silene_dioica_distribution">Cool woodland edges, hedges and damp woods; scarcer in the dry south.</string>
+<string name="bot_stellaria_latin" translatable="false">Rabelera holostea</string>
+<string name="bot_stellaria_name">Greater stitchwort</string>
+<string name="bot_stellaria_aliases">Stellaria holostea; langue d’oiseau; greater stitchwort</string>
+<string name="bot_stellaria_description">Narrow, opposite, stalkless leaves have rough margins. Each flower has five white petals split about halfway, rather than ten petals. Capsules have six teeth. Many floras still use the name Stellaria holostea.</string>
+<string name="bot_stellaria_distribution">Hedges, shady banks and woodland edges, often forming springtime patches.</string>
+<string name="bot_veronica_latin" translatable="false">Veronica chamaedrys</string>
+<string name="bot_veronica_name">Germander speedwell</string>
+<string name="bot_veronica_aliases">Fausse germandrée; germander speedwell</string>
+<string name="bot_veronica_description">Opposite toothed leaves and two lines of hairs on the stem. Lateral racemes bear blue flowers with white throats. The corolla has four unequal lobes and two stamens; capsules are flattened and heart-shaped.</string>
+<string name="bot_veronica_distribution">Meadows, hedges, banks and open woods; common across much of France.</string>
+<string name="bot_vachellia_tortilis_name">Umbrella thorn</string>
+<string name="bot_vachellia_tortilis_aliases">Acacia tortilis · acacia raddiana</string>
+<string name="bot_vachellia_tortilis_description">A spreading crown often forms an umbrella. Tiny leaflets are carried on paired pinnae. Long straight thorns and short hooked thorns may coexist. Cream flower heads give way to narrow, coiled, usually indehiscent pods.</string>
+<string name="bot_vachellia_tortilis_distribution">Dry African savannas and semi-desert regions, from northern and Sahelian areas to eastern and southern Africa; forms vary by subspecies.</string>
+<string name="bot_tamarindus_name">Tamarind</string>
+<string name="bot_tamarindus_aliases">Tamarin · tamarind</string>
+<string name="bot_tamarindus_description">Dense rounded crown and leaves with many paired oblong leaflets, without a terminal leaflet or tendril. Three conspicuous yellow petals carry red veins; two other petals are reduced. Brown brittle pods remain closed around pulp and hard seeds.</string>
+<string name="bot_tamarindus_distribution">Native to tropical Africa and widely cultivated throughout the tropics. African savannas, wooded sites and villages.</string>
+<string name="bot_senna_italica_name">Senegal senna</string>
+<string name="bot_senna_italica_aliases">Cassia italica · Cassia obovata · séné d’Italie</string>
+<string name="bot_senna_italica_description">Low perennial or subshrub with paired, blunt leaflets and no terminal tendril. Yellow flowers have five unequal petals and conspicuous unequal anthers. The flattened pods are curved. Habit and hairiness vary among subspecies.</string>
+<string name="bot_senna_italica_distribution">Dry sandy or stony habitats across much of Africa, including the Sahel; its native range extends to the Indian subcontinent.</string>
+<string name="bot_ziziphus_mauritiana_name">Indian jujube</string>
+<string name="bot_ziziphus_mauritiana_aliases">Jujube · ber · Ziziphus mauritiana</string>
+<string name="bot_ziziphus_mauritiana_description">Thorny shrub or tree with drooping branches. The shiny leaves show three strong veins from the base and a pale hairy underside. Tiny greenish flowers grow in axillary clusters. Wild drupes are smaller than those of many cultivated forms.</string>
+<string name="bot_ziziphus_mauritiana_distribution">Widespread in warm African drylands and cultivated near settlements; also widespread in Asia. It may grow as a tree where conditions permit.</string>
+<string name="bot_sesamum_alatum_name">Winged-seed sesame</string>
+<string name="bot_sesamum_alatum_aliases">Sésame de gazelle · Sesamopteris alata</string>
+<string name="bot_sesamum_alatum_description">Annual with generally opposite leaves, rarely alternate, strongly differing along the stem: lower leaves are deeply divided or have three to five narrow leaflets; upper leaves are simple. Pink tubular flowers have darker lines on the lower lip. Beaked capsules contain seeds winged at both ends.</string>
+<string name="bot_sesamum_alatum_distribution">Widespread in tropical Africa south to Namibia and South Africa; sandy roadsides, grasslands and seasonal river beds.</string>
+<string name="bot_vachellia_tortilis_latin" translatable="false">Vachellia tortilis</string>
+<string name="bot_tamarindus_latin" translatable="false">Tamarindus indica</string>
+<string name="bot_senna_italica_latin" translatable="false">Senna italica</string>
+<string name="bot_ziziphus_mauritiana_latin" translatable="false">Ziziphus mauritiana</string>
+<string name="bot_sesamum_alatum_latin" translatable="false">Sesamum alatum</string>
+<string name="bot_sequoiadendron_name">Giant sequoia</string>
+<string name="bot_sequoiadendron_aliases">Giant redwood; Wellingtonia; séquoia de Wellington</string>
+<string name="bot_sequoiadendron_description">A huge, long-lived conifer with a broad, buttressed trunk and reddish fibrous bark. Short pointed leaves overlap around cord-like shoots. Ovoid cones have thick shield-like scales. Old crowns become rounded and irregular.</string>
+<string name="bot_sequoiadendron_distribution">Native to scattered groves on the western slopes of the Sierra Nevada, California. Planted in parks on other continents.</string>
+<string name="bot_sequoiadendron_latin" translatable="false">Sequoiadendron giganteum</string>
+<string name="bot_sequoia_name">Coast redwood</string>
+<string name="bot_sequoia_aliases">Coastal redwood; séquoia à feuilles d’if</string>
+<string name="bot_sequoia_description">A towering evergreen with a long straight trunk. Shaded lateral shoots carry flattened leaves in two apparent ranks, with pale stomatal bands beneath; exposed shoots also bear short scale-like leaves. Small woody cones have shield-like scales.</string>
+<string name="bot_sequoia_distribution">Native to the fog-influenced Pacific coast of northern and central California and southwestern Oregon.</string>
+<string name="bot_sequoia_latin" translatable="false">Sequoia sempervirens</string>
+<string name="bot_vaccinium_corymbosum_name">Highbush blueberry</string>
+<string name="bot_vaccinium_corymbosum_aliases">Blueberry; bleuet en corymbe; bleuet américain</string>
+<string name="bot_vaccinium_corymbosum_description">Upright deciduous shrub of acidic ground. Clusters of small urn-shaped flowers precede blue berries with a waxy bloom and a persistent calyx crown. It is a major parent of cultivated highbush blueberries.</string>
+<string name="bot_vaccinium_corymbosum_distribution">Eastern North America, in moist woods, swamps and acidic clearings. Cultivated widely outside its native range.</string>
+<string name="bot_vaccinium_corymbosum_latin" translatable="false">Vaccinium corymbosum</string>
+<string name="bot_triticum_name">Bread wheat</string>
+<string name="bot_triticum_latin" translatable="false">Triticum aestivum</string>
+<string name="bot_triticum_aliases">Common wheat · Blé tendre · Froment</string>
+<string name="bot_triticum_description">Annual cereal producing several tillers from the base. Jointed culms have mostly hollow internodes; alternate leaves have a sheath, a flat blade, a short membranous ligule and clasping auricles, often hairy. The terminal spike carries sessile spikelets on opposite sides of its axis. Each spikelet has several florets enclosed by glumes, lemmas and paleas. A fertile floret has three stamens and two feathery stigmas. Each grain is a caryopsis with a longitudinal ventral crease. Awn length varies greatly; the drawing represents a short-awned form.</string>
+<string name="bot_triticum_distribution">Domesticated hexaploid wheat, widely cultivated in temperate regions and suitable uplands. Winter and spring forms differ in their seasonal requirements. Cultivation, soil conditions and cultivar strongly influence height and ear shape.</string>
+<string name="bot_triticum_habit">Several jointed tillers, narrow sheathing leaves and upright terminal spikes.</string>
+<string name="bot_triticum_leaf">Parallel-veined blade; enlarged junction on the right shows the sheath, short ligule and clasping hairy auricles.</string>
+<string name="bot_triticum_flower">Main spike: alternating sessile spikelets with several florets. Enlarged open floret on the right: three stamens and two feathery stigmas.</string>
+<string name="bot_triticum_fruit">Enlarged naked caryopsis with a ventral crease and an apical brush of hairs; a mature spike is shown at a smaller scale.</string>
+<string name="bot_zea_name">Maize</string>
+<string name="bot_zea_latin" translatable="false">Zea mays</string>
+<string name="bot_zea_aliases">Corn · Maïs</string>
+<string name="bot_zea_description">Tall annual grass with a stout, pith-filled culm and broad alternate leaves arranged in two ranks. Each leaf has a clasping sheath, a short ligule and a prominent midrib. Male flowers form the terminal tassel; female flowers occupy separate ears in the leaf axils on the same plant. The silks are elongated styles and stigmas that receive airborne pollen. The mature ear bears rows of caryopses on a cob, surrounded by leafy husks. Grain colour, ear size and plant height vary greatly among cultivars.</string>
+<string name="bot_zea_distribution">Crop domesticated in Mexico and now cultivated worldwide where seasonal warmth permits. The plate shows a conventional grain-maize form; it does not represent the full diversity of maize landraces or wild teosintes.</string>
+<string name="bot_zea_habit">Thick jointed culm, broad leaves in two ranks, terminal male tassel, axillary female ear and basal brace roots.</string>
+<string name="bot_zea_leaf">Broad blade with a pale midrib and parallel veins; inset shows its sheathing base and short membranous ligule.</string>
+<string name="bot_zea_flower">Left: branched male tassel with hanging anthers. Right: female ear inside leafy husks, with a tuft of silks; these are not stamens.</string>
+<string name="bot_zea_fruit">Main subject: mature ear with rows of grains and peeled-back husks. Right: enlarged individual caryopsis with its embryo region indicated.</string>
+<string name="bot_tuberosum_name">Potato</string>
+<string name="bot_tuberosum_latin" translatable="false">Solanum tuberosum</string>
+<string name="bot_tuberosum_aliases">Pomme de terre · Irish potato</string>
+<string name="bot_tuberosum_description">Tuber-forming perennial usually grown as an annual crop. The aerial stems carry alternate compound leaves with large oval leaflets and smaller intercalary ones. White to violet flowers have a broad, fused, five-lobed corolla and yellow anthers opening by terminal pores. Some plants develop small greenish berries containing seeds; these berries are not edible. Underground stolons swell into tubers whose eyes are buds: the tuber is a stem organ, distinct from the fruit and from a root.</string>
+<string name="bot_tuberosum_distribution">Domesticated South American crop, now cultivated worldwide in suitable climates. Tuber formation, flowering and fruit set depend strongly on the variety and growing conditions. Vegetative propagation through tubers does not make the tuber a seed.</string>
+<string name="bot_tuberosum_habit">Leafy aerial stems above a schematic soil line; below, lateral stolons end in tubers. Roots are omitted to keep these stem organs clear.</string>
+<string name="bot_tuberosum_leaf">Compound leaf with broad principal leaflets and smaller intercalary ones; margins are much less deeply cut than in the tomato example.</string>
+<string name="bot_tuberosum_flower">Broad violet corolla with five fused lobes; five yellow anthers with terminal pores surround the style. White-flowered varieties also occur.</string>
+<string name="bot_tuberosum_fruit">Large green sphere: the seed-bearing berry, not edible. Separate brown inset: a stolon tuber with bud eyes, drawn at an independent scale.</string>
+<string name="bot_thymus_vulgaris_name">Common thyme</string>
+<string name="bot_thymus_vulgaris_latin">Thymus vulgaris</string>
+<string name="bot_thymus_vulgaris_aliases">Common thyme Thymus vulgaris</string>
+<string name="bot_thymus_vulgaris_description">Small aromatic subshrub with a woody base. Leaf edges are often rolled under.</string>
+<string name="bot_thymus_vulgaris_distribution">Southern Europe; widely cultivated.</string>
+<string name="bot_thymus_vulgaris_habit">Short shoots arising from a woody base.</string>
+<string name="bot_thymus_vulgaris_leaf">Small opposite narrow leaves with entire margins.</string>
+<string name="bot_thymus_vulgaris_flower">Two-lipped pink to white corolla.</string>
+<string name="bot_thymus_vulgaris_fruit">Four nutlets within the persistent calyx, enlarged.</string>
+<string name="bot_secale_cereale_name">Rye</string>
+<string name="bot_secale_cereale_latin">Secale cereale</string>
+<string name="bot_secale_cereale_aliases">Rye Secale cereale</string>
+<string name="bot_secale_cereale_description">Annual cereal, distinct from Lolium ryegrasses. Spikelets usually contain two fertile florets.</string>
+<string name="bot_secale_cereale_distribution">Domesticated in Turkey; cultivated worldwide.</string>
+<string name="bot_secale_cereale_habit">Upright culms and narrow spike.</string>
+<string name="bot_secale_cereale_leaf">Linear blade, sheath and small auricles.</string>
+<string name="bot_secale_cereale_flower">Spikelets along the rachis; awns and enlarged floret.</string>
+<string name="bot_secale_cereale_fruit">Elongated caryopsis; mature spike in the inset.</string>
+<string name="bot_trigonella_foenum_graecum_name">Fenugreek</string>
+<string name="bot_trigonella_foenum_graecum_latin">Trigonella foenum-graecum</string>
+<string name="bot_trigonella_foenum_graecum_aliases">Fenugreek Trigonella foenum-graecum</string>
+<string name="bot_trigonella_foenum_graecum_description">Aromatic annual cultivated for leaves and seeds. Its pods are long and narrow.</string>
+<string name="bot_trigonella_foenum_graecum_distribution">Southeastern Europe and western Asia; cultivated elsewhere.</string>
+<string name="bot_trigonella_foenum_graecum_habit">Upright branched stems with alternate leaves.</string>
+<string name="bot_trigonella_foenum_graecum_leaf">Three leaflets, toothed mainly towards their tips.</string>
+<string name="bot_trigonella_foenum_graecum_flower">Pale pea-shaped flowers in leaf axils.</string>
+<string name="bot_trigonella_foenum_graecum_fruit">Slender opened pod containing numerous seeds.</string>
+<string name="bot_sinapis_alba_name">White mustard</string>
+<string name="bot_sinapis_alba_latin">Sinapis alba</string>
+<string name="bot_sinapis_alba_aliases">White mustard Sinapis alba</string>
+<string name="bot_sinapis_alba_description">Often bristly annual. “White” names the mustard, not its flower colour.</string>
+<string name="bot_sinapis_alba_distribution">Europe, North Africa and western Asia; introduced elsewhere.</string>
+<string name="bot_sinapis_alba_habit">Branched stem and divided foliage.</string>
+<string name="bot_sinapis_alba_leaf">Lobed leaf with a large terminal lobe.</string>
+<string name="bot_sinapis_alba_flower">Four yellow petals arranged in a cross.</string>
+<string name="bot_sinapis_alba_fruit">Hairy silique with flattened beak; opened valves reveal a few seeds.</string>
+<string name="bot_zingiber_officinale_name">Ginger</string>
+<string name="bot_zingiber_officinale_aliases">Zingiber officinale</string>
+<string name="bot_zingiber_officinale_latin">Zingiber officinale</string>
+<string name="bot_zingiber_officinale_description">Harvested ginger is a branched rhizome: an underground stem with buds and roots, not a fruit or a true root. Leafy shoots and separate leafless flower spikes arise from it. Each asymmetric flower has one fertile stamen and a coloured lip derived from sterile stamens. Flowering and fruiting are uncommon in cultivation.</string>
+<string name="bot_zingiber_officinale_distribution">Cultivated in tropical regions, with Asian origins; reproduction depends on growing conditions.</string>
+<string name="bot_zingiber_officinale_habit">Leafy shoots and separate bracted spike above a branched rhizome.</string>
+<string name="bot_zingiber_officinale_leaf">Narrow alternate blades in two ranks, with parallel veins.</string>
+<string name="bot_zingiber_officinale_flower">Bracted spike and enlarged asymmetric flower: coloured lip and one fertile stamen.</string>
+<string name="bot_zingiber_officinale_fruit">Rare three-valved capsule; the rhizome inset is a stem, not a fruit.</string>
+<string name="bot_vaccinium_vitis_idaea_name">Lingonberry</string>
+<string name="bot_vaccinium_vitis_idaea_aliases">Vaccinium vitis-idaea</string>
+<string name="bot_vaccinium_vitis_idaea_latin">Vaccinium vitis-idaea</string>
+<string name="bot_vaccinium_vitis_idaea_description">A low evergreen ericaceous shrub with leathery leaves and red berries. Short racemes bear fused bell-shaped corollas, usually four-lobed, with eight stamens. Rhizomes form spreading patches. Leaf persistence and red fruits distinguish it from deciduous bilberry.</string>
+<string name="bot_vaccinium_vitis_idaea_distribution">Northern temperate and boreal regions of the Northern Hemisphere, especially woods and heaths.</string>
+<string name="bot_vaccinium_vitis_idaea_habit">Low woody shoots in an evergreen patch.</string>
+<string name="bot_vaccinium_vitis_idaea_leaf">Small leathery oval leaf with rounded tip.</string>
+<string name="bot_vaccinium_vitis_idaea_flower">Four-lobed bell and enlarged end view with eight stamens.</string>
+<string name="bot_vaccinium_vitis_idaea_fruit">Red berries in a short terminal raceme.</string>
+<string name="bot_salix_repens_name">Creeping willow</string>
+<string name="bot_salix_repens_aliases">Salix repens</string>
+<string name="bot_salix_repens_latin">Salix repens</string>
+<string name="bot_salix_repens_description">A low deciduous willow spreading through creeping stems. Small leaves often have a silky silver underside. Male and female catkins occur on separate plants, without petals. Female flowers form two-valved capsules releasing hairy seeds. Habit and hairiness vary strongly.</string>
+<string name="bot_salix_repens_distribution">Europe, especially wet heaths and dunes; some forms are much taller than the low habit illustrated.</string>
+<string name="bot_salix_repens_habit">Creeping woody axes with short upright leafy shoots.</string>
+<string name="bot_salix_repens_leaf">Small oval leaf with silvery marginal hairs.</string>
+<string name="bot_salix_repens_flower">Male catkin with paired stamens; female catkin enlarged separately.</string>
+<string name="bot_salix_repens_fruit">Two-valved capsule and seeds with a tuft of fine hairs.</string>
+<string name="bot_saponaria_officinalis_name">Soapwort</string>
+<string name="bot_saponaria_officinalis_aliases">Saponaria officinalis</string>
+<string name="bot_saponaria_officinalis_latin">Saponaria officinalis</string>
+<string name="bot_saponaria_officinalis_description">A spreading rhizomatous perennial with opposite leaves and conspicuous longitudinal veins. Wild-type flowers have five pale petals, ten stamens and two styles; double garden forms differ. The persistent tubular calyx surrounds a dry capsule opening by four apical teeth.</string>
+<string name="bot_saponaria_officinalis_distribution">Eurasia; cultivated and naturalized in many temperate regions.</string>
+<string name="bot_saponaria_officinalis_habit">Branching leafy stems arising from spreading underground axes.</string>
+<string name="bot_saponaria_officinalis_leaf">Opposite blade with three strong basal longitudinal veins.</string>
+<string name="bot_saponaria_officinalis_flower">Five pale petals, ten stamens and two styles.</string>
+<string name="bot_saponaria_officinalis_fruit">Four-toothed dry capsule; the calyx remains around its base.</string>
+<string name="bot_silene_latifolia_name">White campion</string>
+<string name="bot_silene_latifolia_aliases">Silene latifolia</string>
+<string name="bot_silene_latifolia_latin">Silene latifolia</string>
+<string name="bot_silene_latifolia_description">A usually dioecious campion with opposite hairy leaves: male and female flowers grow on separate plants. The five white petals are deeply split. Female flowers have five styles and an enlarged ribbed calyx; their capsules commonly show ten teeth as five valves divide again.</string>
+<string name="bot_silene_latifolia_distribution">Native to Europe and introduced widely, including North America.</string>
+<string name="bot_silene_latifolia_habit">Opposite leafy stems and branching white flowers.</string>
+<string name="bot_silene_latifolia_leaf">Opposite oval blade with fine hairs.</string>
+<string name="bot_silene_latifolia_flower">Female flower with five split petals, five styles and inflated calyx inset.</string>
+<string name="bot_silene_latifolia_fruit">Ten-toothed capsule within its persistent ribbed calyx.</string>
+<string name="bot_tussilago_farfara_name">Coltsfoot</string>
+<string name="bot_tussilago_farfara_aliases">Tussilago farfara</string>
+<string name="bot_tussilago_farfara_latin">Tussilago farfara</string>
+<string name="bot_tussilago_farfara_description">A rhizomatous perennial whose scaly flower stalks usually appear before the broad foliage leaves. Yellow heads contain many narrow peripheral ray florets and central disc florets. Later leaves have a woolly underside. Fruits carry a pappus of fine hairs; flowering and leafy stages are shown separately.</string>
+<string name="bot_tussilago_farfara_distribution">Europe, northern Africa and northern/western Asia; introduced elsewhere. Seasons differ between hemispheres.</string>
+<string name="bot_tussilago_farfara_habit">Leafless scaly flowering stalk; later leafy stage in a separate inset.</string>
+<string name="bot_tussilago_farfara_leaf">Broad heart-based leaf with shallow teeth and hairy underside.</string>
+<string name="bot_tussilago_farfara_flower">Yellow flower head: many ray florets surrounding disc florets.</string>
+<string name="bot_tussilago_farfara_fruit">Slender one-seeded fruit with a long fine-haired pappus.</string>
+<string name="bot_sorbus_intermedia_name">Swedish whitebeam</string>
+<string name="bot_sorbus_intermedia_aliases">Sorbus intermedia Scandosorbus intermedia</string>
+<string name="bot_sorbus_intermedia_latin">Sorbus intermedia</string>
+<string name="bot_sorbus_intermedia_description">A deciduous whitebeam with simple lobed leaves, unlike the pinnate leaves of rowan. The pale felted underside contrasts with the dark upper face. White flowers form corymbs and mature into orange-red pomes. Its hybrid and polyploid history is more complex than one bifurcation in a teaching tree.</string>
+<string name="bot_sorbus_intermedia_distribution">Northern European origins; also planted in temperate urban and coastal landscapes. The archive retains the name Sorbus intermedia.</string>
+<string name="bot_sorbus_intermedia_habit">Broad-crowned deciduous tree.</string>
+<string name="bot_sorbus_intermedia_leaf">One simple toothed and lobed blade; a pale underside is shown separately.</string>
+<string name="bot_sorbus_intermedia_flower">White five-petalled flowers in a corymb.</string>
+<string name="bot_sorbus_intermedia_fruit">Orange-red pomes with persistent calyx remnants.</string>
+<string name="bot_vicia_sativa_name">Common vetch</string>
+<string name="bot_vicia_sativa_aliases">Vicia sativa</string>
+<string name="bot_vicia_sativa_latin">Vicia sativa</string>
+<string name="bot_vicia_sativa_description">An annual climbing legume with pinnate leaves ending in tendrils. Leaflets often have a notched tip. Usually one or two purple pea flowers occur in a leaf axil. Each flower has one carpel, which forms an elongated pod containing several seeds.</string>
+<string name="bot_vicia_sativa_distribution">Eurasian origins and a long history of cultivation; introduced in many regions.</string>
+<string name="bot_vicia_sativa_habit">Leafy climbing or sprawling shoot.</string>
+<string name="bot_vicia_sativa_leaf">Paired leaflets and a terminal tendril; representative notched tips.</string>
+<string name="bot_vicia_sativa_flower">Pea flower with standard, wings and keel.</string>
+<string name="bot_vicia_sativa_fruit">Elongated pod opening along two sutures to expose seeds.</string>
+<string name="bot_vicia_sepium_name">Hedge vetch</string>
+<string name="bot_vicia_sepium_aliases">Vicia sepium</string>
+<string name="bot_vicia_sepium_latin">Vicia sepium</string>
+<string name="bot_vicia_sepium_description">A perennial climbing vetch with broad paired leaflets and terminal tendrils. Short axillary groups contain several purple flowers, unlike the usually solitary or paired flowers of common vetch. Leaflet number varies. Each flower matures into a several-seeded legume.</string>
+<string name="bot_vicia_sepium_distribution">Europe and temperate Asia; introduced in North America and elsewhere.</string>
+<string name="bot_vicia_sepium_habit">Leafy scrambling perennial shoot.</string>
+<string name="bot_vicia_sepium_leaf">Broad paired leaflets with a terminal tendril.</string>
+<string name="bot_vicia_sepium_flower">Short group of pea flowers on an axillary axis.</string>
+<string name="bot_vicia_sepium_fruit">Several-seeded legume with two opening valves.</string>
+</resources>

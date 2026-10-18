@@ -1,0 +1,190 @@
+{
+  "id": "pluvialis_squatarola",
+  "scientific": "Pluvialis squatarola",
+  "group": "birds",
+  "name": {
+    "en": "Grey Plover",
+    "fr": "Pluvier argenté"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Grey Plover is a long-distance migrant that breeds in Arctic regions and winters widely along coastlines.",
+      "fr": "Le Pluvier argenté est un migrateur au long cours qui niche dans l’Arctique et hiverne largement sur les littoraux."
+    },
+    "identification": {
+      "en": "It is the largest species in Pluvialis. Breeding adults have a black face and underside with a silver-spangled back; black axillaries are visible in flight in every plumage.",
+      "fr": "C’est la plus grande espèce du genre Pluvialis. En plumage nuptial, l’adulte a la face et le dessous noirs, le dos moucheté d’argent; les axillaires noirs sont visibles en vol à tout âge."
+    },
+    "habitat": {
+      "en": "It nests on Arctic tundra and, outside the breeding season, uses tidal mudflats, estuaries, beaches and salt marshes; it may also stop at inland waters during migration.",
+      "fr": "Il niche dans la toundra arctique et fréquente hors reproduction les vasières, estuaires, plages et marais salés; il peut aussi faire halte près des eaux intérieures pendant la migration."
+    },
+    "diet": {
+      "en": "It probes or picks small invertebrates, including worms, molluscs, crustaceans and insects; prey varies between Arctic breeding grounds and coastal wintering sites.",
+      "fr": "Il sonde le sol ou capture de petits invertébrés, notamment des vers, mollusques, crustacés et insectes; les proies varient entre les zones de reproduction arctiques et les sites côtiers d’hivernage."
+    },
+    "behavior": {
+      "en": "It makes trans-hemispheric migrations and is often gregarious on coastal feeding and roosting grounds outside the breeding season.",
+      "fr": "Il effectue des migrations entre hémisphères et se rassemble souvent sur les sites côtiers d’alimentation et de repos hors période de reproduction."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in the Arctic; the clutch is usually four eggs.",
+      "fr": "Il niche au sol dans l’Arctique; la ponte comprend généralement quatre œufs."
+    },
+    "ecology": {
+      "en": "Unlike the European Golden Plover, P. apricaria, it has black rather than white axillaries. It is also a close relative of the Pacific Golden Plover, P. fulva, whose breeding and wintering range is centered farther east around the Pacific and Indian Oceans.",
+      "fr": "À la différence du Pluvier doré, P. apricaria, il a les axillaires noirs plutôt que blancs. Il est aussi proche du Pluvier fauve, P. fulva, dont les aires de reproduction et d’hivernage se situent plus à l’est, autour des océans Pacifique et Indien."
+    },
+    "conservation": {
+      "en": "BirdLife reports that the species was uplisted globally to Vulnerable in 2024 following widespread population declines.",
+      "fr": "BirdLife indique que l’espèce a été reclassée Vulnérable à l’échelle mondiale en 2024 après des déclins généralisés de ses populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grey Plover — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Pluvier argenté — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/black-bellied_plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell: habitat, diet, nesting, axillaries."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 5,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey Plover — BirdLife South Africa, Red Data Book account",
+        "fr": "Pluvier argenté — fiche du Livre rouge de BirdLife Afrique du Sud"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/grey-plover/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The regional account reports the 2024 global Vulnerable category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 9,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey Plover — British Trust for Ornithology bird facts",
+        "fr": "Pluvier argenté — données ornithologiques du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/grey-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "BTO describes long-distance winter migration to Britain and western Africa."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 10,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Golden Plover — Birds of Europe, Naturalis Biodiversity Center",
+        "fr": "Pluvier doré — Birds of Europe, Naturalis Biodiversity Center"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130592",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The European species has white axillaries, contrasting with the Grey Plover’s black axillaries."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 13,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover — BirdLife DataZone species factsheet",
+        "fr": "Pluvier fauve — fiche d’espèce BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/pacific-golden-plover-pluvialis-fulva",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife gives the eastern breeding range and broad Pacific and Indian Ocean winter range of P. fulva."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 17,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Vulnerable category is global, but regional accounts differ in the detail available on trends and threats."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Includes reciprocal flight-mark and range comparisons with P. apricaria and P. fulva; their drafts are updated in this batch."
+}

@@ -1,0 +1,18 @@
+{
+  "color": "#89A9B7",
+  "placement_rule": "solid",
+  "texture_side": "door:89A9B7:5",
+  "id": 9205,
+  "texture_bottom": "cozy:material:9:89A9B7",
+  "creative_tab": "wood",
+  "transparent": true,
+  "tags": [
+    "door"
+  ],
+  "door": true,
+  "hardness": 1.5,
+  "name": "door_plank_blue",
+  "texture_top": "cozy:material:9:89A9B7",
+  "orient_mode": "facing",
+  "drop": "door_plank_blue"
+}

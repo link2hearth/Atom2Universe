@@ -1,0 +1,16 @@
+{
+  "id": 1010,
+  "name": "plank",
+  "texture_top": "base_art:planks:0",
+  "texture_side": "base_art:planks:0",
+  "texture_bottom": "base_art:planks:0",
+  "color": "#B69058",
+  "hardness": 1.5,
+  "drop": "plank",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "planks"
+  ]
+}

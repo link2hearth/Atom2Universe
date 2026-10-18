@@ -1,0 +1,208 @@
+{
+  "id": "dallia_pectoralis",
+  "scientific": "Dallia pectoralis",
+  "group": "fish",
+  "name": {
+    "en": "Alaska blackfish",
+    "fr": "Poisson noir d’Alaska"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Beringian freshwater fish inhabits Alaska, nearby Bering Sea islands and northeastern Siberia.",
+      "fr": "Ce poisson d’eau douce de Béringie vit en Alaska, dans les îles voisines de la mer de Béring et le nord-est de la Sibérie."
+    },
+    "identification": {
+      "en": "Its broad, flattened head, large paddle-like pectoral fins and tiny pelvic fins distinguish it from other northern fishes.",
+      "fr": "Sa tête large et aplatie, ses grandes nageoires pectorales en forme de pagaie et ses petites nageoires pelviennes le distinguent des autres poissons nordiques."
+    },
+    "habitat": {
+      "en": "It occupies vegetated lowland ponds, lakes, sloughs and slow streams that may become oxygen-poor beneath winter ice.",
+      "fr": "Il fréquente les mares, lacs, bras morts et ruisseaux lents des basses terres, où l’eau peut manquer d’oxygène sous la glace hivernale."
+    },
+    "diet": {
+      "en": "It is an opportunistic feeder on small aquatic invertebrates, with fish also recorded in some populations and habitats.",
+      "fr": "C’est un prédateur opportuniste de petits invertébrés aquatiques ; des poissons figurent aussi au régime de certaines populations et de certains habitats."
+    },
+    "behavior": {
+      "en": "It can breathe air and tolerate very low dissolved oxygen, adaptations that help it persist in cold, ice-covered waters.",
+      "fr": "Il peut respirer l’air et tolérer une très faible teneur en oxygène dissous, adaptations qui l’aident à survivre dans les eaux froides couvertes de glace."
+    },
+    "reproduction": {
+      "en": "In Alaska, spawning occurs over an extended warm-season period, and females may release eggs in several batches.",
+      "fr": "En Alaska, le frai s’étend sur une longue période de saison chaude et les femelles peuvent pondre en plusieurs fois."
+    },
+    "ecology": {
+      "en": "Its air-breathing physiology is unusual among Arctic fishes; local studies of transplanted populations also show that diet varies by waterbody.",
+      "fr": "Sa respiration aérienne est inhabituelle chez les poissons arctiques ; des études de populations déplacées montrent aussi que son régime varie selon le milieu."
+    },
+    "conservation": {
+      "en": "Alaska’s wildlife plan identifies it as a Species of Conservation Need, while USGS separately documents human-transplanted populations outside its native range.",
+      "fr": "Le plan faunique de l’Alaska le désigne comme espèce nécessitant une attention de conservation ; l’USGS documente aussi des populations déplacées par l’humain hors de son aire native."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Alaska Blackfish — Alaska Department of Fish and Game Wildlife Notebook",
+        "fr": "Poisson noir d’Alaska — carnet faunique du département des pêches et de la faune d’Alaska"
+      },
+      "url": "https://www.adfg.alaska.gov/static/education/wns/alaska_blackfish.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The state species account gives native range, morphology, habitat, seasonal spawning and repeated partial egg release."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Air breathing in the Arctic: physiology of Dallia pectoralis — Journal of Experimental Biology",
+        "fr": "Respiration aérienne en Arctique : physiologie de Dallia pectoralis — Journal of Experimental Biology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4375840/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The experimental paper documents air breathing and the species’ use of frozen, seasonally hypoxic lakes and warm hypoxic summer habitats."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Trophic ecology of introduced populations of Alaska blackfish — Ecology of Freshwater Fish",
+        "fr": "Écologie trophique de populations introduites du poisson noir d’Alaska — Ecology of Freshwater Fish"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5222565/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed diet study found site-varying consumption of dipteran larvae, gastropods and ostracods in Cook Inlet populations introduced beyond the native range."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Alaska Blackfish — USGS Nonindigenous Aquatic Species Profile",
+        "fr": "Poisson noir d’Alaska — fiche USGS des espèces aquatiques non indigènes"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?SpeciesID=975",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "USGS documents native Alaska and Siberia occurrence as well as introduced, spreading populations around Anchorage."
+      ],
+      "prose_claims": []
+    },
+    {
+      "title": {
+        "en": "2015 Alaska Wildlife Action Plan — Alaska Department of Fish and Game",
+        "fr": "Plan d’action faunique de l’Alaska 2015 — département des pêches et de la faune d’Alaska"
+      },
+      "url": "https://www.adfg.alaska.gov/static/species/wildlife_action_plan/2015_alaska_wildlife_action_plan.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The state plan includes Alaska blackfish among its Species of Conservation Need."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The fish diet study sampled introduced Cook Inlet populations, so its prey proportions should not be generalized to native populations.",
+    "Air-breathing capacity and hypoxia tolerance are supported, but winter behavior in natural habitats remains incompletely observed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared state fish natural history with experimental respiratory physiology, a peer-reviewed introduced-population diet study, USGS range records and the state wildlife action plan; marked which observations apply only to transplanted populations."
+}

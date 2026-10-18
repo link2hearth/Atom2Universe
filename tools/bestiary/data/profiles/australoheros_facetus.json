@@ -1,0 +1,162 @@
+{
+  "id": "australoheros_facetus",
+  "scientific": "Australoheros facetus",
+  "group": "fish",
+  "name": {
+    "en": "Chameleon cichlid",
+    "fr": "Chanchito (cichlidé caméléon)"
+  },
+  "sections": {
+    "overview": {
+      "en": "Australoheros facetus is a southern South American cichlid native to Uruguay, northeastern Argentina and adjoining river systems, and the type species of its genus.",
+      "fr": "Australoheros facetus est un cichlidé du sud de l’Amérique du Sud, indigène d’Uruguay, du nord-est argentin et des bassins voisins, et l’espèce type de son genre."
+    },
+    "identification": {
+      "en": "It has a deep body, usually dark vertical bars and a projecting lower jaw with an upturned mouth; these characters help separate it from close congeners.",
+      "fr": "Son corps est haut, généralement barré verticalement de sombre, avec une mâchoire inférieure saillante et une bouche orientée vers le haut ; ces caractères aident à le distinguer de ses proches congénères."
+    },
+    "habitat": {
+      "en": "The species occupies freshwater streams, rivers, swamps and lakes across tributaries of the lower Paraná and Uruguay drainages and Uruguayan coastal rivers.",
+      "fr": "L’espèce fréquente cours d’eau, rivières, marécages et lacs des affluents du bas Paraná et de l’Uruguay, ainsi que des rivières côtières uruguayennes."
+    },
+    "diet": {
+      "en": "It is a diurnal opportunist that eats detritus and plant matter as well as small aquatic animals, including small fish when available.",
+      "fr": "C’est un opportuniste diurne qui consomme détritus et végétaux ainsi que de petits animaux aquatiques, notamment de petits poissons lorsqu’ils sont disponibles."
+    },
+    "behavior": {
+      "en": "Pairs become territorial while breeding, select exposed stones or wood for egg laying, and both adults guard eggs, larvae and young fish.",
+      "fr": "Les couples deviennent territoriaux pendant la reproduction, choisissent pierres ou bois exposés pour pondre, puis les deux adultes gardent œufs, larves et jeunes poissons."
+    },
+    "reproduction": {
+      "en": "This substrate-spawning cichlid attaches its eggs to a hard surface; parental defence continues after hatching, with reported guarding of juveniles for one to three weeks.",
+      "fr": "Ce cichlidé pond sur un support dur où les œufs adhèrent ; la défense parentale se poursuit après l’éclosion, avec une garde des juvéniles rapportée durant une à trois semaines."
+    },
+    "ecology": {
+      "en": "Its genus contains many regional look-alikes, including A. scitulus and A. tembe; modern morphological and genetic work emphasizes careful separation of these southern cichlids.",
+      "fr": "Son genre compte de nombreux sosies régionaux, dont A. scitulus et A. tembe ; les études morphologiques et génétiques récentes soulignent la nécessité de distinguer soigneusement ces cichlidés méridionaux."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment classifies A. facetus as Least Concern, while the species is non-native and regulated as invasive in parts of Europe.",
+      "fr": "L’évaluation mondiale de l’UICN classe A. facetus en préoccupation mineure, tandis que l’espèce est introduite et réglementée comme invasive dans certaines régions d’Europe."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australoheros facetus — FishBase",
+        "fr": "Australoheros facetus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Australoheros_facetus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "FishBase reports the native range, stream habitat and opportunistic diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 10,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conjectures and refutations: species diversity and phylogeny of Australoheros — PLOS ONE",
+        "fr": "Conjectures et réfutations : diversité et phylogénie d’Australoheros — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0261027",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed revision distinguishes A. facetus by projecting lower jaw, usually four abdominal bars and reduced scale cover, and discusses close genus members including A. scitulus and A. tembe."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 28,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australoheros facetus — Spanish Ministry for Ecological Transition invasive species sheet",
+        "fr": "Australoheros facetus — fiche des espèces invasives du ministère espagnol de la Transition écologique"
+      },
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/agua/temas/estado-y-calidad-de-las-aguas/Especies-invasoras-en-medios-acuaticos-continentales/fichas-especies-ex%C3%B3ticas-invasoras/Australoheros%20facetus.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Spanish government fact sheet describes its invasive status and management listing in Spain."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 13,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Post-hatching larval development of Australoheros facetus — Zoological Society of Uruguay",
+        "fr": "Développement larvaire après éclosion d’Australoheros facetus — Société zoologique d’Uruguay"
+      },
+      "url": "https://journal.szu.org.uy/index.php/Bol_SZU/es/article/view/7",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Uruguayan Spanish-language research publication documents laboratory observations of post-hatching larval development."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The extent of its native range and some locality records remain debated in taxonomic literature; invasive status applies to introduced European populations, not the native range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase with recent PLOS ONE taxonomic revision, a Spanish government invasive-species sheet and a Spanish-language Uruguayan larval study. No Australoheros congeners are present among existing profile records; textual comparisons name A. scitulus and A. tembe."
+}

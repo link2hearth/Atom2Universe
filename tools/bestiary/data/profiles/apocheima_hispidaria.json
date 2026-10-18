@@ -1,0 +1,245 @@
+{
+  "id": "apocheima_hispidaria",
+  "scientific": "Apocheima hispidaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Small Brindled Beauty",
+    "fr": "Nyssie hispide"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apocheima hispidaria is an early-spring geometrid moth described by Denis and Schiffermüller in 1775. It is known in English as the Small Brindled Beauty and in French as the nyssie hispide.",
+      "fr": "Apocheima hispidaria est un papillon de nuit géomètre du début du printemps, décrit par Denis et Schiffermüller en 1775. Son nom anglais est Small Brindled Beauty et son nom français nyssie hispide."
+    },
+    "identification": {
+      "en": "The male has a broad, hairy thorax, yellow-orange comb-like antennae and variable grey-brown forewings, sometimes with a darker central band. Its wingspan is about 28–35 mm. The female is brownish and wingless, so she has no wingspan; the sources reviewed give no standardized female body length, body height, width or mass. Males can be confused with the larger Pale Brindled Beauty, Phigalia pilosaria, or Brindled Beauty, Lycia hirtaria, which share a similar wing pattern or hairy thorax.",
+      "fr": "Le mâle possède un thorax large et velu, des antennes pectinées jaune orangé et des ailes antérieures gris-brun variables, parfois marquées d’une bande centrale sombre. Son envergure est d’environ 28 à 35 mm. La femelle, brunâtre et aptère, n’a pas d’envergure ; les sources consultées ne donnent pas de longueur corporelle, de hauteur, de largeur ni de masse standardisées pour elle. Les mâles peuvent être confondus avec la plus grande Phigalia pilosaria ou avec Lycia hirtaria, qui partagent un motif alaire ou un thorax velu comparables."
+    },
+    "habitat": {
+      "en": "It inhabits deciduous woodland and other tree-rich places, including gardens, parks and shrubland; in southern parts of its range it is more associated with upland or mountainous areas. Its European range extends from Spain through central Europe to Russia, with records eastward into the Caucasus.",
+      "fr": "Elle fréquente les bois de feuillus et les lieux riches en arbres, notamment les jardins, les parcs et les fourrés ; dans le sud de son aire, elle est davantage liée aux zones élevées ou montagneuses. Son aire européenne s’étend de l’Espagne à la Russie en passant par l’Europe centrale, avec des observations jusqu’au Caucase."
+    },
+    "diet": {
+      "en": "The caterpillars feed on the leaves of several deciduous trees and shrubs rather than a single host. Records include oak, willow, birch, elm, hazel, apple and blackthorn.",
+      "fr": "Les chenilles consomment les feuilles de plusieurs arbres et arbustes caducifoliés plutôt que celles d’un seul hôte. Les sources citent notamment le chêne, le saule, le bouleau, l’orme, le noisetier, le pommier et le prunellier."
+    },
+    "behavior": {
+      "en": "Adults appear very early in the year, chiefly in February and March; males come to light, while the wingless females are found crawling on tree trunks. The species is single-brooded, with occasional records extending from late January into April.",
+      "fr": "Les adultes apparaissent très tôt dans l’année, surtout en février et mars ; les mâles viennent à la lumière tandis que les femelles aptères se rencontrent sur les troncs. L’espèce n’a qu’une génération annuelle, avec quelques observations de fin janvier à avril."
+    },
+    "reproduction": {
+      "en": "The female is wingless and stays on tree trunks during the adult flight period; the winged male is the flying, light-attracted sex. The caterpillars feed through spring and early summer. It then overwinters as a pupa before adults emerge the following year.",
+      "fr": "La femelle est aptère et reste sur les troncs pendant la période de vol adulte ; le mâle ailé est celui qui vole et vient à la lumière. Les chenilles se nourrissent au printemps et au début de l’été. L’espèce hiverne ensuite au stade de chrysalide avant l’émergence des adultes l’année suivante."
+    },
+    "ecology": {
+      "en": "As a larva it is a broadleaf feeder in deciduous habitats, while the adults emerge near the end of winter.",
+      "fr": "Au stade larvaire, elle se nourrit sur les feuillus des milieux boisés, tandis que les adultes apparaissent à la fin de l’hiver."
+    },
+    "conservation": {
+      "en": "The Belgian Lepidoptera catalogue describes it as fairly common nationally and reports a Least Concern assessment for Flanders in 2023. This is a regional assessment, not a global status for the species.",
+      "fr": "Le catalogue belge des lépidoptères la décrit comme assez commune dans le pays et indique une évaluation en préoccupation mineure pour la Flandre en 2023. Il s’agit d’un statut régional, et non d’une évaluation mondiale de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Small Brindled Beauty — UKMoths species account",
+        "fr": "Small Brindled Beauty — fiche espèce UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/apocheima-hispidaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "UKMoths describes male variation, female aptery, wingspan, spring flight and foodplants."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "behavior.en.1",
+        "reproduction.en.1",
+        "behavior.fr.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 11,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apocheima hispidaria — Artemisiae French moth observatory",
+        "fr": "Apocheima hispidaria — observatoire français Artemisiae"
+      },
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248860&module=fiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French observatory records sex differences, European range, French habitat, host plants and overwintering as a pupa."
+      ],
+      "prose_claims": [
+        "identification.fr.1",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "identification.en.1",
+        "diet.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 17,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catalogue of the Lepidoptera of Belgium — Apocheima hispidaria",
+        "fr": "Catalogue des lépidoptères de Belgique — Apocheima hispidaria"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5484/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The Belgian Biodiversity Platform confirms accepted classification, multilingual common names, wingspan, flight time and regional conservation category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 17,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Lepidoptera and their ecology — Apocheima hispidaria",
+        "fr": "European Lepidoptera and their ecology — Apocheima hispidaria"
+      },
+      "url": "https://www.pyrgus.de/Apocheima_hispidaria_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The European field guide describes broadleaf habitats, larvae on deciduous hosts, flight and larval seasons, and the wider range."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 19,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Lepidoptera — comparisons with related spring geometrids",
+        "fr": "British Lepidoptera — comparaison avec des géomètres printaniers apparentés"
+      },
+      "url": "https://britishlepidoptera.weebly.com/246-apocheima-hispidaria-small-brindled-beauty.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The specialist account compares male A. hispidaria with Phigalia pilosaria and Lycia hirtaria and notes the smaller size."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 18,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sussex Moth Group — Apocheima hispidaria phenology",
+        "fr": "Sussex Moth Group — phénologie d’Apocheima hispidaria"
+      },
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=70.2460",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The Sussex Moth Group describes this as a single-brooded species with a mainly February–March flight period."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 16,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the winged male with a broad hairy thorax, yellow-orange combed antennae and grey-brown patterned forewings; note that the female is smaller-looking, brown and wingless, so do not draw her as a reduced-winged male.",
+  "uncertainties": [
+    "The published 28–35 mm measurement is male wingspan. The female is wingless; the reviewed sources did not provide standardized female body length, body width, height or mass.",
+    "Flight dates vary geographically and among years; Belgian, French and British accounts report somewhat different early-spring windows.",
+    "The Least Concern status cited here is specifically the 2023 Flemish regional assessment, not a global IUCN category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English and French species accounts, the Belgian biodiversity catalogue, and a European field guide. Kept the male wingspan separate from the wingless female and identified the conservation category as regional."
+}

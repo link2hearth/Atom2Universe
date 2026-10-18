@@ -1,0 +1,358 @@
+{
+  "id": "alpaca",
+  "scientific": "Vicugna pacos",
+  "group": "mammals",
+  "name": {
+    "en": "Alpaca",
+    "fr": "Alpaga"
+  },
+  "sections": {
+    "overview": {
+      "en": "Alpacas are Andean domestic camelids, raised in herds chiefly for their fleece. Genetic studies identify the vicuña as their main wild ancestor; domestic herds also show later llama ancestry. Also known historically as Vicugna pacos, the species is currently listed as Lama pacos by the Mammal Diversity Database.",
+      "fr": "Les alpagas sont des camélidés domestiques des Andes, élevés surtout en troupeaux pour leur toison. Les études génétiques identifient la vigogne comme leur principal ancêtre sauvage ; les troupeaux domestiques portent aussi des traces d’ascendance du Lama. Également connu sous le nom historique de Vicugna pacos, l’animal est actuellement répertorié sous le nom Lama pacos par le Mammal Diversity Database."
+    },
+    "identification": {
+      "en": "Adults usually stand about 0.8–1.0 metres at the shoulder and weigh roughly 45–90 kilograms, with size varying by sex, condition and population. Alpacas are smaller and more lightly built than llamas. Huacaya fleece is dense and crimped; Suri fibre grows in long, silky locks. Each foot has two small-nailed toes supported by broad pads, while the split upper lip and lower incisors help crop short plants.",
+      "fr": "L’adulte mesure généralement 0,8 à 1,0 m au garrot et pèse environ 45 à 90 kg ; la taille varie selon le sexe, l’état corporel et la population. Les alpagas sont plus petits et de constitution plus légère que les lamas. La toison Huacaya est dense et frisée ; la fibre Suri pousse en longues mèches soyeuses. Chaque pied porte deux doigts à petits ongles, soutenus par de larges coussinets ; la lèvre fendue et les incisives inférieures aident à couper les plantes basses."
+    },
+    "habitat": {
+      "en": "Domestic herds are centred in the high Andes of Peru and Bolivia, with husbandry also extending into northern Chile. Alpacas graze open puna grasslands, dry slopes and wet valley meadows called bofedales, moving as forage and water change. In one Bolivian pastoral system, herders relied more heavily on wet meadows during the dry season.",
+      "fr": "Les troupeaux domestiques se concentrent dans les hautes Andes du Pérou et de la Bolivie, et l’élevage s’étend aussi au nord du Chili. Les alpagas broutent la puna ouverte, les versants secs et les prairies humides de vallée appelées bofedales, en suivant les variations du fourrage et de l’eau. Dans un système pastoral bolivien, les éleveurs s’appuyaient davantage sur les prairies humides pendant la saison sèche."
+    },
+    "diet": {
+      "en": "They crop short plants with a split upper lip and lower incisors, then chew repeatedly. Anatomical examination found that the alpaca stomach has three compartments, rather than the four in true ruminants. Microbial fermentation occurs chiefly in the first compartment, where fibrous forage is broken down before further digestion. This digestive design helps alpacas use coarse plants, while forage quality and abundance still change with season. Herders may add hay when grazing is scarce.",
+      "fr": "Ils coupent les plantes basses avec leur lèvre fendue et leurs incisives, puis remâchent. L’examen anatomique a montré que l’estomac de l’alpaga a trois compartiments, au lieu des quatre des ruminants au sens strict. La fermentation microbienne se déroule surtout dans le premier compartiment, où le fourrage fibreux est dégradé avant la suite de la digestion. Ce système aide les alpagas à utiliser des plantes grossières, tandis que la qualité et l’abondance du fourrage varient selon les saisons. Les éleveurs peuvent ajouter du foin lorsque le pâturage manque."
+    },
+    "behavior": {
+      "en": "Alpacas live in social herds. They communicate through posture, ear position, vocal sounds and spitting or retreating during conflict. A soft hum can accompany contact or routine activity, but also separation or distress; it does not always signal calm. A sharper alarm call can alert nearby animals to perceived danger.",
+      "fr": "Les alpagas vivent en troupeaux sociaux. Ils communiquent par la posture, la position des oreilles, des vocalisations, des crachats ou le retrait en situation de conflit. Un doux bourdonnement peut accompagner les contacts et les activités habituelles, mais aussi la séparation ou la détresse ; il ne signale pas toujours le calme. Un cri d’alarme plus aigu peut avertir les autres d’un danger perçu."
+    },
+    "reproduction": {
+      "en": "Females do not follow a regular spontaneous oestrous cycle: mating stimulates ovulation, a pattern called induced ovulation. Gestation lasts about eleven months and usually produces one cria, the term for a young camelid. A cria is relatively developed at birth and soon stands to follow its mother. Mothers nurse and protect their young, which are commonly weaned near six months.",
+      "fr": "Les femelles n’ont pas de cycle œstral spontané régulier : l’accouplement stimule l’ovulation, un mécanisme appelé ovulation induite. La gestation dure environ onze mois et donne généralement un seul cria, terme désignant le jeune camélidé. Le cria est relativement développé à la naissance et se lève rapidement pour suivre sa mère. La mère nourrit et protège son petit, généralement sevré vers l’âge de six mois."
+    },
+    "ecology": {
+      "en": "Bofedales are wet meadows within the seasonally dry puna; their water and low-growing plants provide important forage for alpacas and other livestock. A study of natural and irrigated bofedales in southern Peru found links among vegetation, soil and hydrology, with similar carbon storage and palatable plant cover in the two sites. The researchers found that cover of two nutritious alpaca forage plants tracked environmental measurements weakly, suggesting grazing may obscure those relationships.",
+      "fr": "Les bofedales sont des prairies humides au sein de la puna à saison sèche ; leur eau et leurs plantes basses fournissent un fourrage important aux alpagas et aux autres animaux d’élevage. Une étude de bofedales naturels et irrigués du sud du Pérou a observé des liens entre végétation, sol et hydrologie, ainsi qu’un stockage du carbone et une couverture de plantes appétentes comparables sur les deux sites. La couverture de deux plantes nutritives pour l’alpaga suivait faiblement les paramètres environnementaux mesurés, ce qui suggère que le pâturage peut masquer ces relations."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database classifies the alpaca as domesticated and marks it Not Evaluated on the global Red List. A genomic study dated substantial llama-to-alpaca introgression to about 500 years ago, near the Spanish conquest; the authors suggest disrupted traditional management may explain the pattern but say its cause is unknown. In a 1995–96 Bolivian study, deferred grazing (temporarily resting pasture) reduced plant diversity in bofedales but access to reserves improved young alpaca survival. The authors caution that fencing communal pastures can bring social costs.",
+      "fr": "Le Mammal Diversity Database classe l’Alpaga parmi les animaux domestiques et indique qu’il est non évalué sur la Liste rouge mondiale. Une étude génomique date d’environ 500 ans d’importants apports du Lama à l’Alpaga, près de la conquête espagnole ; les auteurs proposent que la perturbation de la gestion traditionnelle puisse expliquer ce signal, tout en précisant que sa cause reste inconnue. Dans une étude menée en Bolivie en 1995–1996, le pâturage différé (mise temporaire des pâtures au repos) a réduit la diversité végétale des bofedales, mais l’accès aux réserves améliorait la survie des jeunes alpagas. Les auteurs avertissent que clôturer des pâturages communaux peut entraîner des coûts sociaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Alpaca — Smithsonian's National Zoo and Conservation Biology Institute",
+        "fr": "Alpaga — Smithsonian's National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/animals/alpaca",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Coat types, adult dimensions, grazing and gestation."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 7,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lama pacos — Mammal Diversity Database",
+        "fr": "Lama pacos — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006387/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Accepted taxon Lama pacos; domesticated; Red List Not Evaluated."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 9,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alpaca fact sheet — San Francisco Zoo Docents",
+        "fr": "Fiche sur l’alpaga — San Francisco Zoo Docents"
+      },
+      "url": "https://www.sfzoodocents.org/notebook/FactSheets/MAMMALIA/ARTIODACTYLA/Alpaca.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Andean range, padded toes, cria and single births."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.4",
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 8,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The topographic and systematic anatomy of the alpaca stomach — The Anatomical Record",
+        "fr": "Anatomie topographique et systématique de l’estomac de l’alpaga — The Anatomical Record"
+      },
+      "url": "https://anatomypubs.onlinelibrary.wiley.com/doi/abs/10.1002/ar.24588",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Anatomical dissection describes three gastric compartments in alpacas."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 8,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Effects of Diet and Altitude on the Microbiota of the First Compartment of the Stomach in Peruvian Alpacas — Microorganisms",
+        "fr": "Effets du régime alimentaire et de l’altitude sur le microbiote du premier compartiment gastrique chez des alpagas péruviens — Microorganisms"
+      },
+      "url": "https://www.mdpi.com/2076-2607/14/1/138",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Study examines microbial fermentation in the alpaca foregut."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 8,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genomic analysis of the domestication and post-Spanish conquest evolution of the llama and alpaca — BMC Genomics",
+        "fr": "Analyse génomique de la domestication et de l’évolution après la conquête espagnole du lama et de l’alpaga — BMC Genomics"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7331169/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Genome study supports vicuña origin and substantial llama introgression."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 9,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Influence of deferred grazing on vegetation dynamics and livestock productivity in an Andean pastoral system — Journal of Applied Ecology",
+        "fr": "Influence du pâturage différé sur la végétation et la productivité animale dans un système pastoral andin — Journal of Applied Ecology"
+      },
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.0021-8901.2004.00921.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Bolivian herders shift grazing between uplands and wet meadows."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.2",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 9,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Behavioural biology of South American domestic camelids: An overview from a welfare perspective — Small Ruminant Research",
+        "fr": "Biologie comportementale des camélidés domestiques sud-américains : synthèse sous l’angle du bien-être — Small Ruminant Research"
+      },
+      "url": "https://doi.org/10.1016/j.smallrumres.2023.106918",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review distinguishes contact, separation and distress vocalizations."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 7,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pregnancy in New World camelids — PubMed",
+        "fr": "Gestation chez les camélidés du Nouveau Monde — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9091279/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Veterinary review describes induced ovulation after mating."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 7,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecohydrology and ecosystem services of a natural and an artificial bofedal wetland in the central Andes — Science of the Total Environment",
+        "fr": "Écohydrologie et services écosystémiques d’un bofedal naturel et artificiel dans les Andes centrales — Science of the Total Environment"
+      },
+      "url": "https://doi.org/10.1016/j.scitotenv.2022.155968",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Wetland study links vegetation, soil, hydrology and alpaca forage."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 9,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the accepted root illustration: anatomy and fleece reference a white Huacaya alpaca; retain that image.",
+  "uncertainties": [
+    "Historical evidence supports vicuña ancestry and later llama introgression, but the timing and cause of crossbreeding are not fully resolved.",
+    "Adult size ranges vary with sex, condition and population; husbandry and forage quality vary by region and season.",
+    "The Bolivian grazing findings are local and date to 1995–96; their balance of plant-diversity and livestock effects should not be generalized to all bofedales."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and second review confirm revised claims; conflicting birth-weight ranges and unsupported history removed. Anatomical identity of Huacaya illustration independently validated; narrow top margin retained as minor composition limitation."
+}

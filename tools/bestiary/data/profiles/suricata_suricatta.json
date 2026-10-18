@@ -1,0 +1,145 @@
+{
+  "id": "suricata_suricatta",
+  "scientific": "Suricata suricatta",
+  "group": "mammals",
+  "name": {
+    "en": "Meerkat",
+    "fr": "Suricate"
+  },
+  "sections": {
+    "overview": {
+      "en": "The meerkat is a small mongoose native to the dry open regions of southern Africa.",
+      "fr": "Le suricate est une petite mangouste originaire des milieux secs et ouverts d’Afrique australe."
+    },
+    "identification": {
+      "en": "It has a slender body, pale coat with darker bands across the back, and often stands upright while watching.",
+      "fr": "Il a un corps fin, un pelage clair marqué de bandes dorsales plus sombres, et se tient souvent debout pour surveiller les alentours."
+    },
+    "habitat": {
+      "en": "It uses arid open country and lives in underground burrow systems with multiple entrances.",
+      "fr": "Il fréquente les milieux arides et ouverts et vit dans des réseaux de terriers souterrains à plusieurs entrées."
+    },
+    "diet": {
+      "en": "Its diet is mainly insects, but it also takes other small animals, including scorpions and lizards.",
+      "fr": "Son régime est surtout composé d’insectes, mais il capture aussi d’autres petits animaux, notamment des scorpions et des lézards."
+    },
+    "behavior": {
+      "en": "Groups forage cooperatively, with sentinels giving alarm calls when predators approach.",
+      "fr": "Les groupes cherchent leur nourriture de façon coordonnée ; des sentinelles lancent des cris d’alarme à l’approche d’un prédateur."
+    },
+    "reproduction": {
+      "en": "Groups are usually centered on a dominant breeding pair, although other females may also breed.",
+      "fr": "Les groupes sont généralement organisés autour d’un couple reproducteur dominant, même si d’autres femelles peuvent aussi se reproduire."
+    },
+    "ecology": {
+      "en": "Its burrows provide refuge and its cooperative vigilance helps reduce the risk of predation while group members forage.",
+      "fr": "Ses terriers offrent un refuge et la vigilance collective réduit le risque de prédation pendant que les membres du groupe cherchent leur nourriture."
+    },
+    "conservation": {
+      "en": "It is listed as Least Concern in the global IUCN assessment; local populations may decline during droughts.",
+      "fr": "Il est classé en Préoccupation mineure à l’échelle mondiale par l’UICN ; des populations locales peuvent décliner pendant les sécheresses."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Meerkat — SANBI",
+        "fr": "Meerkat — SANBI"
+      },
+      "url": "https://www.sanbi.org/animal-of-the-week/meerkat/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "South African National Biodiversity Institute account covers southern African range, coat, burrows, group life, diet and breeding."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 17,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Suricate — Muséum national d’Histoire naturelle",
+        "fr": "Suricate — Muséum national d’Histoire naturelle"
+      },
+      "url": "https://www.mnhn.fr/fr/suricate",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French museum account describes upright sentinels, alarm calls, burrows and care of young."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 13,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meerkat — Animal Diversity Web",
+        "fr": "Meerkat — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Suricata_suricatta/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "University species account reports its IUCN Least Concern status and notes local extinctions in dry years."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 16,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Group size and breeding structure vary; the account avoids fixed group counts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a South African biodiversity institute account with the French National Museum and a university species account; no profile for a close mongoose relative is in the catalogue."
+}

@@ -1,0 +1,140 @@
+{
+  "id": "horse",
+  "scientific": "Equus caballus",
+  "group": "mammals",
+  "name": {
+    "en": "Domestic horse",
+    "fr": "Cheval domestique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The domestic horse is a single-toed grazing mammal shaped by human breeding. Ancient genomes trace most living domestic horses to a western Eurasian steppe lineage that spread about 4,200 years ago. Its expansion replaced many local horse populations across Eurasia. Earlier horse management did not produce most living domestic lineages. People keep horses worldwide for varied roles.",
+      "fr": "Le cheval domestique est un mammifère brouteur à un doigt, façonné par la sélection humaine. Les génomes anciens rattachent la plupart des chevaux actuels à une lignée des steppes d’Eurasie occidentale, diffusée il y a environ 4 200 ans. Son expansion a remplacé de nombreuses populations chevalines locales en Eurasie. Des pratiques d’élevage plus anciennes n’ont pas produit la plupart des lignées domestiques actuelles. Les humains élèvent des chevaux partout pour divers usages."
+    },
+    "identification": {
+      "en": "Horses have a long head, mobile ears, maned neck, deep body, and long limbs with one hoof each. Breed variation spans compact ponies to tall draft horses, with different coats and proportions. Adult males are stallions, females mares, young horses foals. Domestic horse size varies widely by breed: roughly 0.9–1.7 m at the shoulder and 227–900 kg across breed types; these are broad breed ranges, not a single species average.",
+      "fr": "Le cheval a une tête longue, des oreilles mobiles, un cou à crinière, un corps profond et de longs membres à sabot unique. Les races vont du poney compact au grand cheval de trait et varient par la robe et les proportions. Le mâle adulte est l’étalon, la femelle la jument, le jeune le poulain. La taille du cheval domestique varie fortement selon la race : environ 0,9–1,7 m au garrot et 227–900 kg selon les types ; ces fourchettes de races ne constituent pas une moyenne unique de l’espèce."
+    },
+    "habitat": {
+      "en": "People keep horses in pastures, paddocks, and stables across the inhabited continents. Their surroundings depend on local land use and husbandry; domestic horses have no single natural range.",
+      "fr": "Les humains élèvent les chevaux dans des pâturages, enclos et écuries sur les continents habités. Leur milieu dépend de l’usage local des terres et de l’élevage ; les chevaux domestiques n’ont pas d’aire naturelle unique."
+    },
+    "diet": {
+      "en": "Horses graze grasses and fibrous plants. Symbiotic microbes in the cecum ferment plant cellulose, enabling hindgut digestion without a ruminant’s multi-chambered stomach.",
+      "fr": "Les chevaux broutent graminées et plantes fibreuses. Des microbes symbiotiques du cæcum fermentent la cellulose végétale, permettant une digestion intestinale sans estomac compartimenté de ruminant."
+    },
+    "behavior": {
+      "en": "Horses are social: free-ranging mares and offspring form stable family bands, while young or unattached males may gather separately. Domestic herds also form preferred bonds. Horses communicate through senses, posture, and calls, and often graze or rest together.",
+      "fr": "Les chevaux sont sociaux : juments en liberté et descendants forment des groupes familiaux stables ; les jeunes mâles peuvent se regrouper séparément. Les troupeaux domestiques nouent aussi des liens privilégiés. Les chevaux communiquent par les sens, les postures et les appels, et broutent ou se reposent souvent ensemble."
+    },
+    "reproduction": {
+      "en": "Mares generally cycle in long-day seasons. Pregnancy averages about 340 days, or eleven months, with variation. Usually one foal is born; it soon stands, follows its mother, and nurses as she protects it.",
+      "fr": "Les juments ont généralement leurs cycles aux jours longs. La gestation dure environ 340 jours, soit onze mois, en moyenne variable. Un seul poulain naît habituellement ; il se lève et suit vite sa mère, qui l’allaite et le protège."
+    },
+    "ecology": {
+      "en": "Grazing removes plants and can change habitat. At springs in Nevada’s Great Basin, plots accessible to feral horses had less plant cover and species richness than horse exclosures. In high-elevation meadows, protected vegetation was taller than vegetation grazed by horses and cattle. These local results depend on habitat and grazing pressure.",
+      "fr": "Le pâturage prélève des végétaux et peut modifier leur milieu. Aux sources du Grand Bassin, au Nevada, les parcelles accessibles aux chevaux féraux avaient moins de couvert végétal et de richesse en espèces que les exclos. Dans les prairies d’altitude, la végétation protégée était plus haute que celle pâturée par les chevaux et les bovins. Ces résultats locaux dépendent du milieu et de la pression de pâturage."
+    },
+    "conservation": {
+      "en": "Domestic horses are maintained through breeding, not as a wild population. Breeds vary in size, build, coat, and inherited traits selected for different uses and conditions. Preserving distinct breeds maintains domestic diversity; a wild equid’s conservation status does not describe domestic horses.",
+      "fr": "Les chevaux domestiques sont maintenus par l’élevage, non comme population sauvage. Les races varient par taille, conformation, robe et caractères sélectionnés pour divers usages et milieux. Préserver les races maintient leur diversité ; le statut d’un équidé sauvage ne décrit pas le cheval domestique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Widespread horse-based mobility arose around 2,200 BCE in Eurasia",
+        "fr": "La mobilité équestre s’est largement diffusée en Eurasie vers 2 200 av. J.-C."
+      },
+      "url": "https://www.nature.com/articles/s41586-024-07597-5",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Ancient horse genomes trace the modern domestic lineage to western Eurasia and document its rapid expansion about 4,200 years ago.",
+        "Horse populations and traits changed under human breeding; ancient lineages and the modern domestic lineage are distinguishable."
+      ]
+    },
+    {
+      "title": {
+        "en": "Horses",
+        "fr": "Chevaux"
+      },
+      "url": "https://www.fao.org/livestock-systems/global-distributions/horses/en/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FAO global livestock maps show domestic horses across world regions; its species summary identifies hindgut fermentation by symbiotic cecal bacteria and lists varied human uses."
+      ]
+    },
+    {
+      "title": {
+        "en": "Social organisation in herds of horses",
+        "fr": "Organisation sociale des troupeaux de chevaux"
+      },
+      "url": "https://equipedia.ifce.fr/en/equipedia-the-universe-of-the-horse-ifce/health-and-animal-well-being/animal-behaviour-and-well-being/horse-behaviour/social-organisation-in-herds-of-horses",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The French Horse and Riding Institute describes stable family groups centered on mares and offspring, with separate groupings of young males."
+      ]
+    },
+    {
+      "title": {
+        "en": "Management of Reproduction in Horses",
+        "fr": "Gestion de la reproduction chez le cheval"
+      },
+      "url": "https://www.merckvetmanual.com/horse-owners/reproductive-disorders-of-horses/management-of-reproduction-in-horses",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Mares generally cycle during long-day seasons; average horse pregnancy lasts about 340 days."
+      ]
+    },
+    {
+      "title": {
+        "en": "Examining ecological consequences of feral horse grazing using exclosures",
+        "fr": "Étude des conséquences écologiques du pâturage des chevaux en liberté au moyen d’exclos"
+      },
+      "url": "https://pubs.usgs.gov/publication/70170444",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A Great Basin exclosure study compared feral-horse access at springs and horse-and-cattle grazing in high-elevation meadows; vegetation differences are local experimental results."
+      ]
+    },
+    {
+      "title": {
+        "en": "Equus caballus, horse — BioKIDS, University of Michigan",
+        "fr": "Equus caballus, cheval — BioKIDS, université du Michigan"
+      },
+      "url": "https://www.biokids.umich.edu/critters/Equus_caballus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Breed-dependent size ranges broadly from about 0.9–1.7 m at the shoulder and 227–900 kg; these are species-level breed ranges, not a single adult standard."
+      ]
+    }
+  ],
+  "illustration_notes": "Depict one adult domestic horse of a plausible natural breed type, with accurate equine proportions, one visible hoof per limb, natural mane and tail, and a realistic coat. Pure uniform white background; no tack, scenery, text, or props.",
+  "uncertainties": [
+    "The domestication process involved multiple early horse-human interactions; the genetic expansion of the lineage ancestral to most living domestic horses is distinct from the earliest evidence of horse management."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review; cattle conservation supplemented with FAO breed-conservation evidence; horse ecological observations explicitly scoped to feral herds and mixed grazing."
+}

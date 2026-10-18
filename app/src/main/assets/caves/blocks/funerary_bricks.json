@@ -1,0 +1,17 @@
+{
+  "id": 2662,
+  "name": "funerary_bricks",
+  "texture_top": "cave_ruins:funerary_bricks",
+  "texture_side": "cave_ruins:funerary_bricks",
+  "texture_bottom": "cave_ruins:funerary_bricks",
+  "color": "#78867E",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "funerary_bricks",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

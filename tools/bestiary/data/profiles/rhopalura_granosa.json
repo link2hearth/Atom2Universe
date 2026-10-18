@@ -1,0 +1,143 @@
+{
+  "id": "rhopalura_granosa",
+  "scientific": "Rhopalura granosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Granular orthonectid",
+    "fr": "Orthonectide granuleux"
+  },
+  "sections": {
+    "overview": {
+      "en": "Rhopalura granosa is a little-known orthonectid, a microscopic marine parasite.",
+      "fr": "Rhopalura granosa est un orthonectide peu connu, un parasite marin microscopique."
+    },
+    "identification": {
+      "en": "Orthonectids have a highly simplified body plan; the genus is distinguished from related genera by microscopic anatomical characters.",
+      "fr": "Les orthonectides ont un corps très simplifié; le genre se distingue des genres proches par des caractères anatomiques microscopiques."
+    },
+    "habitat": {
+      "en": "Published records place this species in a marine bivalve host in the eastern North Atlantic.",
+      "fr": "Les publications signalent cette espèce chez un bivalve marin de l’Atlantique nord-est."
+    },
+    "diet": {
+      "en": "It is parasitic in the bivalve Heteranomia squamula, identified as its host in the original description.",
+      "fr": "Il parasite le bivalve Heteranomia squamula, identifié comme hôte dans sa description originale."
+    },
+    "behavior": {
+      "en": "The original species paper includes observations of swimming, but the available account is brief.",
+      "fr": "L’article original décrit aussi la nage, mais les observations disponibles sont succinctes."
+    },
+    "reproduction": {
+      "en": "The references consulted do not provide a concise species-specific account of reproduction.",
+      "fr": "Les références consultées ne donnent pas de synthèse concise de la reproduction propre à l’espèce."
+    },
+    "ecology": {
+      "en": "Unlike R. ophiocomae, which is reported from brittle stars, R. granosa is known from a bivalve host.",
+      "fr": "À la différence de R. ophiocomae, signalé chez des ophiures, R. granosa est connu chez un bivalve hôte."
+    },
+    "conservation": {
+      "en": "No conservation assessment for this microscopic parasite was found in the sources consulted.",
+      "fr": "Les sources consultées ne signalent pas d’évaluation de conservation pour ce parasite microscopique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rhopalura granosa sp. nov. — Journal of the Marine Biological Association of the United Kingdom",
+        "fr": "Rhopalura granosa sp. nov. — Journal of the Marine Biological Association of the United Kingdom"
+      },
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/rhopalura-granosa-sp-nov-an-orthonectid-parasite-of-a-lamellibranch-heteranomia-squamula-l-with-a-note-on-its-swimming-behaviour/49F72F4D67763B362427CEA8F7BB638F",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original account: bivalve host and swimming observations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 7,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The genera of the phylum Orthonectida — Cahiers de Biologie Marine",
+        "fr": "The genera of the phylum Orthonectida — Cahiers de Biologie Marine"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French and English review: genus-level characters and species placement."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 9,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhopalura ophiocomae — structure and host biology",
+        "fr": "Rhopalura ophiocomae — structure and host biology"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6395.1994.tb01206.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study reports the brittle-star host Amphipholis squamata."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 7,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level anatomy and life history are poorly documented in accessible sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The comparison with R. ophiocomae concerns documented host groups, not overall biology."
+}

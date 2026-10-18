@@ -1,0 +1,143 @@
+{
+  "id": "rocio_octofasciata",
+  "scientific": "Rocio octofasciata",
+  "group": "fish",
+  "name": {
+    "en": "Jack Dempsey",
+    "fr": "Cichlidé Jack Dempsey"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Jack Dempsey is a freshwater cichlid native to the Atlantic slope of Central America.",
+      "fr": "Le Jack Dempsey est un cichlidé d’eau douce indigène du versant atlantique de l’Amérique centrale."
+    },
+    "identification": {
+      "en": "It is a robust, spotted fish that can reach about 25 centimetres in total length.",
+      "fr": "C’est un poisson robuste et tacheté, qui peut atteindre environ 25 centimètres de longueur totale."
+    },
+    "habitat": {
+      "en": "It occurs in warm, slow waters, including marshes, canals and lower river valleys.",
+      "fr": "Il fréquente des eaux chaudes et lentes, notamment les marais, canaux et basses vallées fluviales."
+    },
+    "diet": {
+      "en": "It eats animal prey such as worms, crustaceans, insects and fish.",
+      "fr": "Il mange des proies animales comme des vers, crustacés, insectes et poissons."
+    },
+    "behavior": {
+      "en": "Outside its native range, it has been recorded as an introduced fish in several places.",
+      "fr": "Hors de son aire indigène, il a été signalé comme poisson introduit dans plusieurs régions."
+    },
+    "reproduction": {
+      "en": "It lays eggs on a substrate, and both parents guard the eggs and young.",
+      "fr": "Il pond sur un substrat, et les deux parents gardent les œufs et les jeunes."
+    },
+    "ecology": {
+      "en": "It is a benthopelagic, non-migratory fish of lowland freshwater habitats.",
+      "fr": "C’est un poisson benthopélagique et non migrateur des habitats d’eau douce de plaine."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern, assessed in 2018.",
+      "fr": "FishBase rapporte une catégorie mondiale UICN de Préoccupation mineure, évaluée en 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rocio octofasciata — FishBase species summary",
+        "fr": "Rocio octofasciata — fiche d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/Rocio-octofasciata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records range, size, habitat, diet, spawning, parental care, ecology and global assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 13,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jack Dempsey — USGS Nonindigenous Aquatic Species database",
+        "fr": "Jack Dempsey — base des espèces aquatiques non indigènes de l’USGS"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=448",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "USGS documents records of the species outside its native range."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 10,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ornamental fish moved in Argentina — Ministry of Agriculture (Spanish)",
+        "fr": "Poissons ornementaux déplacés en Argentine — ministère de l’Agriculture (espagnol)"
+      },
+      "url": "https://www.magyp.gob.ar/sitio/areas/acuicultura/especies/_archivos/000000_Peces%20de%20cultivo%20y%20captura%20que%20se%20trasladan%20en%20Argentina%20con%20finalidad%20ornamental.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "The Spanish-language government document lists Rocio octofasciata among ornamental fishes moved in Argentina."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "FishBase gives a global assessment from 2018; this is not a local assessment of introduced populations.",
+    "Introduced records do not imply that the species is established everywhere it has been reported."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. FishBase’s global conservation assessment is kept separate from introduced-range records in USGS and a Spanish-language government document."
+}

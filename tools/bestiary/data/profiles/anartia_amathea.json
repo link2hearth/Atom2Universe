@@ -1,0 +1,179 @@
+{
+  "id": "anartia_amathea",
+  "scientific": "Anartia amathea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Scarlet peacock",
+    "fr": "Princesse rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "Anartia amathea is a Neotropical brush-footed butterfly ranging from Central America through much of South America and several Caribbean islands. It is often seen in open and disturbed places as well as forest edges.",
+      "fr": "Anartia amathea est un papillon néotropical de la famille des Nymphalidés, présent de l’Amérique centrale à une grande partie de l’Amérique du Sud et dans plusieurs îles des Caraïbes. On le rencontre dans les espaces ouverts et perturbés, ainsi qu’aux lisières."
+    },
+    "identification": {
+      "en": "The upper wings are dark brown to black with red-orange patches and a band of white spots; the underside repeats the pattern more softly. Males are usually vivid red, while females tend toward orange and are somewhat larger. The Trinidad guide gives an approximate 4 cm wingspan, not a separate male/female range.",
+      "fr": "Le dessus des ailes est brun sombre à noir, marqué de plages rouge-orangé et d’une bande de points blancs; le revers reprend le motif en plus pâle. Le mâle est généralement rouge vif, la femelle plus orangée et un peu plus grande. Le guide de Trinidad indique environ 4 cm d’envergure, sans fourchette distincte selon le sexe."
+    },
+    "habitat": {
+      "en": "Adults use sunny clearings, fields, pastures, gardens and river margins, including disturbed land and secondary growth. Records extend from low elevations to about 1,600 m in parts of its range.",
+      "fr": "Les adultes fréquentent les clairières ensoleillées, champs, pâturages, jardins et berges, y compris les terrains perturbés et les repousses secondaires. Dans certaines parties de son aire, les observations montent du niveau de la mer jusqu’à environ 1 600 m."
+    },
+    "diet": {
+      "en": "Adults drink nectar from flowering plants. Caterpillars feed on host foliage; documented hosts include Acanthaceae, but the full host-plant list remains incomplete.",
+      "fr": "Les adultes boivent le nectar des fleurs. Les chenilles consomment des feuilles-hôtes; des plantes de la famille des Acanthacées sont documentées, mais la liste complète reste lacunaire."
+    },
+    "behavior": {
+      "en": "It is active by day; adults may shelter, feed and mate in the same local areas, but the Trinidad guide reports no structured groups.",
+      "fr": "Elle est active le jour; les adultes peuvent s’abriter, se nourrir et s’accoupler dans le même secteur, sans former de groupes structurés selon le guide de Trinidad."
+    },
+    "reproduction": {
+      "en": "Females lay greenish eggs on host plants; one Trinidad account reports several hundred and a potential total near 800.",
+      "fr": "Les femelles pondent des œufs verdâtres sur les plantes-hôtes; une fiche de Trinidad rapporte plusieurs centaines, jusqu’à environ 800."
+    },
+    "ecology": {
+      "en": "Its caterpillars depend on suitable host plants, while nectar-feeding adults use flowering vegetation in open landscapes. Red and orange wing patches differ between sexes and make the butterfly conspicuous in flight.",
+      "fr": "Les chenilles dépendent de plantes-hôtes adaptées, tandis que les adultes nectarivores exploitent les fleurs des paysages ouverts. Les plages rouges et orangées varient entre les sexes et rendent le papillon visible lorsqu’il vole."
+    },
+    "conservation": {
+      "en": "The species is reported as common in disturbed settings across a broad Neotropical range, but the consulted accounts provide no quantitative population trend.",
+      "fr": "Elle est signalée comme commune dans les milieux perturbés d’une vaste aire néotropicale, mais les fiches consultées ne donnent pas de tendance quantitative des effectifs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Anartia amathea — Online Guide to the Animals of Trinidad and Tobago, University of the West Indies",
+        "fr": "Anartia amathea — guide en ligne des animaux de Trinité-et-Tobago, University of the West Indies"
+      },
+      "url": "https://sta.uwi.edu/fst/lifesciences/sites/default/files/lifesciences/images/Anartia%20amathea%20-%20Scarlet%20Peacock%20Butterfly.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UWI guide: pattern, sexes, 4 cm span, eggs."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 8,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anartia amathea — Wild Nature Images species account",
+        "fr": "Anartia amathea — fiche naturaliste Wild Nature Images"
+      },
+      "url": "https://www.wildnatureimages.org/Insects/Lepidoptera/Butterflies/Nymphalidae/Nymphalinae/Anartia-amathea.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Range, open habitats, nectar and likely caterpillar hosts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 8,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anartia amathea — Spanish species overview",
+        "fr": "Anartia amathea — resumen de especie en español"
+      },
+      "url": "https://es.wikipedia.org/wiki/Anartia_amathea",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish account summarizes range, nectar feeding and host-family records."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 9,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Quantifying wing pattern sexual dimorphism in Anartia amathea roeselia — Lepidoptera, 2018",
+        "fr": "Quantification du dimorphisme sexuel des motifs alaires chez Anartia amathea roeselia — Lepidoptera, 2018"
+      },
+      "url": "https://www.researchgate.net/publication/327831056_Quantifying_wing_pattern_sexual_dimorphism_in_the_butterfly_Anartia_amathea_roeselia_Eschscholtz_Lepidoptera_Nymphalidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "A roeselia study found larger females and measurable size differences in its sampled subspecies."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 14,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show dorsal wing pattern clearly: dark ground, red-orange patches, white spots, and female paler/oranger than the male. Avoid the white peacock Anartia jatrophae pattern.",
+  "uncertainties": [
+    "The 4 cm wingspan is an approximate value from a regional guide; a robust species-wide range by sex was not located.",
+    "Host-plant records are incomplete and vary by locality."
+  ],
+  "reviewed": true,
+  "review_note": "Profile uses a university natural-history guide for traits and measurements, a regional account for range and habitat, and Spanish-language and subspecies research for cross-checking."
+}

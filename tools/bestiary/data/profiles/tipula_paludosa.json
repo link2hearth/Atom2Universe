@@ -1,0 +1,190 @@
+{
+  "id": "tipula_paludosa",
+  "scientific": "Tipula paludosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "European crane fly",
+    "fr": "Tipule des prairies"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tipula paludosa is a crane fly whose larvae, known as leatherjackets, live in soil and can damage grass and crops.",
+      "fr": "Tipula paludosa est une tipule dont les larves, appelées vers gris, vivent dans le sol et peuvent endommager pelouses et cultures."
+    },
+    "identification": {
+      "en": "The adult is a long-legged fly; the legless, grey-brown larva is the stage most often noticed for its feeding damage.",
+      "fr": "L’adulte est une mouche aux longues pattes ; la larve apode, gris-brun, est surtout remarquée pour les dégâts qu’elle cause en se nourrissant."
+    },
+    "habitat": {
+      "en": "It is associated with moist soils, including grassland and turf; its range includes northern Europe and introduced areas.",
+      "fr": "Elle est associée aux sols humides, notamment des prairies et pelouses ; son aire comprend le nord de l’Europe et des régions où elle a été introduite."
+    },
+    "diet": {
+      "en": "The larvae are polyphagous and feed on plant material, including roots and the bases of grasses.",
+      "fr": "Les larves sont polyphages et consomment des végétaux, notamment des racines et la base des graminées."
+    },
+    "behavior": {
+      "en": "It usually has one generation per year; adults fly mainly in late summer and autumn, while larvae feed during the cooler months.",
+      "fr": "Elle a généralement une génération par an ; les adultes volent surtout de la fin de l’été à l’automne, tandis que les larves se nourrissent pendant les mois frais."
+    },
+    "reproduction": {
+      "en": "The sources consulted describe an annual life cycle but provide limited species-specific detail on mating and egg laying.",
+      "fr": "Les sources consultées décrivent un cycle annuel, mais donnent peu de détails propres à l’espèce sur l’accouplement et la ponte."
+    },
+    "ecology": {
+      "en": "Unlike the related Tipula oleracea, which can have two generations in a year, T. paludosa is generally univoltine; their seasonal activity can help distinguish them.",
+      "fr": "Contrairement à l’espèce proche Tipula oleracea, qui peut avoir deux générations par an, T. paludosa est généralement univoltine ; leur activité saisonnière aide à les distinguer."
+    },
+    "conservation": {
+      "en": "The consulted agricultural and natural-history sources discuss its range and occasional pest damage but give no global conservation assessment.",
+      "fr": "Les sources agricoles et naturalistes consultées décrivent sa répartition et ses dégâts parfois importants, mais ne donnent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "INRAE ePhytia — Tipula spp.",
+        "fr": "INRAE ePhytia — Tipula spp."
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/11692/Hypp-encyclopedie-en-protection-des-plantes-Tipula-spp",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The French plant-protection account describes the annual seasonal cycle of T. paludosa and its occasional damage to turf and crops."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 20,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cornell Cooperative Extension — European crane flies",
+        "fr": "Cornell Cooperative Extension — Tipules européennes"
+      },
+      "url": "https://cals.cornell.edu/integrated-pest-management/outreach-education/fact-sheets/european-crane-flies-tipula-paludosa-and-tipula-oleracea-ornamental-ipm-fact-sheet",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The extension fact sheet compares T. paludosa and T. oleracea and describes adult and larval forms and turf-feeding damage."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 19,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oxford Academic — Taxonomy and biology of Tipula paludosa and T. oleracea",
+        "fr": "Oxford Academic — Taxonomie et biologie de Tipula paludosa et T. oleracea"
+      },
+      "url": "https://academic.oup.com/aesa/article/99/1/33/47468?searchresult=1",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The paper compares the two European species and their life cycles and seasonal activity."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 14,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Agroscope — Crane fly information sheet",
+        "fr": "Agroscope — Fiche d’information sur les tipules"
+      },
+      "url": "https://www.agroscope.admin.ch/agroscope/fr/home/a-propos/collaborateurs/_jcr_content/par/externalcontent.bitexternalcontent.exturl.pdf/aHR0cHM6Ly9pcmEuYWdyb3Njb3BlLmNoL2ZyLUNIL1BhZ2UvRW/luemVscHVibGlrYXRpb24vRG93bmxvYWQ_ZWluemVscHVibGlr/YXRpb25JZD0zNzc1Mw%3D%3D.pdf",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The French fact sheet links crane fly abundance to pasture disturbance."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 11,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natural History Museum — Crane fly facts",
+        "fr": "Natural History Museum — Faits sur les tipules"
+      },
+      "url": "https://www.nhm.ac.uk/discover/crane-fly-daddy-long-legs-facts.html",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The museum account describes crane-fly adults and larvae and notes that adults likely do not feed."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Life-cycle dates vary with climate; seasonal timing is generalized, and no global threat assessment was found."
+  ],
+  "review_note": "Used French plant-protection guidance and English extension and museum sources; described larval feeding without implying that every population is a pest.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

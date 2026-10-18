@@ -1,0 +1,168 @@
+{
+  "id": "lethrinus_ravus",
+  "scientific": "Lethrinus ravus",
+  "group": "fish",
+  "name": {
+    "en": "Drab emperor",
+    "fr": "Empereur terne"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus ravus Carpenter & Randall, 2003 is a marine emperor fish in the family Lethrinidae.",
+      "fr": "Lethrinus ravus Carpenter et Randall, 2003 est un poisson marin de la famille des Lethrinidae."
+    },
+    "identification": {
+      "en": "A relatively small emperor, it reaches about 25 centimetres standard length and has a pale grey or tan body with scattered dark blotches.",
+      "fr": "Empereur de taille relativement modeste, il atteint environ 25 centimètres de longueur standard et présente un corps gris pâle ou beige parsemé de taches sombres."
+    },
+    "habitat": {
+      "en": "It occurs from the western Pacific to the eastern Indian Ocean, on or near reefs at roughly 5–35 metres depth.",
+      "fr": "Il vit du Pacifique occidental à l’est de l’océan Indien, sur les récifs ou à proximité, vers 5–35 mètres de profondeur."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not provide a well-supported, detailed diet description.",
+      "fr": "Les fiches consultées ne fournissent pas de description détaillée et bien étayée de son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It is observed alone or in small groups near reefs.",
+      "fr": "On l’observe seul ou en petits groupes près des récifs."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide little species-specific information on reproduction.",
+      "fr": "Les sources consultées donnent peu d’informations propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The original description identifies L. semicinctus as its closest look-alike and probable sister species; the companion profiles of L. obsoletus and L. reticulatus add two other Lethrinus for comparison.",
+      "fr": "La description originale présente L. semicinctus comme son sosie le plus proche et probablement son espèce sœur ; les fiches associées de L. obsoletus et L. reticulatus offrent deux autres Lethrinus à comparer."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 2015 classified it as Least Concern.",
+      "fr": "L’évaluation mondiale de l’UICN datée de 2015 le classe en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus ravus — FishBase field guide",
+        "fr": "Lethrinus ravus — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=036&genusname=Lethrinus&speciesname=ravus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the range, reef setting, size, solitary or small-group occurrence and 2015 IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 15,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus ravus, a new species of emperor fish — Zootaxa",
+        "fr": "Lethrinus ravus, nouvelle espèce d’empereur — Zootaxa"
+      },
+      "url": "https://www.mapress.com/zootaxa/2003f/z00240f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The original description details the diagnostic scale pattern and close resemblance to Lethrinus semicinctus."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 14,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Drab emperor — Codes for Australian Aquatic Biota",
+        "fr": "Empereur terne — Codes for Australian Aquatic Biota"
+      },
+      "url": "https://www.cmar.csiro.au/caab/taxon_report.cfm?caab_code=37351031",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "CSIRO's CAAB accepts Lethrinus ravus, gives Drab emperor as its Australian standard name, describes its habitat as coastal and provides an expected depth range of 0–35 m."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 27,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Checklist of the fishes of New Caledonia — IRD",
+        "fr": "Liste des poissons de Nouvelle-Calédonie — IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-04/010061070.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The New Caledonia checklist records Lethrinus ravus as a marine species and documents it in New Caledonia; it traces its original description to Carpenter and Randall (2003)."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 27,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed diet and reproduction information was not found in the consulted sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the taxonomic description against FishBase, CSIRO CAAB and the IRD New Caledonia checklist. Lethrinus semicinctus is cited only for the direct morphological comparison in the original description."
+}

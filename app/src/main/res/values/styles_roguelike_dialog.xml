@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Native AlertDialog reads android:buttonBar*; Material uses unprefixed attributes. -->
+    <style name="Theme_Dungeon_Dialog" parent="ThemeOverlay.A2U.Audio.AlertDialog">
+        <item name="android:colorAccent">?attr/a2uMusicAccent</item>
+        <item name="colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:textColorPrimary">?attr/a2uTextColor</item>
+        <item name="android:textColorSecondary">?attr/a2uSecondaryTextColor</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+    </style>
+
+    <style name="Widget_Dungeon_DialogButton" parent="android:style/Widget.Material.Button.Borderless">
+        <item name="android:textColor">?attr/a2uMusicAccent</item>
+    </style>
+
+    <style name="Widget_Dungeon_MaterialDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/a2uMusicAccent</item>
+    </style>
+</resources>

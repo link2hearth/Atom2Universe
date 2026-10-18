@@ -1,0 +1,108 @@
+{
+  "id": "hemiechinus_auritus",
+  "scientific": "Hemiechinus auritus",
+  "group": "mammals",
+  "name": {
+    "en": "Long-eared Hedgehog",
+    "fr": "Hérisson à grandes oreilles"
+  },
+  "sections": {
+    "overview": {
+      "en": "The long-eared hedgehog is a small, fast, nocturnal hedgehog of the dry steppes and deserts of western and central Asia and the eastern Mediterranean region. Its large ears and banded spines mark it out from the common hedgehogs of Europe.",
+      "fr": "Le hérisson à grandes oreilles est un petit hérisson rapide et nocturne des steppes sèches et des déserts d’Asie occidentale et centrale et de la région méditerranéenne orientale. Ses grandes oreilles et ses piquants bandés le distinguent des hérissons communs d’Europe."
+    },
+    "identification": {
+      "en": "Head and body measure about 120–270 mm and the tail 10–50 mm. It weighs roughly 250–400 g, less than the European hedgehog. The spines are banded dark brown and white, the underparts whitish and the ears long, more than half the length of the head. The ears are thought to help shed heat in the desert.",
+      "fr": "La tête et le corps mesurent environ 120 à 270 mm et la queue 10 à 50 mm. Il pèse à peu près 250 à 400 g, moins que le hérisson d’Europe. Les piquants sont bandés de brun foncé et de blanc, le ventre blanchâtre et les oreilles longues, de plus de la moitié de la longueur de la tête. Ces oreilles aideraient à évacuer la chaleur dans le désert."
+    },
+    "habitat": {
+      "en": "It lives in arid steppes, semi-deserts and deserts, from the steppe zone of eastern Ukraine to Mongolia in the north and from Libya to western Pakistan in the south. It favours dry river valleys, gullies, shrubby areas and oases, and often lives near villages and farmland. It tends to avoid very hot deserts and cold northern mountains.",
+      "fr": "Il vit dans les steppes arides, les semi-déserts et les déserts, de la zone de steppe de l’Ukraine orientale à la Mongolie au nord, et de la Libye au Pakistan occidental au sud. Il préfère les vallées sèches, les ravins, les zones buissonneuses et les oasis, et vit souvent près des villages et des cultures. Il évite plutôt les déserts très chauds et les montagnes froides du nord."
+    },
+    "diet": {
+      "en": "It is omnivorous but eats mainly small invertebrates, such as grasshoppers and beetles. It also takes eggs, fruit and plants, and sometimes small vertebrates such as lizards and snakes. In the laboratory it survived up to ten weeks without food or water.",
+      "fr": "Il est omnivore mais mange surtout de petits invertébrés, comme des criquets et des coléoptères. Il prend aussi des œufs, des fruits et des végétaux, et parfois de petits vertébrés comme des lézards et des serpents. En laboratoire, il a survécu jusqu’à dix semaines sans nourriture ni eau."
+    },
+    "behavior": {
+      "en": "It is nocturnal and solitary, and may range up to 9 km in a night in search of food. By day it rests under rocks or in hollows, or in a burrow of about 45 cm with a single entrance, often dug under a bush. It can run fast and rarely curls into a ball. It enters torpor in summer, and some populations hibernate in winter.",
+      "fr": "Il est nocturne et solitaire, et peut parcourir jusqu’à 9 km en une nuit à la recherche de nourriture. Le jour, il se repose sous des pierres ou dans des creux, ou dans un terrier d’environ 45 cm à une seule entrée, souvent creusé sous un buisson. Il court vite et se met rarement en boule. Il entre en torpeur en été, et certaines populations hibernent en hiver."
+    },
+    "reproduction": {
+      "en": "It breeds once a year, generally from July to September. Gestation lasts 35–42 days. Litters are small, with sources giving one to four young, and the young are fully covered in spines after about two weeks. The eyes open after about a week and the young eat solid food after about three weeks.",
+      "fr": "Il se reproduit une fois par an, en général de juillet à septembre. La gestation dure 35 à 42 jours. Les portées sont petites, les sources indiquant de un à quatre petits, qui sont entièrement couverts de piquants au bout d’environ deux semaines. Les yeux s’ouvrent après environ une semaine et les jeunes mangent de la nourriture solide vers trois semaines."
+    },
+    "ecology": {
+      "en": "By eating insects including termites and scorpions, it takes many pests, and since it lives mostly in open wasteland it is not known to damage crops. Predators include owls: the Eurasian eagle-owl has been found to take hedgehogs, which formed about 14% of its prey in one study.",
+      "fr": "En mangeant des insectes, dont des termites et des scorpions, il élimine de nombreux nuisibles, et comme il vit surtout dans des terrains vagues ouverts, il n’est pas connu pour abîmer les cultures. Ses prédateurs comprennent des rapaces nocturnes : le grand-duc d’Europe prend des hérissons, qui formaient environ 14 % de ses proies dans une étude."
+    },
+    "conservation": {
+      "en": "It is classified as Least Concern on the IUCN Red List and appears plentiful across its wide range. Little is known about its actual abundance in many places, and its status is not known to be threatened.",
+      "fr": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN et semble abondant sur sa vaste aire. On sait peu de chose sur son abondance réelle en bien des endroits, et rien n’indique qu’il soit menacé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hemiechinus auritus — Animal Diversity Web, University of Michigan",
+        "fr": "Hemiechinus auritus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Hemiechinus_auritus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Head and body 120–270 mm, tail 10–50 mm; banded spines; nocturnal and solitary, burrow about 45 cm, wanders up to 9 km a night; torpor in summer, some hibernate in winter.",
+        "Breeds once a year July–September, gestation 35–42 days, 1–4 young; eats pests such as termites and scorpions; Least Concern.",
+        "Head-and-body length is about 120–270 mm, tail 10–50 mm, mass roughly 250–400 g; ears are more than half the head length."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hemiechinus auritus — Mammal Diversity Database",
+        "fr": "Hemiechinus auritus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003812",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Range: steppe zone from eastern Ukraine to Mongolia in the north and from Libya to western Pakistan in the south; Palearctic.",
+        "IUCN Red List status: Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Long-eared hedgehog — Wikipedia (supporting source)",
+        "fr": "Hérisson à grandes oreilles — Wikipédia (source complémentaire)"
+      },
+      "url": "https://en.wikipedia.org/wiki/Long-eared_hedgehog",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Weight 250–400 g; prefers intermediate climates with about 100–400 mm rainfall; rarely curls into a ball; Eurasian eagle-owl takes about 14% of its prey as hedgehogs; Least Concern, assessment cited as 2021.",
+        "Gives 2–3 young per litter, which differs from Animal Diversity Web’s 1–4."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Litter size differs between sources (Animal Diversity Web 1–4 although its own average is stated as 4; Wikipedia 2–3), so the text gives one to four without an average.",
+    "Animal Diversity Web’s status line is older; the Least Concern category is confirmed by the Mammal Diversity Database, which cites the IUCN assessment, but the IUCN page itself could not be opened.",
+    "Behavioural data (torpor, hibernation, diet) come from general accounts and may combine different subspecies or related species; precise figures for wild populations are lacking."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from Animal Diversity Web, the Mammal Diversity Database and a supporting Wikipedia page; illustration to be checked by the owner."
+}

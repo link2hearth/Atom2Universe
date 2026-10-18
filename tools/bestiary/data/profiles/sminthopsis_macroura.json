@@ -1,0 +1,141 @@
+{
+  "id": "sminthopsis_macroura",
+  "scientific": "Sminthopsis macroura",
+  "group": "mammals",
+  "name": {
+    "en": "Stripe-faced Dunnart",
+    "fr": "Sminthopsis macroura"
+  },
+  "sections": {
+    "overview": {
+      "en": "Sminthopsis macroura is an Australian dasyurid marsupial.",
+      "fr": "Sminthopsis macroura est un marsupial dasyuridé d’Australie."
+    },
+    "identification": {
+      "en": "A dark stripe runs down its face, giving it its common name.",
+      "fr": "Une bande sombre parcourt son visage et lui donne son nom commun anglais."
+    },
+    "habitat": {
+      "en": "It occurs in dry habitats, including desert, dune, grassland and savanna.",
+      "fr": "Il vit dans des milieux secs, notamment les déserts, les dunes, les prairies et les savanes."
+    },
+    "diet": {
+      "en": "It eats insects and may also take small vertebrates such as lizards and mice.",
+      "fr": "Il mange des insectes et peut aussi capturer de petits vertébrés, comme des lézards et des souris."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal and terrestrial, sheltering in burrows or nests made from grasses and leaves.",
+      "fr": "Il est surtout nocturne et terrestre, et s’abrite dans des terriers ou des nids faits d’herbes et de feuilles."
+    },
+    "reproduction": {
+      "en": "Breeding details reported by the source come from captive colonies, so they should not be treated as a field calendar.",
+      "fr": "Les données reproductives rapportées par la source proviennent de colonies captives et ne doivent donc pas être prises pour un calendrier observé dans la nature."
+    },
+    "ecology": {
+      "en": "Its tail fat provides an energy reserve when food becomes scarce.",
+      "fr": "Les graisses de sa queue constituent une réserve d’énergie lorsque la nourriture se raréfie."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists the species as Least Concern globally.",
+      "fr": "La Mammal Diversity Database classe l’espèce en préoccupation mineure à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sminthopsis macroura — Animal Diversity Web, University of Michigan",
+        "fr": "Sminthopsis macroura — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Sminthopsis_macroura/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The account summarizes dry habitats, diet, nocturnal behavior and captive reproductive observations."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 12,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sminthopsis macroura — Western Australian Museum Collections",
+        "fr": "Sminthopsis macroura — Western Australian Museum Collections"
+      },
+      "url": "https://museum.wa.gov.au/online-collections/names/sminthopsis-macroura",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The museum account identifies the dark facial stripe as the species’ namesake feature."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 13,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sminthopsis macroura — Mammal Diversity Database",
+        "fr": "Sminthopsis macroura — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000212/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "MDD lists Australian distribution and Least Concern global IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 10,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The ADW reproductive account is explicitly based on captive animals and is not generalized to wild populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; reproductive information is qualified as captive-colony evidence."
+}

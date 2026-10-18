@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_change_artist_icon"
+        android:title="@string/music_change_artist_icon" />
+
+    <item
+        android:id="@+id/action_change_artist_color"
+        android:title="@string/music_change_artist_color" />
+
+    <item
+        android:id="@+id/action_toggle_artist_favorite"
+        android:title="@string/music_add_artist_to_favorites" />
+
+    <item
+        android:id="@+id/action_play_artist"
+        android:title="@string/music_play_all_artist" />
+
+    <item
+        android:id="@+id/action_shuffle_artist"
+        android:title="@string/music_shuffle_all_artist" />
+
+</menu>

@@ -1,0 +1,166 @@
+{
+  "id": "prosopocoilus_astacoides",
+  "scientific": "Prosopocoilus astacoides",
+  "group": "invertebrates",
+  "name": {
+    "en": "Astacoides stag beetle",
+    "fr": "Lucane astacoïde"
+  },
+  "sections": {
+    "overview": {
+      "en": "Prosopocoilus astacoides is an Asian stag beetle with several named subspecies; its classification has been debated.",
+      "fr": "Prosopocoilus astacoides est un lucane asiatique décrit en plusieurs sous-espèces, dont le statut a fait débat."
+    },
+    "identification": {
+      "en": "It belongs to Lucanidae, the stag beetle family. A taxonomic study found marked morphological and genetic differences among some populations assigned to its subspecies group.",
+      "fr": "Il appartient aux Lucanidae, la famille des lucanes. Une étude taxonomique a relevé des différences morphologiques et génétiques marquées entre certaines populations rattachées à son groupe de sous-espèces."
+    },
+    "habitat": {
+      "en": "Published subspecies records span parts of South and Southeast Asia, including northeastern India, Myanmar, Java and Sumatra; these do not describe one uniform range for every population.",
+      "fr": "Les mentions publiées de ses sous-espèces couvrent des régions d’Asie du Sud et du Sud-Est, dont le nord-est de l’Inde, le Myanmar, Java et Sumatra; elles ne définissent pas une aire uniforme pour toutes les populations."
+    },
+    "diet": {
+      "en": "The sources consulted here do not establish a species-specific wild diet.",
+      "fr": "Les sources consultées ici ne précisent pas le régime de l’espèce à l’état sauvage."
+    },
+    "behavior": {
+      "en": "Wild behavior is poorly documented in the sources consulted; captive observations should not be treated as a full account of its natural history.",
+      "fr": "Les sources consultées documentent peu son comportement sauvage; les observations en élevage ne suffisent pas à décrire toute son histoire naturelle."
+    },
+    "reproduction": {
+      "en": "Captive breeding research on the subspecies blanchardi measured mating and egg-laying, but those conditions do not establish the timing of reproduction in wild populations.",
+      "fr": "Une étude d’élevage sur la sous-espèce blanchardi a mesuré l’accouplement et la ponte, mais ces conditions ne déterminent pas le calendrier reproducteur des populations sauvages."
+    },
+    "ecology": {
+      "en": "Some forms once treated within P. astacoides have been raised to species rank, while genetic work has questioned the boundaries of others; subspecies names therefore require care.",
+      "fr": "Certaines formes autrefois incluses dans P. astacoides ont été élevées au rang d’espèce, tandis que des travaux génétiques interrogent les limites d’autres formes; les noms de sous-espèces demandent donc de la prudence."
+    },
+    "conservation": {
+      "en": "A Korean study describes the subspecies blanchardi as endangered; that assessment should not be generalized to the whole species.",
+      "fr": "Une étude coréenne qualifie la sous-espèce blanchardi d’espèce menacée; cette évaluation ne doit pas être étendue à toute l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Notes on Prosopocoilus from China, with two new species",
+        "fr": "Notes sur Prosopocoilus de Chine et description de deux espèces nouvelles"
+      },
+      "url": "https://tb.plazi.org/GgServer/html/A41687E4FFE7C95A5FCB5765FF01760F",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The treatment lists several P. astacoides subspecies and their Asian distributions; it notes taxonomic changes in the group."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 18,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taiwan Encyclopedia of Life: Prosopocoilus astacoides",
+        "fr": "Encyclopédie taïwanaise du vivant : Prosopocoilus astacoides"
+      },
+      "url": "https://taieol.tw/pages/245352",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "TaiEOL places the species in Lucanidae and Prosopocoilus."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 8,
+        "total": 24,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oviposition in the endangered Prosopocoilus astacoides blanchardi",
+        "fr": "Ponte chez Prosopocoilus astacoides blanchardi, une sous-espèce menacée"
+      },
+      "url": "https://doi.org/10.5656/KSAE.2021.11.0.050",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The captive-rearing paper studies oviposition in P. a. blanchardi and describes that subspecies as endangered."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 15,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenetic study of the Prosopocoilus astacoides group",
+        "fr": "Étude phylogénétique du groupe Prosopocoilus astacoides"
+      },
+      "url": "https://www.dbpia.co.kr/journal/detail?nodeId=T13434052",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "A Korean thesis reports genetic and morphological differentiation among sampled subspecies and discusses uncertain species boundaries."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 16,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The taxonomic limits of the subspecies complex have been debated; the account avoids treating every named form as settled."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Captive reproductive observations and the conservation status of one subspecies are explicitly not generalized to the entire species."
+}

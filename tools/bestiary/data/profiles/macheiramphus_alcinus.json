@@ -1,0 +1,144 @@
+{
+  "id": "macheiramphus_alcinus",
+  "scientific": "Macheiramphus alcinus",
+  "group": "birds",
+  "name": {
+    "en": "Bat Hawk",
+    "fr": "Alcin des chauves-souris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Bat Hawk is a raptor of sub-Saharan Africa and parts of South and Southeast Asia, including New Guinea.",
+      "fr": "L’Alcin des chauves-souris est un rapace d’Afrique subsaharienne et de régions d’Asie du Sud et du Sud-Est, jusqu’en Nouvelle-Guinée."
+    },
+    "identification": {
+      "en": "It has dark plumage, large yellow eyes and an unusually wide gape; adults are about 41–51 cm long.",
+      "fr": "Son plumage est sombre, ses grands yeux sont jaunes et son ouverture buccale est inhabituellement large ; l’adulte mesure environ 41 à 51 cm."
+    },
+    "habitat": {
+      "en": "It uses forests, savannas and wooded areas near towns where flying prey is available.",
+      "fr": "Il fréquente les forêts, savanes et zones boisées proches des villes lorsque des proies volantes y sont disponibles."
+    },
+    "diet": {
+      "en": "Small bats make up much of its diet, supplemented by birds and large insects.",
+      "fr": "Les petites chauves-souris constituent une grande partie de son régime, complété par des oiseaux et de gros insectes."
+    },
+    "behavior": {
+      "en": "It hunts mainly around dusk, catching prey on the wing near roosts or water, and can also forage at dawn or by moonlight.",
+      "fr": "Il chasse surtout au crépuscule, en capturant ses proies en vol près des gîtes ou de l’eau ; il peut aussi s’alimenter à l’aube ou au clair de lune."
+    },
+    "reproduction": {
+      "en": "Breeding seasons differ across its range, and the nest is a stick platform placed in a tall tree.",
+      "fr": "Les périodes de reproduction varient dans son aire et le nid est une plateforme de branchages installée dans un grand arbre."
+    },
+    "ecology": {
+      "en": "Its foraging depends strongly on concentrations of flying prey, especially bats leaving roosts, so it may also hunt near artificial lights.",
+      "fr": "Sa chasse dépend fortement des concentrations de proies volantes, surtout des chauves-souris quittant leurs gîtes ; il peut aussi chasser près des éclairages artificiels."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern. A South African regional assessment classified the local population as Endangered.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en préoccupation mineure. Une évaluation régionale sud-africaine a classé la population locale en danger."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bat Hawk — BirdLife DataZone / IUCN Red List",
+        "fr": "Bat Hawk — BirdLife DataZone / Liste rouge de l’UICN"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/bat-hawk-macheiramphus-alcinus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife describes an African, Malagasy, Indomalayan and New Guinean range; crepuscular hunting; tall-tree stick nests; variable breeding seasons and global Least Concern listing."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 23,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alcin des chauves-souris — Oiseaux.net",
+        "fr": "Alcin des chauves-souris — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/alcin.des.chauves-souris.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "French account gives adult size, yellow eyes, wide gape, dark plumage, wooded habitat, bats as principal prey and hunting around roosts, water and lights."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 24,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Regional Red List of Birds of South Africa, Lesotho and Eswatini",
+        "fr": "Liste rouge régionale des oiseaux d’Afrique du Sud, du Lesotho et de l’Eswatini"
+      },
+      "url": "https://www.birdlife.org.za/wp-content/uploads/2021/02/RDBB-Final-copy.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The South African regional assessment classifies the local Bat Hawk population as Endangered because of its small regional population; this does not replace the global IUCN status."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 27,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The global Least Concern category reflects the latest IUCN/BirdLife assessment reported on the source page; the South African Endangered category is regional and older."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared BirdLife/IUCN, the French-language Oiseaux.net account and a South African regional bird assessment. The French name follows Oiseaux.net and its cited IOC recommendation."
+}

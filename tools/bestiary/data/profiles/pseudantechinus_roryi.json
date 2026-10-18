@@ -1,0 +1,145 @@
+{
+  "id": "pseudantechinus_roryi",
+  "scientific": "Pseudantechinus roryi",
+  "group": "mammals",
+  "name": {
+    "en": "Rory Cooper’s pseudantechinus",
+    "fr": "Pseudantechinus de Rory Cooper"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudantechinus roryi is a name historically applied to western Australian false antechinuses.",
+      "fr": "Pseudantechinus roryi est un nom historiquement appliqué à des pseudantechinus de l’ouest de l’Australie."
+    },
+    "identification": {
+      "en": "DNA analyses found specimens identified as P. roryi, including type material, indistinguishable from P. macdonnellensis.",
+      "fr": "Les analyses ADN n’ont pas distingué les spécimens identifiés comme P. roryi, y compris le matériel type, de P. macdonnellensis."
+    },
+    "habitat": {
+      "en": "The western populations bearing this name were recorded in dry, rocky areas of Western Australia, including the Pilbara.",
+      "fr": "Les populations occidentales portant ce nom ont été observées dans des zones sèches et rocheuses d’Australie-Occidentale, notamment dans le Pilbara."
+    },
+    "diet": {
+      "en": "A separate species-specific diet is not established for P. roryi under the synonymy proposed by the 2017 study.",
+      "fr": "Un régime distinct propre à P. roryi n’est pas établi au vu de la synonymie proposée par l’étude de 2017."
+    },
+    "behavior": {
+      "en": "The genetic study found no clear biogeographic separation between sampled roryi and macdonnellensis populations.",
+      "fr": "L’étude génétique n’a pas trouvé de séparation biogéographique nette entre les populations échantillonnées sous les noms roryi et macdonnellensis."
+    },
+    "reproduction": {
+      "en": "The reviewed taxonomic study does not describe separate reproductive biology for P. roryi.",
+      "fr": "L’étude taxonomique consultée ne décrit pas de biologie de reproduction distincte pour P. roryi."
+    },
+    "ecology": {
+      "en": "The 2017 authors proposed treating P. roryi as a synonym of P. macdonnellensis. The Mammal Diversity Database currently includes it there; see P. macdonnellensis.",
+      "fr": "Les auteurs de 2017 ont proposé de traiter P. roryi comme synonyme de P. macdonnellensis. La Mammal Diversity Database l’y inclut actuellement ; voir P. macdonnellensis."
+    },
+    "conservation": {
+      "en": "Conservation information should be read under P. macdonnellensis where the taxon is included.",
+      "fr": "Les informations de conservation sont à consulter sous P. macdonnellensis, où ce taxon est inclus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Umbrello et al. (2017), taxonomic status of P. roryi — UWA Research Repository",
+        "fr": "Umbrello et al. (2017), taxonomic status of P. roryi — UWA Research Repository"
+      },
+      "url": "https://research-repository.uwa.edu.au/en/publications/species-relationships-in-the-dasyurid-marsupial-genus-pseudantech",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Molecular study proposes synonymy with macdonnellensis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 6,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fat-tailed pseudantechinus — Animal Diversity Web, University of Michigan",
+        "fr": "Fat-tailed pseudantechinus — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pseudantechinus_macdonnellensis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "University account summarizes western habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 5,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudantechinus macdonnellensis — Mammal Diversity Database",
+        "fr": "Pseudantechinus macdonnellensis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000162/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "MDD includes roryi in macdonnellensis."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 5,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue has a separate P. roryi profile, but current Mammal Diversity Database treatment folds it into P. macdonnellensis following the 2017 DNA study.",
+    "Older or other taxonomic sources may retain roryi as a species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Treats the catalogue entry as a historical taxon name and clearly reports the 2017 proposed synonymy and current MDD inclusion; reciprocal reference to macdonnellensis."
+}

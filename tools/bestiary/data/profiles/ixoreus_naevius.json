@@ -1,0 +1,185 @@
+{
+  "id": "ixoreus_naevius",
+  "scientific": "Ixoreus naevius",
+  "group": "birds",
+  "name": {
+    "en": "Varied Thrush",
+    "fr": "Grive à collier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Varied Thrush is a Turdidae songbird of the Pacific Northwest, breeding in wet mature forests and wintering farther south.",
+      "fr": "La Grive à collier est un Turdidé du nord-ouest du Pacifique ; elle niche dans les forêts humides mûres et hiverne plus au sud."
+    },
+    "identification": {
+      "en": "The male has a slate head and breast band, orange breast and flanks, and a bold orange eyebrow; females are duller.",
+      "fr": "Le mâle a la tête et le collier gris ardoise, la poitrine et les flancs orangés, ainsi qu’un sourcil orange ; la femelle est plus terne."
+    },
+    "habitat": {
+      "en": "It breeds in shaded, humid conifer forests and uses parks, gardens and riparian woods in winter.",
+      "fr": "Il niche dans les forêts de conifères ombragées et humides, et fréquente en hiver parcs, jardins et bois riverains."
+    },
+    "diet": {
+      "en": "It gleans insects and other arthropods from leaf litter in summer, then relies more on berries, fruit and acorns in winter.",
+      "fr": "Il glane insectes et autres arthropodes dans la litière en été, puis consomme davantage baies, fruits et glands en hiver."
+    },
+    "behavior": {
+      "en": "It forages on the ground, and males sing to establish territories before females arrive on the breeding grounds.",
+      "fr": "Il cherche sa nourriture au sol ; les mâles chantent pour établir leur territoire avant l’arrivée des femelles sur les sites de nidification."
+    },
+    "reproduction": {
+      "en": "The female builds a cup nest in the forest understory; Cornell reports one or two broods and about 12 days of incubation.",
+      "fr": "La femelle bâtit un nid en coupe dans le sous-bois ; Cornell indique une ou deux nichées et environ 12 jours d’incubation."
+    },
+    "ecology": {
+      "en": "The European Robin in the existing robin profile belongs to Muscicapidae, not the thrush family Turdidae.",
+      "fr": "Le Rougegorge familier de la fiche existante appartient aux Muscicapidés, et non à la famille des grives, les Turdidés."
+    },
+    "conservation": {
+      "en": "Canada lists the species as globally Least Concern in 2018, while its national population has declined moderately since about 1970.",
+      "fr": "Le Canada rapporte une préoccupation mineure mondiale en 2018, mais une diminution modérée de la population nationale depuis environ 1970."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Varied Thrush Life History — Cornell Lab of Ornithology",
+        "fr": "Grive à collier — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Varied_Thrush/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell describes seasonal food, ground foraging and nesting."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 8,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Varied Thrush — Government of Canada, State of Canada’s Birds",
+        "fr": "Grive à collier — Gouvernement du Canada, Situation des oiseaux du Canada"
+      },
+      "url": "https://faune-especes.canada.ca/situation-oiseaux/oiseau-bird-fra.aspx?sB=VATH&sL=f&sM=a&sY=2019",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Canadian French species account gives the name, migration strategy, population trend and global category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 14,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ixoreus naevius — British Columbia Conservation Data Centre",
+        "fr": "Ixoreus naevius — Centre de données sur la conservation de la Colombie-Britannique"
+      },
+      "url": "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=18390",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "British Columbia describes forest settings and migration across populations."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 9,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Varied Thrush — Audubon Field Guide",
+        "fr": "Grive à collier — Guide de terrain Audubon"
+      },
+      "url": "https://www.audubon.org/field-guide/bird/varied-thrush?nid=4976&site=ak",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Audubon describes male and female plumage and key field marks."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 10,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Robin — Ligue pour la Protection des Oiseaux",
+        "fr": "Rougegorge familier — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougegorge-familier",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "LPO identifies Erithacus rubecula as a member of family Muscicapidae."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 10,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Canadian population trend is regional; the Cornell summary reports a broader North American trend using separate survey years."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used Canadian French government nomenclature and status alongside Cornell natural history; separated the Old World robin family distinction."
+}

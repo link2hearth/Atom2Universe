@@ -1,0 +1,17 @@
+{
+  "id": 2612,
+  "name": "frosted_stone",
+  "texture_top": "underground:frost",
+  "texture_side": "underground:frost",
+  "texture_bottom": "underground:frost",
+  "color": "#A8C1CF",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "frosted_stone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

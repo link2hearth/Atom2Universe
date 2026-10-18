@@ -1,0 +1,187 @@
+{
+  "id": "astronotus_ocellatus",
+  "scientific": "Astronotus ocellatus",
+  "group": "fish",
+  "name": {
+    "en": "Oscar",
+    "fr": "Oscar"
+  },
+  "sections": {
+    "overview": {
+      "en": "The oscar is a large South American freshwater cichlid native to the Amazon and Orinoco drainages, widely kept in aquariums and also eaten locally.",
+      "fr": "L’oscar est un grand cichlidé d’eau douce d’Amérique du Sud, originaire des bassins de l’Amazone et de l’Orénoque, élevé en aquarium et consommé localement."
+    },
+    "identification": {
+      "en": "Its deep oval body, large mouth and dark ground colour with orange-red markings are distinctive; adults commonly reach about 24 centimetres and can exceed 40.",
+      "fr": "Son corps ovale et haut, sa grande bouche et sa robe sombre marquée d’orange rougeâtre sont caractéristiques ; l’adulte mesure couramment 24 centimètres et peut dépasser 40."
+    },
+    "habitat": {
+      "en": "Oscars inhabit warm, quiet, shallow freshwater habitats such as sluggish channels, ponds and floodplain waters with muddy or sandy bottoms.",
+      "fr": "L’oscar fréquente des eaux douces chaudes, calmes et peu profondes, notamment des chenaux lents, mares et plaines inondables aux fonds vaseux ou sableux."
+    },
+    "diet": {
+      "en": "It feeds mainly near the bottom, taking snails, shrimp, insects and other small animals, while field accounts also report small fish and crayfish.",
+      "fr": "Il se nourrit surtout près du fond, où il capture escargots, crevettes, insectes et autres petits animaux ; des sources signalent aussi de petits poissons et des écrevisses."
+    },
+    "behavior": {
+      "en": "Pairs clean and defend spawning surfaces, and both parents guard eggs and young; the species is a popular aquarium fish but grows relatively slowly.",
+      "fr": "Les couples nettoient et défendent un support de ponte, puis les deux parents protègent œufs et jeunes ; l’espèce est populaire en aquarium mais sa croissance est relativement lente."
+    },
+    "reproduction": {
+      "en": "This open-substrate spawner lays adhesive eggs on a cleaned flat surface; both parents tend the clutch, and eggs typically hatch within three or four days.",
+      "fr": "Ce pondeur sur substrat dépose des œufs adhésifs sur une surface plane nettoyée ; les deux parents veillent sur la ponte, qui éclot généralement en trois ou quatre jours."
+    },
+    "ecology": {
+      "en": "As a generalist predator and benthic feeder, it links small invertebrates and fish to larger predators; introduced populations can persist outside its native range.",
+      "fr": "Prédateur généraliste et mangeur benthique, il relie petits invertébrés et poissons aux prédateurs supérieurs ; des populations introduites peuvent s’établir hors de son aire d’origine."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment classifies the oscar as Least Concern, although local assessments can differ and non-native populations are documented in several regions.",
+      "fr": "L’évaluation mondiale de l’UICN classe l’oscar en préoccupation mineure, même si des évaluations locales peuvent différer et que l’espèce a été introduite dans plusieurs régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Astronotus ocellatus — FishBase",
+        "fr": "Astronotus ocellatus — FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/Astronotus-ocellatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "FishBase gives native range in western Amazon and Orinoco basins, shallow quiet habitat, maximum length 45.7 cm TL and common length 24 cm TL.",
+        "FishBase reports a least-concern global IUCN status (assessment dated 2020-11-04)."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 34,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Astronotus ocellatus — Animal Diversity Web, University of Michigan",
+        "fr": "Astronotus ocellatus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Astronotus_ocellatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "ADW describes bottom-feeding, animal prey, cleaned spawning sites, parental care and short egg incubation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 14,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oscar — Fishipedia",
+        "fr": "Oscar — Fishipedia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/astronotus-ocellatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French-language fish profile documents aquarium popularity, slow growth, introduced occurrence and ecological information; it cites FishBase and other species references."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 20,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oscar (Astronotus ocellatus) — U.S. Geological Survey Nonindigenous Aquatic Species",
+        "fr": "Oscar (Astronotus ocellatus) — USGS, espèces aquatiques non indigènes"
+      },
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?SpeciesID=436",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "USGS records introduced populations and notes unresolved taxonomy within the genus Astronotus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oscar — French Guiana freshwater fish Red List",
+        "fr": "Oscar — Liste rouge des poissons d’eau douce de Guyane française"
+      },
+      "url": "https://inpn.mnhn.fr/docs/LR_FCE/Rapport_Liste_rouge_especes_Faune_vertebree_Guyane_Poissons_eau_douce_2017_2020.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "French Guiana regional assessment categorizes Astronotus ocellatus as Near Threatened locally, illustrating why regional status differs from global status."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic remarks warn that more than one Astronotus taxon may have been reported under A. ocellatus; exact sex-specific dimensions and full range of variation are not summarized here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase, Animal Diversity Web, a French-language species profile, USGS invasive-species data and the regional French Guiana assessment. The profile catalog has no Astronotus congener; A. crassipinnis is a useful external genus comparison, but taxonomy within the genus remains under review."
+}

@@ -1,0 +1,17 @@
+{
+  "id": 2683,
+  "name": "cave_bookshelf_fir",
+  "texture_top": "cave_furniture:fir_planks",
+  "texture_side": "cave_furniture:fir_wood",
+  "texture_bottom": "cave_furniture:fir_planks",
+  "texture_front": "cave_furniture:fir_books",
+  "color": "#715741",
+  "hardness": 1.5,
+  "drop": "cave_bookshelf_fir",
+  "creative_tab": "wood",
+  "orient_mode": "facing",
+  "furniture": "bookshelf",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": ["wood"]
+}

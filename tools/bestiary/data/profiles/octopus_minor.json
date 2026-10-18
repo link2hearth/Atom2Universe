@@ -1,0 +1,177 @@
+{
+  "id": "octopus_minor",
+  "scientific": "Octopus minor",
+  "group": "invertebrates",
+  "name": {
+    "en": "Long-arm octopus",
+    "fr": "Poulpe à longs bras"
+  },
+  "sections": {
+    "overview": {
+      "en": "The long-arm octopus is a coastal, bottom-dwelling species of Northeast Asia and an important local fishery resource. Its placement within the large genus *Octopus* remains provisional in current cephalopod literature.",
+      "fr": "Le poulpe à longs bras est une espèce côtière et benthique d’Asie du Nord-Est, importante pour les pêcheries locales. Son placement dans le vaste genre *Octopus* reste provisoire dans la littérature récente sur les céphalopodes."
+    },
+    "identification": {
+      "en": "It has a relatively small body and long arms, the features reflected in its common name. The species can vary in appearance among localities, and its phylogenetic position is not settled.",
+      "fr": "Il possède un corps relativement petit et de longs bras, comme l’indique son nom vernaculaire. Son apparence peut varier selon les localités et sa position phylogénétique n’est pas résolue."
+    },
+    "habitat": {
+      "en": "It lives on the seabed in coastal waters of China, Korea and Japan, especially on muddy shores and tidal flats.",
+      "fr": "Il vit sur les fonds des eaux côtières de Chine, de Corée et du Japon, notamment sur les estrans vaseux et les vasières."
+    },
+    "diet": {
+      "en": "The species has a studied trophic ecology, but the sources consulted here do not support a single detailed prey list or reliable diet proportions.",
+      "fr": "L’écologie alimentaire de l’espèce a été étudiée, mais les sources consultées ici ne permettent pas d’établir une liste détaillée de proies ni des proportions alimentaires fiables."
+    },
+    "behavior": {
+      "en": "It is benthic and supports coastal fisheries. Research on its growth, feeding and behaviour informs fishery management, especially as overfishing has been reported as a concern.",
+      "fr": "Il est benthique et soutient les pêcheries côtières. Les recherches sur sa croissance, son alimentation et son comportement contribuent à la gestion de la pêche, notamment parce que la surexploitation est signalée comme une préoccupation."
+    },
+    "reproduction": {
+      "en": "A Korean study found the main spawning period to be April–May. Timing and fecundity may vary with local conditions, so these results should not be treated as a range-wide calendar.",
+      "fr": "Une étude coréenne situe la principale période de ponte en avril–mai. Le calendrier et la fécondité peuvent varier selon les conditions locales ; ces résultats ne décrivent donc pas nécessairement toute l’aire de l’espèce."
+    },
+    "ecology": {
+      "en": "The species remains provisionally assigned to *Octopus*: recent phylogenetic work suggests closer affinity to *Callistoctopus*, but further evidence is needed to settle its placement.",
+      "fr": "L’espèce reste provisoirement placée dans *Octopus* : des travaux phylogénétiques récents suggèrent une plus grande proximité avec *Callistoctopus*, mais de nouvelles données sont nécessaires pour trancher."
+    },
+    "conservation": {
+      "en": "It is commercially important, and a recent review reports concern about declining catches and overfishing. The sources consulted do not provide a global conservation assessment.",
+      "fr": "Cette espèce a une importance commerciale, et une synthèse récente rapporte des préoccupations liées à la baisse des captures et à la surexploitation. Les sources consultées ne fournissent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The genome of common long-arm octopus *Octopus minor* — GigaScience",
+        "fr": "Génome du poulpe commun à longs bras *Octopus minor* — GigaScience"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6279123/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Describes O. minor as benthic and littoral in coastal Northeast Asia, with ecological and fishery importance; limited comparable evidence on prey list in this article."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 25,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sexual group maturity, fecundity and reproductive cycle of *Octopus minor* — Korean Journal of Malacology",
+        "fr": "Maturité, fécondité et cycle reproducteur d’*Octopus minor* — Korean Journal of Malacology"
+      },
+      "url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002209766",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Korean study reports April–May as the main spawning period and gives local maturity and fecundity measures; only the seasonal result is generalized here."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 23,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomy and systematic positions of three new *Callistoctopus* species — Zoological Studies",
+        "fr": "Taxonomie et positions systématiques de trois espèces de *Callistoctopus* — Zoological Studies"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11602926/",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Review treats Octopus minor as an unplaced, provisionally Octopus species; phylogenetic studies suggest affinity with Callistoctopus but further data are needed."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 21,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "‘Octopus’ minor, long-armed octopus — Octopus Biology and Ecology (2024)",
+        "fr": "« Octopus » minor, poulpe à longs bras — Octopus Biology and Ecology (2024)"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/B9780128206393000054",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "2024 specialist chapter reviews life history, trophic and behavioural ecology; notes coastal fishery importance and concern about sharp decline associated with overfishing."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 22,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The generic placement remains provisional; inventory name is retained pending formal taxonomic change.",
+    "Detailed diet and life-history claims vary among local studies; Korean seasonal data are not extrapolated across the range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used peer-reviewed sources in English and Korean; kept disputed generic placement explicit and avoided unsupported prey details."
+}

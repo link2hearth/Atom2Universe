@@ -1,0 +1,232 @@
+{
+  "id": "rosy_boa",
+  "scientific": "Lichanura trivirgata",
+  "group": "reptiles",
+  "name": {
+    "en": "Desert rosy boa",
+    "fr": "Boa rosé du désert"
+  },
+  "sections": {
+    "overview": {
+      "en": "The desert rosy boa, Lichanura trivirgata, is a small boa native to the southwestern United States and northwestern Mexico.",
+      "fr": "Le boa rosé du désert, Lichanura trivirgata, est un petit boa du sud-ouest des États-Unis et du nord-ouest du Mexique."
+    },
+    "identification": {
+      "en": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands. AnAge lists 450 g as adult mean mass, rated acceptable from a small sample, without separating sexes.",
+      "fr": "Les femelles sont généralement plus grandes que les mâles. En Arizona, il atteint 95 centimètres ; ses trois bandes sombres et ses pupilles ovales verticales sont caractéristiques. La tête est petite et la queue relativement arrondie. Son corps trapu présente généralement un fond gris clair avec des bandes marron ou orangées. AnAge indique une masse adulte moyenne de 450 g, jugée acceptable malgré un petit échantillon, sans distinguer les sexes."
+    },
+    "habitat": {
+      "en": "Its range covers western Arizona, Sonora and most of Baja California; California records are limited to far southern San Diego County. It shelters in rocky desert foothills, scrub and canyon crevices, and may use burrows where surface cover is scarce. Coastal California populations formerly grouped with this boa are now treated as Lichanura orcutti.",
+      "fr": "Son aire comprend l’ouest de l’Arizona, le Sonora et la Basse-Californie ; en Californie, il atteint seulement l’extrême sud du comté de San Diego. Il s’abrite dans les piémonts rocheux et les fissures de canyon, et peut gagner un terrier quand les abris de surface manquent. Les populations côtières autrefois regroupées avec ce boa sont maintenant classées comme Lichanura orcutti."
+    },
+    "diet": {
+      "en": "Small mammals and birds are its main prey. It subdues them by constriction, wrapping its body around the animal.",
+      "fr": "Ses principales proies sont les petits mammifères et les oiseaux. Il les maîtrise par constriction, en les enserrant de ses anneaux."
+    },
+    "behavior": {
+      "en": "Usually solitary, it moves slowly and stays sheltered under rocks, in crevices or inside burrows. In Arizona it is mostly nocturnal or crepuscular, yet may move on spring mornings and on mild or overcast days.",
+      "fr": "Généralement solitaire, il se déplace lentement et reste à l’abri sous les rochers, dans les fissures ou les terriers. En Arizona, il est surtout nocturne ou crépusculaire, mais peut sortir les matins de printemps et lors des journées douces ou couvertes."
+    },
+    "reproduction": {
+      "en": "During spring courtship, a male follows the female’s scent, tongue-flicks over her body and strokes her flanks with pelvic spurs before mating. After several months of internal development, females bear live young that soon become independent. In Arizona, births occur in late summer or early autumn, with three to fourteen young recorded per litter.",
+      "fr": "Pendant la parade printanière, le mâle suit les odeurs de la femelle, passe sa langue sur son corps et lui frotte les flancs avec ses ergots pelviens avant l’accouplement. Après plusieurs mois de développement interne, la femelle met au monde des petits vivants qui deviennent vite autonomes. En Arizona, les naissances surviennent à la fin de l’été ou au début de l’automne, avec trois à quatorze petits rapportés par portée."
+    },
+    "ecology": {
+      "en": "It hunts rodents in rocky desert habitats, acting as a ground-level predator in arid food webs.",
+      "fr": "Il chasse des rongeurs dans les milieux rocheux, comme prédateur au sol des réseaux alimentaires arides."
+    },
+    "conservation": {
+      "en": "Wild collection for pets occurred historically, while captive breeding later met much of the demand. An IUCN assessment published in 2007 classified the species as Least Concern.",
+      "fr": "Des boas ont été prélevés pour le commerce des animaux de compagnie, mais l’élevage en captivité répondait déjà à une grande partie de la demande. Une évaluation de l’UICN publiée en 2007 classait l’espèce parmi les espèces de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Desert rosy boa",
+        "fr": "Boa rosé du désert"
+      },
+      "url": "https://en.wikipedia.org/wiki/Desert_rosy_boa",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Range, prey, seasonal activity and dated assessment."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 7,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Charina trivirgata (Rosy Boa), Animal Diversity Web, University of Michigan",
+        "fr": "Charina trivirgata (boa rosé), Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Charina_trivirgata/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Legacy taxon dimensions and reproductive ranges."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 6,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rosy Boa, The Reptiles and Amphibians of Arizona",
+        "fr": "Boa rosé, Reptiles et amphibiens de l’Arizona"
+      },
+      "url": "https://reptilesofaz.org/snakes-subpages/h-l-trivirgata/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Arizona field account gives local size, diet, birth season."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rosy Boa, California Wildlife Habitat Relationships System",
+        "fr": "Boa rosé, système californien des relations entre faune et habitat"
+      },
+      "url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=2745",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "California account records taxonomic change to Lichanura orcutti."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 8,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lichanura trivirgata — Wikipédia",
+        "fr": "Lichanura trivirgata — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Lichanura_trivirgata",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Stout body and variable grey, brown or orange colour."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 9,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lichanura trivirgata — AnAge: Animal Ageing and Longevity Database",
+        "fr": "Lichanura trivirgata — AnAge : base de données sur l’âge et la longévité des animaux"
+      },
+      "url": "https://genomics.senescence.info/species/entry.php?species=Lichanura_trivirgata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "AnAge lists 450 g adult mass for Lichanura trivirgata; the record has a small sample, acceptable data quality and no observations."
+      ],
+      "prose_claims": ["identification.en.5", "identification.fr.5"]
+    }
+  ],
+  "illustration_notes": "Show one adult desert rosy boa with a stout, smooth-scaled body, small head, short blunt tail, vertical pupils and three dark lengthwise stripes on a pale ground. Use a neutral side-three-quarter pose on white; do not depict the coastal rosy boa Lichanura orcutti.",
+  "uncertainties": [
+    "Animal Diversity Web uses an older, broader rosy-boa concept that included populations now assigned to Lichanura orcutti; its adult size and reproductive ranges may therefore include that species.",
+    "The Least Concern category cited here comes from a 2007 assessment and does not establish a current global assessment or population trend.",
+    "Arizona birth timing and litter counts are regional observations, not fixed dates or brood sizes throughout the range."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: three longitudinal bands and head/tail proportions checked with Arizona field guide; compared EN and FR species accounts and California taxonomic note; excluded precise older-group average size, gestation and newborn lengths rather than transferring them to the revised species; retained scoped Arizona births.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,189 @@
+{
+  "id": "parectropis_similaria",
+  "scientific": "Parectropis similaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brindled white-spot",
+    "fr": "Boarmie frottée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Parectropis similaria is a European geometrid moth associated with broad-leaved woodland.",
+      "fr": "La Boarmie frottée est un papillon géomètre européen associé aux boisements de feuillus."
+    },
+    "identification": {
+      "en": "The adult has densely mottled, brindled wings with a conspicuous pale patch near the outer forewing. Its wingspan is about 33–39 mm.",
+      "fr": "L’adulte a des ailes finement marbrées de sombre, avec une tache claire visible vers le bord externe de l’aile antérieure. Son envergure est d’environ 33–39 mm."
+    },
+    "habitat": {
+      "en": "It is recorded from much of Europe and locally favours deciduous or ancient woodland; records also come from gardens near wooded landscapes.",
+      "fr": "Elle est présente dans une grande partie de l’Europe et fréquente localement les forêts de feuillus, notamment anciennes; elle est aussi observée dans des jardins proches de milieux boisés."
+    },
+    "diet": {
+      "en": "The caterpillars feed on leaves of oaks, birches, hazel and hawthorn; recorded host lists vary by region.",
+      "fr": "Les chenilles mangent les feuilles des chênes, bouleaux, noisetiers et aubépines; la liste des plantes hôtes varie selon les régions."
+    },
+    "behavior": {
+      "en": "Adults are mainly on the wing from late May into early July in southern Britain and are attracted to light; local flight periods can vary.",
+      "fr": "Les adultes volent surtout de fin mai à début juillet dans le sud de la Grande-Bretagne et sont attirés par la lumière; les périodes locales peuvent varier."
+    },
+    "reproduction": {
+      "en": "In the British account, the species is single-brooded and winters as a pupa.",
+      "fr": "Dans la source britannique, l’espèce n’a qu’une génération annuelle et hiverne sous forme de chrysalide."
+    },
+    "ecology": {
+      "en": "Its larvae use several common deciduous trees and shrubs, linking the moth to structurally varied woodland edges and broad-leaved habitats.",
+      "fr": "Ses chenilles utilisent plusieurs arbres et arbustes feuillus communs; l’espèce dépend ainsi de lisières et de milieux boisés diversifiés."
+    },
+    "conservation": {
+      "en": "Regional records show a local rather than uniformly abundant moth; the sources consulted do not provide a global conservation assessment.",
+      "fr": "Les suivis régionaux décrivent une espèce locale, et non uniformément abondante; les sources consultées ne fournissent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The genome sequence of the Brindled White-spot moth — Genome Biology / PMC",
+        "fr": "Séquence du génome de la Boarmie frottée — Genome Biology / PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12485357/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Genome paper identifies the adult by its brindled appearance and pale patch on the outer forewing."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 16,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parectropis similaria — Hantsmoths, Lepidoptera of Hampshire and Isle of Wight",
+        "fr": "Parectropis similaria — Hantsmoths, lépidoptères du Hampshire et de l’île de Wight"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.273",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional account gives 33–39 mm wingspan, deciduous woodland habitat, host plants and pupal overwintering."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 14,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parectropis similaria — Sussex Moth Group",
+        "fr": "Parectropis similaria — Sussex Moth Group"
+      },
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=70.2730",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Sussex account describes a local resident, usually sparse, with a single generation and a late-May to early-July adult flight."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 19,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parectropis similaria — Lepiforum / LepiWiki",
+        "fr": "Parectropis similaria — Lepiforum / LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Parectropis_similaria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "German-language specialist account documents European records, woodland habitats and caterpillars observed on oak and hawthorn."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 15,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parectropis similaria — Biodiv’ Oise species records",
+        "fr": "Parectropis similaria — observations de Biodiv’ Oise"
+      },
+      "url": "https://biodiv.parc-oise-paysdefrance.fr/espece/210490",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French regional biodiversity portal lists the vernacular name Boarmie frottée and records the species in Oise."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The larval host list and flight timing vary among regional accounts; the profile identifies these as local records rather than universal limits."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Hantsmoths, the Sussex Moth Group, German Lepiforum records and a French regional biodiversity inventory; regional observations are not treated as global population trends."
+}

@@ -1,0 +1,12 @@
+{
+  "id": 9914,
+  "name": "expedition_gun",
+  "texture_top": "expedition:9914:top",
+  "texture_side": "expedition:9914:side",
+  "texture_bottom": "expedition:9914:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_gun",
+  "creative_tab": "resources",
+  "placeable": false
+}

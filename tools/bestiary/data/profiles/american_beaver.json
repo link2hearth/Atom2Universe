@@ -1,0 +1,198 @@
+{
+  "id": "american_beaver",
+  "scientific": "Castor canadensis",
+  "group": "mammals",
+  "name": {
+    "en": "American beaver",
+    "fr": "Castor du Canada"
+  },
+  "sections": {
+    "overview": {
+      "en": "The American beaver is a large freshwater herbivorous rodent, distinct from the Eurasian beaver (Castor fiber). Its webbed hind feet propel it through water; its broad flattened tail steers and supports the body on land. Families occupy ponds, lakes, wetlands and streams. Where they build dams, the deeper impounded water provides underwater access to food stores and shelter.",
+      "fr": "Le castor du Canada est un grand rongeur herbivore d’eau douce, distinct du castor d’Eurasie (Castor fiber). Ses pattes arrière palmées le propulsent ; sa large queue aplatie le dirige dans l’eau et soutient son corps à terre. Les familles occupent étangs, lacs, zones humides et cours d’eau. Là où ils construisent des barrages, l’eau retenue, plus profonde, permet un accès immergé aux réserves alimentaires et aux abris."
+    },
+    "identification": {
+      "en": "The adult has a stout brown body, small ears, a broad, scaly tail and large webbed hind feet. Its orange incisors grow continuously and cut branches or strip bark. Hard enamel on the front and faster wear behind keep their edges sharp. Dense underfur insulates the animal beneath longer guard hairs that shed water. Valves close the ears and nostrils underwater; a nictitating membrane protects the eyes, and the lips can close behind the incisors while the animal gnaws underwater. The U.S. National Park Service describes an average body length of about 61 cm excluding the tail and mass of 16–27 kg; males and females look alike. These are broad field-guide figures, not sex-specific measurements.",
+      "fr": "L’adulte a le corps trapu et brun, de petites oreilles, une large queue écailleuse et de grandes pattes arrière palmées. Ses incisives orange poussent sans cesse et coupent les branches ou détachent l’écorce. L’émail dur à l’avant et l’usure plus rapide à l’arrière en gardent le tranchant. Le sous-poil dense l’isole sous les poils de garde qui repoussent l’eau. Des valves ferment oreilles et narines sous l’eau ; une membrane nictitante protège les yeux et les lèvres peuvent se fermer derrière les incisives pendant le rongement immergé. Le National Park Service des États-Unis indique une longueur corporelle moyenne d’environ 61 cm sans la queue et une masse de 16 à 27 kg ; mâles et femelles se ressemblent. Ces valeurs générales ne distinguent pas les sexes."
+    },
+    "habitat": {
+      "en": "The species ranges across much of Canada and the United States into northern Mexico. It uses fresh water beside woody or herbaceous plants, especially ponds, wetlands and slow streams with banks suitable for burrowing. A lodge of branches and mud has an underwater entrance and a dry chamber. Where lakes or rivers already hold deep, stable water, beavers may use a bank den or lodge without building a dam. Introductions have also established populations outside North America, notably in Finland and Tierra del Fuego.",
+      "fr": "L’espèce vit dans une grande partie du Canada et des États-Unis, jusqu’au nord du Mexique. Elle fréquente les eaux douces bordées de plantes ligneuses ou herbacées, surtout les étangs, zones humides et cours d’eau lents aux berges propices au creusement. Une hutte de branches et de boue comprend une entrée immergée et une chambre sèche. Si un lac ou une rivière offre déjà une eau profonde et stable, le castor peut utiliser un terrier de berge ou une hutte sans construire de barrage. Des introductions ont aussi établi des populations hors d’Amérique du Nord, notamment en Finlande et en Terre de Feu."
+    },
+    "diet": {
+      "en": "Beavers eat leaves, grasses, aquatic plants, roots, buds, twigs and the soft cambium beneath bark. Aspen, willow, birch, poplar and other local trees provide woody foods; dense wood is often left for construction. Mammals cannot digest cellulose unaided, so microbes in the enlarged caecum ferment plant tissue and help release nutrients. In autumn, a colony may anchor branches underwater near its lodge. This food cache remains accessible beneath winter ice when fresh plants are scarce.",
+      "fr": "Le castor mange feuilles, herbes, plantes aquatiques, racines, bourgeons, rameaux et cambium tendre sous l’écorce. Trembles, saules, bouleaux, peupliers et autres arbres locaux fournissent des aliments ligneux ; le bois dense sert souvent à construire. Les mammifères ne digèrent pas seuls la cellulose : des microbes du cæcum agrandi fermentent les tissus végétaux et en libèrent les nutriments. En automne, la colonie peut ancrer des branches sous l’eau près de la hutte. Cette réserve reste accessible sous la glace, lorsque les plantes fraîches se font rares."
+    },
+    "behavior": {
+      "en": "A colony is usually a territorial family with two adults and young from one or two breeding seasons. Older offspring help maintain the lodge and dams and care for kits. They remain active year-round, often at dusk or night. In water, hind feet provide thrust and the tail steers; on land, the tail can brace the body while the animal gnaws.",
+      "fr": "Une colonie est généralement une famille territoriale comprenant deux adultes et les jeunes d’une ou deux saisons de reproduction. Les jeunes plus âgés entretiennent la hutte et les barrages et participent aux soins des petits. Les animaux restent actifs toute l’année, souvent au crépuscule ou la nuit. Dans l’eau, les pattes arrière propulsent et la queue dirige ; à terre, celle-ci soutient le corps pendant le rongement."
+    },
+    "reproduction": {
+      "en": "Mating usually occurs in winter. After about 105–107 days of pregnancy, a female gives birth in spring or early summer, often to two to four kits. Newborns are furred and can see; they soon sample solid food while continuing to nurse. Parents and older siblings shelter and tend them. Young usually disperse around age two, before or near the next litter, to establish territories. Breeding dates and litter size vary with latitude, food and local population density.",
+      "fr": "L’accouplement a généralement lieu en hiver. Après environ 105 à 107 jours de gestation, la femelle met bas au printemps ou au début de l’été, souvent deux à quatre petits. Ceux-ci naissent couverts de poils et les yeux ouverts ; ils goûtent bientôt des aliments solides tout en continuant à téter. Parents et frères et sœurs plus âgés les protègent et les soignent. Vers deux ans, les jeunes se dispersent, avant ou près de la portée suivante, pour établir leur territoire. Dates de reproduction et taille des portées varient selon la latitude, la nourriture et la densité locale."
+    },
+    "ecology": {
+      "en": "A dam slows water, raises the upstream level and may connect a stream with its floodplain. In a 2002–2005 study of two dams along 1.5 kilometres of the Colorado River in Rocky Mountain National Park, researchers measured longer inundation and a higher water table. The dams reduced summer water-table decline across parts of the 58-hectare study valley. These findings describe that reach; effects elsewhere depend on channel form and flow. In Tierra del Fuego, introduced beavers can turn native Nothofagus forest into meadows by cutting trees and flooding land.",
+      "fr": "Un barrage ralentit l’eau, élève le niveau en amont et peut relier un cours d’eau à sa plaine inondable. Dans une étude de 2002 à 2005 sur deux barrages le long de 1,5 kilomètre du Colorado, dans le parc national des Montagnes Rocheuses, les chercheurs ont mesuré des inondations prolongées et une nappe plus haute. Les barrages ont réduit la baisse estivale de la nappe dans certaines parties de la vallée étudiée, qui couvre 58 hectares. Ces résultats concernent ce tronçon ; ailleurs, les effets dépendent du chenal et du débit. En Terre de Feu, les castors introduits peuvent transformer des forêts indigènes de Nothofagus en prairies par l’abattage des arbres et l’inondation."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database, consulted in October 2026, reports the species’ global IUCN category as Least Concern. The species recovered in many regions after historic fur-trapping declines, but local pressures persist. British Columbia’s Conservation Data Centre assigns it provincial rank S5, last reviewed on 15 January 2024; it lists urbanization, altered waterways, severe drought, trapping and conflict control as possible local pressures. These regional assessments do not establish a current continent-wide population total.",
+      "fr": "La Mammal Diversity Database, consultée en octobre 2026, relaie la catégorie mondiale « Préoccupation mineure » de l’UICN. L’espèce s’est rétablie dans plusieurs régions après les déclins historiques dus au commerce des fourrures, mais les pressions locales persistent. Le Centre de données sur la conservation de la Colombie-Britannique lui attribue le rang provincial S5, révisé pour la dernière fois le 15 janvier 2024 ; il cite l’urbanisation, la modification des cours d’eau, les sécheresses sévères, le piégeage et le contrôle des conflits parmi les pressions locales possibles. Ces évaluations régionales ne fournissent pas de total continental actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "American Beaver — Québec Government",
+        "fr": "Castor du Canada — Gouvernement du Québec"
+      },
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/castor",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Québec: winter mating, gestation, litter and family dispersal."
+      ]
+    },
+    {
+      "title": {
+        "en": "Beaver Natural History Narrative — Glacier National Park, National Park Service",
+        "fr": "Histoire naturelle du castor — Parc national de Glacier, National Park Service"
+      },
+      "url": "https://www.nps.gov/glac/learn/education/beaver-natural-history-narrative.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "North American rodent; growing incisors, webbed feet and flat tail."
+      ]
+    },
+    {
+      "title": {
+        "en": "Fish and Wildlife: Beaver — Indiana Department of Natural Resources",
+        "fr": "Poissons et faune : castor — Département des ressources naturelles de l’Indiana"
+      },
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/beaver",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Indiana: bank dens, stable water without dams, local habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Castor canadensis — Animal Diversity Web, University of Michigan",
+        "fr": "Castor canadensis — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Castor_canadensis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Herbivory and microbial digestion of cellulose."
+      ]
+    },
+    {
+      "title": {
+        "en": "Beavers — Rocky Mountain National Park, National Park Service",
+        "fr": "Castors — Parc national des Montagnes Rocheuses, National Park Service"
+      },
+      "url": "https://home.nps.gov/romo/learn/nature/beavers.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Family groups; young help and disperse near age two."
+      ]
+    },
+    {
+      "title": {
+        "en": "Beaver dams and overbank floods influence groundwater-surface water interactions of a Rocky Mountain riparian area — USGS",
+        "fr": "Les barrages de castors et les crues influencent les échanges entre eaux souterraines et superficielles dans une vallée des Rocheuses — USGS"
+      },
+      "url": "https://pubs.usgs.gov/publication/70030228",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Colorado reach: two dams, 1.5 km, 2002–05; water table effects in 58 ha."
+      ]
+    },
+    {
+      "title": {
+        "en": "Conservation Status Report: Castor canadensis — British Columbia Conservation Data Centre",
+        "fr": "Rapport sur le statut de conservation : Castor canadensis — Centre de données sur la conservation de la Colombie-Britannique"
+      },
+      "url": "https://a100.gov.bc.ca/pub/eswp/esr.do?id=14816",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BC rank S5 (reviewed 2024); local pressures, historic recovery."
+      ]
+    },
+    {
+      "title": {
+        "en": "American beaver — IUCN SSC Global Invasive Species Database",
+        "fr": "Castor du Canada — base mondiale des espèces envahissantes, UICN SSC"
+      },
+      "url": "https://www.iucngisd.org/gisd/species.php?sc=981",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Aquatic adaptations; introduced Finland and Tierra del Fuego populations; Nothofagus forest conversion."
+      ]
+    },
+    {
+      "title": {
+        "en": "Castor canadensis — Mammal Diversity Database",
+        "fr": "Castor canadensis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1001957/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Account consulted October 2026 reports the global IUCN category as Least Concern; its generic bibliographic year is not interpreted as a species assessment year."
+      ]
+    },
+    {
+      "title": {
+        "en": "North American Beaver — Acadia National Park, U.S. National Park Service",
+        "fr": "Castor du Canada — parc national d’Acadia, National Park Service des États-Unis"
+      },
+      "url": "https://www.nps.gov/articles/north-american-beaver-acadia.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Average body length about 2 feet excluding the tail; mass 35–60 pounds."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult American beaver (Castor canadensis), natural species-specific proportions: stout brown body, dense insulating fur, broad flat scaly hairless tail, webbed hind feet and orange incisors visible in a natural pose. Pure white background; no props, habitat, text, labels or scenery.",
+  "uncertainties": [
+    "Body size, diet, litter size and breeding dates vary geographically with local conditions.",
+    "The measured hydrological effects are specific to the studied Colorado River reach.",
+    "Conservation statements are regional assessments and do not provide a current continent-wide population estimate."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review; root added verified GISD aquatic anatomy and introduced-range forest impacts, clarified dam function, and reported global category with consultation date without inventing assessment year."
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Cases de BD style bande dessinée -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4,2C2.9,2 2,2.9 2,4V20C2,21.1 2.9,22 4,22H20C21.1,22 22,21.1 22,20V4C22,2.9 21.1,2 20,2H4ZM4,4H12V12H4V4ZM14,4H20V8H14V4ZM14,10H20V12H14V10ZM4,14H9V20H4V14ZM11,14H20V20H11V14Z" />
+</vector>

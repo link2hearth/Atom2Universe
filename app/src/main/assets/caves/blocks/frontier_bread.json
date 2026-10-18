@@ -1,0 +1,17 @@
+{
+  "id": 9811,
+  "name": "frontier_bread",
+  "texture_top": "frontier:9811:top",
+  "texture_side": "frontier:9811:side",
+  "texture_bottom": "frontier:9811:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_bread",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

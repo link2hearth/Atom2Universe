@@ -1,0 +1,17 @@
+{
+  "id": 1003,
+  "name": "wood_dark",
+  "texture_top": "cozy:material:8:706353",
+  "texture_side": "cozy:material:7:706353",
+  "texture_bottom": "cozy:material:8:706353",
+  "color": "#706353",
+  "hardness": 2.0,
+  "drop": "wood_dark",
+  "creative_tab": "wood",
+  "orient_mode": "axis",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "logs"
+  ]
+}

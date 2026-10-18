@@ -1,0 +1,204 @@
+{
+  "id": "brown_hare",
+  "scientific": "Lepus europaeus",
+  "group": "mammals",
+  "name": {
+    "en": "European hare",
+    "fr": "Lièvre d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European hare is a large, ground-dwelling lagomorph of open country across much of Europe and western Asia. Unlike rabbits, it does not shelter in a communal burrow: it rests in a shallow surface hollow and depends on concealment, keen senses and rapid flight. Its life is closely tied to the seasonal food and cover of grasslands and farmland.",
+      "fr": "Le Lièvre d’Europe est un grand lagomorphe terrestre des milieux ouverts, présent dans une grande partie de l’Europe et de l’Asie occidentale. Contrairement aux lapins, il ne s’abrite pas dans un terrier collectif : il se repose dans une dépression superficielle et compte sur le camouflage, ses sens aiguisés et la fuite. Son cycle de vie dépend des ressources saisonnières des prairies et des terres agricoles."
+    },
+    "identification": {
+      "en": "Adults are typically tawny or reddish brown, with paler flanks, a light underside and a black upper surface to the tail. The long ears have dark tips; the hind legs are much longer and more powerful than the forelegs. These proportions support fast running and sharp turns across open ground. Compared with a European rabbit, a hare is larger, longer-legged and lacks the rabbit’s burrow-dwelling build. Adults have a head-and-body length of about 55–65 cm and weigh around 3.5–5 kg; these sources report seasonal and individual variation rather than a dependable sex-specific range.",
+      "fr": "L’adulte est généralement fauve ou brun roux, avec les flancs plus pâles, le ventre clair et le dessus de la queue noir. Ses longues oreilles ont l’extrémité sombre; ses membres postérieurs sont beaucoup plus longs et puissants que les antérieurs. Ces proportions favorisent la course et les virages brusques en terrain découvert. Plus grand et plus haut sur pattes que le lapin de garenne, il n’a pas sa morphologie fouisseuse. Les adultes ont une longueur tête-corps d’environ 55 à 65 cm et pèsent autour de 3,5 à 5 kg ; les sources signalent des variations saisonnières et individuelles plutôt qu’une plage fiable selon le sexe."
+    },
+    "habitat": {
+      "en": "The species uses grassland, pasture, arable fields and other open or lightly covered ground. Hares remain above ground through the year. A resting hollow, called a form, may lie among grasses or crop plants, in a dry sheltered patch or on a slight rise. The animal presses into the hollow with its ears laid back, so its outline is difficult to see; it does not excavate a warren like a rabbit.",
+      "fr": "L’espèce fréquente les prairies, les pâturages, les champs cultivés et d’autres espaces ouverts ou peu couverts. Elle reste à l’air libre toute l’année. Le gîte, appelé « forme », se trouve dans l’herbe ou les cultures, dans un endroit sec et abrité ou sur une légère élévation. Couché dans ce creux, oreilles rabattues, le lièvre devient difficile à distinguer; il ne creuse pas de garenne comme le lapin."
+    },
+    "diet": {
+      "en": "This herbivore eats grasses, wild herbs and crops, with the available menu changing through the year. In an Austrian arable study, hares selected forage richer in energy, fat and protein and lower in fibre; they also used weeds and grasses rather than relying only on crops. When green food is scarce, woody shoots and bark can enter the diet. Like other leporids, hares ferment plant material in the caecum and re-ingest soft caecal droppings, recovering nutrients from this hindgut digestion.",
+      "fr": "Cet herbivore consomme des graminées, des plantes sauvages et des cultures; les ressources disponibles varient au fil des saisons. Dans une étude menée en milieu agricole autrichien, les lièvres choisissaient des aliments plus riches en énergie, en lipides et en protéines, et moins riches en fibres; ils mangeaient aussi des plantes sauvages plutôt que de dépendre uniquement des cultures. Quand la végétation verte se raréfie, pousses ligneuses et écorce complètent le régime. Comme les autres léporidés, ils fermentent les végétaux dans le cæcum puis réingèrent les crottes molles issues de cette digestion, ce qui récupère des nutriments."
+    },
+    "behavior": {
+      "en": "Hares are mostly solitary, though several may feed in the same open area. They spend much of the day at or near a form and forage mainly at night or around twilight. When disturbed, a hare can burst from cover and run at high speed, using long hind legs and abrupt changes of direction to evade pursuit. Springtime boxing is often a female striking an insistent courting male with her forepaws, rather than two males fighting.",
+      "fr": "Les lièvres sont le plus souvent solitaires, même si plusieurs individus peuvent se nourrir dans un même espace ouvert. Ils passent une grande partie du jour dans leur forme ou à proximité et cherchent leur nourriture surtout la nuit ou au crépuscule. Dérangé, le lièvre bondit hors de son abri et détale; ses longues pattes arrière et ses changements brusques de direction compliquent la poursuite. Au printemps, les « combats de boxe » opposent souvent une femelle qui repousse de ses pattes avant un mâle trop pressant, plutôt que deux mâles rivaux."
+    },
+    "reproduction": {
+      "en": "In Central Europe, breeding can extend from winter into autumn. Females may produce several litters, with litter size varying by season and commonly one to four in the cited regional studies. Leverets are precocial: they are born furred, with eyes open, and can move soon after birth. The mother leaves them concealed apart from brief nursing visits, usually once each night; this limits the time adults gather at a vulnerable litter. Weaning occurs at about five weeks.",
+      "fr": "En Europe centrale, la reproduction peut s’étendre de l’hiver à l’automne. Les femelles ont plusieurs portées; leur taille varie selon la saison et compte souvent de un à quatre petits dans les études régionales citées. Les levrauts sont nidifuges et précoces : ils naissent couverts de poils, les yeux ouverts, et peuvent se déplacer rapidement. La mère les laisse cachés et ne revient que pour de brèves tétées, généralement une fois par nuit, limitant ainsi les rassemblements autour d’une portée vulnérable. Le sevrage survient vers cinq semaines."
+    },
+    "ecology": {
+      "en": "By grazing selectively, hares use both wild vegetation and cultivated plants, while their feeding can affect young crops and woody growth. They are also prey, particularly when young: foxes are an important predator in parts of Europe. Their dependence on both food and hiding cover makes the arrangement of fields matter. Studies in Germany show that harvest and other farm operations can change how hares use fields, with responses depending on the management and landscape.",
+      "fr": "En broutant de façon sélective, les lièvres consomment la végétation spontanée comme les plantes cultivées; leur alimentation peut aussi toucher les jeunes cultures et les pousses ligneuses. Ils constituent une proie, notamment lorsqu’ils sont jeunes : le renard est un prédateur important dans certaines régions d’Europe. Leur besoin simultané de nourriture et de couvert rend l’organisation des champs déterminante. Des études allemandes montrent que les récoltes et autres travaux agricoles modifient l’utilisation des parcelles, selon le type d’intervention et le paysage."
+    },
+    "conservation": {
+      "en": "A widespread species can still be scarce locally. The Mammal Society lists the European hare as Least Concern globally, while documenting declines and habitat problems in Britain. This regional picture should not be mistaken for the status of every population. Intensive, specialised farming can reduce the mix of forage and cover, and machinery may kill hares; local outcomes also vary with predation and land use. The broad global category therefore sits alongside substantial regional conservation concern.",
+      "fr": "Une espèce largement répartie peut rester rare localement. La Mammal Society classe le Lièvre d’Europe en préoccupation mineure à l’échelle mondiale, tout en signalant des déclins et des problèmes d’habitat en Grande-Bretagne. Cette situation régionale ne décrit pas toutes les populations. L’agriculture intensive et spécialisée peut réduire la diversité des ressources alimentaires et du couvert; les machines peuvent tuer des lièvres. Les tendances locales varient aussi selon la prédation et l’usage des terres. La catégorie mondiale coexiste donc avec de réelles préoccupations régionales de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lepus europaeus (Lagomorpha: Leporidae)",
+        "fr": "Lepus europaeus (Lagomorpha : Leporidae)"
+      },
+      "url": "https://academic.oup.com/mspecies/article/52/997/125/6046128",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Species account reports hares living above ground year-round in forms rather than rabbit warrens.",
+        "Describes long ears, powerful hind limbs, pelage, herbivory, caecotrophy, boxing and precocial young.",
+        "Notes species-specific European distribution and red fox as a predator in Europe.",
+        "Adults 550–650 mm head-body length and 3.5–5.0 kg; mass varies seasonally in both sexes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brown hare",
+        "fr": "Lièvre brun (fiche de la Mammal Society)"
+      },
+      "url": "https://mammal.org.uk/british-mammals/brown-hare",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Institutional species profile gives red-brown coloration, black-tipped ears and tail, long hind legs, form use, feeding times and speeds.",
+        "Reports UK breeding and nursing patterns, fox predation, global Least Concern listing, and British pressures from farm specialisation, machinery and pesticides.",
+        "British examples are treated as regional context, not as a proxy for all populations."
+      ]
+    },
+    {
+      "title": {
+        "en": "The European Hare: A Picky Herbivore Searching for Plant Parts Rich in Fat",
+        "fr": "Le Lièvre d’Europe : un herbivore sélectif qui recherche les parties végétales riches en lipides"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4521881/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Three-year Austrian arable-land study found selection for energy, crude fat and protein and avoidance of crude fibre.",
+        "Study discusses seasonal reproductive energy demand and the role of weeds, grasses and crop diversity in habitat quality."
+      ]
+    },
+    {
+      "title": {
+        "en": "Living on the edge: circadian habitat usage in pre-weaning European hares in an intensively used agricultural area",
+        "fr": "Vivre en marge : utilisation circadienne de l’habitat par les jeunes lièvres d’Europe avant le sevrage en milieu agricole intensif"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6733508/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Central European reproduction is reported from January to October, with three to four litters and one to four leverets depending on season.",
+        "Field observations describe short nightly nursing, independent hiding places and weaning in the fifth week."
+      ]
+    },
+    {
+      "title": {
+        "en": "How do agricultural practices affect the movement behaviour of European brown hares?",
+        "fr": "Comment les pratiques agricoles influencent-elles les déplacements du Lièvre d’Europe ?"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0167880920300049",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "GPS and accelerometer study of 36 hares in northeast and southern Germany compared movements before and after farm management events.",
+        "Hares spent more time on recently harvested crop fields; range changes depended on management type and large-field landscapes."
+      ]
+    },
+    {
+      "title": {
+        "en": "In Vitro Study of Caecal Fermentation in the Brown Hare and Domestic Rabbit",
+        "fr": "Étude in vitro de la fermentation cæcale chez le lièvre brun et le lapin domestique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4309574/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Comparative paper identifies both species as hindgut fermenters that practise caecotrophy."
+      ]
+    },
+    {
+      "title": {
+        "en": "The effect of landscape heterogeneity on European hare density and habitat preferences",
+        "fr": "Effet de l’hétérogénéité du paysage sur la densité et les préférences d’habitat du lièvre d’Europe"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S1616504717302069",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Central European farmland study links hare distribution to landscape heterogeneity and crop diversity."
+      ]
+    },
+    {
+      "title": {
+        "en": "Why Did Brown Hare Disappear from Some Areas in Central Poland?",
+        "fr": "Pourquoi le lièvre brun a-t-il disparu de certaines régions de Pologne centrale ?"
+      },
+      "url": "https://www.mdpi.com/1424-2818/14/6/465",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Local Polish long-term population data demonstrate severe regional decline and contrasts between farming landscapes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Reproduction and ‘March madness’ in the brown hare, Lepus europaeus",
+        "fr": "Reproduction et « folie de mars » chez le lièvre brun, Lepus europaeus"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/j.1469-7998.1974.tb03140.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Study of 760 hares links seasonal spring rutting behaviour with reproductive physiology and records breeding mainly January–August."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult European hare, natural tawny reddish-brown coat, long black-tipped ears, powerful elongated hind legs, pale underside and black upper tail; anatomically accurate, standing in a natural alert pose on a PURE WHITE background.",
+  "uncertainties": [
+    "The Mammal Society page reports global Least Concern but does not give an assessment year; no assessment date is asserted here.",
+    "Breeding dates, litter sizes and local threats vary geographically; Central European and British observations are labelled as regional evidence."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review with primary sources. Root edited newborn-spine wording where applicable and improved clouded-leopard geographic habitat and functional climbing explanation while preserving captive-data scope."
+}

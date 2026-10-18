@@ -1,0 +1,147 @@
+{
+  "id": "rough_legged_buzzard",
+  "scientific": "Buteo lagopus",
+  "group": "birds",
+  "name": {
+    "en": "Rough-legged Buzzard",
+    "fr": "Buse pattue"
+  },
+  "sections": {
+    "overview": {
+      "en": "This northern raptor breeds across Arctic regions of Eurasia and North America, then moves south into open wintering country.",
+      "fr": "Ce rapace nordique niche dans les régions arctiques d’Eurasie et d’Amérique du Nord, puis gagne vers le sud des milieux ouverts pour hiverner."
+    },
+    "identification": {
+      "en": "Feathers extend down the legs to the toes; long wings, dark wrist patches and a pale tail with a dark band aid identification.",
+      "fr": "Les plumes descendent jusqu’aux doigts; les longues ailes, taches sombres aux poignets et queue pâle barrée de sombre facilitent l’identification."
+    },
+    "habitat": {
+      "en": "It hunts open tundra and cliffs during breeding, and uses fields, marshes and other open landscapes in winter.",
+      "fr": "Il chasse dans la toundra ouverte et niche sur des falaises, puis fréquente champs, marais et autres espaces dégagés en hiver."
+    },
+    "diet": {
+      "en": "Small rodents, especially lemmings and voles, dominate its diet, supplemented by birds and occasional carrion.",
+      "fr": "Les petits rongeurs, notamment lemmings et campagnols, dominent son régime, complété par des oiseaux et parfois des charognes."
+    },
+    "behavior": {
+      "en": "It often hovers into the wind while searching for prey, and its numbers and breeding success track small-mammal availability.",
+      "fr": "Il fait souvent du surplace face au vent pour repérer ses proies, et ses effectifs ainsi que son succès reproducteur suivent la disponibilité des micromammifères."
+    },
+    "reproduction": {
+      "en": "Pairs place bulky stick nests on cliffs or rocky ledges, often reusing or repairing a nest in later years.",
+      "fr": "Les couples installent de grands nids de branchages sur des falaises ou corniches rocheuses, qu’ils réutilisent ou réparent souvent."
+    },
+    "ecology": {
+      "en": "As a predator of small mammals, it responds strongly to prey cycles and occupies an important role in Arctic food webs.",
+      "fr": "Prédateur de petits mammifères, il réagit fortement aux cycles de ses proies et joue un rôle important dans les réseaux alimentaires arctiques."
+    },
+    "conservation": {
+      "en": "Its global status is Least Concern, but local abundance fluctuates markedly with prey cycles and winter conditions.",
+      "fr": "Son statut mondial est de préoccupation mineure, mais son abondance locale fluctue nettement selon les cycles de proies et les conditions hivernales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rough-legged Hawk — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Buse pattue — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Rough-legged_Hawk/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell describes Arctic breeding, open-country wintering, small-mammal prey, hovering hunts and cliff nests; it reports a global assessment of Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 21,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Buse pattue — Guide des oiseaux de proie des Territoires du Nord-Ouest",
+        "fr": "Buse pattue — Guide des oiseaux de proie des Territoires du Nord-Ouest"
+      },
+      "url": "https://www.gov.nt.ca/ecc/sites/ecc/files/resources/128-raptor_guide_fr.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "The French-language territorial guide describes feathered tarsi, underwing and tail marks, Arctic breeding, rodent prey, and cliff ledges with nest reuse."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 21,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Buteo lagopus — Forest and Rangeland Ecosystem Science, USDA Forest Service",
+        "fr": "Buteo lagopus — Forest and Rangeland Ecosystem Science, USDA Forest Service"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/bula",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The US Forest Service review summarizes the species’ circumpolar Arctic breeding distribution and prey-linked variation in breeding ecology."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 18,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The broad conservation category does not imply stable local numbers; this species’ breeding productivity varies with cyclic rodent prey."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Cornell’s North American life-history account with the French Northwest Territories raptor guide and the USDA Forest Service species review."
+}

@@ -1,0 +1,78 @@
+{
+  "id": "tufted_duck",
+  "scientific": "Aythya fuligula",
+  "group": "birds",
+  "name": {
+    "en": "Tufted Duck",
+    "fr": "Fuligule morillon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tufted duck is a compact diving duck of lakes and ponds, named for the drooping crest on the back of its head. It is common across much of Britain, including on park lakes in towns and cities.",
+      "fr": "Le fuligule morillon est un canard plongeur trapu des lacs et des étangs, nommé d’après la huppe retombante à l’arrière de sa tête. Il est courant dans une grande partie de la Grande-Bretagne, y compris sur les plans d’eau des parcs urbains."
+    },
+    "identification": {
+      "en": "In Britain adults weigh about 850 g, males slightly more than females, with a wing near 205 mm. The male is black with white flanks and a bright yellow eye; the female is brown with a white belly and also has yellow eyes. Both have a crest, longer and blacker in the male, and white under the wing.",
+      "fr": "En Grande-Bretagne, les adultes pèsent environ 850 g, les mâles un peu plus que les femelles, avec une aile d’environ 205 mm. Le mâle est noir avec les flancs blancs et l’œil jaune vif; la femelle est brune avec le ventre blanc et a aussi l’œil jaune. Les deux ont une huppe, plus longue et plus noire chez le mâle, et du blanc sous l’aile."
+    },
+    "habitat": {
+      "en": "In the breeding season it favours lakes, with ponds also common, and nests in dense vegetation near the water. In winter it spreads across much of Britain on lakes and ponds, including in towns and cities. It prefers shallow lakes with dense reeds for breeding.",
+      "fr": "En période de reproduction, il fréquente surtout les lacs, mais aussi les étangs, et niche dans la végétation dense près de l’eau. En hiver, il se répartit sur une grande partie de la Grande-Bretagne, sur les lacs et les étangs, y compris en ville. Pour nicher, il préfère les lacs peu profonds bordés de roseaux denses."
+    },
+    "diet": {
+      "en": "It dives to feed on aquatic invertebrates and bivalve molluscs, with mussels such as the zebra mussel an important food. It also eats some plant matter. Ducklings eat insects from the water surface at first.",
+      "fr": "Il plonge pour se nourrir d’invertébrés aquatiques et de mollusques bivalves, parmi lesquels des moules comme la moule zébrée tiennent une place importante. Il mange aussi un peu de matière végétale. Les canetons mangent d’abord des insectes à la surface de l’eau."
+    },
+    "behavior": {
+      "en": "The tufted duck is highly aquatic and is often seen diving, sometimes springing slightly out of the water to start a dive. Birds are social outside the breeding season, while males defend territories around nests in spring. Courtship includes bill-dipping and neck stretches, and winter numbers in Britain are boosted by visitors from as far as central Russia.",
+      "fr": "Le fuligule morillon est très aquatique et plonge souvent, parfois en bondissant légèrement hors de l’eau pour amorcer sa plongée. Les oiseaux sont grégaires en dehors de la reproduction, tandis que les mâles défendent un territoire autour des nids au printemps. La parade comprend des plongeons du bec et des étirements du cou, et les effectifs hivernaux britanniques sont renforcés par des visiteurs venus jusqu’au centre de la Russie."
+    },
+    "reproduction": {
+      "en": "In Britain a clutch is typically eight to eleven eggs, incubated by the female for about 25 days. The downy chicks feed themselves soon after hatching and fledge at roughly 45–50 days. Only the female provides direct care, and birds typically first breed at one year old.",
+      "fr": "En Grande-Bretagne, une couvée compte typiquement huit à onze œufs, couvés par la femelle pendant environ 25 jours. Les poussins couverts de duvet se nourrissent seuls peu après l’éclosion et volent vers 45 à 50 jours. Seule la femelle prodigue des soins directs, et les oiseaux se reproduisent en général pour la première fois à un an."
+    },
+    "ecology": {
+      "en": "As a diver on mussels and other invertebrates, the tufted duck can strongly affect those prey populations. Eggs and young fall prey to crows and mammals, and adults to foxes and large birds of prey; incubating females rely on camouflage. It also hosts a parasite that uses molluscs as an intermediate host.",
+      "fr": "Plongeur qui se nourrit de moules et d’autres invertébrés, le fuligule morillon peut influencer fortement ces populations de proies. Les œufs et les jeunes sont la proie des corneilles et des mammifères, et les adultes celle des renards et de grands rapaces; les femelles qui couvent comptent sur leur camouflage. Il héberge aussi un parasite qui utilise des mollusques comme hôte intermédiaire."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, but it is considered Near Threatened in Europe, and Green-listed in the UK. Britain holds about 17,000 breeding pairs (2016) and about 140,000 wintering birds, though the winter count fell 21% between 1998 and 2023. The oldest ringed bird lived over 24 years.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais elle est considérée comme quasi menacée en Europe, et sur la liste verte au Royaume-Uni. La Grande-Bretagne compte environ 17 000 couples nicheurs (2016) et environ 140 000 oiseaux hivernants, bien que l’effectif hivernal ait baissé de 21 % entre 1998 et 2023. Le plus vieil oiseau bagué a vécu plus de 24 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tufted Duck — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Fuligule morillon — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/tufted-duck",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults 853 g, wing 205 mm; clutch typically 8–11; incubation about 25 days; fledging 45–50 days; first breeding at 1 year.",
+        "UK 17,000 breeding pairs (2016), 140,000 wintering birds (2012–17), winter −21% (1998–2023); Green in UK, Near Threatened in Europe, IUCN Least Concern; record age 24 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aythya fuligula — Animal Diversity Web, University of Michigan",
+        "fr": "Aythya fuligula — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Aythya_fuligula/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Males black with white flanks and yellow eyes, females brown; breeds on shallow reedy lakes; molluscs (zebra mussels) main food; springs out of the water to dive; only females provide direct care.",
+        "Predators include foxes, birds of prey, crows; hosts the nasal parasite Trichobilharzia regenti; affects aquatic invertebrate populations."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives 26–27 days of incubation and 49–56 days to fledging versus about 25 and 45–50 in BTO data; the BTO figures were used.",
+    "BirdFacts lists the UK breeding trend as stable but also shows a 9% change (1995–2024), so no breeding trend is stated.",
+    "Numbers are British; clutch size and timing vary across the wide range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW used for qualitative facts; illustration (adult male) checked against sources."
+}

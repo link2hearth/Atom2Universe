@@ -1,0 +1,176 @@
+{
+  "id": "ero_aphana",
+  "scientific": "Ero aphana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Four-humped Pirate Spider",
+    "fr": "Araignée pirate à quatre bosses"
+  },
+  "sections": {
+    "overview": {
+      "en": "The World Spider Catalog accepts Ero aphana in the pirate-spider family Mimetidae.",
+      "fr": "Le World Spider Catalog classe Ero aphana dans la famille des araignées pirates, les Mimetidae."
+    },
+    "identification": {
+      "en": "Males are about 2.5 mm and females 3.0–4.2 mm; four humps mark the abdomen, but genitalia help separate similar Ero.",
+      "fr": "Le mâle mesure environ 2,5 mm et la femelle 3,0 à 4,2 mm ; l’abdomen porte quatre bosses, mais les pièces génitales distinguent les Ero proches."
+    },
+    "habitat": {
+      "en": "It occurs on bushes in warm areas, including woodland edges; French records also include other vegetation and rocky places.",
+      "fr": "Elle fréquente les buissons des zones chaudes, notamment les lisières ; les données françaises incluent aussi végétation et milieux rocheux."
+    },
+    "diet": {
+      "en": "Mimetids prey on other web-building spiders, invading webs before attacking.",
+      "fr": "Les Mimetidae chassent d’autres araignées à toile et s’introduisent dans leur réseau avant d’attaquer."
+    },
+    "behavior": {
+      "en": "The French regional account describes mimetids approaching on the host web and seizing prey with spiny forelegs.",
+      "fr": "La fiche régionale décrit les Mimetidae avançant sur la toile de l’hôte et saisissant leurs proies avec leurs pattes épineuses."
+    },
+    "reproduction": {
+      "en": "ODIN reports an annual cycle, spring-to-summer adults and suspended egg sacs with up to about ten eggs.",
+      "fr": "ODIN rapporte un cycle annuel, des adultes du printemps à l’été et des cocons suspendus contenant jusqu’à une dizaine d’œufs."
+    },
+    "ecology": {
+      "en": "Four abdominal humps distinguish it from several Ero with two; genital examination helps separate E. tuberculata.",
+      "fr": "Quatre bosses abdominales la distinguent de plusieurs Ero qui en ont deux ; l’examen génital aide à la séparer d’E. tuberculata."
+    },
+    "conservation": {
+      "en": "The French regional platform lists Least Concern in Normandy; this is a regional, not global, assessment.",
+      "fr": "La plateforme régionale indique « Préoccupation mineure » en Normandie ; cette évaluation est régionale et non mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ero aphana — Spiders of Europe",
+        "fr": "Ero aphana — Spiders of Europe"
+      },
+      "url": "https://araneae.nmbe.ch/data/190/Ero_aphana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "European spider account gives adult sizes, four-humped abdomen, habitat and distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Araignée pirate — ODIN Normandie",
+        "fr": "Araignée pirate — ODIN Normandie"
+      },
+      "url": "https://odin.anbdd.fr/espece/903",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French regional profile describes Mimetidae hunting and E. aphana life cycle and regional status."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ero aphana — World Spider Catalog",
+        "fr": "Ero aphana — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/28049/Ero_aphana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "World Spider Catalog accepts the taxon in Mimetidae and lists its distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Predatory behavior is explicitly framed as family-level evidence; the French LC label is national and not treated as a global assessment."
+}

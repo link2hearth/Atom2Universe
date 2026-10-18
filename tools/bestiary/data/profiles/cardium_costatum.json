@@ -1,0 +1,186 @@
+{
+  "id": "cardium_costatum",
+  "scientific": "Cardium costatum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Costate Cockle",
+    "fr": "Bucarde côtelée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cardium costatum is a large marine cockle of the tropical eastern Atlantic, especially documented along West Africa.",
+      "fr": "Cardium costatum est une grande bucarde marine de l’Atlantique tropical oriental, particulièrement documentée le long de l’Afrique de l’Ouest."
+    },
+    "identification": {
+      "en": "Adults are reported at about 80–110 mm; the inflated shell bears strong radial ribs, the feature behind its common name.",
+      "fr": "Les adultes sont signalés autour de 80 à 110 mm ; la coquille renflée porte de fortes côtes radiales, à l’origine de son nom courant."
+    },
+    "habitat": {
+      "en": "Records place it on shallow sandy to muddy bottoms along the West African Atlantic coast, including the waters off Côte d’Ivoire.",
+      "fr": "Les données la situent sur des fonds peu profonds, sableux à vaseux, de la côte atlantique ouest-africaine, notamment au large de la Côte d’Ivoire."
+    },
+    "diet": {
+      "en": "A two-year study of 400 Ivorian specimens found a plankton-feeding diet, especially phytoplankton, with detritus and bacteria also consumed.",
+      "fr": "Une étude de deux ans portant sur 400 spécimens ivoiriens a décrit un régime planctonophage, surtout phytoplanctonique, complété par des détritus et des bactéries."
+    },
+    "behavior": {
+      "en": "Like other cockles, it is a shallow-burrowing bivalve that filters suspended food from water; species-specific behavioral observations are limited.",
+      "fr": "Comme d’autres bucardes, c’est un bivalve fouisseur peu profond qui filtre les particules alimentaires de l’eau ; les observations comportementales propres à l’espèce sont limitées."
+    },
+    "reproduction": {
+      "en": "Its larval and reproductive biology is poorly covered in the sources located, so no detailed breeding schedule is given here.",
+      "fr": "Sa biologie larvaire et reproductive est peu décrite dans les sources trouvées ; aucun calendrier détaillé de reproduction n’est donc avancé."
+    },
+    "ecology": {
+      "en": "The accepted name is Cardium costatum; the 2007 taxonomic literature clarified its identity against the similar West African C. maxicostatum.",
+      "fr": "Le nom accepté est Cardium costatum ; la littérature taxonomique de 2007 a clarifié son identité par rapport à C. maxicostatum, espèce ouest-africaine ressemblante."
+    },
+    "conservation": {
+      "en": "No species-level conservation assessment was located; occurrence records and fisheries information are too limited here to infer population security.",
+      "fr": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; les données d’occurrence et de pêche disponibles ici ne permettent pas de conclure à la sécurité des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cardium costatum — World Register of Marine Species",
+        "fr": "Cardium costatum — Registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?id=224543&p=taxdetails",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "WoRMS accepts the taxon and records adult length and common names."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 11,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphological adaptations in cardiid bivalves — Paleontological Research",
+        "fr": "Adaptations morphologiques des bucardes — Paleontological Research"
+      },
+      "url": "https://www.jstage.jst.go.jp/article/prpsj/8/4/8_4_221/_pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Peer-reviewed study reports West African range and shallow sandy-muddy habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 10,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food and Feeding Habits of Cardium costatum in Côte d’Ivoire — IJCMAS",
+        "fr": "Alimentation de Cardium costatum en Côte d’Ivoire — IJCMAS"
+      },
+      "url": "https://www.ijcmas.com/abstractview.php?ID=22508&SNo=45&vol=10-9-2021",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Two-year examination of Ivorian specimens reports phytoplankton, detritus and bacterial food."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 11,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notes on the identity of Cardium costatum — Basteria",
+        "fr": "Notes sur l’identité de Cardium costatum — Basteria"
+      },
+      "url": "https://natuurtijdschriften.nl/pub/597335/BAST2007071001005.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic paper distinguishes C. costatum and C. maxicostatum; conservation status is not assessed."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 13,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Family Details for Cardiidae — SeaLifeBase",
+        "fr": "Données sur la famille Cardiidae — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.se/summary/FamilySummary.php?ID=1849",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The family overview describes cockles generally as shallow burrowers and does not assign Cardium costatum a conservation category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 18,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The diet study covers Côte d’Ivoire and should not be assumed to represent every population.",
+    "Les informations de reproduction et le statut de conservation à l’échelle de l’espèce restent insuffisamment documentés."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared WoRMS taxonomy, a peer-reviewed West African shell/habitat study, an Ivorian diet study and the taxonomic revision. Kept the C. costatum/C. maxicostatum distinction explicit."
+}

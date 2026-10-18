@@ -1,0 +1,164 @@
+{
+  "id": "carcharhinus_amblyrhynchoides",
+  "scientific": "Carcharhinus amblyrhynchoides",
+  "group": "fish",
+  "name": {
+    "en": "Graceful Shark",
+    "fr": "Requin gracile"
+  },
+  "sections": {
+    "overview": {
+      "en": "The graceful shark is an Indo-West Pacific requiem shark of coastal and continental-shelf waters, recorded from the Gulf region to northern Australia.",
+      "fr": "Le requin gracile est un requin requiem de l’Indo-Pacifique occidental, présent dans les eaux côtières et du plateau continental, de la région du Golfe jusqu’au nord de l’Australie."
+    },
+    "identification": {
+      "en": "It is a medium-sized streamlined shark; Australian records give a maximum of 167 cm total length, while reliable records can be confused with similar blacktip sharks.",
+      "fr": "C’est un requin fusiforme de taille moyenne ; les données australiennes indiquent une longueur totale maximale de 167 cm, mais les confusions avec d’autres requins à pointes noires compliquent les relevés."
+    },
+    "habitat": {
+      "en": "It uses continental-shelf waters to at least 50 m and is especially associated with mangrove habitats in northern Australia.",
+      "fr": "Il fréquente les eaux du plateau continental jusqu’à au moins 50 m et est particulièrement associé aux mangroves dans le nord de l’Australie."
+    },
+    "diet": {
+      "en": "Its diet includes fishes; species-specific prey data are limited, and fishing records often group it with other blacktip sharks.",
+      "fr": "Son régime comprend des poissons ; les données précises sur ses proies sont limitées et les captures le regroupent souvent avec d’autres requins à pointes noires."
+    },
+    "behavior": {
+      "en": "It is a mobile coastal predator, but detailed movement and lifespan information remains sparse.",
+      "fr": "C’est un prédateur côtier mobile, mais les données détaillées sur ses déplacements et sa longévité restent rares."
+    },
+    "reproduction": {
+      "en": "It is a live-bearing shark; available Australian syntheses report maturity near 110 cm total length in both sexes, while other reproductive details remain poorly known.",
+      "fr": "C’est un requin vivipare ; les synthèses australiennes indiquent une maturité vers 110 cm de longueur totale dans les deux sexes, mais les autres détails reproductifs sont peu connus."
+    },
+    "ecology": {
+      "en": "It can be mistaken for the blacktip shark C. limbatus or spinner shark C. brevipinna; it is distinct from the grey reef shark C. amblyrhynchos despite the similar scientific name.",
+      "fr": "Il peut être confondu avec le requin à pointes noires C. limbatus ou le requin-tisserand C. brevipinna ; il se distingue du requin gris de récif C. amblyrhynchos malgré le nom scientifique proche."
+    },
+    "conservation": {
+      "en": "FishBase reports the current global IUCN category as Vulnerable; fishing pressure and identification problems complicate estimates of population trends.",
+      "fr": "FishBase rapporte la catégorie mondiale actuelle de l’UICN « vulnérable » ; la pression de pêche et les difficultés d’identification compliquent l’estimation des tendances démographiques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Graceful Shark — Australian Shark Report",
+        "fr": "Requin gracile — Rapport australien sur les requins"
+      },
+      "url": "https://www.fish.gov.au/docs/SharkReport/2023_FRDC_Carcharhinus_amblyrhynchoides_final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Australian fisheries synthesis gives size, shelf habitat, mangrove association and life-history summary."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 12,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carcharhinus amblyrhynchoides — FishBase",
+        "fr": "Carcharhinus amblyrhynchoides — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/860",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports taxonomic name, IUCN category and fisheries information."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 9,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Graceful Shark CITES non-detriment advice — Australian Government",
+        "fr": "Requin gracile — avis australien CITES"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/expert-advice-cites-ndfs-graceful-sharks.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Government advice summarizes species-specific data limitations and fisheries context."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 9,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Graceful Shark — IUCN/SSC regional assessment",
+        "fr": "Requin gracile — évaluation régionale UICN/SSC"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/2017-035.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Regional assessment describes look-alikes, fishery capture and concern about declines."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 10,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Maximum length differs among references; the draft uses the Australian synthesis rather than older larger estimates.",
+    "La catégorie vulnérable est mondiale selon FishBase, tandis que certains anciens bilans régionaux emploient d’autres catégories."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the Australian shark report, FishBase, Australian CITES advice and an IUCN/SSC regional assessment. Distinguished C. amblyrhynchoides from C. limbatus, C. brevipinna and C. amblyrhynchos."
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Open periodic table</string>
+    <string name="periodic_info_atomic_number">Atomic number</string>
+    <string name="periodic_info_mass">Mass</string>
+    <string name="periodic_info_period">Period</string>
+    <string name="periodic_info_symbol">Symbol</string>
+    <string name="periodic_info_category">Category</string>
+    <string name="periodic_info_group">Group</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Tap the name to see the description</string>
+    <string name="periodic_table_title">Periodic Table</string>
+
+    <string name="periodic_prop_phase">Phase</string>
+    <string name="periodic_prop_density">Density</string>
+    <string name="periodic_prop_melt">Melting point</string>
+    <string name="periodic_prop_boil">Boiling point</string>
+    <string name="periodic_prop_block">Orbital block</string>
+    <string name="periodic_prop_shells">Electron shells</string>
+    <string name="periodic_prop_electronegativity">Electronegativity</string>
+    <string name="periodic_prop_electron_config">Electron config.</string>
+    <string name="periodic_prop_discovered_by">Discovered by</string>
+    <string name="periodic_prop_named_by">Named by</string>
+    <string name="periodic_prop_appearance">Appearance</string>
+    <string name="periodic_prop_unknown">Unknown</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Physical &amp; Chemical Properties</string>
+    <string name="periodic_atom_section_title">Bohr Model</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+
+    <string name="periodic_category_alkali_metal">Alkali metal</string>
+    <string name="periodic_category_alkaline_earth_metal">Alkaline earth metal</string>
+    <string name="periodic_category_transition_metal">Transition metal</string>
+    <string name="periodic_category_post_transition_metal">Post-transition metal</string>
+    <string name="periodic_category_metalloid">Metalloid</string>
+    <string name="periodic_category_nonmetal">Nonmetal</string>
+    <string name="periodic_category_halogen">Halogen</string>
+    <string name="periodic_category_noble_gas">Noble gas</string>
+    <string name="periodic_category_lanthanide">Lanthanide</string>
+    <string name="periodic_category_actinide">Actinide</string>
+    <string name="periodic_phase_solid">Solid</string>
+    <string name="periodic_phase_liquid">Liquid</string>
+    <string name="periodic_phase_gas">Gas</string>
+</resources>

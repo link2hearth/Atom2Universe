@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="#1AFFFFFF"
+    android:layout_marginBottom="6dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bonus_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bonus_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/bonus_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#AAFFD700"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bonus_minus"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="−"
+        android:textSize="18sp"
+        android:padding="0dp"
+        android:backgroundTint="#33FFFFFF"
+        android:textColor="#FFFFFFFF" />
+
+    <TextView
+        android:id="@+id/bonus_qty"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="0" />
+
+    <Button
+        android:id="@+id/bonus_plus"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="+"
+        android:textSize="18sp"
+        android:padding="0dp"
+        android:backgroundTint="#33FFFFFF"
+        android:textColor="#FFFFFFFF" />
+
+    <TextView
+        android:id="@+id/bonus_cost"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFD700"
+        android:textSize="12sp"
+        android:layout_marginStart="8dp" />
+</LinearLayout>

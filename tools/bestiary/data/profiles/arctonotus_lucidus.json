@@ -1,0 +1,259 @@
+{
+  "id": "arctonotus_lucidus",
+  "scientific": "Arctonotus lucidus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Pacific Green Sphinx",
+    "fr": "Arctonotus lucidus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The catalogue retains Arctonotus lucidus, its original combination; molecular work placed it within Proserpinus, so the accepted name is Proserpinus lucidus. English sources call it the Pacific Green Sphinx, while the 2009 revisers preferred Bear Sphinx.",
+      "fr": "Le catalogue conserve Arctonotus lucidus, sa combinaison originale; des travaux moléculaires l’ont replacée dans le genre Proserpinus, d’où le nom accepté Proserpinus lucidus. En anglais, l’espèce est appelée Pacific Green Sphinx, tandis que les auteurs de la révision de 2009 préféraient Bear Sphinx."
+    },
+    "identification": {
+      "en": "Adults have a wingspan of about 4.8–6.1 cm and a short, stout body; the sources reviewed give no separate male and female size ranges. The forewings are green to olive with purple-pink bands, and the hindwings are rose-pink with a darker red band near the edge. The male's ciliate antennae and unusually heavy, woolly-looking vestiture helped distinguish the old genus Arctonotus, but molecular evidence now places it among Proserpinus. Young caterpillars have a small black anal horn; later instars lose the horn and develop a conspicuous yellow-ringed eyespot at the tail end. The late caterpillar varies from green to pink or nearly black, with pale bands and lines; it can be confused with the related Proserpinus clarkiae, but the two have different larval markings.",
+      "fr": "L’adulte atteint environ 4,8 à 6,1 cm d’envergure et possède un corps court et trapu; les sources consultées ne donnent pas de plages de taille distinctes pour les mâles et les femelles. Les ailes antérieures sont vertes à olive, barrées de rose violacé, et les ailes postérieures rose pâle portent une bande rouge sombre près du bord. Les antennes ciliées du mâle et son revêtement particulièrement dense et laineux avaient contribué à distinguer l’ancien genre Arctonotus, mais la phylogénie moléculaire le place aujourd’hui parmi les Proserpinus. Les jeunes chenilles portent une petite corne noire à l’extrémité abdominale; aux derniers stades, elle disparaît et laisse place à un ocelle jaune cerclé, très visible à l’arrière. La coloration varie alors du vert au rose ou au presque noir, avec des lignes claires; elle peut être confondue avec celle de Proserpinus clarkiae, mais les motifs larvaires des deux espèces diffèrent."
+    },
+    "habitat": {
+      "en": "Its Pacific North American range includes California, Oregon, Washington and Idaho, where it inhabits oak woodland and grassland.",
+      "fr": "Son aire pacifique comprend la Californie, l’Oregon, Washington et l’Idaho; elle fréquente les chênaies et les prairies."
+    },
+    "diet": {
+      "en": "The caterpillars feed on evening-primrose relatives in the family Onagraceae, including Clarkia, Camissonia and Oenothera. Field observations confirm Clarkia breweri and Clarkia modesta as host plants; other plants have been used in rearing but are less certain as wild hosts.",
+      "fr": "Les chenilles se nourrissent de plantes apparentées aux onagres, dans la famille des Onagraceae, notamment Clarkia, Camissonia et Oenothera. Les observations de terrain confirment Clarkia breweri et Clarkia modesta comme plantes hôtes; d’autres plantes ont servi en élevage, mais leur rôle dans la nature est moins certain."
+    },
+    "behavior": {
+      "en": "Adults fly in winter and early spring, from December in southern California to April in Washington and British Columbia. They are nocturnal, come to lights, and do not feed because their proboscis is vestigial.",
+      "fr": "Les adultes volent en hiver et au début du printemps, de décembre en Californie méridionale jusqu’en avril dans l’État de Washington et en Colombie-Britannique. Ils sont nocturnes, viennent aux lumières et ne s’alimentent pas, car leur trompe est vestigiale."
+    },
+    "reproduction": {
+      "en": "Females deposit eggs singly or in pairs; in one captive study, two females laid 380 eggs in total, so this count is a small laboratory sample. Larvae began pupating about four to five weeks after hatching, sometimes underground in host-plant roots, and the pupae produced adults the following winter.",
+      "fr": "Les femelles pondent les œufs isolément ou par paires; dans une étude en captivité, deux femelles en ont pondu 380 au total, un petit échantillon de laboratoire. Les chenilles commençaient à se nymphoser environ quatre à cinq semaines après l’éclosion, parfois sous terre dans les racines de la plante hôte, et les chrysalides donnaient des adultes l’hiver suivant."
+    },
+    "ecology": {
+      "en": "This winter-flying sphinx is adapted to open woodland: US Forest Service guidance notes that infrequent controlled burns or thinning can preserve suitable openings. Its pupae can develop when surface temperatures still fall below freezing.",
+      "fr": "Ce sphinx au vol hivernal est lié aux boisements ouverts: le service forestier américain indique que des brûlages contrôlés peu fréquents ou des éclaircies peuvent maintenir ces ouvertures. Ses chrysalides peuvent se développer lorsque la température de surface descend encore sous zéro."
+    },
+    "conservation": {
+      "en": "NatureServe ranks it G5, globally secure, though it may be rare at range edges and affected by invasive weeds.",
+      "fr": "NatureServe la classe G5, sûre à l’échelle mondiale, mais elle peut être rare aux marges de son aire et affectée par les plantes envahissantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Synonymization of Arctonotus based on molecular phylogeny — Journal of the Lepidopterists’ Society",
+        "fr": "Synonymisation d’Arctonotus selon la phylogénie moléculaire — Journal of the Lepidopterists’ Society"
+      },
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/2000s/2009/2009-63-4-233.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The 2009 paper uses molecular evidence to place A. lucidus within Proserpinus and compares related species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 16,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Proserpinus lucidus — LepIndex, Natural History Museum, London",
+        "fr": "Proserpinus lucidus — LepIndex, Muséum d’histoire naturelle de Londres"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=55416",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Natural History Museum lists Proserpinus lucidus as the current valid name."
+      ],
+      "prose_claims": [
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 12,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Green Sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx vert du Pacifique — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Proserpinus-lucidus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BMNA lists its range, span, colors, hosts, habitat and G5 rank."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 11,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arctonotus lucidus — Pacific Northwest Forest Service Lepidoptera profiles",
+        "fr": "Arctonotus lucidus — profils de lépidoptères du service forestier du Nord-Ouest Pacifique"
+      },
+      "url": "https://www.fs.usda.gov/foresthealth/technology/pdfs/MILLER_LEPIDOPTERA_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "US Forest Service profile gives adult wing colors and describes open-habitat management for populations."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 14,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Observations of adult and larval behavior in the winter sphingid — Journal of the Lepidopterists’ Society",
+        "fr": "Observations sur le comportement adulte et larvaire du sphinx hivernal — Journal of the Lepidopterists’ Society"
+      },
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/2000s/2001/2001-55(2)78-Rubinoff.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Field and captive observations document adult season, nonfeeding, egg laying, larval development and pupation."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 14,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Additional notes on Proserpinus clarkiae and Arctonotus lucidus life histories — Journal of the Lepidopterists’ Society",
+        "fr": "Notes complémentaires sur les cycles de Proserpinus clarkiae et Arctonotus lucidus — Journal of the Lepidopterists’ Society"
+      },
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/1990s/1999/1999-53(4)169-Cordero.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Life-history note distinguishes A. lucidus and P. clarkiae larvae and reports Clarkia host associations."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 14,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Proserpinus lucidus — French-language overview of the species",
+        "fr": "Proserpinus lucidus — fiche française de l’espèce"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Proserpinus_lucidus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "identification"
+      ],
+      "facts": [
+        "French-language secondary page cross-checks accepted combination, winter season and late-larval eyespot; core biology was checked against primary studies."
+      ],
+      "prose_claims": [
+        "overview.fr.2",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 18,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adult wingspan is reported as about 5.0 cm by the Forest Service and 4.8–6.1 cm by BMNA; no sex-specific adult range, mass, body height or body width was found.",
+    "Egg number and some life-history observations come from a small captive sample; Clarkia breweri and C. modesta are the field-confirmed larval hosts cited here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked two primary life-history papers, the 2009 molecular taxonomic revision, a US Forest Service field profile, a North American moth account, the Natural History Museum name record and a French-language secondary page; the existing tree identifier is retained while the accepted combination is stated explicitly."
+}

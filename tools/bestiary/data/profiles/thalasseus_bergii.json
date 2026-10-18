@@ -1,0 +1,144 @@
+{
+  "id": "thalasseus_bergii",
+  "scientific": "Thalasseus bergii",
+  "group": "birds",
+  "name": {
+    "en": "Greater Crested Tern",
+    "fr": "Sterne huppée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Greater Crested Tern is a large coastal tern distributed from southern Africa across the Indian Ocean to the western Pacific.",
+      "fr": "La Sterne huppée est une grande sterne côtière, présente de l’Afrique australe à l’ouest du Pacifique en passant par l’océan Indien."
+    },
+    "identification": {
+      "en": "It has a shaggy black crest, grey upperparts, white underparts and a long yellow bill. Compare it with the Sandwich Tern (T. sandvicensis), whose bill is black with a yellow tip; see that profile.",
+      "fr": "Elle porte une huppe noire ébouriffée, un dessus gris, un dessous blanc et un long bec jaune. À comparer avec la Sterne caugek (T. sandvicensis), au bec noir à pointe jaune ; voir sa fiche."
+    },
+    "habitat": {
+      "en": "It nests on offshore sandy, rocky or coral islands and also uses coastal waters, estuaries and lagoons.",
+      "fr": "Elle niche sur des îlots au large, sableux, rocheux ou coralliens, et fréquente aussi les eaux côtières, estuaires et lagunes."
+    },
+    "diet": {
+      "en": "It feeds mainly on small fish, caught by shallow plunge-dives; squid and crabs are also taken.",
+      "fr": "Elle se nourrit surtout de petits poissons capturés par des plongeons peu profonds ; elle prend aussi calmars et crabes."
+    },
+    "behavior": {
+      "en": "It may occur alone or in flocks and forms noisy colonies to breed; many populations remain near nesting areas.",
+      "fr": "Elle peut être solitaire ou grégaire et forme des colonies bruyantes pour nicher ; beaucoup de populations restent près des sites de reproduction."
+    },
+    "reproduction": {
+      "en": "Pairs nest on the ground in a shallow scrape, usually laying one egg in Australia and one or two in other regions.",
+      "fr": "Les couples nichent au sol dans une simple cuvette et pondent généralement un œuf en Australie, un ou deux ailleurs."
+    },
+    "ecology": {
+      "en": "Its fish-based diet and island colonies tie it to shallow coastal waters and nearby marine prey.",
+      "fr": "Son régime piscivore et ses colonies insulaires la lient aux eaux côtières peu profondes et à leurs proies marines."
+    },
+    "conservation": {
+      "en": "It is not globally threatened overall, though dense colonies can be locally vulnerable to disturbance and predators.",
+      "fr": "Elle n’est pas globalement menacée, mais ses colonies denses peuvent être localement vulnérables au dérangement et aux prédateurs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Greater Crested Tern",
+        "fr": "Oiseaux.net — Sterne huppée"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/sterne.huppee.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Oiseaux.net reports range, bill, habitat and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 7,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "South Australia — Greater Crested Tern fact sheet",
+        "fr": "Australie-Méridionale — Fiche de la Sterne huppée"
+      },
+      "url": "https://cdn.environment.sa.gov.au/landscape/docs/hf/greater-crested-tern-bio-region-fact.pdf",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Government account describes plumage, flocks, fish-diving and nesting colonies."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 9,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Oiseaux.net — Sandwich Tern",
+        "fr": "Oiseaux.net — Sterne caugek"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/sterne.caugek.html",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Sandwich Tern account describes its black bill with a yellow tip, contrasting with the Greater Crested Tern's yellow bill."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 20,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "Population movements differ among populations; the cited sources describe a tendency for many to remain near colonies, not a universal pattern."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

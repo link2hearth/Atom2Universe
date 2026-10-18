@@ -1,0 +1,397 @@
+{
+  "id": "great_crested_grebe",
+  "scientific": "Podiceps cristatus",
+  "group": "birds",
+  "name": {
+    "en": "Great Crested Grebe",
+    "fr": "Grèbe huppé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Great Crested Grebe is a large waterbird of wetlands across Europe, Asia, parts of Africa, Australia and New Zealand. It dives for prey, nests on floating vegetation and raises its young on water. Northern birds often move to ice-free wintering waters. Breeding populations also occur eastward to Mongolia, with winter visitors reaching southern Asia.",
+      "fr": "Le Grèbe huppé est un grand oiseau d’eau des zones humides d’Europe, d’Asie, de régions d’Afrique, d’Australie et de Nouvelle-Zélande. Il plonge pour capturer ses proies, niche sur la végétation flottante et élève ses petits sur l’eau. Les oiseaux nordiques gagnent souvent des eaux libres de glace en hiver. Des populations nichent jusqu’en Mongolie, et des oiseaux hivernent jusqu’en Asie méridionale."
+    },
+    "identification": {
+      "en": "Adults are about 45–51 cm long, with similar plumage in both sexes. Breeding birds show a black double crest and chestnut-and-black facial ruff; in winter these ornaments shrink. Striped heads distinguish juveniles. Their long neck, pointed reddish bill, short tail and pale underside complete a distinctive profile on the water. British adults average about 993 g; the species is about 45–51 cm long, with similar adult plumage in both sexes.",
+      "fr": "Les adultes mesurent environ 45 à 51 cm, et les deux sexes ont un plumage semblable. En période nuptiale, la double huppe noire et la collerette faciale rousse et noire sont visibles ; elles diminuent en hiver. La tête rayée distingue les jeunes. Leur long cou, leur bec rougeâtre pointu, leur courte queue et leur dessous pâle dessinent une silhouette reconnaissable sur l’eau. Les adultes britanniques pèsent en moyenne environ 993 g ; l’espèce mesure environ 45–51 cm, et le plumage adulte est semblable chez les deux sexes."
+    },
+    "habitat": {
+      "en": "Breeding grebes favour freshwater lakes and reservoirs, often with reed-fringed sheltered margins. Calm shallows provide plants and anchorage for floating nests. In winter, some move to larger lakes, estuaries or coasts, depending on ice and food. They also use brackish lagoons and bays, provided shallow water and vegetation offer secure nesting cover.",
+      "fr": "Pour nicher, le grèbe préfère les lacs d’eau douce et les réservoirs aux rives abritées, souvent bordées de roseaux. Les hauts-fonds calmes fournissent des plantes et un ancrage au nid flottant. En hiver, certains gagnent de grands lacs, des estuaires ou la côte, selon le gel et la nourriture. Il fréquente aussi lagunes saumâtres et baies, lorsque hauts-fonds et végétation assurent un abri au nid."
+    },
+    "diet": {
+      "en": "Fish are its main prey, swallowed head-first after underwater pursuit; aquatic insects, crustaceans and amphibians also feature. The separate toe lobes act like paddles and rudders beneath the surface. Grebes swallow loose feathers while preening; stomach studies found feathers mixed with indigestible fish remains in regurgitated pellets. Their precise digestive role remains debated. At one Dutch lake, grebes fed at dawn and dusk when smelt rose nearer the surface, shortening dives; this pattern is local, not universal.",
+      "fr": "Le poisson est sa principale proie, avalée tête la première après une poursuite sous l’eau ; insectes aquatiques, crustacés et amphibiens complètent son régime. Les lobes de ses doigts agissent comme des pagaies et un gouvernail sous la surface. En se lissant, le grèbe avale des plumes libres ; des examens d’estomacs ont trouvé des plumes mêlées aux restes indigestes de poissons dans des pelotes régurgitées. Le rôle digestif précis des plumes reste discuté. Dans un lac néerlandais, les grèbes pêchaient à l’aube et au crépuscule, lorsque les éperlans remontaient, réduisant la durée des plongées ; ce rythme est local, non universel."
+    },
+    "behavior": {
+      "en": "Pairs defend nesting territories. In their well-known display, both birds raise their crests, shake their heads, dive and rise together while offering water plants. This synchronized weed ceremony helps maintain the pair bond. Their legs are set far back for efficient swimming and diving, but make walking on land awkward. Females also advertise during pair formation with a loud metallic note followed by a softer purring sound.",
+      "fr": "Les couples défendent leur territoire de nidification. Durant leur parade célèbre, les deux oiseaux dressent leur huppe, secouent la tête, plongent puis se redressent ensemble en offrant des plantes aquatiques. Cette cérémonie synchronisée contribue au lien du couple. Leurs pattes sont placées très en arrière pour nager et plonger efficacement, mais rendent la marche pénible. Lors de la formation du couple, les femelles émettent aussi un signal sonore : une note métallique forte suivie d’un doux ronronnement."
+    },
+    "reproduction": {
+      "en": "The pair builds a floating platform of water plants among reeds. Usually three or four eggs hatch after both adults share 27–29 days of incubation. Chicks leave the nest soon after hatching; able to swim, they still depend on both parents for warmth and food. For up to three weeks, the adults carry them on their backs into the water. They continue following and begging from their parents until fledging at roughly ten to eleven weeks.",
+      "fr": "Le couple bâtit une plateforme flottante de plantes aquatiques parmi les roseaux. La ponte compte généralement trois ou quatre œufs, couvés par les deux adultes pendant 27 à 29 jours. Les poussins quittent le nid peu après l’éclosion ; ils savent nager, mais dépendent encore de leurs parents pour la chaleur et la nourriture. Jusqu’à trois semaines durant, les adultes les transportent sur leur dos dans l’eau. Les jeunes suivent leurs parents et réclament leur nourriture jusqu’à l’envol, vers dix à onze semaines."
+    },
+    "ecology": {
+      "en": "The grebe is a predator of fish and aquatic invertebrates, and in turn may be prey for larger aquatic hunters. Its floating nest occupies the boundary between open water and emergent plants. Eurasian coots eat grebe eggs; a departing parent covers its clutch with nest material, concealing it from this predator. Reeds conceal nests, while waves, boats and changing water levels can expose or damage eggs.",
+      "fr": "Le grèbe chasse poissons et invertébrés aquatiques et peut, à son tour, devenir la proie de prédateurs aquatiques plus grands. Son nid flottant occupe la limite entre eau libre et végétation émergente. Les foulques macroules mangent ses œufs ; avant de partir, un parent recouvre la ponte de matériaux du nid pour la dissimuler à ce prédateur. Les roseaux cachent le nid, tandis que vagues, bateaux et variations du niveau peuvent exposer ou endommager les œufs."
+    },
+    "conservation": {
+      "en": "BirdLife's global assessment published in 2019 classified the species as Least Concern; southern Africa assessed it separately as Vulnerable in 2025 after a modeled range contraction. Wetland drainage, pollution and disturbance threaten local habitats. In Britain, nineteenth-century demand for grebe skins and feathers in fashionable hats reduced the population to 32 known pairs in England. The Plumage Prohibition was passed in 1921 after bird-protection campaigning. The British population later recovered.",
+      "fr": "L’évaluation mondiale publiée par BirdLife en 2019 classait l’espèce en préoccupation mineure ; l’Afrique australe l’a évaluée séparément comme vulnérable en 2025 après une contraction modélisée de son aire. Le drainage, la pollution et le dérangement menacent les habitats locaux. En Grande-Bretagne, la demande du XIXe siècle pour les peaux et plumes destinées aux chapeaux a réduit la population à 32 couples connus en Angleterre. L’interdiction du commerce des plumages fut adoptée en 1921 après des campagnes de protection. La population britannique s’est ensuite rétablie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great crested grebe — The Wildlife Trusts",
+        "fr": "Grèbe huppé — The Wildlife Trusts"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/grebes-and-divers/great-crested-grebe",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Adult length 45–51 cm; breeding crest and ruff."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 8,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Crested Grebe — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Grèbe huppé — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/great-crested-grebe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BTO nest records give clutch, incubation and fledging timings.",
+        "British adults average about 993 g."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "overview.en.3",
+        "overview.fr.3",
+        "reproduction.en.2",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 15,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Crested Grebe facts — RSPB",
+        "fr": "Faits sur le Grèbe huppé — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/great-crested-grebe",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "RSPB documents the weed ceremony and British plumage campaign history."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "conservation.en.5",
+        "conservation.fr.5",
+        "ecology.en.4",
+        "ecology.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 10,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Courtship-habits of the Great Crested Grebe — Julian S. Huxley (1914)",
+        "fr": "The Courtship-habits of the Great Crested Grebe — Julian S. Huxley (1914)"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1914.tb07052.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Original field study documents coordinated courtship displays."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 7,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feather eating in Great Crested Grebes — Piersma and van Eerden (1989)",
+        "fr": "Feather eating in Great Crested Grebes — Piersma et van Eerden (1989)"
+      },
+      "url": "https://doi.org/10.1111/j.1474-919X.1989.tb04784.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Stomach and pellet study documents feathers with fish remains; function remains qualified."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 12,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Crested Grebe — BirdLife South Africa regional assessment",
+        "fr": "Grèbe huppé — évaluation régionale de BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/great-crested-grebe/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Prey, wetland threats and the 2025 southern African Vulnerable status."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 10,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Crested Grebe species factsheet — BirdLife DataZone",
+        "fr": "Fiche du Grèbe huppé — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/great-crested-grebe-podiceps-cristatus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global distribution and 2019 assessment are distinct from regional status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "overview.en.1",
+        "overview.en.4",
+        "overview.fr.1",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 10,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Podiceps cristatus — Animal Diversity Web, University of Michigan",
+        "fr": "Podiceps cristatus — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Podiceps_cristatus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Account describes floating nest, hatchlings, back-riding and parental care."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "reproduction.en.1",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 9,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging rhythm of great crested grebes — Piersma, Lindeboom and van Eerden (1988)",
+        "fr": "Rythme alimentaire du Grèbe huppé — Piersma, Lindeboom et van Eerden (1988)"
+      },
+      "url": "https://doi.org/10.1007/BF00397858",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Dutch lake study links twilight feeding with smelt near the surface."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 11,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Egg-covering behaviour by great crested grebes — Verena Keller (1989)",
+        "fr": "Comportement de recouvrement des œufs chez le Grèbe huppé — Verena Keller (1989)"
+      },
+      "url": "https://doi.org/10.2307/3676880",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Field observations and experiments document coot predation and egg-covering protection."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 10,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Podicipedidae — Grebes — British Trust for Ornithology",
+        "fr": "Podicipedidae — Grebes — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/bird-families/podicipedidae-grebes",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Lobed feet act as both paddle and rudder in water."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult breeding plumage with black double crest, chestnut facial ruff and pale bill; optionally show striped chicks riding on a parent's back on a reed-fringed lake.",
+  "uncertainties": [
+    "Global population status is based on BirdLife's 2019 assessment; regional trends vary and remain incompletely surveyed.",
+    "Feather swallowing and pellet formation are documented, but the functional explanation should remain qualified."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual review; Australasian range restored from ADW and BirdLife primary accounts; regional 2025 Vulnerable status distinguished from global 2019 assessment; feather digestive role left uncertain; art accepted.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,201 @@
+{
+  "id": "euproctis_similis",
+  "scientific": "Euproctis similis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow-tail",
+    "fr": "Cul-doré"
+  },
+  "sections": {
+    "overview": {
+      "en": "Euproctis similis, the Yellow-tail, is a tussock moth in the family Erebidae; its French common name is Cul-doré.",
+      "fr": "Euproctis similis, le Cul-doré, est un papillon de la famille des Erebidae, parmi les bombyx à houppes."
+    },
+    "identification": {
+      "en": "The adult has a 28–35 mm wingspan; females are larger and carry a conspicuous yellow hair tuft at the abdomen tip.",
+      "fr": "L’adulte a une envergure de 28 à 35 mm ; la femelle, plus grande, porte une touffe de poils jaunes à l’extrémité de l’abdomen."
+    },
+    "habitat": {
+      "en": "Its caterpillars feed on deciduous trees and shrubs, with French field records including willow and poplar.",
+      "fr": "Ses chenilles consomment des arbres et arbustes feuillus ; des observations françaises les signalent notamment sur saule et peuplier."
+    },
+    "diet": {
+      "en": "The caterpillars feed on deciduous woody plants; sources list several trees and shrubs rather than one exclusive host.",
+      "fr": "Les chenilles mangent des ligneux feuillus ; les sources indiquent plusieurs arbres et arbustes plutôt qu’une plante-hôte exclusive."
+    },
+    "behavior": {
+      "en": "Larvae bear irritating hairs and should not be handled; the female uses her yellow abdominal tuft to cover newly laid eggs.",
+      "fr": "Les chenilles portent des poils irritants et ne doivent pas être manipulées ; la femelle recouvre ses œufs fraîchement pondus avec sa touffe abdominale jaune."
+    },
+    "reproduction": {
+      "en": "It has one generation each year and overwinters as a solitary third-instar larva. Pupation occurs in foliage.",
+      "fr": "Elle produit une génération par an et hiverne seule au troisième stade larvaire. La nymphose a lieu dans le feuillage."
+    },
+    "ecology": {
+      "en": "It resembles the Brown-tail, Euproctis chrysorrhoea, and has a similar life cycle, but its larvae are solitary rather than gregarious; see that related profile.",
+      "fr": "Elle ressemble au Cul-brun, Euproctis chrysorrhoea, et son cycle est similaire, mais ses chenilles sont solitaires et non grégaires ; voir sa fiche."
+    },
+    "conservation": {
+      "en": "The consulted regional accounts document its occurrence but do not provide a current global conservation assessment.",
+      "fr": "Les sources régionales consultées documentent sa présence, mais ne donnent pas d’évaluation mondiale actuelle de son état de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Yellow-tail moth species account — UKMoths",
+        "fr": "Fiche du Cul-doré — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/euproctis-similis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "UKMoths reports adult size, female tuft, flight period, larval host range and irritating hairs."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Anses species profile: Euproctis similis",
+        "fr": "Fiche Anses : Euproctis similis"
+      },
+      "url": "https://www.anses.fr/system/files/SANTVEG2020SA0005Ra_0.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Anses describes its one-generation life cycle, overwintering stage, solitary larvae and relationship to E. chrysorrhoea."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Euproctis similis — Papillons de Poitou-Charentes",
+        "fr": "Euproctis similis — Papillons de Poitou-Charentes"
+      },
+      "url": "https://www.papillon-poitou-charentes.org/Euproctis-similis-Fuessly-1775%2C3586.html?tri=verna",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "French regional page gives the common name and reports pupation in host foliage."
+      ],
+      "prose_claims": [
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Sphrageidus similis — Lepinet",
+        "fr": "Sphrageidus similis — Lépi’Net"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?dep=43&e=l&id=38650",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Lepinet reports French regional presence."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Regional range records are not a substitute for a global conservation category; the name Sphrageidus similis is also used as a taxonomic combination."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Comparison with Euproctis chrysorrhoea is based on the French Anses report; the cross-reference is reciprocal where that profile exists."
+}

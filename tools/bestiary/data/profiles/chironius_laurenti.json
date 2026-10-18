@@ -1,0 +1,121 @@
+{
+  "id": "chironius_laurenti",
+  "scientific": "Chironius laurenti",
+  "group": "reptiles",
+  "name": {
+    "en": "Laurenti's Sipo",
+    "fr": "Sipo de Laurenti"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American snake belongs to the Chironius multiventris species complex, still under taxonomic revision.",
+      "fr": "Cette couleuvre sud-américaine appartient au complexe Chironius multiventris, toujours en révision taxonomique."
+    },
+    "identification": {
+      "en": "It has a brown back, yellow mottling on its lower sides and strongly keeled dorsal scales.",
+      "fr": "Son dos est brun, ses flancs inférieurs marbrés de jaune et ses écailles dorsales fortement carénées."
+    },
+    "habitat": {
+      "en": "It occurs in Bolivia’s Beni savanna and Chiquitano Dry Forest, with one confirmed record in Brazil’s Rondônia.",
+      "fr": "Elle vit dans la savane du Beni et la forêt sèche chiquitane en Bolivie, avec une observation confirmée en Rondônia, au Brésil."
+    },
+    "diet": {
+      "en": "Frog records suggest more terrestrial habits than in some relatives.",
+      "fr": "Les observations de prédation sur des grenouilles suggèrent des habitudes plus terrestres que chez certaines parentes."
+    },
+    "behavior": {
+      "en": "A Bolivian field guide says little is known and records observations mainly in August and October.",
+      "fr": "Un guide bolivien indique que l’espèce est peu connue et rapporte surtout des observations en août et octobre."
+    },
+    "reproduction": {
+      "en": "The 2026 study records juveniles in January–April but gives no clutch size or exact laying dates.",
+      "fr": "L’étude de 2026 note des juvéniles de janvier à avril, sans indiquer la taille ni les dates des pontes."
+    },
+    "ecology": {
+      "en": "Its closest named sister is C. xaraes; they occupy separate river basins.",
+      "fr": "Son espèce sœur nommée la plus proche est C. xaraes; les deux occupent des bassins fluviaux distincts."
+    },
+    "conservation": {
+      "en": "The revision gives no population estimate or global threat category.",
+      "fr": "La révision ne fournit ni estimation de population ni catégorie mondiale de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Systematics of Chironius laurenti reveals unexpected taxonomic insights — Organisms Diversity & Evolution",
+        "fr": "La systématique de Chironius laurenti révèle des résultats taxonomiques inattendus — Organisms Diversity & Evolution"
+      },
+      "url": "https://link.springer.com/article/10.1007/s13127-026-00698-1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2026 study updates taxonomy, range and relationships."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 8,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chironius laurenti — Bolivian Amphibians and Reptiles Field Guide",
+        "fr": "Chironius laurenti — guide de terrain des amphibiens et reptiles de Bolivie"
+      },
+      "url": "https://www.fcbc.org.bo/wp-content/uploads/2021/07/GuiaAnfibios-.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Bolivian guide describes its colors and interrupted crossbands and says the species is little studied."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 16,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species-complex revision is recent and states that diversity among its lineages remains incompletely understood; species-specific reproductive and population data are lacking in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Prioritized the 2026 peer-reviewed taxonomic revision over older range summaries, checked it against a Spanish-language Bolivian field guide, and avoided treating sparse observations as a complete natural-history account."
+}

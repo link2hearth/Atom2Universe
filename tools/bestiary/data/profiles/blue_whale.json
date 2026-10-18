@@ -1,0 +1,434 @@
+{
+  "id": "blue_whale",
+  "scientific": "Balaenoptera musculus",
+  "group": "mammals",
+  "name": {
+    "en": "Blue whale",
+    "fr": "Baleine bleue"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue whale is a baleen-bearing rorqual that captures prey with an expandable throat. It occurs in every ocean except the Arctic, but its movements and population structure vary by region. Song, sightings and genetic data distinguish several population units across this wide range.",
+      "fr": "La baleine bleue est un rorqual à fanons qui capture ses proies grâce à une gorge extensible. Elle vit dans tous les océans sauf l’Arctique, mais ses déplacements et sa structure de population varient selon les régions. Chants, observations et données génétiques distinguent plusieurs groupes dans cette vaste aire."
+    },
+    "identification": {
+      "en": "Its long, tapered body is mottled blue-grey, with a broad U-shaped head and a small dorsal fin far back. Each whale’s stable mottling can help identify it in photographs. Antarctic whales can reach about 33.5 metres and around 150 tonnes; northern whales about 27 metres, with females generally larger than males. About 60–88 pleats run beneath the jaw to the navel, expanding the throat during feeding. Dark, fringed baleen plates hang from the upper jaw and retain krill while water is pushed out.",
+      "fr": "Son corps long et effilé est marbré de gris bleuté ; sa tête est large et en U, et sa petite nageoire dorsale est reculée. Le motif stable de chaque individu aide à l’identifier en photo. Les baleines antarctiques peuvent atteindre environ 33,5 mètres et 150 tonnes, celles du Nord environ 27 mètres ; les femelles sont généralement plus grandes que les mâles. Environ 60 à 88 sillons vont de la mâchoire au nombril et dilatent la gorge pendant l’alimentation. Des fanons sombres et frangés pendent de la mâchoire supérieure et retiennent le krill lorsque l’eau est expulsée."
+    },
+    "habitat": {
+      "en": "Blue whales follow krill concentrations, often in productive high-latitude waters during the warm season. Many move toward lower latitudes in winter, but the pattern varies: some Antarctic whales remain south and a northern Indian Ocean population is considered resident, though its movements are poorly known. Eastern North Pacific whales commonly feed off western North America and winter near Mexico and Central America; calves are seen in the Gulf of California. Antarctic, Indian Ocean and Pacific groups are distinguished by sightings, acoustics and genetics, but some regions remain under-sampled.",
+      "fr": "Les baleines bleues suivent les concentrations de krill, souvent dans les eaux productives de hautes latitudes pendant la saison chaude. Beaucoup gagnent des latitudes plus basses en hiver, mais les parcours varient : certaines restent en Antarctique et une population de l’océan Indien septentrional est dite résidente, bien que ses déplacements soient mal connus. Les baleines du Pacifique Nord-Est s’alimentent souvent à l’ouest de l’Amérique du Nord et hivernent près du Mexique et de l’Amérique centrale ; des baleineaux sont observés dans le golfe de Californie. Observations, acoustique et génétique distinguent des groupes antarctiques, indiens et pacifiques, mais plusieurs régions restent peu échantillonnées."
+    },
+    "diet": {
+      "en": "Krill, especially euphausiid crustaceans, supplies nearly all blue whale food, with prey species varying by region. At a dense patch, a whale accelerates, opens its jaws and engulfs prey and water; its throat pleats stretch around the expanded pouch. It then closes its mouth and presses water through the baleen with its tongue; krill remain caught on the fringed plates and are swallowed. This lunge-and-filter method is costly, but tag-based models show that energy gained per lunge rises sharply with krill density. Dense prey patches help build fat reserves used to fuel migration and reproduction.",
+      "fr": "Le krill, surtout les crustacés euphausiacés, fournit presque toute la nourriture de la baleine bleue, avec des espèces consommées différentes selon les régions. Face à un banc dense, elle accélère, ouvre les mâchoires et engloutit les proies avec l’eau ; les sillons dilatent la poche ventrale. Elle referme ensuite la bouche et pousse l’eau à travers les fanons avec la langue ; le krill reste pris dans leurs franges et est avalé. Cette méthode d’engouffrement et de filtration coûte de l’énergie, mais les modèles fondés sur des balises montrent que le gain par bouchée augmente fortement avec la densité du krill. Les bancs denses contribuent aux réserves de graisse mobilisées pendant la migration et la reproduction."
+    },
+    "behavior": {
+      "en": "Blue whales are usually alone or in pairs; large feeding aggregations are rare. Their low-frequency calls include long tonal notes and repeated songs; researchers have described nine regional song types, several stable for more than 30 years. In a Northeast Pacific study combining tags and acoustic records, foraging whales sang mainly at night, while the population-level transition to migration brought more daytime song. This diel shift is a useful acoustic indicator of migration in that population; whether distant songs guide individual departures remains a hypothesis.",
+      "fr": "Les baleines bleues sont généralement seules ou par paires ; les grands regroupements alimentaires sont rares. Leurs appels de basse fréquence comprennent de longues notes tonales et des chants répétés ; neuf types régionaux ont été décrits, dont plusieurs sont restés stables plus de 30 ans. Dans une étude du Pacifique Nord-Est associant balises et enregistrements acoustiques, les baleines en alimentation chantaient surtout la nuit, tandis que la transition collective vers la migration s’accompagnait de davantage de chants diurnes. Ce rythme jour-nuit indique utilement la migration dans cette population ; l’hypothèse selon laquelle les chants lointains guident les départs individuels reste à tester."
+    },
+    "reproduction": {
+      "en": "Females usually bear one calf, with pregnancy estimated at 10–12 months and births about every two to three years. Northern births occur mainly in winter; calves are also regularly seen in the Gulf of California. Newborns are several metres long and nurse on their mother’s rich milk for about six to eight months, sometimes while travelling toward feeding areas. Females provide the known parental care, and sparse observations mean reproductive timings remain estimates that can vary among populations.",
+      "fr": "La femelle met généralement au monde un seul petit ; la gestation est estimée à 10–12 mois et les naissances sont espacées d’environ deux à trois ans. Dans le Nord, elles surviennent surtout en hiver ; des baleineaux sont aussi régulièrement observés dans le golfe de Californie. Long de plusieurs mètres à la naissance, le jeune tète le lait riche de sa mère pendant environ six à huit mois, parfois durant le trajet vers les zones d’alimentation. Les soins parentaux connus sont assurés par les femelles et, faute d’observations abondantes, ces durées restent des estimations variables selon les populations."
+    },
+    "ecology": {
+      "en": "Blue whales are low-level predators that consume abundant krill and may themselves be prey for killer whales. In a laboratory experiment, faeces from pygmy blue whales stimulated photosynthesis and growth in tested phytoplankton species. This evidence comes from one subspecies under experimental conditions and does not quantify effects in the open ocean or across all populations.",
+      "fr": "La baleine bleue est un prédateur de niveau trophique inférieur qui consomme beaucoup de krill et peut être la proie d’orques. En laboratoire, des fèces de baleines bleues naines ont stimulé la photosynthèse et la croissance d’espèces de phytoplancton testées. Cette preuve concerne une sous-espèce en conditions expérimentales et ne mesure pas l’effet en pleine mer ni dans toutes les populations."
+    },
+    "conservation": {
+      "en": "Mechanized harpoons and factory ships made blue whales targets of industrial whaling in the early twentieth century. The IWC records 37,000 whales killed in Antarctica in 1931, most of them blue whales; a global commercial-whaling moratorium began in 1986. For Antarctic blue whales, the IWC’s 2024 estimate is about 4,000 animals (range 1,870–8,400), or 1.9% (range 0.7–4.8%) of estimated pre-whaling abundance. Numbers have risen since the last recorded catches in 1973, yet this estimate shows continued severe depletion. The 2018 IUCN global assessment lists the species as Endangered. The IUCN’s November 2018 update lists the Antarctic subspecies as Critically Endangered. Current pressures include ship strikes, fishing-gear entanglement, underwater noise and climate-related changes to krill habitat.",
+      "fr": "Les harpons mécanisés et les navires-usines ont rendu la baleine bleue accessible à la chasse industrielle au début du XXe siècle. La CBI recense 37 000 baleines tuées en Antarctique en 1931, principalement des baleines bleues ; le moratoire mondial sur la chasse commerciale a débuté en 1986. Pour la baleine bleue antarctique, l’estimation 2024 de la CBI est d’environ 4 000 individus (fourchette : 1 870–8 400), soit 1,9 % (fourchette : 0,7–4,8 %) de l’effectif pré-chasse estimé. Les effectifs ont augmenté depuis les dernières captures signalées en 1973, mais cette estimation montre que la population reste fortement appauvrie. L’évaluation mondiale UICN de 2018 classe l’espèce « En danger ». La mise à jour UICN de novembre 2018 classe la sous-espèce antarctique « En danger critique ». Les pressions actuelles comprennent les collisions avec les navires, l’empêtrement dans les engins de pêche, le bruit sous-marin et les changements climatiques de l’habitat du krill."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue Whale — NOAA Fisheries",
+        "fr": "Baleine bleue — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/blue-whale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "NOAA: Northern blue whales to 90 ft/>100,000 lb; Antarctic to 110 ft/>330,000 lb; females larger."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 15,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "conservation.en.7",
+        "conservation.fr.7",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.3",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
+      ]
+    },
+    {
+      "title": {
+        "en": "Blue Whale (Balaenoptera musculus) — COSEWIC status report, Canada",
+        "fr": "Baleine bleue (Balaenoptera musculus) — rapport de situation du COSEPAC, Canada"
+      },
+      "url": "https://wildlife-species.canada.ca/species-risk-registry/virtual_sara/files/cosewic/sr_blue_whale_e.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "COSEWIC report documents pleats, baleen, regional prey and photo-identification markings."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 10,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.4",
+        "identification.fr.5"
+      ]
+    },
+    {
+      "title": {
+        "en": "Mechanics, hydrodynamics and energetics of blue whale lunge feeding — Journal of Experimental Biology",
+        "fr": "Mécanique, hydrodynamique et énergétique de l’alimentation par engouffrement — Journal of Experimental Biology"
+      },
+      "url": "https://journals.biologists.com/jeb/article/214/1/131/10226/Mechanics-hydrodynamics-and-energetics-of-blue",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "overview"
+      ],
+      "facts": [
+        "Blue-whale tag/model study finds lunge energy payoff rises with krill density."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 11,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
+      ]
+    },
+    {
+      "title": {
+        "en": "Biogeographic characterisation of blue whale song worldwide — Journal of Cetacean Research and Management",
+        "fr": "Caractérisation biogéographique des chants de baleines bleues — Journal of Cetacean Research and Management"
+      },
+      "url": "https://journal.iwc.int/index.php/jcrm/article/view/702",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "overview"
+      ],
+      "facts": [
+        "Global comparison describes nine stable regional song types and cautions on inference."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 12,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "Past and present distribution, densities and movements of blue whales in the Southern Hemisphere and northern Indian Ocean — Mammal Review",
+        "fr": "Distribution, densités et déplacements passés et actuels des baleines bleues de l’hémisphère Sud et de l’océan Indien septentrional — Mammal Review"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-2907.2007.00106.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat"
+      ],
+      "facts": [
+        "Southern Hemisphere review records variable movement and solitary/pair sightings."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 9,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.4",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.4"
+      ]
+    },
+    {
+      "title": {
+        "en": "Balaenoptera musculus — IUCN Red List of Threatened Species, global assessment 2018 (errata version 2019)",
+        "fr": "Balaenoptera musculus — Liste rouge de l’UICN, évaluation mondiale 2018 (version corrigée en 2019)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T2477A156923585.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN record: global species assessment EN, 2018 (errata published in 2019)."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 11,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ]
+    },
+    {
+      "title": {
+        "en": "35 Updated Cetacean Red List Assessments published in November 2018 — IUCN SSC Cetacean Specialist Group",
+        "fr": "35 évaluations actualisées des cétacés publiées en novembre 2018 — groupe de spécialistes des cétacés de la CSE de l’UICN"
+      },
+      "url": "https://iucn-csg.org/35-updated-cetacean-red-list-assessments-published-in-nov-2018/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN’s November 2018 table lists the Antarctic blue-whale subspecies as CR."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 11,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "conservation.en.6",
+        "conservation.fr.6"
+      ]
+    },
+    {
+      "title": {
+        "en": "Balaenoptera musculus (blue whale) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Balaenoptera musculus (baleine bleue) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Balaenoptera_musculus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Species account estimates gestation, winter births, calf nursing and calving interval."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 11,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ]
+    },
+    {
+      "title": {
+        "en": "Preliminary investigation into the stimulation of phytoplankton photophysiology and growth by whale faeces — Journal of Experimental Marine Biology and Ecology",
+        "fr": "Étude préliminaire de la stimulation du phytoplancton par les fèces de baleine — Journal of Experimental Marine Biology and Ecology"
+      },
+      "url": "https://doi.org/10.1016/j.jembe.2013.04.010",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A lab experiment found pygmy blue whale faeces stimulated tested phytoplankton growth."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.2",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 12,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cetaceans and Extinction — International Whaling Commission",
+        "fr": "Cétacés et extinction — Commission baleinière internationale"
+      },
+      "url": "https://iwc.int/management-and-conservation/cetaceans-and-extinction",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IWC records the 1931 Antarctic catch and the 1986 commercial-whaling moratorium."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 11,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Animal-Borne Metrics Enable Acoustic Detection of Blue Whale Migration — Current Biology",
+        "fr": "Animal-Borne Metrics Enable Acoustic Detection of Blue Whale Migration — Current Biology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0960982220313312",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Northeast Pacific tag and acoustic study found night foraging song, day migration song at population scale."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 16,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "accessible_copy": "https://physalus.github.io/files/pubs/Oestreich%20et%20al.%20-%202020%20-%20Animal-Borne%20Metrics%20Enable%20Acoustic%20Detection%20of%20Blue%20Whale%20Migration.pdf"
+    },
+    {
+      "title": {
+        "en": "Antarctic blue whale abundance, distribution and ecology — International Whaling Commission SORP",
+        "fr": "Abondance, répartition et écologie de la baleine bleue antarctique — programme SORP de la Commission baleinière internationale"
+      },
+      "url": "https://iwc.int/management-and-conservation/international-research-programmes/sorp/antarctic-blue-whale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IWC’s 2024 Antarctic estimate: 4,000 (1,870–8,400), or 1.9% (0.7–4.8%) pre-whaling abundance."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 11,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue whale northwest Atlantic recovery strategy — Environment and Climate Change Canada",
+        "fr": "Stratégie de rétablissement de la baleine bleue de l’Atlantique Nord-Ouest — Environnement et Changement climatique Canada"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/recovery-strategies/blue-whale-northwest-atlantic/chapter-1.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Canada describes blue whales as lower-trophic predators and possible killer-whale prey."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 11,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict one adult blue whale, sex unspecified, with species-accurate mottled blue-grey pigmentation, broad U-shaped head, small rear-set dorsal fin, ventral throat pleats and natural body proportions. Pure white background only; no sea, props, text, border or watermark.",
+  "uncertainties": [
+    "Migration routes, winter ranges and population boundaries remain incompletely known; some whales do not follow the common high-latitude summer feeding pattern.",
+    "The IUCN categories cited are from the global 2018 assessment (errata version published in 2019); they are dated status assessments, not current census counts.",
+    "The phytoplankton response is a laboratory result using pygmy blue whale faeces. Its magnitude in natural waters and applicability across populations are unknown.",
+    "Reproductive durations are estimates drawn from sparse observations and can vary by population.",
+    "The Oestreich et al. publisher page returned 403; the authors’ open manuscript was accessible and supports the population-level day/night pattern. The IUCN record and 2013 phytoplankton journal page were not directly accessible; category and experiment details were cross-checked against the IUCN specialist summary and indexed article abstract."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent scientific reader verified bilingual explanations, source scope and allocations. All identified corrections resolved; blue whale dimensions additionally checked against NOAA.",
+  "source_audit_version": 1
+}

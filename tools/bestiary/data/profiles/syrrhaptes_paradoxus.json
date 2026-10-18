@@ -1,0 +1,141 @@
+{
+  "id": "syrrhaptes_paradoxus",
+  "scientific": "Syrrhaptes paradoxus",
+  "group": "birds",
+  "name": {
+    "en": "Pallas’s Sandgrouse",
+    "fr": "Syrrhapte paradoxal"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pallas’s sandgrouse is an Asian sandgrouse of open, dry country, with a range centred on Central Asia.",
+      "fr": "Le syrrhapte paradoxal est un ganga asiatique des milieux secs et ouverts, dont l’aire se situe surtout en Asie centrale."
+    },
+    "identification": {
+      "en": "It is a slender, pigeon-sized bird with sandy, dark-speckled plumage, a black belly and a long pointed tail.",
+      "fr": "C’est un oiseau élancé de la taille d’un petit pigeon, au plumage sable ponctué de sombre, au ventre noir et à la longue queue pointue."
+    },
+    "habitat": {
+      "en": "It favours sparsely vegetated semi-deserts, deserts and dry steppe on varied open soils.",
+      "fr": "Il fréquente surtout les semi-déserts, les déserts et les steppes sèches à végétation clairsemée, sur des sols ouverts variés."
+    },
+    "diet": {
+      "en": "Seeds form the main part of its diet; it also takes plant shoots, leaves and flowers, with insects reported only rarely.",
+      "fr": "Les graines constituent l’essentiel de son alimentation ; il consomme aussi des pousses, des feuilles et des fleurs, tandis que les insectes sont rarement signalés."
+    },
+    "behavior": {
+      "en": "It is a mobile species that can erupt beyond its usual range, sometimes reaching western and northern Europe.",
+      "fr": "C’est une espèce mobile qui peut effectuer des irruptions loin de son aire habituelle, parfois jusqu’en Europe occidentale et septentrionale."
+    },
+    "reproduction": {
+      "en": "It nests on the ground; the Russian species account describes a typical clutch of three eggs.",
+      "fr": "Il niche au sol ; la fiche russe de l’espèce décrit une ponte habituelle de trois œufs."
+    },
+    "ecology": {
+      "en": "Access to waterholes is important in its dry habitats, and flocks regularly visit them to drink.",
+      "fr": "L’accès aux points d’eau est important dans ses milieux arides, et les groupes s’y rendent régulièrement pour boire."
+    },
+    "conservation": {
+      "en": "A Russian regional account reports declines in parts of Kazakhstan and Kyrgyzstan, but those local notes do not establish a global trend.",
+      "fr": "Une source régionale russe signale des déclins dans certaines parties du Kazakhstan et du Kirghizstan, sans permettre d’en déduire une tendance mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pallas’s Sandgrouse — Birds of Russia and Adjacent Regions",
+        "fr": "Syrrhapte paradoxal — Oiseaux de Russie et des régions voisines"
+      },
+      "url": "https://www.egir.ru/bird/134.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The Russian species account describes its sandy plumage, dry open habitats and mainly plant diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 15,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pallas’s Sandgrouse — British Trust for Ornithology",
+        "fr": "Syrrhapte paradoxal — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/pallass-sandgrouse",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "BTO describes the species’ Central Asian range and irregular irruptive movements."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 11,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Syrrhaptes paradoxus — Birds of European Russia",
+        "fr": "Syrrhaptes paradoxus — Oiseaux de la Russie européenne"
+      },
+      "url": "https://www.ebirds.ru/vid/210.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "This Russian regional account describes ground nests, a usual three-egg clutch, the importance of water, and local declines."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 18,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation note is regional; the sources used here are insufficient to describe the species’ current global population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; regional conservation observations are kept separate from global status."
+}

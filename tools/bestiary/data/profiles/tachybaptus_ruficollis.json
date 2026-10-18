@@ -1,0 +1,91 @@
+{
+  "id": "tachybaptus_ruficollis",
+  "scientific": "Tachybaptus ruficollis",
+  "group": "birds",
+  "name": {
+    "en": "Little Grebe",
+    "fr": "Grèbe castagneux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The little grebe is the smallest of the grebes in Britain: a shy, dumpy diving bird of ponds and lakes. It is often hidden among vegetation and betrays itself by its high-pitched, whinnying trill.",
+      "fr": "Le grèbe castagneux est le plus petit des grèbes de Grande-Bretagne : un oiseau plongeur timide et rondouillard des étangs et des lacs. Il se cache souvent dans la végétation et se trahit par son trille aigu qui ressemble à un hennissement."
+    },
+    "identification": {
+      "en": "A small, dumpy grebe whose rear often looks fluffy, with an adult weight of about 225 g and a wing length near 104 mm; one account gives a body length of about 29 cm. In summer it has a bright chestnut throat and cheeks and a pale gape patch at the base of the bill.",
+      "fr": "Petit grèbe rondouillard dont l’arrière paraît souvent duveteux, d’un poids d’adulte d’environ 225 g et d’une aile d’environ 104 mm; un ouvrage donne une longueur d’environ 29 cm. En été, il a la gorge et les joues d’un marron vif et une tache pâle à la base du bec."
+    },
+    "habitat": {
+      "en": "In Britain and Ireland it breeds most often on lakes and ponds, including small farm ponds and urban parks. In winter it also uses rivers, streams and some brackish and coastal sites.",
+      "fr": "En Grande-Bretagne et en Irlande, il se reproduit surtout sur les lacs et les étangs, y compris les petites mares agricoles et les parcs urbains. En hiver, il utilise aussi les rivières, les ruisseaux et quelques sites saumâtres et côtiers."
+    },
+    "diet": {
+      "en": "A field guide from Kenya describes a diet of insects and their larvae, small fish, frogs and tadpoles, small crustaceans and molluscs, all caught by diving.",
+      "fr": "Un guide de terrain du Kenya décrit un régime d’insectes et de leurs larves, de petits poissons, de grenouilles et de têtards, de petits crustacés et de mollusques, tous capturés en plongée."
+    },
+    "behavior": {
+      "en": "It dives readily when disturbed and surfaces unseen some way off, rather than flying. Its feet are set far back on the body, so it is awkward on land. Birds that breed in Britain make short moves to wintering sites, and others arrive from elsewhere.",
+      "fr": "Il plonge volontiers quand on le dérange et réapparaît hors de vue à quelque distance, plutôt que de s’envoler. Ses pattes sont placées très en arrière du corps, ce qui le rend maladroit à terre. Les oiseaux nichant en Grande-Bretagne font de courts déplacements vers leurs sites d’hivernage, et d’autres arrivent d’ailleurs."
+    },
+    "reproduction": {
+      "en": "The nest is a floating platform of vegetation anchored to submerged plants. There are typically two broods, each of four to six eggs, incubated by both sexes for 20–21 days. The downy chicks leave the nest quickly and sometimes ride on a parent’s back; they fledge after about 44–48 days. Breeding typically starts at one year.",
+      "fr": "Le nid est une plate-forme flottante de végétation fixée à des plantes immergées. Il y a en général deux couvées de quatre à six œufs, couvés par les deux sexes pendant 20 à 21 jours. Les poussins couverts de duvet quittent vite le nid et montent parfois sur le dos d’un parent; ils s’envolent après environ 44 à 48 jours. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "In Britain, nests succeed more often on ponds and lakes than on rivers and streams, where fluctuating water levels cause flooding failures. In Africa, tawny eagles, herons and Cape clawless otters are among its predators. The oldest ringed bird in Britain lived just over six years.",
+      "fr": "En Grande-Bretagne, les nids réussissent plus souvent sur les étangs et les lacs que sur les rivières et les ruisseaux, où les variations du niveau d’eau provoquent des échecs par inondation. En Afrique, l’aigle ravisseur, les hérons et la loutre à joues blanches figurent parmi ses prédateurs. Le plus vieil oiseau bagué en Grande-Bretagne a vécu un peu plus de six ans."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes it as Least Concern. The UK breeding population was about 5,500 pairs in 2016, with some 16,000 birds in winter. It is Green-listed in the UK, after a spell on the Amber list during a decline in 2009–15, and has been broadly stable in Europe since 1990.",
+      "fr": "La Liste rouge de l’UICN le classe en préoccupation mineure. La population nicheuse britannique était d’environ 5 500 couples en 2016, avec quelque 16 000 oiseaux en hiver. Il est sur la liste verte du Royaume-Uni, après un passage sur la liste ambre lors d’un déclin en 2009-2015, et il est globalement stable en Europe depuis 1990."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Grebe — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Grèbe castagneux — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/little-grebe",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adult weight 224.9 g, wing 104.1 mm; 2 broods, 4–6 eggs; incubation 20–21 days by both sexes; fledging 44–48 days; max age 6 years.",
+        "UK 5,500 pairs (2016), winter 16,000; Green, Amber during 2009–15; Europe stable since 1990; IUCN Least Concern; nest success higher on lakes than rivers."
+      ]
+    },
+    {
+      "title": {
+        "en": "Little Grebe — RSPB Birds and Wildlife",
+        "fr": "Grèbe castagneux — RSPB, oiseaux et faune"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/little-grebe",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "conservation"],
+      "facts": [
+        "Small dumpy grebe with fluffy rear; chestnut throat and cheeks and pale gape patch in summer; dives when disturbed; whinnying trill.",
+        "UK status Green."
+      ]
+    },
+    {
+      "title": {
+        "en": "Little Grebe — Mpala Live field guide, Mpala Research Centre",
+        "fr": "Grèbe castagneux — guide de terrain Mpala Live, Mpala Research Centre"
+      },
+      "url": "https://www.mpalalive.org/field_guide/view/little_grebe",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Length about 29 cm; diet of insects, larvae, small fish, frogs, tadpoles, crustaceans and molluscs; floating nest anchored to submerged plants; chicks ride on parents’ backs.",
+        "African account (Kenya): predators include tawny eagles, herons and Cape clawless otters; feet far back, awkward on land."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The diet, body length and predator details come from an African field guide (Kenya); European birds may differ, and no European source with diet was readable.",
+    "Incubation is 20–21 days in British nest records but the African guide gives 19–28 days; the British figure is used.",
+    "BTO gives the fledging period as 44–48 days; the chicks are precocial and swim soon after hatching."
+  ],
+  "reviewed": true,
+  "review_note": "British numbers from BTO BirdFacts, plumage from the RSPB, diet and predators from an African field guide (consulted 2026-10-12); illustration to be checked by the owner."
+}

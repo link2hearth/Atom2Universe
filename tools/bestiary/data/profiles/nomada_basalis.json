@@ -1,0 +1,142 @@
+{
+  "id": "nomada_basalis",
+  "scientific": "Nomada basalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Basal nomad bee",
+    "fr": "Nomade basale"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada basalis is a cuckoo bee recorded across Europe and nearby regions; its known hosts are Andrena mining bees.",
+      "fr": "Nomada basalis est une abeille coucou signalée en Europe et alentour ; ses hôtes connus sont des andrènes."
+    },
+    "identification": {
+      "en": "A French account gives females as 10–12 mm and males as 8–11 mm; use a key for identification.",
+      "fr": "Une fiche française indique 10 à 12 mm chez la femelle et 8 à 11 mm chez le mâle ; utiliser une clé pour l’identifier."
+    },
+    "habitat": {
+      "en": "It is recorded across the Palearctic, but no characteristic habitat is established.",
+      "fr": "Elle est signalée dans le Paléarctique, mais aucun habitat caractéristique n’est établi."
+    },
+    "diet": {
+      "en": "Like other Nomada, the female does not provision her own brood with pollen; the larva develops in a host nest and consumes its food stores.",
+      "fr": "Comme les autres Nomada, la femelle ne nourrit pas son propre couvain avec du pollen ; la larve se développe dans un nid hôte et consomme les réserves."
+    },
+    "behavior": {
+      "en": "Reported hosts are Andrena truncatilabris and A. optata; further hosts are possible.",
+      "fr": "Les hôtes signalés sont Andrena truncatilabris et A. optata ; d’autres hôtes sont possibles."
+    },
+    "reproduction": {
+      "en": "It is cleptoparasitic; species-specific flight and brood details remain uncertain.",
+      "fr": "Elle est cleptoparasite ; les périodes de vol et les détails du couvain restent incertains."
+    },
+    "ecology": {
+      "en": "The European Red List classifies N. basalis as Least Concern; this continental assessment does not establish abundance at any particular locality.",
+      "fr": "La Liste rouge européenne classe N. basalis en préoccupation mineure ; cette évaluation continentale ne renseigne pas sur son abondance dans une localité particulière."
+    },
+    "conservation": {
+      "en": "No species-specific conservation measure was established here; protecting host nesting habitat is a cautious general implication, not a documented targeted programme.",
+      "fr": "Aucune mesure de conservation propre à l’espèce n’a été établie ici ; préserver l’habitat de nidification des hôtes est une recommandation générale, pas un programme ciblé documenté."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nomada basalis — Les carnets nature de Jessica Joachim",
+        "fr": "Nomada basalis — Les carnets nature de Jessica Joachim"
+      },
+      "url": "https://jessica-joachim.com/insectes/hymenopteres/apidae/nomada-basalis/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Account reports a broad Palearctic range, body lengths, March–July flight, and two Andrena hosts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 14,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Bees — European Commission / IUCN",
+        "fr": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "European and EU categories for Nomada basalis are Least Concern."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 10,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Nomada females lack pollen-collecting apparatus; their larvae use host nests and provisions."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 12,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host records include a caveat and are not a complete confirmed host range.",
+    "Distribution and habitat details are uneven in the available species account."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,18 @@
+{
+  "color": "#B69058",
+  "placement_rule": "solid",
+  "texture_side": "door:B69058:0",
+  "id": 9200,
+  "texture_bottom": "base_art:planks:0",
+  "creative_tab": "wood",
+  "transparent": true,
+  "tags": [
+    "door"
+  ],
+  "door": true,
+  "hardness": 1.5,
+  "name": "door_plank",
+  "texture_top": "base_art:planks:0",
+  "orient_mode": "facing",
+  "drop": "door_plank"
+}

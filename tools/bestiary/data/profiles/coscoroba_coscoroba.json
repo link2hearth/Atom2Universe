@@ -1,0 +1,192 @@
+{
+  "id": "coscoroba_coscoroba",
+  "scientific": "Coscoroba coscoroba",
+  "group": "birds",
+  "name": {
+    "en": "Coscoroba swan",
+    "fr": "Cygne coscoroba"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Coscoroba is a small, distinctive South American swan-like waterfowl placed in its own genus, Coscoroba.",
+      "fr": "Le coscoroba est un oiseau d’eau sud-américain de petite taille, à l’allure de cygne, classé dans son propre genre, Coscoroba."
+    },
+    "identification": {
+      "en": "Adults are white with black primary tips and a red bill, and are smaller and shorter-necked than the larger swans.",
+      "fr": "L’adulte est blanc, avec le bout des rémiges noires et le bec rouge ; il est plus petit et son cou est plus court que celui des grands cygnes."
+    },
+    "habitat": {
+      "en": "It uses shallow freshwater lagoons, marshes and lakes with abundant vegetation, and can also occupy some coastal wetlands.",
+      "fr": "Il fréquente les lagunes peu profondes, marais et lacs d’eau douce riches en végétation, ainsi que certains milieux humides côtiers."
+    },
+    "diet": {
+      "en": "It feeds mainly on aquatic plants and small invertebrates by dabbling or wading, and also grazes on nearby pasture.",
+      "fr": "Il mange surtout des plantes aquatiques et de petits invertébrés en barbotant ou en marchant dans l’eau, et broute aussi les pâtures voisines."
+    },
+    "behavior": {
+      "en": "It often feeds in shallow water without upending as frequently as other swans, and may gather in pairs or small groups outside breeding.",
+      "fr": "Il se nourrit souvent en eau peu profonde sans basculer aussi souvent que les autres cygnes, et peut se rassembler en couples ou petits groupes hors reproduction."
+    },
+    "reproduction": {
+      "en": "Breeding is concentrated in the southern part of its South American range, while seasonal movements farther north remain incompletely known.",
+      "fr": "La reproduction se concentre dans le sud de son aire sud-américaine, tandis que les déplacements saisonniers plus au nord restent mal connus."
+    },
+    "ecology": {
+      "en": "Its broad bill has fine serrations that help strain food particles, and it overlaps geographically with the black-necked swan without belonging to the genus Cygnus.",
+      "fr": "Son large bec finement dentelé aide à filtrer les particules alimentaires ; son aire recoupe celle du cygne à cou noir, sans qu’il appartienne au genre Cygnus."
+    },
+    "conservation": {
+      "en": "The global status cited is Least Concern, although the patchy distribution makes local wetland loss and local disappearance relevant concerns.",
+      "fr": "Le statut mondial cité est « préoccupation mineure », mais sa répartition discontinue rend importantes les pertes locales de zones humides et les disparitions locales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Coscoroba Swan — Swan Specialist Group",
+        "fr": "Cygne coscoroba — groupe de spécialistes des cygnes"
+      },
+      "url": "https://swansg.org/the-swans/coscoroba/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Guide summarizes species features and status."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Coscoroba coscoroba — Chilean Ministry of the Environment species sheet",
+        "fr": "Coscoroba coscoroba — fiche du ministère chilien de l’Environnement"
+      },
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/5084",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Chilean biodiversity portal lists freshwater and brackish lakes as usual habitat and records native South American distribution and Chilean occurrences."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Coscoroba Swan — AZA Anseriformes Taxon Advisory Group",
+        "fr": "Cygne coscoroba — groupe consultatif taxonomique des Ansériformes de l’AZA"
+      },
+      "url": "https://www.waterfowltag.com/coscoroba-swan",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "The zoological specialist group describes this small, distinctive South American swan and its plant and invertebrate diet."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Coscoroba coscoroba — IUCN Red List",
+        "fr": "Coscoroba coscoroba — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22679866A92832574.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global Red List assessment assigns Least Concern; the Swan Specialist Group separately discusses local habitat sensitivity."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The catalogue also includes Mute Swan and Whooper Swan; they are useful comparisons in body form, but the sources place Coscoroba in a separate genus and do not identify either as its closest relative.",
+    "Global LC status and local wetland pressures refer to different scales and should not be conflated."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the swan specialist account with Chilean government biodiversity information and the AZA waterfowl taxon group; used Mute Swan and Whooper Swan only as visual comparisons, not as asserted sister taxa."
+}

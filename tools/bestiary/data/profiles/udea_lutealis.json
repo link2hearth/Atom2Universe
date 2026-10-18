@@ -1,0 +1,119 @@
+{
+  "id": "udea_lutealis",
+  "scientific": "Udea lutealis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Pale straw pearl",
+    "fr": "Pyrale paille"
+  },
+  "sections": {
+    "overview": {
+      "en": "Udea lutealis is a crambid moth recorded widely in Europe and common in Britain.",
+      "fr": "Udea lutealis est un papillon de nuit de la famille des Crambidae, répandu en Europe et commun en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "The adult has pale cream forewings with darker cross-lines and outlined markings.",
+      "fr": "L’adulte a les ailes antérieures crème pâle, marquées de lignes transversales sombres et de motifs délimités."
+    },
+    "habitat": {
+      "en": "It occurs in varied open and semi-open settings, including meadows, field edges and woodland margins.",
+      "fr": "On le rencontre dans des milieux ouverts ou semi-ouverts variés, notamment les prairies, lisières de champs et bordures forestières."
+    },
+    "diet": {
+      "en": "The caterpillars feed on many herbaceous plants, including bramble, plantain, thistles and sorrel.",
+      "fr": "Les chenilles consomment de nombreuses plantes herbacées, dont la ronce, le plantain, les chardons et l’oseille."
+    },
+    "behavior": {
+      "en": "Adults fly at night, chiefly in midsummer.",
+      "fr": "Les adultes volent la nuit, surtout au cœur de l’été."
+    },
+    "reproduction": {
+      "en": "The caterpillars are reported in spring; the consulted accounts do not give a reliable egg count or detailed mating description.",
+      "fr": "Les chenilles sont signalées au printemps ; les sources consultées ne donnent ni nombre fiable d’œufs ni description détaillée de l’accouplement."
+    },
+    "ecology": {
+      "en": "Larvae may shelter in a light web beneath a leaf, and may roll narrow leaves into a tube.",
+      "fr": "Les larves peuvent s’abriter dans une toile légère sous une feuille et enrouler les feuilles étroites en tube."
+    },
+    "conservation": {
+      "en": "It is described as very common in Britain, but that regional description is not a global conservation assessment.",
+      "fr": "L’espèce est décrite comme très commune en Grande-Bretagne, mais cette indication régionale ne constitue pas une évaluation mondiale de son état de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "UKMoths — Udea lutealis",
+        "fr": "UKMoths — Udea lutealis"
+      },
+      "url": "https://www.ukmoths.org.uk/species/udea-lutealis/",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths reports British abundance, markings, foodplants and season."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 8,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LepiWiki — Udea lutealis",
+        "fr": "LepiWiki — Udea lutealis"
+      },
+      "url": "https://lepiforum.org/wiki/page/Udea_lutealis",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "German-language records document varied field, meadow and woodland-edge localities."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 9,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat wording synthesizes examples from European records; it is not intended as a complete habitat niche."
+  ],
+  "review_note": "Kept abundance explicitly local to Britain and treated host-plant lists as broad larval records, not exclusive foodplants.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

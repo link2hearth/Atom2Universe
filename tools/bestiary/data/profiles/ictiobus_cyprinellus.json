@@ -1,0 +1,122 @@
+{
+  "id": "ictiobus_cyprinellus",
+  "scientific": "Ictiobus cyprinellus",
+  "group": "fish",
+  "name": {
+    "en": "Bigmouth Buffalo",
+    "fr": "Buffalo à grande bouche"
+  },
+  "sections": {
+    "overview": {
+      "en": "It is one of five Ictiobus sucker species. It can hybridize with Smallmouth Buffalo, Ictiobus bubalus.",
+      "fr": "C’est l’une des cinq espèces de meuniers Ictiobus. Il peut s’hybrider avec le Buffalo à petite bouche, Ictiobus bubalus."
+    },
+    "identification": {
+      "en": "It reaches 91 cm and 36 kg; its large mouth lacks barbels.",
+      "fr": "Il atteint 91 cm et 36 kg; sa grande bouche n’a pas de barbillons."
+    },
+    "habitat": {
+      "en": "It favors slow rivers, lakes and reservoirs.",
+      "fr": "Il préfère les rivières lentes, les lacs et les réservoirs."
+    },
+    "diet": {
+      "en": "It filter-feeds on small invertebrates.",
+      "fr": "Il filtre de petits invertébrés."
+    },
+    "behavior": {
+      "en": "Spring floods prompt movement toward spawning grounds.",
+      "fr": "Les crues printanières entraînent des déplacements vers les frayères."
+    },
+    "reproduction": {
+      "en": "It spawns in spring and scatters eggs over vegetation.",
+      "fr": "Il fraie au printemps et disperse ses œufs sur la végétation."
+    },
+    "ecology": {
+      "en": "Unlike many suckers, it eats plankton as well as benthos.",
+      "fr": "Contrairement à beaucoup de meuniers, il mange du plancton et des organismes benthiques."
+    },
+    "conservation": {
+      "en": "In 2008, Canadian populations received different regional status designations.",
+      "fr": "En 2008, les populations canadiennes ont reçu des statuts régionaux différents."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bigmouth Buffalo — USGS Nonindigenous Aquatic Species Database",
+        "fr": "Buffalo à grande bouche — base des espèces aquatiques non indigènes de l’USGS"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?SpeciesID=362",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "USGS reports hybridization with Smallmouth Buffalo, spring spawning with eggs attached to vegetation, and feeding on plankton as well as benthos."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 21,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bigmouth Buffalo — COSEWIC status assessment and update report",
+        "fr": "Buffalo à grande bouche — évaluation et rapport de situation du COSEPAC"
+      },
+      "url": "https://www.canada.ca/fr/environnement-changement-climatique/services/registre-public-especes-peril/evaluations-rapports-situations-cosepac/buffalo-grande-bouche-2009.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Report summarizes taxonomy, size, filtering diet, slow-water habitat, spring movements and Canadian population statuses."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 14,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation sentence summarizes the 2009 Canadian assessment only; its population-level designations are historical and geographically limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared USGS species ecology with the French COSEPAC report; kept the older Canadian statuses explicitly regional and dated, and noted the documented hybrid relative."
+}

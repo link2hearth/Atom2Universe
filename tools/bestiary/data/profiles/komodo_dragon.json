@@ -1,0 +1,163 @@
+{
+  "id": "komodo_dragon",
+  "scientific": "Varanus komodoensis",
+  "group": "reptiles",
+  "name": {
+    "en": "Komodo dragon",
+    "fr": "Dragon de Komodo"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Komodo dragon is the world’s largest living lizard and is endemic to a few Indonesian islands.",
+      "fr": "Le Dragon de Komodo est le plus grand lézard vivant au monde et est endémique de quelques îles indonésiennes."
+    },
+    "identification": {
+      "en": "Adults are large, heavy monitor lizards with a long tail, strong limbs and a forked tongue; juveniles are smaller and more vividly patterned.",
+      "fr": "Les adultes sont de grands varans massifs à longue queue, membres puissants et langue fourchue ; les jeunes sont plus petits et plus vivement colorés."
+    },
+    "habitat": {
+      "en": "It uses tropical savanna, forest, scrub and other island habitats, from beaches to higher ridges.",
+      "fr": "Il fréquente les savanes tropicales, les forêts, les broussailles et d’autres milieux insulaires, des plages aux crêtes."
+    },
+    "diet": {
+      "en": "It hunts vertebrates and also scavenges carcasses; prey size and diet change as it grows.",
+      "fr": "Il chasse des vertébrés et consomme aussi des carcasses ; la taille des proies et le régime changent avec sa croissance."
+    },
+    "behavior": {
+      "en": "It locates food chiefly by smell, sampling airborne scents with its long, forked tongue.",
+      "fr": "Il repère surtout sa nourriture grâce à l’odorat, en recueillant les odeurs de l’air avec sa longue langue fourchue."
+    },
+    "reproduction": {
+      "en": "Females lay eggs; young dragons spend much of their early life in trees, where they are less exposed to larger conspecifics.",
+      "fr": "Les femelles pondent des œufs ; les jeunes passent une grande partie de leurs premières années dans les arbres, à l’abri des congénères plus grands."
+    },
+    "ecology": {
+      "en": "As a large island predator, it shares its habitat with other monitor lizards but is distinguished by its exceptional size and restricted range.",
+      "fr": "Ce grand prédateur insulaire partage son habitat avec d’autres varans, mais se distingue par sa taille exceptionnelle et son aire restreinte."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Endangered; its small, fragmented island range and projected climate-related habitat loss are major concerns.",
+      "fr": "L’UICN le classe En danger ; son aire insulaire restreinte et fragmentée ainsi que la perte d’habitat prévue liée au climat sont préoccupantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Komodo dragon — Smithsonian National Zoo",
+        "fr": "Dragon de Komodo — Smithsonian National Zoo"
+      },
+      "url": "https://nationalzoo.si.edu/animals/komodo-dragon",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Smithsonian describes the dragon’s island range, habitats, feeding and scent-based food detection."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 12,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Komodo dragon — IUCN Red List",
+        "fr": "Dragon de Komodo — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T22884A123633058.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN assessment lists the species as Endangered and notes the restricted subpopulations and climate-related risk."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 16,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Komodo dragon — Animal Diversity Web",
+        "fr": "Dragon de Komodo — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Varanus_komodoensis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "ADW describes the species’ body form, egg-laying, island endemism and role as a large predator and scavenger."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 17,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Komodo National Park profile — Indonesia Ministry of Environment and Forestry (Indonesian)",
+        "fr": "Profil du parc national de Komodo — ministère indonésien de l’Environnement et des Forêts (indonésien)"
+      },
+      "url": "https://ksdae.kehutanan.go.id/kawasan-konservasi/100243029/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Indonesian official account names the island range and describes the species as the world’s largest lizard."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 17,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some older popular accounts overstate bacterial effects of bites; this draft makes no such claim."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The animal is in the monitor-lizard family; no close congener profile was established for a species-level cross-reference."
+}

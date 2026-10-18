@@ -1,0 +1,543 @@
+package com.Atom2Universe.app.games.motocross
+
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import android.view.Choreographer
+import android.view.MotionEvent
+import android.view.View
+import androidx.core.view.ViewCompat
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import kotlin.math.*
+import kotlin.random.Random
+
+/** Simulation et rendu sur le thread UI : entrées, pause et reprises sont atomiques. */
+class MotocrossView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    View(context, attrs), Choreographer.FrameCallback {
+
+    data class Stats(
+        val seed: Int, val distance: Int, val length: Int, val speed: Int,
+        val seconds: Int, val faults: Int, val checkpoint: Int, val checkpointCount: Int
+    )
+    var onStats: ((Stats) -> Unit)? = null
+    var onReward: ((Int) -> Unit)? = null
+    var onControlsCleared: (() -> Unit)? = null
+    private val prefs = context.getSharedPreferences("motocross_save", Context.MODE_PRIVATE)
+    private var track = MotocrossTrack(prefs.getInt("trial_seed", Random.nextInt(100000, 1000000)))
+    private val bike = MotocrossBike()
+    private val bikeArt = MotocrossArt()
+    private var checkpoint = prefs.getInt("trial_checkpoint", 0).coerceIn(0, track.checkpoints.lastIndex)
+    private var elapsed = prefs.getFloat("trial_time", 0f)
+    private var faults = prefs.getInt("trial_faults", 0)
+    private var frontier = prefs.getFloat("trial_frontier", 0f)
+    private var paid = prefs.getInt("trial_paid", 0)
+    private var finished = prefs.getBoolean("trial_finished", false)
+    private var best = prefs.getInt("trial_best", 0)
+    private var running = false
+    private var lastFrame = 0L
+    private var accumulator = 0f
+    private var hudClock = 0f
+    private var checkpointNotice = 0f
+    private var crashAge = 0f
+    private var camX = 0f
+    private var camY = 0f
+    private var zoom = 1f
+    private var throttle = false
+    private var brake = false
+    private var leanBack = false
+    private var leanForward = false
+    private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
+    }
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.DEFAULT_BOLD }
+    private val path = Path()
+    private var sky: Shader? = null
+    private val dp = resources.displayMetrics.density
+
+    init {
+        isFocusable = true
+        isClickable = true
+        accessibilityLiveRegion = ACCESSIBILITY_LIVE_REGION_POLITE
+        contentDescription = context.getString(R.string.motocross_surface_description)
+        bike.reset(if (finished) track.finishX else track.checkpoints[checkpoint], track)
+        snapCamera()
+        save()
+    }
+
+    /** 0/1 : équilibre arrière/avant, 2/3 : frein/gaz. */
+    fun setControl(control: Int, held: Boolean) {
+        if (held && (bike.crashed || finished)) return
+        when (control) {
+            0 -> leanBack = held
+            1 -> leanForward = held
+            2 -> brake = held
+            3 -> throttle = held
+        }
+    }
+
+    fun clearControls() {
+        throttle = false; brake = false; leanBack = false; leanForward = false
+        onControlsCleared?.invoke()
+    }
+
+    fun resume() {
+        if (running) return
+        running = true; lastFrame = 0L; accumulator = 0f
+        Choreographer.getInstance().postFrameCallback(this)
+        reportStats()
+    }
+
+    fun pause() {
+        running = false
+        Choreographer.getInstance().removeFrameCallback(this)
+        clearControls()
+        save()
+    }
+
+    override fun onDetachedFromWindow() { pause(); super.onDetachedFromWindow() }
+
+    /** Le bouton de reprise conserve le parcours et son point de passage. */
+    fun resetGame() {
+        if (finished) {
+            checkpoint = 0; elapsed = 0f; faults = 0; finished = false
+        } else if (!bike.crashed) faults++
+        bike.reset(track.checkpoints[checkpoint], track)
+        clearControls(); crashAge = 0f; accumulator = 0f; checkpointNotice = 0f
+        snapCamera(); save(); reportStats(); invalidate()
+    }
+
+    fun restartTrack() {
+        checkpoint = 0; elapsed = 0f; faults = 0; finished = false
+        bike.reset(track.checkpoints[0], track)
+        clearControls(); accumulator = 0f; crashAge = 0f; checkpointNotice = 0f
+        // frontier/paid restent conservés : recommencer ne duplique pas les gains.
+        snapCamera(); save(); reportStats(); invalidate()
+    }
+
+    fun newTrack() {
+        var seed = Random.nextInt(100000, 1000000)
+        if (seed == track.seed) seed = if (seed == 999999) 100000 else seed + 1
+        track = MotocrossTrack(seed)
+        checkpoint = 0; elapsed = 0f; faults = 0; frontier = 0f; paid = 0
+        finished = false; checkpointNotice = 0f; crashAge = 0f
+        clearControls(); accumulator = 0f
+        bike.reset(track.checkpoints[0], track)
+        snapCamera(); save(); reportStats(); invalidate()
+    }
+
+    private fun snapCamera() {
+        camX = bike.x + 5f; camY = bike.y + 1.8f; zoom = 1f
+        ViewCompat.setStateDescription(this, if (finished) context.getString(R.string.motocross_finished) else null)
+    }
+
+    override fun doFrame(frameTimeNanos: Long) {
+        if (!running) return
+        val dt = if (lastFrame == 0L) 0f else ((frameTimeNanos - lastFrame) / 1e9f).coerceIn(0f, .066f)
+        lastFrame = frameTimeNanos
+        accumulator = min(accumulator + dt, .066f)
+        checkpointNotice = max(0f, checkpointNotice - dt)
+        if (bike.crashed) crashAge += dt
+        while (accumulator >= STEP) {
+            if (!finished && !bike.crashed) {
+                val lean = (if (leanForward) 1f else 0f) - (if (leanBack) 1f else 0f)
+                if (throttle || brake || lean != 0f || elapsed > 0f) elapsed += STEP
+                bike.step(STEP, throttle, brake, lean, track)
+                if (bike.crashed) {
+                    faults++; crashAge = 0f; clearControls(); save()
+                    ViewCompat.setStateDescription(this, context.getString(R.string.motocross_crashed))
+                } else updateProgress()
+            }
+            accumulator -= STEP
+        }
+        val smooth = 1f - exp(-4.5f * dt)
+        val transfer = track.sections.firstOrNull {
+            it.kind == MotocrossTrack.Kind.TRANSFER && bike.x in (it.start + 24f)..(it.start + 100f)
+        }
+        val loop = bike.activeLoop(track)?.takeIf { abs(bike.x - it.loopCenterX) < 20f }
+        val lookAhead = (5f + bike.vx * .12f).coerceIn(-3f, 8.5f)
+        val targetX = transfer?.let { (bike.x + lookAhead).coerceIn(it.start + 45f, it.start + 85f) }
+            ?: loop?.loopCenterX ?: (bike.x + lookAhead)
+        camX += (targetX - camX) * smooth
+        val aheadGround = track.heightBelow(bike.x + 12f, bike.y + 3f)
+        val targetY = transfer?.let { max(12f, bike.y + 2f) } ?: loop?.let { it.maxY * .5f + 1f }
+            ?: max(bike.y + 1.8f, aheadGround + 1.8f).coerceAtMost(bike.y + 4.5f)
+        camY += (targetY - camY) * (1f - exp(-3f * dt))
+        val altitude = (bike.y - track.heightBelow(bike.x, bike.y) - 1f).coerceAtLeast(0f)
+        val targetZoom = transfer?.let { .52f } ?: loop?.let { (14f / (it.maxY + 5f)).coerceIn(.45f, .8f) }
+            ?: (1f - (hypot(bike.vx, bike.vy) / 28f).coerceIn(0f, 1f) * .18f - altitude * .02f)
+                .coerceIn(.60f, 1f)
+        zoom += (targetZoom - zoom) * smooth
+        hudClock += dt
+        if (hudClock >= .1f) { hudClock = 0f; reportStats() }
+        invalidate()
+        Choreographer.getInstance().postFrameCallback(this)
+    }
+
+    private fun updateProgress() {
+        // On valide un checkpoint sur ses roues, jamais en survolant le drapeau.
+        val next = checkpoint + 1
+        if (next < track.checkpoints.size && bike.x >= track.checkpoints[next] &&
+            (bike.rear.grounded || bike.front.grounded) && abs(bike.angle) < .65f) {
+            checkpoint = next; checkpointNotice = 1.5f; save()
+        }
+        val distance = (bike.x - track.checkpoints[0]).coerceIn(0f, courseLength())
+        if (distance > frontier) frontier = distance
+        best = max(best, frontier.toInt())
+        val earned = NeutrinoRewards.perDistance(frontier)
+        if (earned > paid) {
+            val difference = earned - paid
+            paid = earned
+            save() // La même portion ne rapporte pas à nouveau après une reprise.
+            onReward?.invoke(difference)
+        }
+        if (bike.x >= track.finishX && (bike.rear.grounded || bike.front.grounded)) {
+            finished = true; clearControls(); save(); reportStats()
+            ViewCompat.setStateDescription(this, context.getString(R.string.motocross_finished))
+        }
+    }
+
+    private fun courseLength() = track.finishX - track.checkpoints[0]
+
+    private fun reportStats() {
+        onStats?.invoke(Stats(track.seed,
+            (bike.x - track.checkpoints[0]).coerceIn(0f, courseLength()).toInt(),
+            courseLength().toInt(), (hypot(bike.vx, bike.vy) * 3.6f).toInt(), elapsed.toInt(), faults,
+            checkpoint, track.checkpoints.lastIndex))
+    }
+
+    private fun save() {
+        prefs.edit().putInt("trial_seed", track.seed).putInt("trial_checkpoint", checkpoint)
+            .putFloat("trial_time", elapsed).putInt("trial_faults", faults)
+            .putFloat("trial_frontier", frontier).putInt("trial_paid", paid)
+            .putBoolean("trial_finished", finished).putInt("trial_best", best).apply()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_UP) performClick()
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        if (finished) newTrack() else if (bike.crashed && crashAge > .2f) resetGame()
+        return true
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        sky = LinearGradient(0f, 0f, 0f, h.toFloat(),
+            intArrayOf(Color.rgb(24, 43, 65), Color.rgb(85, 126, 145), Color.rgb(229, 192, 143)),
+            floatArrayOf(0f, .62f, 1f), Shader.TileMode.CLAMP)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        drawSky(canvas)
+        val scale = min(width / 32f, height / 16f).coerceAtLeast(1f) * zoom
+        canvas.save()
+        canvas.translate(width * .5f, height * .53f)
+        canvas.scale(scale, -scale)
+        canvas.translate(-camX, -camY)
+        drawTerrain(canvas, scale)
+        drawStructures(canvas, scale)
+        drawBike(canvas)
+        canvas.restore()
+        drawHud(canvas)
+    }
+
+    private fun fill(color: Int) { ink.style = Paint.Style.FILL; ink.color = color; ink.shader = null }
+    private fun line(canvas: Canvas, x1: Float, y1: Float, x2: Float, y2: Float, color: Int, thickness: Float) {
+        ink.style = Paint.Style.STROKE; ink.color = color; ink.strokeWidth = thickness; ink.shader = null
+        canvas.drawLine(x1, y1, x2, y2, ink)
+    }
+    private fun circle(canvas: Canvas, x: Float, y: Float, radius: Float, color: Int) {
+        fill(color); canvas.drawCircle(x, y, radius, ink)
+    }
+
+    private fun drawSky(canvas: Canvas) {
+        fill(Color.rgb(34, 59, 78)); ink.shader = sky
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), ink); ink.shader = null
+        circle(canvas, width * .78f, height * .23f, min(width, height) * .09f, Color.argb(30, 255, 226, 174))
+        circle(canvas, width * .78f, height * .23f, min(width, height) * .06f, Color.rgb(249, 218, 165))
+        // Reliefs continus avec parallaxe ; aucun bitmap ni chargement d'assets.
+        for (layer in 0..2) {
+            val stride = 100f * dp
+            val offset = camX * (3f + layer * 3f) * dp
+            val start = floor(offset / stride).toInt() - 1
+            path.reset(); path.moveTo(-stride, height.toFloat())
+            for (i in start..start + ceil(width / stride).toInt() + 3) {
+                val screenX = i * stride - offset
+                val wave = sin(i * 1.71f + layer * 2f) * .5f + .5f
+                val screenY = height * (.44f + layer * .11f) - wave * height * .17f
+                path.lineTo(screenX, screenY)
+            }
+            path.lineTo(width + stride, height.toFloat()); path.close()
+            fill(intArrayOf(Color.rgb(82, 113, 128), Color.rgb(58, 90, 106), Color.rgb(36, 65, 81))[layer])
+            canvas.drawPath(path, ink)
+        }
+    }
+
+    private fun drawTerrain(canvas: Canvas, scale: Float) {
+        val left = camX - width / (2f * scale) - 2f
+        val right = camX + width / (2f * scale) + 2f
+        val bottom = camY - height / scale - 5f
+        val first = track.segmentAt(left)
+        val last = min(track.points.lastIndex, track.segmentAt(right) + 2)
+
+        // Pins et panneaux en arrière-plan : purement décoratifs, hors de la piste.
+        for (i in floor(left / 6f).toInt()..ceil(right / 6f).toInt()) {
+            val x = i * 6f + 1f
+            val ground = track.height(x)
+            val h = 1.4f + abs(sin(i * 4.1f))
+            line(canvas, x, ground, x, ground + h, Color.rgb(48, 66, 61), .10f)
+            fill(Color.rgb(41, 80, 78))
+            path.reset(); path.moveTo(x - .65f, ground + .4f)
+            path.lineTo(x, ground + h + .4f); path.lineTo(x + .65f, ground + .4f); path.close()
+            canvas.drawPath(path, ink)
+        }
+
+        path.reset(); path.moveTo(track.points[first].x, bottom)
+        for (i in first..last) path.lineTo(track.points[i].x, track.points[i].y)
+        path.lineTo(track.points[last].x, bottom); path.close()
+        fill(Color.rgb(60, 48, 42)); canvas.drawPath(path, ink)
+        canvas.save(); canvas.clipPath(path)
+        // Strates et gravier déterministes : la même piste garde le même aspect.
+        for (depth in 1..4) {
+            path.reset()
+            for (i in first..last) {
+                val p = track.points[i]
+                val y = p.y - depth * .62f + sin(p.x * .7f + depth) * .09f
+                if (i == first) path.moveTo(p.x, y) else path.lineTo(p.x, y)
+            }
+            ink.style = Paint.Style.STROKE; ink.color = Color.rgb(83, 62, 48); ink.strokeWidth = .09f
+            canvas.drawPath(path, ink)
+        }
+        for (i in floor(left * 2).toInt()..ceil(right * 2).toInt()) {
+            val x = i * .5f
+            val y = track.height(x) - .35f - abs(sin(i * 19.7f)) * 2.2f
+            circle(canvas, x, y, .025f + abs(sin(i * 3.7f)) * .035f, Color.rgb(112, 82, 57))
+        }
+        canvas.restore()
+        path.reset()
+        for (i in first..last) {
+            val p = track.points[i]
+            if (i == first) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
+        }
+        ink.style = Paint.Style.STROKE; ink.color = Color.rgb(155, 113, 66); ink.strokeWidth = .18f
+        canvas.drawPath(path, ink)
+        ink.color = Color.rgb(234, 193, 122); ink.strokeWidth = .045f
+        canvas.drawPath(path, ink)
+
+        // Habillage posé exactement sur le profil physique : bois pour les tables,
+        // dalles pour les marches. Aucun obstacle invisible ou décor trompeur.
+        for (section in track.sections) {
+            if (section.end < left || section.start > right) continue
+            if (section.kind != MotocrossTrack.Kind.TABLE && section.kind != MotocrossTrack.Kind.STEPS) continue
+            var x = max(section.start, floor(left * 2f) / 2f)
+            while (x < min(section.end, right)) {
+                val y = track.height(x)
+                if (y > .4f) {
+                    val slope = atan2(track.height(x + .2f) - track.height(x - .2f), .4f)
+                    canvas.save(); canvas.translate(x, y); canvas.rotate(Math.toDegrees(slope.toDouble()).toFloat())
+                    val wood = section.kind == MotocrossTrack.Kind.TABLE
+                    fill(if (wood) Color.rgb(177, 126, 72) else Color.rgb(131, 143, 142))
+                    canvas.drawRoundRect(-.23f, -.20f, .23f, .015f, .025f, .025f, ink)
+                    line(canvas, -.21f, .015f, .21f, .015f, if (wood) GOLD else STEEL, .035f)
+                    if (wood) circle(canvas, 0f, -.08f, .025f, DARK)
+                    canvas.restore()
+                }
+                x += .5f
+            }
+        }
+
+        for ((index, x) in track.checkpoints.withIndex()) {
+            if (x < left || x > right) continue
+            val active = index <= checkpoint
+            val color = if (active) MINT else Color.rgb(195, 204, 208)
+            line(canvas, x, .06f, x, 1.55f, color, .055f)
+            fill(color)
+            path.reset(); path.moveTo(x, 1.55f); path.lineTo(x + .65f, 1.37f)
+            path.lineTo(x, 1.13f); path.close(); canvas.drawPath(path, ink)
+            worldText(canvas, context.getString(R.string.motocross_checkpoint_number, index), x, 1.8f, .25f, color)
+        }
+        if (track.finishX in left..right) {
+            val x = track.finishX
+            line(canvas, x, 0f, x, 2.7f, WHITE, .08f)
+            for (row in 0..2) for (col in 0..4) {
+                fill(if ((row + col) % 2 == 0) WHITE else DARK)
+                canvas.drawRect(x + col * .2f, 2.1f + row * .2f, x + (col + 1) * .2f, 2.3f + row * .2f, ink)
+            }
+            worldText(canvas, context.getString(R.string.motocross_finish_flag), x, 3f, .3f, WHITE)
+        }
+        // Repères d'obstacles : nombre de chevrons = difficulté, avant la montée.
+        track.sections.filter { it.start in left..right && it.kind != MotocrossTrack.Kind.REST }.forEach { section ->
+            val x = section.start + 2f
+            line(canvas, x, 0f, x, .65f, Color.rgb(134, 112, 79), .06f)
+            fill(DARK); canvas.drawRoundRect(x - .34f, .55f, x + .34f, .93f, .05f, .05f, ink)
+            for (j in 0..section.difficulty) {
+                val px = x - section.difficulty * .13f + j * .26f
+                line(canvas, px - .06f, .65f, px + .04f, .74f, GOLD, .035f)
+                line(canvas, px + .04f, .74f, px - .06f, .83f, GOLD, .035f)
+            }
+        }
+    }
+
+    private fun drawStructures(canvas: Canvas, scale: Float) {
+        val left = camX - width / (2f * scale) - 3f
+        val right = camX + width / (2f * scale) + 3f
+        for (road in track.roads) {
+            if (road.maxX < left || road.minX > right) continue
+            // Charpente en arrière-plan ; seules les bandes de roulement
+            // constituent une surface solide dans le plan de la moto.
+            for (i in 0 until road.points.lastIndex step (if (road.loop) 150 else 50)) {
+                val p = road.points[i]
+                if (p.x !in left..right || p.y - track.height(p.x) < 2f) continue
+                val q = road.points[min(i + 50, road.points.lastIndex)]
+                val floor = track.height(p.x)
+                val tint = Color.argb(140, 88, 118, 128)
+                line(canvas, p.x, floor, p.x, p.y - .18f, tint, .14f)
+                if (!road.loop) {
+                    line(canvas, p.x, p.y - 1.3f, q.x, q.y - .18f, tint, .09f)
+                    line(canvas, p.x, p.y - .18f, q.x, q.y - 1.3f, tint, .09f)
+                }
+            }
+            if (road.loop) {
+                // Le retour est dessiné après la montée, avec un liseré sombre qui
+                // sépare les deux plans au croisement. La physique suit le même ordre.
+                val top = road.topIndex
+                for (range in listOf(0..top, top..road.points.lastIndex)) {
+                    path.reset()
+                    for (i in range) {
+                        val p = road.points[i]
+                        if (i == range.first) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
+                    }
+                    ink.style = Paint.Style.STROKE; ink.strokeWidth = .42f; ink.color = DARK
+                    canvas.drawPath(path, ink)
+                    ink.strokeWidth = .23f; ink.color = if (range.first == 0) STEEL else MINT
+                    canvas.drawPath(path, ink)
+                    ink.strokeWidth = .045f; ink.color = WHITE
+                    canvas.drawPath(path, ink)
+                }
+                // Chevrons tangents à la voie : ils indiquent le sens jusque sous le plafond.
+                for (i in 35 until road.points.lastIndex step 45) {
+                    val p = road.points[i]; val q = road.points[i + 1]
+                    val length = hypot(q.x - p.x, q.y - p.y)
+                    val tx = (q.x - p.x) / length; val ty = (q.y - p.y) / length
+                    val cx = p.x - ty * .5f; val cy = p.y + tx * .5f
+                    line(canvas, cx - tx * .25f - ty * .15f, cy - ty * .25f + tx * .15f,
+                        cx, cy, GOLD, .055f)
+                    line(canvas, cx - tx * .25f + ty * .15f, cy - ty * .25f - tx * .15f,
+                        cx, cy, GOLD, .055f)
+                }
+                continue
+            }
+            path.reset()
+            for ((i, p) in road.points.withIndex()) {
+                if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
+            }
+            ink.style = Paint.Style.STROKE; ink.strokeWidth = .16f; ink.color = STEEL
+            canvas.drawPath(path, ink)
+            ink.strokeWidth = .045f; ink.color = WHITE
+            canvas.drawPath(path, ink)
+            for (i in road.points.indices step 7) {
+                val p = road.points[i]
+                if (p.x in left..right) circle(canvas, p.x, p.y, .04f, DARK)
+            }
+        }
+        for (section in track.sections) {
+            if (section.kind !in listOf(MotocrossTrack.Kind.BRIDGE, MotocrossTrack.Kind.LOOP, MotocrossTrack.Kind.TRANSFER) ||
+                section.start !in left..right) continue
+            val x = section.start + 8f
+            line(canvas, x, 0f, x, 2.3f, STEEL, .07f)
+            val sign = when (section.kind) {
+                MotocrossTrack.Kind.TRANSFER -> R.string.motocross_transfer_sign
+                MotocrossTrack.Kind.LOOP -> R.string.motocross_loop_sign
+                else -> R.string.motocross_bridge_sign
+            }
+            worldText(canvas, context.getString(sign), x, 2.6f, .55f, MINT)
+        }
+    }
+
+    private fun drawBike(canvas: Canvas) {
+        val ground = track.heightBelow(bike.x, bike.y)
+        val clearance = (bike.y - ground).coerceIn(0f, 5f)
+        fill(Color.argb((65f / (1f + clearance)).toInt(), 0, 0, 0))
+        canvas.drawOval(bike.x - 1f, ground + .035f, bike.x + 1f, ground + .12f, ink)
+        if (throttle && bike.rear.grounded && bike.vx > 1f && !bike.crashed) {
+            for (i in 1..7) {
+                val life = ((elapsed * 2f + i * .13f) % 1f)
+                val x = bike.rear.surfaceX - bike.rear.normalY * life * 1.7f + bike.rear.normalX * (.12f + life * .3f)
+                val y = bike.rear.surfaceY + bike.rear.normalX * life * 1.7f + bike.rear.normalY * (.12f + life * .3f)
+                circle(canvas, x, y,
+                    .03f + life * .10f, Color.argb(((1f - life) * 100).toInt(), 219, 179, 116))
+            }
+        }
+        bikeArt.draw(canvas, bike)
+    }
+
+    private fun worldText(canvas: Canvas, text: String, x: Float, y: Float, size: Float, color: Int) {
+        canvas.save(); canvas.translate(x, y); canvas.scale(1f, -1f)
+        textPaint.textSize = size; textPaint.textAlign = Paint.Align.CENTER; textPaint.color = color
+        canvas.drawText(text, 0f, 0f, textPaint); canvas.restore()
+    }
+
+    private fun drawHud(canvas: Canvas) {
+        val margin = 16f * dp
+        val barWidth = width - margin * 2f
+        fill(Color.argb(120, 13, 24, 36))
+        canvas.drawRoundRect(margin, 10f * dp, width - margin, 15f * dp, 3f * dp, 3f * dp, ink)
+        fill(MINT)
+        val progress = ((bike.x - 3f) / courseLength()).coerceIn(0f, 1f)
+        canvas.drawRoundRect(margin, 10f * dp, margin + barWidth * progress, 15f * dp, 3f * dp, 3f * dp, ink)
+        if (checkpointNotice > 0f && !bike.crashed && !finished) {
+            screenText(canvas, context.getString(R.string.motocross_checkpoint_saved, checkpoint),
+                width / 2f, 43f * dp, 14f * dp, MINT)
+        } else if (bike.x < 11f && !bike.crashed && !finished) {
+            screenText(canvas, context.getString(R.string.motocross_controls_hint),
+                width / 2f, 43f * dp, 12f * dp, WHITE)
+        } else if (!bike.crashed && !finished) {
+            val feature = track.sections.firstOrNull {
+                bike.x >= it.start + 5f && bike.x <= it.start + 48f &&
+                    (it.kind == MotocrossTrack.Kind.BRIDGE || it.kind == MotocrossTrack.Kind.LOOP ||
+                        it.kind == MotocrossTrack.Kind.TRANSFER)
+            }
+            if (feature != null) {
+                val hint = when (feature.kind) {
+                    MotocrossTrack.Kind.TRANSFER -> R.string.motocross_transfer_hint
+                    MotocrossTrack.Kind.LOOP -> R.string.motocross_loop_hint
+                    else -> R.string.motocross_bridge_hint
+                }
+                screenText(canvas, context.getString(hint),
+                    width / 2f, 43f * dp, 12f * dp, WHITE)
+            }
+        }
+        if (bike.crashed || finished) {
+            fill(Color.argb(180, 10, 20, 32))
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), ink)
+            val title = context.getString(if (finished) R.string.motocross_finished else R.string.motocross_crashed)
+            val titleSize = min(27f * dp, width / 14f)
+            screenText(canvas, title, width / 2f, height * .36f, titleSize, if (finished) MINT else ORANGE)
+            screenText(canvas, context.getString(R.string.motocross_run_summary, elapsed.toInt() / 60,
+                elapsed.toInt() % 60, faults), width / 2f, height * .50f, 16f * dp, WHITE)
+            val hint = context.getString(if (finished) R.string.motocross_next_hint else R.string.motocross_retry_hint)
+            screenText(canvas, hint, width / 2f, height * .65f, 13f * dp, WHITE)
+        }
+    }
+
+    private fun screenText(canvas: Canvas, text: String, x: Float, y: Float, size: Float, color: Int) {
+        textPaint.textSize = size; textPaint.textAlign = Paint.Align.CENTER; textPaint.color = color
+        val available = width - 24f * dp
+        if (textPaint.measureText(text) > available) textPaint.textSize *= available / textPaint.measureText(text)
+        canvas.drawText(text, x, y, textPaint)
+    }
+
+    private companion object {
+        const val STEP = 1f / 240f
+        val DARK = Color.rgb(17, 27, 39)
+        val WHITE = Color.rgb(235, 242, 242)
+        val STEEL = Color.rgb(151, 174, 187)
+        val MINT = Color.rgb(101, 225, 194)
+        val GOLD = Color.rgb(242, 195, 108)
+        val ORANGE = Color.rgb(246, 147, 88)
+    }
+}

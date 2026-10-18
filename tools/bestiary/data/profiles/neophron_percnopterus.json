@@ -1,0 +1,164 @@
+{
+  "id": "neophron_percnopterus",
+  "scientific": "Neophron percnopterus",
+  "group": "birds",
+  "name": {
+    "en": "Egyptian Vulture",
+    "fr": "Vautour percnoptère"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Egyptian Vulture is a member of the vulture family Accipitridae; its French name is Vautour percnoptère.",
+      "fr": "Le Vautour percnoptère appartient à la famille des vautours Accipitridae ; son nom anglais est Egyptian Vulture."
+    },
+    "identification": {
+      "en": "Adults have a bare yellow head and throat, pale body plumage and contrasting dark flight feathers.",
+      "fr": "L’adulte a la tête et la gorge jaunes et dénudées, le corps pâle et les rémiges sombres contrastées."
+    },
+    "habitat": {
+      "en": "It uses open country, rocky slopes and escarpments across a range extending from southwestern Europe and Africa into Asia.",
+      "fr": "Il fréquente les milieux ouverts, les pentes rocheuses et les escarpements, de l’Europe du Sud-Ouest et de l’Afrique jusqu’en Asie."
+    },
+    "diet": {
+      "en": "Carrion is central to its diet, but it also takes small prey, eggs, insects and other food.",
+      "fr": "La charogne est au cœur de son régime, mais il consomme aussi de petites proies, des œufs, des insectes et d’autres aliments."
+    },
+    "behavior": {
+      "en": "It is known to use stones to crack large eggs, a rare example of tool use in birds.",
+      "fr": "Il est connu pour utiliser des pierres afin de casser de gros œufs, un exemple rare d’usage d’outils chez les oiseaux."
+    },
+    "reproduction": {
+      "en": "The regional and conservation summaries consulted here do not provide enough detail for a reliable account of its breeding cycle.",
+      "fr": "Les synthèses régionales et de conservation consultées ici ne donnent pas assez de détails pour décrire fiablement son cycle de reproduction."
+    },
+    "ecology": {
+      "en": "As a relatively small vulture, it can feed on small remains and varied resources that larger carcass-feeders may leave behind.",
+      "fr": "Relativement petit pour un vautour, il peut exploiter de petits restes et des ressources variées laissés par les espèces plus grandes."
+    },
+    "conservation": {
+      "en": "The IUCN Red List lists it as Endangered, with declines linked to poisoning, persecution and other pressures across parts of its range.",
+      "fr": "La Liste rouge de l’UICN le classe En danger, en raison notamment de déclins liés aux empoisonnements, aux persécutions et à d’autres pressions dans une partie de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Egyptian Vulture — Environment Agency Abu Dhabi",
+        "fr": "Vautour percnoptère — Environment Agency Abu Dhabi"
+      },
+      "url": "https://www.ead.gov.ae/en/Discover-Our-Biodiversity/Birds/Egyptian-Vulture",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The agency describes adult yellow bare skin and pale plumage, rocky habitat, stone tool use on eggs, scavenging and a broad range."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 22,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vautour percnoptère — LPO",
+        "fr": "Vautour percnoptère — LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/vautour-percnoptere",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French LPO account gives the common names Egyptian Vulture and Vautour percnoptère and classifies the species in Accipitridae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 19,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Egyptian Vulture — IUCN Red List",
+        "fr": "Vautour percnoptère — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22695180A118600142.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "The BirdLife/IUCN account records the 2021 global category as Endangered and discusses long-term declines and threats"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 16,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Egyptian Vulture — Vulture Conservation Foundation",
+        "fr": "Vautour percnoptère — Vulture Conservation Foundation"
+      },
+      "url": "https://4vultures.org/es/vultures/egyptian-vulture/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The foundation summarizes varied feeding on carrion and small food items and describes this species as smaller than the other European vultures."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 22,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited IUCN page reports a global Endangered assessment last updated in 2021; national trends can differ.",
+    "Detailed breeding ecology was not included in the regional and conservation summaries consulted for this concise profile."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the French LPO species account with Environment Agency Abu Dhabi, Vulture Conservation Foundation and BirdLife/IUCN; avoided inferring breeding details."
+}

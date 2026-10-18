@@ -1,0 +1,169 @@
+{
+  "id": "larus_canus",
+  "scientific": "Larus canus",
+  "group": "birds",
+  "name": {
+    "en": "Common Gull",
+    "fr": "Goéland cendré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Gull breeds widely across the northern Palearctic. It shares genus Larus with the Lesser Black-backed Gull and Glaucous Gull covered alongside it here.",
+      "fr": "Le Goéland cendré niche dans une vaste partie du nord du Paléarctique. Il partage le genre Larus avec le Goéland brun et le Goéland bourgmestre présentés ici."
+    },
+    "identification": {
+      "en": "Adults have a grey back and greenish-yellow bill and legs.",
+      "fr": "Les adultes ont le dos gris, le bec et les pattes jaune verdâtre."
+    },
+    "habitat": {
+      "en": "It nests on coasts and inland, including moorland, lake shores and river banks.",
+      "fr": "Il niche sur les côtes et à l’intérieur des terres, notamment dans les landes, près des lacs et le long des rivières."
+    },
+    "diet": {
+      "en": "Inland birds take worms and insects; coastal birds also eat crustaceans, molluscs and small fish.",
+      "fr": "À l’intérieur des terres, il mange vers et insectes; sur les côtes, il consomme aussi crustacés, mollusques et petits poissons."
+    },
+    "behavior": {
+      "en": "It often breeds colonially, then gathers in groups outside the nesting season.",
+      "fr": "Il niche souvent en colonies, puis se rassemble en groupes hors de la période de reproduction."
+    },
+    "reproduction": {
+      "en": "Nests are usually on the ground, though trees and artificial structures can also be used.",
+      "fr": "Les nids se trouvent généralement au sol, mais l’espèce peut aussi utiliser des arbres ou des structures artificielles."
+    },
+    "ecology": {
+      "en": "Its varied prey links food webs in inland fields, freshwater edges and coastal waters.",
+      "fr": "Ses proies variées le relient aux réseaux alimentaires des champs, des eaux douces et des milieux côtiers."
+    },
+    "conservation": {
+      "en": "IUCN lists it as Least Concern globally. British monitoring places the breeding population on the UK Red List.",
+      "fr": "L’UICN la classe en préoccupation mineure à l’échelle mondiale. Le suivi britannique inscrit la population nicheuse sur la Liste rouge du Royaume-Uni."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Larus canus — IUCN Red List",
+        "fr": "Larus canus — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22694308A155576460.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN assessment describes an extensive northern Palearctic breeding range, ground and occasional elevated nesting, and global Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 20,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "English By Taxonomic Order — Canadian migratory bird names",
+        "fr": "Noms anglais par ordre taxonomique — oiseaux migrateurs du Canada"
+      },
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The federal bilingual taxonomic list uses the English Common Gull and French Goéland cendré names and lists the three Larus species in this batch."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 24,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Gull species account — BTO, JNCC and RSPB Seabird Monitoring Programme 2024",
+        "fr": "Fiche du Goéland cendré — programme de suivi des oiseaux marins BTO, JNCC et RSPB 2024"
+      },
+      "url": "https://www.bto.org/sites/default/files/bto-jncc-rspb-seabird-montoring-programme-annual-report-2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2024 British report gives adult leg and bill colors, inland and coastal prey, breeding settings, and a UK Red List designation."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 22,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Goéland cendré — Oiseaux.net",
+        "fr": "Goéland cendré — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/goeland.cendre.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The French-language account describes colonial nesting and group roosting or activity outside the breeding season."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 15,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Global Least Concern and the UK Red List apply to different geographic populations and should not be conflated."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the global IUCN assessment against the UK seabird report and the French Oiseaux.net account; the regional conservation statuses are stated separately."
+}

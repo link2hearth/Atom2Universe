@@ -1,0 +1,146 @@
+{
+  "id": "galerida_cristata",
+  "scientific": "Galerida cristata",
+  "group": "birds",
+  "name": {
+    "en": "Crested Lark",
+    "fr": "Cochevis huppé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The crested lark ranges across Eurasia and North Africa; northern populations may migrate, while many others are resident.",
+      "fr": "Le Cochevis huppé vit en Eurasie et en Afrique du Nord; certaines populations nordiques migrent, tandis que beaucoup restent sédentaires."
+    },
+    "identification": {
+      "en": "This 18 cm brown streaked lark has a conspicuous pointed crest, broad wings and a short rounded tail.",
+      "fr": "Cette alouette brune rayée d’environ 18 cm porte une huppe pointue bien visible, des ailes larges et une queue courte arrondie."
+    },
+    "habitat": {
+      "en": "It favors warm open ground, including cereal fields, fallows, roadsides and suburban edges.",
+      "fr": "Elle préfère les terrains ouverts et chauds, notamment cultures, jachères, bords de route et périphéries urbaines."
+    },
+    "diet": {
+      "en": "It eats invertebrates, seeds, leaves and shoots, with plant foods more important in winter.",
+      "fr": "Elle mange invertébrés, graines, feuilles et pousses; les végétaux prennent plus d’importance en hiver."
+    },
+    "behavior": {
+      "en": "It often sings from the ground or a low perch and remains territorial during breeding; most Iberian populations are sedentary.",
+      "fr": "Elle chante souvent depuis le sol ou un perchoir bas et reste territoriale en période de reproduction; la plupart des populations ibériques sont sédentaires."
+    },
+    "reproduction": {
+      "en": "It nests in a lined ground depression, usually laying three to seven eggs; Spanish birds may raise two or three broods.",
+      "fr": "Elle niche dans une dépression du sol garnie de végétaux et pond généralement trois à sept œufs; les oiseaux espagnols peuvent faire deux ou trois nichées."
+    },
+    "ecology": {
+      "en": "It uses cultivated open country and resembles the closely related Thekla’s lark, Galerida theklae.",
+      "fr": "Elle fréquente les espaces agricoles ouverts et ressemble au proche Cochevis de Thékla, Galerida theklae."
+    },
+    "conservation": {
+      "en": "It is globally Least Concern, although BirdLife reports European declines. In Spain, SEO links population decline to agricultural change.",
+      "fr": "Elle est classée en préoccupation mineure dans le monde, malgré un recul européen signalé par BirdLife. En Espagne, SEO relie son déclin aux changements agricoles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crested Lark — BirdLife International DataZone",
+        "fr": "Cogujada común — BirdLife International DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/crested-lark-galerida-cristata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife synthesis describes dry open habitat, broad range, resident and migratory populations, ground nesting, diet and global population trends."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 19,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cogujada común — SEO/BirdLife",
+        "fr": "Cogujada común — SEO/BirdLife"
+      },
+      "url": "https://seo.org/ave/cogujada-comun/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "SEO/BirdLife describes identification, habitat, diet, breeding, threats and Spanish population decline."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 11,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cogujada común — Spanish breeding bird atlas",
+        "fr": "Cogujada común — atlas español de aves reproductoras"
+      },
+      "url": "https://atlasaves.seo.org/ave/cogujada-comun/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish atlas documents Iberian breeding distribution and population trends."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared BirdLife International with SEO/BirdLife and Spain’s breeding atlas. SEO identifies Galerida theklae as a close comparison; no profile for that congener was found in the current catalog."
+}

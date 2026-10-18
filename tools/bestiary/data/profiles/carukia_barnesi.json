@@ -1,0 +1,164 @@
+{
+  "id": "carukia_barnesi",
+  "scientific": "Carukia barnesi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Irukandji Jellyfish",
+    "fr": "Méduse irukandji"
+  },
+  "sections": {
+    "overview": {
+      "en": "Carukia barnesi is a small box jellyfish from northern Australian waters and the first species linked to Irukandji syndrome.",
+      "fr": "Carukia barnesi est une petite cuboméduse des eaux du nord de l’Australie et la première espèce associée au syndrome d’Irukandji."
+    },
+    "identification": {
+      "en": "Its transparent bell is about 1–2 cm across, while its tentacles can reach roughly 1 m; small size makes it difficult to see in water.",
+      "fr": "Son ombrelle transparente mesure environ 1 à 2 cm de diamètre, tandis que ses tentacules peuvent atteindre environ 1 m ; sa petite taille la rend difficile à voir dans l’eau."
+    },
+    "habitat": {
+      "en": "It is usually solitary offshore in northern Australia, from Western Australia to Queensland, and winds and currents sometimes carry it inshore.",
+      "fr": "Elle vit généralement seule au large du nord de l’Australie, de l’Australie-Occidentale au Queensland ; vents et courants la portent parfois vers la côte."
+    },
+    "diet": {
+      "en": "Immature medusae feed on invertebrate prey, while mature medusae shift toward vertebrate prey, according to a species-specific study.",
+      "fr": "Les méduses immatures mangent des proies invertébrées, tandis que les adultes se tournent davantage vers les vertébrés, selon une étude spécifique."
+    },
+    "behavior": {
+      "en": "Most aspects of its behavior remain little known; prey capture appears to change as the animal matures.",
+      "fr": "La plupart des aspects de son comportement restent mal connus ; la capture des proies semble changer avec la maturation."
+    },
+    "reproduction": {
+      "en": "Its life cycle includes fertilized eggs, a planula stage, polyps that reproduce by budding, and medusae released by strobilation.",
+      "fr": "Son cycle comprend des œufs fécondés, un stade planula, des polypes qui se reproduisent par bourgeonnement et des méduses libérées par strobilation."
+    },
+    "ecology": {
+      "en": "The common label “Irukandji” also refers to other small box jellies, including Malo kingi; C. barnesi is one species within this broader group.",
+      "fr": "Le nom courant « Irukandji » désigne aussi d’autres petites cuboméduses, dont Malo kingi ; C. barnesi n’est qu’une espèce de ce groupe plus large."
+    },
+    "conservation": {
+      "en": "Its sting can cause Irukandji syndrome, a potentially severe illness; species-level abundance and conservation status are not well assessed.",
+      "fr": "Sa piqûre peut provoquer le syndrome d’Irukandji, une affection potentiellement grave ; l’abondance et l’état de conservation de l’espèce sont mal évalués."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Irukandji, Carukia barnesi — Australian Museum",
+        "fr": "Irukandji, Carukia barnesi — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/jellyfish/irukandji-carukia-barnesi/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Museum account gives classification, small transparent bell, tentacle length and first association with syndrome."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 14,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Venom ontogeny, diet and morphology in Carukia barnesi — Toxicon",
+        "fr": "Venin, régime et morphologie de Carukia barnesi — Toxicon"
+      },
+      "url": "https://doi.org/10.1016/j.toxicon.2007.01.014",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Species study reports offshore collection and prey shift from invertebrates to vertebrates with age."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 14,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early Life History of Carukia barnesi — PLOS ONE",
+        "fr": "Premières étapes de vie de Carukia barnesi — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0151197",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Primary study documents planula, polyp budding and medusa production under laboratory conditions."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 12,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Irukandji syndrome — Queensland Poisons Information Centre",
+        "fr": "Syndrome d’Irukandji — Centre antipoison du Queensland"
+      },
+      "url": "https://www.poisonsinfo.health.qld.gov.au/bites-and-stings/sea-creature-bites-and-stings",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Queensland health resource links Carukia stings with potentially serious syndrome."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 10,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The polyp life cycle was studied under laboratory conditions; natural duration and seasonal timing are uncertain.",
+    "« Irukandji » syndrome can be caused by multiple species; health observations do not establish population trends."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Australian Museum species information with two primary biological studies and Queensland health information. Distinguished C. barnesi from the wider set of Irukandji jellies such as Malo kingi."
+}

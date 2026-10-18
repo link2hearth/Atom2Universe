@@ -1,0 +1,27 @@
+package com.Atom2Universe.app.science.botany
+
+import com.Atom2Universe.app.R
+
+/** Six additional terminal taxa from the bundled green tree. */
+internal object PriorityTreeCatalogHerbariumLot29 {
+    val species = listOf(
+        PlantSpecies("abies_yuanbaoshanensis",R.string.bot_abies_yuanbaoshanensis_name,R.string.bot_abies_yuanbaoshanensis_latin,R.string.bot_abies_yuanbaoshanensis_aliases,"Pinaceae",setOf("trees"),1000,2500,emptySet(),emptySet(),setOf(Habitat.MOUNTAIN,Habitat.WOOD),true,
+            PlantLook(Crown.CONICAL,LeafShape.NEEDLE,LeafMargin.ENTIRE,LeafArrangement.ALTERNATE,FlowerShape.CONIFER,FruitShape.CONE,FlowerColor.GREEN,3f,7f,12f,seed=1007,coneUpright=true,leafDetail=LeafDetail(width=.35f,veinPairs=0),architecture=TreeArchitecture(radius=112f,top=22f,bottom=232f,fork=231f,trunkWidth=17f,density=.58f)),
+            R.string.bot_abies_yuanbaoshanensis_description,R.string.bot_abies_yuanbaoshanensis_distribution,PlantView.entries.zip(listOf(R.string.bot_abies_yuanbaoshanensis_habit,R.string.bot_abies_yuanbaoshanensis_leaf,R.string.bot_abies_yuanbaoshanensis_flower,R.string.bot_abies_yuanbaoshanensis_fruit)).toMap(),setOf("powo")),
+        PlantSpecies("ammi_majus",R.string.bot_ammi_majus_name,R.string.bot_ammi_majus_latin,R.string.bot_ammi_majus_aliases,"Apiaceae",setOf("herbs"),30,100,emptySet(),emptySet(),setOf(Habitat.MEADOW,Habitat.DISTURBED,Habitat.CULTIVATED),false,
+            PlantLook(Crown.HERB,LeafShape.DIVIDED,LeafMargin.SERRATE,LeafArrangement.ALTERNATE,FlowerShape.UMBEL,FruitShape.SCHIZOCARP,FlowerColor.WHITE,12f,6f,0.35f,seed=1008,petiole=.4f,leafDetail=LeafDetail(width=.65f,veinPairs=5)),
+            R.string.bot_ammi_majus_description,R.string.bot_ammi_majus_distribution,PlantView.entries.zip(listOf(R.string.bot_ammi_majus_habit,R.string.bot_ammi_majus_leaf,R.string.bot_ammi_majus_flower,R.string.bot_ammi_majus_fruit)).toMap(),setOf("powo"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("cuminum_cyminum",R.string.bot_cuminum_cyminum_name,R.string.bot_cuminum_cyminum_latin,R.string.bot_cuminum_cyminum_aliases,"Apiaceae",setOf("herbs"),15,30,emptySet(),emptySet(),setOf(Habitat.DRY_SCRUB,Habitat.CULTIVATED),false,
+            PlantLook(Crown.HERB,LeafShape.LINEAR,LeafMargin.ENTIRE,LeafArrangement.ALTERNATE,FlowerShape.UMBEL,FruitShape.SCHIZOCARP,FlowerColor.PINK,8f,3f,.5f,seed=1009,petiole=.25f,leafDetail=LeafDetail(width=.3f,veinPairs=0)),
+            R.string.bot_cuminum_cyminum_description,R.string.bot_cuminum_cyminum_distribution,PlantView.entries.zip(listOf(R.string.bot_cuminum_cyminum_habit,R.string.bot_cuminum_cyminum_leaf,R.string.bot_cuminum_cyminum_flower,R.string.bot_cuminum_cyminum_fruit)).toMap(),setOf("powo","useful_plants"),collectionIds=setOf("useful_plants"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("anemarrhena_asphodeloides",R.string.bot_anemarrhena_asphodeloides_name,R.string.bot_anemarrhena_asphodeloides_latin,R.string.bot_anemarrhena_asphodeloides_aliases,"Asparagaceae",setOf("herbs"),30,100,emptySet(),emptySet(),setOf(Habitat.MEADOW,Habitat.MOUNTAIN),false,
+            PlantLook(Crown.HERB,LeafShape.LINEAR,LeafMargin.ENTIRE,LeafArrangement.ROSETTE,FlowerShape.SPIKE,FruitShape.CAPSULE,FlowerColor.PINK,45f,25f,2f,seed=1010,petiole=.15f,leafDetail=LeafDetail(width=.25f,veinPairs=0)),
+            R.string.bot_anemarrhena_asphodeloides_description,R.string.bot_anemarrhena_asphodeloides_distribution,PlantView.entries.zip(listOf(R.string.bot_anemarrhena_asphodeloides_habit,R.string.bot_anemarrhena_asphodeloides_leaf,R.string.bot_anemarrhena_asphodeloides_flower,R.string.bot_anemarrhena_asphodeloides_fruit)).toMap(),setOf("powo"),collectionIds=setOf("useful_plants")),
+        PlantSpecies("ansellia_africana",R.string.bot_ansellia_africana_name,R.string.bot_ansellia_africana_latin,R.string.bot_ansellia_africana_aliases,"Orchidaceae",setOf("herbs"),50,150,emptySet(),emptySet(),setOf(Habitat.WOOD),false,
+            PlantLook(Crown.HERB,LeafShape.LINEAR,LeafMargin.ENTIRE,LeafArrangement.ROSETTE,FlowerShape.PANICLE,FruitShape.CAPSULE,FlowerColor.YELLOW,25f,5f,6f,seed=1011,petiole=.1f,leafDetail=LeafDetail(width=.3f,veinPairs=0)),
+            R.string.bot_ansellia_africana_description,R.string.bot_ansellia_africana_distribution,PlantView.entries.zip(listOf(R.string.bot_ansellia_africana_habit,R.string.bot_ansellia_africana_leaf,R.string.bot_ansellia_africana_flower,R.string.bot_ansellia_africana_fruit)).toMap(),setOf("powo")),
+        PlantSpecies("arbutus_canariensis",R.string.bot_arbutus_canariensis_name,R.string.bot_arbutus_canariensis_latin,R.string.bot_arbutus_canariensis_aliases,"Ericaceae",setOf("trees"),600,1500,emptySet(),emptySet(),setOf(Habitat.WOOD,Habitat.PARK),true,
+            PlantLook(Crown.ROUND,LeafShape.OVAL,LeafMargin.SERRATE,LeafArrangement.ALTERNATE,FlowerShape.BELL,FruitShape.BERRY,FlowerColor.WHITE,10f,1.2f,2f,seed=1012,petiole=.15f,leafDetail=LeafDetail(width=.48f,veinPairs=9),architecture=TreeArchitecture(radius=125f,top=24f,bottom=231f,fork=220f,trunkWidth=22f,density=.48f)),
+            R.string.bot_arbutus_canariensis_description,R.string.bot_arbutus_canariensis_distribution,PlantView.entries.zip(listOf(R.string.bot_arbutus_canariensis_habit,R.string.bot_arbutus_canariensis_leaf,R.string.bot_arbutus_canariensis_flower,R.string.bot_arbutus_canariensis_fruit)).toMap(),setOf("powo"))
+    )
+}

@@ -1,0 +1,169 @@
+{
+  "id": "porcellio_scaber",
+  "scientific": "Porcellio scaber",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common rough woodlouse",
+    "fr": "Cloporte rugueux"
+  },
+  "sections": {
+    "overview": {
+      "en": "Porcellio scaber is a familiar European woodlouse that has spread widely beyond its native range.",
+      "fr": "Porcellio scaber est un cloporte européen familier qui s’est largement répandu au-delà de son aire d’origine."
+    },
+    "identification": {
+      "en": "Its body is rough and strongly tuberculate, with variable colouration. Unlike P. spinicornis, its mottling is irregular rather than forming a yellow-flanked stripe. Its telson is less rounded than that of P. dilatatus.",
+      "fr": "Son corps est rugueux et fortement granuleux, avec une coloration variable. Contrairement à P. spinicornis, ses taches sont irrégulières et ne forment pas une bande bordée de jaune. Son telson est moins arrondi que celui de P. dilatatus."
+    },
+    "habitat": {
+      "en": "It uses many habitats, especially under stones, dead wood and leaf litter, and tolerates drier sites than Oniscus asellus.",
+      "fr": "Il fréquente de nombreux milieux, surtout sous les pierres, le bois mort et la litière, et tolère les sites plus secs que Oniscus asellus."
+    },
+    "diet": {
+      "en": "It feeds on decaying organic matter, including leaf litter, fungi and animal remains.",
+      "fr": "Il consomme de la matière organique en décomposition, notamment la litière, des champignons et des restes animaux."
+    },
+    "behavior": {
+      "en": "It often shelters in damp refuges but can also climb walls and enter buildings.",
+      "fr": "Il se réfugie souvent dans des endroits humides, mais peut aussi grimper sur les murs et entrer dans les bâtiments."
+    },
+    "reproduction": {
+      "en": "Females carry eggs and hatchlings in a fluid-filled brood pouch.",
+      "fr": "Les femelles portent les œufs et les jeunes dans une poche incubatrice remplie de liquide."
+    },
+    "ecology": {
+      "en": "Experiments have documented viable seed dispersal after it eats fruits.",
+      "fr": "Des expériences ont documenté la dispersion de graines viables après ingestion de fruits."
+    },
+    "conservation": {
+      "en": "The British group lists it as Least Concern in Great Britain; this regional status is not a global assessment.",
+      "fr": "Le groupe britannique le classe en préoccupation mineure en Grande-Bretagne ; ce statut régional ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Porcellio scaber — British Myriapod and Isopod Group",
+        "fr": "Porcellio scaber — British Myriapod and Isopod Group"
+      },
+      "url": "https://bmig.org.uk/species/Porcellio-scaber",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist account gives habitat and British status; its identification contrasts the pattern with P. spinicornis."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 15,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio scaber — Animal Diversity Web, University of Michigan",
+        "fr": "Porcellio scaber — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Porcellio_scaber/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "University account describes a worldwide introduced range, the brood pouch and detritivory."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 12,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seed dispersal by terrestrial isopods — Plants, People, Planet (2024)",
+        "fr": "Dispersion des graines par les isopodes terrestres — Plants, People, Planet (2024)"
+      },
+      "url": "https://nph.onlinelibrary.wiley.com/doi/10.1002/ppp3.10519",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Experimental study documents seed survival after ingestion by Porcellio scaber."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 10,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio scaber — FAUNA regional account",
+        "fr": "Porcellio scaber — fiche régionale FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/18820",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French account confirms rough surface and variable appearance."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 8,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "British Least Concern applies regionally only.",
+    "Colour varies; distinguish P. spinicornis by pattern arrangement, not colour alone."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked specialist British identification, university natural history, French regional data and seed-dispersal research; linked the P. spinicornis comparison reciprocally."
+}

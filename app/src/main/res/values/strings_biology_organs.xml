@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_layer_organs">Organs</string>
+    <string name="bio_organ_structure">Organ, lobe, organ wall or tissue</string>
+    <string name="bio_organ_coverage">Organs: %1$d selectable structures, including the cardiac walls, five lung lobes, liver, digestive tract, urinary organs and several glands. BodyParts3D organ positions are preserved; the Z-Anatomy lungs and thyroid share an approximate alignment to the rib cage. The heart shows its walls; valves are absent; coronary vessels belong to the vascular layer. The penile erectile bodies and glans are included. The bulbospongiosus and ischiocavernosus muscles are absent from the imported sources. The sigmoid colon and parotid glands are not separately modelled. This adult male model does not include female reproductive organs. Brain and nerve networks, fine tissue structure and physiological animation remain outside this layer. Display systems and regions are navigation groups; for example, the pancreas also has an endocrine function.</string>
+    <string name="bio_organ_reference">Internal organs · OpenStax anatomy textbook</string>
+    <string name="bio_visceral_modifications">Added organ surfaces: five lung lobes and the thyroid from Z-Anatomy, registered together to thoracic bones with a uniform scale, rotation and translation. Both left lung lobes then receive a shared rigid adjustment to reduce overlap with the heart. Surface detail is simplified for mobile display. The original poses differ, so contacts with neighbouring organs remain approximate. All kidneys are from BodyParts3D 4.0; the Z-Anatomy kidney assets carrying an additional noncommercial attribution are excluded.</string>
+    <string name="bio_colors_organs">Colour organs by system</string>
+    <string name="bio_colors_organs_hint">Organ colours are illustrative. Disable system colours to restore the individual tissue colours.</string>
+    <string name="bio_organ_systems">Filter organs by system</string>
+    <string name="bio_organ_systems_count">Organ systems · %1$d/%2$d ▾</string>
+    <string name="bio_organ_systems_hint">These filters affect only the Internal organs layer. They combine with region filters. The pancreas is grouped with digestion and the testes with reproduction, although both also have endocrine functions.</string>
+    <string name="bio_system_cardiovascular">Heart</string>
+    <string name="bio_system_respiratory">Respiratory organs</string>
+    <string name="bio_system_digestive">Digestive organs</string>
+    <string name="bio_system_urinary">Urinary organs</string>
+    <string name="bio_system_endocrine">Endocrine glands</string>
+    <string name="bio_system_lymphatic">Lymphoid organs</string>
+    <string name="bio_system_reproductive">Male reproductive organs</string>
+</resources>

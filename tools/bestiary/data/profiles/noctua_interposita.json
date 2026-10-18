@@ -1,0 +1,119 @@
+{
+  "id": "noctua_interposita",
+  "scientific": "Noctua interposita",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sarmatian yellow underwing",
+    "fr": "Triphène sarmate"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sarmatian yellow underwing is a noctuid moth recorded across Europe and parts of western Asia.",
+      "fr": "La Triphène sarmate est une noctuelle observée en Europe et dans une partie de l’Asie occidentale."
+    },
+    "identification": {
+      "en": "It is easily confused with the related Noctua orbona; a diffuse brown subapical mark helps separate it, but genital examination may be decisive.",
+      "fr": "Elle se confond facilement avec la Noctua orbona apparentée ; une marque subapicale brune diffuse aide à la distinguer, mais l’examen des genitalia peut être décisif."
+    },
+    "habitat": {
+      "en": "French records include mountain localities in the Pyrenees, Alps and Massif Central, while the species has been reported farther north and east.",
+      "fr": "Les observations françaises comprennent des sites montagnards dans les Pyrénées, les Alpes et le Massif central, tandis que l’espèce est signalée plus au nord et à l’est."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on various low-growing herbaceous plants.",
+      "fr": "Ses chenilles se nourrissent de diverses plantes herbacées basses."
+    },
+    "behavior": {
+      "en": "Adults are recorded from June to October in central European accounts.",
+      "fr": "Les adultes sont signalés de juin à octobre dans les sources d’Europe centrale."
+    },
+    "reproduction": {
+      "en": "The caterpillar occurs from autumn into spring and overwinters, according to the German species account.",
+      "fr": "La chenille est présente de l’automne au printemps et hiverne, selon la fiche allemande."
+    },
+    "ecology": {
+      "en": "Compared with Noctua comes, it has a broader black band on the hindwing and a larger central spot.",
+      "fr": "Par rapport à Noctua comes, elle a une bande noire plus large sur l’aile postérieure et une tache centrale plus grande."
+    },
+    "conservation": {
+      "en": "French observations suggest recent expansion into new regions, but the sources reviewed do not provide a global population assessment.",
+      "fr": "Les observations françaises suggèrent une expansion récente vers de nouvelles régions, mais les sources examinées ne donnent pas d’évaluation mondiale de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Noctua interposita — Les Carnets du Lépidoptériste Français",
+        "fr": "Noctua interposita — Les Carnets du Lépidoptériste Français"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?dep=04&e=p&id=40280",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The French account reports the French name Triphène sarmate, its close resemblance and diagnostic difference from Noctua orbona, host plants as diverse low plants, and recent sprea"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 27,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Noctua interposita — LepiWiki",
+        "fr": "Noctua interposita — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/noctua_interposita",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The German moth account gives a flight season from June to October, larvae from autumn through spring, overwintering larvae, varied herbaceous foods and a broad European range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 27,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The French source documents regional observations and expansion, not a global abundance trend or conservation category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the French Lepidopterist’s account with German LepiWiki; the latter compares interposita directly with Noctua orbona and Noctua comes, supporting these useful close-relative references."
+}

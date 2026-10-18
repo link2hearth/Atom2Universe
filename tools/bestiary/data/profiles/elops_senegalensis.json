@@ -1,0 +1,122 @@
+{
+  "id": "elops_senegalensis",
+  "scientific": "Elops senegalensis",
+  "group": "fish",
+  "name": {
+    "en": "Senegalese Ladyfish",
+    "fr": "Élope du Sénégal"
+  },
+  "sections": {
+    "overview": {
+      "en": "Elops senegalensis is a West African ladyfish in genus Elops and a close relative of E. lacerta.",
+      "fr": "Elops senegalensis est un poisson côtier ouest-africain du genre Elops et une proche parente d’E. lacerta."
+    },
+    "identification": {
+      "en": "It has 11–15 lower-arch gill rakers and 92–100 lateral-line scales, unlike E. lacerta.",
+      "fr": "Il porte 11 à 15 branchiospines sur l’arc inférieur et 92 à 100 écailles latérales, contrairement à E. lacerta."
+    },
+    "habitat": {
+      "en": "It inhabits eastern Atlantic coastal waters from Mauritania south to the Democratic Republic of the Congo.",
+      "fr": "Il fréquente les eaux côtières de l’Atlantique oriental, de la Mauritanie jusqu’à la République démocratique du Congo."
+    },
+    "diet": {
+      "en": "Its recorded prey include fish and shrimps.",
+      "fr": "Ses proies signalées comprennent les poissons et les crevettes."
+    },
+    "behavior": {
+      "en": "This coastal pelagic fish occurs inshore and can move up tidal rivers.",
+      "fr": "Ce poisson pélagique côtier fréquente le littoral et peut remonter les rivières à marée."
+    },
+    "reproduction": {
+      "en": "The regional guide reports spawning at sea and a transparent leptocephalus larval stage for coastal Elops.",
+      "fr": "Le guide régional signale une ponte en mer et un stade larvaire leptocéphale transparent chez les Elops côtiers."
+    },
+    "ecology": {
+      "en": "It overlaps with E. lacerta in West African coastal food webs; E. machnata is a related Indo-West Pacific species.",
+      "fr": "Elle partage les réseaux alimentaires côtiers ouest-africains avec E. lacerta; E. machnata est une espèce apparentée de l’Indo-Pacifique occidental."
+    },
+    "conservation": {
+      "en": "FishBase reports the global IUCN category Data Deficient, assessed in 2019.",
+      "fr": "FishBase indique la catégorie mondiale Données insuffisantes de l’UICN, selon l’évaluation de 2019."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Elops senegalensis — FishBase",
+        "fr": "Elops senegalensis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/5023",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the distribution, diagnostic counts, coastal diet, and Data Deficient status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 12,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fresh and brackish water fishes of West Africa — IRD",
+        "fr": "Poissons d’eau douce et saumâtre d’Afrique de l’Ouest — IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers21-03/010034145.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The regional guide compares E. senegalensis with E. lacerta and reports sea spawning and leptocephalus larvae for coastal Elops."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 19,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

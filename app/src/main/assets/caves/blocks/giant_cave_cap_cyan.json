@@ -1,0 +1,15 @@
+{
+  "id": 2643,
+  "name": "giant_cave_cap_cyan",
+  "texture_top": "cave_art:b_cap_cyan",
+  "texture_side": "cave_art:b_cap_side_cyan",
+  "texture_bottom": "cave_art:b_gills_cyan",
+  "color": "#85D9E4",
+  "hardness": 0.6,
+  "light_emission": 3,
+  "drop": "giant_cave_cap_cyan",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

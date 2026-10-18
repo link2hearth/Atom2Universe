@@ -1,0 +1,154 @@
+package com.Atom2Universe.app.games.caves.ai
+
+import kotlin.math.atan2
+import kotlin.math.sqrt
+
+/**
+ * Fait avancer un personnage le long d'un chemin de cases ([NavGrid]).
+ *
+ * Il vise le centre de chaque case l'une après l'autre, à vitesse constante. La grille garantit
+ * que chaque liaison est praticable : pas besoin de collisions, on glisse d'un centre à l'autre et
+ * la hauteur suit la case visée (marche, descente). Coordonnées locales à la carte, pieds.
+ */
+internal class PathFollower(private val grid: NavGrid, private val clearance: BodyClearance? = null) {
+
+    /** Le chemin suivi, départ compris. */
+    val path = IntList(64)
+    private var next = 0
+
+    var x = 0.0; private set
+    var y = 0.0; private set
+    var z = 0.0; private set
+    /** Direction de marche en degrés, même convention que la caméra et les ennemis (0 = +Z). */
+    var yawDeg = 0f; private set
+    var jumpOffset = 0.0; private set
+    private var jumpVelocity = 0.0
+
+    /** Petit saut d'esquive ; le volume debout doit pouvoir monter sans toucher le plafond. */
+    fun startJump(): Boolean {
+        if (jumpOffset > 0.0 || arrived || clearance == null) return false
+        for (i in 1..4) if (!clearance.isFree(x, y + i * .2, z)) return false
+        jumpVelocity = 5.0
+        jumpOffset = .001
+        return true
+    }
+
+    fun updateJump(dt: Float) {
+        var remaining = dt.coerceAtLeast(0f)
+        while (remaining > 0f && jumpOffset > 0.0) {
+            val step = minOf(remaining, .016f).toDouble()
+            remaining -= step.toFloat()
+            jumpVelocity -= 18.0 * step
+            val height = (jumpOffset + jumpVelocity * step).coerceAtLeast(0.0)
+            if (clearance == null || clearance.isFree(x, y + height, z)) jumpOffset = height
+            else jumpVelocity = minOf(0.0, jumpVelocity)
+            if (jumpOffset == 0.0) jumpVelocity = 0.0
+        }
+    }
+
+    val arrived: Boolean get() = next >= path.size
+
+    /** Index dans [path] de la prochaine case visée (les précédentes sont déjà atteintes). */
+    val nextIndex: Int get() = next
+
+    fun place(x: Double, y: Double, z: Double) {
+        this.x = x; this.y = y; this.z = z
+        jumpOffset = 0.0; jumpVelocity = 0.0
+        stop()
+    }
+
+    /** Revient d'abord au centre de la case de départ si un trajet a été interrompu. */
+    fun follow(newPath: IntList) {
+        path.copyFrom(newPath)
+        next = if (path.size > 1) 0 else path.size
+    }
+
+    fun stop() {
+        path.clear()
+        next = 0
+    }
+
+    /** Avance de [speed] blocs par seconde pendant [dt] secondes. Renvoie vrai s'il a bougé. */
+    fun advance(dt: Float, speed: Float): Boolean {
+        if (clearance != null) return advanceWithCollisions(dt, speed)
+        if (arrived) return false
+        var budget = (speed * dt).toDouble()
+        while (budget > 0.0 && next < path.size) {
+            val n = path[next]
+            val tx = grid.nodeX[n] + 0.5; val tz = grid.nodeZ[n] + 0.5
+            val dx = tx - x; val dz = tz - z
+            val dist = sqrt(dx * dx + dz * dz)
+            if (dist > 1e-6) yawDeg = Math.toDegrees(atan2(dx, dz)).toFloat()
+            if (dist <= budget) {
+                x = tx; z = tz
+                budget -= dist
+                next++
+            } else {
+                x += dx / dist * budget; z += dz / dist * budget
+                budget = 0.0
+            }
+        }
+        // La hauteur rejoint celle de la case visée (ou de la dernière atteinte), sans à-coup.
+        val targetY = grid.nodeY[path[if (next < path.size) next else path.size - 1]].toDouble()
+        val climb = (VERTICAL_SPEED * dt).toDouble()
+        y = when {
+            y < targetY -> minOf(targetY, y + climb)
+            y > targetY -> maxOf(targetY, y - climb)
+            else -> y
+        }
+        return true
+    }
+
+    private fun advanceWithCollisions(dt: Float, speed: Float): Boolean {
+        var remaining = dt.coerceAtLeast(0f)
+        var moved = false
+        while (remaining > 0f && !arrived) {
+            val step = minOf(remaining, .016f)
+            remaining -= step
+            val node = path[next]
+            val tx = grid.nodeX[node] + .5; val tz = grid.nodeZ[node] + .5
+            val ty = grid.nodeY[node].toDouble()
+            // Termine le saut avant de changer d'étage ; la navigation garde le sol comme repère.
+            if (jumpOffset > 0.0 && kotlin.math.abs(ty - y) > .0001) break
+            val dx = tx - x; val dz = tz - z
+            val distance = sqrt(dx * dx + dz * dz)
+            val travel = minOf(distance, speed * step.toDouble())
+            val nx = if (distance > .00001) x + dx / distance * travel else tx
+            val nz = if (distance > .00001) z + dz / distance * travel else tz
+            // Monte avant de franchir la marche ; redescend seulement après dégagement du rebord.
+            if (ty > y + .0001) {
+                val ny = minOf(ty, y + VERTICAL_SPEED * step)
+                if (!clearance!!.isFree(x, ny, z)) break
+                y = ny; moved = true
+                if (y < ty - .0001) continue
+            }
+            if (!clearance!!.isFree(nx, y, nz)) break
+            // Garde tout le couloir de retombée libre, pas seulement le volume au sommet du saut.
+            if (jumpOffset > 0.0) {
+                var lift = .1
+                var free = true
+                while (lift < jumpOffset + .1) {
+                    if (!clearance.isFree(nx, y + minOf(lift, jumpOffset), nz)) { free = false; break }
+                    lift += .1
+                }
+                if (!free) break
+            }
+            if (travel > .00001) {
+                yawDeg = Math.toDegrees(atan2(dx, dz)).toFloat()
+                moved = true
+            }
+            x = nx; z = nz
+            if (ty < y) {
+                val ny = maxOf(ty, y - VERTICAL_SPEED * step)
+                if (clearance.isFree(x, ny, z)) { y = ny; moved = true }
+            }
+            if (distance <= travel + .00001 && kotlin.math.abs(y - ty) < .0001) next++
+        }
+        return moved
+    }
+
+    private companion object {
+        /** Blocs par seconde pour monter une marche ou descendre d'un rebord. */
+        const val VERTICAL_SPEED = 6f
+    }
+}

@@ -1,0 +1,160 @@
+{
+  "id": "mesonauta_festivus",
+  "scientific": "Mesonauta festivus",
+  "group": "fish",
+  "name": {
+    "en": "Flag Cichlid",
+    "fr": "Cichlidé drapeau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Flag Cichlid is a South American freshwater fish in the cichlid family.",
+      "fr": "Le Cichlidé drapeau est un poisson d’eau douce d’Amérique du Sud, de la famille des cichlidés."
+    },
+    "identification": {
+      "en": "Its laterally compressed body bears a bold dark diagonal stripe running from the snout through the eye toward the dorsal fin, which gives it the flag-fish name.",
+      "fr": "Son corps comprimé latéralement porte une large bande sombre oblique, du museau en passant par l’œil jusqu’à la nageoire dorsale, à l’origine de son nom de poisson drapeau."
+    },
+    "habitat": {
+      "en": "It inhabits shallow, slow or still freshwater with abundant aquatic plants and sandy or muddy bottoms in the Amazon and Paraguay basins.",
+      "fr": "Il fréquente les eaux douces peu profondes, calmes ou lentes, riches en plantes aquatiques et à fond sableux ou vaseux, dans les bassins de l’Amazone et du Paraguay."
+    },
+    "diet": {
+      "en": "A field guide to Bolivian fishes describes it as mainly herbivorous, eating algae, seeds and fruits, with occasional aquatic invertebrates.",
+      "fr": "Un guide des poissons de Bolivie le décrit comme surtout herbivore : il consomme des algues, graines et fruits, ainsi qu’occasionnellement des invertébrés aquatiques."
+    },
+    "behavior": {
+      "en": "Both parents care for the young; a Bolivian guide also notes that adults may be aggressive in aquariums.",
+      "fr": "Les deux parents s’occupent des jeunes ; un guide bolivien indique aussi que les adultes peuvent être agressifs en aquarium."
+    },
+    "reproduction": {
+      "en": "In Bolivia, breeding is reported to begin with rising water, and both parents guard the offspring.",
+      "fr": "En Bolivie, la reproduction est signalée au début de la montée des eaux et les deux parents protègent leur progéniture."
+    },
+    "ecology": {
+      "en": "It is a small, plant-associated cichlid of the Amazon and Paraguay drainages; the same genus contains other species, including M. insignis, so genus-level similarities should not be mistaken for identical ranges.",
+      "fr": "C’est un petit cichlidé associé aux plantes des bassins de l’Amazone et du Paraguay ; le genre comprend d’autres espèces, dont M. insignis, et leurs aires ne doivent pas être confondues."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 20 November 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN en préoccupation mineure, datée du 20 novembre 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer's Catalog of Fishes: Mesonauta festivus",
+        "fr": "Catalogue des poissons d’Eschmeyer : Mesonauta festivus"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37520",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The California Academy of Sciences catalog treats the name as valid and gives its Amazon and Paraguay drainage distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 19,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peces de Bolivia / Bolivian Fishes — IRD, species account",
+        "fr": "Peces de Bolivia / Poissons de Bolivie — IRD, fiche d’espèce"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers20-06/010062802.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Spanish-English field guide describes shallow, vegetated habitat, herbivory and parental care."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 12,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mesonauta festivus — FishBase",
+        "fr": "Mesonauta festivus — FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/Mesonauta_festivus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records a Least Concern assessment from the 2025-2 IUCN dataset, dated 20 November 2020."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 15,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Flag Cichlid — Fishipedia (Spanish species account)",
+        "fr": "Cichlidé drapeau — Fishipedia (fiche espagnole)"
+      },
+      "url": "https://www.fishipedia.es/pez/mesonauta-festivus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Spanish-language fish account independently describes the diagonal stripe and shallow vegetated habitats."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 13,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

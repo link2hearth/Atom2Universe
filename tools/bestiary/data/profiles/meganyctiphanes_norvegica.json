@@ -1,0 +1,148 @@
+{
+  "id": "meganyctiphanes_norvegica",
+  "scientific": "Meganyctiphanes norvegica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Northern krill",
+    "fr": "Krill atlantique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Meganyctiphanes norvegica is a euphausiid crustacean, commonly called northern or Atlantic krill, found across the North Atlantic and much of the Mediterranean.",
+      "fr": "Meganyctiphanes norvegica est un crustacé euphausiacé, appelé krill du Nord ou krill atlantique, présent dans l’Atlantique Nord et une grande partie de la Méditerranée."
+    },
+    "identification": {
+      "en": "Adults are about 22–45 mm long, with a shrimp-like transparent body, red pigment patches and large round eyes.",
+      "fr": "L’adulte mesure environ 22–45 mm ; son corps transparent, semblable à celui d’une crevette, porte des zones pigmentées rouges et de grands yeux ronds."
+    },
+    "habitat": {
+      "en": "It lives in open water, commonly between the surface and about 400 m, and may occur deeper.",
+      "fr": "Elle vit en pleine eau, le plus souvent entre la surface et environ 400 m, mais peut se trouver plus profondément."
+    },
+    "diet": {
+      "en": "Its diet shifts with season and location: phytoplankton is important in spring and summer, while copepods and other animal prey can dominate in colder seasons.",
+      "fr": "Son régime varie selon la saison et le lieu : le phytoplancton est important au printemps et en été, tandis que les copépodes et d’autres proies animales peuvent dominer aux saisons froides."
+    },
+    "behavior": {
+      "en": "It often forms dense swarms and usually rises toward the surface after dusk before descending again around dawn.",
+      "fr": "Elle forme souvent des essaims denses et remonte généralement vers la surface après le crépuscule avant de redescendre à l’aube."
+    },
+    "reproduction": {
+      "en": "It reproduces sexually; females release eggs in the water, and the young pass through several larval stages.",
+      "fr": "La reproduction est sexuée ; les femelles libèrent leurs œufs dans l’eau et les jeunes traversent plusieurs stades larvaires."
+    },
+    "ecology": {
+      "en": "It is a major prey item for fish, squid, seabirds, seals and whales, linking planktonic production to larger predators.",
+      "fr": "C’est une proie importante pour les poissons, les calmars, les oiseaux marins, les phoques et les baleines ; elle relie la production planctonique aux grands prédateurs."
+    },
+    "conservation": {
+      "en": "These sources describe its broad distribution and ecological role but do not establish a current species-specific population trend.",
+      "fr": "Ces sources décrivent sa vaste répartition et son rôle écologique, mais n’établissent pas de tendance actuelle propre à la population de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Meganyctiphanes norvegica — DORIS, FFESSM",
+        "fr": "Meganyctiphanes norvegica — DORIS, FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Meganyctiphanes-norvegica-Krill-atlantique-3044",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French specialist account gives size, range, swarming, seasonal feeding, vertical migration, egg release, larvae, and predators."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 16,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food and Feeding in Northern Krill — Advances in Marine Biology",
+        "fr": "Alimentation du krill du Nord — Advances in Marine Biology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/B9780123813084000054",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The review finds that diet varies seasonally and geographically; phytoplankton and copepods are both important."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 15,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Zooplankton and Micronekton of the North Sea 2.0 — Naturalis Biodiversity Center",
+        "fr": "Zooplancton et micronecton de la mer du Nord 2.0 — Naturalis Biodiversity Center"
+      },
+      "url": "https://ns-zooplankton.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=132226",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Naturalis describes adult size, North Atlantic and Mediterranean distribution, vertical migration, maturity, lifespan, and predators."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 15,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Depth and seasonal patterns vary geographically; the profile gives typical values and does not imply that all populations behave identically.",
+    "The sources consulted do not provide a current species-specific population trend or Red List assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French specialist account with a marine biology review and the Naturalis North Sea zooplankton reference."
+}

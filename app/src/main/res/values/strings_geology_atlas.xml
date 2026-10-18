@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="geo_atlas">Scene atlas</string>
+    <string name="geo_scene_position">%1$d / %2$d · %3$s</string>
+    <string name="geo_choose_scene">Choose a scene</string>
+    <string name="geo_understand">Understand this scene</string>
+    <string name="geo_observe">Look closely</string>
+    <string name="geo_wonder">A question to explore</string>
+    <string name="geo_reveal">Reveal the explanation</string>
+    <string name="geo_hide_answer">Hide the explanation</string>
+    <string name="geo_previous">Previous</string>
+    <string name="geo_next">Next scene</string>
+    <string name="geo_evolution">Auto evolution</string>
+    <string name="geo_restart">Start again</string>
+    <string name="geo_stage_caption">%1$s · %2$d%%</string>
+    <string name="geo_save">Save this entry</string>
+    <string name="geo_saved">Saved entry</string>
+    <string name="geo_all_entries">All entries</string>
+    <string name="geo_saved_entries">Saved</string>
+    <string name="geo_saved_empty">No saved entries yet. Open an entry and save it to find it here.</string>
+    <string name="geo_results_count">%1$d entries</string>
+    <string name="geo_marker_number">%1$d</string>
+    <string name="geo_marker_title">%1$d · %2$s</string>
+    <string name="geo_diagram_note">Illustrative motions · tap a marker</string>
+    <string name="geo_time_read">Explore an interval</string>
+    <string name="geo_time_help">Reading geological time</string>
+    <string name="geo_scale_expanded_note">Layers enlarged for clarity · radii are not proportional.</string>
+    <string name="geo_scene_menu_hint">Open the illustrated scene atlas</string>
+    <string name="geo_globe_summary">Earth is layered by composition: a rocky crust and mantle surround a metallic core. Temperature alone does not determine whether a layer is solid or liquid: pressure matters too. The cutaway reveals a structure we mainly investigate through seismic waves.</string>
+    <string name="geo_globe_observe">Compare the thin crust with the mantle. Use display options to enlarge the layers.</string>
+    <string name="geo_globe_question">Is the mantle an ocean of magma?</string>
+    <string name="geo_globe_answer">No. It is mostly solid rock, capable of deforming over geological time. The moving dots illustrate slow circulation, not boiling liquid.</string>
+    <string name="geo_shell_summary">Two ways of dividing Earth overlap here. Crust and mantle describe materials; lithosphere and asthenosphere describe mechanical behaviour. Follow the pale boundary below the crust, then the deeper base of the rigid plate. They are different boundaries.</string>
+    <string name="geo_shell_observe">Follow the crust beneath the ocean and continent. The rigid plate extends into the mantle.</string>
+    <string name="geo_shell_question">Does a tectonic plate consist only of crust?</string>
+    <string name="geo_shell_answer">No. A plate contains the crust and the rigid uppermost mantle. The Moho marks a change in composition inside that plate.</string>
+    <string name="geo_ridge_summary">At a mid-ocean ridge, plates move apart. Rising mantle partially melts as pressure decreases; magma supplies new oceanic crust. Cooling rock moves away on both sides, recording successive episodes of seafloor creation.</string>
+    <string name="geo_ridge_observe">Follow the upward flow, then the arrows pointing away from the ridge.</string>
+    <string name="geo_ridge_question">Where would you look for the youngest oceanic crust?</string>
+    <string name="geo_ridge_answer">Near the ridge axis. Farther away, the seafloor is generally older. The bands sit side by side: they are not sedimentary layers stacked vertically.</string>
+    <string name="geo_subduction_summary">Follow the descending oceanic plate from the trench into the mantle. Fluids released at depth help the overlying mantle melt partially. Magma can then rise toward a volcanic arc, while earthquakes occur along parts of the descending plate.</string>
+    <string name="geo_subduction_observe">Locate the trench, the dipping plate and the volcano farther inland. Notice the expanding seismic rings.</string>
+    <string name="geo_subduction_question">Does the entire descending plate melt to feed the volcano?</string>
+    <string name="geo_subduction_answer">No. Released fluids promote melting mainly in the mantle above the plate. This is why the volcanic arc is set back from the trench.</string>
+    <string name="geo_collision_summary">After an ocean closes, continental domains may converge. Rocks shorten, fold and overlap. A mountain belt grows above an increasingly thick crust: the visible peaks are only part of the structure.</string>
+    <string name="geo_collision_observe">Move the evolution slider: compare the relief above with the crustal root below.</string>
+    <string name="geo_collision_question">Is the age of a mountain the age of all its rocks?</string>
+    <string name="geo_collision_answer">No. The rocks can be much older than their deformation and uplift. A marine limestone can become part of a mountain long after its deposition.</string>
+    <string name="geo_transform_summary">These two blocks slide past each other. A line crossing the fault becomes offset, allowing you to read the displacement. In nature, friction can lock a fault temporarily while strain builds up around it.</string>
+    <string name="geo_transform_observe">Compare the matching stripes on either side as you move the slider.</string>
+    <string name="geo_transform_question">Does sliding create a new ocean floor here?</string>
+    <string name="geo_transform_answer">No. A transform boundary mainly accommodates lateral movement. Unlike a ridge, it does not directly create lithosphere.</string>
+    <string name="geo_hotspot_summary">A moving plate carries volcanic edifices away from an active source. New volcanoes grow near the source while older ones erode and may sink below sea level. A chain can therefore preserve a record of plate motion.</string>
+    <string name="geo_hotspot_observe">Start at the active volcano on the right and follow the plate toward the older edifices.</string>
+    <string name="geo_hotspot_question">Are all volcanoes on plate boundaries?</string>
+    <string name="geo_hotspot_answer">No. Hotspot volcanism can occur within a plate. The source is drawn fixed to simplify the diagram; real hotspots can move too.</string>
+    <string name="geo_folds_summary">Imagine following a single bed through the mountain. Its bends reveal folding; interruptions and overlaps reveal faults. A geological cross-section combines these clues to reconstruct deformation rather than simply trace the shape of the skyline.</string>
+    <string name="geo_folds_observe">Trace one pale layer from left to right and watch its curvature change.</string>
+    <string name="geo_folds_question">Can an older rock lie above a younger one?</string>
+    <string name="geo_folds_answer">Yes. A thrust can carry an older rock unit over a younger one. Overturned folds can also reverse the original order of beds.</string>
+    <string name="geo_faults_summary">Stretching breaks the crust into blocks separated by normal faults. Some blocks become lower relative to their neighbours, forming basins bordered by scarps. Relief can therefore develop where the crust is being pulled apart.</string>
+    <string name="geo_faults_observe">Lower the central block with the slider and follow the displaced layers.</string>
+    <string name="geo_faults_question">Does every mountain require a continental collision?</string>
+    <string name="geo_faults_answer">No. Faulting during extension can create relative highs and lows. The central depression here is a graben.</string>
+    <string name="geo_landscape_summary">Water and ice reshape a mountain after—and during—its growth. A glacier occupies a valley, rivers carry debris downstream, and sediment gathers in lower areas. Removing material can also trigger a slow isostatic adjustment.</string>
+    <string name="geo_landscape_observe">Follow the glacier into the river and the moving grains toward the sediment basin.</string>
+    <string name="geo_landscape_question">Does an eroding mountain always stop rising?</string>
+    <string name="geo_landscape_answer">No. Erosion and uplift can happen together. The changing height of the surface reflects both processes, which need not balance each other.</string>
+    <string name="geo_strata_summary">A sedimentary archive grows one deposit at a time. Sand, mud and carbonate material form different beds; burial, compaction and cementation can turn deposits into rock. Fossils and textures provide clues to former environments.</string>
+    <string name="geo_strata_observe">Build the sequence with the slider. Watch new material settle above older deposits.</string>
+    <string name="geo_strata_question">Does a thicker bed always represent more time?</string>
+    <string name="geo_strata_answer">No. Deposition rates vary and erosion can remove deposits. Thickness alone cannot tell you how long an interval lasted.</string>
+    <string name="geo_cycle_summary">Follow several possible journeys through the landscape: erosion supplies sediment, burial changes rocks, and melting produces magma. Cooling magma forms igneous rock; solid-state transformation produces metamorphic rock. The paths connect, but no single route is compulsory.</string>
+    <string name="geo_cycle_observe">Compare the magma body with the striped metamorphic rocks and the surface deposits.</string>
+    <string name="geo_cycle_question">Must a rock melt to become metamorphic?</string>
+    <string name="geo_cycle_answer">No. Metamorphism changes minerals and textures in solid rock. Melting is a different process that produces magma.</string>
+    <string name="geo_archive_summary">Read this section as a sequence of events. Older beds were deposited, tilted and eroded before horizontal layers covered them. A younger intrusion cuts some beds. Every contact is a clue; missing rock can represent missing time.</string>
+    <string name="geo_archive_observe">Find the tilted beds, the horizontal erosion surface and the orange intrusion that cuts across them.</string>
+    <string name="geo_archive_question">Can the order of events reveal their exact dates?</string>
+    <string name="geo_archive_answer">No. Cross-cutting and superposition establish relative order. Numerical ages require an appropriate dating method and an identified event to date.</string>
+    <string-array name="geo_collision_steps">
+        <item>Initial relief</item>
+        <item>Crustal thickening</item>
+        <item>Developed mountain belt</item>
+    </string-array>
+    <string-array name="geo_transform_steps">
+        <item>First position</item>
+        <item>Aligned markers</item>
+        <item>Offset markers</item>
+    </string-array>
+    <string-array name="geo_faults_steps">
+        <item>Aligned beds</item>
+        <item>Growing displacement</item>
+        <item>Lowered central block</item>
+    </string-array>
+    <string-array name="geo_landscape_steps">
+        <item>High relief</item>
+        <item>Valleys deepen</item>
+        <item>Reduced relief</item>
+    </string-array>
+    <string-array name="geo_strata_steps">
+        <item>First deposits</item>
+        <item>Burial</item>
+        <item>Completed sequence</item>
+    </string-array>
+</resources>

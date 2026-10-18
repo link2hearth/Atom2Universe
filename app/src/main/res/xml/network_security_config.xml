@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- HTTP autorisé pour les serveurs locaux (NAS, serveurs de paroles en LAN, etc.) -->
+    <!-- HTTPS reste utilisé par défaut pour tous les services externes -->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

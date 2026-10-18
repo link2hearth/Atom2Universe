@@ -1,0 +1,226 @@
+{
+  "id": "bidessus_unistriatus",
+  "scientific": "Bidessus unistriatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "One-grooved Diving Beetle",
+    "fr": "Bidesse unistriée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Bidessus unistriatus is a minute aquatic beetle in the diving-beetle family Dytiscidae. It belongs to Bidessus, a genus of very small dytiscids; unlike the familiar large great diving beetle Dytiscus marginalis, this species is only a few millimetres long.",
+      "fr": "Bidessus unistriatus est un minuscule coléoptère aquatique de la famille des Dytiscidés. Il appartient au genre Bidessus, composé de très petits dytiques ; contrairement au grand dytique bordé bien connu (Dytiscus marginalis), cette espèce ne mesure que quelques millimètres."
+    },
+    "identification": {
+      "en": "It is about 2 mm long and dark brown. Reliable identification from other tiny diving beetles requires magnification and examination of diagnostic structures; the single-grooved appearance behind its English common name is not by itself a complete field key.",
+      "fr": "Il mesure environ 2 mm et est brun foncé. Pour le distinguer d’autres minuscules dytiques, il faut un grossissement et l’examen de caractères diagnostiques ; l’aspect « unistrié » évoqué par son nom français ne constitue pas à lui seul une clé de terrain complète."
+    },
+    "habitat": {
+      "en": "In Britain it is recorded from lowland stagnant pools, marl pits and slow drainage channels, often at sparsely vegetated margins. It has not been reported from brackish water in the cited regional account, despite some coastal occurrences.",
+      "fr": "En Grande-Bretagne, il est signalé dans des mares stagnantes de plaine, des fosses marneuses et des fossés lents, souvent en bordure peu végétalisée. La source régionale citée ne le signale pas en eau saumâtre, malgré quelques présences près des côtes."
+    },
+    "diet": {
+      "en": "As a predatory diving beetle, it belongs to a family whose adults and larvae generally hunt small aquatic animals. Species-specific prey observations were not detailed in the regional account consulted, so a narrower diet is not assigned here.",
+      "fr": "Comme les autres dytiques prédateurs, il appartient à une famille dont les adultes et les larves chassent généralement de petits animaux aquatiques. La source régionale consultée ne détaille pas les proies propres à cette espèce ; aucun régime plus précis n’est donc proposé ici."
+    },
+    "behavior": {
+      "en": "The species is aquatic and associated with still or very slow water. British observations indicate that it can fly, which may help it move among suitable pools, although flight frequency is not quantified in the sources used.",
+      "fr": "L’espèce est aquatique et associée aux eaux stagnantes ou très lentes. Des observations britanniques indiquent qu’elle peut voler, ce qui peut faciliter ses déplacements entre mares favorables, sans que la fréquence des vols soit quantifiée dans les sources utilisées."
+    },
+    "reproduction": {
+      "en": "The sources consulted did not provide species-specific courtship, egg-laying or development details. As a beetle it undergoes complete metamorphosis, but the timing and precise stages in this species are left unspecified here.",
+      "fr": "Les sources consultées ne donnent pas de détails propres à l’espèce sur la parade, la ponte ou le développement. Comme les autres coléoptères, elle subit une métamorphose complète, mais son calendrier et les étapes précises ne sont pas indiqués ici."
+    },
+    "ecology": {
+      "en": "It depends on small, lowland freshwater habitats and is recorded in England from scattered, increasingly isolated localities. Drainage, water-quality changes and coastal saline intrusion are identified as pressures on the British populations.",
+      "fr": "Il dépend de petits milieux d’eau douce de plaine et est connu en Angleterre par des localités dispersées et de plus en plus isolées. Le drainage, les changements de qualité de l’eau et l’intrusion saline côtière sont signalés comme des pressions sur les populations britanniques."
+    },
+    "conservation": {
+      "en": "The British review describes a severe contraction from a formerly wider English distribution and highlights risk from saline intrusion near Hickling Broad. This regional evidence does not establish a global IUCN category; national status should not be mistaken for the species’ worldwide status.",
+      "fr": "La synthèse britannique décrit une forte contraction par rapport à l’ancienne répartition anglaise et souligne le risque d’intrusion saline près de Hickling Broad. Ces données régionales n’établissent pas de catégorie mondiale UICN ; le statut national ne doit pas être confondu avec le statut mondial de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Review of scarce and threatened British water beetles — JNCC",
+        "fr": "Revue des dytiques rares et menacés de Grande-Bretagne — JNCC"
+      },
+      "url": "https://data.jncc.gov.uk/data/e80beaf2-456c-4178-8f16-0c2ef01368d/SpeciesStatus-1-Coleoptera-WEB-2010.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UK distribution and threat review."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 5,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coleoptera of Rye Bay — water beetle account",
+        "fr": "Coléoptères de Rye Bay — fiche du dytique"
+      },
+      "url": "https://dnu7gk7p9afoo.cloudfront.net/Files/coleoptera-of-rye-bay.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Regional species account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 3,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bidessus unistriatus taxon record — Muséum national d’Histoire naturelle",
+        "fr": "Bidessus unistriatus — fiche taxonomique du Muséum national d’Histoire naturelle"
+      },
+      "url": "https://science.mnhn.fr/taxon/species/bidessus/unistriatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "MNHN taxonomic record."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 3,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dytiscidae family — French Wikipedia",
+        "fr": "Famille des Dytiscidés — Wikipédia en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Dytiscidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Family overview."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 2,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "One-grooved Diving Beetle species recording sheet — Freshwater Habitats Trust",
+        "fr": "Fiche d’observation du bidesse unistrié — Freshwater Habitats Trust"
+      },
+      "url": "https://content.freshwaterhabitats.org.uk/2015/03/18-ONE-GROOVED-DIVING-BEETLE-RARE-SPECIES-RECORDING-SHEET-FINAL.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Survey recording sheet."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 3,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The three smallest British diving beetles — British Wildlife",
+        "fr": "Les trois plus petits dytiques britanniques — British Wildlife"
+      },
+      "url": "https://www.researchgate.net/publication/296126606_The_three_smallest_British_diving_beetles",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Foster and Carr describe the life cycle of B. unistriatus as largely unknown and clearly label general diving-beetle egg-laying and pupation patterns as suppositions."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 24,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The sources consulted provide stronger information on British distribution and habitat than on species-specific feeding or reproduction; no global conservation category is inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used MNHN taxonomy and British specialist references; separated local UK evidence from global conservation status and avoided inventing species-specific life-history details."
+}

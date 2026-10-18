@@ -1,0 +1,15 @@
+{
+  "id": 2610,
+  "name": "giant_mushroom_cap",
+  "texture_top": "underground:cap",
+  "texture_side": "underground:cap",
+  "texture_bottom": "underground:gills",
+  "color": "#86638F",
+  "hardness": 0.6,
+  "light_emission": 0,
+  "drop": "giant_mushroom_cap",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -1,0 +1,163 @@
+{
+  "id": "synodontis_grandiops",
+  "scientific": "Synodontis grandiops",
+  "group": "fish",
+  "name": {
+    "en": "Bigeye cuckoo catfish",
+    "fr": "Synodontis à grands yeux"
+  },
+  "sections": {
+    "overview": {
+      "en": "Synodontis grandiops is a Tanganyika catfish described in 2006, but a 2024 revision treats it as a synonym of S. multipunctatus.",
+      "fr": "Synodontis grandiops est un poisson-chat du Tanganyika décrit en 2006, mais une révision de 2024 le traite comme synonyme de S. multipunctatus."
+    },
+    "identification": {
+      "en": "The original description emphasized its relatively large eye and spotted body; FishBase retains it as a separate species account.",
+      "fr": "La description originale soulignait son œil relativement grand et son corps tacheté ; FishBase conserve une fiche sous ce nom comme espèce distincte."
+    },
+    "habitat": {
+      "en": "The original species account places it in Lake Tanganyika, over littoral-to-bottom shell, sand and mud habitats.",
+      "fr": "La fiche historique de l’espèce la situe dans le lac Tanganyika, des zones littorales aux fonds de coquilles, sable et vase."
+    },
+    "diet": {
+      "en": "Its diet is poorly documented; the original account suggested small snails based on other Tanganyika Synodontis.",
+      "fr": "Son régime est peu documenté ; la fiche originale évoquait de petits gastéropodes par comparaison avec d’autres Synodontis du Tanganyika."
+    },
+    "behavior": {
+      "en": "Detailed behavior and reproduction are not established in the cited species account.",
+      "fr": "Le comportement et la reproduction ne sont pas détaillés dans la fiche d’espèce citée."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide species-specific reproductive observations under this name.",
+      "fr": "Les sources consultées ne fournissent pas d’observations reproductives propres à cette espèce sous ce nom."
+    },
+    "ecology": {
+      "en": "The 2024 revision recognizes S. petricola as a distinct Tanganyika species; it also found broad overlap between S. grandiops and S. multipunctatus, leading to synonymy.",
+      "fr": "La révision de 2024 maintient S. petricola comme espèce distincte du Tanganyika ; elle relève aussi un fort chevauchement entre S. grandiops et S. multipunctatus, conduisant à la synonymie."
+    },
+    "conservation": {
+      "en": "FishBase lists the separate-name account as Not Evaluated; that entry predates the 2024 synonymy and is not a status assessment for S. multipunctatus.",
+      "fr": "FishBase indique « non évalué » dans sa fiche sous ce nom ; cette entrée précède la synonymie de 2024 et n’évalue pas le statut de S. multipunctatus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer's Catalog of Fishes — Synodontis grandiops",
+        "fr": "Catalogue des poissons d’Eschmeyer — Synodontis grandiops"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=69381",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The current Catalog of Fishes lists S. grandiops as a synonym of S. multipunctatus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 14,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Revised taxonomy of Lake Tanganyika Synodontis — Zoological Journal of the Linnean Society",
+        "fr": "Révision taxonomique des Synodontis du Tanganyika — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://doi.org/10.1093/zoolinnean/zlae130",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The 2024 integrated morphological and genetic revision synonymized S. grandiops with S. multipunctatus, found their characters broadly overlapping, and retained S. petricola as distinct."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 24,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "FishBase — Synodontis grandiops",
+        "fr": "FishBase — Synodontis grandiops"
+      },
+      "url": "https://www.fishbase.se/summary/Synodontis-grandiops",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase retains a separate entry and reports Tanganyika habitat, tentative diet and Not Evaluated under this name."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 17,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Wright and Page — Taxonomic Revision of Lake Tanganyikan Synodontis",
+        "fr": "Wright et Page — Révision taxonomique des Synodontis du Tanganyika"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/bulletin/vol46no4lores.pdf",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The original description diagnoses the fish by its relatively large eye and spotted body."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 14,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The inventory identifier is preserved, but current taxonomic treatment in Eschmeyer's Catalog is synonymy under S. multipunctatus; FishBase still displays a separate-name entry. Historical ecological and conservation data should not automatically be transferred to the currently accepted taxon."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

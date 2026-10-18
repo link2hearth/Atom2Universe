@@ -1,0 +1,174 @@
+{
+  "id": "lasioderma_serricorne",
+  "scientific": "Lasioderma serricorne",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cigarette Beetle",
+    "fr": "Vrillette du tabac"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Cigarette Beetle, called vrillette du tabac in French, is a cosmopolitan pest of stored tobacco and other dried products.",
+      "fr": "La vrillette du tabac, appelée Cigarette Beetle en anglais, est un ravageur cosmopolite du tabac stocké et d’autres produits secs."
+    },
+    "identification": {
+      "en": "Adults are oval, reddish-brown beetles about two to three millimetres long. The head bends beneath the thorax, giving the beetle a humped outline.",
+      "fr": "Les adultes sont des coléoptères ovales brun rougeâtre, longs d’environ deux à trois millimètres. La tête s’incline sous le thorax, donnant au coléoptère un profil bossu."
+    },
+    "habitat": {
+      "en": "It occurs wherever dried tobacco is stored and also infests pantry foods, herbs, spices and dried flowers.",
+      "fr": "On le trouve là où du tabac séché est entreposé; il infeste aussi des aliments de garde, des herbes, des épices et des fleurs séchées."
+    },
+    "diet": {
+      "en": "Larvae feed on dried commodities including tobacco, cereals, spices and dried fruit; adults do not feed, although they drink liquids.",
+      "fr": "Les larves consomment des produits secs comme le tabac, les céréales, les épices et les fruits secs; les adultes ne s’alimentent pas, mais boivent des liquides."
+    },
+    "behavior": {
+      "en": "Adults hide in dark cracks and are most active at dusk and night; when disturbed, they may draw in their legs and remain still.",
+      "fr": "Les adultes se cachent dans les fissures sombres et sont surtout actifs au crépuscule et la nuit; dérangés, ils peuvent replier leurs pattes et rester immobiles."
+    },
+    "reproduction": {
+      "en": "Females lay roughly ten to one hundred eggs in food, and development usually takes forty to ninety days depending on temperature and diet.",
+      "fr": "Les femelles pondent environ dix à cent œufs dans les aliments; le développement dure généralement quarante à quatre-vingt-dix jours selon la température et le régime."
+    },
+    "ecology": {
+      "en": "It shares stored-product habitats with the related Drugstore Beetle, Stegobium paniceum, and the two are often confused. Serrated antennae and smooth, hairy wing cases help distinguish this species from that beetle’s clubbed antennae and striated wing cases.",
+      "fr": "Il partage les denrées stockées avec la vrillette du pain, Stegobium paniceum, une espèce apparentée, et les deux sont souvent confondues. Les antennes dentées et les élytres lisses et velus distinguent cette espèce des antennes en massue et des élytres striés de l’autre vrillette."
+    },
+    "conservation": {
+      "en": "Penn State describes it as a common stored-product pest in Pennsylvania, especially of dried herbs, spices and flowers.",
+      "fr": "Penn State le décrit comme un ravageur courant des denrées stockées en Pennsylvanie, surtout des herbes, épices et fleurs séchées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cigarette Beetle, Lasioderma serricorne — UF/IFAS Featured Creatures",
+        "fr": "Vrillette du tabac, Lasioderma serricorne — UF/IFAS Featured Creatures"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN384",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IFAS describes appearance, feeding, activity, life cycle and lookalike."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cigarette Beetle — Penn State Extension",
+        "fr": "Vrillette du tabac — Penn State Extension"
+      },
+      "url": "https://extension.psu.edu/cigarette-beetle",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Penn State confirms stored-product pest status and common confusion with the Drugstore Beetle."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 13,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lasioderma serricorne — EPPO Global Database",
+        "fr": "Lasioderma serricorne — base de données mondiale de l’OEPP"
+      },
+      "url": "https://gd.eppo.int/taxon/LASDSE",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The international plant-protection database lists English, French and other common names."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lasioderme — Grand dictionnaire terminologique, Office québécois de la langue française",
+        "fr": "Lasioderme — Grand dictionnaire terminologique, Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/17047901/lasioderme",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "French terminology record gives the common name and confirms worldwide spread through trade and association with dried tobacco."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 18,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Development time varies with temperature and food; the cited 40–90-day interval is not universal."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UF/IFAS and Penn State extension accounts, then cross-checked English and French common names against EPPO and the Quebec terminology database; the Stegobium comparison uses diagnostic features stated by UF/IFAS."
+}

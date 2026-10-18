@@ -1,0 +1,617 @@
+{
+  "id": "polar_bear",
+  "scientific": "Ursus maritimus",
+  "group": "mammals",
+  "name": {
+    "en": "Polar bear",
+    "fr": "Ours polaire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The polar bear is a marine mammal whose life follows Arctic sea ice, the platform from which it reaches seals. Its fur, fat, smell, and broad paws suit cold water and ice, but it hunts most effectively from sea ice. Seasonal ice loss changes both access to food and the distances bears must travel.",
+      "fr": "L’ours polaire est un mammifère marin qui suit la banquise arctique, plateforme d’accès aux phoques. Sa fourrure, sa graisse, son odorat et ses larges pattes l’adaptent au froid, mais il chasse surtout depuis la glace. La perte saisonnière de banquise modifie l’accès aux proies et les distances parcourues."
+    },
+    "identification": {
+      "en": "Adult males commonly weigh about 270–545 kg and measure roughly 2.4–3 m from nose to tail; adult females are smaller, commonly about 180–320 kg. These are broad wild adult ranges: age, region, season, and fat reserves change an individual’s mass. The long neck and narrow head help distinguish the species, while the coat’s translucent hairs scatter visible light so the dense fur appears cream or white. Beneath the fur lie dark skin and a thick layer of subcutaneous fat; the hairs do not channel sunlight to the skin like fibre-optic cables. Dense underfur and guard hairs trap still air, while blubber adds insulation in water. Broad paws spread weight on weak ice and paddle during swimming; partial webbing increases paddle efficiency. Small, round ears and a short tail reduce exposed surfaces. A keen sense of smell helps locate seals, while the muzzle and claws help seize prey.",
+      "fr": "Les mâles pèsent généralement 270 à 545 kg et mesurent 2,4 à 3 m du museau à la queue ; les femelles, plus petites, autour de 180 à 320 kg. Ces fourchettes d’adultes sauvages varient avec l’âge, la région, la saison et l’état corporel. Le long cou et la tête étroite distinguent l’espèce ; les poils translucides diffusent la lumière visible, donnant au pelage dense son aspect blanc ou crème. Sous la fourrure se trouvent la peau sombre puis une épaisse couche de graisse sous-cutanée ; les poils ne conduisent pas la lumière solaire comme des fibres optiques. Le sous-poil et les poils de couverture emprisonnent l’air ; la graisse isole aussi dans l’eau. Les larges pattes répartissent le poids sur la glace fragile et servent de palettes dans l’eau ; leur palmure partielle rend la nage plus efficace. Ses petites oreilles rondes et sa courte queue limitent les surfaces exposées. Son odorat repère les phoques ; son museau et ses griffes aident à les saisir."
+    },
+    "habitat": {
+      "en": "Its range circles the Arctic, from Alaska and Canada to Greenland, Svalbard, and Russia; movements vary with coastlines and ice. Productive sea ice over continental shelves gives bears access to seals resting or raising pups. Some follow seasonal ice toward shore at breakup, while others remain farther north; an ashore summer is not universal. Many land maternity dens are excavated in snow, but in Western and Southern Hudson Bay some females begin in frozen peat or earth before extending the den into accumulating snow. In some other regions, pregnant bears also den on stable sea ice.",
+      "fr": "L’espèce vit autour de l’Arctique, de l’Alaska à la Russie, mais les déplacements dépendent des côtes et de la glace. La banquise des plateaux continentaux productifs donne accès aux phoques qui s’y reposent ou élèvent leurs petits. Certaines populations gagnent la côte à la débâcle ; d’autres restent plus au nord : l’été à terre n’est pas universel. Beaucoup de tanières terrestres sont creusées dans la neige, mais dans l’ouest et le sud de la baie d’Hudson, certaines femelles commencent dans la tourbe ou le sol gelé avant de prolonger la tanière dans la neige qui s’accumule. Dans certaines autres régions, les femelles gestantes creusent aussi leur tanière sur la banquise stable."
+    },
+    "diet": {
+      "en": "Ringed seals are staple prey; bearded seals also matter, depending on local availability. A bear may wait by a breathing hole, detect a seal by smell, and seize it as it surfaces, or stalk one resting on ice. Bears often eat blubber and skin first, leaving remains for foxes, ravens, gulls, and other bears. They digest and store these lipids efficiently as fat, which fuels movement, warmth, reproduction, and fasting. On land they may eat birds, eggs, plants, fish, carrion, or refuse; most terrestrial foods are scattered or relatively low in energy and generally cannot replace seal hunting. Rich marine-mammal carcasses, such as whale or walrus remains, can nevertheless be locally important. Bears can enter a facultative fasting state even while actively searching for food: stored lipids supply energy while protein is spared. The duration and energetic cost of fasting vary among bears.",
+      "fr": "Le phoque annelé est une proie majeure ; le phoque barbu compte selon sa disponibilité. Un ours peut attendre près d’un trou de respiration, détecter un phoque à l’odeur et le saisir à sa remontée, ou l’approcher sur la glace. L’ours mange souvent d’abord le lard et la peau, puis laisse des restes aux renards, corbeaux, goélands et autres ours. Il digère et stocke ces lipides sous forme de graisse, qui alimente déplacement, thermorégulation, reproduction et jeûne. À terre, il mange parfois oiseaux, œufs, végétaux, poissons, charognes ou déchets ; la plupart sont dispersés ou peu énergétiques et ne remplacent généralement pas la chasse aux phoques. Les carcasses riches de mammifères marins, comme les baleines ou les morses, peuvent toutefois compter localement. Un ours peut jeûner facultativement même en cherchant activement à manger : ses lipides stockés fournissent l’énergie, tandis que ses protéines sont épargnées. La durée et le coût énergétique du jeûne varient."
+    },
+    "behavior": {
+      "en": "Adults are usually solitary outside mating and family groups; females use large home ranges whose size varies with local land and sea ice. Regional movements may follow freeze-up and breakup, while elsewhere bears remain on ice in summer. In spring, males follow tracks and scent trails left by females’ feet. Experiments show that bears can distinguish scent donors by sex and reproductive condition, so trails carry more than a simple signal of presence. When seals are unavailable, some rest while others search for land foods; either strategy spends stored energy and can still bring weight loss.",
+      "fr": "Hors accouplement et groupes familiaux, les adultes sont généralement solitaires ; les femelles occupent de vastes domaines vitaux, variables selon la répartition locale entre terre et banquise. Selon la région, les déplacements suivent le gel et la débâcle, ou les ours restent sur la glace en été. Au printemps, les mâles suivent les traces et les odeurs laissées par les pattes des femelles. Des expériences montrent que l’odeur renseigne sur le sexe et l’état reproducteur ; une piste transmet donc plus qu’une simple présence. Quand les phoques manquent, certains ours se reposent, d’autres cherchent de la nourriture à terre ; les deux stratégies épuisent les réserves."
+    },
+    "reproduction": {
+      "en": "Mating occurs on sea ice in spring. After fertilization, the embryo pauses and usually implants in autumn only if the female has built adequate reserves; this is delayed implantation. The interval from mating to birth is about 195–265 days, but active fetal development lasts only two to three months. Only pregnant females enter maternity dens, often in October or November, and births occur from November to early January depending on latitude. The mother fasts while giving birth and nursing; this winter dormancy is not species-wide hibernation. Litters contain one to three cubs, usually twins; newborns are blind and weigh about 0.5 kg. They grow quickly on fat-rich milk and stay with their mother for about 2.5–3 years, learning to hunt and swim.",
+      "fr": "L’accouplement a lieu sur la banquise au printemps. Après fécondation, l’embryon suspend son développement et s’implante à l’automne si la femelle a constitué assez de réserves : c’est l’implantation différée. L’intervalle entre accouplement et naissance dure environ 195 à 265 jours, mais le développement fœtal actif n’occupe que deux à trois mois. Seules les femelles gestantes entrent en tanière, souvent en octobre ou novembre, et les naissances ont lieu de novembre au début janvier selon la latitude. La mère jeûne pendant la mise bas et l’allaitement ; cette dormance hivernale n’est pas une hibernation générale. Les portées comptent un à trois oursons, le plus souvent deux ; aveugles à la naissance, ils pèsent environ 0,5 kg. Ils grandissent vite grâce au lait gras et restent avec leur mère environ 2,5 à 3 ans, apprenant à chasser et nager."
+    },
+    "ecology": {
+      "en": "As the Arctic’s largest terrestrial predator, the polar bear links sea ice to marine food webs: ice algae support small consumers, then fish and seals, which feed bears. Seal remains feed Arctic foxes, gulls, and ravens, extending each kill’s benefit to other species. Seasonal fat storage links prey abundance with survival and cub production, carrying effects of ice change through the ecosystem.",
+      "fr": "Plus grand prédateur terrestre de l’Arctique, l’ours relie la banquise aux réseaux marins : les algues nourrissent de petits organismes, puis poissons et phoques, proies des ours. Les restes des phoques nourrissent renards, goélands et corbeaux ; une capture soutient donc d’autres espèces. Les réserves saisonnières relient l’abondance des proies à la survie et aux naissances, transmettant les effets des changements de glace à l’écosystème."
+    },
+    "conservation": {
+      "en": "The IUCN Polar Bear Specialist Group’s global assessment, published in 2015, classified the polar bear as Vulnerable. It identified climate-driven sea-ice loss as the leading long-term threat because ice provides access to seals. Longer open-water seasons can force some bears ashore, lengthen fasting, and affect condition, reproduction, or survival; effects differ by region and period. In Canada, COSEWIC assessed the species as Special Concern in 2018; individual management-unit trends are separate from the global Red List and may be uncertain or dated. In 1973, the five range states signed an agreement for coordinated protection and management of feeding, denning, and migration habitat.",
+      "fr": "Le Groupe de spécialistes de l’ours polaire de l’UICN l’a classé Vulnérable dans son évaluation mondiale de 2015. Il désignait la perte de banquise due au réchauffement comme principale menace à long terme, car la glace donne accès aux phoques. Des saisons d’eau libre plus longues peuvent conduire certains ours à terre, prolonger le jeûne et affecter leur état, leur reproduction ou leur survie ; les effets varient selon la région. Au Canada, le COSEPAC a classé l’espèce préoccupante en 2018 ; les tendances des unités de gestion restent distinctes du statut mondial et peuvent être incertaines ou anciennes. En 1973, les cinq États de l’aire ont signé un accord pour protéger et gérer ensemble les habitats d’alimentation, de tanière et de migration."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Polar Bear Species Profile",
+        "fr": "Profil de l’espèce : ours polaire"
+      },
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=polarbear.main",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Males are larger; furred feet support movement."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 7,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Adaptations and Characteristics",
+        "fr": "Adaptations et caractéristiques"
+      },
+      "url": "https://www.polarbearsinternational.org/polar-bears/polar-bear-facts/adaptations-characteristics/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Fur and paws aid adaptation."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.5",
+        "identification.en.7",
+        "identification.fr.3",
+        "identification.fr.5",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 5,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bear (Ursus maritimus): COSEWIC assessment and status report 2018",
+        "fr": "Ours polaire : rapport d’évaluation et de situation du COSEPAC, 2018"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/polar-bear-2018.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Sea ice supports seal hunting; biological responses differ regionally."
+      ],
+      "prose_claims": [
+        "diet.en.6",
+        "diet.fr.6",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 9,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution and Movements of Polar Bears",
+        "fr": "Répartition et déplacements des ours polaires"
+      },
+      "url": "https://www.usgs.gov/centers/alaska-science-center/science/distribution-and-movements-polar-bears",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Movement studies document responses to changing sea ice."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 8,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet and Prey",
+        "fr": "Régime alimentaire et proies"
+      },
+      "url": "https://polarbearsinternational.org/polar-bears/polar-bear-facts/diet-prey/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Ringed and bearded seals are key prey; bears often eat blubber first."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.4",
+        "identification.en.8",
+        "identification.fr.8"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 12,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bears Unlikely to Thrive on Land-based Foods",
+        "fr": "Les ours polaires ne peuvent probablement pas prospérer avec des aliments terrestres"
+      },
+      "url": "https://www.usgs.gov/news/national-news-release/polar-bears-unlikely-thrive-land-based-foods",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Land foods rarely compensate for lost seal-hunting opportunities."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.5",
+        "diet.fr.5",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 8,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Life Cycle",
+        "fr": "Cycle de vie"
+      },
+      "url": "https://www.polarbearsinternational.org/polar-bears/polar-bear-facts/life-cycle/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Spring mating, delayed implantation, and long maternal care shape reproduction."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 10,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List",
+        "fr": "Liste rouge de l’UICN"
+      },
+      "url": "https://www.iucn-pbsg.org/iucn-redlist/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2015 global assessment classified the species as Vulnerable."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 9,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "An experimental investigation of chemical communication in the polar bear",
+        "fr": "Étude expérimentale de la communication chimique chez l’ours polaire"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/jzo.12181",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Experiments support scent-mediated recognition from pedal scent trails."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 8,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Energy and Feeding",
+        "fr": "Énergie et alimentation"
+      },
+      "url": "https://polarbearsinternational.org/what-we-do/research/energetics/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Polar bears digest and store fat; fasting has energetic costs."
+      ],
+      "prose_claims": [
+        "diet.en.8",
+        "diet.fr.8",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 10,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Is polar bear hair fiber optic?",
+        "fr": "Les poils de l’ours polaire sont-ils des fibres optiques ?"
+      },
+      "url": "https://opg.optica.org/ao/abstract.cfm?uri=ao-37-15-3198",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Measurements found high light attenuation along hairs, ruling out proposed fiber-optic waveguiding."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 12,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bear Wildlife Notebook",
+        "fr": "Ours polaire : fiche naturaliste"
+      },
+      "url": "https://www.adfg.alaska.gov/static/education/wns/polar_bear.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Only pregnant females den; they fast during dormancy and nurse rapidly growing cubs."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 13,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar bear energetic and behavioral strategies on land with implications for surviving the ice-free period",
+        "fr": "Stratégies énergétiques et comportementales de l’ours polaire à terre pendant la période sans glace"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10864307/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field study documented resting and terrestrial foraging strategies, both with energy costs."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 12,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "7 Facts About Oceans and Polar Bears",
+        "fr": "Sept faits sur les océans et les ours polaires"
+      },
+      "url": "https://www.polarbearsinternational.org/news-media/articles/polar-bears-oceans-facts/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Sea-ice algae support marine food-web pathways that reach seals and polar bears."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 12,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The 1973 Agreement on the Conservation of Polar Bears",
+        "fr": "Accord de 1973 sur la conservation des ours polaires"
+      },
+      "url": "https://www.iucn-pbsg.org/agreements-conventions/agreement-on-the-conservation-of-polar-bears/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The agreement calls for habitat protection and coordinated management based on science."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 12,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bear and Walrus Response to the Rapid Decline in Arctic Sea Ice",
+        "fr": "Réponse de l’ours polaire et du morse au recul rapide de la banquise arctique"
+      },
+      "url": "https://pubs.usgs.gov/fs/2012/3131/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Sea ice over continental shelves is important habitat for polar bears and walruses."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 13,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bear (Ursus maritimus): COSEWIC assessment and status report 2018, Chapter 5: Biology",
+        "fr": "Ours polaire : rapport d’évaluation du COSEPAC 2018, chapitre 5 : biologie"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/polar-bear/chapter-5.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Total gestation includes delayed implantation; fetal development begins in autumn."
+      ],
+      "prose_claims": [
+        "diet.en.7",
+        "diet.fr.7",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polar Bear Maternal Denning",
+        "fr": "Tanières de maternité de l’ours polaire"
+      },
+      "url": "https://www.usgs.gov/centers/alaska-science-center/science/polar-bear-maternal-denning",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Regional maternal dens occur on land or sea ice where suitable snow forms."
+      ],
+      "prose_claims": [
+        "habitat.en.5",
+        "habitat.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 13,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Modeling the metabolic costs of swimming in polar bears (Ursus maritimus)",
+        "fr": "Modélisation du coût métabolique de la nage chez l’ours polaire (Ursus maritimus)"
+      },
+      "url": "https://link.springer.com/doi/10.1007/s00300-017-2209-x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Partly webbed broad paws spread weight and improve paddle efficiency."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 10,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "COSEWIC Wildlife Species Assessments, Detailed Results, November 2018",
+        "fr": "Évaluations détaillées des espèces sauvages par le COSEPAC, novembre 2018"
+      },
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/cosewic/wsam-results/november-2018/2018-wildlife-species-assessments-detailed-november-en.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Polar bear status confirmed as Special Concern in 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 9,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict an adult wild polar bear with natural sex-neutral proportions, dense cream-white coat, elongated neck and muzzle, and broad furred paws; no accessories or anthropomorphic expression; plain white background.",
+  "uncertainties": [
+    "Adult mass varies substantially with season, sex, age, body condition, and region; the cited ranges are broad reference intervals, not fixed species-wide limits.",
+    "The amount of active fetal development is an approximate interval; delayed implantation makes total gestation duration longer and variable.",
+    "Seasonal migration and fasting schedules differ among populations and years, so regional patterns should not be generalized to every bear.",
+    "Fur optics are described conservatively: coat hairs scatter visible light and provide insulation; the popular claim that they act as solar fibre-optic cables is unsupported.",
+    "The global Red List assessment cited was published in 2015; regional trend estimates differ in date, method, and direction."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Deepened encyclopedia article, independent scientific critique and corrections, source budget audit, bilingual anatomy and qualifier review; existing naturalistic plate retained."
+}

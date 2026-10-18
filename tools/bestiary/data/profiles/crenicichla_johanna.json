@@ -1,0 +1,209 @@
+{
+  "id": "crenicichla_johanna",
+  "scientific": "Crenicichla johanna",
+  "group": "fish",
+  "name": {
+    "en": "Johanna pike cichlid",
+    "fr": "Cichlidé-brochet de Johanna"
+  },
+  "sections": {
+    "overview": {
+      "en": "The inventory name Crenicichla johanna is the familiar historical combination; a phylogenetic revision now places the species in Lugubria as Lugubria johanna.",
+      "fr": "Le nom de l’inventaire, Crenicichla johanna, est l’ancienne combinaison familière ; une révision phylogénétique place maintenant l’espèce dans Lugubria sous le nom Lugubria johanna."
+    },
+    "identification": {
+      "en": "It is a large-bodied pike cichlid; in the revised genus Lugubria, L. johanna is one of the exceptions lacking the usual dark caudal-fin blotch.",
+      "fr": "C’est un cichlidé-brochet de grande taille ; dans le genre révisé Lugubria, L. johanna fait partie des exceptions dépourvues de la tache sombre caudale habituelle."
+    },
+    "habitat": {
+      "en": "Its reported range spans several cis-Andean South American drainages, including the Amazon, Orinoco and Guiana systems, though the name may cover multiple lineages.",
+      "fr": "Son aire rapportée couvre plusieurs bassins sud-américains à l’est des Andes, notamment l’Amazone, l’Orénoque et les Guyanes, bien que le nom puisse recouvrir plusieurs lignées."
+    },
+    "diet": {
+      "en": "Like other pike cichlids it is predatory, but species-level field records do not justify a precise prey list across its entire broad range.",
+      "fr": "Comme les autres cichlidés-brochets, c’est un prédateur, mais les observations de terrain propres à l’espèce ne justifient pas une liste précise de proies pour toute son vaste aire."
+    },
+    "behavior": {
+      "en": "It belongs to the robust-bodied Lugubria lineage of pike cichlids, a group separated from several other former Crenicichla lineages by phylogenetic evidence.",
+      "fr": "Il appartient à la lignée robuste des Lugubria, un groupe de cichlidés-brochets séparé de plusieurs autres lignées autrefois classées dans Crenicichla par des données phylogénétiques."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a dependable species-specific account of its breeding cycle or parental care.",
+      "fr": "Les sources consultées ne fournissent pas de description fiable et propre à l’espèce de son cycle reproducteur ou des soins parentaux."
+    },
+    "ecology": {
+      "en": "The old name Crenicichla johanna is still useful for finding earlier literature; compare the catalogue’s Crenicichla strigata profile, another species now assigned to Lugubria.",
+      "fr": "L’ancien nom Crenicichla johanna reste utile pour retrouver la littérature antérieure ; comparez le profil Crenicichla strigata du catalogue, une autre espèce désormais placée dans Lugubria."
+    },
+    "conservation": {
+      "en": "A cited regional survey and the global assessment report it as Least Concern, but the species-complex evidence cautions against treating all records as one uniform population.",
+      "fr": "Une enquête régionale citée et l’évaluation mondiale le donnent en préoccupation mineure, mais les indices de complexe d’espèces invitent à ne pas traiter toutes les observations comme une population uniforme."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Revision of the generic classification of pike cichlids — Varella et al., 2023",
+        "fr": "Révision de la classification générique des cichlidés-brochets — Varella et al., 2023"
+      },
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The integrative phylogenetic revision resurrects Lugubria, transfers johanna to it and gives diagnostic characters, including the exception to the caudal blotch among Lugubria."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Lugubria johanna",
+        "fr": "Catalogue des poissons d’Eschmeyer — Lugubria johanna"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56696",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The catalog gives the current valid name Lugubria johanna and its recorded range across multiple South American countries and freshwater basins."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "MtDNA species-level phylogeny and underestimated diversity in Crenicichla — PeerJ",
+        "fr": "Phylogénie mitochondriale et diversité sous-estimée de Crenicichla — PeerJ"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8588857/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The molecular study finds substantial divergence among allopatric populations identified as C. johanna sensu lato, supporting caution about range-wide identity and highlighting limits in species-level natural history."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Fishes at Risk: Hidden diversity in a Peruvian Amazon lake — Revista Peruana de Biología",
+        "fr": "Poissons menacés : diversité cachée d’un lac amazonien péruvien — Revista Peruana de Biología"
+      },
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S2410-11842023000200004&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Peruvian survey lists Lugubria johanna as Least Concern in its study context and documents local occurrence under the revised genus name."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Crenicichla strigata — FishBase species list for Lugubria",
+        "fr": "Crenicichla strigata — liste FishBase des Lugubria"
+      },
+      "url": "https://www.fishbase.net.br/identification/SpeciesList.php?genus=Lugubria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase lists Lugubria strigata among the species in the current genus Lugubria, providing a catalogue-level comparison for the legacy illustrated entry."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The inventory identifier retains the widely used historical name Crenicichla johanna although the 2023 revision and current Eschmeyer catalogue use Lugubria johanna.",
+    "Molecular work indicates that C. johanna sensu lato may comprise allopatric lineages; broad range and ecology claims should be read with this taxonomic caveat.",
+    "The catalogue’s Crenicichla strigata entry may likewise preserve an older generic combination after the 2023 revision."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the 2023 primary phylogenetic revision and current Eschmeyer nomenclature, then checked a molecular diversity study and a Spanish-language Peruvian survey; cross-referenced the related legacy Crenicichla strigata entry with the nomenclature caveat."
+}

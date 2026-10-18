@@ -1,0 +1,14 @@
+{
+  "id": 2705,
+  "name": "street_drain",
+  "texture_top": "street:drain",
+  "texture_side": "street:asphalt",
+  "texture_bottom": "street:asphalt",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_drain",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

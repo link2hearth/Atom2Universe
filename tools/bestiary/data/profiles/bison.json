@@ -1,0 +1,141 @@
+{
+  "id": "bison",
+  "scientific": "Bison bison",
+  "group": "mammals",
+  "name": {
+    "en": "American bison",
+    "fr": "Bison d’Amérique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The American bison is a large hoofed ruminant native to North America. Before European settlement, it ranged from northern Mexico to interior Alaska. Two forms are commonly distinguished: plains bison in the south and wood bison farther north.",
+      "fr": "Le bison d’Amérique est un grand ruminant à sabots d’Amérique du Nord. Avant la colonisation européenne, il vivait du nord du Mexique à l’intérieur de l’Alaska. On distingue couramment deux formes : le bison des plaines au sud et le bison des bois plus au nord."
+    },
+    "identification": {
+      "en": "Its massive head, shoulder hump and short hindquarters create a distinctive profile. Both sexes have short, curved horns. Long hair covers the head, shoulders and forelegs, but the rear coat is shorter. Adults shed much of this winter coat in spring. Plains bison usually have a smaller, rounder hump than wood bison. Typical adults are about 2.7–3.8 m long and 1.8–2.0 m high; bulls commonly weigh about 907–998 kg and cows about 454 kg. Bulls are markedly larger, although values vary among subspecies and populations.",
+      "fr": "Sa tête massive, sa bosse et son arrière-train court forment une silhouette typique. Les deux sexes ont des cornes courtes et recourbées. De longs poils couvrent tête, épaules et pattes avant ; le pelage arrière est plus court. L’adulte perd sa toison hivernale au printemps. La bosse du bison des plaines est plus petite et arrondie que celle du bison des bois. Les adultes mesurent généralement environ 2,7 à 3,8 m de long et 1,8 à 2,0 m de haut ; les mâles pèsent souvent autour de 907 à 998 kg et les femelles environ 454 kg. Les mâles sont nettement plus grands, avec des variations selon la sous-espèce et la population."
+    },
+    "habitat": {
+      "en": "Bison use grasslands, prairies, sedge meadows, shrublands and some woods. Historically, herds moved over immense areas. Today, free-ranging and conservation herds occupy fragments of the former range; fences and management often limit movement.",
+      "fr": "Le bison fréquente prairies, prés à carex, broussailles et bois. Autrefois, les troupeaux parcouraient d’immenses territoires. Aujourd’hui, ceux en liberté ou de conservation occupent des fragments de l’ancienne aire ; clôtures et gestion limitent souvent leurs déplacements."
+    },
+    "diet": {
+      "en": "Bison graze year-round, mainly on grasses and sedges, as well as flowering plants and leaves when available. In winter, they sweep snow aside with the head to uncover plants. They need water daily.",
+      "fr": "Le bison broute toute l’année, surtout des graminées et des carex, ainsi que des plantes à fleurs et des feuilles disponibles. En hiver, il balaie la neige de la tête pour découvrir les plantes. Il a besoin d’eau chaque jour."
+    },
+    "behavior": {
+      "en": "Herds vary with sex, age and season: females and young commonly group together, while mature bulls may be solitary or form male groups. Bison alternate grazing, resting and rumination. They move as food and water change, wallow in loose soil, and bulls clash during the summer rut.",
+      "fr": "Les troupeaux varient selon le sexe, l’âge et la saison : femelles et jeunes se regroupent souvent, tandis que les mâles adultes peuvent être seuls ou en groupes. Les bisons alternent pâturage, repos et rumination. Ils suivent les changements de nourriture et d’eau, se roulent dans la terre meuble, et les mâles s’affrontent au rut estival."
+    },
+    "reproduction": {
+      "en": "Mating occurs mainly from late June to September. After about 285 days, a female usually gives birth to one calf in spring. The reddish calf soon follows the herd, nurses for seven to eight months and is weaned by its first year. Females may breed at two to three years; males often breed later.",
+      "fr": "L’accouplement a lieu surtout de la fin juin à septembre. Après environ 285 jours, la femelle met bas un petit au printemps. Le veau roux suit bientôt le troupeau, tète sept à huit mois et est sevré avant un an. Les femelles peuvent se reproduire dès deux ou trois ans ; les mâles plus tard."
+    },
+    "ecology": {
+      "en": "Grazing, trampling, wallowing and movement disturb prairie plants and soils, creating varied growing conditions. Seeds caught in the coat travel elsewhere, while dung returns nutrients to soil. These effects create a mosaic of plant communities and small habitats, shaped by landscape and herd management.",
+      "fr": "Pâturage, piétinement, bains de poussière et déplacements remuent plantes et sols, créant des conditions de croissance variées. Des graines accrochées au pelage sont transportées ; les déjections rendent des nutriments au sol. Ces effets forment une mosaïque végétale et de petits habitats, selon le paysage et la gestion des troupeaux."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List assessment, dated 1 September 2016 and published in 2017, classified the species as Near Threatened. It counted wild and conservation herds, not commercial livestock; most American bison are managed for production. The assessment cited few viable populations and many small, isolated herds. It also identified habitat loss and genetic risks, including cattle introgression and hybridization between subspecies.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN, datée du 1er septembre 2016 et publiée en 2017, classait l’espèce « quasi menacée ». Elle porte sur les troupeaux sauvages et de conservation, pas le bétail commercial ; la plupart des bisons sont élevés pour la production. Elle relevait peu de populations viables et de nombreux troupeaux isolés. Elle relevait aussi perte d’habitat et risques génétiques, notamment l’incorporation de gènes bovins et les croisements entre sous-espèces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Basic Facts — Bison, U.S. National Park Service",
+        "fr": "Faits essentiels sur le bison — National Park Service des États-Unis"
+      },
+      "url": "https://www.nps.gov/subjects/bison/bison-facts.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The NPS gives the historic continental range, diets including grasses and sedges, seasonal social and movement patterns, and wallowing behavior.",
+        "Females give birth to one calf after about 9.5 months; calves nurse for 7–8 months, and bulls often breed from around six years.",
+        "Grazing, wallowing, seed transport and dung affect vegetation, habitat diversity and soil nutrients."
+      ]
+    },
+    {
+      "title": {
+        "en": "American Bison — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Bison d’Amérique — Smithsonian’s National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/animals/american-bison",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Both sexes have short up-curving horns; the forebody is shaggy, and the heavy coat is shed in spring.",
+        "Conservation herds are fragmented; females and young form bands, while mature bulls may group separately.",
+        "The zoo distinguishes approximately 30,000 bison in conservation herds from approximately 500,000 commercially managed animals; its page notes the IUCN scope excludes commercial herds.",
+        "Mature bulls may reach 1.9 m at the hump, 2.7–3.8 m long and 816–1,088 kg; females are smaller, about 2.2–3.2 m long and 1.5 m at the hump."
+      ]
+    },
+    {
+      "title": {
+        "en": "Bison bison (American bison) — Animal Diversity Web, University of Michigan",
+        "fr": "Bison bison (bison d’Amérique) — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Bison_bison/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The account describes year-round grazing, seasonal group structure, rut-associated bull competition and reproductive biology."
+      ]
+    },
+    {
+      "title": {
+        "en": "Bison bison — The IUCN Red List of Threatened Species",
+        "fr": "Bison bison — Liste rouge des espèces menacées de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T2815A45156541.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment is Near Threatened; it was assessed on 1 September 2016 and published in 2017.",
+        "Its scope excludes commercial herds and identifies dependence on conservation programs, few viable populations, and numerous small isolated populations."
+      ]
+    },
+    {
+      "title": {
+        "en": "About Bison — U.S. National Park Service",
+        "fr": "À propos du bison — U.S. National Park Service"
+      },
+      "url": "https://www.nps.gov/subjects/bison/about.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Typical adult bison are 1.8–2.0 m high and 3–3.8 m long; bulls about 907–998 kg and cows about 454 kg."
+      ]
+    }
+  ],
+  "illustration_notes": "The existing validated app image, app/src/main/assets/science/bestiary/bison.webp, shows an adult male American bison with the characteristic shoulder hump, dark shaggy forequarters, shorter hindquarter coat, beard and curved horns on a pure white background. It is suitable for this entry.",
+  "uncertainties": [
+    "The IUCN Near Threatened category cited here comes from the global assessment dated 1 September 2016 and published in 2017; it is not presented as a new 2026 assessment.",
+    "The IUCN Red List page returned a 403 error when opened directly; its assessment details were available in the indexed IUCN record.",
+    "Current herd counts vary by source and date; commercial livestock numbers are separate from wild and conservation populations and from IUCN assessment scope.",
+    "Local diet, movements, herd associations and ecological effects vary with season, habitat and management; plains and wood bison also differ in average build."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source critique passed; bison genetic conservation risks clarified and historical assessment wording corrected."
+}

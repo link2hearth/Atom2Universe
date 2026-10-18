@@ -1,0 +1,91 @@
+{
+  "id": "regulus_regulus",
+  "scientific": "Regulus regulus",
+  "group": "birds",
+  "name": {
+    "en": "Goldcrest",
+    "fr": "Roitelet huppé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The goldcrest is one of Europe’s smallest birds, a restless, tiny insect-eater of conifer woods. Its numbers swing with the severity of winter, and large clutches help it recover from the heavy losses cold weather causes.",
+      "fr": "Le roitelet huppé est l’un des plus petits oiseaux d’Europe, un minuscule insectivore fébrile des bois de conifères. Ses effectifs varient avec la rigueur de l’hiver, et ses grandes pontes l’aident à se remettre des lourdes pertes causées par le froid."
+    },
+    "identification": {
+      "en": "It weighs only 5–6 g and is about 9 cm long. The body is dull greyish-green with a pale belly, a large dark eye in a pale eye ring, two white wing bars and a thin bill. A yellow crown stripe bordered with black is orange in the male and yellow in the female; juveniles lack the stripe.",
+      "fr": "Il ne pèse que 5 à 6 g et mesure environ 9 cm. Le corps est vert-gris terne avec un ventre pâle, un grand œil sombre cerné d’un anneau clair, deux barres alaires blanches et un bec fin. Une raie jaune sur le sommet de la tête, bordée de noir, est orange chez le mâle et jaune chez la femelle; les jeunes n’en ont pas."
+    },
+    "habitat": {
+      "en": "In the breeding season it is most frequent in coniferous woodland, and it also uses mixed woods, parks and gardens with mature trees, mostly staying in the treetops. In winter it moves lower, into hedges and scrub.",
+      "fr": "En saison de reproduction, il est le plus fréquent dans les bois de conifères, et utilise aussi les bois mixtes, les parcs et les jardins aux arbres âgés, en restant surtout à la cime. En hiver, il descend dans les haies et les broussailles."
+    },
+    "diet": {
+      "en": "It is mainly insectivorous, picking small invertebrates such as insects and spiders from foliage, especially conifer needles, and often hanging upside down while it hunts.",
+      "fr": "Il est surtout insectivore et prélève de petits invertébrés, comme des insectes et des araignées, dans le feuillage, surtout entre les aiguilles de conifères, souvent suspendu la tête en bas."
+    },
+    "behavior": {
+      "en": "It is very active and restless, and its high-pitched, repetitive song is the best way to find it. In winter it often joins roaming flocks of tits. Autumn brings arrivals from Scandinavia and Russia, which boost winter numbers in Britain.",
+      "fr": "Il est très actif et agité, et son chant aigu et répétitif est le meilleur moyen de le repérer. En hiver, il se joint souvent aux bandes errantes de mésanges. L’automne amène des oiseaux de Scandinavie et de Russie, qui gonflent les effectifs hivernaux en Grande-Bretagne."
+    },
+    "reproduction": {
+      "en": "In Britain the first clutch is laid around early May and there are typically two broods. A clutch is typically six to eight eggs and can reach twelve. The female alone incubates for about 16–19 days, and the downy chicks fledge after roughly 16.5–18 days. Breeding usually begins at one year.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu vers début mai et il y a en général deux couvées. Une ponte compte en général six à huit œufs et peut atteindre douze. La femelle seule couve environ 16 à 19 jours, et les poussins couverts de duvet s’envolent après environ 16,5 à 18 jours. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Cold winters are the main check on its numbers: RSPB reports that about eight in ten goldcrests die each winter. Predators include the Eurasian sparrowhawk and the pygmy owl. A typical bird lives about two years, and the oldest ringed one in Britain reached just over five.",
+      "fr": "Les hivers froids sont le principal frein à ses effectifs : la RSPB indique qu’environ huit roitelets sur dix meurent chaque hiver. Ses prédateurs comprennent l’épervier d’Europe et la chevêchette. Un oiseau vit en général environ deux ans, et le plus âgé bagué en Grande-Bretagne a un peu dépassé cinq ans."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes it as Least Concern, and it is Green-listed in the UK. The UK breeding population was estimated at 790,000 territories in 2016, though it fluctuates with winter weather, and numbers in Europe have declined since 1980.",
+      "fr": "La Liste rouge de l’UICN le classe en préoccupation mineure, et il est sur la liste verte du Royaume-Uni. La population nicheuse britannique était estimée à 790 000 territoires en 2016, mais elle varie selon les hivers, et les effectifs européens déclinent depuis 1980."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Goldcrest — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Roitelet huppé — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/goldcrest",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Weight 5–6 g; clutch typically 6–8 (up to 12); incubation 16–19 days by the female; fledging 16.5–18 days; first clutch about 2 May; max age 5 years 1 month.",
+        "UK 790,000 territories (2016); Green; IUCN Least Concern; Europe declining since 1980; very vulnerable to cold weather."
+      ]
+    },
+    {
+      "title": {
+        "en": "Goldcrest — RSPB Birds and Wildlife",
+        "fr": "Roitelet huppé — RSPB, oiseaux et faune"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/goldcrest",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology"],
+      "facts": [
+        "Greyish-green with pale belly, black-bordered crown stripe (orange in males), eye ring, white wing bars; often hangs upside down; joins tit flocks.",
+        "About eight in ten die each winter from cold; migrants from Scandinavia and Russia join residents."
+      ]
+    },
+    {
+      "title": {
+        "en": "Regulus regulus — Animal Diversity Web, University of Michigan",
+        "fr": "Regulus regulus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Regulus_regulus/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "ecology"],
+      "facts": [
+        "Length about 9 cm; insects, spiders and caterpillars; winter in hedges and scrub, higher in canopy in warmer seasons.",
+        "Predators include Eurasian sparrowhawks and pygmy owls; juveniles lack the crown pattern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "BTO’s key statistics label the 1995–2024 UK trend as stable while its text mentions a decline ending around 2010 and a recent decline in Wales; no trend direction is claimed here.",
+    "Clutch and lifespan figures in the Animal Diversity Web conflict with BTO’s and were not used.",
+    "Breeding figures are British; timing and clutch size vary across the range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts, plumage and winter mortality from the RSPB, predators from the Animal Diversity Web (consulted 2026-10-12); illustration to be checked by the owner."
+}

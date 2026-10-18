@@ -1,0 +1,150 @@
+{
+  "id": "lethrinus_laticaudis",
+  "scientific": "Lethrinus laticaudis",
+  "group": "fish",
+  "name": {
+    "en": "Grass emperor",
+    "fr": "Empereur des herbiers"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus laticaudis Alleyne & Macleay, 1877 is a western Pacific emperor, recorded from southern Indonesia and northern Australia to Papua New Guinea and the Solomon Islands.",
+      "fr": "Lethrinus laticaudis Alleyne et Macleay, 1877 est un empereur du Pacifique occidental, signalé du sud de l’Indonésie et du nord de l’Australie jusqu’à la Papouasie-Nouvelle-Guinée et aux îles Salomon."
+    },
+    "identification": {
+      "en": "It has a tan, brown or yellow body with irregular dark blotches; blue dots and short blue lines often mark the cheeks and head. It reaches about 56 cm total length.",
+      "fr": "Son corps beige, brun ou jaune porte des taches sombres irrégulières ; des points et de courtes lignes bleus marquent souvent les joues et la tête. Il atteint environ 56 cm de longueur totale."
+    },
+    "habitat": {
+      "en": "Juveniles use seagrass beds and mangrove swamps, while adults are found mainly over coral reefs.",
+      "fr": "Les jeunes fréquentent les herbiers marins et les mangroves, tandis que les adultes se rencontrent surtout au-dessus des récifs coralliens."
+    },
+    "diet": {
+      "en": "Its diet consists mainly of crustaceans and fishes.",
+      "fr": "Son alimentation se compose surtout de crustacés et de poissons."
+    },
+    "behavior": {
+      "en": "It is often observed in schools, according to the FAO account.",
+      "fr": "Il est souvent observé en bancs, selon le compte rendu de la FAO."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted do not provide a spawning calendar specific to L. laticaudis.",
+      "fr": "Les comptes rendus consultés ne donnent pas de calendrier de ponte propre à L. laticaudis."
+    },
+    "ecology": {
+      "en": "Like Lethrinus microdon, it is an Indo-Pacific emperor, but their reported habitats differ: juvenile grass emperors use seagrass and mangroves, whereas smalltooth emperors are reported over sand near reefs.",
+      "fr": "Comme Lethrinus microdon, il s’agit d’un empereur de l’Indo-Pacifique, mais leurs habitats signalés diffèrent : les jeunes empereurs des herbiers fréquentent les herbiers et les mangroves, tandis que l’empereur tidents est signalé sur le sable près des récifs."
+    },
+    "conservation": {
+      "en": "FishBase lists a 2015 IUCN assessment of Least Concern.",
+      "fr": "FishBase indique une évaluation UICN de 2015 en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus laticaudis — FAO emperor-fish catalogue",
+        "fr": "Lethrinus laticaudis — catalogue FAO des empereurs"
+      },
+      "url": "https://www.fao.org/4/y0770e/y0770e26.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "FAO reports juvenile seagrass and mangrove use, adult reef habitat, diet, schooling and a 56 cm maximum; its catalogue also describes L. microdon over sand near reefs."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 27,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus laticaudis — FishBase (French interface)",
+        "fr": "Lethrinus laticaudis — FishBase (interface française)"
+      },
+      "url": "https://www.fishbase.se/Summary/SpeciesSummary.php?id=1857&lang=french",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records range, appearance and size and lists the 2015 IUCN assessment; it gives no spawning calendar."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 17,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus laticaudis — Fishes of Australia",
+        "fr": "Lethrinus laticaudis — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/2461",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The Australian National Fish Collection and Museums Victoria list Grass Emperor as a standard name and place L. laticaudis in genus Lethrinus and family Lethrinidae."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 25,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "No species-specific spawning information was found in the species accounts consulted. The French common name is a descriptive translation of Grass emperor; FAO's species sheet gives English, Spanish and local names but no standardized French name."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FAO species account, FishBase's French-interface page and the Australian fish collection portal; the reciprocal L. microdon comparison is limited to documented genus membership and habitat."
+}

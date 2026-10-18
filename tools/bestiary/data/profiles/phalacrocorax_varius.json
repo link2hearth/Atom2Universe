@@ -1,0 +1,122 @@
+{
+  "id": "phalacrocorax_varius",
+  "scientific": "Phalacrocorax varius",
+  "group": "birds",
+  "name": {
+    "en": "Australian Pied Cormorant",
+    "fr": "Cormoran varié"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phalacrocorax varius is Australia's Australian Pied Cormorant.",
+      "fr": "Phalacrocorax varius est le Cormoran varié d’Australie."
+    },
+    "identification": {
+      "en": "It has a black back, white belly and grey hooked bill.",
+      "fr": "Il a le dos noir, le ventre blanc et le bec crochu gris."
+    },
+    "habitat": {
+      "en": "It uses coasts, estuaries, mangroves and eastern inland wetlands.",
+      "fr": "Il fréquente les côtes, estuaires, mangroves et zones humides de l’est."
+    },
+    "diet": {
+      "en": "It eats mostly fish, also crustaceans and molluscs.",
+      "fr": "Il mange surtout des poissons, ainsi que des crustacés et mollusques."
+    },
+    "behavior": {
+      "en": "It dives with webbed feet and spreads its wings to dry.",
+      "fr": "Il plonge avec ses pieds palmés et étale ses ailes pour sécher."
+    },
+    "reproduction": {
+      "en": "It nests colonially; both parents incubate eggs and feed young.",
+      "fr": "Il niche en colonies ; les deux parents couvent et nourrissent les jeunes."
+    },
+    "ecology": {
+      "en": "P. fuscescens is restricted to southern coasts. P. varius also uses eastern inland wetlands.",
+      "fr": "P. fuscescens est limité aux côtes du sud. P. varius fréquente aussi les zones humides intérieures de l’est."
+    },
+    "conservation": {
+      "en": "BirdLife Australia reports its global IUCN category as Least Concern.",
+      "fr": "BirdLife Australia rapporte que sa catégorie UICN mondiale est « préoccupation mineure »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pied Cormorant — BirdLife Australia",
+        "fr": "Cormoran varié — BirdLife Australia"
+      },
+      "url": "https://birdlife.org.au/bird-profiles/pied-cormorant/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Species account describes appearance, habitats, diet, diving, colony nesting, parental care and Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 15,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-faced Cormorant account — Wildlife Conservation Plan for Seabirds, Australian Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Fiche du Cormoran de Tasmanie — Plan australien de conservation des oiseaux marins"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/wildlife-conservation-plan-for-seabirds.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Comparison species is endemic to southern Australia and feeds in coastal waters."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 15,
+        "notes_words": 12,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The BirdLife profile is older and concise; precise abundance trends are not included here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the BirdLife Australia species profile with the Australian seabird plan for the reciprocal P. fuscescens comparison."
+}

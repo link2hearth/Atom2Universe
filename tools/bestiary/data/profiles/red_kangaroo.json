@@ -1,0 +1,258 @@
+{
+  "id": "red_kangaroo",
+  "scientific": "Osphranter rufus",
+  "group": "mammals",
+  "name": {
+    "en": "Red kangaroo",
+    "fr": "Kangourou roux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red kangaroo is a large grazing marsupial of mainland Australia’s arid and semi-arid interior. It uses open plains, grasslands and shrublands. Its fortunes follow irregular rain: fresh growth can support breeding and population increases, while prolonged drought reduces forage and may lower numbers.",
+      "fr": "Le kangourou roux est un grand marsupial herbivore de l’intérieur aride et semi-aride de l’Australie continentale. Il fréquente plaines, prairies et broussailles. Son sort suit les pluies irrégulières : les nouvelles pousses peuvent favoriser la reproduction et la hausse des effectifs, tandis qu’une sécheresse prolongée réduit nourriture et peut faire baisser les populations."
+    },
+    "identification": {
+      "en": "The largest living marsupial, it shows striking sexual dimorphism. Males may reach 1.4 m head-and-body length and 92 kg; females about 1.1 m and 39 kg. Males are often rusty red and females blue-grey, though shades vary. Both have pale undersides and black-and-white cheek markings, including a light stripe from mouth towards ear. Fast travel uses powerful hindlimb bounds; a long muscular tail swings with the legs and helps reduce trunk pitch. During each bound, ankle extensor tendons stretch under load and recoil, returning stored elastic energy. This reduces the muscle work needed to repeat the movement; oxygen use on level ground changes little across hopping speeds, though uphill travel costs more.",
+      "fr": "Le plus grand marsupial vivant présente un fort dimorphisme sexuel. Les mâles peuvent atteindre 1,4 m de longueur tête-corps et 92 kg ; les femelles, environ 1,1 m et 39 kg. Les mâles sont souvent roux et les femelles gris bleuté, avec des nuances variables. Tous ont le dessous pâle et des marques noires et blanches aux joues, dont une bande claire de la bouche vers l’oreille. Les déplacements rapides reposent sur de puissants bonds des pattes arrière ; une longue queue musclée accompagne leur mouvement et aide à limiter le tangage du tronc. À chaque bond, les tendons extenseurs de la cheville s’étirent sous la charge puis se rétractent, restituant leur énergie élastique. Cela réduit le travail musculaire nécessaire aux bonds répétés ; sur terrain plat, la consommation d’oxygène varie peu avec la vitesse, mais la montée coûte davantage."
+    },
+    "habitat": {
+      "en": "Across mainland Australia’s dry interior, it inhabits open plains, grassland, shrubland and savanna woodland. Scattered trees and shrubs offer shade from intense heat. In hot conditions, blood flow rises in superficial vessels of the forelegs; licking spreads moisture there, which evaporates and carries heat away. Radio-tracking in Western Australia found adult females’ core ranges stable and compact, with grazing and shelter together; males used larger areas. Drought increased adult dispersal, and journeys to water were prominent. Local distribution thus reflects vegetation and changing forage as well as water access.",
+      "fr": "Dans l’intérieur sec de l’Australie continentale, il fréquente plaines, prairies, broussailles et savanes boisées. Des arbres et arbustes épars donnent de l’ombre. Par forte chaleur, la circulation augmente dans les vaisseaux superficiels des pattes avant ; le léchage y étale de l’humidité qui évacue la chaleur en s’évaporant. Le suivi radio a montré en Australie-Occidentale que les femelles adultes gardent un noyau stable où pâture et abri coïncident ; les mâles utilisent de plus grands domaines. En sécheresse, les adultes se dispersent davantage et font des trajets jusqu’à l’eau. La répartition dépend donc du couvert et du fourrage autant que de l’accès à l’eau."
+    },
+    "diet": {
+      "en": "It mainly grazes grasses. A 12-year study in southern Australian arid shrubland found more forbs in wet seasons and more shrub browsing in dry conditions; grasses still formed almost 90% of sampled food in severe drought. Microbes ferment fibrous plants in its enlarged forestomach, making nutrients available. Experiments with red kangaroos found methane yield varied with food intake. Green herbage supplies some water, but drought reduces both forage and moisture.",
+      "fr": "Il broute surtout des graminées. Une étude de douze ans dans les broussailles arides du sud australien a relevé davantage de plantes herbacées non graminéennes en saison humide et de végétaux ligneux en saison sèche ; les graminées formaient encore près de 90 % des aliments échantillonnés lors d’une sécheresse sévère. Des microbes fermentent les fibres dans son avant-estomac volumineux et rendent des nutriments disponibles. Des essais sur des kangourous roux ont montré que le rendement en méthane variait avec l’ingestion. Les plantes vertes fournissent une partie de l’eau, mais la sécheresse réduit nourriture et humidité."
+    },
+    "behavior": {
+      "en": "Groups are small and temporary rather than fixed family units: one field study in northwestern New South Wales recorded a mean of 2.2 animals, with size and membership changing frequently. Radio-tracking found adult females relatively sedentary with stable ranges, while subadult males dispersed widely; drought increased adult movements. Male ranges were larger and could include the core areas of several females. In an arid-pasture study, grazing peaked between dusk and dawn, when animals spent over 60% of their time grazing.",
+      "fr": "Les groupes sont petits et temporaires plutôt que des familles fixes : une étude de terrain dans le nord-ouest de la Nouvelle-Galles du Sud a relevé une moyenne de 2,2 individus, avec des effectifs et une composition qui changeaient souvent. Le suivi radio a montré que les femelles adultes sont relativement sédentaires, avec des domaines stables, tandis que les mâles subadultes se dispersent largement ; la sécheresse accroît les déplacements des adultes. Les domaines des mâles sont plus vastes et peuvent englober les noyaux d’activité de plusieurs femelles. Dans une étude de pâturage aride, le broutage culminait entre le crépuscule et l’aube, période durant laquelle les animaux y consacraient plus de 60 % de leur temps."
+    },
+    "reproduction": {
+      "en": "Breeding can occur year-round, with more births in spring and summer, and responds to food and rainfall. After about 33 days, one very underdeveloped young crawls into the pouch and attaches to a teat. A female may mate again soon after birth. If the pouch young still suckles, the new embryo can pause at the blastocyst stage; this embryonic diapause delays development until the older joey permanently leaves the pouch. The joey exits permanently at about eight months but may continue suckling for months.",
+      "fr": "La reproduction peut avoir lieu toute l’année, avec davantage de naissances au printemps et en été ; elle répond à la nourriture et aux pluies. Après environ 33 jours, un petit très immature rampe jusqu’à la poche et s’attache à une tétine. La femelle peut s’accoupler peu après la naissance. Si le jeune en poche tète encore, le nouvel embryon peut suspendre son développement au stade blastocyste : cette diapause embryonnaire retarde sa croissance jusqu’à la sortie définitive du jeune précédent de la poche. Le joey quitte définitivement la poche vers huit mois, mais peut continuer à téter plusieurs mois."
+    },
+    "ecology": {
+      "en": "The red kangaroo is prey for predators such as dingoes and shares arid rangelands with livestock. In a long-term southern Australian study, dietary overlap with sheep increased in drought, when both relied heavily on grasses; potential competition grew as pasture deteriorated. An analysis of 1978–2002 aerial counts across four South Australian areas modelled population growth against rainfall, harvest, kangaroo density and domestic herbivore density. The best model found a positive statistical association with livestock density, which the authors proposed could reflect resource availability beyond rainfall. These findings describe regional pastoral systems, not a universal effect of livestock.",
+      "fr": "Proie du dingo, le kangourou roux partage les parcours arides avec le bétail. Une étude de longue durée dans le sud australien a trouvé que le chevauchement alimentaire avec les moutons augmente en sécheresse, quand les deux mangent surtout des graminées ; la concurrence possible croît avec la dégradation des pâturages. Les comptages aériens de 1978 à 2002 dans quatre régions d’Australie-Méridionale ont été modélisés selon les pluies, les prélèvements et les densités de kangourous et de bétail. Le meilleur modèle associe positivement densité du bétail et croissance des kangourous ; les auteurs proposent que le bétail signale des ressources non mesurées par la seule pluviométrie. Ce résultat régional ne démontre pas un effet universel du bétail."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reported the IUCN global category as Least Concern when consulted in October 2026, reflecting the species’ broad Australian range and large population. This status coexists with marked local fluctuations: drought can reduce forage and survival, while favourable rain can support population growth. Management figures are regional. A New South Wales government report dated 17 December 2025 set commercial quotas for 2026 and gave 2025 estimates for monitored zones; these guide harvest in that state rather than estimate the global population.",
+      "fr": "La catégorie mondiale UICN rapportée par la Mammal Diversity Database, consultée en octobre 2026, est « préoccupation mineure », compte tenu de la vaste aire australienne et des effectifs élevés. Les effectifs locaux fluctuent : sécheresses et manque de nourriture peuvent réduire survie et nombres, tandis que les pluies favorables soutiennent la croissance. La gestion est régionale : un rapport de Nouvelle-Galles du Sud (17 décembre 2025) fixe les quotas commerciaux de 2026 et donne les estimations de population 2025 des zones suivies. Ces quotas encadrent les prélèvements de cet État sans mesurer l’effectif mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Kangaroo — Australian Museum",
+        "fr": "Kangourou roux — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/red-kangaroo/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Arid Australian range, sexual size and colour dimorphism, grazing, pouch birth and lactation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Osphranter rufus (Diprotodontia: Macropodidae) — Mammalian Species, Oxford University Press",
+        "fr": "Osphranter rufus (Diprotodontia : Macropodidae) — Mammalian Species, Oxford University Press"
+      },
+      "url": "https://academic.oup.com/mspecies/article/52/998/143/6046133",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Review documents sexual size and coat dimorphism and identifies dingoes as major predators, especially of juveniles and smaller females."
+      ]
+    },
+    {
+      "title": {
+        "en": "Energetics and biomechanics of locomotion by red kangaroos — Comparative Biochemistry and Physiology B",
+        "fr": "Énergétique et biomécanique du déplacement du kangourou roux — Comparative Biochemistry and Physiology B"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9787777/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Level-hop oxygen use changes little with speed; elastic leg tendons store and return energy."
+      ]
+    },
+    {
+      "title": {
+        "en": "The mechanics of hopping by kangaroos (Macropodidae) — Journal of Zoology",
+        "fr": "Mécanique du bond chez les kangourous (Macropodidae) — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1975.tb05983.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Force-platform and film analyses showed elastic storage in ankle extensor tendons reduces work during hopping; tendon recoil returns energy."
+      ]
+    },
+    {
+      "title": {
+        "en": "Thermoregulation by Kangaroos from Mesic and Arid Habitats — Physiological and Biochemical Zoology",
+        "fr": "Thermorégulation de kangourous de milieux humides et arides — Physiological and Biochemical Zoology"
+      },
+      "url": "https://researchonline.jcu.edu.au/27493/1/27493_Dawson_etal_2000.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Forelimb licking and superficial vessels aid evaporative cooling in red kangaroos."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diets of mammalian herbivores in Australian arid shrublands — Journal of Arid Environments",
+        "fr": "Régimes alimentaires d’herbivores mammifères dans les broussailles arides d’Australie — Journal of Arid Environments"
+      },
+      "url": "https://doi.org/10.1006/jare.1994.1028",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Southern study: grass diet, seasonal plant shifts, near 90% grass in severe drought and more sheep overlap."
+      ]
+    },
+    {
+      "title": {
+        "en": "Decreasing methane yield with increasing food intake in two foregut-fermenting marsupials — Journal of Experimental Biology",
+        "fr": "Baisse du rendement en méthane lorsque l’ingestion augmente chez deux marsupiaux à fermentation antérieure — Journal of Experimental Biology"
+      },
+      "url": "https://doi.org/10.1242/jeb.128165",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "In vivo trials included four red kangaroos; methane yield per unit of intake fell as intake rose, while daily output stayed similar."
+      ]
+    },
+    {
+      "title": {
+        "en": "Social organisation and dispersal in the red kangaroo — Murdoch University doctoral thesis",
+        "fr": "Organisation sociale et dispersion du kangourou roux — thèse de doctorat, Murdoch University"
+      },
+      "url": "https://researchportal.murdoch.edu.au/esploro/outputs/doctoral/Social-organisation-and-dispersal-in-the/991005543254107891",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Field tracking: female site fidelity, larger male ranges, subadult dispersal and drought movement."
+      ]
+    },
+    {
+      "title": {
+        "en": "Behaviour of Red Kangaroos in northwestern New South Wales — Australian Mammalogy",
+        "fr": "Comportement du kangourou roux dans le nord-ouest de la Nouvelle-Galles du Sud — Australian Mammalogy"
+      },
+      "url": "https://www.publish.csiro.au/AM/AM80015",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "About 1,500 field hours recorded small, impermanent groups averaging 2.2 animals, with frequently changing size and membership."
+      ]
+    },
+    {
+      "title": {
+        "en": "The life history and reproduction of the red kangaroo — Proceedings of the Zoological Society of London",
+        "fr": "Cycle biologique et reproduction du kangourou roux — Proceedings of the Zoological Society of London"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1964.tb05152.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Species-specific study documents the reproductive cycle, postpartum mating and lactation-associated reproductive pause."
+      ]
+    },
+    {
+      "title": {
+        "en": "Of sheep and rain: large-scale population dynamics of the red kangaroo — Journal of Animal Ecology",
+        "fr": "Moutons et pluies : dynamique à grande échelle des populations de kangourous roux — Journal of Animal Ecology"
+      },
+      "url": "https://doi.org/10.1111/j.1365-2656.2005.00915.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Four-area South Australian model found density dependence and a positive statistical livestock-density association; rainfall alone did not capture resource feedback."
+      ]
+    },
+    {
+      "title": {
+        "en": "The effect of pasture availability on food intake, species selection and grazing behaviour of kangaroos — Journal of Applied Ecology",
+        "fr": "Effet de la disponibilité des pâturages sur l’ingestion, le choix alimentaire et le comportement de pâturage des kangourous — Journal of Applied Ecology"
+      },
+      "url": "https://researchportal.murdoch.edu.au/esploro/outputs/journalArticle/The-effect-of-pasture-availability-on/991005540635107891",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Pasture-monitoring study found grazing activity peaked from dusk to dawn, with over 60% of time spent grazing then."
+      ]
+    },
+    {
+      "title": {
+        "en": "Osphranter rufus — Mammal Diversity Database",
+        "fr": "Osphranter rufus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000292/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Database reports IUCN Least Concern; its bibliography points to the Red List record."
+      ]
+    },
+    {
+      "title": {
+        "en": "NSW Commercial Kangaroo Management Program: 2026 Quota Report — NSW Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Programme de gestion commerciale des kangourous de Nouvelle-Galles du Sud : rapport des quotas 2026 — ministère de l’Environnement de NSW"
+      },
+      "url": "https://www.environment.nsw.gov.au/publications/nsw-commercial-kangaroo-management-program-2026-quota-report",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NSW report (2025): state-zone estimates for 2025 and commercial quotas for 2026."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult red kangaroo (sex unspecified) with exact natural proportions: powerful hind limbs, long muscular tail, small forelimbs, pale underside, black-and-white cheek markings and light stripe from mouth toward ear; coat may be rusty red or blue-grey according to sex and individual variation. Pure uniform white background (#FFFFFF), no scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "The cited IUCN Red List record could not be opened during consultation. Mammal Diversity Database reported Least Concern and cited IUCN (2024), but the underlying assessment and publication years remain unverified.",
+    "Diet, movement, reproduction and abundance vary with rainfall, habitat and local plant growth; regional study results should not be treated as universal constants.",
+    "New South Wales quota figures apply to monitored management zones and do not estimate the species’ entire Australian population."
+  ],
+  "reviewed": true,
+  "review_note": "Independent zoological and bilingual review followed by per-fact source allocation revision; elastic tendon mechanism expanded, reproductive diapause scoped, global category distinguished from NSW estimates and quotas."
+}

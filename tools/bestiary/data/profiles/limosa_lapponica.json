@@ -1,0 +1,172 @@
+{
+  "id": "limosa_lapponica",
+  "scientific": "Limosa lapponica",
+  "group": "birds",
+  "name": {
+    "en": "Bar-tailed Godwit",
+    "fr": "Barge rousse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Bar-tailed Godwit is an Arctic-breeding shorebird that migrates between northern breeding grounds and coastal wintering areas.",
+      "fr": "La Barge rousse est un limicole nichant dans l’Arctique et migrant entre ses lieux de reproduction septentrionaux et des quartiers d’hiver côtiers."
+    },
+    "identification": {
+      "en": "Its shorter legs, slightly upturned bill and lack of white wing-bars in flight distinguish it from the Black-tailed Godwit.",
+      "fr": "Ses pattes plus courtes, son bec légèrement retroussé et l’absence de barres alaires blanches en vol la distinguent de la Barge à queue noire."
+    },
+    "habitat": {
+      "en": "Outside the breeding season it is mainly coastal, using intertidal mudflats and sandy-muddy shores. It breeds in open Arctic tundra.",
+      "fr": "Hors de la reproduction, elle fréquente surtout les vasières intertidales et les estrans sablo-vaseux. Elle niche dans la toundra arctique ouverte."
+    },
+    "diet": {
+      "en": "It probes soft sediment for invertebrates, including marine worms and small crustaceans; the mix of prey varies among feeding sites.",
+      "fr": "Elle sonde les sédiments meubles à la recherche d’invertébrés, notamment des vers marins et de petits crustacés; la composition du régime varie selon les sites d’alimentation."
+    },
+    "behavior": {
+      "en": "Some individuals make exceptionally long non-stop migratory flights, while others use coastal stopovers; routes and timing differ among populations and subspecies.",
+      "fr": "Certains individus effectuent des vols migratoires exceptionnellement longs sans escale, tandis que d’autres utilisent des haltes côtières; routes et calendrier varient selon les populations et sous-espèces."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in treeless tundra. A clutch is usually four eggs, incubated by both sexes.",
+      "fr": "Elle niche au sol dans la toundra sans arbres. La ponte compte généralement quatre œufs, couvés par les deux adultes."
+    },
+    "ecology": {
+      "en": "Its close congener is the Black-tailed Godwit (*Limosa limosa*); see that profile for the reciprocal comparison.",
+      "fr": "Sa proche congénère est la Barge à queue noire (*Limosa limosa*); voir cette fiche pour la comparaison réciproque."
+    },
+    "conservation": {
+      "en": "The BTO reports a global IUCN category of Near Threatened; its page also distinguishes this from UK and European assessments, which use different scales and contexts.",
+      "fr": "Le BTO rapporte pour l’espèce une catégorie mondiale UICN « Quasi menacée »; sa fiche la distingue aussi des évaluations britannique et européenne, établies à des échelles et dans des contextes différents."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bar-tailed Godwit — British Trust for Ornithology BirdFacts",
+        "fr": "Barge rousse — fiche BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/bar-tailed-godwit",
+      "supports": [
+        "overview",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BTO reports global and regional categories."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 6,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barge rousse — French MNHN habitat account",
+        "fr": "Barge rousse — Cahiers d’Habitat du MNHN"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Barge-rousse.pdf",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French MNHN account: migration, identification, feeding and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 8,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barge rousse — French LPO species account",
+        "fr": "Barge rousse — fiche espèce de la LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/barge-rousse",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "LPO details coastal use and differing migratory routes."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 8,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bar-tailed Godwit — Cornell Lab All About Birds",
+        "fr": "Barge rousse — Cornell Lab All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Bar-tailed_Godwit/lifehistory",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Cornell identifies the close congener Limosa limosa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 7,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration distances and destinations vary by population and subspecies; extraordinary non-stop flights should not be generalized to every bird.",
+    "Conservation labels in source accounts refer to different regions and assessment dates."
+  ],
+  "review_note": "Cross-checked the French MNHN account and LPO with BTO material; compared directly with the already documented Limosa limosa profile.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

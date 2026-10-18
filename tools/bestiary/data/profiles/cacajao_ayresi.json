@@ -1,0 +1,142 @@
+{
+  "id": "cacajao_ayresi",
+  "scientific": "Cacajao ayresi",
+  "group": "mammals",
+  "name": {
+    "en": "Ayres’s Black Uakari",
+    "fr": "Uakari noir d’Ayres"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ayres’s black uakari is an Amazonian monkey known from a restricted area of Brazil’s Amazonas State between the Curuduri and Araçá rivers.",
+      "fr": "L’uakari noir d’Ayres est un singe amazonien connu d’une aire restreinte de l’État brésilien d’Amazonas, entre les rios Curuduri et Araçá."
+    },
+    "identification": {
+      "en": "It is a dark-coated, robust-bodied, short-tailed Cacajao; field records and measurements remain sparse, so descriptions of individual variation are still limited.",
+      "fr": "C’est un Cacajao au pelage sombre, au corps robuste et à la queue courte ; observations et mesures restent rares, ce qui limite encore la description des variations individuelles."
+    },
+    "habitat": {
+      "en": "A few confirmed sightings come from primary forest, including flooded igapó and terra-firme forest mosaics in the Araçá basin.",
+      "fr": "Quelques observations confirmées proviennent de forêt primaire, notamment d’igapó inondé et de mosaïques de terre ferme dans le bassin de l’Araçá."
+    },
+    "diet": {
+      "en": "Species-specific feeding data are lacking; the fruit-and-seed diet of other uakaris cannot be assumed for this species.",
+      "fr": "Les données alimentaires propres à l’espèce manquent ; le régime de fruits et graines d’autres uakaris ne peut lui être attribué sans preuve."
+    },
+    "behavior": {
+      "en": "Group size, ranging, activity and tolerance of disturbance remain unknown because the species is rarely seen in the wild.",
+      "fr": "Taille des groupes, déplacements, activité et tolérance aux perturbations restent inconnus, car l’espèce est rarement observée dans la nature."
+    },
+    "reproduction": {
+      "en": "Maturity, gestation and birth interval are unknown; estimates from other Cacajao are not secure species-specific values.",
+      "fr": "Maturité, gestation et intervalle entre naissances sont inconnus ; les estimations d’autres Cacajao ne sont pas des valeurs fiables propres à l’espèce."
+    },
+    "ecology": {
+      "en": "A 2008 taxonomic revision separated C. ayresi and C. hosomi from the broader C. melanocephalus concept, so older sources may use other names.",
+      "fr": "Une révision taxonomique de 2008 a distingué C. ayresi et C. hosomi du concept large de C. melanocephalus ; les sources anciennes peuvent donc employer d’autres noms."
+    },
+    "conservation": {
+      "en": "ICMBio reports Data Deficient nationally and Vulnerable globally; suspected hunting for fish bait, low density and no protected-area records are concerns.",
+      "fr": "L’ICMBio indique « données insuffisantes » au Brésil et « vulnérable » mondialement ; chasse présumée pour appât, faible densité et absence de présence connue en aire protégée sont préoccupantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cacajao ayresi — Brazilian Primates, ICMBio",
+        "fr": "Cacajao ayresi — Primates du Brésil, ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/assuntos/centros-de-pesquisa/primatas-brasileiros/arquivos/fichas_primatas/PITHECIIDAE/ficha_cacajao_ayresi.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Portuguese ICMBio sheet reports range, few sightings and primary forest habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 12,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic reassessment of black uakaris — International Journal of Primatology",
+        "fr": "Révision taxonomique des uakaris noirs — International Journal of Primatology"
+      },
+      "url": "https://doi.org/10.1007/s10764-008-9288-6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The primary revision described C. ayresi and C. hosomi; the species-specific biology remains poorly documented."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 15,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cacajao ayresi — IUCN Red List and ICMBio",
+        "fr": "Cacajao ayresi — Liste rouge de l’UICN et ICMBio"
+      },
+      "url": "https://www.iucnredlist.org/species/136917/4305998",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "ICMBio reports national Data Deficient and global Vulnerable assessments and suspected hunting."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 12,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet, group size, reproductive biology, abundance and home range remain poorly documented.",
+    "La fiche ICMBio renvoie à une évaluation mondiale antérieure."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Portuguese ICMBio species sheet and primary taxonomic revision; sparse field records limit ecological detail. Comparisons stay within closely related black uakaris."
+}

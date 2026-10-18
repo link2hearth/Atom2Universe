@@ -1,0 +1,114 @@
+{
+  "id": "littorina_littorea",
+  "scientific": "Littorina littorea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Periwinkle",
+    "fr": "Bigorneau commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common periwinkle is a sea snail of European rocky shores and the largest British periwinkle. It grazes on algae, is gathered by hand for food, and has been introduced to the north-west Atlantic, where it became the most abundant large invertebrate grazer of the coast.",
+      "fr": "Le bigorneau commun est un escargot de mer des côtes rocheuses d’Europe et le plus grand bigorneau de Grande-Bretagne. Il broute les algues, est ramassé à la main pour la consommation, et a été introduit dans l’Atlantique nord-ouest, où il est devenu le plus abondant des grands invertébrés brouteurs du littoral."
+    },
+    "identification": {
+      "en": "The shell is sharply conical with a pointed tip, usually black or dark grey-brown with darker spiral lines and a white central column. It is typically about 3 cm high and reaches 5 cm at most. Young shells with spiral ridges can be confused with Littorina saxatilis. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "La coquille est nettement conique, à sommet pointu, en général noire ou brun gris foncé avec des lignes spirales plus sombres et une columelle blanche. Elle mesure typiquement 3 cm de haut et atteint 5 cm au maximum. Les jeunes coquilles à côtes spirales peuvent être confondues avec Littorina saxatilis. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
+    },
+    "habitat": {
+      "en": "It occurs on rocky shores from the upper shore into shallow subtidal water, except in the most exposed places, and also on sand or mud in sheltered estuaries. It tolerates brackish water. Its native range runs from northern Spain to the White Sea.",
+      "fr": "Elle vit sur les côtes rocheuses, du haut de l’estran à la zone subtidale peu profonde, sauf aux endroits les plus exposés, et aussi sur le sable ou la vase dans les estuaires abrités. Elle tolère l’eau saumâtre. Son aire d’origine s’étend du nord de l’Espagne à la mer Blanche."
+    },
+    "diet": {
+      "en": "It is a grazer feeding mainly on fine green, brown and red algae such as sea lettuce, Cladophora and Ectocarpus. It occasionally eats small animals and the egg capsules of other snails.",
+      "fr": "C’est un brouteur qui se nourrit surtout de fines algues vertes, brunes et rouges, comme la laitue de mer, Cladophora et Ectocarpus. Il mange parfois de petits animaux et les capsules d’œufs d’autres escargots."
+    },
+    "behavior": {
+      "en": "In northern Britain it moves down the shore in autumn and back up in spring, depending on local winter temperatures. It hosts several parasitic flatworms, and parasitism by trematodes may cause sterility.",
+      "fr": "Dans le nord de la Grande-Bretagne, il descend l’estran en automne et le remonte au printemps, selon les températures hivernales locales. Il héberge plusieurs vers plats parasites, et le parasitisme par des trématodes peut causer la stérilité."
+    },
+    "reproduction": {
+      "en": "Sexes are separate and fertilisation is internal. Females release egg capsules of about 1 mm, each with usually two or three eggs, directly into the sea, timed with spring tides; a large female can produce up to about 100,000 eggs a year. The larvae feed in the plankton for several weeks, up to six, and the snails mature at 2 to 3 years and live 5 to 10 years.",
+      "fr": "Les sexes sont séparés et la fécondation est interne. Les femelles libèrent directement en mer des capsules d’environ 1 mm contenant en général deux ou trois œufs, en phase avec les marées de vive-eau; une grande femelle peut produire jusqu’à environ 100 000 œufs par an. Les larves se nourrissent dans le plancton pendant plusieurs semaines, jusqu’à six, et les escargots mûrissent à 2 ou 3 ans et vivent 5 à 10 ans."
+    },
+    "ecology": {
+      "en": "It is often the dominant grazing snail on the lower shore, and it accumulates trace elements such as silver, cadmium and lead, so it is a suitable bioindicator of marine contamination. It is prey for crabs, fish and birds. In New England its grazing has strongly changed algal communities.",
+      "fr": "Il est souvent le gastéropode brouteur dominant du bas de l’estran, et il accumule des éléments traces comme l’argent, le cadmium et le plomb, ce qui en fait un bon bioindicateur de la contamination marine. Il est la proie de crabes, de poissons et d’oiseaux. En Nouvelle-Angleterre, son broutage a fortement modifié les communautés d’algues."
+    },
+    "conservation": {
+      "en": "No global conservation category was found. It is hand-gathered without regulation for food, with commercial value in Scotland and Ireland, where collectors have noted fewer large snails. In North America it was first recorded at Pictou, Nova Scotia, in 1840, and is established from Newfoundland to Virginia.",
+      "fr": "Aucune catégorie mondiale de conservation n’a été trouvée. Il est ramassé à la main sans réglementation pour l’alimentation, avec une valeur commerciale en Écosse et en Irlande, où des ramasseurs ont remarqué moins de gros individus. En Amérique du Nord, il a été signalé pour la première fois à Pictou, en Nouvelle-Écosse, en 1840, et il est établi de Terre-Neuve à la Virginie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common periwinkle (Littorina littorea) — MarLIN, Marine Biological Association",
+        "fr": "Bigorneau commun (Littorina littorea) — MarLIN, Marine Biological Association"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1328",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Shell up to 52 mm, sharply conical, black or dark grey-brown with darker spiral lines and white columella; rocky shores, estuaries, brackish water; grazer on fine algae; moves down shore in autumn and up in spring in northern Britain.",
+        "Separate sexes, internal fertilisation, capsules about 1 mm with usually 2–3 eggs, up to about 100,000 eggs per year, larvae up to six weeks, maturity at 2–3 years, lifespan 5–10 years; trematode parasites; bioindicator; hand-gathered without regulation, commercial in Scotland and Ireland.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
+      ]
+    },
+    {
+      "title": {
+        "en": "Littorina littorea — Invasion History, NEMESIS, Smithsonian Environmental Research Center",
+        "fr": "Littorina littorea — Histoire de l’invasion, NEMESIS, Smithsonian Environmental Research Center"
+      },
+      "url": "https://invasions.si.edu/nemesis/calnemo/species_summary/70419",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Native from the White Sea to Gibraltar; first recorded at Pictou, Nova Scotia, in 1840; established from Newfoundland to Virginia; typically about 31 mm, maximum 53 mm.",
+        "Eats green algae and occasionally animals; larvae drift 2–4 weeks; most abundant large invertebrate herbivore of the north-west Atlantic coast; prey for crabs, fish and birds."
+      ]
+    },
+    {
+      "title": {
+        "en": "Littorina littorea — Global Invasive Species Database, IUCN Invasive Species Specialist Group",
+        "fr": "Littorina littorea — Base de données mondiale sur les espèces envahissantes, groupe de spécialistes de l’UICN"
+      },
+      "url": "https://www.iucngisd.org/gisd/species.php?sc=400",
+      "consulted": "2026-10-12",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Native to Europe; alien in eastern Canada and New England; grazes diatoms and green algae; larval phase up to six weeks; matures at 2–3 years, lifespan 5–10 years.",
+        "In New England an important grazer that changed intertidal community structure; densities of 200–500 per square metre reported."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Fecundity differs: up to about 100,000 eggs a year (MarLIN), 50,000–200,000 per season for New Brunswick females (NEMESIS) and 10,000–100,000 (GISD); the MarLIN figure is used.",
+    "Larval life in the plankton is 2–4 weeks in one source and up to six weeks in others; the range is given as several weeks, up to six.",
+    "Maximum shell height is 52 mm (MarLIN) or 53 mm (NEMESIS); about 5 cm is stated.",
+    "The IUCN Red List page could not be opened; no global conservation category is stated."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

@@ -1,0 +1,146 @@
+{
+  "id": "sphaerodactylus_elegans",
+  "scientific": "Sphaerodactylus elegans",
+  "group": "reptiles",
+  "name": {
+    "en": "Sphaerodactylus elegans",
+    "fr": "Sphaerodactylus elegans"
+  },
+  "sections": {
+    "overview": {
+      "en": "Native to Cuba and Hispaniola, this gecko has also established introduced populations in Florida. Its range differs from that of its congener Sphaerodactylus fantasticus, native to the Lesser Antilles.",
+      "fr": "Originaire de Cuba et d’Hispaniola, ce gecko possède aussi des populations introduites en Floride. Son aire diffère de celle de son congénère Sphaerodactylus fantasticus, originaire des Petites Antilles."
+    },
+    "identification": {
+      "en": "The Reptile Database treats the Cuban and Hispaniolan populations as distinct named subspecies.",
+      "fr": "The Reptile Database traite les populations cubaine et hispaniolienne comme des sous-espèces nommées distinctes."
+    },
+    "habitat": {
+      "en": "Florida records place it around buildings, beneath bark and in moist ground debris or rotting logs.",
+      "fr": "En Floride, il est observé près des bâtiments, sous l’écorce, dans les débris humides au sol et sous les troncs pourrissants."
+    },
+    "diet": {
+      "en": "A Florida field account recorded ants and a fly in the stomach of one female; this is a limited observation, not a full diet study.",
+      "fr": "Une étude de terrain en Floride a trouvé des fourmis et une mouche dans l’estomac d’une femelle; cette observation limitée ne constitue pas une étude complète du régime."
+    },
+    "behavior": {
+      "en": "It uses small sheltered spaces at ground level and has also been found on human-made structures.",
+      "fr": "Il utilise de petits abris au niveau du sol et a également été trouvé sur des structures humaines."
+    },
+    "reproduction": {
+      "en": "The species is oviparous.",
+      "fr": "Cette espèce est ovipare."
+    },
+    "ecology": {
+      "en": "Florida populations are non-native and were first recorded on Key West in the early twentieth century.",
+      "fr": "Les populations de Floride sont introduites; les premières observations à Key West datent du début du XXe siècle."
+    },
+    "conservation": {
+      "en": "The sources consulted document an established Florida introduction but do not provide a current global conservation category.",
+      "fr": "Les sources consultées documentent une introduction établie en Floride, mais ne donnent pas de catégorie mondiale actuelle de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sphaerodactylus elegans — The Reptile Database",
+        "fr": "Sphaerodactylus elegans — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/elegans",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The taxonomic account lists Cuba, Hispaniola and introduced Florida populations, treats the named geographic forms, and records oviparity."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 18,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Runaway Train in the Making: Exotic Herpetofauna of Florida",
+        "fr": "Une invasion en marche : herpétofaune exotique de Floride"
+      },
+      "url": "https://herpconbio.org/Volume_6/Monographs/Meshaka_2011.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Florida monograph records this gecko on buildings, under tree bark and moist ground debris, and reports ants and a fly in one stomach sample."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 25,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sphaerodactylus fantasticus — The Reptile Database",
+        "fr": "Sphaerodactylus fantasticus — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/fantasticus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The congeneric S. fantasticus is listed from the Lesser Antilles, including Guadeloupe, Dominica and Montserrat."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet details are based on a single stomach observation cited in a regional monograph.",
+    "No global conservation category was found in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The taxonomic database and a Florida herpetology monograph were cross-checked; the reciprocal S. fantasticus reference is a range comparison between congeners."
+}

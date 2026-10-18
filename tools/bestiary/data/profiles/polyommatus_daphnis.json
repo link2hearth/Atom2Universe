@@ -1,0 +1,176 @@
+{
+  "id": "polyommatus_daphnis",
+  "scientific": "Polyommatus daphnis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Meleager’s Blue",
+    "fr": "Azuré de l’orobe"
+  },
+  "sections": {
+    "overview": {
+      "en": "Meleager’s Blue is a locally distributed blue butterfly of southeastern Europe and western Asia.",
+      "fr": "L’Azuré de l’orobe est un papillon bleu à répartition localisée dans le sud-est de l’Europe et l’ouest de l’Asie."
+    },
+    "identification": {
+      "en": "Both sexes have scalloped hindwing edges, especially pronounced in females. Males are blue above; females are usually brown, sometimes with blue at the wing bases.",
+      "fr": "Les deux sexes ont le bord des ailes postérieures festonné, surtout chez la femelle. Le dessus du mâle est bleu; celui de la femelle est généralement brun, parfois bleuté à la base des ailes."
+    },
+    "habitat": {
+      "en": "It inhabits warm, dry, often flowery grasslands, scrub edges and woodland clearings, from low hills to about eighteen hundred metres in some regional accounts.",
+      "fr": "Il fréquente les prairies chaudes, sèches et souvent fleuries, les lisières de broussailles et les clairières, jusqu’à environ mille huit cents mètres selon certaines sources régionales."
+    },
+    "diet": {
+      "en": "Adults take nectar from flowers. Caterpillars feed on legumes, including crown vetch and milk-vetches such as Astragalus.",
+      "fr": "Les adultes prennent le nectar des fleurs. Les chenilles consomment des légumineuses, notamment la coronille bigarrée et des astragales."
+    },
+    "behavior": {
+      "en": "It usually has one generation per year, with adults flying in summer; populations can be local and small.",
+      "fr": "Il produit généralement une génération par an, dont les adultes volent en été; les populations peuvent être localisées et de faible effectif."
+    },
+    "reproduction": {
+      "en": "It overwinters as an egg or young larva, depending on the region. Caterpillars may be attended by ants.",
+      "fr": "Selon la région, il passe l’hiver sous forme d’œuf ou de jeune chenille. Les chenilles peuvent être accompagnées de fourmis."
+    },
+    "ecology": {
+      "en": "Its scalloped hindwing margin is a useful distinction from many other blue butterflies. A Central European population study found high densities near patches of the larval host plant Securigera varia.",
+      "fr": "Le bord festonné des ailes postérieures le distingue de nombreux autres azurés. Une étude de population d’Europe centrale a relevé des densités élevées près des plantes hôtes Securigera varia."
+    },
+    "conservation": {
+      "en": "The sources consulted describe it as local in parts of its range but do not provide a current global IUCN category.",
+      "fr": "Les sources consultées le décrivent comme localisé dans certaines régions, sans fournir de catégorie mondiale UICN actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Meleager’s Blue — Climatic Risk Atlas of European Butterflies",
+        "fr": "Azuré de l’orobe — Atlas européen du risque climatique pour les papillons"
+      },
+      "url": "https://pensoft.net/J_FILES/2/articles/568/3-3-Chapter-C-Lycaenidae-Riodinidae-Libytheidae.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The atlas describes hindwing scalloping, one generation per year and ant attendance."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 12,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Azuré de l’orobe — Conservatoire d’espaces naturels de Provence-Alpes-Côte d’Azur",
+        "fr": "Azuré de l’orobe — Conservatoire d’espaces naturels de Provence-Alpes-Côte d’Azur"
+      },
+      "url": "https://ns340113.ip-5-196-79.eu/index.php?cd_nom=219766&pag=3_12_5especes&rub=3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The French regional record lists a Mediterranean-Asian range and dry, warm woodland edges; no conservation category is given."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 18,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polyommatus daphnis — Lepinet, French butterfly species account",
+        "fr": "Polyommatus daphnis — fiche espèce Lepinet"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=31390",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The French butterfly account lists Astragalus and Coronilla as caterpillar host plants."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 12,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Polyommatus daphnis — population study, Ecology and Evolution (PMC)",
+        "fr": "Polyommatus daphnis — étude de population, Ecology and Evolution (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7316833/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The study reports nectar plants, overwintering as an egg or early larva, and high densities near a larval host plant."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 20,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The overwintering stage varies across the range; sources report egg or early larva.",
+    "The habitat and elevation descriptions are regional rather than a complete range-wide synthesis."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-checked English research and European atlas material with French regional butterfly sources."
+}

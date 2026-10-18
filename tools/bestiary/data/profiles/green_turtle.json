@@ -1,0 +1,564 @@
+{
+  "id": "green_turtle",
+  "scientific": "Chelonia mydas",
+  "group": "reptiles",
+  "name": {
+    "en": "Green sea turtle",
+    "fr": "Tortue verte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The green sea turtle is a marine reptile of tropical and subtropical waters in the Atlantic, Pacific and Indian oceans, and the Mediterranean. It is the largest hard-shelled sea turtle, moving through open-ocean juvenile habitat, coastal feeding grounds and sandy nesting beaches as it grows. Adults breathe air and migrate between feeding and breeding areas. The name “green” refers to the colour of some body fat, not the shell.",
+      "fr": "La tortue verte est un reptile marin des eaux tropicales et subtropicales de l’Atlantique, du Pacifique et de l’océan Indien, ainsi que de la Méditerranée. C’est la plus grande tortue marine à carapace dure ; au fil de sa croissance, elle passe du large aux aires côtières d’alimentation et aux plages sableuses de ponte. Les adultes respirent de l’air et migrent entre les zones où ils se nourrissent et se reproduisent. Le nom « verte » désigne la couleur de certaines graisses, et non celle de la carapace."
+    },
+    "identification": {
+      "en": "The smooth, oval carapace is usually brown, olive or mottled, above a pale plastron; hatchlings are dark above and pale below. A small rounded head, one pair of scales between the eyes and four pairs of costal scutes distinguish it from other hard-shelled sea turtles. Broad foreflippers provide propulsion, while hind flippers steer and help females dig nests. A typical adult has a straight carapace length near one metre and weighs about 150 kilograms, though sizes vary among populations. Mature males have longer tails and larger foreflipper claws than females.",
+      "fr": "La carapace lisse et ovale est généralement brune, olive ou marbrée, au-dessus d’un plastron pâle ; les nouveau-nés sont sombres dessus et clairs dessous. Une petite tête arrondie, une paire d’écailles entre les yeux et quatre paires d’écailles costales la distinguent des autres tortues marines à carapace dure. Les larges nageoires antérieures assurent la propulsion ; les postérieures servent à se diriger et aident les femelles à creuser leur nid. Un adulte typique a une longueur droite de carapace proche d’un mètre et pèse environ 150 kilogrammes, mais la taille varie selon les populations. Les mâles adultes ont une queue plus longue et des griffes antérieures plus grandes que les femelles."
+    },
+    "habitat": {
+      "en": "Adults and larger juveniles use shallow bays, lagoons and reef-fringed shores, especially where seagrass or algae are abundant. Hatchlings swim offshore and spend several years in open water, often among floating seaweed, before many settle into coastal feeding habitat; the timing varies among populations.",
+      "fr": "Les adultes et les grands juvéniles fréquentent les baies peu profondes, les lagunes et les côtes bordées de récifs, surtout là où herbiers et algues abondent. Les nouveau-nés gagnent le large et passent plusieurs années en mer ouverte, souvent parmi les algues flottantes, avant que beaucoup ne s’installent dans des zones côtières d’alimentation ; cette durée varie selon les populations."
+    },
+    "diet": {
+      "en": "Diet changes with age: hatchlings and small oceanic juveniles take both animal and plant matter, while many older turtles graze algae and seagrass. Adults crop leaves with a keratin-covered beak and are predominantly herbivorous, though local menus vary. Microbes in the caecum and colon ferment fibrous plants, helping extract nutrients from bulky, low-energy food.",
+      "fr": "Le régime évolue avec l’âge : les nouveau-nés et les petits juvéniles océaniques consomment des matières animales et végétales, tandis que beaucoup de tortues plus âgées broutent algues et herbiers. Les adultes coupent les feuilles avec un bec corné et sont principalement herbivores, même si le menu varie localement. Des microbes du cæcum et du côlon fermentent les végétaux fibreux, aidant à tirer des nutriments d’une nourriture volumineuse et peu énergétique."
+    },
+    "behavior": {
+      "en": "In a St Croix study, juvenile green turtles usually foraged alone, though groups of up to three were seen. Biologgers on free-ranging juveniles in the Lesser Antilles recorded underwater rumbles during rest and grunts near other turtles; these sounds may serve social or warning roles, but their meanings remain untested. Experiments show that green turtles can use magnetic cues as a map for open-sea navigation.",
+      "fr": "Dans une étude menée à Sainte-Croix, les tortues vertes juvéniles s’alimentaient généralement seules, même si des groupes de trois individus au plus ont été observés. Des balises posées sur des juvéniles libres des Petites Antilles ont enregistré des grondements au repos et des grognements près d’autres tortues ; ces sons pourraient servir aux interactions sociales ou à l’alerte, mais leur fonction n’est pas démontrée. Des expériences montrent que la tortue verte utilise des repères magnétiques comme carte pour s’orienter en haute mer."
+    },
+    "reproduction": {
+      "en": "Females mature late, often around 25–35 years, and adults return to breeding areas every few years. A female lays several clutches, commonly about two weeks apart, in sand chambers dug with her hind flippers; clutch size varies around a regional average near 100 eggs. Eggs incubate for roughly two months. Warmer nests tend to produce more females. Hatchlings emerge together and crawl toward the sea, where exhaustion and predators make their first journey dangerous.",
+      "fr": "Les femelles atteignent tardivement la maturité, souvent vers 25 à 35 ans, et les adultes reviennent aux aires de reproduction tous les quelques ans. Une femelle pond plusieurs fois, souvent à environ deux semaines d’intervalle, dans des chambres creusées dans le sable avec ses nageoires postérieures ; le nombre d’œufs varie autour d’une moyenne régionale proche de 100. Les œufs incubent environ deux mois. Les nids plus chauds tendent à produire davantage de femelles. Les jeunes émergent ensemble et rampent vers la mer, où épuisement et prédateurs rendent leur premier trajet dangereux."
+    },
+    "ecology": {
+      "en": "As a large herbivore, the green turtle links coastal plant production to marine food webs. Grazing trims seagrass and can create short, repeatedly cropped patches, sometimes encouraging fresh growth. Results depend on local plants and turtle density: a Great Barrier Reef experiment found an intense grazing patch at one site. Work in Lakshadweep documented seagrass decline under concentrated grazing, showing that turtle feeding can also damage habitat. Grazing can shape coastal habitats locally; turtles depend on their sustained productivity.",
+      "fr": "Grand herbivore, la tortue verte relie la production végétale côtière aux réseaux alimentaires marins. Son broutage taille les herbiers et peut créer des clairières entretenues, parfois favorables aux nouvelles pousses. Les effets dépendent des plantes et de la densité locale : une expérience sur la Grande Barrière de corail a révélé un broutage intense sur un site. Une étude aux Laquedives a documenté le recul des herbiers sous une pression concentrée, montrant que l’alimentation des tortues peut aussi dégrader l’habitat. Le broutage peut façonner localement les habitats côtiers ; la tortue dépend de leur productivité durable."
+    },
+    "conservation": {
+      "en": "The IUCN Red List now classifies the global species as Least Concern in 2025, replacing its 2004 global Endangered assessment. Regional populations remain uneven: the Central South Pacific is Endangered, the East Pacific and North Indian Ocean subpopulations are Vulnerable, and the Mediterranean Near Threatened. Overharvest of eggs, nesting females and feeding turtles, bycatch and habitat degradation have long reduced populations. Today, coastal development, vessel strikes, debris and disease remain pressures; hotter sand can skew hatchling sex ratios, while storms threaten nests. At southern Gulf of Mexico nesting sites, long-term protection and monitoring accompanied rising green turtle nest counts.",
+      "fr": "La Liste rouge de l’UICN classe désormais l’espèce dans son ensemble en catégorie « Préoccupation mineure » en 2025, après l’évaluation mondiale « En danger » de 2004. Les populations régionales restent inégales : celle du Pacifique Sud central est « En danger », celles du Pacifique oriental et du nord de l’océan Indien « Vulnérables », et celle de Méditerranée « Quasi menacée ». La surexploitation des œufs, des femelles nicheuses et des tortues en alimentation, les prises accidentelles et la dégradation des habitats ont longtemps fait baisser les populations. Aujourd’hui, aménagement côtier, collisions, déchets et maladies restent des pressions ; le sable plus chaud peut déséquilibrer le sex-ratio, et les tempêtes menacent les nids. Dans les sites de ponte du sud du golfe du Mexique, protection et suivi à long terme ont accompagné l’augmentation des nids de tortues vertes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Green Turtle — NOAA Fisheries",
+        "fr": "Tortue verte — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/green-turtle?page=0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "identification"
+      ],
+      "facts": [
+        "Adults: 0.9–1.2 m long, 136–159 kg; males have longer tails and larger foreflipper claws."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 14,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA Fisheries — Green Turtle science profile",
+        "fr": "NOAA Fisheries — Données scientifiques sur la tortue verte"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/green-turtle/science?page=0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Fat colour, herbivory and age-related feeding shift."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 7,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA — Sea turtles: marine life and nesting",
+        "fr": "NOAA — Tortues marines : milieu et nidification"
+      },
+      "url": "https://www.noaa.gov/education/resource-collections/marine-life/sea-turtles",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Air breathing, flipper propulsion and hatchling journey."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 7,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. Fish and Wildlife Service — Green Sea Turtle",
+        "fr": "U.S. Fish and Wildlife Service — Tortue verte"
+      },
+      "url": "https://www.fws.gov/species/green-sea-turtle-chelonia-mydas",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Shell colours, body shape and hatchling appearance."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 7,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA — Sea Turtles identification guide",
+        "fr": "NOAA — Guide d’identification des tortues marines"
+      },
+      "url": "https://www.aoml.noaa.gov/general/graphics/lib/turtles.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "One prefrontal pair and four costal scute pairs."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 8,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA Marine Turtle Species Guide — Green Sea Turtle",
+        "fr": "Guide NOAA des tortues marines — Tortue verte"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/35695/noaa_35695_DS1.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Adult mean near one metre straight carapace length and 150 kilograms."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 11,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. Fish and Wildlife Service — Green turtle biology and conservation",
+        "fr": "U.S. Fish and Wildlife Service — Biologie et conservation de la tortue verte"
+      },
+      "url": "https://www.fws.gov/sites/default/files/documents/2024-04/1777.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Males have longer tails and foreflipper claws than females."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 9,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hawaiian green turtle gastrointestinal microbiota study",
+        "fr": "Étude du microbiote digestif des tortues vertes hawaïennes"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7160772/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Hindgut microbes ferment plant fibre in caecum and colon."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 9,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ogden et al. — Juvenile green turtle foraging at St Croix",
+        "fr": "Ogden et al. — Alimentation des tortues vertes juvéniles à Sainte-Croix"
+      },
+      "url": "https://digitalcommons.usf.edu/bin_facpub/399/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Study observed usually solitary foraging and groups up to three."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 10,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Maucourt et al. (2025) — Underwater sounds of juvenile green turtles",
+        "fr": "Maucourt et al. (2025) — Sons sous-marins des tortues vertes juvéniles"
+      },
+      "url": "https://link.springer.com/article/10.1007/s00265-025-03561-z",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Biologgers recorded sound contexts in Lesser Antilles juveniles."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 8,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lohmann et al. — Geomagnetic map in green turtle navigation",
+        "fr": "Lohmann et al. — Carte géomagnétique et orientation de la tortue verte"
+      },
+      "url": "https://www.nature.com/articles/428909a",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Experiments support geomagnetic-map navigation in green turtles."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 7,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA — Green turtle nesting ecology in the Northern Mariana Islands",
+        "fr": "NOAA — Écologie de la nidification de la tortue verte aux Mariannes du Nord"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/58380",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Mariana field study measured clutch size and nesting intervals."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 9,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA Ocean Service — Sea turtle incubation and hatchling orientation",
+        "fr": "NOAA Ocean Service — Incubation et orientation des nouveau-nés"
+      },
+      "url": "https://oceanservice.noaa.gov/facts/turtle-hatch.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "About two-month incubation and hatchlings’ seaward crawl."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 7,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kelkar et al. — Green turtle grazing in a Great Barrier Reef meadow",
+        "fr": "Kelkar et al. — Broutage dans un herbier de la Grande Barrière de corail"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33065522/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Green Island experiment documented a localized grazing plot."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.5",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 8,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kelkar et al. — Seagrass loss under green turtle grazing in Lakshadweep",
+        "fr": "Kelkar et al. — Recul des herbiers broutés aux Laquedives"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0006320721002470",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Concentrated grazing reduced seagrass and associated functions."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 7,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Chelonia mydas assessment record",
+        "fr": "Liste rouge de l’UICN — Évaluation de Chelonia mydas"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2004.RLTS.T4615A11037468.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2004 Endangered assessment documents historic exploitation and habitat threats."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 9,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN SSC Marine Turtle Specialist Group — Red List assessments",
+        "fr": "Groupe de spécialistes des tortues marines de l’UICN — Liste rouge"
+      },
+      "url": "https://www.iucn-mtsg.org/statuses",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Regional green turtle categories differ across ocean populations."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 8,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Long-term protection and green turtle nesting in the southern Gulf of Mexico",
+        "fr": "Protection à long terme et nidification des tortues vertes dans le sud du golfe du Mexique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9739169/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Thirty-one-year monitoring linked protection with rising nest counts."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 8,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA Ocean Service — Temperature-dependent sex determination",
+        "fr": "NOAA Ocean Service — Détermination du sexe selon la température"
+      },
+      "url": "https://oceanservice.noaa.gov/facts/temperature-dependent.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Warmer nest temperatures generally produce a higher female ratio."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 9,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show one adult Chelonia mydas swimming in a three-quarter side view. Use a smooth oval brown-to-olive carapace with four pairs of costal scutes, small rounded head, one pair of prefrontal scales, pale plastron, and broad paddle-like front flippers. Do not give it the hawksbill’s hooked beak or overlapping shell scutes. Sex unspecified; avoid exaggerated size. PURE WHITE background (#FFFFFF), no water, seabed, text, border or watermark.",
+  "uncertainties": [
+    "Adult mass and carapace length vary by population, sex, age and measurement convention; the cited adult interval is indicative, not a species-wide boundary.",
+    "The length of the oceanic juvenile stage and age at recruitment to coastal feeding grounds are incompletely observed and vary among populations.",
+    "Underwater sound functions are preliminary: the 2025 study reports behavioural associations, not experimentally confirmed meanings.",
+    "The IUCN specialist-group status page reports the 2025 global category and regional subpopulation categories; the legacy species record retains its 2004 assessment text."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique confirms life stages, anatomy and 2025 global and regional statuses; North Indian Ocean geographic translation corrected and local grazing effects qualified. Principal reviewed text and original illustration."
+}

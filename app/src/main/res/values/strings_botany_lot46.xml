@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_family_unknown">Unknown family</string>
+    <string name="bot_family_unknown_desc">The family for this entry has not yet been recorded.</string>
+
+    <string name="bot_chamaecrista_aldabrensis_name">Aldabra cassia</string><string name="bot_chamaecrista_aldabrensis_latin" translatable="false">Chamaecrista aldabrensis</string><string name="bot_chamaecrista_aldabrensis_aliases">Cassia aldabrensis</string>
+    <string name="bot_chamaecrista_aldabrensis_description">A low, spreading perennial subshrub of the Aldabra islands, with slender stems woody at the base and fine puberulence. Its short leaves carry 3–9 pairs of minute, oblong leaflets, each asymmetric about its midrib; a small sessile gland may occur near the basal pair. The extra-axillary inflorescence usually bears one small yellow flower. Hairy pods are about 2–2.5 cm long. The tree index uses the older name Cassia aldabrensis; Kew accepts Chamaecrista aldabrensis.</string>
+    <string name="bot_chamaecrista_aldabrensis_distribution">Recorded on Aldabra and Assumption in the Seychelles; the specialist Seychelles flora describes it as presumed endemic to Aldabra, while a recent flora also records it on Assumption.</string>
+    <string name="bot_chamaecrista_aldabrensis_habit">A 15–40 cm, low, spreading perennial subshrub; older stems become woody at the base.</string>
+    <string name="bot_chamaecrista_aldabrensis_leaf">Leaves only 1–1.5 cm long, with 3–9 pairs of oblong leaflets about 3 × 0.8 mm; the leaflets are asymmetric and the rachis often has a sessile gland beside the basal pair.</string>
+    <string name="bot_chamaecrista_aldabrensis_flower">Usually one extra-axillary flower; its five unequal petals are yellow and about 5–6 mm long.</string>
+    <string name="bot_chamaecrista_aldabrensis_fruit">A puberulent, dehiscent pod about 2–2.5 cm long; the small seeds bear aligned dark markings.</string>
+    <string name="bot_chamaecrista_aldabrensis_phenology">The checked flora gives no transferable flowering or fruiting calendar.</string>
+
+    <string name="bot_aglaia_archboldiana_name">Archbold’s aglaia</string><string name="bot_aglaia_archboldiana_latin" translatable="false">Aglaia archboldiana</string><string name="bot_aglaia_archboldiana_aliases">Aglaia archboldiana</string>
+    <string name="bot_aglaia_archboldiana_description">A slender forest tree of Viti Levu, Fiji, recorded from near sea level to about 970 m and reaching roughly 10 m. A.C. Smith described a light-brown indument on young parts and exceptionally large compound leaves, which help distinguish it from its closest relative, A. parksii. The original author later corrected his description of the petals: the outer petals have sparse hairs near their base. The consulted species account does not establish mature fruit characters or flower colour.</string>
+    <string name="bot_aglaia_archboldiana_distribution">Known from Viti Levu, Fiji; collections are from dense forest over a broad elevational range.</string>
+    <string name="bot_aglaia_archboldiana_habit">A slender forest tree, reported up to about 10 m, with light-brown hairs on young growth.</string>
+    <string name="bot_aglaia_archboldiana_leaf">Very large pinnate leaves; the species account emphasizes their size, while detailed leaflet measurements are not supplied here.</string>
+    <string name="bot_aglaia_archboldiana_flower">The outer petals bear sparse hairs toward their bases. The checked species description does not confirm corolla colour; the pale tone in the plate is illustrative.</string>
+    <string name="bot_aglaia_archboldiana_fruit">Mature fruit characters were not established in the sources consulted, so no diagnostic fruit appearance is claimed.</string>
+    <string name="bot_aglaia_archboldiana_phenology">The consulted type-based account does not provide a reliable flowering or fruiting calendar.</string>
+
+    <string name="bot_syzygium_phaeophyllum_name">Taveuni brown-leaf syzygium</string><string name="bot_syzygium_phaeophyllum_latin" translatable="false">Syzygium phaeophyllum</string><string name="bot_syzygium_phaeophyllum_aliases">Eugenia durifolia; Syzygium durifolium (illegitimate later homonym)</string>
+    <string name="bot_syzygium_phaeophyllum_description">A very poorly known evergreen tree endemic to Taveuni, Fiji, represented by early twentieth-century collections from dense forest near Somosomo. The recorded tree reached about 6 m and had smooth bark and stiff, cylindrical brown twigs. Its leathery elliptic leaves measure about 6–8 × 2.5–4 cm, taper slightly at the base and end in an acuminate tip; the flattened petiole is 6–10 mm long. Flower and fruit details are not secure in the sources consulted. Kew accepts the 1945 name Syzygium phaeophyllum; a later homonymous combination is not the accepted name.</string>
+    <string name="bot_syzygium_phaeophyllum_distribution">Known from Taveuni, Fiji, in wet tropical forest; the type was collected at roughly 700–900 m east of Somosomo.</string>
+    <string name="bot_syzygium_phaeophyllum_habit">An evergreen tree recorded to about 6 m, with smooth bark and stiff, round brown twigs.</string>
+    <string name="bot_syzygium_phaeophyllum_leaf">Leathery elliptic blades about 6–8 × 2.5–4 cm; base slightly narrowed, apex acuminate, petiole flattened and 6–10 mm long.</string>
+    <string name="bot_syzygium_phaeophyllum_flower">Species-specific flower form and colour are not confirmed by the checked records; the plate therefore uses foliage only.</string>
+    <string name="bot_syzygium_phaeophyllum_fruit">Species-specific fruit form and colour are not confirmed by the checked records.</string>
+    <string name="bot_syzygium_phaeophyllum_phenology">The available collections do not support a reliable annual phenology calendar.</string>
+
+    <string name="bot_erythrina_atitlanensis_name">Lake Atitlán coral tree</string><string name="bot_erythrina_atitlanensis_latin" translatable="false">Erythrina atitlanensis</string><string name="bot_erythrina_atitlanensis_aliases">Erythrina atitlanensis</string>
+    <string name="bot_erythrina_atitlanensis_description">A deciduous Guatemalan tree described from flowering material collected above San Juan La Laguna, Lake Atitlán, at about 1,585 m. Like other Erythrina, it bears alternate, three-foliolate leaves and showy papilionoid flowers; the genus has prickles on some petioles or branches and usually red-to-orange corollas. Species-level field data remain sparse, so the exact wild stature, detailed leaflet measurements and fruit characters should be treated cautiously. The red flower shown agrees with documented cultivated flowering but is not a measurement from the type.</string>
+    <string name="bot_erythrina_atitlanensis_distribution">Known from Guatemala around Lake Atitlán; the cited isotype records flowering in February at about 1,585 m.</string>
+    <string name="bot_erythrina_atitlanensis_habit">A deciduous tree; cultivated references report roughly 6–12 m, but the consulted type record does not give a measured height.</string>
+    <string name="bot_erythrina_atitlanensis_leaf">Alternate leaves divided into three leaflets; the terminal leaflet is commonly the largest in the genus. Petioles and young branches can bear prickles.</string>
+    <string name="bot_erythrina_atitlanensis_flower">Showy red papilionoid flowers in an upright raceme, consistent with cultivated records and the usual floral form of Erythrina.</string>
+    <string name="bot_erythrina_atitlanensis_fruit">As a legume, it produces a pod; species-specific pod shape, size and seed details were not confirmed in the sources consulted.</string>
+    <string name="bot_erythrina_atitlanensis_phenology">The isotype is flowering in February; this single collection does not establish the full seasonal calendar.</string>
+
+    <string name="bot_pierrebraunia_bahiensis_name">Bahia pink cactus</string><string name="bot_pierrebraunia_bahiensis_latin" translatable="false">Pierrebraunia bahiensis</string><string name="bot_pierrebraunia_bahiensis_aliases">Arrojadoa bahiensis; Floribunda bahiensis</string>
+    <string name="bot_pierrebraunia_bahiensis_description">A compact succulent subshrub endemic to Bahia, Brazil, on rocky, seasonally dry ground. Young shoots are nearly spherical; mature stems are short cylindrical to columnar, often branching at or below the base, commonly around 30 cm but occasionally much taller. The green to grey-green stems carry 9–14(–17) rounded ribs, initially woolly areoles, one central spine and several radial spines. Pink narrow tubular flowers open at night; pink naked berries contain black seeds. POWO accepts Pierrebraunia bahiensis, while some cactus classifications have treated it as Arrojadoa.</string>
+    <string name="bot_pierrebraunia_bahiensis_distribution">Endemic to Bahia, northeastern Brazil, especially rocky quartzitic and sandstone sites in the Chapada Diamantina.</string>
+    <string name="bot_pierrebraunia_bahiensis_habit">A low succulent subshrub, usually around 30 cm tall; older plants may branch at the base and occasionally exceed 60 cm.</string>
+    <string name="bot_pierrebraunia_bahiensis_leaf">True leaves are reduced; the visible armature is made of woolly areoles on 9–14 rounded ribs, each bearing a central spine and several radial spines.</string>
+    <string name="bot_pierrebraunia_bahiensis_flower">Narrow tubular pink flowers, about 3.2–3.9 cm long, arise near the upper stem and open at night; inner perianth parts are white.</string>
+    <string name="bot_pierrebraunia_bahiensis_fruit">A naked pink berry, roughly 1–3 cm across, with white pulp and small black seeds.</string>
+    <string name="bot_pierrebraunia_bahiensis_phenology">No reliable wild flowering or fruiting calendar was found in the checked specialist sources.</string>
+
+    <string name="bot_rauhocereus_riosaniensis_name">Ríos-Saña cactus</string><string name="bot_rauhocereus_riosaniensis_latin" translatable="false">Rauhocereus riosaniensis</string><string name="bot_rauhocereus_riosaniensis_aliases">Browningia riosaniensis</string>
+    <string name="bot_rauhocereus_riosaniensis_description">A large branching columnar cactus of northern Peru, usually branching from the base and forming dense stands. Its bluish-green shoots are roughly 8–15 cm thick; 5–6 longitudinal ribs are divided by transverse grooves into flattened tubercles. Woolly areoles carry a few strong spines, sometimes up to about 5 cm. Large funnel-shaped white flowers open at night; their scaly tube bears curly brown hairs. The fleshy ovoid fruit is dark red, with a persistent flower remnant and shiny black seeds.</string>
+    <string name="bot_rauhocereus_riosaniensis_distribution">Northern Peru, including the Saña, Chamaya and Jaén valleys; dry scrub and river-valley settings.</string>
+    <string name="bot_rauhocereus_riosaniensis_habit">A shrubby columnar cactus branching from a thick trunk or from the base; plants may reach about 4 m.</string>
+    <string name="bot_rauhocereus_riosaniensis_leaf">Leaves are absent; the diagnostic surface has 5–6 wavy ribs broken into flattened tubercles, with woolly areoles and 2–8 robust spines.</string>
+    <string name="bot_rauhocereus_riosaniensis_flower">Large white bell-to-funnel flowers, about 8–10 cm long, open at night; brown curled hairs sit in the axils of the scales on the flower tube.</string>
+    <string name="bot_rauhocereus_riosaniensis_fruit">A red fleshy ovoid berry with a persistent dry flower remnant and small shiny black seeds.</string>
+    <string name="bot_rauhocereus_riosaniensis_phenology">Flowers open at night; the consulted flora does not establish a reliable month-by-month calendar.</string>
+</resources>

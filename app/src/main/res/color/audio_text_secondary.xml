@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Theme-aware compatibility resource for existing XML and Context.getColor callers. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/a2uSecondaryTextColor" />
+</selector>

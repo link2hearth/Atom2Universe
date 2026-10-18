@@ -1,0 +1,118 @@
+{
+  "id": "sorubim_trigonocephalus",
+  "scientific": "Sorubim trigonocephalus",
+  "group": "fish",
+  "name": {
+    "en": "Arrowhead shovelnose catfish",
+    "fr": "Sorubim trigonocephalus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American pimelodid catfish is known from Amazon tributaries in Brazil.",
+      "fr": "Ce silure pimelodidé sud-américain est connu de tributaires amazoniens au Brésil."
+    },
+    "identification": {
+      "en": "Its head is conspicuously triangular or arrowhead-shaped in top and underside views.",
+      "fr": "Sa tête est nettement triangulaire ou en forme de pointe de flèche vue de dessus ou de dessous."
+    },
+    "habitat": {
+      "en": "It is a freshwater, bottom-dwelling fish.",
+      "fr": "C’est un poisson d’eau douce vivant près du fond."
+    },
+    "diet": {
+      "en": "The references consulted do not provide a species-specific diet account.",
+      "fr": "Les références consultées ne donnent pas de description propre de son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Detailed activity and social behaviour are not reported in the sources consulted.",
+      "fr": "Les sources consultées ne décrivent pas en détail son activité ni son comportement social."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide no species-specific breeding details.",
+      "fr": "Les sources consultées ne fournissent pas de détails propres à sa reproduction."
+    },
+    "ecology": {
+      "en": "It resembles S. lima in body shape, but its triangular head is distinctive; few museum specimens are known.",
+      "fr": "Il ressemble à S. lima par la forme du corps, mais sa tête triangulaire le distingue ; peu de spécimens sont conservés en musée."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2018.",
+      "fr": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sorubim trigonocephalus — FishBase",
+        "fr": "Sorubim trigonocephalus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48578",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports a freshwater demersal fish from Brazil, with a triangular or arrowhead head profile, sparse biological details and a Least Concern assessment dated 2018."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 25,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Systematic review of the genus Sorubim — Zootaxa",
+        "fr": "Révision systématique du genre Sorubim — Zootaxa"
+      },
+      "url": "https://mapress.com/zootaxa/article/view/zootaxa.1422.1.1",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The genus review says S. trigonocephalus resembles S. lima in body shape, has a distinct arrowhead-like snout, and is rare in collections."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 22,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The taxonomic review describes very limited collection records; natural history remains poorly known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

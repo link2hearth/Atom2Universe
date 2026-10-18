@@ -1,0 +1,17 @@
+{
+  "id": 3000,
+  "name": "coal",
+  "texture_top": "cozy:ore:3:929EAA:2C2C2C",
+  "texture_side": "cozy:ore:3:929EAA:2C2C2C",
+  "texture_bottom": "cozy:ore:3:929EAA:2C2C2C",
+  "color": "#2C2C2C",
+  "hardness": 3.5,
+  "drop": "raw_coal",
+  "harvest_category": "ore",
+  "creative_tab": "ores",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "ore"
+  ]
+}

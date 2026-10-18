@@ -1,0 +1,138 @@
+{
+  "id": "empis_opaca",
+  "scientific": "Empis opaca",
+  "group": "invertebrates",
+  "name": {
+    "en": "Empis opaca dance fly",
+    "fr": "Empis opaca, mouche danseuse"
+  },
+  "sections": {
+    "overview": {
+      "en": "Empis opaca is a European dance fly in the family Empididae and genus Empis.",
+      "fr": "Empis opaca est une mouche danseuse européenne de la famille Empididae et du genre Empis."
+    },
+    "identification": {
+      "en": "Adults are about six to ten millimetres long, with reddish legs and four dark thoracic stripes that distinguish them from Empis livida.",
+      "fr": "Les adultes mesurent environ six à dix millimètres; leurs pattes rougeâtres et quatre bandes thoraciques sombres les distinguent d’Empis livida."
+    },
+    "habitat": {
+      "en": "It is reported along hedgerows and woodland edges and occurs in cooler parts of Europe.",
+      "fr": "Elle est signalée le long des haies et en lisière de forêt, et vit dans les régions plus fraîches d’Europe."
+    },
+    "diet": {
+      "en": "Adults prey on other insects and also take nectar from flowers.",
+      "fr": "Les adultes chassent d’autres insectes et prennent aussi du nectar sur les fleurs."
+    },
+    "behavior": {
+      "en": "Males may present a dead insect as a nuptial gift, which the female eats during mating.",
+      "fr": "Le mâle peut offrir un insecte mort comme cadeau nuptial, que la femelle mange pendant l’accouplement."
+    },
+    "reproduction": {
+      "en": "Field accounts report that females may reject males without a prey gift; egg and larval biology remain poorly documented in the sources used.",
+      "fr": "Les observations indiquent que les femelles peuvent refuser les mâles sans cadeau alimentaire; les sources utilisées documentent peu les œufs et les larves."
+    },
+    "ecology": {
+      "en": "It is mainly recorded from April to early June, and its spring adults hunt insects and visit flowers.",
+      "fr": "Elle est surtout observée d’avril au début juin; les adultes printaniers chassent des insectes et visitent les fleurs."
+    },
+    "conservation": {
+      "en": "NatureSpot describes it as fairly common in England and Wales, with fewer records from Scotland, but this is not a Europe-wide trend assessment.",
+      "fr": "NatureSpot la décrit comme assez commune en Angleterre et au pays de Galles, avec moins d’observations en Écosse, sans évaluer la tendance européenne."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Empis opaca — NatureSpot",
+        "fr": "Empis opaca — NatureSpot"
+      },
+      "url": "https://www.naturespot.org/species/empis-opaca",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species natural history and records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 5,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphology, biology, phenology and occurrence of Empis in Poland",
+        "fr": "Morphologie, biologie, phénologie et occurrence d’Empis en Pologne"
+      },
+      "url": "https://rcin.org.pl/Content/51351/PDF/WA058_61096_P256-T49_Fragm-Faun-Nr-1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The European study places E. opaca in cooler Europe and reports spring records from April to early June."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 18,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Empis opaca — Muséum national d’Histoire naturelle",
+        "fr": "Empis opaca — Muséum national d’Histoire naturelle"
+      },
+      "url": "https://science.mnhn.fr/taxon/species/empis/opaca",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "MNHN recognizes Empis opaca as a species within the genus Empis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 11,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,188 @@
+{
+  "id": "charadrius_dubius",
+  "scientific": "Charadrius dubius",
+  "group": "birds",
+  "name": {
+    "en": "Little Ringed Plover",
+    "fr": "Petit Gravelot"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Little Ringed Plover is a small Old World plover that breeds on open inland shores and winters mainly in Africa and the Mediterranean. The American Ornithological Society now places it in Thinornis, although European references still use Charadrius.",
+      "fr": "Le Petit Gravelot est un petit pluvier de l’Ancien Monde qui niche sur les rives continentales dégagées et hiverne surtout en Afrique et en Méditerranée. L’American Ornithological Society le classe désormais dans Thinornis, tandis que des références européennes conservent Charadrius."
+    },
+    "identification": {
+      "en": "It is smaller and more compact than the coastal Kentish Plover (C. alexandrinus); the breeding adult has a complete dark chest band and a bright yellow eye-ring, while C. alexandrinus has a broken band and no such ring.",
+      "fr": "Il est plus petit et plus trapu que le Gravelot à collier interrompu côtier (C. alexandrinus) ; l’adulte nuptial porte un collier sombre complet et un cercle oculaire jaune vif, absents ou interrompus chez C. alexandrinus."
+    },
+    "habitat": {
+      "en": "Its natural nesting sites are gravel bars, shingle islands and bare lake margins near fresh water; where these disappear, it also colonizes gravel pits, quarries and other sparsely vegetated disturbed ground.",
+      "fr": "Ses sites naturels de nidification sont les bancs de gravier, îlots de galets et rives nues près de l’eau douce ; lorsque ceux-ci disparaissent, il colonise aussi gravières, carrières et terrains perturbés peu végétalisés."
+    },
+    "diet": {
+      "en": "It picks small invertebrates from the ground or shallow water, including insects, worms and small crustaceans.",
+      "fr": "Il prélève de petits invertébrés au sol ou dans l’eau peu profonde, notamment des insectes, des vers et de petits crustacés."
+    },
+    "behavior": {
+      "en": "It often runs quickly, stops abruptly to pick prey, and may perform a distraction display by feigning injury to draw a threat away from its nest.",
+      "fr": "Il court souvent vite, s’arrête brusquement pour picorer et peut simuler une blessure afin d’éloigner un danger de son nid."
+    },
+    "reproduction": {
+      "en": "The nest is a shallow scrape among stones or bare substrate, where camouflaged eggs are laid; the female may lay a second clutch and the male can care for earlier chicks.",
+      "fr": "Le nid est une faible dépression parmi les cailloux ou sur un substrat nu, où les œufs sont camouflés ; la femelle peut pondre une seconde fois et le mâle prendre en charge les premiers poussins."
+    },
+    "ecology": {
+      "en": "Unlike C. alexandrinus, which is strongly associated with coasts and saline wetlands, this species is primarily inland and can exploit temporary gravel workings, although such substitutes remain vulnerable to disturbance and vegetation growth.",
+      "fr": "Contrairement à C. alexandrinus, lié aux côtes et zones humides salées, il vit surtout à l’intérieur des terres et peut exploiter les gravières temporaires, même si ces milieux de substitution restent sensibles au dérangement et à l’embroussaillement."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern, while local populations depend on maintaining open gravelly nesting patches and limiting disturbance during breeding.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en préoccupation mineure, tandis que les populations locales dépendent du maintien de grèves ouvertes et de la réduction des dérangements pendant la nidification."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Ringed Plover — French National Museum of Natural History habitat account",
+        "fr": "Petit Gravelot — Cahiers d’Habitat du Muséum national d’histoire naturelle"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Petit-gravelot.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "French national habitat account describes identification, inland habitats, migration, bare-ground nesting and invertebrate diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 14,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Little Ringed Plover — LPO Normandy",
+        "fr": "Petit Gravelot — LPO Normandie"
+      },
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/petit-gravelot/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "French bird conservation organization documents substitute gravel-pit habitat, diet, nesting, migration and local threats."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 14,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Little Ringed Plover — Convention on Migratory Species",
+        "fr": "Petit Gravelot — Convention sur les espèces migratrices"
+      },
+      "url": "https://www.cms.int/species/charadrius-dubius",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "CMS species page reports global IUCN status as Least Concern and provides country occurrence data."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 15,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Little Ringed Plover — British Trust for Ornithology",
+        "fr": "Petit Gravelot — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/little-ringed-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "BTO provides English species information and updated genus usage; older global taxonomy retains Charadrius."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 14,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "AOS Check-list: Thinornis dubius",
+        "fr": "Liste de l’AOS : Thinornis dubius"
+      },
+      "url": "https://checklist.americanornithology.org/taxa/383",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The American Ornithological Society checklist places the species in Thinornis and notes that it was formerly in Charadrius."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 18,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The MNHN and BirdLife/CMS sources retain Charadrius dubius; some newer bird checklists use Thinornis dubius. The conservation account distinguishes the global category from local breeding-site pressures."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked MNHN, LPO Normandy, CMS and BTO; contrasted its mostly inland habitat and complete eye-ring/collar with the Kentish Plover entry."
+}

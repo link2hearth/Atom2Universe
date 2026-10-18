@@ -1,0 +1,12 @@
+{
+  "id": 9916,
+  "name": "expedition_smg",
+  "texture_top": "expedition:9916:top",
+  "texture_side": "expedition:9916:side",
+  "texture_bottom": "expedition:9916:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_smg",
+  "creative_tab": "resources",
+  "placeable": false
+}

@@ -1,0 +1,18 @@
+{
+  "id": 3112,
+  "name": "string",
+  "texture_top": "cozy:resource:12:DCD5B8",
+  "texture_side": "cozy:resource:12:DCD5B8",
+  "texture_bottom": "cozy:resource:12:DCD5B8",
+  "color": "#DCD5B8",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "string",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

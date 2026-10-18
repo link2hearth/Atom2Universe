@@ -1,0 +1,119 @@
+{
+  "id": "scoliopteryx_libatrix",
+  "scientific": "Scoliopteryx libatrix",
+  "group": "invertebrates",
+  "name": {
+    "en": "Herald",
+    "fr": "Découpure"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scoliopteryx libatrix, the Herald, is an Erebidae moth whose adults overwinter.",
+      "fr": "Scoliopteryx libatrix, la Découpure, est un papillon de la famille des Erebidae dont les adultes hivernent."
+    },
+    "identification": {
+      "en": "Its orange-brown wings have pale markings and a scalloped outer edge.",
+      "fr": "Ses ailes brun orangé portent des marques pâles et un bord externe festonné."
+    },
+    "habitat": {
+      "en": "Larvae use willows (Salix) and poplars (Populus), while adults shelter in caves, cellars and other sheltered places.",
+      "fr": "Les chenilles vivent sur les saules (Salix) et les peupliers (Populus), tandis que les adultes s’abritent dans les grottes, caves et autres refuges."
+    },
+    "diet": {
+      "en": "Caterpillars feed on willow and poplar foliage.",
+      "fr": "Les chenilles se nourrissent du feuillage des saules et des peupliers."
+    },
+    "behavior": {
+      "en": "Adults overwinter, often in caves or buildings, and may be seen on the wing in both autumn and spring.",
+      "fr": "Les adultes hivernent, souvent dans des grottes ou des bâtiments, et peuvent être observés en vol à l’automne comme au printemps."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on willows and poplars; the caterpillars later pupate between leaves joined with silk.",
+      "fr": "Les femelles pondent sur les saules et les peupliers; les chenilles se nymphosent ensuite entre des feuilles réunies par de la soie."
+    },
+    "ecology": {
+      "en": "Its life cycle links damp, often wooded settings with sheltered winter roosts.",
+      "fr": "Son cycle de vie associe des milieux souvent boisés et humides à des refuges abrités pour l’hiver."
+    },
+    "conservation": {
+      "en": "The regional and species accounts consulted describe its biology and distribution but provide no global conservation assessment.",
+      "fr": "Les fiches régionales et spécifiques consultées décrivent sa biologie et sa répartition, sans fournir d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Herald — UKMoths",
+        "fr": "The Herald — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/scoliopteryx-libatrix/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths records adult overwintering and larval host plants."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 8,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La Découpure — Liste des espèces de papillons de nuit de Franche-Comté (OPIE/CBNFC-ORI)",
+        "fr": "La Découpure — Liste des espèces de papillons de nuit de Franche-Comté (OPIE/CBNFC-ORI)"
+      },
+      "url": "https://cbnfc-ori.org/sites/default/files/2024-03/Liste-especes-papillons-nuit-FrancheComte_V4_OPIE-FC-GPNFC_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French regional account classifies it in Erebidae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 8,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Distribution wording is kept broad because a single regional source does not establish the full global range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; no conservation status inferred from local occurrence records."
+}

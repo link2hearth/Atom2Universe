@@ -1,0 +1,211 @@
+{
+  "id": "anopheles_maculipennis",
+  "scientific": "Anopheles maculipennis",
+  "group": "invertebrates",
+  "name": {
+    "en": "European malaria mosquito",
+    "fr": "Anophèle à ailes tachetées"
+  },
+  "sections": {
+    "overview": {
+      "en": "Anopheles maculipennis is a European mosquito and the nominal member of its namesake complex. Its close relatives differ in host choice and malaria-vector importance; this species has a comparatively minor role.",
+      "fr": "Anopheles maculipennis est un moustique européen et l’espèce nominale du complexe qui porte son nom. Ses proches parentes diffèrent par leurs hôtes et leur rôle dans le paludisme; cette espèce a une importance vectorielle plutôt secondaire."
+    },
+    "identification": {
+      "en": "The grey-brown adult has dark wing scales grouped into spots and a pale terminal fringe patch. A taxonomic description reports a female wing about 5.1 mm long, not a body length. Male antennae are more feathery, but adult appearance cannot reliably separate this mosquito from its close relatives. Its eggs have darker crossbars than those of Anopheles messeae; egg examination or DNA is more reliable than adult appearance. No representative body length, height, width, mass, or comparable male and female measurements were located.",
+      "fr": "L’adulte gris-brun porte des écailles sombres groupées en taches sur les ailes et une zone pâle au bord terminal. Une description taxonomique donne une aile femelle d’environ 5,1 mm, et non une longueur corporelle. Les antennes du mâle sont plus plumeuses, mais l’adulte ne se distingue pas sûrement de ses proches parentes à l’œil. Ses œufs ont des barres transversales plus sombres que ceux d’Anopheles messeae; leur examen ou l’ADN est plus fiable que l’apparence adulte. Aucune longueur du corps, hauteur, largeur, masse ou mesure comparable entre les sexes n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Larvae use fresh water, often with algae or vegetation, including streams and irrigation channels where they tolerate more flow than some close relatives.",
+      "fr": "Les larves vivent en eau douce, souvent avec algues ou végétation, y compris dans les ruisseaux et canaux où elles tolèrent plus de courant que certaines parentes."
+    },
+    "diet": {
+      "en": "Females strongly prefer animal blood, particularly where livestock are present. They may bite people when mosquitoes are abundant or animal hosts scarce; some siblings are more human-oriented.",
+      "fr": "Les femelles préfèrent nettement le sang animal, surtout près du bétail. Elles peuvent piquer l’humain si les moustiques abondent ou si les hôtes animaux manquent; certaines espèces jumelles sont plus anthropophiles."
+    },
+    "behavior": {
+      "en": "Adults often rest in stables; winter dormancy varies, with feeding and egg-laying recorded in mild conditions but absent during colder periods.",
+      "fr": "Les adultes se reposent souvent dans les étables; leur dormance hivernale varie, des repas et pontes étant observés par temps doux mais absents par temps froid."
+    },
+    "reproduction": {
+      "en": "Females lay separate floating eggs on water; their bars help distinguish siblings. The aquatic larva and pupa develop before the winged adult emerges.",
+      "fr": "Les femelles pondent des œufs flottants, séparés, à la surface de l’eau; leurs bandes aident à distinguer les espèces jumelles. Larve et nymphe aquatiques précèdent l’adulte ailé."
+    },
+    "ecology": {
+      "en": "Close relatives include Anopheles atroparvus, Anopheles labranchiae and Anopheles messeae. Older records often used Anopheles maculipennis for this broader group, complicating comparisons of vector role and host choice.",
+      "fr": "Ses proches parentes comprennent Anopheles atroparvus, Anopheles labranchiae et Anopheles messeae. Les anciens textes appliquaient souvent le nom Anopheles maculipennis au groupe entier, ce qui complique les comparaisons de rôle vectoriel et d’hôtes."
+    },
+    "conservation": {
+      "en": "This species can contribute to malaria transmission, but its animal-focused feeding generally gives it a smaller vector role than some relatives.",
+      "fr": "Cette espèce peut contribuer à transmettre le paludisme, mais son alimentation animale réduit généralement son rôle par rapport à certaines parentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Morphological and molecular characterization of Anopheles maculipennis — Systematic Entomology",
+        "fr": "Caractérisation morphologique et moléculaire d’Anopheles maculipennis — Systematic Entomology"
+      },
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-3113.2003.00198.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed adult, egg, larval and pupal description; wing, scale, egg and molecular-identification details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 13,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Occurrence and bionomics of potential malaria vectors in Europe — systematic review",
+        "fr": "Présence et biologie des vecteurs potentiels du paludisme en Europe — revue systématique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8922938/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Review of European records through 2021, including breeding sites, host preference, resting and overwintering."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 14,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anopheles maculipennis s.s. — Les moustiques d’Europe, IRD identification guide",
+        "fr": "Anopheles maculipennis s.s. — Les moustiques d’Europe, identiciel de l’IRD"
+      },
+      "url": "https://bioinfo-web.mpl.ird.fr/identiciels/culeurope/html/taxa/An_maculipennis_s_s_L_.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "French identification guide states that egg ornamentation is the most reliable morphological clue."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Malaria in Spain: entomological aspects and future outlook — Spanish Journal of Public Health",
+        "fr": "Paludisme en Espagne : aspects entomologiques et perspectives — Revista Española de Salud Pública"
+      },
+      "url": "https://scielo.isciii.es/scielo.php?pid=s1135-57272008000500003&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language review describes historical taxonomic confusion and animal preference in the nominal form."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 13,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anopheles mosquito life cycle — US Centers for Disease Control and Prevention (Spanish edition)",
+        "fr": "Cycle de vie des moustiques Anopheles — Centers for Disease Control and Prevention (édition espagnole)"
+      },
+      "url": "https://www.cdc.gov/mosquitoes/es/about-mosquito-bites/ciclo-de-vida-de-los-mosquitos-anopheles.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish CDC page illustrates the generic aquatic stages of Anopheles mosquitoes."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 11,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a slender grey-brown anopheline mosquito at an oblique resting angle, with dark clusters of wing scales and a pale spot near the wing tip. Add an inset of a barred egg and note that adult appearance alone does not securely separate members of the Maculipennis complex.",
+  "uncertainties": [
+    "The historic name Anopheles maculipennis was often applied to the broader sibling-species complex; this profile concerns the narrow species concept unless otherwise noted.",
+    "The 5.1 mm value is a female wing measurement from a taxonomic description, not body length or a sex-comparison study. No reliable height, width, mass or comparable male measurement was located.",
+    "The sources reviewed do not provide a formal conservation assessment for Anopheles maculipennis sensu stricto."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked a peer-reviewed morphology and molecular study, a systematic review of European ecology, a French IRD identification guide, and a Spanish public-health review; kept present taxonomy separate from historical broad usage of the species name."
+}

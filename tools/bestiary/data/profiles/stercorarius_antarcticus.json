@@ -1,0 +1,119 @@
+{
+  "id": "stercorarius_antarcticus",
+  "scientific": "Stercorarius antarcticus",
+  "group": "birds",
+  "name": {
+    "en": "Brown Skua",
+    "fr": "Labbe antarctique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Brown Skua is a large seabird of the Southern Ocean.",
+      "fr": "Le labbe antarctique est un grand oiseau marin de l’océan Austral."
+    },
+    "identification": {
+      "en": "Its dark brown plumage has pale flashes on the wings.",
+      "fr": "Son plumage brun sombre porte des plages claires sur les ailes."
+    },
+    "habitat": {
+      "en": "It nests near seabird colonies and winters at sea.",
+      "fr": "Il niche près des colonies d’oiseaux marins et hiverne en mer."
+    },
+    "diet": {
+      "en": "It eats seabirds, eggs and chicks, and scavenges carcasses.",
+      "fr": "Il mange des oiseaux marins, leurs œufs et leurs poussins, et consomme des carcasses."
+    },
+    "behavior": {
+      "en": "It is a territorial predator and scavenger that can hunt on foot or in flight.",
+      "fr": "C’est un prédateur et charognard territorial qui chasse à pied ou en vol."
+    },
+    "reproduction": {
+      "en": "It nests in loose colonies; the female usually lays two eggs in a ground scrape.",
+      "fr": "Il niche en colonies lâches ; la femelle pond généralement deux œufs dans une dépression du sol."
+    },
+    "ecology": {
+      "en": "Near colonies it hunts burrow-nesting petrels; in winter it disperses over the open ocean.",
+      "fr": "Près des colonies, il chasse les pétrels nichant en terrier ; en hiver, il se disperse en haute mer."
+    },
+    "conservation": {
+      "en": "Oiseaux.net reports the global IUCN category as Least Concern; local populations can still face human disturbance or persecution.",
+      "fr": "Oiseaux.net rapporte la catégorie mondiale UICN de préoccupation mineure ; des populations locales peuvent néanmoins subir des dérangements ou des persécutions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Skua brun — Livret espèces australes",
+        "fr": "Skua brun — Livret espèces australes"
+      },
+      "url": "https://taaf.fr/content/uploads/2021/04/LIVRET-ESPECES-AUSTRALES.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The TAAF species account describes plumage, nesting, territoriality, prey and seasonal habitat in the Southern Ocean."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 16,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labbe antarctique — Oiseaux.net",
+        "fr": "Labbe antarctique — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/labbe.antarctique.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Oiseaux.net gives the species name and a global IUCN status of Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 13,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species account includes several geographically separated populations and subspecies; local timing and food use vary."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; uses the French TAAF account and global status while noting local variation."
+}

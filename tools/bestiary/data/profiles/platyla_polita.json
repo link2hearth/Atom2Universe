@@ -1,0 +1,143 @@
+{
+  "id": "platyla_polita",
+  "scientific": "Platyla polita",
+  "group": "invertebrates",
+  "name": {
+    "en": "Smooth needle snail",
+    "fr": "Aiguillette lisse"
+  },
+  "sections": {
+    "overview": {
+      "en": "Platyla polita is a tiny, operculate land snail with a broad but patchy European range.",
+      "fr": "Platyla polita est un minuscule escargot terrestre à opercule, largement répandu en Europe mais de façon discontinue."
+    },
+    "identification": {
+      "en": "Its smooth, glossy reddish-brown shell is elongated and tower-shaped, usually under 4 mm high.",
+      "fr": "Sa coquille lisse, brillante et brun rougeâtre est allongée et en forme de tour ; elle mesure généralement moins de 4 mm."
+    },
+    "habitat": {
+      "en": "It lives in damp woodland litter, moss and decaying wood, often on moist, base-rich ground.",
+      "fr": "Elle vit dans la litière des bois humides, les mousses et le bois mort, souvent sur des sols frais riches en bases."
+    },
+    "diet": {
+      "en": "The species accounts consulted do not describe its diet in detail.",
+      "fr": "Les fiches consultées ne décrivent pas précisément son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It hides in litter and wood mould; in Latvia it is active in the growing season and overwinters below litter.",
+      "fr": "Elle se cache dans la litière et l’humus du bois ; en Lettonie, elle est active durant la végétation et hiverne sous la litière."
+    },
+    "reproduction": {
+      "en": "It has separate sexes; little else is known about its reproduction.",
+      "fr": "Les sexes sont séparés ; le reste de sa reproduction est peu connu."
+    },
+    "ecology": {
+      "en": "In eastern France it also occurs under dead wood and among scree in cool deciduous forests.",
+      "fr": "Dans l’est de la France, elle se rencontre aussi sous le bois mort et dans les éboulis de forêts fraîches de feuillus."
+    },
+    "conservation": {
+      "en": "In 2023 Latvia assessed it as Vulnerable nationally, but Least Concern globally and in Europe.",
+      "fr": "En 2023, la Lettonie l’a classée vulnérable au niveau national, mais en préoccupation mineure dans le monde et en Europe."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Platyla polita: distribution and ecology in Europe and Germany — German Malacological Society",
+        "fr": "Platyla polita : répartition et écologie en Europe et en Allemagne — Société malacologique allemande"
+      },
+      "url": "https://dmg.mollusca.de/images/mitteilungen_dmg/mitteilungen106/mitt_dmg_106_001-020_menzel-harloff.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The German-language malacological study documents a broad but discontinuous European range and association with moist, base-rich woodland, litter and dead wood."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 21,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smooth needle snail — Latvian Red Data Book",
+        "fr": "Aiguillette lisse — Livre rouge de Lettonie"
+      },
+      "url": "https://sarkanagramata.lu.lv/suga/gludais-adatgliemezis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Latvian account gives shell traits, concealed habits, activity and reproduction; diet is not detailed.",
+        "The Latvian Red Data Book distinguishes country-level Vulnerable from global and European Least Concern."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 28,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aiguillette luisante — Atlas des mollusques méconnus de Bourgogne–Franche-Comté",
+        "fr": "Smooth needle snail — atlas of little-known molluscs in Bourgogne–Franche-Comté"
+      },
+      "url": "https://cbnfc-ori.org/ouvrages/Atlas-Meconnus-BFC/ATLAS-Mollusques_Meconnus-BFC_2025_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The French atlas reports the snail in cool deciduous woodland litter, under dead wood and in scree in eastern France."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet details and many aspects of reproduction remain poorly documented in the reviewed sources.",
+    "The Latvian national category must not be generalized to the whole species range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a German specialist malacological study, a French regional atlas and the Latvian Red Data Book; kept conservation categories at their stated geographic scales."
+}

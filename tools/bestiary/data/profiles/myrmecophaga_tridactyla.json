@@ -1,0 +1,150 @@
+{
+  "id": "myrmecophaga_tridactyla",
+  "scientific": "Myrmecophaga tridactyla",
+  "group": "mammals",
+  "name": {
+    "en": "Giant anteater",
+    "fr": "Fourmilier géant"
+  },
+  "sections": {
+    "overview": {
+      "en": "The giant anteater is the largest living anteater, native to Central and South America.",
+      "fr": "Le fourmilier géant est le plus grand fourmilier actuel, originaire d’Amérique centrale et du Sud."
+    },
+    "identification": {
+      "en": "A tubular snout, bushy tail and strong foreclaws distinguish this ground-dwelling species.",
+      "fr": "Son museau tubulaire, sa queue touffue et ses puissantes griffes antérieures le distinguent."
+    },
+    "habitat": {
+      "en": "It uses forests, wetlands, savannas and other open habitats across its range.",
+      "fr": "Il fréquente forêts, zones humides, savanes et autres milieux ouverts de son aire."
+    },
+    "diet": {
+      "en": "It feeds mainly on ants and termites, collected with its long sticky tongue.",
+      "fr": "Il mange surtout des fourmis et des termites, capturés avec sa longue langue collante."
+    },
+    "behavior": {
+      "en": "It is usually solitary and diurnal, walking on its knuckles to protect its claws.",
+      "fr": "Il est généralement solitaire et diurne, et marche sur ses jointures pour protéger ses griffes."
+    },
+    "reproduction": {
+      "en": "After roughly six months, a female usually gives birth to one young that rides on her back.",
+      "fr": "Après environ six mois de gestation, la femelle donne généralement naissance à un petit porté sur son dos."
+    },
+    "ecology": {
+      "en": "By eating ants and termites, it influences local insect communities.",
+      "fr": "En mangeant fourmis et termites, il influence les communautés locales d’insectes."
+    },
+    "conservation": {
+      "en": "The IUCN Anteater, Sloth and Armadillo Specialist Group reports the species as Vulnerable, citing habitat loss and fragmentation, fires and road deaths among its threats.",
+      "fr": "Le groupe de spécialistes de l’UICN consacré aux fourmiliers, paresseux et tatous classe l’espèce Vulnérable et signale notamment la perte et la fragmentation de l’habitat, les incendies et les collisions routières."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Giant anteater — Animal Diversity Web, University of Michigan",
+        "fr": "Fourmilier géant — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Myrmecophaga_tridactyla/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "University species account documents form, daily behavior, breeding and diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 10,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tamanduá-bandeira — IUCN SSC Anteater, Sloth and Armadillo Specialist Group",
+        "fr": "Tamandua géant — Groupe de spécialistes UICN des fourmiliers, paresseux et tatous"
+      },
+      "url": "https://xenarthrans.org/pt/tamanduas/tamandua-bandeira-myrmecophaga-tridactyla/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist-group Portuguese account describes habitat diversity, Vulnerable assessment and threats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 10,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Giant anteater — IUCN SSC species facts (Spanish edition)",
+        "fr": "Fourmilier géant — fiche du groupe UICN SSC (édition espagnole)"
+      },
+      "url": "https://xenarthrans.org/es/datos-sobre-el-hormiguero-gigante-para-ninos/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish specialist factsheet confirms the ant-and-termite diet and singleton litters."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reproductive timing and the age of independence vary across accounts and populations; the concise gestation and single-young summary is the consistent point retained here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Checked English natural-history material against Spanish- and Portuguese-language pages from the IUCN SSC specialist group; the related anteater species are mentioned only for broad size-based identification."
+}

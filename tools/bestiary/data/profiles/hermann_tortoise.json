@@ -1,0 +1,382 @@
+{
+  "id": "hermann_tortoise",
+  "scientific": "Testudo hermanni",
+  "group": "reptiles",
+  "name": {
+    "en": "Hermann's tortoise",
+    "fr": "Tortue d'Hermann"
+  },
+  "sections": {
+    "overview": {
+      "en": "Hermann's tortoise is a land-dwelling tortoise native to Mediterranean and nearby parts of southeastern Europe, from northeastern Spain to the Balkans. The current specialist checklist recognizes western Testudo hermanni hermanni and eastern Testudo hermanni boettgeri as subspecies.",
+      "fr": "La tortue d'Hermann est une tortue terrestre originaire du pourtour méditerranéen et des régions voisines du sud-est de l'Europe, du nord-est de l'Espagne aux Balkans. La checklist spécialisée actuelle reconnaît Testudo hermanni hermanni à l'ouest et Testudo hermanni boettgeri à l'est comme des sous-espèces."
+    },
+    "identification": {
+      "en": "The domed, oval shell is usually yellow to yellow-orange with dark marks, and its plastron, the shell's underside, often has two black bands whose pattern varies by region. A horny claw at the tail tip and a supracaudal scale above the tail that is almost always divided help identify it. Unlike Testudo graeca, it lacks prominent spurs on the inner thighs; unlike Testudo marginata, its rear shell edge does not flare. In the Var, females can reach 20–25 centimetres in shell length. Males are smaller, with a longer, thicker tail and a slightly concave plastron. Across western populations, adult females average about 15–18 centimetres and males 13–15 centimetres in straight carapace length; Balkan adults are generally larger. In an Albanian Balkan sample, adult males averaged 735 g and females 1,129 g; mean straight carapace length was 15.1 cm for males and 17.2 cm for females.",
+      "fr": "La carapace bombée et ovale est généralement jaune à jaune orangé, avec des marques sombres ; son plastron, la face ventrale de la carapace, porte souvent deux bandes noires dont le motif varie selon les régions. Une griffe cornée au bout de la queue et une écaille sus-caudale au-dessus de celle-ci, presque toujours divisée, aident à reconnaître l'espèce. Contrairement à Testudo graeca, elle n'a pas d'éperons marqués sur la face interne des cuisses ; contrairement à Testudo marginata, le bord arrière de sa carapace ne s'évase pas. Dans le Var, les femelles peuvent atteindre 20 à 25 centimètres de longueur de carapace. Les mâles sont plus petits, avec une queue plus longue et épaisse et un plastron légèrement concave. Dans les populations occidentales, la longueur droite moyenne de la carapace est d'environ 15 à 18 centimètres chez les femelles et de 13 à 15 chez les mâles ; les adultes des Balkans sont généralement plus grands. Dans un échantillon des Balkans en Albanie, les adultes pesaient en moyenne 735 g chez les mâles et 1 129 g chez les femelles, la longueur droite moyenne de la carapace était de 15,1 cm chez les mâles et de 17,2 cm chez les femelles."
+    },
+    "habitat": {
+      "en": "Hermann's tortoise uses a patchwork of Mediterranean vegetation, from coastal lowlands to inland hills. At a central Italian site, tortoises selected small patches where bare ground lay beside dense plant cover and several favored plant species.",
+      "fr": "La tortue d'Hermann fréquente une mosaïque de végétation méditerranéenne, des plaines littorales aux collines de l'intérieur. Sur un site d'Italie centrale, les tortues sélectionnaient de petites zones où sol nu et végétation dense se côtoyaient, avec quelques espèces végétales particulièrement présentes."
+    },
+    "diet": {
+      "en": "It crops leaves, flowers and other low-growing plants as it forages on foot. Wild diets are chiefly plant material, especially soft annual plants, and the menu changes with season and local growth. A central Italian study of the western subspecies found mostly legume leaves and grasses in spring, then flowers and unripe butcher's-broom fruit in autumn.",
+      "fr": "Elle broute feuilles, fleurs et autres plantes basses en se déplaçant au sol. Dans la nature, son régime est surtout végétal, notamment composé de plantes annuelles tendres, et varie selon la saison et la végétation locale. Une étude de la sous-espèce occidentale en Italie centrale a trouvé surtout des feuilles de légumineuses et des graminées au printemps, puis des fleurs et des fruits immatures du fragon en automne."
+    },
+    "behavior": {
+      "en": "This tortoise is mostly active by day, but its schedule changes with temperature. It basks in the morning, then moves between feeding grounds and cover. In hot Mediterranean summers, activity often pauses during the hottest hours and resumes toward evening; winter brings a prolonged inactive period in a sheltered place. Adults generally live alone and meet to mate. Courtship also uses high-pitched calls and scent cues.",
+      "fr": "Cette tortue est surtout active le jour, mais son rythme dépend de la température. Elle se chauffe au soleil le matin, puis passe entre les zones d'alimentation et les abris. Pendant les étés méditerranéens chauds, l'activité s'interrompt souvent aux heures les plus brûlantes et reprend vers le soir ; l'hiver apporte une longue période d'inactivité dans un lieu abrité. Les adultes vivent généralement seuls et se rencontrent pour s'accoupler. La parade utilise aussi des vocalisations aiguës et des signaux olfactifs."
+    },
+    "reproduction": {
+      "en": "Mating begins after winter dormancy and can continue through the active season. Females dig nests in soil and lay hard-shelled eggs, usually in late spring or early summer; clutch size and frequency vary among populations. In the Var, incubation averages about one hundred days, and hatchlings usually emerge in early September after late-summer rain. Incubation temperature influences hatchling sex. After laying, the female leaves the nest; the young develop without parental care. In the Var, maturity averages about eleven years.",
+      "fr": "L'accouplement commence après la dormance hivernale et peut se poursuivre pendant la saison d'activité. Les femelles creusent des nids dans le sol et pondent des œufs à coquille dure, généralement à la fin du printemps ou au début de l'été ; le nombre d'œufs et de pontes varie selon les populations. Dans le Var, l'incubation dure en moyenne une centaine de jours et les jeunes émergent généralement au début de septembre après les pluies de fin d'été. La température d'incubation influence le sexe des nouveau-nés. Après la ponte, la femelle abandonne le nid ; les jeunes se développent sans soins parentaux. Dans le Var, la maturité survient en moyenne vers onze ans."
+    },
+    "ecology": {
+      "en": "As a herbivore, it crops leaves, flowers and seasonal fruit. Eggs and young tortoises are prey for mammals and birds, while the hard shell protects older individuals from many attacks. In some studied areas, nest predators destroy many eggs before hatchlings can join the population.",
+      "fr": "Herbivore, elle broute des feuilles, des fleurs et des fruits saisonniers. Les mammifères et les oiseaux s'attaquent aux œufs et aux jeunes tortues, tandis que la carapace dure protège les individus plus âgés de nombreuses attaques. Dans certaines zones étudiées, les prédateurs détruisent de nombreux œufs avant que les nouveau-nés puissent rejoindre la population."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List assessment was dated 5 May 2024 and classified Testudo hermanni as Vulnerable with a decreasing population trend; its corrected version was published in 2025. Former western populations have disappeared from parts of their range, including Roussillon, and France now retains populations in Corsica and the Var. The 2015 French assessment classified the species as Vulnerable and the Var population as Endangered. Urban development, roads, intensive land use, wildfire and illegal collection for the pet trade are documented threats. France's action plans for the Var covered 2009–2014 and 2018–2027, with work on habitat and populations.",
+      "fr": "L'évaluation mondiale de la Liste rouge de l'UICN, datée du 5 mai 2024, classe Testudo hermanni comme vulnérable et indique une tendance démographique à la baisse ; sa version corrigée a été publiée en 2025. Des populations occidentales ont disparu de parties de leur aire, dont le Roussillon, et la France conserve aujourd'hui des populations en Corse et dans le Var. L'évaluation française de 2015 classait l'espèce comme vulnérable et la population du Var comme en danger. L'urbanisation, les routes, l'intensification agricole, les incendies et la collecte illégale pour le commerce d'animaux de compagnie sont des menaces documentées. Les plans d'action français pour le Var ont couvert les périodes 2009–2014 et 2018–2027, avec des actions sur les habitats et les populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Testudo hermanni (Gmelin 1789) – Hermann’s Tortoise, Conservation Biology of Freshwater Turtles and Tortoises, Chelonian Research Monographs No. 5 (2011)",
+        "fr": "Testudo hermanni (Gmelin 1789) – Hermann’s Tortoise, Conservation Biology of Freshwater Turtles and Tortoises, Chelonian Research Monographs no 5 (2011)"
+      },
+      "url": "https://iucn-tftsg.org/wp-content/uploads/file/Accounts/crm_5_059_hermanni_v1_2011.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Western females average 15–18 cm, males 13–15 cm straight carapace; Balkan tortoises are generally larger."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 15,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Turtles of the World: Annotated Checklist and Atlas, 10th Edition (2025) — IUCN/SSC Tortoise and Freshwater Turtle Specialist Group",
+        "fr": "Turtles of the World : checklist annotée et atlas, 10e édition (2025) — Groupe de spécialistes des tortues terrestres et d'eau douce de l'UICN/SSC"
+      },
+      "url": "https://iucn-tftsg.org/wp-content/uploads/crm.10.checklist.atlas_.v10.2025.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The 2025 checklist lists Testudo hermanni and both named subspecies."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 10,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal changes in the diet of Testudo hermanni hermanni in central Italy — Herpetologica (2011)",
+        "fr": "Seasonal changes in the diet of Testudo hermanni hermanni in central Italy — Herpetologica (2011)"
+      },
+      "url": "https://doi.org/10.1655/HERPETOLOGICA-D-10-00064.1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Wild central-Italian tortoises ate chiefly plants, with marked spring-to-autumn food shifts."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 11,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Testudo hermanni — Animal Diversity Web, University of Michigan Museum of Zoology (2012)",
+        "fr": "Testudo hermanni — Animal Diversity Web, Musée de zoologie de l'Université du Michigan (2012)"
+      },
+      "url": "https://animaldiversity.org/accounts/Testudo_hermanni/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "University account describes seasonal inactivity, courtship cues, temperature-dependent sex and absence of post-laying care."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.5",
+        "behavior.fr.3",
+        "behavior.fr.5",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 14,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La tortue d'Hermann — Portail des parcs nationaux de France",
+        "fr": "La tortue d'Hermann — Portail des parcs nationaux de France"
+      },
+      "url": "https://parcsnationaux.fr/fr/des-connaissances/biodiversite/faune-emblematique/les-reptiles/la-tortue-dhermann",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French Var account gives female size, incubation duration and average maturity age."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "identification.en.1",
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.4",
+        "reproduction.en.3",
+        "reproduction.en.6",
+        "reproduction.fr.3",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 12,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Breeding traits of Hermann's tortoise Testudo hermanni hermanni in two western populations — Amphibia-Reptilia (2007)",
+        "fr": "Breeding traits of Hermann's tortoise Testudo hermanni hermanni in two western populations — Amphibia-Reptilia (2007)"
+      },
+      "url": "https://brill.com/view/journals/amre/28/1/article-p77_9.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Radiographic study compared clutch size and clutch frequency in females from Corsica and the Ebro Delta."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 16,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The turtle is in the details: Microhabitat choice by Testudo hermanni is based on microscale plant distribution — Animal Biology (2011)",
+        "fr": "The turtle is in the details: Microhabitat choice by Testudo hermanni is based on microscale plant distribution — Animal Biology (2011)"
+      },
+      "url": "https://doi.org/10.1163/157075511X584209",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Central Italian study found small selected habitat patches combined bare ground and dense vegetation; tortoises basked and thermoregulated."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 18,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Testudo hermanni — The IUCN Red List of Threatened Species, errata version (assessment 2024; published 2025)",
+        "fr": "Testudo hermanni — Liste rouge de l'UICN, version corrigée (évaluation 2024 ; publication 2025)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-1.RLTS.T21648A268511652.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 5 May 2024: Vulnerable with decreasing trend; errata appeared in 2025."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 14,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La Liste rouge des espèces menacées en France: Reptiles et amphibiens de France métropolitaine (2015) — INPN/MNHN, OFB and IUCN France",
+        "fr": "La Liste rouge des espèces menacées en France : Reptiles et amphibiens de France métropolitaine (2015) — INPN/MNHN, OFB et UICN France"
+      },
+      "url": "https://inpn.mnhn.fr/docs/LR_FCE/Rapport-Eval-Reptiles-Amphibiens-metropole_Actualisee-16-01-2017.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2015 assessment: species Vulnerable nationally; Var population Endangered, declining and threatened by development and fire."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 15,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La Tortue d’Hermann — DREAL Provence-Alpes-Côte d’Azur",
+        "fr": "La Tortue d’Hermann — DREAL Provence-Alpes-Côte d’Azur"
+      },
+      "url": "https://www.paca.developpement-durable.gouv.fr/la-tortue-d-hermann-a385.html?lang=fr",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Action plans covered 2009–2014 and 2018–2027; French populations remain in Corsica and Var."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.5",
+        "conservation.fr.2",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 13,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphological Divergence of Hermann’s Tortoise (Testudo hermanni boettgeri) in Albania",
+        "fr": "Divergence morphologique de la tortue d’Hermann (Testudo hermanni boettgeri) en Albanie"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7827169/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "In 188 adult Albanian tortoises, mean mass was 735 g for males and 1,129 g for females; mean straight carapace lengths were 15.1 and 17.2 cm, respectively."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 27,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Retain the existing illustration. A recognizable adult land tortoise has a domed yellow to yellow-orange carapace with dark markings, a pale plastron with variable paired dark bands, sturdy clawed forefeet and a short tail ending in a horny claw. Do not add thigh spurs or flared rear shell edges. Shell pattern, size and proportions vary across western and eastern populations.",
+  "uncertainties": [
+    "The 2025 specialist checklist recognizes the western and eastern subspecies, but population boundaries and external appearance vary, so morphology alone can make subspecies identification uncertain.",
+    "The fine-scale habitat and seasonal diet studies cited here were conducted in central Italy; they do not establish identical site selection or menus across the eastern subspecies and the full range.",
+    "The approximately one-hundred-day incubation and eleven-year maturity figures describe the Var population and should not be treated as fixed values across the species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source scientific critique and root bilingual review. Clarified plastron and tail/supracaudal anatomy, regional Var figures, herbivory and predation; distinguished global assessment dated May2024 with2025 errata from French national and Var2015 categories. Retained original illustration after visual examination."
+}

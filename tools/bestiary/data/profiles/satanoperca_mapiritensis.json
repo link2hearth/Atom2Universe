@@ -1,0 +1,119 @@
+{
+  "id": "satanoperca_mapiritensis",
+  "scientific": "Satanoperca mapiritensis",
+  "group": "fish",
+  "name": {
+    "en": "Satanoperca mapiritensis",
+    "fr": "Satanoperca mapiritensis"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American cichlid is known from the lower Orinoco basin and neighboring rivers.",
+      "fr": "Ce cichlidé sud-américain est connu du bassin de l’Orénoque inférieur et des cours d’eau voisins."
+    },
+    "identification": {
+      "en": "The documented species reaches about 14 cm standard length; detailed field marks are not summarized here.",
+      "fr": "La taille documentée atteint environ 14 cm de longueur standard ; cette fiche ne résume pas de critères détaillés d’identification."
+    },
+    "habitat": {
+      "en": "FishBase classifies it as a tropical freshwater, benthopelagic fish.",
+      "fr": "FishBase la classe parmi les poissons d’eau douce tropicaux benthopélagiques."
+    },
+    "diet": {
+      "en": "The accessible species summaries do not provide a verified species-specific diet description.",
+      "fr": "Les résumés accessibles ne fournissent pas de description vérifiée du régime propre à cette espèce."
+    },
+    "behavior": {
+      "en": "The sources consulted do not provide species-specific behavioral details.",
+      "fr": "Les sources consultées ne détaillent pas le comportement propre à cette espèce."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide species-specific reproductive details.",
+      "fr": "Les sources consultées ne détaillent pas la reproduction propre à cette espèce."
+    },
+    "ecology": {
+      "en": "It shares the genus Satanoperca with S. pappaterra, but the published ranges place this species in the Orinoco and pappaterra mainly in the Guaporé and Paraguay systems; see the related profile.",
+      "fr": "Elle partage le genre Satanoperca avec S. pappaterra, mais les aires publiées situent cette espèce dans l’Orénoque et pappaterra surtout dans les bassins du Guaporé et du Paraguay ; voir la fiche correspondante."
+    },
+    "conservation": {
+      "en": "FishBase lists a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase indique une évaluation mondiale UICN « Préoccupation mineure », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — résumé de l’espèce"
+      },
+      "url": "https://www.fishbase.se/summary/57779",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the Orinoco range, benthopelagic habitat, maximum length and 2020 IUCN category; biology fields are sparse."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 17,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species-level phylogeny of Satanoperca — Molecular Phylogenetics and Evolution",
+        "fr": "Phylogénie des espèces de Satanoperca — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S1055790312000711",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "This peer-reviewed study places S. mapiritensis in the lower Orinoco and S. pappaterra in Guaporé/Paraguay and other South American basins, providing the comparison used here."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 25,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some basin records assigned historically to Satanoperca species have been revised; the comparison uses the ranges summarized by the cited phylogenetic study."
+  ],
+  "review_note": "Checked FishBase and a peer-reviewed genus-level phylogenetic study; kept species-specific biology brief where summaries were empty.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

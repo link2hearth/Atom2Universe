@@ -1,0 +1,188 @@
+{
+  "id": "aequidens_diadema",
+  "scientific": "Aequidens diadema",
+  "group": "fish",
+  "name": {
+    "en": "Diadem acara",
+    "fr": "Aequidens diadema"
+  },
+  "sections": {
+    "overview": {
+      "en": "Aequidens diadema is a South American freshwater cichlid known from the upper Rio Negro and tributaries of the Orinoco. Its scientific name refers to a diadem, and it is sometimes sold as the royal acara. Older records from Peru require taxonomic caution because some may refer to a different species.",
+      "fr": "Aequidens diadema est un cichlidé d’eau douce sud-américain connu du haut Rio Negro et d’affluents de l’Orénoque. Son nom évoque un diadème et il est parfois vendu sous le nom d’acara royal. Les mentions anciennes du Pérou doivent être interprétées avec prudence, car certaines pourraient concerner une autre espèce."
+    },
+    "identification": {
+      "en": "It has the compact, oval, laterally compressed body typical of an acara, with olive to brassy tones, a dark mark on each flank and a darker band across the head that gives the fish its diadem-like name. FishBase records a maximum standard length of 11.8 cm for a male or unsexed fish; that is body length excluding the caudal fin. The sources found no comparable female measurement, body width, height or reliable mass, so they do not support a numerical sex comparison. Similar Aequidens can share dark flank marks; use the head pattern together with locality and a taxonomic key.",
+      "fr": "Il a le corps ovale et comprimé latéralement caractéristique des acaras, des tons olive à cuivrés, une marque sombre sur chaque flanc et une bande plus foncée sur la tête, à l’origine de son nom de « diadème ». FishBase rapporte une longueur standard maximale de 11,8 cm pour un individu mâle ou non sexé ; cette mesure exclut la nageoire caudale. Les sources consultées ne donnent pas de mesure comparable pour une femelle, ni de largeur, de hauteur ou de masse fiable : elles ne permettent donc pas de comparaison chiffrée entre sexes. D’autres Aequidens peuvent aussi porter des marques sombres sur les flancs ; comparer le motif de la tête, la provenance et les caractères d’une clé taxonomique."
+    },
+    "habitat": {
+      "en": "The verified distribution includes the upper Negro River in the Amazon basin and tributaries of the Orinoco in Colombia and Venezuela. It is a tropical freshwater, benthopelagic fish, living close to the bottom as well as in the water column. FishBase gives a broad temperature range of about 23–28 °C; fine-scale habitat descriptions and depth records are sparse.",
+      "fr": "La répartition vérifiée comprend le haut Rio Negro, dans le bassin amazonien, et des affluents de l’Orénoque en Colombie et au Venezuela. C’est un poisson tropical d’eau douce benthopélagique, qui fréquente le fond et la colonne d’eau. FishBase indique une plage de température générale d’environ 23 à 28 °C ; les descriptions détaillées de ses habitats et les données de profondeur restent rares."
+    },
+    "diet": {
+      "en": "A species-specific study of wild prey or stomach contents was not found in the sources reviewed. FishBase provides no direct prey list for this species; its displayed trophic-level estimate is modelled from related fishes and should not be treated as a measured diet. A detailed menu therefore cannot be stated reliably from the available evidence.",
+      "fr": "Les sources examinées ne fournissent pas d’étude propre à l’espèce sur ses proies sauvages ou le contenu de son estomac. FishBase ne donne pas de liste directe de proies ; l’estimation de niveau trophique affichée est modélisée à partir de poissons apparentés et ne constitue pas une mesure du régime alimentaire. Les données disponibles ne permettent donc pas de décrire précisément son menu naturel."
+    },
+    "behavior": {
+      "en": "The clearest documented parental behavior occurs after spawning: both parents take the newly hatched larvae into their mouths. This is a specialized form of brood care and distinguishes its reproductive behavior from simple egg guarding. Beyond parental care, the reviewed species accounts provide little direct field information on daily activity, social grouping or territorial behavior.",
+      "fr": "Le comportement parental le mieux documenté intervient après la ponte : les deux parents prennent les larves nouvellement écloses dans leur bouche. Cette forme particulière de soin distingue sa reproduction d’une simple garde des œufs. En dehors de ces soins parentaux, les fiches consultées donnent peu d’observations directes de terrain sur son activité quotidienne, sa vie sociale ou sa territorialité."
+    },
+    "reproduction": {
+      "en": "The species lays eggs on a substrate rather than brooding the eggs in the mouth. After hatching, both parents carry the larvae in their mouths, a delayed, biparental form of larval mouthbrooding reported in the cichlid literature. The sources reviewed do not provide dependable species-specific clutch size, incubation time or age at maturity.",
+      "fr": "L’espèce pond ses œufs sur un support au lieu de les incuber dans sa bouche. Après l’éclosion, les deux parents transportent les larves dans leur bouche : la littérature sur les cichlidés décrit ainsi une incubation larvaire différée et assurée par les deux parents. Les sources consultées ne donnent pas de données fiables propres à l’espèce sur la taille des pontes, la durée d’incubation ou l’âge de maturité."
+    },
+    "ecology": {
+      "en": "The species occupies freshwater river systems in the Amazon–Orinoco region and is classified as benthopelagic. Its exact ecological role and natural diet are not quantified in the sources found. FishBase flags older Peruvian records as potentially belonging to a different taxon, so those records should not be used uncritically to extend its range or ecological profile. Another Cichlasomatini in this Bestiary is the blue acara, Andinoacara pulcher. It was formerly called Aequidens pulcher, but that synonym does not mean it is Aequidens diadema.",
+      "fr": "L’espèce vit dans les réseaux fluviaux d’eau douce de la région Amazone–Orénoque et est classée comme benthopélagique. Les sources trouvées ne quantifient ni son rôle écologique précis ni son régime naturel. FishBase signale que d’anciennes mentions péruviennes pourraient concerner un autre taxon ; elles ne doivent donc pas servir sans réserve à étendre son aire ou son profil écologique. Un autre Cichlasomatini présent dans ce Bestiaire est l’acara bleu, Andinoacara pulcher. Il était autrefois appelé Aequidens pulcher, mais ce synonyme ne désigne pas Aequidens diadema."
+    },
+    "conservation": {
+      "en": "The IUCN assessment dated 2020 classifies Aequidens diadema as Least Concern. The assessment summary reports a broad range but limited information on population size and trend; the category should not be read as proof that every local population is abundant or monitored. No reliable species-wide trend was found in the sources reviewed.",
+      "fr": "L’évaluation de l’UICN datée de 2020 classe Aequidens diadema en préoccupation mineure. Le résumé de l’évaluation indique une vaste répartition, mais peu d’informations sur l’effectif et son évolution ; cette catégorie ne prouve pas que toutes les populations locales soient abondantes ou suivies. Les sources examinées ne donnent pas de tendance fiable à l’échelle de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aequidens diadema summary — FishBase",
+        "fr": "Fiche Aequidens diadema — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Aequidens-diadema",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the accepted name, upper Rio Negro and Orinoco distribution, benthopelagic freshwater environment, 23–28 °C range, maximum 11.8 cm standard length for male or unsexed fish, substrate spawning followed by both parents carrying larvae in their mouths, and Least Concern status assessed in 2020; its trophic-level estimate is explicitly model-based."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aequidens diadema — Eschmeyer’s Catalog of Fishes, California Academy of Sciences",
+        "fr": "Aequidens diadema — catalogue des poissons d’Eschmeyer, California Academy of Sciences"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=39112",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The scientific catalogue confirms Acara diadema as the original name, the type locality at Marabitanos on the Rio Negro, current validity as Aequidens diadema, and the accepted Amazon and Orinoco basin distribution; it lists older taxonomic treatments and specimen records."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cichlid fishes of the Amazon River drainage of Peru — Swedish Museum of Natural History",
+        "fr": "Poissons cichlidés du bassin péruvien de l’Amazone — Muséum suédois d’histoire naturelle"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s systematic monograph provides a primary taxonomic treatment of Amazonian cichlids and is cited by the Catalog of Fishes for the present species; the Peruvian material must be interpreted alongside FishBase’s note that some records labelled diadema may represent another taxon."
+      ]
+    },
+    {
+      "title": {
+        "en": "Die Buntbarsche Amerikas, volume 1 — Stawikowski and Werner, FishBase reference record",
+        "fr": "Les cichlidés d’Amérique, volume 1 — notice bibliographique FishBase de Stawikowski et Werner"
+      },
+      "url": "https://www.fishbase.se/references/FBRefSummary.php?ID=40602",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase identifies the underlying 1998 German-language cichlid monograph as its reference for substrate spawning followed by both parents taking the hatched larvae into their mouths."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aequidens diadema — IUCN Red List assessment",
+        "fr": "Aequidens diadema — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://www.iucnredlist.org/species/49830014/158819542",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase links this IUCN assessment and reports the global category Least Concern, assessed on 29 October 2020."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diadem Cichlid — Cichlid Atlas",
+        "fr": "Aequidens diadema — Cichlid Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/aequidens-diadema/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Secondary species account describes the oval compressed body, dark head band and flank blotches, notes sexual size tendencies and identifies the weakness of population data; its aquarium husbandry recommendations are not used as wild measurements."
+      ]
+    },
+    {
+      "title": {
+        "en": "NCBI Taxonomy — Aequidens diadema",
+        "fr": "Taxonomie NCBI — Aequidens diadema"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=318560",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "NCBI lineage places Aequidens diadema in tribe Cichlasomatini."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ]
+    },
+    {
+      "title": {
+        "en": "NCBI Taxonomy — Andinoacara pulcher",
+        "fr": "Taxonomie NCBI — Andinoacara pulcher"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=172522",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "NCBI lists the former synonym Aequidens pulcher and places Andinoacara pulcher in Cichlasomatini."
+      ],
+      "prose_claims": [
+        "ecology.en.5",
+        "ecology.fr.5"
+      ]
+    }
+  ],
+  "illustration_notes": "Oval, laterally compressed acara with olive or brassy coloring, a darker band across the head and a dark blotch on each flank; show the entire profile of the dorsal and anal fins and do not overstate color intensity.",
+  "uncertainties": [
+    "The maximum length record is 11.8 cm standard length for a male or unsexed specimen; no comparable female maximum or reliable mass was located.",
+    "Older records from Peru may refer to a different taxon, as flagged by FishBase.",
+    "Species-specific diet, population trend, and detailed field observations of daily behavior remain poorly documented in the sources reviewed."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked FishBase against Eschmeyer’s Catalog of Fishes, Kullander’s systematic monograph, a German-language cichlid reference record, and the dated IUCN category; excluded unsupported sex-specific measurements and modelled trophic estimates."
+}

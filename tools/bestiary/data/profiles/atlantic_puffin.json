@@ -1,0 +1,545 @@
+{
+  "id": "atlantic_puffin",
+  "scientific": "Fratercula arctica",
+  "group": "birds",
+  "name": {
+    "en": "Atlantic puffin",
+    "fr": "Macareux moine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Atlantic puffin is a small, stocky auk of the North Atlantic that spends most of the year at sea and comes ashore to breed in colonies. Its cycle links small fish at sea with sheltered burrows where it raises one chick.\nBecause adults can breed repeatedly over many years, population change reflects both their survival and the later recruitment of young birds.",
+      "fr": "Le macareux moine est un petit alcidé trapu de l’Atlantique Nord ; il passe la majeure partie de l’année en mer et revient nicher en colonies. Son cycle relie petits poissons et terriers abrités où il élève un poussin.\nComme les adultes peuvent se reproduire pendant de nombreuses années, l’évolution des effectifs dépend à la fois de leur survie et du recrutement ultérieur des jeunes."
+    },
+    "identification": {
+      "en": "Adults are generally 26–29 cm long, with a wingspan near 53 cm.\nThe black back and crown contrast with white underparts and a pale breeding-season face; the bill’s bright plates and facial ornaments fade or fall away after breeding, revealing darker facial feathers and a smaller, duller winter bill. Adults weigh about 320–480 g; the consulted source does not give separate ranges by sex.",
+      "fr": "Les adultes mesurent généralement 26 à 29 cm, pour une envergure proche de 53 cm .\nLe dos et la calotte noirs contrastent avec le dessous blanc et la face claire de la saison nuptiale ; après la reproduction, les plaques colorées du bec et les ornements faciaux s’estompent ou tombent, révélant une face plus sombre et un bec hivernal plus petit et terne. Les adultes pèsent environ 320 à 480 g ; la source consultée ne donne pas de plages distinctes selon le sexe."
+    },
+    "habitat": {
+      "en": "Puffins breed on islands, headlands, and sea cliffs, digging burrows in soft ground or nesting in rock crevices and beneath boulders where soil is shallow. The tunnel shelters egg and chick from exposure and many surface predators.\nOutside the breeding season, birds disperse across the North Atlantic; during chick-rearing, adults must find suitable prey within practical commuting distance of the colony.",
+      "fr": "Les macareux nichent sur des îles, des caps et des falaises maritimes ; ils creusent des terriers dans les sols meubles ou utilisent fissures et espaces sous les blocs lorsque le sol est mince. Le tunnel abrite l’œuf et le poussin des intempéries et de nombreux prédateurs de surface.\nHors de la saison de reproduction, les oiseaux se dispersent dans l’Atlantique Nord ; lorsqu’ils nourrissent un poussin, les adultes doivent trouver des proies convenables à une distance praticable de la colonie."
+    },
+    "diet": {
+      "en": "The puffin hunts by pursuit-diving: it beats its short wings underwater to propel itself and uses its webbed feet to steer toward prey.\nAt Skomer, Wales, instrumented birds averaged 11.8 m depth and about 40 seconds per dive; most dives were shallow and V-shaped, so those measurements describe that breeding population rather than a species-wide maximum.\nSmall fish dominate the diet, including sandeels, herring, and capelin, although crustaceans and marine worms are also eaten. Adults can hold several fish crosswise in the bill, braced by backward-pointing spines on the roof of the mouth and tongue, and carry the catch back to a chick.\nA Gulf of Maine study found that adult diets included more kinds of prey than chick meals and shifted across breeding stages and warm years; this flexibility did not fully compensate for apparent prey shortages.",
+      "fr": "Le macareux chasse en plongée de poursuite : il bat ses ailes courtes sous l’eau pour avancer et dirige sa trajectoire vers les proies avec ses pattes palmées.\nÀ Skomer, au pays de Galles, les oiseaux équipés plongeaient en moyenne à 11,8 m pendant environ 40 secondes ; la plupart des plongées étaient peu profondes et en V. Ces mesures décrivent cette population nicheuse, pas un maximum pour l’espèce.\nLes petits poissons dominent le régime, notamment lançons, harengs et capelans, mais l’oiseau consomme aussi des crustacés et des vers marins. Les adultes peuvent retenir plusieurs poissons en travers du bec grâce à des épines orientées vers l’arrière au palais et sur la langue, puis rapporter cette prise au poussin.\nDans le golfe du Maine, une étude a trouvé que le régime des adultes comportait plus de types de proies que les repas des poussins et changeait selon l’étape de reproduction et les années chaudes ; cette souplesse n’a pas entièrement compensé les pénuries apparentes."
+    },
+    "behavior": {
+      "en": "Breeding colonies are dense, but each pair attends its own nest burrow. Partners renew their bond with a bill-rattling display, and males give low grunts in courtship.\nAnnual moult also changes how the bird moves: in the North Sea, flightless adults have been recorded from September to March, with peaks in October and March. The dates vary among individuals; each bird replaces its flight feathers during only part of that window.",
+      "fr": "Les colonies de reproduction sont denses, mais chaque couple fréquente son propre terrier. Les partenaires renouent leur lien en entrechoquant leur bec, et les mâles émettent de bas grognements lors de la parade nuptiale.\nLa mue annuelle modifie aussi les déplacements : en mer du Nord, des adultes inaptes au vol ont été observés entre septembre et mars, avec des pics en octobre et en mars. Les dates varient selon les individus : chacun ne renouvelle ses plumes de vol que pendant une partie de cette période."
+    },
+    "reproduction": {
+      "en": "A pair usually lays one egg in a burrow excavated with bill and feet, or in a rock crevice, and both parents share incubation for about 40–45 days. The newly hatched, dark-down chick is brooded continuously for its first week or so, then stays in the nest while adults forage.\nParents deliver whole fish until the chick fledges at roughly 38–44 days; it leaves at night and heads out to sea, then lives independently. Young birds spend several years at sea before breeding. At Hornøya, ringed immatures often returned to the natal colony at age three, while the estimated local mean age at first breeding was five; this shows that visiting a colony can precede recruitment, not that all populations share that schedule.",
+      "fr": "Un couple pond généralement un seul œuf dans un terrier creusé avec le bec et les pattes, ou dans une fissure rocheuse ; les deux parents se relaient pour l’incuber pendant environ 40 à 45 jours. Le poussin nouveau-né, couvert de duvet sombre, est couvé sans interruption durant sa première semaine environ, puis reste au nid pendant que les adultes pêchent.\nLes parents lui apportent des poissons entiers jusqu’à son envol, vers 38 à 44 jours ; il part de nuit vers le large et devient autonome. Les jeunes passent plusieurs années en mer avant de se reproduire. À Hornøya, les immatures bagués revenaient souvent à leur colonie natale dès trois ans, alors que l’âge moyen local estimé à la première reproduction était de cinq ans : la visite de la colonie peut donc précéder le recrutement, sans que ce calendrier vaille pour toutes les populations."
+    },
+    "ecology": {
+      "en": "Puffins are both consumers of forage fish and prey for larger seabirds: gulls may rob returning adults or take eggs and chicks, while great skuas kill adults at some colonies. These interactions shape where and how safely a colony can raise young.\nOn Fair Isle, a 27-year study estimated a roughly 50% population decline from 1986 to 2012 alongside lower breeding success and fewer fish delivered to chicks, although adult survival stayed comparatively high. Across four North Atlantic populations, poor local prey supply was associated with longer trips, fewer chick feeds, and lower-energy diets.",
+      "fr": "Le macareux consomme des poissons fourrage et sert lui-même de proie à de grands oiseaux marins : des goélands peuvent voler les prises des adultes ou s’en prendre aux œufs et aux poussins, tandis que des grands labbes tuent des adultes dans certaines colonies. Ces interactions influencent les lieux de nidification et les chances d’élever les jeunes sans danger.\nÀ Fair Isle, une étude de 27 ans a estimé un déclin d’environ 50 % entre 1986 et 2012, accompagné d’une baisse du succès reproducteur et du nombre de poissons apportés aux poussins, tandis que la survie des adultes restait relativement élevée. Dans quatre populations de l’Atlantique Nord, le manque local de proies était associé à des trajets plus longs, moins de repas pour les poussins et des régimes moins énergétiques."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 1 October 2017 and published that year classed the puffin as Vulnerable, reporting rapid declines across much of Europe and projecting a 50–79% European population decrease over 2000–2065. A 2021 pan-European regional assessment classified it as Endangered and recorded a decreasing trend; these assessments describe extinction risk at different geographic scales. Threats include warming-driven prey shifts, fishing and bycatch, introduced predators, disturbance, and pollution, with effects varying among colonies.\nIn Maine, hunting for meat, feathers, and eggs, followed by introduced grazing and predators, had nearly eliminated puffins by 1900. Project Puffin began at Eastern Egg Rock in 1973, moving chicks from Newfoundland and using decoys and recorded calls to re-establish breeding. A separate restoration on Seal Island began in 1984. A 2003 Maine agency profile records the state’s 1997 threatened listing.",
+      "fr": "L’évaluation mondiale de l’UICN, datée du 1er octobre 2017 et publiée cette année-là, classait le macareux « Vulnérable », signalait de forts déclins dans une grande partie de l’Europe et projetait une baisse de 50 à 79 % de la population européenne entre 2000 et 2065. L’évaluation régionale paneuropéenne de 2021 le classait « En danger » et indiquait une tendance à la baisse ; ces catégories portent sur des échelles géographiques différentes. Les menaces comprennent le déplacement des proies lié au réchauffement, la pêche et les captures accidentelles, les prédateurs introduits, le dérangement et la pollution, avec des effets variables selon les colonies.\nDans le Maine, la chasse pour la viande, les plumes et les œufs, puis le pâturage et les prédateurs introduits, avaient presque éliminé les macareux vers 1900. Project Puffin a débuté à Eastern Egg Rock en 1973 : des poussins de Terre-Neuve y ont été transférés et des leurres et cris enregistrés ont aidé à rétablir la nidification. Un programme distinct à Seal Island a commencé en 1984. Une fiche de l’agence du Maine publiée en 2003 rapporte que l’État avait classé l’espèce menacée en 1997 ."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Atlantic Puffin",
+        "fr": "Atlantic Puffin"
+      },
+      "url": "https://doi.org/10.2173/bna.709",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Specialist account reviews North American field studies and natural history."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 10,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Puffin Identification",
+        "fr": "Identification du Macareux moine"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Field-guide ranges combine measurements from multiple birds and settings."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 9,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aging Atlantic Puffins in summer and winter",
+        "fr": "Déterminer l’âge des Macareux moines en été et en hiver"
+      },
+      "url": "https://seabirdgroup.org.uk/journals/seabird-27/seabird-27-21.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Seasonal bill plates fall away; grooves persist and develop with age."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 11,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging behaviour of sympatric razorbills and puffins",
+        "fr": "Comportement alimentaire du Pingouin torda et du Macareux moine sympatriques"
+      },
+      "url": "https://doi.org/10.3354/meps11080",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Skomer chick-rearing birds averaged 11.8 m depth and 39.7 seconds per dive."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 12,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Multiple methods of diet assessment reveal differences in Atlantic puffin diet between ages, breeding stages, and years",
+        "fr": "Plusieurs méthodes révèlent des différences de régime selon l’âge, la reproduction et l’année chez le Macareux moine"
+      },
+      "url": "https://doi.org/10.3389/fmars.2024.1410805",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Gulf of Maine sampling covered anomalously warm breeding seasons in 2021 and 2022."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 13,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Puffin (Fratercula arctica) Species Profile",
+        "fr": "Fiche de l’espèce Macareux moine (Fratercula arctica)"
+      },
+      "url": "https://www.maine.gov/ifw/docs/endangered/atlanticpuffin_56_57.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2003 Maine agency profile reports the species was listed as threatened in 1997 and documents near extirpation by 1900."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.en.7",
+        "conservation.fr.4",
+        "conservation.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 19,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fratercula arctica",
+        "fr": "Fratercula arctica"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22694927A117606911.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 1 October 2017; documents rapid European declines and a projected 50–79% European decrease over 2000–2065."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 18,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Local prey shortages drive foraging costs and breeding success in a declining seabird, the Atlantic puffin",
+        "fr": "Les pénuries locales de proies augmentent le coût de la recherche alimentaire et réduisent le succès reproducteur du Macareux moine"
+      },
+      "url": "https://doi.org/10.1111/1365-2656.13442",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Four populations compared; scarce prey coincided with longer trips and reduced provisioning."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 12,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "When are Atlantic puffins Fratercula arctica in the North Sea and around the Faroe Islands flightless?",
+        "fr": "Quand les Macareux moines sont-ils incapables de voler en mer du Nord et autour des îles Féroé ?"
+      },
+      "url": "https://doi.org/10.1080/00063657.2014.909382",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "North Sea and Faroes records show flightless moult from September through March."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 12,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Decline in an Atlantic Puffin Population: Evaluation of Magnitude and Mechanisms",
+        "fr": "Déclin d’une population de Macareux moines : ampleur et mécanismes"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0131527",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Fair Isle study estimated about 50% decline from 1986 through 2012."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 11,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "High Survival of Immatures in a Long-Lived Seabird: Insights from a Long-Term Study of the Atlantic Puffin",
+        "fr": "Forte survie des immatures chez un oiseau marin longévif : étude de long terme du Macareux moine"
+      },
+      "url": "https://doi.org/10.1525/auk.2008.07059",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "At Hornøya, colour-ringed immatures were frequently resighted at age three; estimated mean first breeding age was five locally."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 18,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gull-Puffin Interactions on Great Island, Newfoundland",
+        "fr": "Interactions entre goélands et Macareux moines à Great Island, Terre-Neuve"
+      },
+      "url": "https://doi.org/10.1016/0006-3207(83)90044-7",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Field observations documented gull predation and kleptoparasitism at Great Island."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 10,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Puffin Life History",
+        "fr": "Cycle de vie du Macareux moine"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell summarizes one egg, incubation, brooding, and fledging periods."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 9,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Puffin Sounds",
+        "fr": "Sons du Macareux moine"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/sounds",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Male grunts and bill rattles are recorded during breeding-season courtship and display."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 12,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Re-establishment of Atlantic Puffins (Fratercula arctica) at a former breeding site in the Gulf of Maine",
+        "fr": "Rétablissement du Macareux moine (Fratercula arctica) sur un ancien site de reproduction du golfe du Maine"
+      },
+      "url": "https://sora.unm.edu/sites/default/files/journals/jfo/v059n02/p0161-p0170.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Project Puffin transferred chicks to Eastern Egg Rock from 1973 to 1981; the paper reports the re-establishment effort."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 18,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "2004 Program Highlights, Maine Coastal Islands National Wildlife Refuge",
+        "fr": "Faits saillants 2004, Maine Coastal Islands National Wildlife Refuge"
+      },
+      "url": "https://www.fws.gov/sites/default/files/documents/Program_highlights_2004_Maine_Coastal_Islands_NWR.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The refuge report says puffin restoration on Seal Island began in 1984."
+      ],
+      "prose_claims": [
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 12,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021",
+        "fr": "Liste rouge européenne des oiseaux 2021"
+      },
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/3321_fratercula_arctica.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International regional assessment: Endangered in Europe, breeding population trend decreasing, assessment year 2021."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 14,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Top 10 facts about Puffins — WWF UK",
+        "fr": "10 faits sur les macareux — WWF UK"
+      },
+      "url": "https://www.wwf.org.uk/learn/fascinating-facts/puffins",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Atlantic puffins weigh 320–480 g and measure 26–29 cm long, with wingspans of 47–63 cm; no sex-specific range given."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 19,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": {
+    "en": "Show a breeding adult with bright seasonal bill plates and pale face beside a diving pose; do not imply the bill stays colorful year-round.",
+    "fr": "Montrer un adulte en plumage nuptial, avec plaques colorées du bec et face claire, près d’une scène de plongée ; ne pas suggérer que le bec reste coloré toute l’année."
+  },
+  "uncertainties": [
+    "Global population abundance and trend vary among colonies; this account avoids a single global estimate.",
+    "The timing and route of some winter movements remain incompletely resolved."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and targeted full-text verification of Hornøya age estimates; corrected restoration chronology, feeding anatomy, moult and status scope, bilingual and source budget audit; illustration inspected."
+}

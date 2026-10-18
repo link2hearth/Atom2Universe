@@ -1,0 +1,139 @@
+{
+  "id": "orca",
+  "scientific": "Orcinus orca",
+  "group": "mammals",
+  "name": {
+    "en": "Orca",
+    "fr": "Orque"
+  },
+  "sections": {
+    "overview": {
+      "en": "The orca, or killer whale, is the largest member of the dolphin family. It occurs in every ocean, from polar waters to the tropics. Its species-wide range contains distinct populations whose diets, calls and social traditions vary considerably.",
+      "fr": "L’orque est le plus grand membre de la famille des dauphins. Elle vit dans tous les océans, des eaux polaires aux tropiques. Au sein de cette espèce, les populations diffèrent nettement par leur régime, leurs vocalisations et leurs traditions sociales."
+    },
+    "identification": {
+      "en": "A robust, streamlined body carries sharply contrasting black and white markings, including pale oval eye patches and a grey saddle behind the dorsal fin. The rounded head has no distinct beak; a tall fin, especially in adult males, helps identify the species. Adult males average about 8 m long and can reach 9.75 m; females average about 7 m and can reach 8.5 m. Reported average male mass is about 7,200 kg, while females are described as somewhat lighter without a comparable average. The erect dorsal fin can reach 1.8 m in adult males, versus about 0.9 m in females and immature males. No useful body-width measurement was found.",
+      "fr": "Son corps puissant et fuselé porte des motifs noirs et blancs très contrastés, dont des taches claires près des yeux et une selle grise derrière la nageoire dorsale. Sa tête arrondie n’a pas de bec distinctif ; la grande nageoire des mâles adultes facilite l’identification. Le mâle adulte mesure en moyenne environ 8 m et peut atteindre 9,75 m; la femelle mesure en moyenne environ 7 m et peut atteindre 8,5 m. La masse moyenne rapportée chez le mâle est d’environ 7 200 kg; la femelle est décrite comme un peu plus légère, sans moyenne comparable dans la source. La nageoire dorsale dressée peut atteindre 1,8 m chez le mâle adulte, contre environ 0,9 m chez les femelles et les mâles immatures. Je n’ai pas trouvé de mesure utile de largeur du corps."
+    },
+    "habitat": {
+      "en": "Orcas inhabit coastal seas, continental shelves and open ocean across all major ocean basins. They are most abundant in colder regions but also occur in tropical and subtropical waters. Some communities range widely offshore; others use coastal corridors, and ranges can overlap.",
+      "fr": "Les orques fréquentent les mers côtières, les plateaux continentaux et le large, dans tous les grands bassins océaniques. Elles sont plus abondantes dans les régions froides, mais vivent aussi sous les tropiques et en zone subtropicale. Certaines communautés parcourent le large, d’autres les côtes."
+    },
+    "diet": {
+      "en": "Food choice differs among populations and is often shaped by learned hunting traditions. In the northeast Pacific, resident communities mainly take fish, including salmon; Bigg’s whales hunt marine mammals, while offshore whales eat fish and sharks. Elsewhere, prey includes herring, rays, seals or penguins.",
+      "fr": "Le régime varie selon les populations et dépend souvent de techniques de chasse apprises. Dans le nord-est du Pacifique, les communautés résidentes mangent surtout des poissons, dont des saumons ; les orques de Bigg chassent des mammifères marins, celles du large des poissons et requins."
+    },
+    "behavior": {
+      "en": "Many orcas maintain long-lasting, often maternally related social groups. Clicks, whistles and pulsed calls coordinate activity and keep groups in contact; call repertoires can be learned and shared within communities. Some populations cooperate during hunts, but group size and social structure vary.",
+      "fr": "De nombreuses orques vivent dans des groupes durables, souvent apparentés par les femelles. Clics, sifflements et appels pulsés coordonnent leurs activités et maintiennent le contact ; les répertoires vocaux s’apprennent et se transmettent au sein des communautés. Certaines populations chassent ensemble."
+    },
+    "reproduction": {
+      "en": "Females mature at roughly 10–13 years and carry a single calf for about 15–18 months. A calf nurses for at least a year and remains close to its mother for two years or longer. Births occur throughout the year; intervals differ among populations.",
+      "fr": "Les femelles mûrissent vers 10–13 ans et portent un seul petit environ 15–18 mois. Le jeune est allaité au moins un an et reste près de sa mère deux ans ou davantage. Les naissances ont lieu toute l’année ; leur intervalle varie."
+    },
+    "ecology": {
+      "en": "As a predator, an orca can influence prey abundance and behaviour, depending on local food webs and hunting traditions. It also transfers energy and nutrients through the marine food web. Persistent pollutants accumulate in its blubber over a long life.",
+      "fr": "Prédateur, l’orque peut modifier l’abondance et le comportement de ses proies, selon le réseau alimentaire local et les traditions de chasse. Elle transfère aussi énergie et nutriments dans le réseau marin. Les polluants persistants s’accumulent dans son tissu graisseux."
+    },
+    "conservation": {
+      "en": "Risk is uneven: some local populations face depleted prey, fishing-gear entanglement, vessel disturbance and underwater noise, while contaminants can affect health and reproduction. The IUCN’s 2017 global assessment classed the species Data Deficient, reflecting limited population-wide information, not proof that every population is secure.",
+      "fr": "Certaines populations manquent de proies et subissent engins de pêche, bateaux et bruit sous-marin ; les contaminants affectent leur santé. En 2017, l’UICN classait l’espèce « données insuffisantes », faute de données mondiales ; ce statut ne garantit pas la sécurité de chaque population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Killer Whale",
+        "fr": "Orque"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/killer-whale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA describes global ocean distribution, population-specific ecotypes and prey, morphology, reproduction, threats and pollutant accumulation.",
+        "Its reproductive age, gestation and nursing figures are species-level summaries; local ecological examples are labeled geographically."
+      ]
+    },
+    {
+      "title": {
+        "en": "Killer Whale: Science",
+        "fr": "Orque : recherche scientifique"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/killer-whale/science?page=0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "NOAA reports learned, culturally transmitted calls in Pacific Northwest pods and cooperative hunting.",
+        "It contrasts Pacific Northwest diets and gives examples from Norway, New Zealand and Antarctica."
+      ]
+    },
+    {
+      "title": {
+        "en": "Killer Whale",
+        "fr": "Orque"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/killer-whale/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The Australian Museum describes the black-and-white pattern, rounded head, teeth and dorsal fin.",
+        "It documents occurrence from coastal to deep waters and tropical to polar seas."
+      ]
+    },
+    {
+      "title": {
+        "en": "Killer whale",
+        "fr": "Orque"
+      },
+      "url": "https://iwc.int/about-whales/whale-species/killer-whale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The IWC page reports the 2017 IUCN Data Deficient assessment and explains that broad range and poorly surveyed populations constrain assessment.",
+        "It cites research on cultural transmission within maternal lineages and on effects of vessel traffic on foraging."
+      ]
+    },
+    {
+      "title": {
+        "en": "Orcinus orca (killer whale) | Animal Diversity Web",
+        "fr": "Orcinus orca (killer whale) | Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Orcinus_orca/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports sex-specific average and maximum lengths, male average body mass, relative female mass, and dorsal-fin height by sex/age."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult orca with accurate natural anatomy and species-specific black-white pattern, shown on a pure white background.",
+  "uncertainties": [
+    "The number and taxonomic rank of distinct orca lineages remain under study; this entry follows the requested archive identity, Orcinus orca.",
+    "Diet, social organization and population status differ substantially by region; the North Pacific ecotype examples do not characterize all orcas.",
+    "The IUCN global Data Deficient category cited here is from its 2017 assessment, not a current population estimate."
+  ],
+  "reviewed": true,
+  "review_note": "Coordinator bilingual coherence/source review; existing independently accepted illustration retained."
+}

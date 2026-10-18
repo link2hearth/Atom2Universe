@@ -1,0 +1,186 @@
+{
+  "id": "nomada_succincta",
+  "scientific": "Nomada succincta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow-legged nomad bee",
+    "fr": "Nomade jaune et noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada succincta is a European cuckoo bee whose best-supported hosts are Andrena nitida and A. nigroaenea.",
+      "fr": "Nomada succincta est une abeille coucou européenne ; ses hôtes les mieux documentés sont Andrena nitida et A. nigroaenea."
+    },
+    "identification": {
+      "en": "Its common English name refers to yellow legs, but similar Nomada can be confused; a French field account distinguishes it from N. goodeniana by its more fully yellow tibiae and tarsi.",
+      "fr": "Son nom anglais courant évoque ses pattes jaunes, mais des Nomada proches peuvent lui ressembler ; une fiche française la distingue de N. goodeniana par ses tibias et tarses plus entièrement jaunes."
+    },
+    "habitat": {
+      "en": "Regional accounts record it in varied places, including railway land, dikes, woodland edges and heath; no single habitat is established for the full range.",
+      "fr": "Des sources régionales la signalent dans des milieux variés, comme les emprises ferroviaires, digues, lisières et landes ; aucun habitat unique n’est établi pour toute son aire."
+    },
+    "diet": {
+      "en": "As a cleptoparasite, its larvae use the host nest provisions rather than pollen collected by the female; adults may visit flowers for nectar.",
+      "fr": "Comme cleptoparasite, ses larves utilisent les réserves du nid hôte plutôt que du pollen récolté par la femelle ; les adultes peuvent visiter des fleurs pour le nectar."
+    },
+    "behavior": {
+      "en": "European accounts most often name A. nitida and A. nigroaenea as hosts; some list other Andrena as possible hosts, so those additional records remain provisional.",
+      "fr": "Les sources européennes citent surtout A. nitida et A. nigroaenea comme hôtes ; certaines proposent d’autres Andrena, mais ces données restent provisoires."
+    },
+    "reproduction": {
+      "en": "A Slovenian account describes one generation per year, with adults from April to June; local dates may vary with climate and host activity.",
+      "fr": "Une source slovène décrit une génération annuelle, avec des adultes d’avril à juin ; les dates locales peuvent varier selon le climat et l’activité des hôtes."
+    },
+    "ecology": {
+      "en": "It overlaps in season with other spring Nomada but has different documented hosts from N. leucophthalma, whose hosts are A. clarkella and A. apicata.",
+      "fr": "Sa période chevauche celle d’autres Nomada printaniers, mais ses hôtes documentés diffèrent de ceux de N. leucophthalma : A. clarkella et A. apicata."
+    },
+    "conservation": {
+      "en": "The European Red List classifies N. succincta as Least Concern at European and EU scales; this does not imply it is common at every site.",
+      "fr": "La Liste rouge européenne classe N. succincta en préoccupation mineure aux échelles européenne et de l’UE à vingt-sept ; cela ne signifie pas qu’elle soit commune partout."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nomada accounts — Slovenian Museum of Natural History journal, Scopolia 42",
+        "fr": "Fiches de Nomada — revue Scopolia 42, Musée slovène d’histoire naturelle"
+      },
+      "url": "https://www.pms-lj.si/app/uploads/2022/11/Scopolia-42.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional account names A. nitida and A. nigroaenea as hosts and reports one generation from April to June."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 18,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "De wespbijen (Nomada) van Nederland — Netherlands Entomological Society paper",
+        "fr": "Les abeilles coucous Nomada des Pays-Bas — article de la Société entomologique néerlandaise"
+      },
+      "url": "https://www.researchgate.net/publication/254911760_De_wespbijen_Nomada_van_Nederland_Hymenoptera_Apidae",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Dutch synthesis calls A. nitida the most likely primary host and A. nigroaenea another probable host; it records railway grounds, dikes, woodland margins and heath."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 25,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La nomada à pattes jaunes — Quel est cet animal?",
+        "fr": "La nomada à pattes jaunes — Quel est cet animal?"
+      },
+      "url": "https://www.quelestcetanimal.com/hymenopteres/la-nomada-a-pattes-jaunes/",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French account compares the yellow tibiae and tarsi with the more orange appendages of N. goodeniana and reports A. nigroaenea and A. nitida as main hosts."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 26,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Bees — European Commission / IUCN",
+        "fr": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European and EU categories for N. succincta are Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 10,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Nomada females do not transport pollen; larvae consume food in host brood cells."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 13,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host lists vary among regional sources; only the recurring A. nitida and A. nigroaenea associations are emphasized.",
+    "Use a taxonomic key for records because related species may be confused."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,284 @@
+{
+  "id": "sable",
+  "scientific": "Martes zibellina",
+  "group": "mammals",
+  "name": {
+    "en": "Sable",
+    "fr": "Zibeline"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sable is a forest marten of northern Eurasia, widespread from the Urals through Siberia to the Pacific. It also occurs in China, Mongolia, North Korea, Kazakhstan and Hokkaido.",
+      "fr": "La zibeline est une martre forestière du nord de l’Eurasie, présente de l’Oural à travers la Sibérie jusqu’au Pacifique. Elle est aussi présente en Chine, en Mongolie, en Corée du Nord, au Kazakhstan et à Hokkaido."
+    },
+    "identification": {
+      "en": "Adults have a long, flexible body, short feet and a bushy tail. In broad Russian samples, males measured 32–53 cm from head to body and weighed 1.15–1.85 kg; females measured 30–48 cm and weighed 0.65–1.60 kg. These observed ranges vary geographically, and adult males are usually heavier than females. Winter fur is dense and silky; the summer coat is shorter and coarser. Across populations, fur ranges from sandy brown to nearly black, sometimes with a pale throat patch. The sable resembles the European pine marten, Martes martes, but is usually darker, has a shorter tail relative to its body, and hunts more often on the ground.",
+      "fr": "L’adulte a un corps allongé et souple, des pieds courts et une queue touffue. Dans de vastes échantillons russes, les mâles mesuraient 32 à 53 cm de la tête au corps et pesaient 1,15 à 1,85 kg ; les femelles mesuraient 30 à 48 cm et pesaient 0,65 à 1,60 kg. Ces plages observées varient selon les régions, et les mâles adultes sont généralement plus lourds que les femelles. Le pelage d’hiver est dense et soyeux ; celui d’été est plus court et rêche. Selon les populations, la fourrure va du brun sable au presque noir, parfois avec une tache claire à la gorge. La zibeline ressemble à la martre des pins européenne, Martes martes, mais elle est généralement plus sombre, sa queue est plus courte par rapport au corps et elle chasse davantage au sol."
+    },
+    "habitat": {
+      "en": "The sable inhabits coniferous taiga and mixed forests on plains and mountains, hunting mainly near the ground. In Hokkaido, tracked animals rested in dense stands with fallen wood and foraged in mature forest where rodents were plentiful.",
+      "fr": "La zibeline fréquente la taïga de conifères et les forêts mixtes de plaine et de montagne, chassant surtout près du sol. À Hokkaido, les animaux suivis se reposaient dans des peuplements denses où le bois mort abondait et cherchaient leur nourriture dans les forêts mûres riches en rongeurs."
+    },
+    "diet": {
+      "en": "The sable is an adaptable predator, and its diet shifts with season and local prey. In eastern Hokkaido, voles occurred most often in samples, followed by Siberian chipmunks and wood mice. The same study recorded birds, eggs, insects, fish, amphibians, reptiles and crustaceans; fruits were more frequent in autumn and winter, when plant foods can supplement mammal prey. In Barguzin, sables hunt pikas beneath snow and scavenge carrion. This broad menu may help sables compensate when mammal prey fluctuates.",
+      "fr": "La zibeline est un prédateur opportuniste dont le régime varie avec les saisons et les proies locales. Dans l’est de Hokkaido, les campagnols étaient les plus fréquents dans les échantillons, suivis des tamias de Sibérie et des mulots. La même étude a relevé des oiseaux, des œufs, des insectes, des poissons, des amphibiens, des reptiles et des crustacés ; les fruits apparaissaient davantage en automne et en hiver, lorsque les végétaux complètent les proies mammifères. Dans la réserve de Bargouzine, la zibeline chasse les pikas sous la neige et consomme des charognes. Ce menu varié peut les aider à compenser les fluctuations des proies mammifères."
+    },
+    "behavior": {
+      "en": "Sables are generally solitary, use individual ranges, locate prey by hearing and smell, and mark their surroundings with scent. In storms or during human pursuit, they may hide in dens for days.",
+      "fr": "Les zibelines sont généralement solitaires, occupent des domaines individuels, repèrent leurs proies par l’ouïe et l’odorat et marquent leur environnement par des odeurs. En cas de tempête ou de poursuite humaine, elles peuvent rester plusieurs jours dans leur gîte."
+    },
+    "reproduction": {
+      "en": "Mating takes place mainly from mid-June to mid-August, though dates vary by region. In sparse populations, courtship may involve chasing, jumps and low rumbling; males may fight where their ranges overlap. After fertilization, the embryo remains dormant for 7.5–8 months before attaching to the uterine lining; it then develops for about 30–35 days, with births from late March to early May. Litters contain one to seven kits, often about three. Newborns are helpless and blind; they open their eyes around one month, leave the den soon afterward, and are weaned at about seven weeks, when the mother begins providing regurgitated food. Young disperse in August.",
+      "fr": "Les accouplements ont lieu surtout de la mi-juin à la mi-août, avec des variations régionales. Quand les animaux sont rares, la parade peut comporter poursuites, bonds et grondements sourds ; les mâles peuvent se battre là où leurs domaines se chevauchent. Après fécondation, l’embryon reste en repos pendant 7,5 à 8 mois avant de se fixer à la paroi de l’utérus ; il se développe ensuite durant environ 30 à 35 jours, avec des naissances de la fin mars au début mai. Les portées comptent de un à sept petits, souvent autour de trois. Les nouveau-nés sont dépendants et aveugles ; ils ouvrent les yeux vers un mois, quittent le gîte peu après et sont sevrés vers sept semaines, lorsque la mère commence à leur apporter des aliments régurgités. Les jeunes se dispersent en août."
+    },
+    "ecology": {
+      "en": "Forest structure shapes shelter and hunting: in Hokkaido, sables rested under dense cover that may reduce exposure to red foxes and wind, then foraged in rodent-rich mature stands. Some tracked home ranges overlapped extensively. Food shortages can enlarge home ranges.",
+      "fr": "La structure forestière conditionne le refuge et la chasse : à Hokkaido, les zibelines se reposaient sous un couvert dense pouvant les protéger des renards roux et du vent, puis chassaient dans des peuplements mûrs riches en rongeurs. Certains domaines vitaux suivis se chevauchaient largement. La pénurie de nourriture peut élargir les domaines vitaux."
+    },
+    "conservation": {
+      "en": "Demand for sable fur drove severe depletion in parts of Russia by the early twentieth century. In 1914, a survey found only about 20–30 sables across the future Barguzin reserve; established in 1916 with a hunting ban, it enabled the population to recover. An IUCN assessment dated 3 March 2015 and published in 2016 classified the species globally as Least Concern, reflecting its large, widespread population.",
+      "fr": "La demande de fourrure de zibeline a provoqué un fort déclin dans certaines régions de Russie au début du XXe siècle. En 1914, une expédition ne recensait qu’environ 20 à 30 zibelines dans la future réserve de Bargouzine ; créée en 1916 avec une interdiction de chasse, elle permit à la population de se rétablir. Une évaluation de l’UICN datée du 3 mars 2015 et publiée en 2016 a classé l’espèce en préoccupation mineure à l’échelle mondiale, compte tenu de sa population importante et largement répartie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Martes zibellina (Carnivora: Mustelidae)",
+        "fr": "Martes zibellina (Carnivora : Mustelidae)"
+      },
+      "url": "https://academic.oup.com/mspecies/article/43/876/75/2642981",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Body form, pine-marten comparison, solitary habits, and sheltering."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.6",
+        "identification.fr.6",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 8,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martes zibellina, Sable",
+        "fr": "Martes zibellina, zibeline"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41652A45213477.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Dated global assessment, distribution, status, and reproductive estimates."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 8,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food habits of the Japanese sable Martes zibellina brachyura in eastern Hokkaido, Japan",
+        "fr": "Régime alimentaire de la zibeline japonaise Martes zibellina brachyura dans l’est de Hokkaido, Japon"
+      },
+      "url": "https://www.jstage.jst.go.jp/article/mammalstudy/28/2/28_2_129/_article",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Hokkaido fecal and stomach samples show seasonal shifts among prey and plant foods."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.5",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 13,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Home range and habitat use by the sable Martes zibellina brachyura in a Japanese cool-temperate mixed forest",
+        "fr": "Domaine vital et utilisation de l’habitat par la zibeline Martes zibellina brachyura dans une forêt mixte tempérée fraîche du Japon"
+      },
+      "url": "https://doi.org/10.1007/s11284-004-0012-y",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Hokkaido tracking links resting cover, movement, and foraging routes to forest structure and prey."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 14,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martes zibellina (sable)",
+        "fr": "Martes zibellina (zibeline)"
+      },
+      "url": "https://animaldiversity.org/accounts/Martes_zibellina/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Michigan account describes seasonal coat, mating, newborn care, and development."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 10,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barguzin Sable",
+        "fr": "Zibeline de Bargouzine"
+      },
+      "url": "https://barguzinsky.ru/species/sobol",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "Reserve account records 1914 depletion, 1916 protection, and recovery after hunting stopped."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 12,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ezo sable",
+        "fr": "Zibeline d’Ézo"
+      },
+      "url": "https://www.city.kushiro.lg.jp/zoo/shoukai/1001527/1001528/1001535.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Species range, Hokkaido populations, sex-specific measurements, and coat variation."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.5",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 9,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a compact, long-bodied mustelid with short feet, a bushy tail, and a variable brown coat with a pale throat patch; place it on the taiga forest floor beside roots or fallen wood. Avoid depicting it as the European pine marten or as a tree-specialist.",
+  "uncertainties": [
+    "Body size and coat color vary geographically; the measurement ranges here summarize a broad Russian sample rather than every population.",
+    "The detailed seasonal diet and home-range evidence cited here comes from the Hokkaido subspecies and should not be read as a universal seasonal pattern.",
+    "The cited IUCN assessment was conducted in 2015 and published in 2016; no newer global assessment was verified during research."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual review; adult dimensions checked in Kushiro institutional account, juvenile feeding checked in ADW, delayed implantation explained, scent-gland position omitted; art accepted.",
+  "source_audit_version": 1
+}

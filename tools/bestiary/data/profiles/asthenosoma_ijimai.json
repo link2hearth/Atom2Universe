@@ -1,0 +1,208 @@
+{
+  "id": "asthenosoma_ijimai",
+  "scientific": "Asthenosoma ijimai",
+  "group": "invertebrates",
+  "name": {
+    "en": "Iijima's fire urchin",
+    "fr": "Oursin de feu d’Iijima"
+  },
+  "sections": {
+    "overview": {
+      "en": "Asthenosoma ijimai is a tropical echinothuriid sea urchin, notable for its soft, flexible test and conspicuous venomous spines.",
+      "fr": "Asthenosoma ijimai est un oursin tropical de la famille des Echinothuriidae, remarquable par son test souple et ses épines venimeuses."
+    },
+    "identification": {
+      "en": "The flattened animal may reach about 13 centimetres across; a dark reddish upper surface, pale spine bands and white spine tips distinguish it.",
+      "fr": "Cet animal aplati peut atteindre environ 13 centimètres de diamètre ; sa face supérieure rouge sombre, ses bandes claires et ses pointes blanches le caractérisent."
+    },
+    "habitat": {
+      "en": "It lives on the seabed in the western Pacific, from Japanese waters south toward the Philippines and South China Sea, across reported depth ranges of roughly 7–300 metres.",
+      "fr": "Il vit sur les fonds du Pacifique occidental, des eaux japonaises vers les Philippines et la mer de Chine méridionale, dans des profondeurs rapportées d’environ 7 à 300 mètres."
+    },
+    "diet": {
+      "en": "Species-specific feeding observations are sparse in the references consulted, so a more precise account of its natural food remains uncertain.",
+      "fr": "Les références consultées fournissent peu d’observations alimentaires propres à l’espèce ; la composition précise de son régime naturel reste donc incertaine."
+    },
+    "behavior": {
+      "en": "An older Japanese encyclopedia account says it hides in hollows or beneath stones, then returns to shelter after emerging to feed.",
+      "fr": "Une ancienne encyclopédie japonaise indique qu’il se cache dans les creux ou sous les pierres, puis regagne son abri après être sorti se nourrir."
+    },
+    "reproduction": {
+      "en": "Laboratory work found unusually large, floating eggs and a lecithotrophic larval development; larvae remain near the surface before settling after several weeks.",
+      "fr": "En laboratoire, les œufs se sont révélés exceptionnellement grands et flottants, avec un développement larvaire lécithotrophe ; les larves restent près de la surface avant de se fixer après plusieurs semaines."
+    },
+    "ecology": {
+      "en": "It is a benthic urchin documented across a broad tropical western Pacific depth range, while variation among Japanese populations has prompted taxonomic study.",
+      "fr": "C’est un oursin benthique documenté sur une vaste plage de profondeurs du Pacifique tropical occidental ; la variation entre populations japonaises a motivé des études taxonomiques."
+    },
+    "conservation": {
+      "en": "No global Red List assessment was located in the databases consulted, and available sources do not establish population trends or a species-specific conservation status.",
+      "fr": "Aucune évaluation mondiale de la Liste rouge n’a été trouvée dans les bases consultées, et les sources disponibles n’établissent ni tendance démographique ni statut de conservation propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Asthenosoma ijimai — SeaLifeBase",
+        "fr": "Asthenosoma ijimai — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.se/summary/139087",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase reports tropical benthic range and western Pacific localities."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 9,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Iijima's fire urchin — Kotobank, Britannica International Encyclopedia",
+        "fr": "Oursin de feu d’Iijima — Kotobank, Encyclopædia Britannica internationale"
+      },
+      "url": "https://kotobank.jp/word/%E3%81%84%E3%81%84%E3%81%98%E3%81%BE%E3%81%B5%E3%81%8F%E3%82%8D%E3%81%86%E3%81%AB-3190887",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Japanese encyclopedia describes a flexible flattened test and venomous spines."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 10,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Development and Larval Form of Asthenosoma ijimai, Revisited — PubMed",
+        "fr": "Développement et forme larvaire d’Asthenosoma ijimai — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29304716/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed developmental study reports a highly modified, reduced pluteus larva in this echinothurioid."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 13,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Development of the echinothurid sea urchin Asthenosoma ijimai — Marine Biology",
+        "fr": "Développement de l’oursin échinothuride Asthenosoma ijimai — Marine Biology"
+      },
+      "url": "https://doi.org/10.1007/BF00386862",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Developmental paper reports large floating eggs, lecithotrophic embryos and larvae, and settlement after roughly three to four weeks under laboratory conditions."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular evidence for sibling species within Asthenosoma ijimai — PubMed",
+        "fr": "Données moléculaires en faveur d’espèces jumelles au sein d’Asthenosoma ijimai — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15514475/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Japanese populations historically called A. ijimai showed geographic, ecological, morphological and genetic differentiation; authors proposed a sibling species for the Ryukyu form."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 22,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Asthenosoma ijimai — French Wikipedia",
+        "fr": "Asthenosoma ijimai — Wikipédia en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Asthenosoma_ijimai",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "French-language account characterizes the species as an algal grazer and places it in the central Indo-Pacific; these details require stronger primary corroboration."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 22,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Depth limits differ among reference summaries (7–300 m versus 8–120 m); distribution and the identity of the Ryukyu population have taxonomic qualifications.",
+    "Detailed species-specific diet, behavior, population trends and conservation assessment were not established by the strongest sources located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Japanese-language encyclopedia information with SeaLifeBase and primary developmental and molecular studies. Same-genus relative A. varium is not currently represented among the existing profile records; the A. ijimai name has also been applied to a differentiated Ryukyu population."
+}

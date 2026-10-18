@@ -1,0 +1,646 @@
+{
+  "id": "common_octopus",
+  "scientific": "Octopus vulgaris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common octopus",
+    "fr": "Poulpe commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Octopus is a soft-bodied coastal cephalopod, adapted to reefs and seabed shelters. Octopus vulgaris sensu stricto is documented in the Mediterranean and eastern Atlantic. Earlier worldwide records often treated related lineages as one species. The American Atlantic lineage is recognized as O. americanus. The East Asian common octopus is O. sinensis. Its short life links planktonic young to solitary, bottom-living adults.",
+      "fr": "Le Poulpe commun est un céphalopode côtier au corps mou, adapté aux récifs et aux abris du fond. Octopus vulgaris sensu stricto est attesté en Méditerranée et dans l’Atlantique oriental. D’anciennes mentions mondiales réunissaient souvent des lignées apparentées sous un seul nom. La lignée de l’Atlantique américain est reconnue comme O. americanus. Le poulpe commun d’Asie orientale est O. sinensis. Son cycle bref relie les jeunes planctoniques aux adultes solitaires du fond."
+    },
+    "identification": {
+      "en": "Its rounded mantle houses the organs; the head bears large eyes and a beak amid eight arms. These are arms, not tentacles: each carries two rows of suckers for gripping, tasting and handling food or shelter. Typical mantle length is 10–20 cm and mass 1–3 kg; the reported maximum is about 10 kg, with males tending to grow larger. Ten kilograms is exceptional; skin colour ranges from grey to yellow or reddish brown and its texture can rise into bumps.",
+      "fr": "Le manteau arrondi abrite les organes ; la tête porte de grands yeux et un bec au milieu de huit bras. Ce sont des bras, pas des tentacules : chacun porte deux rangées de ventouses pour saisir, goûter et manipuler nourriture ou abri. Le manteau mesure généralement 10 à 20 cm et la masse atteint 1 à 3 kg ; le maximum rapporté approche 10 kg, les mâles tendant à devenir plus grands. Dix kilogrammes est une valeur exceptionnelle ; la peau varie du gris au jaune ou au brun rougeâtre et peut se hérisser de reliefs."
+    },
+    "habitat": {
+      "en": "Adults occupy coastal seabeds, often rocky or sandy, mostly within about 100 m. A crevice or rock cavity provides a den for shelter and retreat after foraging. They are generally solitary, and den use varies with local prey and shelter.",
+      "fr": "Les adultes vivent sur les fonds côtiers, souvent rocheux ou sableux, surtout à moins de 100 m. Une fissure ou une cavité rocheuse sert de tanière et de refuge après la quête alimentaire. Ils sont généralement solitaires, et l’usage des tanières varie selon les proies et abris locaux."
+    },
+    "diet": {
+      "en": "It hunts bottom-living prey, chiefly crabs and other crustaceans, bivalves and snails. Shells and prey remains near dens reveal part of the diet, but currents and carried-away prey make such middens incomplete evidence. The arms and suckers hold prey while the beak bites. Octopuses drill holes into shells to reach the soft tissue inside. The toothed salivary papilla acts as an accessory radula during drilling. Salivary enzymes help process prey, and nutrients are absorbed through the digestive gland.",
+      "fr": "Il chasse des proies du fond, surtout des crabes et autres crustacés, des bivalves et des escargots. Les coquilles et restes près des tanières révèlent une partie du régime, mais les courants et les proies emportées rendent ces amas incomplets. Les bras et les ventouses retiennent la proie pendant que le bec mord. Le poulpe perce la coquille pour atteindre les tissus mous qu’elle contient. La papille salivaire dentée agit comme une radula auxiliaire pendant le forage. Les enzymes salivaires contribuent à la digestion, puis la glande digestive absorbe les nutriments."
+    },
+    "behavior": {
+      "en": "An arm is a muscular hydrostat: interwoven lengthwise, transverse and oblique muscles bend, shorten, extend and twist it without rigid bones. Arm nerve networks coordinate local movement within a connected nervous system; the popular phrase “nine brains” oversimplifies this arrangement. Suckers attach, explore and sense surfaces. Chromatophores are pigment sacs expanded by radial muscle contraction; iridophores reflect light, while muscular papillae change skin relief. In a captive spatial-reversal study, some individuals learned to change a rewarded choice when feedback was available, evidence of flexible learning in that specific laboratory task.",
+      "fr": "Un bras est un hydrostat musculaire : des muscles longitudinaux, transversaux et obliques entrecroisés le plient, le raccourcissent, l’allongent et le tordent sans os rigides. Des réseaux nerveux des bras coordonnent les mouvements locaux au sein d’un système connecté ; la formule populaire des « neuf cerveaux » simplifie abusivement cette organisation. Les ventouses adhèrent, explorent et perçoivent les surfaces. Les chromatophores sont des sacs pigmentaires dilatés par la contraction de muscles radiaires ; les iridophores réfléchissent la lumière et les papilles musculaires modifient le relief cutané. Dans une étude d’inversion des choix spatiaux menée en captivité, certains individus ont appris à changer un choix récompensé lorsque le retour d’information était disponible, preuve d’un apprentissage flexible dans cette tâche précise en laboratoire."
+    },
+    "reproduction": {
+      "en": "Males transfer sperm packets with a specialized right third arm, the hectocotylus. A female attaches 100,000–500,000 eggs, each about 2 mm long, in strings inside a sheltered den. She cleans and ventilates the clutch with water jets and generally stops feeding while brooding. The species reproduces once: females die after hatching, and males undergo terminal decline after mating. In Senegal, eggs hatched in 15–42 days at 27 degrees Celsius but took 80–87 days at 17 degrees Celsius. Hatchlings are planktonic paralarvae, not miniature benthic adults; a regional rearing study recorded settlement after about 40–60 days at 18–22 degrees Celsius. These timings vary with region and water temperature.",
+      "fr": "Le mâle transfère des spermatophores avec son troisième bras droit spécialisé, l’hectocotyle. La femelle fixe en cordons 100 000 à 500 000 œufs d’environ 2 mm dans une tanière abritée. Elle nettoie et ventile la ponte par des jets d’eau et cesse généralement de s’alimenter pendant la garde. L’espèce ne se reproduit qu’une fois : les femelles meurent après l’éclosion et les mâles connaissent un déclin terminal après l’accouplement. Au Sénégal, les œufs ont éclos en 15 à 42 jours à 27 degrés Celsius, contre 80 à 87 jours à 17 degrés Celsius. Les nouveau-nés sont des paralarves planctoniques, pas des adultes benthiques miniatures ; un élevage régional a observé leur installation après environ 40 à 60 jours à 18–22 degrés Celsius. Ces délais varient selon la région et la température de l’eau."
+    },
+    "ecology": {
+      "en": "The life cycle spans two food webs: paralarvae eat zooplankton, while adults prey on seabed invertebrates. Currents disperse young, and temperature and circulation affect development and juvenile supply to coasts. Adults also feed larger fish and marine mammals. The octopus therefore links plankton, benthic prey and coastal predators.",
+      "fr": "Le cycle relie deux réseaux trophiques : les paralarves mangent du zooplancton, tandis que les adultes chassent les invertébrés du fond. Les courants dispersent les jeunes ; température et circulation influencent leur développement et leur arrivée près des côtes. Les adultes nourrissent aussi de grands poissons et des mammifères marins. Le poulpe relie ainsi le plancton, les proies benthiques et les prédateurs côtiers."
+    },
+    "conservation": {
+      "en": "The species is commercially exploited. Its short life cycle makes annual abundance sensitive to recruitment success. A 2008 northwest African stock assessment, published by FAO in 2011, classed the Dakhla, Cap Blanc and Senegal–Gambia stocks as overexploited and recommended lower fishing effort; this is a dated regional finding. The European Commission lists a 750 g minimum conservation reference size for relevant fisheries, a management rule rather than a guarantee of population security.",
+      "fr": "L’espèce est pêchée commercialement. Son cycle bref rend les effectifs annuels sensibles au succès du recrutement. Une évaluation des stocks du nord-ouest africain menée en 2008 et publiée par la FAO en 2011 a classé surexploités ceux de Dakhla, du Cap Blanc et du Sénégal–Gambie et recommandé de réduire l’effort de pêche ; il s’agit d’un constat régional daté. La Commission européenne indique une taille minimale de référence de 750 g pour les pêcheries concernées ; cette règle de gestion ne garantit pas la sécurité des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Genomic Divergence Between Octopus vulgaris and Its Undescribed Sister Species From the South Atlantic and Indian Ocean",
+        "fr": "Divergence génomique entre Octopus vulgaris et son espèce sœur non décrite de l’Atlantique Sud et de l’océan Indien"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13093632/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Genomic analysis separates O. vulgaris sensu stricto from related named and unnamed lineages."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 13,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species complex phylogeography of Octopus vulgaris in Atlantic Macaronesia",
+        "fr": "Phylogéographie du complexe Octopus vulgaris en Macaronésie atlantique"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230294",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The article identifies sensu stricto in northeast Atlantic and Mediterranean and describes plankton dispersal."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.en.6",
+        "overview.fr.2",
+        "overview.fr.6",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 14,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO species account: Octopus vulgaris",
+        "fr": "Fiche FAO : Octopus vulgaris"
+      },
+      "url": "https://www.fao.org/fishery/docs/CDrom/ARTFIMED/ArtFiWeb/descript/Species/OCTOCVUL.HTML",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Typical size, sex difference and reported maximum."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 7,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The morphology and adhesion mechanism of Octopus vulgaris suckers",
+        "fr": "Morphologie et mécanisme d’adhérence des ventouses d’Octopus vulgaris"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3672162/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Study of sucker anatomy and muscular adhesion in specimens from the Bay of Naples."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 14,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Octopus arm flexibility and muscular hydrostat anatomy",
+        "fr": "Flexibilité des bras et anatomie de l’hydrostat musculaire du poulpe"
+      },
+      "url": "https://www.nature.com/articles/s41598-020-77873-7",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Primary anatomical work describes muscle groups and arm flexibility."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 9,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Camouflaging in a complex environment: background matching in octopuses",
+        "fr": "Camouflage dans un environnement complexe : mimétisme du fond chez les poulpes"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3359305/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Study includes O. vulgaris and describes chromatophores, iridophores and visual background matching; chromatophore sacs expand under radial muscle contraction."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 19,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging, feeding and prey remains in juvenile Octopus vulgaris middens",
+        "fr": "Recherche alimentaire et restes de proies dans les amas de jeunes Octopus vulgaris"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/abs/10.1111/j.1469-7998.1991.tb04786.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Field and choice observations cover juvenile prey, dens and limits of midden remains."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 13,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Prey capture, ingestion and digestion in Octopus vulgaris paralarvae",
+        "fr": "Capture, ingestion et digestion des proies chez les paralarves d’Octopus vulgaris"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5562678/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Describes adult beak, salivary enzymes and paralarval zooplankton feeding."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.en.6",
+        "diet.fr.3",
+        "diet.fr.6",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 9,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Temperature and embryonic development of Octopus vulgaris off Senegal",
+        "fr": "Température et développement embryonnaire d’Octopus vulgaris au Sénégal"
+      },
+      "url": "https://www.cambridge.org/core/journals/aquatic-living-resources/article/abs/observations-on-the-influence-of-temperature-on-the-length-of-embryonic-development-in-octopus-vulgaris-senegal/6667C5D50E326C9E80C9D3C132B5BBC6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Field and tank observations: hatching took 15–87 days across 17–27°C."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 10,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cephalopod ontogeny and life-cycle patterns",
+        "fr": "Ontogenèse et cycles de vie des céphalopodes"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2023.1162735/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Review table gives O. vulgaris settlement at 40–60 days and 18–22°C."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 11,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO Fisheries Report 985: regional stock assessments in northwest Africa",
+        "fr": "Rapport FAO 985 : évaluations régionales des stocks du nord-ouest africain"
+      },
+      "url": "https://www.fao.org/4/i2443b/i2443b.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2011 report records 2008 overexploitation findings for three named regional octopus stocks."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 13,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Commission species page: Octopus vulgaris",
+        "fr": "Page de la Commission européenne sur Octopus vulgaris"
+      },
+      "url": "https://fish-commercial-names.ec.europa.eu/fish-names/species/octopus-vulgaris_en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Commission page lists 750 g minimum conservation reference size in relevant European areas."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.4",
+        "conservation.fr.1",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 13,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dwellers in dens on sandy bottoms: ecology and behaviour of Octopus vulgaris",
+        "fr": "Habitants des tanières sur fonds sableux : écologie et comportement d’Octopus vulgaris"
+      },
+      "url": "https://doi.org/10.3989/scimar.04071.28F",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Field study describes den use and spatial ecology on sandy bottoms."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.2",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 11,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reversal of a spatial discrimination task in the Common Octopus",
+        "fr": "Inversion d’une discrimination spatiale chez le Poulpe commun"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8267067/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Captive reversal learning succeeded under feedback for some tested individuals."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "From brooding to hatching: a female Octopus vulgaris in the wild",
+        "fr": "De la couvaison à l’éclosion : une femelle Octopus vulgaris sauvage"
+      },
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/from-brooding-to-hatching-new-insights-from-a-female-octopus-vulgaris-in-the-wild/66CB052E583951A953EF24627EA0003A",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Wild observation documents a female tending eggs through hatching."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 9,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Octopus vulgaris, the common octopus: biology and ecology",
+        "fr": "Octopus vulgaris, le poulpe commun : biologie et écologie"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/B9780128206393000200",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Species synthesis describes prey, predators, planktonic young and benthic adults."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.3",
+        "ecology.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 10,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Embodied organization of Octopus vulgaris morphology, vision and locomotion",
+        "fr": "Organisation incarnée de la morphologie, de la vision et de la locomotion d’Octopus vulgaris"
+      },
+      "url": "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2017.00164/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review explains central and peripheral control in octopus arms."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 9,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nurseries, spawning grounds and recruitment of Octopus vulgaris in the Strait of Sicily",
+        "fr": "Nourriceries, frayères et recrutement d’Octopus vulgaris dans le détroit de Sicile"
+      },
+      "url": "https://academic.oup.com/icesjms/article/67/7/1363/664985",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Field study relates hatching temperature and recruitment in central Mediterranean waters."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 11,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Octopus americanus: A Cryptic Species of the O. vulgaris Species Complex Redescribed From the Caribbean",
+        "fr": "Octopus americanus : une espèce cryptique du complexe O. vulgaris redécrite depuis les Caraïbes"
+      },
+      "url": "https://doi.org/10.1007/s10452-020-09778-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Avendaño et al. redescribe the Caribbean species and recognize O. americanus as a distinct cryptic species in the O. vulgaris complex."
+      ],
+      "prose_claims": [
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 21,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Octopus sinensis d’Orbigny, 1841 (Cephalopoda: Octopodidae): Valid Species Name for the Commercially Valuable East Asian Common Octopus",
+        "fr": "Octopus sinensis d’Orbigny, 1841 (Cephalopoda : Octopodidae) : nom d’espèce valide pour le poulpe commun commercial d’Asie orientale"
+      },
+      "url": "https://doi.org/10.12782/sd.21.1.031",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Gleadall validates O. sinensis as the name of the East Asian common octopus, distinct from Atlantic and Mediterranean O. vulgaris."
+      ],
+      "prose_claims": [
+        "overview.en.5",
+        "overview.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 20,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The salivary papilla of Octopus as an accessory radula for drilling shells",
+        "fr": "La papille salivaire du poulpe, radula auxiliaire pour percer les coquilles"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1980.tb01422.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Nixon describes the toothed salivary papilla as an accessory radula used by octopuses to drill shells."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 16,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The effects on shells of drilling by octopus",
+        "fr": "Effets sur les coquilles du percement par les poulpes"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1980.tb01450.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Primary study examines shell modifications produced by octopus drilling."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 9,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "An original illustration already exists in the project; no new image requested.",
+  "uncertainties": [
+    "Historical cosmopolitan records of Octopus vulgaris include lookalike lineages; the limits and distributions of some newly recognized species remain under study.",
+    "Body size, lifespan, breeding season, paralarval duration and recruitment vary by sex, region and temperature; maxima and experimental rearing schedules are not typical values.",
+    "The FAO overexploitation finding is a 2008 assessment for three northwest African stocks, published in 2011; it is not a current global extinction-risk assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; taxonomy citations corrected and supplemented for O. americanus and O. sinensis; drilling mechanics and chromatophore mechanism clarified; original illustration preserved."
+}

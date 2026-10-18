@@ -1,0 +1,163 @@
+{
+  "id": "scinax_flavoguttatus",
+  "scientific": "Scinax flavoguttatus",
+  "group": "amphibians",
+  "name": {
+    "en": "Scinax flavoguttatus",
+    "fr": "Scinax flavoguttatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scinax flavoguttatus is a frog of Brazil’s Atlantic Forest region, recorded from coastal and nearby mountain areas.",
+      "fr": "Scinax flavoguttatus est une rainette de la région de la forêt atlantique brésilienne, connue du littoral et de montagnes voisines."
+    },
+    "identification": {
+      "en": "Its common name is Yellowbelly Snouted Treefrog; the species has been studied as a distinct member of the Scinax catharinae group.",
+      "fr": "Son nom anglais est Yellowbelly Snouted Treefrog; l’espèce a été étudiée comme membre distinct du groupe Scinax catharinae."
+    },
+    "habitat": {
+      "en": "Field observations associate it with forested streams, where adults perch on leaves or roots near the water.",
+      "fr": "Les observations de terrain l’associent aux ruisseaux forestiers, où les adultes se perchent sur des feuilles ou des racines près de l’eau."
+    },
+    "diet": {
+      "en": "The sources consulted do not provide a reliable species-specific account of adult feeding.",
+      "fr": "Les sources consultées ne fournissent pas de description fiable du régime alimentaire de l’adulte."
+    },
+    "behavior": {
+      "en": "Males have been observed calling from streamside vegetation, sometimes close to other calling males.",
+      "fr": "Des mâles ont été observés en train de chanter dans la végétation riveraine, parfois près d’autres mâles chanteurs."
+    },
+    "reproduction": {
+      "en": "Eggs are deposited in calm sections of streams, and tadpoles use flowing-water habitats.",
+      "fr": "Les œufs sont déposés dans des secteurs calmes des ruisseaux et les têtards occupent des eaux courantes."
+    },
+    "ecology": {
+      "en": "Current Amphibian Species of the World treatment uses the name Ololygon flavoguttata; this profile retains the catalogue name and ID Scinax flavoguttatus.",
+      "fr": "La taxonomie actuelle d’Amphibian Species of the World emploie le nom Ololygon flavoguttata; cette fiche conserve le nom et l’identifiant du catalogue, Scinax flavoguttatus."
+    },
+    "conservation": {
+      "en": "An older IUCN assessment lists the species as Least Concern and notes habitat loss as a concern; the assessment is not a current population estimate.",
+      "fr": "Une ancienne évaluation UICN classe l’espèce en Préoccupation mineure et signale la perte d’habitat; elle ne constitue pas une estimation actuelle de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ololygon flavoguttata — Amphibian Species of the World",
+        "fr": "Ololygon flavoguttata — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-flavoguttatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The AMNH account gives its Brazil range, recognized common name, taxonomic history, and current Ololygon placement."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 16,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new species of the Scinax catharinae group from Minas Gerais",
+        "fr": "Nouvelle espèce du groupe Scinax catharinae du Minas Gerais"
+      },
+      "url": "https://www.amphibiatree.org/sites/amphibiatree.org/files/LourencoETAL2009.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The field study reports males calling beside streams and eggs laid in calm stream sections; it does not detail adult diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 21,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ololygon flavoguttata — IUCN Red List assessment",
+        "fr": "Ololygon flavoguttata — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2004.RLTS.T55955A11401605.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2004 Red List assessment lists the species as Least Concern and identifies habitat loss among concerns."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 17,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Observations on the biology of Scinax flavoguttatus and description of its tadpoles",
+        "fr": "Observations sur la biologie de Scinax flavoguttatus et description de ses têtards"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Bibliography/C/Carvalho-e-Silva-and-Carnaval-1997-Rev.-Fr.-Aquar.-Herpetol.-24",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The French-language journal reference confirms a dedicated biological and tadpole description for the species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic treatments differ in genus assignment; dietary detail was not available in the species-specific sources reviewed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The catalogue's Scinax name is retained while the current AMNH treatment under Ololygon is explicitly noted. Field, taxonomy and IUCN sources were cross-checked."
+}

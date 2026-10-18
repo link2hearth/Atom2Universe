@@ -1,0 +1,146 @@
+{
+  "id": "leopard",
+  "scientific": "Panthera pardus",
+  "group": "mammals",
+  "name": {
+    "en": "Leopard",
+    "fr": "Léopard"
+  },
+  "sections": {
+    "overview": {
+      "en": "The leopard is a powerful cat native to Africa and Asia. It occupies a broad range of environments, from tropical forest to desert and mountains. Its flexible hunting and climbing abilities help it persist where other large cats may not.",
+      "fr": "Le léopard est un félin puissant présent en Afrique et en Asie. Il vit dans divers milieux, des forêts tropicales aux déserts et aux montagnes. Ses capacités de chasse et d’escalade l’aident à subsister dans des paysages où d’autres félins sont absents."
+    },
+    "identification": {
+      "en": "Adults have a long body, short muscular legs, broad paws and a long tail. Their coats range from pale gold to ochre, with dark rosettes and smaller solid spots. Some are melanistic; their markings remain visible in suitable light. Adult size varies geographically. Published reported length ranges are 1.6–2.3 m for males and 1.7–1.9 m for females; corresponding reported masses are 31–65 kg and 17–58 kg. Males are generally larger, but the overlap and geographic variation mean size alone does not identify sex. A dependable general shoulder-height range was not found.",
+      "fr": "L’adulte a un corps allongé, des pattes courtes et musclées, de larges pieds et une longue queue. Son pelage va du doré pâle à l’ocre, avec des rosettes sombres et de petites taches. Chez les individus mélaniques, les motifs restent visibles sous un éclairage favorable. La taille adulte varie selon les régions. Les plages de longueur rapportées sont de 1,6 à 2,3 m chez les mâles et de 1,7 à 1,9 m chez les femelles; les masses rapportées sont respectivement de 31 à 65 kg et de 17 à 58 kg. Les mâles sont généralement plus grands, mais les plages se chevauchent et varient selon la région : la taille seule ne permet donc pas de déterminer le sexe. Je n’ai pas trouvé de hauteur au garrot générale fiable."
+    },
+    "habitat": {
+      "en": "Leopards use rainforest, woodland, savanna, scrub, rocky slopes and desert where cover and prey are available. They also occur in some human-used landscapes. Himalayan records reach about 5,200 metres, an exceptional local record rather than a typical habitat.",
+      "fr": "Le léopard fréquente forêts tropicales, boisements, savanes, broussailles, pentes rocheuses et déserts lorsque couvert et proies sont présents. Il vit aussi dans certains paysages humains. Dans l’Himalaya, des observations atteignent environ 5 200 mètres ; cette altitude exceptionnelle ne décrit pas son habitat ordinaire."
+    },
+    "diet": {
+      "en": "This carnivore hunts prey from small mammals and birds to larger ungulates. Its menu depends on locally available animals: a Gabon study found forest ungulates important, while research in Tanzania recorded substantial primate consumption. Leopards may also take livestock near farms.",
+      "fr": "Ce carnivore chasse de petits mammifères et oiseaux, mais aussi de grands ongulés. Son menu dépend des proies locales : au Gabon, les ongulés forestiers comptaient beaucoup ; en Tanzanie, les primates étaient importants. Près des fermes, il peut aussi prendre du bétail."
+    },
+    "behavior": {
+      "en": "Leopards generally live alone, except when females travel with cubs or adults meet to mate. Activity varies: many studied savanna populations are mainly nocturnal, while some in Gabonese rainforest were largely active by day. Scent marks, calls and scratches signal presence.",
+      "fr": "Le léopard vit seul, sauf lorsqu’une femelle accompagne ses petits ou que des adultes s’accouplent. Son activité varie : beaucoup de populations de savane sont surtout nocturnes, tandis que certaines forêts gabonaises abritent des animaux diurnes. Odeurs, cris et griffures signalent sa présence."
+    },
+    "reproduction": {
+      "en": "After about three months of pregnancy, a female gives birth in a concealed den, commonly to two or three cubs. They remain hidden, then follow her and learn to hunt. Independence is gradual; reported ages vary among populations, from about one year to two years.",
+      "fr": "Après environ trois mois de gestation, la femelle met bas dans une tanière cachée, souvent deux ou trois petits. Ils restent dissimulés, puis suivent leur mère et apprennent à chasser. Selon les populations, l’autonomie survient vers un an, deux ans ou plus tard."
+    },
+    "ecology": {
+      "en": "The leopard consumes different prey in different habitats, so no single species defines its diet everywhere. It may carry a kill into a tree, making it less accessible to competitors. When wild prey is scarce, livestock may enter its diet and cause conflict with people.",
+      "fr": "Le léopard consomme des proies différentes selon le milieu ; aucune espèce ne caractérise partout son régime. Il peut hisser une carcasse dans un arbre, la rendant moins accessible aux concurrents. Si les proies sauvages manquent, le bétail peut provoquer des conflits avec les humains."
+    },
+    "conservation": {
+      "en": "The IUCN SSC Cat Specialist Group’s account, citing Red List version 2024-2, classifies leopards as Vulnerable and reports an 11% contraction of extant range during 2016–2023. It identifies habitat loss, prey depletion, illegal killing and trade, retaliation, and poorly managed trophy hunting as pressures.",
+      "fr": "La fiche du Groupe de spécialistes des félins de l’UICN (Liste rouge 2024-2) classe le léopard Vulnérable et indique une baisse de 11 % de son aire entre 2016 et 2023. Les pressions citées sont perte d’habitat, raréfaction des proies, commerce illégal et représailles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Living Species: Leopard — IUCN SSC Cat Specialist Group",
+        "fr": "Espèces actuelles : Léopard — Groupe de spécialistes des félins de l’UICN"
+      },
+      "url": "https://www.catsg.org/living-species-leopard",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Habitats range from rainforest and savanna to scrub and desert; Himalayan records reach about 5,200 m.",
+        "Activity patterns differ by habitat: studied savanna populations were mainly nocturnal, while some Gabon rainforest populations were largely diurnal.",
+        "Version 2024-2 account reports Vulnerable status and an 11% range contraction during 2016–2023; threats include habitat change, prey depletion and killing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Leopard — San Diego Zoo Animals & Plants",
+        "fr": "Léopard — San Diego Zoo Animals & Plants"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/leopard",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Coat rosettes, melanistic form, arboreal food caching and maternal care are described.",
+        "Gestation is about three to three-and-a-half months; two or three young are usual in the zoo’s summary.",
+        "The account documents threats including habitat loss, poaching and livestock-related poisoning."
+      ]
+    },
+    {
+      "title": {
+        "en": "Leopard food habits in the Lopé National Park, Gabon, Central Africa — University of Stirling",
+        "fr": "Régime alimentaire du léopard au parc national de Lopé, Gabon — University of Stirling"
+      },
+      "url": "https://www.stir.ac.uk/research/hub/publication/650195",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Analysis of 196 scats identified at least 30 prey species; ungulates contributed 59% of estimated consumed biomass, with primates and large rodents also prominent in this Gabon study."
+      ]
+    },
+    {
+      "title": {
+        "en": "Primates are an important food resource for leopards in Mahale, Tanzania — African Journal of Ecology",
+        "fr": "Les primates sont une ressource alimentaire importante pour les léopards de Mahale, Tanzanie — African Journal of Ecology"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/aje.12714",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Mahale study analysed remains in 256 scats and found primates to be an important resource where medium-sized ungulates were relatively scarce."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cub Survival in a Wild Leopard Population — PMC",
+        "fr": "Survie des petits dans une population sauvage de léopards — PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11428743/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Camera-trap study of Indian leopards at Jhalana, India, followed 33 cubs in 16 litters; den residence, maternal accompaniment and dispersal timings vary, and 61% survived to independence at two years in this population."
+      ]
+    },
+    {
+      "title": {
+        "en": "Panthera pardus | Animal Diversity Web",
+        "fr": "Panthera pardus | Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Panthera_pardus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Gives sex-specific total-length and body-mass ranges and notes geographic variation and larger males."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult leopard with natural proportions and accurately distributed rosettes on a PURE WHITE background; allow coat tone to vary naturally and do not depict melanism unless specifically intended.",
+  "uncertainties": [
+    "Age at independence varies among populations and studies; the text gives a broad interval rather than treating one local observation as universal.",
+    "Conservation status and range-change figures follow the cited IUCN SSC account and its stated assessment version and period."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/scientific critique completed; identified grammar, dating and generalization issues corrected."
+}

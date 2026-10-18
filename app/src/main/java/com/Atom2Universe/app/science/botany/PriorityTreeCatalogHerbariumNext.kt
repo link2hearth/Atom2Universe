@@ -1,0 +1,27 @@
+package com.Atom2Universe.app.science.botany
+
+import com.Atom2Universe.app.R
+
+/** Further life-tree taxa chosen for distinctive forms and useful field comparisons. */
+internal object PriorityTreeCatalogHerbariumNext {
+    val species = listOf(
+        PlantSpecies("arctium_minus",R.string.bot_arctium_minus_name,R.string.bot_arctium_minus_latin,R.string.bot_arctium_minus_aliases,"Asteraceae",setOf("herbs"),60,150,emptySet(),emptySet(),setOf(Habitat.DISTURBED,Habitat.MEADOW),false,
+            PlantLook(Crown.HERB,LeafShape.OVAL,LeafMargin.SERRATE,LeafArrangement.ALTERNATE,FlowerShape.THISTLE,FruitShape.ACHENE,FlowerColor.PURPLE,28f,2.5f,.5f,seed=901,petiole=.38f,leafDetail=LeafDetail(width=.7f,veinPairs=9)),
+            R.string.bot_arctium_minus_description,R.string.bot_arctium_minus_distribution,PlantView.entries.zip(listOf(R.string.bot_arctium_minus_habit,R.string.bot_arctium_minus_leaf,R.string.bot_arctium_minus_flower,R.string.bot_arctium_minus_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("agave_filifera",R.string.bot_agave_filifera_name,R.string.bot_agave_filifera_latin,R.string.bot_agave_filifera_aliases,"Asparagaceae",setOf("herbs"),30,60,emptySet(),emptySet(),setOf(Habitat.DRY_SCRUB),true,
+            PlantLook(Crown.HERB,LeafShape.LANCE,LeafMargin.SPINY,LeafArrangement.ROSETTE,FlowerShape.PANICLE,FruitShape.CAPSULE,FlowerColor.YELLOW,30f,4f,2f,seed=902,petiole=.03f,leafDetail=LeafDetail(width=.17f),leafColor=0xff365b3d.toInt()),
+            R.string.bot_agave_filifera_description,R.string.bot_agave_filifera_distribution,PlantView.entries.zip(listOf(R.string.bot_agave_filifera_habit,R.string.bot_agave_filifera_leaf,R.string.bot_agave_filifera_flower,R.string.bot_agave_filifera_fruit)).toMap(),setOf("powo"),collectionIds=setOf("north_america"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("armeria_maritima",R.string.bot_armeria_maritima_name,R.string.bot_armeria_maritima_latin,R.string.bot_armeria_maritima_aliases,"Plumbaginaceae",setOf("herbs"),10,40,emptySet(),emptySet(),setOf(Habitat.WET,Habitat.DRY_SCRUB),true,
+            PlantLook(Crown.HERB,LeafShape.LINEAR,LeafMargin.ENTIRE,LeafArrangement.ROSETTE,FlowerShape.GLOBOSE_HEAD,FruitShape.CAPSULE,FlowerColor.PINK,12f,2f,.3f,seed=903,petiole=.02f,leafDetail=LeafDetail(width=.12f,venation=Venation.PARALLEL)),
+            R.string.bot_armeria_maritima_description,R.string.bot_armeria_maritima_distribution,PlantView.entries.zip(listOf(R.string.bot_armeria_maritima_habit,R.string.bot_armeria_maritima_leaf,R.string.bot_armeria_maritima_flower,R.string.bot_armeria_maritima_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("bertholletia_excelsa",R.string.bot_bertholletia_excelsa_name,R.string.bot_bertholletia_excelsa_latin,R.string.bot_bertholletia_excelsa_aliases,"Lecythidaceae",setOf("trees"),2500,5000,emptySet(),emptySet(),setOf(Habitat.WOOD),true,
+            PlantLook(Crown.SPREAD,LeafShape.OVAL,LeafMargin.ENTIRE,LeafArrangement.ALTERNATE,FlowerShape.CUP,FruitShape.CAPSULE,FlowerColor.WHITE,18f,3f,15f,seed=904,petiole=.2f,leafDetail=LeafDetail(width=.52f,veinPairs=11),fruitColor=0xff796146.toInt(),architecture=TreeArchitecture(radius=112f,top=22f,bottom=230f,fork=238f,trunkWidth=22f,density=.6f)),
+            R.string.bot_bertholletia_excelsa_description,R.string.bot_bertholletia_excelsa_distribution,PlantView.entries.zip(listOf(R.string.bot_bertholletia_excelsa_habit,R.string.bot_bertholletia_excelsa_leaf,R.string.bot_bertholletia_excelsa_flower,R.string.bot_bertholletia_excelsa_fruit)).toMap(),setOf("powo"),collectionIds=setOf("food_crops"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("cirsium_vulgare",R.string.bot_cirsium_vulgare_name,R.string.bot_cirsium_vulgare_latin,R.string.bot_cirsium_vulgare_aliases,"Asteraceae",setOf("herbs"),60,150,emptySet(),emptySet(),setOf(Habitat.DISTURBED,Habitat.MEADOW),false,
+            PlantLook(Crown.HERB,LeafShape.DIVIDED,LeafMargin.SPINY,LeafArrangement.ALTERNATE,FlowerShape.THISTLE,FruitShape.ACHENE,FlowerColor.PURPLE,28f,4f,.5f,seed=905,petiole=.12f,leafDetail=LeafDetail(width=.65f,veinPairs=9),thorny=true),
+            R.string.bot_cirsium_vulgare_description,R.string.bot_cirsium_vulgare_distribution,PlantView.entries.zip(listOf(R.string.bot_cirsium_vulgare_habit,R.string.bot_cirsium_vulgare_leaf,R.string.bot_cirsium_vulgare_flower,R.string.bot_cirsium_vulgare_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("drosera_rotundifolia",R.string.bot_drosera_rotundifolia_name,R.string.bot_drosera_rotundifolia_latin,R.string.bot_drosera_rotundifolia_aliases,"Droseraceae",setOf("herbs"),5,25,emptySet(),emptySet(),setOf(Habitat.WET),false,
+            PlantLook(Crown.HERB,LeafShape.ROUND,LeafMargin.ENTIRE,LeafArrangement.ROSETTE,FlowerShape.RACEME,FruitShape.CAPSULE,FlowerColor.WHITE,.8f,.7f,.4f,seed=906,petiole=.3f,leafDetail=LeafDetail(width=.8f,veinPairs=0)),
+            R.string.bot_drosera_rotundifolia_description,R.string.bot_drosera_rotundifolia_distribution,PlantView.entries.zip(listOf(R.string.bot_drosera_rotundifolia_habit,R.string.bot_drosera_rotundifolia_leaf,R.string.bot_drosera_rotundifolia_flower,R.string.bot_drosera_rotundifolia_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season)
+    )
+}

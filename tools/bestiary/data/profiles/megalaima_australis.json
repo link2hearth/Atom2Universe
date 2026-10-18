@@ -1,0 +1,147 @@
+{
+  "id": "megalaima_australis",
+  "scientific": "Megalaima australis",
+  "group": "birds",
+  "name": {
+    "en": "Yellow-eared Barbet",
+    "fr": "Barbu à calotte bleue"
+  },
+  "sections": {
+    "overview": {
+      "en": "The catalogue name Megalaima australis is an older combination; current checklists treat the Java-and-Bali species as Psilopogon australis.",
+      "fr": "Le nom du catalogue, Megalaima australis, est une ancienne combinaison ; les listes actuelles classent l’espèce de Java et Bali sous Psilopogon australis."
+    },
+    "identification": {
+      "en": "The green barbet has a blue crown and throat, a dark chest band, and conspicuous yellow ear-coverts and cheeks.",
+      "fr": "Ce barbu vert présente une calotte et une gorge bleues, une bande sombre sur la poitrine, ainsi que des joues et des couvertures auriculaires jaunes."
+    },
+    "habitat": {
+      "en": "This monotypic species is restricted to Java and Bali; forest is its principal habitat.",
+      "fr": "Cette espèce monotypique est limitée à Java et Bali ; son habitat principal est la forêt."
+    },
+    "diet": {
+      "en": "It is classed as mainly fruit-eating; its close island relative, the Flame-fronted Barbet, also takes insects and spiders.",
+      "fr": "Elle est classée comme principalement frugivore ; son proche parent insulaire, le Barbu souci-col, mange aussi des insectes et des araignées."
+    },
+    "behavior": {
+      "en": "It is a resident forest barbet; detailed behavior is poorly documented for the modern, narrow species concept.",
+      "fr": "C’est un barbu forestier sédentaire ; le comportement est peu documenté pour la définition actuelle, plus restreinte, de l’espèce."
+    },
+    "reproduction": {
+      "en": "Nesting details in older accounts are difficult to separate from the formerly broader taxon.",
+      "fr": "Les détails de nidification des anciennes fiches sont difficiles à dissocier du taxon autrefois plus large."
+    },
+    "ecology": {
+      "en": "Like the Flame-fronted Barbet, it is an island forest barbet, but yellow ear-coverts distinguish it from that cousin’s orange-yellow forehead.",
+      "fr": "Comme le Barbu souci-col, c’est un barbu forestier insulaire, mais ses couvertures auriculaires jaunes le distinguent du front jaune orangé de ce cousin."
+    },
+    "conservation": {
+      "en": "Birds of the World lists it as Least Concern; this category does not establish that every local population is stable.",
+      "fr": "Birds of the World la classe en préoccupation mineure ; cette catégorie ne démontre pas que chaque population locale soit stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Yellow-eared Barbet — Birds of the World, Cornell Lab of Ornithology",
+        "fr": "Barbu à calotte bleue — Birds of the World, Cornell Lab of Ornithology"
+      },
+      "url": "https://birdsoftheworld.org/bow/species/litbar1/cur/introduction",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell’s account identifies the modern species as monotypic, gives Java as type locality, and lists Least Concern."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 17,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barbu à calotte bleue — Oiseaux.net",
+        "fr": "Barbu à calotte bleue — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/barbu.a.calotte.bleue.html",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The older French account describes a green bird with blue crown and throat, yellow ear-coverts, and a mainly fruit-based diet; some text concerns the old wider complex."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 27,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow-eared Barbet — Natural History Museum, University of Oslo",
+        "fr": "Barbu à calotte bleue — Musée d’histoire naturelle de l’Université d’Oslo"
+      },
+      "url": "https://nhmo-birds.collectionexplorer.org/taxon-9110.aspx",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The museum collection accepts Psilopogon australis and records Java and Bali."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older sources used Megalaima australis broadly for several Asian barbet taxa now treated separately; this profile follows the modern Java–Bali species concept.",
+    "Oiseaux.net retains text from the former wider complex; its broad former range and subspecies list are not attributed to the current species.",
+    "Nesting and behavior details are sparse for the current narrow species concept."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the modern narrow range and status from Cornell and museum taxonomy; used the older French account only for details compatible with the Java–Bali form."
+}

@@ -1,0 +1,142 @@
+{
+  "id": "trachinotus_baillonii",
+  "scientific": "Trachinotus baillonii",
+  "group": "fish",
+  "name": {
+    "en": "Smallspotted dart",
+    "fr": "Pompaneau muscadin"
+  },
+  "sections": {
+    "overview": {
+      "en": "This jack is native to tropical waters of the Indo-Pacific.",
+      "fr": "Cette carangue vit dans les eaux tropicales de l’Indo-Pacifique."
+    },
+    "identification": {
+      "en": "Adults are silvery with a row of small black flank spots; juveniles may lack spots.",
+      "fr": "Les adultes sont argentés avec une rangée de petits points noirs sur le flanc ; les jeunes peuvent en être dépourvus."
+    },
+    "habitat": {
+      "en": "Records from New Caledonia and Mayotte place it in shallow water.",
+      "fr": "Des observations en Nouvelle-Calédonie et à Mayotte le situent en eau peu profonde."
+    },
+    "diet": {
+      "en": "The species summary reports a diet of small fishes.",
+      "fr": "La synthèse de l’espèce indique un régime composé de petits poissons."
+    },
+    "behavior": {
+      "en": "It schools in pairs or small groups near reefs and surf.",
+      "fr": "Il nage en couple ou en petits bancs près des récifs et du ressac."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide little species-specific information on its spawning or early life stages.",
+      "fr": "Les sources consultées donnent peu d’informations propres à l’espèce sur la ponte ou les premiers stades de vie."
+    },
+    "ecology": {
+      "en": "Its range extends from the Red Sea across the Indo-Pacific.",
+      "fr": "Son aire s’étend de la mer Rouge à l’ensemble de l’Indo-Pacifique."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern, assessed in 2015.",
+      "fr": "FishBase rapporte une catégorie mondiale UICN de Préoccupation mineure, évaluée en 2015."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Trachinotus baillonii — FishBase species summary",
+        "fr": "Trachinotus baillonii — FishBase species summary"
+      },
+      "url": "https://www.fishbase.se/summary/trachinotus-baillonii",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives Indo-Pacific range, fish diet, schooling behavior, LC assessment (2015), and sparse reproduction data."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 15,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pompaneau muscadin — DORIS, Fédération française d’études et de sports sous-marins",
+        "fr": "Pompaneau muscadin — DORIS, Fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Trachinotus-baillonii-Pompaneau-muscadin-3235/%28rOffset%29/13",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "French DORIS record gives Indo-Pacific/Red Sea range and shallow-water observations in New Caledonia and Mayotte."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 15,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO Species Identification Sheets — Trachinotus baillonii",
+        "fr": "Fiches d’identification FAO — Trachinotus baillonii"
+      },
+      "url": "https://www.fao.org/4/ad468e/AD468eCF.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO guide describes silvery-blue adults with small black flank spots, often absent in small juveniles."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 15,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "FishBase reports the status as assessed in 2015; no newer assessment was established in the sources consulted.",
+    "DORIS labels its species page as proposed and incomplete, so it is used only for the French common name and occurrence context."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Identification is based on the FAO fish guide; FishBase supports diet and schooling; the French DORIS record is used only for its shallow-water observations and range."
+}

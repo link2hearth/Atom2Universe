@@ -1,0 +1,118 @@
+{
+  "id": "sorubim_elongatus",
+  "scientific": "Sorubim elongatus",
+  "group": "fish",
+  "name": {
+    "en": "Slender shovelnose catfish",
+    "fr": "Sorubim elongatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "A tropical South American pimelodid catfish.",
+      "fr": "Silure pimelodidé d’Amérique du Sud tropicale."
+    },
+    "identification": {
+      "en": "Its head and body are notably elongated, the feature reflected in its scientific name.",
+      "fr": "Sa tête et son corps sont particulièrement allongés, comme le rappelle son nom scientifique."
+    },
+    "habitat": {
+      "en": "It occurs in floodplain lakes, creeks and large rivers, often near aquatic or streamside vegetation.",
+      "fr": "Il fréquente les lacs de plaine inondable, les ruisseaux et les grands cours d’eau, souvent près de la végétation aquatique ou riveraine."
+    },
+    "diet": {
+      "en": "The species-specific references consulted do not establish its natural diet.",
+      "fr": "Les références consultées ne précisent pas son régime alimentaire naturel."
+    },
+    "behavior": {
+      "en": "It is apparently nocturnal and shelters in groups along stream margins during the day.",
+      "fr": "Il semble nocturne et se regroupe le jour dans des abris le long des berges."
+    },
+    "reproduction": {
+      "en": "The species description and summaries consulted provide little detail on its breeding biology.",
+      "fr": "La description de l’espèce et les résumés consultés donnent peu de détails sur sa reproduction."
+    },
+    "ecology": {
+      "en": "It occurs alongside S. lima in some basins; its more elongated head and body help distinguish it.",
+      "fr": "Il cohabite avec S. lima dans certains bassins ; sa tête et son corps plus allongés aident à le distinguer."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2020.",
+      "fr": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sorubim elongatus — FishBase",
+        "fr": "Sorubim elongatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Sorubim-elongatus",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summarizes the species’ range, habitat, nocturnal sheltering and IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 11,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Systematic review of the genus Sorubim — Zootaxa",
+        "fr": "Révision systématique du genre Sorubim — Zootaxa"
+      },
+      "url": "https://mapress.com/zt/article/view/zootaxa.1422.1.1",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2001 species description states that S. elongatus occurs syntopically with S. lima and diagnoses the elongate form."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 18,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet and breeding details were not provided in the concise sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,14 @@
+{
+  "id": 9015,
+  "name": "cotton_magenta",
+  "texture_top": "cozy:cloth:5:FF00FF",
+  "texture_side": "cozy:cloth:5:FF00FF",
+  "texture_bottom": "cozy:cloth:5:FF00FF",
+  "color": "#FF00FF",
+  "hardness": 1.0,
+  "drop": "cotton_magenta",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

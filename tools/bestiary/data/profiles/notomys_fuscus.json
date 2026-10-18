@@ -1,0 +1,142 @@
+{
+  "id": "notomys_fuscus",
+  "scientific": "Notomys fuscus",
+  "group": "mammals",
+  "name": {
+    "en": "Dusky hopping mouse",
+    "fr": "Notomys fuscus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The dusky hopping mouse is a small rodent of arid inland Australia.",
+      "fr": "La souris sauteuse sombre est un petit rongeur de l’intérieur aride de l’Australie."
+    },
+    "identification": {
+      "en": "Large ears, long hind feet and a brush-tipped tail mark this hopping mouse.",
+      "fr": "Ses grandes oreilles, ses longues pattes postérieures et sa queue touffue la distinguent."
+    },
+    "habitat": {
+      "en": "It occurs patchily in sandy deserts of central Australia.",
+      "fr": "Elle occupe de façon discontinue les déserts sableux du centre de l’Australie."
+    },
+    "diet": {
+      "en": "It eats seeds, berries, leaves and other green plants, with insects only occasionally.",
+      "fr": "Elle mange graines, baies, feuilles et autres plantes vertes, parfois des insectes."
+    },
+    "behavior": {
+      "en": "It is nocturnal, shelters in deep burrows and forages close to them.",
+      "fr": "Nocturne, elle s’abrite dans des terriers profonds et s’alimente à proximité."
+    },
+    "reproduction": {
+      "en": "Little is known in the wild beyond its opportunistic breeding.",
+      "fr": "Dans la nature, sa reproduction opportuniste reste peu documentée."
+    },
+    "ecology": {
+      "en": "Introduced foxes and cats prey on hopping mice, while grazing and rabbits can degrade the vegetation and sandy habitat on which this species depends.",
+      "fr": "Les renards et les chats introduits prédatent les souris sauteuses, tandis que le pâturage et les lapins peuvent dégrader la végétation et les milieux sableux dont dépend cette espèce."
+    },
+    "conservation": {
+      "en": "It is Vulnerable nationally in Australia and Endangered in New South Wales; its sparse and fragmented populations remain difficult to survey.",
+      "fr": "Elle est classée Vulnérable à l’échelle nationale en Australie et En danger dans l’État de Nouvelle-Galles du Sud ; ses populations clairsemées et fragmentées restent difficiles à inventorier."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Notomys fuscus — Animal Diversity Web, University of Michigan",
+        "fr": "Notomys fuscus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Notomys_fuscus/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Account describes sandy desert habitats, morphology, nocturnal habits, burrows, diet and opportunistic breeding."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 13,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dusky Hopping-mouse species profile — NSW Environment",
+        "fr": "Fiche de la souris sauteuse sombre — agence de l’environnement de Nouvelle-Galles du Sud"
+      },
+      "url": "https://threatenedspecies.bionet.nsw.gov.au/profile?id=10563",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Government profile lists Endangered status in NSW and Vulnerable status nationally and summarizes local distribution and threats."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 17,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notomys fuscus — IUCN Red List assessment",
+        "fr": "Notomys fuscus — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://www.iucnredlist.org/species/14863/22401596",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Assessment describes sandy dune habitat and effects of habitat degradation and introduced predators."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history accounts rely on relatively few sightings; food and breeding can vary with rainfall and local conditions. Conservation categories above are jurisdiction-specific."
+  ],
+  "review_note": "Distribution and conservation categories checked against NSW Government data; ecological details are kept general where field records are sparse.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

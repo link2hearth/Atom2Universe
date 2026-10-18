@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Original summaries; references checked on 2026-10-06. No imported media. -->
+    <string name="ct_science_field_mathematics">Mathématiques</string>
+    <string name="ct_science_field_physics">Physique</string>
+    <string name="ct_science_field_astronomy">Astronomie et espace</string>
+    <string name="ct_science_field_chemistry">Chimie</string>
+    <string name="ct_science_field_biology">Biologie et génétique</string>
+    <string name="ct_science_field_medicine">Médecine et santé</string>
+    <string name="ct_science_field_earth">Sciences de la Terre</string>
+    <string name="ct_science_field_computing">Informatique</string>
+    <string name="ct_history_topic_all">Tous les repères</string>
+    <string name="ct_history_topic_general">Sociétés et cultures</string>
+    <string name="ct_history_topic_science">Toutes les sciences</string>
+    <string name="ct_history_region_menu">Choisir une région</string>
+    <string name="ct_history_filter_summary">%1$s · %2$s</string>
+    <string name="ct_history_reference_search">Rechercher un repère, une discipline, une source…</string>
+    <string name="ct_science_method">Les repères scientifiques datent selon les cas une observation, une expérience, un manuscrit, une publication ou une annonce. Les notes distinguent ces étapes, les datations approximatives et les contributions collectives. Les disciplines servent de portes d’entrée et se recouvrent ; les régions situent les travaux ou les équipes, pas la nationalité exclusive d’une découverte. Références scientifiques vérifiées le 6 octobre 2026.</string>
+
+    <string name="ct_science_rhind_title">Le papyrus mathématique Rhind</string>
+    <string name="ct_science_rhind_body">Copié par le scribe Ahmès, ce manuel égyptien rassemble des problèmes de fractions, de surfaces et de volumes. Il montre comment des méthodes de calcul s’appliquaient à des situations concrètes, bien avant les notations modernes.</string>
+    <string name="ct_science_rhind_precision">La date approximative concerne la copie conservée, qui reprend des connaissances plus anciennes ; elle ne date pas l’invention des mathématiques.</string>
+    <string name="ct_science_rhind_source">British Museum · Le papyrus mathématique Rhind</string>
+
+    <string name="ct_science_euclid_title">Les Éléments d’Euclide</string>
+    <string name="ct_science_euclid_body">À Alexandrie, Euclide organise des connaissances de géométrie, de proportions et de théorie des nombres. Les Éléments enchaînent les démonstrations à partir de définitions et de postulats : une manière durable de construire un raisonnement mathématique.</string>
+    <string name="ct_science_euclid_precision">Vers 300 avant notre ère est une datation conventionnelle de l’ouvrage. Les résultats rassemblés ne sont pas tous des découvertes personnelles d’Euclide.</string>
+    <string name="ct_science_euclid_source">Library of Congress · Les Éléments d’Euclide</string>
+
+    <string name="ct_science_liu_hui_title">Liu Hui commente les Neuf Chapitres</string>
+    <string name="ct_science_liu_hui_body">Liu Hui explique et justifie des méthodes de calcul d’un grand recueil chinois : arpentage, fractions, volumes, partages et résolution de problèmes. Ses raisonnements géométriques permettent de comprendre pourquoi les procédures fonctionnent.</string>
+    <string name="ct_science_liu_hui_precision">263 date le commentaire de Liu Hui. Le recueil lui-même résulte d’une transmission et de remaniements beaucoup plus anciens.</string>
+    <string name="ct_science_liu_hui_source">MacTutor · Liu Hui commente les Neuf Chapitres</string>
+
+    <string name="ct_science_aryabhata_title">L’Aryabhatiya : calculer le ciel</string>
+    <string name="ct_science_aryabhata_body">Aryabhata compose un traité reliant mathématiques et astronomie. Il présente des méthodes de calcul, une table de sinus et l’approximation 3,1416 de pi. Il explique aussi le mouvement quotidien apparent du ciel par la rotation de la Terre.</string>
+    <string name="ct_science_aryabhata_precision">499 est la date donnée pour la composition du traité, pas celle de l’apparition de toutes les méthodes qu’il contient.</string>
+    <string name="ct_science_aryabhata_source">MacTutor · L’Aryabhatiya : calculer le ciel</string>
+
+    <string name="ct_science_brahmagupta_title">Calculer avec zéro et les nombres négatifs</string>
+    <string name="ct_science_brahmagupta_body">Dans le Brahmasphutasiddhanta, Brahmagupta formule des règles pour les nombres positifs, négatifs et le zéro. Les dettes et les fortunes servent à expliquer les signes ; son traité associe ces mathématiques à l’astronomie.</string>
+    <string name="ct_science_brahmagupta_precision">628 date l’ouvrage. Ce n’est pas l’invention isolée du zéro, et ses propositions concernant la division par zéro ne correspondent pas aux règles actuelles.</string>
+    <string name="ct_science_brahmagupta_source">MacTutor · Calculer avec zéro et les nombres négatifs</string>
+
+    <string name="ct_science_algebra_title">L’algèbre d’al-Khwarizmi</string>
+    <string name="ct_science_algebra_body">À Bagdad, al-Khwarizmi expose des procédures pour résoudre des équations du premier et du second degré. Il les décrit en mots et les justifie notamment par la géométrie, avec des applications aux partages, aux échanges et aux mesures.</string>
+    <string name="ct_science_algebra_precision">Le traité appartient au début du IXe siècle ; le repère vers 830 reste approximatif. Il systématise une tradition de problèmes plus ancienne.</string>
+    <string name="ct_science_algebra_source">MacTutor · L’algèbre d’al-Khwarizmi</string>
+
+    <string name="ct_science_bhaskara_title">Bhaskara II : mathématiques et astronomie</string>
+    <string name="ct_science_bhaskara_body">Le Siddhanta Siromani de Bhaskara II relie le calcul au mouvement des astres. Son œuvre transmet et développe la tradition mathématique indienne, à travers des problèmes d’arithmétique, d’algèbre et d’astronomie.</string>
+    <string name="ct_science_bhaskara_precision">1150 date la composition du Siddhanta Siromani. Il s’inscrit dans une longue lignée de textes et de commentaires.</string>
+    <string name="ct_science_bhaskara_source">MacTutor · Bhaskara II : mathématiques et astronomie</string>
+
+    <string name="ct_science_calculus_title">Le calcul différentiel publié par Leibniz</string>
+    <string name="ct_science_calculus_body">Leibniz publie une méthode pour étudier les variations, les tangentes, les maxima et les minima. Ses règles de dérivation donnent un outil général pour relier des grandeurs qui changent, essentiel à la physique mathématique.</string>
+    <string name="ct_science_calculus_precision">1684 date son premier article sur le calcul différentiel. La construction du calcul s’étend sur plusieurs décennies, avec les travaux indépendants de Newton.</string>
+    <string name="ct_science_calculus_source">MacTutor · Le calcul différentiel publié par Leibniz</string>
+
+    <string name="ct_science_noether_title">Noether relie symétries et conservations</string>
+    <string name="ct_science_noether_body">Emmy Noether établit un lien profond entre les symétries continues d’un système et ses lois de conservation. Dans le cadre de son théorème, l’invariance par translation dans le temps correspond à la conservation de l’énergie.</string>
+    <string name="ct_science_noether_precision">1918 date l’article original. Le lien s’applique aux systèmes variationnels et sous les hypothèses du théorème, pas à n’importe quelle symétrie au sens courant.</string>
+    <string name="ct_science_noether_source">Noether · Noether relie symétries et conservations</string>
+
+    <string name="ct_science_optics_title">Ibn al-Haytham et l’étude de la lumière</string>
+    <string name="ct_science_optics_body">Le Livre de l’optique examine la vision, la propagation de la lumière et les phénomènes de réflexion et de réfraction. Ibn al-Haytham combine raisonnement et expériences, en étudiant la lumière qui entre dans l’œil.</string>
+    <string name="ct_science_optics_precision">Le repère vers 1015 situe un ouvrage du début du XIe siècle. Il ne correspond ni à une publication moderne datée au jour près, ni à l’invention de toute méthode expérimentale.</string>
+    <string name="ct_science_optics_source">UNESCO · Ibn al-Haytham et l’étude de la lumière</string>
+
+    <string name="ct_science_newton_title">Les Principia : mouvement et gravitation</string>
+    <string name="ct_science_newton_body">Newton publie un cadre mathématique réunissant les lois du mouvement et la gravitation universelle. Les mêmes principes permettent d’étudier une chute sur Terre et les trajectoires des corps célestes, reliant mécanique terrestre et astronomie.</string>
+    <string name="ct_science_newton_precision">1687 date la première édition. Ce cadre classique reste une approximation très efficace dans son domaine, mais n’est pas la description finale de toute la physique.</string>
+    <string name="ct_science_newton_source">Royal Society · Les Principia : mouvement et gravitation</string>
+
+    <string name="ct_science_volta_title">La pile de Volta</string>
+    <string name="ct_science_volta_body">Alessandro Volta décrit un dispositif empilant des conducteurs différents, capable de fournir un courant électrique. Cette source d’électricité permet de nouvelles expériences et ouvre la voie au développement de l’électrochimie.</string>
+    <string name="ct_science_volta_precision">Le 20 mars 1800 date sa lettre à Joseph Banks. La communication est lue à la Royal Society le 26 juin.</string>
+    <string name="ct_science_volta_source">Royal Society · La pile de Volta</string>
+    <string name="ct_science_volta_date">20 mars 1800</string>
+
+    <string name="ct_science_faraday_title">Faraday découvre l’induction</string>
+    <string name="ct_science_faraday_body">En modifiant le courant d’une bobine, Faraday détecte un courant temporaire dans une autre bobine couplée à la première. L’induction électromagnétique relie les variations du champ magnétique à la production d’électricité.</string>
+    <string name="ct_science_faraday_precision">Le 29 août 1831 date l’expérience de l’anneau. Un courant constant dans la première bobine ne suffit pas à entretenir le courant induit observé.</string>
+    <string name="ct_science_faraday_source">Royal Institution · Faraday découvre l’induction</string>
+    <string name="ct_science_faraday_date">29 août 1831</string>
+
+    <string name="ct_science_maxwell_title">La lumière devient électromagnétique</string>
+    <string name="ct_science_maxwell_body">Maxwell développe une théorie unifiant électricité et magnétisme. Elle permet de comprendre la lumière comme une onde électromagnétique : deux domaines auparavant étudiés séparément deviennent les aspects d’un même phénomène.</string>
+    <string name="ct_science_maxwell_precision">1865 est l’année de publication de A Dynamical Theory of the Electromagnetic Field, présenté à la Royal Society en 1864.</string>
+    <string name="ct_science_maxwell_source">Royal Society · La lumière devient électromagnétique</string>
+
+    <string name="ct_science_xray_title">Röntgen observe les rayons X</string>
+    <string name="ct_science_xray_body">En travaillant sur des tubes à décharge, Wilhelm Röntgen repère un rayonnement traversant certains matériaux opaques à la lumière visible. Les différences d’absorption rendent bientôt possible l’imagerie des os et d’objets cachés.</string>
+    <string name="ct_science_xray_precision">Le 8 novembre 1895 date l’observation initiale. Les expériences et les premières radiographies suivent ; les risques des rayonnements seront compris progressivement.</string>
+    <string name="ct_science_xray_source">APS · Röntgen observe les rayons X</string>
+    <string name="ct_science_xray_date">8 novembre 1895</string>
+
+    <string name="ct_science_becquerel_title">Becquerel met en évidence la radioactivité</string>
+    <string name="ct_science_becquerel_body">Des composés d’uranium impressionnent une plaque photographique protégée de la lumière. Becquerel établit que cette émission ne nécessite pas l’éclairage préalable attendu : la matière peut émettre spontanément un rayonnement.</string>
+    <string name="ct_science_becquerel_precision">1896 date les expériences. Leur interprétation en termes de transformations du noyau atomique se construit ensuite, avec d’autres chercheurs.</string>
+    <string name="ct_science_becquerel_source">Prix Nobel · Becquerel met en évidence la radioactivité</string>
+
+    <string name="ct_science_electron_title">Identifier l’électron</string>
+    <string name="ct_science_electron_body">J. J. Thomson étudie la déviation des rayons cathodiques dans des champs électriques et magnétiques. Ses résultats indiquent des particules négatives bien plus légères que les atomes, communes à différents matériaux.</string>
+    <string name="ct_science_electron_precision">1897 date ces résultats expérimentaux. La structure de l’atome reste à établir ; le modèle nucléaire ne viendra que plus tard.</string>
+    <string name="ct_science_electron_source">Prix Nobel · Identifier l’électron</string>
+
+    <string name="ct_science_planck_title">Planck introduit les quanta</string>
+    <string name="ct_science_planck_body">Pour rendre compte du rayonnement d’un corps noir, Planck introduit des éléments discrets d’énergie liés à la fréquence. Cette étape remet en question l’idée que tous les échanges d’énergie peuvent être décrits de façon continue.</string>
+    <string name="ct_science_planck_precision">1900 date la proposition de Planck. Il ne s’agit pas encore de la mécanique quantique complète, ni du concept de photon développé ensuite.</string>
+    <string name="ct_science_planck_source">Prix Nobel · Planck introduit les quanta</string>
+
+    <string name="ct_science_relativity_title">La relativité restreinte</string>
+    <string name="ct_science_relativity_body">Einstein reformule les relations entre espace et temps à partir de la constance de la vitesse de la lumière et du principe de relativité. La simultanéité dépend du référentiel ; un autre article de la même année relie masse et énergie.</string>
+    <string name="ct_science_relativity_precision">1905 date les publications. La relativité restreinte traite notamment des référentiels inertiels ; la gravitation sera intégrée à une théorie plus générale en 1915.</string>
+    <string name="ct_science_relativity_source">Prix Nobel · La relativité restreinte</string>
+
+    <string name="ct_science_general_relativity_title">La relativité générale</string>
+    <string name="ct_science_general_relativity_body">Einstein achève les équations de sa théorie de la gravitation. La matière et l’énergie sont liées à la géométrie de l’espace-temps ; le mouvement des corps et de la lumière s’inscrit dans cette géométrie.</string>
+    <string name="ct_science_general_relativity_precision">1915 date l’aboutissement de plusieurs années de travail. Les prédictions seront testées progressivement, et la théorie ne constitue pas une théorie quantique de la gravitation.</string>
+    <string name="ct_science_general_relativity_source">Max Planck Institute · La relativité générale</string>
+
+    <string name="ct_science_nucleus_title">Le modèle nucléaire de l’atome</string>
+    <string name="ct_science_nucleus_body">Rutherford interprète la forte déviation de certaines particules alpha observée par Geiger et Marsden. Il propose qu’une grande partie de la masse atomique et la charge positive soient concentrées dans un noyau minuscule.</string>
+    <string name="ct_science_nucleus_precision">1911 date le modèle, fondé notamment sur des expériences de 1909. Les neutrons et la description quantique des électrons restent à découvrir.</string>
+    <string name="ct_science_nucleus_source">Prix Nobel · Le modèle nucléaire de l’atome</string>
+
+    <string name="ct_science_quantum_title">Construire la mécanique quantique</string>
+    <string name="ct_science_quantum_body">Heisenberg développe une formulation matricielle, puis Schrödinger une formulation ondulatoire. Avec les contributions de Born, Jordan et d’autres physiciens, un nouveau cadre mathématique décrit les systèmes atomiques et leurs résultats de mesure.</string>
+    <string name="ct_science_quantum_precision">1925–1926 regroupe plusieurs publications fondatrices. Ces formulations ne représentent pas deux mondes physiques différents ; elles sont mathématiquement reliées.</string>
+    <string name="ct_science_quantum_source">Prix Nobel · Construire la mécanique quantique</string>
+
+    <string name="ct_science_raman_title">L’effet Raman</string>
+    <string name="ct_science_raman_body">C. V. Raman et ses collaborateurs mettent en évidence une modification de fréquence d’une partie de la lumière diffusée par la matière. Ce phénomène deviendra un outil pour étudier les propriétés et les vibrations des molécules.</string>
+    <string name="ct_science_raman_precision">Le 28 février 1928 marque l’observation décisive dans cette série de recherches, et non le début de toute l’étude de la diffusion lumineuse.</string>
+    <string name="ct_science_raman_source">Prix Nobel · L’effet Raman</string>
+    <string name="ct_science_raman_date">28 février 1928</string>
+
+    <string name="ct_science_neutron_title">Chadwick identifie le neutron</string>
+    <string name="ct_science_neutron_body">James Chadwick interprète un rayonnement très pénétrant comme constitué de particules sans charge électrique, de masse voisine de celle du proton. Le neutron devient une pièce essentielle pour comprendre les noyaux atomiques.</string>
+    <string name="ct_science_neutron_precision">1932 date l’identification du neutron à partir d’expériences qui prolongent notamment celles de Bothe et Becker.</string>
+    <string name="ct_science_neutron_source">Prix Nobel · Chadwick identifie le neutron</string>
+
+    <string name="ct_science_fission_title">Comprendre la fission nucléaire</string>
+    <string name="ct_science_fission_body">Fin 1938, Hahn et Strassmann identifient du baryum après irradiation de l’uranium. Meitner et Frisch expliquent la séparation d’un noyau lourd en fragments plus légers, avec libération d’énergie, et publient cette interprétation en 1939.</string>
+    <string name="ct_science_fission_precision">L’intervalle distingue le résultat chimique de son explication physique. Il ne date ni un réacteur en fonctionnement ni une arme nucléaire.</string>
+    <string name="ct_science_fission_source">IAEA · Comprendre la fission nucléaire</string>
+
+    <string name="ct_science_laser_title">Le premier laser opérationnel</string>
+    <string name="ct_science_laser_body">Theodore Maiman obtient une émission laser avec un cristal de rubis. Le dispositif réalise une amplification de lumière par émission stimulée, ouvrant des usages en mesure, communications, industrie et recherche.</string>
+    <string name="ct_science_laser_precision">Le 16 mai 1960 date le fonctionnement du laser à rubis. Il prolonge des travaux théoriques et expérimentaux collectifs, notamment sur les masers.</string>
+    <string name="ct_science_laser_source">APS · Le premier laser opérationnel</string>
+    <string name="ct_science_laser_date">16 mai 1960</string>
+
+    <string name="ct_science_higgs_title">Un boson compatible avec le Higgs</string>
+    <string name="ct_science_higgs_body">Les collaborations ATLAS et CMS annoncent au CERN l’observation d’une nouvelle particule compatible avec le boson de Higgs. Cette découverte apporte un élément majeur pour tester le mécanisme associé à la masse de certaines particules élémentaires.</string>
+    <string name="ct_science_higgs_precision">Le 4 juillet 2012 date l’annonce. L’étude ultérieure de ses propriétés consolide l’identification ; cette découverte n’explique pas à elle seule toute la masse de la matière.</string>
+    <string name="ct_science_higgs_source">CERN · Un boson compatible avec le Higgs</string>
+    <string name="ct_science_higgs_date">4 juillet 2012</string>
+
+    <string name="ct_science_copernicus_title">Copernic publie son modèle héliocentrique</string>
+    <string name="ct_science_copernicus_body">Dans De revolutionibus, Copernic place la Terre parmi les planètes en mouvement autour du Soleil. Son modèle réorganise le calcul des mouvements célestes et prépare un long renouvellement de l’astronomie.</string>
+    <string name="ct_science_copernicus_precision">1543 date la publication du livre, pas la première idée héliocentrique de l’histoire ni une preuve immédiate de tout le modèle.</string>
+    <string name="ct_science_copernicus_source">Library of Congress · Copernic publie son modèle héliocentrique</string>
+
+    <string name="ct_science_kepler_title">Les lois des orbites de Kepler</string>
+    <string name="ct_science_kepler_body">À partir notamment des observations de Tycho Brahe, Kepler décrit des orbites elliptiques et des aires égales balayées en temps égaux. Il relie ensuite la durée d’une révolution à la taille de l’orbite.</string>
+    <string name="ct_science_kepler_precision">Les deux premières lois paraissent en 1609, la troisième en 1619. L’intervalle réunit ces publications, pas une unique observation.</string>
+    <string name="ct_science_kepler_source">NASA Glenn · Les lois des orbites de Kepler</string>
+
+    <string name="ct_science_galileo_title">Galilée observe les lunes de Jupiter</string>
+    <string name="ct_science_galileo_body">Grâce à la lunette, Galilée suit des points lumineux accompagnant Jupiter et comprend qu’ils tournent autour de cette planète. Tous les corps célestes ne gravitent donc pas autour de la Terre ; le ciel devient un terrain d’observations instrumentales nouvelles.</string>
+    <string name="ct_science_galileo_precision">Les observations commencent le 7 janvier 1610 ; leur interprétation se précise les jours suivants. Le Sidereus nuncius paraît en mars.</string>
+    <string name="ct_science_galileo_source">NASA · Galilée observe les lunes de Jupiter</string>
+
+    <string name="ct_science_leavitt_title">Leavitt : des étoiles pour mesurer les distances</string>
+    <string name="ct_science_leavitt_body">Henrietta Leavitt précise la relation entre la période de variation des céphéides et leur luminosité. Une fois calibrée, cette relation permet de comparer luminosité réelle et éclat observé pour estimer des distances astronomiques.</string>
+    <string name="ct_science_leavitt_precision">1912 date la relation publiée après des résultats préliminaires de 1908. La calibration absolue des distances nécessite d’autres travaux.</string>
+    <string name="ct_science_leavitt_source">Harvard CfA · Leavitt : des étoiles pour mesurer les distances</string>
+
+    <string name="ct_science_payne_title">Payne révèle la composition des étoiles</string>
+    <string name="ct_science_payne_body">Dans sa thèse, Cecilia Payne utilise la physique de l’ionisation pour interpréter les spectres stellaires. Ses calculs indiquent que l’hydrogène et l’hélium sont beaucoup plus abondants dans les étoiles que les éléments lourds.</string>
+    <string name="ct_science_payne_precision">1925 date la thèse. Payne nuance alors ses résultats sous l’influence des objections de ses contemporains ; leur acceptation se construit ensuite.</string>
+    <string name="ct_science_payne_source">Harvard CfA · Payne révèle la composition des étoiles</string>
+
+    <string name="ct_science_lemaitre_title">Lemaître propose un Univers en expansion</string>
+    <string name="ct_science_lemaitre_body">Georges Lemaître relie une solution cosmologique de la relativité générale aux observations de galaxies. Il propose un Univers en expansion et une relation entre distance et vitesse apparente d’éloignement.</string>
+    <string name="ct_science_lemaitre_precision">1927 date cet article. Son hypothèse de l’atome primitif appartient à 1931 ; ces deux étapes ne doivent pas être confondues.</string>
+    <string name="ct_science_lemaitre_source">NASA NTRS · Lemaître propose un Univers en expansion</string>
+
+    <string name="ct_science_hubble_title">Hubble : distance et décalage vers le rouge</string>
+    <string name="ct_science_hubble_body">Edwin Hubble met en relation les distances de galaxies et leurs décalages spectraux, en utilisant notamment des mesures de Vesto Slipher. Cette relation devient un appui observationnel majeur à l’expansion cosmique.</string>
+    <string name="ct_science_hubble_precision">1929 date la publication. Lemaître avait déjà établi une relation d’expansion en 1927 ; les distances et leur calibration seront ensuite révisées.</string>
+    <string name="ct_science_hubble_source">NASA · Hubble : distance et décalage vers le rouge</string>
+
+    <string name="ct_science_sputnik_title">Spoutnik 1 ouvre l’ère des satellites</string>
+    <string name="ct_science_sputnik_body">L’Union soviétique place Spoutnik 1 en orbite terrestre. Les signaux radio de ce petit satellite artificiel sont suivis depuis le sol : l’espace devient accessible à des instruments construits par les humains.</string>
+    <string name="ct_science_sputnik_precision">Le 4 octobre 1957 date le lancement du premier satellite artificiel terrestre. Des fusées avaient déjà atteint l’espace sans se placer en orbite.</string>
+    <string name="ct_science_sputnik_source">NASA · Spoutnik 1 ouvre l’ère des satellites</string>
+    <string name="ct_science_sputnik_date">4 octobre 1957</string>
+
+    <string name="ct_science_gagarin_title">Gagarine, premier humain dans l’espace</string>
+    <string name="ct_science_gagarin_body">À bord de Vostok 1, Youri Gagarine réalise le premier vol spatial humain et accomplit un tour de la Terre. La mission soviétique démontre la possibilité d’un séjour humain en orbite suivi d’un retour au sol.</string>
+    <string name="ct_science_gagarin_precision">Le 12 avril 1961 date le vol. Gagarine s’éjecte de la capsule lors de la descente et termine son retour en parachute.</string>
+    <string name="ct_science_gagarin_source">NASA · Gagarine, premier humain dans l’espace</string>
+    <string name="ct_science_gagarin_date">12 avril 1961</string>
+
+    <string name="ct_science_cmb_title">Détecter le fond diffus cosmologique</string>
+    <string name="ct_science_cmb_body">Penzias et Wilson mesurent un rayonnement micro-onde persistant. Les travaux de l’équipe de Dicke, Peebles, Roll et Wilkinson relient ce signal à un Univers ancien chaud : une observation centrale pour la cosmologie du Big Bang.</string>
+    <string name="ct_science_cmb_precision">1965 date les publications. Les mesures s’étendent sur 1964–1965 ; l’émission cosmique observée remonte, elle, à environ 380 000 ans après le Big Bang.</string>
+    <string name="ct_science_cmb_source">NASA LAMBDA · Détecter le fond diffus cosmologique</string>
+
+    <string name="ct_science_pulsar_title">Jocelyn Bell Burnell repère les pulsars</string>
+    <string name="ct_science_pulsar_body">En analysant les enregistrements d’un radiotélescope, Jocelyn Bell Burnell distingue des signaux réguliers inhabituels. Les travaux menés avec Antony Hewish et leur équipe révèlent les pulsars, ensuite interprétés comme des étoiles à neutrons en rotation.</string>
+    <string name="ct_science_pulsar_precision">1967 date la détection ; l’article paraît en 1968. Les pulsations précises sont reconnues après les premiers indices relevés dans les enregistrements.</string>
+    <string name="ct_science_pulsar_source">Cambridge · Jocelyn Bell Burnell repère les pulsars</string>
+
+    <string name="ct_science_exoplanet_title">51 Pegasi b : une planète autour d’une étoile solaire</string>
+    <string name="ct_science_exoplanet_body">Michel Mayor et Didier Queloz annoncent une planète autour de l’étoile 51 Pegasi. Les variations de vitesse de l’étoile trahissent la présence de ce compagnon, une planète géante sur une orbite très courte.</string>
+    <string name="ct_science_exoplanet_precision">Le 6 octobre 1995 date l’annonce. Il s’agit de la première exoplanète découverte autour d’une étoile de type solaire ; des planètes de pulsar étaient connues depuis 1992.</string>
+    <string name="ct_science_exoplanet_source">ESO · 51 Pegasi b : une planète autour d’une étoile solaire</string>
+    <string name="ct_science_exoplanet_date">6 octobre 1995</string>
+
+    <string name="ct_science_gravitational_waves_title">La première détection directe d’ondes gravitationnelles</string>
+    <string name="ct_science_gravitational_waves_body">Les deux détecteurs LIGO enregistrent un signal compatible avec la fusion de deux trous noirs. Ils mesurent une minuscule variation relative des longueurs provoquée par le passage d’ondes gravitationnelles, ouvrant une nouvelle manière d’observer l’Univers.</string>
+    <string name="ct_science_gravitational_waves_precision">Le 14 septembre 2015 date la réception du signal sur Terre ; l’annonce publique a lieu le 11 février 2016. La fusion elle-même s’est produite bien auparavant.</string>
+    <string name="ct_science_gravitational_waves_source">LIGO · La première détection directe d’ondes gravitationnelles</string>
+    <string name="ct_science_gravitational_waves_date">14 septembre 2015</string>
+
+    <string name="ct_science_black_hole_image_title">L’image de l’ombre d’un trou noir</string>
+    <string name="ct_science_black_hole_image_body">La collaboration Event Horizon Telescope publie l’image d’une région lumineuse entourant l’ombre du trou noir de M87. Des radiotélescopes répartis sur la Terre ont combiné leurs observations pour atteindre la résolution nécessaire.</string>
+    <string name="ct_science_black_hole_image_precision">Le 10 avril 2019 date la publication ; les observations remontent à 2017. L’image montre l’émission environnante et une ombre, pas l’intérieur du trou noir.</string>
+    <string name="ct_science_black_hole_image_source">ESO / EHT · L’image de l’ombre d’un trou noir</string>
+    <string name="ct_science_black_hole_image_date">10 avril 2019</string>
+
+    <string name="ct_science_lavoisier_title">Le Traité élémentaire de chimie</string>
+    <string name="ct_science_lavoisier_body">Lavoisier rassemble une chimie fondée sur les mesures, le bilan des masses et une nouvelle compréhension de la combustion. Marie-Anne Paulze participe au travail scientifique, aux traductions et aux illustrations qui accompagnent cette transformation.</string>
+    <string name="ct_science_lavoisier_precision">1789 date le traité. Il synthétise des recherches menées depuis des années et ne marque pas une invention soudaine de toute la chimie moderne.</string>
+    <string name="ct_science_lavoisier_source">American Chemical Society · Le Traité élémentaire de chimie</string>
+
+    <string name="ct_science_dalton_title">Dalton développe la théorie atomique</string>
+    <string name="ct_science_dalton_body">Dalton explique les proportions des réactions chimiques par des combinaisons d’atomes propres à chaque élément. Son ouvrage donne à l’atomisme une forme quantitative qui contribue à organiser la chimie du XIXe siècle.</string>
+    <string name="ct_science_dalton_precision">1808 date le premier volume de A New System of Chemical Philosophy. Ses idées circulaient déjà auparavant ; plusieurs masses et formules proposées seront corrigées.</string>
+    <string name="ct_science_dalton_source">Science History Institute · Dalton développe la théorie atomique</string>
+
+    <string name="ct_science_periodic_table_title">Mendeleïev organise les éléments</string>
+    <string name="ct_science_periodic_table_body">Mendeleïev dispose les éléments suivant leur masse et leurs ressemblances chimiques, laissant des places pour des éléments encore inconnus. Les prédictions associées montrent la puissance d’un classement qui exprime une régularité de la matière.</string>
+    <string name="ct_science_periodic_table_precision">1869 date son premier tableau. D’autres classements existaient, notamment ceux de Meyer ; le tableau actuel est ordonné par numéro atomique, pas par masse.</string>
+    <string name="ct_science_periodic_table_source">Royal Society of Chemistry · Mendeleïev organise les éléments</string>
+
+    <string name="ct_science_curie_title">Le polonium et le radium</string>
+    <string name="ct_science_curie_body">Marie et Pierre Curie étudient des minerais plus actifs que l’uranium seul. Ils annoncent le polonium, puis le radium avec Gustave Bémont, révélant de nouveaux éléments à partir de leurs propriétés radioactives.</string>
+    <string name="ct_science_curie_precision">1898 date les annonces. La séparation et l’étude de ces substances se poursuivent pendant des années ; annoncer un élément et isoler son métal sont des étapes différentes.</string>
+    <string name="ct_science_curie_source">Prix Nobel · Le polonium et le radium</string>
+
+    <string name="ct_science_ammonia_title">L’ammoniac produit à l’échelle industrielle</string>
+    <string name="ct_science_ammonia_body">À Oppau, le procédé issu des recherches de Haber est porté à l’échelle industrielle par l’équipe de Bosch. Fabriquer de l’ammoniac à partir d’azote et d’hydrogène permet de produire massivement des engrais azotés.</string>
+    <string name="ct_science_ammonia_precision">1913 date l’entrée en service de l’usine. La synthèse en laboratoire et les travaux sur les catalyseurs précèdent cette étape industrielle.</string>
+    <string name="ct_science_ammonia_source">BASF · L’ammoniac produit à l’échelle industrielle</string>
+
+    <string name="ct_science_fullerene_title">Le carbone en cage : les fullerènes</string>
+    <string name="ct_science_fullerene_body">L’équipe réunissant notamment Kroto, Curl, Smalley, Heath et O’Brien identifie une molécule de soixante atomes de carbone. La structure en cage proposée pour C60 révèle une nouvelle famille de formes moléculaires du carbone.</string>
+    <string name="ct_science_fullerene_precision">1985 date la découverte et la publication. Les confirmations structurales et les méthodes de production en quantité viennent ensuite.</string>
+    <string name="ct_science_fullerene_source">American Chemical Society · Le carbone en cage : les fullerènes</string>
+
+    <string name="ct_science_hooke_title">Hooke décrit les cellules du liège</string>
+    <string name="ct_science_hooke_body">Dans Micrographia, Robert Hooke publie des observations microscopiques détaillées. Les petites loges visibles dans le liège sont nommées cellules : le microscope rend accessibles des structures auparavant invisibles à l’œil nu.</string>
+    <string name="ct_science_hooke_precision">1665 date le livre. Hooke observe surtout les parois de cellules mortes du liège ; la théorie cellulaire sera construite bien plus tard.</string>
+    <string name="ct_science_hooke_source">Royal Society · Hooke décrit les cellules du liège</string>
+
+    <string name="ct_science_leeuwenhoek_title">Leeuwenhoek décrit les microorganismes</string>
+    <string name="ct_science_leeuwenhoek_body">Avec ses microscopes, Antoni van Leeuwenhoek décrit de minuscules êtres dans différentes eaux et infusions. Ses observations révèlent un monde vivant microscopique dont l’étude transformera progressivement la biologie.</string>
+    <string name="ct_science_leeuwenhoek_precision">Le 9 octobre 1676 date la lettre qui rapporte ces observations. La date du document ne correspond pas à une unique séance d’observation.</string>
+    <string name="ct_science_leeuwenhoek_source">Royal Society · Leeuwenhoek décrit les microorganismes</string>
+    <string name="ct_science_leeuwenhoek_date">9 octobre 1676</string>
+
+    <string name="ct_science_linnaeus_title">Linné systématise les noms des plantes</string>
+    <string name="ct_science_linnaeus_body">Species Plantarum emploie de façon cohérente un nom de genre et une épithète pour identifier les espèces végétales. Cette nomenclature facilite la comparaison des descriptions et les échanges entre naturalistes.</string>
+    <string name="ct_science_linnaeus_precision">1753 date cet ouvrage botanique. Nommer les espèces et reconstruire leurs liens évolutifs sont deux tâches différentes ; les classifications continueront de changer.</string>
+    <string name="ct_science_linnaeus_source">Linnean Society · Linné systématise les noms des plantes</string>
+
+    <string name="ct_science_selection_title">Darwin et Wallace : la sélection naturelle</string>
+    <string name="ct_science_selection_body">Les idées de Darwin et Wallace sur la sélection naturelle sont présentées ensemble en 1858. Darwin développe ensuite son argumentation dans L’Origine des espèces : des différences héréditaires influencent la reproduction et peuvent transformer les populations au fil des générations.</string>
+    <string name="ct_science_selection_precision">L’intervalle relie la communication commune de 1858 au livre de 1859. L’évolution était déjà discutée ; le mécanisme de sélection constitue l’apport central.</string>
+    <string name="ct_science_selection_source">Cambridge · Darwin et Wallace : la sélection naturelle</string>
+
+    <string name="ct_science_mendel_title">Mendel étudie la transmission des caractères</string>
+    <string name="ct_science_mendel_body">En croisant des pois et en comptant les caractères des descendants, Gregor Mendel met en évidence des régularités de transmission. Ces résultats contribueront à fonder la génétique et la notion de facteurs héréditaires distincts.</string>
+    <string name="ct_science_mendel_precision">Les conférences ont lieu en 1865 et le texte paraît en 1866. Tous les caractères biologiques ne suivent pas un schéma mendélien simple.</string>
+    <string name="ct_science_mendel_source">Mendel Museum · Mendel étudie la transmission des caractères</string>
+
+    <string name="ct_science_avery_title">L’ADN porte une information héréditaire</string>
+    <string name="ct_science_avery_body">Avery, MacLeod et McCarty montrent qu’une fraction d’ADN peut transmettre un caractère entre pneumocoques. Cette transformation bactérienne fournit une preuve majeure en faveur de l’ADN comme support de l’hérédité.</string>
+    <string name="ct_science_avery_precision">1944 date la publication. L’expérience concerne un système bactérien précis ; l’acceptation générale du rôle de l’ADN mobilisera d’autres résultats.</string>
+    <string name="ct_science_avery_source">NHGRI · L’ADN porte une information héréditaire</string>
+
+    <string name="ct_science_dna_title">La double hélice de l’ADN</string>
+    <string name="ct_science_dna_body">Watson et Crick proposent un modèle à deux brins complémentaires. Les données de diffraction de Franklin, Gosling et Wilkins, ainsi que les résultats de Chargaff, sont essentiels à cette avancée, qui suggère comment l’information peut être copiée.</string>
+    <string name="ct_science_dna_precision">Le 25 avril 1953 date les articles de Nature. Le modèle structural ne constitue pas à lui seul la découverte de tous les mécanismes de réplication.</string>
+    <string name="ct_science_dna_source">NHGRI · La double hélice de l’ADN</string>
+    <string name="ct_science_dna_date">25 avril 1953</string>
+
+    <string name="ct_science_sequencing_title">Lire la séquence de l’ADN</string>
+    <string name="ct_science_sequencing_body">Les équipes de Sanger et de Maxam et Gilbert développent des méthodes pour déterminer l’ordre des bases de l’ADN. Le séquençage transforme des molécules en informations comparables, ouvrant l’étude détaillée des gènes et des génomes.</string>
+    <string name="ct_science_sequencing_precision">1975–1977 regroupe plusieurs étapes méthodologiques. Ces techniques ne lisent pas encore un génome humain entier et prolongent des travaux antérieurs.</string>
+    <string name="ct_science_sequencing_source">NHGRI · Lire la séquence de l’ADN</string>
+
+    <string name="ct_science_pcr_title">La PCR : amplifier un fragment d’ADN</string>
+    <string name="ct_science_pcr_body">La réaction en chaîne par polymérase permet de multiplier un fragment ciblé d’ADN. La méthode transforme les possibilités d’analyse lorsque l’échantillon de départ contient très peu de matière génétique.</string>
+    <string name="ct_science_pcr_precision">1983 date la conception de la PCR par Kary Mullis. Sa mise au point expérimentale, son automatisation et sa diffusion reposent sur des développements ultérieurs.</string>
+    <string name="ct_science_pcr_source">NHGRI · La PCR : amplifier un fragment d’ADN</string>
+
+    <string name="ct_science_human_genome_title">L’achèvement du Projet génome humain</string>
+    <string name="ct_science_human_genome_body">Un consortium international annonce l’achèvement du Projet génome humain. La séquence de référence fournit une ressource majeure pour étudier les gènes, comparer des génomes et explorer les bases moléculaires de certaines maladies.</string>
+    <string name="ct_science_human_genome_precision">Le 14 avril 2003 date l’annonce. La référence couvre alors environ 92 % du génome ; « projet achevé » ne signifie donc pas « séquence sans aucune lacune ».</string>
+    <string name="ct_science_human_genome_source">NHGRI · L’achèvement du Projet génome humain</string>
+    <string name="ct_science_human_genome_date">14 avril 2003</string>
+
+    <string name="ct_science_crispr_title">CRISPR-Cas9 devient programmable</string>
+    <string name="ct_science_crispr_body">L’équipe de Doudna et Charpentier, avec notamment Jinek et Chylinski, décrit une enzyme Cas9 guidée par ARN pour couper un ADN ciblé en laboratoire. Cette programmation ouvre une nouvelle voie pour modifier et étudier les génomes.</string>
+    <string name="ct_science_crispr_precision">Le 28 juin 2012 date la publication en ligne. Les démonstrations d’édition dans des cellules humaines et animales suivent en 2013 ; la découverte des systèmes CRISPR est antérieure.</string>
+    <string name="ct_science_crispr_source">Berkeley · CRISPR-Cas9 devient programmable</string>
+    <string name="ct_science_crispr_date">28 juin 2012</string>
+
+    <string name="ct_science_t2t_title">Combler les lacunes du génome : T2T</string>
+    <string name="ct_science_t2t_body">Le consortium Telomere-to-Telomere présente la référence T2T-CHM13. De longues lectures d’ADN permettent de résoudre des régions répétées jusque-là difficiles à assembler, notamment autour des centromères.</string>
+    <string name="ct_science_t2t_precision">Le 31 mars 2022 date la publication. Cette référence comporte les autosomes et le chromosome X, sans chromosome Y ; elle ne représente pas toute la diversité génétique humaine.</string>
+    <string name="ct_science_t2t_source">T2T Consortium · Combler les lacunes du génome : T2T</string>
+    <string name="ct_science_t2t_date">31 mars 2022</string>
+
+    <string name="ct_science_vesalius_title">Vésale renouvelle l’anatomie</string>
+    <string name="ct_science_vesalius_body">De humani corporis fabrica présente une anatomie humaine fondée sur l’examen direct des corps et des illustrations détaillées. Vésale confronte des descriptions héritées de l’Antiquité à l’observation et corrige plusieurs erreurs.</string>
+    <string name="ct_science_vesalius_precision">1543 date la première édition. L’exemplaire numérisé cité dans les références est celui de la seconde édition, publiée en 1555.</string>
+    <string name="ct_science_vesalius_source">Library of Congress · Vésale renouvelle l’anatomie</string>
+
+    <string name="ct_science_harvey_title">Harvey décrit la circulation du sang</string>
+    <string name="ct_science_harvey_body">William Harvey publie une démonstration du rôle moteur du cœur et de la circulation du sang. Observations, expériences et raisonnements quantitatifs permettent de dépasser l’idée d’un sang continuellement consommé par les organes.</string>
+    <string name="ct_science_harvey_precision">1628 date De motu cordis, après des années de recherche. Des descriptions antérieures de la circulation pulmonaire existaient ; le réseau capillaire sera observé plus tard.</string>
+    <string name="ct_science_harvey_source">Royal College of Physicians · Harvey décrit la circulation du sang</string>
+
+    <string name="ct_science_jenner_title">Jenner et la vaccination contre la variole</string>
+    <string name="ct_science_jenner_body">Edward Jenner teste la protection contre la variole obtenue à partir de la vaccine. Cette approche contribue au développement de la vaccination et à sa diffusion, dans une histoire qui comporte déjà de nombreuses pratiques d’inoculation.</string>
+    <string name="ct_science_jenner_precision">1796 date l’expérience célèbre de Jenner. Elle ne marque ni la première tentative de prévention de la variole ni l’éradication de la maladie.</string>
+    <string name="ct_science_jenner_source">OMS · Jenner et la vaccination contre la variole</string>
+
+    <string name="ct_science_semmelweis_title">Semmelweis et l’hygiène des mains</string>
+    <string name="ct_science_semmelweis_body">À la maternité de Vienne, Ignace Semmelweis impose la désinfection des mains et observe une forte baisse des décès dus à la fièvre puerpérale. La comparaison des pratiques hospitalières devient un argument pour prévenir la transmission.</string>
+    <string name="ct_science_semmelweis_precision">1847 date cette intervention. Le résultat précède la compréhension complète des agents microbiens et ne suffit pas, à lui seul, à faire accepter immédiatement la mesure.</string>
+    <string name="ct_science_semmelweis_source">Semmelweis University · Semmelweis et l’hygiène des mains</string>
+
+    <string name="ct_science_snow_title">John Snow enquête sur le choléra</string>
+    <string name="ct_science_snow_body">Pendant une épidémie londonienne, John Snow relie des cas de choléra à l’eau de la pompe de Broad Street. La localisation des malades et l’étude de leur consommation d’eau contribuent à établir une voie de transmission.</string>
+    <string name="ct_science_snow_precision">1854 date l’enquête. Elle ne correspond pas à l’identification du microbe ; l’histoire de l’épidémie ne se résume pas au retrait de la poignée de la pompe.</string>
+    <string name="ct_science_snow_source">LSHTM · John Snow enquête sur le choléra</string>
+
+    <string name="ct_science_rabies_title">Prévenir la rage après une morsure</string>
+    <string name="ct_science_rabies_body">Joseph Meister reçoit une série d’inoculations mises au point par Pasteur et ses collaborateurs après avoir été mordu par un chien enragé. Le succès de cette prévention contribue à la création de l’Institut Pasteur.</string>
+    <string name="ct_science_rabies_precision">Le 6 juillet 1885 date le début du traitement. Il s’agit de prévenir la maladie après exposition, avant les symptômes, et non de guérir une rage déclarée.</string>
+    <string name="ct_science_rabies_source">Institut Pasteur · Prévenir la rage après une morsure</string>
+    <string name="ct_science_rabies_date">6 juillet 1885</string>
+
+    <string name="ct_science_insulin_title">L’insuline passe du laboratoire aux patients</string>
+    <string name="ct_science_insulin_body">À Toronto, les travaux de Banting, Best, Macleod et Collip conduisent à un extrait utilisable pour traiter le diabète. Les expériences de 1921 sont suivies des premiers traitements humains en 1922.</string>
+    <string name="ct_science_insulin_precision">L’intervalle distingue la recherche expérimentale de l’application clinique. La purification et la production fiable sont aussi essentielles que l’observation initiale.</string>
+    <string name="ct_science_insulin_source">University of Toronto · L’insuline passe du laboratoire aux patients</string>
+
+    <string name="ct_science_penicillin_title">Fleming observe l’effet de la pénicilline</string>
+    <string name="ct_science_penicillin_body">Alexander Fleming remarque qu’une moisissure empêche certaines bactéries de se développer autour d’elle. L’observation révèle une activité antibactérienne qui ouvrira la voie à un médicament majeur.</string>
+    <string name="ct_science_penicillin_precision">1928 date l’observation, pas la disponibilité d’un traitement. Florey, Chain et de nombreuses équipes développent ensuite la purification, les essais et la production dans les années 1940.</string>
+    <string name="ct_science_penicillin_source">American Chemical Society · Fleming observe l’effet de la pénicilline</string>
+
+    <string name="ct_science_artemisinin_title">Isoler l’artémisinine</string>
+    <string name="ct_science_artemisinin_body">Dans le cadre d’un programme de recherche chinois, Tu Youyou et son équipe identifient et isolent un composé antipaludique issu d’Artemisia annua. L’artémisinine devient le point de départ d’une nouvelle famille de traitements.</string>
+    <string name="ct_science_artemisinin_precision">1972 date l’isolement du composé actif. Des résultats sur les extraits précèdent cette étape ; sa structure et ses usages pharmaceutiques seront développés ensuite.</string>
+    <string name="ct_science_artemisinin_source">Prix Nobel · Isoler l’artémisinine</string>
+
+    <string name="ct_science_smallpox_title">L’éradication de la variole reconnue</string>
+    <string name="ct_science_smallpox_body">L’Assemblée mondiale de la Santé reconnaît l’éradication de la variole. Vaccination, surveillance des cas et interventions coordonnées ont permis d’interrompre la transmission naturelle de cette maladie humaine à l’échelle mondiale.</string>
+    <string name="ct_science_smallpox_precision">Le 8 mai 1980 date la reconnaissance officielle, après la certification d’une commission en 1979. Le dernier cas naturel connu remontait à 1977.</string>
+    <string name="ct_science_smallpox_source">OMS · L’éradication de la variole reconnue</string>
+    <string name="ct_science_smallpox_date">8 mai 1980</string>
+
+    <string name="ct_science_steno_title">Sténon apprend à lire les strates</string>
+    <string name="ct_science_steno_body">Nicolas Sténon expose des principes pour interpréter les couches de roche et les objets qu’elles contiennent. Dans une succession sédimentaire non renversée, les couches inférieures sont plus anciennes que celles déposées au-dessus.</string>
+    <string name="ct_science_steno_precision">1669 date le Prodromus. Ces principes établissent des relations d’âge ; ils ne fournissent pas encore une date chiffrée en années.</string>
+    <string name="ct_science_steno_source">UC Berkeley · Sténon apprend à lire les strates</string>
+
+    <string name="ct_science_hutton_title">Hutton et la profondeur du temps</string>
+    <string name="ct_science_hutton_body">À Siccar Point, Hutton observe des roches anciennes redressées, érodées puis recouvertes par d’autres dépôts. Cette succession d’événements révèle une histoire terrestre bien plus longue que ne le suggère une simple lecture du paysage actuel.</string>
+    <string name="ct_science_hutton_precision">1788 date l’observation de cette discordance. Elle soutient l’idée d’un temps géologique immense, sans mesurer encore l’âge de la Terre.</string>
+    <string name="ct_science_hutton_source">Geological Society · Hutton et la profondeur du temps</string>
+
+    <string name="ct_science_lyell_title">Les Principes de géologie de Lyell</string>
+    <string name="ct_science_lyell_body">Lyell cherche à expliquer les paysages anciens par des processus observables : érosion, dépôts, volcanisme et mouvements du sol. L’accumulation de changements sur de longues durées offre un cadre pour reconstruire l’histoire terrestre.</string>
+    <string name="ct_science_lyell_precision">1830–1833 couvre les trois volumes de la première édition. La géologie actuelle reconnaît aussi des événements brusques ; elle ne reprend pas toutes les positions de Lyell.</string>
+    <string name="ct_science_lyell_source">Cambridge · Les Principes de géologie de Lyell</string>
+
+    <string name="ct_science_wegener_title">Wegener propose la dérive des continents</string>
+    <string name="ct_science_wegener_body">Alfred Wegener rassemble des arguments géologiques, paléontologiques et géographiques pour proposer que les continents se déplacent. Des terres aujourd’hui séparées auraient autrefois été réunies.</string>
+    <string name="ct_science_wegener_precision">1912 date ses premières publications sur cette théorie. Le mécanisme proposé reste insuffisant ; la tectonique des plaques se construit plusieurs décennies plus tard.</string>
+    <string name="ct_science_wegener_source">USGS · Wegener propose la dérive des continents</string>
+
+    <string name="ct_science_inner_core_title">Lehmann propose un noyau interne</string>
+    <string name="ct_science_inner_core_body">Inge Lehmann étudie des ondes sismiques reçues là où un modèle simple du noyau ne les prévoyait pas. Elle propose une région interne distincte, montrant comment les séismes permettent de sonder l’intérieur inaccessible de la Terre.</string>
+    <string name="ct_science_inner_core_precision">1936 date l’article P’. Il s’agit d’une inférence tirée de la propagation des ondes, pas d’une observation directe du noyau ; ses propriétés seront précisées ensuite.</string>
+    <string name="ct_science_inner_core_source">EGU Seismology · Lehmann propose un noyau interne</string>
+
+    <string name="ct_science_radiocarbon_title">Tester la datation au carbone 14</string>
+    <string name="ct_science_radiocarbon_body">Libby et Arnold comparent l’âge estimé d’échantillons organiques à des âges déjà connus. La décroissance du carbone 14 offre une horloge pour l’archéologie et l’étude d’environnements relativement récents.</string>
+    <string name="ct_science_radiocarbon_precision">1949 date cette validation publiée, après la proposition de 1946. La méthode exige une calibration et ne sert pas à dater la formation de la Terre.</string>
+    <string name="ct_science_radiocarbon_source">American Chemical Society · Tester la datation au carbone 14</string>
+
+    <string name="ct_science_keeling_title">Mesurer durablement le CO₂ atmosphérique</string>
+    <string name="ct_science_keeling_body">Charles David Keeling lance à Mauna Loa une série de mesures précises du dioxyde de carbone. Leur continuité révèle les oscillations saisonnières et l’augmentation de fond de la concentration atmosphérique.</string>
+    <string name="ct_science_keeling_precision">1958 date le début de cette série à Mauna Loa. La courbe retrace une mesure de concentration, pas directement une température ni l’ensemble des gaz à effet de serre.</string>
+    <string name="ct_science_keeling_source">Scripps · Mesurer durablement le CO₂ atmosphérique</string>
+
+    <string name="ct_science_ozone_title">Publier la découverte du trou d’ozone</string>
+    <string name="ct_science_ozone_body">Farman, Gardiner et Shanklin publient des mesures montrant un fort appauvrissement saisonnier de l’ozone au-dessus de l’Antarctique. Cette surveillance atmosphérique révèle un phénomène majeur et stimule des recherches et une action internationale.</string>
+    <string name="ct_science_ozone_precision">Le 16 mai 1985 date la publication. Le « trou » désigne une forte diminution, pas une disparition totale ; les mesures avaient commencé des décennies auparavant.</string>
+    <string name="ct_science_ozone_source">British Antarctic Survey · Publier la découverte du trou d’ozone</string>
+    <string name="ct_science_ozone_date">16 mai 1985</string>
+
+    <string name="ct_science_plate_tectonics_title">Décrire les plaques sur une Terre sphérique</string>
+    <string name="ct_science_plate_tectonics_body">McKenzie et Parker montrent comment des régions rigides de la surface terrestre se déplacent sur une sphère. Leur étude du Pacifique Nord contribue à transformer les indices de mobilité terrestre en un modèle géométrique de tectonique des plaques.</string>
+    <string name="ct_science_plate_tectonics_precision">1967 date cet article, parmi de nombreux travaux fondateurs des années 1960. La théorie résulte aussi des recherches sur les fonds océaniques, leur magnétisme et les séismes.</string>
+    <string name="ct_science_plate_tectonics_source">McKenzie &amp; Parker · Décrire les plaques sur une Terre sphérique</string>
+
+    <string name="ct_science_lovelace_title">Ada Lovelace et la machine analytique</string>
+    <string name="ct_science_lovelace_body">Dans ses notes sur la machine de Babbage, Ada Lovelace décrit une procédure de calcul des nombres de Bernoulli. Elle envisage qu’une machine manipulant des symboles puisse servir à bien plus que de simples opérations arithmétiques.</string>
+    <string name="ct_science_lovelace_precision">1843 date la publication des notes. La machine analytique n’est pas alors construite ; il s’agit d’un programme décrit pour une machine projetée.</string>
+    <string name="ct_science_lovelace_source">Computer History Museum · Ada Lovelace et la machine analytique</string>
+
+    <string name="ct_science_turing_title">Turing formalise le calcul</string>
+    <string name="ct_science_turing_body">Alan Turing propose un modèle abstrait de machine qui lit et écrit des symboles selon des règles. Ce cadre permet d’étudier ce qu’un algorithme peut calculer et les limites du calcul automatique.</string>
+    <string name="ct_science_turing_precision">1936 date le travail fondateur sur les nombres calculables. La machine de Turing est un modèle mathématique, pas un ordinateur construit cette année-là.</string>
+    <string name="ct_science_turing_source">Alan Turing Institute · Turing formalise le calcul</string>
+
+    <string name="ct_science_eniac_title">ENIAC présenté au public</string>
+    <string name="ct_science_eniac_body">ENIAC démontre la puissance du calcul électronique programmable à grande échelle. Son fonctionnement repose sur le travail des concepteurs et de six programmeuses, qui traduisent les problèmes en configurations de câbles et de commutateurs.</string>
+    <string name="ct_science_eniac_precision">Février 1946 date la présentation publique. ENIAC fonctionne déjà auparavant et n’est pas le premier dispositif de calcul de toute catégorie.</string>
+    <string name="ct_science_eniac_source">University of Pennsylvania · ENIAC présenté au public</string>
+    <string name="ct_science_eniac_date">Février 1946</string>
+
+    <string name="ct_science_transistor_title">Le transistor à pointes</string>
+    <string name="ct_science_transistor_body">Aux Bell Labs, Bardeen et Brattain obtiennent une amplification électrique dans un dispositif au germanium. Dans le groupe dirigé par Shockley, cette réussite ouvre la voie à des composants plus petits et à l’électronique des semi-conducteurs.</string>
+    <string name="ct_science_transistor_precision">1947 date le fonctionnement et la démonstration internes. L’annonce publique a lieu en juin 1948 ; le transistor à jonction de Shockley est une étape distincte.</string>
+    <string name="ct_science_transistor_source">Computer History Museum · Le transistor à pointes</string>
+
+    <string name="ct_science_shannon_title">Shannon fonde la théorie de l’information</string>
+    <string name="ct_science_shannon_body">Claude Shannon développe une mesure mathématique de l’information et étudie les limites de la transmission avec bruit. Son cadre permet de raisonner sur la compression, le codage et la capacité des canaux de communication.</string>
+    <string name="ct_science_shannon_precision">1948 date A Mathematical Theory of Communication. L’information y est une grandeur probabiliste : elle ne mesure pas directement le sens ni la valeur d’un message.</string>
+    <string name="ct_science_shannon_source">Claude Shannon · Shannon fonde la théorie de l’information</string>
+
+    <string name="ct_science_integrated_circuit_title">Le circuit intégré</string>
+    <string name="ct_science_integrated_circuit_body">Kilby réalise un premier circuit dont les composants sont formés dans un matériau semi-conducteur. Noyce propose ensuite une structure monolithique avec des interconnexions métalliques, s’appuyant sur le procédé planaire de Hoerni.</string>
+    <string name="ct_science_integrated_circuit_precision">1958–1959 relie le prototype de Kilby aux idées et dépôts de brevet de Noyce. Les circuits monolithiques opérationnels de l’équipe Fairchild suivent en 1960.</string>
+    <string name="ct_science_integrated_circuit_source">Computer History Museum · Le circuit intégré</string>
+
+    <string name="ct_science_arpanet_title">Le premier message d’ARPANET</string>
+    <string name="ct_science_arpanet_body">Une liaison entre UCLA et le Stanford Research Institute transmet les premières lettres d’une tentative de connexion. ARPANET devient un terrain majeur pour les réseaux informatiques et un précurseur de l’Internet.</string>
+    <string name="ct_science_arpanet_precision">Le 29 octobre 1969 date cette transmission, interrompue après deux lettres avant une tentative réussie. ARPANET, Internet et le Web désignent des étapes et des systèmes différents.</string>
+    <string name="ct_science_arpanet_source">UCLA · Le premier message d’ARPANET</string>
+    <string name="ct_science_arpanet_date">29 octobre 1969</string>
+    <string name="ct_science_source_euclid_context">MacTutor · Euclide</string>
+    <string name="ct_science_source_algebra_dating">MacTutor / DSB · Datation de l’algèbre</string>
+    <string name="ct_science_source_bhaskara_context">MacTutor · Les œuvres de Bhaskara II</string>
+    <string name="ct_science_source_maxwell_context">Royal Society · Publishing 350</string>
+    <string name="ct_science_source_gagarin_return">NASA · Retour de Vostok 1</string>
+    <string name="ct_science_source_cmb_interpretation">NASA PDS · Fond diffus cosmologique</string>
+    <string name="ct_science_source_dna_papers">Nature · Les trois articles sur l’ADN</string>
+    <string name="ct_science_source_hgp_announcement">NHGRI · 14 avril 2003</string>
+    <string name="ct_science_source_pcr_lecture">Kary Mullis · Conférence Nobel</string>
+    <string name="ct_science_source_mendel_inheritance">NHGRI · Les expériences de Mendel</string>
+    <string name="ct_science_source_hooke_cork">Royal Society · Cellules de liège, 1665</string>
+    <string name="ct_science_source_kilby_prototype">Computer History Museum · Prototype de Kilby</string>
+    <string name="ct_science_source_raman_lecture">C. V. Raman · Diffusion moléculaire de la lumière</string>
+</resources>

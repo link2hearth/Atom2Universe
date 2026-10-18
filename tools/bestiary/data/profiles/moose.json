@@ -1,0 +1,164 @@
+{
+  "id": "moose",
+  "scientific": "Alces alces",
+  "group": "mammals",
+  "name": {
+    "en": "Moose",
+    "fr": "Élan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The moose is the largest living deer, inhabiting northern forests of North America and Eurasia, from Alaska and Canada to Scandinavia, Russia, northern China and Mongolia. In British English it is often called elk.",
+      "fr": "L’élan est le plus grand cervidé vivant. Il habite les forêts nordiques d’Amérique du Nord et d’Eurasie, de l’Alaska au Canada, en Scandinavie, en Russie, au nord de la Chine et en Mongolie. En anglais britannique, il est souvent appelé « elk »."
+    },
+    "identification": {
+      "en": "A shoulder hump, heavy body, long legs and drooping muzzle define its shape. Only males grow annual antlers: broad palms are common in North America, narrower forms occur in Eurasia. Coat colour ranges from brown to nearly black. Long legs cross deep snow; nostrils close underwater, aiding submerged feeding. Adults typically stand about 1.5–2.1 m at the shoulder. British Columbia reports average masses of about 450–500 kg for males and 340–420 kg for females; very large males can reach about 680 kg. The antlers of males can span about 1.5 m, but antler width varies and is not body width.",
+      "fr": "Une bosse, un corps massif, de longues pattes et un museau tombant définissent sa silhouette. Seuls les mâles portent des bois annuels : les palettes sont fréquentes en Amérique du Nord, les formes étroites en Eurasie. Le pelage va du brun au presque noir. Les longues pattes franchissent la neige profonde ; les narines se ferment sous l’eau pour brouter immergé. L’adulte mesure généralement environ 1,5 à 2,1 m au garrot. La Colombie-Britannique indique des masses moyennes d’environ 450 à 500 kg chez les mâles et 340 à 420 kg chez les femelles; les très grands mâles peuvent atteindre environ 680 kg. Les bois du mâle peuvent mesurer environ 1,5 m d’envergure, mais cette largeur variable n’est pas celle du corps."
+    },
+    "habitat": {
+      "en": "Moose favour northern woodland, young forest, wetlands and shores. In Alaska they use river corridors, timberline plateaus and burns where willow, birch and aspen regrow. Lakes and marshes offer food and cover. Seasonal movements link feeding, calving, rutting and wintering areas.",
+      "fr": "L’élan fréquente forêts nordiques, jeunes peuplements, zones humides et rives. En Alaska, il utilise les vallées fluviales, plateaux près des arbres et brûlis où repoussent saules, bouleaux et trembles. Lacs et marais offrent nourriture et abri. Ses déplacements relient les lieux d’alimentation, de mise bas, de rut et d’hivernage."
+    },
+    "diet": {
+      "en": "Food varies with season and supply. In summer it eats leaves, herbs and shallow-water plants; spring also brings grazing. Woody shoots, especially willow, birch and aspen, matter more in autumn and winter. Its long muzzle and closable nostrils help crop submerged plants.",
+      "fr": "Son régime varie selon la saison et les ressources. En été, il mange feuilles, herbes et plantes aquatiques ; au printemps, il broute aussi. Les pousses de saules, bouleaux et trembles dominent davantage en automne et en hiver. Son museau et ses narines refermables facilitent la coupe de plantes immergées."
+    },
+    "behavior": {
+      "en": "Moose are usually solitary; cows stay with calves, and adults meet more during the autumn rut. Males push antlers against rivals; winners may mate with several females. Seasonal movements vary locally. Daily activity centres on feeding, resting and rumination.",
+      "fr": "Les élans sont généralement solitaires ; les femelles restent avec leurs petits et les adultes se rencontrent au rut. Les mâles poussent leurs bois contre leurs rivaux ; les vainqueurs peuvent s’accoupler avec plusieurs femelles. Les déplacements saisonniers varient localement. Leur journée alterne alimentation, repos et rumination."
+    },
+    "reproduction": {
+      "en": "In Alaska, mating peaks in late September and early October. After about 230 days, females calve in spring, usually producing one calf; twins occur in favourable conditions. Calves grow quickly, nurse through summer and are usually weaned in autumn, remaining with their mother into the next year.",
+      "fr": "En Alaska, le rut culmine fin septembre et début octobre. Après environ 230 jours, la femelle met bas au printemps, généralement un petit, parfois des jumeaux si les conditions sont favorables. Le jeune grandit vite, tète tout l’été, est sevré en automne et reste auprès de sa mère jusqu’à l’année suivante."
+    },
+    "ecology": {
+      "en": "Browsing shrubs, saplings and aquatic plants affects forest regeneration. At unusually high density in Forillon, Parks Canada documents major vegetation changes. That local case shows how abundant moose can shape plant communities; effects vary with population and habitat.",
+      "fr": "Le broutage des arbustes, jeunes arbres et plantes aquatiques agit sur la régénération forestière. À forte densité à Forillon, Parcs Canada relève d’importants changements végétaux. Ce cas local montre l’influence possible d’élans nombreux ; les effets varient selon la population et le milieu."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment (last assessed 27 September 2015; published 2016) classed moose as Least Concern, with an increasing overall trend. It cited habitat alteration as a major human threat. This dated assessment is not a current survey of regional populations.",
+      "fr": "L’évaluation mondiale de l’UICN (27 septembre 2015 ; publiée en 2016) classait l’élan en « préoccupation mineure », avec une tendance globale à la hausse. Elle citait la transformation des habitats comme menace humaine majeure. Cette évaluation datée ne constitue pas un recensement régional actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Alces alces • Moose — ASM Mammal Diversity Database",
+        "fr": "Alces alces • Élan — base de données de diversité des mammifères de l’ASM"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006285/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The ASM database recognizes Alces alces across North America and Eurasia; it notes that some authors have treated americanus as a separate species, while its treatment includes it in A. alces.",
+        "The database gives the broad northern distribution and records the common name elk alongside moose."
+      ]
+    },
+    {
+      "title": {
+        "en": "Moose Species Profile — Alaska Department of Fish and Game",
+        "fr": "Profil de l’élan — Département de la pêche et de la chasse de l’Alaska"
+      },
+      "url": "https://www.awc.adfg.alaska.gov/index.cfm?adfg=moose.main",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The agency describes male-only antlers that regrow each summer, seasonal coat colour, and spring calving after about 230 days.",
+        "Its Alaska account identifies river corridors, timberline plateaus and recently burned shrub stands as important habitats; it describes seasonal foods and autumn rut behaviour.",
+        "The source's ranges, seasons and reproductive figures refer specifically to Alaska and are presented as such."
+      ]
+    },
+    {
+      "title": {
+        "en": "What’s the purpose of a moose’s long nose? — University of Alaska Fairbanks",
+        "fr": "À quoi sert le long museau de l’élan ? — Université d’Alaska à Fairbanks"
+      },
+      "url": "https://www.uaf.edu/news/archives/news-archives-2010-2021/whats-the-purpose-of-a-mooses-long-nose.php",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "The account summarizes anatomical research indicating that pressure closes the nostrils when the moose submerges its head, enabling underwater feeding.",
+        "The article presents directional smelling as a possibility and says heat-loss explanations were considered unlikely; it does not treat every proposed function as settled."
+      ]
+    },
+    {
+      "title": {
+        "en": "Maintaining forest balance: Forillon moose management plan 2023–2027 — Parks Canada",
+        "fr": "Maintenir l’équilibre forestier : plan de gestion de l’élan de Forillon 2023–2027 — Parcs Canada"
+      },
+      "url": "https://parks.canada.ca/pn-np/qc/forillon/nature/conservation/gestion-orignaux-moose-management",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The park plan describes a diet of land and aquatic vegetation and explains that unusually high local densities can change plant communities and forest dynamics.",
+        "Its population and ecological observations are specific to Forillon and are not generalized as a species-wide density pattern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Alces alces — The IUCN Red List of Threatened Species",
+        "fr": "Alces alces — Liste rouge des espèces menacées de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T56003281A22157381.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment was last assessed on 27 September 2015, published in 2016, and classified the moose as Least Concern with an increasing overall trend.",
+        "The assessment cites habitat alteration as a principal human-caused threat and describes the species as widespread and abundant despite hunting pressure."
+      ]
+    },
+    {
+      "title": {
+        "en": "Moose | Rocky Mountain National Park, National Park Service",
+        "fr": "Moose | Rocky Mountain National Park, National Park Service"
+      },
+      "url": "https://www.nps.gov/romo/learn/nature/moose.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports typical shoulder height of 5–7 feet and very large male mass up to 1,500 lb; notes females are smaller."
+      ]
+    },
+    {
+      "title": {
+        "en": "Moose | Government of British Columbia",
+        "fr": "Moose | Government of British Columbia"
+      },
+      "url": "https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/wildlife/wildlife-conservation/moose",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports average masses of 450–500 kg for males and 340–420 kg for females."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult male moose (Alces alces), anatomically accurate natural proportions, dark brown coat, broad drooping muzzle and broad palmate antlers; standing in a neutral three-quarter side view on a PURE WHITE background, with no scenery, shadow, labels or props.",
+  "uncertainties": [
+    "Species limits remain debated: some taxonomies recognize North American moose as Alces americanus, whereas the ASM Mammal Diversity Database treats them within Alces alces; this article follows the database used for its scientific name.",
+    "Antler form varies geographically, so the illustration notes specify a male with palmate antlers without implying this form is universal."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source/taxonomic and bilingual critique; red deer range narrowed to current MDD treatment and elk terminology corrected."
+}

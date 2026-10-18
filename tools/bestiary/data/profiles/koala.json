@@ -1,0 +1,291 @@
+{
+  "id": "koala",
+  "scientific": "Phascolarctos cinereus",
+  "group": "mammals",
+  "name": {
+    "en": "Koala",
+    "fr": "Koala"
+  },
+  "sections": {
+    "overview": {
+      "en": "The koala is an Australian marsupial whose range follows eucalypt forests and woodlands across Queensland, New South Wales, Victoria and a small part of South Australia. Its distribution is broad but patchy: suitable food trees, soils and local conditions determine where animals can persist. It is the sole living member of the family Phascolarctidae and spends most of its life in trees.",
+      "fr": "Le koala est un marsupial australien dont l’aire suit les forêts et boisements d’eucalyptus du Queensland, de la Nouvelle-Galles du Sud, du Victoria et d’une petite partie de l’Australie-Méridionale. Sa répartition est vaste mais discontinue : les arbres alimentaires, les sols et les conditions locales déterminent les secteurs où il peut vivre. Seul représentant actuel de la famille des Phascolarctidés, il passe l’essentiel de sa vie dans les arbres."
+    },
+    "identification": {
+      "en": "Adults have a large rounded head, conspicuous furry ears, a broad black nose and dense grey to brown fur, usually paler on the chest, inner limbs and rump. Their strong limbs and curved claws grip trunks; two opposable digits on each forepaw help secure a hold while climbing. Males tend to be larger and have a prominent chest scent gland, while females have a pouch opening towards the rear. Size and coat thickness vary geographically, with northern animals generally smaller and lighter than southern ones. In southern Australia, adults measure about 750–820 mm from head to body in males and 680–730 mm in females; their corresponding average masses are 11.8 kg and 7.9 kg. Across the wider range, government sources give broader weight ranges (about 4–14 kg for males and 4–10 kg for females), reflecting geographic variation. No useful body-width measurement was found.",
+      "fr": "L’adulte a une grosse tête arrondie, de grandes oreilles velues, un large nez noir et une fourrure épaisse grise à brune, généralement plus claire sur la poitrine, l’intérieur des membres et le croupion. Ses membres puissants et ses griffes recourbées agrippent les troncs ; deux doigts opposables à chaque patte avant aident à tenir les branches. Les mâles sont en général plus grands et portent une glande odorante sur la poitrine, tandis que la poche de la femelle s’ouvre vers l’arrière. La taille et l’épaisseur du pelage varient selon la région, les animaux du nord étant généralement plus petits et plus clairs que ceux du sud. Dans le sud de l’Australie, l’adulte mesure environ 750 à 820 mm de la tête au corps chez le mâle et 680 à 730 mm chez la femelle; les masses moyennes correspondantes sont de 11,8 kg et 7,9 kg. À l’échelle de l’aire, les autorités indiquent des plages de poids plus larges (environ 4 à 14 kg pour le mâle et 4 à 10 kg pour la femelle), qui reflètent les variations géographiques. Je n’ai pas trouvé de mesure utile de largeur du corps."
+    },
+    "habitat": {
+      "en": "Koalas occupy open forests and woodlands from tropical Queensland to temperate southern Australia, including some fragmented and urban landscapes. Habitat quality depends especially on the local mixture and abundance of food trees; fertile soils and watercourses often support higher densities. Koalas also use non-food trees for resting and shelter, including during extreme weather. Because preferred tree species differ by region and season, suitable habitat is a network of feeding and refuge trees rather than simply any stand of eucalypts.",
+      "fr": "Le koala fréquente les forêts claires et les boisements, du Queensland tropical jusqu’au sud tempéré de l’Australie, y compris certains paysages fragmentés et urbanisés. La qualité du milieu dépend surtout de la diversité locale et de l’abondance des arbres alimentaires ; les sols fertiles et les cours d’eau accueillent souvent davantage d’animaux. Le koala utilise aussi des arbres non alimentaires pour se reposer et s’abriter, notamment lors de conditions météorologiques extrêmes. Comme les essences préférées varient selon les régions et les saisons, un habitat favorable forme un réseau d’arbres nourriciers et refuges, et ne se résume pas à n’importe quel peuplement d’eucalyptus."
+    },
+    "diet": {
+      "en": "Leaves of selected Eucalyptus, Corymbia and related trees make up almost all the diet; a koala may eat roughly half a kilogram of foliage daily, although intake varies. It does not choose every tree of a favoured species: leaf water and nutrients matter, as do defensive chemicals such as terpenes and phenolic compounds. The koala’s ridged molars crush leaves, and its liver processes some absorbed toxins. In the hindgut, an enlarged caecum and proximal colon retain fluids, microbes and fine particles for extended fermentation, while less digestible coarse material passes more quickly. This slow, selective processing extracts nutrients from fibrous leaves but yields little energy, so activity is economical and rest is prolonged. Free-ranging females have been observed increasing foliage intake during peak lactation, with digestive adjustments that preserve nutrient extraction.",
+      "fr": "Les feuilles de certaines espèces d’Eucalyptus, de Corymbia et d’arbres apparentés constituent presque toute son alimentation ; un koala peut consommer environ un demi-kilo de feuillage par jour, mais la quantité varie. Il ne choisit pas tous les arbres d’une essence appréciée : l’eau et les nutriments des feuilles comptent, tout comme leurs substances défensives, notamment les terpènes et les composés phénoliques. Ses molaires striées broient les feuilles et son foie transforme une partie des toxines absorbées. Dans l’intestin postérieur, un cæcum volumineux et le côlon proximal retiennent longtemps les liquides, microbes et particules fines pour leur fermentation, tandis que les éléments grossiers moins digestibles avancent plus vite. Ce traitement lent et sélectif extrait des nutriments de feuilles fibreuses mais fournit peu d’énergie ; l’activité reste donc économe et le repos prolongé. Des femelles libres augmentent leur consommation de feuillage au pic de lactation, avec des ajustements digestifs qui préservent l’extraction des nutriments."
+    },
+    "behavior": {
+      "en": "Koalas are mainly solitary, but neighbouring home ranges often overlap and allow encounters. They rest for much of the day, commonly wedged in a tree fork, and feed or move more often at night and around dawn and dusk. Ground travel between trees exposes them to danger, so connected tree cover matters. Males advertise during the breeding season with deep bellows and scent marks from the chest gland; interactions and movement increase as animals seek mates or compete. These signals help coordinate contact across a dispersed population rather than forming stable social groups.",
+      "fr": "Le koala est surtout solitaire, mais les domaines vitaux voisins se chevauchent souvent et permettent des rencontres. Il se repose une grande partie de la journée, fréquemment calé dans une fourche, et se nourrit ou se déplace davantage la nuit, à l’aube et au crépuscule. Les trajets au sol entre les arbres l’exposent au danger ; la continuité du couvert arboré est donc importante. Pendant la reproduction, les mâles signalent leur présence par de profonds appels et des marques odorantes de la glande thoracique ; les déplacements et interactions augmentent quand les animaux cherchent un partenaire ou se concurrencent. Ces signaux organisent les contacts dans une population dispersée plutôt que de créer des groupes sociaux stables."
+    },
+    "reproduction": {
+      "en": "After a gestation of about 35 days, a female usually gives birth to one very small, hairless joey. It crawls unaided to the rear-opening pouch and attaches to a teat, where it continues developing for around six months. At first emergence it begins tasting the mother’s soft faecal pap, which transfers maternal gut microbes that contribute to foliage digestion. The young then rides on her back and continues nursing while learning to feed; weaning is usually complete near its first birthday. It may remain within its mother’s range before dispersing, often around two to three years old. Timing of births and breeding varies with region and conditions.",
+      "fr": "Après environ 35 jours de gestation, la femelle met généralement au monde un seul jeune, minuscule et dépourvu de poils. Celui-ci gagne seul la poche, ouverte vers l’arrière, puis s’attache à une tétine où il poursuit son développement pendant environ six mois. Lorsqu’il en sort pour la première fois, il commence à consommer le pap fécal maternel, qui lui transmet des microbes intestinaux maternels contribuant à la digestion du feuillage. Il est ensuite transporté sur le dos de sa mère et continue de téter tout en apprenant à se nourrir ; le sevrage s’achève généralement vers son premier anniversaire. Il peut rester dans le domaine vital maternel avant de se disperser, souvent vers deux ou trois ans. La période des naissances et de la reproduction varie selon la région et les conditions."
+    },
+    "ecology": {
+      "en": "The koala’s close dependence on a short list of tree species ties its distribution to the composition and condition of forest. It uses several tree types for shelter as well as food, and moves among them to forage, rest and meet other koalas. Fragmentation can therefore separate feeding patches and make ground crossings more frequent. Drought, heat and fire can reduce foliage quality or availability, while disease, dogs and vehicles add direct mortality; effects differ among regions and populations.",
+      "fr": "La dépendance du koala à un nombre restreint d’essences lie sa répartition à la composition et à l’état des forêts. Il utilise plusieurs types d’arbres pour s’abriter autant que pour se nourrir, et circule entre eux afin de manger, se reposer et rencontrer d’autres koalas. La fragmentation peut donc séparer les zones d’alimentation et multiplier les traversées au sol. Sécheresse, chaleur et incendies peuvent réduire la qualité ou la disponibilité du feuillage ; maladies, chiens et véhicules ajoutent une mortalité directe. L’importance de ces effets varie selon les régions et les populations."
+    },
+    "conservation": {
+      "en": "The koala’s conservation situation varies geographically. Under Australia’s EPBC Act, the combined populations of Queensland, New South Wales and the Australian Capital Territory were listed as Endangered on 12 February 2022. Queensland also changed its state category to Endangered on 8 April 2022, and New South Wales did so on 20 May 2022. The 2022 national recovery plan reports the whole species as Vulnerable on the IUCN Red List, while Victoria and South Australia are outside that federal endangered listing. Habitat loss and fragmentation, climate-related heat and drought, disease, vehicle strikes and dog attacks are interacting pressures. The recovery plan therefore prioritizes connected habitat and coordinated action across jurisdictions; local population trends and legal categories should not be generalized to the entire range.",
+      "fr": "La situation du koala varie selon les régions. En vertu de la loi fédérale australienne EPBC, les populations réunies du Queensland, de la Nouvelle-Galles du Sud et du Territoire de la capitale australienne sont classées en danger depuis le 12 février 2022. Le Queensland a également adopté la catégorie en danger le 8 avril 2022, puis la Nouvelle-Galles du Sud le 20 mai 2022. Le plan national de rétablissement de 2022 indique que l’espèce entière est vulnérable sur la Liste rouge de l’UICN, tandis que le Victoria et l’Australie-Méridionale ne relèvent pas de ce classement fédéral en danger. La perte et la fragmentation de l’habitat, les chaleurs et sécheresses liées au climat, les maladies, les collisions routières et les attaques de chiens se combinent. Le plan privilégie donc la continuité des habitats et une action coordonnée entre juridictions ; les tendances locales et les catégories légales ne doivent pas être généralisées à toute l’aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Koala facts — Queensland Government",
+        "fr": "Faits sur le koala — Gouvernement du Queensland"
+      },
+      "url": "https://www.qld.gov.au/environment/plants-animals/animals/living-with/koalas/koala-information/koala-facts",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional morphology, climbing features, range, leaf intake and low-energy leaves; daily rest and activity timing; 35-day gestation, pouch, back-riding and dispersal timing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala habitat and feed trees — NSW Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Habitat et arbres nourriciers du koala — ministère de l’Environnement de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/koala/koala-habitat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Local and seasonal differences in preferred trees create uneven distribution; shelter trees are also needed, especially in extreme weather."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eucalyptus foliar chemistry explains selective feeding by koalas — Proceedings of the Royal Society B",
+        "fr": "La chimie foliaire des eucalyptus explique la sélection alimentaire des koalas — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1965198/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Koalas focus on a few local eucalypt species; leaf chemistry varies within and between species, and plant secondary metabolites including phenolics, terpenes and FPCs influence feeding."
+      ]
+    },
+    {
+      "title": {
+        "en": "A flexible digestive strategy accommodates the nutritional demands of reproduction in a free-living folivore, the Koala — Functional Ecology",
+        "fr": "Une stratégie digestive souple répond aux besoins nutritionnels de reproduction chez le koala libre — Functional Ecology"
+      },
+      "url": "https://doi.org/10.1111/j.1365-2435.2007.01279.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The caecum and proximal colon selectively retain fluid and small particles; lactating free-ranging females increased foliage intake by 36% at peak lactation, with digestive adjustments maintaining nutrient extraction."
+      ]
+    },
+    {
+      "title": {
+        "en": "Movement of Free-Ranging Koalas in Response to Male Vocalisation Playbacks — Animals",
+        "fr": "Déplacement de koalas libres en réponse à la diffusion d’appels de mâles — Animals"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8833420/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Koalas are generally solitary with overlapping home ranges and vocal and chemical signalling; playback responses in a study of 20 free-ranging koalas supported a role for male bellows in space use during breeding."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala Development — UNSW Embryology",
+        "fr": "Développement du koala — Embryologie de l’UNSW"
+      },
+      "url": "https://embryology.med.unsw.edu.au/embryology/index.php?title=Koala_Development",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Newborn development in the pouch and early pap ingestion introduce gut microbes needed for eucalypt digestion; joeys later ride on the mother’s back."
+      ]
+    },
+    {
+      "title": {
+        "en": "National Recovery Plan for the Koala — Australian Government and New South Wales Government, March 2022",
+        "fr": "Plan national de rétablissement du koala — gouvernements australien et de Nouvelle-Galles du Sud, mars 2022"
+      },
+      "url": "https://www.legislation.gov.au/F2022L00555/asmade/2022-04-07/text/original/epub/OEBPS/document_1/document_1.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Patchy eastern and southern mainland distribution and tree associations; interacting threats include land-use and climate change, disease, dogs, vehicles, habitat loss and fragmentation; regional legal categories differ."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala listing under national environmental law — Australian Government Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Classement du koala selon la loi environnementale nationale — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+      },
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/species/koalas/listing-under-national-environmental-law",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The combined Queensland, New South Wales and ACT population was listed as Endangered under the EPBC Act on 12 February 2022; page updated 28 April 2026."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala — The Australian Museum",
+        "fr": "Koala — Musée australien"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/koala/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Patchy range and ash-grey fur; solitary arboreal life, specialized eucalypt diet and caecum; pouch development and pap; federal listing applies to NSW, Queensland and ACT."
+      ]
+    },
+    {
+      "title": {
+        "en": "Activity patterns of free-ranging koalas revealed by accelerometry — PLOS ONE",
+        "fr": "Les accéléromètres révèlent les rythmes d’activité de koalas libres — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3817117/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Accelerometry of 27 adult koalas at Cape Otway found most activity from mid-afternoon to early morning and greater activity in early than late breeding season."
+      ]
+    },
+    {
+      "title": {
+        "en": "Meeting the energy demands of reproduction in female koalas — Journal of Comparative Physiology B",
+        "fr": "Répondre aux besoins énergétiques de la reproduction chez les femelles koalas — Journal of Comparative Physiology B"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12827418/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "In free-ranging females, foliage intake rose 36% at peak lactation while measured field metabolic rate did not rise, indicating energetic compensation; results are study-specific."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala state category change, 8 April 2022 — Queensland Government",
+        "fr": "Changement de catégorie du koala, 8 avril 2022 — Queensland"
+      },
+      "url": "https://www.qld.gov.au/environment/plants-animals/conservation/threatened-species/classes/conservation-status/changes-categories-april-2022",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Queensland category changed Vulnerable to Endangered on 8 April 2022."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala Endangered listing, 20 May 2022 — NSW Scientific Committee",
+        "fr": "Classement du koala en danger, 20 mai 2022 — Comité scientifique de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/threatened-species/nsw-threatened-species-scientific-committee/determinations/final-determinations/2022/phascolarctos-cinereus-endangered-species-listing",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NSW final determination replaced Vulnerable category with Endangered on 20 May 2022."
+      ]
+    },
+    {
+      "title": {
+        "en": "Maternal inheritance of the koala gut microbiome — Blyton et al. (2022)",
+        "fr": "Transmission maternelle du microbiote intestinal du koala — Blyton et al. (2022)"
+      },
+      "url": "https://enviromicro-journals.onlinelibrary.wiley.com/doi/abs/10.1111/1462-2920.15858",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Maternal microbial inheritance and developmental maturation studied during juvenile diet transition."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala life – up close and personal | South Australian Department for Environment and Water",
+        "fr": "Koala life – up close and personal | South Australian Department for Environment and Water"
+      },
+      "url": "https://www.environment.sa.gov.au/files/sharedassets/public/plants_and_animals/pa-fact-koalalife.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Provides southern Australian sex-specific head–body lengths and average weights."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala | NSW Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Koala | NSW Department of Climate Change, Energy, the Environment and Water"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/koala",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports broad sex-specific adult weight ranges and regional body-size variation."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult koala (sex unspecified) with a large rounded head, furry rounded ears, broad bare black nose, dense grey-brown coat with pale chest and inner limbs, strong climbing limbs and curved claws. Preserve natural proportions and fur; seated against a tree-trunk fragment only if the existing illustration framing requires it. Pure uniform white #FFFFFF background; no scenery, text, border or watermark. Existing illustration must not be replaced.",
+  "uncertainties": [
+    "Body size, coat, breeding season and local tree preferences vary geographically; the article avoids treating Queensland figures as species-wide values.",
+    "The Endangered classification cited here applies to the combined Queensland, New South Wales and ACT population under federal law, not uniformly to every population. The 2022 recovery plan reports the whole-species IUCN category as Vulnerable; no newer IUCN assessment date was verified for this article.",
+    "Pap is described by sources as a maternal faecal material that inoculates the joey’s gut; its precise composition and timing vary among accounts."
+  ],
+  "reviewed": true,
+  "review_note": "Independent primary-source review; corrected obsolete regional legal categories with official 2022 changes, qualified maternal microbiome function, retained dated global versus federal scope."
+}

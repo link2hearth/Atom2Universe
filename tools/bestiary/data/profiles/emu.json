@@ -1,0 +1,146 @@
+{
+  "id": "emu",
+  "scientific": "Dromaius novaehollandiae",
+  "group": "birds",
+  "name": {
+    "en": "Emu",
+    "fr": "Émeu d’Australie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The emu is Australia’s tallest native bird, a flightless runner living across much of the mainland. Rainfall shapes its movements and breeding opportunities. A distinctive feature of its life cycle is male-only incubation and care of striped, mobile chicks.",
+      "fr": "L’émeu est le plus grand oiseau indigène d’Australie. Incapable de voler, il parcourt une grande partie du continent et adapte ses déplacements aux pluies. Son cycle de vie se distingue par le mâle, seul responsable de la couvaison et des poussins rayés."
+    },
+    "identification": {
+      "en": "Adults stand 1.6–1.9 m, with shaggy grey-brown feathers, a sparsely feathered bluish head and neck, tiny wings and long legs. Each foot has three forward toes; ostriches are taller and have two. Chicks bear dark stripes. Adult mass is about 30–45 kg; the consulted sources do not give a dependable sex-specific adult mass range.",
+      "fr": "L’adulte mesure 1,6 à 1,9 m. Son plumage gris-brun hirsute, sa tête et son cou bleuâtres peu emplumés, ses petites ailes et ses longues pattes le caractérisent. Chaque pied a trois doigts vers l’avant ; l’autruche, plus grande, en a deux. Les poussins sont rayés. La masse adulte est d’environ 30 à 45 kg ; les sources consultées ne donnent pas de fourchette fiable selon le sexe."
+    },
+    "habitat": {
+      "en": "Emus range across mainland Australia, from coastal regions and woodlands to open plains. They avoid rainforest and very arid areas. Where food or water varies, birds move in response to climate and rainfall, sometimes hundreds of kilometres.",
+      "fr": "L’émeu vit dans les régions continentales australiennes, des côtes et boisements aux plaines ouvertes. Il évite les forêts tropicales humides et les zones très arides. Quand eau et nourriture fluctuent, il se déplace selon les conditions climatiques et les pluies, parfois sur des centaines de kilomètres."
+    },
+    "diet": {
+      "en": "They eat nutrient-rich fruits, seeds, flowers and young shoots, plus insects and small animals when available. Food changes seasonally with plant growth and rain; swallowed pebbles help the gizzard grind it. They generally avoid dry grass and mature leaves.",
+      "fr": "Il consomme fruits, graines, fleurs et jeunes pousses nutritives, ainsi que des insectes et petits animaux disponibles. Son alimentation suit les saisons, la végétation et les pluies. Des cailloux avalés aident le gésier à broyer les aliments ; il évite généralement herbes sèches et feuilles mûres."
+    },
+    "behavior": {
+      "en": "Usually seen alone, in pairs or loose groups, emus make low booming, drumming and grunting calls using a tracheal pouch. Strong legs support rapid running, zigzag escape from aerial predators and defensive kicks at close range.",
+      "fr": "Souvent seul, en couple ou en groupes lâches, l’émeu produit grondements, roulements et grognements grâce à une poche trachéale. Ses pattes puissantes servent à courir vite, fuir en zigzag les attaques aériennes et donner des coups défensifs à courte distance."
+    },
+    "reproduction": {
+      "en": "Breeding often occurs in late autumn and winter, but varies regionally. The pair makes a shallow ground nest; after laying dark-green eggs, the female usually leaves. The male fasts while incubating for about eight weeks, then guards and accompanies striped chicks for months. They walk and forage soon after hatching.",
+      "fr": "La reproduction a souvent lieu à la fin de l’automne et en hiver, avec des variations régionales. Le couple aménage un nid au sol ; après la ponte d’œufs vert foncé, la femelle part généralement. Le mâle jeûne en couvant près de huit semaines, puis protège les poussins rayés durant des mois. Ceux-ci marchent et se nourrissent vite après l’éclosion."
+    },
+    "ecology": {
+      "en": "On the NSW north coast, emus disperse native plant seeds over long distances; chicks also eat caterpillars and grasshoppers. Their movements between feeding and nesting sites require connected habitat. Roads, fences and land conversion can block travel or kill birds.",
+      "fr": "Sur la côte nord de Nouvelle-Galles du Sud, les émeus dispersent les graines de plantes indigènes sur de longues distances ; les poussins mangent aussi chenilles et criquets. Les déplacements entre alimentation et nidification exigent des habitats connectés. Routes, clôtures et aménagements bloquent les passages ou tuent des oiseaux."
+    },
+    "conservation": {
+      "en": "The species remains widespread on mainland Australia, but some local populations are declining. A 2020 NSW profile classifies the north-coast and Port Stephens population as endangered, citing habitat loss and fragmentation, altered fire, predators, traffic and barriers. This regional status does not establish a global category.",
+      "fr": "L’espèce reste largement répartie sur le continent, mais certaines populations locales déclinent. Une fiche régionale de Nouvelle-Galles du Sud publiée en 2020 classe en danger la population de la côte nord et de Port Stephens ; elle cite perte et fragmentation des habitats, feux modifiés, prédateurs, trafic et barrières. Ce statut régional ne définit pas le statut mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Emu — Australian Museum",
+        "fr": "Émeu — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/birds/emu/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Adults are 1.6–1.9 m tall; three forward toes, reduced wings, grey-brown feathers, and sparse bluish head/neck skin.",
+        "Occurs across most of Australia; uncommon in rainforest and very arid areas; movement responds to food, water and climate.",
+        "Eats fruits, seeds, shoots, insects and small animals; breeding account describes winter nesting, male-only incubation and striped young accompanying him for months.",
+        "Tasmanian population and dwarf island emu species are extinct."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emus — NSW Environment and Heritage",
+        "fr": "Émeus — Environnement et patrimoine de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/birds/native-animal-facts/emus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Seasonal diet in NSW shifts among flowers/seeds, post-rain young grass, herbs and seasonally available insects.",
+        "Describes low drumming calls, broad Australian habitat tolerance, zigzag escape and defensive kicks.",
+        "Reports May–June laying in its account, male incubation for 8–10 weeks, and young staying with fathers up to two years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emu — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Émeu — Smithsonian’s National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://www.nationalzoo.si.edu/animals/emu",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Wild movements track rainfall and food; diet favors nutrient-rich seeds, fruits, flowers and shoots, and includes insects and small vertebrates.",
+        "Male incubation is reported as 56 days; females usually leave after laying, and males accompany chicks about five to seven months.",
+        "Chicks eat caterpillars and grasshoppers; the zoo page also describes human agricultural conflict."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emu population in the NSW North Coast Bioregion and Port Stephens local government area — NSW Environment, Energy and Science",
+        "fr": "Population d’émeus de la biorégion de la côte nord de Nouvelle-Galles du Sud et de la région de Port Stephens — Environnement, énergie et sciences de Nouvelle-Galles du Sud"
+      },
+      "url": "https://threatenedspecies.bionet.nsw.gov.au/profile?id=10250",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Regional population profile last updated 21 January 2020; NSW status is endangered, while the profile says Commonwealth status is not listed.",
+        "Describes range contraction, habitat fragmentation, fire, predators, vehicle collisions and barriers as regional threats.",
+        "Documents long-distance seed dispersal by emus on the north-east NSW coast and states that all parental care is by males."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emu — Australia Zoo",
+        "fr": "Émeu — Australia Zoo"
+      },
+      "url": "https://australiazoo.com.au/wildlife/our-animals/emu/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult emus weigh about 30–45 kg."
+      ]
+    }
+  ],
+  "illustration_notes": "Depict one adult emu of indeterminate sex, standing naturally on a PURE WHITE background: shaggy grey-brown double-shafted plumage, sparse-feathered bluish head and upper neck, tiny wings, long strong legs, and three forward-facing toes on each foot with no hind toe. Keep realistic proportions and unadorned natural coloration; no ostrich traits, props, ground scene or shadow-colored backdrop.",
+  "uncertainties": [
+    "Breeding dates, clutch sizes and the time young remain with the male vary among regions and accounts; the NSW north-coast profile specifically says more breeding data are needed there.",
+    "The cited 2020 endangered status applies to the named NSW regional population, not the whole species; no global conservation category is asserted here.",
+    "The extent of emu movements depends on rainfall and local food and water; the hundreds-of-kilometres description is not a fixed annual migration route."
+  ],
+  "reviewed": true,
+  "review_note": "Independent image and bilingual/source coherence review; flagged unsupported claims removed and translation corrected."
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2310,
+  "name": "mud_swamp",
+  "texture_top": "base_art:mud_swamp",
+  "texture_side": "base_art:mud_swamp",
+  "texture_bottom": "base_art:mud_swamp",
+  "color": "#574634",
+  "hardness": 1,
+  "drop": "mud_swamp",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": ["soil"]
+}

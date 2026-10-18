@@ -1,0 +1,12 @@
+{
+  "id": 9904,
+  "name": "expedition_steel_sword",
+  "texture_top": "expedition:9904:top",
+  "texture_side": "expedition:9904:side",
+  "texture_bottom": "expedition:9904:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_steel_sword",
+  "creative_tab": "resources",
+  "placeable": false
+}

@@ -1,0 +1,168 @@
+{
+  "id": "tringa_flavipes",
+  "scientific": "Tringa flavipes",
+  "group": "birds",
+  "name": {
+    "en": "Lesser yellowlegs",
+    "fr": "Chevalier à pattes jaunes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lesser yellowlegs breeds in boreal North America and winters from the southern United States to South America.",
+      "fr": "Le chevalier à pattes jaunes niche dans l’Amérique du Nord boréale et hiverne du sud des États-Unis jusqu’en Amérique du Sud."
+    },
+    "identification": {
+      "en": "Its long bright-yellow legs and slender, straight bill distinguish it from many other waders; it is smaller and shorter-billed than the greater yellowlegs.",
+      "fr": "Ses longues pattes jaune vif et son bec fin et droit le distinguent de nombreux limicoles ; il est plus petit et a le bec plus court que le grand chevalier à pattes jaunes."
+    },
+    "habitat": {
+      "en": "It nests in open boreal forest near marshes and bogs, then uses a wide range of freshwater and coastal wetlands during migration and winter.",
+      "fr": "Il niche dans les boisements boréaux ouverts, près des marais et tourbières, puis fréquente une grande variété de zones humides douces et côtières en migration et en hiver."
+    },
+    "diet": {
+      "en": "It takes aquatic and terrestrial insects, worms, small crustaceans and some small fish while foraging in shallow water and along wetland shores.",
+      "fr": "Il capture des insectes aquatiques et terrestres, des vers, de petits crustacés et quelques petits poissons dans l’eau peu profonde et sur les berges."
+    },
+    "behavior": {
+      "en": "It migrates between North American breeding grounds and wintering areas across Central and South America and the Caribbean.",
+      "fr": "Il migre entre ses sites de reproduction nord-américains et ses quartiers d’hiver d’Amérique centrale, des Caraïbes et d’Amérique du Sud."
+    },
+    "reproduction": {
+      "en": "Both parents care for the chicks, but the female usually leaves the breeding grounds before they can fly.",
+      "fr": "Les deux parents s’occupent des poussins, mais la femelle quitte généralement le site de reproduction avant qu’ils ne sachent voler."
+    },
+    "ecology": {
+      "en": "It is a Tringa close relative of the spotted redshank; see that profile for comparison.",
+      "fr": "Il est un proche parent du chevalier arlequin dans le genre Tringa ; voir cette fiche pour comparer."
+    },
+    "conservation": {
+      "en": "A Chilean biodiversity assessment reports evidence of declines and identifies wetland loss, pollution, hunting and climate change as concerns; those regional findings should not be read as a current global category.",
+      "fr": "Une évaluation chilienne de la biodiversité rapporte des indices de déclin et cite la perte des zones humides, la pollution, la chasse et le changement climatique comme préoccupations ; ces constats régionaux ne constituent pas un statut mondial actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Animal Diversity Web — Lesser yellowlegs",
+        "fr": "Animal Diversity Web — Chevalier à pattes jaunes"
+      },
+      "url": "https://animaldiversity.org/accounts/Tringa_flavipes/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The English species account describes range, yellow legs and bill, wetlands, prey and migration."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 14,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "SIMBIO Chile — Tringa flavipes",
+        "fr": "SIMBIO Chili — Tringa flavipes"
+      },
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/4869",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "The Spanish Chilean biodiversity sheet describes the North American breeding range, nesting and evidence of population declines and threats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 19,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Lesser yellowlegs",
+        "fr": "British Trust for Ornithology — Chevalier à pattes jaunes"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/lesser-yellowlegs",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The BTO notes that both parents care for the chicks and females usually leave before the chicks can fly."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 19,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oiseaux.net — Spotted redshank phylogeny",
+        "fr": "Oiseaux.net — Phylogénie du chevalier arlequin"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.arlequin.html",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The phylogenetic summary lists the lesser yellowlegs among the spotted redshank’s close relatives."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 13,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Chilean status discussion reflects regional evidence and is not presented as a global assessment."
+  ],
+  "review_note": "Kept breeding and migration general; distinguished national/regional concern from global conservation status.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

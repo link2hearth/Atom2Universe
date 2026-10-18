@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dictaphone</string>
+    <string name="dictaphone_action_record">Record</string>
+    <string name="dictaphone_action_stop">Stop</string>
+    <string name="dictaphone_action_play">Play</string>
+    <string name="dictaphone_action_rename">Rename</string>
+    <string name="dictaphone_action_delete">Delete</string>
+    <string name="dictaphone_recordings_title">Recordings</string>
+    <string name="dictaphone_recordings_empty">No recordings yet. Tap the microphone to start.</string>
+    <string name="dictaphone_status_saving">Saving…</string>
+    <string name="dictaphone_rename_title">Rename recording</string>
+    <string name="dictaphone_delete_title">Delete recording</string>
+    <string name="dictaphone_delete_message">Delete \"%1$s\"?</string>
+    <string name="dictaphone_delete_confirm">Delete</string>
+    <string name="audio_hub_dictaphone_title">Dictaphone</string>
+    <string name="audio_hub_dictaphone_desc">Voice recorder saved to Music</string>
+</resources>

@@ -1,0 +1,169 @@
+{
+  "id": "bothrops_cotiara",
+  "scientific": "Bothrops cotiara",
+  "group": "reptiles",
+  "name": {
+    "en": "Black-bellied lancehead",
+    "fr": "Cotiara à ventre noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Brazilian pit viper belongs to the diverse lancehead genus Bothrops, alongside the closely related B. fonsecai, another distinct pit viper of southern Brazil.",
+      "fr": "Cette vipère brésilienne appartient au riche genre des jararacas, Bothrops, comme B. fonsecai, une autre vipère distincte du sud du Brésil."
+    },
+    "identification": {
+      "en": "It has a stout body, a brown-to-grey ground colour with dark, broken trapezoid markings, a conspicuous dark V across the head and a nearly black belly; adults are commonly 70–80 cm, with exceptional specimens near one metre.",
+      "fr": "Son corps est trapu, le fond varie du brun au gris et porte des trapèzes sombres interrompus ; un V foncé marque la tête et le ventre est presque noir ; les adultes mesurent souvent 70 à 80 cm, certains approchant un mètre."
+    },
+    "habitat": {
+      "en": "It lives in cool highland forests of southern Brazil, including Araucaria woodland, a habitat that distinguishes it from many lowland lanceheads.",
+      "fr": "Elle vit dans les forêts fraîches d’altitude du sud brésilien, notamment les boisements d’Araucaria, un milieu qui la distingue de nombreuses jararacas de plaine."
+    },
+    "diet": {
+      "en": "It preys on small mammals, especially rodents and marsupials, as recorded for this forest-dwelling lancehead in Brazilian species accounts.",
+      "fr": "Elle chasse de petits mammifères, surtout des rongeurs et des marsupiaux, comme le rapportent les fiches brésiliennes consacrées à cette jararaca forestière."
+    },
+    "behavior": {
+      "en": "This terrestrial snake is mainly nocturnal and camouflaged in leaf litter, where its forest-floor habits can make it difficult to spot.",
+      "fr": "Ce serpent terrestre est surtout nocturne et se camoufle dans la litière ; ses habitudes au sol forestier le rendent donc difficile à repérer."
+    },
+    "reproduction": {
+      "en": "It bears live young, with summer litters of about 8–12 reported. A separate study found mating plugs and sperm storage in males.",
+      "fr": "Elle met bas environ 8 à 12 petits vivants en été. Une étude distincte a observé des bouchons copulatoires et du sperme stocké chez les mâles."
+    },
+    "ecology": {
+      "en": "It belongs to the diverse lancehead genus Bothrops: the related B. fonsecai is another southern Brazilian highland viper, while B. jararaca is a useful comparison for head-scale pattern but is more broadly distributed.",
+      "fr": "Elle appartient au riche genre Bothrops : B. fonsecai est une autre vipère des hautes terres du sud du Brésil, tandis que B. jararaca offre une comparaison utile pour les écailles de la tête mais possède une aire plus vaste."
+    },
+    "conservation": {
+      "en": "A regional Argentine database labels it rare in Misiones and cites an endangered assessment from 2012; older Brazilian state assessments also identify concern, but a current global category was not verified in the sources consulted.",
+      "fr": "Une base régionale argentine la qualifie de rare à Misiones et cite une évaluation « en danger » de 2012 ; d’anciennes évaluations brésiliennes signalent aussi une préoccupation, mais les sources consultées ne permettent pas de confirmer une catégorie mondiale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bothrops cotiara — Sistema de Información de Biodiversidad, Argentina",
+        "fr": "Bothrops cotiara — Système d’information sur la biodiversité, Argentine (espagnol)"
+      },
+      "url": "https://sib.gob.ar/especies/bothrops-cotiara",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish database gives body form and length, the characteristic dark V and black ventral scales, comparison with B. jararaca, and describes it as rare in Misiones while referencing a 2012 endangered assessment."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 33,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "As espécies de serpentes do Brasil — Marco Antônio de Freitas",
+        "fr": "Les espèces de serpents du Brésil — Marco Antônio de Freitas (portugais)"
+      },
+      "url": "https://www.herpeto.org/wp-content/uploads/biblioteca/livros/Serpentes-Brasileiras-Marco-Antonio-de-Freitas.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Brazilian guide covers habitat, feeding, activity and reproduction."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 9,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mating plugs and male sperm storage in Bothrops cotiara — Herpetological Journal",
+        "fr": "Bouchons copulatoires et stockage du sperme chez Bothrops cotiara — Herpetological Journal"
+      },
+      "url": "https://www.thebhs.org/publications/the-herpetological-journal/volume-27-number-1-january-2017/955-13-mating-plugs-and-male-sperm-storage-in-i-bothrops-cotiara-i-serpentes-viperidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The study documents mating plugs and epididymal sperm storage in male B. cotiara."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 13,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snake venomics of the Brazilian pitvipers Bothrops cotiara and Bothrops fonsecai",
+        "fr": "Vénomique des vipères brésiliennes Bothrops cotiara et Bothrops fonsecai"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1874391908001310",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The comparative study treats B. cotiara and B. fonsecai as distinct Brazilian pitvipers."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 13,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A current global IUCN assessment was not located; the conservation statement is explicitly limited to older regional references."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a Brazilian Portuguese species guide, an Argentine Spanish biodiversity record and two specialist studies; linked the species to B. jararaca and B. fonsecai. No close-genus profile is currently in the catalogue."
+}

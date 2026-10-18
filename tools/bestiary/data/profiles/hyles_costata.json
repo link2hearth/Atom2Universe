@@ -1,0 +1,119 @@
+{
+  "id": "hyles_costata",
+  "scientific": "Hyles costata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Steppe Hawk-moth",
+    "fr": "Sphinx de la steppe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sphingidae Taxonomic Inventory accepts Hyles costata as a valid hawk-moth species.",
+      "fr": "Le Sphingidae Taxonomic Inventory reconnaît Hyles costata comme une espèce valide de sphinx."
+    },
+    "identification": {
+      "en": "The Amur account gives a 64–75 mm wingspan, pale forewing bands and a reddish hindwing field.",
+      "fr": "La fiche de l’Amour donne une envergure de 64–75 mm, des bandes pâles sur l’aile antérieure et un champ rougeâtre sur l’aile postérieure."
+    },
+    "habitat": {
+      "en": "In Amur it occupies dry meadows and steppe.",
+      "fr": "Dans l’Amour, elle fréquente les prairies sèches et la steppe."
+    },
+    "diet": {
+      "en": "Euphorbia is reported as a larval host in Amur.",
+      "fr": "Euphorbia est signalée comme plante-hôte larvaire dans l’Amour."
+    },
+    "behavior": {
+      "en": "Adults fly at dusk and night; Amur records span mid-June to early August.",
+      "fr": "Les adultes volent au crépuscule et la nuit ; dans l’Amour, les observations vont de la mi-juin au début août."
+    },
+    "reproduction": {
+      "en": "Two annual generations are reported in Amur.",
+      "fr": "Deux générations annuelles sont signalées dans l’Amour."
+    },
+    "ecology": {
+      "en": "Its taxonomic history includes treatment as a form of H. euphorbiae, but the specialist inventory records its reinstatement as a distinct species in 1993.",
+      "fr": "Son histoire taxonomique comprend un ancien rattachement à H. euphorbiae, mais l’inventaire spécialisé indique son rétablissement comme espèce distincte en 1993."
+    },
+    "conservation": {
+      "en": "The regional Red Book notes low local numbers and habitat loss.",
+      "fr": "Le Livre rouge régional signale de faibles effectifs locaux et une perte d’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hyles costata — Sphingidae Taxonomic Inventory",
+        "fr": "Hyles costata — Inventaire taxonomique des Sphingidae"
+      },
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1292",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Specialist inventory accepts Hyles costata as valid and records historic taxonomic changes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 12,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Steppe hawk-moth — Red Book of Amur Oblast",
+        "fr": "Sphinx de la steppe — Livre rouge de l’oblast de l’Amour"
+      },
+      "url": "https://cicon.ru/hylescostata-amur.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Amur account describes the wings, dry habitat, host plant, flight season, generations and regional threats."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 15,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host and low-abundance/threat statements are regional reports from Amur Oblast, not global ecological or conservation assessments."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept regional natural-history and conservation information within its documented Amur context."
+}

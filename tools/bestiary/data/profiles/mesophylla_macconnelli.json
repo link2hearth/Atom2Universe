@@ -1,0 +1,203 @@
+{
+  "id": "mesophylla_macconnelli",
+  "scientific": "Mesophylla macconnelli",
+  "group": "mammals",
+  "name": {
+    "en": "MacConnell's Bat",
+    "fr": "Chauve-souris de MacConnell"
+  },
+  "sections": {
+    "overview": {
+      "en": "MacConnell’s Bat is a neotropical leaf-nosed bat in the family Phyllostomidae.",
+      "fr": "La Chauve-souris de MacConnell est une chauve-souris néotropicale de la famille des Phyllostomidés."
+    },
+    "identification": {
+      "en": "It is a small, pale bat with bright yellow ears and noseleaf in life; these features help distinguish it from other leaf-nosed bats.",
+      "fr": "C’est une petite chauve-souris pâle, aux oreilles et à la feuille nasale jaune vif à l’état vivant ; ces traits aident à la distinguer d’autres phyllostomidés."
+    },
+    "habitat": {
+      "en": "It occurs in tropical Central and northern South America, including Amazonian forests, where it roosts in foliage and in leaf tents.",
+      "fr": "Elle vit dans les régions tropicales d’Amérique centrale et du nord de l’Amérique du Sud, notamment en forêt amazonienne, et se repose dans le feuillage ou des feuilles aménagées en tentes."
+    },
+    "diet": {
+      "en": "A Peruvian community study classified it as a strict frugivore; the small sample of documented fruits does not establish a complete menu.",
+      "fr": "Une étude péruvienne sur les communautés de chauves-souris la classe comme strictement frugivore ; le petit nombre de fruits documentés ne permet pas d’établir tout son régime."
+    },
+    "behavior": {
+      "en": "It uses foliage shelters, including small tents formed by modified palm leaves.",
+      "fr": "Elle utilise des abris de feuillage, dont de petites tentes formées par des feuilles de palmier modifiées."
+    },
+    "reproduction": {
+      "en": "Field records in Peru include pregnant females in September, while older regional accounts report breeding in both dry and rainy seasons; timing may vary geographically.",
+      "fr": "Des observations péruviennes signalent des femelles gestantes en septembre, tandis que des sources régionales plus anciennes rapportent une reproduction pendant les saisons sèche et pluvieuse ; la période peut varier selon les régions."
+    },
+    "ecology": {
+      "en": "Its taxonomic history includes placements in Ectophylla and Vampyressa, while current mammal databases retain Mesophylla as its genus.",
+      "fr": "Son histoire taxonomique comprend des classements dans les genres Ectophylla et Vampyressa, tandis que les bases actuelles des mammifères la maintiennent dans Mesophylla."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports a global IUCN category of Least Concern; that broad status does not rule out local habitat pressures.",
+      "fr": "La Mammal Diversity Database rapporte le statut mondial UICN de préoccupation mineure ; cette catégorie générale n’exclut pas des pressions locales sur l’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "MacConnell's Bat — Mammal Diversity Database",
+        "fr": "Chauve-souris de MacConnell — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005031/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The ASM database lists the taxon in Phyllostomidae, its broad country distribution and Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 16,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammalian Diversity and Matses Ethnomammalogy in Amazonian Peru, Part 4: Bats — American Museum of Natural History",
+        "fr": "Diversité des mammifères et ethnomammalogie Matses en Amazonie péruvienne, partie 4 : chauves-souris — American Museum of Natural History"
+      },
+      "url": "https://bioone.org/journals/bulletin-of-the-american-museum-of-natural-history/volume-451/issue-1/0003-0090.451.1.1/Mammalian-Diversity-and-Matses-Ethnomammalogy-in-Amazonian-Peru-Part-4/10.1206/0003-0090.451.1.1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The mammal treatment gives species-level identification features, including small size, pale fur and yellow facial structures."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 16,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annotated list of the bats of Manu National Park — Museo de Historia Natural, UNMSM",
+        "fr": "Liste annotée des chauves-souris du parc national du Manu — Museo de Historia Natural, UNMSM"
+      },
+      "url": "https://museohn.unmsm.edu.pe/docs/pub_zoologia/Publicaciones%20Zologia%20Serie%20A%20N%C2%B0%2042.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The Spanish-language Peruvian mammal survey records the species in forest habitats and pregnant females; it cites earlier work for roost and seasonal breeding information."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 24,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet and trophic structure of a bat assemblage in Peru — Revista Peruana de Biología",
+        "fr": "Régime alimentaire et structure trophique d’un assemblage de chauves-souris au Pérou — Revista Peruana de Biología"
+      },
+      "url": "https://revistasinvestigacion.unmsm.edu.pe/index.php/rpb/article/download/16375/14103",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The study classifies Mesophylla macconnelli as a strict frugivore and cautions through its sample-based analysis that diets are species specific."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 20,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natural roosts used by bats in Central Amazonia, Brazil — SciELO",
+        "fr": "Refuges naturels utilisés par les chauves-souris en Amazonie centrale, Brésil — SciELO"
+      },
+      "url": "https://www.scielo.sa.cr/scielo.php?lng=en&nrm=iso&pid=S0034-77442016000301333&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field observations document Mesophylla macconnelli using leaf tents made from understory palm leaves."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 13,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological determinants of social systems in tent-roosting bats — Advances in the Study of Behavior",
+        "fr": "Déterminants écologiques des systèmes sociaux chez les chauves-souris à tentes foliaires — Advances in the Study of Behavior"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0065345410420094",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The review reports foliage tents and unmodified foliage as roost types used by this species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

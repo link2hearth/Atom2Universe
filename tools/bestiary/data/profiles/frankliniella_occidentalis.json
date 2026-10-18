@@ -1,0 +1,139 @@
+{
+  "id": "frankliniella_occidentalis",
+  "scientific": "Frankliniella occidentalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Western flower thrips",
+    "fr": "Thrips californien"
+  },
+  "sections": {
+    "overview": {
+      "en": "The western flower thrips is a tiny, highly polyphagous insect native to North America and now established in many world regions.",
+      "fr": "Le thrips californien est un très petit insecte très polyphage, originaire d’Amérique du Nord et désormais présent dans de nombreuses régions du monde."
+    },
+    "identification": {
+      "en": "Adults are about a millimetre long; under magnification, eight antennal segments distinguish it from the similar onion thrips, which has seven.",
+      "fr": "Les adultes mesurent environ un millimètre; sous grossissement, huit segments antennaires le distinguent du Thrips tabaci, qui en possède sept."
+    },
+    "habitat": {
+      "en": "It occupies flowers and growing tissues on a very broad range of wild, vegetable and ornamental hosts, including greenhouse crops.",
+      "fr": "Il occupe les fleurs et les tissus en croissance d’un vaste éventail de plantes sauvages, potagères et ornementales, notamment sous serre."
+    },
+    "diet": {
+      "en": "Both larvae and adults feed on plant tissues, pollen and flowers; females and nymphs may also eat mite eggs when available.",
+      "fr": "Les larves et les adultes consomment des tissus végétaux, du pollen et des fleurs; les femelles et les nymphes peuvent aussi manger des œufs d’acariens."
+    },
+    "behavior": {
+      "en": "Adults and larvae remain active when conditions are warm; in greenhouses, individuals shelter in protected sites during cold periods.",
+      "fr": "Adultes et larves restent actifs lorsque les conditions sont chaudes; sous serre, ils se réfugient dans des abris durant les périodes froides."
+    },
+    "reproduction": {
+      "en": "Females insert eggs into plant tissue, and reproduction may be sexual or asexual; later immature stages usually pupate in the substrate.",
+      "fr": "Les femelles insèrent leurs œufs dans les tissus végétaux et la reproduction peut être sexuée ou asexuée; les derniers stades immatures se nymphosent généralement dans le substrat."
+    },
+    "ecology": {
+      "en": "Feeding scars can deform leaves, flowers and fruit, and the thrips efficiently transmits several plant viruses between hosts.",
+      "fr": "Les piqûres peuvent déformer feuilles, fleurs et fruits, et ce thrips transmet efficacement plusieurs virus végétaux entre plantes-hôtes."
+    },
+    "conservation": {
+      "en": "It is an important crop pest and virus vector rather than a species evaluated for wildlife conservation; its distribution reflects global plant trade.",
+      "fr": "C’est un ravageur agricole et un vecteur viral important, plutôt qu’une espèce évaluée pour la conservation; sa répartition est liée au commerce mondial des plantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Frankliniella occidentalis datasheet — EPPO Global Database",
+        "fr": "Fiche Frankliniella occidentalis — base mondiale de l’OEPP"
+      },
+      "url": "https://gd.eppo.int/taxon/FRANOC/datasheet",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "EPPO records North American origin, worldwide spread and hundreds of host plants."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 12,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Frankliniella occidentalis: Biology — Ephytia, INRAE",
+        "fr": "Frankliniella occidentalis : biologie — Ephytia, INRAE"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/19739/Biocontrol-Biologie",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "INRAE describes eight adult antennal segments versus seven in Thrips tabaci, temperature-dependent development, sexual or asexual reproduction and soil pupation."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 20,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Frankliniella occidentalis: Damage — Ephytia, INRAE",
+        "fr": "Frankliniella occidentalis : dégâts — Ephytia, INRAE"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/19738/Biocontrol-Degats",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "INRAE describes plant damage and the species as an effective vector of tomato spotted wilt and impatiens necrotic spot viruses."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 20,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared French INRAE biological and damage notes with EPPO’s international pest datasheet. Host breadth and crop impact are summarized without claiming that every listed host sustains populations equally."
+}

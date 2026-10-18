@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Éditeur audio : outils de l'étape 8 (enveloppe, affichage, mixage, analyse, fichiers de repères) -->
+    <string name="ae_tool_envelope">Courbe de volume</string>
+    <string name="ae_envelope_reset">Effacer la courbe de volume</string>
+    <string name="ae_track_display">Affichage</string>
+    <string name="ae_display_wave">Forme d\'onde</string>
+    <string name="ae_display_spectro">Spectrogramme</string>
+    <string name="ae_mixdown">Mixer les pistes en une</string>
+    <string name="ae_remove_lead_gap">Supprimer le vide au début</string>
+    <string name="ae_mixdown_name">Mixage</string>
+    <string name="ae_mixdown_progress_title">Mixage en cours</string>
+    <string name="ae_menu_analyze">Analyser…</string>
+    <string name="ae_an_title">Analyse</string>
+    <string name="ae_an_computing">Analyse en cours…</string>
+    <string name="ae_an_range">Plage</string>
+    <string name="ae_an_range_values">%1$s – %2$s</string>
+    <string name="ae_an_length">Durée</string>
+    <string name="ae_an_peak">Crête (gauche · droite)</string>
+    <string name="ae_an_pair">%1$s · %2$s</string>
+    <string name="ae_an_rms">Niveau (efficace)</string>
+    <string name="ae_an_clipped">Échantillons saturés</string>
+    <string name="ae_an_dc">Décalage continu</string>
+    <string name="ae_an_silence">Silence</string>
+    <string name="ae_an_spectrum">Spectre de fréquences</string>
+    <string name="ae_an_mark_clips">Poser des repères sur les saturations</string>
+    <string name="ae_an_clip_marker">Saturation %1$d</string>
+    <string name="ae_markers_export">Exporter les repères…</string>
+    <string name="ae_markers_import">Importer des repères…</string>
+</resources>

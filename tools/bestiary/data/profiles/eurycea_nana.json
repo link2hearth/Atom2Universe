@@ -1,0 +1,186 @@
+{
+  "id": "eurycea_nana",
+  "scientific": "Eurycea nana",
+  "group": "amphibians",
+  "name": {
+    "en": "San Marcos Salamander",
+    "fr": "Salamandre de San Marcos"
+  },
+  "sections": {
+    "overview": {
+      "en": "The San Marcos salamander is a tiny, permanently aquatic plethodontid endemic to the headwaters of the San Marcos River in Texas.",
+      "fr": "La salamandre de San Marcos est une petite pléthodontidé strictement aquatique, endémique des sources de la rivière San Marcos, au Texas."
+    },
+    "identification": {
+      "en": "Adults are dark reddish brown and slender, about 2.5–5 cm long, with large eyes and prominent external gills retained throughout life.",
+      "fr": "L’adulte, brun rougeâtre et fin, mesure environ 2,5 à 5 cm ; ses yeux sont grands et ses branchies externes persistent toute sa vie."
+    },
+    "habitat": {
+      "en": "It lives in clear, flowing spring water among gravel, rocks, moss and algae; muddy or bare bottoms are unsuitable.",
+      "fr": "Elle vit dans l’eau claire et courante des sources, parmi graviers, rochers, mousses et algues ; les fonds nus ou vaseux lui conviennent mal."
+    },
+    "diet": {
+      "en": "It eats small aquatic crustaceans, insects and snails; federal sources also list midge larvae and aquatic insect nymphs.",
+      "fr": "Elle consomme de petits crustacés aquatiques, des insectes et des escargots ; les sources fédérales citent aussi les larves de chironomes et les nymphes d’insectes."
+    },
+    "behavior": {
+      "en": "It remains aquatic and often waits among submerged vegetation or algae for prey; the dark back blends with the algal habitat.",
+      "fr": "Elle reste aquatique et attend souvent ses proies dans la végétation ou les algues submergées ; son dos sombre se confond avec ce milieu."
+    },
+    "reproduction": {
+      "en": "Texas Parks and Wildlife reports eggs laid singly or in small groups on plants or beneath rocks. FWS notes that wild courtship and egg laying have not been observed.",
+      "fr": "Texas Parks and Wildlife signale des œufs pondus seuls ou en petits groupes sur les plantes ou sous les rochers. Le FWS précise que la parade et la ponte n’ont pas été observées dans la nature."
+    },
+    "ecology": {
+      "en": "The nearby Barton Springs Salamander, Eurycea sosorum, is a different species: genetic studies assign salamanders at northern Hays County springs to E. sosorum, not E. nana; see its profile.",
+      "fr": "La salamandre des sources de Barton, Eurycea sosorum, est une espèce distincte : les études génétiques attribuent à E. sosorum les salamandres des sources du nord du comté de Hays, et non à E. nana ; voir sa fiche."
+    },
+    "conservation": {
+      "en": "It has been federally and state-listed as threatened since 1980; declining spring flow, groundwater pollution and siltation threaten its restricted habitat.",
+      "fr": "Elle est classée menacée au niveau fédéral et texan depuis 1980 ; la baisse du débit des sources, la pollution des eaux souterraines et l’envasement menacent son habitat restreint."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "San Marcos Salamander — Texas Parks and Wildlife Department",
+        "fr": "Salamandre de San Marcos — Texas Parks and Wildlife Department"
+      },
+      "url": "https://tpwd.texas.gov/huntwild/wild/species/sanmarcossalamander/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "TPWD reports prey and egg placement."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "San Marcos Salamander — U.S. Fish and Wildlife Service",
+        "fr": "Salamandre de San Marcos — U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/san-marcos-salamander-eurycea-nana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "habitat",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "FWS details spring habitat, threats, and limits of wild breeding observations."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurycea nana — Animal Diversity Web",
+        "fr": "Eurycea nana — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Eurycea_nana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "ADW summarizes published activity and foraging observations."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Reproductive observations differ in detail: TPWD reports egg placement but FWS says courtship and eggs have not been observed in the wild."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The ecological cross-reference to Eurycea sosorum is justified by FWS genetics and uses the existing catalog profile."
+}

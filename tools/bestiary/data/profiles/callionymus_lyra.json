@@ -1,0 +1,145 @@
+{
+  "id": "callionymus_lyra",
+  "scientific": "Callionymus lyra",
+  "group": "fish",
+  "name": {
+    "en": "Common Dragonet",
+    "fr": "Dragonnet lyre"
+  },
+  "sections": {
+    "overview": {
+      "en": "This bottom-dwelling dragonet ranges through the north-east Atlantic and Mediterranean, from Norway and the North Sea south to Mauritania and the western Black Sea.",
+      "fr": "Ce poisson benthique vit dans l’Atlantique nord-est et la Méditerranée, de la Norvège et de la mer du Nord jusqu’à la Mauritanie et à l’ouest de la mer Noire."
+    },
+    "identification": {
+      "en": "Its flattened triangular head and upward-facing eyes are distinctive; breeding males have an unusually tall first dorsal fin and vivid blue lines, unlike the smaller, dark-spotted C. maculatus.",
+      "fr": "Sa tête aplatie et triangulaire et ses yeux dirigés vers le haut sont caractéristiques ; le mâle nuptial porte une première nageoire dorsale très haute et des lignes bleues vives, contrairement au C. maculatus plus petit et ponctué de noir."
+    },
+    "habitat": {
+      "en": "Adults live on sandy or shell-gravel seabeds from shallow coastal water to several hundred metres, often partly buried, while juveniles may occur in shallow tidal pools.",
+      "fr": "Les adultes vivent sur des fonds de sable ou de gravier coquillier, depuis les eaux côtières peu profondes jusqu’à plusieurs centaines de mètres, souvent à demi enfouis ; les juvéniles se trouvent parfois dans les cuvettes de marée."
+    },
+    "diet": {
+      "en": "It eats benthic invertebrates; a British gut-content study found crustaceans dominant, especially porcelain crabs, with polychaete worms as a supplementary prey.",
+      "fr": "Il consomme des invertébrés benthiques ; une étude britannique du contenu intestinal a trouvé une majorité de crustacés, surtout des galathées, les vers polychètes constituant une proie secondaire."
+    },
+    "behavior": {
+      "en": "The fish can bury itself rapidly in sand, and territorial males display and court females with a conspicuous spread of their dorsal fins.",
+      "fr": "Il peut s’enfouir rapidement dans le sable ; les mâles territoriaux paradent et courtisent les femelles en déployant leurs nageoires dorsales."
+    },
+    "reproduction": {
+      "en": "Courtship includes a paired rise toward the surface, where eggs and sperm are released; the eggs and larvae remain pelagic, with spawning reported in spring and summer.",
+      "fr": "La parade comprend une ascension du couple vers la surface, où sont libérés ovules et spermatozoïdes ; les œufs et les larves sont pélagiques, et la ponte est signalée au printemps et en été."
+    },
+    "ecology": {
+      "en": "It belongs to Callionymidae, the dragonets; the closely compared C. maculatus can be separated by rows of dark flank spots, a useful distinction when females and juveniles are less colourful.",
+      "fr": "Il appartient aux Callionymidae, les dragonnets ; l’espèce proche C. maculatus s’en distingue par des rangées de taches sombres sur les flancs, critère utile lorsque femelles et juvéniles sont moins colorés."
+    },
+    "conservation": {
+      "en": "Regional accounts describe its ecology but report no global IUCN threat category for the species.",
+      "fr": "Les fiches régionales décrivent son écologie sans rapporter de catégorie mondiale de menace de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common dragonet — Marine Life Information Network (MarLIN)",
+        "fr": "Dragonnet — Marine Life Information Network (anglais)"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/2078",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Species account."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 2,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Callionymus lyra — DORIS / Fédération française d’études et de sports sous-marins",
+        "fr": "Callionymus lyra — DORIS / Fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Callionymus-lyra-Dragonnet-120",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "The French account documents range, habitat, courtship, spawning and identification."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 10,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dietary preference and feeding selectivity of common dragonet — Journal of Fish Biology via PubMed",
+        "fr": "Préférences alimentaires du dragonnet — Journal of Fish Biology via PubMed (anglais)"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22880734/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Peer-reviewed UK gut-content analysis found crustaceans, especially Pisidia longicornis, to dominate the sampled diet."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 14,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Global conservation category was not verified in a current primary assessment; the entry deliberately reports this limit rather than inferring a status from regional abundance."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined French identification and reproductive observations with the Marine Biological Association habitat account and a peer-reviewed diet study; named C. maculatus as the close comparator."
+}

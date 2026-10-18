@@ -1,0 +1,198 @@
+{
+  "id": "henosepilachna_argus",
+  "scientific": "Henosepilachna argus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Bryony ladybird",
+    "fr": "Coccinelle de la bryone"
+  },
+  "sections": {
+    "overview": {
+      "en": "This phytophagous ladybird is associated with bryony and is recorded across parts of Europe. GBIF lists English, French, German and Spanish common names.",
+      "fr": "Cette coccinelle phytophage est associée à la bryone et présente dans plusieurs régions d’Europe. GBIF répertorie des noms vernaculaires anglais, français, allemand et espagnol."
+    },
+    "identification": {
+      "en": "It is orange to brick red with eleven black elytral spots. The British account gives a length of 5–7 mm.",
+      "fr": "Elle est orange à rouge brique et porte onze points noirs sur les élytres. La fiche britannique indique une longueur de 5–7 mm."
+    },
+    "habitat": {
+      "en": "In Picardy it occurs in moist valleys and coastal dunes where white bryony grows.",
+      "fr": "En Picardie, elle fréquente les vallées humides et les dunes littorales où pousse la bryone dioïque."
+    },
+    "diet": {
+      "en": "Picardy adults and larvae feed exclusively on white bryony. British sources report melon feeding elsewhere in Europe.",
+      "fr": "En Picardie, adultes et larves se nourrissent exclusivement de bryone dioïque. Des sources britanniques signalent des melons ailleurs en Europe."
+    },
+    "behavior": {
+      "en": "In Picardy, records peak from May to August.",
+      "fr": "En Picardie, les observations culminent de mai à août."
+    },
+    "reproduction": {
+      "en": "The species is phytophagous throughout its larval and adult stages; British records document it breeding at Molesey.",
+      "fr": "L’espèce est phytophage aux stades larvaire et adulte ; des observations britanniques documentent sa reproduction à Molesey."
+    },
+    "ecology": {
+      "en": "The French profile distinguishes it from H. angusticollis and H. elaterii; the latter has larger spots.",
+      "fr": "La fiche française la distingue de H. angusticollis et de H. elaterii, qui a de plus grandes taches."
+    },
+    "conservation": {
+      "en": "It is unevaluated nationally in France; Picardy reports local Least Concern.",
+      "fr": "Elle n’est pas évaluée au niveau national en France ; la Picardie indique une préoccupation mineure locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Henosepilachna argus — Biodiv’ Oise regional species record",
+        "fr": "Henosepilachna argus — fiche régionale Biodiv’ Oise"
+      },
+      "url": "https://biodiv.parc-oise-paysdefrance.fr/espece/239048",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French regional record provides local habitats, host plant, observation season, lookalikes and local conservation context."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Henosepilachna argus — UK Beetle Recording",
+        "fr": "Henosepilachna argus — UK Beetle Recording"
+      },
+      "url": "https://coleoptera.org.uk/species/henosepilachna-argus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "British beetle account gives adult size and color, host plants, overwintering and published first breeding records in Britain."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1,
+            2
+          ],
+          "fr_sentence_ids": [
+            1,
+            2
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Henosepilachna argus — GBIF taxon record",
+        "fr": "Henosepilachna argus — fiche taxonomique GBIF"
+      },
+      "url": "https://www.gbif.org/taxon/CFXPG",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Catalogue of Life backbone supplies the accepted scientific name and English, French, German and Spanish vernacular names."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Host-plant breadth differs geographically; the exclusive white-bryony statement applies to the Picardy source, while British sources also note melons in parts of Europe."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the host-plant and conservation statements explicitly regional, and noted close lookalikes only where the French record distinguishes them."
+}

@@ -1,0 +1,18 @@
+{
+  "id": 9866,
+  "name": "frontier_cast_mold",
+  "texture_top": "frontier:9866:top",
+  "texture_side": "frontier:9866:side",
+  "texture_bottom": "frontier:9866:top",
+  "color": "#6F7A73",
+  "hardness": 1.5,
+  "drop": "frontier_cast_mold",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "block_height": 0.375
+}

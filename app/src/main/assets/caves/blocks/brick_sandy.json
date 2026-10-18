@@ -1,0 +1,14 @@
+{
+  "id": 2013,
+  "name": "brick_sandy",
+  "texture_top": "cozy:material:12:D5C49C",
+  "texture_side": "cozy:material:12:D5C49C",
+  "texture_bottom": "cozy:material:12:D5C49C",
+  "color": "#D5C49C",
+  "hardness": 3.5,
+  "drop": "brick_sandy",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

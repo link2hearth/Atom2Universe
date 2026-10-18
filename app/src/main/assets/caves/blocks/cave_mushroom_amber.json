@@ -1,0 +1,17 @@
+{
+  "id": 2620,
+  "name": "cave_mushroom_amber",
+  "texture_top": "cave_art:a_mushroom_amber",
+  "texture_side": "cave_art:a_mushroom_amber",
+  "texture_bottom": "cave_art:a_mushroom_amber",
+  "color": "#EBC47A",
+  "hardness": 0.3,
+  "light_emission": 4,
+  "drop": "cave_mushroom_amber",
+  "creative_tab": "nature",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": [],
+  "decoration": true,
+  "sprite_height": 0.72
+}

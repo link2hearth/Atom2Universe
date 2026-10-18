@@ -1,0 +1,170 @@
+{
+  "id": "sphinx_canadensis",
+  "scientific": "Sphinx canadensis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Canadian sphinx",
+    "fr": "Sphinx du Canada"
+  },
+  "sections": {
+    "overview": {
+      "en": "This North American hawk moth belongs to the family Sphingidae.",
+      "fr": "Ce sphinx nord-américain appartient à la famille des Sphingidae."
+    },
+    "identification": {
+      "en": "Its grey-brown wings span about 7–8.5 cm.",
+      "fr": "Ses ailes gris-brun ont une envergure d’environ 7 à 8,5 cm."
+    },
+    "habitat": {
+      "en": "It ranges across Canada and the northeastern United States.",
+      "fr": "Il est présent au Canada et dans le nord-est des États-Unis."
+    },
+    "diet": {
+      "en": "Larvae feed on woody plants; black ash is a reported host.",
+      "fr": "Les chenilles mangent des plantes ligneuses ; le frêne noir est signalé comme hôte."
+    },
+    "behavior": {
+      "en": "Adults fly from May to September; southern populations may have two broods.",
+      "fr": "Les adultes volent de mai à septembre ; le sud peut compter deux générations."
+    },
+    "reproduction": {
+      "en": "The caterpillar is a hornworm and pupates after larval growth.",
+      "fr": "La chenille porte une corne et se nymphose après sa croissance."
+    },
+    "ecology": {
+      "en": "The French common name is sphinx du Canada. It ranges from Canada south to Arkansas. Its congener Sphinx chisoya extends from south Texas into Mexico.",
+      "fr": "Le nom vernaculaire français est sphinx du Canada. Son aire s’étend du Canada à l’Arkansas. Son congénère Sphinx chisoya va du sud du Texas jusqu’au Mexique."
+    },
+    "conservation": {
+      "en": "NatureServe ranks it globally secure (G5).",
+      "fr": "NatureServe la classe comme non menacée à l’échelle mondiale (G5)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Moth Photographers Group — Sphinx canadensis",
+        "fr": "Moth Photographers Group — Sphinx canadensis"
+      },
+      "url": "https://www.mothphotographersgroup.msstate.edu/species.php?phylo=890116",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "The account gives Canadian sphinx range to Arkansas, which can be compared with the south Texas-to-Mexico range of its congener."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 20,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Office québécois de la langue française — Sphinx du Canada",
+        "fr": "Office québécois de la langue française — Sphinx du Canada"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26578611/sphinx-du-canada",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The Québec terminology record gives the French common name used in the ecology note."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 14,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "NatureServe Explorer — Sphinx canadensis",
+        "fr": "NatureServe Explorer — Sphinx canadensis"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.113535/Sphinx_canadensis",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NatureServe global conservation rank: G5."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 5,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "BAMONA — Chisoya sphinx",
+        "fr": "BAMONA — Sphinx chisoya"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-chisoya",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BAMONA describes Sphinx chisoya as a tropical and subtropical lowland moth ranging from south Texas into Mexico."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 17,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant reports differ; this account avoids treating one plant as the exclusive host."
+  ],
+  "review_note": "Cross-checked an academic moth group, Québec terminology, and NatureServe; treated host specificity cautiously.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

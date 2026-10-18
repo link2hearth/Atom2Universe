@@ -1,0 +1,17 @@
+{
+  "id": 3003,
+  "name": "gold",
+  "texture_top": "cozy:ore:3:929EAA:FFD700",
+  "texture_side": "cozy:ore:3:929EAA:FFD700",
+  "texture_bottom": "cozy:ore:3:929EAA:FFD700",
+  "color": "#FFD700",
+  "hardness": 3.5,
+  "drop": "raw_gold",
+  "harvest_category": "ore",
+  "creative_tab": "ores",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "ore"
+  ]
+}

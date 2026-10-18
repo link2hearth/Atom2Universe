@@ -1,0 +1,18 @@
+{
+  "id": 2726,
+  "name": "cave_relic_dwarf_tools",
+  "texture_top": "cave_relics:dwarf_tools_top",
+  "texture_side": "cave_relics:dwarf_tools_side",
+  "texture_bottom": "cave_relics:dwarf_tools_top",
+  "color": "#806043",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_relic_dwarf_tools",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ],
+  "block_height": 0.75
+}

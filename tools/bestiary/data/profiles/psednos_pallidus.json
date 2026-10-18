@@ -1,0 +1,166 @@
+{
+  "id": "psednos_pallidus",
+  "scientific": "Psednos pallidus",
+  "group": "fish",
+  "name": {
+    "en": "Pallid snailfish",
+    "fr": "Limace de mer pâle"
+  },
+  "sections": {
+    "overview": {
+      "en": "This marine snailfish of Liparidae is recorded off central Baja California, Mexico.",
+      "fr": "Cette limace de mer de la famille des Liparidés est signalée au large du centre de la Basse-Californie, au Mexique."
+    },
+    "identification": {
+      "en": "Its description emphasizes pale coloration across the body and internal organs.",
+      "fr": "Sa description souligne la coloration pâle du corps et des organes internes."
+    },
+    "habitat": {
+      "en": "It was collected in midwater above deep seafloor; this does not define a complete depth range.",
+      "fr": "Elle a été recueillie en pleine eau au-dessus de fonds profonds ; cela ne définit pas toute son amplitude bathymétrique."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not report what it eats.",
+      "fr": "Les fiches consultées ne précisent pas son alimentation."
+    },
+    "behavior": {
+      "en": "No behavior specific to the species is documented in the consulted accounts.",
+      "fr": "Les sources consultées ne documentent pas de comportement propre à cette espèce."
+    },
+    "reproduction": {
+      "en": "The consulted sources provide no reproductive observations.",
+      "fr": "Les sources consultées ne fournissent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The checklist reports only one known specimen, so its ecology remains poorly known. Its eastern-Pacific congener P. mexicanus is also known from Isla Guadalupe, but is described with a pale body and dark tongue and palate.",
+      "fr": "La liste consultée ne signale qu’un seul spécimen connu ; son écologie reste donc mal connue. Son congénère du Pacifique oriental P. mexicanus est également connu de l’île Guadalupe, mais il est décrit avec un corps pâle et la langue et le palais sombres."
+    },
+    "conservation": {
+      "en": "The consulted sources do not report an IUCN evaluation.",
+      "fr": "Les sources consultées ne rapportent pas d’évaluation UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59830",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the Baja California distribution and pale coloration; it does not list diet, behavior, reproduction or an IUCN assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 20,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BOEM — deep-sea fish checklist",
+        "fr": "BOEM — deep-sea fish checklist"
+      },
+      "url": "https://espis.boem.gov/Final%20Reports/4996.pdf",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The checklist reports one known specimen and a midwater trawl capture above deep seafloor off central Baja California."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 18,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scripps Institution — type catalog",
+        "fr": "Scripps Institution — type catalog"
+      },
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The type catalog records the unique holotype for Psednos pallidus from off Baja California."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos mexicanus species summary",
+        "fr": "FishBase — résumé de Psednos mexicanus"
+      },
+      "url": "https://www.fishbase.se/summary/59795",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos mexicanus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 14,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reported trawl span is not treated as a normal habitat range. The French vernacular is descriptive and not an established standardized name."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

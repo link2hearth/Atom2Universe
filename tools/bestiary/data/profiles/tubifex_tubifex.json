@@ -1,0 +1,144 @@
+{
+  "id": "tubifex_tubifex",
+  "scientific": "Tubifex tubifex",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sludge worm",
+    "fr": "Tubifex tubifex"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tubifex tubifex is a freshwater oligochaete annelid that burrows in bottom sediment.",
+      "fr": "Tubifex tubifex est un annélide oligochète d’eau douce qui creuse les sédiments du fond."
+    },
+    "identification": {
+      "en": "It is usually a slender, reddish worm; the posterior end may wave above the mud.",
+      "fr": "C’est généralement un ver fin et rougeâtre ; son extrémité postérieure peut onduler au-dessus de la vase."
+    },
+    "habitat": {
+      "en": "It lives in many freshwater sediments, from clean lakes to polluted rivers, and tolerates low oxygen. A Canadian review reports feeding within roughly the upper 10 cm of sediment.",
+      "fr": "Elle vit dans des sédiments d’eau douce variés, des lacs propres aux rivières polluées, et tolère un faible taux d’oxygène. Une synthèse canadienne signale une alimentation dans les quelque 10 premiers cm de sédiment."
+    },
+    "diet": {
+      "en": "It ingests fine sediment and digests selected bacteria and other organic material.",
+      "fr": "Elle ingère des sédiments fins et digère certaines bactéries et autres matières organiques."
+    },
+    "behavior": {
+      "en": "The worm keeps its anterior end in the sediment while extending and waving its tail in the water.",
+      "fr": "Le ver garde l’avant du corps dans le sédiment et étend sa queue dans l’eau en la faisant onduler."
+    },
+    "reproduction": {
+      "en": "It reproduces sexually and lays eggs in cocoons; parthenogenesis is also reported in some populations or conditions.",
+      "fr": "Elle se reproduit sexuellement et pond des œufs dans des cocons ; une parthénogenèse est également signalée dans certaines populations ou conditions."
+    },
+    "ecology": {
+      "en": "It can become very abundant in oxygen-poor, organically polluted sediment, but is also recorded in cleaner waters.",
+      "fr": "Elle peut devenir très abondante dans les sédiments pauvres en oxygène et riches en matière organique, mais vit aussi dans des eaux plus propres."
+    },
+    "conservation": {
+      "en": "The cited sources describe ecology and taxonomy but provide no conservation assessment for this common freshwater worm.",
+      "fr": "Les sources citées décrivent son écologie et sa taxonomie, mais ne donnent pas d’évaluation de conservation pour ce ver d’eau douce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Freshwater Oligochaeta of North-West Europe — Tubifex tubifex",
+        "fr": "Oligochètes d’eau douce du nord-ouest de l’Europe — Tubifex tubifex"
+      },
+      "url": "https://fw-oligochaeta.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?epi=124&id=94524",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Naturalis taxon account describes burrowing, freshwater habitats, oxygen tolerance, ecological forms and reproduction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 13,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Missouri Department of Conservation — Tubificid worms",
+        "fr": "Missouri Department of Conservation — vers tubificidés"
+      },
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/tubificid-worms-tubifex-worms",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "State account describes morphology, tube dwelling, tail movement and sediment feeding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 11,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Environment and Climate Change Canada — Recyclage biologique des contaminants",
+        "fr": "Environnement et Changement climatique Canada — Recyclage biologique des contaminants"
+      },
+      "url": "https://publications.gc.ca/collections/collection_2018/eccc/En36-502-142-fra.pdf",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "French Canadian review reports T. tubifex feeding within roughly the upper 10 cm of sediment."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 15,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The relative frequency of sexual and parthenogenetic reproduction varies; older literature may have confused T. tubifex with related worms."
+  ],
+  "review_note": "Bilingual draft kept concise; species-specific limits and the scope of regional or dated evidence are stated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

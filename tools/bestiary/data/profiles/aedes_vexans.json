@@ -1,0 +1,183 @@
+{
+  "id": "aedes_vexans",
+  "scientific": "Aedes vexans",
+  "group": "invertebrates",
+  "name": {
+    "en": "Inland floodwater mosquito",
+    "fr": "Aedes vexans"
+  },
+  "sections": {
+    "overview": {
+      "en": "Aedes vexans, often called the inland floodwater mosquito, is a widespread mosquito whose sudden local swarms follow flooding. Its eggs lie in damp ground and hatch when water covers the site, allowing it to exploit temporary pools and floodplains that dry between rains.",
+      "fr": "Aedes vexans est un moustique largement répandu, souvent appelé moustique des inondations. Des émergences massives peuvent suivre une crue : ses œufs sont déposés sur un sol humide et éclosent lorsque le site est recouvert d’eau. Ce cycle lui permet d’exploiter des mares temporaires et des plaines inondables qui s’assèchent entre les pluies."
+    },
+    "identification": {
+      "en": "The adult is brown to dark, with narrow pale rings at the bases of the tarsal segments and pale, indented bands at the bases of the abdominal plates; viewed from the side, the markings can resemble a row of B shapes. The body is about 5–7 mm long and the wing about 3.5–4 mm. Reliable standard figures for body width or mass, and a consistent adult size difference between sexes, were not found; males instead have conspicuously feathery antennae and longer palps. Reliable mass figures were not found in the consulted sources.",
+      "fr": "L’adulte est brun à sombre, avec de fins anneaux pâles à la base des articles des tarses et des bandes pâles échancrées à la base des plaques abdominales ; vues de côté, ces marques peuvent évoquer une succession de B. Le corps mesure environ 5 à 7 mm et l’aile 3,5 à 4 mm. Les sources consultées ne donnent pas de mesure fiable normalisée pour la largeur du corps ou la masse, ni de différence constante de taille entre sexes ; le mâle se reconnaît plutôt à ses antennes très plumeuses et à ses palpes plus longs. Les sources consultées ne fournissent pas de valeur de masse fiable."
+    },
+    "habitat": {
+      "en": "Larvae develop in shallow, temporary water after river or lake margins, floodplains, meadows and other low ground are inundated. The European identification guide also reports fluctuating lake levels and rapid larval development. Adults can disperse well beyond the breeding pools; the guide gives flights of up to 15 km, so a biting adult may be far from where it hatched.",
+      "fr": "Les larves se développent dans des eaux peu profondes et temporaires, lorsque des plaines inondables, des prés ou des terrains bas sont recouverts par les crues des rivières ou des lacs. Le guide européen signale aussi les lacs à niveau fluctuant et un développement larvaire rapide. Les adultes s’éloignent des sites de ponte ; il peut parcourir jusqu’à 15 km selon ce guide, de sorte qu’un adulte piqueur peut se trouver loin de son lieu d’émergence."
+    },
+    "diet": {
+      "en": "Both sexes use nectar and other plant sugars. Females also take blood from vertebrates to mature their eggs and often bite people when they are available; cattle are another reported host. Males do not take blood meals. These feeding differences matter when interpreting nuisance reports, which concern the biting females rather than every adult mosquito present.",
+      "fr": "Les deux sexes consomment du nectar et d’autres sucres végétaux. Les femelles prennent aussi du sang de vertébrés pour permettre la maturation de leurs œufs et piquent volontiers les humains lorsqu’ils sont accessibles ; les bovins sont également cités comme hôtes. Les mâles ne prennent pas de repas sanguin. Cette différence aide à interpréter les signalements de nuisance, qui concernent les femelles piqueuses et non tous les adultes présents."
+    },
+    "behavior": {
+      "en": "Females may bite during the day as well as around dusk, and can be persistent and abundant after flooding. Adults are strong fliers and may travel many kilometres from larval sites. A South African field report describes adults appearing only four days after the first rain at a temporary pool, illustrating how quickly a local population can emerge under suitable conditions.",
+      "fr": "Les femelles peuvent piquer le jour comme autour du crépuscule et devenir insistantes et nombreuses après une inondation. Les adultes volent bien et peuvent parcourir plusieurs kilomètres depuis les sites larvaires. Une étude de terrain au Sénégal a observé l’apparition des adultes quatre jours après les premières pluies dans une mare temporaire, ce qui illustre la rapidité possible d’une émergence locale lorsque les conditions conviennent."
+    },
+    "reproduction": {
+      "en": "After a blood meal, females lay drought-resistant eggs on moist soil in places likely to flood, rather than directly on open water. The eggs can remain viable through dry periods and hatch when inundated; a research review reports viability of up to three years. Larvae and pupae are aquatic, and development can be rapid in warm, newly flooded pools.",
+      "fr": "Après un repas sanguin, les femelles pondent des œufs résistants à la sécheresse sur le sol humide des endroits susceptibles d’être inondés, plutôt qu’à la surface de l’eau libre. Les œufs supportent les périodes sèches et éclosent après la mise en eau ; une synthèse scientifique rapporte une viabilité pouvant atteindre trois ans. Larves et nymphes vivent dans l’eau, où le développement peut être rapide dans les mares récemment formées et chaudes."
+    },
+    "ecology": {
+      "en": "The species is tightly linked to flood pulses: its eggs persist through dry periods and large groups of larvae can emerge when temporary pools refill. This makes its local abundance fluctuate sharply with rainfall and water levels. Females can be important nuisance biters, and the species has been implicated as a carrier of several pathogens; this does not mean that every population is transmitting disease. Local risk depends on the pathogen, host and setting.",
+      "fr": "L’espèce dépend fortement des épisodes d’inondation : ses œufs persistent pendant les périodes sèches, puis des cohortes nombreuses peuvent éclore lorsque les mares temporaires se remplissent. Son abondance locale varie donc nettement avec les pluies et le niveau de l’eau. Les femelles peuvent causer une forte nuisance et l’espèce a été impliquée dans la transmission de plusieurs agents pathogènes ; cela ne signifie pas que chaque population transmet une maladie. Le risque local dépend de l’agent, des hôtes et du contexte."
+    },
+    "conservation": {
+      "en": "This is a widespread and often locally abundant species, not one for which a current global threatened-species assessment was verified in the sources used here. The European Centre for Disease Prevention and Control tracks its presence across Europe, while UK authorities describe it as uncommon but widespread in Britain. Such regional occurrence records are not population trend assessments.",
+      "fr": "L’espèce est largement répartie et peut être abondante localement ; les sources consultées ne permettent pas de vérifier une évaluation mondiale récente de son risque d’extinction. Le Centre européen de prévention et de contrôle des maladies suit sa présence en Europe, tandis que les autorités britanniques la décrivent comme rare mais largement répartie au Royaume-Uni. Ces données de présence régionales ne constituent pas une mesure de tendance des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Reverse identification key for invasive mosquito species — ECDC",
+        "fr": "Clé d’identification des moustiques invasifs — ECDC"
+      },
+      "url": "https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "European identification key describes the pale basal tarsal rings and notched pale abdominal bands, floodplain breeding, rapid larval development, daytime biting and dispersal up to 15 km.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Global phylogeography of the flood mosquito, Aedes vexans — Zoologia (SciELO)",
+        "fr": "Phylogéographie mondiale du moustique des inondations Aedes vexans — Zoologia (SciELO)"
+      },
+      "url": "https://www.scielo.br/j/zool/a/y4GTWSBf6L8PbYPr3b56Vxp/?format=html&lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Research article reviews the broad subtropical distribution, flight distance, drought-resistant flood-hatching eggs, reported egg viability, female blood feeding, human host preference and documented vector competence; it cautions that geographic sampling is biased."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aedes (Aedimorphus) vexans — Walter Reed Biosystematics Unit specimen page",
+        "fr": "Aedes (Aedimorphus) vexans — fiche de spécimen du Walter Reed Biosystematics Unit"
+      },
+      "url": "https://ph.health.mil/resources/Aedes%28Aedimorphus%29vexans%28Meigen%29WRBUspecimenAEvex_TA-274-0116.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Professional taxonomic species page gives a 3.5–4.0 mm wing length, pale basal bands on abdominal segments, and records immature stages from temporary fresh-water pools and other wet habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Native mosquito species profiles — UK Health Security Agency",
+        "fr": "Profils des moustiques indigènes — UK Health Security Agency"
+      },
+      "url": "https://www.gov.uk/guidance/mosquitoes-species-profiles",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "UK public-health agency describes the species as uncommon but widespread in Britain, breeding in inundated river and lake floodplains and causing substantial nuisance biting near towns."
+      ]
+    },
+    {
+      "title": {
+        "en": "New Vectors of Rift Valley Fever in West Africa — Emerging Infectious Diseases (CDC)",
+        "fr": "Nouveaux vecteurs de la fièvre de la vallée du Rift en Afrique de l’Ouest — Emerging Infectious Diseases (CDC)"
+      },
+      "url": "https://wwwnc.cdc.gov/eid/article/4/2/98-0218_article",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Field observations in Senegal describe eggs laid on soil in temporary ground pools, adult emergence four days after first rain, high local abundance and changing abundance as the pools age."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aedes vexans — Electronic Atlas of the Wildlife of British Columbia",
+        "fr": "Aedes vexans — atlas électronique de la faune de Colombie-Britannique"
+      },
+      "url": "https://linnet.geog.ubc.ca/efauna/Atlas/Atlas.aspx?sciname=Aedes+vexans",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Simon Fraser University atlas calls the species small to medium and specifies a 3.5–4 mm wing length, narrow pale tarsal bands and indented abdominal bands."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aedes vexans — Insektarium",
+        "fr": "Aedes vexans — Insektarium"
+      },
+      "url": "https://insektarium.net/diptera-2/culicidae-komarowate/aedes-vexans-doskwier-pastwiskowy/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Polish-language entomological species account gives a 5–6 mm body length and describes the narrow basal tarsal rings, floodplain and wetland habitats, and sex-specific feeding."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aedes (Aedimorphus) vexans — MedilabSecure mosquito toolkit",
+        "fr": "Aedes (Aedimorphus) vexans — guide des moustiques MedilabSecure"
+      },
+      "url": "https://www.onehealthsecure.com/sites/default/files/2023-02/Mosquitoes%20Toolkit.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Medical entomology toolkit gives a body length of about 7 mm and identifies pale bilobed abdominal bands and tarsal rings; it summarizes biting and floodwater breeding."
+      ]
+    }
+  ],
+  "illustration_notes": "Small slender brown mosquito with narrow pale basal tarsal rings, indented pale basal abdominal bands, dark proboscis and long legs; if male is shown, give it strongly feathery antennae and longer palps.",
+  "uncertainties": [
+    "Adult body width and mass are not reported consistently in the sources consulted; size varies with sex and larval conditions, and the available measurements are body or wing lengths.",
+    "The article literature discusses vector competence and potential disease transmission, which should not be read as evidence that every local population is infected or poses the same risk."
+  ],
+  "reviewed": true,
+  "review_note": "Compared English-language public-health and taxonomic sources with a Brazilian research publication and a Polish-language species account; disease transmission claims are carefully qualified."
+}

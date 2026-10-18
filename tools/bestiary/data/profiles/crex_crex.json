@@ -1,0 +1,91 @@
+{
+  "id": "crex_crex",
+  "scientific": "Crex crex",
+  "group": "birds",
+  "name": {
+    "en": "Corn Crake",
+    "fr": "Râle des genêts"
+  },
+  "sections": {
+    "overview": {
+      "en": "The corn crake is a small, brown and secretive bird of the rail family. Unlike its relatives the moorhen and the coot, it lives on dry land, hidden in tall grass, so it is far more often heard than seen.",
+      "fr": "Le râle des genêts est un petit oiseau brun et discret de la famille des rallidés. Contrairement à ses cousins la poule d’eau et la foulque, il vit sur la terre ferme, caché dans les hautes herbes : on l’entend bien plus souvent qu’on ne le voit."
+    },
+    "identification": {
+      "en": "A medium-sized rail, 27–30 cm long, weighing about 150 g (151 g on average in Britain). The back is brown-black streaked with buff, the wings show chestnut patches, the face, neck and breast are blue-grey, and the flanks are barred chestnut and white. The bill is flesh-coloured and the legs pale grey.",
+      "fr": "Râle de taille moyenne, long de 27 à 30 cm et pesant environ 150 g (151 g en moyenne en Grande-Bretagne). Le dos est brun-noir strié de chamois, les ailes portent des plages marron, le visage, le cou et la poitrine sont gris-bleu, et les flancs sont barrés de marron et de blanc. Le bec est couleur chair et les pattes sont gris pâle."
+    },
+    "habitat": {
+      "en": "On its breeding grounds it favours meadows: cool, moist hayfields and traditional grassland that is cut late and lightly fertilised. In winter it lives in dry grassland and savanna in Africa.",
+      "fr": "Sur ses sites de reproduction, il apprécie les prairies de fauche fraîches et humides, à gestion traditionnelle, fauchées tard et peu fertilisées. En hiver, il fréquente les prairies sèches et les savanes d’Afrique."
+    },
+    "diet": {
+      "en": "It eats mainly invertebrates such as earthworms, slugs, snails, beetles and grasshoppers. It also takes small frogs and mammals, grass seeds and cereal grain.",
+      "fr": "Il se nourrit surtout d’invertébrés : vers de terre, limaces, escargots, coléoptères et sauterelles. Il prend aussi de petites grenouilles et de petits mammifères, des graines d’herbes et des grains de céréales."
+    },
+    "behavior": {
+      "en": "The male gives a loud, rasping advertising call, a repeated “krek krek” that carries up to about 1.5 km. The species migrates at night between Europe and Africa, arriving in Britain from April.",
+      "fr": "Le mâle émet un cri nuptial fort et râpeux, un « krek krek » répété qui porte jusqu’à 1,5 km environ. L’espèce migre de nuit entre l’Europe et l’Afrique et arrive en Grande-Bretagne à partir d’avril."
+    },
+    "reproduction": {
+      "en": "The nest is a scrape on the ground lined with grass. A clutch is typically 8–12 eggs (range 6–14), incubated by the female alone for 16–19 days. The downy chicks leave the nest within a day or two and fledge after 34–38 days; one or two broods are raised per season. Breeding typically starts at one year of age.",
+      "fr": "Le nid est une cuvette au sol garnie d’herbe. Une ponte compte en général 8 à 12 œufs (de 6 à 14), couvés par la seule femelle pendant 16 à 19 jours. Les poussins, couverts de duvet, quittent le nid en un jour ou deux et prennent leur envol après 34 à 38 jours; on compte une ou deux couvées par saison. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Cats, foxes, weasels, rats and birds such as buzzards and crows prey on corn crakes and their chicks. The greatest danger comes from early mechanical mowing, which destroys nests and kills chicks hidden in the grass.",
+      "fr": "Chats, renards, belettes, rats et oiseaux comme la buse ou les corneilles s’attaquent aux râles et à leurs poussins. Le plus grand danger vient de la fauche mécanique précoce, qui détruit les nids et tue les poussins cachés dans l’herbe."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern; it was Near Threatened until 2010. In Europe it numbers an estimated 1.3–2.0 million breeding pairs, about three-quarters of them in Russia. In the UK it is Red-listed: about 1,100 calling males bred in 2013–17, and 904 were counted in 2019. Typical life expectancy is only about two years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure; elle était « quasi menacée » jusqu’en 2010. L’Europe compte environ 1,3 à 2,0 millions de couples nicheurs, dont les trois quarts en Russie. Au Royaume-Uni, elle figure sur la liste rouge : environ 1 100 mâles chanteurs nichaient en 2013-2017, et 904 ont été comptés en 2019. L’espérance de vie typique n’est que d’environ deux ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Corncrake — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Râle des genêts — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/corncrake",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Mean weight 151.3 g; clutch typically 8–12 eggs (6–14); incubation 16–19 days by the female; fledging 34–38 days; 1–2 broods; summer visitor from April.",
+        "UK 1,100 males (2013–17), 904 singing males in 2019; UK Red; IUCN Least Concern; typical life expectancy 2 years, breeding from age 1."
+      ]
+    },
+    {
+      "title": {
+        "en": "Corncrake — RSPB",
+        "fr": "Râle des genêts — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/corncrake",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "behavior", "conservation"],
+      "facts": [
+        "Small brown secretive birds related to moorhens and coots but living on dry land, hidden in tall grass; males give a rasping call, more often heard than seen.",
+        "UK status Red, Schedule 1."
+      ]
+    },
+    {
+      "title": {
+        "en": "Corn crake — Wikipedia",
+        "fr": "Râle des genêts — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Corn_crake",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "ecology", "conservation"],
+      "facts": [
+        "27–30 cm; plumage details; diet of invertebrates, small frogs, seeds and grain; predators; main threat early mechanised mowing; wintering in Africa.",
+        "Near Threatened until 2010, now Least Concern; Europe 1.3–2.0 million pairs, about three-quarters in European Russia."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Incubation is 16–19 days at BTO (Britain) and 19–20 days in other literature; the BTO range is used.",
+    "Wikipedia is used only as a supplementary source for size, diet, predators and the European population; the IUCN category itself is confirmed by the BTO page.",
+    "Numbers of calling males are British; the species is far more numerous in Russia and eastern Europe."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts and RSPB (consulted 2026-10-12); Wikipedia only for supplementary qualitative facts and the European population; illustration to be checked by the owner."
+}

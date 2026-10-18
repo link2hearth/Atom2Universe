@@ -1,0 +1,173 @@
+{
+  "id": "greater_scaup",
+  "scientific": "Aythya marila",
+  "group": "birds",
+  "name": {
+    "en": "Greater Scaup",
+    "fr": "Fuligule milouinan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Greater Scaup is a circumpolar diving duck that breeds in northern wetlands and winters widely along coasts. Like the Common Pochard (Aythya ferina), it belongs to Aythya. Compared with that relative, it winters more often on marine shores.",
+      "fr": "Le Fuligule milouinan est un canard plongeur circumpolaire qui niche dans les zones humides nordiques et hiverne largement sur les côtes. Comme le Fuligule milouin (Aythya ferina), il appartient au genre Aythya. Comparé à ce parent, il hiverne plus souvent en milieu marin."
+    },
+    "identification": {
+      "en": "The male is black and white with a rounded head; females are brown, and both sexes have pale blue bills.",
+      "fr": "Le mâle est noir et blanc, avec une tête arrondie; les femelles sont brunes, et les deux sexes ont un bec bleu pâle."
+    },
+    "habitat": {
+      "en": "It nests beside shallow Arctic and subarctic lakes, while wintering birds gather on bays, estuaries and sheltered coastal waters.",
+      "fr": "Il niche au bord de lacs peu profonds de l’Arctique et du subarctique, tandis que les hivernants se rassemblent dans les baies, estuaires et eaux côtières abritées."
+    },
+    "diet": {
+      "en": "It dives for molluscs, crustaceans and aquatic insects, also taking aquatic plants and seeds, especially in inland waters.",
+      "fr": "Il plonge pour capturer mollusques, crustacés et insectes aquatiques, et consomme aussi plantes et graines, surtout dans les eaux intérieures."
+    },
+    "behavior": {
+      "en": "Outside breeding, it forms large rafts and feeds by diving; coastal winter flocks may be far offshore.",
+      "fr": "Hors reproduction, il forme de grands rassemblements et se nourrit en plongeant; les groupes hivernaux peuvent se tenir loin au large."
+    },
+    "reproduction": {
+      "en": "The female builds a down-lined ground nest near water, incubates the eggs and leads the downy, mobile ducklings.",
+      "fr": "La femelle construit près de l’eau un nid au sol garni de duvet, couve les œufs et accompagne les canetons nidifuges."
+    },
+    "ecology": {
+      "en": "Its diving for benthic prey connects shallow-lake and marine food webs, with habitat use shifting between seasons.",
+      "fr": "Sa recherche de proies benthiques relie les réseaux alimentaires lacustres et marins, avec un usage des habitats qui varie selon la saison."
+    },
+    "conservation": {
+      "en": "Global and regional assessments report declines in some populations, although monitoring remains uneven across its vast range.",
+      "fr": "Les évaluations mondiales et régionales signalent des baisses dans certaines populations, bien que le suivi reste inégal sur son vaste territoire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater Scaup — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Fuligule milouinan — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Greater_Scaup/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell documents this duck’s northern breeding, marine wintering, diving diet and ground nesting habits."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.3",
+        "overview.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 14,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fuligule milouinan — Cahiers d’Habitat Oiseaux, INPN / MNHN",
+        "fr": "Fuligule milouinan — Cahiers d’Habitat Oiseaux, INPN / MNHN"
+      },
+      "url": "https://inpn.mnhn.fr/docs-web/docs/download/440989",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The French INPN account documents its Arctic breeding, European coastal wintering and female incubation."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 14,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fuligule milouin — Oiseaux.net",
+        "fr": "Fuligule milouin — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/fuligule.milouin.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French account’s BirdTree phylogeny lists Aythya marila among the closest evolutionary relatives of Aythya ferina."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 16,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aythya marila — The IUCN Red List of Threatened Species",
+        "fr": "Aythya marila — Liste rouge mondiale de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22680398A132525108.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 global assessment describes an omnivorous Arctic-breeding diving duck."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 10,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A European INPN account is used for regional wintering and conservation context; the species’ full circumpolar population is not monitored uniformly."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Checked the English Cornell life-history account against the French INPN species account; the mutual comparison with the Common Pochard reflects shared genus and different typical winter habitats."
+}

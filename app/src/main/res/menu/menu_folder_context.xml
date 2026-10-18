@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_play_folder"
+        android:title="@string/music_play_all" />
+
+    <item
+        android:id="@+id/action_shuffle_folder"
+        android:title="@string/music_shuffle" />
+
+    <item
+        android:id="@+id/action_edit_folder_tags"
+        android:title="@string/music_edit_tags" />
+
+</menu>

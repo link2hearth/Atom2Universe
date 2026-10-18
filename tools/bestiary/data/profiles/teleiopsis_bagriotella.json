@@ -1,0 +1,120 @@
+{
+  "id": "teleiopsis_bagriotella",
+  "scientific": "Teleiopsis bagriotella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Alpine sorrel moth",
+    "fr": "Téléiopsis de l’oxyrie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Teleiopsis bagriotella is a small gelechiid moth recorded in mountain regions of Europe and Turkey.",
+      "fr": "Teleiopsis bagriotella est un petit papillon de nuit de la famille des Gelechiidae, signalé dans les montagnes d’Europe et de Turquie."
+    },
+    "identification": {
+      "en": "The available sources identify it mainly by its taxonomic placement; a concise species-specific field diagnosis was not found.",
+      "fr": "Les sources disponibles le situent surtout par sa taxonomie ; elles ne fournissent pas de diagnostic de terrain synthétique propre à l’espèce."
+    },
+    "habitat": {
+      "en": "It occurs in alpine settings, including rocky scree where its host plant grows.",
+      "fr": "Il vit dans des milieux alpins, notamment les éboulis où pousse sa plante hôte."
+    },
+    "diet": {
+      "en": "Its larva feeds on Oxyria digyna, a plant of cold, rocky mountain habitats.",
+      "fr": "Sa chenille se nourrit d’Oxyria digyna, une plante des milieux montagneux froids et rocheux."
+    },
+    "behavior": {
+      "en": "The sources consulted provide little species-specific information on adult behavior.",
+      "fr": "Les sources consultées donnent peu d’informations propres à l’espèce sur le comportement des adultes."
+    },
+    "reproduction": {
+      "en": "The documented larval host is Oxyria digyna; other details of its life cycle were not established in the sources consulted.",
+      "fr": "La plante hôte documentée de la chenille est Oxyria digyna ; les sources consultées ne précisent pas les autres étapes de son cycle."
+    },
+    "ecology": {
+      "en": "Its dependence on one documented host plant links the moth to alpine plant communities.",
+      "fr": "Sa dépendance à une plante hôte documentée le lie aux communautés végétales alpines."
+    },
+    "conservation": {
+      "en": "The sources consulted describe distribution and host use but do not provide a global conservation assessment.",
+      "fr": "Les sources consultées décrivent sa répartition et sa plante hôte, sans fournir d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Teleiopsis — Lepidoptera and some other life forms (Funet)",
+        "fr": "Teleiopsis — Lepidoptera and some other life forms (Funet)"
+      },
+      "url": "https://www.nic.funet.fi/index/Tree_of_life/insecta/lepidoptera/ditrysia/gelechioidea/gelechiidae/gelechiinae/teleiopsis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomic compilation places the moth in Gelechiidae, gives its European-to-Turkish mountain distribution, and lists Oxyria digyna as larval food."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 19,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Die Schmetterlinge des Nationalparks Hohe Tauern — Wissenschaftliche Mitteilungen Hohe Tauern",
+        "fr": "Die Schmetterlinge des Nationalparks Hohe Tauern — Wissenschaftliche Mitteilungen Hohe Tauern"
+      },
+      "url": "https://www.zobodat.at/pdf/WissMittHoheTauern_5_0023-0060.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Regional scientific survey documents its alpine scree habitat and host plant; behavior, life-cycle detail and conservation status are not covered there."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 21,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "This is a little-known micro-moth; sources located provide a useful host-plant association but limited behavior and conservation detail."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the larval host association to the specialist taxonomic compilation and used the regional alpine survey for the habitat and evidence limits."
+}

@@ -1,0 +1,131 @@
+{
+  "id": "actias_selene",
+  "scientific": "Actias selene",
+  "group": "invertebrates",
+  "name": {
+    "en": "Indian moon moth",
+    "fr": "Papillon lune indien"
+  },
+  "sections": {
+    "overview": {
+      "en": "Actias selene is a large Asian silk moth in the family Saturniidae. It is known for its pale green wings, eye-like spots and long tails extending from the hindwings. The species ranges from the Indian subcontinent through parts of East and Southeast Asia, with regional forms and a complex of closely related moon moths that can complicate identification. Its larvae feed on several woody plants, and Indian research documents it as a native wild silk moth.",
+      "fr": "Actias selene est un grand papillon de nuit asiatique de la famille des Saturniidés. Il est reconnaissable à ses ailes vert pâle, à ses taches en forme d’yeux et aux longues queues prolongeant les ailes postérieures. Il est présent du sous-continent indien à une partie de l’Asie orientale et du Sud-Est ; les formes régionales et les espèces proches compliquent parfois l’identification. Ses chenilles se nourrissent de plusieurs plantes ligneuses, et des travaux indiens le décrivent comme un papillon à soie sauvage indigène."
+    },
+    "identification": {
+      "en": "The adult has pale green to bluish-green wings, a pinkish or brownish forewing border, discal eyespots and long, curved hindwing tails. The male usually has more strongly feathered antennae, more falcate wing tips and longer, more pink-toned tails; the female is often larger with rounder wing tips and less developed pink markings. An Indian taxonomic account reports male wingspans of about 132–166 mm and female spans of 140–182 mm; values differ among studies and regional forms. No reliable adult mass, body height or body-width measurement was found. The long hindwing tails and contrasting eye-spots separate it from many other large green moths, but comparison with related Actias species should use tail shape, eyespot pattern, geography and genital or larval characters when necessary.",
+      "fr": "L’adulte a les ailes vert pâle à vert bleuté, une bordure antérieure rosée ou brunâtre, des taches discales en forme d’yeux et de longues queues courbes aux ailes postérieures. Le mâle possède généralement des antennes plus plumeuses, des extrémités d’ailes plus falquées et des queues plus longues et davantage rosées ; la femelle est souvent plus grande, avec des extrémités plus arrondies et des marques roses moins développées. Une étude taxonomique indienne donne une envergure d’environ 132 à 166 mm pour les mâles et de 140 à 182 mm pour les femelles ; les valeurs diffèrent selon les études et les formes régionales. Aucune masse adulte fiable, hauteur ou largeur du corps n’a été trouvée. Les longues queues postérieures et les taches oculaires contrastées permettent de la distinguer de nombreux grands papillons verts, mais la comparaison avec les autres Actias doit aussi considérer la forme des queues, le motif des ocelles et la provenance, voire les caractères génitaux ou larvaires."
+    },
+    "habitat": {
+      "en": "It occurs in wooded and forested landscapes across tropical and subtropical Asia. Records include lowland and hill forests in India and neighboring regions; the species is also reared on multiple tree and shrub hosts in Nagaland. Its broad distribution spans different climates, so local flight seasons and life-cycle schedules are not uniform.",
+      "fr": "Il fréquente les paysages boisés et forestiers de l’Asie tropicale et subtropicale. Des observations proviennent de forêts de plaine et de collines en Inde et dans les régions voisines ; au Nagaland, l’espèce a aussi été élevée sur plusieurs plantes hôtes ligneuses. Sa vaste répartition couvre des climats différents : les périodes de vol et le calendrier du cycle de vie varient donc localement."
+    },
+    "diet": {
+      "en": "The adult moth has reduced mouthparts and does not feed; energy for its short adult life is stored during the caterpillar stage. Larvae are polyphagous. A peer-reviewed Nagaland study reared them on Nepal alder (Alnus nepalensis) and Rhus javanica and reported feeding on six host plants in the regional study. Other host records include walnut, willow, cherry, sweetgum and several shrubs, but host use differs by locality and should not be treated as a complete universal list.",
+      "fr": "Le papillon adulte a des pièces buccales réduites et ne s’alimente pas ; l’énergie de sa courte vie adulte est accumulée au stade chenille. Les larves sont polyphages. Une étude évaluée par les pairs au Nagaland les a élevées sur l’aulne du Népal (Alnus nepalensis) et Rhus javanica, et signale six plantes hôtes dans cette région. D’autres observations mentionnent le noyer, le saule, le cerisier, le liquidambar et plusieurs arbustes, mais l’utilisation des plantes varie selon les lieux ; cette liste ne doit pas être considérée comme universelle."
+    },
+    "behavior": {
+      "en": "Adults are nocturnal and are attracted to lights. The long hindwing tails are not merely ornamental: research on moon moths indicates that tails can disrupt bat echolocation and reduce capture risk, although the cited experimental research tested related Actias species rather than A. selene directly. Males use broad, feathered antennae to detect female pheromones. Adults do not feed and generally live only long enough to mate and lay eggs.",
+      "fr": "Les adultes sont nocturnes et attirés par les lumières. Les longues queues postérieures ne sont pas seulement décoratives : des recherches sur les papillons lune indiquent qu’elles peuvent perturber l’écholocalisation des chauves-souris et réduire les risques de capture, mais les expériences citées portent sur des espèces d’Actias proches, et non directement sur A. selene. Les mâles détectent les phéromones des femelles grâce à leurs antennes plumeuses. Les adultes ne se nourrissent pas et vivent généralement juste assez longtemps pour s’accoupler et pondre."
+    },
+    "reproduction": {
+      "en": "The female lays eggs that hatch into caterpillars; larvae pass through several moults before spinning a silk cocoon in which they pupate. The species can produce multiple generations per year in Nagaland, but pupae undergo a winter resting period there averaging about 98 days. These findings are regional: elsewhere, temperature and season can change the number of generations and whether pupae enter diapause. Larval colour changes by instar and can be an important clue for identification.",
+      "fr": "La femelle pond des œufs qui donnent des chenilles ; celles-ci muent plusieurs fois puis tissent un cocon de soie où elles se nymphosent. Au Nagaland, l’espèce peut produire plusieurs générations par an, mais les chrysalides y connaissent une période de repos hivernal d’environ 98 jours en moyenne. Ces résultats sont régionaux : ailleurs, la température et la saison peuvent modifier le nombre de générations et l’entrée ou non en diapause. La couleur des chenilles change au fil des stades et peut aider à l’identification."
+    },
+    "ecology": {
+      "en": "The caterpillars consume foliage from a variety of trees and shrubs, while the adults are part of the nocturnal insect community and provide prey for bats and other predators. Its long tails may reduce bat capture, based on experiments with close relatives. The larval stages can be reared for wild silk, but harvest and commercial breeding should not be confused with evidence about the abundance or condition of wild populations.",
+      "fr": "Les chenilles consomment le feuillage de différents arbres et arbustes ; les adultes appartiennent à la faune nocturne et servent de proies aux chauves-souris et à d’autres prédateurs. Les longues queues pourraient réduire les captures par les chauves-souris, d’après des expériences menées sur des espèces proches. Les larves peuvent être élevées pour produire de la soie sauvage, mais l’élevage commercial ne renseigne pas directement sur l’abondance ou l’état des populations naturelles."
+    },
+    "conservation": {
+      "en": "The sources reviewed do not establish a current global IUCN category or population trend specific to Actias selene. It remains widespread across a large Asian range, but range size alone does not show that local forest populations are secure. Protecting wooded habitat and avoiding unsustainable collection are reasonable local measures; quantitative trend data are limited.",
+      "fr": "Les sources examinées ne permettent pas d’établir une catégorie mondiale actuelle de l’UICN ni une tendance de population propre à Actias selene. L’espèce conserve une vaste répartition asiatique, mais cela ne suffit pas à garantir la sécurité des populations forestières locales. La protection des milieux boisés et l’évitement des prélèvements non durables sont des mesures locales pertinentes ; les données quantitatives de tendance restent limitées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Taxonomic study of moths (Lepidoptera: Heterocera) from North Maharashtra, India — University of Pune thesis record, India Biodiversity Portal",
+        "fr": "Étude taxonomique des papillons de nuit du nord du Maharashtra — notice de thèse de l’université de Pune, India Biodiversity Portal"
+      },
+      "url": "https://indiabiodiversity.org/group/National_Moth_Week_2023/species/show/235468",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Species record attributes adult descriptions and sexed wingspan ranges to Gurule's 2013 University of Pune thesis: male 132–166 mm, female 140–182 mm; also describes sex differences in wing shape, antennae, tail colour and larval tubercles."
+      ]
+    },
+    {
+      "title": {
+        "en": "Biology and rearing performance of Actias selene in Nagaland, India — Lepidoptera Science",
+        "fr": "Biologie et élevage d’Actias selene au Nagaland — Lepidoptera Science"
+      },
+      "url": "https://doi.org/10.18984/lepid.61.3_228",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study reports the species as an indigenous wild silk moth, polyphagous larvae using six hosts in the Nagaland study, rearing on Alnus nepalensis and Rhus javanica, multiple generations under local conditions and approximately 97.6 ± 4.37 days of winter pupal dormancy."
+      ]
+    },
+    {
+      "title": {
+        "en": "The fauna of British India, including Ceylon and Burma: Moths, Volume 1 — G. F. Hampson",
+        "fr": "The fauna of British India, incluant Ceylan et la Birmanie : Moths, volume 1 — G. F. Hampson"
+      },
+      "url": "https://archive.org/details/faunaofbritishin01hamp/page/3/mode/1up",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Historic regional taxonomic monograph is cited by the India Biodiversity Portal for sex-specific wingspan and adult morphology; measurements are retained as reported in that reference, not as modern population means."
+      ]
+    },
+    {
+      "title": {
+        "en": "Luna moth hindwing tails disrupt bat echolocation — Florida Museum of Natural History",
+        "fr": "Les queues des papillons lune perturbent l’écholocalisation des chauves-souris — Florida Museum of Natural History"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/science/what-is-it-good-for-absolutely-one-thing-luna-moths-use-their-tails-solely-for-bat-evasion/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Florida Museum summarizes experimental studies finding hindwing tails reduce bat capture in luna moths and notes male Actias selene can track female pheromones; bat-evasion trials were conducted on related species, so this is not presented as a direct A. selene experiment."
+      ]
+    },
+    {
+      "title": {
+        "en": "Indian moon moth — ICFRE Van Sangyan, Indian Forest Research and Education Council",
+        "fr": "Papillon lune indien — Van Sangyan, Conseil indien de la recherche forestière et de l’enseignement"
+      },
+      "url": "https://tfrienglish.icfre.gov.in/VanSangyan/April%202016%20issue.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Indian forestry research bulletin describes the adult's pale-green wings and eyespots and notes a report of 29 host plant species from different Indian regions; host diversity is reported as geographically variable."
+      ]
+    }
+  ],
+  "illustration_notes": "Large pale-green moth with discal eyespots, pinkish outer markings and very long, curved hindwing tails; portray male with more feathered antennae and longer, pinker tails than the generally larger female.",
+  "uncertainties": [
+    "Wingspan varies by sex, locality and source; the cited Indian ranges are historic or thesis-based reference measurements, not global population averages.",
+    "Host plant lists are regional and incomplete; the peer-reviewed Nagaland study found six local hosts, while broader compilations list more.",
+    "The anti-bat role of hindwing tails is experimentally supported in close relatives but not directly tested in A. selene in the cited source.",
+    "A current global population trend or species-specific IUCN assessment was not established in the sources reviewed."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked an Indian taxonomic thesis record and historic moth monograph with peer-reviewed Nagaland rearing research, an Indian forestry bulletin and Florida Museum reporting on experimental tail function; kept local life-cycle data and related-species inference distinct."
+}

@@ -1,0 +1,124 @@
+{
+  "id": "gallinago_gallinago",
+  "scientific": "Gallinago gallinago",
+  "group": "birds",
+  "name": {
+    "en": "Common Snipe",
+    "fr": "Bécassine des marais"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common snipe is a skulking, long-billed wading bird of wet ground, so well camouflaged that it is usually seen only when it bursts into a zigzag flight. In spring the male produces a strange drumming sound in display flight.",
+      "fr": "La bécassine des marais est un limicole discret au long bec, des terrains humides, si bien camouflé qu’on ne le voit d’ordinaire que lorsqu’il s’envole en zigzag. Au printemps, le mâle produit un curieux bruit de tambourinage pendant son vol de parade."
+    },
+    "identification": {
+      "en": "An adult weighs about 108 g with a wing length near 14 cm, and a length of roughly 23–28 cm. The plumage is mottled brown above with pale buff stripes along the back, a streaked breast and pale underparts. The bill is long and straight, about 6 cm, and the legs are short. The sexes look alike.",
+      "fr": "L’adulte pèse environ 108 g, avec une aile d’environ 14 cm, pour une longueur d’environ 23 à 28 cm. Le plumage est tacheté de brun dessus, avec des bandes beige clair le long du dos, une poitrine striée et le dessous clair. Le bec est long et droit, d’environ 6 cm, et les pattes sont courtes. Les sexes se ressemblent."
+    },
+    "habitat": {
+      "en": "In the breeding season in Britain it is most frequent around lakes and also common in bogs and marshes, with the highest densities in Scotland, north-west England, Wales and western Ireland. In winter it uses a wide range of lowland and upland wet habitats. It nests on drier grassy ground close to its feeding areas.",
+      "fr": "En période de reproduction en Grande-Bretagne, elle est surtout fréquente autour des lacs et aussi dans les tourbières et les marais, avec les plus fortes densités en Écosse, dans le nord-ouest de l’Angleterre, au pays de Galles et dans l’ouest de l’Irlande. En hiver, elle utilise une grande variété de milieux humides de plaine et de montagne. Elle niche sur un sol herbeux plus sec, près de ses zones de nourrissage."
+    },
+    "diet": {
+      "en": "It probes wet soil with its long bill for invertebrates. From April to August earthworms and insect larvae make up most of its food; in a Northumberland study, earthworms were about 61% of the diet by dry mass, followed by crane fly larvae at about 24%. Plant matter and seeds are eaten in smaller amounts.",
+      "fr": "Elle sonde le sol humide de son long bec à la recherche d’invertébrés. D’avril à août, les vers de terre et les larves d’insectes forment l’essentiel de son alimentation ; dans une étude du Northumberland, les vers de terre représentaient environ 61 % du régime en masse sèche, suivis des larves de tipules à environ 24 %. Elle mange aussi un peu de matière végétale et de graines."
+    },
+    "behavior": {
+      "en": "A skulking bird, it keeps to cover and flushes with a jinking flight. In display the male dives so that air passes through his outer tail feathers, making the drumming sound; females seem to prefer males that drum well. Males and females also take part in display fights.",
+      "fr": "Oiseau discret, elle reste à couvert et s’envole en zigzaguant. En parade, le mâle plonge en piqué de sorte que l’air passe dans ses rectrices externes, produisant le tambourinage ; les femelles semblent préférer les mâles qui tambourinent bien. Mâles et femelles participent aussi à des combats de parade."
+    },
+    "reproduction": {
+      "en": "In Britain the first clutch is laid on average around 30 April, typically four eggs, with one brood. The female incubates alone for 18–20 days. The downy chicks leave the nest and fledge after about 19–20 days, tended by both parents. Breeding typically starts at two years of age.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 30 avril ; elle compte typiquement quatre œufs, pour une seule nichée. La femelle couve seule pendant 18 à 20 jours. Les poussins, couverts de duvet, quittent le nid et s’envolent après environ 19 à 20 jours, soignés par les deux parents. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "As a predator of earthworms and larvae, the snipe is part of wet-grassland food webs, and it falls prey to red foxes, carrion crows and stoats. It is also hunted for food and sport, an estimated 1.5 million birds a year in Europe. In Britain, steep declines have been noted in lowland wet grassland. Unlike the smaller, shorter-billed Jack Snipe (Lymnocryptes minimus), it usually flies off in a conspicuous zigzag; see that profile for the reciprocal comparison.",
+      "fr": "Prédatrice de vers de terre et de larves, la bécassine fait partie des chaînes alimentaires des prairies humides, et elle est la proie du renard roux, de la corneille noire et de l’hermine. Elle est aussi chassée pour la table et le sport, à raison d’environ 1,5 million d’oiseaux par an en Europe. En Grande-Bretagne, de fortes baisses ont été constatées dans les prairies humides de plaine. Contrairement à la Bécassine sourde (Lymnocryptes minimus), plus petite et au bec plus court, elle s’envole généralement en zigzaguant de façon visible ; voir cette fiche pour la comparaison réciproque."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, but numbers have declined across Europe since 1980. In the UK it is Amber-listed: about 67,000 breeding pairs in 2016, with a breeding range 31.5% smaller than in 1968–72. A snipe typically lives about three years once adult, and the oldest ringed bird exceeded 16.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais les effectifs ont baissé dans toute l’Europe depuis 1980. Au Royaume-Uni, elle figure sur la liste ambre : environ 67 000 couples nicheurs en 2016, avec une aire de reproduction réduite de 31,5 % par rapport à 1968-1972. Une bécassine vit en général environ trois ans une fois adulte, et le plus vieil oiseau bagué a dépassé 16 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Snipe — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Bécassine des marais — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/snipe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Adults average 108.2 g, wing 136 mm; first clutch average 30 April, 4 eggs, incubation 18–20 days by female, fledging 19–20 days; breeding at 2 years; max age 16 years.",
+        "UK ~67,000 pairs (2016); breeding range −31.5% 1968–72 to 2008–11; Europe declining since 1980; UK Amber; IUCN Least Concern.",
+        "British adults average about 108 g and have a mean wing length of about 136 mm."
+      ]
+    },
+    {
+      "title": {
+        "en": "Snipe — RSPB",
+        "fr": "Bécassine des marais — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/snipe",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Mottled brown above with paler buff back stripes, streaked chest, long straight bill, short legs; skulking wader.",
+        "Amber-listed; moderate UK decline over 25 years, particularly steep in lowland wet grassland."
+      ]
+    },
+    {
+      "title": {
+        "en": "Gallinago gallinago — Animal Diversity Web, University of Michigan",
+        "fr": "Gallinago gallinago — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Gallinago_gallinago/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Length about 23–28 cm, bill about 6.4 cm; probes wet soil; Northumberland diet study: earthworms about 61% and crane fly larvae about 24% by dry mass; males drum by diving, air passing through outer tail feathers; females prefer dominant males.",
+        "Predators: red fox, carrion crow, ermine; hunted, about 1.5 million birds per year in Europe."
+      ]
+    },
+    {
+      "title": {
+        "en": "Jack Snipe — RSPB",
+        "fr": "Bécassine sourde — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/jack-snipe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "RSPB says the Jack Snipe is smaller and more compact than the Common Snipe, has a much shorter bill, and usually flies low and drops back into cover; Common Snipe flies off high."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "BTO’s UK breeding trend statement is ambiguous (‘stable’ in key stats, an unsigned 19% in the detailed text), so no trend figure is given here.",
+    "Fledging time differs between sources (BTO 19–20 days; Animal Diversity Web 10–20 days); the BTO figure is used. The Animal Diversity Web diet study citation is dated 2003 in the text and 2007 in the reference list.",
+    "The IUCN Red List pages could not be opened; Least Concern is taken from the BTO page."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); plumage and decline from RSPB; diet, drumming and predators from Animal Diversity Web; illustration to be checked by the owner."
+}

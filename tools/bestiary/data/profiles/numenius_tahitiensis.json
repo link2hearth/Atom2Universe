@@ -1,0 +1,175 @@
+{
+  "id": "numenius_tahitiensis",
+  "scientific": "Numenius tahitiensis",
+  "group": "birds",
+  "name": {
+    "en": "Bristle-thighed Curlew",
+    "fr": "Courlis d’Alaska"
+  },
+  "sections": {
+    "overview": {
+      "en": "This migratory shorebird breeds in Alaska and winters on Pacific islands, crossing a vast stretch of ocean between the two.",
+      "fr": "Ce limicole migrateur niche en Alaska et hiverne sur des îles du Pacifique, franchissant une vaste étendue d’océan entre les deux."
+    },
+    "identification": {
+      "en": "It resembles a whimbrel but has warmer brown plumage, a cinnamon rump and tail, and conspicuous thigh bristles at close range.",
+      "fr": "Il ressemble au courlis corlieu, mais son plumage est plus chaud, son croupion et sa queue sont couleur cannelle, et ses cuisses portent des plumes raides visibles de près."
+    },
+    "habitat": {
+      "en": "It nests on upland Arctic tundra and forages on island beaches, reefs, mudflats, lagoons and open grassy ground.",
+      "fr": "Il niche dans la toundra arctique d’altitude et s’alimente sur les plages, récifs, vasières, lagunes et terrains herbeux ouverts des îles."
+    },
+    "diet": {
+      "en": "In Alaska it eats berries, insects, spiders and flowers; on the islands it also takes marine invertebrates, eggs, small vertebrates and carrion.",
+      "fr": "En Alaska, il mange des baies, insectes, araignées et fleurs ; sur les îles, il consomme aussi des invertébrés marins, des œufs, de petits vertébrés et des charognes."
+    },
+    "behavior": {
+      "en": "During its long migration it can fly nonstop, but on its Pacific wintering grounds it becomes temporarily flightless while replacing many flight feathers at once.",
+      "fr": "Durant sa longue migration, il peut voler sans escale, mais sur ses quartiers d’hiver du Pacifique, il devient temporairement incapable de voler en renouvelant de nombreuses plumes de vol simultanément."
+    },
+    "reproduction": {
+      "en": "It lays three or four eggs in a simple ground nest on the tundra, and both parents incubate.",
+      "fr": "Il pond trois ou quatre œufs dans un nid simple au sol de la toundra, et les deux parents couvent."
+    },
+    "ecology": {
+      "en": "The Eurasian Whimbrel (*Numenius phaeopus*) is considered its closest relative; compare that profile for the related species’ own range and migration.",
+      "fr": "Le courlis corlieu (*Numenius phaeopus*) est considéré comme son plus proche parent ; voir cette fiche pour l’aire et la migration de l’espèce apparentée."
+    },
+    "conservation": {
+      "en": "Counts in French Polynesia in 2021–2022 indicated a decline of about 50% over two decades, although its global IUCN category was then Near Threatened.",
+      "fr": "Des dénombrements en Polynésie française en 2021–2022 ont indiqué un déclin d’environ 50 % en deux décennies, bien que sa catégorie mondiale UICN ait alors été « quasi menacée »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bristle-thighed Curlew — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Courlis d’Alaska — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Bristle-thighed_Curlew/lifehistory",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Alaska breeding; oceanic migration."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 196,
+        "notes_words": 4,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population trends, size, and potential threats to Bristle-thighed Curlew — Bird Conservation International",
+        "fr": "Tendances, effectifs et menaces du courlis d’Alaska — Bird Conservation International"
+      },
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/population-trends-size-and-potential-threats-to-bristlethighed-curlew-numenius-tahitiensis-new-data-from-french-polynesia/4C687B6AB040F1E3724B7859B0116D63",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "French Polynesia surveys in 2021–2022 found about a 50% decline over two decades; the paper discusses Near Threatened status and a case for reassessment."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 24,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Courlis d’Alaska — Tetiaroa Society",
+        "fr": "Courlis d’Alaska — Tetiaroa Society"
+      },
+      "url": "https://www.tetiaroasociety.org/fr/ile/oiseaux/courlis-d-alaska",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Regional species account."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 3,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bristle-thighed Curlew — NatureServe Explorer",
+        "fr": "Courlis d’Alaska — NatureServe Explorer"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.104761/Numenius_tahitiensis",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Breeds in Alaska; nonbreeding range includes Pacific islands and atolls; the Eurasian Whimbrel is generally regarded as its closest relative."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 20,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The recent French Polynesian decline is based on local counts, not a precise global trend.",
+    "The global Red List category can change as assessments are updated."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Cornell, a peer-reviewed population study, and a French Polynesian field account; compares the species cautiously with the whimbrel."
+}

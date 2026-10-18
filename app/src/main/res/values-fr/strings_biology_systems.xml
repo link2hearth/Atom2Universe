@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_region_body">Corps entier</string>
+    <string name="bio_layer_senses">Yeux et structures sensorielles</string>
+    <string name="bio_layer_nervous">Système nerveux</string>
+    <string name="bio_layer_vascular">Vaisseaux sanguins</string>
+    <string name="bio_layer_lymphatic">Ganglions et tonsilles</string>
+    <string name="bio_colors_lymphatic">Colorer les structures lymphoïdes par région</string>
+    <string name="bio_layer_connective">Ligaments, tendons et fascias</string>
+    <string name="bio_layer_skin">Peau et pilosité</string>
+    <string name="bio_colors_senses">Colorer les structures sensorielles par groupe</string>
+    <string name="bio_colors_nervous">Colorer les structures nerveuses par groupe</string>
+    <string name="bio_colors_vascular">Colorer les vaisseaux par territoire</string>
+    <string name="bio_colors_connective">Colorer les tissus conjonctifs par groupe</string>
+    <string name="bio_colors_skin">Colorer la peau et la pilosité par groupe</string>
+    <string name="bio_system_coverage_count">%1$s : %2$d structures sélectionnables</string>
+    <string name="bio_systems_coverage">Ces couches représentent les surfaces disponibles dans les sources. Les décomptes incluent des subdivisions et des branches regroupées, pas des systèmes physiologiques complets. Les couleurs vasculaires sont illustratives : rouge pour les artères systémiques et les veines pulmonaires, bleu pour les veines systémiques et les artères pulmonaires. Les capillaires et les tissus microscopiques sont absents. Les yeux comportent des enveloppes et des structures optiques sélectionnables séparément ; les transparences sont illustratives, sans simulation optique. Les tissus de l’oreille moyenne et interne sont absents. La couche lymphoïde contient 158 groupes nommés de ganglions et deux tonsilles palatines, sans collecteurs ni conduits lymphatiques. La peau constitue une surface externe unique. Les nerfs et ganglions ajoutés utilisent un recalage approximatif entre atlas ; les dimensions locales et les contacts ne sont pas validés cliniquement.</string>
+    <string name="bio_systems_modifications">Surfaces BodyParts3D supplémentaires : yeux et supports orbitaires, oreilles externes, structures cérébrales, vaisseaux sanguins, certains tissus conjonctifs, peau et pilosité. Disposition source conservée, avec des surfaces simplifiées pour mobile ; fiches originales bilingues et matériaux illustratifs ajoutés. Quatre surfaces de l’œil droit contiennent de minuscules fragments isolés dans l’orbite opposée ; seuls ces fragments documentés ont été retirés. Les variantes vasculaires en double ont été exclues ; les côtés des veines lombales ascendantes ont été corrigés à partir de la géométrie. Deux portions veineuses épigastriques conservent une identité incertaine. Compléments Z-Anatomy : huit muscles du tronc, 247 structures nerveuses et 160 structures lymphoïdes. Les muscles du tronc et les structures lymphoïdes conservent leur forme source avec une échelle uniforme et un recalage rigide. Les nerfs utilisent un ajustement de pose continu guidé par les os, susceptible de modifier les dimensions locales. Les inventaires, exclusions, transformations et limites mesurées figurent dans le fichier de provenance embarqué.</string>
+    <string name="bio_reference_senses">Yeux et sens · anatomie OpenStax</string>
+    <string name="bio_reference_nervous">Système nerveux · anatomie OpenStax</string>
+    <string name="bio_reference_vascular">Vaisseaux sanguins · anatomie OpenStax</string>
+    <string name="bio_reference_skin">Peau · anatomie OpenStax</string>
+</resources>

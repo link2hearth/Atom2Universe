@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="bot_family_Gentianaceae" translatable="false">Gentian family</string>
+    <string name="bot_family_Gentianaceae_desc">Gentians often have opposite leaves and regular flowers with a fused corolla; fruits commonly form capsules.</string>
+    <string name="bot_family_Gentianaceae_aliases">Gentian family</string>
+    <string name="bot_family_Dilleniaceae" translatable="false">Dillenia family</string>
+    <string name="bot_family_Dilleniaceae_desc">Tropical trees and shrubs, often with strongly veined toothed leaves and numerous stamens; persistent sepals may enlarge around fruitlets.</string>
+    <string name="bot_family_Dilleniaceae_aliases">Dillenia family</string>
+    <string name="bot_family_Euphorbiaceae" translatable="false">Spurge family</string>
+    <string name="bot_family_Euphorbiaceae_desc">A diverse family with varied flowers; Euphorbia species have a specialized cyathium and often milky latex.</string>
+    <string name="bot_family_Euphorbiaceae_aliases">Spurge family</string>
+    <string name="bot_family_Polygonaceae" translatable="false">Buckwheat family</string>
+    <string name="bot_family_Polygonaceae_desc">Often recognizable by swollen stem nodes and small flowers; fruits commonly are three-angled achenes.</string>
+    <string name="bot_family_Polygonaceae_aliases">Buckwheat family</string>
+    <string name="bot_family_Nymphaeaceae" translatable="false">Water-lily family</string>
+    <string name="bot_family_Nymphaeaceae_desc">Aquatic rhizomatous herbs with floating or emergent leaves and solitary flowers above or at the water surface.</string>
+    <string name="bot_family_Nymphaeaceae_aliases">Water-lily family</string>
+    <string name="bot_astrophytum_ornatum_name">Ornate astrophytum</string>
+    <string name="bot_astrophytum_ornatum_latin" translatable="false">Astrophytum ornatum</string>
+    <string name="bot_astrophytum_ornatum_aliases">star cactus; monk’s hood cactus</string>
+    <string name="bot_astrophytum_ornatum_description">A solitary blue-green cactus ranging from flattened-globose to short-columnar. Its 5–8 ribs bear areoles marked by conspicuous white woolly scales and stout spines; pale yellow flowers arise at the crown.</string>
+    <string name="bot_astrophytum_ornatum_distribution">Native to north-eastern Mexico, from Coahuila and San Luis Potosí toward Veracruz; inhabits dry scrub and rocky slopes.</string>
+    <string name="bot_astrophytum_ornatum_habit">Single ribbed cactus with white areoles and spines</string>
+    <string name="bot_astrophytum_ornatum_leaf">Rib and woolly areole</string>
+    <string name="bot_astrophytum_ornatum_flower">Pale yellow flower</string>
+    <string name="bot_astrophytum_ornatum_fruit">Ovoid fruit with dark seeds</string>
+    <string name="bot_calocedrus_macrolepis_name">Chinese incense cedar</string>
+    <string name="bot_calocedrus_macrolepis_latin" translatable="false">Calocedrus macrolepis</string>
+    <string name="bot_calocedrus_macrolepis_aliases">Chinese calocedrus; Taiwan incense cedar</string>
+    <string name="bot_calocedrus_macrolepis_description">An evergreen conifer with a straight trunk and narrow crown. Flattened sprays carry opposite scale-like leaves; its small seed cones have four principal scales, while pollen cones occur in clusters.</string>
+    <string name="bot_calocedrus_macrolepis_distribution">Native from southern China and Hainan through northern Indochina, including Laos, Myanmar, Thailand and Vietnam.</string>
+    <string name="bot_calocedrus_macrolepis_habit">Conical evergreen tree</string>
+    <string name="bot_calocedrus_macrolepis_leaf">Flattened spray of scale leaves</string>
+    <string name="bot_calocedrus_macrolepis_flower">Four-scaled seed cone</string>
+    <string name="bot_calocedrus_macrolepis_fruit">Pollen-cone cluster</string>
+    <string name="bot_centaurium_erythraea_name">Common centaury</string>
+    <string name="bot_centaurium_erythraea_latin" translatable="false">Centaurium erythraea</string>
+    <string name="bot_centaurium_erythraea_aliases">common centaury; European centaury</string>
+    <string name="bot_centaurium_erythraea_description">A small annual or biennial gentian, usually with a basal rosette and upright, often branched stems. Opposite leaves accompany terminal clusters of pink, five-lobed flowers; the fruit is a narrow capsule with many minute seeds.</string>
+    <string name="bot_centaurium_erythraea_distribution">Native across much of Europe, North Africa and western Asia; now introduced in many temperate regions.</string>
+    <string name="bot_centaurium_erythraea_habit">Basal rosette and flowering stems</string>
+    <string name="bot_centaurium_erythraea_leaf">Opposite leaves</string>
+    <string name="bot_centaurium_erythraea_flower">Pink five-lobed flower</string>
+    <string name="bot_centaurium_erythraea_fruit">Slender seed capsule</string>
+    <string name="bot_cereus_jamacaru_name">Mandacaru</string>
+    <string name="bot_cereus_jamacaru_latin" translatable="false">Cereus jamacaru</string>
+    <string name="bot_cereus_jamacaru_aliases">mandacaru; cardeiro</string>
+    <string name="bot_cereus_jamacaru_description">A tree-like columnar cactus of seasonally dry Brazil, with erect branching stems and several prominent ribs bearing areoles and spines. Large white flowers open at night; oblong red fruits contain white pulp and dark seeds.</string>
+    <string name="bot_cereus_jamacaru_distribution">Native to central and eastern Brazil, especially the Caatinga and other seasonally dry landscapes.</string>
+    <string name="bot_cereus_jamacaru_habit">Branching columnar cactus</string>
+    <string name="bot_cereus_jamacaru_leaf">Rib with areoles and spines</string>
+    <string name="bot_cereus_jamacaru_flower">Large nocturnal white flower</string>
+    <string name="bot_cereus_jamacaru_fruit">Red fruit with white pulp</string>
+    <string name="bot_cyclamen_coum_name">Eastern cyclamen</string>
+    <string name="bot_cyclamen_coum_latin" translatable="false">Cyclamen coum</string>
+    <string name="bot_cyclamen_coum_aliases">eastern cyclamen; round-leaved cyclamen</string>
+    <string name="bot_cyclamen_coum_description">A low tuberous perennial whose rounded, kidney-shaped leaves often show silvery patterns. Short-stalked flowers have five rounded petals reflexed upward, commonly pink with a darker basal mark; the fruiting stalk coils toward the ground.</string>
+    <string name="bot_cyclamen_coum_distribution">Native from south-eastern Europe across the Caucasus and western Asia to Israel; flowers in the cool season.</string>
+    <string name="bot_cyclamen_coum_habit">Tuber, patterned leaves and reflexed flowers</string>
+    <string name="bot_cyclamen_coum_leaf">Rounded patterned leaf</string>
+    <string name="bot_cyclamen_coum_flower">Reflexed five-petal flower</string>
+    <string name="bot_cyclamen_coum_fruit">Coiled fruit stalk and capsule</string>
+    <string name="bot_cunninghamia_lanceolata_name">Chinese fir</string>
+    <string name="bot_cunninghamia_lanceolata_latin" translatable="false">Cunninghamia lanceolata</string>
+    <string name="bot_cunninghamia_lanceolata_aliases">Chinese fir; coffin tree</string>
+    <string name="bot_cunninghamia_lanceolata_description">A large evergreen conifer with a straight trunk and broad conical crown. Stiff, sharply pointed linear leaves spiral around the shoots; rounded to broadly ovoid female cones bear broad overlapping scales, and pollen cones form clusters.</string>
+    <string name="bot_cunninghamia_lanceolata_distribution">Native to central and southern China, extending into northern Vietnam; widely cultivated elsewhere.</string>
+    <string name="bot_cunninghamia_lanceolata_habit">Tall conical conifer</string>
+    <string name="bot_cunninghamia_lanceolata_leaf">Spiral pointed leaves</string>
+    <string name="bot_cunninghamia_lanceolata_flower">Rounded woody seed cone</string>
+    <string name="bot_cunninghamia_lanceolata_fruit">Pollen cones on twig</string>
+    <string name="bot_dillenia_indica_name">Elephant apple</string>
+    <string name="bot_dillenia_indica_latin" translatable="false">Dillenia indica</string>
+    <string name="bot_dillenia_indica_aliases">elephant apple; chulta</string>
+    <string name="bot_dillenia_indica_description">An evergreen tropical tree with large alternate, strongly veined leaves and toothed margins. Solitary white flowers have numerous petals and stamens; after flowering, enlarged persistent sepals become fleshy around the clustered fruitlets.</string>
+    <string name="bot_dillenia_indica_distribution">Native to the Indian subcontinent and mainland South-East Asia; cultivated in tropical gardens and for its fruit.</string>
+    <string name="bot_dillenia_indica_habit">Broad evergreen tree</string>
+    <string name="bot_dillenia_indica_leaf">Large toothed leaf</string>
+    <string name="bot_dillenia_indica_flower">White many-stamened flower</string>
+    <string name="bot_dillenia_indica_fruit">Fruit enclosed by fleshy sepals</string>
+    <string name="bot_dieffenbachia_seguine_name">Variable dieffenbachia</string>
+    <string name="bot_dieffenbachia_seguine_latin" translatable="false">Dieffenbachia seguine</string>
+    <string name="bot_dieffenbachia_seguine_aliases">dumb cane; spotted dumb cane</string>
+    <string name="bot_dieffenbachia_seguine_description">An erect tropical evergreen herb with stout, ring-scarred cane-like stems and large alternate leaves. The inflorescence is a cream spadix partly enclosed by a green spathe; berries ripen orange-red. Sap and tissues contain irritating calcium oxalate crystals and are poisonous.</string>
+    <string name="bot_dieffenbachia_seguine_distribution">Native to the Caribbean and tropical America; widely cultivated as a houseplant.</string>
+    <string name="bot_dieffenbachia_seguine_habit">Cane-like tropical herb</string>
+    <string name="bot_dieffenbachia_seguine_leaf">Large mottled leaf</string>
+    <string name="bot_dieffenbachia_seguine_flower">Spadix within green spathe</string>
+    <string name="bot_dieffenbachia_seguine_fruit">Orange-red berry cluster</string>
+    <string name="bot_dracaena_cinnabari_name">Socotra dragon tree</string>
+    <string name="bot_dracaena_cinnabari_latin" translatable="false">Dracaena cinnabari</string>
+    <string name="bot_dracaena_cinnabari_aliases">dragon blood tree; Socotra dracaena</string>
+    <string name="bot_dracaena_cinnabari_description">An endemic evergreen tree with a stout trunk and a distinctive umbrella-shaped crown of repeatedly forked branches. Stiff linear leaves cluster at branch tips; branched inflorescences bear pale flowers followed by fleshy orange-red berries.</string>
+    <string name="bot_dracaena_cinnabari_distribution">Endemic to Socotra, Yemen, where it grows on rocky plateaux and mountain slopes; the 2004 IUCN assessment listed it as Vulnerable.</string>
+    <string name="bot_dracaena_cinnabari_habit">Umbrella-crowned endemic tree</string>
+    <string name="bot_dracaena_cinnabari_leaf">Terminal sword-shaped leaves</string>
+    <string name="bot_dracaena_cinnabari_flower">Pale branched inflorescence</string>
+    <string name="bot_dracaena_cinnabari_fruit">Orange-red fleshy berries</string>
+    <string name="bot_euterpe_oleracea_name">Açaí palm</string>
+    <string name="bot_euterpe_oleracea_latin" translatable="false">Euterpe oleracea</string>
+    <string name="bot_euterpe_oleracea_aliases">açaí; assai palm</string>
+    <string name="bot_euterpe_oleracea_description">A slender, clumping palm with several ringed stems and arching pinnate leaves. Branched inflorescences emerge below the crown and carry small flowers; ripe fruits are round, dark purple drupes with a large seed and a thin edible pulp, commonly processed as food.</string>
+    <string name="bot_euterpe_oleracea_distribution">Native to the Amazon basin of northern South America, especially seasonally flooded forests and estuaries.</string>
+    <string name="bot_euterpe_oleracea_habit">Clump of slender palms</string>
+    <string name="bot_euterpe_oleracea_leaf">Pinnate palm leaf</string>
+    <string name="bot_euterpe_oleracea_flower">Branched flower cluster</string>
+    <string name="bot_euterpe_oleracea_fruit">Dark purple drupes</string>
+    <string name="bot_euphorbia_cyparissias_name">Cypress spurge</string>
+    <string name="bot_euphorbia_cyparissias_latin" translatable="false">Euphorbia cyparissias</string>
+    <string name="bot_euphorbia_cyparissias_aliases">cypress spurge</string>
+    <string name="bot_euphorbia_cyparissias_description">A rhizomatous perennial that forms dense upright patches of slender stems. Numerous narrow linear leaves give it a cypress-like outline; the terminal yellow-green structures are cyathia, each a tiny flower cluster enclosed by an involucre. The milky latex can irritate skin and eyes.</string>
+    <string name="bot_euphorbia_cyparissias_distribution">Native to Europe and western Asia; introduced and locally invasive in parts of North America.</string>
+    <string name="bot_euphorbia_cyparissias_habit">Slender cypress-like flowering stems</string>
+    <string name="bot_euphorbia_cyparissias_leaf">Narrow linear leaves</string>
+    <string name="bot_euphorbia_cyparissias_flower">Yellow-green cyathium</string>
+    <string name="bot_euphorbia_cyparissias_fruit">Three-lobed capsule</string>
+    <string name="bot_euphorbia_hirta_name">Asthma-plant spurge</string>
+    <string name="bot_euphorbia_hirta_latin" translatable="false">Euphorbia hirta</string>
+    <string name="bot_euphorbia_hirta_aliases">asthma-plant; hairy spurge</string>
+    <string name="bot_euphorbia_hirta_description">A small annual with hairy reddish stems, usually prostrate or ascending. Opposite oblong leaves may have a dark central blotch; compact cyathia occur in axillary clusters, followed by small three-lobed capsules. Its latex is irritating; traditional names do not establish medicinal safety.</string>
+    <string name="bot_euphorbia_hirta_distribution">Native to tropical and subtropical America; now pantropical and widespread in warm regions.</string>
+    <string name="bot_euphorbia_hirta_habit">Hairy prostrate-to-ascending annual</string>
+    <string name="bot_euphorbia_hirta_leaf">Opposite blotched leaves</string>
+    <string name="bot_euphorbia_hirta_flower">Axillary cyathium cluster</string>
+    <string name="bot_euphorbia_hirta_fruit">Hairy three-lobed capsule</string>
+    <string name="bot_eryngium_maritimum_name">Sea holly</string>
+    <string name="bot_eryngium_maritimum_latin" translatable="false">Eryngium maritimum</string>
+    <string name="bot_eryngium_maritimum_aliases">sea holly; sea eryngo</string>
+    <string name="bot_eryngium_maritimum_description">A robust coastal perennial with a deep rootstock and stiff, glaucous, spiny leaves. Its branched stems bear rounded heads of tiny blue flowers surrounded by rigid spiny bracts; the dry fruit splits into two mericarps.</string>
+    <string name="bot_eryngium_maritimum_distribution">Native to Atlantic and Mediterranean coasts of Europe and North Africa, extending east into western Asia; characteristic of coastal dunes.</string>
+    <string name="bot_eryngium_maritimum_habit">Glaucous coastal perennial</string>
+    <string name="bot_eryngium_maritimum_leaf">Rigid spiny leaf</string>
+    <string name="bot_eryngium_maritimum_flower">Blue head with spiny bracts</string>
+    <string name="bot_eryngium_maritimum_fruit">Paired mericarps</string>
+    <string name="bot_echinocactus_horizonthalonius_name">Eagle-claw cactus</string>
+    <string name="bot_echinocactus_horizonthalonius_latin" translatable="false">Echinocactus horizonthalonius</string>
+    <string name="bot_echinocactus_horizonthalonius_aliases">eagle-claw cactus; devil’s pincushion</string>
+    <string name="bot_echinocactus_horizonthalonius_description">A small, blue-green, flattened-globose cactus with distinct ribs and widely spaced areoles. Curved stout spines give the plant its common name; pink to magenta flowers appear at the crown and are followed by small reddish fruits with woolly scales.</string>
+    <string name="bot_echinocactus_horizonthalonius_distribution">Native to arid regions of the south-western United States and northern Mexico, on limestone and rocky slopes.</string>
+    <string name="bot_echinocactus_horizonthalonius_habit">Flattened ribbed cactus</string>
+    <string name="bot_echinocactus_horizonthalonius_leaf">Curved spines and areoles</string>
+    <string name="bot_echinocactus_horizonthalonius_flower">Pink-magenta crown flower</string>
+    <string name="bot_echinocactus_horizonthalonius_fruit">Woolly-scaled red fruit</string>
+    <string name="bot_echinopsis_pachanoi_name">San Pedro cactus</string>
+    <string name="bot_echinopsis_pachanoi_latin" translatable="false">Echinopsis pachanoi</string>
+    <string name="bot_echinopsis_pachanoi_aliases">San Pedro; wachuma; Trichocereus pachanoi</string>
+    <string name="bot_echinopsis_pachanoi_description">A fast-growing, upright columnar cactus with several blue-green stems, usually 6–8 broad ribs and small areoles with short spines. Large white flowers open at night, and green ovoid fruits develop later. “San Pedro” is a common name also applied to related cacti, so it is not by itself a reliable identification.</string>
+    <string name="bot_echinopsis_pachanoi_distribution">Native to the Andean region of Ecuador and Peru; cultivated widely beyond its native range.</string>
+    <string name="bot_echinopsis_pachanoi_habit">Blue-green columnar cactus</string>
+    <string name="bot_echinopsis_pachanoi_leaf">Broad rib and short-spined areole</string>
+    <string name="bot_echinopsis_pachanoi_flower">Large nocturnal white flower</string>
+    <string name="bot_echinopsis_pachanoi_fruit">Green ovoid fruit with seeds</string>
+    <string name="bot_fagopyrum_esculentum_name">Common buckwheat</string>
+    <string name="bot_fagopyrum_esculentum_latin" translatable="false">Fagopyrum esculentum</string>
+    <string name="bot_fagopyrum_esculentum_aliases">buckwheat; beech wheat</string>
+    <string name="bot_fagopyrum_esculentum_description">An annual crop with reddish branching stems, alternate triangular leaves and loose clusters of small white or pink flowers. Its dry fruit is a distinctive three-angled achene enclosing one seed; the crop is used as a food grain despite not being a true cereal grass.</string>
+    <string name="bot_fagopyrum_esculentum_distribution">Cultivated worldwide; domesticated in temperate East Asia and the Himalayan region.</string>
+    <string name="bot_fagopyrum_esculentum_habit">Branched flowering annual</string>
+    <string name="bot_fagopyrum_esculentum_leaf">Triangular cordate leaf</string>
+    <string name="bot_fagopyrum_esculentum_flower">White-pink flower cluster</string>
+    <string name="bot_fagopyrum_esculentum_fruit">Three-angled achene</string>
+    <string name="bot_fagus_grandifolia_name">American beech</string>
+    <string name="bot_fagus_grandifolia_latin" translatable="false">Fagus grandifolia</string>
+    <string name="bot_fagus_grandifolia_aliases">American beech; North American beech</string>
+    <string name="bot_fagus_grandifolia_description">A large deciduous North American tree with smooth pale grey bark and a spreading crown. Alternate oval leaves have straight side veins ending at the teeth; male catkins hang from twigs, while prickly four-valved husks enclose two sharply three-angled nuts.</string>
+    <string name="bot_fagus_grandifolia_distribution">Native to eastern North America, from southern Canada through the eastern United States.</string>
+    <string name="bot_fagus_grandifolia_habit">Smooth-barked spreading tree</string>
+    <string name="bot_fagus_grandifolia_leaf">Oval leaf with straight parallel veins</string>
+    <string name="bot_fagus_grandifolia_flower">Beech catkin and female flower</string>
+    <string name="bot_fagus_grandifolia_fruit">Prickly husk with three-angled nuts</string>
+    <string name="bot_galium_verum_name">Lady’s bedstraw</string>
+    <string name="bot_galium_verum_latin" translatable="false">Galium verum</string>
+    <string name="bot_galium_verum_aliases">yellow bedstraw; lady’s bedstraw</string>
+    <string name="bot_galium_verum_description">A perennial with slender erect stems and narrow leaves arranged in conspicuous whorls. Dense airy panicles carry numerous tiny yellow four-lobed flowers; the fruit separates into two smooth rounded nutlets.</string>
+    <string name="bot_galium_verum_distribution">Native across Europe and temperate Asia; found in dry grasslands, dunes and open scrub.</string>
+    <string name="bot_galium_verum_habit">Erect stems with yellow panicles</string>
+    <string name="bot_galium_verum_leaf">Whorl of narrow leaves</string>
+    <string name="bot_galium_verum_flower">Four-lobed yellow flower</string>
+    <string name="bot_galium_verum_fruit">Paired smooth nutlets</string>
+    <string name="bot_picea_glauca_name">White spruce</string>
+    <string name="bot_picea_glauca_latin" translatable="false">Picea glauca</string>
+    <string name="bot_picea_glauca_aliases">white spruce; Canadian spruce</string>
+    <string name="bot_picea_glauca_description">A boreal evergreen tree with a straight trunk and symmetrical conical crown. Stiff, four-angled needles attach singly around the twig and show pale stomatal lines; slender pendant seed cones have thin, rounded scales.</string>
+    <string name="bot_picea_glauca_distribution">Native across Canada and Alaska, reaching the northern United States; characteristic of boreal and montane forests.</string>
+    <string name="bot_picea_glauca_habit">Symmetrical conical tree</string>
+    <string name="bot_picea_glauca_leaf">Four-angled needles on twig</string>
+    <string name="bot_picea_glauca_flower">Slender pendant seed cone</string>
+    <string name="bot_picea_glauca_fruit">Pollen cones on twig</string>
+    <string name="bot_nuphar_lutea_name">Yellow pond-lily</string>
+    <string name="bot_nuphar_lutea_latin" translatable="false">Nuphar lutea</string>
+    <string name="bot_nuphar_lutea_aliases">yellow pond-lily; spatterdock</string>
+    <string name="bot_nuphar_lutea_description">An aquatic perennial rooted by a thick, branching rhizome. Its floating oval leaves have a deep basal sinus where the petiole attaches; solitary yellow flowers form a cup of petaloid sepals, and the later fruit is a green, bottle-shaped capsule.</string>
+    <string name="bot_nuphar_lutea_distribution">Native across Europe, North Africa and temperate Asia to Siberia and Xinjiang, chiefly in still or slow-moving fresh water.</string>
+    <string name="bot_nuphar_lutea_habit">Rhizome, floating leaves and yellow cups</string>
+    <string name="bot_nuphar_lutea_leaf">Leaf with basal sinus and petiole</string>
+    <string name="bot_nuphar_lutea_flower">Cup-shaped yellow flower</string>
+    <string name="bot_nuphar_lutea_fruit">Bottle-shaped green capsule</string>
+</resources>

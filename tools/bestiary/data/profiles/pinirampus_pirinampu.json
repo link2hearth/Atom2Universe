@@ -1,0 +1,144 @@
+{
+  "id": "pinirampus_pirinampu",
+  "scientific": "Pinirampus pirinampu",
+  "group": "fish",
+  "name": {
+    "en": "Flat-whiskered catfish",
+    "fr": "Silure à barbillons plats"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pinirampus pirinampu is a South American freshwater catfish in the family Pimelodidae.",
+      "fr": "Pinirampus pirinampu est un poisson-chat d’eau douce sud-américain de la famille des Pimelodidae."
+    },
+    "identification": {
+      "en": "It is a large river catfish known locally in parts of Brazil as barba-chata.",
+      "fr": "C’est un grand poisson-chat des rivières, appelé localement barba-chata dans certaines régions du Brésil."
+    },
+    "habitat": {
+      "en": "It occurs in major South American river systems, including the Amazon, Orinoco, Essequibo and Paraná basins.",
+      "fr": "Il vit dans de grands réseaux fluviaux d’Amérique du Sud, notamment les bassins de l’Amazone, de l’Orénoque, de l’Essequibo et du Paraná."
+    },
+    "diet": {
+      "en": "Although often described as a fish-eating predator, a recent study in the Xingu found aquatic insects dominant in stomach contents, while isotope results indicated assimilated resources from fish, crustaceans and molluscs.",
+      "fr": "Souvent décrit comme un prédateur piscivore, il avait surtout consommé des insectes aquatiques dans une étude récente du Xingu ; les isotopes indiquaient toutefois l’assimilation de ressources provenant de poissons, de crustacés et de mollusques."
+    },
+    "behavior": {
+      "en": "It is reported as nocturnal and moves within river systems; field work in the Xingu also describes foraging both in the water column and near the bottom.",
+      "fr": "Il est décrit comme nocturne et se déplace dans les réseaux fluviaux ; dans le Xingu, il a aussi été observé en quête de nourriture dans la colonne d’eau et près du fond."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive details were not established by the sources consulted.",
+      "fr": "Les sources consultées n’établissent pas de détails propres à la reproduction de cette espèce."
+    },
+    "ecology": {
+      "en": "Its feeding evidence shows that prey use can vary by study method and river setting, so the Xingu findings should not be treated as a universal diet.",
+      "fr": "Les données alimentaires montrent que les proies observées varient selon la méthode et le milieu étudié ; les résultats du Xingu ne doivent donc pas être généralisés à toute l’espèce."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en catégorie « Préoccupation mineure », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pinirampus pirinampu summary page — FishBase",
+        "fr": "Fiche Pinirampus pirinampu — FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/8688",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase lists Pimelodidae, South American basins, nocturnal habit, potamodromous movement and a 2020 Least Concern assessment; its reproduction fields are blank."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 21,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trophic dynamics of a carnivorous catfish under dam-regulated flood conditions in the Amazon — Neotropical Ichthyology",
+        "fr": "Dynamique trophique d’un poisson-chat carnivore sous régime de crues régulé en Amazonie — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/FY5qmpJCD7kz4BxsrrR8hPC/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "At Xingu, stomach contents were mostly aquatic insects but isotope estimates also indicate carbon from crustaceans, fish and molluscs. The study describes nocturnal foraging."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 24,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecologia alimentar do barba-chata Pinirampus pirinampu na Volta Grande do rio Xingu — Realize Editora",
+        "fr": "Écologie alimentaire du barba-chata Pinirampus pirinampu dans la Volta Grande du Xingu — Realize Editora"
+      },
+      "url": "https://www.editorarealize.com.br/artigo/visualizar/119589",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Portuguese report calls it barba-chata and records aquatic insects as nearly all Xingu stomach contents."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 15,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet results are from particular local studies and should not be generalized to all river basins.",
+    "Species-specific breeding information was not available in the references consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Portuguese and English summaries of a Xingu diet study with FishBase range, movement and conservation data; diet wording preserves the difference between stomach contents and isotope evidence."
+}

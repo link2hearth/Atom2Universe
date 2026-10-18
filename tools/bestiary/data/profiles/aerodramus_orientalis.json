@@ -1,0 +1,135 @@
+{
+  "id": "aerodramus_orientalis",
+  "scientific": "Aerodramus orientalis",
+  "group": "birds",
+  "name": {
+    "en": "Mayr's swiftlet",
+    "fr": "Salangane de Mayr"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mayr's swiftlet is a little-known swiftlet of the Bismarck and Solomon Islands, recorded from New Ireland and Guadalcanal. It belongs to the echolocating swiftlet genus Aerodramus and is believed to feed on insects caught in flight. The global Red List assessment is Data Deficient, reflecting the lack of information on its population and ecology; consequently, many details available for better-studied swiftlets should not be assumed for this species.",
+      "fr": "La Salangane de Mayr est une salangane peu connue des archipels Bismarck et Salomon, signalée en Nouvelle-Irlande et à Guadalcanal. Elle appartient au genre Aerodramus, dont les espèces utilisent l’écholocation, et se nourrit probablement d’insectes capturés en vol. Elle est classée en données insuffisantes à l’échelle mondiale, car les informations sur sa population et son écologie manquent ; de nombreux détails connus chez des salanganes mieux étudiées ne doivent donc pas lui être attribués sans vérification."
+    },
+    "identification": {
+      "en": "The French Oiseaux.net account compiles a length of about 13–14 cm and a mass of 13.4 g, but these are not secure diagnostic measurements: a 2018 reassessment notes that the taxon rests on very few specimens whose wing lengths overlap with Uniform Swiftlet. The mass is a single compiled value, not a sex-specific range; no dependable body height, width, or male–female difference was found. Like other swiftlets, it has a compact body, long narrow wings, a short bill and a shallowly forked tail. Field identification relies on appearance together with island and habitat, but the available evidence does not support confident separation from other dark swiftlets across Melanesia.",
+      "fr": "La fiche française d’Oiseaux.net compile une longueur d’environ 13 à 14 cm et une masse de 13,4 g, mais ces valeurs ne constituent pas des mesures diagnostiques sûres : une réévaluation de 2018 souligne que le taxon repose sur très peu de spécimens, dont la longueur d’aile recoupe celle de la Salangane uniforme. La masse est une valeur compilée isolée, et non une plage selon le sexe ; aucune hauteur, largeur corporelle ou différence mâle-femelle fiable n’a été trouvée. Comme les autres salanganes, elle a un corps compact, de longues ailes étroites, un bec court et une queue faiblement échancrée. L’identification s’appuie sur l’apparence et l’île d’origine, mais les données disponibles ne permettent pas de la séparer sûrement des autres salanganes sombres de Mélanésie."
+    },
+    "habitat": {
+      "en": "Its documented range is highly restricted to Guadalcanal in the Solomon Islands and central New Ireland in Papua New Guinea. It is treated as a resident, non-migratory species by compiled ornithological datasets. Species-specific habitat descriptions are sparse; other Aerodramus swiftlets commonly forage over forest and open areas and roost or nest in caves, but those genus-level habits should be regarded as expectations rather than well-documented facts for Mayr's swiftlet.",
+      "fr": "Son aire connue est très restreinte à Guadalcanal, aux îles Salomon, et au centre de la Nouvelle-Irlande, en Papouasie-Nouvelle-Guinée. Les bases ornithologiques compilées la traitent comme une espèce résidente et non migratrice. Les descriptions de son habitat propre sont rares ; d’autres Aerodramus chassent souvent au-dessus des forêts et des espaces ouverts et nichent ou se reposent dans des cavernes, mais ces habitudes du genre constituent ici des attentes plutôt que des faits bien documentés pour la Salangane de Mayr."
+    },
+    "diet": {
+      "en": "The likely feeding mode is aerial insectivory: swiftlets take small insects and other flying invertebrates while on the wing. No species-specific prey analysis was found for Mayr's swiftlet, so the exact prey, foraging height and daily schedule remain undocumented in the sources reviewed.",
+      "fr": "Le mode d’alimentation probable est l’insectivorie aérienne : les salanganes capturent de petits insectes et autres invertébrés volants en plein vol. Aucune analyse des proies propre à la Salangane de Mayr n’a été trouvée ; la composition précise du régime, la hauteur de chasse et le rythme quotidien restent donc documentés de manière insuffisante."
+    },
+    "behavior": {
+      "en": "Aerodramus swiftlets are adapted to sustained, agile flight and use echolocation clicks to move through dark cavities. These are genus-level traits; the reviewed literature did not provide detailed observations of flocking, daily movements or cave use specifically for A. orientalis. It is regarded as sedentary, so any movements are presumed local rather than long-distance migration.",
+      "fr": "Les Aerodramus sont adaptés au vol prolongé et agile et utilisent des clics d’écholocation pour se déplacer dans les cavités obscures. Il s’agit de traits connus à l’échelle du genre ; les publications consultées ne fournissent pas d’observations détaillées propres à A. orientalis sur les groupes, les déplacements quotidiens ou l’usage des cavernes. L’espèce étant considérée sédentaire, ses déplacements seraient locaux plutôt que de longue migration."
+    },
+    "reproduction": {
+      "en": "A species-specific breeding account, clutch size and nesting calendar were not found in the sources reviewed. Many Aerodramus nest in colonies on cave walls, but this is not sufficiently documented for Mayr's swiftlet here and is not stated as a confirmed species-level fact. The two named subspecies occupy different island groups, which makes targeted surveys of nesting sites especially useful for clarifying its breeding distribution.",
+      "fr": "Les sources consultées ne fournissent pas de description propre à l’espèce de la reproduction, de taille de ponte ou de calendrier de nidification. De nombreux Aerodramus nichent en colonies sur les parois de cavernes, mais ce comportement n’est pas assez documenté ici pour la Salangane de Mayr et n’est donc pas présenté comme un fait confirmé à son sujet. Les deux sous-espèces occupent des îles différentes ; des recherches ciblées sur les sites de nidification aideraient à préciser sa répartition reproductrice."
+    },
+    "ecology": {
+      "en": "If, as expected for a swiftlet, it feeds on flying insects, it is part of the aerial insectivore community linking island forests and open landscapes. The species' restricted distribution and limited study mean that its ecological role, nesting-site requirements and interactions with other swiftlets remain poorly known. Cave-roosting behavior is plausible from its genus but needs species-specific confirmation.",
+      "fr": "Si, comme attendu chez une salangane, elle consomme des insectes volants, elle participe à la communauté d’insectivores aériens qui relie les forêts et les espaces ouverts des îles. Sa répartition limitée et le peu d’études disponibles laissent mal connus son rôle écologique, ses besoins en sites de nidification et ses interactions avec les autres salanganes. L’utilisation de cavernes est plausible au vu du genre, mais demande une confirmation propre à l’espèce."
+    },
+    "conservation": {
+      "en": "The IUCN Red List category is Data Deficient; no reliable global population estimate or trend was available in the sources reviewed. Its range is confined to a small number of islands, but restricted distribution alone does not determine its threat category when abundance and trend are unknown. Surveys are needed to establish population size, confirm habitat and nesting requirements, and assess any pressures at occupied sites before stronger conservation conclusions can be made.",
+      "fr": "La catégorie de la Liste rouge de l’UICN est « données insuffisantes » ; aucune estimation fiable de la population mondiale ni de son évolution n’a été trouvée dans les sources consultées. Son aire se limite à quelques îles, mais cette répartition restreinte ne suffit pas à déterminer son niveau de menace lorsque l’effectif et sa tendance sont inconnus. Des relevés sont nécessaires pour estimer la population, confirmer les exigences d’habitat et de nidification et évaluer les pressions sur les sites occupés avant de tirer des conclusions de conservation plus fermes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mayr's Swiftlet — BirdLife International DataZone factsheet",
+        "fr": "Salangane de Mayr — fiche BirdLife International DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/mayrs-swiftlet-aerodramus-orientalis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Current factsheet provides no assessment values in the retrieved page; BirdLife lists the assessor as BirdLife International. The page's missing fields are not interpreted as a status or population estimate."
+      ]
+    },
+    {
+      "title": {
+        "en": "Salangane de Mayr — Oiseaux.net French species account",
+        "fr": "Salangane de Mayr — fiche française Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/salangane.de.mayr.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "French-language account compiles body length of about 13–14 cm and mass of 13.4 g, lists Data Deficient, describes forms on Guadalcanal and New Ireland, and summarizes resident status and restricted range; its species information is compiled from ornithological datasets."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mayr's Swiftlet — H&M4 Checklist, Trust for Avian Systematics",
+        "fr": "Salangane de Mayr — liste H&M4 du Trust for Avian Systematics"
+      },
+      "url": "https://www.aviansystematics.org/checklist?viewfamilies=78",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Checklist identifies A. orientalis orientalis on Guadalcanal and A. o. leletensis in central New Ireland, with cited taxonomic literature."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aerodramus orientalis — ITIS taxonomic report",
+        "fr": "Aerodramus orientalis — rapport taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/SingleRpt/SingleRpt?search_topic=TSN&search_value=178017",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Aerodramus orientalis as a species and gives Mayr's swiftlet as its common English name."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mayr's Swiftlet — Australian Field Ornithology record",
+        "fr": "Salangane de Mayr — note d’ornithologie de terrain australienne"
+      },
+      "url": "https://afo.birdlife.org.au/afo/index.php/afo/article/viewFile/2127/2149",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Reassessment notes that the taxon was described from two specimens, with only three skins compared; their wing lengths overlap with Uniform Swiftlet, and the author recommends including it in A. vanikorensis."
+      ]
+    }
+  ],
+  "illustration_notes": "Small dark swiftlet with long narrow wings and a slightly forked tail; distribution is limited to Guadalcanal and New Ireland, but a confident plumage diagnosis was not available in the sources reviewed.",
+  "uncertainties": [
+    "BirdLife's retrieved factsheet has blank assessment fields, while secondary sources list Data Deficient; the exact assessment date could not be confirmed.",
+    "Species-specific descriptions of diet, nesting, breeding and detailed plumage are sparse; genus-level swiftlet traits are marked as expectations rather than confirmed facts.",
+    "The 13–14 cm length and 13.4 g mass are secondary compiled values; an ornithological reassessment based on very few specimens argues that the taxon may belong within Aerodramus vanikorensis, so these figures should not be treated as secure species-level diagnostic ranges or sex-specific measurements."
+  ],
+  "reviewed": true,
+  "review_note": "Used French ornithological data alongside a specialist avian systematics checklist, ITIS, BirdLife's incomplete factsheet and a field ornithology record; avoided filling species-specific gaps with assumptions from congeners."
+}

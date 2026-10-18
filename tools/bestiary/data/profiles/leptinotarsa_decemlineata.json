@@ -1,0 +1,112 @@
+{
+  "id": "leptinotarsa_decemlineata",
+  "scientific": "Leptinotarsa decemlineata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Colorado Potato Beetle",
+    "fr": "Doryphore de la pomme de terre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Colorado potato beetle is a leaf beetle from North America that became one of the world’s most serious potato pests. It first fed on wild nightshades, moved onto cultivated potato in the 19th century, and later spread across Europe and Asia.",
+      "fr": "Le doryphore est un chrysomèle d’Amérique du Nord devenu l’un des ravageurs les plus sérieux de la pomme de terre. Il vivait d’abord sur des morelles sauvages, est passé à la pomme de terre cultivée au XIXe siècle, puis s’est répandu en Europe et en Asie."
+    },
+    "identification": {
+      "en": "Adults are oval, dome-shaped and 8–10 mm long. Each wing cover bears five black stripes on a yellow ground, and the orange thorax carries black spots. Larvae are soft, plump and hump-backed, with a row of black spots along each side; the eggs are yellow-orange and about 1.7–1.8 mm long. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’adulte est ovale, bombé et mesure 8 à 10 mm. Chaque élytre porte cinq bandes noires sur fond jaune, et le thorax orangé est orné de taches noires. Les larves sont molles, dodues et bossues, avec une rangée de points noirs sur chaque flanc; les œufs sont jaune-orangé et mesurent environ 1,7 à 1,8 mm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
+    },
+    "habitat": {
+      "en": "It lives mostly in fields of potato and other nightshade crops such as tomato, eggplant and pepper, and on wild nightshades in grassland and suburbs. The species originated in the south-western United States and Mexico, spread east of the Rockies, and is now established across Europe, Asia Minor, Iran, Central Asia and China.",
+      "fr": "Il vit surtout dans les champs de pomme de terre et d’autres solanacées cultivées comme la tomate, l’aubergine et le poivron, ainsi que sur des morelles sauvages en prairie et en banlieue. L’espèce est originaire du sud-ouest des États-Unis et du Mexique; elle s’est étendue à l’est des Rocheuses et est installée aujourd’hui dans toute l’Europe, en Asie Mineure, en Iran, en Asie centrale et en Chine."
+    },
+    "diet": {
+      "en": "Adults and larvae both eat leaves, mainly of Solanum plants. Cultivated potato is the favourite host, ahead of eggplant, tomato, pepper and wild nightshades. A heavy attack can strip a plant down to stems.",
+      "fr": "Adultes et larves mangent des feuilles, surtout de plantes du genre Solanum. La pomme de terre cultivée est l’hôte préféré, devant l’aubergine, la tomate, le poivron et les morelles sauvages. Une forte attaque peut laisser une plante réduite à ses tiges."
+    },
+    "behavior": {
+      "en": "Adults and larvae are active by day and inactive at night. Adults can fly several kilometres, especially when crowded, and males release a pheromone that attracts both sexes. Larvae defend themselves by walking away, regurgitating and wiggling.",
+      "fr": "Adultes et larves sont actifs le jour et au repos la nuit. Les adultes peuvent voler sur plusieurs kilomètres, surtout quand ils sont nombreux, et les mâles émettent une phéromone qui attire les deux sexes. Les larves se défendent en s’éloignant, en régurgitant et en se tortillant."
+    },
+    "reproduction": {
+      "en": "Adults overwinter in the soil, usually at field edges, and emerge in spring. Females lay clusters of yellow-orange eggs under leaves, up to about 800 in a lifetime. The larvae pass through four stages, then pupate in the soil, and a life cycle lasts about 30 days depending on temperature. There are two or three generations a year, and some adults stay in the soil for more than one winter.",
+      "fr": "Les adultes passent l’hiver dans le sol, en général en bordure de champ, et sortent au printemps. Les femelles pondent des paquets d’œufs jaune-orangé sous les feuilles, jusqu’à environ 800 en tout. Les larves passent par quatre stades puis se nymphosent dans le sol, et un cycle dure environ 30 jours selon la température. Il y a deux ou trois générations par an, et certains adultes restent en terre plus d’un hiver."
+    },
+    "ecology": {
+      "en": "Fungi, predatory insects, toads and birds attack the beetle, but they rarely control it alone. Its resistance to insecticides is a major issue: more than 300 cases have been documented in Asia, Europe and North America.",
+      "fr": "Des champignons, des insectes prédateurs, des crapauds et des oiseaux s’en prennent au doryphore, mais ils suffisent rarement à le contenir. Sa résistance aux insecticides pose un problème majeur : plus de 300 cas sont documentés en Asie, en Europe et en Amérique du Nord."
+    },
+    "conservation": {
+      "en": "The species is not threatened; Animal Diversity Web lists its IUCN status as Not Evaluated. It is better known as an agricultural pest, and Great Britain fought three invasions in 1876, 1901 and 1914 with chemical control.",
+      "fr": "L’espèce n’est pas menacée; l’Animal Diversity Web indique que son statut UICN est « non évalué ». Elle est surtout connue comme ravageur agricole, et la Grande-Bretagne a combattu trois invasions en 1876, 1901 et 1914 par des moyens chimiques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Leptinotarsa decemlineata — Animal Diversity Web, University of Michigan",
+        "fr": "Leptinotarsa decemlineata — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Leptinotarsa_decemlineata/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Adults 8–10 mm, five black stripes per wing cover, orange thorax with black spots; eggs 1.7–1.8 mm; day-active; flight of several km; aggregation pheromone.",
+        "Origin in south-western U.S. and Mexico; IUCN listed as Not Evaluated; resistance to nearly all insecticide classes.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
+      ]
+    },
+    {
+      "title": {
+        "en": "Identifying Resistance to the Colorado Potato Beetle in Potato Germplasm: Review Update — Frontiers in Agronomy, 2021",
+        "fr": "Identifier la résistance au doryphore dans le matériel génétique de la pomme de terre : mise à jour — Frontiers in Agronomy, 2021"
+      },
+      "url": "https://www.frontiersin.org/journals/agronomy/articles/10.3389/fagro.2021.642189/full",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spread: Atlantic coast by 1874; established in France near Bordeaux in 1922; across Europe, Asia Minor, Iran, Central Asia and China by end of 20th century; Britain invaded 1876, 1901, 1914.",
+        "Up to about 800 eggs per female; about 30-day cycle; 2–3 generations; some multi-winter diapause; more than 300 documented insecticide resistance cases."
+      ]
+    },
+    {
+      "title": {
+        "en": "Colorado potato beetle — University of Vermont Extension fact sheet",
+        "fr": "Doryphore de la pomme de terre — fiche de l’extension de l’université du Vermont"
+      },
+      "url": "https://www.uvm.edu/vtvegandberry/factsheets/potatobeetle.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Larvae soft-bodied and hump-backed; adults overwinter in soil at field edges; eggs in clusters under leaves; four larval moults.",
+        "Fungi, beneficial insects, toads and birds attack it but rarely give enough control; resistance to many insecticides."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Egg-cluster size differs between sources (10–30, 15–25 and 20–60 eggs); only the lifetime figure of about 800 eggs is given.",
+    "Generations per year differ with climate: two according to the Vermont fact sheet, two to three according to the 2021 review.",
+    "Origin is described as the south-western United States and Mexico by one source and Mexico by the review; the wording stays general.",
+    "No Red List assessment was read; ‘Not Evaluated’ comes from Animal Diversity Web."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

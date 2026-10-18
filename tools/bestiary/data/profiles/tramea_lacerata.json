@@ -1,0 +1,163 @@
+{
+  "id": "tramea_lacerata",
+  "scientific": "Tramea lacerata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Black saddlebags",
+    "fr": "Tramea lacerata"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tramea lacerata is a widely distributed North American skimmer, also recorded on some Caribbean islands and Hawaii.",
+      "fr": "Tramea lacerata est une libellule largement répartie en Amérique du Nord, également signalée dans certaines îles des Caraïbes et à Hawaï."
+    },
+    "identification": {
+      "en": "The dark patches near the body on each hindwing create the “saddlebags” pattern.",
+      "fr": "Les taches sombres à la base des ailes postérieures forment le motif de « sacoches »."
+    },
+    "habitat": {
+      "en": "It is associated with ponds and other still or slow waters.",
+      "fr": "Elle fréquente les étangs et d’autres eaux stagnantes ou lentes."
+    },
+    "diet": {
+      "en": "Adults catch flying insects in the air.",
+      "fr": "Les adultes capturent des insectes en vol."
+    },
+    "behavior": {
+      "en": "It often glides and is rarely seen perching for long.",
+      "fr": "Elle plane souvent et se pose rarement longtemps."
+    },
+    "reproduction": {
+      "en": "It breeds in temporary or permanent ponds and ditches; some populations migrate seasonally.",
+      "fr": "Elle se reproduit dans des mares temporaires ou permanentes et des fossés ; certaines populations migrent selon les saisons."
+    },
+    "ecology": {
+      "en": "It is a Tramea like T. onusta; this species has dark hindwing patches, whereas T. onusta has reddish ones.",
+      "fr": "C’est une Tramea comme T. onusta ; ses taches alaires sont sombres, tandis que celles de T. onusta sont rougeâtres."
+    },
+    "conservation": {
+      "en": "The cited Idaho catalog lists a global rank of G5; that broad rank does not resolve local trends.",
+      "fr": "Le catalogue de l’Idaho indique un rang mondial G5 ; ce rang général ne renseigne pas sur les tendances locales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Animal Diversity Web — Tramea lacerata",
+        "fr": "Animal Diversity Web — Tramea lacerata"
+      },
+      "url": "https://animaldiversity.org/accounts/Tramea_lacerata/",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "The account describes range, aerial insect feeding, gliding, ponds and seasonal movement."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 12,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Missouri Department of Conservation — Black Saddlebags",
+        "fr": "Missouri Department of Conservation — Black Saddlebags"
+      },
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/black-saddlebags",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The field guide describes the dark hindwing marks."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 8,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Idaho Fish and Game — Tramea lacerata species catalog",
+        "fr": "Idaho Fish and Game — fiche Tramea lacerata"
+      },
+      "url": "https://idfg.idaho.gov/species/taxa/33096",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The catalog reports global conservation rank G5."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 7,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illinois Department of Natural Resources — Red saddlebags",
+        "fr": "Illinois Department of Natural Resources — Red saddlebags"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfredsaddlebags.html",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Illinois guide describes reddish marks in T. onusta, contrasted here with dark patches in T. lacerata."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 16,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Life-history timing varies across the broad range; the cited account gives a general summary rather than local dates."
+  ],
+  "review_note": "Concise bilingual draft based on cited specialist and institutional sources; uncertain or regional evidence is scoped explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

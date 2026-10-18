@@ -1,0 +1,164 @@
+{
+  "id": "todiramphus_sanctus",
+  "scientific": "Todiramphus sanctus",
+  "group": "birds",
+  "name": {
+    "en": "Sacred Kingfisher",
+    "fr": "Martin-chasseur sacré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sacred Kingfisher is a woodland kingfisher occurring in Australia and nearby western Pacific islands.",
+      "fr": "Le Martin-chasseur sacré est un martin-chasseur des bois présent en Australie et sur les îles voisines du Pacifique occidental."
+    },
+    "identification": {
+      "en": "It has a turquoise back, buff-white underparts, a cream collar and a dark stripe through the eye.",
+      "fr": "Il a le dos turquoise, le dessous blanc crème, un collier clair et une bande sombre qui traverse l’œil."
+    },
+    "habitat": {
+      "en": "It uses open woodland, eucalyptus and paperbark forest, and mangroves.",
+      "fr": "Il fréquente les boisements ouverts, les forêts d’eucalyptus et de mélaleucas, ainsi que les mangroves."
+    },
+    "diet": {
+      "en": "It hunts mainly on land for insects, crustaceans and small reptiles, and only occasionally catches fish.",
+      "fr": "Il chasse surtout à terre des insectes, des crustacés et de petits reptiles, et ne capture qu’occasionnellement des poissons."
+    },
+    "behavior": {
+      "en": "It watches from an exposed perch, then swoops down and returns to the perch with its prey.",
+      "fr": "Il guette depuis un perchoir dégagé, fond sur sa proie puis revient au perchoir avec elle."
+    },
+    "reproduction": {
+      "en": "Both sexes excavate a nest burrow in a termite mound, hollow branch or river bank and share incubation and care of the young.",
+      "fr": "Les deux sexes creusent un terrier de nid dans une termitière, une branche creuse ou une berge, puis se partagent la couvaison et les soins aux jeunes."
+    },
+    "ecology": {
+      "en": "In southeast Sulawesi it is a seasonal migrant that overwinters there, unlike the resident Collared Kingfisher.",
+      "fr": "Dans le sud-est de Sulawesi, il migre et y passe l’hiver, contrairement au Martin-chasseur à collier blanc qui y réside."
+    },
+    "conservation": {
+      "en": "The 2016 global IUCN assessment lists the species as Least Concern.",
+      "fr": "L’évaluation mondiale de l’UICN de 2016 classe l’espèce en Préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sacred Kingfisher — Australian Museum",
+        "fr": "Sacred Kingfisher — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/birds/sacred-kingfisher-todiramphus-sanctus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Museum account describes range, plumage, habitat, terrestrial prey and perch-and-swoop hunting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 11,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martin-chasseur sacré — Oiseaux.net",
+        "fr": "Martin-chasseur sacré — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/martin-chasseur.sacre.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "French account documents nest sites and shared parental incubation and care."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 11,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diversification of a great speciator in Wallacea — Ibis",
+        "fr": "Diversification of a great speciator in Wallacea — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/ibi.12688",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study identifies T. sanctus as the overwintering migrant in southeast Sulawesi, contrasted with resident breeding T. chloris."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 17,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sacred Kingfisher — IUCN Red List assessment",
+        "fr": "Sacred Kingfisher — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22683442A92986873.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The cited 2016 assessment lists the species globally as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 11,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The migration comparison is region-specific to southeast Sulawesi; movements differ across the species’ range.",
+    "The IUCN category is explicitly dated to the 2016 global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference with Todiramphus chloris uses a peer-reviewed study’s resident-versus-overwintering contrast; other details are checked against museum and French species accounts."
+}

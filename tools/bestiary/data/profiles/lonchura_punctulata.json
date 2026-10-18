@@ -1,0 +1,141 @@
+{
+  "id": "lonchura_punctulata",
+  "scientific": "Lonchura punctulata",
+  "group": "birds",
+  "name": {
+    "en": "Scaly-breasted Munia",
+    "fr": "Capucin damier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Scaly-breasted Munia is a small Asian estrildid finch; populations introduced outside its native range are established in some places.",
+      "fr": "Le Capucin damier est un petit estrildidé d’Asie ; des populations introduites se sont établies dans certaines régions hors de son aire native."
+    },
+    "identification": {
+      "en": "Its pale underparts have dark, scale-like markings; the stout bill is adapted to seeds.",
+      "fr": "Son dessous clair porte des marques sombres en écailles ; son bec robuste est adapté aux graines."
+    },
+    "habitat": {
+      "en": "It uses grassland, scrub, crops and other semi-open places, often near people.",
+      "fr": "Il fréquente prairies, broussailles, cultures et autres milieux semi-ouverts, souvent près des habitations."
+    },
+    "diet": {
+      "en": "Seeds make up most of its usual food; Australian observations also report occasional scavenging around farms and refuse.",
+      "fr": "Les graines constituent l’essentiel de son alimentation ; des observations australiennes signalent aussi du charognage occasionnel près des fermes et des déchets."
+    },
+    "behavior": {
+      "en": "It forages in groups and can gather in flocks numbering hundreds outside the breeding season.",
+      "fr": "Il recherche sa nourriture en groupe et peut former des bandes de plusieurs centaines d’individus hors de la période de reproduction."
+    },
+    "reproduction": {
+      "en": "In its native Southeast Asian range, it can breed throughout the year when conditions are suitable; both sexes incubate.",
+      "fr": "Dans son aire native d’Asie du Sud-Est, il peut se reproduire toute l’année lorsque les conditions sont favorables ; les deux sexes couvent."
+    },
+    "ecology": {
+      "en": "It forages from the ground and also hangs from stems to reach seeds.",
+      "fr": "Il cherche sa nourriture au sol et se suspend aussi aux tiges pour atteindre les graines."
+    },
+    "conservation": {
+      "en": "The global assessment cited by Cornell lists it as Least Concern and reports a stable trend; this does not describe every local introduced population.",
+      "fr": "L’évaluation mondiale citée par Cornell le classe en préoccupation mineure et indique une tendance stable ; cela ne décrit pas chacune des populations locales introduites."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scaly-breasted Munia Life History — Cornell Lab of Ornithology",
+        "fr": "Scaly-breasted Munia : histoire naturelle — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Scaly-breasted_Munia/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell reports flocking outside breeding season, year-round breeding when conditions permit in the native range, shared incubation, and quotes the 2016 BirdLife/IUCN assessment as Least Concern with a stable trend."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 30,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nutmeg Mannikin — BirdLife Australia",
+        "fr": "Capucin damier — BirdLife Australia"
+      },
+      "url": "https://birdlife.org.au/bird-profiles/nutmeg-mannikin/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife Australia describes the introduced Australian population, scalloped underparts, seed diet, and occasional scavenging near farms and refuse."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 18,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scaly-breasted Munia — Oiseaux.net",
+        "fr": "Capucin damier — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/scaly-breasted.munia.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "French ornithological account compiles semi-open habitat records including grassland, scrub, farmland, and settlement edges."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 14,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Descriptions of the Australian introduced population do not necessarily apply to native Asian populations. The behavioral comparison in ecology is at group level; no particular close species comparison was available in the current Bestiary."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an English-language life-history and conservation account with BirdLife Australia and a French-language ornithological synthesis; kept introduced-population observations geographically qualified."
+}

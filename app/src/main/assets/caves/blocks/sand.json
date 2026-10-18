@@ -1,0 +1,17 @@
+{
+  "id": 4000,
+  "name": "sand",
+  "texture_top": "base_art:sand:0",
+  "texture_side": "base_art:sand:0",
+  "texture_bottom": "base_art:sand:0",
+  "color": "#DDC99F",
+  "hardness": 0.5,
+  "falling": true,
+  "drop": "sand",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "sand"
+  ]
+}

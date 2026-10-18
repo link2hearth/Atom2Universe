@@ -1,0 +1,17 @@
+{
+  "id": 9834,
+  "name": "frontier_axe_1",
+  "texture_top": "frontier:9834:top",
+  "texture_side": "frontier:9834:side",
+  "texture_bottom": "frontier:9834:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_axe_1",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

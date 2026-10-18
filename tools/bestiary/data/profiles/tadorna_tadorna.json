@@ -1,0 +1,145 @@
+{
+  "id": "tadorna_tadorna",
+  "scientific": "Tadorna tadorna",
+  "group": "birds",
+  "name": {
+    "en": "Common shelduck",
+    "fr": "Tadorne de Belon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common shelduck is a large, colourful waterfowl of coastal and inland wetlands across Eurasia.",
+      "fr": "Le Tadorne de Belon est un grand oiseau d’eau coloré des zones humides côtières et continentales d’Eurasie."
+    },
+    "identification": {
+      "en": "It has a mainly white body, chestnut breast band, dark green head and red bill; the sexes are similar in plumage.",
+      "fr": "Il présente un corps surtout blanc, une bande pectorale rousse, une tête vert sombre et un bec rouge ; les sexes ont un plumage proche."
+    },
+    "habitat": {
+      "en": "It favours saline and brackish wetlands, including mudflats, estuaries and shallow coastal lakes; it also uses inland saline lakes.",
+      "fr": "Il privilégie les zones humides salées ou saumâtres, comme les vasières, estuaires et lagunes côtières peu profondes ; il fréquente aussi des lacs salés intérieurs."
+    },
+    "diet": {
+      "en": "It feeds mainly on molluscs and other aquatic invertebrates, with plant material also included in its diet.",
+      "fr": "Il consomme surtout des mollusques et autres invertébrés aquatiques, mais aussi des végétaux."
+    },
+    "behavior": {
+      "en": "Outside breeding, shelducks gather in flocks and many European birds assemble at moulting sites after breeding.",
+      "fr": "Hors reproduction, les tadornes se rassemblent en groupes et de nombreux oiseaux européens rejoignent des sites de mue après la nidification."
+    },
+    "reproduction": {
+      "en": "Pairs are monogamous and territorial; nests are often placed in cavities, and chicks soon leave the nest to feed with family groups.",
+      "fr": "Les couples sont monogames et territoriaux ; le nid est souvent installé dans une cavité, et les poussins le quittent rapidement pour rejoindre des groupes familiaux d’alimentation."
+    },
+    "ecology": {
+      "en": "Its feeding on mudflat invertebrates links it closely to productive intertidal and estuarine wetlands.",
+      "fr": "Sa consommation d’invertébrés des vasières le relie étroitement aux milieux intertidaux et estuariens productifs."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern and reports an increasing population trend (2019 assessment).",
+      "fr": "L’évaluation mondiale de l’UICN la classe en Préoccupation mineure et indique une tendance d’effectif à la hausse (évaluation de 2019)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "MNHN / INPN — Cahiers d’Habitat: Tadorne de Belon",
+        "fr": "MNHN / INPN — Cahiers d’Habitat : Tadorne de Belon"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Tadorne-debelon.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French habitat account describes mud-surface feeding, seasonal moulting gatherings, territorial monogamous pairs, cavity nesting and family crèches."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 18,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Common Shelduck",
+        "fr": "Liste rouge de l’UICN — Tadorne de Belon"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22680024A154560262.en",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International's 2019 global assessment lists Least Concern and an increasing trend; it describes saline wetlands and a diet dominated by molluscs and other aquatic invertebrates."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 26,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "BirdLife Österreich — Brandgans",
+        "fr": "BirdLife Österreich — Tadorne de Belon"
+      },
+      "url": "https://www.birdlife.at/voegel/brandgans/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "BirdLife Austria describes the species' contrasting plumage, use of shallow waters and sand or mud, and diet of small invertebrates and plant matter."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 23,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The IUCN trend and category refer to the 2019 global assessment; regional trends may differ."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

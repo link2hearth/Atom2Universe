@@ -1,0 +1,144 @@
+{
+  "id": "wunderpus_photogenicus",
+  "scientific": "Wunderpus photogenicus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Wunderpus octopus",
+    "fr": "Poulpe Wunderpus"
+  },
+  "sections": {
+    "overview": {
+      "en": "A long-armed octopus of Indo-Malayan shallows.",
+      "fr": "Un poulpe aux longs bras des eaux peu profondes indo-malaises."
+    },
+    "identification": {
+      "en": "Small stalked eyes and fixed white bars mark its reddish body.",
+      "fr": "De petits yeux pédonculés et des barres blanches fixes marquent son corps rougeâtre."
+    },
+    "habitat": {
+      "en": "It lives on shallow soft sediments.",
+      "fr": "Il vit sur des sédiments meubles peu profonds."
+    },
+    "diet": {
+      "en": "It traps buried crustaceans and fish beneath its arms and web.",
+      "fr": "Il piège crustacés et poissons enfouis sous ses bras et sa membrane."
+    },
+    "behavior": {
+      "en": "It forages at dawn and dusk, probing holes with its arms.",
+      "fr": "Il cherche sa nourriture à l’aube et au crépuscule, sondant les trous de ses bras."
+    },
+    "reproduction": {
+      "en": "The cited description gives no reproductive details.",
+      "fr": "La description citée ne donne pas de détail reproductif."
+    },
+    "ecology": {
+      "en": "Its pattern intensifies when disturbed; a warning role is only a hypothesis. It is closely related to the mimic octopus, Thaumoctopus mimicus; see its profile.",
+      "fr": "Ses motifs s’intensifient lorsqu’il est dérangé ; un rôle d’avertissement reste une hypothèse. Il est proche du poulpe mimétique, Thaumoctopus mimicus ; voir sa fiche."
+    },
+    "conservation": {
+      "en": "It is traded for photography and aquaria; wild trends were not assessed.",
+      "fr": "Il est recherché pour la photographie et les aquariums ; les tendances sauvages ne sont pas évaluées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Molluscan Research — original description of Wunderpus photogenicus",
+        "fr": "Molluscan Research — description originale de Wunderpus photogenicus"
+      },
+      "url": "https://www.mapress.com/mrs/article/view/mr.26.3.5",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original description reports range, soft-bottom habitat, foraging and uncertain display function."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 11,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "PLOS ONE — Photo-identification study of Wunderpus photogenicus",
+        "fr": "PLOS ONE — étude d’identification photographique de Wunderpus photogenicus"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2579581/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Study documents individual fixed white dorsal markings and mentions the aquarium and dive-tourism trade."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 14,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biological Journal of the Linnean Society — octopus phylogeny and mimicry",
+        "fr": "Biological Journal of the Linnean Society — phylogénie et mimétisme des poulpes"
+      },
+      "url": "https://birdsheadseascape.com/download/research/j.1095-8312.2010.01484.x.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The phylogenetic study finds Thaumoctopus mimicus most closely related to Wunderpus photogenicus."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 12,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The original paper presents warning display and mimicry as hypotheses, not demonstrated explanations."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

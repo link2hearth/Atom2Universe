@@ -1,0 +1,164 @@
+{
+  "id": "masturus_lanceolatus",
+  "scientific": "Masturus lanceolatus",
+  "group": "fish",
+  "name": {
+    "en": "Sharptail mola",
+    "fr": "Poisson-lune lancéolé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sharptail mola is a large oceanic sunfish in the family Molidae and the sole living member of Masturus; it is related to but distinct from the ocean sunfish Mola mola.",
+      "fr": "Le poisson-lune lancéolé est un grand poisson océanique de la famille des Molidae et le seul représentant vivant de Masturus ; il est apparenté à la môle commune Mola mola, mais en diffère."
+    },
+    "identification": {
+      "en": "Its tall, flattened body ends in a truncated tail-like clavus with a central pointed projection, unlike the unpointed clavus of Mola mola; it can approach three metres long.",
+      "fr": "Son corps haut et aplati se termine par un clavus tronqué portant une pointe centrale, contrairement au clavus sans pointe de Mola mola ; sa longueur peut approcher trois mètres."
+    },
+    "habitat": {
+      "en": "It occurs in tropical and warm-temperate waters of the major oceans, although its scattered records leave its full distribution imperfectly known.",
+      "fr": "Il fréquente les eaux tropicales et tempérées chaudes des grands océans, mais les observations dispersées laissent sa répartition complète imparfaitement connue."
+    },
+    "diet": {
+      "en": "A recent diet study found varied prey, with tunicates prominent in sampled fish and prey drawn from several ocean depths and habitats.",
+      "fr": "Une étude alimentaire récente a trouvé des proies variées, les tuniciers étant fréquents chez les poissons échantillonnés et les proies provenant de plusieurs profondeurs et habitats."
+    },
+    "behavior": {
+      "en": "It is rarely observed directly, though tagging has documented deep dives whose purpose remains uncertain.",
+      "fr": "Il est rarement observé directement, bien que des marquages aient documenté des plongées profondes dont la fonction reste incertaine."
+    },
+    "reproduction": {
+      "en": "Its breeding season and reproductive biology remain poorly known.",
+      "fr": "Sa période de reproduction et sa biologie reproductive restent mal connues."
+    },
+    "ecology": {
+      "en": "It occupies open-water food webs and is targeted in a Taiwanese fishery where megamouth sharks are also caught incidentally; see that shark’s profile for the reciprocal link.",
+      "fr": "Il prend place dans les réseaux alimentaires du large et est ciblé par une pêcherie taïwanaise où des requins grande-gueule sont aussi capturés accessoirement ; voir la fiche de ce requin pour le renvoi réciproque."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2015 classified it as Least Concern but noted uncertainty and the need for better catch and biological data.",
+      "fr": "L’évaluation de l’UICN publiée en 2015 le classait en préoccupation mineure, tout en signalant les incertitudes et le besoin de meilleures données biologiques et de capture."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sharptail mola — Okinawa Churaumi Aquarium",
+        "fr": "Poisson-lune lancéolé — Aquarium Churaumi d’Okinawa"
+      },
+      "url": "https://oki-churaumi.jp/en/fishbook/1521347397/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The aquarium reports the species in tropical and temperate seas worldwide and a maximum length near 3 m; its distribution remains poorly documented."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 23,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ontogenetic and seasonal shifts in diets of sharptail sunfish — University of Hawaiʻi thesis, 2024",
+        "fr": "Variations ontogénétiques et saisonnières du régime du poisson-lune lancéolé — thèse, université d’Hawaï, 2024"
+      },
+      "url": "https://www.soest.hawaii.edu/oceanography/oceanwp/wp-content/uploads/2024/09/2024-Chang.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Recent samples show varied prey, with tunicates prominent; feeding evidence indicates use of prey from multiple depth and habitat zones."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 20,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Masturus lanceolatus — IUCN Red List assessment, 2015",
+        "fr": "Masturus lanceolatus — évaluation de la Liste rouge de l’UICN, 2015"
+      },
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2015-4.RLTS.T193634A2250642.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The assessment describes sparse biological information, broad warm-water distribution and bycatch in the eastern Taiwan fishery targeting sharptail mola; assessed Least Concern in 2015."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 24,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Poisson-lune commun — DORIS, Fédération française d’études et de sports sous-marins",
+        "fr": "Ocean sunfish — DORIS, French Federation for Underwater Studies and Sports"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Mola-mola-Poisson-lune-344/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language species account distinguishes Masturus lanceolatus from Mola mola by a central point on the truncated clavus."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 17,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Most life-history details, including reproduction and the meaning of deep dives, remain poorly known. The 2015 IUCN assessment is dated.",
+    "La plupart des détails du cycle de vie, dont la reproduction et la fonction des plongées profondes, restent mal connus. L’évaluation UICN date de 2015."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared English institutional and research sources with a French DORIS account. The reciprocal megamouth-shark comparison is supported by the IUCN assessment’s note on bycatch in the fishery targeting this species."
+}

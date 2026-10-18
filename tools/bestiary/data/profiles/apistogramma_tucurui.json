@@ -1,0 +1,365 @@
+{
+  "id": "apistogramma_tucurui",
+  "scientific": "Apistogramma tucurui",
+  "group": "fish",
+  "name": {
+    "en": "Tucuruí Dwarf Cichlid",
+    "fr": "Apistogramme de Tucuruí"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma tucurui is a Brazilian dwarf cichlid described by Wolfgang Staeck in 2003. Its type locality is a brook in the Tocantins system about 10 km south of Jacundá, Pará. Its name refers to the Tucuruí Reservoir, which inundated much of the surrounding river habitat.",
+      "fr": "Apistogramma tucurui est un cichlidé nain brésilien décrit par Wolfgang Staeck en 2003. Sa localité type est un ruisseau du bassin du Tocantins, à environ 10 km au sud de Jacundá, au Pará. Son nom fait référence au réservoir de Tucuruí, qui a submergé une grande partie des habitats fluviaux alentour."
+    },
+    "identification": {
+      "en": "The most striking clue is a set of fine dark pinstripes above and below the faint lateral band, reaching across the head and flanks. FishBase has no formal maximum; aquarium reports commonly give males around 8–9 cm total length and females near 5 cm. A Swedish register lists 6 cm without a measurement convention. No reliable mass, body width or height was found.",
+      "fr": "Le repère le plus frappant est un ensemble de fines rayures sombres au-dessus et au-dessous de la bande latérale peu marquée, jusque sur la tête et les flancs. FishBase ne donne pas de maximum officiel ; les observations d’aquarium indiquent souvent des mâles autour de 8 à 9 cm de longueur totale et des femelles près de 5 cm. Un registre suédois donne 6 cm sans préciser la mesure. Aucune masse, largeur ou hauteur corporelle fiable n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Its documented range is the lower Tocantins basin in Brazil, east of the Tucuruí Reservoir. Field accounts describe small forest streams and overflow swamps with sandy bottoms, leaf debris and sedge-like plants along their edges.",
+      "fr": "Son aire documentée se situe dans le bassin inférieur du Tocantins, au Brésil, à l’est du réservoir de Tucuruí. Les observations de terrain décrivent de petits ruisseaux forestiers et des marécages de débordement, sur fond sableux jonché de feuilles et bordé de plantes semblables aux laîches."
+    },
+    "diet": {
+      "en": "FishBase provides no direct species-specific food record. Its trophic level is estimated from close relatives, supporting only a broad micropredator inference rather than a measured prey list.",
+      "fr": "FishBase ne fournit pas de donnée alimentaire directe propre à l’espèce. Son niveau trophique est estimé à partir de proches parents, ce qui permet seulement d’inférer un micropredateur au sens large plutôt qu’une liste de proies mesurée."
+    },
+    "behavior": {
+      "en": "Males defend a larger territory that can overlap the smaller areas of several females, each guarding a separate cave. Early breeders described unusually strong aggression and warned that confined fish can harass one another persistently.",
+      "fr": "Les mâles défendent un grand territoire qui peut recouvrir les espaces plus réduits de plusieurs femelles, chacune gardant une cavité distincte. Les premiers éleveurs décrivaient une forte agressivité et prévenaient que des poissons confinés pouvaient se harceler de façon persistante."
+    },
+    "reproduction": {
+      "en": "The species is a cave spawner: a female attaches eggs to a cave roof or wall and guards them and the fry. One breeder reported about 40 eggs beneath a clay pot. Another described an 80-egg spawn and brood losses, so these captive counts vary.",
+      "fr": "Cette espèce pond dans une cavité : la femelle fixe les œufs au plafond ou à la paroi et garde ensuite les œufs puis les alevins. Un éleveur a rapporté environ 40 œufs sous un pot en terre. Un autre a décrit une ponte de 80 œufs et des pertes de couvée ; ces chiffres d’aquarium varient donc."
+    },
+    "ecology": {
+      "en": "Specialists place it in the Apistogramma regani group with A. regani and A. eunotus. Its many pinstripes make it more distinctive than those usually single-banded relatives.",
+      "fr": "Les spécialistes le placent dans le groupe Apistogramma regani avec A. regani et A. eunotus. Ses nombreuses rayures le distinguent de ces proches parents, généralement marqués d’une seule bande latérale."
+    },
+    "conservation": {
+      "en": "The global IUCN category is Data Deficient, assessed on 7 November 2018. Brazil’s national Red Book also recorded the species as DD in its 2014 assessment, and the reservoir has inundated part of its river habitat.",
+      "fr": "La catégorie mondiale UICN est « données insuffisantes », selon l’évaluation du 7 novembre 2018. Le Livre rouge national du Brésil indiquait aussi DD lors de son évaluation de 2014, et le réservoir a submergé une partie de son habitat fluvial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma tucurui — FishBase species summary",
+        "fr": "Apistogramma tucurui — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-tucurui.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the accepted name, Tocantins basin, absence of a formal maximum length, trophic estimate and global IUCN category with assessment date."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 22,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma tucurui — Aquarist Atlas species account",
+        "fr": "Apistogramma tucurui — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-tucurui/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The account summarizes striped morphology, reported sex-specific sizes, field habitat, the regani group, aquarium breeding reports and the DD assessment."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 20,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma tucurui — Nordiska Ciklidsällskapet species register",
+        "fr": "Apistogramma tucurui — registre de la société nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1583",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Swedish cichlid society lists a 6 cm size without a length convention and confirms the lower Tocantins range east of the reservoir."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 23,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase Spanish-language summary for Apistogramma tucurui",
+        "fr": "Fiche FishBase en espagnol pour Apistogramma tucurui"
+      },
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=62416&lang=spanish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language FishBase record independently states the species occurs in the Tocantins basin and repeats its global Data Deficient status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 20,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes: Apistogramma tucurui",
+        "fr": "Catalog of Fishes : Apistogramma tucurui"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=67840",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The catalog record gives the precise type locality south of Jacundá in the Tocantins drainage."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 15,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma tucurui — ICMBio Brazilian Red Book",
+        "fr": "Apistogramma tucurui — Livre rouge brésilien de l’ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Portuguese-language Brazilian Red Book records Apistogramma tucurui as Data Deficient in a national 2014 assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 16,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: Cichlidae name etymologies",
+        "fr": "ETYFish : étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The etymology note connects the name to the Tucuruí Reservoir and says it destroyed much of the species habitat."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 19,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pin-striped Apistogramma tucurui — Potomac Valley Aquarium Society",
+        "fr": "Apistogramma tucurui rayé — association aquariophile de la vallée du Potomac"
+      },
+      "url": "https://www.pvas.com/post/apistogramma-tucurui-the-apisto-in-the-pin-striped-suit",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "A breeder account documents female brood guarding, yellow spawning coloration and an observed clutch of about 40 eggs."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 18,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma tucurui — translated field and aquarium account by Ingo Koslowski",
+        "fr": "Apistogramma tucurui — compte rendu de terrain et d’aquariophilie d’Ingo Koslowski, traduit"
+      },
+      "url": "https://www.thekrib.com/Apisto/A-tucurui.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "A 1994 German account, reproduced in English translation, describes numerous longitudinal stripes, sandy stream habitat east of the dam, placement in the regani group, and strong aggression in captivity."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 29,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma regani species group — Tom Christoffersen",
+        "fr": "Groupe d’espèces Apistogramma regani — Tom Christoffersen"
+      },
+      "url": "https://www.tomc.no/page.aspx?pageid=127",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The species-group overview places A. tucurui in the A. regani group."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 11,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma tucurui — aquarium breeding observation",
+        "fr": "Apistogramma tucurui — observation de reproduction en aquarium"
+      },
+      "url": "https://apistogramma.com/forum/threads/apistogramma-tucurui.2849/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "A 2005 keeper report describes a clutch of around 80 eggs and artificial egg removal after repeated brood losses were reported."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 21,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a dwarf cichlid with an elongate, compressed body and unusually numerous fine horizontal pinstripes across its head and flanks; adult males are more strongly colored, while breeding females turn yellow with dark markings.",
+  "uncertainties": [
+    "No formal maximum size is listed in FishBase. Aquarium reports commonly give larger males and smaller females, but these are total-length observations from captivity rather than a standardized wild maximum.",
+    "Clutch counts vary between breeder reports, and maternal care appears inconsistent in some captive observations; these accounts do not establish wild reproductive success or typical fecundity.",
+    "The species is known from the lower Tocantins near the reservoir, but population trend and the precise effect of habitat inundation remain insufficiently documented."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English and Spanish FishBase, the Swedish cichlid register, the Portuguese ICMBio Red Book, FishBase-linked taxonomic records and aquarium accounts that explicitly document clutch observations. Kept captivity-based sizes and reproduction separate from formal wild measurements."
+}

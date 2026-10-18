@@ -1,0 +1,141 @@
+{
+  "id": "triplofusus_giganteus",
+  "scientific": "Triplofusus giganteus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Horse conch",
+    "fr": "Conque cheval"
+  },
+  "sections": {
+    "overview": {
+      "en": "Triplofusus giganteus, the horse conch, is a large predatory marine gastropod of the western Atlantic and Gulf of Mexico region.",
+      "fr": "Triplofusus giganteus, la conque cheval, est un grand gastéropode marin prédateur de l’Atlantique occidental et du golfe du Mexique."
+    },
+    "identification": {
+      "en": "Its robust shell can exceed 50 cm, and younger shells are often orange; the living animal has a vivid orange-red foot.",
+      "fr": "Sa robuste coquille peut dépasser 50 cm et est souvent orange chez les jeunes ; l’animal vivant possède un pied rouge orangé vif."
+    },
+    "habitat": {
+      "en": "It occurs in shallow marine waters from North Carolina to the Yucatán Peninsula.",
+      "fr": "Il vit dans les eaux marines peu profondes, de la Caroline du Nord à la péninsule du Yucatán."
+    },
+    "diet": {
+      "en": "It preys on other large sea snails, including lightning whelks and tulip snails.",
+      "fr": "Il chasse d’autres grands gastéropodes marins, notamment des buccins-tonnerre et des fasciolaires."
+    },
+    "behavior": {
+      "en": "It uses its muscular foot to envelop and smother prey.",
+      "fr": "Il utilise son pied musculeux pour envelopper et étouffer ses proies."
+    },
+    "reproduction": {
+      "en": "Females lay distinctive fan-shaped capsules of eggs.",
+      "fr": "Les femelles pondent des capsules d’œufs caractéristiques, disposées en éventail."
+    },
+    "ecology": {
+      "en": "As a large predator, it is part of coastal food webs and its shell is also heavily sought by collectors.",
+      "fr": "Grand prédateur des réseaux alimentaires côtiers, il est aussi très recherché pour sa coquille."
+    },
+    "conservation": {
+      "en": "A population study reports declines associated with long-term shell collecting and commercial harvest, alongside coastal development.",
+      "fr": "Une étude de population rapporte un déclin associé à la collecte durable des coquilles et à la pêche commerciale, ainsi qu’à l’aménagement du littoral."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Florida Museum of Natural History — Horse Conch",
+        "fr": "Florida Museum of Natural History — conque cheval"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/100-years/object/horse-conch/",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Florida Museum describes range, shallow-water occurrence, prey snails and orange-foot prey handling."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 13,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bailey-Matthews National Shell Museum — Triplofusus giganteus",
+        "fr": "Bailey-Matthews National Shell Museum — Triplofusus giganteus"
+      },
+      "url": "https://shells.shellmuseum.org/shell/triplofusus-giganteus/",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "The museum documents shell dimensions, colours and fan-shaped egg capsules."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "PLOS ONE — Age and growth of the Florida horse conch",
+        "fr": "PLOS ONE — âge et croissance de la conque cheval de Floride"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8985988/",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The peer-reviewed study describes intense harvest, coastal development and a reported decline."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 12,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited decline is reported in a research study; no formal global Red List category is asserted here."
+  ],
+  "review_note": "Kept the comparison within species biology and avoided unsupported claims about formal protection or population status.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

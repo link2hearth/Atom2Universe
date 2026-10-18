@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_info">Commandes et astuces</string>
+    <string name="golf_done">Terminé</string>
+    <string name="golf_tips">Astuces du parcours</string>
+    <string name="golf_expand">%1$s · déplier</string>
+    <string name="golf_collapse">%1$s · replier</string>
+    <string name="golf_title">Golf</string>
+    <string name="golf_description">Golf 3D · parcours de 18 trous</string>
+    <string name="golf_continue">Continuer</string>
+    <string name="golf_new_course">Nouveau parcours</string>
+    <string name="golf_course_best">Record : %1$d (%2$s)</string>
+    <string name="golf_menu">Menu</string>
+    <string name="golf_retry">Rejouer</string>
+    <string name="golf_next">Trou suivant</string>
+    <string name="golf_result_hole_in_one">Trou en un !</string>
+    <string name="golf_result_albatross">Albatros !</string>
+    <string name="golf_result_eagle">Eagle !</string>
+    <string name="golf_result_birdie">Birdie !</string>
+    <string name="golf_result_par">Par</string>
+    <string name="golf_result_bogey">Bogey</string>
+    <string name="golf_result_double_bogey">Double bogey</string>
+    <string name="golf_result_over">+%1$d</string>
+    <string name="golf_result_line">%1$s · %2$s</string>
+    <string name="golf_scorecard">Carte de score</string>
+    <string name="golf_total">Total %1$d · Par %2$d</string>
+    <string name="golf_back">Retour</string>
+    <string name="golf_play">Jouer</string>
+    <string name="golf_relative_over">+%1$d</string>
+    <string name="golf_relative_under">−%1$d</string>
+</resources>

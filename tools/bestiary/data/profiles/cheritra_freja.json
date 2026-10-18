@@ -1,0 +1,163 @@
+{
+  "id": "cheritra_freja",
+  "scientific": "Cheritra freja",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Imperial",
+    "fr": "Impérial commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Asian hairstreak belongs to the lycaenid tribe Cheritrini, also collectively called “imperials” in English.",
+      "fr": "L’Impérial commun est un thécla asiatique de la tribu des Cheritrini, au sein des Lycaenidae; cette tribu est aussi appelée « imperials » en anglais."
+    },
+    "identification": {
+      "en": "Indian records distinguish the regional subspecies Cheritra freja butleri and Cheritra freja evansi.",
+      "fr": "Les données indiennes distinguent les sous-espèces régionales Cheritra freja butleri et Cheritra freja evansi."
+    },
+    "habitat": {
+      "en": "A field survey recorded it at forest edges around Matheran in western India.",
+      "fr": "Un inventaire autour de Matheran, dans l’ouest de l’Inde, l’a observé en lisière forestière."
+    },
+    "diet": {
+      "en": "Its Indian caterpillars use host plants from Fabaceae, Lauraceae, Rubiaceae and Sapindaceae.",
+      "fr": "En Inde, ses chenilles consomment des plantes de plusieurs familles, notamment les Fabaceae, Lauraceae, Rubiaceae et Sapindaceae."
+    },
+    "behavior": {
+      "en": "At Matheran, adults were seen mud-puddling, basking, and visiting sap, carcasses, dung, bird droppings and rotting fruit.",
+      "fr": "À Matheran, les adultes pompent l’humidité des sols, se chauffent au soleil et visitent la sève, les carcasses, les déjections, les fientes et les fruits pourris."
+    },
+    "reproduction": {
+      "en": "The sources document larval host plants but provide little species-specific detail on courtship, egg laying or brood timing.",
+      "fr": "Les sources documentent les plantes hôtes larvaires, mais donnent peu de détails propres à l’espèce sur la parade, la ponte ou le calendrier des générations."
+    },
+    "ecology": {
+      "en": "Its larvae use plants from several families, while adults also exploit mineral-rich soil and diverse organic matter.",
+      "fr": "Ses larves utilisent des plantes de plusieurs familles, tandis que les adultes exploitent aussi les sols minéralisés et diverses matières organiques."
+    },
+    "conservation": {
+      "en": "The reviewed sources document Indian distribution and natural history but provide no current global conservation assessment.",
+      "fr": "Les sources examinées documentent la répartition indienne et l’histoire naturelle, mais ne donnent pas d’évaluation mondiale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cheritra freja — Butterflies of India",
+        "fr": "Cheritra freja — Butterflies of India"
+      },
+      "url": "https://www.ifoundbutterflies.org/cheritra-freja",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Indian species page lists two local subspecies and host plants in four families; it gives no global assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 19,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New larval host plants of butterflies in the Western Ghats — Journal of Threatened Taxa",
+        "fr": "Nouvelles plantes hôtes larvaires des papillons des Ghâts occidentaux — Journal of Threatened Taxa"
+      },
+      "url": "https://doi.org/10.11609/jott.3104.10.4.11495-11550",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The cited host-plant paper supports some Cinnamomum records."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Finding the forgotten gems: revisiting the butterflies of Matheran after 125 years",
+        "fr": "À la recherche de papillons oubliés : inventaire de Matheran après 125 ans"
+      },
+      "url": "https://doi.org/10.3897/zookeys.915.46586",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The Matheran field survey records forest-edge habitat and adults using mud, sap, carrion, waste, bird droppings and rotting fruit."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 19,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cheritra freja — National Bureau of Agricultural Insect Resources",
+        "fr": "Cheritra freja — Bureau national des ressources en insectes agricoles"
+      },
+      "url": "https://databases.nbair.res.in/insectpests/Cheritra-freja.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Indian government research database also lists Xylia xylocarpa and Lepisanthes tetraphylla as hosts."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reviewed species page and field paper do not support a current global conservation category or detailed species-specific reproductive schedule."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Indian butterfly database and its cited host-plant research, cross-checked some hosts against the national agricultural insect database, and used the Matheran field paper for local habitat and adult feeding behaviour; no global status was inferred."
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_external_genitals">External genitalia</string>
+    <string name="bio_show_external_genitals">Show external genitalia</string>
+    <string name="bio_hide_external_genitals">Hide external genitalia</string>
+    <string name="bio_atlas_choice">Anatomical model</string>
+    <string name="bio_atlas_male">Male body</string>
+    <string name="bio_atlas_female">Female body</string>
+    <string name="bio_atlas_ear">Right ear · detailed view</string>
+    <string name="bio_ear_view_main">Main view</string>
+    <string name="bio_ear_view_opposite">Opposite view</string>
+    <string name="bio_ear_view_left">Quarter turn left</string>
+    <string name="bio_ear_view_right">Quarter turn right</string>
+    <string name="bio_female_coverage">Female reference anatomy from the Human Reference Atlas, based on the Visible Human Female. The imported structures retain their spatial relationships in this reference assembly, with surfaces simplified for mobile display. Coverage includes skin, pelvis, internal reproductive organs, breast tissues and selected other bones and organs. The skeleton and muscles are incomplete. The clitoris, vestibular bulbs, labia majora and minora, and female urethra are original educational reconstructions guided by published anatomical dimensions and relationships. Their information sheets distinguish them from segmented surfaces. The labial shapes illustrate one example among many variations; native skin and some organ ends remain capped. Pelvic floor muscles, vestibular glands and vulvar neurovascular detail are not reconstructed. The source lumbar region contains six meshes, grouped without assigning clinical vertebral numbering. This adaptation has not undergone clinical validation.</string>
+    <string name="bio_ear_coverage">Local model of a right ear from the OpenEar ZETA specimen. The ossicles, tympanic membrane, cochlear spaces, nerves and neighbouring structures retain their source relationships. This is a specimen study, not a registration into either whole-body model. The temporal bone and the twelve fine structures are simplified for mobile display, with finer detail retained on the small ear structures. The scala vestibuli, vestibule and semicircular canal spaces form one source group; the membranous ducts and organ of Corti are not individually modelled. View axes belong to the specimen and have no clinical orientation. Colours and transparency are illustrative; surfaces do not simulate sound or fluid flow.</string>
+    <string name="bio_female_source">Female anatomy · Human Reference Atlas</string>
+    <string name="bio_ear_source">Detailed ear · OpenEar dataset</string>
+    <string name="bio_detail_license_offline">Female anatomy and ear · offline attribution</string>
+    <string name="bio_detail_attribution">Female anatomy: Kristen Browne and Heidi Schlehlein, Human Reference Atlas / HuBMAP, Visible Human Female data from the National Library of Medicine, CC BY 4.0. Ear: Daniel Sieber and colleagues, OpenEar dataset, ZETA specimen, CC BY 4.0. Selected surfaces, conversion to GLB, original bilingual summaries and illustrative materials. The female genital and urethral supplements are original educational reconstructions by Atom2Universe, distinct from HRA segmentations. Detailed inventories, anatomical references and modifications are bundled with each model.</string>
+</resources>

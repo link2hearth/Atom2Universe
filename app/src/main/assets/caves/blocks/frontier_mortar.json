@@ -1,0 +1,17 @@
+{
+  "id": 9819,
+  "name": "frontier_mortar",
+  "texture_top": "frontier:9819:top",
+  "texture_side": "frontier:9819:side",
+  "texture_bottom": "frontier:9819:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_mortar",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

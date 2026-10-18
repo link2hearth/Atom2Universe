@@ -1,0 +1,221 @@
+{
+  "id": "falcipennis_canadensis",
+  "scientific": "Falcipennis canadensis",
+  "group": "birds",
+  "name": {
+    "en": "Spruce Grouse",
+    "fr": "Tétras du Canada"
+  },
+  "sections": {
+    "overview": {
+      "en": "Falcipennis canadensis, the Spruce Grouse or Tétras du Canada, is a boreal forest grouse. AOS and IOC lists now use Canachites canadensis.",
+      "fr": "Falcipennis canadensis, le Tétras du Canada, est un galliforme de la forêt boréale. Les listes de l’AOS et de l’IOC utilisent aujourd’hui Canachites canadensis."
+    },
+    "identification": {
+      "en": "Males are dark with white-spotted flanks and a bright red eyebrow comb in spring; females are brown and mottled.",
+      "fr": "Le mâle est sombre, avec les flancs tachetés de blanc et une caroncule rouge vif au printemps ; la femelle est brune et bariolée."
+    },
+    "habitat": {
+      "en": "It depends on conifer forests, including spruce, fir, jack pine and larch; denser cover is used in winter and more open habitat to raise chicks.",
+      "fr": "Elle dépend des forêts de conifères — épinettes, sapins, pins gris et mélèzes — ; elle utilise un couvert dense en hiver et plus ouvert pour élever les poussins."
+    },
+    "diet": {
+      "en": "Adults eat conifer needles, especially spruce and pine; summer diet also includes berries, plants, fungi and insects.",
+      "fr": "L’adulte mange des aiguilles de conifères, surtout d’épinette et de pin ; l’été, son régime comprend aussi baies, plantes, champignons et insectes."
+    },
+    "behavior": {
+      "en": "It is a resident bird, often tame, and males advertise territories with spring flutter flights and wing sounds.",
+      "fr": "Cet oiseau sédentaire est souvent peu farouche ; au printemps, le mâle signale son territoire par des envolées vibrantes."
+    },
+    "reproduction": {
+      "en": "Females nest on the ground and usually lay 5–7 eggs; incubation lasts about 20–24 days.",
+      "fr": "La femelle niche au sol et pond généralement 5 à 7 œufs ; l’incubation dure environ 20 à 24 jours."
+    },
+    "ecology": {
+      "en": "The grouse depends on conifer forest mosaics and regenerating stands. AOS moved the species from Falcipennis to Canachites. IOC lists the same genus change.",
+      "fr": "Le tétras dépend de mosaïques de forêts résineuses et de peuplements en régénération. L’AOS a déplacé l’espèce de Falcipennis à Canachites. L’IOC indique le même changement de genre."
+    },
+    "conservation": {
+      "en": "Quebec reports provincial rank S5 and slight Canadian increase since 1970, while warning that southern populations face forest loss.",
+      "fr": "Le Québec indique le rang provincial S5 et une légère hausse canadienne depuis 1970, tout en signalant le recul des populations méridionales lié aux pertes forestières."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spruce Grouse Life History — Cornell Lab of Ornithology",
+        "fr": "Biologie du Tétras du Canada — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Spruce_Grouse/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Cornell account covers conifer forest, diet and seasonal behavior."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tétras du Canada — Gouvernement du Québec",
+        "fr": "Spruce Grouse — Government of Quebec"
+      },
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/tetras-canada",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Quebec sheet gives French name, appearance, habitats and local status."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Falcipennis canadensis taxonomy update — American Ornithological Society",
+        "fr": "Mise à jour taxonomique — American Ornithological Society"
+      },
+      "url": "https://americanornithology.org/wp-content/uploads/2021/07/2021-C-final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "AOS proposal documents the transfer to Canachites."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "IOC taxonomic updates — International Ornithologists’ Union",
+        "fr": "Mises à jour taxonomiques IOC — International Ornithologists’ Union"
+      },
+      "url": "https://www.worldbirdnames.org/updates/taxonomy/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "IOC update confirms the new genus usage."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            3
+          ],
+          "fr_sentence_ids": [
+            3
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The requested scientific name is retained as the profile key even though AOS and IOC currently use Canachites canadensis."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomic cross-reference is explained; no other grouse profile in the immediate lot requires a reciprocal species-level link."
+}

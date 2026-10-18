@@ -1,0 +1,14 @@
+{
+  "id": 2017,
+  "name": "brick_rose",
+  "texture_top": "cozy:material:12:CEABB6",
+  "texture_side": "cozy:material:12:CEABB6",
+  "texture_bottom": "cozy:material:12:CEABB6",
+  "color": "#CEABB6",
+  "hardness": 3.5,
+  "drop": "brick_rose",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

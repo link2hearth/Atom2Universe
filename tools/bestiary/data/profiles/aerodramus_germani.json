@@ -1,0 +1,133 @@
+{
+  "id": "aerodramus_germani",
+  "scientific": "Aerodramus germani",
+  "group": "birds",
+  "name": {
+    "en": "Germain's swiftlet",
+    "fr": "Salangane de German"
+  },
+  "sections": {
+    "overview": {
+      "en": "Germain's swiftlet is a small swift of coastal Southeast Asia, associated with caves and other sheltered nesting sites. It catches small insects in flight and, like other Aerodramus swiftlets, can use echolocation to navigate inside dark roosts. Its treatment as a full species is not universal: some current taxonomies include it within the edible-nest swiftlet as the subspecies A. f. germani, sometimes together with A. f. amechanus. This profile follows the species-level name used in the project catalog while making that taxonomic uncertainty explicit.",
+      "fr": "La Salangane de German est un petit martinet des régions côtières d’Asie du Sud-Est, associé aux cavernes et à d’autres sites abrités de nidification. Elle capture de petits insectes en vol et, comme d’autres salanganes du genre Aerodramus, peut utiliser l’écholocation pour se déplacer dans l’obscurité de ses dortoirs. Son statut d’espèce à part entière n’est pas admis par toutes les classifications : certaines l’incluent dans la Salangane à nid blanc comme sous-espèce A. f. germani, parfois avec A. f. amechanus. Cette fiche suit le nom d’espèce du catalogue du projet tout en signalant cette incertitude taxonomique."
+    },
+    "identification": {
+      "en": "About 12 cm long; the French Oiseaux.net account gives a compiled mass range of 15–18 g, while a Spanish-language account reports 13–14 g, so the published summaries differ. Neither estimate is separated by sex, and no reliable body height, body width or sex-specific difference was found. The plumage is dark brown to blackish above and paler below, with long narrow wings, a slightly forked tail and a black bill and feet. The nominate form has a pale rump, whereas the form amechanus is reported with a greyer rump; rump colour and geography must therefore be considered together. It is difficult to identify confidently away from its range without comparing it with other swiftlets, and identification can be further complicated by taxonomic lumping with A. fuciphagus.",
+      "fr": "Elle mesure environ 12 cm ; la fiche Oiseaux.net en français donne une masse compilée de 15 à 18 g, tandis qu’une source en espagnol indique 13 à 14 g : les compilations publiées divergent donc. Aucune de ces estimations n’est ventilée selon le sexe, et aucune hauteur ou largeur corporelle fiable ni différence entre sexes n’a été trouvée. Le plumage est brun sombre à noirâtre dessus et plus clair dessous ; les ailes sont longues et étroites, la queue légèrement échancrée, et le bec comme les pattes sont noirs. La forme nominale a le croupion clair, tandis que la forme amechanus est décrite avec un croupion plus gris ; il faut donc considérer ensemble la couleur du croupion et la provenance. L’identification est difficile hors de son aire sans comparaison avec les autres salanganes et peut être compliquée par son regroupement taxonomique avec A. fuciphagus."
+    },
+    "habitat": {
+      "en": "The taxon is reported from coastal Southeast Asia, including southern mainland areas, the Malay Peninsula, Borneo and parts of the Philippines; the boundaries vary with the taxonomic treatment, especially for A. f. amechanus. It forages over open country, coastal lowlands and wooded landscapes, but nests in caves and other dark cavities. As with other swiftlets, the availability and security of suitable cave sites can be more restrictive than the broad landscape used for feeding.",
+      "fr": "Ce taxon est signalé dans les régions côtières d’Asie du Sud-Est, notamment le sud du continent, la péninsule Malaise, Bornéo et une partie des Philippines ; les limites varient selon le traitement taxonomique, en particulier pour A. f. amechanus. Il chasse au-dessus des espaces ouverts, des basses terres côtières et des paysages boisés, mais niche dans des cavernes et d’autres cavités obscures. Comme chez les autres salanganes, la disponibilité et la sécurité des sites de nidification peuvent être plus limitantes que l’étendue des milieux de chasse."
+    },
+    "diet": {
+      "en": "It is an aerial insectivore, taking small flying invertebrates while on the wing. The sources reviewed support this general feeding mode but do not establish a detailed prey list specific to this taxon. Because Germain's swiftlet is sometimes treated as part of the edible-nest swiftlet complex, ecological statements in broader A. fuciphagus accounts should not automatically be assumed to have been tested separately for this form.",
+      "fr": "C’est un insectivore aérien qui capture de petits invertébrés volants en plein vol. Les sources consultées confirment ce mode d’alimentation général, mais ne permettent pas d’établir une liste détaillée de proies propre à ce taxon. Comme la Salangane de German est parfois incluse dans le complexe de la Salangane à nid blanc, les données écologiques portant sur A. fuciphagus au sens large ne doivent pas être considérées automatiquement comme ayant été vérifiées séparément pour cette forme."
+    },
+    "behavior": {
+      "en": "It spends much of its time flying and may gather with other swiftlets over feeding areas. Aerodramus swiftlets use rapid clicks for echolocation in darkness, helping them move through caves and locate roosts. Species-specific behavioral studies for Germain's swiftlet were sparse in the sources reviewed, so details known from other swiftlets are not treated as uniquely demonstrated for this taxon.",
+      "fr": "Elle passe une grande partie de son temps en vol et peut se rassembler avec d’autres salanganes au-dessus des zones de nourrissage. Les Aerodramus émettent des séries rapides de clics d’écholocation qui les aident à se déplacer dans l’obscurité des cavernes et à retrouver leurs dortoirs. Les études de comportement propres à la Salangane de German étaient peu nombreuses parmi les sources consultées ; les détails connus chez d’autres salanganes ne sont donc pas présentés comme ayant été démontrés spécifiquement pour ce taxon."
+    },
+    "reproduction": {
+      "en": "Nesting takes place in caves or comparable sheltered cavities, often in colonies. The name edible-nest swiftlet reflects the use of saliva-bound nest material in the wider A. fuciphagus complex, but the reviewed sources did not provide a well-supported, separate account of nest architecture, clutch size or breeding calendar for A. germani alone. Harvesting of edible nests is a conservation concern for some swiftlet populations in Southeast Asia; its scale and effect should not be generalized to every population assigned to this taxon.",
+      "fr": "La nidification a lieu dans des cavernes ou des cavités abritées comparables, souvent en colonies. Le nom de Salangane à nid blanc fait référence aux matériaux liés par la salive dans le complexe A. fuciphagus au sens large, mais les sources consultées ne fournissent pas de données bien établies sur l’architecture du nid, la taille de ponte ou le calendrier de reproduction de A. germani seul. Le prélèvement des nids comestibles menace certaines populations de salanganes en Asie du Sud-Est ; son ampleur et ses effets ne doivent pas être généralisés à toutes les populations attribuées à ce taxon."
+    },
+    "ecology": {
+      "en": "As an insect-eating swiftlet, it transfers energy from aerial insects to cave and coastal island food webs. It depends on undisturbed cavities for nesting and roosting, linking its persistence to both the wider foraging landscape and the condition of specific cave sites. Where edible-nest harvesting occurs, management must distinguish sustainable local practices from damaging extraction rather than assuming that all colonies face the same pressure.",
+      "fr": "En tant que salangane insectivore, elle transfère l’énergie des insectes aériens vers les réseaux trophiques des îles côtières et des cavernes. Elle dépend de cavités peu perturbées pour nicher et se reposer ; sa persistance est donc liée à la fois aux paysages de chasse et à l’état de sites cavernicoles précis. Là où les nids comestibles sont prélevés, la gestion doit distinguer les pratiques locales durables des prélèvements dommageables, sans supposer que toutes les colonies subissent la même pression."
+    },
+    "conservation": {
+      "en": "A separate global Red List category for A. germani is not consistently available because some taxonomies treat it as part of A. fuciphagus. The project catalog's species-level treatment is followed here, but conservation estimates and threat summaries for the broader edible-nest swiftlet complex may include multiple named forms and cannot be assigned to Germain's swiftlet without checking their scope. Relevant pressures can include cave disturbance or destruction and nest harvesting; reliable population trends for this taxon as delimited here were not established in the sources reviewed.",
+      "fr": "Une catégorie mondiale distincte de Liste rouge pour A. germani n’est pas disponible de façon cohérente, car certaines classifications l’incluent dans A. fuciphagus. La fiche suit ici le traitement au rang d’espèce du catalogue du projet, mais les effectifs et menaces publiés pour le complexe de la Salangane à nid blanc peuvent inclure plusieurs formes et ne peuvent être attribués à la Salangane de German sans vérifier leur périmètre. Les pressions pertinentes peuvent comprendre la perturbation ou la destruction des cavernes et le prélèvement des nids ; les sources consultées n’établissent pas de tendance fiable pour le taxon tel qu’il est traité ici."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Germain's Swiftlet — ITIS taxonomy report",
+        "fr": "Salangane de German — rapport taxonomique ITIS"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=1149401&source=to_print",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "ITIS recognizes Aerodramus germani as a verified valid species and lists Aerodramus fuciphagus germani and Collocalia germani among its synonyms, illustrating the competing taxonomic treatments."
+      ]
+    },
+    {
+      "title": {
+        "en": "Germain's Swiftlet — Oiseaux.net English species account",
+        "fr": "Salangane de German — fiche anglaise Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/birds/germain.s.swiftlet.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation",
+        "behavior",
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "English-language account presents the full species treatment, maps two subspecies, and describes a Southeast Asian distribution; its IUCN status field is not evaluated."
+      ]
+    },
+    {
+      "title": {
+        "en": "Salangane de German — Oiseaux.net French account",
+        "fr": "Salangane de German — fiche française Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/salangane.de.german.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "French account treats the taxon as a subspecies of Aerodramus fuciphagus, gives a length of 12 cm and a mass of 15–18 g, and notes that conservation status is not evaluated separately."
+      ]
+    },
+    {
+      "title": {
+        "en": "Salangana de German — Spanish-language species account",
+        "fr": "Salangane de German — source espagnole sur l’espèce"
+      },
+      "url": "https://es.wikipedia.org/wiki/Aerodramus_germani",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Spanish account summarizes 12 cm length, 13–14 g mass, coastal Southeast Asian range, dark upperparts, paler underside and distinction in rump colour between forms; used only as a cross-check against the French account."
+      ]
+    },
+    {
+      "title": {
+        "en": "Germain's Swiftlet — U.S. Fish and Wildlife Service species page",
+        "fr": "Salangane de German — page espèce de l’U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/germains-swiftlet-aerodramus-germani",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Official species page confirms use of the binomial Aerodramus germani in an English-language government database."
+      ]
+    }
+  ],
+  "illustration_notes": "Small dark swift with long narrow wings, a slightly forked tail and contrasting pale or grey rump; rump tone varies among named forms.",
+  "uncertainties": [
+    "Several checklists treat Germain's swiftlet as part of Aerodramus fuciphagus rather than as a separate species; the profile follows the project's species-level catalog.",
+    "Mass estimates differ between the French Oiseaux.net compilation (9–18 g) and a Spanish-language account (13–14 g); neither provides sex-specific measurements.",
+    "Species-specific breeding and population information is sparse, and broader A. fuciphagus data may combine several forms."
+  ],
+  "reviewed": true,
+  "review_note": "Compared French and English Oiseaux.net treatments, ITIS taxonomy and Spanish-language identification information; kept taxonomic rank and mass estimates explicitly qualified."
+}

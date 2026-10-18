@@ -1,0 +1,167 @@
+{
+  "id": "manduca_florestan",
+  "scientific": "Manduca florestan",
+  "group": "invertebrates",
+  "name": {
+    "en": "Florestan sphinx",
+    "fr": "Manduca florestan"
+  },
+  "sections": {
+    "overview": {
+      "en": "Manduca florestan is a New World hawkmoth ranging from the southwestern United States southward.",
+      "fr": "Manduca florestan est un sphinx du Nouveau Monde, présent jusqu’au sud-ouest des États-Unis."
+    },
+    "identification": {
+      "en": "Adults have grey-brown forewings with pale patches and dark marks.",
+      "fr": "Les adultes ont les ailes antérieures gris-brun, marquées de clair et de sombre."
+    },
+    "habitat": {
+      "en": "It reaches Mexico, Central America and South America; habitat detail is sparse.",
+      "fr": "Elle atteint le Mexique, l’Amérique centrale et l’Amérique du Sud ; son habitat est peu documenté."
+    },
+    "diet": {
+      "en": "Caterpillars use several woody plant families, including Bignoniaceae, Boraginaceae and Verbenaceae; adults feed on flower nectar.",
+      "fr": "Les chenilles consomment des plantes de plusieurs familles, dont les Bignoniacées, Boraginacées et Verbénacées ; les adultes se nourrissent de nectar."
+    },
+    "behavior": {
+      "en": "The caterpillar bears the tail horn typical of many sphinxes.",
+      "fr": "La chenille porte la corne caudale typique de nombreux sphinx."
+    },
+    "reproduction": {
+      "en": "A pupa precedes adult emergence; timing across its range is unclear.",
+      "fr": "Une chrysalide précède l’émergence de l’adulte ; la période varie selon les régions."
+    },
+    "ecology": {
+      "en": "Argentine records list hosts from three plant families. By comparison, the Costa Rican inventory of Manduca albiplaga larvae found them on Annonaceae; see that profile for details.",
+      "fr": "Les données argentines recensent des plantes hôtes de trois familles. En comparaison, l’inventaire costaricien des chenilles de Manduca albiplaga les a trouvées sur des Annonacées ; voir cette fiche pour plus de détails."
+    },
+    "conservation": {
+      "en": "Sources reviewed give no global population trend for this moth.",
+      "fr": "Les sources consultées ne donnent pas de tendance démographique mondiale pour ce sphinx."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Manduca florestan — Butterflies and Moths of North America",
+        "fr": "Manduca florestan — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Manduca-florestan",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "North American account gives the range, adult pattern, tail horn, adult nectar feeding and hosts Tecoma and Citharexylum."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 18,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Manduca florestan — Argentine Sphingidae database, Biodar-UNLP",
+        "fr": "Manduca florestan — base argentine des Sphingidae, Biodar-UNLP"
+      },
+      "url": "https://biodar.unlp.edu.ar/sphingidae/en/info/20431.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The Argentine database lists caterpillar hosts in Bignoniaceae, Boraginaceae and Verbenaceae and adult nectar plants."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 15,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Manduca florestan — Sphingidae Taxonomic Inventory",
+        "fr": "Manduca florestan — inventaire taxonomique des Sphingidae"
+      },
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1734",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Taxonomic cross-check for the current species name and genus assignment."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Manduca albiplaga — Área de Conservación Guanacaste species account",
+        "fr": "Manduca albiplaga — fiche de l’Área de Conservación Guanacaste"
+      },
+      "url": "https://www.acguanacaste.ac.cr/paginas-de-especies/insectos/101-sphingidae/4743-i-manduca-albiplaga-i-sphingidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Costa Rican inventory documents many Manduca albiplaga larvae on plants in Annonaceae."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 13,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant records from Argentina and North America are regional and cannot be treated as an exhaustive list across the species' full range; the cited host families differ across source coverage."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an English North American species account with the Argentine Biodar-UNLP Sphingidae database and a taxonomic inventory. Mutual comparison with Manduca albiplaga is restricted to the geographic scope of the host-plant records."
+}

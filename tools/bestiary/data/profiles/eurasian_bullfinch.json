@@ -1,0 +1,220 @@
+{
+  "id": "eurasian_bullfinch",
+  "scientific": "Pyrrhula pyrrhula",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Bullfinch",
+    "fr": "Bouvreuil pivoine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian Bullfinch is a compact finch of wooded Europe and temperate Asia. Northern populations often move south in winter, while many remain resident.",
+      "fr": "Le Bouvreuil pivoine est un fringille trapu des bois d’Europe et d’Asie tempérée. Les populations nordiques gagnent souvent le sud en hiver, tandis que beaucoup restent sédentaires."
+    },
+    "identification": {
+      "en": "Adults measure about 14.5–16 cm and show a stout black bill, grey back, black cap and wings, and white rump. Males have rose-red underparts; females are grey-brown, and juveniles lack the black cap. Adults average about 22.5 g in British ringing data; male and female means are close (about 22.2 and 23.0 g).",
+      "fr": "L’adulte mesure environ 14,5 à 16 cm ; son bec noir est épais, son dos gris, ses ailes et sa calotte noires, et son croupion blanc. Le mâle a le dessous rouge rosé ; la femelle est gris-brun et le jeune n’a pas de calotte noire. Les données britanniques de baguage donnent environ 22,5 g en moyenne ; les moyennes des mâles et femelles sont proches (environ 22,2 et 23,0 g)."
+    },
+    "habitat": {
+      "en": "It nests in mixed woodland, scrub and hedgerows, including wooded parks and gardens. Shrubs and leafy cover offer nest sites and sheltered feeding routes; it generally avoids open, treeless country.",
+      "fr": "Il niche dans les bois mixtes, les fourrés et les haies, y compris les parcs et jardins arborés. Les arbustes et le feuillage abritent le nid et les déplacements alimentaires ; il évite généralement les espaces ouverts sans arbres."
+    },
+    "diet": {
+      "en": "Its short, powerful conical bill cracks seeds and clips buds from branches, often high in trees. Seeds and berries are important seasonally, while fruit-tree buds are especially taken in late winter and spring. A pouch at the floor of the mouth stores food, complementing the bill’s role in collecting it.",
+      "fr": "Son bec conique, court et puissant casse les graines et prélève les bourgeons, souvent dans les arbres. Graines et baies comptent selon la saison ; les bourgeons des fruitiers sont recherchés en fin d’hiver et au printemps. Une poche au plancher de la bouche permet de stocker la nourriture, en complément du rôle du bec dans sa collecte."
+    },
+    "behavior": {
+      "en": "Pairs move quietly through cover, giving soft piping whistles that reveal birds hidden in foliage. Outside breeding, they usually travel as pairs or small family groups rather than large flocks.",
+      "fr": "Les couples avancent discrètement dans le couvert et émettent de doux sifflements flûtés qui signalent leur présence. Hors reproduction, les oiseaux circulent surtout en couple ou en petit groupe familial, rarement en grandes bandes."
+    },
+    "reproduction": {
+      "en": "The female builds a cup nest in a shrub or tree and usually lays four or five eggs, incubating them for 14–16 days. Downy chicks receive parental food, including small invertebrates, leave after about 15–17 days, and remain dependent while learning to forage. In Britain, breeding extends mainly from May to July, with nests of twigs, moss and lichen concealed in dense vegetation.",
+      "fr": "La femelle construit une coupe dans un arbuste ou un arbre et pond généralement quatre ou cinq œufs, couvés 14 à 16 jours. Les poussins duveteux reçoivent de la nourriture parentale, dont de petits invertébrés ; ils quittent le nid vers 15 à 17 jours et restent dépendants durant leur apprentissage alimentaire. En Grande-Bretagne, la nidification s’étend surtout de mai à juillet, dans des nids de brindilles, de mousse et de lichens cachés dans la végétation dense."
+    },
+    "ecology": {
+      "en": "Sparrowhawks prey on adult bullfinches, while eggs and nestlings are vulnerable to other predators; dense nesting cover shelters these early stages. Their seasonal use of buds links them to woody plant growth and can bring them into conflict with orchard growers.",
+      "fr": "Les éperviers capturent les bouvreuils adultes, tandis que les œufs et les poussins sont vulnérables à d’autres prédateurs ; le couvert dense abrite ces premiers stades. Leur consommation saisonnière de bourgeons les lie à la croissance des ligneux et les oppose parfois aux arboriculteurs."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2018 classified the species as Least Concern because of its broad range. Regional declines can still occur: British monitoring records a long fall since the late 1970s, which may be affected by declining habitat quality and fewer large orchards.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2018 classe l’espèce en préoccupation mineure en raison de sa vaste aire. Des déclins régionaux restent possibles : le suivi britannique relève une baisse prolongée depuis la fin des années 1970, que pourraient expliquer la dégradation des habitats et la raréfaction des grands vergers."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian bullfinch",
+        "fr": "Bouvreuil pivoine"
+      },
+      "url": "https://en.wikipedia.org/wiki/Eurasian_bullfinch",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Range, movement, social habits and orchard conflicts."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "conservation.en.2",
+        "ecology.en.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 7,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bouvreuil pivoine",
+        "fr": "Bouvreuil pivoine"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Bouvreuil_pivoine",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "habitat",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Adult size, plumage, bill, diet."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "ecology.fr.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 5,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bullfinch: BirdFacts — British Trust for Ornithology",
+        "fr": "Bouvreuil pivoine : BirdFacts — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/bullfinch",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "conservation",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "British nesting and population records.",
+        "Adult UK ringing records average 22.5 g; reported male and female means are 22.2 g and 23.0 g, respectively; adults average 82.3 mm in wing length."
+      ],
+      "prose_claims": [
+        "conservation.fr.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 31,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pyrrhula pyrrhula: The IUCN Red List",
+        "fr": "Pyrrhula pyrrhula : Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22720671A132141969.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife global Red List assessment published in 2018: Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 10,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bullfinch (Pyrrhula pyrrhula)",
+        "fr": "Bouvreuil pivoine — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/bullfinch/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Food storage, nest materials and predators."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 6,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Eurasian bullfinch pair: male with rose-red face and breast, female with grey-brown underparts; both with stout black conical bills, black caps and white rumps, perched among leafy branches on a pure white background.",
+  "uncertainties": [
+    "Breeding timing, diet proportions and movement vary among regions; BTO nesting intervals and population trends are British records, while the IUCN category is a global 2018 assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: BTO clutch, incubation and fledging checked; habitat causes qualified as possible rather than established. Removed unsupported seed-dispersal generalization; added documented food-storage anatomy, seasonal nest construction and sparrowhawk predation from Woodland Trust."
+}

@@ -1,0 +1,143 @@
+{
+  "id": "ixobrychus_minutus",
+  "scientific": "Ixobrychus minutus",
+  "group": "birds",
+  "name": {
+    "en": "Little Bittern",
+    "fr": "Blongios nain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Little Bittern is Europe’s smallest heron and a trans-Saharan migrant in its western Palearctic range.",
+      "fr": "Le Blongios nain est le plus petit héron d’Europe et migre au sud du Sahara depuis l’ouest du Paléarctique."
+    },
+    "identification": {
+      "en": "Males have a black crown and back with pale wing panels; females are duller and streaked below.",
+      "fr": "Le mâle a la calotte et le dos noirs avec des plages pâles sur l’aile ; la femelle est plus terne et striée dessous."
+    },
+    "habitat": {
+      "en": "It hides among reedbeds and other dense emergent plants along lakes, marshes, ditches and river margins.",
+      "fr": "Il se dissimule dans les roselières et autres végétaux émergents denses, au bord des lacs, marais, fossés et rivières."
+    },
+    "diet": {
+      "en": "Its food varies by site and season but includes small fish, amphibians and aquatic invertebrates.",
+      "fr": "Son alimentation varie selon le lieu et la saison, mais comprend de petits poissons, des amphibiens et des invertébrés aquatiques."
+    },
+    "behavior": {
+      "en": "A secretive bird, it is mainly active by day and at dusk; European populations migrate to sub-Saharan Africa.",
+      "fr": "Oiseau discret, il est surtout actif le jour et au crépuscule ; les populations européennes migrent en Afrique subsaharienne."
+    },
+    "reproduction": {
+      "en": "It usually nests alone in dense waterside vegetation, where the nest is close to water.",
+      "fr": "Il niche généralement seul dans une végétation riveraine dense, avec un nid proche de l’eau."
+    },
+    "ecology": {
+      "en": "It shares reedbed habitat with the larger Eurasian Bittern (Botaurus stellaris); see that profile for a comparison.",
+      "fr": "Il partage les roselières avec le Butor étoilé (Botaurus stellaris), beaucoup plus grand ; voir sa fiche pour comparaison."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2019 lists it as Least Concern, with a decreasing population trend.",
+      "fr": "L’évaluation mondiale UICN publiée en 2019 le classe en préoccupation mineure, avec une tendance démographique à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Bittern — Office français de la biodiversité",
+        "fr": "Blongios nain — Office français de la biodiversité"
+      },
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "OFB describes migration, reedbeds, nesting, behavior and habitat pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 9,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Little Bittern — Birds of Europe (Naturalis)",
+        "fr": "Blongios nain — Birds of Europe (Naturalis)"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130373",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Naturalis account describes plumage, wetlands, prey and evening activity."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 9,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ixobrychus minutus — IUCN Red List assessment",
+        "fr": "Ixobrychus minutus — évaluation de la Liste rouge UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22735766A155511258.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife/IUCN assessment published 2019 reports global Least Concern and a decreasing population trend; assessment date 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 16,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited IUCN global assessment is from 2018/2019; local conservation categories differ by country."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept global IUCN status separate from country-level listings and linked the reedbed comparison to the existing Eurasian Bittern profile."
+}

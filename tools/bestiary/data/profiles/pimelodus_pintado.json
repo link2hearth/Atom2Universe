@@ -1,0 +1,218 @@
+{
+  "id": "pimelodus_pintado",
+  "scientific": "Pimelodus pintado",
+  "group": "fish",
+  "name": {
+    "en": "Pimelodus pintado",
+    "fr": "Pimelodus pintado"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American long-whiskered catfish was described from tributaries flowing into Laguna Merín in Uruguay.",
+      "fr": "Ce poisson-chat sud-américain à longs barbillons a été décrit dans des affluents de la lagune Merín, en Uruguay."
+    },
+    "identification": {
+      "en": "Its most striking reported feature is a dense pattern of small irregular dark spots over the head, body and fins; freshly caught fish were described with a metallic golden background.",
+      "fr": "Son caractère le plus frappant est une profusion de petites taches sombres irrégulières sur la tête, le corps et les nageoires; les individus frais étaient décrits avec un fond métallique doré."
+    },
+    "habitat": {
+      "en": "The confirmed records are from the Cebollatí, Tacuarí and Yaguarón rivers of the Laguna Merín basin; detailed habitat requirements remain poorly known.",
+      "fr": "Les données confirmées proviennent des rivières Cebollatí, Tacuarí et Yaguarón, dans le bassin de la lagune Merín; ses exigences précises en matière d’habitat restent peu connues."
+    },
+    "diet": {
+      "en": "Its diet has not been studied in detail; a Uruguayan guide reports mollusc remains in examined stomachs, while broader basin-level diet information cannot be assumed to apply fully to this species.",
+      "fr": "Son régime n’a pas été étudié en détail; un guide uruguayen signale des restes de mollusques dans des estomacs examinés, mais les données alimentaires générales du bassin ne peuvent lui être attribuées sans réserve."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is scarcely documented in the description and regional accounts consulted.",
+      "fr": "Le comportement propre à l’espèce est peu documenté dans la description et les sources régionales consultées."
+    },
+    "reproduction": {
+      "en": "The Uruguayan regional account states that its reproductive biology is unknown.",
+      "fr": "La source régionale uruguayenne indique que sa biologie reproductrice est inconnue."
+    },
+    "ecology": {
+      "en": "Its dense spotting and Laguna Merín range distinguish it among the four Pimelodus profiles here. P. pohli is instead known from the São Francisco drainage. P. stewarti comes from the Tocantins and is much smaller. P. tetramerus occurs in the Tapajós–Tocantins region and has four dark flank bands.",
+      "fr": "Sa robe très tachetée et sa présence dans le bassin de la lagune Merín le distinguent parmi les quatre Pimelodus présentés ici. P. pohli est plutôt connu du bassin du São Francisco. P. stewarti vient du Tocantins et est beaucoup plus petit. P. tetramerus vit dans la région Tapajós–Tocantins et porte quatre bandes sombres sur les flancs."
+    },
+    "conservation": {
+      "en": "Uruguay’s environment ministry lists it as a national conservation priority because its distribution is restricted; this national designation is not a global IUCN category.",
+      "fr": "Le ministère uruguayen de l’Environnement le classe parmi les priorités nationales de conservation en raison de son aire restreinte; cette désignation nationale n’est pas une catégorie mondiale de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pimelodus pintado — original species description",
+        "fr": "Pimelodus pintado — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The 2008 description documents the species from Laguna Merín tributaries and describes its dense dark spotting and golden fresh coloration."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 20,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Freshwater fishes of Uruguay — second edition (Spanish)",
+        "fr": "Poissons d’eau douce d’Uruguay — deuxième édition (espagnol)"
+      },
+      "url": "https://udelar.edu.uy/retema/wp-content/uploads/sites/30/2023/10/Peces-de-agua-dulce-de-Uruguay.-Segunda-Edicion.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The regional guide describes the restricted Merín-basin distribution and reports molluscs from sampled stomachs; reproductive biology is little known."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 19,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pintado — Uruguay Ministry of Environment species record (Spanish)",
+        "fr": "Pimelodus pintado — fiche espèce du ministère uruguayen de l’Environnement (espagnol)"
+      },
+      "url": "https://www.ambiente.gub.uy/especies/especie/P_pintado/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Uruguay’s national assessment identifies a restricted distribution and a national conservation priority."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 12,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pohli — original description",
+        "fr": "Pimelodus pohli — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The original description places P. pohli in the São Francisco drainage."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 11,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus stewarti — FishBase species summary",
+        "fr": "Pimelodus stewarti — fiche espèce FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/64684",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports P. stewarti from the Tocantins drainage and a maximum standard length of 6.6 cm."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 16,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus tetramerus — original description",
+        "fr": "Pimelodus tetramerus — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The original description documents four dark lateral bands and records from the Tapajós and Tocantins river systems."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 17,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and ecology are based on sparse regional observations; the examined stomachs are not enough to define a species-wide diet.",
+    "The national conservation-priority listing should not be presented as an IUCN global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Includes reciprocal comparisons with P. pohli, P. stewarti and P. tetramerus; citations distinguish basin, size and marking differences."
+}

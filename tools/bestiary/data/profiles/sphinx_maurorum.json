@@ -1,0 +1,121 @@
+{
+  "id": "sphinx_maurorum",
+  "scientific": "Sphinx maurorum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Southern pine hawkmoth",
+    "fr": "Sphinx mauresque"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Mediterranean hawk moth is associated with pine woods.",
+      "fr": "Ce sphinx méditerranéen est associé aux pinèdes."
+    },
+    "identification": {
+      "en": "It closely resembles Sphinx pinastri; genitalia help distinguish them.",
+      "fr": "Il ressemble à Sphinx pinastri ; les genitalia aident à les distinguer."
+    },
+    "habitat": {
+      "en": "Its range includes North Africa, Iberia and parts of southern France.",
+      "fr": "Son aire inclut l’Afrique du Nord, l’Ibérie et le sud de la France."
+    },
+    "diet": {
+      "en": "Larvae feed on pines; cedar is also reported.",
+      "fr": "Les chenilles mangent des pins ; le cèdre est aussi signalé."
+    },
+    "behavior": {
+      "en": "The two species may meet; hybrids are reported in contact zones.",
+      "fr": "Les deux espèces peuvent se rencontrer ; des hybrides sont signalés en zone de contact."
+    },
+    "reproduction": {
+      "en": "The consulted accounts do not establish a reliable breeding schedule.",
+      "fr": "Les sources consultées ne permettent pas d’établir un calendrier reproductif fiable."
+    },
+    "ecology": {
+      "en": "See Sphinx pinastri, its similar northern relative.",
+      "fr": "Voir Sphinx pinastri, son proche parent septentrional."
+    },
+    "conservation": {
+      "en": "The consulted species accounts provide no global conservation rank.",
+      "fr": "Les fiches consultées ne donnent pas de rang mondial de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Les Sphingidae de France — Sphinx maurorum",
+        "fr": "Les Sphingidae de France — Sphinx maurorum"
+      },
+      "url": "https://sphingidae-haxaire.com/index.php/sphinginae/sphinx-maurorum/",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The specialist French account describes its Mediterranean range, pine hosts, contact with Sphinx pinastri, hybrids, and notes that the specific phenology is not established there."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 25,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lepinet — Sphinx mauresque",
+        "fr": "Lepinet — Sphinx mauresque"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=&id=37945",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Lepinet notes similarity to Sphinx pinastri and the genital differences used for identification.",
+        "The consulted Lepinet species account does not present a global conservation rank."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 25,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Distribution within France remains difficult to map because of frequent confusion with Sphinx pinastri.",
+    "No global conservation assessment was found in the consulted species references."
+  ],
+  "review_note": "Concision reflects the taxonomic identification difficulty; the related pine hawkmoth is named explicitly for cross-reference.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

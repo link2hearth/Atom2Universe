@@ -1,0 +1,163 @@
+{
+  "id": "red_admiral",
+  "scientific": "Vanessa atalanta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Red admiral",
+    "fr": "Vulcain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Red admiral is a widespread butterfly of the Northern Hemisphere, and many populations migrate seasonally.",
+      "fr": "Le Vulcain est un papillon largement répandu dans l’hémisphère Nord, dont de nombreuses populations effectuent des déplacements saisonniers."
+    },
+    "identification": {
+      "en": "Its dark wings have vivid red-orange bands and white marks near the forewing tips.",
+      "fr": "Ses ailes sombres portent de vives bandes rouge orangé et des marques blanches près de l’extrémité des ailes antérieures."
+    },
+    "habitat": {
+      "en": "Adults use gardens, woodland edges and open country, visiting flowers and ripe or fermenting fruit.",
+      "fr": "Les adultes fréquentent les jardins, les lisières et les espaces ouverts ; ils visitent les fleurs et les fruits mûrs ou fermentés."
+    },
+    "diet": {
+      "en": "Caterpillars feed mainly on nettles, while adults take nectar and other sugary fluids.",
+      "fr": "Les chenilles se nourrissent surtout d’orties, tandis que les adultes prélèvent du nectar et d’autres liquides sucrés."
+    },
+    "behavior": {
+      "en": "Some Red Admirals migrate into Britain from farther south, while a portion now survives mild winters there.",
+      "fr": "Certains Vulcains migrent vers la Grande-Bretagne depuis le sud, tandis qu’une partie survit désormais aux hivers doux."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on host plants, and the caterpillars shelter in leaves they draw together with silk.",
+      "fr": "Les femelles pondent sur des plantes hôtes, et les chenilles s’abritent dans des feuilles qu’elles assemblent avec de la soie."
+    },
+    "ecology": {
+      "en": "Its migration and overwintering vary by region; even in Britain, the extent of successful wintering remains uncertain.",
+      "fr": "Ses migrations et son hivernage varient selon les régions ; même en Grande-Bretagne, l’ampleur de l’hivernage réussi reste incertaine."
+    },
+    "conservation": {
+      "en": "The IUCN classifies the Red Admiral globally as Least Concern, while noting that its population trend is unknown.",
+      "fr": "L’UICN classe le Vulcain dans la catégorie préoccupation mineure à l’échelle mondiale, tout en indiquant que sa tendance de population est inconnue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Admiral — LPO",
+        "fr": "Vulcain — LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/papillons/vulcain",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French LPO describes the adult wing pattern and flight period."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 11,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red Admiral — Butterfly Conservation",
+        "fr": "Vulcain — Butterfly Conservation"
+      },
+      "url": "https://butterfly-conservation.org/news-and-blog/species-of-the-month-red-admiral",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Butterfly Conservation describes migrant arrivals and uncertain overwintering in Britain; those regional details are not a global population assessment."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 19,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red Admiral — Animal Diversity Web",
+        "fr": "Vulcain — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Vanessa_atalanta/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "ADW describes the broad range, host plants and feeding ecology of Vanessa atalanta."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 13,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red Admiral — IUCN Red List",
+        "fr": "Vulcain — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T174225A172421220.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment published in 2020 lists Vanessa atalanta as Least Concern and reports its population trend as unknown."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 19,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration and overwintering vary among regions and years; the conservation section avoids assigning an unsupported global status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. No close relative currently profiled in the selected inventory with a sufficiently clear comparison; a Painted Lady mention is contextual, not a profile link."
+}

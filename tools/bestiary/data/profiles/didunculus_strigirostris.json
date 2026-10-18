@@ -1,0 +1,190 @@
+{
+  "id": "didunculus_strigirostris",
+  "scientific": "Didunculus strigirostris",
+  "group": "birds",
+  "name": {
+    "en": "Tooth-billed Pigeon (Manumea)",
+    "fr": "Diduncule strigirostre (Manumea)"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Manumea is a Samoan endemic pigeon now known from the islands of Upolu and Savai‘i, where it persists in very small numbers and is difficult to detect.",
+      "fr": "Le Manumea est un pigeon endémique des Samoa, aujourd’hui connu des îles d’Upolu et de Savai‘i ; il subsiste en très petit nombre et reste difficile à détecter."
+    },
+    "identification": {
+      "en": "Its distinctive heavy bill has tooth-like projections on the lower mandible, an unusual feature among pigeons that gives the species its English name.",
+      "fr": "Son bec massif porte des projections dentiformes sur la mandibule inférieure, caractère inhabituel chez les pigeons qui explique son nom anglais."
+    },
+    "habitat": {
+      "en": "The recovery plan reports it within and along the edges of mature native forest; forest retention is central to the species’ survival.",
+      "fr": "Le plan de rétablissement le signale à l’intérieur des forêts indigènes matures et sur leurs lisières ; la préservation de ces forêts est essentielle à sa survie."
+    },
+    "diet": {
+      "en": "The French species account reports fruits, including hard fruits of Dysoxylum that the bird can open with its strong bill; detailed dietary studies remain limited.",
+      "fr": "La fiche française rapporte des fruits, notamment ceux, coriaces, de Dysoxylum que l’oiseau peut ouvrir avec son bec puissant ; les études détaillées de son régime restent limitées."
+    },
+    "behavior": {
+      "en": "Traditional ecological knowledge describes the pigeon as cryptic and difficult to observe, and notes that it may be confused in the field with the Pacific Pigeon.",
+      "fr": "Les savoirs écologiques traditionnels le décrivent comme discret et difficile à observer, et signalent qu’il peut être confondu sur le terrain avec le Pigeon des îles."
+    },
+    "reproduction": {
+      "en": "The recovery literature emphasizes major gaps in basic life-history knowledge, so breeding details should be treated as poorly established rather than assumed from other pigeons.",
+      "fr": "La documentation de rétablissement souligne d’importantes lacunes sur son histoire naturelle ; les détails de sa reproduction restent donc mal établis et ne doivent pas être déduits de ceux d’autres pigeons."
+    },
+    "ecology": {
+      "en": "As the only living species in Didunculus, this forest pigeon represents a distinctive Samoan lineage; its restricted island range makes forest loss and introduced predators especially consequential.",
+      "fr": "Seule espèce actuelle du genre Didunculus, ce pigeon forestier représente une lignée propre aux Samoa ; son aire insulaire restreinte rend particulièrement lourds les effets de la perte forestière et des prédateurs introduits."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Critically Endangered; the Samoa recovery plan prioritizes forest protection, invasive-predator management and improved population knowledge.",
+      "fr": "L’évaluation UICN le classe « En danger critique » ; le plan samoan donne la priorité à la protection des forêts, à la gestion des prédateurs introduits et à l’amélioration des connaissances sur la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tooth-billed Pigeon / Manumea Recovery Plan 2020–2029",
+        "fr": "Plan de rétablissement 2020–2029 du Manumea / Diduncule strigirostre"
+      },
+      "url": "https://samoaconservationsociety.com/wp-content/uploads/2024/12/recovery-plan_tooth-billed-pigeon-final-compressed.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Samoa recovery plan describes the endemic range, mature native forest, knowledge gaps and conservation priorities."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Traditional ecological knowledge of the critically endangered tooth-billed pigeon",
+        "fr": "Savoirs écologiques traditionnels sur le Diduncule strigirostre en danger critique"
+      },
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/traditional-ecological-knowledge-of-the-critically-endangered-toothbilled-pigeon-didunculus-strigirostris-endemic-to-samoa/90773A514E89F8924CB023DC2AC1BEDB",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Study records cryptic habits, low detectability and possible confusion with the Pacific Pigeon."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Diduncule strigirostre — Oiseaux.net",
+        "fr": "Diduncule strigirostre — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/diduncule.strigirostre.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "French species page describes the unusual bill and reported fruit diet, including Dysoxylum."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tooth-billed Pigeon — IUCN Red List",
+        "fr": "Didunculus strigirostris — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22691890A156841404.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN/BirdLife profile gives the global category Critically Endangered and Samoan island range."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Current endangerment category is given as shown by IUCN; avoid citing older population estimates as current because surveys and estimates vary and the species is difficult to detect."
+}

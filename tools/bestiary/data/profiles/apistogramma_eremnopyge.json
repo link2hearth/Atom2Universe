@@ -1,0 +1,254 @@
+{
+  "id": "apistogramma_eremnopyge",
+  "scientific": "Apistogramma eremnopyge",
+  "group": "fish",
+  "name": {
+    "en": "Apistogramma eremnopyge",
+    "fr": "Apistogramma eremnopyge"
+  },
+  "sections": {
+    "overview": {
+      "en": "This dwarf cichlid was described from the Río Pintuyacu in Peru’s Loreto region. Later records extend its known range to nearby Nanay and southern Tapiche drainages.",
+      "fr": "Ce cichlidé nain a été décrit du Río Pintuyacu, dans la région péruvienne de Loreto. Des données ultérieures étendent son aire connue aux réseaux voisins du Nanay et du Tapiche méridional."
+    },
+    "identification": {
+      "en": "The type series’ adult male measured 34.4 mm standard length; adult females measured 26.1–28.2 mm, measured to the tail-fin base. Males have extended front dorsal lobes and tail rays; both sexes show the unique lower tail-stalk blotch and narrow side stripe.",
+      "fr": "Le mâle adulte de la série type mesurait 34,4 mm de longueur standard ; les femelles, 26,1 à 28,2 mm, mesure prise jusqu’à la base de la caudale. Le mâle a des prolongements dorsaux et caudaux ; les deux sexes portent la tache basse unique et une étroite bande latérale."
+    },
+    "habitat": {
+      "en": "It inhabits slow tributaries, creeks and backwaters with soft, acidic clear or black water and fallen leaf litter on the bottom.",
+      "fr": "Il vit dans des affluents lents, des ruisseaux et des bras calmes à eau douce et acide, claire ou noire, sur fond de feuilles mortes."
+    },
+    "diet": {
+      "en": "A species-specific prey list has not been documented; genus-level accounts describe Apistogramma as carnivorous, mainly taking small bottom-dwelling invertebrates.",
+      "fr": "Aucune liste de proies propre à l’espèce n’a été publiée ; les synthèses du genre décrivent des Apistogramma carnivores, consommant surtout de petits invertébrés benthiques."
+    },
+    "behavior": {
+      "en": "Captive observations describe territorial males that may attack rival males. Some pairs reportedly settle better when other conspecific pairs remain visible nearby.",
+      "fr": "En captivité, les mâles territoriaux peuvent attaquer leurs rivaux. Certains couples s’installeraient mieux lorsque d’autres couples de la même espèce restent visibles à proximité."
+    },
+    "reproduction": {
+      "en": "Captive reports describe cave spawning at night or dawn, usually with 50–150 eggs. The male patrols while the female guards and tends eggs and fry.",
+      "fr": "En élevage, la ponte a lieu dans une cavité, la nuit ou à l’aube, avec généralement 50 à 150 œufs. Le mâle patrouille et la femelle garde les œufs et les alevins."
+    },
+    "ecology": {
+      "en": "Its closest lookalike is Apistogramma bitaeniata; the bold dark blotch low on the tail stalk distinguishes A. eremnopyge.",
+      "fr": "Son espèce la plus ressemblante est Apistogramma bitaeniata ; la tache sombre marquée au bas du pédoncule caudal distingue A. eremnopyge."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists the species as Least Concern, last assessed in 2014. Later Peruvian research notes that narrow-range Apistogramma may be sensitive to forest loss and other habitat change.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure, avec une dernière évaluation en 2014. Des travaux péruviens ultérieurs indiquent que les Apistogramma à aire restreinte peuvent être sensibles à la déforestation et à d’autres changements d’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma eremnopyge, a new species of cichlid fish from Peru — Zootaxa",
+        "fr": "Apistogramma eremnopyge, nouvelle espèce de cichlidé du Pérou — Zootaxa"
+      },
+      "url": "https://mapress.com/zt/article/download/zootaxa.564.1.1/8036/8045",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Original 2004 peer-reviewed description by Ready and Kullander; gives type locality, specimen measurements, unique tail-stalk blotch, fin characters and comparison with A. bitaeniata."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 23,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eremnopyge — Seriously Fish species account",
+        "fr": "Apistogramma eremnopyge — fiche espèce Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eremnopyge",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Revised 2026 account documents additional Loreto drainages, clear and blackwater habitat, leaf litter, genus-level invertebrate feeding, captive behaviour and breeding reports."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 21,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eremnopyge — FishBase summary",
+        "fr": "Apistogramma eremnopyge — fiche FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/62078",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "FishBase reports global IUCN Least Concern, using assessment version 2025-2 and the species assessment date 25 April 2014."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "State of Conservation and Red List of Freshwater Fishes of Peru — IUCN Library",
+        "fr": "État de conservation et Liste rouge des poissons d’eau douce du Pérou — bibliothèque UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language assessment table records Apistogramma eremnopyge as LC."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 8,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Changes of water temperature by deforestation and Apistogramma cichlids in Loreto, Peru — Bulletin of Fish Biology",
+        "fr": "Changements de température de l’eau liés à la déforestation et aux Apistogramma du Loreto — Bulletin of Fish Biology"
+      },
+      "url": "https://www.ichthyologie.de/wp-content/uploads/2021/03/Beninde-et-al-2020-Changes-of-water-temperature-by-deforestation-and-Apistogramma.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study notes that A. eremnopyge was known from a short river and discusses the vulnerability of narrow-range Peruvian Apistogramma to habitat change."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 23,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eremnopyge — Fishipedia French species card",
+        "fr": "Apistogramma eremnopyge — fiche espèce Fishipedia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-eremnopyge",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "French card cross-checks dwarf-cichlid classification, approximate size, and Least Concern status; its text is marked as still being developed."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eremnopyge — Cichlid Atlas species account",
+        "fr": "Apistogramma eremnopyge — fiche du Cichlid Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/apistogramma-eremnopyge/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Account synthesizes Römer’s captive observations on male territories, female-led brood care, cave spawning and clutch size."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 16,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a tiny, laterally compressed dwarf cichlid with a narrow side stripe and conspicuous black blotch on the lower rear tail stalk, present in both sexes. Male: more colorful with red-blue cheek accents and elongated dorsal and caudal rays; female: smaller and plainer. Leaf-litter stream setting.",
+  "uncertainties": [
+    "The original description measured a small type series: 34.4 mm standard length in its adult male and 26.1–28.2 mm in its adult females. These are specimen observations, not verified species-wide maximum sizes; later aquarium guides report larger maxima.",
+    "No reliable body-mass, body-width or body-height values were found in the sources reviewed.",
+    "The wild diet and spawning ecology were not detailed in the original description. Dietary information above is explicitly genus-level, and reproductive details are attributed to captive breeding accounts.",
+    "The 2020 study describes the short Río Itaya range known at that time; a 2026 account also reports Nanay and Tapiche records, so the geographic picture has expanded."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the original Zootaxa description for diagnostic characters and type-series measurements, cross-checked newer drainage records, and separated species-specific evidence from genus-level diet and captive breeding reports. Included English, Spanish and French references; the French card is treated only as a limited cross-check."
+}

@@ -1,0 +1,143 @@
+{
+  "id": "bonobo",
+  "scientific": "Pan paniscus",
+  "group": "mammals",
+  "name": {
+    "en": "Bonobo",
+    "fr": "Bonobo"
+  },
+  "sections": {
+    "overview": {
+      "en": "The bonobo (Pan paniscus) is a great ape found only in the Democratic Republic of the Congo, south of the Congo River. It shares Pan with the common chimpanzee (P. troglodytes). Communities forage in changing subgroups, with social patterns that vary between them.",
+      "fr": "Le bonobo (Pan paniscus) est un grand singe présent uniquement en République démocratique du Congo, au sud du fleuve Congo. Il partage le genre Pan avec le chimpanzé commun (P. troglodytes). Les communautés cherchent leur nourriture en sous-groupes changeants et leurs comportements varient."
+    },
+    "identification": {
+      "en": "Adults are slender, long-legged apes with black hair and dark skin on face, hands and feet. Crown hair often parts centrally; infants have a white rump tuft. Pink lips and a less projecting muzzle distinguish them from the more robust common chimpanzee. Adult head-to-rump length is about 70–83 cm; reported adult masses are 27–38 kg for females and 37–61 kg for males, with substantial overlap between sexes.",
+      "fr": "L’adulte est élancé, avec de longues jambes, un pelage noir et la peau sombre au visage, aux mains et aux pieds. Les poils du sommet du crâne forment souvent une raie centrale ; le petit porte une touffe blanche au croupion. Lèvres roses et museau moins saillant le distinguent du chimpanzé commun, plus robuste. La longueur tête-croupe des adultes est d’environ 70 à 83 cm ; les masses adultes publiées sont de 27 à 38 kg chez les femelles et de 37 à 61 kg chez les mâles, avec un chevauchement important entre les sexes."
+    },
+    "habitat": {
+      "en": "The range lies in the central Congo Basin, between the Congo River and Kasai–Sankuru system, within the Democratic Republic of the Congo. Bonobos use lowland primary, secondary and swamp forests; some also inhabit forest–savanna mosaics. Habitat varies locally.",
+      "fr": "L’aire se trouve dans le bassin central du Congo, entre le fleuve Congo et le système Kasaï–Sankuru, en République démocratique du Congo. Le bonobo fréquente les forêts de plaine primaires, secondaires et marécageuses ; certains vivent aussi dans des mosaïques forêt-savane. L’habitat varie localement."
+    },
+    "diet": {
+      "en": "Bonobos mainly eat fruit, plus leaves, shoots and flowers; insects and small vertebrates are also recorded. Diet varies by site and season. At LuiKotale, fruit appeared in 66% of feeding sessions in one habituated community. They forage in trees and on the ground.",
+      "fr": "Le bonobo mange surtout des fruits, mais aussi des feuilles, pousses et fleurs ; des insectes et petits vertébrés sont signalés. Le régime varie selon le site et la saison. À LuiKotale, les fruits apparaissaient dans 66 % des séances d’une communauté habituée. Il se nourrit dans les arbres et au sol."
+    },
+    "behavior": {
+      "en": "Communities split into temporary parties that later separate or reunite, a fission–fusion pattern. Females often leave their birth community at maturity; males usually stay. Females cooperate around food, but aggression and competition also occur. Patterns vary between sites: bonobos are not universally peaceful.",
+      "fr": "Les communautés se divisent en groupes temporaires qui se séparent ou se retrouvent : c’est la fission-fusion. Les femelles quittent souvent leur communauté natale à maturité ; les mâles restent généralement. Les femelles coopèrent autour de la nourriture, mais agressivité et compétition existent aussi. Les comportements varient selon les sites : les bonobos ne sont pas toujours paisibles."
+    },
+    "reproduction": {
+      "en": "Females usually have one infant after about eight months of pregnancy. They nurse and carry it for a long period, with births years apart. At Wamba, the mean interval between live births was 4.8 years; individual timing varies. Mothers care for young as they learn to travel and feed.",
+      "fr": "La femelle a généralement un seul petit après environ huit mois de gestation. Elle l’allaite et le porte longtemps ; plusieurs années séparent les naissances. À Wamba, l’intervalle moyen entre naissances vivantes était de 4,8 ans ; le rythme varie. La mère accompagne son petit dans l’apprentissage des déplacements et de l’alimentation."
+    },
+    "ecology": {
+      "en": "After eating fruit, bonobos deposit seeds in dung away from parent trees. At LuiKotale, researchers recorded over 91 plant species and a mean dispersal distance of 1.2 kilometres; gut-passed seeds germinated better in trials. This supports a local role in forest regeneration.",
+      "fr": "Après avoir mangé des fruits, les bonobos rejettent les graines loin des arbres parents. À LuiKotale, les chercheurs ont relevé plus de 91 espèces végétales et une distance moyenne de dispersion de 1,2 kilomètre ; les graines ingérées germaient mieux lors d’essais. Cela étaye leur rôle local à la régénération forestière."
+    },
+    "conservation": {
+      "en": "The IUCN’s 2016 global assessment classified bonobos as Endangered, citing hunting, habitat loss and degradation, and weak law enforcement. The Bonobo Conservation Initiative also reports human encroachment and disease risk. Population estimates are difficult; this assessment is not a new census.",
+      "fr": "L’évaluation mondiale de l’UICN de 2016 classait le bonobo « En danger », en raison de la chasse, de la perte et de la dégradation de l’habitat, et de l’application insuffisante des lois. Le Bonobo Conservation Initiative signale aussi l’avancée humaine et les maladies. Les estimations sont difficiles ; cette évaluation n’est pas un nouveau recensement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "EAZA Best Practice Guidelines: Bonobo (Pan paniscus)",
+        "fr": "EAZA Best Practice Guidelines : Bonobo (Pan paniscus)"
+      },
+      "url": "https://strapi.eaza.net/uploads/Bonobo_BPG_final_version_2020_ab295642cd.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Expert husbandry guidelines summarize field data on bonobo morphology, range and habitats, natural diet, social behavior and reproduction; wild observations are distinguished from captive management information."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pan paniscus — The IUCN Red List of Threatened Species, 2016 assessment",
+        "fr": "Pan paniscus — Liste rouge de l’UICN, évaluation de 2016"
+      },
+      "url": "https://www.storre.stir.ac.uk/bitstream/1893/26839/1/10.2305_IUCN.UK.2016-2.RLTS.T15932A17964305.en.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Published in 2016; classifies the species as Endangered and describes its DRC-only range, population uncertainty, habitat pressures and hunting threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Stable and fluctuating social preferences among female bonobos — Animal Behaviour",
+        "fr": "Préférences sociales stables et fluctuantes chez les femelles bonobos — Animal Behaviour"
+      },
+      "url": "https://www.bonobosworld.org/images/zotero/Moscovice_et_al.-2017-Stable_and_fluctuating_social_preferences.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Research describes flexible fission–fusion parties, female association and cooperation, and social conflicts, while noting variation among relationships and communities."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ecological services performed by the bonobo (Pan paniscus): seed dispersal effectiveness in tropical forest — Journal of Tropical Ecology",
+        "fr": "Services écologiques du bonobo (Pan paniscus) : efficacité de la dispersion des graines en forêt tropicale — Journal of Tropical Ecology"
+      },
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/ecological-services-performed-by-the-bonobo-pan-paniscus-seed-dispersal-effectiveness-in-tropical-forest/A581415D4111271BDCD5AA7D0E9519B",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "A 22-month LuiKotale study found fruit in 66% of feeding sessions; bonobos dispersed seeds from over 91 plant species, averaging 1.2 km, and gut-passed seeds performed better in germination trials."
+      ]
+    },
+    {
+      "title": {
+        "en": "Threats — Bonobo Conservation Initiative",
+        "fr": "Menaces — Bonobo Conservation Initiative"
+      },
+      "url": "https://www.bonobo.org/threats",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Describes poaching, habitat degradation, human encroachment and disease transmission concerns, and notes that estimating wild population size is difficult."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan",
+        "fr": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pan_paniscus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult head-rump length 70–83 cm; reported female mass 27–38 kg and male mass 37–61 kg, with overlap."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated bonobo.webp. Show one adult bonobo with a naturally slender build, long legs, black face and coat, dark hands and feet, middle-parted crown hair and naturally pink lips; preserve ordinary individual variation and avoid chimpanzee-like heavy brow ridges. Isolate the full animal on a PURE WHITE background.",
+  "uncertainties": [
+    "The IUCN category and threats cited are from its 2016 global assessment; no current abundance estimate is asserted.",
+    "Diet, habitat use and social patterns vary by site and season; LuiKotale and Wamba measurements are specific to the study populations and periods.",
+    "The 4.8-year interval between live births is a field-study average, not a universal reproductive interval."
+  ],
+  "reviewed": true,
+  "review_note": "Independent primary-source review confirms locally scoped LuiKotale and Wamba figures and dated conservation; bilingual certainty aligned."
+}

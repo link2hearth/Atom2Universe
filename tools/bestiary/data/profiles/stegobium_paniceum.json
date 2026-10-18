@@ -1,0 +1,142 @@
+{
+  "id": "stegobium_paniceum",
+  "scientific": "Stegobium paniceum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Biscuit beetle",
+    "fr": "Vrillette du pain"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small beetle is a widespread pest of stored foods.",
+      "fr": "Ce petit coléoptère est un ravageur répandu des denrées entreposées."
+    },
+    "identification": {
+      "en": "Adults are reddish brown and about 2–4 mm long.",
+      "fr": "L’adulte est brun rougeâtre et mesure environ 2 à 4 mm."
+    },
+    "habitat": {
+      "en": "It is often found in homes, shops, warehouses and kitchens where dry foods are stored.",
+      "fr": "On le rencontre souvent dans les maisons, magasins, entrepôts et cuisines où sont stockés des aliments secs."
+    },
+    "diet": {
+      "en": "Larvae feed on dry foods, including flour, biscuits and spices.",
+      "fr": "Les larves mangent des aliments secs, notamment farine, biscuits et épices."
+    },
+    "behavior": {
+      "en": "Larvae tunnel through food and can reach supplies hidden inside packaging.",
+      "fr": "Les larves creusent dans les aliments et peuvent atteindre des réserves dissimulées dans leur emballage."
+    },
+    "reproduction": {
+      "en": "It develops through egg, larva, pupa and adult stages; females lay eggs on or near a food source.",
+      "fr": "Son développement passe par l’œuf, la larve, la nymphe et l’adulte ; la femelle pond sur ou près d’une source de nourriture."
+    },
+    "ecology": {
+      "en": "Development speed depends on temperature, moisture and food quality.",
+      "fr": "La vitesse de développement dépend de la température, de l’humidité et de la qualité de la nourriture."
+    },
+    "conservation": {
+      "en": "The references consulted describe it as a stored-food pest rather than provide a conservation assessment.",
+      "fr": "Les références consultées le décrivent comme un ravageur des denrées stockées, sans fournir d’évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biscuit beetle identification and life cycle — Natural History Museum",
+        "fr": "Identification et cycle de la vrillette du pain — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/take-part/identify-nature/common-insect-pest-species-in-homes/bread-or-biscuit-beetle-stegobium-paniceum-identification-guide.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The museum describes a common stored-food pest found in homes, stores and warehouses and covers its four life stages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 19,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Drugstore beetle — University of Florida IFAS Extension",
+        "fr": "Vrillette des pharmacies — University of Florida IFAS Extension"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN385",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "UF/IFAS reports larvae tunnelling through stored foods and that food, humidity and temperature affect development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 15,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stegobium paniceum — INRAE Ephytia",
+        "fr": "Stegobium paniceum — INRAE Ephytia"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/11596/Hypp-encyclopedie-en-protection-des-plantes-Stegobium-paniceum",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "INRAE gives an adult size of about 1.8–3.7 mm and notes temperature-dependent development."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 13,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The exact duration and number of generations vary with local conditions and are not fixed species-wide values."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

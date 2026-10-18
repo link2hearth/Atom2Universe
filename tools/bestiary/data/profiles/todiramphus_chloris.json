@@ -1,0 +1,141 @@
+{
+  "id": "todiramphus_chloris",
+  "scientific": "Todiramphus chloris",
+  "group": "birds",
+  "name": {
+    "en": "Collared Kingfisher",
+    "fr": "Martin-chasseur à collier blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread kingfisher occurs across the tropical Indo-Pacific.",
+      "fr": "Ce martin-chasseur répandu vit dans l’Indo-Pacifique tropical."
+    },
+    "identification": {
+      "en": "It has blue-green upperparts, a white collar and pale underparts.",
+      "fr": "Il a le dessus bleu-vert, un collier blanc et le dessous clair."
+    },
+    "habitat": {
+      "en": "It uses coasts, wetlands and other open habitats.",
+      "fr": "Il fréquente les côtes, les zones humides et d’autres milieux ouverts."
+    },
+    "diet": {
+      "en": "It takes fish, crabs, lizards, insects and amphibians.",
+      "fr": "Il capture des poissons, crabes, lézards, insectes et amphibiens."
+    },
+    "behavior": {
+      "en": "It hunts from perches and beats larger prey before eating.",
+      "fr": "Il chasse depuis un perchoir et frappe les grosses proies avant de les manger."
+    },
+    "reproduction": {
+      "en": "Pairs dig nest tunnels; both parents care for the young.",
+      "fr": "Les couples creusent un tunnel de nid ; les deux parents s’occupent des jeunes."
+    },
+    "ecology": {
+      "en": "In Sulawesi it is a resident breeder, unlike the migratory Sacred Kingfisher that winters there.",
+      "fr": "À Sulawesi, il niche comme résident, contrairement au Martin-chasseur sacré, migrateur qui y passe l’hiver."
+    },
+    "conservation": {
+      "en": "BirdLife International lists it globally as Least Concern, while noting a decreasing population trend.",
+      "fr": "BirdLife International le classe mondialement en Préoccupation mineure, tout en signalant une tendance démographique à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Martin-chasseur à collier blanc — Oiseaux.net",
+        "fr": "Martin-chasseur à collier blanc — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/martin-chasseur.a.collier.blanc.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French species account describes appearance, range, habitat, prey, hunting and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 11,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diversification of a great speciator in Wallacea — Ibis",
+        "fr": "Diversification of a great speciator in Wallacea — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/ibi.12688",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study describes T. chloris as the breeding resident in southeast Sulawesi, contrasting it with overwintering migratory T. sanctus."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 18,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Collared Kingfisher — BirdLife DataZone",
+        "fr": "Collared Kingfisher — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/collared-kingfisher-todiramphus-chloris",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s 2024 factsheet gives the global category Least Concern and population trend decreasing."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 13,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species varies widely across its range; the habitat and prey summary avoids treating all local populations as identical."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The reciprocal comparison with Todiramphus sanctus is limited to the directly documented Sulawesi contrast between resident breeding and seasonal migration."
+}

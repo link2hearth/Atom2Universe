@@ -1,0 +1,209 @@
+{
+  "id": "betta_edithae",
+  "scientific": "Betta edithae",
+  "group": "fish",
+  "name": {
+    "en": "Edith's Betta",
+    "fr": "Combattant d’Édith"
+  },
+  "sections": {
+    "overview": {
+      "en": "Edith’s betta is a wild labyrinth fish recorded from Borneo, Sumatra and nearby islands. It belongs to the edithae group, distinct from the albimarginata group that includes B. channoides, although both lineages include paternal mouthbrooders.",
+      "fr": "Le combattant d’Édith est un poisson labyrinthidé sauvage connu de Bornéo, de Sumatra et des îles voisines. Il appartient au groupe edithae, distinct du groupe albimarginata auquel appartient B. channoides, bien que les deux lignées comprennent des espèces à incubation buccale paternelle."
+    },
+    "identification": {
+      "en": "It reaches roughly 8 cm total length. Males show stronger iridescence and more extended unpaired fins, while the overall form is sturdier and less ornate than domesticated B. splendens; wild coloration is comparatively restrained.",
+      "fr": "Il atteint environ 8 cm de longueur totale. Les mâles présentent une irisation plus vive et des nageoires impaires plus longues ; sa silhouette est plus robuste et moins ornementale que celle du B. splendens domestique, et sa coloration sauvage reste relativement discrète."
+    },
+    "habitat": {
+      "en": "The species occurs in lowland fresh waters across parts of Kalimantan, Sumatra and islands including Bangka, Belitung and Bintan. It is associated with slow or still, vegetated water, often acidic and stained by peat and leaf tannins.",
+      "fr": "L’espèce est présente dans les eaux douces de basse altitude de certaines régions du Kalimantan, de Sumatra et des îles Bangka, Belitung et Bintan. Elle fréquente des eaux lentes ou stagnantes et végétalisées, souvent acides et colorées par les tanins de la tourbe et des feuilles."
+    },
+    "diet": {
+      "en": "It feeds on small animal prey, including aquatic invertebrates and insects. This is typical of the genus, whose species forage in shallow vegetated waters rather than grazing on plants.",
+      "fr": "Il se nourrit de petites proies animales, notamment des invertébrés aquatiques et des insectes. Ce régime est courant dans le genre, dont les espèces cherchent leur nourriture dans les eaux peu profondes végétalisées plutôt que de brouter les plantes."
+    },
+    "behavior": {
+      "en": "Like other osphronemids it supplements gill respiration by taking air at the surface with its labyrinth organ. Compared with territorial bubble-nesting B. splendens, its mouthbrooding reproductive ecology and reported temperament are different, though individual behaviour varies.",
+      "fr": "Comme les autres osphronémidés, il complète la respiration branchiale en prenant de l’air à la surface grâce à son organe labyrinthique. Par rapport au B. splendens territorial qui bâtit un nid de bulles, son mode de reproduction par incubation buccale et son tempérament rapporté diffèrent, même si les individus varient."
+    },
+    "reproduction": {
+      "en": "The male is a paternal mouthbrooder and carries eggs in his mouth for about two to three weeks before releasing free-swimming fry. This contrasts with the bubble nests of B. splendens and B. imbellis, while resembling the strategy of B. channoides.",
+      "fr": "Le mâle pratique l’incubation buccale et garde les œufs dans sa bouche pendant environ deux à trois semaines avant de libérer des alevins nageant librement. Cette stratégie diffère des nids de bulles du B. splendens et du B. imbellis, mais ressemble à celle du B. channoides."
+    },
+    "ecology": {
+      "en": "Its broad island distribution spans varied lowland waters, but peat-swamp populations depend on intact vegetation and water chemistry. Its air-breathing organ, shared across labyrinth fishes, helps tolerate oxygen-poor water but does not remove its dependence on suitable habitat.",
+      "fr": "Sa vaste répartition insulaire couvre divers milieux de basse altitude, mais les populations des tourbières dépendent d’une végétation et d’une chimie de l’eau préservées. L’organe respiratoire aérien, partagé par les poissons labyrinthidés, aide à tolérer les eaux pauvres en oxygène sans supprimer la dépendance à un habitat convenable."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2019 classifies B. edithae as Least Concern. The broad recorded range supports that assessment, but local habitat alteration and the uneven quality of distribution records should not be mistaken for proof that every population is secure.",
+      "fr": "L’évaluation UICN publiée en 2019 classe B. edithae en Préoccupation mineure. La vaste aire connue étaye cette évaluation, mais les transformations locales de l’habitat et les lacunes des données de répartition ne prouvent pas que toutes les populations soient à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Betta edithae — Seriously Fish",
+        "fr": "Betta edithae — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/betta-edithae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Specialist species account."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 3,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta edithae — IUCN Red List",
+        "fr": "Betta edithae — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T91309748A91309753.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "IUCN Red List assessment: Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 6,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Edith's betta — International Betta Congress",
+        "fr": "Combattant d’Édith — International Betta Congress"
+      },
+      "url": "https://smp.ibcbettas.org/species/edithae.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Mouthbrooding account."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 2,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Edith's Kampffisch — German Wikipedia",
+        "fr": "Combattant d’Édith — Wikipédia en allemand"
+      },
+      "url": "https://de.wikipedia.org/wiki/Ediths_Kampffisch",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "German-language cross-check."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 2,
+        "total": 2,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta edithae — FishBase",
+        "fr": "Betta edithae — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Betta-edithae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase species summary."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 3,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Fine-scale differences among island populations and field diet observations are incompletely documented in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared specialist species accounts with the global conservation assessment and multilingual reference; distinguished its mouthbrooding from bubble-nesting Betta species."
+}

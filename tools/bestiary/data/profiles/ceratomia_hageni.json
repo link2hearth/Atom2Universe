@@ -1,0 +1,191 @@
+{
+  "id": "ceratomia_hageni",
+  "scientific": "Ceratomia hageni",
+  "group": "invertebrates",
+  "name": {
+    "en": "Hagen’s Sphinx",
+    "fr": "Sphinx de Hagen"
+  },
+  "sections": {
+    "overview": {
+      "en": "Hagen’s sphinx is a North American hawkmoth whose distribution is centred on the central and eastern United States, where its larval food plant, Osage orange, is established.",
+      "fr": "Le sphinx de Hagen est un sphinx nord-américain dont l’aire se concentre dans le centre et l’est des États-Unis, où pousse sa plante nourricière larvaire, l’oranger des Osages."
+    },
+    "identification": {
+      "en": "The adult is a medium-sized grey-brown sphinx with greenish forewing markings and a conspicuous pale discal spot; the caterpillar varies in colour but bears a long tail horn.",
+      "fr": "L’adulte est un sphinx gris-brun de taille moyenne, aux marques verdâtres sur les ailes antérieures et à la tache discale pâle ; la chenille varie en couleur mais porte une longue corne caudale."
+    },
+    "habitat": {
+      "en": "It occurs wherever Osage orange (Maclura pomifera) grows, including hedgerows, yards, parks and planted areas, so its habitat is often a mixture of natural and human-managed land.",
+      "fr": "Elle se rencontre là où pousse l’oranger des Osages (Maclura pomifera), notamment dans les haies, jardins, parcs et plantations ; son habitat mêle ainsi souvent milieux naturels et espaces aménagés."
+    },
+    "diet": {
+      "en": "Its caterpillars are host-specialists recorded on Osage orange leaves; unlike the related catalpa sphinx (C. catalpae), which feeds on Catalpa, it has not been shown to use other plants.",
+      "fr": "Ses chenilles sont spécialisées sur les feuilles de l’oranger des Osages ; contrairement au sphinx du catalpa (C. catalpae), qui se nourrit de Catalpa, aucune autre plante hôte n’est établie."
+    },
+    "behavior": {
+      "en": "The caterpillars feed mainly at night and hide near the trunk during the day, while adults are attracted to lights during the warm-season flight period.",
+      "fr": "Les chenilles se nourrissent surtout la nuit et se cachent près du tronc le jour ; les adultes peuvent être attirés par les lumières durant leur période de vol estivale."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on the host plant; mature larvae leave it and pupate in the soil, with the number and timing of broods varying with climate.",
+      "fr": "Les femelles pondent sur la plante hôte ; à maturité, les chenilles la quittent et se nymphosent dans le sol, le nombre et le calendrier des générations variant selon le climat."
+    },
+    "ecology": {
+      "en": "It is one member of the North American genus Ceratomia; its strict dependence on Maclura contrasts with congeners such as C. catalpae, illustrating how close relatives can use different host trees.",
+      "fr": "C’est l’un des sphinx nord-américains du genre Ceratomia ; sa dépendance à Maclura contraste avec celle de congénères comme C. catalpae, montrant que des parents proches peuvent exploiter des arbres hôtes différents."
+    },
+    "conservation": {
+      "en": "No global extinction-risk assessment was found in the consulted moth references; the species’ close association with a cultivated native tree is not itself evidence of secure populations everywhere.",
+      "fr": "Les références consultées ne donnent pas d’évaluation mondiale du risque d’extinction ; son association avec un arbre indigène cultivé ne prouve pas à elle seule que toutes les populations sont à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ceratomia hageni — Sphingidae of the United States",
+        "fr": "Ceratomia hageni — sphinx des États-Unis"
+      },
+      "url": "https://www.sphingidae.us/ceratomia-hageni.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account reports adult morphology and season, larval behavior and Maclura pomifera as the specialist host."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ceratomia hageni — Moth Photographers Group, Mississippi State University",
+        "fr": "Ceratomia hageni — Moth Photographers Group, Université d’État du Mississippi"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7790&state=IA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "North American moth resource gives distribution records, photographs and host genus Maclura."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ceratomia hageni — Museum of Comparative Zoology, Harvard University",
+        "fr": "Ceratomia hageni — Museum of Comparative Zoology, Université Harvard"
+      },
+      "url": "https://mczbase.mcz.harvard.edu/name/Ceratomia%20hageni",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Museum taxonomy lists recognized congeners, including C. catalpae; no conservation status is provided."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Maclura pomifera — North Carolina Extension Gardener Plant Toolbox",
+        "fr": "Maclura pomifera — service de vulgarisation horticole de l’Université d’État de Caroline du Nord"
+      },
+      "url": "https://plants.ces.ncsu.edu/plants/maclura-pomifera/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "University extension confirms C. hageni larvae feed on Maclura foliage."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Detailed breeding timing and number of broods are climate-dependent; no global Red List evaluation was found."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked US moth specialists, Mississippi State and Harvard taxonomy resources and university plant-extension information; compared its Maclura specialization with C. catalpae."
+}

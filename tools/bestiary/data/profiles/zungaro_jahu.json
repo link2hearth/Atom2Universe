@@ -1,0 +1,119 @@
+{
+  "id": "zungaro_jahu",
+  "scientific": "Zungaro jahu",
+  "group": "fish",
+  "name": {
+    "en": "Jau catfish",
+    "fr": "Silure jaú"
+  },
+  "sections": {
+    "overview": {
+      "en": "Jahu is a large South American freshwater catfish native to the Paraná–Paraguay basin.",
+      "fr": "Le Jaú est un grand poisson-chat d’eau douce d’Amérique du Sud, originaire des bassins Paraná–Paraguay."
+    },
+    "identification": {
+      "en": "It is a large pimelodid catfish; FishBase records a maximum of 140 cm standard length.",
+      "fr": "C’est un grand poisson-chat pimélodidé ; FishBase indique une longueur standard maximale de 140 cm."
+    },
+    "habitat": {
+      "en": "Adults occupy deeper river reaches, while fry are found mainly near the mouths of smaller tributaries.",
+      "fr": "Les adultes occupent les tronçons profonds des cours d’eau, tandis que les alevins se trouvent surtout près des embouchures de petits affluents."
+    },
+    "diet": {
+      "en": "In a hatchery study, captive brood fish were fed live juvenile fishes.",
+      "fr": "Dans une étude en écloserie, les géniteurs captifs étaient nourris de poissons juvéniles vivants."
+    },
+    "behavior": {
+      "en": "It is migratory and follows seasonal expansion of aquatic habitats during river flooding.",
+      "fr": "Il est migrateur et suit l’expansion saisonnière des habitats aquatiques lors des crues."
+    },
+    "reproduction": {
+      "en": "It is a total spawner; researchers have also induced spawning in hatchery-kept adults.",
+      "fr": "Il pond en une seule fois ; des chercheurs ont également induit la reproduction chez des adultes maintenus en écloserie."
+    },
+    "ecology": {
+      "en": "Dams, overfishing, agriculture, mining, navigation and pollution have contributed to reduced catches in parts of its range.",
+      "fr": "Les barrages, la surpêche, l’agriculture, l’exploitation minière, la navigation et la pollution ont contribué à réduire les captures dans certaines parties de son aire."
+    },
+    "conservation": {
+      "en": "FishBase reports a global Near Threatened assessment dated 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale « quasi menacée » datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Zungaro jahu — FishBase",
+        "fr": "Zungaro jahu — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/zungaro_jahu.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the Paraná–Paraguay range, large maximum size and global Near Threatened assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 13,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Induced spawning and early ontogeny in hatchery-reared Zungaro jahu — SciELO",
+        "fr": "Reproduction induite et ontogenèse précoce de Zungaro jahu en écloserie — SciELO"
+      },
+      "url": "https://www.scielo.br/j/ni/a/TNCYyDjBqKzCs9KZDKFXVkn/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The study describes adult and fry river habitat, migratory flood-pulse ecology, induced spawning and threats documented in the La Plata basin."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 21,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The diet note describes hatchery feeding, not a complete analysis of wild diet; conservation pressures vary by river basin."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the diet statement is restricted to the study conditions, and threats are scoped to parts of the range."
+}

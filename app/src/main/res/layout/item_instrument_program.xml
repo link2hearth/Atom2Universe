@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="6dp"
+    android:paddingEnd="16dp"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Checkbox (used by HybridProgramSelectionDialog) -->
+    <CheckBox
+        android:id="@+id/checkbox_program"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Color preview (used by ColorSettingsDialog) -->
+    <View
+        android:id="@+id/color_preview"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:visibility="gone" />
+
+    <!-- Program number -->
+    <TextView
+        android:id="@+id/text_program_number"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textSize="11sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:gravity="end" />
+
+    <!-- Program name -->
+    <TextView
+        android:id="@+id/text_program_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:textSize="13sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:ellipsize="end"
+        android:maxLines="1" />
+
+    <!-- Reset button (used by ColorSettingsDialog) -->
+    <ImageButton
+        android:id="@+id/btn_reset"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_close"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/color_not_set"
+        android:visibility="gone" />
+
+</LinearLayout>

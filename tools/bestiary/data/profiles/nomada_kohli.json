@@ -1,0 +1,142 @@
+{
+  "id": "nomada_kohli",
+  "scientific": "Nomada kohli",
+  "group": "invertebrates",
+  "name": {
+    "en": "Kohl's nomad bee",
+    "fr": "Nomade de Kohl"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada kohli is a West Palearctic cuckoo bee whose documented host is the sweat bee Lasioglossum puncticolle.",
+      "fr": "Nomada kohli est une abeille coucou du Paléarctique occidental, dont l’hôte documenté est l’halicte Lasioglossum puncticolle."
+    },
+    "identification": {
+      "en": "A published male diagnosis describes a small dark bee with sparse yellow abdominal markings; structural details help separate it from similar Nomada.",
+      "fr": "Une diagnose publiée du mâle décrit une petite abeille sombre portant quelques marques jaunes sur l’abdomen ; des caractères morphologiques la distinguent des Nomada proches."
+    },
+    "habitat": {
+      "en": "A Luxembourg record came from a landscape dominated by pasture with some nearby woodland; this single observation does not define its full habitat preferences.",
+      "fr": "Une observation au Luxembourg provient d’un paysage dominé par les pâtures, avec quelques bois proches ; cette donnée ne définit pas tout l’habitat de l’espèce."
+    },
+    "diet": {
+      "en": "Unlike many Nomada associated with Andrena, N. kohli is reported as a cleptoparasite of Lasioglossum; the host brood cell provides food for the larva.",
+      "fr": "À la différence de nombreux Nomada associés aux Andrena, N. kohli est signalée comme cleptoparasite de Lasioglossum ; la cellule de l’hôte fournit les provisions de la larve."
+    },
+    "behavior": {
+      "en": "The host association with L. puncticolle also appears in regional ecological databases; compare N. basalis, for which Andrena hosts are reported.",
+      "fr": "L’association avec L. puncticolle figure aussi dans des bases écologiques régionales ; comparer avec N. basalis, pour laquelle des hôtes Andrena sont signalés."
+    },
+    "reproduction": {
+      "en": "The published host relationship indicates nest parasitism, but detailed observations of egg laying and larval development were not available.",
+      "fr": "La relation d’hôte publiée indique un parasitisme de nid, mais les sources ne détaillent pas la ponte ni le développement larvaire."
+    },
+    "ecology": {
+      "en": "Because reproduction depends on a particular Lasioglossum host, N. kohli may be overlooked where that small bee is not identified to species.",
+      "fr": "Comme sa reproduction dépend d’un Lasioglossum particulier, N. kohli peut passer inaperçue lorsque cette petite abeille hôte n’est pas identifiée jusqu’à l’espèce."
+    },
+    "conservation": {
+      "en": "A French regional database marks N. kohli as very rare in its territory; this local status should not be generalized to its full range.",
+      "fr": "Une base régionale française indique que N. kohli est très rare sur son territoire ; ce statut local ne doit pas être étendu à toute son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "An addition to the wild-bee fauna of Luxembourg: Nomada kohli — Bulletin de la Société des naturalistes luxembourgeois",
+        "fr": "Ajout à la faune des abeilles sauvages du Luxembourg : Nomada kohli — Bulletin de la Société des naturalistes luxembourgeois"
+      },
+      "url": "https://www.researchgate.net/publication/356002827_An_addition_to_the_list_of_wild_bee_fauna_of_Luxembourg_Nomada_kohli_Schmiedeknecht_1882_Hymenoptera_Apidae_with_a_list_of_the_species_of_the_genus_Nomada_Scopoli_1770_recorded_in_the_country",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed note documents the Luxembourg occurrence, describes the male, names Lasioglossum puncticolle as host, and reports pasture with nearby woodland."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 20,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nomada kohli — Observatoire régional de la biodiversité FAUNA",
+        "fr": "Nomada kohli — Observatoire régional de la biodiversité FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/240001",
+      "supports": [
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Database using BeeFun data records larval parasitism and obligatory cleptoparasitism on Lasioglossum; it marks the species very rare regionally in France."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 21,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomic monograph of West-Palearctic Nomada — Insect Systematics and Diversity",
+        "fr": "Monographie phylogénomique des Nomada du Paléarctique occidental — Insect Systematics and Diversity"
+      },
+      "url": "https://academic.oup.com/isd/article/8/1/1/7510720",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Review reports that most West Palearctic Nomada parasitize one or two usually related Andrena species, while Lasioglossum is an exception."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 20,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Luxembourg paper documents a regional occurrence, not a range-wide ecological survey.",
+    "The unusual Lasioglossum host assignment is supported by regional evidence; future host records can refine it."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

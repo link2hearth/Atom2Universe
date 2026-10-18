@@ -1,0 +1,432 @@
+{
+  "id": "snowshoe_hare",
+  "scientific": "Lepus americanus",
+  "group": "mammals",
+  "name": {
+    "en": "Snowshoe hare",
+    "fr": "Lièvre d’Amérique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This North American hare inhabits boreal and mountain forests, from Alaska and Newfoundland south to the western mountains and Appalachians. Its name recalls broad, furred hind feet that aid travel over soft snow. Herbivorous, it also feeds many mammalian and bird predators, so its abundance affects other populations. Northern numbers cycle strongly, while many southern populations fluctuate less.",
+      "fr": "Ce lièvre nord-américain vit dans les forêts boréales et montagnardes, de l’Alaska et Terre-Neuve aux Appalaches et montagnes de l’Ouest. Son nom rappelle ses larges pattes arrière fourrées, adaptées à la neige meuble. Herbivore, il nourrit aussi de nombreux mammifères et oiseaux prédateurs, influençant leurs populations. Ses effectifs cyclent fortement au Nord, mais fluctuent moins dans beaucoup de populations méridionales."
+    },
+    "identification": {
+      "en": "Adults average 46–51 centimetres and 1.4–1.8 kilograms in Alaska; size varies regionally, so these are indicative figures. The coat usually changes from brown or grey-brown in summer to white in winter, with dark ear tips and a small tail. Large, furred hind feet spread weight over snow and reduce sinking. On coastal parts of British Columbia, Washington and Oregon, where snow is scarce, hares may remain brown year-round. Females are often slightly larger than males.",
+      "fr": "En Alaska, l’adulte mesure en moyenne 46 à 51 centimètres et pèse 1,4 à 1,8 kilogramme ; la taille varie selon les régions. Son pelage brun ou gris-brun en été devient généralement blanc en hiver ; sa queue est petite et ses oreilles ont des pointes foncées. Ses grandes pattes arrière fourrées répartissent le poids et limitent l’enfoncement dans la neige. Sur la côte de Colombie-Britannique, de Washington et d’Oregon, où la neige est rare, il peut rester brun toute l’année. Les femelles sont souvent un peu plus grandes que les mâles."
+    },
+    "habitat": {
+      "en": "Across most of its range, the hare favors boreal or upper-montane forest with dense understory, where shrubs provide food and concealment. In California it also uses dense conifer stands, high-elevation riparian woods and chaparral. It rests in a shallow ground hollow called a form, often beneath brush, ferns or fallen timber, rather than digging a burrow. Well-used runways connect feeding patches and shelter; snow makes them conspicuous and can preserve summer routes.",
+      "fr": "Il préfère les forêts boréales ou montagnardes à sous-bois dense, où les arbustes fournissent nourriture et abri. En Californie, il fréquente aussi conifères denses, zones riveraines d’altitude et chaparral. Il se repose dans une dépression au sol, le gîte, sous des broussailles ou du bois tombé ; il ne creuse pas de terrier. Des pistes relient abris et nourriture ; la neige les rend visibles et conserve parfois les trajets d’été."
+    },
+    "diet": {
+      "en": "In California, grasses, forbs and succulent plants are important summer foods; in snowy winters, hares there rely mainly on conifer needles and evergreen shrub leaves. Newfoundland menus include birch, willow, maple, balsam fir, grasses and fireweed, illustrating regional variation. Like other lagomorphs, hares re-ingest soft nutrient-rich droppings called cecotropes, passing food through the gut again so more nutrients can be absorbed. This helps recover nutrients from fibrous plants, while nutritious young growth remains valuable when available.",
+      "fr": "En Californie, graminées, herbes et pousses tendres comptent surtout en été ; l’hiver, le lièvre consomme surtout aiguilles de conifères et feuilles d’arbustes persistants. À Terre-Neuve, bouleaux, saules, érables, sapins baumiers, graminées et épilobes illustrent la variété régionale. Comme les autres lagomorphes, il réingère des cæcotrophes, crottes molles fermentées, pour absorber davantage de nutriments lors d’un second passage intestinal. Cette pratique récupère des nutriments des fibres végétales, sans remplacer les jeunes pousses nutritives quand elles sont disponibles."
+    },
+    "behavior": {
+      "en": "Snowshoe hares are generally solitary outside breeding, although overlapping home ranges and temporary feeding aggregations occur. They are active mainly at dusk and night, resting by day in sheltered cover. Individuals communicate partly by thumping their hind feet, a reported warning or contact signal, and may squeal when captured. Females and males may each have several mates; this does not make hares a stable social group.",
+      "fr": "Hors reproduction, le lièvre d’Amérique est généralement solitaire, malgré les domaines vitaux qui se chevauchent et les rassemblements temporaires aux sites nourriciers. Il est surtout actif au crépuscule et la nuit, puis se repose le jour à couvert. Il communique notamment par des martèlements des pattes arrière, signal d’alerte ou de contact, et peut crier s’il est capturé. Chaque sexe peut avoir plusieurs partenaires ; cela ne forme pas un groupe social durable."
+    },
+    "reproduction": {
+      "en": "Breeding dates vary with latitude and local conditions; in many northern populations, mating begins in late winter or spring and continues into summer. Gestation lasts about 36–37 days; litters range from one to six leverets and average three, with counts varying locally. A female may conceive again before her previous litter is born, allowing several litters in a long season. Leverets are born fully furred, open-eyed and mobile; they nurse once daily and become self-supporting at three to four weeks.",
+      "fr": "Les dates varient selon latitude et conditions locales ; au Nord, la reproduction va de la fin de l’hiver à l’été. La gestation dure 36 à 37 jours ; les portées comptent de un à six levrauts, trois en moyenne, avec des variations locales. Une femelle peut concevoir de nouveau avant la naissance de sa portée précédente, permettant plusieurs portées par saison. Les levrauts naissent fourrés, les yeux ouverts et mobiles ; ils tètent une fois par jour et deviennent autonomes vers trois ou quatre semaines."
+    },
+    "ecology": {
+      "en": "Lynx, coyotes and foxes hunt snowshoe hares, as do numerous hawks and owls; no single predator explains every local trend. Yukon field experiments found that reducing mammalian predation and adding food each raised hare density, while doing both had a larger combined effect. Predator numbers often follow hare abundance with a delay, and may shift to other prey when hares become scarce. At population peaks, browsing can reduce young shoots, linking plant availability with predation.",
+      "fr": "Lynx, coyotes et renards chassent les lièvres, ainsi que de nombreux rapaces ; aucun prédateur unique n’explique les tendances locales. Au Yukon, réduire la prédation des mammifères et ajouter de la nourriture ont augmenté la densité des lièvres ; ensemble, ces mesures ont eu un effet supérieur. Les effectifs de prédateurs suivent souvent ceux des lièvres avec retard et se reportent sur d’autres proies quand les lièvres deviennent rares. Aux pics, le broutage peut réduire les jeunes pousses disponibles : plantes et prédation influencent donc ensemble les cycles."
+    },
+    "conservation": {
+      "en": "The species is widespread and classified as Secure in Canada in the 2020 General Status assessment, a national screening rather than legal protection. In California, where it occupies a limited set of high-elevation regions, the wildlife agency lists it as a Species of Special Concern. In Alaska, the wildlife agency lists development, mining and fuel exploration as habitat threats. Shorter snow seasons can leave winter-white hares conspicuous against bare ground. Montana research found mismatches during spring and autumn molts; spring color change can respond to snow conditions, but does not track every local change perfectly.",
+      "fr": "Au Canada, l’espèce est classée « Secure » dans l’évaluation nationale de 2020, un statut sans valeur juridique. En Californie, l’agence de la faune la classe comme espèce préoccupante dans quelques régions d’altitude. En Alaska, elle cite mines, aménagement humain et exploration énergétique comme menaces pour l’habitat. Des hivers moins enneigés peuvent rendre visibles les lièvres blancs sur sol nu. Au Montana, une étude a observé un décalage aux mues printanière et automnale ; la mue de printemps suit partiellement l’enneigement, sans s’ajuster à chaque changement local."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Snowshoe Hare Species Profile",
+        "fr": "Profil de l’espèce Lièvre d’Amérique"
+      },
+      "url": "https://www.awc.adfg.alaska.gov/index.cfm?adfg=snowshoehare.printerfriendly",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Alaska profile covers size, shelters, trails and habitat threats."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.fr.3",
+        "habitat.fr.4",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 9,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snowshoe hare",
+        "fr": "Le lièvre d’Amérique"
+      },
+      "url": "https://publications.gc.ca/collections/collection_2018/eccc/CW69-4-44-2003-eng.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Canadian Wildlife Service account covers range, trails and leveret development."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 10,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lepus americanus, snowshoe hare",
+        "fr": "Lepus americanus, lièvre d’Amérique"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/leam",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Forest Service review covers understory, heavy browsing and vegetation effects."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 10,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snowshoe Hare",
+        "fr": "Lièvre d’Amérique"
+      },
+      "url": "https://www.nps.gov/romo/learn/nature/snowshoe_hare.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Rocky Mountain National Park describes coats, feet, mating range and activity."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 11,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snowshoe Hare",
+        "fr": "Lièvre d’Amérique"
+      },
+      "url": "https://wildlife.ca.gov/Conservation/Mammals/Snowshoe-Hare",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "California agency reports regional habitats, seasonal foods and concern status."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 10,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snowshoe Hare",
+        "fr": "Lièvre d’Amérique"
+      },
+      "url": "https://www.gov.nl.ca/fal/wildlife/snp/programs/education/animal-facts/mammals/snowshoe-hare/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Newfoundland government account lists local trees, shrubs, herbs and grasses."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 10,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NETN Species Spotlight - Snowshoe Hare",
+        "fr": "Portrait d’espèce NETN : Lièvre d’Amérique"
+      },
+      "url": "https://www.nps.gov/articles/netn-species-spotlight-snowshoe-hare.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "National Park Service explains cecotrophy and several predator relationships."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 9,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lepus americanus (snowshoe hare)",
+        "fr": "Lepus americanus (lièvre d’Amérique)"
+      },
+      "url": "https://animaldiversity.org/accounts/Lepus_americanus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "University of Michigan account describes overlapping ranges, thumping and mating partners."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 11,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species Summary: Lepus americanus",
+        "fr": "Résumé de l’espèce : Lepus americanus"
+      },
+      "url": "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=18449",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "British Columbia Data Centre summarizes gestation, litter size and breeding dates."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 11,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snowshoe Hare (Lepus americanus) General Status",
+        "fr": "État général du lièvre d’Amérique au Canada"
+      },
+      "url": "https://search.wildspecies.ca/en/GS001590",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Canada’s 2020 General Status listing ranks this species Secure, without legal force."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 12,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Impact of Food and Predation on the Snowshoe Hare Cycle",
+        "fr": "Effets de la nourriture et de la prédation sur le cycle du lièvre d’Amérique"
+      },
+      "url": "https://doi.org/10.1126/science.269.5227.1112",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Yukon factorial field experiment tested food addition and predator exclusion."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 10,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Of lemmings and snowshoe hares: the ecology of northern Canada",
+        "fr": "Lemmings et lièvres d’Amérique : écologie du nord du Canada"
+      },
+      "url": "https://doi.org/10.1098/rstb.2010.0123",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "University of British Columbia review explains multi-factor cycles beyond lynx and hare."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "overview.en.3",
+        "overview.en.4",
+        "overview.fr.3",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 12,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Camouflage Mismatch in Seasonal Coat Color Due to Decreased Snow Duration",
+        "fr": "Décalage du camouflage saisonnier lié à la diminution de la durée d’enneigement"
+      },
+      "url": "https://doi.org/10.1073/pnas.1222724110",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Montana field study observed seasonal mismatch and limited spring molt plasticity."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.en.5",
+        "conservation.fr.4",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 11,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the large furry hind feet, compact body and contrasting brown summer and white winter coats in a dense boreal understory; a small inset can show a leveret beside a shallow form.",
+  "uncertainties": [
+    "Exact molt timing and the proportion of winter-white individuals vary geographically; the Montana study does not represent the full continental range.",
+    "The mechanisms behind population cycles differ among places and are not fully explained by a simple lynx–hare relationship."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual editorial review; sensitive taxonomy, life-cycle and conservation statements checked against cited primary sources; source accounting passed; independent artwork review accepted.",
+  "source_audit_version": 1
+}

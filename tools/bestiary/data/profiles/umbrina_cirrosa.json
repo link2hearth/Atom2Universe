@@ -1,0 +1,142 @@
+{
+  "id": "umbrina_cirrosa",
+  "scientific": "Umbrina cirrosa",
+  "group": "fish",
+  "name": {
+    "en": "Shi drum",
+    "fr": "Ombrine côtière"
+  },
+  "sections": {
+    "overview": {
+      "en": "Umbrina cirrosa is a coastal sciaenid fish of the eastern Atlantic, Mediterranean and Black Sea region.",
+      "fr": "Umbrina cirrosa est un poisson côtier de la famille des Sciaenidae, présent dans l’Atlantique oriental, en Méditerranée et en mer Noire."
+    },
+    "identification": {
+      "en": "A short, firm barbel beneath the chin and oblique yellowish flank lines help distinguish it from the brown meagre.",
+      "fr": "Un court barbillon rigide sous le menton et des lignes obliques jaunâtres sur les flancs aident à la distinguer du corb (Sciaena umbra)."
+    },
+    "habitat": {
+      "en": "It lives in coastal water over rocky, sandy or gravelly bottoms, and juveniles often enter estuaries.",
+      "fr": "Il vit dans les eaux côtières sur des fonds rocheux, sableux ou graveleux ; les jeunes pénètrent souvent dans les estuaires."
+    },
+    "diet": {
+      "en": "It feeds mainly on fish and bottom-dwelling invertebrates, and also takes algae.",
+      "fr": "Il se nourrit surtout de poissons et d’invertébrés benthiques, mais consomme aussi des algues."
+    },
+    "behavior": {
+      "en": "It is generally described as sedentary and close to the coast.",
+      "fr": "Il est généralement décrit comme sédentaire et proche du littoral."
+    },
+    "reproduction": {
+      "en": "Spawning occurs in spring and summer.",
+      "fr": "La reproduction a lieu au printemps et en été."
+    },
+    "ecology": {
+      "en": "It is a coastal food fish and is caught by both commercial and recreational fisheries.",
+      "fr": "C’est un poisson côtier exploité par la pêche commerciale et récréative."
+    },
+    "conservation": {
+      "en": "An Italian assessment cites a Mediterranean IUCN listing of Vulnerable from 2013 and identifies overfishing and habitat alteration as concerns.",
+      "fr": "Une évaluation italienne cite un classement méditerranéen « Vulnérable » de l’UICN datant de 2013 et mentionne la surpêche et la modification de l’habitat comme préoccupations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FAO — Umbrina cirrosa",
+        "fr": "FAO — Umbrina cirrosa"
+      },
+      "url": "https://www.fao.org/fishery/docs/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SCIUMCIR.HTML",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The FAO account summarizes range, coastal habitat, feeding, seasonal reproduction and fishery use."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 13,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ISPRA — Umbrina cirrosa, protected marine species atlas",
+        "fr": "ISPRA — Umbrina cirrosa, atlas des espèces marines protégées"
+      },
+      "url": "https://www.isprambiente.gov.it/it/banche-dati/atlante-delle-specie-marine-protette/animali/vertebrati/osteitti/umbrina-cirrosa-linnaeus-1758",
+      "supports": [
+        "overview",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The Italian public environmental agency describes coastal sedentary habitat, regional protection and the older Mediterranean assessment with cited pressures."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 19,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ISPRA — Marine fish species guide, Umbrina cirrosa",
+        "fr": "ISPRA — guide des poissons marins, Umbrina cirrosa"
+      },
+      "url": "https://www.isprambiente.gov.it/it/pubblicazioni/manuali-e-linee-guida/resolveuid/b0abdc7780dd4c9abaf9cc9de970cf58",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The identification guide describes the chin barbel and yellow flank stripes, distinguishing the species from Sciaena umbra."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 17,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation wording preserves the date and Mediterranean scope of the cited Vulnerable assessment; it does not present it as a current global category."
+  ],
+  "review_note": "Used the Italian agency’s identification and conservation notes alongside FAO natural-history information; the older regional status is dated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

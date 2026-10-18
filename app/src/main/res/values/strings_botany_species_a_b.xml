@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="bot_betula_name">Silver birch</string>
+<string name="bot_betula_latin" translatable="false">Betula pendula</string>
+<string name="bot_betula_aliases">Bouleau verruqueux</string>
+<string name="bot_betula_description">White bark, dark and fissured at the base of older trunks. Slender, often drooping twigs bear small warts. Triangular leaves and tiny winged fruits.</string>
+<string name="bot_betula_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_alnus_name">Common alder</string>
+<string name="bot_alnus_latin" translatable="false">Alnus glutinosa</string>
+<string name="bot_alnus_aliases">Aulne glutineux</string>
+<string name="bot_alnus_description">Rounded leaves, often notched at the tip. Long hanging male catkins; woody female fruiting structures resemble small cones, but this is not a conifer.</string>
+<string name="bot_alnus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_aesculus_name">Horse chestnut</string>
+<string name="bot_aesculus_latin" translatable="false">Aesculus hippocastanum</string>
+<string name="bot_aesculus_aliases">Marronnier d’Inde</string>
+<string name="bot_aesculus_description">Opposite leaves with 5–7 large leaflets meeting at one point. Upright flower panicles. Sparsely spiny capsules contain one or a few large seeds.</string>
+<string name="bot_aesculus_distribution">Native to the Balkans; widely planted in French parks and avenues.</string>
+<string name="bot_abies_name">Silver fir</string>
+<string name="bot_abies_latin" translatable="false">Abies alba</string>
+<string name="bot_abies_aliases">Sapin pectiné</string>
+<string name="bot_abies_description">Flat, usually blunt needles with two pale bands underneath. Upright cones break apart on the tree, leaving their central axis behind.</string>
+<string name="bot_abies_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_buxus_name">Common box</string>
+<string name="bot_buxus_latin" translatable="false">Buxus sempervirens</string>
+<string name="bot_buxus_aliases">Buis commun</string>
+<string name="bot_buxus_description">Small opposite leathery leaves with rounded or slightly notched tips. Yellowish flowers without petals in leaf axils. Capsules end in three small points.</string>
+<string name="bot_buxus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_bellis_name">Common daisy</string>
+<string name="bot_bellis_latin" translatable="false">Bellis perennis</string>
+<string name="bot_bellis_aliases">Pâquerette vivace</string>
+<string name="bot_bellis_description">All leaves form a spoon-leaved basal rosette. Each leafless stalk carries one head: white, sometimes pink, ray florets surround yellow tubular florets.</string>
+<string name="bot_bellis_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_achillea_name">Common yarrow</string>
+<string name="bot_achillea_latin" translatable="false">Achillea millefolium</string>
+<string name="bot_achillea_aliases">Achillée millefeuille</string>
+<string name="bot_achillea_description">Finely divided feathery leaves. Many tiny white or pinkish heads form a flat cluster; each head has a few short ray florets.</string>
+<string name="bot_achillea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_anthriscus_name">Cow parsley</string>
+<string name="bot_anthriscus_latin" translatable="false">Anthriscus sylvestris</string>
+<string name="bot_anthriscus_aliases">Cerfeuil sauvage</string>
+<string name="bot_anthriscus_description">Large finely divided triangular leaves. Spring white umbels usually lack large bracts beneath the main umbel. Long smooth dark fruits; many similar species occur in this family.</string>
+<string name="bot_anthriscus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_briza_name">Quaking grass</string>
+<string name="bot_briza_latin" translatable="false">Briza media</string>
+<string name="bot_briza_aliases">Brize intermédiaire</string>
+<string name="bot_briza_description">Airy panicle with small hanging heart-shaped spikelets on fine stalks. Spikelets are often purple-tinged and tremble in the wind. Narrow leaves.</string>
+<string name="bot_briza_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+<string name="bot_acer_monspessulanum_latin" translatable="false">Acer monspessulanum</string>
+<string name="bot_acer_monspessulanum_name">Montpellier maple</string>
+<string name="bot_acer_monspessulanum_aliases">Érable trilobé; Montpellier maple</string>
+<string name="bot_acer_monspessulanum_description">Small, opposite, thick leaves have three usually untoothed lobes. The paired fruit wings are held close together, almost parallel. Often a small, low-branching tree.</string>
+<string name="bot_acer_monspessulanum_distribution">Open woods and dry slopes in southern France, with scattered populations farther north.</string>
+<string name="bot_betula_pubescens_latin" translatable="false">Betula pubescens</string>
+<string name="bot_betula_pubescens_name">Downy birch</string>
+<string name="bot_betula_pubescens_aliases">Bouleau blanc pubescent; downy birch</string>
+<string name="bot_betula_pubescens_description">Young shoots are hairy and usually lack the resinous warts of silver birch. Ovate leaves have rounded bases and irregular teeth. Branches tend to be less drooping; female catkins release tiny winged fruits.</string>
+<string name="bot_betula_pubescens_distribution">Damp acidic soils, bogs, cool woods and mountains; scarce in Mediterranean regions.</string>
+<string name="bot_amelanchier_latin" translatable="false">Amelanchier ovalis</string>
+<string name="bot_amelanchier_name">Snowy mespilus</string>
+<string name="bot_amelanchier_aliases">Amelanchier rotundifolia; amélanchier commun; snowy mespilus</string>
+<string name="bot_amelanchier_description">Toothed oval leaves are white-felted beneath when young. Short racemes bear flowers with five narrow, elongated white petals. Small bluish-black pome fruits retain their calyx.</string>
+<string name="bot_amelanchier_distribution">Limestone rocks, scrub and open woods, especially in southern France and mountain districts.</string>
+<string name="bot_adansonia_name">African baobab</string>
+<string name="bot_adansonia_aliases">Adansonia digitata</string>
+<string name="bot_adansonia_description">Massive trunk and stout branches. Adult leaves have usually five to seven leaflets; young plants may bear simple leaves. Large hanging flowers have five white petals and a dense brush of stamens. The velvety woody fruit stays closed around dry pulp and seeds.</string>
+<string name="bot_adansonia_distribution">Widespread in seasonally dry tropical Africa, particularly savannas; also planted near settlements.</string>
+<string name="bot_balanites_name">Desert date</string>
+<string name="bot_balanites_aliases">Balanitès · desert date</string>
+<string name="bot_balanites_description">Thorny tree with an open crown. Each leaf bears exactly two leathery leaflets. Small greenish-yellow flowers have five petals and ten stamens. The elongated drupe contains one hard stone; despite its name, this is not a palm.</string>
+<string name="bot_balanites_distribution">Very widespread in dry tropical Africa, notably the Sahel and eastern Africa; also occurs beyond Africa.</string>
+<string name="bot_adansonia_latin" translatable="false">Adansonia digitata</string>
+<string name="bot_balanites_latin" translatable="false">Balanites aegyptiaca</string>
+<string name="bot_acer_saccharum_name">Sugar maple</string>
+<string name="bot_acer_saccharum_aliases">Hard maple; rock maple; érable franc</string>
+<string name="bot_acer_saccharum_description">Deciduous maple with opposite leaves, usually five pointed lobes and rounded sinuses. Small flowers hang on long slender stalks; paired samaras mature later. Its sap is traditionally used for maple syrup.</string>
+<string name="bot_acer_saccharum_distribution">Eastern and central North America, from southeastern Canada to the eastern United States, especially mesic forests.</string>
+<string name="bot_acer_saccharum_latin" translatable="false">Acer saccharum</string>
+<string name="bot_arctostaphylos_name">Bearberry</string>
+<string name="bot_arctostaphylos_aliases">Kinnikinnick; raisin d’ours; bearberry</string>
+<string name="bot_arctostaphylos_description">Evergreen mat-forming dwarf shrub with leathery spoon-shaped leaves. Small pale pink urn-shaped flowers hang in short clusters. Red, mealy drupes contain several hard nutlets.</string>
+<string name="bot_arctostaphylos_distribution">Circumboreal: native to northern North America, Europe and Asia, including dry heaths and rocky mountain sites.</string>
+<string name="bot_arctostaphylos_latin" translatable="false">Arctostaphylos uva-ursi</string>
+<string name="bot_arabidopsis_name">Thale cress</string>
+<string name="bot_arabidopsis_latin" translatable="false">Arabidopsis thaliana</string>
+<string name="bot_arabidopsis_aliases">Mouse-ear cress · Arabette de Thalius</string>
+<string name="bot_arabidopsis_description">Small annual with a basal rosette and slender, branching flowering stems. Basal leaves are petiolate, oval to spatulate and often toothed; the fewer stem leaves are narrower and alternate. Hairs may be simple or branched. Tiny white flowers have four petals in a cross, four sepals and six stamens, four longer and two shorter. The raceme elongates as fruits develop: narrow siliques open by two valves, leaving seeds on a central partition. A major research model; these characters alone do not identify every small white-flowered brassica.</string>
+<string name="bot_arabidopsis_distribution">Native across much of temperate Eurasia and parts of Africa, and introduced elsewhere. Open, disturbed ground, field margins and dry sandy or stony soils; often completes its cycle before summer drought.</string>
+<string name="bot_arabidopsis_habit">Basal rosette, slender flowering axes and ascending siliques below the younger flowers.</string>
+<string name="bot_arabidopsis_leaf">Large basal leaf with a petiole and sparse teeth; a rosette and a narrower stem leaf are shown separately.</string>
+<string name="bot_arabidopsis_flower">Four white petals and six stamens, including two shorter ones. The inset shows the elongating flowering raceme.</string>
+<string name="bot_arabidopsis_fruit">Closed silique on the left; on the right, two separating valves expose the partition and numerous small seeds.</string>
+<string name="bot_armeniaca_name">Apricot</string>
+<string name="bot_armeniaca_aliases">apricot apricot tree</string>
+<string name="bot_armeniaca_description">Deciduous tree with broad, ovate to almost rounded, toothed and pointed leaves, often slightly heart-shaped at the base. White to pinkish five-petalled flowers precede the foliage. The apricot is a yellow-orange drupe with a marked suture; its flattened stone is less deeply sculptured than a peach stone.</string>
+<string name="bot_armeniaca_distribution">Asian origin; cultivated in many temperate regions with warm summers.</string>
+<string name="bot_armeniaca_habit">Rounded crown with broad foliage on ascending branches.</string>
+<string name="bot_armeniaca_leaf">Broad blade with cordate base, toothed edge and tapered tip.</string>
+<string name="bot_armeniaca_flower">Five pale petals, numerous stamens; bud on a bare twig.</string>
+<string name="bot_armeniaca_fruit">Whole apricot and section with flattened, edged stone.</string>
+<string name="bot_armeniaca_latin" translatable="false">Prunus armeniaca</string>
+<string name="bot_allium_cepa_name">Onion</string>
+<string name="bot_allium_cepa_aliases">onion bulb shallot Allium cepa</string>
+<string name="bot_allium_cepa_description">Bulbous plant, usually biennial but often harvested in its first year. Hollow leaves have parallel veins. The bulb consists of fleshy leaf bases around a very short stem: it is not a fruit. A hollow scape bears a globose umbel; each flower has six tepals and six stamens. The fruit is a capsule containing black seeds.</string>
+<string name="bot_allium_cepa_distribution">Domesticated crop of Central Asian origin, widely cultivated. The plate represents a yellow bulb onion.</string>
+<string name="bot_allium_cepa_habit">Tubular leaves, bulb and umbel on a leafless scape.</string>
+<string name="bot_allium_cepa_leaf">Hollow leaf and cross section; bulb section inset at a different scale.</string>
+<string name="bot_allium_cepa_flower">Six green-veined tepals, six stamens; miniature umbel.</string>
+<string name="bot_allium_cepa_fruit">Three-chambered capsule opening in three valves; angular black seeds.</string>
+<string name="bot_brassica_oleracea_name">Cabbage</string>
+<string name="bot_brassica_oleracea_aliases">cabbage broccoli cauliflower Brussels sprout kale Brassica oleracea</string>
+<string name="bot_brassica_oleracea_description">Thick-leaved, often glaucous species whose cultivated forms include headed cabbage, broccoli and cauliflower. A cabbage head is a cluster of tightly packed leaves, not a fruit. At flowering, a branched stem bears flowers with four crosswise petals and six stamens, two shorter. Fruits are siliques with two valves around a seed-bearing partition.</string>
+<string name="bot_brassica_oleracea_distribution">European species with many domesticated forms, now grown worldwide. The plate distinguishes a cabbage head from a flowering plant.</string>
+<string name="bot_brassica_oleracea_habit">Bolting flowering plant; cabbage head inset at a different scale.</string>
+<string name="bot_brassica_oleracea_leaf">Large waxy leaf with branching veins; outline and margin vary among cultivars.</string>
+<string name="bot_brassica_oleracea_flower">Four petals, four long and two short stamens.</string>
+<string name="bot_brassica_oleracea_fruit">Closed and open silique: two valves, persistent partition and seeds.</string>
+<string name="bot_arachis_name">Peanut</string>
+<string name="bot_arachis_aliases">peanut groundnut monkey nut Arachis hypogaea</string>
+<string name="bot_arachis_description">Annual herb with two pairs of leaflets per leaf. After fertilization of the yellow flower, a peg called the gynophore elongates into the soil, carrying the ovary: pods ripen underground. Their net-veined shell does not open spontaneously and contains one to several seeds. A peanut is therefore a legume seed, not a botanical nut.</string>
+<string name="bot_arachis_distribution">South American origin, cultivated in warm regions. The plate represents a spreading form with two-seeded pods.</string>
+<string name="bot_arachis_habit">Soil cutaway: stem-borne pegs and underground pods, distinct from roots.</string>
+<string name="bot_arachis_leaf">Two pairs of rounded leaflets, no terminal leaflet; stipules at the petiole.</string>
+<string name="bot_arachis_flower">Yellow pea flower; elongating post-fertilization peg inset.</string>
+<string name="bot_arachis_fruit">Net-veined pod and artificially opened shell showing two seeds.</string>
+<string name="bot_allium_cepa_latin" translatable="false">Allium cepa</string>
+<string name="bot_brassica_oleracea_latin" translatable="false">Brassica oleracea</string>
+<string name="bot_arachis_latin" translatable="false">Arachis hypogaea</string>
+<string name="bot_allium_sativum_name">Garlic</string>
+<string name="bot_allium_sativum_latin">Allium sativum</string>
+<string name="bot_allium_sativum_aliases">Garlic Allium sativum</string>
+<string name="bot_allium_sativum_description">The bulb consists of cloves. Some forms bear bulbils in the umbel; these are not seeds.</string>
+<string name="bot_allium_sativum_distribution">Asian cultivated plant, grown worldwide.</string>
+<string name="bot_allium_sativum_habit">Flat leaves, naked scape and underground bulb.</string>
+<string name="bot_allium_sativum_leaf">Solid strap-shaped blade; diagrammatic clove bulb.</string>
+<string name="bot_allium_sativum_flower">Umbel bearing bulbils and a few six-tepalled flowers; many cultivated forms flower sparingly.</string>
+<string name="bot_allium_sativum_fruit">Diagrammatic capsule, often aborted or seedless in cultivation; vegetative bulb and bulbils shown separately.</string>
+<string name="bot_allium_ursinum_name">Ramsons</string>
+<string name="bot_allium_ursinum_latin">Allium ursinum</string>
+<string name="bot_allium_ursinum_aliases">Ramsons Allium ursinum</string>
+<string name="bot_allium_ursinum_description">Bulbous woodland perennial with broad leaves. Garlic scent is an additional character.</string>
+<string name="bot_allium_ursinum_distribution">Western and central Europe to the Caucasus.</string>
+<string name="bot_allium_ursinum_habit">Two stalked basal leaves and flowering scape.</string>
+<string name="bot_allium_ursinum_leaf">Flat lanceolate blade with converging veins.</string>
+<string name="bot_allium_ursinum_flower">Loose, nearly flat umbel; white six-tepalled flowers.</string>
+<string name="bot_allium_ursinum_fruit">Three-lobed seed capsule; small vegetative bulb in the inset.</string>
+<string name="bot_allium_fistulosum_name">Welsh onion</string>
+<string name="bot_allium_fistulosum_latin">Allium fistulosum</string>
+<string name="bot_allium_fistulosum_aliases">Welsh onion Allium fistulosum</string>
+<string name="bot_allium_fistulosum_description">This perennial forms clumps and small cylindrical bulbs. Leaves and scapes are hollow.</string>
+<string name="bot_allium_fistulosum_distribution">Cultivated in Europe and Asia, locally escaped.</string>
+<string name="bot_allium_fistulosum_habit">Upright leaf tuft with slightly swollen bases.</string>
+<string name="bot_allium_fistulosum_leaf">Tubular blade; enlarged section showing its cavity.</string>
+<string name="bot_allium_fistulosum_flower">Globose umbel without bulbils, whitish flowers.</string>
+<string name="bot_allium_fistulosum_fruit">Seed capsule; cylindrical bulb differs from a swollen onion.</string>
+<string name="bot_allium_ampeloprasum_name">Wild leek</string>
+<string name="bot_allium_ampeloprasum_latin">Allium ampeloprasum</string>
+<string name="bot_allium_ampeloprasum_aliases">Wild leek Allium ampeloprasum</string>
+<string name="bot_allium_ampeloprasum_description">This species includes several cultivated groups, including leeks. Overlapping leaf sheaths form the pseudostem.</string>
+<string name="bot_allium_ampeloprasum_distribution">Mediterranean region and western Asia; naturalized elsewhere.</string>
+<string name="bot_allium_ampeloprasum_habit">Flat leaf fan, sheathing base and tall scape.</string>
+<string name="bot_allium_ampeloprasum_leaf">Broad solid strap; flat section and sheathing base.</string>
+<string name="bot_allium_ampeloprasum_flower">Rounded umbel of numerous pale, often lilac flowers.</string>
+<string name="bot_allium_ampeloprasum_fruit">Three-lobed capsule; bulb shown as a vegetative organ.</string>
+<string name="bot_anethum_graveolens_name">Dill</string>
+<string name="bot_anethum_graveolens_latin">Anethum graveolens</string>
+<string name="bot_anethum_graveolens_aliases">Dill Anethum graveolens</string>
+<string name="bot_anethum_graveolens_description">Aromatic annual with hollow stems. Culinary “seeds” are dry fruits.</string>
+<string name="bot_anethum_graveolens_distribution">Mediterranean region and adjoining areas; widely cultivated.</string>
+<string name="bot_anethum_graveolens_habit">Branched stems and fine foliage.</string>
+<string name="bot_anethum_graveolens_leaf">Repeatedly divided leaf with threadlike segments.</string>
+<string name="bot_anethum_graveolens_flower">Compound umbel: main rays bear small yellow umbellets.</string>
+<string name="bot_anethum_graveolens_fruit">Flattened ribbed fruit splitting into two mericarps.</string>
+<string name="bot_avena_sativa_name">Oat</string>
+<string name="bot_avena_sativa_latin">Avena sativa</string>
+<string name="bot_avena_sativa_aliases">Oat Avena sativa</string>
+<string name="bot_avena_sativa_description">Annual cereal with hanging spikelets on panicle branches; each grain is a caryopsis.</string>
+<string name="bot_avena_sativa_distribution">Worldwide crop; domesticated in western Asia.</string>
+<string name="bot_avena_sativa_habit">Upright culms bearing an open panicle.</string>
+<string name="bot_avena_sativa_leaf">Strap-shaped blade, sheath and ligule; no auricles.</string>
+<string name="bot_avena_sativa_flower">Hanging spikelets; enlarged petal-free floret with three stamens.</string>
+<string name="bot_avena_sativa_fruit">Elongated caryopsis; mature panicle and hulls in the inset.</string>
+<string name="bot_brassica_rapa_name">Turnip and Asian greens</string>
+<string name="bot_brassica_rapa_latin">Brassica rapa</string>
+<string name="bot_brassica_rapa_aliases">Turnip and Asian greens Brassica rapa</string>
+<string name="bot_brassica_rapa_description">One species includes turnips, pak choi and several oilseed crops. Only some groups develop swollen roots.</string>
+<string name="bot_brassica_rapa_distribution">Cultivated and naturalized in many regions.</string>
+<string name="bot_brassica_rapa_habit">Basal leaves followed by branched flowering stem.</string>
+<string name="bot_brassica_rapa_leaf">Divided lower leaf; simpler upper leaves.</string>
+<string name="bot_brassica_rapa_flower">Four yellow petals arranged in a cross.</string>
+<string name="bot_brassica_rapa_fruit">Valved silique ending in a beak; rounded seeds.</string>
+<string name="bot_aloe_vera_name">Aloe vera</string>
+<string name="bot_aloe_vera_aliases">Aloe vera</string>
+<string name="bot_aloe_vera_latin">Aloe vera</string>
+<string name="bot_aloe_vera_description">A succulent monocot with thick water-storing leaves and marginal teeth. Its elevated raceme bears tubular flowers with six tepals and six stamens. Offsets form new rosettes; the dry capsule is distinct from the fleshy foliage.</string>
+<string name="bot_aloe_vera_distribution">Widely cultivated in warm regions; floras differ in their interpretation of its geographic origin.</string>
+<string name="bot_aloe_vera_habit">Succulent rosette, offsets and flowering scape.</string>
+<string name="bot_aloe_vera_leaf">Thick lanceolate blade with small marginal teeth.</string>
+<string name="bot_aloe_vera_flower">Pendant tube; enlarged end view with six tepals and six stamens.</string>
+<string name="bot_aloe_vera_fruit">Dry capsule opening into three valves; seeds shown separately.</string>
+<string name="bot_ananas_comosus_name">Pineapple</string>
+<string name="bot_ananas_comosus_aliases">Ananas comosus</string>
+<string name="bot_ananas_comosus_latin">Ananas comosus</string>
+<string name="bot_ananas_comosus_description">A terrestrial bromeliad with a stiff rosette. Each flower has three petals and six stamens. Adjacent ovaries and other inflorescence tissues unite into a multiple fruit, a syncarp, topped by a leafy crown. Many cultivated forms are seedless.</string>
+<string name="bot_ananas_comosus_distribution">South American cultivated plant, now grown throughout the tropics. Some cultivars have almost smooth leaf margins.</string>
+<string name="bot_ananas_comosus_habit">Stiff rosette with a central fruit-bearing axis.</string>
+<string name="bot_ananas_comosus_leaf">Long parallel-veined blade with a representative spiny margin.</string>
+<string name="bot_ananas_comosus_flower">Spike and enlarged three-petalled flower with six stamens.</string>
+<string name="bot_ananas_comosus_fruit">Syncarp with polygonal eyes and leafy crown, formed from many flowers.</string>
+<string name="bot_areca_catechu_name">Areca palm</string>
+<string name="bot_areca_catechu_aliases">Areca catechu</string>
+<string name="bot_areca_catechu_latin">Areca catechu</string>
+<string name="bot_areca_catechu_description">A solitary slender palm with a green crownshaft formed by leaf sheaths. Branched inflorescences emerge below it, with basal female and distal male flowers on the same plant. The orange-red fruit encloses a hard seed: the areca nut is the seed, not the whole fruit.</string>
+<string name="bot_areca_catechu_distribution">Long cultivated in tropical Asia and elsewhere; ancient cultivation complicates its original range.</string>
+<string name="bot_areca_catechu_habit">Slender ringed stem, green crownshaft and compact pinnate crown.</string>
+<string name="bot_areca_catechu_leaf">Pinnate frond with broadening, pointed leaflet groups.</string>
+<string name="bot_areca_catechu_flower">Branched inflorescence below the crownshaft.</string>
+<string name="bot_areca_catechu_fruit">Orange-red drupes and section separating fibrous wall from hard seed.</string>
+<string name="bot_bowiea_volubilis_name">Climbing onion</string>
+<string name="bot_bowiea_volubilis_aliases">Bowiea volubilis</string>
+<string name="bot_bowiea_volubilis_latin">Bowiea volubilis</string>
+<string name="bot_bowiea_volubilis_description">A bulbous geophyte with a partly exposed green bulb. Its branching climbing flowering axis performs much of the photosynthesis; the few narrow true leaves are short-lived. Small green six-tepalled flowers produce dry capsules. It is not an edible onion.</string>
+<string name="bot_bowiea_volubilis_distribution">Eastern and southern tropical Africa; axis length depends on support and conditions.</string>
+<string name="bot_bowiea_volubilis_habit">Exposed bulb and green branching flowering axis; sparse basal true leaves.</string>
+<string name="bot_bowiea_volubilis_leaf">Short-lived linear leaf beside a separately reduced photosynthetic axis.</string>
+<string name="bot_bowiea_volubilis_flower">Green flower with six tepals and six stamens.</string>
+<string name="bot_bowiea_volubilis_fruit">Three-valved dry capsule and flattened dark seeds.</string>
+<string name="bot_ajuga_reptans_name">Bugle</string>
+<string name="bot_ajuga_reptans_aliases">Ajuga reptans</string>
+<string name="bot_ajuga_reptans_latin">Ajuga reptans</string>
+<string name="bot_ajuga_reptans_description">A stolon-forming perennial with opposite leaves. Blue flowers form tiers around an upright axis; the upper lip is reduced and the broad lower lip forms a landing platform. Four nutlets mature inside the persistent calyx. Winter foliage and flower colour vary.</string>
+<string name="bot_ajuga_reptans_distribution">Europe, northern Africa and southwestern Asia; also cultivated and introduced elsewhere.</string>
+<string name="bot_ajuga_reptans_habit">Basal rosettes linked by stolons and upright flowering shoots.</string>
+<string name="bot_ajuga_reptans_leaf">Broad opposite leaves with rounded tips and shallow teeth.</string>
+<string name="bot_ajuga_reptans_flower">Reduced upper lip and three-lobed lower lip; flowering tiers inset.</string>
+<string name="bot_ajuga_reptans_fruit">Four one-seeded nutlets retained by a five-toothed calyx.</string>
+<string name="bot_antirrhinum_majus_name">Snapdragon</string>
+<string name="bot_antirrhinum_majus_aliases">Antirrhinum majus</string>
+<string name="bot_antirrhinum_majus_latin">Antirrhinum majus</string>
+<string name="bot_antirrhinum_majus_description">The two-lipped corolla has a raised palate closing its entrance. A short pouch at the base differs from the long nectar spur of toadflax. Lower leaves may be opposite, upper leaves alternate. Dry capsules release many seeds through pores; cultivated flower colours vary widely.</string>
+<string name="bot_antirrhinum_majus_distribution">Mediterranean origins; widely cultivated as a garden plant.</string>
+<string name="bot_antirrhinum_majus_habit">Leafy branching stem with a terminal raceme.</string>
+<string name="bot_antirrhinum_majus_leaf">Entire lanceolate leaf; lower and upper arrangements differ.</string>
+<string name="bot_antirrhinum_majus_flower">Closed two-lipped mouth, raised palate and short basal pouch.</string>
+<string name="bot_antirrhinum_majus_fruit">Pore-bearing dry capsule and separately enlarged small seeds.</string>
+<string name="bot_anemone_sylvestris_name">Snowdrop anemone</string>
+<string name="bot_anemone_sylvestris_aliases">Anemone sylvestris</string>
+<string name="bot_anemone_sylvestris_latin">Anemone sylvestris</string>
+<string name="bot_anemone_sylvestris_description">A spreading perennial with divided basal leaves and an involucral whorl below the solitary flower. Its white petal-like organs are usually five sepals, sometimes six; true petals are absent. Numerous stamens surround separate carpels, which mature into hairy achenes.</string>
+<string name="bot_anemone_sylvestris_distribution">Temperate Europe and Asia; woodland margins, grassland and cultivated plantings.</string>
+<string name="bot_anemone_sylvestris_habit">Basal divided leaves and three involucral bracts below a solitary flower.</string>
+<string name="bot_anemone_sylvestris_leaf">Deeply palmate blade, distinct from the stem involucre.</string>
+<string name="bot_anemone_sylvestris_flower">Five white petaloid sepals and numerous stamens; true petals absent.</string>
+<string name="bot_anemone_sylvestris_fruit">Hairy one-seeded achenes grouped on the receptacle.</string>
+<string name="bot_agrimonia_eupatoria_name">Common agrimony</string>
+<string name="bot_agrimonia_eupatoria_aliases">Agrimonia eupatoria</string>
+<string name="bot_agrimonia_eupatoria_latin">Agrimonia eupatoria</string>
+<string name="bot_agrimonia_eupatoria_description">A rosaceous herb with interrupted pinnate leaves: small leaflets alternate with larger pairs. Yellow five-petalled flowers form a slender raceme. A hooked persistent hypanthium encloses one or two achenes and catches on animals; the burr is an accessory envelope, not one large achene.</string>
+<string name="bot_agrimonia_eupatoria_distribution">Europe and western Asia; grassland, hedges and woodland margins.</string>
+<string name="bot_agrimonia_eupatoria_habit">Upright leafy stem and slender terminal raceme.</string>
+<string name="bot_agrimonia_eupatoria_leaf">Large toothed leaflets with smaller pairs between them.</string>
+<string name="bot_agrimonia_eupatoria_flower">Five yellow petals with numerous stamens; raceme inset.</string>
+<string name="bot_agrimonia_eupatoria_fruit">Hooked hypanthium, cut envelope and one or two enclosed achenes.</string>
+<string name="bot_armoracia_rusticana_name">Horseradish</string>
+<string name="bot_armoracia_rusticana_aliases">Armoracia rusticana</string>
+<string name="bot_armoracia_rusticana_latin">Armoracia rusticana</string>
+<string name="bot_armoracia_rusticana_description">A perennial crucifer with large basal leaves and smaller stem leaves, sometimes divided. Branching clusters bear four-petalled white flowers and six stamens, including two shorter ones. Short silicles may form, but seed production is often limited in cultivated plants. The harvested swollen root is not the fruit.</string>
+<string name="bot_armoracia_rusticana_distribution">Eurasian origins; widely cultivated and naturalized.</string>
+<string name="bot_armoracia_rusticana_habit">Large basal leaves and an elevated branched inflorescence.</string>
+<string name="bot_armoracia_rusticana_leaf">Large toothed basal blade; stem leaves are smaller.</string>
+<string name="bot_armoracia_rusticana_flower">Branched clusters of four-petalled white flowers.</string>
+<string name="bot_armoracia_rusticana_fruit">Short silicle with a persistent partition; seed set may be poor.</string>
+<string name="bot_barbarea_vulgaris_name">Wintercress</string>
+<string name="bot_barbarea_vulgaris_aliases">Barbarea vulgaris</string>
+<string name="bot_barbarea_vulgaris_latin">Barbarea vulgaris</string>
+<string name="bot_barbarea_vulgaris_description">A biennial or short-lived perennial crucifer with glossy lyrate basal leaves: a large terminal lobe and smaller lateral lobes. Upper leaves are less divided and may clasp the stem. Four-petalled yellow flowers open above elongating siliques. The flower has four long and two shorter stamens.</string>
+<string name="bot_barbarea_vulgaris_distribution">Native across much of temperate Eurasia; introduced elsewhere, often in moist disturbed ground.</string>
+<string name="bot_barbarea_vulgaris_habit">Basal rosette and upright flowering and fruiting stems.</string>
+<string name="bot_barbarea_vulgaris_leaf">Continuous lyrate blade with a large terminal lobe.</string>
+<string name="bot_barbarea_vulgaris_flower">Yellow four-petalled flowers in a terminal raceme.</string>
+<string name="bot_barbarea_vulgaris_fruit">Elongated two-valved silique around a seed-bearing partition.</string>
+<string name="bot_anacardium_occidentale_name">Cashew tree</string>
+<string name="bot_anacardium_occidentale_latin" translatable="false">Anacardium occidentale</string>
+<string name="bot_anacardium_occidentale_aliases">cashew; cashew nut tree</string>
+<string name="bot_anacardium_occidentale_description">Evergreen tropical tree with a spreading crown, alternate leathery leaves and terminal flower panicles. The kidney-shaped true fruit is attached to a swollen, colourful fruit stalk called the cashew apple. The nut shell contains caustic resin and must be processed before consumption.</string>
+<string name="bot_anacardium_occidentale_distribution">Native to tropical America; cultivated widely across tropical regions.</string>
+<string name="bot_anacardium_occidentale_habit">Evergreen tree with a broad, spreading crown.</string>
+<string name="bot_anacardium_occidentale_leaf">Simple alternate leathery leaf, elliptic to obovate.</string>
+<string name="bot_anacardium_occidentale_flower">Small five-petalled flowers in a branched terminal panicle.</string>
+<string name="bot_anacardium_occidentale_fruit">Kidney-shaped nut, the true fruit, attached beneath the swollen cashew apple.</string>
+<string name="bot_arum_italicum_name">Italian arum</string>
+<string name="bot_arum_italicum_latin" translatable="false">Arum italicum</string>
+<string name="bot_arum_italicum_aliases">Italian arum; cuckoo pint</string>
+<string name="bot_arum_italicum_description">Tuberous woodland perennial with arrowhead leaves, often marked by pale veins. Tiny flowers occupy the base of a fleshy spadix partly enclosed by a pale spathe; a later stage bears a spike of orange-red berries. All parts are toxic if eaten and may irritate skin or eyes.</string>
+<string name="bot_arum_italicum_distribution">Europe and the Mediterranean to Iraq; also naturalized and cultivated elsewhere.</string>
+<string name="bot_arum_italicum_habit">Low tuberous perennial with basal leaves and a single spathe.</string>
+<string name="bot_arum_italicum_leaf">Arrowhead leaf with pale branching veins.</string>
+<string name="bot_arum_italicum_flower">Spadix with female flowers below male flowers inside a spathe.</string>
+<string name="bot_arum_italicum_fruit">Later fruiting stage: a spike of orange-red berries; poisonous if eaten.</string>
+<string name="bot_abelmoschus_esculentus_name">Okra</string>
+<string name="bot_abelmoschus_esculentus_latin" translatable="false">Abelmoschus esculentus</string>
+<string name="bot_abelmoschus_esculentus_aliases">okra; lady\'s finger; gumbo</string>
+<string name="bot_abelmoschus_esculentus_description">Annual tropical crop in the mallow family. Its palmately lobed leaves accompany large yellow flowers with a dark maroon centre; the young ridged capsules are harvested as a vegetable.</string>
+<string name="bot_abelmoschus_esculentus_distribution">Native to India according to Kew; now cultivated widely across tropical and warm regions.</string>
+<string name="bot_abelmoschus_esculentus_habit">Erect, branching annual herb with alternate lobed leaves.</string>
+<string name="bot_abelmoschus_esculentus_leaf">Palmately lobed leaf with toothed margins.</string>
+<string name="bot_abelmoschus_esculentus_flower">Yellow hibiscus-like flower with a dark maroon centre.</string>
+<string name="bot_abelmoschus_esculentus_fruit">Young edible capsule, elongated and longitudinally ridged.</string>
+<string name="bot_acer_japonicum_name">Fullmoon maple</string>
+<string name="bot_acer_japonicum_latin" translatable="false">Acer japonicum</string>
+<string name="bot_acer_japonicum_aliases">fullmoon maple; Japanese maple</string>
+<string name="bot_acer_japonicum_description">Deciduous Japanese maple with opposite, rounded leaves deeply divided into broad pointed lobes. Small reddish flowers appear in spring, followed by paired winged samaras.</string>
+<string name="bot_acer_japonicum_distribution">Native to Japan and the southern Kuril Islands; grown as an ornamental tree in temperate regions.</string>
+<string name="bot_acer_japonicum_habit">Small broad-crowned deciduous tree.</string>
+<string name="bot_acer_japonicum_leaf">Rounded leaf divided into seven to eleven deep, pointed lobes.</string>
+<string name="bot_acer_japonicum_flower">Small pendent clusters of reddish-purple flowers.</string>
+<string name="bot_acer_japonicum_fruit">Paired winged samaras, typical of maples.</string>
+<string name="bot_actinidia_kolomikta_name">Kolomikta vine</string>
+<string name="bot_actinidia_kolomikta_latin" translatable="false">Actinidia kolomikta</string>
+<string name="bot_actinidia_kolomikta_aliases">kolomikta vine; variegated kiwi vine; Arctic kiwi</string>
+<string name="bot_actinidia_kolomikta_description">Woody, twining climber with oval toothed leaves, often splashed white and pink near the tips. Small fragrant flowers are followed on female plants, with pollination, by small edible green berries.</string>
+<string name="bot_actinidia_kolomikta_distribution">Native from the Russian Far East through northeast and central China to northern and central Japan.</string>
+<string name="bot_actinidia_kolomikta_habit">Woody deciduous climber that twines around supports.</string>
+<string name="bot_actinidia_kolomikta_leaf">Oval toothed leaf; mature leaves may show white and pink variegation.</string>
+<string name="bot_actinidia_kolomikta_flower">Small white flower with numerous stamens.</string>
+<string name="bot_actinidia_kolomikta_fruit">Small green berry with many dark seeds; fruits on pollinated female vines.</string>
+<string name="bot_agave_deserti_name">Desert agave</string>
+<string name="bot_agave_deserti_latin" translatable="false">Agave deserti</string>
+<string name="bot_agave_deserti_aliases">desert agave; amul</string>
+<string name="bot_agave_deserti_description">Small, very slow-growing desert succulent forming a compact rosette of nearly straight, blue-grey leaves with marginal teeth and a terminal spine. Mature rosettes produce a tall branched stalk with yellow flowers and die after flowering.</string>
+<string name="bot_agave_deserti_distribution">Native to southern California and northern Baja California, in rocky or gravelly desert habitats.</string>
+<string name="bot_agave_deserti_habit">Compact stemless rosette; the mature plant sends up a tall branched flowering stalk.</string>
+<string name="bot_agave_deserti_leaf">Nearly straight blue-grey succulent leaf with marginal teeth and a sharp terminal spine.</string>
+<string name="bot_agave_deserti_flower">Yellow flowers in clusters on a tall branched inflorescence.</string>
+<string name="bot_agave_deserti_fruit">Dry capsule containing flat black seeds.</string>
+<string name="bot_aloe_polyphylla_name">Spiral aloe</string>
+<string name="bot_aloe_polyphylla_latin" translatable="false">Aloe polyphylla</string>
+<string name="bot_aloe_polyphylla_aliases">spiral aloe; kharatsa</string>
+<string name="bot_aloe_polyphylla_description">Stemless succulent endemic to the Maluti Mountains of Lesotho. Its many thick, toothed leaves form a striking spiral rosette; a flower stalk bears coral-pink tubular flowers. It is a high-altitude species and is not a desert aloe.</string>
+<string name="bot_aloe_polyphylla_distribution">Endemic to the Maluti Mountains of Lesotho in southern Africa.</string>
+<string name="bot_aloe_polyphylla_habit">Stemless mountain aloe forming a single spiral rosette.</string>
+<string name="bot_aloe_polyphylla_leaf">Thick blue-green leaf with small marginal teeth and a dark sharp tip.</string>
+<string name="bot_aloe_polyphylla_flower">Coral-pink tubular flowers arranged along a central stalk.</string>
+<string name="bot_aloe_polyphylla_fruit">Three-lobed dry capsule with dark seeds.</string>
+<string name="bot_arctium_lappa_name">Greater burdock</string>
+<string name="bot_arctium_lappa_latin" translatable="false">Arctium lappa</string>
+<string name="bot_arctium_lappa_aliases">greater burdock; edible burdock; gobo</string>
+<string name="bot_arctium_lappa_description">Robust biennial with large heart-shaped leaves, pale and softly felted beneath, and clusters of rounded purple flower heads. The mature heads become hooked burrs that cling to fur and clothing. Its cultivated taproot is eaten in some cuisines.</string>
+<string name="bot_arctium_lappa_distribution">Native across temperate Eurasia; introduced and naturalized in many other regions.</string>
+<string name="bot_arctium_lappa_habit">Tall, branching biennial herb, often growing in disturbed or shaded ground.</string>
+<string name="bot_arctium_lappa_leaf">Large heart-shaped leaf with a pale felted underside.</string>
+<string name="bot_arctium_lappa_flower">Purple florets in a rounded head surrounded by hooked bracts.</string>
+<string name="bot_arctium_lappa_fruit">Mature burr with hooked bracts; the small achenes are dispersed by attachment.</string>
+<string name="bot_alcea_rosea_name">Hollyhock</string>
+<string name="bot_alcea_rosea_latin" translatable="false">Alcea rosea</string>
+<string name="bot_alcea_rosea_aliases">hollyhock; rose mallow</string>
+<string name="bot_alcea_rosea_description">Tall biennial or short-lived perennial grown from a cultigen associated with Türkiye. Large simple flowers rise along an erect spike above broad palmately lobed leaves; the dry fruit separates into wedge-shaped mericarps.</string>
+<string name="bot_alcea_rosea_distribution">Cultivated worldwide as an ornamental; Kew records its origin as a cultigen from Türkiye.</string>
+<string name="bot_alcea_rosea_habit">Tall erect biennial with a single flowering spike.</string>
+<string name="bot_alcea_rosea_leaf">Large rounded leaf shallowly divided into palm-like lobes.</string>
+<string name="bot_alcea_rosea_flower">Large five-petaled funnel-shaped flower with a central staminal column.</string>
+<string name="bot_alcea_rosea_fruit">Dry round schizocarp that splits into wedge-shaped mericarps.</string>
+<string name="bot_alisma_plantago_aquatica_name">Common water-plantain</string>
+<string name="bot_alisma_plantago_aquatica_latin" translatable="false">Alisma plantago-aquatica</string>
+<string name="bot_alisma_plantago_aquatica_aliases">common water-plantain; European water-plantain</string>
+<string name="bot_alisma_plantago_aquatica_description">Semi-aquatic perennial of shallow water and marsh edges, unrelated to true plantains (Plantago). A basal clump of long-petioled leaves supports a tall, airy, whorled panicle of delicate white flowers. Ingesting large quantities can be harmful.</string>
+<string name="bot_alisma_plantago_aquatica_distribution">Temperate Eurasia and North Africa to Tanzania; found at pond margins, ditches and slow water.</string>
+<string name="bot_alisma_plantago_aquatica_habit">Rhizomatous marsh herb rooted in shallow water or fertile mud.</string>
+<string name="bot_alisma_plantago_aquatica_leaf">Long-petioled ovate leaf with several strong veins from the base.</string>
+<string name="bot_alisma_plantago_aquatica_flower">Small white flower with three delicate petals, on a whorled branched panicle.</string>
+<string name="bot_alisma_plantago_aquatica_fruit">Ring of small ridged achenes around the receptacle.</string>
+<string name="bot_artemisia_absinthium_name">Wormwood</string>
+<string name="bot_artemisia_absinthium_latin" translatable="false">Artemisia absinthium</string>
+<string name="bot_artemisia_absinthium_aliases">wormwood; absinthe wormwood; grande absinthe</string>
+<string name="bot_artemisia_absinthium_description">Aromatic perennial with silvery, finely divided leaves and many small drooping yellow heads in a branched panicle. Thujone-containing extracts can be toxic; the illustration is for identification and not a guide to preparation or use.</string>
+<string name="bot_artemisia_absinthium_distribution">Native to Europe, North Africa and temperate regions east to Siberia and the western Himalaya.</string>
+<string name="bot_artemisia_absinthium_habit">Bushy perennial with branching, softly hairy silver-gray stems and foliage.</string>
+<string name="bot_artemisia_absinthium_leaf">Silvery, twice-pinnately divided aromatic leaf.</string>
+<string name="bot_artemisia_absinthium_flower">Small drooping spherical head of yellow tubular florets.</string>
+<string name="bot_artemisia_absinthium_fruit">Tiny dry achene, typical of the daisy family.</string>
+<string name="bot_artemisia_vulgaris_name">Mugwort</string>
+<string name="bot_artemisia_vulgaris_latin" translatable="false">Artemisia vulgaris</string>
+<string name="bot_artemisia_vulgaris_aliases">mugwort; common mugwort; armoise commune</string>
+<string name="bot_artemisia_vulgaris_description">Tall rhizomatous perennial with deeply divided leaves that are green and nearly hairless above but white-gray and softly felted beneath. Small pale flower heads form narrow branching panicles. It can be confused with wormwood, whose foliage is more uniformly silvery.</string>
+<string name="bot_artemisia_vulgaris_distribution">Native across temperate Eurasia to Indochina and North Africa; introduced elsewhere.</string>
+<string name="bot_artemisia_vulgaris_habit">Tall branching perennial that spreads by rhizomes.</string>
+<string name="bot_artemisia_vulgaris_leaf">Deeply divided leaf, green above and softly white-felted beneath.</string>
+<string name="bot_artemisia_vulgaris_flower">Tiny pale tubular florets in narrow branched panicles.</string>
+<string name="bot_artemisia_vulgaris_fruit">Minute dry achene formed after flowering.</string>
+<string name="bot_abies_nordmanniana_name">Nordmann fir</string>
+<string name="bot_abies_nordmanniana_latin" translatable="false">Abies nordmanniana</string>
+<string name="bot_abies_nordmanniana_aliases">Nordmann fir; Caucasian fir</string>
+<string name="bot_abies_nordmanniana_description">Evergreen Caucasian fir with a narrow, tiered crown and flattened glossy needles; their undersides bear two pale stomatal bands. Its seed cones stand upright and disintegrate on the tree.</string>
+<string name="bot_abies_nordmanniana_distribution">Native from northeastern Türkiye to the western Caucasus; widely planted as an ornamental and Christmas tree.</string>
+<string name="bot_abies_nordmanniana_habit">Tall evergreen conifer with a straight trunk and regular tiered branches.</string>
+<string name="bot_abies_nordmanniana_leaf">Flat needles, dark glossy green above and pale beneath with two stomatal bands.</string>
+<string name="bot_abies_nordmanniana_flower">Separate male pollen cones and upright female seed cones occur on the same tree.</string>
+<string name="bot_abies_nordmanniana_fruit">The upright seed cone breaks apart while attached, leaving the central axis on the branch.</string>
+<string name="bot_agave_victoriae_reginae_name">Queen Victoria agave</string>
+<string name="bot_agave_victoriae_reginae_latin" translatable="false">Agave victoriae-reginae</string>
+<string name="bot_agave_victoriae_reginae_aliases">Queen Victoria agave; royal agave</string>
+<string name="bot_agave_victoriae_reginae_description">Small, slow-growing Mexican agave forming a compact rosette of rigid dark green leaves marked by white lines. Leaf margins are smooth, with a sharp terminal spine. A mature rosette sends up a tall flowering stalk and then dies.</string>
+<string name="bot_agave_victoriae_reginae_distribution">Native to northeastern Mexico, especially arid rocky habitats.</string>
+<string name="bot_agave_victoriae_reginae_habit">Compact solitary rosette; flowering stalk is many times taller than the leaves.</string>
+<string name="bot_agave_victoriae_reginae_leaf">Rigid dark leaves with white markings, smooth margins and a terminal spine.</string>
+<string name="bot_agave_victoriae_reginae_flower">Cream flowers are clustered along a tall branched stalk.</string>
+<string name="bot_agave_victoriae_reginae_fruit">Dry capsules contain dark seeds after flowering.</string>
+<string name="bot_artocarpus_altilis_name">Breadfruit tree</string>
+<string name="bot_artocarpus_altilis_latin" translatable="false">Artocarpus altilis</string>
+<string name="bot_artocarpus_altilis_aliases">Breadfruit; breadfruit tree</string>
+<string name="bot_artocarpus_altilis_description">Evergreen tropical tree with large deeply lobed leaves and separate male and female flower heads. The female flowers fuse into a large compound fruit rich in starch. Seedless cultivars are common, while seeded forms are also grown.</string>
+<string name="bot_artocarpus_altilis_distribution">Origin uncertain; cultivated widely across tropical regions, especially the Pacific and Caribbean.</string>
+<string name="bot_artocarpus_altilis_habit">Broad-crowned evergreen tree with fruits borne on branches and trunk.</string>
+<string name="bot_artocarpus_altilis_leaf">Large alternate leaf with deep rounded lobes and prominent palmate veins.</string>
+<string name="bot_artocarpus_altilis_flower">Male flowers form elongated hanging heads; female flowers form a rounded head.</string>
+<string name="bot_artocarpus_altilis_fruit">Compound syncarp with a patterned surface; edible cultivars may be seedless.</string>
+<string name="bot_betula_papyrifera_name">Paper birch</string>
+<string name="bot_betula_papyrifera_latin" translatable="false">Betula papyrifera</string>
+<string name="bot_betula_papyrifera_aliases">Paper birch; canoe birch</string>
+<string name="bot_betula_papyrifera_description">North American birch recognized by its pale bark peeling in thin papery layers and ovate double-toothed leaves. Male catkins hang; smaller female catkins produce tiny winged nutlets.</string>
+<string name="bot_betula_papyrifera_distribution">Native to much of northern and central North America, from Canada into the northern United States.</string>
+<string name="bot_betula_papyrifera_habit">Slender deciduous tree with white bark that separates in papery curls.</string>
+<string name="bot_betula_papyrifera_leaf">Ovate pointed leaf with a double-toothed margin.</string>
+<string name="bot_betula_papyrifera_flower">Pendulous male catkins and smaller female catkins appear on the same tree.</string>
+<string name="bot_betula_papyrifera_fruit">Small winged nutlets are released from a disintegrating fruiting catkin.</string>
+<string name="bot_aeonium_ciliatum_name">Ciliate aeonium</string>
+<string name="bot_aeonium_ciliatum_latin" translatable="false">Aeonium ciliatum</string>
+<string name="bot_aeonium_ciliatum_aliases">Ciliate aeonium</string>
+<string name="bot_aeonium_ciliatum_description">Branching succulent shrub endemic to Tenerife, with terminal rosettes on woody stems. Its fleshy leaves bear fine cilia along their margins. Branched clusters of small yellow star-shaped flowers appear on mature flowering shoots.</string>
+<string name="bot_aeonium_ciliatum_distribution">Endemic to Tenerife in the Canary Islands.</string>
+<string name="bot_aeonium_ciliatum_habit">Woody branching stems bear rounded rosettes at their tips.</string>
+<string name="bot_aeonium_ciliatum_leaf">Fleshy spoon-shaped leaf with fine eyelash-like marginal cilia.</string>
+<string name="bot_aeonium_ciliatum_flower">Branched panicle of small yellow, five-pointed star flowers.</string>
+<string name="bot_aeonium_ciliatum_fruit">Dry follicles develop after flowering.</string>
+<string name="bot_arctium_minus_name">Lesser burdock</string>
+<string name="bot_arctium_minus_latin" translatable="false">Arctium minus</string>
+<string name="bot_arctium_minus_aliases">Lesser burdock; common burdock</string>
+<string name="bot_arctium_minus_description">Biennial burdock with branched flowering stems, broad lower leaves and smaller globose-ovoid heads than greater burdock. Hooked bracts form burrs after flowering.</string>
+<string name="bot_arctium_minus_distribution">Native from Europe and northwestern Africa east to Afghanistan; introduced widely elsewhere.</string>
+<string name="bot_arctium_minus_habit">Upright flowering second-year stem rises from a basal rosette.</string>
+<string name="bot_arctium_minus_leaf">Broad lower leaf with a pale underside; shape and size vary along the stem.</string>
+<string name="bot_arctium_minus_flower">Purple florets sit in a small head surrounded by hooked bracts.</string>
+<string name="bot_arctium_minus_fruit">Achenes develop inside the hooked burr; each seed has a short pappus.</string>
+<string name="bot_agave_filifera_name">Thread agave</string>
+<string name="bot_agave_filifera_latin" translatable="false">Agave filifera</string>
+<string name="bot_agave_filifera_aliases">Thread agave; thread-leaf agave</string>
+<string name="bot_agave_filifera_description">Compact Mexican succulent with narrow stiff leaves that often shed curling white marginal filaments and end in a sharp spine. Mature rosettes send up a branched flowering stalk and then die.</string>
+<string name="bot_agave_filifera_distribution">Native to central Mexico, from Querétaro to México State.</string>
+<string name="bot_agave_filifera_habit">Compact solitary or slowly offsetting rosette with a tall flower stalk at maturity.</string>
+<string name="bot_agave_filifera_leaf">Narrow stiff green leaf with curling white marginal threads and a terminal spine.</string>
+<string name="bot_agave_filifera_flower">Cream to yellow flowers grow in clusters on a branched stalk.</string>
+<string name="bot_agave_filifera_fruit">Dry capsules contain dark seeds after flowering.</string>
+<string name="bot_armeria_maritima_name">Sea thrift</string>
+<string name="bot_armeria_maritima_latin" translatable="false">Armeria maritima</string>
+<string name="bot_armeria_maritima_aliases">Sea thrift; sea pink</string>
+<string name="bot_armeria_maritima_description">Compact evergreen coastal perennial with narrow basal leaves and leafless stalks topped by rounded clusters of small pink flowers. It tolerates exposed, saline habitats.</string>
+<string name="bot_armeria_maritima_distribution">Native across subarctic and temperate parts of the Northern Hemisphere, especially coasts.</string>
+<string name="bot_armeria_maritima_habit">Low dense cushion sends leafless flower stalks above the foliage.</string>
+<string name="bot_armeria_maritima_leaf">Narrow linear leaves form a basal tuft.</string>
+<string name="bot_armeria_maritima_flower">Small pink five-part flowers cluster in a globular head with papery bracts.</string>
+<string name="bot_armeria_maritima_fruit">A small dry capsule forms inside the persistent flower head.</string>
+<string name="bot_bertholletia_excelsa_name">Brazil nut tree</string>
+<string name="bot_bertholletia_excelsa_latin" translatable="false">Bertholletia excelsa</string>
+<string name="bot_bertholletia_excelsa_aliases">Brazil nut tree; Brazil nut</string>
+<string name="bot_bertholletia_excelsa_description">Huge evergreen Amazonian tree with simple leaves and pale flowers. Its large hard woody pyxidia contain many edible seeds known as Brazil nuts. The tree is harvested mainly for its seeds, and wild populations are vulnerable.</string>
+<string name="bot_bertholletia_excelsa_distribution">Native to humid tropical South America, especially the Amazon basin.</string>
+<string name="bot_bertholletia_excelsa_habit">Very tall emergent evergreen tree with a straight trunk and high broad crown.</string>
+<string name="bot_bertholletia_excelsa_leaf">Entire elliptic leaf with a distinct petiole and fine lateral veins.</string>
+<string name="bot_bertholletia_excelsa_flower">Pale flowers have hooded petals and numerous stamens.</string>
+<string name="bot_bertholletia_excelsa_fruit">A large woody pyxidium encloses several angular seeds.</string>
+<string name="bot_acoelorraphe_wrightii_name">Everglades palm</string>
+<string name="bot_acoelorraphe_wrightii_latin" translatable="false">Acoelorrhaphe wrightii</string>
+<string name="bot_acoelorraphe_wrightii_aliases">Everglades palm; paurotis palm</string>
+<string name="bot_acoelorraphe_wrightii_description">Clumping palm of wet tropical and subtropical habitats, with several slender trunks and rounded crowns of deeply divided fan leaves. Leaf stalks bear sharp orange-brown spines; the small drupes ripen from green to dark.</string>
+<string name="bot_acoelorraphe_wrightii_distribution">Native from southern Florida and the Caribbean through southern Mexico to Colombia.</string>
+<string name="bot_acoelorraphe_wrightii_habit">Clustering palm with multiple cane-like trunks in wet ground.</string>
+<string name="bot_acoelorraphe_wrightii_leaf">Fan-shaped palmate frond with narrow segments and spiny petiole.</string>
+<string name="bot_acoelorraphe_wrightii_flower">Branched sprays of many small pale flowers emerge among the fronds.</string>
+<string name="bot_acoelorraphe_wrightii_fruit">Small rounded drupes ripen from green to nearly black.</string>
+<string name="bot_adoxa_moschatellina_name">Moschatel</string>
+<string name="bot_adoxa_moschatellina_latin" translatable="false">Adoxa moschatellina</string>
+<string name="bot_adoxa_moschatellina_aliases">Moschatel; townhall clock</string>
+<string name="bot_adoxa_moschatellina_description">Tiny spring rhizomatous herb of damp, shaded woodland. It bears two long-stalked basal divided leaves, two opposite divided stem leaves, and a distinctive compact five-flower head: four five-parted flowers face outward and one four-parted flower sits on top.</string>
+<string name="bot_adoxa_moschatellina_distribution">Native across temperate regions of the Northern Hemisphere.</string>
+<string name="bot_adoxa_moschatellina_habit">Single slender spring shoot rises from an underground rhizome.</string>
+<string name="bot_adoxa_moschatellina_leaf">Basal leaves are long-petioled and divided into three-lobed leaflets; smaller divided leaves are opposite on the stem.</string>
+<string name="bot_adoxa_moschatellina_flower">Five flowers form a compact cube-like head: four five-parted flowers face sideways and one four-parted flower sits on top.</string>
+<string name="bot_adoxa_moschatellina_fruit">Small dark drupes develop after the short spring flowering season.</string>
+<string name="bot_adansonia_perrieri_name">Perrier\'s baobab</string>
+<string name="bot_adansonia_perrieri_latin" translatable="false">Adansonia perrieri</string>
+<string name="bot_adansonia_perrieri_aliases">Perrier\'s baobab</string>
+<string name="bot_adansonia_perrieri_description">Deciduous baobab endemic to northern Madagascar, with a massive swollen trunk and sparse high branches. Its large pendulous flowers may appear while the tree is leafless; palmately compound leaves and oblong fruits are shown separately.</string>
+<string name="bot_adansonia_perrieri_distribution">Endemic to northern Madagascar.</string>
+<string name="bot_adansonia_perrieri_habit">Massive bottle-shaped trunk supports a sparse, high crown.</string>
+<string name="bot_adansonia_perrieri_leaf">Palmately compound leaf with several narrow leaflets.</string>
+<string name="bot_adansonia_perrieri_flower">Large pendulous flower has pale petals and many long stamens.</string>
+<string name="bot_adansonia_perrieri_fruit">Oblong hard fruit encloses dry pale pulp and dark seeds.</string>
+<string name="bot_afzelia_africana_name">African afzelia</string>
+<string name="bot_afzelia_africana_latin" translatable="false">Afzelia africana</string>
+<string name="bot_afzelia_africana_aliases">African afzelia; papao; doussie</string>
+<string name="bot_afzelia_africana_description">Large West African savanna and woodland tree with paripinnate leaves. Fragrant flowers have a conspicuous pale petal marked red; dark woody pods open to reveal shiny black seeds with orange arils.</string>
+<string name="bot_afzelia_africana_distribution">Native from West Tropical Africa east to Uganda.</string>
+<string name="bot_afzelia_africana_habit">Broad-crowned deciduous tree of savanna and dry woodland.</string>
+<string name="bot_afzelia_africana_leaf">Paripinnate compound leaf with opposite pairs of broad oval leaflets.</string>
+<string name="bot_afzelia_africana_flower">Fragrant flower has a pale petal with red markings among greenish floral parts.</string>
+<string name="bot_afzelia_africana_fruit">Dark woody pod contains shiny black seeds attached to orange arils.</string>
+<string name="bot_agathis_robusta_name">Queensland kauri</string>
+<string name="bot_agathis_robusta_latin" translatable="false">Agathis robusta</string>
+<string name="bot_agathis_robusta_aliases">Queensland kauri; smooth-barked kauri</string>
+<string name="bot_agathis_robusta_description">Very tall evergreen conifer of eastern Australia and New Guinea, with a straight trunk, smooth shedding bark and broad opposite leaves. Male pollen cones are elongated; female seed cones are rounded and disintegrate at maturity.</string>
+<string name="bot_agathis_robusta_distribution">Native to eastern Queensland, New Guinea and the Bismarck Archipelago.</string>
+<string name="bot_agathis_robusta_habit">Huge evergreen conifer with a straight trunk and high broad crown.</string>
+<string name="bot_agathis_robusta_leaf">Broad leathery leaves occur in opposite pairs on the twig.</string>
+<string name="bot_agathis_robusta_flower">Male pollen cones are cylindrical and distinct from the female seed cones.</string>
+<string name="bot_agathis_robusta_fruit">Rounded female cone releases a winged seed as its scales separate.</string>
+<string name="bot_alstonia_scholaris_name">Devil tree</string>
+<string name="bot_alstonia_scholaris_latin" translatable="false">Alstonia scholaris</string>
+<string name="bot_alstonia_scholaris_aliases">Devil tree; blackboard tree; saptaparni</string>
+<string name="bot_alstonia_scholaris_description">Tall evergreen tropical tree with leathery entire leaves in whorls of four to eight and dense terminal clusters of fragrant cream-white flowers. Paired long slender follicles release many seeds with silky hairs; injured parts exude milky latex.</string>
+<string name="bot_alstonia_scholaris_distribution">Native from tropical and subtropical Asia to northern Australia.</string>
+<string name="bot_alstonia_scholaris_habit">Tall evergreen tree with a tiered crown and leaves crowded near shoot tips.</string>
+<string name="bot_alstonia_scholaris_leaf">Leathery, entire leaves form a whorl of four to eight.</string>
+<string name="bot_alstonia_scholaris_flower">Many small fragrant cream-white flowers form dense terminal clusters.</string>
+<string name="bot_alstonia_scholaris_fruit">Paired long narrow follicles open to release silky-haired seeds.</string>
+<string name="bot_abies_yuanbaoshanensis_name">Yuanbaoshan fir</string>
+<string name="bot_abies_yuanbaoshanensis_latin" translatable="false">Abies yuanbaoshanensis</string>
+<string name="bot_abies_yuanbaoshanensis_aliases">Yuanbaoshan fir</string>
+<string name="bot_abies_yuanbaoshanensis_description">A narrowly crowned fir known only from Yuanbao Mountain in Guangxi, China. Its upright seed cones and individually attached flattened needles are typical of Abies; the species is assessed as Critically Endangered.</string>
+<string name="bot_abies_yuanbaoshanensis_distribution">Endemic to northern Guangxi, China.</string>
+<string name="bot_abies_yuanbaoshanensis_habit">Evergreen conifer with a straight trunk and a narrow pyramidal crown.</string>
+<string name="bot_abies_yuanbaoshanensis_leaf">Short flattened needles attach singly to the twig; they are not bundled like pine needles.</string>
+<string name="bot_abies_yuanbaoshanensis_flower">Pollen cones and seed cones are separate reproductive structures on the same tree.</string>
+<string name="bot_abies_yuanbaoshanensis_fruit">Upright woody seed cones disintegrate on the tree at maturity.</string>
+<string name="bot_ammi_majus_name">Greater ammi</string>
+<string name="bot_ammi_majus_latin" translatable="false">Ammi majus</string>
+<string name="bot_ammi_majus_aliases">Greater ammi; bishop\'s flower; false bishop\'s weed</string>
+<string name="bot_ammi_majus_description">Annual or biennial Apiaceae herb with finely divided leaves and broad, many-rayed white umbels. It can resemble other white-flowered umbellifers; sap may cause phototoxic skin reactions in sunlight.</string>
+<string name="bot_ammi_majus_distribution">Native from the Mediterranean region east to western Asia; introduced and cultivated elsewhere.</string>
+<string name="bot_ammi_majus_habit">Upright, branching herb with open flat-topped flower umbels.</string>
+<string name="bot_ammi_majus_leaf">Leaves are pinnately divided, with toothed segments below and narrower divisions higher on the stem.</string>
+<string name="bot_ammi_majus_flower">Numerous tiny white flowers are grouped into compound umbels with many rays.</string>
+<string name="bot_ammi_majus_fruit">The dry fruit splits into two small ribbed mericarps.</string>
+<string name="bot_anemarrhena_asphodeloides_name">Anemarrhena</string>
+<string name="bot_anemarrhena_asphodeloides_latin" translatable="false">Anemarrhena asphodeloides</string>
+<string name="bot_anemarrhena_asphodeloides_aliases">Anemarrhena; zhi mu</string>
+<string name="bot_anemarrhena_asphodeloides_description">Rhizomatous perennial native to northern China and Mongolia. Long basal grasslike leaves contrast with a taller leafless flowering spike; the stout rhizome bears persistent fibrous leaf-base remains.</string>
+<string name="bot_anemarrhena_asphodeloides_distribution">Native to Mongolia and northern, central and eastern China.</string>
+<string name="bot_anemarrhena_asphodeloides_habit">Clump of arching basal leaves with a separate upright flowering scape.</string>
+<string name="bot_anemarrhena_asphodeloides_leaf">Long narrow leaves arise from the base and have parallel veins.</string>
+<string name="bot_anemarrhena_asphodeloides_flower">Small pale pink to whitish six-parted flowers line the leafless spike.</string>
+<string name="bot_anemarrhena_asphodeloides_fruit">The dry capsule follows flowering; the perennial rhizome has closely spaced leaf-scar nodes.</string>
+<string name="bot_ansellia_africana_name">African leopard orchid</string>
+<string name="bot_ansellia_africana_latin" translatable="false">Ansellia africana</string>
+<string name="bot_ansellia_africana_aliases">African leopard orchid; Ansellia</string>
+<string name="bot_ansellia_africana_description">Robust tropical African epiphytic orchid with clustered spindle-shaped pseudobulbs, straplike leaves and branched sprays of yellow flowers marked with brown or purple spots.</string>
+<string name="bot_ansellia_africana_distribution">Native across tropical and southern Africa.</string>
+<string name="bot_ansellia_africana_habit">Clumping epiphyte anchored by exposed aerial roots.</string>
+<string name="bot_ansellia_africana_leaf">Several long leathery leaves grow from the top of each pseudobulb.</string>
+<string name="bot_ansellia_africana_flower">Branched panicles carry yellow flowers with characteristic dark spots and an orchid lip.</string>
+<string name="bot_ansellia_africana_fruit">A narrow capsule forms after pollination and later releases minute seeds.</string>
+<string name="bot_arbutus_canariensis_name">Canary Islands strawberry tree</string>
+<string name="bot_arbutus_canariensis_latin" translatable="false">Arbutus canariensis</string>
+<string name="bot_arbutus_canariensis_aliases">Canary Islands strawberry tree; Canary madrone</string>
+<string name="bot_arbutus_canariensis_description">Evergreen tree endemic to the Canary Islands, with finely serrated leaves, peeling reddish bark, pendant bell-shaped flowers and orange granular fruits. It is related to the common strawberry tree but has distinctly orange ripe fruit.</string>
+<string name="bot_arbutus_canariensis_distribution">Endemic to the Canary Islands.</string>
+<string name="bot_arbutus_canariensis_habit">Small evergreen tree with a spreading crown and peeling reddish bark.</string>
+<string name="bot_arbutus_canariensis_leaf">Leathery lanceolate to elliptic leaves have fine saw-toothed margins.</string>
+<string name="bot_arbutus_canariensis_flower">Pale urn-shaped flowers hang in clusters from the branches.</string>
+<string name="bot_arbutus_canariensis_fruit">The round ripe fruit is orange and covered with small granular bumps; it is edible.</string>
+<string name="bot_agave_fourcroydes_name">Henequen</string>
+<string name="bot_agave_fourcroydes_latin" translatable="false">Agave fourcroydes</string>
+<string name="bot_agave_fourcroydes_aliases">Henequen; Yucatan sisal</string>
+<string name="bot_agave_fourcroydes_description">A large, evergreen rosette-forming succulent with stiff, sword-shaped leaves edged by teeth and tipped with a spine. Mature plants send up a tall branched flowering stalk; the cultivated henequen is especially valued for strong leaf fibre. The plate shows a flowering plant and separate leaf and fibre details.</string>
+<string name="bot_agave_fourcroydes_distribution">Native to Mexico and Central America; widely cultivated, especially in the Yucatan Peninsula.</string>
+<string name="bot_agave_fourcroydes_habit">Large perennial rosette; a mature individual produces a tall flowering panicle.</string>
+<string name="bot_agave_fourcroydes_leaf">Stiff, long, lance-shaped leaves with marginal teeth and a sharp terminal spine; leaves are harvested for fibre.</string>
+<string name="bot_agave_fourcroydes_flower">Numerous yellowish flowers are borne on branches of a tall panicle.</string>
+<string name="bot_agave_fourcroydes_fruit">The fruit is a dry capsule; the illustration emphasizes the economically important leaf fibre.</string>
+<string name="bot_agave_shawii_name">Shaw’s agave</string>
+<string name="bot_agave_shawii_latin" translatable="false">Agave shawii</string>
+<string name="bot_agave_shawii_aliases">Shaw’s agave; coastal agave</string>
+<string name="bot_agave_shawii_description">A compact coastal agave forming a dense rosette of broad, fleshy leaves with conspicuous marginal teeth and a dark terminal spine. The adult flowering stalk rises far above the rosette and bears yellow flowers. Its restricted coastal habitat makes wild populations conservation-sensitive.</string>
+<string name="bot_agave_shawii_distribution">Coastal southern California and northwestern Baja California, including islands in the region.</string>
+<string name="bot_agave_shawii_habit">A low, evergreen succulent rosette; flowering plants produce a much taller panicle.</string>
+<string name="bot_agave_shawii_leaf">Broad, thick leaves bear curved marginal teeth and a strong terminal spine.</string>
+<string name="bot_agave_shawii_flower">Yellow flowers are carried on a tall, branched inflorescence.</string>
+<string name="bot_agave_shawii_fruit">A dry capsule follows flowering; plants commonly die after their single flowering event.</string>
+<string name="bot_agrostis_gigantea_name">Agrostide géante</string>
+<string name="bot_agrostis_gigantea_latin" translatable="false">Agrostis gigantea</string>
+<string name="bot_agrostis_gigantea_aliases">Redtop; black bent</string>
+<string name="bot_agrostis_gigantea_description">A tall perennial grass spreading by creeping rhizomes and forming leafy shoots. Its flat, narrow leaves sit below a large, open, finely branched panicle of tiny spikelets. The rhizomes and open inflorescence help distinguish it from compact, densely tufted bent grasses.</string>
+<string name="bot_agrostis_gigantea_distribution">Native across temperate parts of Europe and Asia; introduced in many other regions.</string>
+<string name="bot_agrostis_gigantea_habit">Rhizomatous perennial grass, often forming loose colonies, with flowering stems that may exceed one metre.</string>
+<string name="bot_agrostis_gigantea_leaf">Flat, narrow leaves arise from sheaths; a small ligule occurs where the blade meets its sheath.</string>
+<string name="bot_agrostis_gigantea_flower">A broad, open panicle bears many tiny, one-flowered spikelets.</string>
+<string name="bot_agrostis_gigantea_fruit">Each spikelet forms a small grain-like caryopsis.</string>
+<string name="bot_adansonia_suarezensis_name">Baobab de Suarez</string>
+<string name="bot_adansonia_suarezensis_latin" translatable="false">Adansonia suarezensis</string>
+<string name="bot_adansonia_suarezensis_aliases">Suarez baobab; northern baobab</string>
+<string name="bot_adansonia_suarezensis_description">A rare baobab endemic to northern Madagascar. Like other baobabs it is a large, seasonally deciduous tree with a massive trunk, palmately divided leaves and large flowers, followed by a woody-shelled fruit. The general baobab silhouette is well established, but exact proportions and some organ details vary among species; this plate is therefore schematic at species level.</string>
+<string name="bot_adansonia_suarezensis_distribution">Endemic to northern Madagascar, where it occurs in seasonally dry tropical vegetation.</string>
+<string name="bot_adansonia_suarezensis_habit">Massive-trunked, seasonally deciduous tree; the flowering and leafless states occur at different times.</string>
+<string name="bot_adansonia_suarezensis_leaf">Leaves are palmately divided into several leaflets and are shed in the dry season.</string>
+<string name="bot_adansonia_suarezensis_flower">Large pale flowers occur on long stalks; baobab flowers are short-lived.</string>
+<string name="bot_adansonia_suarezensis_fruit">An oblong fruit with a hard woody shell encloses dry pulp and numerous seeds.</string>
+<string name="bot_anthemis_arvensis_name">Camomille des champs</string>
+<string name="bot_anthemis_arvensis_latin" translatable="false">Anthemis arvensis</string>
+<string name="bot_anthemis_arvensis_aliases">Camomille sauvage; corn chamomile</string>
+<string name="bot_anthemis_arvensis_description">An annual or short-lived herb with finely divided, aromatic leaves and daisy-like flower heads. White ray florets surround a yellow disc; as the head ages, the receptacle becomes distinctly conical and bears pale scales between the florets. Those scales help separate it from scentless mayweed, which lacks them.</string>
+<string name="bot_anthemis_arvensis_distribution">Native across Europe, North Africa and temperate Asia; introduced beyond this range.</string>
+<string name="bot_anthemis_arvensis_habit">Annual or short-lived herb, usually branched, with one or more flower heads on leafy stems.</string>
+<string name="bot_anthemis_arvensis_leaf">Leaves are alternate and finely divided into narrow segments.</string>
+<string name="bot_anthemis_arvensis_flower">White ray florets surround a yellow disc; the receptacle is conical and has pale scales between florets.</string>
+<string name="bot_anthemis_arvensis_fruit">Small dry achenes develop on the conical receptacle.</string>
+<string name="bot_anchusa_arvensis_name">Buglosse des champs</string>
+<string name="bot_anchusa_arvensis_latin" translatable="false">Anchusa arvensis</string>
+<string name="bot_anchusa_arvensis_aliases">Buglosse des champs; petite buglosse</string>
+<string name="bot_anchusa_arvensis_description">An annual, stiffly bristly herb with alternate, narrow leaves whose margins are wavy or shallowly toothed. Coiled flowering clusters elongate as the flowers open; each small blue corolla has a conspicuously bent tube and unequal lobes. Four rough nutlets follow. The curved tube and unequal flower lobes help distinguish this species from other buglosses.</string>
+<string name="bot_anchusa_arvensis_distribution">Native to Europe; introduced in many temperate regions.</string>
+<string name="bot_anchusa_arvensis_habit">Usually branched annual herb, 15–60 cm tall, with coarse spreading bristles.</string>
+<string name="bot_anchusa_arvensis_leaf">Alternate, narrow lance-shaped leaves are bristly and wavy-edged, with upper leaves clasping the stem.</string>
+<string name="bot_anchusa_arvensis_flower">Small blue flowers grow in coiled clusters; the corolla tube bends sharply and ends in unequal lobes.</string>
+<string name="bot_anchusa_arvensis_fruit">Each flower forms four rough, obliquely ovoid nutlets.</string>
+<string name="bot_artemisia_maritima_name">Armoise maritime</string>
+<string name="bot_artemisia_maritima_latin" translatable="false">Artemisia maritima</string>
+<string name="bot_artemisia_maritima_aliases">Armoise maritime; sea wormwood</string>
+<string name="bot_artemisia_maritima_description">A low aromatic perennial subshrub of northern and western European coasts. Its finely divided leaves are densely hairy and appear silvery; small yellow-brown flower heads are grouped along flowering branches. It is one of several aromatic wormwoods, so colour and scent alone are not a safe identification.</string>
+<string name="bot_artemisia_maritima_distribution">Native to northern and western Europe, including Atlantic and Baltic coastal regions.</string>
+<string name="bot_artemisia_maritima_habit">Compact perennial subshrub, commonly 0.5–1 m high, with silvery branchlets.</string>
+<string name="bot_artemisia_maritima_leaf">Aromatic leaves are finely divided into very narrow, hair-covered segments that give a silvery appearance.</string>
+<string name="bot_artemisia_maritima_flower">Tiny yellow-brown tubular florets form small nodding heads grouped on flowering stems.</string>
+<string name="bot_artemisia_maritima_fruit">Small dry achenes develop within the mature flower heads.</string>
+<string name="bot_asarum_europaeum_name">Asaret d’Europe</string>
+<string name="bot_asarum_europaeum_latin" translatable="false">Asarum europaeum</string>
+<string name="bot_asarum_europaeum_aliases">Asaret d’Europe; European wild ginger</string>
+<string name="bot_asarum_europaeum_description">A low evergreen woodland perennial spreading by a creeping rhizome. Its glossy, long-stalked leaves are kidney-shaped to broadly heart-shaped. Solitary dark reddish-brown flowers lie close to the ground beneath the leaves; the three-lobed floral tube is unusual and easy to overlook. The common name “wild ginger” does not make it a culinary ginger.</string>
+<string name="bot_asarum_europaeum_distribution">Native from Europe eastward to central Siberia.</string>
+<string name="bot_asarum_europaeum_habit">Low mat-forming perennial with a creeping rhizome and leaves borne in small pairs along its growth.</string>
+<string name="bot_asarum_europaeum_leaf">Glossy kidney-shaped or heart-shaped leaf on a long stalk, usually held close to the woodland floor.</string>
+<string name="bot_asarum_europaeum_flower">A solitary, ground-level flower has a dark, three-lobed calyx forming a short jug-like tube.</string>
+<string name="bot_asarum_europaeum_fruit">A leathery capsule develops close to the ground after flowering.</string>
+<string name="bot_astrophytum_caput_medusae_name">Astrophytum tête-de-Méduse</string>
+<string name="bot_astrophytum_caput_medusae_latin" translatable="false">Astrophytum caput-medusae</string>
+<string name="bot_astrophytum_caput_medusae_aliases">Tête-de-Méduse; Medusa-head cactus</string>
+<string name="bot_astrophytum_caput_medusae_description">A highly distinctive tuberous cactus native to northeastern Mexico. Instead of the usual ribbed cactus body, it bears a small basal caudex and long, narrow, tapering stem tubercles that radiate like serpents. Each tubercle carries an areole near its tip and is almost spineless. Large yellow flowers arise from mature tubercles; the long projections are modified stem, not leaves.</string>
+<string name="bot_astrophytum_caput_medusae_distribution">Endemic to northeastern Mexico, in Nuevo León and Tamaulipas.</string>
+<string name="bot_astrophytum_caput_medusae_habit">Small tuberous cactus with a basal caudex and long radiating stem tubercles.</string>
+<string name="bot_astrophytum_caput_medusae_leaf">True leaves are absent; the long narrow projections are succulent stem tubercles with areoles near their tips.</string>
+<string name="bot_astrophytum_caput_medusae_flower">A large yellow flower with a warm orange-red centre appears from a mature tubercle near the caudex.</string>
+<string name="bot_astrophytum_caput_medusae_fruit">A small scaly capsule forms after flowering and contains dark seeds.</string>
+<string name="bot_brocchinia_reducta_name">Brocchinie carnivore</string>
+<string name="bot_brocchinia_reducta_latin" translatable="false">Brocchinia reducta</string>
+<string name="bot_brocchinia_reducta_aliases">Brocchinie réduite; carnivorous bromeliad</string>
+<string name="bot_brocchinia_reducta_description">A terrestrial bromeliad of the Guiana Shield highlands. Its narrow upright leaves overlap to form a persistent water-holding tank; waxy inner surfaces and modified absorptive scales help the plant trap insects and take up nutrients. This is a true documented case of carnivory within Bromeliaceae. The open branched flower stalk rises well above the rosette.</string>
+<string name="bot_brocchinia_reducta_distribution">Native to the Guiana Shield, especially wet savannas, bogs and rocky tepui slopes in Venezuela and Guyana.</string>
+<string name="bot_brocchinia_reducta_habit">Terrestrial rosette-forming perennial, about 20–60 cm tall in flower, growing in open wet uplands.</string>
+<string name="bot_brocchinia_reducta_leaf">Narrow upright leaves overlap at their bases to hold rainwater; the inner surface is waxy and bears absorptive scales.</string>
+<string name="bot_brocchinia_reducta_flower">A lax, branched panicle carries small pale yellow flowers above the rosette.</string>
+<string name="bot_brocchinia_reducta_fruit">A dry capsule forms after flowering.</string>
+</resources>

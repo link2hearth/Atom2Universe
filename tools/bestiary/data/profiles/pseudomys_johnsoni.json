@@ -1,0 +1,141 @@
+{
+  "id": "pseudomys_johnsoni",
+  "scientific": "Pseudomys johnsoni",
+  "group": "mammals",
+  "name": {
+    "en": "Central pebble-mound mouse",
+    "fr": "Souris centrale à monticules de galets"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Australian murid rodent is known as the central pebble-mound mouse.",
+      "fr": "Ce rongeur australien de la famille des Muridés est appelé souris centrale à monticules de galets."
+    },
+    "identification": {
+      "en": "It has a yellow-brown to rufous back with dark guard hairs and a pale underside.",
+      "fr": "Son dos va du brun jaunâtre au roux, avec des poils de jarre foncés, et son ventre est clair."
+    },
+    "habitat": {
+      "en": "It inhabits rocky country, open woodland, valleys and grassland, especially stony ridges and plains.",
+      "fr": "Elle fréquente les terrains rocheux, les boisements ouverts, les vallées et les prairies, notamment les crêtes et plaines pierreuses."
+    },
+    "diet": {
+      "en": "Species-specific diet data were not found in the consulted accounts.",
+      "fr": "Les sources consultées ne donnent pas de données alimentaires propres à cette espèce."
+    },
+    "behavior": {
+      "en": "It constructs burrows and pebble mounds near their entrances; several mice may share a mound system.",
+      "fr": "Elle creuse des terriers et bâtit des monticules de galets près de leurs entrées ; plusieurs souris peuvent partager un même réseau."
+    },
+    "reproduction": {
+      "en": "The consulted species accounts provide no reproductive details.",
+      "fr": "Les sources consultées ne fournissent pas de détails sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Pebble mounds are a conspicuous sign of this species, but tracks and other signs can resemble those of other small mammals.",
+      "fr": "Ses monticules de galets sont un indice visible de sa présence, mais ses empreintes et autres traces peuvent ressembler à celles d’autres petits mammifères."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists its global IUCN category as Least Concern.",
+      "fr": "La Mammal Diversity Database indique pour l’espèce la catégorie mondiale UICN « Préoccupation mineure »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Arid Zone Monitoring — species profile",
+        "fr": "Arid Zone Monitoring — species profile"
+      },
+      "url": "https://www.nespthreatenedspecies.edu.au/media/jsypmqty/azm-species-profiles-complete-digital_v2_lowres.pdf",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The Central pebble-mound mouse profile describes its fur, rocky/open-woodland habitats, burrows and pebble mounds, and cautions that tracks may resemble those of other small mammals."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 25,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Diversity Database — taxon account",
+        "fr": "Mammal Diversity Database — taxon account"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003292/",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The database accepts Pseudomys johnsoni, lists Australia and IUCN Least Concern; it offers no species-specific diet or reproduction data."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 19,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlas of Living Australia — species taxonomy",
+        "fr": "Atlas of Living Australia — species taxonomy"
+      },
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/f44806fd-7802-45d7-bb10-774ecc577c7d",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Atlas lists Central Pebble-Mound Mouse as the preferred English vernacular for Pseudomys johnsoni."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and reproduction are left unspecified because the consulted species accounts provide no direct species-specific details. The global IUCN category is not a substitute for any state or regional conservation listing."
+  ],
+  "review_note": "Kept the profile concise and cross-checked species-level facts against taxonomic, institutional or assessment sources. Related Pseudoplatystoma profiles use reciprocal comparisons limited to sourced distribution and coloration.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

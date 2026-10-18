@@ -1,0 +1,253 @@
+{
+  "id": "apistogramma_urteagai",
+  "scientific": "Apistogramma urteagai",
+  "group": "fish",
+  "name": {
+    "en": "Broadstriped Dwarf Cichlid",
+    "fr": "Apistogramme d’Urteaga"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma urteagai is a Peruvian dwarf cichlid described by Sven O. Kullander in 1986. Its type locality is Lake Túpac Amaru near Puerto Maldonado, in the Madre de Dios drainage. The species honours Peruvian biologist Jorge Andrés Urteaga Cavero, who helped lead the collecting expedition.",
+      "fr": "Apistogramma urteagai est un cichlidé nain péruvien décrit par Sven O. Kullander en 1986. Sa localité type est le lac Túpac Amaru, près de Puerto Maldonado, dans le bassin du Madre de Dios. L’espèce honore le biologiste péruvien Jorge Andrés Urteaga Cavero, qui a contribué à diriger l’expédition de collecte."
+    },
+    "identification": {
+      "en": "The narrow, strongly pigmented lateral band reaches the seventh bar but stops before the tail, leaving a separate caudal spot. A dark midventral stripe, short dorsal-fin lappets and rounded caudal fin complete the pattern. FishBase lists a maximum of 41 mm standard length for a male or specimen of unspecified sex; it gives no female-specific maximum, body mass, width or height. This helps distinguish it from Apistogramma resticulosa, whose band usually ends at bar six, and Apistogramma linkei, whose band and caudal spot join into a tail-shaped patch.",
+      "fr": "La bande latérale étroite et très pigmentée atteint la septième barre, mais s’arrête avant la queue et laisse une tache caudale distincte. Une raie médiane sombre sur le ventre, de courtes membranes dorsales et une caudale arrondie complètent le motif. FishBase indique un maximum de 41 mm de longueur standard pour un mâle ou un spécimen de sexe non précisé ; il ne donne ni maximum propre aux femelles, ni mesure de masse, largeur ou hauteur. Cela aide à le distinguer d’Apistogramma resticulosa, dont la bande s’arrête généralement à la sixième barre, et d’Apistogramma linkei, chez qui la bande rejoint la tache caudale en une marque en forme de queue."
+    },
+    "habitat": {
+      "en": "Near Puerto Maldonado in Peru's Madre de Dios basin, it occurs along muddy lake margins, among pebbles in quiet streams, in swamps, and near vegetated stream mouths.",
+      "fr": "Près de Puerto Maldonado, dans le bassin péruvien du Madre de Dios, il fréquente les rives boueuses, les galets des cours d’eau calmes, les marécages et les embouchures de ruisseaux végétalisées."
+    },
+    "diet": {
+      "en": "FishBase lists no prey records and gives only a trophic estimate inferred from close relatives, so there is no reliable species-specific prey list to report.",
+      "fr": "FishBase ne donne aucune donnée sur les proies et ne propose qu’une estimation trophique déduite de proches parents ; aucune liste fiable de proies propre à l’espèce n’est donc disponible."
+    },
+    "behavior": {
+      "en": "A German keeper account describes it as a quiet, cover-seeking fish rather than an active open-water swimmer.",
+      "fr": "Un compte rendu aquariophile allemand le décrit comme un poisson calme qui recherche les abris plutôt que la nage en eau libre."
+    },
+    "reproduction": {
+      "en": "The female attaches eggs to the roof of a cave and tends the eggs and larvae.",
+      "fr": "La femelle fixe ses œufs au plafond d’une cavité et s’occupe des œufs puis des larves."
+    },
+    "ecology": {
+      "en": "Kullander placed it in the Apistogramma regani group and noted its resemblance to Apistogramma resticulosa and Apistogramma linkei, while leaving their exact relationships unresolved.",
+      "fr": "Kullander l’a placé dans le groupe Apistogramma regani et a relevé sa ressemblance avec Apistogramma resticulosa et Apistogramma linkei, tout en laissant leurs relations précises en suspens."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists Apistogramma urteagai as Least Concern, assessed on 25 April 2014.",
+      "fr": "L’évaluation mondiale de l’UICN classe Apistogramma urteagai en préoccupation mineure, selon l’évaluation du 25 avril 2014."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma urteagai — FishBase species summary",
+        "fr": "Apistogramma urteagai — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/26694",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the accepted name, Madre de Dios range, 41 mm standard-length maximum for male or unspecified sex, basic habitat and breeding notes, inferred trophic estimate, and IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 29,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma urteagai — FishBase Spanish-language summary",
+        "fr": "Apistogramma urteagai — fiche FishBase en espagnol"
+      },
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=26694&lang=spanish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language record cross-checks the Madre de Dios distribution, cave spawning with female care, and global Least Concern category."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 19,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer's Catalog of Fishes — Apistogramma urteagai",
+        "fr": "Catalog of Fishes d’Eschmeyer — Apistogramma urteagai"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=33000",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The catalog confirms the valid name, 1986 description, Lake Túpac Amaru type locality and Madre de Dios drainage."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 18,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cichlid fishes of the Amazon River drainage of Peru",
+        "fr": "Cichlid fishes of the Amazon River drainage of Peru"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander describes its markings, local habitats and uncertain close relationships."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 10,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma regani species-group overview — Tom Christoffersen",
+        "fr": "Présentation du groupe Apistogramma regani — Tom Christoffersen"
+      },
+      "url": "https://www.tomc.no/page.aspx?pageid=127",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The specialist species-group list places A. urteagai in the A. regani group."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A rare guest: Apistogramma urteagai — Roland Kipper (German)",
+        "fr": "Un visiteur rare : Apistogramma urteagai — Roland Kipper (allemand)"
+      },
+      "url": "https://www.zwergbuntbarsche.com/news/ein-seltener-gast-apistogramma-urteagai-von-roland-kipper/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The German-language aquarist account independently describes the separate tail-base spot, rounded caudal fin, Madre de Dios and Tambopata records, and similarities to A. linkei and A. resticulosa."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 27,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish — Cichlidae name etymologies",
+        "fr": "ETYFish — étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The species is named for Peruvian biologist Jorge Andrés Urteaga Cavero, a co-leader of the collecting expedition."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 17,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a compact dwarf cichlid with a narrow dark flank band ending at the seventh bar before the tail, a separate caudal-base spot, a rounded tail and short dorsal lappets; include the dark midventral stripe noted in the original description.",
+  "uncertainties": [
+    "FishBase gives a maximum length for a male or specimen of unspecified sex, but no female-specific maximum or body mass, width or height. The 41 mm figure is standard length, not total length.",
+    "Kullander considered A. resticulosa and A. linkei close look-alikes but stated that relationships within the A. regani group could not yet be resolved satisfactorily.",
+    "The global Least Concern assessment dates from 2014; current population trend and species-specific threats were not established in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English and Spanish FishBase entries, Eschmeyer's Catalog, Kullander's original 1986 Peruvian cichlid monograph, specialist group listings, and a German field and aquarium account. Kept the maximum-length convention explicit and described close comparisons as identification aids rather than settled phylogenetic relationships."
+}

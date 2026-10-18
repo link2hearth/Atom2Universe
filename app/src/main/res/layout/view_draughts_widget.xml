@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?attr/a2uSurfaceColor"
+    app:cardCornerRadius="?attr/a2uCorner18"
+    app:cardElevation="8dp"
+    app:strokeColor="?attr/a2uOutlineColor"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header : compteur de pièces + bouton reset -->
+        <FrameLayout
+            android:id="@+id/draughts_header_area"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/draughts_piece_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="28dp"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:textSize="11sp"
+                android:textColor="?attr/a2uSecondaryTextColor"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/draughts_btn_reset"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="@string/draughts_widget_reset_btn"
+                android:textColor="?attr/a2uSecondaryTextColor"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </FrameLayout>
+
+        <!-- Damier 10×10 + overlays -->
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp">
+
+            <com.Atom2Universe.app.games.draughts.DraughtsView
+                android:id="@+id/draughts_widget_board"
+                android:layout_width="184dp"
+                android:layout_height="184dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Overlay résultat (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/draughts_result_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/a2uSurfaceColor"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/draughts_result_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text=""
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="#22C55E" />
+
+            </FrameLayout>
+
+            <!-- Overlay sélection de difficulté (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/draughts_difficulty_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/a2uSurfaceColor"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/draughts_diff_training"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="@string/draughts_difficulty_training"
+                        android:textColor="?attr/a2uSecondaryTextColor"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/draughts_diff_standard"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/draughts_difficulty_standard"
+                        android:textColor="?attr/a2uSecondaryTextColor"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/draughts_diff_expert"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/draughts_difficulty_expert"
+                        android:textColor="?attr/a2uSecondaryTextColor"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/draughts_diff_two_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/draughts_difficulty_two_player"
+                        android:textColor="?attr/a2uSecondaryTextColor"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/draughts_diff_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/draughts_widget_cancel"
+                        android:textColor="?attr/a2uSecondaryTextColor"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

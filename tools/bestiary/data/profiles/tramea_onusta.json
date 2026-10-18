@@ -1,0 +1,191 @@
+{
+  "id": "tramea_onusta",
+  "scientific": "Tramea onusta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Red saddlebags",
+    "fr": "Tramea onusta"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tramea onusta is a skimmer dragonfly found across much of North America and into Central and South America.",
+      "fr": "Tramea onusta est une libellule de la famille des libellulidés présente dans une grande partie de l’Amérique du Nord et jusque dans le nord de l’Amérique du Sud."
+    },
+    "identification": {
+      "en": "The male has a red face and abdomen, with reddish patches at the hindwing bases. It differs from T. carolina by lacking a violet forehead.",
+      "fr": "Le mâle a la face et l’abdomen rouges, avec des taches rougeâtres aux ailes postérieures. Il se distingue de T. carolina par l’absence de front violet."
+    },
+    "habitat": {
+      "en": "It uses ponds and shallow, vegetated lakes.",
+      "fr": "Elle fréquente les étangs et les lacs peu profonds et végétalisés."
+    },
+    "diet": {
+      "en": "Adults hunt in open air and may target swarms of flying insects.",
+      "fr": "Les adultes chassent dans les espaces ouverts et peuvent viser des essaims d’insectes volants."
+    },
+    "behavior": {
+      "en": "In Illinois, adults are recorded from May to August.",
+      "fr": "En Illinois, les adultes sont observés de mai à août."
+    },
+    "reproduction": {
+      "en": "Adults mate in vegetation or woody debris; in Illinois, females have been seen laying on shiny surfaces that resemble water.",
+      "fr": "Les adultes s’accouplent dans la végétation ou sur du bois mort ; en Illinois, des femelles ont été vues pondant sur des surfaces brillantes ressemblant à l’eau."
+    },
+    "ecology": {
+      "en": "Like T. carolina, it occurs in eastern North America, but its male lacks the violet forehead described for that species. Its reddish wing patches contrast with the dark patches of T. lacerata.",
+      "fr": "Comme T. carolina, elle est présente dans l’est de l’Amérique du Nord, mais son mâle n’a pas le front violet décrit chez cette espèce. Ses taches rougeâtres contrastent avec celles, sombres, de T. lacerata."
+    },
+    "conservation": {
+      "en": "Illinois lists it as common and native; this is a local status, not a global assessment.",
+      "fr": "L’Illinois la considère commune et indigène ; ce statut local n’est pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nebraska Dragonflies and Damselflies — Red Saddlebags",
+        "fr": "Nebraska Dragonflies and Damselflies — Red Saddlebags"
+      },
+      "url": "https://unsm-ento.unl.edu/Odonata/tron.html",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Nebraska account describes male and female coloration, red hindwing band and habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 12,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illinois Department of Natural Resources — Red saddlebags",
+        "fr": "Illinois Department of Natural Resources — Red saddlebags"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfredsaddlebags.html",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Illinois account describes feeding, regional flight timing, reproduction observations and local status."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 12,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024",
+        "fr": "Liste des Odonates nord-américains, 2024"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Checklist gives the broad range of T. onusta."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 8,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wisconsin Odonata Survey — Carolina Saddlebags",
+        "fr": "Wisconsin Odonata Survey — Tramea carolina"
+      },
+      "url": "https://wiatri.net/inventory/odonata/SpeciesAccounts/SpeciesDetail.cfm?TaxaID=161",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Survey contrasts T. carolina with T. onusta by the violet forehead and wing markings."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 14,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Missouri Department of Conservation — Black Saddlebags",
+        "fr": "Missouri Department of Conservation — Black Saddlebags"
+      },
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/black-saddlebags",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The field guide describes dark hindwing patches in T. lacerata, contrasted with reddish patches in T. onusta."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 17,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Illinois observations are regional; abundance and seasonal timing should not be generalized to the full species range."
+  ],
+  "review_note": "Concise bilingual draft based on cited specialist and institutional sources; uncertain or regional evidence is scoped explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

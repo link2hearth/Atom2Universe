@@ -1,0 +1,194 @@
+{
+  "id": "moon_jellyfish",
+  "scientific": "Aurelia aurita",
+  "group": "invertebrates",
+  "name": {
+    "en": "Moon jellyfish",
+    "fr": "Méduse lune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Aurelia aurita is a translucent scyphozoan, or true jellyfish, whose familiar saucer-shaped medusa is only one part of its life cycle. Once treated as cosmopolitan, the species was later separated from many similar Aurelia; A. aurita is now reported mainly from the northeastern Atlantic, with introduced populations in northeastern US and Argentina, though natural arrival in the US remains possible.",
+      "fr": "Aurelia aurita est un scyphozoaire translucide, ou méduse vraie, dont la méduse en forme de soucoupe n’est qu’une étape du cycle. Autrefois considérée comme cosmopolite, l’espèce a ensuite été distinguée de nombreuses aurélies semblables; A. aurita est aujourd’hui surtout signalée dans l’Atlantique Nord-Est, avec des populations introduites dans le nord-est des États-Unis et en Argentine, bien qu’une arrivée naturelle aux États-Unis reste possible."
+    },
+    "identification": {
+      "en": "A typical adult bell is about 25–40 cm across. Four horseshoe-shaped gonads show through it, above four oral arms and fine marginal tentacles; the clear body may have a faint blue or pink tint. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’ombrelle adulte mesure généralement environ 25 à 40 cm de diamètre. Quatre gonades en fer à cheval sont visibles par transparence, au-dessus de quatre bras buccaux et de fins tentacules marginaux; le corps clair peut être légèrement bleuté ou rosé. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
+    },
+    "habitat": {
+      "en": "The medusa lives in pelagic water; its polyp is benthic and attaches to a hard surface, often under shelter in shallow brackish sites.",
+      "fr": "La méduse nage en pleine eau; le polype benthique se fixe sur un support dur, souvent à l’abri dans des eaux saumâtres peu profondes."
+    },
+    "diet": {
+      "en": "Tentacles and bell mucus intercept zooplankton, including copepods and small larvae. Cnidocytes are stinging cells containing nematocysts, tiny capsules that fire venomous harpoons when prey touches a tentacle. The same contact-triggered discharge can stun predators, so these cells serve defense as well as feeding. Cilia carry captured food along the oral arms to the mouth and gastrovascular cavity for digestion.",
+      "fr": "Les tentacules et le mucus de l’ombrelle interceptent le zooplancton, notamment des copépodes et de petites larves. Les cnidocytes sont des cellules urticantes contenant des nématocystes, minuscules capsules qui projettent un harpon venimeux au contact d’une proie. Le même mécanisme peut étourdir des prédateurs; ces cellules servent donc aussi à la défense. Les cils transportent les aliments capturés le long des bras buccaux jusqu’à la bouche et la cavité gastrovasculaire, où ils sont digérés."
+    },
+    "behavior": {
+      "en": "Bell pulses propel the medusa briefly, while currents carry it farther. Medusae may gather to breed; attached polyps bud asexually.",
+      "fr": "Les pulsations de l’ombrelle propulsent brièvement la méduse, tandis que les courants l’emportent plus loin. Les méduses se regroupent parfois pour se reproduire; les polypes bourgeonnent asexuellement."
+    },
+    "reproduction": {
+      "en": "Adults have separate sexes; males release sperm, and fertilized eggs develop in brood pockets on female oral arms. The ciliated planula swims briefly before settling and becoming a small attached polyp, or scyphistoma. The polyp may bud, then strobilate: constrictions segment it and release disc-shaped ephyrae. Ephyrae develop into adult medusae. Seasonal temperature affects strobilation timing.",
+      "fr": "Les adultes ont des sexes séparés; les mâles libèrent leur sperme, et les œufs fécondés se développent dans les poches incubatrices des bras buccaux femelles. La planula ciliée nage brièvement avant de se fixer et de devenir un petit polype, ou scyphistome. Le polype peut bourgeonner puis se strobiler: des étranglements le divisent et libèrent des éphyrules discoïdes. Les éphyrules deviennent des méduses adultes. La température saisonnière influence le calendrier de la strobilation."
+    },
+    "ecology": {
+      "en": "Podocysts, protective resting cysts produced by polyps, help them endure food shortages and resist nudibranch predation during the benthic stage.",
+      "fr": "Les podocystes, kystes protecteurs de résistance produits par les polypes, les aident à supporter le manque de nourriture et à résister aux nudibranches."
+    },
+    "conservation": {
+      "en": "Periodic local blooms can strand jellies on beaches or clog coastal seawater intakes, creating a local infrastructure problem rather than evidence of a global population decline.",
+      "fr": "Des proliférations locales peuvent échouer sur les plages ou obstruer des prises d’eau de mer côtières, créant un problème matériel local plutôt qu’une preuve de déclin mondial de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aurelia aurita",
+        "fr": "Aurelia aurita"
+      },
+      "url": "https://en.wikipedia.org/wiki/Aurelia_aurita",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Restricted species range.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
+      ],
+      "prose_claims": [
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 23,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aurelia aurita",
+        "fr": "Aurelia aurita"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Aurelia_aurita",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Morphology and swimming."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "diet.en.4",
+        "diet.fr.4",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 3,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aurelia spp. (Moon jellies), DORIS",
+        "fr": "Aurelia spp. (Aurélies), DORIS"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Aurelia-spp.-Aurelie-129",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Polyp and medusa development."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 4,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jellyfish Tentacles Close Up, Smithsonian Ocean",
+        "fr": "Tentacules de méduse en gros plan, Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/jellyfish-tentacles-close",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Defensive nematocyst discharge."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 3,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "One translucent Aurelia aurita medusa with a shallow clear bell, exactly four conspicuous horseshoe gonads, four short oral arms beneath the bell, and fine marginal tentacles; white background, no labels.",
+  "uncertainties": [
+    "Aurelia contains many morphologically similar cryptic species; the stated range follows the current English species article and should not be generalized to all moon jellies.",
+    "DORIS covers Aurelia spp. for some habitat and life-history details, so those genus-level observations are phrased as variable rather than universal for A. aurita.",
+    "No dated species-wide conservation assessment was established from the consulted sources; local bloom impacts are not evidence of global decline.",
+    "Species-level communication is not detailed in consulted sources; behavior coverage is limited to swimming and breeding aggregations."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: corrected obsolete cosmopolitan taxonomy, matched hard-substrate habitat in both languages, checked complete planula/polyp/strobilation/ephyra cycle against actual DORIS text; corrected podocyst protection instead of inverse predation claim; Smithsonian confirms prey-triggered defensive cells.",
+  "source_audit_version": 1
+}

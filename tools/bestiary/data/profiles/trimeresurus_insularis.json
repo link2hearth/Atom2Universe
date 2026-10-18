@@ -1,0 +1,121 @@
+{
+  "id": "trimeresurus_insularis",
+  "scientific": "Trimeresurus insularis",
+  "group": "reptiles",
+  "name": {
+    "en": "White-lipped Island Pit Viper",
+    "fr": "Trimeresurus insularis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The white-lipped island pit viper is a venomous, fully tree-dwelling snake of Java and the Lesser Sunda Islands of Indonesia, and of Timor-Leste. It is related to the white-lipped pit viper of mainland Southeast Asia and is known for its colour forms, including a rare blue one.",
+      "fr": "La vipère des îles à lèvres blanches est un serpent venimeux entièrement arboricole de Java et des petites îles de la Sonde, en Indonésie, ainsi que du Timor oriental. Elle est apparentée à la vipère à lèvres blanches de l’Asie du Sud-Est continentale et se distingue par ses formes colorées, dont une rare forme bleue."
+    },
+    "identification": {
+      "en": "A venom-study sample of adult snakes from eastern Java measured 40–69 cm in snout-to-vent length; this is a sample range, not a whole-body length or species maximum. The consulted sources do not report a reliable adult mass, width or sex-specific size comparison. There are three fairly distinct colour forms: green, found across the Lesser Sundas, blue, reported only on Komodo and Padar, and yellow, on Flores. The tail tip carries a conspicuous red stripe along its upper surface. The sources read give no body length, so none is stated.",
+      "fr": "Un échantillon de serpents adultes de l’est de Java étudié pour son venin mesurait 40 à 69 cm du museau au cloaque ; il s’agit de l’étendue de cet échantillon, pas de la longueur totale ni d’un maximum de l’espèce. Les sources consultées ne donnent pas de masse adulte, de largeur ou de comparaison de taille entre sexes fiables. Il existe trois formes de couleur assez distinctes : verte, présente dans toutes les petites îles de la Sonde, bleue, signalée seulement à Komodo et à Padar, et jaune, à Florès. L’extrémité de la queue porte une raie rouge bien visible sur le dessus. Les sources lues ne donnent aucune longueur, elle n’est donc pas indiquée."
+    },
+    "habitat": {
+      "en": "It occurs on Bali, Java, Flores, Lombok, Sumba, Sumbawa, Timor, Komodo and other islands, and in Timor-Leste, with the type locality at Soe on Timor. It generally stays in bushland and bamboo forest but sometimes enters inhabited areas in search of food.",
+      "fr": "Elle vit à Bali, Java, Florès, Lombok, Sumba, Sumbawa, Timor, Komodo et sur d’autres îles, ainsi qu’au Timor oriental, la localité type étant Soe, à Timor. Elle reste en général dans la brousse et les forêts de bambous, mais entre parfois dans les zones habitées à la recherche de nourriture."
+    },
+    "diet": {
+      "en": "It eats mice and lizards. A field naturalist suggested that skinks of the genus Sphenomorphus, very common on the islands he visited, probably make up much of its diet, but this is an inference, not a measurement.",
+      "fr": "Elle mange des souris et des lézards. Un naturaliste de terrain a suggéré que les scinques du genre Sphenomorphus, très communs sur les îles qu’il a visitées, constituent probablement une grande part de son régime, mais il s’agit d’une déduction et non d’une mesure."
+    },
+    "behavior": {
+      "en": "It is a fully arboreal snake, though one was seen crossing the forest floor at night on Komodo. It uses caudal luring, raising and wriggling its tail like a worm to attract prey. It is described as an aggressive predator that tends to stand its ground rather than flee.",
+      "fr": "C’est un serpent entièrement arboricole, bien qu’un individu ait été vu traversant le sol de la forêt de nuit à Komodo. Elle pratique le leurre caudal, en dressant et en agitant la queue comme un ver pour attirer ses proies. On la décrit comme un prédateur agressif, qui tend à tenir tête plutôt qu’à fuir."
+    },
+    "reproduction": {
+      "en": "The Reptile Database lists the species as ovoviviparous, meaning the eggs develop inside the female and she gives birth to live young. A field account notes that different colour forms can appear in the same litter. Litter size and breeding season were not found.",
+      "fr": "La Reptile Database indique que l’espèce est ovovivipare : les œufs se développent dans la femelle, qui met bas des petits vivants. Un récit de terrain note que des formes de couleurs différentes peuvent naître dans une même portée. La taille des portées et la saison de reproduction n’ont pas été trouvées."
+    },
+    "ecology": {
+      "en": "As a predator of small lizards and rodents in island scrub and forest, it takes its place in local food webs. Its tail lure is the only hunting tactic described in the sources read. Its colour forms differ in abundance between islands for reasons that remain unclear.",
+      "fr": "Prédatrice de petits lézards et de rongeurs dans la brousse et la forêt des îles, elle occupe une place dans les réseaux alimentaires locaux. Son leurre caudal est la seule tactique de chasse décrite dans les sources lues. Ses formes de couleur varient en abondance d’une île à l’autre, pour des raisons restées obscures."
+    },
+    "conservation": {
+      "en": "The Reptile Database lists it as Least Concern on the IUCN Red List. It is one of the most common causes of venomous snakebite on Bali, according to a magazine article citing an Australian Museum herpetologist; its haemorrhagic venom rarely kills but can cause severe swelling, tissue damage and bleeding. Its taxonomy is not settled across authors.",
+      "fr": "La Reptile Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN. Elle est l’une des causes les plus fréquentes de morsures venimeuses à Bali, d’après un article de magazine citant un herpétologue du musée australien; son venin hémorragique tue rarement mais peut provoquer un gonflement sévère, des lésions des tissus et des saignements. Sa taxonomie n’est pas fixée de la même façon selon les auteurs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Trimeresurus insularis — The Reptile Database",
+        "fr": "Trimeresurus insularis — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Trimeresurus/insularis",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Fully arboreal venomous viper; Indonesia (Bali, Java, Flores, Lombok, Sumba, Sumbawa, Timor, Komodo) and Timor-Leste; type locality Soe, Timor; ovoviviparous; Least Concern; taxonomy debated. Description withheld on the page."
+      ]
+    },
+    {
+      "title": {
+        "en": "Beware the impossibly beautiful blue viper — Australian Geographic",
+        "fr": "Attention à la sublime vipère bleue — Australian Geographic"
+      },
+      "url": "https://www.australiangeographic.com.au/blogs/creatura-with-bec-crew/2017/09/beware-the-impossibly-beautiful-blue-viper/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Blue form rare, seen on Komodo with green animals; bushland and bamboo forest, sometimes villages; eats mice and lizards; aggressive; one of the commonest venomous bites on Bali; haemorrhagic venom rarely lethal.",
+        "The page’s photo caption may be mislabelled, so only the text was used."
+      ]
+    },
+    {
+      "title": {
+        "en": "White-lipped Island Pit Viper — field account by a naturalist (Aleph Rocco)",
+        "fr": "Vipère des îles à lèvres blanches — récit de terrain d’un naturaliste (Aleph Rocco)"
+      },
+      "url": "https://alephrocco.com/2018/05/02/white-lipped-island-pit-viper-trimeresurus-insularis/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Three morphs (blue on Komodo and Padar, yellow on Flores, green throughout); red stripe on tail tip; caudal luring; skinks (Sphenomorphus) probably an important prey, an inference; morphs can occur in the same litter."
+      ]
+    },
+    {
+      "title": {
+        "en": "Venom composition of Indonesian Trimeresurus species — peer-reviewed study",
+        "fr": "Composition du venin de Trimeresurus indonésiens — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9261747/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult T. insularis specimens from eastern Java used in the study were 40–69 cm snout-to-vent length; measurement is sample-scoped."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Body size, litter size and detailed ecology are not documented in the sources that could be read; none is given.",
+    "The Reptile Database page withholds its description, so most field facts come from a magazine article and an individual naturalist’s blog.",
+    "The IUCN Red List page could not be opened; Least Concern comes from the Reptile Database badge.",
+    "The Australian Geographic article may mix up this species with the green white-lipped pit viper of the mainland in its photos; only its text was used."
+  ],
+  "reviewed": true,
+  "review_note": "Sober profile with limited sources; illustration to be checked by the owner."
+}

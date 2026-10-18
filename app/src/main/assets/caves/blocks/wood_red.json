@@ -1,0 +1,17 @@
+{
+  "id": 1002,
+  "name": "wood_red",
+  "texture_top": "cozy:material:8:B87862",
+  "texture_side": "cozy:material:7:B87862",
+  "texture_bottom": "cozy:material:8:B87862",
+  "color": "#B87862",
+  "hardness": 2.0,
+  "drop": "wood_red",
+  "creative_tab": "wood",
+  "orient_mode": "axis",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "logs"
+  ]
+}

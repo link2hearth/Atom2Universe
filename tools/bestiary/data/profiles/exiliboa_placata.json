@@ -1,0 +1,176 @@
+{
+  "id": "exiliboa_placata",
+  "scientific": "Exiliboa placata",
+  "group": "reptiles",
+  "name": {
+    "en": "Oaxacan Dwarf Boa",
+    "fr": "Boa naine oaxaquène"
+  },
+  "sections": {
+    "overview": {
+      "en": "Exiliboa placata, the Oaxacan dwarf boa, is the sole described species of its genus and is endemic to Oaxaca, Mexico.",
+      "fr": "Exiliboa placata, la boa naine oaxaquène, est l’unique espèce décrite de son genre et une endémique de l’Oaxaca, au Mexique."
+    },
+    "identification": {
+      "en": "The original paper established it as a distinct genus and species of dwarf boa; the accessible summary sources offer little field-level diagnostic detail.",
+      "fr": "L’article original l’a décrite comme genre et espèce distincts parmi les boas nains ; les notices consultées donnent peu de détails diagnostiques utilisables sur le terrain."
+    },
+    "habitat": {
+      "en": "Published summaries place it in montane parts of Oaxaca, including the Sierra de Juárez and Sierra Mixe near Totontepec.",
+      "fr": "Les notices publiées la situent dans les montagnes de l’Oaxaca, notamment la Sierra de Juárez et la Sierra Mixe près de Totontepec."
+    },
+    "diet": {
+      "en": "The species-specific summaries consulted provide no prey data.",
+      "fr": "Les notices propres à l’espèce consultées ne donnent aucune donnée sur ses proies."
+    },
+    "behavior": {
+      "en": "A field quotation in the Reptile Database describes a specimen lying motionless in rocky soil; broader activity is unknown.",
+      "fr": "Une citation de terrain reprise par le Reptile Database décrit un spécimen immobile dans un sol rocheux ; son activité générale reste inconnue."
+    },
+    "reproduction": {
+      "en": "A 1992 paper is devoted to descriptive and life-history notes, but its results were not accessible in the sources reviewed.",
+      "fr": "Un article de 1992 est consacré à des notes descriptives et d’histoire naturelle, mais ses résultats n’étaient pas accessibles dans les sources examinées."
+    },
+    "ecology": {
+      "en": "Mexico’s 2024 inventory treats it as an endemic species; the reviewed sources provide no direct ecological comparison with another catalogued snake.",
+      "fr": "L’inventaire mexicain de 2024 la considère comme endémique ; les sources examinées ne permettent pas de comparaison écologique directe avec un autre serpent du catalogue."
+    },
+    "conservation": {
+      "en": "The Mexican inventory confirms that it is endemic to Oaxaca; that distribution note is not itself a current threat assessment.",
+      "fr": "L’inventaire mexicain confirme son endémisme dans l’Oaxaca ; cette donnée de répartition ne constitue pas une évaluation actuelle du risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Exiliboa placata — The Reptile Database",
+        "fr": "Exiliboa placata — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Exiliboa/placata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Reptile Database summarizes range and bibliography, including an inaccessible 1992 life-history note."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "A new genus and species of dwarf boa from southern Mexico — Biodiversity Heritage Library",
+        "fr": "Un nouveau genre et une nouvelle espèce de boa nain du sud du Mexique — Biodiversity Heritage Library"
+      },
+      "url": "https://field.biodiversitylibrary.org/bibliography/207258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "BHL catalogs the 1968 original description from Oaxaca."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Inventario de la Herpetofauna de México 2024 — Herpetología Mexicana",
+        "fr": "Inventaire de l’herpétofaune du Mexique 2024 — Herpetología Mexicana"
+      },
+      "url": "https://herpetologiamexicana.org/revista-hm/index.php/HERPETOLOGIA-MEXICANA/article/download/Inventario-de-la-Herpetofauna-de-Mexico-2024-taxones-biodiversos/43",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Mexican herpetofauna inventory lists E. placata as endemic and the only species in Exiliboa; it does not itself assess risk."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Natural-history information is exceptionally sparse in accessible sources; diet and reproduction should not be inferred from other dwarf boas."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Vulnerable status is historical/secondary only; species-level life-history paper is cited but not available for verification here."
+}

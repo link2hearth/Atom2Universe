@@ -1,0 +1,141 @@
+{
+  "id": "pygoderma_bilabiatum",
+  "scientific": "Pygoderma bilabiatum",
+  "group": "mammals",
+  "name": {
+    "en": "Ipanema broad-nosed bat",
+    "fr": "Chauve-souris d’Ipanema"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Neotropical fruit bat occurs in Bolivia, southeastern Brazil, Paraguay and northern Argentina.",
+      "fr": "Cette chauve-souris frugivore néotropicale est présente en Bolivie, au sud-est du Brésil, au Paraguay et dans le nord de l’Argentine."
+    },
+    "identification": {
+      "en": "The species is a member of the leaf-nosed bat family Phyllostomidae; detailed distinguishing features were not described in the sources used here.",
+      "fr": "L’espèce appartient à la famille des Phyllostomidés ; les sources utilisées ici ne détaillent pas ses caractères distinctifs."
+    },
+    "habitat": {
+      "en": "Records include the Atlantic Forest and coastal shrubland in Brazil.",
+      "fr": "Des observations proviennent de la forêt atlantique et de formations arbustives côtières au Brésil."
+    },
+    "diet": {
+      "en": "It eats fruit, including soft, pulpy fruit; flower visits have also been recorded.",
+      "fr": "Elle mange des fruits, notamment des fruits mous et pulpeux ; des visites de fleurs sont également signalées."
+    },
+    "behavior": {
+      "en": "Some Paraná records suggest seasonal presence, but migration patterns remain poorly known.",
+      "fr": "Certaines observations au Paraná suggèrent une présence saisonnière, mais ses déplacements restent mal connus."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive information was not available in the consulted accounts.",
+      "fr": "Les fiches consultées ne fournissent pas d’information reproductive propre à l’espèce."
+    },
+    "ecology": {
+      "en": "As a fruit eater, it may disperse seeds; pollen has also been found on bats visiting a recorded flower species.",
+      "fr": "En mangeant des fruits, elle peut disperser des graines ; du pollen a aussi été trouvé sur des individus visitant une espèce de fleur signalée."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern globally.",
+      "fr": "La Mammal Diversity Database la classe en « Préoccupation mineure » à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mammal Diversity Database — taxon account",
+        "fr": "Mammal Diversity Database — fiche taxonomique"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005052/",
+      "supports": [
+        "overview",
+        "conservation",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "The database gives the accepted taxon, family, four-country range and global IUCN Least Concern category; it gives no reproductive details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 20,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Animal Diversity Web — species account",
+        "fr": "Animal Diversity Web — fiche de l’espèce"
+      },
+      "url": "https://animaldiversity.org/accounts/Pygoderma_bilabiatum/",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The account documents Atlantic Forest range, fruit diet, flower visits/pollen, seed-dispersal role, and reports uncertain seasonal presence in Paraná."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 19,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Check List — coastal-shrubland occurrence note",
+        "fr": "Check List — note d’observation en formation arbustive côtière"
+      },
+      "url": "https://www.biotaxa.org/cl/article/viewFile/3.3.175/12974",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "A Brazilian distribution note reports P. bilabiatum in coastal shrubland as well as nearby Atlantic Forest."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species’ seasonal movement patterns are uncertain, and detailed reproduction and identification data were not found in the selected accounts. The French name is descriptive."
+  ],
+  "review_note": "Kept ecology claims qualified and checked distribution/status against the Mammal Diversity Database; habitat and feeding details are drawn from an academic species account and occurrence note.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

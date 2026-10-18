@@ -1,0 +1,142 @@
+{
+  "id": "uromys_imperator",
+  "scientific": "Uromys imperator",
+  "group": "mammals",
+  "name": {
+    "en": "Emperor giant rat",
+    "fr": "Uromys empereur"
+  },
+  "sections": {
+    "overview": {
+      "en": "Uromys imperator is a giant murid rodent endemic to Guadalcanal in the Solomon Islands.",
+      "fr": "Uromys imperator est un grand rongeur muridé endémique de Guadalcanal, dans les îles Salomon."
+    },
+    "identification": {
+      "en": "Historical descriptions record dark grey, woolly fur that grades to a paler underside, with very short ears.",
+      "fr": "Les descriptions historiques signalent un pelage gris foncé et laineux, plus clair dessous, ainsi que des oreilles très courtes."
+    },
+    "habitat": {
+      "en": "Its confirmed historical material comes from Aola on northern Guadalcanal; the species’ wider habitat use remains uncertain.",
+      "fr": "Les spécimens historiques confirmés proviennent d’Aola, au nord de Guadalcanal ; l’utilisation plus large de son habitat reste incertaine."
+    },
+    "diet": {
+      "en": "A reliable species-specific diet has not been documented.",
+      "fr": "Aucun régime alimentaire fiable propre à l’espèce n’a été documenté."
+    },
+    "behavior": {
+      "en": "The few historical specimens provide little direct evidence about its behavior.",
+      "fr": "Les rares spécimens historiques apportent peu d’informations directes sur son comportement."
+    },
+    "reproduction": {
+      "en": "Its reproductive biology is not described in the sources consulted.",
+      "fr": "Les sources consultées ne décrivent pas sa biologie reproductive."
+    },
+    "ecology": {
+      "en": "The revision documents only a few historical specimens; the related Uromys porculus is also known from scarce records, as its profile explains.",
+      "fr": "La révision ne documente que quelques spécimens historiques ; Uromys porculus, une espèce apparentée, n’est également connue que par de rares données, comme l’explique sa fiche."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Critically Endangered, Possibly Extinct; unconfirmed local reports are not equivalent to a verified rediscovery.",
+      "fr": "L’UICN le classe en danger critique, possiblement éteint ; des témoignages locaux non confirmés ne constituent pas une redécouverte vérifiée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australian Museum — Revision of the genus Uromys",
+        "fr": "Australian Museum — révision du genre Uromys"
+      },
+      "url": "https://journals.australian.museum/media/Uploads/Journals/17810/12_complete.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed revision describes Uromys imperator, the limited historical specimens and comparisons with congeners."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 13,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Diversity Database — Uromys imperator",
+        "fr": "Mammal Diversity Database — Uromys imperator"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003319/",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "MDD identifies Guadalcanal as the type locality."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 7,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Possibly Extinct species summary",
+        "fr": "UICN — résumé des espèces possiblement éteintes"
+      },
+      "url": "https://cmsdocs.s3.amazonaws.com/summarystats/2016-1_Summary_Stats_Page_Documents/2016_1_RL_Stats_Table_9.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN table gives the Possibly Extinct qualifier."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 8,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation category was last assessed in 2008 in the cited IUCN summary; “Possibly Extinct” remains a qualifier, not confirmed extinction.",
+    "The revision states that three specimens are certainly known, while later reports and identity of some material are less certain."
+  ],
+  "review_note": "Natural-history sections are deliberately short because the taxonomic revision and conservation sources document almost no direct observations.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,245 @@
+package com.Atom2Universe.app.science.mycology
+
+import androidx.annotation.ArrayRes
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
+
+/** Statut de comestibilité, du plus rassurant au plus grave (l'ordre sert aux filtres et aux tris). */
+enum class FungusStatus(@param:StringRes val label: Int, val color: Int) {
+    EDIBLE(R.string.myco_status_edible, 0xFF2E7D32.toInt()),
+    COOKED(R.string.myco_status_cooked, 0xFFB26A00.toInt()),
+    INEDIBLE(R.string.myco_status_inedible, 0xFF6B6B6B.toInt()),
+    TOXIC(R.string.myco_status_toxic, 0xFFD84315.toInt()),
+    DEADLY(R.string.myco_status_deadly, 0xFF8E0F24.toInt()),
+    REFERENCE_ONLY(R.string.myco_status_reference_only, 0xFF526477.toInt())
+}
+
+/** Type de schéma pour les taxons fongiques qui ne produisent pas un champignon à chapeau. */
+enum class FungusDiagramKind { MUSHROOM, GENERIC_MUSHROOM, JELLY, TRUFFLE, YEAST, MOLD, RUST, LICHEN, CORTICIOID }
+
+/** Les trois vues d'une planche. */
+enum class PlateMode(@param:StringRes val label: Int) {
+    SIDE(R.string.myco_view_side),
+    SECTION(R.string.myco_view_section),
+    UNDER(R.string.myco_view_under)
+}
+
+/**
+ * [BALL] : vesse-de-loup, scléroderme, œuf d'amanite (voir [BallSpec]) ; [BRACKET] : console sur le bois, pied latéral (pleurote) ;
+ * [CORAL] : ni chapeau ni lames, un bloc de lobes ou un buisson de branches (voir [CoralSpec]).
+ */
+enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN, BALL, BRACKET, CORAL }
+enum class Hymenium { GILLS, PORES, RIDGES, TEETH, NONE }
+enum class GillAttach { FREE, ADNATE, DECURRENT }
+enum class Interior { SOLID, STUFFED, HOLLOW, CHAMBERED }
+enum class StipeForm { CYLINDER, CLUB, BULB, MARGINATE, TAPER_DOWN, FLARED, BARREL }
+enum class RingKind { NONE, SKIRT, STRIATE, SLIDING, FLOCCOSE, FUGACIOUS, ZONE }
+enum class VolvaKind { NONE, SAC, RIMS }
+
+/** Décors du chapeau, dessinés par-dessus la couleur de fond. */
+sealed class CapDeco {
+    /** Verrues ou plaques du voile (tue-mouches, panthère). */
+    class Warts(val color: Int, val count: Int, val size: Float) : CapDeco()
+    /** Écailles en couronnes concentriques (coulemelle, petites lépiotes). */
+    class Scales(val color: Int, val rows: Int, val size: Float, val from: Float = 0.2f) : CapDeco()
+    /** Fibrilles rayonnantes depuis le centre. */
+    class Fibrils(val color: Int, val count: Int, val alpha: Int = 90) : CapDeco()
+    /** Flocons irréguliers (amanite rougissante). */
+    class Flakes(val color: Int, val count: Int, val size: Float) : CapDeco()
+    /** Mèches retroussées étagées sur un chapeau haut (coprin chevelu) : [rows] étages, [size] en cm. */
+    class Shaggy(val color: Int, val rows: Int, val size: Float) : CapDeco()
+    /** Cercles concentriques plus foncés sur le chapeau (lactaires) : [count] zones. */
+    class Zones(val color: Int, val count: Int, val alpha: Int = 110) : CapDeco()
+    /** Craquelures en pavage (russule verdoyante, bolet à chair jaune) : [cell] = taille d'une plaque, en cm. */
+    class Cracks(val color: Int, val cell: Float, val alpha: Int = 190) : CapDeco()
+    /** Fines stries sur la marge (amanite panthère). */
+    class Striate(val alpha: Int = 120) : CapDeco()
+    /** Surface visqueuse et brillante. */
+    object Sticky : CapDeco()
+    /** Surface feutrée : bord plus clair et duveteux. */
+    object Felt : CapDeco()
+}
+
+/** Décors du pied. */
+sealed class StipeDeco {
+    /** Réseau en mailles (cèpes) ; [from] = part de la hauteur couverte en partant du haut. */
+    class Net(val color: Int, val from: Float, val cell: Float, val alpha: Int = 200) : StipeDeco()
+    /** Bandes en zigzag, « peau de serpent » (coulemelle). */
+    class Bands(val color: Int, val gap: Float, val alpha: Int = 200) : StipeDeco()
+    /** Fines fibrilles ondulées (phalloïde). */
+    class Fibrils(val color: Int, val alpha: Int = 70) : StipeDeco()
+    /** Écailles sombres sur la partie basse ([from] = part de la hauteur couverte en partant du bas). */
+    class Scales(val color: Int, val from: Float) : StipeDeco()
+    /** Sillons verticaux (gyromitre). */
+    class Furrows(val color: Int) : StipeDeco()
+    /** Petits points ou fossettes régulièrement répartis (bolet à pied rouge, lactaires) ; [spacing] et [size] en cm, [top] = part de la hauteur couverte en partant du haut. */
+    class Dots(val color: Int, val spacing: Float, val size: Float, val alpha: Int = 220, val top: Float = 1f) : StipeDeco()
+}
+
+/** [STIPE_CUT] : la chair du pied, visible seulement à la coupe (le pied entier ne change pas de couleur de l'extérieur). */
+enum class StainZone { CAP_SKIN, ABOVE_TUBES, STIPE_BASE, STIPE_ALL, STIPE_TOP, STIPE_CUT, CAP_EDGE, HYMENIUM }
+
+/** Changement de couleur de la chair ou des lames à la blessure. */
+class Stain(val zone: StainZone, val color: Int, val strength: Float)
+
+/** Points d'accroche des repères : la vue les calcule d'après la géométrie. */
+enum class Anchor {
+    CAP, EDGE, UMBO, FACE, RING, VOLVA, BULB, STIPE_U, STIPE_M, BASE, SKIN,
+    S_FLESH, S_HYM, S_STIPE, S_BASE, S_CAVITY, S_STAIN, S_RING, S_VOLVA,
+    U_RIM, U_HYM, U_CENTER
+}
+
+/** Un repère : un mot posé sur un point du dessin. */
+class Mark(val at: Anchor, @param:StringRes val label: Int)
+
+/** Ce que l'on voit à l'intérieur d'une boule coupée en deux. */
+enum class BallInside {
+    /** Chair pleine et blanche, sur un pied conique stérile (vesse-de-loup jeune). */
+    SOLID,
+    /** Peau épaisse, intérieur sombre veiné de blanc (scléroderme). */
+    SPORE_MASS,
+    /** Un jeune champignon déjà formé dans son sac : chapeau, lames, pied (œuf d'amanite). */
+    YOUNG_AMANITA
+}
+
+/**
+ * Les boules : [skin] = épaisseur de la peau ou du sac en cm, [skinColor] sa couleur, [gleba] la couleur de l'intérieur ;
+ * [accent] = base stérile (SOLID), veines (SPORE_MASS) ou chapeau du jeune champignon (YOUNG_AMANITA) ;
+ * [cords] = cordons de mycélium sous la boule.
+ */
+class BallSpec(val inside: BallInside, val skin: Float, val skinColor: Int, val gleba: Int, val accent: Int, val cords: Boolean = false)
+
+/**
+ * Les champignons ramifiés : [LOBES] = un bloc de lobes plats et crépus (sparassis), [BRANCHES] = un buisson de branches dressées (clavaire),
+ * [SPINES] = une masse accrochée au bois dont pendent de longs aiguillons (hydne hérisson).
+ */
+enum class CoralKind { LOBES, BRANCHES, SPINES }
+
+/**
+ * Le détail d'un corail : [kind], [tip] = couleur du bord des lobes ou des pointes des branches, [density] = nombre de lobes
+ * (LOBES), de branches à la base (BRANCHES) ou de rangées d'aiguillons (SPINES). Largeur = capDiam, hauteur de la couronne = capRise,
+ * base = stipeH, stipeW ; pour SPINES, stipeH = la longueur dont les aiguillons dépassent sous la masse.
+ */
+class CoralSpec(val kind: CoralKind, val tip: Int, val density: Int)
+
+/**
+ * Tout ce qu'il faut pour dessiner un champignon : mesures en centimètres (typiques, pas exactes),
+ * couleurs et caractères d'identification. L'axe du pied est x = 0, le sol y = 0.
+ */
+class FungusLook(
+    // Chapeau
+    val capDiam: Float,
+    val capRise: Float,
+    val capShape: CapShape = CapShape.CONVEX,
+    val capN: Float = 2.2f,
+    val edgeDrop: Float = 0f,
+    val umbo: Float = 0f,
+    val dip: Float = 0f,
+    val inrolled: Boolean = false,
+    val capCenter: Int,
+    val capMid: Int,
+    val capEdge: Int,
+    val capDecos: List<CapDeco> = emptyList(),
+    /** Épaisseur de la chair du chapeau au centre (cm) ; 0 = automatique. */
+    val fleshThick: Float = 0f,
+    // Pied
+    val stipeH: Float,
+    val stipeW: Float,
+    val stipeBaseW: Float = stipeW,
+    val stipeForm: StipeForm = StipeForm.CYLINDER,
+    val bulbW: Float = 0f,
+    val bulbH: Float = 0f,
+    val lean: Float = 0f,
+    val stipeTop: Int,
+    val stipeBottom: Int = stipeTop,
+    val stipeDecos: List<StipeDeco> = emptyList(),
+    val interior: Interior = Interior.SOLID,
+    // Dessous du chapeau
+    val hymenium: Hymenium = Hymenium.GILLS,
+    val hymColor: Int,
+    val hymInner: Int = hymColor,
+    val attach: GillAttach = GillAttach.FREE,
+    val hymDepth: Float = 0.6f,
+    val forked: Boolean = false,
+    /** Lames très serrées (1) ou espacées (0). */
+    val crowd: Float = 0.7f,
+    /** Pores larges et labyrinthiques de certains bolets, plutôt que points réguliers. */
+    val largeIrregularPores: Boolean = false,
+    // Accessoires
+    val ring: RingKind = RingKind.NONE,
+    val ringAt: Float = 0.78f,
+    val ringColor: Int = 0xFFF4F0E4.toInt(),
+    val volva: VolvaKind = VolvaKind.NONE,
+    val volvaH: Float = 0f,
+    val volvaColor: Int = 0xFFF6F4EA.toInt(),
+    // Chair
+    val flesh: Int,
+    val stipeFlesh: Int = flesh,
+    val stains: List<Stain> = emptyList(),
+    val spore: Int,
+    /** Couleur du lait qui perle à la coupe (lactaires) ; 0 = pas de lait. */
+    val latex: Int = 0,
+    /** Pour [CapShape.BALL] : le détail de la boule (capDiam = largeur, capRise = hauteur, stipeH = hauteur du pied conique). */
+    val ball: BallSpec? = null,
+    /** Pour [CapShape.CORAL] : le détail du corail. */
+    val coral: CoralSpec? = null,
+    /** Nombre de champignons de la touffe (le principal compris). */
+    val cluster: Int = 1,
+    /** Pousse en touffe sur le bois : le bouquet sort du flanc d'un tronc debout, tiges à l'horizontale puis redressées (voir [TuftPainter]). */
+    val onWood: Boolean = false,
+    val seed: Int = 1,
+    // Repères
+    val marksSide: List<Mark> = emptyList(),
+    val marksSection: List<Mark> = emptyList(),
+    val marksUnder: List<Mark> = emptyList()
+) {
+    /** Inclinaison apparente du plan du chapeau : rapport du demi-axe vertical au rayon de l'ellipse du dessous. */
+    val tilt: Float get() = when (hymenium) {
+        Hymenium.PORES -> 0.24f
+        else -> 0.2f
+    }
+
+    /** Hauteur totale (pied + chapeau). */
+    val totalHeight: Float get() = stipeH + capRise + 0.4f
+}
+
+/**
+ * Une espèce du catalogue. Les textes viennent tous des ressources : le nom dans la langue courante,
+ * l'autre langue en « aussi appelé », et le nom latin (non traduit).
+ */
+class FungusSpecies(
+    val id: String,
+    @param:StringRes val name: Int,
+    @param:StringRes val altNames: Int,
+    @param:StringRes val latin: Int,
+    val status: FungusStatus,
+    /** Vente interdite en France : une pastille en plus du statut. */
+    val saleBanned: Boolean = false,
+    val look: FungusLook,
+    @param:ArrayRes val traits: Int,
+    @param:StringRes val note: Int,
+    /** Histoire du classement (0 = rien à raconter). */
+    @param:StringRes val history: Int = 0,
+    /** Un schéma conceptuel remplace la planche à chapeau pour les formes non agaricoïdes. */
+    val diagram: FungusDiagramKind = FungusDiagramKind.MUSHROOM
+)
+
+/** Un groupe de sosies. */
+class FungusGroup(
+    val id: String,
+    @param:StringRes val title: Int,
+    val members: List<String>,
+    @param:ArrayRes val points: Int,
+    /** Étiquette courte de l'origine de la confusion (rapport ANSES, décret…). */
+    @param:StringRes val evidence: Int
+)
+
+/** Un champignon dont le classement a changé. */
+class FungusChange(
+    val speciesId: String,
+    val before: FungusStatus,
+    val now: FungusStatus,
+    /** Années repères, dans l'ordre. */
+    val years: List<Int>,
+    @param:StringRes val story: Int
+)

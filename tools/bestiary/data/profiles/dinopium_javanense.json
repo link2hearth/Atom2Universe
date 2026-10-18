@@ -1,0 +1,193 @@
+{
+  "id": "dinopium_javanense",
+  "scientific": "Dinopium javanense",
+  "group": "birds",
+  "name": {
+    "en": "Common Flameback",
+    "fr": "Pic à dos rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "This resident woodpecker ranges across South and Southeast Asia.",
+      "fr": "Ce pic sédentaire est présent en Asie du Sud et du Sud-Est."
+    },
+    "identification": {
+      "en": "It is 28–30 cm long; males have a red crown and both sexes a golden-red back.",
+      "fr": "Il mesure 28 à 30 cm ; le mâle a la calotte rouge et les deux sexes le dos rouge doré."
+    },
+    "habitat": {
+      "en": "It uses open and secondary woodland, forest edges, plantations and parks, and can also occur in mangroves and cultivated landscapes.",
+      "fr": "Il fréquente les boisements ouverts ou secondaires, les lisières, les plantations et les parcs, ainsi que les mangroves et les paysages cultivés."
+    },
+    "diet": {
+      "en": "It searches tree trunks, palms and other vegetation for insects, and accounts also describe it catching insects in flight.",
+      "fr": "Il recherche des insectes sur les troncs, les palmiers et d’autres végétaux ; des observations le décrivent aussi en train de capturer des insectes en vol."
+    },
+    "behavior": {
+      "en": "Like other woodpeckers, it climbs trunks with its strong feet and tail support; it is generally resident rather than a long-distance migrant.",
+      "fr": "Comme les autres pics, il grimpe aux troncs en s’aidant de ses pattes robustes et de sa queue ; il est généralement sédentaire plutôt que grand migrateur."
+    },
+    "reproduction": {
+      "en": "It is a resident breeder in Singapore, but the concise regional accounts consulted do not establish one breeding calendar for its broad Asian range.",
+      "fr": "Il se reproduit à Singapour où il est résident, mais les fiches régionales consultées ne permettent pas d’établir un calendrier unique pour toute son vaste aire asiatique."
+    },
+    "ecology": {
+      "en": "Six subspecies are recognized; Everett’s Flameback (D. everetti) was formerly included here.",
+      "fr": "Six sous-espèces sont reconnues ; le Pic d’Everett (D. everetti) était auparavant inclus dans cette espèce."
+    },
+    "conservation": {
+      "en": "Oiseaux.net lists it globally as Least Concern.",
+      "fr": "Oiseaux.net le classe au niveau mondial comme Preoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pic à dos rouge — Oiseaux.net",
+        "fr": "Pic à dos rouge — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/pic.a.dos.rouge.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French bird account covers identification, range, habitat, behavior, subspecies, taxonomic split and status."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Flameback — Biodiversity Singapore",
+        "fr": "Pic à dos rouge — Biodiversity Singapore"
+      },
+      "url": "https://biodiversitysg.nparks.gov.sg/our-biodiversity/birds/woodpeckers-barbets/common-flameback/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Singapore Parks account confirms local habitat and resident-breeder status."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Flameback — NParks Flora & Fauna Web",
+        "fr": "Pic à dos rouge — base Flora & Fauna de NParks"
+      },
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/5/9/590",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "NParks Singapore species page supplies regional habitat and location information."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dinopium javanense — Birds of the World",
+        "fr": "Dinopium javanense — Birds of the World"
+      },
+      "url": "https://birdsoftheworld.org/bow/species/comfla1/cur/introduction",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell species monograph covers the flameback’s insect-foraging ecology."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The species is treated apart from Dinopium everetti following the modern split; no other Dinopium profile is present in the current catalogue."
+}

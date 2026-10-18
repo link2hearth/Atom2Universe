@@ -1,0 +1,163 @@
+{
+  "id": "prognatholiparis_ptychomandibularis",
+  "scientific": "Prognatholiparis ptychomandibularis",
+  "group": "fish",
+  "name": {
+    "en": "Wrinkle-jaw snailfish",
+    "fr": "Limace de mer à mâchoire plissée"
+  },
+  "sections": {
+    "overview": {
+      "en": "This little-known snailfish is the sole described species of the genus Prognatholiparis.",
+      "fr": "Cette limace de mer peu connue est la seule espèce décrite du genre Prognatholiparis."
+    },
+    "identification": {
+      "en": "Its lower jaw projects beyond the upper jaw, and conspicuous folds of skin mark the snout and underside of the jaw.",
+      "fr": "Sa mâchoire inférieure dépasse la supérieure, et des plis cutanés marqués longent le museau et le dessous de la mâchoire."
+    },
+    "habitat": {
+      "en": "It is known from the Aleutian Islands in the northeast Pacific; records place it on the seabed at moderate depth.",
+      "fr": "Elle est connue des îles Aléoutiennes, dans le nord-est du Pacifique ; les données la situent près du fond, à profondeur modérée."
+    },
+    "diet": {
+      "en": "The only reported stomach observation found ostracods and stones, too little evidence to define its usual diet.",
+      "fr": "La seule observation publiée de contenu stomacal mentionne des ostracodes et des pierres, ce qui ne suffit pas à définir son régime habituel."
+    },
+    "behavior": {
+      "en": "The consulted account gives no species-specific behavioral details.",
+      "fr": "La fiche consultée ne donne pas de détails comportementaux propres à cette espèce."
+    },
+    "reproduction": {
+      "en": "The consulted account gives no species-specific reproductive details.",
+      "fr": "La fiche consultée ne donne pas de détails reproductifs propres à cette espèce."
+    },
+    "ecology": {
+      "en": "It is a marine, bottom-associated fish, and the known record base is exceptionally sparse.",
+      "fr": "C’est un poisson marin associé au fond, et les données connues sont extrêmement rares."
+    },
+    "conservation": {
+      "en": "FishBase reports Data Deficient in the IUCN assessment it cites, dated 2009.",
+      "fr": "FishBase rapporte la catégorie « Données insuffisantes » dans l’évaluation UICN qu’il cite, datée de 2009."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Prognatholiparis ptychomandibularis — FishBase",
+        "fr": "Prognatholiparis ptychomandibularis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/58835",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports a marine Aleutian snailfish; one stomach held ostracods and stones; cited IUCN assessment: Data Deficient (2009)."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 18,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Prognatholiparis ptychomandibularis — original species description, Biodiversity Heritage Library",
+        "fr": "Prognatholiparis ptychomandibularis — description originale, Biodiversity Heritage Library"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/49139",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Orr and Busby described the species’ projecting lower jaw and the distinctive folds along the snout and lower jaw."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 19,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taiwan Fish Database — species record",
+        "fr": "Base de données des poissons de Taïwan — fiche espèce"
+      },
+      "url": "https://fishdb.sinica.edu.tw/eng/chinesequer2.php?D1=&R1=&T1=&cn=&dere=desc&fm=&gc=&orderby=family_name&page=733&pz=20&vn=",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Taiwanese fish database lists Prognatholiparis ptychomandibularis as an accepted species in Liparidae."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Prognatholiparis",
+        "fr": "Catalogue des poissons d’Eschmeyer — Prognatholiparis"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Liparidae&tbl=genus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The California Academy of Sciences catalog recognizes Prognatholiparis as valid and lists P. ptychomandibularis as its sole species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 18,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The common name “wrinkle-jaw snailfish” is an English descriptive name; the French label is a descriptive rendering, not a verified standardized vernacular name. The specimen-level stomach observation should not be generalized into a species-wide diet."
+  ],
+  "review_note": "Kept this profile short because the species is known from very sparse material. Cross-checked the original-description record with FishBase and a Taiwanese multilingual fish database. No numerical claims were used.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

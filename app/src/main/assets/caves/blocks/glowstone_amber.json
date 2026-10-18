@@ -1,0 +1,17 @@
+{
+  "id": 2600,
+  "name": "glowstone_amber",
+  "texture_top": "underground:amber",
+  "texture_side": "underground:amber",
+  "texture_bottom": "underground:amber",
+  "color": "#EBC47A",
+  "hardness": 1.5,
+  "light_emission": 8,
+  "drop": "glowstone_amber",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

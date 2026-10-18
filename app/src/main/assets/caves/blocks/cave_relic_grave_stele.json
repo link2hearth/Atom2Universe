@@ -1,0 +1,17 @@
+{
+  "id": 2723,
+  "name": "cave_relic_grave_stele",
+  "texture_top": "cave_relics:grave_stele_top",
+  "texture_side": "cave_relics:grave_stele_side",
+  "texture_bottom": "cave_relics:grave_stele_top",
+  "color": "#667C6B",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_relic_grave_stele",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "id": "european_herring_gull",
+  "scientific": "Larus argentatus",
+  "group": "birds",
+  "name": {
+    "en": "European Herring Gull",
+    "fr": "Goéland argenté"
+  },
+  "sections": {
+    "overview": {
+      "en": "The herring gull is the classic large seaside gull of Europe. Originally a cliff-nesting coastal bird, it has adapted to towns and cities, nesting on rooftops, but its numbers in Britain have fallen sharply.",
+      "fr": "Le goéland argenté est le grand goéland typique des côtes d’Europe. À l’origine oiseau côtier nichant sur les falaises, il s’est adapté aux villes, nichant sur les toits, mais ses effectifs ont fortement diminué en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "Adult males measure about 60–66 cm and weigh 1.05–1.25 kg; females are smaller at 56–62 cm and 0.80–0.98 kg, with overlapping ranges. In Britain, all-adult mean wing length is about 415 mm. The adult has a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
+      "fr": "Les mâles adultes mesurent environ 60 à 66 cm et pèsent 1,05 à 1,25 kg ; les femelles sont plus petites, avec 56 à 62 cm et 0,80 à 0,98 kg, malgré un chevauchement des plages. En Grande-Bretagne, la longueur moyenne de l’aile de l’ensemble des adultes est d’environ 415 mm. L’adulte a le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté."
+    },
+    "habitat": {
+      "en": "Breeding birds are most frequent on open shores and cliffs, but some nest on buildings in towns. Outside the breeding season it is widespread across lowland Britain, mostly near the coast, and inland around rubbish tips, fields, reservoirs and lakes.",
+      "fr": "Les nicheurs sont surtout fréquents sur les rivages ouverts et les falaises, mais certains nichent sur les bâtiments en ville. Hors saison de reproduction, il est répandu dans les basses terres de Grande-Bretagne, surtout près de la côte, et à l’intérieur des terres autour des décharges, des champs, des réservoirs et des lacs."
+    },
+    "diet": {
+      "en": "It feeds mainly on marine animals, the green shore crab being a particular favourite, and also on fish, insects, carrion and refuse. It is an opportunist; it even stamps its feet to imitate rain and bring earthworms to the surface.",
+      "fr": "Il se nourrit surtout d’animaux marins, le crabe vert étant l’un de ses favoris, ainsi que de poissons, d’insectes, de charognes et de déchets. C’est un opportuniste ; il piétine même le sol pour imiter la pluie et faire remonter les vers de terre."
+    },
+    "behavior": {
+      "en": "Herring gulls forage in large flocks at refuse sites and are highly defensive of their nests and young. Pairs are often lifelong partners and return to the same nest site each year. In towns, rooftop nesting gives them plenty of food and fewer predators.",
+      "fr": "Les goélands argentés se nourrissent en grands groupes sur les décharges et défendent vivement leurs nids et leurs jeunes. Les couples restent souvent unis toute la vie et reviennent chaque année au même site de nid. En ville, la nidification sur les toits leur offre beaucoup de nourriture et moins de prédateurs."
+    },
+    "reproduction": {
+      "en": "A pair raises one brood a year, laying typically three eggs (two to four), usually from mid-April, on the ground, on cliff ledges or on rooftops. The female does most of the 28–30 days of incubation. The chicks fledge at 35–40 days and peck the red spot on a parent’s bill to beg for food. Breeding typically starts at four years of age.",
+      "fr": "Un couple élève une nichée par an et pond en général trois œufs (deux à quatre), le plus souvent à partir de la mi-avril, au sol, sur des corniches de falaise ou sur des toits. La femelle assure l’essentiel des 28 à 30 jours de couvaison. Les poussins s’envolent à 35 à 40 jours et picorent la tache rouge du bec d’un parent pour réclamer de la nourriture. La reproduction débute en général à quatre ans."
+    },
+    "ecology": {
+      "en": "As a scavenger and predator of shore animals the herring gull exploits both natural and human food sources. Tracking of breeding birds at one colony showed most feeding on mussel beds and intertidal areas, while declining marine food is thought to push birds to forage inland.",
+      "fr": "Charognard et prédateur des animaux du littoral, le goéland argenté exploite des sources de nourriture naturelles comme humaines. Le suivi d’oiseaux nicheurs d’une colonie a montré que la plupart se nourrissaient sur les bancs de moules et dans les zones intertidales, tandis que la raréfaction de la nourriture marine pousserait les oiseaux à chercher davantage à l’intérieur des terres."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, but it is Red-listed in the UK. About 130,000 pairs bred there in 1998–2002 and some 740,000 birds wintered in 2003–06; the coastal breeding population fell by more than 50% between 1969–70 and 1998–2002 and appears to have kept falling. In ringing data the oldest birds reach about 12 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste rouge du Royaume-Uni. Environ 130 000 couples y ont niché en 1998-2002 et quelque 740 000 oiseaux y ont hiverné en 2003-2006 ; la population nicheuse côtière a diminué de plus de 50 % entre 1969-1970 et 1998-2002 et semble avoir continué à baisser. Selon les données de baguage, les plus vieux oiseaux atteignent environ 12 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Herring Gull — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Goéland argenté — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/herring-gull",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adults average 970.6 g, wing 414.5 mm; clutch 3 (2–4), incubation 28–30 days mostly by the female, fledging 35–40 days, breeding from age 4.",
+        "UK about 130,000 pairs (1998–02), 740,000 in winter (2003–06); coastal breeders -50% 1969–70 to 1998–2002; UK Red, IUCN Least Concern; ringing record about 12 years; GPS tracking at one colony showed feeding on mussel beds.",
+        "British adults average about 970 g and have a mean wing length of about 415 mm."
+      ]
+    },
+    {
+      "title": {
+        "en": "Herring Gull — RSPB",
+        "fr": "Goéland argenté — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "54–60 cm; light grey back, white underparts, black wingtips with white spots, pink legs, yellow bill with red spot; first-year birds mottled brown.",
+        "Eats fish, insects, carrion and refuse; stamps feet to bring worms up; chicks peck the red spot; pairs often lifelong, same nest site yearly; rooftop nesting since the 1920s; Red-listed after population declines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Larus argentatus (Herring Gull) — Animal Diversity Web, University of Michigan",
+        "fr": "Larus argentatus (Goéland argenté) — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Larus_argentatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult males are 60–66 cm and 1,050–1,250 g; females are 56–62 cm and 800–980 g; ranges overlap."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web was read but its account appears to mix in North American herring gulls, so it was not used.",
+    "BTO notes the overall UK trend is unclear because inland urban populations are hard to survey; the figures given are from the coastal surveys.",
+    "The 'declining marine food' explanation for inland foraging is from the RSPB and is a general interpretation."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB used for qualitative facts; illustration to be checked by the owner."
+}

@@ -1,0 +1,146 @@
+{
+  "id": "crenicichla_tigrina",
+  "scientific": "Crenicichla tigrina",
+  "group": "fish",
+  "name": {
+    "en": "Tigrina Pike Cichlid",
+    "fr": "Cichlidé brochet tigrina"
+  },
+  "sections": {
+    "overview": {
+      "en": "The 1991 French description named the Trombetas pike cichlid Crenicichla tigrina. FishBase now accepts Lugubria tigrina. Its related L. strigata is the other revised Lugubria profile in this series.",
+      "fr": "La description française de 1991 nommait le cichlidé brochet du Trombetas Crenicichla tigrina. FishBase accepte désormais Lugubria tigrina. Son espèce apparentée L. strigata est l’autre fiche Lugubria révisée de cette série."
+    },
+    "identification": {
+      "en": "The original description establishes it as a distinct species.",
+      "fr": "La description originale l’établit comme une espèce distincte."
+    },
+    "habitat": {
+      "en": "Its type region is the Rio Trombetas in Pará, Brazil.",
+      "fr": "Sa localité type est le Rio Trombetas, dans le Pará au Brésil."
+    },
+    "diet": {
+      "en": "FishBase does not list prey or feeding data for this species.",
+      "fr": "FishBase ne donne pas de données sur les proies ou l’alimentation de cette espèce."
+    },
+    "behavior": {
+      "en": "FishBase provides no species-specific behavioral account.",
+      "fr": "FishBase ne fournit pas de compte rendu comportemental propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The FishBase summary provides no breeding details.",
+      "fr": "La synthèse FishBase ne donne pas de détails sur la reproduction."
+    },
+    "ecology": {
+      "en": "The description discusses relationships among small-scaled pike cichlids.",
+      "fr": "La description examine les relations entre cichlidés brochets à petites écailles."
+    },
+    "conservation": {
+      "en": "FishBase reports an IUCN status of Least Concern, assessed in 2018.",
+      "fr": "FishBase rapporte un statut UICN de préoccupation mineure, évalué en 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crenicichla tigrina, a new cichlid species from Rio Trombetas — Naturalis Institutional Repository",
+        "fr": "Crenicichla tigrina, a new cichlid species from Rio Trombetas — Naturalis Institutional Repository"
+      },
+      "url": "https://repository.naturalis.nl/pub/505573",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase provides an independent taxonomic summary."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 6,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crenicichla tigrina — FishBase",
+        "fr": "Crenicichla tigrina — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Crenicichla-tigrina.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase recognizes Lugubria tigrina and reports a 2018 Least Concern assessment."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 11,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of the generic classification of pike cichlids — Zoological Journal of the Linnean Society",
+        "fr": "Révision de la classification générique des cichlidés brochets — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The 2023 revision lists both tigrina and strigata in Lugubria."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 10,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 1991 description is the strongest accessible species-specific source; detailed natural history and a current Red List assessment were not found."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the original French taxonomic description and cross-checked current fish-database nomenclature; cousin links distinguish its Trombetas locality from the other two pike-cichlid profiles."
+}

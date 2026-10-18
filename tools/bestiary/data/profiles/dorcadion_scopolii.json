@@ -1,0 +1,141 @@
+{
+  "id": "dorcadion_scopolii",
+  "scientific": "Dorcadion scopolii",
+  "group": "invertebrates",
+  "name": {
+    "en": "Scopoli’s Dorcadion",
+    "fr": "Dorcadion de Scopoli"
+  },
+  "sections": {
+    "overview": {
+      "en": "Dorcadion scopolii is a flightless longhorn beetle in the family Cerambycidae, recorded across parts of central and eastern Europe.",
+      "fr": "Dorcadion scopolii est un longicorne aptère de la famille des Cerambycidés, signalé dans plusieurs régions d’Europe centrale et orientale."
+    },
+    "identification": {
+      "en": "Adults are about 10–13 mm long; the species is placed in the subgenus Cribridorcadion.",
+      "fr": "Les adultes mesurent environ 10 à 13 mm; l’espèce est classée dans le sous-genre Cribridorcadion."
+    },
+    "habitat": {
+      "en": "Records and regional accounts place it in low vegetation and grassland settings, including Hungarian steppe meadows.",
+      "fr": "Les observations et les fiches régionales la situent dans la végétation basse et les prairies, notamment les pelouses steppiques hongroises."
+    },
+    "diet": {
+      "en": "The species account lists grass roots as a food resource, without detailing the diet by life stage.",
+      "fr": "La fiche de l’espèce indique les racines de graminées comme ressource alimentaire, sans préciser le régime selon le stade de vie."
+    },
+    "behavior": {
+      "en": "Adults are reported from April to June and are usually found walking among low vegetation rather than flying.",
+      "fr": "Les adultes sont signalés d’avril à juin et se rencontrent surtout en marchant dans la végétation basse plutôt qu’en vol."
+    },
+    "reproduction": {
+      "en": "The species has a one-year life cycle in the regional account; the finer details of mating and egg-laying were not established by the sources consulted.",
+      "fr": "La fiche régionale indique un cycle de vie annuel; les sources consultées ne précisent pas les détails de l’accouplement et de la ponte."
+    },
+    "ecology": {
+      "en": "As a grass-associated beetle, it is linked to open ground vegetation; the consulted sources do not establish a narrower ecological requirement.",
+      "fr": "Ce longicorne associé aux graminées est lié aux milieux ouverts; les sources consultées ne permettent pas de préciser davantage ses exigences écologiques."
+    },
+    "conservation": {
+      "en": "The consulted species accounts provide no global conservation category; regional occurrence records should not be treated as a global status assessment.",
+      "fr": "Les fiches consultées ne donnent pas de catégorie mondiale de conservation; des données régionales de présence ne constituent pas une évaluation globale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dorcadion scopolii — Cerambyx beetle guide",
+        "fr": "Dorcadion scopolii — guide des longicornes Cerambyx"
+      },
+      "url": "https://www.cerambyx.uochb.cz/dorcadion_scopolii.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Adult size, life cycle, season, roots of grasses and distribution."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 10,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dorcadion scopolii — Lamiinae.org",
+        "fr": "Dorcadion scopolii — Lamiinae.org"
+      },
+      "url": "https://lamiinae.org/dorcadion-scopolii.group-44676.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomic placement, subgenus and distribution records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 6,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Invertebrate fauna of Hortobágy National Park",
+        "fr": "Faune invertébrée du parc national de Hortobágy"
+      },
+      "url": "https://www.hnp.hu/uploads/files/igazgatosag/The%20invertebrate%20fauna%20of%20the%20Hortobagy.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Hungarian national-park account places several flightless Dorcadion species in quality alkaline meadows and notes grass-root feeding."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 16,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The detailed biology of this species is less well documented than its distribution and basic identification."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a species account with a taxonomic catalogue and Hungarian national-park literature. Habitat and conservation statements are kept regional because no global assessment was located."
+}

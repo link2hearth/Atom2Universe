@@ -1,0 +1,136 @@
+{
+  "id": "acicula_fusca",
+  "scientific": "Acicula fusca",
+  "group": "invertebrates",
+  "name": {
+    "en": "Point snail",
+    "fr": "Acicule brune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Acicula fusca is a minute land snail in the family Aciculidae. Its common English name, point snail, refers to the tapered shell. Because it is only a few millimetres long and lives in concealed ground-level microhabitats, it is easily overlooked during ordinary wildlife searches.",
+      "fr": "Acicula fusca est un minuscule escargot terrestre de la famille des Aciculidés. Son nom anglais point snail fait référence à sa coquille effilée. Comme il ne mesure que quelques millimètres et vit dans des microhabitats cachés au niveau du sol, il passe facilement inaperçu lors des recherches naturalistes ordinaires."
+    },
+    "identification": {
+      "en": "The adult shell is tiny, reaching about 2.5 mm high and 0.8 mm wide. It is glossy and reddish to yellowish brown, with a blunt apex, a nearly cylindrical taper, fine radial striae and a minute translucent operculum. In Ireland it may be confused with the blind awl snail, Cecilioides acicula, whose shell is smoother and more sharply tapered and lacks this visible operculum. The cited records measure the shell only; no reliable body-mass figure is reported.",
+      "fr": "La coquille adulte est minuscule : elle atteint environ 2,5 mm de hauteur pour 0,8 mm de largeur. Elle est brillante, brun rougeâtre à jaunâtre, avec un sommet obtus, une forme presque cylindrique, de fines stries radiales et un opercule translucide minuscule. En Irlande, elle peut être confondue avec le limaçon aveugle Cecilioides acicula, dont la coquille est plus lisse, plus effilée et dépourvue de cet opercule visible. Les sources citées mesurent uniquement la coquille ; aucune masse corporelle fiable n’est indiquée."
+    },
+    "habitat": {
+      "en": "The species occurs in western and central parts of Europe, including Britain, Ireland, France, Spain, Belgium and northwestern Germany. It is associated with moist leaf litter and moss in broadleaf woodland and other base-rich, well-soiled sites. Irish conservation sources also record it in rough grassland and hedgerow settings with rich deep soil; habitat descriptions vary by locality.",
+      "fr": "L’espèce est présente dans des régions occidentales et centrales d’Europe, notamment en Grande-Bretagne, en Irlande, en France, en Espagne, en Belgique et dans le nord-ouest de l’Allemagne. Elle est associée aux mousses et à la litière humide des bois de feuillus et d’autres sites riches en bases et en sol. Les sources irlandaises la signalent aussi dans les prairies grossières et les haies sur sols profonds et riches ; les descriptions varient selon les lieux."
+    },
+    "diet": {
+      "en": "The reviewed species accounts focus on shell characters and habitat and do not provide direct observations of what A. fusca eats. Its species-specific diet is therefore left undetermined in this profile.",
+      "fr": "Les fiches de l’espèce consultées portent sur la coquille et l’habitat, et ne décrivent pas directement ce que mange A. fusca. Son régime propre à l’espèce reste donc indéterminé dans ce profil."
+    },
+    "behavior": {
+      "en": "Its tiny size and concealed life in litter, moss and soil make it difficult to observe alive. The species account from Northern Ireland notes adults can be found throughout the year. The available sources do not describe its movement, activity rhythm or interactions in enough detail for a fuller behavioral account.",
+      "fr": "Sa très petite taille et sa vie dissimulée dans la litière, les mousses et le sol rendent l’observation de l’animal vivant difficile. La fiche nord-irlandaise indique que des adultes peuvent être trouvés toute l’année. Les sources disponibles ne décrivent pas assez ses déplacements, ses rythmes d’activité ou ses interactions pour dresser un tableau comportemental plus complet."
+    },
+    "reproduction": {
+      "en": "The Northern Ireland species account notes that adults have separate sexes, unlike most non-marine snails, which are hermaphroditic. Detailed information on courtship, egg laying, development and generation length was not available in the sources reviewed, so those details remain uncertain.",
+      "fr": "La fiche d’Irlande du Nord précise que les adultes ont des sexes séparés, contrairement à la plupart des escargots non marins, généralement hermaphrodites. Les sources consultées ne renseignent pas précisément la parade, la ponte, le développement ni la durée d’une génération ; ces détails restent incertains."
+    },
+    "ecology": {
+      "en": "The point snail is associated with damp, base-rich litter and soil microhabitats, and its minute body makes it a component of the largely unseen soil and litter fauna. The reviewed sources do not quantify its ecological function or interactions with plants, fungi or predators.",
+      "fr": "L’acicule brune est liée aux microhabitats de litière et de sol humide, riches en bases ; sa petite taille en fait un élément de la faune discrète du sol. Les sources examinées ne quantifient pas sa fonction écologique ni ses interactions avec les plantes, les champignons ou les prédateurs."
+    },
+    "conservation": {
+      "en": "An Irish assessment lists A. fusca as a species of conservation concern and describes it as a British-Irish near endemic with smaller continental populations. The material reviewed here does not establish a current global Red List category or a recent population trend. Loss or degradation of moist, base-rich litter habitat is relevant to the habitat it occupies, but no causal population estimate is supplied.",
+      "fr": "Une évaluation irlandaise considère A. fusca comme une espèce d’intérêt pour la conservation et la décrit comme quasi endémique des îles Britanniques et d’Irlande, avec de petites populations sur le continent. Les documents consultés n’établissent ni catégorie mondiale récente de Liste rouge ni tendance récente de population. La perte ou la dégradation de litières humides et riches en bases concerne son habitat, mais aucune estimation d’effet démographique n’est fournie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Point snail Acicula fusca — Northern Ireland Priority Species",
+        "fr": "Acicule brune Acicula fusca — espèces prioritaires d’Irlande du Nord"
+      },
+      "url": "https://www.habitas.org.uk/priority/species.asp?item=6618",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Describes preferred rich deep soils and leaf litter, diagnostic shell and operculum features, adults present throughout the year, separate sexes, and Irish conservation context."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acicula fusca — Natural History Museum species dictionary",
+        "fr": "Acicula fusca — dictionnaire des espèces du Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000006618",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomic record confirms accepted name and common English name, and documents the British and Irish checklist context."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acicula fusca — Mollusc Ireland species account",
+        "fr": "Acicula fusca — fiche d’espèce Mollusc Ireland"
+      },
+      "url": "https://www.habitas.org.uk/molluscireland/species.asp?ID=3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Irish species account provides field identification and habitat notes; detailed diet and behavioral observations are sparse.",
+        "The species account documents shell dimensions and identification, not a reliable body-mass measurement."
+      ]
+    },
+    {
+      "title": {
+        "en": "Red List of Irish non-marine molluscs — National Parks and Wildlife Service",
+        "fr": "Liste rouge des mollusques non marins d’Irlande — National Parks and Wildlife Service"
+      },
+      "url": "https://www.npws.ie/sites/default/files/publications/pdf/RL2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Irish red-list publication describes distribution as near-endemic to Britain and Ireland with smaller populations in France, Belgium and Germany."
+      ]
+    },
+    {
+      "title": {
+        "en": "A quantitative study on sieve mesh size in land-mollusc sampling — Irish Naturalists’ Journal",
+        "fr": "Étude quantitative du tamisage des mollusques terrestres — Irish Naturalists’ Journal"
+      },
+      "url": "https://www.researchgate.net/publication/328096041_A_quantitative_study_on_the_implications_of_sieve_mesh_size_in_land_mollusc_sampling_-_are_snails_05-1_mmin_size_worth_including",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Citing Falkner et al. (2001) and Kerney and Cameron (1979), the article's shell-size table gives Acicula fusca a maximum shell height of 2.5 mm and breadth of 0.8 mm."
+      ]
+    }
+  ],
+  "illustration_notes": "Extremely small terrestrial snail, translucent glossy reddish to yellow-brown elongated cylindrical shell with blunt apex and fine regular striae, shown enlarged on white background; no oversized body.",
+  "uncertainties": [
+    "Species-specific diet and detailed reproduction remain poorly documented in the sources reviewed.",
+    "Irish conservation concern is regional and should not be represented as a global status."
+  ],
+  "reviewed": true,
+  "review_note": "Irish institutional and museum sources checked; distinction from the similarly named Cecilioides acicula made explicit."
+}

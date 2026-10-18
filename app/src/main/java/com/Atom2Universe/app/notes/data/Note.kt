@@ -1,0 +1,40 @@
+package com.Atom2Universe.app.notes.data
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import java.util.UUID
+
+@Entity(
+    tableName = "notes",
+    foreignKeys = [
+        ForeignKey(
+            entity = NoteGroup::class,
+            parentColumns = ["id"],
+            childColumns = ["groupId"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ],
+    indices = [Index("groupId")]
+)
+data class Note(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    /**
+     * L'identité de la note d'un appareil à l'autre : [id] est un compteur local, différent partout.
+     * Une copie ([copy]) doit recevoir son propre uuid, sinon la sync la prendrait pour la même note.
+     */
+    val uuid: String = UUID.randomUUID().toString(),
+    val groupId: Long? = null,
+    val title: String = "",
+    val content: String = "",
+    val contentPlainText: String = "",
+    val isPinned: Boolean = false,
+    val isFavorite: Boolean = false,
+    val colorHex: String? = null,
+    val textColorMode: String = "auto",
+    val dateCreated: Long = System.currentTimeMillis(),
+    val dateModified: Long = System.currentTimeMillis(),
+    /** Mise à la corbeille à cette date ; null = note vivante. Effacée pour de bon après 30 jours. */
+    val deletedAt: Long? = null
+)

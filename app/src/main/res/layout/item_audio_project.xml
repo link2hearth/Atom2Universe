@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.Atom2Universe.app.OrnamentProjectLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/A2UProjectCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        style="@style/A2UProjectPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/project_thumb"
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/project_menu"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="4dp"
+            android:background="?attr/a2uChipBackground"
+            android:contentDescription="@string/px_more"
+            android:padding="10dp"
+            android:src="@drawable/ic_px_more"
+            app:tint="@color/audio_text_primary" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/project_name"
+        style="@style/PxTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/project_info"
+        style="@style/PxCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
+</com.Atom2Universe.app.OrnamentProjectLayout>

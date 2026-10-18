@@ -1,0 +1,177 @@
+{
+  "id": "discus_macclintocki",
+  "scientific": "Discus macclintocki",
+  "group": "invertebrates",
+  "name": {
+    "en": "Iowa Pleistocene Snail",
+    "fr": "Disque du Pléistocène de l’Iowa"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small land snail survives in a few cool, moist refuges in the Driftless Area of the upper Midwest, principally in northeastern Iowa and nearby parts of Illinois.",
+      "fr": "Ce petit escargot terrestre subsiste dans quelques refuges frais et humides de la région sans dérive glaciaire du Midwest supérieur, surtout dans le nord-est de l’Iowa et les secteurs voisins de l’Illinois."
+    },
+    "identification": {
+      "en": "It is a tiny discoid snail, about 5–8 mm across in the Iowa State University research account; the common name refers to its association with the Pleistocene fauna of the region.",
+      "fr": "C’est un minuscule escargot à coquille discoïde, d’environ 5 à 8 mm de diamètre selon le compte rendu de l’Université d’État de l’Iowa ; son nom anglais évoque la faune pléistocène de la région."
+    },
+    "habitat": {
+      "en": "It lives in leaf litter on shaded, cool, moist algific talus slopes, where air cooled by underground ice emerges through openings in the slope.",
+      "fr": "Il vit dans la litière de pentes d’éboulis algifiques ombragées, fraîches et humides, où l’air refroidi par la glace souterraine ressort par des ouvertures du versant."
+    },
+    "diet": {
+      "en": "The Iowa Pleistocene snail uses leaf litter, which provides both food and cover; the consulted species accounts do not define a more specific diet.",
+      "fr": "Le Disque du Pléistocène utilise la litière, qui lui procure à la fois nourriture et abri ; les fiches consultées ne précisent pas davantage son régime."
+    },
+    "behavior": {
+      "en": "The habitat remains below 10°C in summer and above −10°C in winter, according to the U.S. Fish and Wildlife Service.",
+      "fr": "Selon le Fish and Wildlife Service américain, l’habitat reste sous 10 °C en été et au-dessus de −10 °C en hiver."
+    },
+    "reproduction": {
+      "en": "The reproductive mode is not established in the reviewed conservation account; self-fertilization is mentioned only as a possibility inferred from some related land snails.",
+      "fr": "Le mode de reproduction n’est pas établi dans la fiche de conservation consultée ; l’autofécondation n’y est évoquée que comme possibilité déduite chez certains escargots terrestres apparentés."
+    },
+    "ecology": {
+      "en": "These fragile cold-air slope systems support a relict snail population; changes to the slope’s ice and moisture balance could remove the microclimate on which it depends.",
+      "fr": "Ces fragiles versants à air froid abritent une population relique ; une modification de l’équilibre entre glace et humidité pourrait détruire le microclimat dont elle dépend."
+    },
+    "conservation": {
+      "en": "It has been federally listed as Endangered in the United States since 1978; threats include climate change, logging, quarrying, road work, sinkhole alteration, contamination and trampling.",
+      "fr": "L’espèce est inscrite comme « En danger » au niveau fédéral américain depuis 1978 ; les menaces comprennent le changement climatique, l’exploitation forestière, les carrières, les routes, la modification des dolines, la contamination et le piétinement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Iowa Pleistocene Snail — U.S. Fish and Wildlife Service",
+        "fr": "Escargot du Pléistocène de l’Iowa — U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/iowa-pleistocene-snail-discus-macclintocki",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "USFWS describes its leaf-litter refuge, temperature requirements, federal endangered listing and threats."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Iowa Pleistocene Snail — Iowa State University",
+        "fr": "Escargot du Pléistocène de l’Iowa — Université d’État de l’Iowa"
+      },
+      "url": "https://faculty.sites.iastate.edu/kjroe/project/iowa-pleistocene-snail",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Iowa State research summary gives 5–8 mm diameter and its restriction to algific talus slopes in Iowa and Illinois."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Discus macclintocki — NatureServe Explorer",
+        "fr": "Discus macclintocki — NatureServe Explorer"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.111599/Discus_macclintocki",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "NatureServe synthesis notes leaf litter as food and cover and says reproductive mode is unknown; self-fertilization is only a comparative possibility."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "No catalogue close relative was identified. Temperature values are converted from the source’s Fahrenheit values without adding precision; the species account does not establish its reproductive mode."
+}

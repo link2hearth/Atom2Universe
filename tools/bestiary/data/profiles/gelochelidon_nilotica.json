@@ -1,0 +1,206 @@
+{
+  "id": "gelochelidon_nilotica",
+  "scientific": "Gelochelidon nilotica",
+  "group": "birds",
+  "name": {
+    "en": "Gull-billed Tern",
+    "fr": "Sterne hansel"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Gull-billed Tern is a widespread tern of warm coasts and inland wetlands, notable for feeding away from open water as well as along shorelines.",
+      "fr": "La Sterne hansel est une sterne largement répartie sur les côtes chaudes et dans les zones humides intérieures, remarquable par sa chasse loin de l’eau libre comme sur les rivages."
+    },
+    "identification": {
+      "en": "Its stout black bill, broad wings and short notched tail distinguish it from many slimmer-billed terns; adults wear a black cap in breeding plumage.",
+      "fr": "Son bec noir épais, ses ailes larges et sa courte queue échancrée la distinguent de nombreuses sternes au bec plus fin ; l’adulte nuptial porte une calotte noire."
+    },
+    "habitat": {
+      "en": "It breeds on sandy beaches, saltmarsh islands, shell banks and, in some regions, inland wetlands; outside breeding it also uses coastal lagoons and mudflats. CIESM also records nests on sand or mud near coastal lagoons and saltmarshes.",
+      "fr": "Elle niche sur les plages sableuses, îlots de marais salants, bancs de coquillages et, dans certaines régions, zones humides intérieures ; hors reproduction, elle fréquente aussi lagunes côtières et vasières. CIESM signale aussi des nids sur le sable ou la vase près des lagunes côtières et des marais salants."
+    },
+    "diet": {
+      "en": "Its broad diet includes flying insects, crustaceans, lizards, amphibians, fish and occasionally small mammals or young birds. CIESM likewise notes insects, small vertebrates and crustaceans, often taken on land.",
+      "fr": "Son régime varié comprend des insectes volants, crustacés, lézards, amphibiens, poissons et parfois de petits mammifères ou de jeunes oiseaux. CIESM mentionne également des insectes, petits vertébrés et crustacés, souvent capturés à terre."
+    },
+    "behavior": {
+      "en": "Unlike many terns, it rarely plunge-dives: it catches insects in flight and picks prey from the ground or water surface.",
+      "fr": "À la différence de nombreuses sternes, elle plonge rarement en piqué : elle capture les insectes en vol et ramasse ses proies au sol ou à la surface de l’eau."
+    },
+    "reproduction": {
+      "en": "Pairs scrape a shallow nest in the ground, often in small colonies; clutches usually contain two or three eggs.",
+      "fr": "Les couples creusent une cuvette peu profonde au sol, souvent dans de petites colonies ; les pontes comptent généralement deux ou trois œufs."
+    },
+    "ecology": {
+      "en": "This flexible foraging strategy makes it less dependent on fish than many congeners, and it often searches terrestrial habitats.",
+      "fr": "Cette stratégie alimentaire souple la rend moins dépendante des poissons que beaucoup de ses congénères, et elle chasse souvent dans des milieux terrestres."
+    },
+    "conservation": {
+      "en": "Global sources classify it as low concern, while local breeding colonies can be affected by human disturbance and wetland loss. CIESM identifies habitat loss and disturbance at breeding colonies as pressures.",
+      "fr": "Les sources mondiales la classent en préoccupation mineure, tandis que les colonies locales peuvent pâtir du dérangement humain et de la perte de zones humides. CIESM identifie la perte d’habitat et le dérangement des colonies comme des pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sterne hansel — Oiseaux.net",
+        "fr": "Sterne hansel — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/sterne.hansel.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "French species account gives nomenclature and broad range."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gull-billed Tern Life History — Cornell Lab of Ornithology",
+        "fr": "Gull-billed Tern Life History — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Gull-billed_Tern/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell gives diet, foraging and colony/nesting details."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gull-billed tern — CIESM Research on Seabirds",
+        "fr": "Gull-billed tern — CIESM Research on Seabirds"
+      },
+      "url": "https://ciesm.org/marine/programs/seabirds/gull-billed-tern/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "CIESM independently describes shoreline ecology and pressures."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The wide global range contains distinct populations; local status is not uniform.",
+    "Diet and nesting habits may vary among regions."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "French source supports the French common name and broad natural history; Cornell provides North American details, cross-checked for ecology with CIESM."
+}

@@ -1,0 +1,18 @@
+{
+  "id": 2661,
+  "name": "reinforced_mine_beam",
+  "texture_top": "cave_ruins:beam_end",
+  "texture_side": "cave_ruins:beam_side",
+  "texture_bottom": "cave_ruins:beam_end",
+  "color": "#927149",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "reinforced_mine_beam",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "wood"
+  ],
+  "orient_mode": "axis"
+}

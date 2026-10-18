@@ -1,0 +1,165 @@
+{
+  "id": "scinax_eurydice",
+  "scientific": "Scinax eurydice",
+  "group": "amphibians",
+  "name": {
+    "en": "Eurydice snouted treefrog",
+    "fr": "Rainette Eurydice"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scinax eurydice is a Brazilian treefrog recorded along the country’s Atlantic side, from the northeast toward São Paulo.",
+      "fr": "Scinax eurydice est une rainette brésilienne présente le long de la façade atlantique, du nord-est jusqu’à São Paulo."
+    },
+    "identification": {
+      "en": "Adults are medium-sized, with brown to greenish backs and paired dark marks.",
+      "fr": "L’adulte est de taille moyenne, avec le dos brun à verdâtre et des marques sombres par paires."
+    },
+    "habitat": {
+      "en": "It is arboreal at forest edges or open, altered habitats near ponds.",
+      "fr": "Elle vit dans la végétation des lisières forestières ou de milieux ouverts modifiés, près des mares."
+    },
+    "diet": {
+      "en": "Adult diet is not specified in the sources reviewed.",
+      "fr": "Les sources consultées ne précisent pas son régime alimentaire adulte."
+    },
+    "behavior": {
+      "en": "Males call from vegetation above water.",
+      "fr": "Les mâles chantent dans la végétation au-dessus de l’eau."
+    },
+    "reproduction": {
+      "en": "Eggs are laid in water, where tadpoles develop; local breeding seasons vary.",
+      "fr": "Les œufs sont pondus dans l’eau, où se développent les têtards; la saison varie selon les sites."
+    },
+    "ecology": {
+      "en": "Genetic studies indicate that the name may cover a complex of distinct lineages, so records across its broad range may not all represent one biological species.",
+      "fr": "Des études génétiques indiquent que ce nom pourrait recouvrir un complexe de lignées distinctes; les observations de toute son aire ne correspondent donc peut-être pas toutes à une seule espèce biologique."
+    },
+    "conservation": {
+      "en": "The IUCN category is reported as Least Concern, but the possible species complex makes range-wide interpretation less certain.",
+      "fr": "La catégorie UICN rapportée est Préoccupation mineure, mais le possible complexe d’espèces rend son interprétation à l’échelle de toute l’aire moins certaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scinax eurydice — Amphibian Species of the World",
+        "fr": "Scinax eurydice — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-eurydice",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The AMNH account records its Brazilian range and placement in the Scinax eurydice group."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 14,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphibians of Serra do Cipó",
+        "fr": "Amphibiens de la Serra do Cipó"
+      },
+      "url": "https://www.ib.unicamp.br/museu_zoologia/system/files/2022-01/anf%C3%ADbios%20anuros%20Serra%20do%20Cip%C3%B3%20Eterovick%20et%20al.%202020.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The regional account describes colour, habitat, calls and aquatic development, but no adult diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 14,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Multilocus phylogeography of the treefrog Scinax eurydice",
+        "fr": "Phylogéographie multilocus de la rainette Scinax eurydice"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27248688/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed phylogeographic study reports deep genetic structure and lineages consistent with undescribed taxa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 14,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Composition and diversity of anurans in the Restinga of Conde, Bahia",
+        "fr": "Composition et diversité des anoures de la restinga de Conde, Bahia"
+      },
+      "url": "https://www.scielo.br/scielo.php?pid=S1676-06032016000300305&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The Portuguese-language field survey records S. eurydice in the coastal restinga study and documents calling activity."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published local breeding seasons differ, and phylogeographic work indicates that the current name may include cryptic diversity."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Current AMNH taxonomy, an English species guide, peer-reviewed phylogeography and Portuguese field records were cross-checked."
+}

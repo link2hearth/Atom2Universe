@@ -1,0 +1,141 @@
+{
+  "id": "hydroprogne_caspia",
+  "scientific": "Hydroprogne caspia",
+  "group": "birds",
+  "name": {
+    "en": "Caspian Tern",
+    "fr": "Sterne caspienne"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread tern belongs to the family Laridae.",
+      "fr": "Cette sterne largement répartie appartient à la famille des Laridés."
+    },
+    "identification": {
+      "en": "At 47–54 cm long with a 126–128 cm wingspan, it is the largest and heaviest tern.",
+      "fr": "Longue de 47–54 cm et dotée d’une envergure de 126–128 cm, c’est la plus grande et la plus lourde des sternes."
+    },
+    "habitat": {
+      "en": "It nests on open, sparsely vegetated islands or shores near shallow water.",
+      "fr": "Elle niche sur des îles ou rivages dégagés, peu végétalisés et proches d’eaux peu profondes."
+    },
+    "diet": {
+      "en": "It feeds mostly on fish.",
+      "fr": "Elle se nourrit surtout de poissons."
+    },
+    "behavior": {
+      "en": "It may forage as far as 60 km from its breeding colony.",
+      "fr": "Elle peut chercher sa nourriture jusqu’à 60 km de sa colonie de reproduction."
+    },
+    "reproduction": {
+      "en": "It nests in colonies, small groups or pairs, in a shallow scrape.",
+      "fr": "Elle niche en colonies, petits groupes ou couples, dans une simple dépression."
+    },
+    "ecology": {
+      "en": "Older sources use Sterna caspia; the current name is Hydroprogne caspia.",
+      "fr": "Des sources anciennes emploient Sterna caspia ; le nom actuel est Hydroprogne caspia."
+    },
+    "conservation": {
+      "en": "The 2018 global assessment lists it as Least Concern and reports an increasing population trend.",
+      "fr": "L’évaluation mondiale de 2018 la classe en préoccupation mineure et indique une tendance démographique à la hausse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hydroprogne caspia — IUCN Red List assessment",
+        "fr": "Hydroprogne caspia — évaluation de la Liste rouge UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22694524A155509311.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN/BirdLife describes nesting habitat, fish diet, foraging distance, breeding and global status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 12,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sterne caspienne — Gouvernement du Québec",
+        "fr": "Sterne caspienne — Gouvernement du Québec"
+      },
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/sterne-caspienne",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The Quebec profile gives adult dimensions and lists Sterna caspia as a synonym."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 13,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hydroprogne caspia — Convention on Migratory Species",
+        "fr": "Hydroprogne caspia — Convention sur les espèces migratrices"
+      },
+      "url": "https://www.cms.int/species/hydroprogne-caspia",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "CMS lists the species in family Laridae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 7,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Québec threatened status is regional; the global category cited here is from the 2018 assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Separated the regional Québec designation from global conservation status."
+}

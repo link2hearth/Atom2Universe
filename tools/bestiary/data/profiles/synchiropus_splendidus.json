@@ -1,0 +1,120 @@
+{
+  "id": "synchiropus_splendidus",
+  "scientific": "Synchiropus splendidus",
+  "group": "fish",
+  "name": {
+    "en": "Mandarinfish",
+    "fr": "Poisson mandarin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The mandarinfish is a small, brightly coloured dragonet native to the western Pacific.",
+      "fr": "Le poisson mandarin est un petit dragonnet vivement coloré, originaire du Pacifique occidental."
+    },
+    "identification": {
+      "en": "Its blue body bears orange, red and yellow markings; males have a much longer first dorsal spine.",
+      "fr": "Son corps bleu porte des marques orange, rouges et jaunes ; le premier rayon dorsal des mâles est nettement plus long."
+    },
+    "habitat": {
+      "en": "It inhabits shallow coral reefs and lagoons, commonly over coral rubble and silty bottoms, from about 1 to 18 m deep.",
+      "fr": "Il vit dans les récifs coralliens et lagons peu profonds, souvent sur des fonds vaseux mêlés de corail et de débris, vers 1 à 18 m de profondeur."
+    },
+    "diet": {
+      "en": "It feeds on small bottom-dwelling invertebrates, including tiny crustaceans and worms among reef growth.",
+      "fr": "Il consomme de petits invertébrés benthiques, notamment de minuscules crustacés et des vers parmi les organismes du récif."
+    },
+    "behavior": {
+      "en": "It moves close to the reef, often in pairs or small groups, and is also collected for the marine aquarium trade.",
+      "fr": "Il se déplace près du récif, souvent en couple ou en petits groupes, et est également prélevé pour l’aquariophilie marine."
+    },
+    "reproduction": {
+      "en": "At night, pairs rise above the reef and release eggs and sperm into the water.",
+      "fr": "La nuit, des couples s’élèvent au-dessus du récif et libèrent ovules et spermatozoïdes dans l’eau."
+    },
+    "ecology": {
+      "en": "Its diet consists of small reef-associated prey, while spawning briefly takes place in open water above the reef.",
+      "fr": "Son alimentation repose sur de petites proies du récif, tandis que la ponte a lieu brièvement en pleine eau au-dessus de celui-ci."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 2018.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en catégorie Préoccupation mineure, datée de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Synchiropus splendidus",
+        "fr": "FishBase — Synchiropus splendidus"
+      },
+      "url": "https://www.fishbase.se/summary/12644",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports shallow reef habitat, small groups, pair spawning near the surface, aquarium use and a 2018 IUCN Least Concern assessment."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 21,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Animal Diversity Web — Synchiropus splendidus",
+        "fr": "Animal Diversity Web — Synchiropus splendidus"
+      },
+      "url": "https://animaldiversity.org/accounts/Synchiropus_splendidus/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The University of Michigan account describes the western Pacific range, colour pattern and male dorsal spine, reef habitat, small invertebrate prey and pelagic spawning."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 24,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account dates from 2006; current status wording is taken from FishBase's displayed IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

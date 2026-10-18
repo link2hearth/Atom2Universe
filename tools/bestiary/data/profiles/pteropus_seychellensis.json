@@ -1,0 +1,102 @@
+{
+  "id": "pteropus_seychellensis",
+  "scientific": "Pteropus seychellensis",
+  "group": "mammals",
+  "name": {
+    "en": "Seychelles Fruit Bat",
+    "fr": "Roussette des Seychelles"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Seychelles fruit bat, called sousouri locally, is the largest bat of the Seychelles and one of the archipelago’s two native mammals. It is a flying fox that feeds on fruit and flowers and is found across the central granitic islands.",
+      "fr": "La roussette des Seychelles, appelée sousouri localement, est la plus grande chauve-souris des Seychelles et l’un des deux mammifères indigènes de l’archipel. C’est une roussette qui se nourrit de fruits et de fleurs et qui vit sur l’ensemble des îles granitiques centrales."
+    },
+    "identification": {
+      "en": "A large fruit bat with dark brown fur, black wings and a bright orange-yellow head and neck, and a prominent snout. It weighs up to about 600 g, with a wingspan of up to 1.2 m according to one source and up to 1.5 m according to another.",
+      "fr": "Une grande roussette au pelage brun foncé, aux ailes noires, à la tête et au cou jaune-orangé vif, avec un museau marqué. Elle pèse jusqu’à environ 600 g, pour une envergure pouvant atteindre 1,2 m selon une source et 1,5 m selon une autre."
+    },
+    "habitat": {
+      "en": "It occurs widely on the central granitic islands of the Seychelles, such as Mahé, Praslin and Cousine, and roosts in treetops. It can fly between neighbouring islands, for example between Praslin and Cousin. The Mammal Diversity Database now restricts the species to the Seychelles, treating the Comoros population as a separate species.",
+      "fr": "Elle est répandue sur les îles granitiques centrales des Seychelles, comme Mahé, Praslin et Cousine, et dort dans la cime des arbres. Elle peut voler entre îles voisines, par exemple entre Praslin et Cousin. La base Mammal Diversity Database limite désormais l’espèce aux Seychelles et traite la population des Comores comme une espèce distincte."
+    },
+    "diet": {
+      "en": "It eats fruit, nectar and pollen, including cultivated mangoes and papayas, and relies on a keen sense of smell and good eyesight to find food. It feeds noisily in fruiting trees, sometimes all night.",
+      "fr": "Elle mange des fruits, du nectar et du pollen, y compris des mangues et des papayes cultivées, et s’appuie sur un odorat fin et une bonne vue pour trouver sa nourriture. Elle se nourrit bruyamment dans les arbres en fruits, parfois toute la nuit."
+    },
+    "behavior": {
+      "en": "Colonies roost together in treetops during the heat of the day, hanging by one foot, and the bats fly out in the late afternoon to feed. They are most often seen at dusk and dawn, and in greater numbers from November to February, when food is more plentiful, according to a Cousine Island account. On very calm days a few skim the sea and dip their chests in the water, for reasons not fully understood.",
+      "fr": "Les colonies dorment ensemble dans la cime des arbres aux heures chaudes, suspendues par une patte, et les roussettes s’envolent en fin d’après-midi pour se nourrir. On les voit surtout à l’aube et au crépuscule, et en plus grand nombre de novembre à février, quand la nourriture est plus abondante, d’après un récit de l’île Cousine. Par temps très calme, quelques-unes frôlent la mer et trempent leur poitrine, pour des raisons mal comprises."
+    },
+    "reproduction": {
+      "en": "The sources consulted give no breeding season, litter size or age at maturity. The Seychelles Ministry of Environment announced a study to document the species’ feeding and breeding patterns, which suggests these remain poorly documented.",
+      "fr": "Les sources consultées ne donnent ni saison de reproduction, ni taille de portée, ni âge de maturité. Le ministère de l’Environnement des Seychelles a annoncé une étude pour documenter l’alimentation et la reproduction de l’espèce, signe que ces points restent mal documentés."
+    },
+    "ecology": {
+      "en": "As a pollinator and seed disperser, it helps native plants regenerate and is an important part of island ecosystems. A Seychelles environmentalist has noted that it disperses seeds of endemic plants.",
+      "fr": "Pollinisatrice et disperseuse de graines, elle aide les plantes indigènes à se régénérer et joue un rôle important dans les écosystèmes insulaires. Un environnementaliste seychellois a noté qu’elle disperse les graines de plantes endémiques."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern on the IUCN Red List. A 2004 report estimated about 8,500 bats in the Seychelles, and no newer count had been made by the time of a recent news article. It is hunted for a curry considered a delicacy, though no law forbids this, and it also suffers collisions with infrastructure and has been linked to power outages on Mahé.",
+      "fr": "La base Mammal Diversity Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN. Un rapport de 2004 estimait environ 8 500 individus aux Seychelles, et aucun recensement plus récent n’avait été fait au moment d’un article de presse récent. Elle est chassée pour un curry considéré comme un mets fin, sans loi qui l’interdise, et subit aussi des collisions avec des infrastructures et a été liée à des pannes de courant sur Mahé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Seychelles fruit bat — Nature Seychelles",
+        "fr": "Roussette des Seychelles — Nature Seychelles"
+      },
+      "url": "https://natureseychelles.org/seychelles-wildlife/mammals/seychelles-fruit-bat/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Up to 600 g, wingspan up to 1.2 m; dark brown fur, black wings, orange-yellow head and neck; fruit, nectar, pollen; communal roosts; seed disperser; hunted for meat."
+      ]
+    },
+    {
+      "title": {
+        "en": "Seychelles fruit bat (flying fox) — Cousine Island",
+        "fr": "Roussette des Seychelles — île Cousine"
+      },
+      "url": "https://cousineisland.com/journal/seychelles-fruit-bat-flying-fox",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Wingspan up to 1.5 m; roost in treetops, feed in the late afternoon; more numerous November–February; skimming the sea; pollinators and seed dispersers.",
+        "Threats: collisions with infrastructure and hunting for fruit bat curry."
+      ]
+    },
+    {
+      "title": {
+        "en": "Study planned on Seychelles fruit bat population and breeding patterns — Seychelles Broadcasting Corporation",
+        "fr": "Étude prévue sur la population et la reproduction de la roussette des Seychelles — Seychelles Broadcasting Corporation"
+      },
+      "url": "https://www.sbc.sc/?p=8288",
+      "consulted": "2026-10-12",
+      "supports": ["reproduction", "ecology", "conservation"],
+      "facts": [
+        "Ministry study to estimate population, feeding and breeding patterns; 2004 estimate about 8,500 bats; outages on Mahé linked to bats; seeds of endemic plants."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pteropus seychellensis — Mammal Diversity Database",
+        "fr": "Pteropus seychellensis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004499",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "conservation"],
+      "facts": [
+        "Distribution: Seychelles, type locality Mahé; IUCN Least Concern; previously included P. comorensis (Almeida et al. 2025)."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Wingspan differs between sources (1.2 m versus 1.5 m).",
+    "No source consulted documents reproduction; the section only states this gap.",
+    "The IUCN Red List page could not be opened; Least Concern comes from the Mammal Diversity Database and the status may be under review according to the Ministry.",
+    "The 8,500 figure dates from 2004 and has not been updated in the sources read; the news article is undated in the text read, the study being described as upcoming."
+  ],
+  "reviewed": true,
+  "review_note": "Compiled from two local conservation accounts, a news report and a mammal database; illustration to be checked by the owner."
+}

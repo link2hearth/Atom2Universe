@@ -1,0 +1,14 @@
+{
+  "id": 5001,
+  "name": "snow",
+  "texture_top": "cozy:utility:10",
+  "texture_side": "cozy:utility:10",
+  "texture_bottom": "cozy:utility:10",
+  "color": "#ECF0ED",
+  "hardness": 0.5,
+  "drop": "snow",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

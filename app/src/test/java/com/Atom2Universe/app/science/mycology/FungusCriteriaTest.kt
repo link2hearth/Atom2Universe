@@ -1,0 +1,299 @@
+package com.Atom2Universe.app.science.mycology
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/**
+ * Garde-fous des critères de tri de l'écran Espèces : ils sont calculés d'après les dessins, donc ils doivent
+ * retrouver ce que le dessin montre, et la combinaison « ou » dans une ligne / « et » entre les lignes doit tenir.
+ */
+class FungusCriteriaTest {
+    private fun look(id: String) = FungusCatalog.get(id)!!.look
+    private fun ids(vararg criteria: String) = FungusCatalog.species.filter { FungusCriteria.matches(it.look, criteria.toSet()) }.map { it.id }.toSet()
+
+    @Test
+    fun sansCritereToutLeMondeEstLa() {
+        assertEquals(FungusCatalog.species.size, ids().size)
+    }
+
+    @Test
+    fun unCritereLitLeDessin() {
+        val phalloides = look("phalloides")
+        for (id in listOf("s_ring", "s_volva", "u_gills", "cap_GREEN", "sp_white", "w_medium")) assertTrue(id, FungusCriteria.matches(phalloides, setOf(id)))
+        for (id in listOf("s_no_ring", "s_no_volva", "u_pores", "cap_RED", "sp_black", "w_small", "m_cluster")) assertFalse(id, FungusCriteria.matches(phalloides, setOf(id)))
+
+        val edulis = look("edulis")
+        for (id in listOf("u_pores", "s_no_ring", "s_no_volva", "cap_BROWN", "w_large")) assertTrue(id, FungusCriteria.matches(edulis, setOf(id)))
+
+        assertTrue(FungusCriteria.matches(look("muscaria"), setOf("cap_RED", "c_scaly", "s_volva")))
+        assertTrue(FungusCriteria.matches(look("cibarius"), setOf("u_ridges", "c_funnel", "cap_YELLOW")))
+        assertTrue(FungusCriteria.matches(look("morchella"), setOf("u_none", "c_wrinkled", "w_small")))
+        assertTrue(FungusCriteria.matches(look("mutabilis"), setOf("m_cluster", "s_ring")))
+        assertTrue(FungusCriteria.matches(look("campestris"), setOf("sp_brown")))
+        assertTrue(FungusCriteria.matches(look("atramentaria"), setOf("sp_black")))
+        assertTrue(FungusCriteria.matches(look("rubescens"), setOf("m_stains")))
+    }
+
+    @Test
+    fun leLotTroisSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("hydnum"), setOf("u_teeth", "s_no_ring", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("craterellus"), setOf("u_none", "c_funnel", "cap_BLACK", "stipe_GREY")))
+        assertTrue(FungusCriteria.matches(look("erythropus"), setOf("u_pores", "cap_BROWN", "stipe_YELLOW", "m_stains", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("chrysenteron"), setOf("u_pores", "w_small", "stipe_RED", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("deliciosus"), setOf("m_latex", "cap_ORANGE", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("torminosus"), setOf("m_latex", "cap_PINK")))
+        assertTrue(FungusCriteria.matches(look("nuda"), setOf("sp_pink", "cap_PINK", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("prunulus"), setOf("sp_pink", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("orellanus"), setOf("sp_brown", "w_small")))
+        assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
+        // les lactaires seuls laissent couler un lait
+        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor", "volemus", "piperatus", "helvus", "semisanguifluus"), ids("m_latex"))
+        // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
+        assertEquals(setOf("hydnum", "erinaceus", "imbricatus", "rufescens"), ids("u_teeth"))
+        for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
+            assertTrue("$id a une volve", look(id).volva == VolvaKind.NONE)
+    }
+
+    @Test
+    fun leLotQuatreSeLitDansLeDessin() {
+        // les deux formes nouvelles ne se trouvent que par leur forme
+        assertEquals(setOf("perlatum", "egg", "citrinum", "gigantea"), ids("c_ball"))
+        assertEquals(setOf("ostreatus", "pleurocybella", "laetiporus", "fistulina", "pulmonarius"), ids("c_bracket"))
+        assertTrue(FungusCriteria.matches(look("ostreatus"), setOf("c_bracket", "m_cluster", "u_gills", "sp_white", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("perlatum"), setOf("c_ball", "u_none", "cap_WHITE", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("citrinum"), setOf("c_ball", "u_none", "cap_YELLOW", "c_scaly")))
+        // l'œuf d'amanite est enfermé dans sa volve : sur « sans volve » il ne doit jamais sortir
+        assertTrue(FungusCriteria.matches(look("egg"), setOf("c_ball", "s_volva", "sp_white")))
+        assertFalse(FungusCriteria.matches(look("egg"), setOf("s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("pardinum"), setOf("c_scaly", "cap_GREY", "u_gills", "sp_white", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("terreum"), setOf("cap_GREY", "u_gills", "sp_white", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("silvicola"), setOf("cap_WHITE", "s_ring", "s_no_volva", "sp_brown", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("granulatus"), setOf("u_pores", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("olivacea"), setOf("u_gills", "s_no_ring", "s_no_volva", "w_medium")))
+    }
+
+    @Test
+    fun leLotCinqSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("ovoidea"), setOf("cap_WHITE", "s_ring", "s_volva", "u_gills", "w_large", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("geotropa"), setOf("c_funnel", "u_gills", "s_no_ring", "w_large", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("amethystina"), setOf("cap_PINK", "w_small", "u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("pura"), setOf("cap_PINK", "w_small", "u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("calopus"), setOf("u_pores", "stipe_YELLOW", "stipe_RED", "m_stains", "w_large")))
+        assertTrue(FungusCriteria.matches(look("brunneum"), setOf("c_scaly", "s_ring", "s_no_volva", "m_stains", "w_medium", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("rhacodes"), setOf("c_scaly", "s_ring", "m_stains", "w_large", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("emetica"), setOf("cap_RED", "s_no_ring", "s_no_volva", "u_gills", "w_medium", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("cyanoxantha"), setOf("u_gills", "s_no_ring", "w_medium", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("hebeloma"), setOf("w_medium", "u_gills", "s_no_ring", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("aegerita"), setOf("m_cluster", "s_ring", "u_gills", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("tubaeformis"), setOf("c_funnel", "m_cluster", "u_ridges", "stipe_YELLOW", "w_small")))
+        assertTrue(FungusCriteria.matches(look("gigantea"), setOf("c_ball", "u_none", "cap_WHITE", "w_large", "s_no_ring")))
+        // seul l'amanite ovoïde du lot a une volve : rien d'autre ne sort sur « Volve » parmi les nouveaux
+        for (id in listOf("geotropa", "amethystina", "pura", "calopus", "brunneum", "rhacodes", "emetica", "cyanoxantha", "hebeloma", "aegerita", "tubaeformis", "gigantea"))
+            assertFalse("$id a une volve", FungusCriteria.matches(look(id), setOf("s_volva")))
+    }
+
+    @Test
+    fun leLotSixSeLitDansLeDessin() {
+        // les coraux ne se trouvent que par leur forme, et n'ont ni lames ni pores
+        assertEquals(setOf("sparassis", "formosa"), ids("c_coral"))
+        assertTrue(FungusCriteria.matches(look("sparassis"), setOf("c_coral", "u_none", "w_large", "cap_BEIGE", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("formosa"), setOf("c_coral", "u_none", "w_medium", "cap_PINK")))
+        // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
+        assertEquals(
+            setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes", "micaceus", "pulmonarius", "sublateritium"),
+            ids("m_wood")
+        )
+        assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("capnoides"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_brown", "u_gills", "w_small")))
+        assertTrue(FungusCriteria.matches(look("gymnopilus"), setOf("m_wood", "m_cluster", "s_ring", "sp_brown", "cap_ORANGE", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("pleurocybella"), setOf("c_bracket", "m_wood", "u_gills", "sp_white", "cap_WHITE", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("laetiporus"), setOf("c_bracket", "u_pores", "cap_ORANGE", "w_large")))
+        assertTrue(FungusCriteria.matches(look("fistulina"), setOf("c_bracket", "u_pores", "cap_RED", "w_large")))
+        assertTrue(FungusCriteria.matches(look("pinophilus"), setOf("u_pores", "cap_BROWN", "w_large", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("reticulatus"), setOf("u_pores", "cap_BROWN", "w_medium", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("proxima"), setOf("s_volva", "s_ring", "cap_WHITE", "u_gills", "sp_white", "w_medium")))
+        // seule l'amanite à volve rousse du lot a une volve
+        for (id in listOf("flammulina", "capnoides", "gymnopilus", "pleurocybella", "laetiporus", "fistulina", "sparassis", "formosa", "pinophilus", "reticulatus"))
+            assertFalse("$id a une volve", FungusCriteria.matches(look(id), setOf("s_volva")))
+    }
+
+    @Test
+    fun ouDansUneLigneEtEntreLesLignes() {
+        val brown = ids("cap_BROWN")
+        val yellow = ids("cap_YELLOW")
+        assertEquals("ou dans une ligne", brown + yellow, ids("cap_BROWN", "cap_YELLOW"))
+        val ring = ids("s_ring")
+        assertEquals("et entre les lignes", brown.intersect(ring), ids("cap_BROWN", "s_ring"))
+        assertEquals("avec / sans anneau ensemble = tout le monde", FungusCatalog.species.size, ids("s_ring", "s_no_ring").size)
+        assertEquals("un critère inconnu ne restreint rien", FungusCatalog.species.size, ids("n_importe_quoi").size)
+    }
+
+    @Test
+    fun leLotSeptSeLitDansLeDessin() {
+        // la masse d'aiguillons pendants n'est pas un corail : elle se trouve par son dessous et son bois
+        assertEquals(setOf("sparassis", "formosa"), ids("c_coral"))
+        assertTrue(FungusCriteria.matches(look("erinaceus"), setOf("u_teeth", "m_wood", "s_no_ring", "s_no_volva", "sp_white", "w_large")))
+        // seul le satyre a un chapeau alvéolé ET une volve ; la morille n'en a pas
+        assertTrue(FungusCriteria.matches(look("impudicus"), setOf("c_wrinkled", "s_volva", "u_none", "w_small")))
+        assertFalse(FungusCriteria.matches(look("morchella"), setOf("s_volva")))
+        assertTrue(FungusCriteria.matches(look("bisporus"), setOf("s_ring", "u_gills", "sp_brown", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("imbricatus"), setOf("u_teeth", "c_scaly", "c_funnel")))
+        assertTrue(FungusCriteria.matches(look("lignyotus"), setOf("m_latex", "cap_BROWN", "sp_white", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("turpis"), setOf("m_latex", "w_medium", "u_gills")))
+    }
+
+    @Test
+    fun leLotHuitSeLitDansLeDessin() {
+        // les amanites à volve en bourrelet ne sortent pas sur les volves en sac, et inversement
+        assertTrue(FungusCriteria.matches(look("citrina"), setOf("s_ring", "s_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("verna"), setOf("cap_WHITE", "stipe_WHITE", "s_ring", "s_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("subincarnata"), setOf("c_scaly", "s_ring", "s_no_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("rubellus"), setOf("cap_BROWN", "s_no_ring", "s_no_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("geophylla"), setOf("w_small", "cap_WHITE", "s_no_ring", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("sulphureum"), setOf("cap_YELLOW", "s_no_ring", "sp_white")))
+        // le tricholome équestre et le soufré sont comparés l'un à l'autre
+        assertEquals(setOf("equestre", "sulphureum"), FungusCatalog.groups.first { it.id == "knights" }.members.toSet())
+    }
+
+    @Test
+    fun leLotNeufSeLitDansLeDessin() {
+        // les trois lactaires à lait coloré sortent sur le lait ; le roux a des aiguillons qui ne descendent pas
+        for (id in listOf("sanguifluus", "deterrimus", "salmonicolor")) {
+            assertTrue(id, FungusCriteria.matches(look(id), setOf("m_latex", "s_no_ring", "sp_white").minus("sp_white")))
+        }
+        assertTrue(FungusCriteria.matches(look("luteus"), setOf("s_ring", "u_pores")))
+        assertTrue(FungusCriteria.matches(look("vesca"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("rufescens"), setOf("u_teeth", "s_no_ring")))
+        // les groupes nouveaux et agrandis
+        assertTrue(FungusCatalog.groups.first { it.id == "pinebolete" }.members.containsAll(listOf("luteus", "granulatus", "bovinus", "glutinosus")))
+        assertEquals(setOf("hydnum", "rufescens"), FungusCatalog.groups.first { it.id == "hedgehog" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.containsAll(listOf("deliciosus", "sanguifluus", "deterrimus", "salmonicolor")))
+    }
+
+    @Test
+    fun leLotDixSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("volemus"), setOf("m_latex", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("piperatus"), setOf("m_latex", "cap_WHITE", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("bovinus"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("scabrum"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("decastes"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("glutinosus"), setOf("u_gills", "sp_black")))
+        assertTrue(FungusCriteria.matches(look("odora"), setOf("u_gills", "s_no_ring", "sp_white")))
+        val pine = FungusCatalog.groups.first { it.id == "pinebolete" }.members.toSet()
+        assertTrue(pine.containsAll(listOf("luteus", "granulatus", "bovinus", "glutinosus")))
+        assertTrue(FungusCatalog.groups.first { it.id == "entoloma" }.members.contains("decastes"))
+    }
+
+    @Test
+    fun leLotOnzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("xerampelina"), setOf("cap_RED", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("nobilis"), setOf("cap_RED", "w_small", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("aurea"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("versipelle"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("agathosmus"), setOf("u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("marzuolus"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("excoriata"), setOf("s_ring", "u_gills", "c_scaly")))
+        assertTrue(FungusCatalog.groups.first { it.id == "redrussula" }.members.containsAll(listOf("aurea", "emetica", "nobilis", "xerampelina")))
+        assertTrue(FungusCatalog.groups.first { it.id == "roughstem" }.members.containsAll(listOf("scabrum", "versipelle")))
+        assertTrue(FungusCatalog.groups.first { it.id == "parasol" }.members.contains("excoriata"))
+    }
+
+    @Test
+    fun leLotDouzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("gemmata"), setOf("cap_YELLOW", "s_ring", "s_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("porphyria"), setOf("s_ring", "s_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("moelleri"), setOf("c_scaly", "s_ring", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("clavipes"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("helvus"), setOf("m_latex", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("platyphylla"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("fusipes"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("conica"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertEquals(setOf("nebularis", "clavipes"), FungusCatalog.groups.first { it.id == "cloudy" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "field" }.members.contains("moelleri"))
+        assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("gemmata"))
+        assertTrue(FungusCatalog.groups.first { it.id == "greenforms" }.members.contains("porphyria"))
+        assertTrue(FungusCatalog.groups.first { it.id == "woodtuft" }.members.contains("fusipes"))
+    }
+
+    @Test
+    fun leLotTreizeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("castanea"), setOf("c_scaly", "s_ring", "w_small", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("maculatum"), setOf("cap_BROWN", "s_no_ring", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("rosea"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("micaceus"), setOf("u_gills", "s_no_ring", "m_wood")))
+        assertTrue(FungusCriteria.matches(look("regalis"), setOf("s_ring", "u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("asperum"), setOf("c_scaly", "s_ring", "u_gills")))
+        assertEquals(setOf("brunneoincarnata", "subincarnata", "castanea"), FungusCatalog.groups.first { it.id == "smalllepiota" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "inkcap" }.members.contains("micaceus"))
+        assertTrue(FungusCatalog.groups.first { it.id == "stgeorge" }.members.contains("maculatum"))
+        assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("regalis"))
+    }
+
+    @Test
+    fun leLotQuatorzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("semisanguifluus"), setOf("m_latex", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("grevillei"), setOf("u_pores", "s_ring")))
+        assertTrue(FungusCriteria.matches(look("variegatus"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("olivaceoalbus"), setOf("u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("hypothejus"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("fragrans"), setOf("cap_WHITE", "w_small", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("chalciporus"), setOf("u_pores", "s_no_ring")))
+        assertEquals(setOf("odora", "fragrans", "rivulosa"), FungusCatalog.groups.first { it.id == "anise" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "pinebolete" }.members.containsAll(listOf("variegatus", "grevillei", "hypothejus")))
+        assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.contains("semisanguifluus"))
+    }
+
+    @Test
+    fun leLotQuinzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("integra"), setOf("cap_BROWN", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("paludosa"), setOf("cap_RED", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("decolorans"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("aurantiacum"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("cinereus"), setOf("cap_BLACK", "w_small")))
+        assertTrue(FungusCriteria.matches(look("pruinatus"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("rubellus_b"), setOf("cap_RED", "u_pores")))
+        assertTrue(FungusCriteria.matches(look("crocipodium"), setOf("u_pores", "s_no_ring")))
+        assertEquals(setOf("chrysenteron", "pruinatus", "rubellus_b", "badia"), FungusCatalog.groups.first { it.id == "redbolete" }.members.toSet())
+        assertEquals(setOf("craterellus", "cinereus"), FungusCatalog.groups.first { it.id == "blacktrumpet" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "redrussula" }.members.contains("paludosa"))
+        assertTrue(FungusCatalog.groups.first { it.id == "roughstem" }.members.containsAll(listOf("aurantiacum", "crocipodium")))
+    }
+
+    @Test
+    fun leLotSeizeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("sordida"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("pulmonarius"), setOf("m_wood", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("sublateritium"), setOf("m_wood", "s_no_ring")))
+        assertEquals(setOf("nuda", "sordida"), FungusCatalog.groups.first { it.id == "blewit" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "woodtuft" }.members.contains("sublateritium"))
+        assertTrue(FungusCatalog.groups.first { it.id == "oyster" }.members.contains("pulmonarius"))
+    }
+
+    @Test
+    fun lesBoutonsProposesTrouventTousQuelqueChose() {
+        for ((_, list) in FungusCriteria.offered) for (c in list) {
+            assertTrue("${c.id} ne trouve rien", ids(c.id).isNotEmpty())
+        }
+        // chaque espèce se retrouve par au moins une couleur de chapeau, une de pied et son dessous
+        for (sp in FungusCatalog.species) {
+            for (group in listOf(CriterionGroup.CAP_COLOR, CriterionGroup.STIPE_COLOR, CriterionGroup.UNDER, CriterionGroup.CAP_WIDTH, CriterionGroup.SPORE)) {
+                assertTrue("${sp.id} sans ${group.name}", FungusCriteria.all.any { it.group == group && it.test(sp.look) })
+            }
+        }
+        val all = FungusCriteria.all.map { it.id }
+        assertEquals("identifiants en double", all.size, all.toSet().size)
+    }
+
+    @Test
+    fun lesTeintesSeLisentCommeUnOeil() {
+        assertEquals(Tone.WHITE, Tone.of(0xFFF5F3E8.toInt()))
+        assertEquals(Tone.RED, Tone.of(0xFFD83822.toInt()))
+        assertEquals(Tone.YELLOW, Tone.of(0xFFE8D22E.toInt()))
+        assertEquals(Tone.BROWN, Tone.of(0xFF654630.toInt()))
+        assertEquals(Tone.BLACK, Tone.of(0xFF101010.toInt()))
+    }
+}

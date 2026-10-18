@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minigolf_course">Mini-golf classique</string>
+    <string name="minigolf_description">Parcours 7 · Les classiques du bord de mer : pistes droites, virages, moulin, pont et portillon coulissant. Un seul putter, des rebords qui font rebondir la balle et un trou de 15 cm. Joue les bandes, guette les obstacles mobiles et évite l’eau. 18 petits trous.</string>
+    <string name="minigolf_crazy_course">Mini-golf déjanté</string>
+    <string name="minigolf_crazy_description">Parcours 8 · Rien n’est normal ici : tuyaux qui changent de salle, trous noirs, tapis roulants, glace, bumpers de flipper, mâchoires, spirale et labyrinthe. Le même putter et les mêmes rebords, sur des pistes bien plus étranges. 18 trous.</string>
+    <string name="minigolf_help_body">Balaye de côté pour viser et pince pour zoomer. Tire vers le bas n’importe où pour armer le putt : plus tu tires, plus la balle roule fort ; relâche quand l’aiguille est près du milieu. La ligne en pointillés montre le trajet, rebords compris. Les obstacles mobiles n’y sont pas : à toi de choisir ton moment. La carte ouvre une vue aérienne libre de tout le trou. L’eau coûte un coup et ramène la balle là où tu as joué ; le sable la retient.</string>
+    <string name="minigolf_lie_distance">%1$s · %2$d m</string>
+    <string name="minigolf_distance">%1$d m</string>
+    <string-array name="minigolf_holes">
+        <item>Tout droit</item><item>Le coude</item><item>Le virage</item>
+        <item>Le zigzag</item><item>L’épingle</item><item>Le moulin</item>
+        <item>La bosse</item><item>Le plateau</item><item>Les bunkers</item>
+        <item>Le petit pont</item><item>Les piquets</item><item>Le portillon</item>
+        <item>Le tunnel</item><item>Le billard</item><item>La fourche</item>
+        <item>L’anneau</item><item>Les marches</item><item>Le château</item>
+    </string-array>
+    <string-array name="minigolf_tips">
+        <item>Une piste droite et une ligne dégagée : le meilleur trou pour sentir la portée du putter. Vise le trou et tire jusqu’à ce que la ligne en pointillés l’atteigne.</item>
+        <item>Joue-le en deux coups autour du coin, ou fais rebondir la balle sur le rebord du fond : la ligne en pointillés montre où elle rebondit.</item>
+        <item>La piste tourne à mi-chemin. Vise le coin et laisse le rebord renvoyer la balle, ou prends deux putts tranquilles.</item>
+        <item>Deux virages serrés. Des putts courts et dosés évitent que la balle rebondisse trop loin au bout de chaque ligne droite.</item>
+        <item>On monte, on traverse et on redescend près du départ. Le trou est tout près de ton point de départ mais le chemin est long : avance tronçon par tronçon.</item>
+        <item>Trois pales balaient la piste. Attends qu’un passage s’ouvre et roule dedans. Un putt mou te fait attendre plus longtemps : un putt ferme traverse plus vite.</item>
+        <item>Une bosse au milieu : trop doux et la balle redescend, trop fort et elle dépasse le trou. Regarde les pointillés pour juger.</item>
+        <item>Une rampe mène à une plate-forme surélevée. Donne assez de vitesse pour monter, puis laisse la balle courir jusqu’au trou.</item>
+        <item>Deux bunkers retiennent la balle. Contourne-les par les passages larges ; dans le sable, seul un putt ferme permet de sortir.</item>
+        <item>Une planche étroite traverse l’eau. Vise bien : une balle qui tombe coûte un coup et revient là où tu as joué.</item>
+        <item>Quatre piquets à slalomer. La balle rebondit dessus : sers-t’en pour tourner dans la ligne.</item>
+        <item>Un portillon coulisse en travers de la piste. Lance ton putt quand il s’est ouvert d’un côté.</item>
+        <item>Roule dans le tuyau et la balle ressort de l’autre côté. Il suffit de viser l’entrée, pas de voir le trou.</item>
+        <item>Un bloc se dresse au milieu du tapis. Passe d’un côté ou de l’autre, ou joue la bande comme au billard.</item>
+        <item>Deux chemins autour de l’îlot : à gauche, plus long mais lisse ; à droite, court mais avec un bunker.</item>
+        <item>Un anneau autour d’un îlot de jardin. Une bosse d’un côté, un bunker de l’autre : choisis ton côté.</item>
+        <item>Deux marches à gravir. Chacune ralentit la balle : donne assez de vitesse pour la seconde, sans dépasser le trou.</item>
+        <item>Le grand final : un portillon, un virage, une bosse et des douves. Passe la planche, le trou est juste après.</item>
+    </string-array>
+    <string-array name="minigolf_crazy_holes">
+        <item>Les deux tuyaux</item><item>Le trou noir</item><item>Les tapis roulants</item>
+        <item>Le flipper</item><item>Les deux moulins</item><item>Les pistons</item>
+        <item>La patinoire</item><item>Boue et turbo</item><item>L’escargot</item>
+        <item>Les montagnes russes</item><item>La mâchoire</item><item>Les rapides</item>
+        <item>Les deux planètes</item><item>Le dévers</item><item>Les hélices</item>
+        <item>Le toboggan</item><item>Le labyrinthe</item><item>Le grand final</item>
+    </string-array>
+    <string-array name="minigolf_crazy_tips">
+        <item>Deux tuyaux dans le mur de la première salle. L’un mène à la salle du trou, l’autre renvoie la balle au départ. Choisis le bon.</item>
+        <item>Un trou noir attire la balle et l’avale si elle s’en approche trop. Vise loin de lui et laisse-le courber ton putt.</item>
+        <item>Deux tapis roulants poussent la balle de côté, d’abord dans un sens puis dans l’autre. Vise pour que le second te ramène au milieu.</item>
+        <item>Flipper : les bumpers renvoient la balle avec de la vitesse en plus. Un putt doux garde la partie sous contrôle.</item>
+        <item>Deux moulins tournent en sens inverse. Passe le premier, puis attends le second.</item>
+        <item>Trois pistons coulissent chacun à leur rythme. Repère leur cadence et franchis les passages l’un après l’autre.</item>
+        <item>Toute la salle est en glace : la balle continue de glisser. Une petite poussée va très loin. Joue les bandes vers le trou.</item>
+        <item>La boue ralentit la balle jusqu’à l’arrêt ; une bande turbo la propulse. Traverse la boue avec un putt ferme, la bande fera le reste.</item>
+        <item>Une piste en spirale mène au trou, en son cœur. Coupe les virages en jouant les rebords et finis en quelques coups.</item>
+        <item>Trois bosses, puis un entonnoir autour du trou. Garde ta vitesse pour les bosses : l’entonnoir guide une balle lente jusqu’au trou.</item>
+        <item>Des mâchoires s’ouvrent et se ferment devant le trou. Attends que la bouche soit ouverte et roule tout droit.</item>
+        <item>Un courant emporte la balle vers une chute d’eau à droite. Vise à gauche et laisse le courant te ramener.</item>
+        <item>Une planète attire la balle, l’autre la repousse. Laisse-les courber ton putt et reste loin de celle qui avale.</item>
+        <item>Le sol penche : la balle dérive sur le côté. Vise en amont et laisse la pente te ramener au trou.</item>
+        <item>Des hélices remplissent la salle. Glisse-toi entre elles, l’une après l’autre.</item>
+        <item>Le départ est en hauteur : la balle prend toute seule de la vitesse sur le toboggan. Une toute petite poussée suffit, et du sable attend derrière le trou.</item>
+        <item>Un petit labyrinthe avec des impasses. Trouve le chemin et sers-toi des rebords pour tourner les coins.</item>
+        <item>Tout en même temps : un moulin, un tapis et un tuyau, puis un trou noir, un bunker et le trou. Prends ton temps.</item>
+    </string-array>
+</resources>

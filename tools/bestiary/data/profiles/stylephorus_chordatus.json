@@ -1,0 +1,143 @@
+{
+  "id": "stylephorus_chordatus",
+  "scientific": "Stylephorus chordatus",
+  "group": "fish",
+  "name": {
+    "en": "Tube-eye",
+    "fr": "Poisson aux yeux tubulaires"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tube-eye is a rare, deep-water fish and the sole living member of its family.",
+      "fr": "Le poisson aux yeux tubulaires est rare et vit en profondeur ; c’est l’unique espèce actuelle de sa famille."
+    },
+    "identification": {
+      "en": "It has tubular eyes, protrusible jaws and extremely elongated lower tail rays.",
+      "fr": "Il possède des yeux tubulaires, des mâchoires protractiles et des rayons inférieurs de la queue extrêmement allongés."
+    },
+    "habitat": {
+      "en": "It is meso- to bathypelagic, recorded at roughly 300–800 metres in tropical and temperate seas.",
+      "fr": "Il vit entre les zones méso- et bathypélagique et est signalé vers 300–800 mètres dans les mers tropicales et tempérées."
+    },
+    "diet": {
+      "en": "It feeds on small crustaceans, including copepods.",
+      "fr": "Il se nourrit de petits crustacés, notamment des copépodes."
+    },
+    "behavior": {
+      "en": "It may swim head-up while feeding; some observations suggest daily changes in depth.",
+      "fr": "Il pourrait nager la tête en haut pour se nourrir ; certaines observations suggèrent des déplacements quotidiens en profondeur."
+    },
+    "reproduction": {
+      "en": "Its reproduction is poorly known.",
+      "fr": "Sa reproduction est mal connue."
+    },
+    "ecology": {
+      "en": "Spanish-language fish lists call it ojibrotado; English references use tube-eye.",
+      "fr": "Les listes de poissons en espagnol l’appellent ojibrotado ; les références anglaises utilisent tube-eye."
+    },
+    "conservation": {
+      "en": "The consulted FAO account reports no fishery for this elusive species.",
+      "fr": "La fiche FAO consultée ne signale pas de pêche ciblant cette espèce discrète."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FAO — Bony fishes of the Western Central Atlantic: Tube-eyes",
+        "fr": "FAO — Poissons osseux de l’Atlantique centre-ouest : Tube-eyes"
+      },
+      "url": "https://www.fao.org/docrep/pdf/009/x2401e/x2401e43.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FAO describes its morphology, depth, diet, possible head-up feeding, poor reproductive knowledge and lack of fishery."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 16,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Stylephorus chordatus",
+        "fr": "FishBase — Stylephorus chordatus"
+      },
+      "url": "https://www.fishbase.se/summary/Stylephorus_chordatus.html",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "FishBase summarizes mesopelagic records, copepod diet and probable vertical movement; it notes uncertainty around the daily migration."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Puerto Rico DRNA — Nomenclature of aquatic and marine organisms",
+        "fr": "Puerto Rico DRNA — Nomenclature des organismes aquatiques et marins"
+      },
+      "url": "https://www.drna.pr.gov/wp-content/uploads/2015/04/Vol.10-Nomenclatura-de-los-organismos-acu%C3%A1ticos-y-marinos-de-PR-e-Islas-V%C3%ADrgenes.pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Puerto Rico government checklist records the Spanish common name ojibrotado and the English name tube-eye."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 16,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Knowledge of behavior and reproduction remains sparse; the FAO account explicitly describes these gaps."
+  ],
+  "review_note": "Prioritized concise morphology and habitat facts from FAO and FishBase; included the Spanish common name from a Puerto Rico government list.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

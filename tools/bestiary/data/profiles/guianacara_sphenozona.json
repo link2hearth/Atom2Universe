@@ -1,0 +1,222 @@
+{
+  "id": "guianacara_sphenozona",
+  "scientific": "Guianacara sphenozona",
+  "group": "fish",
+  "name": {
+    "en": "Suriname Red-spotted Cichlid",
+    "fr": "Cichlidé à tache rouge du Suriname"
+  },
+  "sections": {
+    "overview": {
+      "en": "Described in 1989, this small cichlid is known from the Sipaliwini and middle Corantijn drainages of Suriname, with a possible occurrence in the Essequibo basin. Kullander and Nijssen included it in their 1989 monograph on Suriname cichlids.",
+      "fr": "Décrit en 1989, ce petit cichlidé est connu des bassins du Sipaliwini et du moyen Corantijn au Suriname, avec une présence possible dans le bassin de l’Essequibo. Kullander et Nijssen l’ont incluse dans leur monographie de 1989 sur les cichlidés du Suriname."
+    },
+    "identification": {
+      "en": "A dark band through the eye and a marked flank pattern give the species its diagnostic appearance. A Smithsonian paratype record documents a shallow Corantijn tributary locality.",
+      "fr": "Une bande sombre traversant l’œil et un motif marqué sur les flancs caractérisent son apparence. Une fiche Smithsonian de paratype documente une localité de faible profondeur dans un affluent du Corantijn."
+    },
+    "habitat": {
+      "en": "It inhabits warm freshwater streams and river margins in the Guiana Shield. A Smithsonian paratype was collected at 0–1 m depth in a Corantijn stream.",
+      "fr": "Il vit dans des cours d’eau douce chauds et des rives fluviales du Bouclier guyanais. Un paratype du Smithsonian a été récolté entre 0 et 1 m de profondeur dans un cours d’eau du Corantijn."
+    },
+    "diet": {
+      "en": "A specialist account describes it as a benthic, sand-sifting omnivore; prey details are not established by the species summary.",
+      "fr": "Une fiche spécialisée le décrit comme un omnivore benthique qui tamise le sable ; le résumé d’espèce ne précise pas ses proies."
+    },
+    "behavior": {
+      "en": "FishBase classifies it as benthopelagic, a broad habitat label rather than a detailed account of social behaviour.",
+      "fr": "FishBase le classe comme benthopélagique, catégorie générale qui ne décrit pas en détail son comportement social."
+    },
+    "reproduction": {
+      "en": "An aquarium specialist describes biparental concealed substrate spawning, but this account is not a field study.",
+      "fr": "Une source aquariophile spécialisée décrit une ponte cachée sur substrat avec soins biparentaux, mais sans étude de terrain."
+    },
+    "ecology": {
+      "en": "It belongs to the Guianacara lineage, distinct from Geophagus; compare the nearby Suriname-basin G. brokopondo and G. winemilleri profiles for related eartheaters with different group placement.",
+      "fr": "Il appartient à la lignée Guianacara, distincte de Geophagus ; les fiches de G. brokopondo et G. winemilleri, géophages des bassins voisins aux placements différents, offrent une comparaison."
+    },
+    "conservation": {
+      "en": "FishBase lists Least Concern, assessed on 28 December 2020.",
+      "fr": "FishBase indique la catégorie « préoccupation mineure », évaluée le 28 décembre 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Guianacara sphenozona — FishBase Portuguese mirror",
+        "fr": "Guianacara sphenozona — FishBase Portuguese mirror"
+      },
+      "url": "https://www.fishbase.net.br/summary/47539",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives drainage, habitat class, conservation date and no species-level life-history details."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cichlids of Surinam — Kullander & Nijssen, taxonomic account",
+        "fr": "Cichlids of Surinam — Kullander & Nijssen, taxonomic account"
+      },
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic treatment lists the valid species and generic context."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Guianacara sphenozona paratype — Smithsonian National Museum of Natural History",
+        "fr": "Guianacara sphenozona paratype — Smithsonian National Museum of Natural History"
+      },
+      "url": "https://www.si.edu/es/object/guianacara-sphenozona-kullander-nijssen%3Anmnhvz_5084408",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Museum specimen record documents a paratype from the Corantijn basin and shallow stream habitat."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Guianacara sphenozona — Aquarist Atlas",
+        "fr": "Guianacara sphenozona — Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/guianacara-sphenozona/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Secondary aquarium account describes sand-sifting omnivory and captive biparental spawning; field evidence is limited."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The possible Essequibo occurrence is uncertain in FishBase.",
+    "Diet and reproduction details are missing from the species summary; no traits are inferred from congeners."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-references to G. brokopondo and G. winemilleri compare related Geophagini without claiming that they are closest relatives; Guianacara is a distinct genus."
+}

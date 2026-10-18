@@ -1,0 +1,14 @@
+{
+  "id": 9002,
+  "name": "cotton_blue",
+  "texture_top": "cozy:cloth:5:3355AA",
+  "texture_side": "cozy:cloth:5:3355AA",
+  "texture_bottom": "cozy:cloth:5:3355AA",
+  "color": "#3355AA",
+  "hardness": 1.0,
+  "drop": "cotton_blue",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -1,0 +1,27 @@
+package com.Atom2Universe.app.science.botany
+
+import com.Atom2Universe.app.R
+
+/** Verified taxa already present in the life tree. */
+internal object PriorityTreeCatalogFinal {
+    val species = listOf(
+        PlantSpecies("abelmoschus_esculentus",R.string.bot_abelmoschus_esculentus_name,R.string.bot_abelmoschus_esculentus_latin,R.string.bot_abelmoschus_esculentus_aliases,"Malvaceae",setOf("herbs"),50,200,emptySet(),emptySet(),setOf(Habitat.CULTIVATED),false,
+            PlantLook(Crown.HERB,LeafShape.PALMATILOBED,LeafMargin.LOBED,LeafArrangement.ALTERNATE,FlowerShape.CUP,FruitShape.CAPSULE,FlowerColor.YELLOW,22f,6f,12f,seed=601,petiole=.55f,leafDetail=LeafDetail(width=.72f,veinPairs=7,venation=Venation.PALMATE)),
+            R.string.bot_abelmoschus_esculentus_description,R.string.bot_abelmoschus_esculentus_distribution,PlantView.entries.zip(listOf(R.string.bot_abelmoschus_esculentus_habit,R.string.bot_abelmoschus_esculentus_leaf,R.string.bot_abelmoschus_esculentus_flower,R.string.bot_abelmoschus_esculentus_fruit)).toMap(),setOf("powo"),collectionIds=setOf("food_crops"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("acer_japonicum",R.string.bot_acer_japonicum_name,R.string.bot_acer_japonicum_latin,R.string.bot_acer_japonicum_aliases,"Sapindaceae",setOf("trees"),500,1000,emptySet(),emptySet(),setOf(Habitat.WOOD,Habitat.PARK),false,
+            PlantLook(Crown.SPREAD,LeafShape.PALMATILOBED,LeafMargin.LOBED,LeafArrangement.OPPOSITE,FlowerShape.CORYMB,FruitShape.DOUBLE_SAMARA,FlowerColor.PURPLE,12f,.6f,3f,seed=602,petiole=.45f,leafDetail=LeafDetail(width=.78f,veinPairs=7,venation=Venation.PALMATE),architecture=TreeArchitecture(radius=100f,top=30f,bottom=230f,fork=235f,trunkWidth=15f,density=.58f)),
+            R.string.bot_acer_japonicum_description,R.string.bot_acer_japonicum_distribution,PlantView.entries.zip(listOf(R.string.bot_acer_japonicum_habit,R.string.bot_acer_japonicum_leaf,R.string.bot_acer_japonicum_flower,R.string.bot_acer_japonicum_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("actinidia_kolomikta",R.string.bot_actinidia_kolomikta_name,R.string.bot_actinidia_kolomikta_latin,R.string.bot_actinidia_kolomikta_aliases,"Actinidiaceae",setOf("shrubs"),300,800,emptySet(),emptySet(),setOf(Habitat.WOOD,Habitat.CULTIVATED),false,
+            PlantLook(Crown.HERB,LeafShape.OVAL,LeafMargin.SERRATE,LeafArrangement.ALTERNATE,FlowerShape.STAR,FruitShape.BERRY,FlowerColor.WHITE,10f,2f,2f,seed=603,petiole=.35f,leafDetail=LeafDetail(width=.55f,veinPairs=7)),
+            R.string.bot_actinidia_kolomikta_description,R.string.bot_actinidia_kolomikta_distribution,PlantView.entries.zip(listOf(R.string.bot_actinidia_kolomikta_habit,R.string.bot_actinidia_kolomikta_leaf,R.string.bot_actinidia_kolomikta_flower,R.string.bot_actinidia_kolomikta_fruit)).toMap(),setOf("powo"),collectionIds=setOf("food_crops"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("agave_deserti",R.string.bot_agave_deserti_name,R.string.bot_agave_deserti_latin,R.string.bot_agave_deserti_aliases,"Asparagaceae",setOf("herbs"),30,50,emptySet(),emptySet(),setOf(Habitat.DRY_SCRUB),true,
+            PlantLook(Crown.HERB,LeafShape.LANCE,LeafMargin.SPINY,LeafArrangement.ROSETTE,FlowerShape.PANICLE,FruitShape.CAPSULE,FlowerColor.YELLOW,35f,4f,3f,seed=604,petiole=.03f,leafDetail=LeafDetail(width=.18f)),
+            R.string.bot_agave_deserti_description,R.string.bot_agave_deserti_distribution,PlantView.entries.zip(listOf(R.string.bot_agave_deserti_habit,R.string.bot_agave_deserti_leaf,R.string.bot_agave_deserti_flower,R.string.bot_agave_deserti_fruit)).toMap(),setOf("powo"),collectionIds=setOf("north_america"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("aloe_polyphylla",R.string.bot_aloe_polyphylla_name,R.string.bot_aloe_polyphylla_latin,R.string.bot_aloe_polyphylla_aliases,"Asphodelaceae",setOf("herbs"),30,50,emptySet(),emptySet(),setOf(Habitat.MOUNTAIN),true,
+            PlantLook(Crown.HERB,LeafShape.LANCE,LeafMargin.SPINY,LeafArrangement.ROSETTE,FlowerShape.RACEME,FruitShape.CAPSULE,FlowerColor.PINK,35f,3f,2f,seed=605,petiole=.02f,leafDetail=LeafDetail(width=.24f)),
+            R.string.bot_aloe_polyphylla_description,R.string.bot_aloe_polyphylla_distribution,PlantView.entries.zip(listOf(R.string.bot_aloe_polyphylla_habit,R.string.bot_aloe_polyphylla_leaf,R.string.bot_aloe_polyphylla_flower,R.string.bot_aloe_polyphylla_fruit)).toMap(),setOf("powo"),collectionIds=setOf("africa_dry"),phenologyNote=R.string.bot_useful_plants_season),
+        PlantSpecies("arctium_lappa",R.string.bot_arctium_lappa_name,R.string.bot_arctium_lappa_latin,R.string.bot_arctium_lappa_aliases,"Asteraceae",setOf("herbs"),75,200,emptySet(),emptySet(),setOf(Habitat.DISTURBED,Habitat.WOOD),false,
+            PlantLook(Crown.HERB,LeafShape.HEART,LeafMargin.LOBED,LeafArrangement.ALTERNATE,FlowerShape.THISTLE,FruitShape.ACHENE,FlowerColor.PURPLE,35f,3f,1f,seed=606,petiole=.55f,leafDetail=LeafDetail(width=.8f,veinPairs=8)),
+            R.string.bot_arctium_lappa_description,R.string.bot_arctium_lappa_distribution,PlantView.entries.zip(listOf(R.string.bot_arctium_lappa_habit,R.string.bot_arctium_lappa_leaf,R.string.bot_arctium_lappa_flower,R.string.bot_arctium_lappa_fruit)).toMap(),setOf("powo"),collectionIds=setOf("europe"),phenologyNote=R.string.bot_useful_plants_season)
+    )
+}

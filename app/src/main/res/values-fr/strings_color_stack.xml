@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Triez les jetons par couleur</string>
+    <string name="color_stack_back">Retour</string>
+    <string name="color_stack_difficulty_label">Difficulté :</string>
+    <string name="color_stack_difficulty_easy">Facile</string>
+    <string name="color_stack_difficulty_medium">Moyen</string>
+    <string name="color_stack_difficulty_hard">Difficile</string>
+    <string name="color_stack_moves">Coups : %1$d</string>
+    <string name="color_stack_moves_zero">Coups : 0</string>
+    <string name="color_stack_btn_new">Nouveau</string>
+    <string name="color_stack_btn_restart">Recommencer</string>
+    <string name="color_stack_btn_undo">Annuler</string>
+    <string name="color_stack_status_new">Nouvelle partie</string>
+    <string name="color_stack_status_restarted">Partie réinitialisée</string>
+    <string name="color_stack_status_won">🎉 Félicitations !</string>
+    <string name="color_stack_new_game">Nouvelle partie</string>
+    <string name="color_stack_widget_cancel">✕ Annuler</string>
+</resources>

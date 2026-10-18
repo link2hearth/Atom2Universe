@@ -1,0 +1,143 @@
+{
+  "id": "coccyzus_erythropthalmus",
+  "scientific": "Coccyzus erythropthalmus",
+  "group": "birds",
+  "name": {
+    "en": "Black-billed Cuckoo",
+    "fr": "Coulicou à bec noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "This secretive North American forest cuckoo is a close genus-mate of the Mangrove Cuckoo, C. minor, which is more coastal.",
+      "fr": "Ce coulicou forestier discret d’Amérique du Nord est un proche congénère du Coulicou des mangroves, C. minor, davantage côtier."
+    },
+    "identification": {
+      "en": "A slender brown body, black bill, red eye-ring and white tail tips help identify it.",
+      "fr": "Son corps brun élancé, son bec noir, son cercle oculaire rouge et les pointes blanches de sa queue aident à l’identifier."
+    },
+    "habitat": {
+      "en": "It breeds in wooded edges and thickets across southern Canada and the eastern United States.",
+      "fr": "Il niche dans les lisières boisées et les fourrés du sud du Canada et de l’est des États-Unis."
+    },
+    "diet": {
+      "en": "Caterpillars are important prey, and abundance can track outbreaks of tent caterpillars.",
+      "fr": "Les chenilles constituent une proie importante, et son abondance peut suivre les pullulations de livrées."
+    },
+    "behavior": {
+      "en": "It usually builds and tends its own nest, though it sometimes lays eggs in other birds’ nests.",
+      "fr": "Il construit et élève généralement sa propre nichée, mais pond parfois dans le nid d’autres oiseaux."
+    },
+    "reproduction": {
+      "en": "The young develop quickly; Cornell reports about 17 days from egg-laying to fledging.",
+      "fr": "Les jeunes se développent rapidement ; Cornell rapporte environ 17 jours entre la ponte et l’envol."
+    },
+    "ecology": {
+      "en": "Its abundance can respond to seasonal pulses in insect prey, especially tent caterpillars.",
+      "fr": "Son abondance peut suivre les fluctuations saisonnières des insectes, notamment des livrées."
+    },
+    "conservation": {
+      "en": "Canadian monitoring indicates a moderate long-term decline, although annual survey results fluctuate widely.",
+      "fr": "Le suivi canadien indique un déclin modéré à long terme, malgré de fortes variations annuelles des relevés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black-billed Cuckoo Overview — Cornell Lab of Ornithology",
+        "fr": "Présentation du Coulicou à bec noir — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Black-billed_Cuckoo/overview",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell describes the species, occasional brood parasitism, caterpillar diet and rapid nestling development."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 13,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-billed Cuckoo — Environment and Climate Change Canada",
+        "fr": "Coulicou à bec noir — Environnement et Changement climatique Canada"
+      },
+      "url": "https://wildlife-species.canada.ca/bird-status/oiseau-bird-eng.aspx?sB=BBCU&sL=e&sM=c&sY=2019",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Canada reports wooded edges, thickets, prey-related abundance cycles and a moderate decline relative to 1970."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 15,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-billed Cuckoo — Manitoba Breeding Bird Atlas",
+        "fr": "Coulicou à bec noir — Atlas des oiseaux nicheurs du Manitoba"
+      },
+      "url": "https://www.birdatlas.mb.ca/accounts/speciesaccount.jsp?lang=en&sp=BBCU",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Manitoba atlas records the species breeding in southern Manitoba and links breeding to tent-caterpillar availability."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Canadian population trend is not a global trend; brood parasitism is occasional rather than the usual strategy."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Cornell life-history material with Canadian monitoring and breeding-atlas accounts; cross-referenced C. minor for habitat differences."
+}

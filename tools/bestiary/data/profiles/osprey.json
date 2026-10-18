@@ -1,0 +1,144 @@
+{
+  "id": "osprey",
+  "scientific": "Pandion haliaetus",
+  "group": "birds",
+  "name": {
+    "en": "Osprey",
+    "fr": "Balbuzard pêcheur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Osprey is a fish-eating raptor found on every continent except Antarctica.",
+      "fr": "Le Balbuzard pêcheur est un rapace piscivore présent sur tous les continents sauf l’Antarctique."
+    },
+    "identification": {
+      "en": "Adults have dark brown upperparts, white underparts and a pale head crossed by a dark eye-stripe.",
+      "fr": "L’adulte a le dessus brun foncé, le dessous blanc et la tête claire barrée d’un trait sombre passant par l’œil."
+    },
+    "habitat": {
+      "en": "It nests near lakes, rivers, lagoons or coasts where fish are accessible; nest sites may be trees or, in Mediterranean populations, cliffs.",
+      "fr": "Il niche près de lacs, de rivières, de lagunes ou de côtes où les poissons sont accessibles ; le nid se trouve dans un arbre ou, chez des populations méditerranéennes, sur une falaise."
+    },
+    "diet": {
+      "en": "Fish make up almost all of its diet, and it catches them by plunging feet-first into the water.",
+      "fr": "Les poissons constituent presque toute son alimentation ; il les capture en plongeant les serres en avant."
+    },
+    "behavior": {
+      "en": "It is a diurnal hunter and often searches for prey while flying above water or from a perch.",
+      "fr": "Chasseur diurne, il repère souvent ses proies en volant au-dessus de l’eau ou depuis un perchoir."
+    },
+    "reproduction": {
+      "en": "A pair generally lays one clutch of one to three eggs each year and may reuse the same nest site.",
+      "fr": "Un couple pond généralement une fois par an, avec une à trois œufs, et peut réutiliser le même site de nidification."
+    },
+    "ecology": {
+      "en": "Migratory populations move between northern breeding areas and warmer wintering grounds, while some populations are resident.",
+      "fr": "Les populations migratrices relient les zones de nidification nordiques à des quartiers d’hivernage plus chauds, tandis que d’autres restent sédentaires."
+    },
+    "conservation": {
+      "en": "The global assessment classifies the species as Least Concern; local populations can nevertheless face disturbance and habitat-specific pressures.",
+      "fr": "L’évaluation mondiale classe l’espèce en préoccupation mineure ; certaines populations subissent néanmoins le dérangement et des pressions locales sur leur habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Osprey — Office français de la biodiversité",
+        "fr": "Balbuzard pêcheur — Office français de la biodiversité"
+      },
+      "url": "https://ofb.gouv.fr/especes/balbuzard-pecheur-pandion-haliaetus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The OFB account describes French habitat and prey use."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 9,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Osprey — Animal Diversity Web",
+        "fr": "Balbuzard pêcheur — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Pandion_haliaetus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "ADW summarizes the species’ daily activity, breeding and migratory habits."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 10,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Osprey — BirdLife DataZone",
+        "fr": "Balbuzard pêcheur — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/osprey-pandion-haliaetus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife provides the global range and global Red List assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 10,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding and habitat details are summarized from the OFB’s France-focused account; they vary among populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Sources consulted in French and English; avoid generalizing regional nesting and migration patterns."
+}

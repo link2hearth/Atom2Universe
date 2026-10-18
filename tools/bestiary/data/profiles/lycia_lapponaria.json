@@ -1,0 +1,142 @@
+{
+  "id": "lycia_lapponaria",
+  "scientific": "Lycia lapponaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rannoch brindled beauty",
+    "fr": "Boarmie de Laponie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lycia lapponaria is a geometrid moth of cool upland moors; in Britain it is restricted to damp moorland in central and northern Scotland.",
+      "fr": "Lycia lapponaria est un papillon de nuit géométridé des hautes terres fraîches ; en Grande-Bretagne, il est limité aux landes humides du centre et du nord de l’Écosse."
+    },
+    "identification": {
+      "en": "Males have whitish forewings marked in black and red markings on the thorax and abdomen, while females are wingless.",
+      "fr": "Le mâle a les ailes antérieures blanchâtres marquées de noir et des marques rouges sur le thorax et l’abdomen, tandis que la femelle est aptère."
+    },
+    "habitat": {
+      "en": "In its British range it inhabits damp moorland, where bog myrtle and heathers grow.",
+      "fr": "Dans son aire britannique, il fréquente les landes humides où poussent la myrte des marais et les bruyères."
+    },
+    "diet": {
+      "en": "The caterpillars feed on several moorland plants, including bog myrtle, heather and bilberry.",
+      "fr": "Les chenilles consomment plusieurs plantes des landes, dont la myrte des marais, la bruyère et la myrtille."
+    },
+    "behavior": {
+      "en": "Adults emerge in spring; the wingless female cannot fly, unlike the male.",
+      "fr": "Les adultes émergent au printemps ; la femelle aptère ne peut pas voler, contrairement au mâle."
+    },
+    "reproduction": {
+      "en": "The pupa overwinters, and the caterpillars feed during summer on their host plants.",
+      "fr": "La chrysalide hiverne et les chenilles se nourrissent durant l’été sur leurs plantes hôtes."
+    },
+    "ecology": {
+      "en": "A Scottish site assessment describes this moth as localised and dependent on bogs that sustain its larval food plants.",
+      "fr": "Une évaluation écossaise de sites décrit ce papillon comme localisé et dépendant des tourbières qui maintiennent ses plantes nourricières larvaires."
+    },
+    "conservation": {
+      "en": "The same assessment notes its localised British distribution, but it is an older site review rather than a current global Red List assessment.",
+      "fr": "La même évaluation signale sa répartition britannique localisée, mais il s’agit d’une ancienne étude de sites, et non d’une évaluation mondiale récente de la Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rannoch Brindled Beauty — UKMoths",
+        "fr": "Boarmie de Laponie — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/lycia-lapponaria/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "In Britain, the species is restricted to damp moorland in central and northern Scotland; males have whitish black-marked forewings, both sexes show red markings, and females are wingless."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 28,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rannoch Brindled Beauty — Hantsmoths",
+        "fr": "Boarmie de Laponie — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.249",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Larvae feed on bog myrtle, bilberry, willows and heathers; the pupa overwinters."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 12,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A revision of invertebrate features of designated sites in Scotland — NatureScot, report 1007",
+        "fr": "Révision des espèces invertébrées des sites protégés d’Écosse — NatureScot, rapport 1007"
+      },
+      "url": "https://www.nature.scot/sites/default/files/2017-10/Publication%202017%20-%20A%20revision%20of%20invertebrate%20features%20of%20designated%20sites%20in%20Scotland.pdf",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The report describes Lycia lapponaria as localised and dependent on bogs supporting larval food plants; its underlying site data are historical."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 21,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The NatureScot report reviews historical Scottish site records and does not establish a current global conservation category.",
+    "The sources consulted describe British habitats and life history; they do not provide a comparable account of populations across the full northern Palaearctic range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft cross-checked against English species accounts and a Scottish conservation-site review; older regional status language is not presented as a current global assessment."
+}

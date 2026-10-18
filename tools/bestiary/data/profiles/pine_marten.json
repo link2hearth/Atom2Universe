@@ -1,0 +1,471 @@
+{
+  "id": "pine_marten",
+  "scientific": "Martes martes",
+  "group": "mammals",
+  "name": {
+    "en": "European pine marten",
+    "fr": "Martre des pins"
+  },
+  "sections": {
+    "overview": {
+      "en": "Native across much of Europe and western Eurasia, the European pine marten varies greatly in abundance and local range. It climbs and forages extensively on the forest floor.",
+      "fr": "Indigène dans une grande partie de l’Europe et de l’Eurasie occidentale, la martre des pins varie fortement en abondance et en aire locale. Elle grimpe et cherche aussi souvent sa nourriture au sol."
+    },
+    "identification": {
+      "en": "Adults have rich brown fur, a yellow to orange bib on the throat and chest, pale-edged ears and a long, bushy tail. The bib’s colour and outline vary among populations and individuals. Males average larger than females; European samples report adult masses of about 0.8–2.4 kilograms for males and 0.6–1.5 kilograms for females, with ranges varying among studies. Across European studies, males have head–body lengths of 38–57 cm and tails of 18–30 cm; females measure 34.5–50 cm with tails of 18–28 cm. Shoulder height is about 15 cm. The beech marten usually has a white bib that forks toward the forelegs and a pale nose; the pine marten usually has a yellowish bib and dark nose.",
+      "fr": "L’adulte porte une fourrure brun soutenu, une bavette jaune à orangée sur la gorge et la poitrine, des oreilles au bord clair et une longue queue touffue. La couleur et le contour de la bavette varient selon les populations et les individus. Les mâles sont en moyenne plus grands ; les échantillons européens indiquent des masses adultes d’environ 0,8 à 2,4 kilogrammes chez les mâles et 0,6 à 1,5 kilogramme chez les femelles, avec des plages variables selon les études. Les études européennes donnent 38 à 57 cm de longueur tête-corps et 18 à 30 cm de queue chez les mâles, contre 34,5 à 50 cm et 18 à 28 cm chez les femelles. La hauteur au garrot est d’environ 15 cm. La fouine porte généralement une bavette blanche qui se divise vers les pattes avant et un nez clair ; la martre des pins a plutôt la bavette jaunâtre et le nez sombre."
+    },
+    "habitat": {
+      "en": "The species uses coniferous, deciduous and mixed forests; mature stands are valuable where they provide canopy cover and cavities in old trees or standing deadwood. These structures offer cover and secure resting or breeding sites. In an Irish landscape with few tree cavities, monitored martens also denned in caves, rock crevices, stone walls and wood debris, while avoiding most immature plantations.",
+      "fr": "L’espèce fréquente les forêts de conifères, de feuillus et mixtes ; les peuplements mûrs sont utiles lorsqu’ils offrent un couvert de canopée et des cavités dans les vieux arbres ou le bois mort sur pied. Ces structures servent d’abri et de gîte pour le repos ou la reproduction. Dans un paysage irlandais pauvre en cavités arboricoles, des martres suivies ont aussi gîté dans des grottes, des fissures rocheuses, des murs et des amas de bois, tout en évitant la plupart des plantations immatures."
+    },
+    "diet": {
+      "en": "The pine marten is an opportunistic omnivore: small mammals, birds and eggs, carrion, invertebrates and fruit all feature in its diet. In Northern Ireland, scat analyses found animal foods prominent in spring and summer and berries important in autumn; birds and small mammals became more important when fruit was scarce. In Galloway, no carrion was detected in denning females’ scats; birds, small mammals and anurans were important, unlike some carrion-containing mixed-sex spring diets reported elsewhere in Scotland.",
+      "fr": "La martre des pins est un omnivore opportuniste : son régime comprend des petits mammifères, des oiseaux et leurs œufs, des charognes, des invertébrés et des fruits. En Irlande du Nord, l’analyse des fèces a relevé une forte présence d’aliments animaux au printemps et en été, puis de baies en automne ; les oiseaux et les petits mammifères prenaient davantage d’importance lorsque les fruits manquaient. À Galloway, aucune charogne n’a été détectée dans les fèces des femelles au gîte ; oiseaux, petits mammifères et anoures comptaient parmi les aliments importants, contrairement à certains régimes printaniers d’échantillons mixtes contenant des charognes ailleurs en Écosse."
+    },
+    "behavior": {
+      "en": "Pine martens are usually solitary outside mating and mostly nocturnal, though activity varies with season. Scent marks, including conspicuously placed scats, signal occupancy along routes; Spanish observations found marking concentrated at exposed sites and crossroads, especially in May and July. British studies found larger home ranges in males than females, with estimates varying among habitats and food conditions.",
+      "fr": "Les martres des pins sont généralement solitaires hors accouplement et surtout nocturnes, même si leur activité varie selon la saison. Les marques odorantes, dont les fèces déposées bien en vue, signalent l’occupation des trajets ; en Espagne, le marquage se concentrait aux endroits exposés et aux carrefours, surtout en mai et juillet. En Grande-Bretagne, les études relèvent des domaines vitaux plus grands chez les mâles, avec des estimations qui varient selon l’habitat et la nourriture."
+    },
+    "reproduction": {
+      "en": "Mating in July–August is followed by about seven months of delayed implantation. Implantation in late winter is followed by 30–35 days of development; births occur in late March or April. Females usually have one litter of one to five kits each year. Born blind, deaf and toothless, kits open their eyes at 34–38 days, eat solids from 36–45 days and are weaned at about six weeks. Young emerge at 7–8 weeks; dispersal may start at 12–16 weeks, though some overwinter in their natal territory and leave the following spring. Females use protected dens during the early weeks.",
+      "fr": "L’accouplement de juillet à août est suivi d’environ sept mois d’implantation différée. Après l’implantation en fin d’hiver, le développement dure 30 à 35 jours ; les naissances surviennent fin mars ou en avril. Les femelles ont généralement une portée annuelle d’un à cinq petits. Nés aveugles, sourds et édentés, les petits ouvrent les yeux vers 34 à 38 jours, prennent des aliments solides dès 36 à 45 jours et sont sevrés vers six semaines. Les jeunes sortent à 7 ou 8 semaines ; la dispersion peut débuter vers 12 à 16 semaines, mais certains hivernent dans leur territoire natal et partent au printemps suivant. Les femelles utilisent des gîtes protégés pendant les premières semaines."
+    },
+    "ecology": {
+      "en": "After eating fleshy fruits, pine martens can carry seeds away from parent shrubs in their scats. In a temperate-forest experiment, marked seed mimics embedded in fruit were recovered up to 1,233 metres from feeding stations, a study maximum rather than a typical distance. In the Irish midlands, surveys recorded grey-squirrel decline alongside red-squirrel return where martens recovered. Later analyses across Britain and Ireland found regional associations between marten exposure, lower grey-squirrel occupancy and higher red-squirrel occupancy. In an Irish feeder-camera study, red squirrels became more vigilant and fed less after a marten visit; this short-lived response is a possible mechanism, not proof of the population pattern. These patterns do not show that martens eliminate grey squirrels everywhere or always benefit red squirrels.",
+      "fr": "Après avoir mangé des fruits charnus, les martres des pins peuvent transporter dans leurs fèces des graines loin des arbustes parents. Dans une expérience en forêt tempérée, des graines factices marquées et incorporées à des fruits ont été retrouvées jusqu’à 1 233 mètres des stations de nourrissage, un maximum de l’étude plutôt qu’une distance habituelle. Dans les Midlands irlandais, des enquêtes ont relevé le recul de l’écureuil gris et le retour du roux là où les martres avaient récupéré. Des analyses en Grande-Bretagne et en Irlande ont aussi trouvé des associations régionales entre présence des martres, occupation moindre par l’écureuil gris et occupation accrue par le roux. En Irlande, une étude avec caméras aux mangeoires a observé que les roux devenaient plus vigilants et mangeaient moins après le passage d’une martre ; cette réaction brève est un mécanisme possible, et non une preuve du phénomène démographique. Ces résultats ne montrent pas que les martres éliminent les écureuils gris partout ni qu’elles bénéficient toujours aux roux."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classified the species as Least Concern globally in an assessment dated 3 March 2015 and published in 2016, citing its wide range and large population despite past declines. This global category does not describe every national population: the Mammal Society lists Great Britain as Least Concern, while martens remain scarce in parts of England and Wales amid habitat fragmentation and persecution. Across Great Britain, the amended Wildlife and Countryside Act 1981 protects the species, with schedule coverage varying by jurisdiction. Ireland separately lists the pine marten under its Wildlife Act 1976.",
+      "fr": "La Liste rouge de l’UICN classait l’espèce en préoccupation mineure à l’échelle mondiale lors d’une évaluation datée du 3 mars 2015 et publiée en 2016, en raison de sa vaste aire et de sa population importante malgré des déclins passés. Ce statut mondial ne vaut pas partout : classée en préoccupation mineure en Grande-Bretagne, la martre reste rare dans certaines zones anglaises et galloises, après fragmentation et persécution. En Grande-Bretagne, la loi de 1981 sur la faune et la campagne, modifiée, protège l’espèce ; la couverture des annexes varie selon la juridiction. L’Irlande l’inscrit aussi dans sa loi sur la faune de 1976."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Martes martes (Carnivora: Mustelidae)",
+        "fr": "Martes martes (Carnivora : Mustelidae)"
+      },
+      "url": "https://doi.org/10.1093/mspecies/seac007",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "European studies report sex-specific head–body, tail and body-mass ranges; shoulder height is about 15 cm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 250,
+        "derived_prose_en_fr": 212,
+        "notes_words": 15,
+        "total": 227,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pine marten or Stone marten?",
+        "fr": "Martre des pins ou fouine ?"
+      },
+      "url": "https://www.waldwissen.net/en/forest-ecology/forest-fauna/mammals/pine-marten-or-stone-marten",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Pine bib usually yellowish; beech marten bib white and often forked."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 11,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pine marten species account",
+        "fr": "Fiche d’espèce : martre des pins"
+      },
+      "url": "https://animaldiversity.org/accounts/Martes_martes/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Climbing anatomy, delayed implantation, litter size, kit development and dispersal."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 10,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "All forests are not equal: population demographics and denning behaviour of a recovering small carnivore in human modified landscapes",
+        "fr": "Toutes les forêts ne se valent pas : démographie et gîtes en paysages transformés"
+      },
+      "url": "https://doi.org/10.2981/wlb.00760",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Mature forest cover and tree cavities; alternate den sites in Ireland."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 11,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal, geographical, and habitat effects on the diet of a recovering predator population in Ireland",
+        "fr": "Effets saisonniers, géographiques et de l’habitat sur le régime d’une population prédatrice en rétablissement en Irlande"
+      },
+      "url": "https://doi.org/10.1007/s10344-019-1289-z",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Local prey switching; seasonal fruit, prey, carrion, and seed services."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 10,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet of denning female European pine martens in Galloway",
+        "fr": "Régime des femelles martres des pins au gîte à Galloway"
+      },
+      "url": "https://doi.org/10.1007/s13364-018-0398-5",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Galloway denning females: no carrion detected; birds, small mammals and anurans important."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 12,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Faecal marking patterns by European pine marten in north-west Spain",
+        "fr": "Marquage fécal de la martre des pins dans le nord-ouest de l’Espagne"
+      },
+      "url": "https://secem.es/galemys/galemys-17-2005-ne-a10",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Scats mark exposed sites and crossroads, with seasonal peaks in May and July."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 13,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pine marten",
+        "fr": "Martre des pins"
+      },
+      "url": "https://mammal.org.uk/british-mammals/pine-marten",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "UK range, nocturnal solitude, home-range sex pattern, British status and pressures."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 11,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Functional diversity among seed dispersal kernels generated by carnivorous mammals",
+        "fr": "Diversité fonctionnelle des distances de dispersion des graines par les mammifères carnivores"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23228197/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Marked-fruit experiment documented marten seed dispersal up to 1,233 metres."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population crash in an invasive species following recovery of a native predator",
+        "fr": "Effondrement d’une espèce envahissante après le rétablissement d’un prédateur indigène"
+      },
+      "url": "https://doi.org/10.1007/s10531-014-0632-7",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Irish midlands: grey-squirrel decline, red return, local predator associations."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 9,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Declining invasive grey squirrels may persist in refugia as a native predator recovers",
+        "fr": "Le gris envahissant peut persister dans des refuges lors du rétablissement d’un prédateur indigène"
+      },
+      "url": "https://doi.org/10.1111/1365-2664.13660",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Britain and Ireland analyses found squirrel occupancy associations varying regionally."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.en.6",
+        "ecology.fr.4",
+        "ecology.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 10,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List: Martes martes",
+        "fr": "Liste rouge de l’UICN : Martes martes"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T12848A45199169.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global Least Concern assessment, dated 2015 and published 2016."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 9,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wildlife Act 1976, Schedule 5",
+        "fr": "Wildlife Act 1976, annexe 5"
+      },
+      "url": "https://www.irishstatutebook.ie/eli/1976/act/39/schedule/5/enacted/en/html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Pine marten is listed under Ireland’s Wildlife Act 1976."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 9,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red squirrels exhibit antipredator behavioural changes in response to a native predator, the pine marten",
+        "fr": "Les écureuils roux modifient leur comportement antiprédateur face à la martre des pins"
+      },
+      "url": "https://doi.org/10.1098/rsos.250661",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Irish feeder cameras: red squirrels increased vigilance and reduced feeding after marten visits."
+      ],
+      "prose_claims": [
+        "ecology.en.5",
+        "ecology.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 13,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wildlife and Countryside Act 1981, revised Schedule 5",
+        "fr": "Wildlife and Countryside Act 1981, annexe 5 révisée"
+      },
+      "url": "https://www.legislation.gov.uk/ukpga/1981/69/schedule/5?lang=en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Latest revised Schedule 5 includes pine marten; separate extent versions reflect jurisdiction."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 12,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult European pine marten with anatomically accurate dark-brown coat, pale yellow throat-and-chest bib, pale-edged ears, long bushy tail and furred climbing paws; pure white background.",
+  "uncertainties": [
+    "The cited European body-mass ranges combine studies from different populations and methods; they are indicative, not a single standardized estimate.",
+    "The Ireland squirrel associations are regional and do not establish a universal mechanism or outcome across the species’ range.",
+    "The global IUCN assessment was made in 2015 and published in 2016; its primary record was not directly accessible during research, so details were checked against an author-uploaded copy of the IUCN PDF.",
+    "Seed dispersal distance comes from an experiment with marked seed mimics embedded in fruit; it is not a routine field estimate."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique corrected Galloway diet interpretation; root checked EN/FR juvenile-development equivalence and complete source sentence accounting. Original illustration retained."
+}

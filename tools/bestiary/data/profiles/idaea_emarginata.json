@@ -1,0 +1,165 @@
+{
+  "id": "idaea_emarginata",
+  "scientific": "Idaea emarginata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Small Scallop",
+    "fr": "Idaea emarginata"
+  },
+  "sections": {
+    "overview": {
+      "en": "Idaea emarginata, the Small Scallop, is a geometrid moth recorded widely but not commonly in England and Wales.",
+      "fr": "Idaea emarginata, appelée Small Scallop en anglais, est un papillon de nuit géométridé largement mais peu communément signalé en Angleterre et au pays de Galles."
+    },
+    "identification": {
+      "en": "Its wingspan is about 22–25 mm.",
+      "fr": "Son envergure est d’environ 22 à 25 mm."
+    },
+    "habitat": {
+      "en": "It occupies damp deciduous woodland, meadows and marshes.",
+      "fr": "Elle fréquente les boisements feuillus humides, les prairies et les marais."
+    },
+    "diet": {
+      "en": "The caterpillar is believed to feed on bedstraws (Galium) in the wild; Finnish records also list Galium and Plantago among its food plants.",
+      "fr": "La chenille est réputée consommer des gaillets (Galium) à l’état sauvage ; les données finlandaises citent aussi Galium et Plantago parmi ses plantes nourricières."
+    },
+    "behavior": {
+      "en": "Adults fly after dark from June to August and may be attracted to lights, although they can also be flushed by day.",
+      "fr": "Les adultes volent après la tombée de la nuit de juin à août et peuvent être attirés par les lumières, mais on peut aussi les débusquer le jour."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted do not give a reliable clutch size or detailed breeding schedule.",
+      "fr": "Les fiches consultées n’indiquent ni taille de ponte fiable ni calendrier détaillé de reproduction."
+    },
+    "ecology": {
+      "en": "It belongs to Idaea, the same genus as I. flaveolaria elsewhere in this bestiary; that shared genus alone does not establish a particularly close relationship.",
+      "fr": "Elle appartient au genre Idaea, comme I. flaveolaria présenté ailleurs dans ce bestiaire ; ce genre partagé ne suffit pas à établir une parenté particulièrement étroite."
+    },
+    "conservation": {
+      "en": "The British account describes a widespread but uncommon moth; this is a regional description, not a global threat assessment.",
+      "fr": "La fiche britannique décrit un papillon largement réparti mais peu commun ; il s’agit d’une indication régionale, pas d’une évaluation mondiale du risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Small Scallop | Idaea emarginata — UKMoths",
+        "fr": "Small Scallop | Idaea emarginata — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/idaea-emarginata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths reports 22–25 mm wingspan, British distribution, wet habitats, flight period and probable Galium larval food."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 16,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Idaea emarginata — LepiWiki",
+        "fr": "Idaea emarginata — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Idaea_Emarginata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "German LepiWiki places the species in Idaea and provides species-specific diagnostic photographs and habitat records."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 15,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Idaea emarginata — Finnish Lepidoptera records",
+        "fr": "Idaea emarginata — données finlandaises sur les lépidoptères"
+      },
+      "url": "https://www.perhoset.fi/historia/sterrhinae/ida-emarginata.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Finnish account compiles records naming Galium and Plantago and notes that larvae also consume wilted leaves."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 16,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Idaea emarginata — Natural History Museum species dictionary",
+        "fr": "Idaea emarginata — dictionnaire taxonomique du Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000005785",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Natural History Museum record confirms accepted species name and the English common name Small Scallop."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The host-plant record is explicitly tentative in the British species account; reproductive details were not available in the reviewed sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked British species account with German and Finnish lepidopteran sources; the catalogue cousin comparison is limited to their shared genus."
+}

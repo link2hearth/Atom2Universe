@@ -1,0 +1,119 @@
+{
+  "id": "urocissa_caerulea",
+  "scientific": "Urocissa caerulea",
+  "group": "birds",
+  "name": {
+    "en": "Taiwan Blue Magpie",
+    "fr": "Pirolle de Taïwan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Taiwan blue magpie is a corvid endemic to Taiwan.",
+      "fr": "La pirolle de Taïwan est un corvidé endémique de Taïwan."
+    },
+    "identification": {
+      "en": "It has a black head, red bill and feet, a blue body, and a very long tail with white tips.",
+      "fr": "Elle a la tête noire, le bec et les pattes rouges, le corps bleu et une très longue queue terminée de blanc."
+    },
+    "habitat": {
+      "en": "It inhabits broad-leaved and secondary forests at low and middle elevations, including wooded areas near people.",
+      "fr": "Elle fréquente les forêts de feuillus et secondaires de basse et moyenne altitude, y compris des zones boisées proches des humains."
+    },
+    "diet": {
+      "en": "It is omnivorous, eating fruit, seeds, insects and small vertebrates.",
+      "fr": "Elle est omnivore et mange des fruits, des graines, des insectes et de petits vertébrés."
+    },
+    "behavior": {
+      "en": "It often travels in groups, sometimes flying in a conspicuous line of long-tailed birds.",
+      "fr": "Elle se déplace souvent en groupe, parfois en une file remarquable d’oiseaux à longue queue."
+    },
+    "reproduction": {
+      "en": "It nests high in trees and typically lays four to six eggs; other group members may help feed the young.",
+      "fr": "Elle niche haut dans les arbres et pond généralement quatre à six œufs ; d’autres membres du groupe peuvent aider à nourrir les jeunes."
+    },
+    "ecology": {
+      "en": "Its cooperative helpers are a notable part of its social breeding system.",
+      "fr": "L’aide apportée par les autres membres du groupe est un aspect notable de son organisation sociale pendant la reproduction."
+    },
+    "conservation": {
+      "en": "Taiwan’s National Museum describes it as protected; a local scenic-area account identifies habitat disturbance and loss as concerns.",
+      "fr": "Le Musée national de Taïwan la décrit comme protégée ; une source d’un parc paysager local cite les perturbations et la perte d’habitat parmi les préoccupations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "National Taiwan Museum — Formosan Blue Magpie",
+        "fr": "Musée national de Taïwan — pirolle de Formose"
+      },
+      "url": "https://www.ntm.gov.tw/en/News_Content2.aspx?n=5699&s=149475",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Taiwan National Museum describes plumage, feeding, nesting and protected status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 11,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tri-Mountain National Scenic Area — Taiwan blue magpie",
+        "fr": "Parc national paysager des Trois-Montagnes — pirolle de Taïwan"
+      },
+      "url": "https://www.trimt-nsa.gov.tw/en/ecology/98/",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The scenic-area guide describes forest habitat, cooperative helpers and local habitat pressures."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 12,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation sentence summarizes Taiwan-specific protection and local pressures; it does not assert a global threat category."
+  ],
+  "review_note": "Used the National Taiwan Museum and an official scenic-area guide; group helpers and clutch size are directly described in the museum account.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

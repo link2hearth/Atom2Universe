@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Éditeur audio : galerie de projets -->
+    <string name="ae_library_title">Éditeur audio</string>
+    <string name="ae_library_empty">Aucun projet audio pour l\'instant</string>
+    <string name="ae_new">Nouveau</string>
+    <string name="ae_new_title">Nouveau projet audio</string>
+    <string name="ae_name_hint">Nom</string>
+    <string name="ae_untitled_n">Projet %1$d</string>
+    <string name="ae_track_n">Piste %1$d</string>
+    <string name="ae_copy_of">Copie de %1$s</string>
+    <string name="ae_sample_rate">Fréquence d\'échantillonnage</string>
+    <string name="ae_rate_44100">44,1 kHz</string>
+    <string name="ae_rate_48000">48 kHz</string>
+    <string name="ae_create_empty">Créer un projet vide</string>
+    <string name="ae_import_files">Importer des fichiers audio…</string>
+
+    <string name="ae_menu_open_audio">Ouvrir un fichier audio</string>
+    <string name="ae_menu_import_project">Importer un fichier de projet</string>
+    <string name="ae_open">Ouvrir</string>
+    <string name="ae_rename">Renommer</string>
+    <string name="ae_duplicate">Dupliquer</string>
+    <string name="ae_export_project">Exporter le fichier de projet</string>
+    <string name="ae_delete">Supprimer</string>
+    <string name="ae_delete_project_title">Supprimer ce projet ?</string>
+    <string name="ae_delete_project_message">« %1$s » et son audio seront supprimés définitivement.</string>
+
+    <string name="ae_import_progress">Import de %1$d sur %2$d : %3$s</string>
+    <string name="ae_import_failed">Impossible d\'importer cet audio</string>
+    <string name="ae_open_failed">Impossible d\'ouvrir ce fichier</string>
+    <string name="ae_export_failed">L\'export a échoué</string>
+
+    <string name="ae_migrating">Conversion de l\'ancien projet…</string>
+    <string name="ae_legacy_project_name">Ancien projet</string>
+
+    <string name="ae_time_mss">%1$d:%2$02d</string>
+    <string name="ae_time_hmmss">%1$d:%2$02d:%3$02d</string>
+    <string name="ae_project_info">%1$s · %2$s · %3$s</string>
+    <plurals name="ae_tracks_count">
+        <item quantity="one">%d piste</item>
+        <item quantity="other">%d pistes</item>
+    </plurals>
+
+    <!-- Éditeur audio : écran d'édition -->
+    <string name="ae_undo">Annuler</string>
+    <string name="ae_redo">Rétablir</string>
+    <string name="ae_cut">Couper</string>
+    <string name="ae_copy">Copier</string>
+    <string name="ae_paste">Coller</string>
+    <string name="ae_split">Scinder au curseur</string>
+    <string name="ae_trim">Ne garder que la sélection</string>
+    <string name="ae_silence">Mettre la sélection en silence</string>
+    <string name="ae_select_all">Tout sélectionner</string>
+    <string name="ae_snap">Aimant</string>
+    <string name="ae_zoom_in">Zoom avant</string>
+    <string name="ae_zoom_out">Zoom arrière</string>
+    <string name="ae_zoom_fit">Ajuster au projet</string>
+    <string name="ae_loop">Boucle</string>
+    <string name="ae_play">Lecture</string>
+    <string name="ae_pause">Pause</string>
+    <string name="ae_stop">Arrêt</string>
+    <string name="ae_to_start">Retour au début</string>
+    <string name="ae_mute_short">M</string>
+    <string name="ae_solo_short">S</string>
+    <string name="ae_locked_short">Verrouillée</string>
+    <string name="ae_add_track">Ajouter une piste</string>
+    <string name="ae_lock_track">Verrouiller la piste</string>
+    <string name="ae_unlock_track">Déverrouiller la piste</string>
+    <string name="ae_delete_track_title">Supprimer cette piste ?</string>
+    <string name="ae_delete_track_message">« %1$s » et ses clips seront retirés du projet.</string>
+    <string name="ae_error_playback">Lecture interrompue : erreur de sortie audio</string>
+    <string name="ae_time_mss_cs">%1$d:%2$02d.%3$02d</string>
+    <string name="ae_clock_hms_cs">%1$d:%2$02d:%3$02d.%4$02d</string>
+
+    <!-- Éditeur audio : 7b (clips, repères) -->
+    <string name="ae_clip_settings">Réglages du clip</string>
+    <string name="ae_gain">Gain</string>
+    <string name="ae_gain_db">%1$d dB</string>
+    <string name="ae_fade_curve">Courbe des fondus</string>
+    <string name="ae_shape_linear">Linéaire</string>
+    <string name="ae_shape_exp">Exponentielle</string>
+    <string name="ae_shape_log">Logarithmique</string>
+    <string name="ae_shape_s">En S</string>
+    <string name="ae_shape_equal">Puissance égale</string>
+    <string name="ae_reverse">Inverser</string>
+    <string name="ae_add_marker">Poser un repère</string>
+    <string name="ae_prev_marker">Repère précédent</string>
+    <string name="ae_next_marker">Repère suivant</string>
+    <string name="ae_markers">Repères</string>
+    <string name="ae_marker_n">Repère %1$d</string>
+    <string name="ae_goto">Aller à</string>
+    <string name="ae_repeat_selection">Répéter la sélection…</string>
+    <string name="ae_repeat_times">Combien de répétitions ?</string>
+
+    <!-- Éditeur audio : 7d (enregistrement, réglages de piste) -->
+    <string name="ae_record">Enregistrer</string>
+    <string name="ae_record_stop">Arrêter l\'enregistrement</string>
+    <string name="ae_recording">Enregistrement</string>
+    <string name="ae_record_progress_title">Sauvegarde de l\'enregistrement</string>
+    <string name="ae_rec_no_permission">L\'accès au micro est nécessaire pour enregistrer</string>
+    <string name="ae_rec_init_failed">Le micro n\'est pas disponible</string>
+    <string name="ae_rec_write_failed">Enregistrement arrêté : le stockage est plein</string>
+    <string name="ae_rec_read_failed">Enregistrement arrêté : erreur du micro</string>
+    <string name="ae_overdub">Écouter les pistes pendant l\'enregistrement</string>
+    <string name="ae_start_recording">Enregistrer tout de suite</string>
+    <string name="ae_volume">Volume</string>
+    <string name="ae_pan">Panoramique</string>
+    <string name="ae_pan_center">Centre</string>
+    <string name="ae_pan_left">G %1$d</string>
+    <string name="ae_pan_right">D %1$d</string>
+    <string name="ae_track_color">Couleur</string>
+    <string name="ae_color_auto">Auto</string>
+    <string name="ae_move_up">Monter</string>
+    <string name="ae_move_down">Descendre</string>
+</resources>

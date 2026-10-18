@@ -1,0 +1,29 @@
+{
+  "id": "us_mountains",
+  "noise_offsets": [1100, 0, 1200],
+  "surface_blocks": [
+    {"block": "granite", "noise_min": 0.0},
+    {"block": "stone", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.06,
+  "surface_variety_offset": 1300,
+  "dirt_block": "stone",
+  "stone_block": "granite",
+  "height_base": 5.0,
+  "height_amplitude": 15.0,
+  "height_roughness": 5.0,
+  "topsoil_depth": 0,
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.0,
+  "decoration_density": 0.03,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structures": []
+}

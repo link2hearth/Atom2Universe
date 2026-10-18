@@ -1,0 +1,214 @@
+{
+  "id": "pluvialis_apricaria",
+  "scientific": "Pluvialis apricaria",
+  "group": "birds",
+  "name": {
+    "en": "European Golden Plover",
+    "fr": "Pluvier doré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European Golden Plover is a migratory shorebird of northern Eurasia.",
+      "fr": "Le Pluvier doré est un limicole migrateur du nord de l’Eurasie."
+    },
+    "identification": {
+      "en": "Its upperparts are golden-spangled; in breeding plumage the face and underparts become largely black, while the underwing and axillaries are white. Compared with the Pacific Golden Plover (P. fulva), the white axillaries are a useful flight character. The Grey Plover (P. squatarola) has black axillaries instead.",
+      "fr": "Son dessus est tacheté d’or ; en plumage nuptial, la face et le dessous deviennent largement noirs, tandis que le dessous des ailes et les axillaires sont blancs. Par rapport au Pluvier fauve (P. fulva), les axillaires blancs sont un critère utile en vol. Le Pluvier argenté (P. squatarola) a plutôt les axillaires noirs."
+    },
+    "habitat": {
+      "en": "It breeds on moors, peatlands and tundra, then winters mainly on open grassland and farmland, with some use of coasts and wetlands.",
+      "fr": "Il niche dans les landes, les tourbières et la toundra, puis hiverne surtout dans les prairies ouvertes et les terres agricoles, fréquentant aussi certaines côtes et zones humides."
+    },
+    "diet": {
+      "en": "It takes ground-dwelling invertebrates such as insects, earthworms and snails, and may also eat berries, seeds and grass.",
+      "fr": "Il capture des invertébrés du sol comme des insectes, des vers de terre et des escargots ; il peut aussi manger des baies, des graines et de l’herbe."
+    },
+    "behavior": {
+      "en": "Most populations migrate toward western and southern Europe in winter; cold weather can trigger movements farther south.",
+      "fr": "La plupart des populations migrent vers l’ouest et le sud de l’Europe en hiver ; les vagues de froid peuvent provoquer des déplacements plus au sud."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in a shallow scrape in open, short vegetation.",
+      "fr": "Il niche au sol, dans une petite dépression peu profonde située dans une végétation ouverte et basse."
+    },
+    "ecology": {
+      "en": "Its migration is generally shorter and more focused on Europe than that of its close relative, the Pacific Golden Plover (Pluvialis fulva), which breeds in Siberia and Alaska and winters widely around the Pacific and Indian Oceans.",
+      "fr": "Sa migration est généralement plus courte et davantage centrée sur l’Europe que celle de son proche parent, le Pluvier fauve (Pluvialis fulva), qui niche en Sibérie et en Alaska et hiverne largement autour des océans Pacifique et Indien."
+    },
+    "conservation": {
+      "en": "In the United Kingdom, the species is on the RSPB’s Green List; that national rating does not replace a global assessment.",
+      "fr": "Au Royaume-Uni, l’espèce figure sur la liste verte de la RSPB ; ce statut national ne remplace pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pluvialis apricaria — IUCN Red List assessment by BirdLife International",
+        "fr": "Pluvialis apricaria — évaluation de la Liste rouge de l’UICN par BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22693727A86551440.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "2016 BirdLife assessment covers range, habitat, diet and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 9,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pluvier doré — French Civil Aviation Authority PIAF bird migration information",
+        "fr": "Pluvier doré — information migratoire PIAF de la Direction générale de l’aviation civile"
+      },
+      "url": "https://piaf.stac.aviation-civile.gouv.fr/birds/42",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The French-language agency account describes the species’ Eurasian range, westward winter movements, its French winter distribution and cold-weather displacement; comparison with P. fulva is limited to the documented broad migration geography."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 31,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Pluvier fauve — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Pacific_Golden-Plover/overview",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Cornell describes P. fulva as an Arctic breeder whose winter range spans the Pacific and Indian Oceans, supporting the reciprocal range comparison."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 22,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Golden Plover — Birds of Europe, Naturalis Biodiversity Center",
+        "fr": "Pluvier doré — Birds of Europe, Naturalis Biodiversity Center"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130592",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The European account describes breeding plumage and white axillaries, and explicitly notes that Pacific Golden Plover has contrasting grey-brown axillaries."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 20,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey Plover — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Pluvier argenté — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/black-bellied_plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Cornell notes that the Grey Plover has black axillaries in every plumage."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 12,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Golden Plover — Royal Society for the Protection of Birds",
+        "fr": "Pluvier doré — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/golden-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "RSPB conservation category is UK-specific: Green."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 6,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation assessment cited is from 2016 and should not be mistaken for a new assessment in 2026.",
+    "The two golden plovers can be difficult to identify outside clear plumage and viewing conditions; the comparison gives one useful character rather than a complete field key."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a BirdLife/IUCN assessment, a French government migration account, Cornell’s Pacific Golden Plover account and a European natural-history reference; included reciprocal range and identification comparisons with P. fulva."
+}

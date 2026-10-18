@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_audio_settings"
+        android:title="@string/midi_audio_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_color_settings"
+        android:title="@string/color_settings_title"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_select_soundfont"
+        android:title="@string/midi_select_soundfont"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_select_midi_folder"
+        android:title="@string/midi_select_folder"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_refresh_library"
+        android:title="@string/midi_refresh_library"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_clear_library"
+        android:title="@string/midi_clear_library"
+        app:showAsAction="never" />
+</menu>

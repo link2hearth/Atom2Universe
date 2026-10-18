@@ -1,0 +1,144 @@
+{
+  "id": "megaphobema_mesomelas",
+  "scientific": "Megaphobema mesomelas",
+  "group": "invertebrates",
+  "name": {
+    "en": "Costa Rican redleg tarantula",
+    "fr": "Mygale à pattes rouges du Costa Rica"
+  },
+  "sections": {
+    "overview": {
+      "en": "The inventory name Megaphobema mesomelas is an older combination; the World Spider Catalog accepts Abdomegaphobema mesomelas, a Costa Rican tarantula.",
+      "fr": "Le nom d’inventaire Megaphobema mesomelas est une ancienne combinaison ; le World Spider Catalog accepte Abdomegaphobema mesomelas, une mygale du Costa Rica."
+    },
+    "identification": {
+      "en": "The World Spider Catalog confirms the accepted species and its Costa Rican distribution; the common name refers to the contrasting reddish legs.",
+      "fr": "Le World Spider Catalog confirme le nom accepté et la répartition costaricienne ; son nom commun évoque le contraste des pattes rougeâtres."
+    },
+    "habitat": {
+      "en": "A Costa Rican natural-history record describes it from forested areas and burrows in holes made by other animals or dug into vertical banks.",
+      "fr": "Une source costaricienne la signale en milieu forestier, dans des cavités creusées par d’autres animaux ou dans des terriers qu’elle aménage sur des talus verticaux."
+    },
+    "diet": {
+      "en": "It is a predator of small animals; a study from Monteverde examined its prey choices and found that prey type and abundance did not alone predict preference.",
+      "fr": "C’est un prédateur de petits animaux ; une étude menée à Monteverde a montré que le type et l’abondance des proies ne suffisaient pas à expliquer ses préférences."
+    },
+    "behavior": {
+      "en": "It is a burrowing, ground-dwelling tarantula; observations outside the burrow are reported during the breeding season.",
+      "fr": "C’est une mygale terricole qui creuse un terrier ; des observations hors du terrier sont signalées pendant la période de reproduction."
+    },
+    "reproduction": {
+      "en": "Species-specific breeding details remain poorly documented in the sources consulted.",
+      "fr": "Les sources consultées documentent peu les détails de sa reproduction."
+    },
+    "ecology": {
+      "en": "As a ground predator, it feeds on other animals and is part of the forest-floor food web.",
+      "fr": "Comme prédateur du sol, elle consomme d’autres animaux et participe au réseau trophique du sous-bois."
+    },
+    "conservation": {
+      "en": "The World Spider Catalog records the species in Costa Rica but does not assign a conservation category.",
+      "fr": "Le World Spider Catalog signale l’espèce au Costa Rica, mais ne lui attribue aucune catégorie de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Abdomegaphobema mesomelas — World Spider Catalog",
+        "fr": "Abdomegaphobema mesomelas — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/44302/species",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The catalog accepts Abdomegaphobema mesomelas, gives Costa Rica as its distribution, and records its 2023 transfer from Megaphobema to Abdomegaphobema."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 20,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Habitat — Costa Rica Red Legged Tarantula articles, Encyclopedia of Life (INBio)",
+        "fr": "Habitat — articles sur la mygale à pattes rouges du Costa Rica, Encyclopedia of Life (INBio)"
+      },
+      "url": "https://eol.org/pages/1182131/articles",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "INBio account in Spanish says it frequents forest, can use animal-made cavities, and can make burrows in vertical banks; it is seen crossing nearby roads during breeding periods."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 28,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Prey preference of Megaphobema mesomelas — University of South Florida Digital Commons",
+        "fr": "Préférences alimentaires de Megaphobema mesomelas — dépôt numérique de l’Université de Floride du Sud"
+      },
+      "url": "https://digitalcommons.usf.edu/tropical_ecology/571/",
+      "supports": [
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The Monteverde study reports prey-selection experiments and concludes that preferences depend on several factors, not abundance alone; the thesis record gives no species-level conservation status."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 25,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The inventory and parent taxonomy tree retain Megaphobema mesomelas, but the World Spider Catalog changed its accepted placement to Abdomegaphobema in 2023.",
+    "The prey study is an undergraduate field project from one Costa Rican site; its results should not be generalized to all populations or seasons.",
+    "No reliable current conservation assessment was found in the consulted sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Preserves the catalogue identifier and scientific field for integration while explaining the current accepted genus; habitat source is Spanish INBio material reproduced by EOL."
+}

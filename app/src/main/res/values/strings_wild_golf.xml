@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_wild_course">Wild Highlands</string>
+    <string name="classic_wild_description">Course 3 · Advanced. 18 holes in the autumn highlands: golden grass, pines, rocks and cold lakes. Greens lie beyond narrow attack routes: successful driver and wood carries can save a shot. Broad detours offer safer landings but need an extra shot. On par 3s, short bailouts allow a two-shot route to the green.</string>
+    <string-array name="classic_wild_holes">
+        <item>The Amber Clearing</item><item>The Cold Twin Lakes</item><item>The Grey Peninsula</item>
+        <item>The Giant’s Saddle</item><item>The Golden Cape</item><item>The River Stones</item>
+        <item>The Wind Redan</item><item>The Pale Quarry</item><item>The Pine S</item>
+        <item>The Autumn Cirque</item><item>The Divided Forest</item><item>The Cold Mirror</item>
+        <item>The Stone Trident</item><item>The Giant’s Balconies</item><item>The Twin Capes</item>
+        <item>The Last Long Iron</item><item>The Shore Choice</item><item>The Highland Lake Crossing</item>
+    </string-array>
+    <string-array name="classic_wild_tips">
+        <item>The green lies beyond the narrow clearing. A precise driver to the 232 m landing leaves about 150 m. The broad outside fairway leaves over 280 m and needs an extra setup shot.</item>
+        <item>Driver to the 225 m pocket, then wood 3 for 205 m to the final bank: about 117 m remain. The broad outside shelves skirt the lakes in four shots before putting.</item>
+        <item>Attack the small green beyond the lake to arrive in one shot. The broad short bailout on the dry bank avoids the direct crossing but leaves a chip of about 68 m. Watch the rear sand.</item>
+        <item>The green sits just beyond the narrow left passage when viewed from the tee. A precise driver to the 227 m landing leaves about 193 m. The broad right detour leaves over 310 m: play a setup shot, then approach.</item>
+        <item>The green extends the narrow cape. A driver to the 229 m landing beyond the lake leaves about 154 m. The broad opposite shelf leaves about 299 m and needs an extra approach shot.</item>
+        <item>Driver to the first stone at 220 m, then wood 3 for 211 m to the second bank: about 125 m remain. The broad outside bank avoids the small targets but needs four shots to the green.</item>
+        <item>Attack the small green directly with a long club beyond the bunker. The broad short apron is an easier target but leaves about 87 m. Read the climb in the preview.</item>
+        <item>Carry the quarry to the narrow tongue at 227 m: the green lies about 183 m further along that side. The broad outside fairway leaves over 310 m and needs an extra shot.</item>
+        <item>The narrow 226 m landing cuts the pine S and leaves about 209 m to the green. The broad opposite shelf leaves about 329 m: play a setup shot before approaching.</item>
+        <item>The descent adds carry: control the driver to the small 228 m landing. The green lies on the same side, about 141 m away. The broad opposite bank leaves about 287 m and needs an extra shot.</item>
+        <item>A precise driver to the 232 m clearing opens about 212 m to the green beyond the narrow route. The broad detour across the woodland leaves over 335 m and needs an extra approach shot.</item>
+        <item>The narrow green lies beyond the lake with rear sand. Attack directly to arrive in one, or choose the broad dry-bank bailout, leaving about 76 m to play.</item>
+        <item>Driver to the narrow tongue at 229 m leaves about 139 m. Wood 3 to the central 210 m pocket leaves about 178 m with sand to negotiate. The broad outside route leaves about 287 m and needs an extra shot.</item>
+        <item>The green extends the narrow balcony: a precise driver to the 229 m landing leaves about 215 m uphill. The broad opposite balcony leaves over 335 m: play a setup shot first.</item>
+        <item>Driver to the first cape at 230 m, then wood 3 for 202 m to the second: about 142 m remain. The broad opposite shelves allow four conservative shots before putting.</item>
+        <item>A long club can reach the green directly between lake and bunker. The broad short apron on the dry bank is an easier reception but leaves a chip of about 74 m.</item>
+        <item>Driver to the small 224 m landing between ridge and lake leaves about 187 m to the green. The broad opposite shelf leaves over 307 m and needs an extra setup shot.</item>
+        <item>Driver to the 220 m pocket, then wood 3 for 210 m to the final reception: about 128 m remain. The broad outside bank avoids both precise crossings but needs four shots before putting.</item>
+    </string-array>
+</resources>

@@ -1,0 +1,163 @@
+{
+  "id": "tabanus_sudeticus",
+  "scientific": "Tabanus sudeticus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Dark giant horsefly",
+    "fr": "Taon des Sudètes"
+  },
+  "sections": {
+    "overview": {
+      "en": "A Czech survey recorded this species in the Bílé Karpaty only from historical records.",
+      "fr": "Une étude tchèque n’a signalé cette espèce dans les Bílé Karpaty que dans d’anciens relevés."
+    },
+    "identification": {
+      "en": "In Britain it is the largest tabanid, with a body about 25–30 mm long and a wingspan reaching 50 mm.",
+      "fr": "En Grande-Bretagne, c’est le plus grand Tabanidae : son corps mesure environ 25 à 30 mm et son envergure peut atteindre 50 mm."
+    },
+    "habitat": {
+      "en": "The species account used here places it mainly in western Britain and records it as very rare in Northern Ireland.",
+      "fr": "La fiche consultée la situe surtout dans l’ouest de la Grande-Bretagne et la signale comme très rare en Irlande du Nord."
+    },
+    "diet": {
+      "en": "As in other tabanids, adult females take blood meals to produce eggs.",
+      "fr": "Comme chez les autres Tabanidae, les femelles adultes prennent des repas de sang pour produire leurs œufs."
+    },
+    "behavior": {
+      "en": "The cited UK account says this very large species rarely bites people, unlike the more familiar smaller horseflies.",
+      "fr": "La source britannique indique que cette très grande espèce pique rarement les humains, contrairement aux taons plus petits et familiers."
+    },
+    "reproduction": {
+      "en": "A study of females in eastern Croatia specifically examined the species’ gonotrophic cycle.",
+      "fr": "Une étude menée sur des femelles en Croatie orientale a examiné spécifiquement le cycle gonotrophique de l’espèce."
+    },
+    "ecology": {
+      "en": "Tabanid larvae develop in wet habitats.",
+      "fr": "Les larves des Tabanidae se développent en milieu humide."
+    },
+    "conservation": {
+      "en": "The account gives no species-specific status for T. sudeticus.",
+      "fr": "La source ne précise pas de statut propre à T. sudeticus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Species showcase: Tabanid flies — IUCN UK Peatland Programme",
+        "fr": "Espèces à l’honneur : les Tabanidae — IUCN UK Peatland Programme"
+      },
+      "url": "https://www.iucn-uk-peatlandprogramme.org/species-showcase-tabanid-flies",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The UK account gives species size and range and family-level feeding and larval ecology."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 14,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Research of the gonotrophic cycle of Tabanus sudeticus — Slovak Academy of Sciences",
+        "fr": "Research of the gonotrophic cycle of Tabanus sudeticus — Académie slovaque des sciences"
+      },
+      "url": "https://publikacie.uke.sav.sk/node/2761",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The study investigated female gonotrophic cycles of T. sudeticus near the Sava River in eastern Croatia in 1995."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 18,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tabanus sudeticus — Biodiv’AURA Atlas",
+        "fr": "Tabanus sudeticus — Atlas Biodiv’AURA"
+      },
+      "url": "https://atlas.biodiversite-auvergne-rhone-alpes.fr/espece/22354",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French regional atlas lists T. sudeticus in the Auvergne–Rhône-Alpes biodiversity reference system."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Horse flies of the Bílé Karpaty — Masaryk University",
+        "fr": "Les taons des Bílé Karpaty — Université Masaryk"
+      },
+      "url": "https://www.muni.cz/en/research/publications/1203578",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "A peer-reviewed survey records T. sudeticus in the Bílé Karpaty only from the distant past."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Several biological statements are explicitly family-level because species-specific evidence was sparse in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; do not generalize family-level larval ecology or reproduction to this species without species-specific data."
+}

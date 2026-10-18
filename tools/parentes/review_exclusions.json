@@ -1,0 +1,606 @@
+[
+  {
+    "name": "Cyprinus yilongensis",
+    "qid": "Q136098",
+    "revision": 2517829048,
+    "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
+  },
+  {
+    "name": "Lophopsittacus mauritianus",
+    "qid": "Q93553",
+    "revision": 2520627825,
+    "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
+  },
+  {
+    "name": "Myrcia neocambessedeana",
+    "qid": "Q146042",
+    "revision": 2535617707,
+    "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
+  },
+  {
+    "name": "Phelsuma gigas",
+    "qid": "Q146475",
+    "revision": 2517970477,
+    "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
+  },
+  {
+    "name": "Mesoplodon traversii",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Phalanger matanim",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Sylvilagus cognatus",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Uromys siebersi",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Aequidens potaroensis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Amphilophus margaritifer",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Angka hexops",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma pleurotaenia",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma rupununi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma taeniata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Aspidodiadema sinuosum",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Asthenosoma dilatatum",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Carcharhinus macrops",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Gyptis bruneli",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis comata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis crinita",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis golikovi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis heteroculatus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis hians",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis lobata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis lobatus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis maraunibinae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis raluanensis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis vittata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Intoshia major",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Osteochilus enneaporos",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Pimelodus platicirris",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Polypera simushirae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Porcellio ferroi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Praematoliparis anarthractae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos groenlandicus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos harteli",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos micruroides",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos micrurus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Rhopalura elongata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Rhopalura litoralis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Venturia compacta",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Dasyatis geijskesi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Dicrossus gladicauda",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Geophagus camopiensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Gymnocranius oblongus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Heliaster solaris",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Janetaescincus veseyfitzgeraldi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Labeo nasus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Lethrinus amboinensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Lethrinus conchyliatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Megascolides australis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus hutchinsi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus reticulatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus wardi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Parascyllium elongatum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Phoenicolacerta laevis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Pimelodus punctatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Pratylenchus penetrans",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Propimelodus araguayae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Propimelodus caesius",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos balushkini",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos carolinae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos christinae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos gelatinosus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos nataliae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos sargassicus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Ptychozoon rhacophorus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Steindachneria argentea",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Thermichthys hollisi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Vinciguerria nimbaria",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Aerodramus bartschi",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus fuciphagus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus hirundinaceus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus infuscatus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus maximus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus nuditarsus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus ocistus",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus papuensis",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus pelewensis",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus sawtelli",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aerodramus terraereginae",
+    "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+  },
+  {
+    "name": "Aglaia amplexicaulis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aglaia basiphylla",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aglaia fragilis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aglaia gracilis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aglaia saltatorum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aglaia unifolia",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Allium macrostemon",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe africana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe albovestita",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe alexandrei",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe arenicola",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe broomii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe cheranganiensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe chlorantha",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe christianii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe chrysostachys",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe citrea",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe comosa",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe cryptopoda",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe hoffmannii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe irafensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe jawiyon",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe lucile-allorgeae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe luntii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe macleayi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe macrocarpa",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe macroclada",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe macrosiphon",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe maculata",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe mayottensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe mcloughlinii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe medishiana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe megalocarpa",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe mendesii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe metallica",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe micracantha",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe microstigma",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe milne-redheadii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe modesta",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe monotropa",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe monticola",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe namorokaensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe petricola",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe reynoldsii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe sinkatana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe succotrina",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe vaombe",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Aloe wildii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Drosera andersoniana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Drosera dielsiana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Drosera graniticola",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Drosera heterophylla",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Drosera indica",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium concolor",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium humboldtii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium maculatum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium medeoloides",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium michauxii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium michiganense",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Lilium tsingtauense",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Nepenthes macrophylla",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Nepenthes merrilliana",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Nepenthes spathulata",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Nepenthes veitchii",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Solanum abutiloides",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Solanum glaucophyllum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Solanum pseudolulo",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  },
+  {
+    "name": "Solanum vescum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+  }
+]

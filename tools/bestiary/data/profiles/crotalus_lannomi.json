@@ -1,0 +1,144 @@
+{
+  "id": "crotalus_lannomi",
+  "scientific": "Crotalus lannomi",
+  "group": "reptiles",
+  "name": {
+    "en": "Autlán Long-tailed Rattlesnake",
+    "fr": "Crotale à longue queue d’Autlán"
+  },
+  "sections": {
+    "overview": {
+      "en": "This elusive rattlesnake is known from western Mexico, especially the Sierra de Manantlán region of Jalisco.",
+      "fr": "Ce crotale discret est connu de l’ouest du Mexique, notamment de la Sierra de Manantlán, dans le Jalisco."
+    },
+    "identification": {
+      "en": "It has a slender, unusually long tail and a gray ground colour marked with dark dorsal blotches.",
+      "fr": "Il possède une queue fine et exceptionnellement longue, sur un fond gris marqué de taches dorsales sombres."
+    },
+    "habitat": {
+      "en": "Available records place it in rocky grassland near the transition between tropical deciduous and pine-oak forests.",
+      "fr": "Les données disponibles le situent dans des prairies rocheuses, entre forêt tropicale déciduale et forêt de pins et chênes."
+    },
+    "diet": {
+      "en": "The Mexican species account lists lizards, arthropods and other reptiles among its reported prey.",
+      "fr": "La fiche mexicaine de l’espèce cite les lézards, les arthropodes et d’autres reptiles parmi ses proies rapportées."
+    },
+    "behavior": {
+      "en": "It may be active at dusk or night and has been observed thermoregulating beside grasses or on low shrubs.",
+      "fr": "Il serait actif au crépuscule ou la nuit et régulerait sa température près des herbes ou sur de petits arbustes."
+    },
+    "reproduction": {
+      "en": "Reliable species-specific breeding information is scarce in the sources consulted.",
+      "fr": "Les sources consultées fournissent peu d’informations fiables sur sa reproduction."
+    },
+    "ecology": {
+      "en": "It belongs to the rare long-tailed rattlesnake group, alongside Crotalus stejnegeri and Crotalus ericsmithi.",
+      "fr": "Il appartient au groupe rare des crotales à longue queue, avec Crotalus stejnegeri et Crotalus ericsmithi."
+    },
+    "conservation": {
+      "en": "Mexico lists it as threatened; rediscovery reports and few locality records underline the need for further surveys.",
+      "fr": "Le Mexique la classe comme espèce menacée; les redécouvertes et rares localités connues justifient de nouveaux inventaires."
+    }
+  },
+  "uncertainties": [
+    "The limited and uneven locality record does not support a precise population estimate or a confident trend assessment."
+  ],
+  "review_note": "Compared CONABIO’s species summary with the rediscovery paper and the Reptile Database; treated status as Mexican rather than global.",
+  "sources": [
+    {
+      "title": {
+        "en": "Cascabel de Autlán — EncicloVida / CONABIO",
+        "fr": "Crotale d’Autlán — EncicloVida / CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/27152.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "CONABIO summary gives the known specimen description, Jalisco locality, rocky ecotone, reported prey, tentative activity and Mexican threatened category."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 19,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rediscovery of the rare Autlán long-tailed rattlesnake",
+        "fr": "Redécouverte du rare crotale à longue queue d’Autlán"
+      },
+      "url": "https://redtox.org/sites/default/files/toxiblog/descargables/2010-crotalus-lannomi-rediscovery-a_1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed rediscovery account places this rare taxon in the long-tailed rattlesnake group and documents renewed field records after its original description."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 21,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crotalus lannomi — The Reptile Database",
+        "fr": "Crotalus lannomi — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Crotalus/lannomi?search_param=%28%28taxon%3D%27crotalinae%27%29%29",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic database lists Crotalus lannomi as valid and gives its range as southwestern Mexico, including Jalisco and Colima."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

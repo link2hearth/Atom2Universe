@@ -1,0 +1,124 @@
+{
+  "id": "wolf",
+  "scientific": "Canis lupus",
+  "group": "mammals",
+  "name": {
+    "en": "Grey wolf",
+    "fr": "Loup gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey wolf is a highly adaptable wild canid whose former range covered much of the Northern Hemisphere. It persists in parts of North America, Europe and Asia. Populations differ in size, coat and prey with local climate, food and human pressures.",
+      "fr": "Le loup gris est un canidé sauvage adaptable, autrefois présent dans une grande partie de l’hémisphère Nord. Il subsiste en Amérique du Nord, en Europe et en Asie. Taille, pelage et proies varient selon climat, ressources alimentaires et pressions humaines locales."
+    },
+    "identification": {
+      "en": "In Yellowstone, adult males average about 50 kg and 81 cm at the shoulder; females average 41 kg and 77 cm. Average total length is 181 cm in that regional reference. These figures vary across the species’ large range; dependable species-wide width data were not found. This large, long-legged canid has a broad muzzle, upright ears, powerful jaws and a bushy tail. Dense underfur insulates it in cold conditions. Coat shades range from white through grey, brown and cinnamon to nearly black; northern populations tend to be larger.",
+      "fr": "À Yellowstone, les mâles adultes pèsent en moyenne environ 50 kg et mesurent 81 cm au garrot ; les femelles, 41 kg et 77 cm. La longueur totale moyenne indiquée pour cette région est de 181 cm. Ces valeurs varient dans l’aire très vaste de l’espèce ; aucune largeur fiable à l’échelle de l’espèce n’a été trouvée. Ce grand canidé aux longues pattes a un museau large, des oreilles dressées, des mâchoires puissantes et une queue touffue. Son sous-poil dense l’isole du froid. La robe varie du blanc au noir ; les populations nordiques sont souvent plus grandes."
+    },
+    "habitat": {
+      "en": "Wolves occupy Arctic tundra, forests, grasslands, mountains and some arid landscapes. They need prey and room to move, but not only untouched wilderness; some populations live near settlements. Abundance tends to track prey availability, while roads and development can fragment habitat.",
+      "fr": "Le loup fréquente toundra arctique, forêts, prairies, montagnes et milieux arides. Il lui faut des proies et de l’espace, mais pas uniquement des régions intactes ; certaines populations vivent près des humains. Son abondance suit les ressources, tandis que routes et aménagements fragmentent l’habitat."
+    },
+    "diet": {
+      "en": "Wolves mainly eat mammals. Packs hunt ungulates such as deer, elk, moose, reindeer or bison; lone wolves also take beavers, rabbits and small prey. They scavenge too. Diet shifts seasonally: elk dominate winter prey in Yellowstone, deer more in summer.",
+      "fr": "Le loup mange surtout des mammifères. Les meutes chassent cerfs, wapitis, orignaux, rennes ou bisons ; les loups seuls prennent aussi castors, lapins et petites proies. Ils récupèrent des carcasses. À Yellowstone, le wapiti domine en hiver, le cerf davantage en été."
+    },
+    "behavior": {
+      "en": "A wild pack is usually a family: a breeding pair and offspring, some helping care for pups. Young wolves may disperse to form packs. Howling and scent marks signal territory.",
+      "fr": "Une meute sauvage est généralement une famille : un couple reproducteur et des descendants, dont certains aident les petits. Des jeunes partent parfois. Hurlements et marques odorantes signalent le territoire."
+    },
+    "reproduction": {
+      "en": "Breeding is seasonal and timing shifts across the range; Yellowstone wolves usually mate in February. After 62–63 days, a female gives birth in a den. Newborns are blind and deaf; their eyes open at about two weeks. Adults bring food as they grow.",
+      "fr": "La reproduction est saisonnière et varie selon les régions ; à Yellowstone, les accouplements ont lieu en février. Après 62 à 63 jours, la femelle met bas dans une tanière. Aveugles et sourds, les petits ouvrent les yeux vers deux semaines ; les adultes les nourrissent ensuite."
+    },
+    "ecology": {
+      "en": "Wolves affect prey through hunting, but effects depend on prey vulnerability, weather, other predators and human hunting. Carcasses also feed scavengers: Yellowstone observations record ravens, magpies, coyotes, bears, eagles and invertebrates at wolf kills. These relationships vary over time and place.",
+      "fr": "La chasse du loup influence ses proies, mais ses effets dépendent de leur vulnérabilité, météo, autres prédateurs et chasse humaine. À Yellowstone, corbeaux, pies, coyotes, ours, aigles et invertébrés consomment ses carcasses. Ces relations varient selon les lieux et périodes."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 30 August 2018 classified the species as Least Concern and noted competition with people over livestock and game, persecution and habitat fragmentation. A global category can conceal regional decline or recovery: legal protection, prey, connectivity and conflict differ among populations.",
+      "fr": "L’évaluation mondiale de l’UICN du 30 août 2018 classait l’espèce en préoccupation mineure et signalait concurrence pour le bétail et le gibier, persécution et fragmentation de l’habitat. Une catégorie mondiale peut masquer déclins ou rétablissements régionaux : protection, proies, connectivité et conflits diffèrent selon les populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Canis lupus (gray wolf) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Canis lupus (loup gris) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Canis_lupus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Range spans tundra, forest, prairie and arid landscapes; populations now persist in parts of North America and Eurasia.",
+        "Body size and coat colour vary geographically; dense underfur insulates in cold conditions.",
+        "Diet varies with prey availability and includes large ungulates, smaller mammals and carrion."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wolf Ecology — Yellowstone National Park, U.S. National Park Service",
+        "fr": "Écologie du loup — parc national de Yellowstone, National Park Service des États-Unis"
+      },
+      "url": "https://www.nps.gov/yell/learn/nature/wolf.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Yellowstone packs are social family groups; howling and scent marking help defend territories.",
+        "Elk are about 90% of winter prey there; summer prey include more deer and smaller mammals.",
+        "Wolf kills feed scavengers; prey patterns also vary with weather, other predators and human hunting.",
+        "Yellowstone regional averages: males 50 kg, 81 cm shoulder height; females 41 kg, 77 cm; average length 181 cm."
+      ]
+    },
+    {
+      "title": {
+        "en": "Gray Wolf — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Loup gris — zoo national et institut de biologie de la conservation Smithsonian"
+      },
+      "url": "https://www.nationalzoo.si.edu/animals/gray-wolf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Wild packs are typically family groups of a breeding pair and offspring; young may disperse.",
+        "The gestation period is 62–63 days; newborn pups are blind and deaf, with eyes opening after about two weeks.",
+        "Large ungulates and smaller prey both occur in the diet."
+      ]
+    },
+    {
+      "title": {
+        "en": "Canis lupus — The IUCN Red List of Threatened Species (2018 assessment)",
+        "fr": "Canis lupus — Liste rouge de l’UICN des espèces menacées (évaluation de 2018)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T3746A163508960.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 30 August 2018 classified the grey wolf as Least Concern.",
+        "The assessment identifies conflict over livestock and game, persecution and habitat fragmentation as continuing threats."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult grey wolf, sex unspecified: robust long-legged build, broad muzzle, upright ears, dense natural grey-brown guard hairs with pale underfur, bushy tail with dark tip. Use anatomically natural proportions and a calm standing three-quarter side view. Pure uniform white #FFFFFF background, no scenery, props, text, frame or watermark.",
+  "uncertainties": [
+    "Pack composition, coat colour, body size and prey vary substantially among regions; Yellowstone observations are local examples.",
+    "The conservation category quoted is specifically the global IUCN assessment dated 30 August 2018, not a claim that regional populations share one status."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source critique; coordinator checked reported omissions against final text and removed unsupported assertions."
+}

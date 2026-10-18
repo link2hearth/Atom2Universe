@@ -1,0 +1,185 @@
+{
+  "id": "bathylychnops_exilis",
+  "scientific": "Bathylychnops exilis",
+  "group": "fish",
+  "name": {
+    "en": "Javelin spookfish",
+    "fr": "Poisson-fantôme javelot"
+  },
+  "sections": {
+    "overview": {
+      "en": "Bathylychnops exilis is a large deep-water barreleye, or spookfish, in the family Opisthoproctidae, recorded in the North Pacific and near the Azores.",
+      "fr": "Bathylychnops exilis est un grand poisson-fantôme des profondeurs, de la famille des Opisthoproctidae, signalé dans le Pacifique Nord et près des Açores."
+    },
+    "identification": {
+      "en": "It can reach about 58 centimetres standard length and is unusual among vertebrates for having a second, ventrally directed optical globe associated with each eye.",
+      "fr": "Il peut atteindre environ 58 centimètres de longueur standard et se distingue par un globe optique secondaire dirigé vers le bas associé à chaque œil."
+    },
+    "habitat": {
+      "en": "This oceanic species occupies mesopelagic to bathypelagic waters, with records generally between about 400 and 800 metres in the North Pacific and eastern Atlantic.",
+      "fr": "Cette espèce océanique fréquente les eaux mésopélagiques à bathypélagiques, avec des observations généralement entre 400 et 800 mètres dans le Pacifique Nord et l’Atlantique oriental."
+    },
+    "diet": {
+      "en": "Its feeding ecology is poorly known; examined stomachs contained krill-like euphausiids, while other possible organic remains have been difficult to identify.",
+      "fr": "Son écologie alimentaire est mal connue ; des estomacs examinés contenaient des euphausiacés proches du krill, tandis que d’autres restes organiques possibles étaient difficiles à identifier."
+    },
+    "behavior": {
+      "en": "The striking paired-eye arrangement includes forward or upward primary eyes and auxiliary globes directed downward, giving the fish an expanded field of view.",
+      "fr": "Son étonnante organisation oculaire associe des yeux principaux orientés vers l’avant ou le haut et des globes auxiliaires dirigés vers le bas, élargissant son champ visuel."
+    },
+    "reproduction": {
+      "en": "It is egg-laying, and its eggs and larvae are pelagic; available developmental records describe larval pigmentation and body form but little adult spawning behavior.",
+      "fr": "Il pond des œufs et ses œufs comme ses larves sont pélagiques ; les données de développement décrivent pigmentation et forme larvaires, mais peu le frai des adultes."
+    },
+    "ecology": {
+      "en": "Bathylychnops is related to other opisthoproctid barreleyes, including Dolichopteryx; its unusual optics are interpreted as adaptations to dim open-ocean depths.",
+      "fr": "Bathylychnops est apparenté aux autres poissons-fantômes opisthoproctidés, dont Dolichopteryx ; son optique inhabituelle est interprétée comme une adaptation aux profondeurs sombres du large."
+    },
+    "conservation": {
+      "en": "No global IUCN assessment was listed by FishBase, and the species is rarely sampled; population size and trend therefore remain unknown.",
+      "fr": "FishBase ne mentionne aucune évaluation mondiale de l’UICN, et l’espèce est rarement échantillonnée ; l’effectif et l’évolution de sa population restent inconnus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bathylychnops exilis — FishBase",
+        "fr": "Bathylychnops exilis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/9119",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase classifies the species in Opisthoproctidae, reports 400–800 m depth and North Pacific/eastern Atlantic records, maximum length 58 cm SL, pelagic eggs and larvae, and no IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 28,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Observations on the morphology, ecology, and behaviour of Bathylychnops exilis — Journal of Fish Biology",
+        "fr": "Observations sur la morphologie, l’écologie et le comportement de Bathylychnops exilis — Journal of Fish Biology"
+      },
+      "url": "https://doi.org/10.1111/j.1095-8649.1985.tb04022.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Primary study describes the unusual auxiliary eye globes and reports limited stomach-content evidence for the species."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 16,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early Life History Description: Bathylychnops exilis — NOAA Alaska Fisheries Science Center",
+        "fr": "Description des premiers stades de vie de Bathylychnops exilis — NOAA Alaska Fisheries Science Center"
+      },
+      "url": "https://apps-afsc.fisheries.noaa.gov/ichthyo/LHDataELH.php?GSID=Bathylychnops%21exilis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA record documents ripe ovarian egg diameter, larval pigmentation and diagnostic morphology, while providing limited life-history fields."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 17,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of the generic classification of long-bodied Opisthoproctidae — Journal of Ichthyology",
+        "fr": "Révision de la classification générique des Opisthoproctidae à corps allongé — Journal of Ichthyology"
+      },
+      "url": "https://doi.org/10.1134/S0032945220050138",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed revision treats relationships among Bathylychnops and related long-bodied opisthoproctid genera."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 11,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "擬淵燈鮭 (Bathylychnops exilis) — Chinese Wikipedia",
+        "fr": "擬淵燈鮭 (Bathylychnops exilis) — Wikipédia en chinois"
+      },
+      "url": "https://zh.wikipedia.org/wiki/%E6%93%AC%E6%B7%B5%E7%87%88%E9%AE%AD",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Chinese-language taxon entry provides an additional language cross-check for the common-name/taxon association, not for detailed biology."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is rarely collected and its diet, behavior, reproduction and population dynamics are poorly known; reported depth and range records are sparse rather than a complete distribution."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase, NOAA early-life-history data, peer-reviewed eye morphology and opisthoproctid taxonomy, plus a Chinese-language taxon entry. No related Opisthoproctidae profiles are present in the current profile catalog; Dolichopteryx and Bathylychnops chilensis are textual taxonomic comparators."
+}

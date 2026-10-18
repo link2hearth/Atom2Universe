@@ -1,0 +1,298 @@
+{
+  "id": "common_crane",
+  "scientific": "Grus grus",
+  "group": "birds",
+  "name": {
+    "en": "Common crane",
+    "fr": "Grue cendrée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common crane, also called the Eurasian crane, is a tall, migratory wetland bird: Grus grus links northern breeding grounds with southern wintering areas. It ranges across northern Eurasia, from western Europe to Siberia, and different populations winter in Iberia, Africa, the Middle East or Asia.",
+      "fr": "La grue cendrée, aussi appelée grue eurasienne, est un grand oiseau migrateur des zones humides : Grus grus relie les sites de reproduction nordiques aux lieux d’hivernage plus méridionaux. Elle vit dans le nord de l’Eurasie, de l’Europe occidentale à la Sibérie, et ses populations hivernent en Ibérie, en Afrique, au Moyen-Orient ou en Asie."
+    },
+    "identification": {
+      "en": "Adults are about 115 centimetres tall, weigh around 5.5 kilograms and span roughly 210 centimetres; males average slightly larger and heavier than females. Slate-grey plumage, long dark legs and a long neck create a tall silhouette. The adult has a bare red crown, black forehead and throat, and a white stripe behind the eye. Long wing feathers drape over the short tail like a false train; juveniles have a greyer body and cinnamon-brown head.",
+      "fr": "L’adulte mesure environ 115 centimètres, pèse autour de 5,5 kilogrammes et atteint près de 210 centimètres d’envergure ; le mâle est en moyenne un peu plus grand et lourd que la femelle. Son plumage gris ardoise, ses longues pattes sombres et son long cou dessinent une silhouette élancée. Il porte une calotte rouge nue, un front et une gorge noirs, ainsi qu’une bande blanche derrière l’œil. De longues plumes de l’aile retombent sur la queue courte comme une fausse traîne ; le jeune a le corps plus gris et la tête brun cannelle."
+    },
+    "habitat": {
+      "en": "Breeding pairs choose quiet, shallow wetlands: bogs, marshes, reedbeds and pools, often with dense shore vegetation. The nest sits in or close to shallow water, which helps conceal it; in winter cranes also use flooded ground, meadows and cultivated fields, returning to communal wetland roosts.",
+      "fr": "Pour nicher, les couples choisissent des zones humides calmes et peu profondes : tourbières, marais, roselières et mares, souvent bordés de végétation dense. Le nid se trouve dans l’eau ou tout près, où il reste dissimulé ; en hiver, les grues fréquentent aussi les terrains inondés, prairies et champs cultivés, puis gagnent des dortoirs humides collectifs."
+    },
+    "diet": {
+      "en": "The crane is omnivorous and changes its menu with season and place. It probes soil and shallow water for roots, tubers, seeds and grain, but also eats insects, snails, worms, amphibians, reptiles and small mammals; animal foods become especially important while feeding chicks.",
+      "fr": "La grue est omnivore et adapte son menu à la saison et au lieu. Elle sonde le sol et les eaux peu profondes pour trouver racines, tubercules, graines et céréales, mais mange aussi insectes, escargots, vers, amphibiens, reptiles et petits mammifères ; les proies animales prennent davantage d’importance quand elle nourrit ses poussins."
+    },
+    "behavior": {
+      "en": "Its loud, trumpeting calls keep birds in contact over open wetlands and warn of danger. Paired cranes answer in a coordinated unison call that reinforces their bond; spring courtship also includes bows, leaps and wing displays. Outside breeding, family groups join larger, shifting flocks that feed by day and gather at traditional roosts at night.",
+      "fr": "Ses appels puissants et trompetants permettent aux oiseaux de rester en contact dans les zones humides ouvertes et de signaler un danger. Les partenaires se répondent par un duo coordonné qui renforce leur lien ; au printemps, la parade comprend aussi révérences, bonds et déploiements d’ailes. Hors reproduction, les familles se mêlent à de grandes bandes changeantes qui s’alimentent le jour et se rassemblent la nuit dans des dortoirs traditionnels."
+    },
+    "reproduction": {
+      "en": "Pairs maintain long-lasting bonds and defend a nesting territory. The female usually lays two eggs in a mound of stems and leaves; both parents incubate them for about 30 days, chiefly the female. Downy chicks leave the nest soon after hatching, walk with their parents and learn to forage; they fledge at about 65–70 days, remain with the family through their first winter, and usually breed successfully at around four years.",
+      "fr": "Les couples entretiennent un lien durable et défendent un territoire de nidification. La femelle pond généralement deux œufs sur un amas de tiges et de feuilles ; les deux parents les couvent environ 30 jours, surtout la femelle. Les poussins duveteux quittent le nid peu après l’éclosion, suivent les adultes et apprennent à chercher leur nourriture ; ils prennent leur envol vers 65 à 70 jours, restent avec leur famille pendant leur premier hiver et ne se reproduisent généralement avec succès qu’autour de quatre ans."
+    },
+    "ecology": {
+      "en": "Seasonal journeys depend on a chain of wetlands where cranes can nest, rest and roost, while nearby fields provide food. Eggs and small chicks are vulnerable to crows and ravens; foxes and eagles can take older young, and adults defend nests vigorously against ground predators.",
+      "fr": "Les déplacements saisonniers dépendent d’un réseau de zones humides où les grues peuvent nicher, faire halte et dormir, tandis que les champs voisins fournissent de la nourriture. Corneilles et grands corbeaux prennent parfois œufs et petits poussins ; renards et aigles peuvent capturer des jeunes plus grands, et les adultes défendent vigoureusement le nid contre les prédateurs terrestres."
+    },
+    "conservation": {
+      "en": "The global population is large and the species is assessed as Least Concern, yet local populations have disappeared or declined. Wetland loss, agricultural change and hunting in some regions remain threats, and wintering and migration sites matter as much as breeding marshes. Britain lost its breeding cranes after centuries of wetland drainage; birds returned to Norfolk in 1979, and a WWT–RSPB–Pensthorpe project released 93 young in Somerset between 2010 and 2014, helping rebuild a small regional population.",
+      "fr": "La population mondiale est importante et l’espèce est classée en préoccupation mineure, mais certaines populations locales ont disparu ou reculé. La perte de zones humides, l’évolution agricole et la chasse dans certaines régions restent des menaces ; les sites d’hivernage et de migration comptent autant que les marais de reproduction. Après des siècles de drainage, la grue avait disparu comme nicheuse de Grande-Bretagne ; les oiseaux sont revenus dans le Norfolk en 1979, puis un projet du WWT, de la RSPB et du Pensthorpe Conservation Trust a relâché 93 jeunes dans le Somerset entre 2010 et 2014, aidant à restaurer une petite population régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common crane",
+        "fr": "Common crane (Wikipedia, English)"
+      },
+      "url": "https://en.wikipedia.org/wiki/Common_crane",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "English synthesis checked against French article and institutional accounts."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "conservation.en.1",
+        "diet.en.1",
+        "ecology.en.1",
+        "habitat.en.2",
+        "identification.en.2",
+        "overview.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 9,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grue cendrée — Wikipédia",
+        "fr": "Grue cendrée — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Grue_cendr%C3%A9e",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French synthesis compared with English page and institutional references."
+      ],
+      "prose_claims": [
+        "behavior.fr.3",
+        "conservation.fr.1",
+        "diet.fr.1",
+        "ecology.fr.1",
+        "habitat.fr.2",
+        "identification.fr.2",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 9,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Crane",
+        "fr": "Grue eurasienne"
+      },
+      "url": "https://savingcranes.org/species/eurasian-crane/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Range, adult pattern, foods and pair-call details."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 7,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crane BirdFacts",
+        "fr": "BirdFacts: Crane"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/crane",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Clutch, incubation, chick development, fledging and maturity."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 7,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Glossary",
+        "fr": "Glossaire"
+      },
+      "url": "https://savingcranes.org/glossary/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Defines tertial bustle and coordinated unison calls."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 7,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common crane factfile",
+        "fr": "Fiche espèce : grue cendrée"
+      },
+      "url": "https://www.wwt.org.uk/discover-wetlands/wetland-wildlife/species-factfiles/common-crane",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Wetland habitat, nesting cover and seasonal foods."
+      ],
+      "prose_claims": [
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 7,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reintroducing common cranes",
+        "fr": "Réintroduire la grue cendrée"
+      },
+      "url": "https://www.wwt.org.uk/our-work/projects/reintroducing-common-cranes",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "British return, project partners and Somerset releases."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 7,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Crane Conservation Strategy",
+        "fr": "Stratégie de conservation de la grue eurasienne"
+      },
+      "url": "https://savingcranes.org/wp-content/uploads/2024/10/crane_conservation_strategy_eurasian_crane.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "2019 IUCN status, regional trends, threats and predator interactions."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 9,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Eurasian/Common Crane, Grus grus: slate-grey body; long dark legs and neck; adult black forehead and throat; bare red crown; white stripe behind eye along neck; elongated drooping tertial feathers forming a false tail train. Keep the short true tail concealed. Do not depict a Demoiselle Crane or Sandhill Crane. Juvenile head is cinnamon-brown without adult head pattern.",
+  "uncertainties": [
+    "Global population and trend values are those summarized in the IUCN SSC Crane Specialist Group's 2019 species review; regional trajectories differ and the estimate should not be treated as a current census.",
+    "A small isolated breeding population is known in Britain; its later size varies by survey year, so no current count is quoted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: ICF adult measurements, range, threats and coordinated pair calls checked; BTO clutch, incubation, fledging and maturity checked; WWT confirms 1979 return, 93 releases and partners. Global status distinguished from regional recovery; no current census inferred."
+}

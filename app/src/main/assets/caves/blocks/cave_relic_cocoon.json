@@ -1,0 +1,18 @@
+{
+  "id": 2721,
+  "name": "cave_relic_cocoon",
+  "texture_top": "cave_relics:cocoon_top",
+  "texture_side": "cave_relics:cocoon_side",
+  "texture_bottom": "cave_relics:cocoon_top",
+  "color": "#C6C0A2",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_relic_cocoon",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ],
+  "furniture": "barrel"
+}

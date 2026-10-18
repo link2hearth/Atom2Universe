@@ -1,0 +1,77 @@
+{
+  "id": "phalanger_mimicus",
+  "scientific": "Phalanger mimicus",
+  "group": "mammals",
+  "name": {
+    "en": "Southern Common Cuscus",
+    "fr": "Couscous commun du Sud"
+  },
+  "sections": {
+    "overview": {
+      "en": "The southern common cuscus is a nocturnal, tree-dwelling marsupial of southern New Guinea and Cape York Peninsula in northern Australia, where it is also called the grey cuscus. It was long treated as a form of other common cuscuses and is now recognised as a species of its own.",
+      "fr": "Le couscous commun du Sud est un marsupial nocturne et arboricole du sud de la Nouvelle-Guinée et de la péninsule du cap York, dans le nord de l’Australie, où on l’appelle aussi couscous gris. Longtemps traité comme une forme d’autres couscous communs, il est aujourd’hui reconnu comme une espèce à part entière."
+    },
+    "identification": {
+      "en": "A small to medium-sized cuscus with a head and body of 33–40 cm, a tail of 28–35 cm and a weight of 1.5–2.2 kg. The back is grey-brown with a stripe from head to rump, and the underside is off-white. In New Guinea females are redder brown than the greyer males. Its skull and molars are smaller than those of the northern and eastern common cuscuses.",
+      "fr": "Un couscous de taille petite à moyenne, au corps long de 33 à 40 cm, à la queue de 28 à 35 cm et pesant de 1,5 à 2,2 kg. Le dos est gris-brun avec une bande de la tête à la croupe, et le dessous blanc cassé. En Nouvelle-Guinée, les femelles sont d’un brun plus roux que les mâles, plus gris. Son crâne et ses molaires sont plus petits que ceux des couscous communs du Nord et de l’Est."
+    },
+    "habitat": {
+      "en": "In New Guinea it lives in secondary forest, riverside gallery forest, gardens and some degraded areas of the southern lowlands. In Australia it is known from rainforest and vine forest in the Iron Range and McIlwraith Range area on eastern Cape York Peninsula.",
+      "fr": "En Nouvelle-Guinée, il vit dans la forêt secondaire, la forêt-galerie le long des cours d’eau, les jardins et certaines zones dégradées des basses terres du sud. En Australie, il est connu des forêts tropicales et des forêts à lianes de la région d’Iron Range et des monts McIlwraith, à l’est de la péninsule du cap York."
+    },
+    "diet": {
+      "en": "In Australia it has been recorded eating the fruit of red cedar, flowers of corky bark and leaves of various trees, and one stomach held seed paste from the black bean tree. Its diet in New Guinea is not described in the source consulted.",
+      "fr": "En Australie, on l’a vu manger les fruits du cèdre rouge, les fleurs d’un arbre à écorce liégeuse et les feuilles de divers arbres, et un estomac contenait une pâte de graines de l’arbre appelé « black bean ». Son régime en Nouvelle-Guinée n’est pas décrit dans la source consultée."
+    },
+    "behavior": {
+      "en": "It is nocturnal, sheltering by day in tree hollows, and is believed to be solitary. In Australia it is scarce: spotlighting typically turns up about one animal every two to five hours. Home range and movements are not documented in the source consulted.",
+      "fr": "Il est nocturne, s’abrite le jour dans des creux d’arbres et passe pour être solitaire. En Australie, il est peu abondant : l’observation de nuit à la lampe ne révèle en moyenne qu’un animal toutes les deux à cinq heures. Le domaine vital et les déplacements ne sont pas documentés dans la source consultée."
+    },
+    "reproduction": {
+      "en": "Very little is known. In Australia, both single young and twins have been recorded. Breeding season, gestation and pouch life are not given in the sources consulted.",
+      "fr": "On en sait très peu. En Australie, on a observé aussi bien des petits uniques que des jumeaux. La saison de reproduction, la gestation et la durée en poche ne sont pas indiquées dans les sources consultées."
+    },
+    "ecology": {
+      "en": "Pythons are thought to be significant predators of the species. Its role in the forest as an eater of fruit, seeds and leaves, for example in dispersing seeds, has not been studied in the sources read.",
+      "fr": "On pense que les pythons sont des prédateurs importants de l’espèce. Son rôle dans la forêt comme mangeur de fruits, de graines et de feuilles, par exemple pour disperser des graines, n’a pas été étudié dans les sources lues."
+    },
+    "conservation": {
+      "en": "It is listed as Least Concern on the IUCN Red List, according to the Mammal Diversity Database and a species treatment, which cite its wide range, presumed large population, presence in protected areas such as Iron Range National Park and tolerance of some habitat change. It is also listed in CITES Appendix II.",
+      "fr": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN, d’après la base Mammal Diversity Database et une fiche d’espèce, qui citent son aire étendue, sa population présumée importante, sa présence dans des aires protégées comme le parc national d’Iron Range et sa tolérance à certaines modifications de l’habitat. Il figure aussi à l’annexe II de la CITES."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Phalanger mimicus — species treatment (Zenodo)",
+        "fr": "Phalanger mimicus — fiche d’espèce (Zenodo)"
+      },
+      "url": "https://zenodo.org/records/6620405/files/treatment.html?download=1",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Head-body 33–40 cm, tail 28–35 cm, 1.5–2.2 kg; grey-brown with dorsal stripe; habitat in New Guinea and Cape York; diet in Australia; single births and twins; nocturnal, tree hollows; pythons predators; one animal per 2–5 hours of spotlighting; CITES II, Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Phalanger mimicus — Mammal Diversity Database",
+        "fr": "Phalanger mimicus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000386",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Southern New Guinea from the Mimika River to Mt Bosavi and the Oriomo River; possibly Aru Islands and Cape York; described by Thomas 1922 as a subspecies of P. orientalis; IUCN Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Only two sources could be read in full; both are databases or treatments, and the two agree on status but the species treatment carries most of the biology.",
+    "The ecology section is short: no source read studies its ecological role, and the predator information is described as thought, not measured.",
+    "Diet, behaviour and breeding are documented mostly from the Australian population; New Guinea data are lacking.",
+    "The IUCN Red List page could not be opened; Least Concern comes from the two sources above."
+  ],
+  "reviewed": true,
+  "review_note": "Sober profile: few sources describe this species; illustration to be checked by the owner."
+}

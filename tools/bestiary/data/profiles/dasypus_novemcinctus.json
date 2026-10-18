@@ -1,0 +1,142 @@
+{
+  "id": "dasypus_novemcinctus",
+  "scientific": "Dasypus novemcinctus",
+  "group": "mammals",
+  "name": {
+    "en": "Nine-banded Armadillo",
+    "fr": "Tatou à neuf bandes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The nine-banded armadillo is a widespread American mammal that has expanded northward in the United States in recent decades.",
+      "fr": "Le tatou à neuf bandes est un mammifère largement répandu dans les Amériques, dont l’aire s’est étendue vers le nord des États-Unis ces dernières décennies."
+    },
+    "identification": {
+      "en": "Its bony armor has nine flexible bands between the shoulder and rump shields, plus a long ringed tail.",
+      "fr": "Son armure osseuse présente neuf bandes souples entre les plaques des épaules et de la croupe, ainsi qu’une longue queue annelée."
+    },
+    "habitat": {
+      "en": "It favors soils that are easy to dig and uses stream banks, grasslands and woodland edges for burrows and foraging.",
+      "fr": "Il préfère les sols faciles à creuser et utilise berges, prairies et lisières boisées pour ses terriers et sa recherche de nourriture."
+    },
+    "diet": {
+      "en": "Its broad diet is mainly insects and other invertebrates, with occasional small vertebrates, fruit and fungi.",
+      "fr": "Son régime varié se compose surtout d’insectes et d’autres invertébrés, avec parfois de petits vertébrés, des fruits et des champignons."
+    },
+    "behavior": {
+      "en": "It is mostly active in the evening and at night in warm weather, and probes soil for prey.",
+      "fr": "Il est surtout actif le soir et la nuit par temps chaud et fouille le sol pour trouver ses proies."
+    },
+    "reproduction": {
+      "en": "A single fertilized ovum usually produces four genetically identical young after delayed implantation.",
+      "fr": "Un seul ovule fécondé produit généralement quatre jeunes génétiquement identiques après une implantation différée."
+    },
+    "ecology": {
+      "en": "Its digging and insect-rich diet link it closely to soil texture, ground invertebrates and riparian corridors.",
+      "fr": "Son activité de fouille et son régime riche en insectes le lient à la texture du sol, aux invertébrés terrestres et aux corridors riverains."
+    },
+    "conservation": {
+      "en": "The 2013 global IUCN assessment lists it as Least Concern, based on its broad range and adaptability.",
+      "fr": "L’évaluation mondiale UICN de 2013 le classe en préoccupation mineure, en raison de sa vaste aire et de sa capacité d’adaptation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nine-banded Armadillo — Texas Tech Natural Science Research Laboratory",
+        "fr": "Tatou à neuf bandes — Natural Science Research Laboratory de Texas Tech"
+      },
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Cingulata/Dasypus_novemcinctus.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Texas mammal account describes armor, digging habitats, insect-heavy diet, activity and identical quadruplets."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 14,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Current distribution of the nine-banded armadillo in the United States — USGS",
+        "fr": "Répartition actuelle du tatou à neuf bandes aux États-Unis — USGS"
+      },
+      "url": "https://www.usgs.gov/publications/current-distribution-nine-banded-armadillo-dasypus-novemcinctus-united-states",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 USGS report documents a continuing northward and eastward U.S. range expansion."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 13,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dasypus novemcinctus — IUCN Red List",
+        "fr": "Dasypus novemcinctus — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2014-1.RLTS.T6290A47440785.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment from 2013 lists Least Concern and notes its broad range and tolerance of habitat change."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 18,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The global IUCN assessment dates from 2013 and is marked as needing an update."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used Texas Tech’s species account, the 2025 USGS range update and the dated IUCN assessment; the expanding-range note is specific to the United States, not the whole range."
+}

@@ -1,0 +1,143 @@
+{
+  "id": "leptothele_bencha",
+  "scientific": "Leptothele bencha",
+  "group": "invertebrates",
+  "name": {
+    "en": "Bencha funnel-web spider",
+    "fr": "Mygale à toile-entonnoir de Bencha"
+  },
+  "sections": {
+    "overview": {
+      "en": "Leptothele bencha is a mygalomorph spider in the family Euagridae, described from Thailand.",
+      "fr": "Leptothele bencha est une araignée mygalomorphe de la famille des Euagridae, décrite de Thaïlande."
+    },
+    "identification": {
+      "en": "A 2020 taxonomic study redescribed both sexes, complementing the original 1995 description.",
+      "fr": "Une étude taxonomique de 2020 a décrit les deux sexes, complétant la description initiale de 1995."
+    },
+    "habitat": {
+      "en": "Documented localities span several southern Thai provinces and islands, including the type locality at Khao Phanom Bencha.",
+      "fr": "Les localités documentées couvrent plusieurs provinces et îles du sud de la Thaïlande, dont la localité type de Khao Phanom Bencha."
+    },
+    "diet": {
+      "en": "The taxonomic sources consulted do not give species-specific prey records.",
+      "fr": "Les sources taxonomiques consultées ne donnent pas de données sur les proies propres à cette espèce."
+    },
+    "behavior": {
+      "en": "The reviewed accounts focus on morphology and distribution, leaving its behaviour poorly documented.",
+      "fr": "Les comptes rendus examinés portent surtout sur la morphologie et la répartition ; son comportement reste peu documenté."
+    },
+    "reproduction": {
+      "en": "The 2020 redescription includes adult males and females but does not establish a detailed breeding cycle.",
+      "fr": "La redescription de 2020 inclut des mâles et des femelles adultes, sans établir de cycle reproducteur détaillé."
+    },
+    "ecology": {
+      "en": "The 2020 paper also describes the congener Leptothele chang, which it distinguishes as larger and paler; that species is not in the illustrated catalogue.",
+      "fr": "L’étude de 2020 décrit aussi la congénère Leptothele chang, plus grande et plus pâle selon ses auteurs ; cette espèce ne figure pas au catalogue illustré."
+    },
+    "conservation": {
+      "en": "No species-level conservation assessment was found in the taxonomic records consulted.",
+      "fr": "Aucune évaluation de conservation à l’échelle de l’espèce n’a été trouvée dans les sources taxonomiques consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Leptothele bencha — World Spider Catalog",
+        "fr": "Leptothele bencha — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/16189/species",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The catalog accepts L. bencha Raven & Schwendinger, 1995, places it in Euagridae and records Thailand as distribution; it contains no conservation assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 23,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New euagrid spiders and new localities of L. bencha — Revue suisse de Zoologie",
+        "fr": "Nouvelles araignées euagrides et nouvelles localités de Leptothele bencha — Revue suisse de Zoologie"
+      },
+      "url": "https://bioone.org/journals/revue-suisse-de-zoologie/volume-127/issue-2/RSZ.0031/New-euagrid-spider-species-from-Thailand-and-Malaysia-and-new/10.35929/RSZ.0031.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The 2020 paper redescribes L. bencha males and females, records southern Thai localities, and describes L. chang as larger and paler."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 21,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Leptothele bencha — ITIS Taxonomic Report",
+        "fr": "Leptothele bencha — fiche taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=859430",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "ITIS lists Leptothele bencha Raven & Schwendinger, 1995 as valid and cites the World Spider Catalog."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level information remains sparse: the main modern source is a taxonomic redescription, not a natural-history study; diet, behaviour, breeding and conservation should not be inferred from family membership."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the World Spider Catalog with the 2020 Revue suisse de Zoologie paper and ITIS. The close congener L. chang is named in the paper but is absent from the illustrated-species catalogue, so no reciprocal profile edit is possible."
+}

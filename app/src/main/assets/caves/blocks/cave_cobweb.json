@@ -1,0 +1,19 @@
+{
+  "id": 2668,
+  "name": "cave_cobweb",
+  "texture_top": "cave_art:a_cobweb",
+  "texture_side": "cave_art:a_cobweb",
+  "texture_bottom": "cave_art:a_cobweb",
+  "color": "#C5D0CD",
+  "hardness": 0.2,
+  "light_emission": 0,
+  "drop": "cave_cobweb",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "decoration": true,
+  "sprite_height": 1,
+  "sprite_margin": 0,
+  "sprite_width": 1
+}

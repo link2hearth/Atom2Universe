@@ -1,0 +1,187 @@
+{
+  "id": "gryllus_campestris",
+  "scientific": "Gryllus campestris",
+  "group": "invertebrates",
+  "name": {
+    "en": "European Field Cricket",
+    "fr": "Grillon champêtre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European Field Cricket is a ground-dwelling cricket of warm, open habitats across much of Europe.",
+      "fr": "Le Grillon champêtre est un grillon terrestre des milieux chauds et ouverts, présent dans une grande partie de l’Europe."
+    },
+    "identification": {
+      "en": "It is a stout, glossy black cricket with a large rounded head and yellowish forewing bases; short hindwings leave it flightless. The UK species account adds that the hindwings are vestigial.",
+      "fr": "C’est un grillon trapu, noir luisant, à grosse tête arrondie et à base des tegmina jaunâtre ; ses ailes postérieures réduites le rendent incapable de voler. La fiche britannique précise que les ailes postérieures sont vestigiales."
+    },
+    "habitat": {
+      "en": "It favours short, warm turf and bare patches on dry, often sandy or chalky ground, where it excavates a burrow.",
+      "fr": "Il préfère les pelouses rases et chaudes avec des plages de sol nu, souvent sableux ou calcaire, où il creuse un terrier."
+    },
+    "diet": {
+      "en": "It eats grasses and herbs, with small invertebrates and carrion also recorded in some regional accounts.",
+      "fr": "Il consomme des graminées et des herbes ; certains comptes rendus régionaux signalent aussi de petits invertébrés et des charognes."
+    },
+    "behavior": {
+      "en": "Males sing from burrow entrances, producing a loud repeated chirp that attracts females.",
+      "fr": "Les mâles chantent à l’entrée de leur terrier, émettant des stridulations répétées et sonores qui attirent les femelles."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in soil; the young hatch after several weeks and overwinter as nymphs before becoming adults the following season.",
+      "fr": "Les femelles pondent dans le sol ; les jeunes éclosent après quelques semaines et passent l’hiver à l’état de nymphes avant de devenir adultes la saison suivante."
+    },
+    "ecology": {
+      "en": "The burrow provides refuge and nesting space; dependence on warm, short vegetation distinguishes it ecologically from woodland crickets such as Nemobius sylvestris.",
+      "fr": "Le terrier sert de refuge et de lieu de ponte ; sa dépendance aux végétations rases et chaudes le distingue écologiquement des grillons forestiers comme Nemobius sylvestris."
+    },
+    "conservation": {
+      "en": "Regional conservation reports link declines to loss of suitable open grassland, although status varies by country and region.",
+      "fr": "Des rapports régionaux associent son déclin à la perte de prairies ouvertes adaptées, même si son statut varie selon les pays et les régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gryllus campestris — Orthoptera & Allied Insects",
+        "fr": "Gryllus campestris — Orthoptera & Allied Insects"
+      },
+      "url": "https://orthoptera.org.uk/node/3373",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "UK account documents species form, song, habitat and seasonal cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Feldgrille — Stiftung Rheinische Kulturlandschaft",
+        "fr": "Feldgrille — Stiftung Rheinische Kulturlandschaft"
+      },
+      "url": "https://www.rheinische-kulturlandschaft.de/arten/feldgrille/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "German conservation account documents habitat, burrows, diet and egg/nymph cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gryllus campestris — Atlas de la faune de Bourgogne",
+        "fr": "Gryllus campestris — Atlas de la faune de Bourgogne"
+      },
+      "url": "https://atlas.shna.fr/espece/65910",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "identification"
+      ],
+      "facts": [
+        "French regional atlas describes appearance and the regional distribution/conservation context."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Diet information varies between accounts; plant and animal matter are included without implying equal importance.",
+    "Conservation statements refer to regional trends, not a single worldwide assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The field cricket is compared with the woodland cricket Nemobius sylvestris by habitat; this is ecological contrast, not a claim of close relationship."
+}

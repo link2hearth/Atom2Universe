@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_door_plank">Oak door</string>
+    <string name="cave_block_door_wood_plank_white">Birch door</string>
+    <string name="cave_block_door_plank_red">Redwood door</string>
+    <string name="cave_block_door_plank_dark">Dark wood door</string>
+    <string name="cave_block_door_plank_jungle">Jungle door</string>
+    <string name="cave_block_door_plank_blue">Blue door</string>
+    <string name="cave_block_door_plank_purple">Purple door</string>
+    <string name="cave_block_door_plank_yellow">Yellow door</string>
+    <string name="cave_block_door_plank_pink">Pink door</string>
+    <string name="cave_block_door_plank_sapin">Fir door</string>
+    <string name="cave_door_hint">Two blocks high. Aim at a floor edge to choose its position and hinge. Use the door to open or close it. Crouch to place blocks against it.</string>
+</resources>

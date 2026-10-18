@@ -1,0 +1,188 @@
+{
+  "id": "labeo_altivelis",
+  "scientific": "Labeo altivelis",
+  "group": "fish",
+  "name": {
+    "en": "Manyame labeo",
+    "fr": "Labéo de Manyame"
+  },
+  "sections": {
+    "overview": {
+      "en": "Labeo altivelis Peters, 1852 is a freshwater cyprinid of the genus Labeo, native to the Zambezi and upper Congo basins.",
+      "fr": "Labeo altivelis Peters, 1852 est un cyprinidé d’eau douce du genre Labeo, originaire des bassins du Zambèze et du haut Congo."
+    },
+    "identification": {
+      "en": "It reaches about 49 centimetres total length and has a conspicuously tall, sail-like dorsal fin with 14–16 soft rays.",
+      "fr": "Il atteint environ 49 centimètres de longueur totale et porte une nageoire dorsale particulièrement haute, en voile, avec 14–16 rayons mous."
+    },
+    "habitat": {
+      "en": "Adults favour large rivers but also inhabit large lakes and reservoirs, including Lake Malawi and Lake Mweru.",
+      "fr": "Les adultes préfèrent les grands cours d’eau, mais vivent aussi dans de grands lacs et réservoirs, notamment les lacs Malawi et Moero."
+    },
+    "diet": {
+      "en": "It grazes algae and aufwuchs, the film of organisms growing on submerged rocks.",
+      "fr": "Il broute les algues et le périphyton, le film d’organismes qui se développe sur les roches immergées."
+    },
+    "behavior": {
+      "en": "Adults make seasonal, potamodromous migrations from Lake Moëro into the Luapula system to spawn.",
+      "fr": "Les adultes effectuent des migrations potamodromes saisonnières du lac Moero vers le système du Luapula pour frayer."
+    },
+    "reproduction": {
+      "en": "Spawning occurs in a short, concentrated event during the river ascent, locally known as kapata in the Luapula–Moëro system.",
+      "fr": "La ponte se concentre en un épisode bref pendant la remontée de la rivière, appelé localement kapata dans le système Luapula–Moero."
+    },
+    "ecology": {
+      "en": "Recent genomic work shows that traditional Labeo groupings do not always represent evolutionary lineages; the companion profiles of L. rosae and L. ruddi allow comparison of their ranges and habitats.",
+      "fr": "Des travaux génomiques récents montrent que les groupes traditionnels de Labeo ne correspondent pas toujours à des lignées évolutives ; les fiches associées de L. rosae et L. ruddi permettent de comparer leurs aires et habitats."
+    },
+    "conservation": {
+      "en": "A recent IUCN freshwater-fish summary lists it as globally Least Concern, with population trend unknown.",
+      "fr": "Une synthèse récente de l’UICN sur les poissons d’eau douce le classe en préoccupation mineure à l’échelle mondiale, avec une tendance de population inconnue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Labeo altivelis — FishBase",
+        "fr": "Labeo altivelis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Labeo-altivelis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase taxonomic, morphometric and ecological summary."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 6,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bassin du Zaïre — IRD",
+        "fr": "Bassin du Zaïre — IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-08/25361.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "This French-language IRD synthesis names Labeo altivelis and describes potamodromous migrations from Lake Moëro into rivers for spawning."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 18,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomics of African Labeo — Molecular Phylogenetics and Evolution",
+        "fr": "Phylogénomique des Labeo africains — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 study analyzed 2,187 ultraconserved elements and found that most previously proposed morphological species groups are not monophyletic."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 19,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Freshwater fishes of potential interest for CMS — IUCN",
+        "fr": "Poissons d’eau douce susceptibles d’intéresser la CMS — UICN"
+      },
+      "url": "https://iucn.org/sites/default/files/2024-01/freshwater-fishes-of-potential-interest-for-inclusion-in-cms-information-brief.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN table lists global Least Concern and an unknown population trend for Labeo altivelis."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 15,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labeo altivelis — Malawi Cichlids species account",
+        "fr": "Labeo altivelis — fiche d’espèce Malawi Cichlids"
+      },
+      "url": "https://malawicichlids.com/mw11011a.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The species account uses the common name Manyame labeo and cautions that FishBase's Rednose labeo common name is a misassignment from L. rosae."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 23,
+        "total": 23,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species' distribution outside major documented basins and the condition of individual populations are incompletely known; FishBase's common-name field appears to conflate this species with L. rosae."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase with a French-language IRD account, a specialist species account correcting a common-name mix-up, and the 2025 phylogenomic study. Cross-links to L. rosae and L. ruddi describe basin and habitat differences without treating older morphological groupings as settled phylogeny."
+}

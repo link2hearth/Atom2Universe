@@ -1,0 +1,16 @@
+{
+  "id": 9991,
+  "name": "bucket_full",
+  "texture_top": "Items/bucket_full.png",
+  "texture_side": "Items/bucket_full.png",
+  "texture_bottom": "Items/bucket_full.png",
+  "color": "#3A7BCC",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "bucket_full",
+  "creative_tab": "items",
+  "placement_rule": "any",
+  "replaceable": false,
+  "placeable": false,
+  "tags": []
+}

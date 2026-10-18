@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="cave_player_stats">Statistiques du joueur</string>
+    <string name="cave_player_show_stats">Afficher les statistiques du joueur</string>
+    <string name="cave_player_show_equipment">Afficher les emplacements d’équipement</string>
+    <string name="cave_player_health">Vie : %1$d / %2$d</string>
+    <string name="cave_player_defense">Défense de l’armure : %1$d</string>
+    <string name="cave_player_reduction">Réduction des dégâts à cette profondeur : %1$d%%</string>
+    <string name="cave_player_shield">Bouclier équipé : %1$s</string>
+    <string name="cave_player_critical_total">Dégâts critiques : %1$d%% des dégâts normaux</string>
+    <string name="cave_player_held">Objet en main</string>
+    <string name="cave_player_stats_note">Les bonus incluent l’armure portée et l’arme active. La protection dépend de la profondeur de l’attaquant.</string>
+    <string name="cave_equipment_relic">Relique</string>
+    <string name="cave_equipment_relic_future">Relique — emplacement réservé pour une prochaine mise à jour</string>
+    <string name="cave_equipment_shield">Bouclier</string>
+    <string name="cave_equipment_suit">Armure entière</string>
+    <string name="cave_equipment_drag_hint">Glissez l’armure vers sa case. Touchez-la pour les détails.</string>
+    <string name="cave_equipment_compact_totals">PV %1$d · Protection %2$d%%</string>
+    <string name="cave_equipment_return_hint">Glissez ici une pièce portée pour la retirer.</string>
+    <string name="cave_equipment_slot_item">%1$s : %2$s</string>
+    <string name="cave_equipment_available">Armures disponibles</string>
+    <string name="cave_equipment_empty_list">Aucune armure disponible dans votre inventaire.</string>
+    <string name="cave_equipment_choose">Sélectionnez une armure à gauche pour la comparer et l’équiper.</string>
+    <string name="cave_equipment_remove_piece">Retirer</string>
+    <string name="cave_category_armor">Armures</string>
+    <string name="cave_category_weapons">Armes</string>
+    <string name="cave_category_ammo">Munitions</string>
+    <string name="cave_category_tools">Outils</string>
+    <string name="cave_category_kitchen">Cuisine</string>
+    <string name="cave_category_blocks">Blocs</string>
+    <string name="cave_double_slab_name">%1$s (bas) + %2$s (haut)</string>
+    <string name="cave_craft_equipment">Équipement requis (conservé) : %1$s · %2$s</string>
+    <string name="cave_craft_logs">Toutes bûches (mélange possible)</string>
+    <string name="cave_craft_planks">Toutes planches (mélange possible)</string>
+    <string name="cave_craft_fuel">Charbon ou charbon de bois</string>
+    <string name="cave_craft_sand">Tous sables</string>
+    <string name="cave_craft_stone">Pierre, cobble ou roche naturelle</string>
+    <string name="cave_block_stick">Bâton</string>
+    <string name="cave_block_plant_fiber">Fibre végétale</string>
+    <string name="cave_block_string">Ficelle</string>
+    <string name="cave_block_charcoal">Charbon de bois</string>
+    <string name="cave_block_iron_ingot">Lingot de fer</string>
+    <string name="cave_block_copper_ingot">Lingot de cuivre</string>
+    <string name="cave_block_gold_ingot">Lingot d’or</string>
+    <string name="cave_block_silver_ingot">Lingot d’argent</string>
+    <string name="cave_block_clay_ball">Boule d’argile</string>
+    <string name="cave_block_fired_brick">Brique cuite</string>
+    <string name="cave_block_mineral_powder">Poudre propulsive minérale</string>
+    <string name="cave_block_terracotta">Terre cuite</string>
+    <string name="cave_craft_furnace_hint">Décoratif. La cuisine se fait sur un four de cuisine posé ; le métal, le verre et l’argile cuite dans un four de forge.</string>
+    <string name="cave_craft_table_hint">Établi décoratif. Toutes les fabrications sont accessibles depuis l’inventaire.</string>
+    <string name="cave_craft_bucket_hint">Utilisez-le sur l’eau pour le remplir, ou sur un espace vide pour le verser.</string>
+    <string name="cave_ui_ores">Minerais</string>
+    <string name="cave_ui_resources">Ressources brutes</string>
+    <string name="cave_ui_raw_resource_hint">Ressource de fabrication · ne se pose pas comme un bloc.</string>
+    <string name="cave_ui_harvest_none">Casser ce bloc ne donne aucun objet.</string>
+    <string name="cave_ui_harvest_result">À la casse : %1$d × %2$s</string>
+    <string name="cave_block_raw_coal">Morceau de charbon</string>
+    <string name="cave_block_raw_iron">Fer brut</string>
+    <string name="cave_block_raw_silver">Argent brut</string>
+    <string name="cave_block_raw_gold">Or brut</string>
+    <string name="cave_block_raw_copper">Cuivre brut</string>
+    <string name="cave_block_raw_ruby">Rubis</string>
+    <string name="cave_block_raw_emerald">Émeraude</string>
+    <string name="cave_block_raw_crystal">Éclat de cristal</string>
+    <string name="cave_block_raw_redstone">Fragment de minerai rouge</string>
+
+    <string name="cave_title">Cave World</string>
+
+    <string name="cave_description">Grottes 3D procédurales infinies</string>
+
+    <string name="cave_back">Retour</string>
+
+    <string name="cave_quit_title">Quitter la partie ?</string>
+
+    <string name="cave_quit_message">La partie sera sauvegardée avant de quitter.</string>
+
+    <string name="cave_quit_confirm">Quitter</string>
+
+    <string name="cave_quit_cancel">Annuler</string>
+
+    <string name="cave_hint_move">Gauche : déplacer</string>
+
+    <string name="cave_hint_look">Droite : regarder</string>
+
+    <string name="cave_mode_spectator">Spectateur</string>
+
+    <string name="cave_mode_walk">Marche</string>
+
+    <string name="cave_jump">SAUTER</string>
+
+    <string name="cave_laser">⚡ LASER</string>
+
+    <string name="cave_block_stone">Pierre</string>
+
+    <string name="cave_block_granite">Granite</string>
+
+    <string name="cave_block_quartz">Quartz</string>
+
+    <string name="cave_block_coal">Charbon</string>
+
+    <string name="cave_block_gold">Or</string>
+
+    <string name="cave_block_crystal">Cristal</string>
+
+    <string name="cave_block_dirt">Terre</string>
+
+    <string name="cave_block_gravel">Gravier</string>
+
+    <string name="cave_block_iron">Minerai de fer</string>
+
+    <string name="cave_block_silver">Minerai d\'argent</string>
+
+    <string name="cave_block_ruby">Minerai de rubis</string>
+
+    <string name="cave_block_lava">Lave</string>
+
+    <string name="cave_block_furnace">Four</string>
+
+    <string name="cave_block_emerald">Minerai d\'émeraude</string>
+
+    <string name="cave_block_copper">Minerai de cuivre</string>
+
+    <string name="cave_block_grass">Herbe</string>
+
+    <string name="cave_block_wood">Bois</string>
+
+    <string name="cave_block_leaves">Feuilles</string>
+
+    <string name="cave_block_sand">Sable</string>
+
+    <string name="cave_block_redsand">Sable rouge</string>
+
+    <string name="cave_block_ice">Glace</string>
+
+    <string name="cave_block_snow">Neige</string>
+
+    <string name="cave_block_brick_red">Brique rouge</string>
+
+    <string name="cave_block_rock">Caillou</string>
+
+    <string name="cave_block_rock_moss">Caillou moussu</string>
+
+    <string name="cave_block_mushroom_red">Champignon rouge</string>
+
+    <string name="cave_block_mushroom_brown">Champignon brun</string>
+
+    <string name="cave_block_mushroom_tan">Champignon beige</string>
+
+    <string name="cave_block_torch">Torche</string>
+
+    <string name="cave_block_plank">Planche de bois</string>
+
+    <string name="cave_block_wood_plank_white">Planche de bouleau</string>
+
+    <string name="cave_block_ward_stone">Pierre de garde</string>
+
+    <string name="cave_item_bucket_empty">Seau en bois</string>
+
+    <string name="cave_item_bucket_full">Seau d\'eau</string>
+
+    <string name="cave_block_brick_grey">Brique grise</string>
+
+    <string name="cave_block_cactus">Cactus</string>
+
+    <string name="cave_block_glass">Verre</string>
+
+    <string name="cave_block_gravel_dirt">Terre graveleuse</string>
+
+    <string name="cave_block_table">Table</string>
+
+    <string name="cave_block_grass_wild1">Herbe sauvage</string>
+
+    <string name="cave_block_grass_wild2">Herbe sauvage 2</string>
+
+    <string name="cave_block_grass_wild3">Herbe sauvage 3</string>
+
+    <string name="cave_block_grass_wild4">Herbe sauvage 4</string>
+
+    <string name="cave_block_grass_brown">Herbe brune</string>
+
+    <string name="cave_block_grass_tan">Herbe beige</string>
+
+    <string name="cave_block_wheat1">Blé (Stade 1)</string>
+
+    <string name="cave_block_wheat2">Blé (Stade 2)</string>
+
+    <string name="cave_block_wheat3">Blé (Stade 3)</string>
+
+    <string name="cave_block_wheat4">Blé (Stade 4)</string>
+
+    <string name="cave_block_redstone">Redstone</string>
+
+    <string name="cave_block_leaves_orange">Feuilles oranges</string>
+
+    <string name="cave_block_wood_white">Bouleau</string>
+
+    <string name="cave_block_leaves_fall">Feuilles d\'automne</string>
+
+    <string name="cave_block_cotton_amber">Coton ambré</string>
+
+    <string name="cave_block_cotton_black">Coton noir</string>
+
+    <string name="cave_block_cotton_blue">Coton bleu</string>
+
+    <string name="cave_block_cotton_brown">Coton marron</string>
+
+    <string name="cave_block_cotton_coral">Coton corail</string>
+
+    <string name="cave_block_cotton_crimson">Coton cramoisi</string>
+
+    <string name="cave_block_cotton_cyan">Coton cyan</string>
+
+    <string name="cave_block_cotton_dark_green">Coton vert foncé</string>
+
+    <string name="cave_block_cotton_gold">Coton doré</string>
+
+    <string name="cave_block_cotton_green">Coton vert</string>
+
+    <string name="cave_block_cotton_hot_pink">Coton rose vif</string>
+
+    <string name="cave_block_cotton_indigo">Coton indigo</string>
+
+    <string name="cave_block_cotton_lavender">Coton lavande</string>
+
+    <string name="cave_block_cotton_light_blue">Coton bleu clair</string>
+
+    <string name="cave_block_cotton_lime">Coton citron</string>
+
+    <string name="cave_block_cotton_magenta">Coton magenta</string>
+
+    <string name="cave_block_cotton_mint">Coton menthe</string>
+
+    <string name="cave_block_cotton_navy">Coton marine</string>
+
+    <string name="cave_block_cotton_olive">Coton olive</string>
+
+    <string name="cave_block_cotton_orange">Coton orange</string>
+
+    <string name="cave_block_cotton_peach">Coton pêche</string>
+
+    <string name="cave_block_cotton_pink">Coton rose</string>
+
+    <string name="cave_block_cotton_purple">Coton violet</string>
+
+    <string name="cave_block_cotton_red">Coton rouge</string>
+
+    <string name="cave_block_cotton_rose">Coton rosé</string>
+
+    <string name="cave_block_cotton_salmon">Coton saumon</string>
+
+    <string name="cave_block_cotton_silver">Coton argent</string>
+
+    <string name="cave_block_cotton_sky">Coton ciel</string>
+
+    <string name="cave_block_cotton_tan">Coton tan</string>
+
+    <string name="cave_block_cotton_teal">Coton sarcelle</string>
+
+    <string name="cave_block_cotton_turquoise">Coton turquoise</string>
+
+    <string name="cave_block_cotton_violet">Coton violet foncé</string>
+
+    <string name="cave_block_cotton_white">Coton blanc</string>
+
+    <string name="cave_block_cotton_yellow">Coton jaune</string>
+
+    <string name="cave_menu_new_world">Nouveau monde</string>
+
+    <string name="cave_menu_create">Créer</string>
+
+    <string name="cave_menu_world_name_hint">Nom du monde</string>
+
+    <string name="cave_menu_seed_hint">Seed (optionnel, aléatoire si vide)</string>
+
+    <string name="cave_menu_default_name">Mon monde</string>
+
+    <string name="cave_menu_seed_label">Seed : %1$d</string>
+
+    <string name="cave_menu_last_played">Dernière session : %1$s</string>
+
+    <string name="cave_menu_no_worlds">Aucun monde.\nCréez votre premier monde !</string>
+
+    <string name="cave_menu_delete_world">Supprimer</string>
+
+    <string name="cave_menu_creative">Créatif</string>
+
+    <string name="cave_menu_delete_confirm_title">Supprimer le monde ?</string>
+
+    <string name="cave_menu_delete_confirm_msg">Supprimer « %1$s » ? Cette action est irréversible.</string>
+
+    <string name="cave_menu_deleted">Monde supprimé</string>
+
+    <!-- Mode Assaut -->
+    <string name="cave_block_spawn_marker_a">Balise d\'apparition A (Assaut)</string>
+    <string name="cave_block_spawn_marker_b">Balise d\'apparition B (Assaut)</string>
+    <string name="cave_menu_assault">Assaut</string>
+    <string name="cave_assault_pick_map">Choisir une carte</string>
+    <string name="cave_assault_choose_weapon">Manche %1$d · Choisissez votre arme</string>
+    <string name="cave_assault_weapon_rules">Vous et tous les soldats utilisez la même arme. Réserves de munitions illimitées ; les chargeurs doivent toujours être rechargés. La manche commence après votre choix.</string>
+    <string name="cave_assault_magazine">Chargeur %1$d/%2$d · Réserve ∞</string>
+    <string name="cave_assault_builtin_arena">Quartier des fonderies (140 × 120)</string>
+    <string name="cave_assault_office_tower">Tour du crépuscule (96 × 80 · 5 niveaux + toit)</string>
+    <string name="cave_assault_hud">Manche %1$d  ·  %2$d:%3$02d  ·  Ennemis %4$d/%5$d  ·  Têtes %6$d  ·  Score %7$d</string>
+    <string name="cave_assault_round_cleared">Manche réussie ! Bonus de temps +%1$d</string>
+    <string name="cave_assault_round_time_up">Temps écoulé ! %1$d/%2$d ennemis</string>
+    <string name="cave_assault_round_died">Tu es mort ! %1$d/%2$d ennemis</string>
+    <string name="cave_assault_next_round">Manche suivante dans %1$d</string>
+    <string name="cave_assault_headshot">Tir à la tête !</string>
+    <string name="cave_assault_health_value">Vie %1$d / %2$d</string>
+    <string name="cave_assault_shield_value">Bouclier %1$d / %2$d</string>
+    <string name="cave_assault_shield_collected">Bouclier +%1$d</string>
+    <string name="cave_assault_no_maps">Aucune carte pour l\'instant.\n\nDans un monde créatif, construisez votre arène et posez les balises d\'apparition A et B. Ouvrez ensuite l\'outil de capture (📐), placez les coins A et B autour de l\'arène, puis appuyez sur 🗺 pour l\'exporter.</string>
+    <string name="cave_assault_map_load_failed">Impossible de charger cette carte.</string>
+    <string name="cave_map_export_title">Exporter en carte Assaut</string>
+    <string name="cave_map_export_hint">Nom de la carte</string>
+    <string name="cave_map_export_confirm">Exporter</string>
+    <string name="cave_map_export_done">Carte exportée : %1$s</string>
+    <string name="cave_map_export_not_loaded">Une partie de la zone n\'est pas chargée. Rapprochez-vous et réessayez.</string>
+    <string name="cave_map_export_too_big">Zone trop grande : %1$d blocs (max %2$d).</string>
+    <string name="cave_map_export_no_spawn">Aucune balise d\'apparition dans la zone. Posez au moins une balise A ou B.</string>
+    <string name="cave_map_export_failed">Échec de l\'export.</string>
+    <string name="cave_storage_access_title">Accès au stockage requis</string>
+    <string name="cave_storage_access_message">Autorisez l\'accès à tous les fichiers pour utiliser Documents/cave_world/.</string>
+    <string name="cave_storage_open_settings">Ouvrir les paramètres</string>
+
+    <string name="cave_place">■ POSER</string>
+
+    <string name="cave_map_surface">Surface</string>
+
+    <string name="cave_map_cave">Caverne</string>
+
+    <string name="cave_menu_controls">Contrôles</string>
+
+    <string name="cave_controls_editor_title">Configurer les contrôles</string>
+
+    <string name="cave_controls_save">Sauvegarder</string>
+
+    <string name="cave_controls_reset">Réinitialiser</string>
+
+    <string name="cave_controls_reset_confirm">Rétablir la disposition et le comportement des commandes tactiles par défaut ? Les boutons de manette restent inchangés. Sauvegardez pour appliquer.</string>
+
+    <string name="cave_controls_saved">Contrôles sauvegardés</string>
+    <string name="cave_controls_save_failed">Impossible de sauvegarder les contrôles. Veuillez réessayer.</string>
+    <string name="cave_controls_size_value">%1$d dp</string>
+    <string name="cave_controls_close">Fermer</string>
+    <string name="cave_controls_hold">Maintenir pour s’accroupir</string>
+    <string name="cave_controls_run">Course</string>
+    <string name="cave_controls_run_hold">Maintenir et glisser pour courir</string>
+    <string name="cave_controls_run_toggle">Appuyer pour activer / désactiver</string>
+    <string name="cave_controls_toggle">Appuyer pour basculer</string>
+
+    <string name="cave_controls_hint">Glissez pour déplacer • Appuyez pour sélectionner</string>
+
+    <string name="cave_controls_hotbar_mock">— barre d\'objets —</string>
+
+    <string name="cave_controls_select_hint">Appuyez sur un bouton pour le sélectionner</string>
+
+    <string name="cave_controls_selected">Sélectionné : %1$s</string>
+
+    <string name="cave_controls_crouch">ACCROUPIR</string>
+
+    <string name="cave_controls_shoot">TIRER</string>
+
+    <string name="cave_controls_size">Taille</string>
+
+    <string name="cave_inventory_title">Inventaire</string>
+
+    <string name="cave_inventory_hint">Appuyez sur un bloc pour l\'assigner au slot sélectionné</string>
+
+    <string name="cave_inventory_empty">Votre inventaire est vide</string>
+
+    <string name="cave_inventory_close">Fermer</string>
+
+    <string name="cave_inv_info_header">Objet</string>
+
+    <string name="cave_inv_info_empty">Sélectionne un bloc</string>
+
+    <string name="cave_inv_crafting_header">Fabrication</string>
+
+    <string name="cave_inv_crafting_empty">Aucune recette</string>
+
+    <string name="cave_inv_craft_btn">Fabriquer</string>
+
+    <string name="cave_inv_sell_header">Vendre</string>
+
+    <string name="cave_inv_sell_price_label">Valeur</string>
+
+    <string name="cave_inv_sell_btn">Vendre</string>
+
+    <string name="cave_inv_sell_ward_stones">ward stones</string>
+
+    <string name="cave_affix_crit_chance">Chance critique</string>
+
+    <string name="cave_affix_crit_dmg">Dégâts critiques</string>
+
+    <string name="cave_affix_attack_speed">Vitesse d\'attaque</string>
+
+    <string name="cave_affix_life_steal">Vol de vie</string>
+
+    <string name="cave_affix_bleed_chance">Chance de saignement</string>
+
+    <string name="cave_affix_electric_chance">Chance électrique</string>
+
+    <string name="cave_affix_freeze_chance">Chance de gel</string>
+
+    <string name="cave_affix_execute">Exécution</string>
+
+    <string name="cave_affix_aoe_splash">Éclaboussure</string>
+
+    <string name="cave_affix_thorns">Épines</string>
+
+    <string name="cave_affix_poison_chance">Chance de poison</string>
+
+    <string name="cave_affix_fire_chance">Chance de feu</string>
+
+    <string name="cave_levelup_title">NIVEAU SUIVANT !</string>
+
+    <string name="cave_levelup_subtitle">Choisissez une amélioration</string>
+
+    <string name="cave_levelup_rare">✦ RARE</string>
+
+    <string name="cave_upgrade_damage_name">+1 Dégâts</string>
+
+    <string name="cave_upgrade_damage_desc">Les projectiles infligent plus de dégâts</string>
+
+    <string name="cave_upgrade_fire_rate_name">+Cadence de tir</string>
+
+    <string name="cave_upgrade_fire_rate_desc">Tire 20% plus vite</string>
+
+    <string name="cave_upgrade_max_hp_name">+4 PV Max</string>
+
+    <string name="cave_upgrade_max_hp_desc">Augmente les PV maximum de 4</string>
+
+    <string name="cave_upgrade_shield_name">+5 Bouclier</string>
+
+    <string name="cave_upgrade_shield_desc">Absorbe les dégâts avant les PV</string>
+
+    <string name="cave_upgrade_weapon_name">Nouvelle Arme</string>
+
+    <string name="cave_upgrade_weapon_desc">Débloque un nouveau type de projectile</string>
+
+    <string name="cave_player_level">Niv %1$d</string>
+
+    <string name="cave_cheat_weapon_kit">Triche : kit armes + munitions</string>
+
+    <string name="cave_cheat_weapon_kit_done">Huit armes équipées. Chaque réserve de munitions contient au moins 250 unités.</string>
+
+    <string name="cave_weapon_sling">Lance-pierre</string>
+
+    <string name="cave_weapon_bow">Arc</string>
+
+    <string name="cave_weapon_crossbow">Arbalète</string>
+
+    <string name="cave_weapon_gun">Pistolet</string>
+
+    <string name="cave_weapon_shotgun">Fusil à pompe</string>
+
+    <string name="cave_weapon_smg">Mitraillette</string>
+
+    <string name="cave_weapon_dual_pistols">Doubles pistolets</string>
+
+    <string name="cave_weapon_lever_rifle">Carabine à levier</string>
+
+    <string name="cave_weapon_style_shotgun">6 plombs par tir • courte portée • chargeur de 6</string>
+
+    <string name="cave_weapon_style_smg">Automatique • dispersion croissante • chargeur de 28</string>
+
+    <string name="cave_weapon_style_dual_pistols">Tirs automatiques alternés • chargeur de 20</string>
+
+    <string name="cave_weapon_style_lever_rifle">Précise, réarmement lent • chargeur de 8</string>
+
+    <string name="cave_weapon_reloading">Rechargement…</string>
+
+    <string name="cave_weapon_magazine">Chargeur : %1$d • Munitions : %2$d</string>
+
+    <string name="cave_block_daisy">Marguerites</string>
+    <string name="cave_block_lavender">Lavande</string>
+    <string name="cave_block_cosmos">Cosmos roses</string>
+    <string name="cave_block_cornflower">Bleuets</string>
+    <string name="cave_block_buttercup">Boutons d’or</string>
+    <string name="cave_block_poppy">Coquelicots</string>
+    <string name="cave_block_fern">Fougère</string>
+    <string name="cave_block_meadow_grass">Herbe de prairie</string>
+    <string name="cave_block_clover">Trèfle fleuri</string>
+    <string name="cave_block_golden_grass">Herbe dorée</string>
+    <string name="cave_block_woodland_mushrooms">Champignons rouges</string>
+    <string name="cave_block_honey_mushrooms">Champignons miel</string>
+    <string name="cave_block_reeds">Roseaux</string>
+    <string name="cave_block_succulent">Plante grasse</string>
+    <string name="cave_block_wild_rose">Églantines</string>
+    <string name="cave_block_berry_bush">Buisson à baies</string>
+    <string name="cave_block_meadow_path">Chemin de jardin</string>
+    <string name="cave_block_teal_roof">Tuiles bleu canard</string>
+    <string name="cave_block_limestone">Pierre calcaire taillée</string>
+    <string name="cave_block_slate_paving">Dalles d’ardoise</string>
+    <string name="cave_block_grass_tuft_short">Touffe d’herbe rase</string>
+    <string name="cave_block_grass_tuft_meadow">Touffe d’herbe de prairie</string>
+    <string name="cave_block_grass_tuft_tall">Touffe d’herbe haute</string>
+    <string name="cave_ui_bag">Inventaire</string>
+    <string name="cave_ui_workshop">Fabrication</string>
+    <string name="cave_ui_equipment">Équipement</string>
+    <string name="cave_ui_materials">Construction</string>
+    <string name="cave_ui_close">Fermer</string>
+    <string name="cave_ui_search">Rechercher un objet ou une recette</string>
+    <string name="cave_ui_craftable">Disponibles</string>
+    <string name="cave_ui_sort">Trier A–Z</string>
+    <string name="cave_ui_previous">Précédent</string>
+    <string name="cave_ui_next">Suivant</string>
+    <string name="cave_ui_assign">Affecter un raccourci</string>
+    <string name="cave_ui_unassign">Retirer le raccourci</string>
+    <string name="cave_ui_recipes_for_item">Recettes utilisant cet objet</string>
+    <string name="cave_ui_craft_five">Fabriquer ×5</string>
+    <string name="cave_ui_cancel">Annuler</string>
+    <string name="cave_ui_empty_search">Aucun objet correspondant. Essaie un autre filtre.</string>
+    <string name="cave_ui_details">DÉTAILS</string>
+    <string name="cave_ui_hint">Toucher pour consulter · Maintenir et glisser pour déplacer</string>
+    <string name="cave_ui_choose_shortcut">Choisis un raccourci en bas. Son objet actuel retournera dans l’inventaire.</string>
+    <string name="cave_ui_assigned">Raccourci affecté</string>
+    <string name="cave_ui_unassigned">Objet remis dans l’inventaire</string>
+    <string name="cave_ui_all">Tout</string>
+    <string name="cave_ui_terrain">Terrain</string>
+    <string name="cave_ui_wood">Bois</string>
+    <string name="cave_ui_stone">Pierre</string>
+    <string name="cave_ui_nature">Nature</string>
+    <string name="cave_ui_functional">Utilitaires</string>
+    <string name="cave_ui_cotton">Tissus</string>
+    <string name="cave_ui_select_item">Sélectionne un objet pour consulter ses détails et ses actions.</string>
+    <string name="cave_ui_select_recipe">Choisis une recette. Tu peux les consulter même si des ingrédients manquent.</string>
+    <string name="cave_ui_owned">En réserve : %1$d</string>
+    <string name="cave_ui_ingredient">%1$s · %2$d / %3$d</string>
+    <string name="cave_ui_available_batches">Fabrications possibles : %1$d</string>
+    <string name="cave_ui_missing">Ingrédients manquants</string>
+    <string name="cave_ui_ready">Prêt à fabriquer</string>
+    <string name="cave_ui_crafted">Fabriqué : %1$s ×%2$d</string>
+    <string name="cave_ui_craft_failed">Fabrication impossible. Aucun ingrédient dépensé.</string>
+    <string name="cave_ui_sell_confirm">Vendre %1$s pour %2$d pierres de garde ? Cette arme sera retirée.</string>
+    <string name="cave_ui_sold">Arme vendue</string>
+    <string name="cave_ui_shortcut_description">Raccourci %1$d : %2$s</string>
+    <string name="cave_ui_empty_slot">Vide</string>
+    <string name="cave_ui_page">Page %1$d sur %2$d</string>
+    <string name="cave_ui_damage">Dégâts : %1$d · Intervalle d’attaque : %2$d ms</string>
+    <string name="cave_ui_common">Commun</string>
+    <string name="cave_ui_uncommon">Inhabituel</string>
+    <string name="cave_ui_rare">Rare</string>
+    <string name="cave_ui_epic">Épique</string>
+    <string name="cave_ui_legendary">Légendaire</string>
+    <string name="cave_ui_sprint">Sprint</string>
+    <string name="cave_ui_camera">Vue caméra</string>
+    <string name="cave_ui_map">Carte</string>
+    <string name="cave_ui_ascend">Monter</string>
+    <string name="cave_ui_descend">Descendre</string>
+    <string name="cave_menu_tagline">Un bloc. Mille possibilités.</string>
+    <string name="cave_menu_infinite">Mondes infinis</string>
+    <string name="cave_menu_worlds_short">Survie &amp; Créatif</string>
+    <string name="cave_menu_assault_short">Arènes &amp; combats</string>
+    <string name="cave_menu_tab">%1$s. %2$s</string>
+    <string name="cave_menu_tab_selected">%1$s. %2$s. Sélectionné</string>
+    <string name="cave_menu_worlds_description">Explorez, récoltez et construisez à votre rythme. Les mêmes mondes, en Survie ou en Créatif.</string>
+    <string name="cave_menu_assault_description">Choisissez une arène. Éliminez les soldats avant la fin du chrono et enchaînez les manches.</string>
+    <string name="cave_menu_worlds_heading">Vos mondes</string>
+    <string name="cave_menu_maps_heading">Choisissez votre arène</string>
+    <string name="cave_menu_loading">Chargement…</string>
+    <string name="cave_menu_load_failed">Impossible de charger le menu</string>
+    <string name="cave_menu_retry_hint">Réessayez pour afficher vos mondes et vos cartes.</string>
+    <string name="cave_menu_retry">Réessayer</string>
+    <string name="cave_menu_empty_title">Votre prochaine aventure commence ici</string>
+    <string name="cave_menu_empty_hint">Créez votre premier monde avec le bouton ci-dessus. Vous pourrez ensuite passer de Survie à Créatif.</string>
+    <string name="cave_menu_survival">Survie</string>
+    <string name="cave_menu_play">Jouer</string>
+    <string name="cave_menu_manage">Gérer</string>
+    <string name="cave_menu_manage_named">Gérer %1$s</string>
+    <string name="cave_menu_bundled_map">Arène incluse</string>
+    <string name="cave_menu_personal_map">Votre arène</string>
+    <string name="cave_menu_launch_assault">Lancer l’assaut</string>
+    <string name="cave_menu_switch_survival">Passer en Survie</string>
+    <string name="cave_menu_switch_creative">Passer en Créatif</string>
+    <string name="cave_menu_details">Graine</string>
+    <string name="cave_menu_create_hint">Un monde, deux façons de jouer. Le mode reste modifiable depuis Gérer.</string>
+    <string name="cave_menu_game_mode">Mode de départ</string>
+    <string name="cave_menu_survival_choice">Survie · Récolter, explorer, survivre</string>
+    <string name="cave_menu_creative_choice">Créatif · Construire en toute liberté</string>
+    <string name="cave_menu_invalid_seed">Saisissez un entier entre −9223372036854775808 et 9223372036854775807, ou laissez vide.</string>
+    <string name="cave_menu_save_failed">Impossible d’enregistrer cette modification. Réessayez.</string>
+    <string name="cave_block_cobblestone">Pierre brute</string>
+    <string name="cave_block_mossy_cobblestone">Pierre brute moussue</string>
+    <string name="cave_block_sandstone">Grès</string>
+    <string name="cave_block_mud">Boue humide</string>
+    <string name="cave_block_mud_clay">Boue argileuse</string>
+    <string name="cave_block_mud_swamp">Boue de marécage</string>
+    <string name="cave_block_clay">Argile</string>
+    <string name="cave_block_forest_floor">Sol forestier</string>
+    <string name="cave_block_moss">Mousse</string>
+    <string name="cave_block_basalt">Basalte</string>
+    <string name="cave_assault_showcase">Atelier des biomes · visite libre</string>
+    <string name="cave_showcase_hint">Jardin derrière les villages : 19 cultures de Ma Ferme, cinq stades chacune. Paysages et galeries au fond.</string>
+    <string-array name="cave_showcase_frontier_names">
+        <item>Hameau · quatre foyers</item>
+        <item>Camp d’arpentage</item>
+        <item>Ruines d’archives</item>
+        <item>Jardin de résonance</item>
+        <item>Potager</item>
+        <item>Atelier du prospecteur</item>
+    </string-array>
+    <string-array name="cave_showcase_frontier_climates">
+        <item>Tempéré</item>
+        <item>Froid</item>
+        <item>Aride</item>
+    </string-array>
+    <string-array name="cave_showcase_mechanics_names">
+        <item>Roue, axes et moulin</item>
+        <item>Manivelle sur un renvoi d’angle, vers un axe vertical</item>
+        <item>Engrenages côte à côte</item>
+        <item>Grand et petits engrenages : deux fois plus vite</item>
+        <item>Renvoi d’angle : un quart de tour</item>
+        <item>De l’horizontale à la verticale, comme dans un moulin à vent</item>
+        <item>Une rangée de renvois partage une roue entre ses ateliers</item>
+        <item>Trop pour une seule roue : à l’arrêt</item>
+        <item>Engrenages qui ne s’accordent pas : à l’arrêt</item>
+        <item>Grande roue : deux fois plus lente, deux fois plus forte</item>
+        <item>Moulin à vent : voiles, renvoi d’angle et moulin en bas</item>
+        <item>Une grande roue et une longue rangée de renvois : six ateliers</item>
+        <item>À la main : une manivelle sur un renvoi, deux ateliers</item>
+        <item>Plus vite : le petit engrenage double la vitesse, la presse demande deux fois plus de force</item>
+        <item>Fonderie : le soufflet attise la forge, le creuset verse dans son moule</item>
+    </string-array>
+    <string-array name="cave_showcase_house_names">
+        <item>Maisonnette</item>
+        <item>Longère</item>
+        <item>Maison en L</item>
+        <item>Maison de ville</item>
+        <item>Tour</item>
+        <item>Maison à auvent</item>
+    </string-array>
+    <string name="cave_showcase_frontier_caption">%1$s · %2$s</string>
+    <string-array name="cave_showcase_mob_names">
+        <item>Nain</item><item>Gobelin</item><item>Golem</item><item>Diablotin</item><item>Momie</item><item>Ogre</item>
+        <item>Squelette</item><item>Slime</item><item>Araignée</item><item>Troll</item><item>Spectre</item><item>Zombie</item><item>Soldat d’Assaut</item>
+    </string-array>
+    <string name="cave_showcase_mob_caption">%1$s · %2$s\nGauche : référence · milieu : repos · droite : action</string>
+    <string name="cave_showcase_reference">Pose de référence (T-pose pour les humanoïdes)</string>
+    <string name="cave_showcase_idle">Animation au repos</string>
+    <string name="cave_showcase_still">Au repos (sans animation)</string>
+    <string name="cave_showcase_firing">Rafale au fusil : recul et flash du canon</string>
+    <string name="cave_showcase_walking">Marche sur place</string>
+    <string name="cave_showcase_attacking">Animation d’attaque</string>
+    <string name="cave_showcase_mountain">Montagne et minerais</string>
+    <string name="cave_showcase_desert">Désert et grès</string>
+    <string name="cave_showcase_beach">Plage et rivage</string>
+    <string name="cave_showcase_forest">Forêt et sous-bois</string>
+    <string name="cave_showcase_marsh">Marais et argile</string>
+    <string name="cave_showcase_volcano">Roches volcaniques</string>
+    <string name="cave_showcase_gallery">Galerie des blocs</string>
+    <string name="cave_showcase_walk">Jardin derrière les villages, au bout de leur allée centrale · paysages et galeries au fond</string>
+    <string name="cave_showcase_sample">Échantillon proche : %1$s</string>
+    <string name="cave_palette_pastel">Palette : Pastel</string>
+    <string name="cave_palette_vivid">Palette : Vif</string>
+    <string name="cave_block_arrow">Flèche</string>
+    <string name="cave_block_blue_ice">Glace bleue compacte</string>
+    <string name="cave_block_bolt">Carreau</string>
+    <string name="cave_block_brick_cobalt">Briques de pierre bleues</string>
+    <string name="cave_block_brick_moss">Briques de pierre moussues</string>
+    <string name="cave_block_brick_obsidian">Briques de basalte</string>
+    <string name="cave_block_brick_rose">Briques roses</string>
+    <string name="cave_block_brick_sandy">Briques de grès</string>
+    <string name="cave_block_brick_terracotta">Briques de terre cuite</string>
+    <string name="cave_block_bullet">Balle</string>
+    <string name="cave_block_dirt_sand">Terre couverte de sable</string>
+    <string name="cave_block_dirt_snow">Terre enneigée</string>
+    <string name="cave_block_greysand">Sable gris</string>
+    <string name="cave_block_greystone">Roche grise</string>
+    <string name="cave_block_greystone_greysand">Roche grise sablée</string>
+    <string name="cave_block_leaves_blue">Feuillage bleu</string>
+    <string name="cave_block_leaves_dark">Feuillage sombre</string>
+    <string name="cave_block_leaves_jungle">Feuillage de jungle</string>
+    <string name="cave_block_leaves_pink">Feuillage rose</string>
+    <string name="cave_block_leaves_purple">Feuillage violet</string>
+    <string name="cave_block_leaves_red">Feuillage rouge</string>
+    <string name="cave_block_leaves_sapin">Feuillage de sapin</string>
+    <string name="cave_block_leaves_yellow">Feuillage jaune</string>
+    <string name="cave_block_plank_blue">Planches en bois bleu</string>
+    <string name="cave_block_plank_dark">Planches en bois sombre</string>
+    <string name="cave_block_plank_jungle">Planches en bois de jungle</string>
+    <string name="cave_block_plank_pink">Planches en bois rose</string>
+    <string name="cave_block_plank_purple">Planches en bois violet</string>
+    <string name="cave_block_plank_red">Planches en bois rouge</string>
+    <string name="cave_block_plank_sapin">Planches en bois de sapin</string>
+    <string name="cave_block_plank_yellow">Planches en bois jaune</string>
+    <string name="cave_block_redstone_redsand">Sable rouge compact</string>
+    <string name="cave_block_stone_dirt">Pierre couverte de terre</string>
+    <string name="cave_block_stone_grass">Pierre enherbée</string>
+    <string name="cave_block_stone_sand">Pierre sablée</string>
+    <string name="cave_block_stone_snow">Pierre enneigée</string>
+    <string name="cave_block_water">Eau (source)</string>
+    <string name="cave_block_water_flow">Eau courante</string>
+    <string name="cave_block_wood_blue">Bois bleu</string>
+    <string name="cave_block_wood_dark">Bois sombre</string>
+    <string name="cave_block_wood_jungle">Bois de jungle</string>
+    <string name="cave_block_wood_pink">Bois rose</string>
+    <string name="cave_block_wood_purple">Bois violet</string>
+    <string name="cave_block_wood_red">Bois rouge</string>
+    <string name="cave_block_wood_sapin">Bois de sapin</string>
+    <string name="cave_block_wood_yellow">Bois jaune</string>
+    <string name="cave_animal_sheep">Mouton</string>
+    <string name="cave_animal_cow">Vache</string>
+    <string name="cave_animal_grazing">Broutage</string>
+    <string name="cave_animal_lamb">Agneau</string>
+    <string name="cave_animal_calf">Veau</string>
+    <string name="cave_animal_chicken">Poulet</string>
+    <string name="cave_animal_chick">Poussin</string>
+    <string name="cave_animal_pig">Cochon</string>
+    <string name="cave_animal_piglet">Porcelet</string>
+    <string name="cave_animal_pecking">Picorage</string>
+    <string name="cave_animal_rooting">Renifle le sol</string>
+    <string name="cave_animal_variant">%1$s · %2$s</string>
+    <string-array name="cave_sheep_coats"><item>Blanc</item><item>Gris clair</item><item>Gris ardoise</item><item>Noir</item></string-array>
+    <string-array name="cave_cow_coats"><item>Taches noires</item><item>Taches brunes</item><item>Taches rousses</item></string-array>
+    <string-array name="cave_chicken_coats"><item>Ivoire</item><item>Fauve</item><item>Charbon</item></string-array>
+    <string-array name="cave_chick_coats"><item>Jaune beurre</item><item>Duvet doré</item><item>Duvet gris</item></string-array>
+    <string-array name="cave_pig_coats"><item>Rose</item><item>Rose sable</item><item>Gris perle</item></string-array>
+    <string name="cave_showcase_walk_attack">Marche et attaque</string>
+    <string name="cave_block_stairs_plank">Escalier en chêne</string>
+    <string name="cave_block_stairs_plank_sapin">Escalier en sapin</string>
+    <string name="cave_block_stairs_plank_dark">Escalier en bois sombre</string>
+    <string name="cave_block_stairs_plank_jungle">Escalier en bois tropical</string>
+    <string name="cave_block_stairs_stone">Escalier en pierre</string>
+    <string name="cave_block_stairs_cobblestone">Escalier en pierre taillée</string>
+    <string name="cave_block_stairs_brick_grey">Escalier en briques de pierre</string>
+    <string name="cave_block_stairs_brick_red">Escalier en briques rouges</string>
+    <string name="cave_block_stairs_sandstone">Escalier en grès</string>
+    <string name="cave_block_stairs_brick_obsidian">Escalier en briques de basalte</string>
+    <string name="cave_block_stairs_weathered_marble">Escalier en marbre</string>
+    <string name="cave_block_stairs_slate_paving">Escalier en ardoise</string>
+    <string name="cave_block_slab_plank">Dalle en chêne</string>
+    <string name="cave_block_slab_plank_sapin">Dalle en sapin</string>
+    <string name="cave_block_slab_plank_dark">Dalle en bois sombre</string>
+    <string name="cave_block_slab_plank_jungle">Dalle en bois tropical</string>
+    <string name="cave_block_slab_stone">Dalle en pierre</string>
+    <string name="cave_block_slab_cobblestone">Dalle en pierre taillée</string>
+    <string name="cave_block_slab_brick_grey">Dalle en briques de pierre</string>
+    <string name="cave_block_slab_brick_red">Dalle en briques rouges</string>
+    <string name="cave_block_slab_sandstone">Dalle en grès</string>
+    <string name="cave_block_slab_brick_obsidian">Dalle en briques de basalte</string>
+    <string name="cave_block_slab_weathered_marble">Dalle en marbre</string>
+    <string name="cave_block_slab_slate_paving">Dalle en ardoise</string>
+    <string name="cave_showcase_garden_sample">%1$s · %2$s</string>
+    <string name="cave_showcase_garden_caption">Jardin de Ma Ferme · %1$s · %2$s\nCinq stades fixes par rangée, du jeune plant au plant mûr · sprites croisés</string>
+    <string-array name="cave_showcase_garden_stages">
+        <item>Jeune pousse</item>
+        <item>Développement</item>
+        <item>Croissance intermédiaire</item>
+        <item>Maturation</item>
+        <item>Plant mûr</item>
+    </string-array>
+    <string name="cave_block_farmland">Terre labourée</string>
+    <string name="cave_block_hoe">Houe</string>
+    <string name="cave_block_desc_farmland">Terre retournée aux sillons humides. Accueille les plantes sans irrigation.</string>
+    <string name="cave_block_desc_hoe">Utiliser sur le dessus d’une terre dégagée pour la labourer. Ne s’use pas.</string>
+    <string name="cave_ui_garden">Jardinage</string>
+    <string name="cave_farm_seed_name">Graines · %1$s</string>
+    <string name="cave_farm_seed_hint">Planter sur une terre labourée dégagée. Environ %1$d minutes avec lumière et eau à 4 blocs maximum. Sans eau, la croissance ralentit ; dans le noir, elle s’arrête. Seules les cultures proches poussent. La récolte rend des graines.</string>
+    <string name="cave_farm_produce_hint">Aliment récolté. Utiliser pour récupérer 3 points de vie. En Jardinage, utiliser un plant mûr pour le récolter.</string>
+    <string name="cave_farm_not_ready">Cette plante pousse encore.</string>
+    <string name="cave_farm_plant_hint">Planter sur une terre labourée avec deux blocs libres au-dessus du plant.</string>
+    <string name="cave_farm_controls">Houe : labourer une terre dégagée · Graines : planter · Plant mûr : récolter</string>
+
+    <string name="cave_block_glowstone_amber">Pierre lumineuse ambre</string>
+    <string name="cave_block_glowstone_green">Pierre lumineuse verte</string>
+    <string name="cave_block_glowstone_violet">Pierre lumineuse violette</string>
+    <string name="cave_block_glowstone_cyan">Pierre lumineuse cyan</string>
+    <string name="cave_block_glowstone_blue">Pierre lumineuse bleue</string>
+    <string name="cave_block_glowstone_ember">Basalte incandescent</string>
+    <string name="cave_block_glow_moss">Mousse luminescente</string>
+    <string name="cave_block_cave_mycelium">Mycélium souterrain</string>
+    <string name="cave_block_cave_root">Racine souterraine</string>
+    <string name="cave_block_giant_mushroom_stem">Pied de champignon géant</string>
+    <string name="cave_block_giant_mushroom_cap">Chapeau de champignon géant</string>
+    <string name="cave_block_glow_mushroom">Champignon luminescent</string>
+    <string name="cave_block_frosted_stone">Pierre givrée</string>
+    <string name="cave_block_cave_calcite">Concrétion de calcite</string>
+    <string name="cave_block_cave_crystal">Cristal décoratif souterrain</string>
+    <string name="cave_loading_terrain">Préparation du terrain alentour…</string>
+    <string name="cave_palette_grayscale">Noir et blanc</string>
+    <string name="cave_palette_change">Thème : %1$s. Toucher pour changer.</string>
+    <string name="cave_controls_reload">Recharger</string>
+    <string name="cave_assault_maple_crossing">Maple Crossing — lotissement américain</string>
+    <string name="cave_assault_dust2">Just You — désert en cubes (128 × 144)</string>
+    <string name="cave_block_street_asphalt">Asphalte</string>
+    <string name="cave_block_street_concrete">Béton</string>
+    <string name="cave_block_street_sidewalk">Dalles de trottoir</string>
+    <string name="cave_block_street_curb">Bordure basse en béton</string>
+    <string name="cave_block_street_manhole">Plaque d’égout</string>
+    <string name="cave_block_street_drain">Grille d’évacuation</string>
+    <string name="cave_block_street_lane_ns">Double ligne jaune — nord/sud</string>
+    <string name="cave_block_street_lane_ew">Double ligne jaune — est/ouest</string>
+    <string name="cave_block_street_cross_ns">Passage piéton — nord/sud</string>
+    <string name="cave_block_street_cross_ew">Passage piéton — est/ouest</string>
+    <string name="cave_block_street_stop_ns">Ligne d’arrêt — nord/sud</string>
+    <string name="cave_block_street_stop_ew">Ligne d’arrêt — est/ouest</string>
+    <string name="cave_block_street_shingles">Bardeaux de toiture</string>
+    <string name="cave_block_street_tile">Carrelage céramique</string>
+    <string name="cave_block_street_light">Plafonnier chaud</string>
+    <string name="cave_audio_credits_title">Crédits des bruitages</string>
+    <string name="cave_audio_credits_body">Kenney — Impact Sounds (CC0)\nhttps://kenney.nl/assets/impact-sounds\n\nBen Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney — The Free Firearm Sound Library (CC0)\nhttps://opengameart.org/content/the-free-firearm-sound-library\n\nartisticdude — Battle Sound Effects (CC0)\nhttps://opengameart.org/content/battle-sound-effects\n\nmikewest / AntumDeluge — Sheep Baa (CC0)\nhttps://opengameart.org/content/sheep-baa\n\nSecretlondon — Farm animals / Mudchute City Farm (CC BY-SA 3.0)\nhttps://opengameart.org/content/farm-animals\n\nIMadeIt — Chicken Sound Effect (CC BY 3.0)\nhttps://opengameart.org/content/chicken-sound-effect\n\nspookymodem — Crossbow Shot (CC BY 3.0)\nhttps://opengameart.org/content/crossbow-shot\n\nhttps://creativecommons.org/publicdomain/zero/1.0/\nhttps://creativecommons.org/licenses/by/3.0/\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\nExtraits sélectionnés, conversion mono, équilibrage du volume et fondus courts. Les enregistrements adaptés de vache, de cochon et le second bêlement restent sous CC BY-SA 3.0. Son original du projet : fusil à pompe.</string>
+    <string name="cave_controls_place_touch">À l’endroit touché : touchez un bloc pour poser à côté. Le bouton Poser utilise le viseur central.</string>
+    <string name="cave_controls_place_crosshair">Uniquement au viseur central : le bouton Poser est masqué. Touchez la zone de jeu, hors des autres boutons et de la barre de raccourcis, pour poser sous la croix au centre de l’écran.</string>
+    <string name="cave_controls_guard">Se mettre en garde</string>
+    <string name="cave_controls_cancel_fishing">Annuler la pêche</string>
+    <string name="cave_controls_tab_touch">Tactile</string>
+    <string name="cave_controls_tab_gamepad">Manette</string>
+    <string name="cave_pad_hint">Sélectionnez une action pour changer son bouton. Stick gauche : déplacement ; stick droit : caméra. LS / RS désignent les clics sur les sticks. Les commandes des menus restent inchangées.</string>
+    <string name="cave_pad_swap_hint">Choisissez un bouton. S’il est déjà attribué, les deux actions échangent leurs boutons.</string>
+    <string name="cave_pad_binding">%1$s : %2$s</string>
+    <string name="cave_pad_unused">Non attribué</string>
+    <string name="cave_pad_reset_confirm">Rétablir les boutons de manette par défaut ? Les réglages tactiles restent inchangés. Sauvegardez pour appliquer.</string>
+    <string name="cave_pad_jump">Sauter / Monter en vol</string>
+    <string name="cave_pad_crouch">S’accroupir / Descendre en vol</string>
+    <string name="cave_pad_attack">Attaquer / Tirer / Miner</string>
+    <string name="cave_pad_place">Poser / Interagir (arme : viser, recharger, garde)</string>
+    <string name="cave_pad_secondary">Recharger / Garde / Annuler la pêche</string>
+    <string name="cave_pad_inventory">Inventaire</string>
+    <string name="cave_pad_previous">Emplacement précédent</string>
+    <string name="cave_pad_next">Emplacement suivant</string>
+    <string name="cave_pad_run">Courir</string>
+    <string name="cave_pad_camera">Changer de caméra</string>
+    <string name="cave_pad_a">A</string>
+    <string name="cave_pad_b">B</string>
+    <string name="cave_pad_x">X</string>
+    <string name="cave_pad_y">Y</string>
+    <string name="cave_pad_lb">LB</string>
+    <string name="cave_pad_rb">RB</string>
+    <string name="cave_pad_lt">LT</string>
+    <string name="cave_pad_rt">RT</string>
+    <string name="cave_pad_ls">LS</string>
+    <string name="cave_pad_rs">RS</string>
+    <string name="cave_pad_up">↑</string>
+    <string name="cave_pad_down">↓</string>
+    <string name="cave_pad_left">←</string>
+    <string name="cave_pad_right">→</string>
+    <string name="cave_block_sapling_oak">Pousse de chêne</string>
+    <string name="cave_block_sapling_birch">Pousse de bouleau</string>
+    <string name="cave_block_sapling_sapin">Pousse de sapin</string>
+    <string name="cave_block_sapling_darkwood">Pousse d\'arbre des forêts sombres</string>
+    <string name="cave_block_sapling_jungle">Pousse d\'arbre de la jungle</string>
+    <string name="cave_block_sapling_redwood">Pousse de séquoia</string>
+    <string name="cave_block_sapling_apple">Pousse de pommier</string>
+    <string name="cave_block_sapling_pear">Pousse de poirier</string>
+    <string name="cave_block_sapling_pink">Pousse de cerisier</string>
+    <string name="cave_block_sapling_purple">Pousse d\'arbre violet</string>
+    <string name="cave_block_sapling_blue">Pousse d\'arbre bleu</string>
+    <string name="cave_block_sapling_yellow">Pousse d\'arbre jaune</string>
+    <string name="cave_block_sapling_giant_redwood">Pousse de séquoia géant</string>
+    <string name="cave_block_sapling_giant_pine">Pousse de pin géant</string>
+    <string name="cave_block_sapling_broad_oak">Pousse de grand chêne</string>
+    <string name="cave_block_sapling_baobab">Pousse de baobab</string>
+    <string name="cave_block_sapling_acacia">Pousse d\'acacia</string>
+    <string name="cave_block_sapling_willow">Pousse de saule pleureur</string>
+    <string name="cave_block_sapling_jungle_small">Pousse de petit arbre de la jungle</string>
+    <string name="cave_block_sapling_autumn">Pousse d\'arbre d\'automne</string>
+    <string name="cave_training_map">Test de combat — structures souterraines</string>
+    <string name="cave_training_choose">Structure : %1$s ▾</string>
+    <string name="cave_training_reset">Recommencer</string>
+    <string name="cave_training_status">Palier 1 · munitions infinies · invincible\nVie Survie : dernier coup −%1$d · défaites simulées : %2$d\nÀ 0 PV, la barre se remplit après 3 secondes.</string>
+    <string name="cave_training_bow">Tension : %1$d%% · flèches : ∞</string>
+    <string name="cave_waila_boss">Boss — %1$s · Palier %2$d\nVie : %3$d / %4$d</string>
+    <string name="cave_waila_unknown_mob">Créature inconnue</string>
+    <string name="cave_waila_mob">%1$s · Palier %2$d\nVie : %3$d / %4$d</string>
+    <string name="cave_menu_export_pack">Exporter le modèle de pack de textures</string>
+    <string name="cave_pack_exported">Modèle enregistré (%1$d textures)</string>
+    <string name="cave_pack_export_failed">Impossible d\'enregistrer le modèle</string>
+    <string name="cave_pack_default_name">Mon pack de textures</string>
+    <string name="cave_pack_button">Textures</string>
+    <string name="cave_pack_button_named">Textures : %1$s</string>
+    <string name="cave_pack_dialog_title">Textures — %1$s</string>
+    <string name="cave_pack_none">d\'origine</string>
+    <string name="cave_pack_import">Importer un pack (.zip)</string>
+    <string name="cave_pack_remove">Retirer le pack</string>
+    <string name="cave_pack_removed">Pack retiré : textures d\'origine</string>
+    <string name="cave_pack_imported">Pack \"%1$s\" installé (%2$d textures)</string>
+    <string name="cave_pack_import_empty">Aucune texture utilisable dans ce zip (PNG carrés nommés comme dans le modèle)</string>
+    <string name="cave_pack_import_failed">Impossible de lire ce zip</string>
+    <string name="cave_pack_readme">CAVE WORLD — PACK DE TEXTURES\n\nCe zip contient toutes les textures que le jeu dessine lui-même, un PNG par fichier. Retouche celles que tu veux, supprime celles que tu gardes, et rezippe : toute texture absente de ton pack reste celle d\'origine.\n\nDOSSIERS\nassets/caves/textures/&lt;onglet&gt;/&lt;nom&gt;.png\nLes dossiers suivent les onglets du mode créatif (terrain, stone, wood, ores…). Seul le NOM du fichier compte : tu peux déplacer les fichiers d\'un dossier à l\'autre ou tout mettre dans un seul.\n\nNOMS\n• stone.png — un bloc dont le dessus, le côté et le dessous partagent la même texture.\n• grass_top.png, grass_side.png — un bloc aux faces différentes (top, side, bottom, front, back).\n• _v1, _v2, _v3 — des variantes tirées au hasard selon la position, pour que le terrain ne paraisse pas carrelé.\n• Une texture partagée par plusieurs blocs (la terre est aussi sous l\'herbe) est un seul fichier : la modifier les change tous.\n\nIMAGES\n• PNG carré, de 16 à 2048 pixels. 32 px est la taille d\'origine ; de 16 à 96 px convient le mieux (le jeu dessine en 96).\n• La transparence est conservée. Aucun lissage : le pixel art reste net.\n• L\'herbe, les feuilles et certaines plantes sont teintées par le biome : peins-les en gris clair ou en blanc.\n\nL\'UTILISER\nDans le menu de Cave World, touche Textures en haut à droite, puis Importer un pack (.zip). Le pack s\'applique au prochain lancement d\'une partie.\n\nPACK.JSON\nNom et auteur de ton pack ; ne touche pas au format.</string>
+</resources>

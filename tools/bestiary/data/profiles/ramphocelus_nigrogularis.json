@@ -1,0 +1,142 @@
+{
+  "id": "ramphocelus_nigrogularis",
+  "scientific": "Ramphocelus nigrogularis",
+  "group": "birds",
+  "name": {
+    "en": "Masked crimson tanager",
+    "fr": "Tangara masqué"
+  },
+  "sections": {
+    "overview": {
+      "en": "This tanager occurs across parts of the western Amazon basin, from Colombia and Ecuador through Peru to northern Bolivia and Brazil.",
+      "fr": "Ce tangara vit dans une partie de l’ouest du bassin amazonien, de la Colombie et de l’Équateur au Pérou, au nord de la Bolivie et du Brésil."
+    },
+    "identification": {
+      "en": "The male has vivid crimson plumage set against a black face and throat; the female is less strongly contrasted.",
+      "fr": "Le mâle présente un plumage cramoisi vif contrastant avec sa face et sa gorge noires ; la femelle est moins vivement contrastée."
+    },
+    "habitat": {
+      "en": "It is associated with Amazonian lowlands, including seasonally flooded forest and river-edge vegetation.",
+      "fr": "Il fréquente les basses terres amazoniennes, notamment les forêts inondées selon la saison et la végétation des berges."
+    },
+    "diet": {
+      "en": "The species is classified as omnivorous in comparative bird-trait datasets.",
+      "fr": "Des bases de données comparatives sur les oiseaux classent l’espèce comme omnivore."
+    },
+    "behavior": {
+      "en": "Field records document it in mixed Amazonian bird communities, but the consulted sources provide little species-specific behavioral detail.",
+      "fr": "Des inventaires la signalent dans des communautés d’oiseaux amazoniennes, mais les sources consultées donnent peu de détails comportementaux propres à l’espèce."
+    },
+    "reproduction": {
+      "en": "The sources consulted here do not provide a sufficiently specific account of its breeding to summarize safely.",
+      "fr": "Les sources consultées ici ne décrivent pas sa reproduction avec assez de précision pour la résumer sans risque."
+    },
+    "ecology": {
+      "en": "It belongs to Ramphocelus, a South American tanager genus whose species include the silver-beaked tanager.",
+      "fr": "Il appartient au genre sud-américain Ramphocelus, qui comprend notamment le tangara à bec d’argent."
+    },
+    "conservation": {
+      "en": "BirdLife and Oiseaux.net list it as Least Concern.",
+      "fr": "BirdLife et Oiseaux.net la classent en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Masked Crimson Tanager",
+        "fr": "Oiseaux.net — Tangara masqué"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/masked.crimson.tanager.html",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "ecology",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account gives range, plumage, genus, compiled diet traits and IUCN LC; the accessible text has limited breeding detail."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 19,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BirdLife DataZone — Masked Crimson Tanager",
+        "fr": "BirdLife DataZone — Tangara masqué"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/masked-crimson-tanager-ramphocelus-nigrogularis",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "BirdLife provides the species factsheet and range map; the range was cross-checked with a regional inventory."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 16,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Field Museum Rapid Inventories — avifaunal appendix",
+        "fr": "Field Museum Rapid Inventories — annexe avifaunistique"
+      },
+      "url": "https://www.rapidinventories.fieldmuseum.org/_files/ugd/d0d95f_79f03db720a04992bf9645abf7b7b1bb.pdf",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "A regional survey records this tanager in Amazonian várzea inventories and local bird communities."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 14,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A concise overview is used because detailed breeding and behavior evidence was limited in the accessible sources; the habitat statement is restricted to the documented Amazonian floodplain context."
+  ],
+  "review_note": "Cross-checked BirdLife, Oiseaux.net, and a Field Museum regional inventory; kept the biology short where source detail was sparse.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

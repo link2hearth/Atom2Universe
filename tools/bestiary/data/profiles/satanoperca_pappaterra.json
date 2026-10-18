@@ -1,0 +1,141 @@
+{
+  "id": "satanoperca_pappaterra",
+  "scientific": "Satanoperca pappaterra",
+  "group": "fish",
+  "name": {
+    "en": "Pantanal eartheater",
+    "fr": "Satanoperca pappaterra"
+  },
+  "sections": {
+    "overview": {
+      "en": "This South American cichlid occurs in the Guaporé and Paraguay river systems.",
+      "fr": "Ce cichlidé sud-américain vit dans les bassins des fleuves Guaporé et Paraguay."
+    },
+    "identification": {
+      "en": "FishBase reports a maximum published length of about 27.5 cm total length.",
+      "fr": "FishBase rapporte une longueur maximale publiée d’environ 27,5 cm de longueur totale."
+    },
+    "habitat": {
+      "en": "It inhabits streams and lagoons with sandy or muddy bottoms.",
+      "fr": "Il fréquente les cours d’eau et lagunes aux fonds sableux ou vaseux."
+    },
+    "diet": {
+      "en": "It sifts sediment through its mouth to extract insect larvae, crustaceans and other food items.",
+      "fr": "Il filtre les sédiments avec sa bouche pour en extraire des larves d’insectes, des crustacés et d’autres aliments."
+    },
+    "behavior": {
+      "en": "When feeding in small groups, individuals may watch for approaching piranhas, according to the cited field observation.",
+      "fr": "Lorsqu’ils s’alimentent en petits groupes, les individus peuvent surveiller l’approche des piranhas, selon l’observation de terrain citée."
+    },
+    "reproduction": {
+      "en": "FishBase classifies the species as an ovophile mouthbrooder.",
+      "fr": "FishBase classe l’espèce parmi les incubateurs buccaux ovophiles."
+    },
+    "ecology": {
+      "en": "Like S. mapiritensis, it is an eartheater cichlid in the genus Satanoperca, but its documented range is the Guaporé and Paraguay systems rather than the lower Orinoco; see the related profile.",
+      "fr": "Comme S. mapiritensis, c’est un cichlidé fouisseur du genre Satanoperca, mais son aire documentée concerne les bassins du Guaporé et du Paraguay plutôt que l’Orénoque inférieur ; voir la fiche correspondante."
+    },
+    "conservation": {
+      "en": "FishBase lists a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase indique une évaluation mondiale UICN « Préoccupation mineure », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Pantanal eartheater summary",
+        "fr": "FishBase — résumé du géophage du Pantanal"
+      },
+      "url": "https://www.fishbase.net.br/summary/57778",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase documents sand/mud habitat, substrate sifting, diet, group vigilance, mouthbrooding, size and dated category."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 14,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species-level phylogeny of Satanoperca — Molecular Phylogenetics and Evolution",
+        "fr": "Phylogénie des espèces de Satanoperca — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S1055790312000711",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed study contrasts pappaterra in the Guaporé/Paraguay with mapiritensis in lower Orinoco."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 13,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Satanoperca pappaterra",
+        "fr": "Catalogue des poissons d’Eschmeyer — Satanoperca pappaterra"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37704",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The California Academy catalog recognizes S. pappaterra as valid and gives its South American basins."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 15,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The profile keeps the distribution to the Guaporé and Paraguay systems; the cited phylogenetic paper notes that some peripheral basin records have also been attributed to other species."
+  ],
+  "review_note": "Cross-checked FishBase and the California Academy of Sciences catalog with a peer-reviewed phylogenetic study; linked the closely related profile reciprocally by genus and basin range.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

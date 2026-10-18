@@ -1,0 +1,144 @@
+{
+  "id": "pseudotropheus_socolofi",
+  "scientific": "Pseudotropheus socolofi",
+  "group": "fish",
+  "name": {
+    "en": "Pindani",
+    "fr": "Pindani"
+  },
+  "sections": {
+    "overview": {
+      "en": "This catalogue retains the name Pseudotropheus socolofi, now generally accepted as Chindongo socolofi. The cichlid is recorded along the Mozambican shore of Lake Malawi.",
+      "fr": "Ce catalogue conserve le nom Pseudotropheus socolofi, aujourd’hui généralement accepté comme Chindongo socolofi. Ce cichlidé est signalé sur la rive mozambicaine du lac Malawi."
+    },
+    "identification": {
+      "en": "The name Pindani is used for this species.",
+      "fr": "Le nom Pindani est utilisé pour cette espèce."
+    },
+    "habitat": {
+      "en": "It inhabits shallow water over sand, with territorial males remaining near rocks.",
+      "fr": "Il fréquente les eaux peu profondes au-dessus de fonds sableux, les mâles territoriaux restant près des rochers."
+    },
+    "diet": {
+      "en": "It feeds on the biocover growing on rock and sand.",
+      "fr": "Il se nourrit du biofilm qui couvre les rochers et le sable."
+    },
+    "behavior": {
+      "en": "Territorial males stay close to rocks.",
+      "fr": "Les mâles territoriaux restent près des rochers."
+    },
+    "reproduction": {
+      "en": "Females incubate eggs in their mouths.",
+      "fr": "Les femelles incubent les œufs dans leur bouche."
+    },
+    "ecology": {
+      "en": "Its distribution in Lake Malawi is limited to Mozambique in the FishBase record.",
+      "fr": "Dans la fiche FishBase, sa répartition au lac Malawi se limite au Mozambique."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2018.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN « Préoccupation mineure » datant de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — résumé de l’espèce"
+      },
+      "url": "https://www.fishbase.se/summary/Pseudotropheus-socolofi",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the Mozambique range, Pindani name, sandy shallows, biofilm diet, mouthbrooding and 2018 IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 16,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "California Academy of Sciences — Catalog of Fishes",
+        "fr": "California Academy of Sciences — Catalog of Fishes"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=61146",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The catalog lists Chindongo socolofi and its earlier combination Pseudotropheus socolofi."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 11,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aquaportail — French species account",
+        "fr": "Aquaportail — fiche française de l’espèce"
+      },
+      "url": "https://www.aquaportail.com/fiche-poisson-3893-chindongo-socolofi.html",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French-language account identifies Chindongo socolofi as the accepted taxon and Pseudotropheus socolofi as the former name."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue retains the supplied Pseudotropheus name as its ID/scientific label, while contemporary taxonomic databases use Chindongo socolofi. No color diagnosis is added because the consulted database summary does not supply one."
+  ],
+  "review_note": "Taxonomy was checked against the California Academy of Sciences and a French-language reference; biological details are limited to FishBase records.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

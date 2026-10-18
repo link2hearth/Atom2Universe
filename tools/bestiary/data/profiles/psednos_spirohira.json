@@ -1,0 +1,166 @@
+{
+  "id": "psednos_spirohira",
+  "scientific": "Psednos spirohira",
+  "group": "fish",
+  "name": {
+    "en": "Coiled-gut snailfish",
+    "fr": "Limace de mer à intestin spiralé"
+  },
+  "sections": {
+    "overview": {
+      "en": "A marine Liparidae snailfish recorded in the northeast Atlantic west of northern Spain.",
+      "fr": "Limace de mer marine de la famille des Liparidés, signalée dans l’Atlantique Nord-Est, à l’ouest du nord de l’Espagne."
+    },
+    "identification": {
+      "en": "Its posterior intestine forms two close parallel coils, the feature reflected in its scientific name.",
+      "fr": "La partie postérieure de son intestin forme deux boucles rapprochées et parallèles, caractère évoqué par son nom scientifique."
+    },
+    "habitat": {
+      "en": "It is reported from deep water, but the precise living depth is not established.",
+      "fr": "Elle est signalée en eaux profondes, mais sa profondeur de vie précise n’est pas établie."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not describe its diet.",
+      "fr": "Les fiches consultées ne décrivent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "No species-specific behavior is given in the consulted accounts.",
+      "fr": "Les sources consultées ne donnent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted sources contain no reproductive observations.",
+      "fr": "Les sources consultées ne contiennent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The known record is limited, and ecological information is scarce. P. islandicus is another northeast-Atlantic congener, recorded south of Iceland; its description emphasizes pale skin and a steeply angled mouth.",
+      "fr": "Les données connues sont limitées et les informations écologiques sont rares. P. islandicus est un autre congénère de l’Atlantique Nord-Est, signalé au sud de l’Islande ; sa description souligne sa peau pâle et sa bouche très inclinée."
+    },
+    "conservation": {
+      "en": "FishBase reports the IUCN category Data Deficient, assessed in 2014.",
+      "fr": "FishBase indique la catégorie UICN « Données insuffisantes », attribuée lors d’une évaluation en 2014."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59796",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the locality west of Spain, coiled intestine, deep-water association, no diet or life-history account, and Data Deficient status dated 2014."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 22,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Family Liparidae — snailfishes, taxonomic account",
+        "fr": "Family Liparidae — snailfishes, taxonomic account"
+      },
+      "url": "https://www.researchgate.net/publication/242550096_Family_Liparidae_Scopoli_1777_-_Snailfishes",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The family account records the type locality west of northern Spain and a single unique holotype."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 16,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — taxonomic report",
+        "fr": "ITIS — taxonomic report"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644416",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes Psednos spirohira Chernova and Stein, 2002 as valid in Liparidae."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos islandicus species summary",
+        "fr": "FishBase — résumé de Psednos islandicus"
+      },
+      "url": "https://www.fishbase.se/summary/59797",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos islandicus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 14,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The coiled-intestine description is a diagnostic observation, not evidence about diet or digestive function. The French common name is descriptive."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

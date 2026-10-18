@@ -1,0 +1,216 @@
+{
+  "id": "pseudoplatystoma_magdaleniatum",
+  "scientific": "Pseudoplatystoma magdaleniatum",
+  "group": "fish",
+  "name": {
+    "en": "Magdalena shovelnose catfish",
+    "fr": "Bagre rayado du Magdalena"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Colombian freshwater catfish is endemic to the Magdalena–Cauca drainage. It is closely related to Pseudoplatystoma corruscans, whose range instead includes the São Francisco and Paraná basins.",
+      "fr": "Ce poisson-chat d’eau douce colombien est endémique du bassin Magdalena–Cauca. Il est proche de Pseudoplatystoma corruscans, présent plutôt dans les bassins du São Francisco et du Paraná."
+    },
+    "identification": {
+      "en": "It has broad, straight dark bars on its sides; P. corruscans is distinguished by a spotted pattern.",
+      "fr": "Elle porte de larges bandes sombres rectilignes sur les flancs ; P. corruscans se distingue par un motif tacheté."
+    },
+    "habitat": {
+      "en": "It inhabits large river channels and floodplain lakes in the Magdalena basin.",
+      "fr": "Elle fréquente les chenaux des grands cours d’eau et les lacs de plaine inondable du bassin Magdalena."
+    },
+    "diet": {
+      "en": "Juveniles feed on other fishes, according to the cited basin assessment.",
+      "fr": "Les juvéniles se nourrissent d’autres poissons, selon l’évaluation citée pour le bassin."
+    },
+    "behavior": {
+      "en": "It makes medium-distance longitudinal migrations within the river basin.",
+      "fr": "Elle effectue des migrations longitudinales de moyenne distance dans le bassin fluvial."
+    },
+    "reproduction": {
+      "en": "It reproduces throughout the year, with seasonal peaks during high water.",
+      "fr": "Elle se reproduit toute l’année, avec des pics saisonniers pendant les hautes eaux."
+    },
+    "ecology": {
+      "en": "Published color-pattern analyses distinguish its dark bars from the characteristic spots of P. corruscans. The taxonomic revision also recognizes P. metaense, an Orinoco congener.",
+      "fr": "Les analyses publiées des motifs de coloration distinguent ses bandes sombres des taches caractéristiques de P. corruscans. La révision taxonomique reconnaît également P. metaense, un congénère de l’Orénoque."
+    },
+    "conservation": {
+      "en": "The 2014 global IUCN assessment listed it as Endangered. Colombia's 2024 national threatened-species resolution lists it as Critically Endangered.",
+      "fr": "L’évaluation mondiale UICN de 2014 la classait « En danger ». La résolution colombienne de 2024 sur les espèces menacées la classe « En danger critique »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://fishbase.se/summary/Pseudoplatystoma-magdaleniatum",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "FishBase records endemism in the Magdalena drainage, its distinguishing dark straight bars, freshwater demersal habitat, and maximum length; no detailed life-history fields are supplied there."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 25,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — species assessment",
+        "fr": "IUCN Red List — species assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T58439165A61474168.en",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN account reports river channels and floodplain lakes, fish-eating juveniles, medium longitudinal migrations, year-round reproduction with flood-season peaks, and global Endangered status assessed in 2014."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 26,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scientific Reports — color-pattern study",
+        "fr": "Scientific Reports — color-pattern study"
+      },
+      "url": "https://www.nature.com/articles/s41598-020-68700-0",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The study describes the barred pattern of P. magdaleniatum and contrasts it with the spotted pattern of P. corruscans."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 19,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "MinAmbiente Colombia — Resolución 0126 de 2024",
+        "fr": "MinAmbiente Colombia — Resolución 0126 de 2024"
+      },
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2024/02/Resolucion-0126-de-2024.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Colombia’s 2024 national list classifies Pseudoplatystoma magdaleniatum as Critically Endangered (CR)."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 11,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — P. corruscans summary",
+        "fr": "FishBase — P. corruscans summary"
+      },
+      "url": "https://www.fishbase.se/summary/pseudoplatystoma-corruscans.html",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "FishBase records P. corruscans from the São Francisco and Paraná River basins."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 12,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Zootaxa — taxonomic revision of Pseudoplatystoma",
+        "fr": "Zootaxa — révision taxonomique de Pseudoplatystoma"
+      },
+      "url": "https://www.mapress.com/zootaxa/2007f/zt01512p038.pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The revision recognizes P. metaense as a distinct congener from the Orinoco drainage."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 13,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Global and national conservation categories refer to different assessments and scopes, so both are dated and labeled. The French common name is a descriptive translation."
+  ],
+  "review_note": "Kept the profile concise and cross-checked species-level facts against taxonomic, institutional or assessment sources. Related Pseudoplatystoma profiles use reciprocal comparisons limited to sourced distribution and coloration.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

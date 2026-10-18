@@ -1,0 +1,16 @@
+{
+  "id": 6002,
+  "name": "water_flow",
+  "texture_top": "cozy:utility:7",
+  "texture_side": "cozy:utility:7",
+  "texture_bottom": "cozy:utility:7",
+  "color": "#78B9BA",
+  "hardness": 100.0,
+  "water": true,
+  "drop": "",
+  "harvest_category": "liquid",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

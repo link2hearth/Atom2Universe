@@ -1,0 +1,143 @@
+{
+  "id": "gymnocranius_audleyi",
+  "scientific": "Gymnocranius audleyi",
+  "group": "fish",
+  "name": {
+    "en": "Collared large-eye bream",
+    "fr": "Pagre à grand œil collier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The collared large-eye bream is an Australian western Pacific species of Gymnocranius, alongside the similarly sized congener G. frenatus.",
+      "fr": "Le pagre à grand œil collier est une espèce australienne du Pacifique occidental, du genre Gymnocranius, comme son congénère de taille comparable G. frenatus."
+    },
+    "identification": {
+      "en": "It is silvery to whitish, often olive-brown above, with brown spots aligned along the scales and sometimes a dark bar through the eye. The FAO catalogue gives a maximum total length of 40 cm, commonly 35 cm.",
+      "fr": "Il est argenté à blanchâtre, souvent brun olive sur le dos, avec des taches brunes alignées sur les écailles et parfois une barre sombre traversant l’œil. Le catalogue de la FAO indique une longueur totale maximale de 40 cm, et 35 cm couramment."
+    },
+    "habitat": {
+      "en": "It occurs on sand or rubble beside reefs at about 8–40 m depth in its Australian western Pacific range.",
+      "fr": "Dans son aire australienne du Pacifique occidental, il fréquente le sable ou les débris coralliens près des récifs, vers 8 à 40 m de profondeur."
+    },
+    "diet": {
+      "en": "The species feeds mainly on bottom-dwelling invertebrates.",
+      "fr": "L’espèce se nourrit principalement d’invertébrés vivant sur le fond."
+    },
+    "behavior": {
+      "en": "FAO describes it as generally solitary over sand or rubble areas next to reefs.",
+      "fr": "La FAO le décrit comme généralement solitaire au-dessus de zones sableuses ou détritiques près des récifs."
+    },
+    "reproduction": {
+      "en": "The species account consulted does not report a breeding season, clutch size, or other species-specific reproductive observations.",
+      "fr": "La fiche d’espèce consultée ne précise ni saison de reproduction, ni taille de ponte, ni autre observation reproductive propre à l’espèce."
+    },
+    "ecology": {
+      "en": "Its benthic feeding links reef-edge sandy habitats with the small invertebrates living on or within the bottom.",
+      "fr": "Son alimentation benthique relie les fonds sableux en bordure de récif aux petits invertébrés qui y vivent."
+    },
+    "conservation": {
+      "en": "FishBase reports the species as Least Concern, with an IUCN assessment dated 2015.",
+      "fr": "FishBase indique que l’espèce est de préoccupation mineure, selon une évaluation de l’UICN datée de 2015."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FAO species catalogue, Gymnocranius audleyi",
+        "fr": "Catalogue FAO, Gymnocranius audleyi"
+      },
+      "url": "https://www.fao.org/4/y0770e/y0770e25.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The FAO species account gives the diagnosis, range and life-history details cited in these sections."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 15,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnocranius audleyi summary — FishBase",
+        "fr": "Résumé de Gymnocranius audleyi — FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/1835",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summary records its broad ecology and current Least Concern assessment; the consulted accounts provide no species-specific reproduction record."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 19,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS report: Gymnocranius audleyi",
+        "fr": "Rapport ITIS : Gymnocranius audleyi"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550893",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS accepts Gymnocranius audleyi and lists Gymnocranius bitorquatus as its synonym."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding details were not supplied by the consulted species catalogue; no season or fecundity estimate is inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared with the FAO account and FishBase summary; cross-reference to Gymnocranius frenatus is based on its congeneric status and contrasting published colour and range descriptions."
+}

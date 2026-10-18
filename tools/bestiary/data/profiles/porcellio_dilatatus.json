@@ -1,0 +1,216 @@
+{
+  "id": "porcellio_dilatatus",
+  "scientific": "Porcellio dilatatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Broad Woodlouse",
+    "fr": "Cloporte dilaté"
+  },
+  "sections": {
+    "overview": {
+      "en": "Porcellio dilatatus is a terrestrial woodlouse native to southwestern Europe and introduced in many other regions.",
+      "fr": "Porcellio dilatatus est un cloporte terrestre originaire du sud-ouest de l’Europe et introduit dans de nombreuses autres régions."
+    },
+    "identification": {
+      "en": "It is broad-bodied, flattened and rough, and females can reach about 20 mm. Its rounded telson helps distinguish it from the pointed telson of P. scaber.",
+      "fr": "Son corps est large, aplati et rugueux; les femelles peuvent atteindre environ 20 mm. Son telson arrondi aide à le distinguer du telson pointu de P. scaber."
+    },
+    "habitat": {
+      "en": "It often lives close to people, including compost or manure heaps and stables, but records also come from some natural habitats.",
+      "fr": "Il vit souvent près des humains, notamment dans les tas de compost ou de fumier et les étables, mais il est aussi signalé dans certains milieux naturels."
+    },
+    "diet": {
+      "en": "Like other woodlice, it feeds on decaying plant material; species-specific diet details are limited in the sources consulted.",
+      "fr": "Comme les autres cloportes, il consomme des végétaux en décomposition; les sources consultées donnent peu de détails sur son régime propre."
+    },
+    "behavior": {
+      "en": "Its frequent presence in buildings and manure or compost piles reflects a tolerance for human-modified habitats.",
+      "fr": "Sa présence fréquente dans les bâtiments et les tas de fumier ou de compost témoigne de sa tolérance aux milieux modifiés par l’humain."
+    },
+    "reproduction": {
+      "en": "In females, fertilization is associated with ovarian maturation and the brood-related molt, as shown in physiological work on this species.",
+      "fr": "Chez les femelles, la fécondation est associée à la maturation ovarienne et à la mue liée à la gestation, comme l’a montré une étude physiologique de cette espèce."
+    },
+    "ecology": {
+      "en": "P. albinus is a burrowing isopod of sandy desert habitats. P. dilatatus is instead frequently recorded around human settlements.",
+      "fr": "P. albinus est un cloporte fouisseur des habitats sableux désertiques. P. dilatatus est plutôt souvent signalé près des habitations."
+    },
+    "conservation": {
+      "en": "No global conservation assessment is reported in the regional and taxonomic sources consulted.",
+      "fr": "Les sources régionales et taxonomiques consultées ne rapportent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Porcellio dilatatus — French FAUNA species record based on INPN data",
+        "fr": "Porcellio dilatatus — fiche espèce FAUNA fondée sur les données de l’INPN"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237085",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The account reports a flattened rough body and human-associated sites."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 10,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio dilatatus — British Myriapod and Isopod Group",
+        "fr": "Porcellio dilatatus — British Myriapod and Isopod Group"
+      },
+      "url": "https://bmig.org.uk/species/porcellio-dilatatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The UK group describes the species as large and broadly recorded."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 11,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Induction of ovarian maturity and parturial moulting in Porcellio dilatatus — PubMed",
+        "fr": "Induction de la maturité ovarienne et de la mue parturiale chez Porcellio dilatatus — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/13585666/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The French-language 1958 paper studies fertilization, ovarian maturation and parturial molt in this isopod."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 14,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Optimization of culture conditions for Porcellio dilatatus — ScienceDirect",
+        "fr": "Optimisation des conditions d’élevage de Porcellio dilatatus — ScienceDirect"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0147651300919821",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The research paper reports the species in southern Europe, Atlantic islands and North African countries."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio albinus — reproductive and ecological study",
+        "fr": "Porcellio albinus — étude de la reproduction et de l’écologie"
+      },
+      "url": "https://doi.org/10.1080/07924259.2016.1263242",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Tunisian study describes P. albinus as a burrowing isopod of xeric and sandy habitats."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 15,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Woodlice — INRAE Jardibiodiv",
+        "fr": "Cloportes — INRAE Jardibiodiv"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/25151/jardibiodiv-Cloportes",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The INRAE overview describes woodlice as consumers of cellulose-containing plant matter and litter."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 13,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The range summary reflects published records and introductions; it should not be read as a complete global map.",
+    "The diet description is general for woodlice because species-specific feeding studies were not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal ecology comparison with P. albinus contrasts synanthropic association with desert burrowing; P. scaber is noted only as an identification lookalike."
+}

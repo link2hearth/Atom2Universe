@@ -1,0 +1,287 @@
+{
+  "id": "apistogramma_steindachneri",
+  "scientific": "Apistogramma steindachneri",
+  "group": "fish",
+  "name": {
+    "en": "Steindachner’s Dwarf Cichlid",
+    "fr": "Apistogramme de Steindachner"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma steindachneri is a comparatively large dwarf cichlid from the Guiana region of northeastern South America. Charles Tate Regan described it in 1908 as Heterogramma steindachneri, using specimens from Georgetown on Guyana’s Demerara River.",
+      "fr": "Apistogramma steindachneri est un cichlidé nain relativement grand, originaire de la région des Guyanes dans le nord-est de l’Amérique du Sud. Charles Tate Regan l’a décrit en 1908 sous le nom Heterogramma steindachneri, d’après des spécimens de Georgetown, sur le Demerara en Guyana."
+    },
+    "identification": {
+      "en": "The diagnostic pattern combines a narrow dark side band, a triangular black spot centered on that band, and a separate round spot at the tail base. It lacks the abdominal stripes found in some look-alikes, while adult males develop longer dorsal rays and a squared or lyre-shaped tail; females retain a rounder tail. FishBase lists males or unsexed fish to 65 mm standard length and females to 70 mm total length. The Swedish register gives 10 cm without specifying the measure; no reliable mass, body width or height was found.",
+      "fr": "Le motif diagnostique associe une bande latérale sombre et étroite, une tache noire triangulaire centrée dessus et une tache ronde distincte à la base de la queue. Il n’a pas les rayures abdominales de certains ressemblants ; les mâles adultes développent des rayons dorsaux plus longs et une caudale carrée ou en lyre, tandis que celle des femelles reste plus arrondie. FishBase indique jusqu’à 65 mm de longueur standard pour les mâles ou individus non sexés et 70 mm de longueur totale pour les femelles. Le registre suédois donne 10 cm sans préciser la mesure ; aucune masse, largeur ou hauteur corporelle fiable n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Records span the Essequibo, Demerara and Mahaica drainages of Guyana and rivers from the Marowijne to the Corantijn in Suriname. It uses slower tributaries and streams with leaf litter and submerged wood, and a similar Cuyuni-basin form in Venezuela remains taxonomically uncertain.",
+      "fr": "Les données couvrent les bassins de l’Essequibo, du Demerara et du Mahaica en Guyana, ainsi que des rivières du Marowijne au Corantijn au Suriname. L’espèce fréquente des affluents et cours d’eau lents riches en feuilles mortes et en bois immergé ; une forme voisine du bassin du Cuyuni, au Venezuela, reste d’identité incertaine."
+    },
+    "diet": {
+      "en": "No direct stomach-content study was located in the sources consulted. FishBase gives a trophic estimate derived from related species, so small invertebrates are a plausible dwarf-cichlid diet, not a measured species-specific menu.",
+      "fr": "Aucune analyse directe du contenu stomacal n’a été retrouvée dans les sources consultées. FishBase propose une estimation trophique déduite d’espèces apparentées ; les petits invertébrés constituent donc un régime plausible de cichlidé nain, et non un menu mesuré spécifiquement chez cette espèce."
+    },
+    "behavior": {
+      "en": "Adult males may defend a harem of several females and multiple nesting sites; females tend the cave brood while the larger males guard the territory.",
+      "fr": "Les mâles adultes peuvent défendre un harem de plusieurs femelles et différents sites de ponte ; les femelles gardent la ponte en cavité tandis que les mâles, plus grands, défendent le territoire."
+    },
+    "reproduction": {
+      "en": "Females deposit roughly 60–120 eggs on the ceiling of a cave, and the female tends the eggs and larvae. The male’s role is mainly territorial, guarding the nesting sites used by the females in his harem.",
+      "fr": "Les femelles déposent environ 60 à 120 œufs au plafond d’une cavité et prennent soin des œufs puis des larves. Le rôle du mâle est surtout territorial : il défend les sites de ponte utilisés par les femelles de son harem."
+    },
+    "ecology": {
+      "en": "This species belongs to the steindachneri lineage, whose members share a conspicuous flank spot; the spot’s position on the lateral band helps identify true A. steindachneri. It is distinct from A. staecki, a similarly sized member of the same broad lineage found far to the southwest in Bolivia and Brazil.",
+      "fr": "Cette espèce appartient à la lignée steindachneri, dont les membres ont une tache latérale marquée ; la position de cette tache sur la bande aide à reconnaître A. steindachneri. Elle diffère d’A. staecki, espèce de taille comparable de la même grande lignée, mais présente beaucoup plus au sud-ouest, en Bolivie et au Brésil."
+    },
+    "conservation": {
+      "en": "The IUCN lists Apistogramma steindachneri as Least Concern, assessed on 29 October 2020. This category applies to the named species; it does not settle whether the Venezuelan Cuyuni form is part of the same species.",
+      "fr": "L’UICN classe Apistogramma steindachneri en préoccupation mineure, selon une évaluation du 29 octobre 2020. Cette catégorie concerne l’espèce telle qu’elle est nommée et ne détermine pas si la forme vénézuélienne du Cuyuni appartient à la même espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes: Apistogramma steindachneri",
+        "fr": "Catalog of Fishes : Apistogramma steindachneri"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=51576",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The catalog records Regan’s 1908 original combination, the Georgetown type locality, valid status and known drainages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 16,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — FishBase species summary",
+        "fr": "Apistogramma steindachneri — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-steindachneri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports male and female length entries, harem and cave spawning, female egg care, modelled trophic level and IUCN assessment date."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 21,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — Seriously Fish profile",
+        "fr": "Apistogramma steindachneri — fiche Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/apistogramma-steindachneri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The profile gives the diagnostic lateral and caudal spots, absence of abdominal stripes, habitats and uncertain Cuyuni form."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 18,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — Aquarist Atlas species account",
+        "fr": "Apistogramma steindachneri — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-steindachneri/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The account discusses spot placement, sexual dimorphism, the steindachneri species group, synonyms and comparison with A. staecki."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 17,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — Nordiska Ciklidsällskapet register",
+        "fr": "Apistogramma steindachneri — registre de la société nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=185",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Swedish cichlid society lists a 10 cm size, range in Guyana and male caudal-fin extensions; the measurement convention is not specified."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 22,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — FishBase Spanish-language summary",
+        "fr": "Apistogramma steindachneri — fiche FishBase en espagnol"
+      },
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=46707&lang=spanish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language FishBase record independently reports the northern South American river range, sex-specific size entries and cave-breeding data."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 18,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma steindachneri — ETYFish name etymology",
+        "fr": "Apistogramma steindachneri — étymologie ETYFish"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The etymology entry confirms that the species honors Austrian ichthyologist Franz Steindachner."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 12,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma staecki — Aquarist Atlas species account",
+        "fr": "Apistogramma staecki — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-staecki/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The profile describes A. staecki as a Bolivian and Brazilian relative within the broader steindachneri lineage."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 16,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a robust, deep-bodied Apistogramma with a narrow lateral stripe, triangular dark spot centered on it, distinct rounded tail-base spot, and a high dorsal fin; mature males have extended, sometimes lyre-shaped tails, females rounder caudal fins.",
+  "uncertainties": [
+    "FishBase reports a maximum of 65 mm standard length for male or unsexed fish and 70 mm total length for females, while the Swedish hobby register gives 10 cm without a measurement convention; these values are not directly comparable.",
+    "No reliable body mass, width or height was located. Diet is inferred from a model based on relatives, not a species-specific feeding study.",
+    "The Cuyuni-basin fish from eastern Venezuela may be conspecific or a related form; available accounts leave that identity unresolved."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Eschmeyer's catalog, FishBase in English and Spanish, the Swedish cichlid register, Seriously Fish and Aquarist Atlas. Kept the male SL, female TL and unspecified 10 cm reports separate and did not turn a modelled diet into an observed feeding record."
+}

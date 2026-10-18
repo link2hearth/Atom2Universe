@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_cave_mushroom_amber">Champignon luminescent ambre</string>
+    <string name="cave_block_giant_cave_cap_amber">Chapeau géant ambre</string>
+    <string name="cave_block_cave_mushroom_green">Champignon luminescent vert</string>
+    <string name="cave_block_giant_cave_cap_green">Chapeau géant vert</string>
+    <string name="cave_block_cave_mushroom_violet">Champignon luminescent violet</string>
+    <string name="cave_block_giant_cave_cap_violet">Chapeau géant violet</string>
+    <string name="cave_block_cave_mushroom_cyan">Champignon luminescent cyan</string>
+    <string name="cave_block_giant_cave_cap_cyan">Chapeau géant cyan</string>
+    <string name="cave_block_cave_mushroom_blue">Champignon luminescent bleu</string>
+    <string name="cave_block_giant_cave_cap_blue">Chapeau géant bleu</string>
+    <string name="cave_block_cave_mushroom_ember">Champignon luminescent braise</string>
+    <string name="cave_block_giant_cave_cap_ember">Chapeau géant braise</string>
+    <string name="cave_block_cave_mushroom_rose">Champignon luminescent rose</string>
+    <string name="cave_block_giant_cave_cap_rose">Chapeau géant rose</string>
+    <string name="cave_block_cave_fern">Fougère des grottes</string>
+    <string name="cave_block_cave_crystal_cluster">Bouquet de cristaux lumineux</string>
+    <string name="cave_block_cave_ice_needles">Aiguilles de glace</string>
+    <string name="cave_block_cave_calcite_spires">Pointes de calcite</string>
+    <string name="cave_block_columnar_basalt">Basalte en colonnes</string>
+    <string name="cave_block_cave_travertine">Travertin des grottes</string>
+</resources>

@@ -1,0 +1,139 @@
+{
+  "id": "short_snouted_seahorse",
+  "scientific": "Hippocampus hippocampus",
+  "group": "fish",
+  "name": {
+    "en": "Short-snouted seahorse",
+    "fr": "Hippocampe à museau court"
+  },
+  "sections": {
+    "overview": {
+      "en": "This seahorse occurs in the eastern Atlantic and Mediterranean; records span European and North African coasts.",
+      "fr": "Cet hippocampe vit dans l’Atlantique est et la Méditerranée ; ses mentions couvrent les côtes européennes et nord-africaines."
+    },
+    "identification": {
+      "en": "It has a short, upturned snout, a prominent spine above each eye and a body that may reach about 15 cm.",
+      "fr": "Il possède un museau court et retroussé, une épine au-dessus de chaque œil et un corps pouvant atteindre environ 15 cm."
+    },
+    "habitat": {
+      "en": "It is reported in shallow muddy or rocky coastal waters, including estuaries and areas with seaweed or seagrass.",
+      "fr": "Il est signalé dans des eaux côtières peu profondes, vaseuses ou rocheuses, notamment les estuaires et les zones d’algues ou d’herbiers."
+    },
+    "diet": {
+      "en": "Seahorses take small live crustaceans; the species account notes mysid shrimps among recorded prey.",
+      "fr": "Les hippocampes capturent de petits crustacés vivants ; la fiche de l’espèce mentionne notamment des mysidacés."
+    },
+    "behavior": {
+      "en": "It anchors itself to nearby vegetation or other surfaces with its prehensile tail and is a relatively weak swimmer.",
+      "fr": "Il s’agrippe à la végétation ou à d’autres supports avec sa queue préhensile et nage relativement peu efficacement."
+    },
+    "reproduction": {
+      "en": "The male carries developing eggs in a brood pouch and releases live young after they hatch.",
+      "fr": "Le mâle porte les œufs en développement dans une poche incubatrice et libère les jeunes après leur éclosion."
+    },
+    "ecology": {
+      "en": "Available biological information is limited; MarLIN notes that dispersal and recovery are poorly documented.",
+      "fr": "Les données biologiques restent limitées ; MarLIN souligne que la dispersion et le rétablissement sont mal documentés."
+    },
+    "conservation": {
+      "en": "FishBase reports the global IUCN category Data Deficient, assessed in 2017; a regional assessment should not be substituted for it.",
+      "fr": "FishBase indique la catégorie mondiale UICN « Données insuffisantes », évaluée en 2017 ; une évaluation régionale ne doit pas la remplacer."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "DORIS — Hippocampus hippocampus (French diving federation species database)",
+        "fr": "DORIS — Hippocampus hippocampus (French diving federation species database)"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Hippocampus-hippocampus-Hippocampe-a-museau-court-299",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The French species account describes range, taxonomy and distinguishing features."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 10,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "MarLIN — Short-snouted seahorse",
+        "fr": "MarLIN — Short-snouted seahorse"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1788",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Marine Life Information Network review covers habitats, prey, anchoring behavior, male brooding and evidence gaps."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 16,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Hippocampus hippocampus",
+        "fr": "FishBase — Hippocampus hippocampus"
+      },
+      "url": "https://www.fishbase.se/summary/hippocampus-hippocampus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the global IUCN assessment category and assessment date."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 10,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

@@ -1,0 +1,172 @@
+{
+  "id": "common_pochard",
+  "scientific": "Aythya ferina",
+  "group": "birds",
+  "name": {
+    "en": "Common Pochard",
+    "fr": "Fuligule milouin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Pochard is a migratory diving duck widespread across Eurasian wetlands. It shares the genus Aythya with the Greater Scaup (Aythya marila). Unlike this relative, it chiefly uses vegetated inland waters.",
+      "fr": "Le Fuligule milouin est un canard plongeur migrateur largement répandu dans les zones humides d’Eurasie. Il partage le genre Aythya avec le Fuligule milouinan (Aythya marila). Contrairement à ce parent, il fréquente surtout les eaux intérieures végétalisées."
+    },
+    "identification": {
+      "en": "In breeding plumage, the male has a chestnut head, black breast and pale grey body, while the female is browner.",
+      "fr": "En plumage nuptial, le mâle a la tête rousse, la poitrine noire et le corps gris pâle, tandis que la femelle est plus brune."
+    },
+    "habitat": {
+      "en": "It breeds on vegetated freshwater lakes and ponds, then winters on larger freshwater or brackish waters.",
+      "fr": "Il niche sur des lacs et étangs d’eau douce végétalisés, puis hiverne sur de grands plans d’eau douce ou saumâtre."
+    },
+    "diet": {
+      "en": "Diving birds gather aquatic seeds, roots and leaves, as well as molluscs, crustaceans, worms and insect larvae.",
+      "fr": "En plongée, il prélève des graines, racines et feuilles aquatiques, ainsi que des mollusques, crustacés, vers et larves d’insectes."
+    },
+    "behavior": {
+      "en": "It migrates between northern and eastern breeding areas and more southerly wintering wetlands, often joining mixed duck flocks.",
+      "fr": "Il migre entre ses sites de reproduction du nord et de l’est et des zones humides d’hivernage plus méridionales, souvent en groupes mixtes de canards."
+    },
+    "reproduction": {
+      "en": "The female nests in waterside vegetation and incubates the clutch alone; the male generally leaves after laying.",
+      "fr": "La femelle niche dans la végétation riveraine et couve seule la ponte; le mâle part généralement après la ponte."
+    },
+    "ecology": {
+      "en": "Its dependence on productive wetlands links its fortunes to the condition of freshwater habitats along its migratory route.",
+      "fr": "Sa dépendance aux zones humides productives lie son sort à l’état des milieux d’eau douce situés le long de ses voies migratoires."
+    },
+    "conservation": {
+      "en": "The global assessment lists it as Vulnerable with a decreasing population; wetland loss, hunting and pollution are reported pressures.",
+      "fr": "L’évaluation mondiale le classe vulnérable et sa population est en baisse; la disparition des zones humides, la chasse et la pollution sont des pressions signalées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aythya ferina — The IUCN Red List of Threatened Species",
+        "fr": "Aythya ferina — Liste rouge mondiale de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22680358A205288455.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International’s 2021 global assessment lists the Common Pochard as Vulnerable, with a decreasing trend and an estimated 760,000–790,000 mature individuals.",
+        "The assessment covers inland and coastal wetlands across resident, breeding and non-breeding ranges."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 34,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Pochard — BirdLife International",
+        "fr": "Fuligule milouin — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/news/2024/10/18/common-pochard/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife describes the male’s chestnut-red head, black breast and grey body, and identifies habitat loss, hunting and pollution among its risks."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 21,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fuligule milouin — Oiseaux.net",
+        "fr": "Fuligule milouin — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/fuligule.milouin.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French species account describes breeding on vegetated freshwater, migratory movements, diving for plants and invertebrates, and female incubation."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 19,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fuligule milouin — Cahiers d’Habitat Oiseaux, INPN / MNHN",
+        "fr": "Fuligule milouin — Cahiers d’Habitat Oiseaux, INPN / MNHN"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Fuligule-milouin.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French natural-history account documents migratory movements, nest placement in bank vegetation, female incubation and precocial young."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 17,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Population estimates and conservation status refer to the 2021 global assessment; local trends can differ among flyways."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the global IUCN assessment with BirdLife and the French Oiseaux.net account; linked the Greater Scaup using the same-genus relationship and its contrasting coastal winter habitat."
+}

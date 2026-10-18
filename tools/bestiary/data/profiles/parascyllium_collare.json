@@ -1,0 +1,148 @@
+{
+  "id": "parascyllium_collare",
+  "scientific": "Parascyllium collare",
+  "group": "fish",
+  "name": {
+    "en": "Collar carpetshark",
+    "fr": "Requin-carpette à collier"
+  },
+  "sections": {
+    "overview": {
+      "en": "Parascyllium collare, the Collar Carpetshark, is an eastern Australian shark in family Parascylliidae.",
+      "fr": "Parascyllium collare, le Requin-carpette à collier, est un requin de l’est australien, famille Parascylliidae."
+    },
+    "identification": {
+      "en": "It is brown with broad bands and a prominent dark collar behind the head.",
+      "fr": "Il est brun, avec de larges bandes et un collier sombre marqué derrière la tête."
+    },
+    "habitat": {
+      "en": "It lives on the eastern continental shelf, mainly around offshore rocky areas.",
+      "fr": "Il vit sur le plateau continental oriental, surtout autour de zones rocheuses au large."
+    },
+    "diet": {
+      "en": "The species is poorly known, and the references consulted do not establish a detailed species-specific diet.",
+      "fr": "L’espèce reste peu connue et les références consultées ne permettent pas d’établir précisément son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It is a bottom-associated shark and is caught mainly as bycatch in some Australian trawl fisheries.",
+      "fr": "C’est un requin associé aux fonds marins, capturé surtout comme prise accessoire dans certaines pêcheries australiennes au chalut."
+    },
+    "reproduction": {
+      "en": "It is oviparous: females lay paired eggs, and embryos are nourished by yolk.",
+      "fr": "Il est ovipare : les femelles pondent des œufs par paires et les embryons sont nourris par leur vitellus."
+    },
+    "ecology": {
+      "en": "Its close Australian relative, the Rusty Carpetshark, Parascyllium ferrugineum, ranges farther south and west and has rusty-brown markings rather than the Collar Carpetshark’s bold banding.",
+      "fr": "Son proche parent australien, le Requin-carpette roux, Parascyllium ferrugineum, vit plus au sud et à l’ouest et porte des marques brun rouille plutôt que les bandes contrastées du Requin-carpette à collier."
+    },
+    "conservation": {
+      "en": "Fishes of Australia reports an IUCN category of Least Concern. Bycatch occurs, and the species’ biology remains incompletely documented.",
+      "fr": "Fishes of Australia rapporte une catégorie UICN de préoccupation mineure. L’espèce est capturée comme prise accessoire et sa biologie reste incomplètement documentée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Collar Carpetshark — Fishes of Australia, Australian National Fish Collection",
+        "fr": "Requin-carpette à collier — Fishes of Australia, collection nationale australienne de poissons"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3287",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Fishes of Australia species entry."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 5,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parascyllium collare summary — FishBase",
+        "fr": "Fiche Parascyllium collare — FishBase"
+      },
+      "url": "https://fishbase.se/summary/5914",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reproduction and ecology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 4,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rusty Carpetshark — Fishes of Australia",
+        "fr": "Requin-carpette roux — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3288",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Related species account for comparison."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 5,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Depth limits vary among accounts; the greater depth is stated as possible.",
+    "Diet and many life-history details remain poorly known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the Australian National Fish Collection account with FishBase and added a sourced, reciprocal comparison with Parascyllium ferrugineum."
+}

@@ -1,0 +1,148 @@
+{
+  "id": "tringa_totanus",
+  "scientific": "Tringa totanus",
+  "group": "birds",
+  "name": {
+    "en": "Common redshank",
+    "fr": "Chevalier gambette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common redshank is a widespread Eurasian wader that breeds in wet open country and winters on coasts and estuaries.",
+      "fr": "Le chevalier gambette est un limicole largement répandu en Eurasie ; il niche dans les milieux humides ouverts et hiverne sur les côtes et les estuaires."
+    },
+    "identification": {
+      "en": "Its bright orange-red legs stand out.",
+      "fr": "Ses pattes rouge orangé vif sont caractéristiques."
+    },
+    "habitat": {
+      "en": "It breeds in wet meadows and marshes, and winters mainly on coasts and estuaries.",
+      "fr": "Il niche dans les prairies humides et les marais, et hiverne surtout sur les côtes et les estuaires."
+    },
+    "diet": {
+      "en": "It takes insects, worms and spiders when breeding, and also eats molluscs, crustaceans and occasionally small fish or tadpoles.",
+      "fr": "En période de reproduction, il consomme insectes, vers et araignées ; il mange aussi des mollusques, crustacés et parfois de petits poissons ou des têtards."
+    },
+    "behavior": {
+      "en": "It probes or pecks for prey and often feeds in flocks on open shores, especially around high tide.",
+      "fr": "Il picore ou sonde le sol à la recherche de proies et se nourrit souvent en groupe sur les rivages dégagés, surtout à marée haute."
+    },
+    "reproduction": {
+      "en": "It usually lays four eggs in a shallow ground nest; the chicks can walk and feed soon after leaving it.",
+      "fr": "Il pond généralement quatre œufs dans une cuvette peu profonde au sol ; les poussins marchent et se nourrissent peu après avoir quitté le nid."
+    },
+    "ecology": {
+      "en": "The spotted redshank can resemble it in winter, but its longer bill and lack of a white wing-bar separate the two.",
+      "fr": "En hiver, le chevalier arlequin peut lui ressembler, mais son bec plus long et l’absence de barre alaire blanche permettent de distinguer les deux espèces."
+    },
+    "conservation": {
+      "en": "Oiseaux.net lists it as globally Least Concern, while the BTO reports declining and increasingly fragmented British breeding populations.",
+      "fr": "Oiseaux.net le classe en Préoccupation mineure à l’échelle mondiale, tandis que le BTO rapporte un déclin et une fragmentation croissante des populations nicheuses britanniques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Common redshank",
+        "fr": "Oiseaux.net — Chevalier gambette"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.gambette.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The French species account describes wetland prey and foraging and compares winter plumage with the spotted redshank."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 17,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Redshank",
+        "fr": "British Trust for Ornithology — Chevalier gambette"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/redshank",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The BTO describes red legs, wet-grassland breeding habitat, four eggs, mobile chicks and fragmented British distribution in response to agricultural change."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 21,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "French National Museum of Natural History — Common redshank",
+        "fr": "MNHN — Chevalier gambette"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Chevalier-gambette.pdf",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The French species account distinguishes it from the spotted redshank by the latter’s longer bill and lack of white wing-bars."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 20,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reported population decline concerns Britain and should not be generalized to the global species trend."
+  ],
+  "review_note": "The reciprocal spotted-redshank comparison highlights a practical identification difference documented by British and French bird accounts.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

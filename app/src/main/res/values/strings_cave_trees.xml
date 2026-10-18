@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_leaves_blossom">Flowering leaves</string>
+    <string name="cave_block_leaves_apple">Apple leaves</string>
+    <string name="cave_block_leaves_pear">Pear leaves</string>
+    <string name="cave_block_leaves_cherry">Cherry leaves</string>
+    <string name="cave_block_apple">Apple</string>
+    <string name="cave_block_pear">Pear</string>
+    <string name="cave_block_cherry">Cherries</string>
+    <string name="cave_showcase_tree_caption">Trees · %1$s</string>
+    <string-array name="cave_showcase_tree_names">
+        <item>Oak</item>
+        <item>Birch</item>
+        <item>Fir</item>
+        <item>Dark forest tree</item>
+        <item>Jungle tree</item>
+        <item>Redwood</item>
+        <item>Apple tree</item>
+        <item>Pear tree</item>
+        <item>Cherry tree</item>
+        <item>Mauve foliage</item>
+        <item>Blue-green foliage</item>
+        <item>Golden foliage</item>
+        <item>Giant redwood · 2×2 trunk</item>
+        <item>Tall pine · 2×2 trunk</item>
+        <item>Broad, low oak</item>
+        <item>Hollow baobab</item>
+        <item>Umbrella acacia</item>
+        <item>Weeping willow</item>
+    </string-array>
+</resources>

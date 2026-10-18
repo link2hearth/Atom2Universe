@@ -1,0 +1,18 @@
+{
+  "id": 1035,
+  "name": "leaves_cherry",
+  "texture_top": "cozy:leaf:23:789360",
+  "texture_side": "cozy:leaf:23:789360",
+  "texture_bottom": "cozy:leaf:23:789360",
+  "color": "#789360",
+  "hardness": 0.3,
+  "drop": "cherry",
+  "harvest_category": "fragile",
+  "creative_tab": "wood",
+  "transparent": true,
+  "decoration": false,
+  "placeable": true,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

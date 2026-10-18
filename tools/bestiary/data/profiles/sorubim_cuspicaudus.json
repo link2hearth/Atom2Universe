@@ -1,0 +1,162 @@
+{
+  "id": "sorubim_cuspicaudus",
+  "scientific": "Sorubim cuspicaudus",
+  "group": "fish",
+  "name": {
+    "en": "Trans-Andean shovelnose catfish",
+    "fr": "Sorubim cuspicaudus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This pimelodid catfish is native to northwestern South America.",
+      "fr": "Ce silure pimelodidé est originaire du nord-ouest de l’Amérique du Sud."
+    },
+    "identification": {
+      "en": "Its tail is deeply forked, with the longest outer rays forming sharply pointed lobes.",
+      "fr": "Sa nageoire caudale est profondément fourchue, avec de longs rayons externes formant des lobes pointus."
+    },
+    "habitat": {
+      "en": "It inhabits freshwater basins including Lake Maracaibo and the Magdalena, Cauca and Sinú rivers.",
+      "fr": "Il vit en eau douce, notamment dans le lac Maracaibo et les bassins des rivières Magdalena, Cauca et Sinú."
+    },
+    "diet": {
+      "en": "It feeds on small fishes, crustaceans, worms and other bottom-dwelling animals.",
+      "fr": "Il mange de petits poissons, des crustacés, des vers et d’autres animaux vivant sur le fond."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal and shelters under vegetation or submerged logs by day.",
+      "fr": "Il est surtout nocturne et se cache le jour sous la végétation ou les troncs immergés."
+    },
+    "reproduction": {
+      "en": "In the middle Magdalena basin, it reproduces during the low-water period.",
+      "fr": "Dans le bassin moyen de la Magdalena, il se reproduit pendant la période de basses eaux."
+    },
+    "ecology": {
+      "en": "Unlike S. lima, it has sharply pointed rather than rounded caudal-fin lobes.",
+      "fr": "Contrairement à S. lima, ses lobes caudaux sont pointus plutôt qu’arrondis."
+    },
+    "conservation": {
+      "en": "A Cauca River study reports declining populations associated with overfishing and other human impacts.",
+      "fr": "Une étude du fleuve Cauca rapporte un déclin des populations associé à la surpêche et à d’autres pressions humaines."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Systematic review of the genus Sorubim — Zootaxa",
+        "fr": "Révision systématique du genre Sorubim — Zootaxa"
+      },
+      "url": "https://mapress.com/zootaxa/article/view/zootaxa.1422.1.1",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The systematic review places S. cuspicaudus in the Maracaibo, Magdalena, Cauca and Sinú basins and distinguishes its pointed caudal lobes from congeners."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 22,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Libro Rojo de Peces Dulceacuícolas de Colombia — Sorubim cuspicaudus",
+        "fr": "Livre rouge des poissons d’eau douce de Colombie — Sorubim cuspicaudus"
+      },
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2021/10/Libro-Rojo-de-Peces-Dulceacui%CC%81colas-de-Colombia.pdf",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Colombian red-book account reports a diet of small fishes, crustaceans, worms and benthic animals, and nocturnal sheltering under submerged cover."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 21,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproduction in the middle Magdalena basin — Universidad de Antioquia repository",
+        "fr": "Reproduction dans le bassin moyen de la Magdalena — dépôt de l’Université d’Antioquia"
+      },
+      "url": "https://bibliotecadigital.udea.edu.co/server/api/core/bitstreams/ef658da8-f0c6-43d9-8716-76d381a442a0/content",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The 2009 study found S. cuspicaudus reproduction during the low-water hydroperiod in the middle Magdalena basin."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 16,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population genetics of Sorubim cuspicaudus in the Cauca River — Neotropical Ichthyology",
+        "fr": "Génétique des populations de Sorubim cuspicaudus dans le Cauca — Neotropical Ichthyology"
+      },
+      "url": "https://doi.org/10.1590/1982-0224-2020-0040",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The study characterizes S. cuspicaudus as migratory and commercially important and reports declining populations associated with overfishing and other anthropogenic impacts."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 21,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation sentence reflects a published Cauca River study and should not be read as a current global IUCN category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

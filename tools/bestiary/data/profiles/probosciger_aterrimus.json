@@ -1,0 +1,164 @@
+{
+  "id": "probosciger_aterrimus",
+  "scientific": "Probosciger aterrimus",
+  "group": "birds",
+  "name": {
+    "en": "Palm cockatoo",
+    "fr": "Cacatoès noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The palm cockatoo is a large parrot and the sole living species in its genus, Probosciger.",
+      "fr": "Le cacatoès noir est un grand perroquet et l’unique espèce actuelle de son genre, Probosciger."
+    },
+    "identification": {
+      "en": "Its mostly black plumage, tall crest and bare red cheek patches make it distinctive among parrots.",
+      "fr": "Son plumage presque entièrement noir, sa haute huppe et ses joues rouges dénudées le distinguent des autres perroquets."
+    },
+    "habitat": {
+      "en": "It inhabits forest, wooded savanna and riparian habitats in northern Australia and New Guinea.",
+      "fr": "Il fréquente les forêts, les savanes boisées et les milieux riverains du nord de l’Australie et de la Nouvelle-Guinée."
+    },
+    "diet": {
+      "en": "Its diet is mainly plant-based, including seeds, nuts, fruits and buds; it also takes insects.",
+      "fr": "Son régime est surtout végétal et comprend des graines, des noix, des fruits et des bourgeons ; il consomme aussi des insectes."
+    },
+    "behavior": {
+      "en": "Males may shape a stick or seedpod and drum it against a hollow tree during display.",
+      "fr": "Les mâles peuvent façonner un bâton ou une capsule de graines et le frapper contre un tronc creux lors de leurs parades."
+    },
+    "reproduction": {
+      "en": "It nests in large tree hollows and typically lays a single egg; breeding is unusually infrequent for a parrot.",
+      "fr": "Il niche dans de grandes cavités d’arbres et pond généralement un seul œuf ; sa reproduction est exceptionnellement peu fréquente pour un perroquet."
+    },
+    "ecology": {
+      "en": "Its dependence on large nesting hollows makes the retention of old hollow-bearing trees important to its breeding habitat.",
+      "fr": "Sa dépendance aux grandes cavités de nidification rend importante la conservation des vieux arbres creux pour son habitat de reproduction."
+    },
+    "conservation": {
+      "en": "BirdLife elevated the global status to Near Threatened in 2023, citing habitat loss and trapping pressure.",
+      "fr": "BirdLife a relevé son statut mondial à « Quasi menacé » en 2023, en raison de la perte d’habitat et de la pression du piégeage."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Palm Cockatoo — Australian Wildlife Conservancy",
+        "fr": "Cacatoès noir — Australian Wildlife Conservancy"
+      },
+      "url": "https://www.australianwildlife.org/news-and-resources/news/saving-the-palm-cockatoo",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The conservation organization describes the species’ black plumage, crest and red facial patches, northern Australian range, hollow-tree dependence and male tool-assisted drumming display."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 23,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cacatoès noir — Oiseaux.net",
+        "fr": "Cacatoès noir — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/cacatoes.noir.html",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The French bird account reports forest and wooded-savanna habitat, a northern Australia/New Guinea range, and a diet of seeds, nuts, fruits, buds and insects."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 24,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The breeding biology of palm cockatoos — Journal of Zoology",
+        "fr": "Biologie de la reproduction du cacatoès noir — Journal of Zoology"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1017/S0952836903004175",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The study reports single-egg clutches and infrequent breeding, using large tree hollows."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 12,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "2023 Red List update — BirdLife International",
+        "fr": "Mise à jour 2023 de la Liste rouge — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/news/2023/12/12/the-2023-red-list-update-reveals-hope-for-birds-in-crisis/",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife reports the global uplisting from Least Concern to Near Threatened in 2023, citing habitat loss and increased trapping pressure in New Guinea."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 23,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional conservation categories may differ from the global BirdLife/IUCN category; this short account reports the global status only."
+  ],
+  "review_note": "Cross-checked a French species account with Australian conservation and peer-reviewed breeding sources and BirdLife’s global status update. Avoided numerical reproductive claims.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

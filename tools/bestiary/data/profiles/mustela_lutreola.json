@@ -1,0 +1,91 @@
+{
+  "id": "mustela_lutreola",
+  "scientific": "Mustela lutreola",
+  "group": "mammals",
+  "name": {
+    "en": "European Mink",
+    "fr": "Vison d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European mink is a semi-aquatic mustelid tied to riverbanks and wetlands. Once widespread across Europe, it now survives in a few isolated populations and is classified as Critically Endangered, one of the most threatened carnivores on the continent.",
+      "fr": "Le vison d’Europe est un mustélidé semi-aquatique lié aux berges et aux zones humides. Jadis répandu dans toute l’Europe, il ne subsiste que dans quelques populations isolées et il est classé en danger critique d’extinction, parmi les carnivores les plus menacés du continent."
+    },
+    "identification": {
+      "en": "A medium-sized mustelid with a long body, short legs and a short tail, measuring roughly 32–50 cm from head to tail and weighing from about half a kilogram to a little over one kilogram, males being larger. The coat is glossy brown to almost black. White patches cover both the upper and lower lips, whereas the American mink has white only on the lower lip and chin.",
+      "fr": "Mustélidé de taille moyenne au corps allongé, aux pattes et à la queue courtes, mesurant environ 32 à 50 cm et pesant d’un demi-kilo à un peu plus d’un kilo, les mâles étant plus grands. Le pelage est brun luisant à presque noir. Du blanc couvre les lèvres supérieure et inférieure, alors que le vison d’Amérique n’en a que sur la lèvre inférieure et le menton."
+    },
+    "habitat": {
+      "en": "It needs riverbanks for both food and shelter, and lives along small and medium rivers, streams, swamps, riparian forest and wet meadows; large river deltas such as the Danube’s are important. It digs its own burrow, uses an abandoned water vole burrow or shelters among tree roots.",
+      "fr": "Il a besoin des berges pour se nourrir et s’abriter, et vit le long de petites et moyennes rivières, de ruisseaux, de marais, de forêts riveraines et de prairies humides; les grands deltas, comme celui du Danube, sont importants. Il creuse son terrier, utilise celui d’un campagnol amphibie abandonné ou s’abrite parmi les racines d’arbres."
+    },
+    "diet": {
+      "en": "It is a generalist predator of amphibians, small mammals, fish, birds and aquatic invertebrates. Amphibians were long thought to dominate its diet, but data from the Danube Delta do not support this: what it eats varies with the season and the environment.",
+      "fr": "C’est un prédateur généraliste d’amphibiens, de petits mammifères, de poissons, d’oiseaux et d’invertébrés aquatiques. On a longtemps cru que les amphibiens dominaient son régime, mais les données du delta du Danube ne le confirment pas : son alimentation varie selon la saison et le milieu."
+    },
+    "behavior": {
+      "en": "The European mink is solitary, adults pairing only in the breeding season. It is most active around dusk and before dawn.",
+      "fr": "Le vison d’Europe est solitaire; les adultes ne se rapprochent qu’à la saison de reproduction. Il est surtout actif au crépuscule et avant l’aube."
+    },
+    "reproduction": {
+      "en": "Mating takes place from late February to March, and females do not delay pregnancy. Gestation lasts 35–42 days and a litter holds three to seven kits, raised by the female alone. Young are weaned at about ten weeks and become sexually mature at roughly one year.",
+      "fr": "L’accouplement a lieu de fin février à mars, et la femelle ne retarde pas la gestation. Celle-ci dure 35 à 42 jours et une portée compte trois à sept petits, élevés par la seule femelle. Les jeunes sont sevrés vers dix semaines et atteignent la maturité sexuelle vers un an."
+    },
+    "ecology": {
+      "en": "As a predator of aquatic and semi-aquatic animals, it sits in riverside food webs. Its main current rival is the introduced American mink, which competes with it directly for the same riverbank habitat.",
+      "fr": "Prédateur d’animaux aquatiques et semi-aquatiques, il occupe une place dans les chaînes alimentaires riveraines. Son principal rival actuel est le vison d’Amérique introduit, qui entre en concurrence directe avec lui pour les mêmes berges."
+    },
+    "conservation": {
+      "en": "It is listed as Critically Endangered on the IUCN Red List and occupies less than a fifth of its former range, in isolated populations in northern Spain and south-western France, the Danube Delta and parts of Russia. A small population has been re-established on Hiiumaa Island in Estonia. Where American mink are absent, habitat destruction and persecution for its fur remain the main threats. It is protected under the EU Habitats Directive and is extinct in the Czech Republic.",
+      "fr": "Il est classé en danger critique d’extinction sur la Liste rouge de l’UICN et occupe moins d’un cinquième de son aire d’origine, en populations isolées dans le nord de l’Espagne et le sud-ouest de la France, le delta du Danube et certaines régions de Russie. Une petite population a été rétablie sur l’île de Hiiumaa, en Estonie. Là où le vison d’Amérique est absent, la destruction de l’habitat et la persécution pour sa fourrure restent les principales menaces. Il est protégé par la directive Habitats de l’UE et a disparu de Tchéquie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "European mink — Vincent Wildlife Trust",
+        "fr": "Vison d’Europe — Vincent Wildlife Trust"
+      },
+      "url": "https://www.vwt.org.uk/species/european-mink",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "Length 32–50 cm; 0.5 kg to over 1 kg; white upper lip distinguishes it from the American mink; gestation 35–42 days; 3–7 kits raised by the female.",
+        "Critically Endangered; under 20% of former range; American mink is the main current threat."
+      ]
+    },
+    {
+      "title": {
+        "en": "European mink — ALKA Wildlife",
+        "fr": "Vison d’Europe — ALKA Wildlife"
+      },
+      "url": "https://en.alkawildlife.eu/species-of-interest/european-mink",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Danube Delta data do not support amphibians as dominant prey; diet varied by season and environment.",
+        "Competition from American mink; where it is absent, habitat destruction and persecution for its skin; EU Habitats Directive Annexes II and IV; extinct in Czechia."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mustela lutreola — Animal Diversity Web, University of Michigan",
+        "fr": "Mustela lutreola — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Mustela_lutreola/",
+      "consulted": "2026-10-12",
+      "supports": ["behavior", "habitat", "reproduction"],
+      "facts": [
+        "Most active at dusk and before daybreak; dens in own burrows, abandoned water vole burrows or among tree roots.",
+        "Weaning about 10 weeks; sexual maturity about one year. Its status line (Endangered) is out of date and was not used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Population estimates differ widely between sources and no figure is given here.",
+    "The IUCN Red List pages could not be opened during research; the Critically Endangered category is taken from the Vincent Wildlife Trust page and should be checked against the current assessment.",
+    "Body mass differs between sources (Animal Diversity Web gives 440–739 g)."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a conservation charity, a wildlife research group and a university database; illustration to be checked by the owner."
+}

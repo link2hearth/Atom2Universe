@@ -1,0 +1,144 @@
+{
+  "id": "gyptis_mackiei",
+  "scientific": "Gyptis mackiei",
+  "group": "invertebrates",
+  "name": {
+    "en": "Mackie’s hesionid worm",
+    "fr": "Gyptis de Mackie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Gyptis mackiei is an accepted species of marine bristle worm in the genus Gyptis and family Hesionidae. Several other accepted Gyptis species are its taxonomic relatives, but species-level ecology remains poorly documented.",
+      "fr": "Gyptis mackiei est une espèce acceptée de ver marin polychète, du genre Gyptis et de la famille des Hesionidae. D’autres espèces acceptées du genre lui sont apparentées, mais son écologie propre est peu documentée."
+    },
+    "identification": {
+      "en": "The catalogues consulted confirm the species name and authorship but do not provide a dependable diagnostic description or size.",
+      "fr": "Les catalogues consultés confirment le nom et l’auteur de l’espèce, mais ne donnent ni description diagnostique ni taille suffisamment documentées."
+    },
+    "habitat": {
+      "en": "The accessible taxonomic records do not establish a precise habitat or geographic range for this species.",
+      "fr": "Les notices taxonomiques accessibles ne permettent pas d’établir un habitat précis ni une aire géographique pour cette espèce."
+    },
+    "diet": {
+      "en": "No species-specific feeding observations were found in the taxonomic records consulted.",
+      "fr": "Aucune observation alimentaire propre à l’espèce n’a été trouvée dans les notices taxonomiques consultées."
+    },
+    "behavior": {
+      "en": "The available records contain no verified account of locomotion, social behavior, or activity patterns.",
+      "fr": "Les notices disponibles ne contiennent aucun compte rendu vérifié de locomotion, de comportement social ou de rythme d’activité."
+    },
+    "reproduction": {
+      "en": "Species-level reproductive data were not reported in the catalogue records consulted.",
+      "fr": "Les notices consultées ne rapportent pas de données reproductives à l’échelle de l’espèce."
+    },
+    "ecology": {
+      "en": "It is classified among errant polychaetes, but that broad taxonomic placement does not establish its specific ecological role.",
+      "fr": "Il est classé parmi les polychètes errants, mais cette position taxonomique générale ne permet pas d’établir son rôle écologique précis."
+    },
+    "conservation": {
+      "en": "The sources provide no population trend or conservation assessment specific to Gyptis mackiei.",
+      "fr": "Les sources ne fournissent ni tendance démographique ni évaluation de conservation propre à Gyptis mackiei."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gyptis mackiei — World Register of Marine Species",
+        "fr": "Gyptis mackiei — Registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Gyptis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "WoRMS provides an accepted genus-and-species taxon list but not species-level natural-history details."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 12,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "COPEPEDIA species record: Gyptis mackiei",
+        "fr": "Notice COPEPEDIA : Gyptis mackiei"
+      },
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T4016085/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The NOAA-hosted record confirms the species as an accepted polychaete and notes very sparse occurrence records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 16,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NCBI Taxonomy Browser: Hesionidae",
+        "fr": "Navigateur taxonomique NCBI : Hesionidae"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=Hesionidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "NCBI places Gyptis mackiei within Hesionidae in its taxonomy browser."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 10,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific morphology, range, habitat, diet, reproduction, population trend and conservation status could not be verified in the available records; absence of data is not evidence of absence."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Conservative profile based on taxonomic catalogs only. Do not infer traits of other Gyptis or Hesionidae species for this species."
+}

@@ -1,0 +1,147 @@
+{
+  "id": "hypsurus_caryi",
+  "scientific": "Hypsurus caryi",
+  "group": "fish",
+  "name": {
+    "en": "Rainbow Seaperch",
+    "fr": "Hypsurus caryi"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Rainbow Seaperch is an eastern Pacific surfperch in Embiotocidae. It usually lives around rocky shores and kelp edges, unlike Hyperprosopon argenteum.",
+      "fr": "Le Hypsurus caryi est un surfpercheur du Pacifique oriental de la famille Embiotocidae. Il vit surtout près des rivages rocheux et des lisières de kelp, contrairement à Hyperprosopon argenteum."
+    },
+    "identification": {
+      "en": "It reaches about 30 cm. Its silvery body shows blue iridescence around the head.",
+      "fr": "Il atteint environ 30 cm. Son corps argenté présente des reflets bleus autour de la tête."
+    },
+    "habitat": {
+      "en": "It ranges from northern California to northern Baja, at depths of 1–50 m.",
+      "fr": "Il vit du nord de la Californie au nord de la Basse-Californie, entre 1 et 50 m de profondeur."
+    },
+    "diet": {
+      "en": "Prey include crustaceans, snails and polychaete worms.",
+      "fr": "Ses proies comprennent des crustacés, des escargots et des vers polychètes."
+    },
+    "behavior": {
+      "en": "Adults gather in autumn, usually near rocky shores and kelp beds.",
+      "fr": "Les adultes se regroupent en automne, généralement près des rivages rocheux et des forêts de kelp."
+    },
+    "reproduction": {
+      "en": "Females carry developing young internally; the species is viviparous.",
+      "fr": "Les femelles portent les jeunes en développement à l’intérieur du corps; l’espèce est vivipare."
+    },
+    "ecology": {
+      "en": "Its rocky habitat contrasts with the sandy surf used by H. argenteum.",
+      "fr": "Son habitat rocheux contraste avec les vagues sableuses fréquentées par H. argenteum."
+    },
+    "conservation": {
+      "en": "FishBase lists the species as not globally evaluated by IUCN.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par l’UICN à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rainbow Seaperch — FishBase",
+        "fr": "Hypsurus caryi — FishBase"
+      },
+      "url": "https://fishbase.se/summary/3633",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives eastern Pacific range, size to 30 cm, 1–50 m depth, rocky and kelp-edge habitat, autumn aggregation, live-bearing reproduction and no global Red List evaluation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 26,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rainbow Perch — SIMoN Species Database",
+        "fr": "Rainbow Perch — base de données des espèces SIMoN"
+      },
+      "url": "https://sanctuarysimon.org/dbtools/species-database/id/196/hypsurus/caryi/rainbow-perch",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "SIMoN describes silver coloration with blue iridescence and reports crustaceans, snails and polychaetes as prey."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 15,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Walleye Surfperch — FishBase",
+        "fr": "Ditrème-vairon — FishBase"
+      },
+      "url": "https://fishbase.se/summary/3631",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Hyperprosopon argenteum commonly inhabits sandy surf and beaches, in contrast with the rocky-shore and kelp-edge habitat documented for Hypsurus caryi."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 20,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Maximum size and conservation evaluation are taken from FishBase; this profile does not infer a population trend from the missing evaluation."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase with the Monterey Bay National Marine Sanctuary SIMoN account and made the comparison with H. argenteum reciprocal and habitat-specific."
+}

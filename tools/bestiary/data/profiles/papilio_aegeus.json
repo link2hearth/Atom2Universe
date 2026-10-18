@@ -1,0 +1,211 @@
+{
+  "id": "papilio_aegeus",
+  "scientific": "Papilio aegeus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Orchard swallowtail",
+    "fr": "Machaon des vergers"
+  },
+  "sections": {
+    "overview": {
+      "en": "Papilio aegeus is a large swallowtail native to eastern Australia and nearby islands; cultivated citrus provides additional larval food in settled areas.",
+      "fr": "Papilio aegeus est un grand papillon machaon indigène de l’est de l’Australie et des îles voisines ; les agrumes cultivés fournissent aussi des plantes hôtes près des habitations."
+    },
+    "identification": {
+      "en": "Males are mainly black and white with a red hindwing spot; browner females bear broader pale markings and red crescents, so the sexes look quite different.",
+      "fr": "Les mâles sont surtout noirs et blancs avec une tache rouge à l’aile postérieure ; les femelles plus brunes portent de larges marques pâles et des lunules rouges, d’où un dimorphisme marqué."
+    },
+    "habitat": {
+      "en": "It inhabits gardens, woodland and forests where host plants grow, and is common in some eastern Australian suburbs.",
+      "fr": "Elle fréquente jardins, bois et forêts où poussent ses plantes hôtes, et est commune dans certaines banlieues de l’est australien."
+    },
+    "diet": {
+      "en": "Caterpillars feed on citrus and other Rutaceae, including Australian native plants; recorded hosts vary by region.",
+      "fr": "Les chenilles mangent des agrumes et d’autres Rutacées, dont des plantes indigènes australiennes ; les hôtes relevés varient selon la région."
+    },
+    "behavior": {
+      "en": "Young caterpillars resemble bird droppings; older larvae can expose a red, foul-smelling osmeterium when threatened, and males defend territories.",
+      "fr": "Les jeunes chenilles ressemblent à des fientes ; les plus âgées peuvent déployer un osmeterium rouge et malodorant si elles sont menacées, et les mâles défendent un territoire."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on host plants and larvae pass through several growth stages before pupating; a single development time is not assumed for all conditions.",
+      "fr": "Les femelles pondent sur les plantes hôtes et les chenilles traversent plusieurs stades avant la nymphose ; aucune durée unique n’est supposée pour toutes les conditions."
+    },
+    "ecology": {
+      "en": "It shares the genus Papilio with the Dainty Swallowtail, P. anactus; both use citrus, though their recorded host lists are not identical. Like the African Citrus Swallowtail, P. demodocus, its caterpillars use Rutaceae; their ranges and recorded host species differ.",
+      "fr": "Elle partage le genre Papilio avec le Machaon gracieux, P. anactus ; tous deux utilisent des agrumes, même si leurs plantes hôtes relevées ne sont pas identiques. Comme le Machaon citronnier africain, P. demodocus, ses chenilles utilisent des Rutacées ; leurs aires et plantes hôtes répertoriées diffèrent."
+    },
+    "conservation": {
+      "en": "It remains widespread in eastern Australia and can benefit from cultivated citrus; no global assessment or population trend was found in the consulted sources.",
+      "fr": "Elle reste largement répandue dans l’est australien et peut profiter des agrumes cultivés ; les sources consultées ne donnent ni évaluation mondiale ni tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orchard Butterfly — Australian Museum",
+        "fr": "Papillon des vergers — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/insects/orchard-butterfly/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Museum account describes adult form, Australian range and habitat, citrus hosts, caterpillar defenses and male territoriality."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 16,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Specialist Australian butterfly account",
+        "fr": "Fiche spécialisée australienne sur le papillon"
+      },
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/aegeus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Specialist account documents the species range, host plants and caterpillar life cycle."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 12,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio aegeus — Museum Victoria",
+        "fr": "Papilio aegeus — Museum Victoria"
+      },
+      "url": "https://collections.museumsvictoria.com.au/species/11381",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Museum Victoria provides independently curated habitat and distribution information; no global assessment is given on its species page."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 18,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio aegeus — French-language overview",
+        "fr": "Papilio aegeus — aperçu en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Papilio_aegeus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French-language entry cross-checks the Australasian range and common French name."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio anactus — specialist Australian butterfly account",
+        "fr": "Papilio anactus — fiche spécialisée australienne"
+      },
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/anactus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The adjacent species account describes the Dainty Swallowtail and its larval food plants, allowing a cautious host-association comparison."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 18,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biodiversity Explorer: Citrus Swallowtail",
+        "fr": "Biodiversity Explorer : Machaon citronnier"
+      },
+      "url": "https://www.biodiversityexplorer.info/butterflies/papilionidae/papilio_demodocus.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Biodiversity Explorer identifies Papilio demodocus and lists its recorded Rutaceae host plants."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 12,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant use varies geographically; the profile avoids an exhaustive list.",
+    "No global assessment or range-wide trend was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Australian museum and specialist accounts with Museum Victoria and a French-language overview; named P. anactus only as a not-yet-profiled genus comparison."
+}

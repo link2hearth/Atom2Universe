@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+        Only EN and FR translations are required (see CLAUDE.md).
+        The 10 other locales (de, ru, pt, in, uk, it, pl, es, nl, tr) are optional,
+        so MissingTranslation is downgraded from error to warning.
+    -->
+    <issue id="MissingTranslation" severity="warning" />
+</lint>

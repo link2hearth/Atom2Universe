@@ -1,0 +1,219 @@
+{
+  "id": "pimelodus_tetramerus",
+  "scientific": "Pimelodus tetramerus",
+  "group": "fish",
+  "name": {
+    "en": "Pimelodus tetramerus",
+    "fr": "Pimelodus tetramerus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pimelodus tetramerus is a freshwater long-whiskered catfish described from Brazil’s Tocantins drainage and also recorded in the Tapajós region.",
+      "fr": "Pimelodus tetramerus est un poisson-chat d’eau douce à longs barbillons, décrit dans le bassin du Tocantins au Brésil et également signalé dans la région du Tapajós."
+    },
+    "identification": {
+      "en": "Its characteristic pattern is four dark bands along the sides, with an additional dark mark at the base of the dorsal-fin spine reported in a regional identification guide.",
+      "fr": "Son motif caractéristique comprend quatre bandes sombres sur les flancs; un guide régional signale aussi une marque sombre à la base de l’épine dorsale."
+    },
+    "habitat": {
+      "en": "It is a freshwater fish recorded from the Tapajós and Tocantins river systems; specific habitat preferences are not established by the sources consulted.",
+      "fr": "C’est un poisson d’eau douce signalé dans les réseaux du Tapajós et du Tocantins; les sources consultées n’établissent pas ses préférences précises d’habitat."
+    },
+    "diet": {
+      "en": "The species-specific diet is not documented in the taxonomic and regional accounts consulted.",
+      "fr": "Le régime propre à l’espèce n’est pas documenté dans les sources taxonomiques et régionales consultées."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is not described in the sources reviewed.",
+      "fr": "Les sources examinées ne décrivent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide reproductive details for this species.",
+      "fr": "Les sources consultées ne fournissent pas de détails sur la reproduction de cette espèce."
+    },
+    "ecology": {
+      "en": "Its four dark bands distinguish it from the other Pimelodus profiles here. P. pintado is densely spotted and restricted to the Laguna Merín basin. P. pohli is from the São Francisco drainage and has a relatively deep body. P. stewarti is a much smaller catfish of the Tocantins drainage, with a gray flank and dark marks near the dorsal fin.",
+      "fr": "Ses quatre bandes sombres le distinguent des autres Pimelodus présentés ici. P. pintado est très tacheté et limité au bassin de la lagune Merín. P. pohli vient du São Francisco et possède un corps relativement haut. P. stewarti est un poisson-chat beaucoup plus petit du Tocantins, aux flancs gris et aux marques sombres près de la dorsale."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2018; the consulted sources provide little species-specific trend information.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN de « préoccupation mineure » datant de 2018; les sources consultées donnent peu d’informations sur l’évolution des effectifs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pimelodus tetramerus — original description",
+        "fr": "Pimelodus tetramerus — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Original description: range and four-band diagnostic pattern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 7,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus cf. tetramerus — Teles Pires River fish guide (Portuguese)",
+        "fr": "Pimelodus cf. tetramerus — guide des poissons du Teles Pires (portugais)"
+      },
+      "url": "https://www.uhetelespires.com.br/site/uploads/arquivos/2020/08/513-1-peixes-do-rio-teles-pires-diversidade-e-guia-de-identificacao-chtp.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "A Portuguese field guide uses cf. tetramerus for local records and describes four flank bands and a dark mark at the dorsal spine base."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 24,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus tetramerus — FishBase species summary",
+        "fr": "Pimelodus tetramerus — fiche espèce FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/63452",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports global IUCN Least Concern, assessed in 2018."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 9,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pintado — original species description",
+        "fr": "Pimelodus pintado — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The description documents the dense spotting and Laguna Merín distribution of P. pintado."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 13,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pohli — original description",
+        "fr": "Pimelodus pohli — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The description documents the São Francisco range and relatively deep body of P. pohli."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 14,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus stewarti — original description",
+        "fr": "Pimelodus stewarti — description scientifique originale"
+      },
+      "url": "https://www.scielo.br/j/ni/a/Lt8rhkXsT9dg8VbLYpN7MRH/abstract/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The original paper describes P. stewarti as gray-flanked and reports its Tocantins drainage range."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 14,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A Portuguese regional guide treats its local specimens as P. cf. tetramerus, reflecting identification uncertainty; the species diagnosis itself is based on the original description.",
+    "Species-specific diet, behavior and reproduction data are sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal comparisons with P. pintado, P. pohli and P. stewarti are included; the regional cf. identification is explicitly qualified."
+}

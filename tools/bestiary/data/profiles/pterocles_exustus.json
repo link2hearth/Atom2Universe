@@ -1,0 +1,141 @@
+{
+  "id": "pterocles_exustus",
+  "scientific": "Pterocles exustus",
+  "group": "birds",
+  "name": {
+    "en": "Chestnut-bellied sandgrouse",
+    "fr": "Ganga à ventre brun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The chestnut-bellied sandgrouse is a ground-dwelling bird of dry regions across Africa and southern Asia.",
+      "fr": "La ganga à ventre brun est un oiseau terrestre des régions sèches d’Afrique et d’Asie du Sud."
+    },
+    "identification": {
+      "en": "Males show a black breast band and chestnut belly; females are more heavily barred and spotted.",
+      "fr": "Le mâle présente une bande noire sur la poitrine et un ventre châtain; la femelle est davantage barrée et tachetée."
+    },
+    "habitat": {
+      "en": "It inhabits deserts, thorn scrub and other open dry country; in Saudi Arabia it is reported from arid sandy or gravel plains with shrubs.",
+      "fr": "Elle fréquente les déserts, broussailles épineuses et autres milieux secs ouverts; en Arabie saoudite, elle est signalée dans des plaines arides sableuses ou graveleuses avec des arbustes."
+    },
+    "diet": {
+      "en": "It feeds mostly on dry seeds.",
+      "fr": "Elle se nourrit surtout de graines sèches."
+    },
+    "behavior": {
+      "en": "It gathers at watering sites, sometimes in large flocks; breeding males can carry water to chicks in specialized breast feathers.",
+      "fr": "Elle se rassemble aux points d’eau, parfois en grandes bandes; le mâle reproducteur peut transporter de l’eau aux poussins dans des plumes pectorales spécialisées."
+    },
+    "reproduction": {
+      "en": "It nests in a simple scrape on bare ground; the usual clutch has three eggs, and both sexes incubate.",
+      "fr": "Elle niche dans une simple dépression sur sol nu; la ponte habituelle compte trois œufs et les deux sexes couvent."
+    },
+    "ecology": {
+      "en": "Its dry-seed diet makes dependable access to water important in arid landscapes.",
+      "fr": "Son régime de graines sèches rend l’accès régulier à l’eau important dans les paysages arides."
+    },
+    "conservation": {
+      "en": "BirdLife’s IUCN assessment lists it as Least Concern, citing its very large range and apparently stable population.",
+      "fr": "L’évaluation UICN de BirdLife la classe en Préoccupation mineure, en raison de sa très vaste aire et d’une population apparemment stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chestnut-bellied Sandgrouse — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Ganga à ventre brun — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Chestnut-bellied_Sandgrouse/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell describes appearance, dry habitats, seed diet, water flights, nesting, shared incubation and Least Concern status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 16,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chestnut-bellied Sandgrouse — Saudipedia",
+        "fr": "Ganga à ventre brun — Saudipedia"
+      },
+      "url": "https://saudipedia.com/en/chestnut-bellied-sandgrouse",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The Saudi reference records the species as resident and breeding in the Kingdom and describes its local arid lowland habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 20,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pterocles exustus — IUCN Red List assessment",
+        "fr": "Pterocles exustus — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22692990A132063215.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s assessment reports a broad native range across Africa and Asia and the Least Concern category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 16,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The overview uses the species’ broad native range; Saudi habitat details are regional and not generalized to all populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The local Saudi habitat account is used as a regional example, while the range and conservation category follow BirdLife’s global assessment."
+}

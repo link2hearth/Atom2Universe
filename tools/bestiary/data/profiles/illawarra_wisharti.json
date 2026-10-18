@@ -1,0 +1,167 @@
+{
+  "id": "illawarra_wisharti",
+  "scientific": "Illawarra wisharti",
+  "group": "invertebrates",
+  "name": {
+    "en": "Illawarra Funnel-web Spider",
+    "fr": "Araignée à toile en entonnoir d’Illawarra"
+  },
+  "sections": {
+    "overview": {
+      "en": "Illawarra wisharti is an Australian funnel-web spider and the sole described species of its genus, Illawarra.",
+      "fr": "Illawarra wisharti est une araignée à toile en entonnoir australienne et la seule espèce décrite de son genre, Illawarra."
+    },
+    "identification": {
+      "en": "Its brown body bears distinct abdominal chevrons; males have a broad mid-ventral spine row beneath the tarsi of all four leg pairs, while females have a robust first leg with enlarged claws.",
+      "fr": "Son corps brun porte des chevrons abdominaux nets ; les mâles ont une large rangée d’épines sous les tarses des quatre paires de pattes, tandis que les femelles ont une première patte robuste aux griffes agrandies."
+    },
+    "habitat": {
+      "en": "The species is known from the Illawarra region of southern New South Wales.",
+      "fr": "L’espèce est connue dans la région d’Illawarra, au sud de la Nouvelle-Galles du Sud."
+    },
+    "diet": {
+      "en": "The taxonomic and collection accounts reviewed here provide no species-specific prey list.",
+      "fr": "Les descriptions taxonomiques et les fiches de collections consultées ne donnent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Its species description is based on preserved specimens and does not establish a detailed activity pattern.",
+      "fr": "Sa description repose sur des spécimens conservés et ne permet pas d’établir un rythme d’activité détaillé."
+    },
+    "reproduction": {
+      "en": "The revision describes female reproductive structures, but the sources consulted do not report clutch size or breeding season.",
+      "fr": "La révision décrit les organes reproducteurs de la femelle, mais les sources consultées ne précisent ni taille de ponte ni saison de reproduction."
+    },
+    "ecology": {
+      "en": "It is a distinct atracid genus alongside Atrax and Hadronyche; the Australian revision diagnoses it by sex-specific leg characters rather than treating it as an Atrax species.",
+      "fr": "C’est un genre distinct d’Atracidae, aux côtés d’Atrax et de Hadronyche ; la révision australienne le distingue par des caractères des pattes propres à chaque sexe, au lieu de le classer dans Atrax."
+    },
+    "conservation": {
+      "en": "The sources document a restricted regional distribution but do not provide a current species-level conservation category.",
+      "fr": "Les sources documentent une répartition régionale restreinte, mais ne donnent pas de catégorie de conservation actuelle pour l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A revision of the Australian funnel-web spiders — Records of the Australian Museum",
+        "fr": "Révision des araignées à toile en entonnoir australiennes — Records of the Australian Museum"
+      },
+      "url": "https://australian.museum/media/Uploads/Journals/19162/1556_complete.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The 2010 taxonomic revision describes I. wisharti, its distribution in southern New South Wales, diagnostic sex-specific leg structures and female anatomy."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 21,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illawarra wisharti — World Spider Catalog",
+        "fr": "Illawarra wisharti — Catalogue mondial des araignées"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/19813",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "World Spider Catalog accepts I. wisharti as the type species of Illawarra and lists its distribution as New South Wales, Australia."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 21,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illawarra wisharti — Atlas of Living Australia",
+        "fr": "Illawarra wisharti — Atlas of Living Australia"
+      },
+      "url": "https://bie.ala.org.au/species/Illawarra%2Bwisharti",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "The Australian biodiversity atlas records the accepted taxon and occurrence datasets; it is not a species-specific natural-history or threat assessment."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 20,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illawarra wisharti — Arachne Australian spider database",
+        "fr": "Illawarra wisharti — base australienne d’araignées Arachne"
+      },
+      "url": "https://www.arachne.org.au/01_cms/details.asp?ID=2702",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Arachne places the species under Atracidae and confirms its Australian funnel-web context."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed prey, activity, reproduction and current conservation information was not found in the species accounts reviewed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Australian Museum taxonomic revision and cross-checked accepted name and range against the World Spider Catalog and Atlas of Living Australia; no French species account found."
+}

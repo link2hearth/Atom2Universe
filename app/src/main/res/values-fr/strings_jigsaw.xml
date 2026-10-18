@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="jigsaw_choose_photo">Choisir une photo</string>
+    <string name="jigsaw_grid_choice">%1$d pièces\n%2$d × %3$d</string>
+    <string name="jigsaw_grid_accessibility">%1$d pièces, %2$d colonnes et %3$d lignes</string>
+    <string name="jigsaw_title">Puzzle</string>
+    <string name="jigsaw_description">Découvre une image cachée ou assemble tes photos, avec un découpage adapté à leur format.</string>
+    <string name="jigsaw_back">Retour</string>
+    <string name="jigsaw_help">Comment jouer</string>
+    <string name="jigsaw_resume">Reprendre le puzzle sauvegardé</string>
+    <string name="jigsaw_resume_summary">Reprendre · %1$d / %2$d pièces</string>
+    <string name="jigsaw_view_finished">Revoir le puzzle terminé</string>
+    <string name="jigsaw_style">Collection d’images</string>
+    <string name="jigsaw_collection_puzzle">Illustrations de puzzle</string>
+    <string name="jigsaw_all_collections">Toutes les collections · Surprise</string>
+    <string name="jigsaw_difficulty">Nombre de pièces</string>
+    <string name="jigsaw_piece_count">%1$d pièces</string>
+    <string name="jigsaw_count_short">%1$d</string>
+    <string name="jigsaw_rotation">Rotation des pièces</string>
+    <string name="jigsaw_layout">Disposition</string>
+    <string name="jigsaw_layout_tray_short">Carrousel</string>
+    <string name="jigsaw_layout_table_short">Table libre</string>
+    <string name="jigsaw_mystery_mark">?</string>
+    <string name="jigsaw_mystery_title">Une image à découvrir</string>
+    <string name="jigsaw_mystery_accessibility">Image surprise cachée. Aucun aperçu de l’image.</string>
+    <string name="jigsaw_start_surprise">Image surprise</string>
+    <string name="jigsaw_new_puzzle">Nouveau puzzle</string>
+    <string name="jigsaw_replace_title">Commencer un nouveau puzzle ?</string>
+    <string name="jigsaw_replace_message">Le puzzle en cours sera remplacé.</string>
+    <string name="jigsaw_start">Commencer</string>
+    <string name="jigsaw_recenter">Recentrer la table et les pièces</string>
+    <string name="jigsaw_more">Autres options</string>
+    <string name="jigsaw_edges">Pièces du bord uniquement</string>
+    <string name="jigsaw_ghost">Image en transparence</string>
+    <string name="jigsaw_hide_ghost">Masquer le guide</string>
+    <string name="jigsaw_tidy">Remettre les pièces libres au carrousel</string>
+    <string name="jigsaw_spread">Étaler les pièces libres</string>
+    <string name="jigsaw_rotate">Tourner la pièce sélectionnée</string>
+    <string name="jigsaw_guide_buy_accessibility">Débloquer l’image en transparence pour %1$d neutrino pour toute cette partie</string>
+    <string name="jigsaw_guide_description">Débloque un guide en transparence pour toute cette partie. Tu pourras ensuite l’afficher ou le masquer librement. Ta récompense finale reste entière.</string>
+    <string name="jigsaw_guide_unlock">Débloquer · %1$d neutrino</string>
+    <string name="jigsaw_guide_balance">Solde : %1$d neutrinos</string>
+    <string name="jigsaw_guide_insufficient">Pas assez de neutrinos · Solde : %1$d</string>
+    <string name="jigsaw_guide_save_error">Impossible de sauvegarder l’achat. Réessaie.</string>
+    <string name="jigsaw_time">%1$02d:%2$02d</string>
+    <string name="jigsaw_status">%1$d / %2$d · %3$s</string>
+    <string name="jigsaw_solved_status">Terminé · %3$s</string>
+    <plurals name="jigsaw_tray">
+        <item quantity="one">%d pièce</item>
+        <item quantity="many">%d pièces</item>
+        <item quantity="other">%d pièces</item>
+    </plurals>
+    <plurals name="jigsaw_tray_edges">
+        <item quantity="one">%d pièce du bord</item>
+        <item quantity="many">%d pièces du bord</item>
+        <item quantity="other">%d pièces du bord</item>
+    </plurals>
+    <string name="jigsaw_board_accessibility">Table du puzzle. Un doigt déplace les pièces, fait défiler le carrousel ou glisse sur le fond pour déplacer la table. Deux doigts ensemble déplacent ou zooment la table. Les repères dans les coins indiquent le cadre du puzzle.</string>
+    <string name="jigsaw_table_accessibility">Table libre du puzzle. Un doigt déplace une pièce ou un groupe, ou glisse sur le fond pour déplacer la table. Deux doigts ensemble déplacent ou zooment la table. Les repères dans les coins indiquent le cadre du puzzle.</string>
+    <string name="jigsaw_completed_accessibility">Puzzle terminé. L’image entière est révélée. Glisse avec un doigt pour déplacer l’image. Deux doigts ensemble permettent de la zoomer ou la déplacer.</string>
+    <string name="jigsaw_well_done">Puzzle terminé !</string>
+    <string name="jigsaw_replay_animation">Revoir l’animation</string>
+    <string name="jigsaw_completion_reward">%1$d neutrinos gagnés</string>
+    <string name="jigsaw_completion_status">%1$s\n%2$s</string>
+    <string name="jigsaw_rules">Choisis une image surprise ou une photo de ton appareil, puis le nombre de pièces, la disposition et, si tu veux, la rotation des pièces. Aucun aperçu : l’image se découvre à travers les pièces, puis en entier à la fin.\n\nCarrousel : fais défiler la réserve du bas et glisse une pièce vers le haut pour la poser sur la table. Pour ranger une pièce isolée, lâche-la sur le carrousel ou touche-la deux fois.\n\nTable libre : les pièces sont éparpillées autour du cadre vide.\n\nUn doigt déplace une pièce ou un groupe ; sur le fond, il déplace la table. Deux doigts déplacent la table et zooment. Les repères colorés des coins marquent le cadre. Aligne une pièce sur sa voisine ou à sa place dans le cadre, puis relâche-la pour l’attacher.\n\nL’œil débloque l’image en transparence pour toute la partie ; son prix est sur sa pastille. Ensuite, il l’affiche ou la masque gratuitement. Ta récompense reste entière.\n\nSi la rotation est activée, touche une pièce puis le bouton de rotation. Le menu ⋮ n’affiche que les pièces du bord et range les pièces isolées. Le bouton aux quatre coins recentre la table.\n\nLa récompense en neutrinos dépend du nombre de pièces et n’est versée qu’une fois par partie. La partie se sauvegarde toute seule ; un seul puzzle est gardé à la fois.</string>
+</resources>

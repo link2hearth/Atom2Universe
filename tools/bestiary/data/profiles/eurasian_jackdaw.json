@@ -1,0 +1,260 @@
+{
+  "id": "eurasian_jackdaw",
+  "scientific": "Corvus monedula",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Jackdaw",
+    "fr": "Choucas des tours"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian Jackdaw, also classified as Coloeus monedula, is a small crow of Europe, western Asia and north-west Africa. Most populations are resident; northern and eastern birds move south in winter.",
+      "fr": "Le Choucas des tours, également classé sous le nom de Coloeus monedula, est un petit corvidé d’Europe, d’Asie occidentale et du nord-ouest de l’Afrique. La plupart des populations sont sédentaires ; celles du nord et de l’est migrent vers le sud en hiver."
+    },
+    "identification": {
+      "en": "Adults measure 34–39 cm and weigh around 240 g. British ringing samples averaged 242 g for males and 226 g for females. Glossy black plumage, a grey nape and cheeks, short black bill and silvery-white eyes distinguish this crow. Young birds are browner with blue eyes.",
+      "fr": "L’adulte mesure 34 à 39 cm et pèse environ 240 g. Les échantillons britanniques de baguage indiquent 242 g en moyenne chez les mâles et 226 g chez les femelles. Son plumage noir brillant, sa nuque et ses joues grises, son bec court et son iris blanc argenté le distinguent. Le jeune est plus brun et a l’œil bleu."
+    },
+    "habitat": {
+      "en": "It forages in open farmland and parks but nests in sheltered cavities: tree holes and rock clefts, or urban chimneys and towers.",
+      "fr": "Il cherche sa nourriture dans les champs ouverts et les parcs, mais niche dans des cavités abritées : arbres creux et fissures rocheuses, ou cheminées et tours en ville."
+    },
+    "diet": {
+      "en": "This omnivore searches mostly on the ground, picking insects and other invertebrates from short vegetation and soil surfaces. During breeding, it takes surface and grass-dwelling prey from short turf and beneath dung; nestlings eat mainly insects and larvae. In winter, plant matter, especially grain and weed seeds, becomes more important. Fruit, carrion and refuse also supplement its diet. Jackdaws sometimes raid other birds’ nests for eggs or chicks.",
+      "fr": "Cet omnivore cherche surtout au sol insectes et autres invertébrés dans l’herbe courte et à la surface du sol. En période de reproduction, il prélève des proies en surface ou dans l’herbe courte et sous les bouses ; les poussins mangent surtout des insectes et des larves. En hiver, les végétaux, notamment les grains et les graines de mauvaises herbes, prennent davantage d’importance. Fruits, charognes et déchets complètent aussi son régime. Les choucas pillent parfois les nids d’autres oiseaux pour prendre œufs ou oisillons."
+    },
+    "behavior": {
+      "en": "Pairs feed and roost together, remaining close within noisy flocks. Their metallic “chack-chack” calls maintain contact, while a harsher call warns of danger. In experiments, jackdaws responded to human attention during competition for food and used a familiar person’s communicative cues to locate hidden food in a cooperative task.",
+      "fr": "Les couples se nourrissent et dorment ensemble, restant proches au sein de bandes bruyantes. Leurs cris métalliques « tchac-tchac » maintiennent le contact, tandis qu’un cri plus rauque signale le danger. En expérience, les choucas ont tenu compte de l’attention humaine en situation de compétition pour la nourriture et utilisé les signaux communicatifs d’une personne familière pour trouver de la nourriture cachée dans une tâche coopérative."
+    },
+    "reproduction": {
+      "en": "Pairs often mate for life, breed from their second year and nest in colonies. They build a stick platform in a cavity, lining it with hair, wool or feathers. The female lays four or five pale blue-green eggs and incubates them for about 20 days as the male feeds her. Hatchlings are naked and helpless; both parents feed them. British nest records show fledging at about 32 days. Young then remain with their family for roughly another month while learning to feed independently.",
+      "fr": "Les couples restent souvent unis pour la vie, se reproduisent dès leur deuxième année et nichent en colonie. Ils construisent une plateforme de brindilles dans une cavité et la tapissent de poils, de laine ou de plumes. La femelle pond quatre ou cinq œufs bleu-vert pâle et les couve environ 20 jours, nourrie par le mâle. Nus et incapables de se débrouiller seuls, les poussins sont nourris par les deux parents. Les données britanniques indiquent un envol vers 32 jours. Les jeunes restent ensuite près d’un mois en famille, tout en apprenant à se nourrir seuls."
+    },
+    "ecology": {
+      "en": "Ground insects feed jackdaws, which also consume seeds and carrion. Cavity nests can be contested with other birds, and communal roosts concentrate large flocks.",
+      "fr": "Les choucas consomment des insectes du sol, mais aussi des graines et des charognes. D’autres oiseaux peuvent convoiter leurs cavités de nidification, et les dortoirs communs rassemblent de grandes bandes."
+    },
+    "conservation": {
+      "en": "Globally, the species is assessed as Least Concern; the broad European population trend has been stable. In Britain, breeding numbers rose from the 1960s to 2024. Historically, jackdaws were hunted for crop damage and nesting in belfries.",
+      "fr": "À l’échelle mondiale, l’espèce est classée en préoccupation mineure ; la tendance générale des populations européennes est stable. En Grande-Bretagne, les effectifs nicheurs ont augmenté des années 1960 à 2024. Autrefois, les choucas étaient chassés pour les dégâts aux cultures et leur nidification dans les clochers."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Western jackdaw — Wikipedia",
+        "fr": "Choucas des tours — Wikipédia en anglais"
+      },
+      "url": "https://en.wikipedia.org/wiki/Western_jackdaw",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "ecology",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Range, appearance, feeding, social and nesting cross-check.",
+        "Adults measure 34–39 cm in length."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.5",
+        "ecology.en.1",
+        "ecology.en.2",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.en.4",
+        "overview.en.1",
+        "overview.en.2",
+        "reproduction.en.1",
+        "reproduction.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 13,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Choucas des tours — Wikipédia",
+        "fr": "Choucas des tours — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Choucas_des_tours",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "French cross-check of range, morphology and social biology."
+      ],
+      "prose_claims": [
+        "behavior.fr.2",
+        "diet.fr.5",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "identification.fr.1",
+        "identification.fr.3",
+        "identification.fr.4",
+        "overview.fr.1",
+        "overview.fr.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 8,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jackdaw BirdFacts — British Trust for Ornithology",
+        "fr": "Choucas des tours : BirdFacts — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jackdaw",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "British ringing, breeding and population-trend data.",
+        "British ringing samples averaged 242 g for males and 226 g for females."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 19,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Jackdaw Life History — Cornell Lab of Ornithology",
+        "fr": "Cycle de vie du Choucas des tours — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Jackdaw/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Habitat, flocking, parental care and IUCN summary."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.fr.4",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 7,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jackdaws Respond to Human Attentional States and Communicative Cues in Different Contexts",
+        "fr": "Les choucas répondent à l’attention et aux signaux communicatifs humains selon le contexte"
+      },
+      "url": "https://doi.org/10.1016/j.cub.2009.02.062",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Jackdaw gaze and communicative-cue experiments."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 5,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Predicting the impact of future agricultural change and uptake of Entry Level Stewardship on farmland birds (BTO Research Report 485)",
+        "fr": "Predicting the impact of future agricultural change and uptake of Entry Level Stewardship on farmland birds (rapport de recherche BTO no 485)"
+      },
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2007/rr485v2.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Jackdaw surface-foraging prey and winter shift toward plant foods."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.2",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 9,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult Eurasian Jackdaw Corvus monedula, a compact dark crow with a clearly pale grey nape and cheek area, silvery-white adult iris, short stout black bill and black legs. Keep the whole bird visible against a plain white background.",
+  "uncertainties": [
+    "The degree of dependence after fledging is described as about one month by Cornell; exact duration may vary among families and populations."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: primary von Bayern and Emery 2009 abstract checked; cooperative task explicitly involves familiar human cues, not cooperation among birds. Bilingual parity and regional British life-history scope checked.",
+  "source_audit_version": 1
+}

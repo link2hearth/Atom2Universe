@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pt_read_title">Understanding the tree of life</string>
+    <string name="pt_read_source">University of California, Berkeley · Understanding Evolution</string>
+    <string name="pt_read_source_method">Reading guide: original explanations checked on 9 October 2026. The following references explain each concept; they are not the source of this atlas topology, which is documented separately.</string>
+    <string name="pt_read_ancestor_title">What does a branch point represent?</string>
+    <string name="pt_read_ancestor_body">An evolutionary tree represents ancestry relationships. Tips correspond to the species or groups shown; a branch point connects lineages with shared ancestry. To compare two species, trace their paths back to their most recent shared junction. Two groups arising directly from the same node are sister groups. In this atlas, nodes preserve source identity; they do not identify individual fossil ancestors.</string>
+    <string name="pt_read_clade_title">Nested groups</string>
+    <string name="pt_read_clade_body">A clade includes a common ancestor and all its descendants, living or extinct. Clades are nested: belonging to a smaller group does not remove membership in its containing groups. Exploring an atlas group reveals only the representatives selected for the catalogue, rather than all its species or fossils.</string>
+    <string name="pt_read_order_title">Position in the drawing</string>
+    <string name="pt_read_order_body">Placing a branch on the left, right or higher up does not rank its species by perfection. Rotating branches around a node preserves the same relationships. Look for junctions and shared paths; names being close on screen does not establish closer ancestry.</string>
+    <string name="pt_read_cousin_title">A living cousin is not an ancestor</string>
+    <string name="pt_read_cousin_body">Two living species each continue their history after divergence. A branch that splits early in a drawing has not stopped evolving. Humans do not descend from living chimpanzees; both lineages share older ancestry. In the journeys, the side species illustrates a relationship rather than a living stage through which the destination species passed.</string>
+    <string name="pt_read_uncertain_title">When a junction has several branches</string>
+    <string name="pt_read_uncertain_body">A polytomy is a node giving rise to more than two lineages. It often indicates that data cannot resolve the order of divergence; in some cases, very rapid diversification is involved. The drawing alone cannot distinguish these interpretations. A new study may clarify some relationships without making every branch point definitive.</string>
+    <string name="pt_read_length_title">Ancestry, duration and resemblance</string>
+    <string name="pt_read_length_body">Depending on the tree, branch length may express time, an amount of change, or neither. Here, distances are chosen for readability: they measure neither years nor genetic differences. Available ages come from separate studies and appear on the timeline with their uncertainties. Similar appearance cannot replace reading the relationships in a tree.</string>
+</resources>

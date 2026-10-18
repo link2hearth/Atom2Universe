@@ -1,0 +1,163 @@
+{
+  "id": "wild_boar",
+  "scientific": "Sus scrofa",
+  "group": "mammals",
+  "name": {
+    "en": "Wild boar",
+    "fr": "Sanglier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The wild boar is native to much of Europe, North Africa and Asia, reaching eastern Siberia and Southeast Asian islands. Feral populations also occur in the Americas and New Zealand, where pigs introduced by people established in the wild. Body size and coat vary widely, and escaped domestic pigs can alter local populations.",
+      "fr": "Le sanglier est autochtone dans une grande partie de l’Europe, de l’Afrique du Nord et de l’Asie, jusqu’en Sibérie orientale et aux îles d’Asie du Sud-Est. Des populations férales vivent aussi dans les Amériques et en Nouvelle-Zélande après introduction humaine. Taille et pelage varient ; des porcs échappés modifient parfois les populations locales."
+    },
+    "identification": {
+      "en": "The species varies greatly by subspecies and region: the IUCN/SSC Pigs, Peccaries and Hippos Specialist Group gives 90–200 cm head-and-body length, 55–110 cm shoulder height, a 15–40 cm tail and 44–320 kg. Females average about 80% of male size; local populations can fall well outside any single “typical” figure. Adults have a muscular body, short muzzle and coarse bristles; their brown to nearly black coat often greys with age. Piglets' dark stripes fade within months. Both sexes have curved canine tusks, usually larger in males. A study of 403 boars in two Spanish districts found canine thickness chiefly related to sex and age.",
+      "fr": "L’espèce varie fortement selon la sous-espèce et la région : le groupe de spécialistes UICN/SSC indique 90 à 200 cm de longueur tête-corps, 55 à 110 cm au garrot, une queue de 15 à 40 cm et 44 à 320 kg. Les femelles représentent en moyenne environ 80 % de la taille des mâles ; les populations locales peuvent s’écarter fortement de ces fourchettes générales. L’adulte a un corps musclé, un museau court et des soies rêches ; son pelage brun à noir grisonne souvent. Les rayures des marcassins s’effacent en quelques mois. Les deux sexes ont des canines recourbées, plus grandes chez le mâle. Une étude espagnole de 403 sangliers reliait leur épaisseur surtout au sexe et à l’âge."
+    },
+    "habitat": {
+      "en": "Wild boars inhabit forests, scrub, grassland, wooded savanna and farmland. They rest in cover and feed in open areas; in Singapore they also forage at urban edges. Habitat use shifts with season, food and disturbance. Their native range spans diverse climates; introduced populations do not extend it naturally.",
+      "fr": "Le sanglier vit en forêt, dans les fourrés, prairies, savanes boisées et terres agricoles. Il se repose à couvert et s’alimente en terrain ouvert ; à Singapour, il fréquente aussi les périphéries urbaines. Son habitat varie selon saison, ressources et dérangements. Une population introduite n’étend pas son aire naturelle."
+    },
+    "diet": {
+      "en": "This omnivore finds food mainly by smell and roots through soil with its mobile snout. Depending on season and place, it eats roots, tubers, grasses, nuts, berries, crops, insects, worms, small reptiles and carrion. Plants often dominate. Rooting also disturbs soil and seedlings.",
+      "fr": "Cet omnivore repère les aliments par l’odorat et fouille le sol avec son groin. Selon le lieu et la saison, il mange racines, tubercules, herbes, noix, baies, cultures, insectes, vers, petits reptiles et charognes. Les végétaux dominent souvent. Le fouissage remue aussi le sol et les plantules."
+    },
+    "behavior": {
+      "en": "Females and young often form family groups; adult males are usually solitary outside mating periods. Boars may be active by day but become more nocturnal under human disturbance. Their keen smell locates food. They push soil aside while rooting and wallow in mud to help regulate body temperature. Grouping varies locally.",
+      "fr": "Femelles et jeunes forment souvent des groupes familiaux ; les mâles adultes sont généralement solitaires hors reproduction. Le sanglier peut être diurne, mais devenir nocturne sous dérangement humain. Son odorat repère la nourriture. Il fouille le sol et se vautre dans la boue pour réguler sa température."
+    },
+    "reproduction": {
+      "en": "Breeding follows climate and food: it can occur year-round in the tropics, while births in temperate regions often peak in spring. Gestation lasts about 108–120 days, and litters commonly have five or six piglets, with local variation. The sow makes a sheltered nest; piglets' stripes fade as they grow.",
+      "fr": "La reproduction suit le climat : elle peut avoir lieu toute l’année sous les tropiques, tandis que les naissances tempérées culminent souvent au printemps. La gestation dure environ 108 à 120 jours et les portées comptent cinq ou six marcassins. La laie prépare un nid abrité ; leurs rayures s’effacent en grandissant."
+    },
+    "ecology": {
+      "en": "Rooting turns over vegetation, litter and soil; effects depend on habitat and intensity. In 22 Berlin dry grasslands, plant diversity declined with rooting, while grasshopper diversity and sand-lizard abundance were positively associated. Forest studies report damage to understory plants and regeneration. Outcomes vary locally.",
+      "fr": "Le fouissage retourne végétation, litière et sol ; ses effets dépendent du milieu. Dans 22 prairies sèches de Berlin, la diversité végétale diminuait avec le fouissage, mais diversité des sauterelles et abondance du lézard des sables lui étaient positivement associées. En forêt, il peut endommager sous-bois et régénération."
+    },
+    "conservation": {
+      "en": "The species remains widespread in much of its native range, though habitat loss, hunting and interbreeding with free-ranging domestic pigs threaten some populations. In introduced regions such as North America, rooting can erode soil, hinder forest regeneration, compete with native wildlife and disturb nests. Such impacts are documented especially in the United States.",
+      "fr": "L’espèce reste répandue dans son aire, mais perte d’habitat, chasse et croisements avec des porcs domestiques menacent certaines populations. En Amérique du Nord, le fouissage peut éroder le sol, freiner la régénération forestière, concurrencer la faune indigène et perturber des nids. Ces effets sont documentés aux États-Unis."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian Wild Boar — IUCN SSC Wild Pigs Specialist Group",
+        "fr": "Sanglier d’Eurasie — Groupe de spécialistes des porcs sauvages de la CSE-UICN"
+      },
+      "url": "https://www.iucn-wpsg.org/eurasian-wild-boar-detailed",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Describes the native range from Europe across Eurasia to East and Southeast Asia, Taiwan and North Africa; records major geographic variation in size and coat.",
+        "Summarizes habitats, omnivorous foods, family groups, generally solitary adult males, seasonal reproduction and local threats; the account is adapted from a 2011 mammal handbook chapter.",
+        "Species-wide size varies substantially; head-body 90–200 cm, shoulder 55–110 cm, tail 15–40 cm, mass 44–320 kg; females about 80% male size."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wild Boar — BiodiversitySG, National Parks Board of Singapore",
+        "fr": "Sanglier — BiodiversitySG, Conseil des parcs nationaux de Singapour"
+      },
+      "url": "https://biodiversitysg.nparks.gov.sg/our-biodiversity/mammals/ungulates-hoofed-animals/wild-boar/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Describes Singapore adults as robust with dark grey-brown to reddish hair and juveniles as brown with longitudinal stripes.",
+        "Reports forest habitat and urban foraging in Singapore, plus plant foods and animal matter including carrion, insects, earthworms and molluscs."
+      ]
+    },
+    {
+      "title": {
+        "en": "Sus scrofa — BioKIDS, University of Michigan",
+        "fr": "Sus scrofa — BioKIDS, Université du Michigan"
+      },
+      "url": "https://www.biokids.umich.edu/critters/Sus_scrofa/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Reports food- and climate-dependent breeding, a 108–120-day gestation, commonly five to six piglets, and births across the year with seasonal variation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Do morphological characteristics and environmental factors affect canine development in wild boar? — Galemys / SECEM",
+        "fr": "Les caractéristiques morphologiques et environnementales influencent-elles le développement des canines du sanglier ? — Galemys / SECEM"
+      },
+      "url": "https://doi.org/10.7325/Galemys.2003.1.A4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "A study of 403 animals in two districts of western-central Spain found canine thickness related chiefly to sex and age; male canines grew more than female canines in that sample."
+      ]
+    },
+    {
+      "title": {
+        "en": "Endangered animals and plants are positively or neutrally related to wild boar soil disturbance in urban grasslands — Scientific Reports",
+        "fr": "Dans les prairies urbaines, les espèces menacées sont liées positivement ou sans effet au dérangement du sol par le sanglier — Scientific Reports"
+      },
+      "url": "https://doi.org/10.1038/s41598-022-20964-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "At 22 Berlin dry-grassland sites, plant diversity decreased with rooting intensity, while grasshopper diversity and sand-lizard abundance showed positive relationships; the authors emphasize context dependence."
+      ]
+    },
+    {
+      "title": {
+        "en": "Feral Swine Damage: Natural Resources — USDA Animal and Plant Health Inspection Service",
+        "fr": "Dégâts des porcs féraux sur les ressources naturelles — Service d’inspection zoosanitaire et phytosanitaire du ministère américain de l’Agriculture"
+      },
+      "url": "https://www.aphis.usda.gov/operational-wildlife-activities/feral-swine/damage-natural-resources",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "For U.S. feral swine, documents competition with native wildlife, disturbance or predation affecting nests, erosion, water-quality effects and reduced forest regeneration. These findings are geographically scoped to feral swine in the United States."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wild pigs — Department of Conservation, New Zealand",
+        "fr": "Porcs sauvages — Department of Conservation, Nouvelle-Zélande"
+      },
+      "url": "https://www.doc.govt.nz/parks-and-recreation/things-to-do/hunting/what-to-hunt/feral-pigs/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Confirms that wild pigs (Sus scrofa) occur on New Zealand islands; the wider New Zealand record describes populations established from introduced domestic pigs."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated image. Adult wild boar with exact natural species morphology: robust body, coarse dark bristles, elongated snout, visible curved tusks; pure white background.",
+  "uncertainties": [
+    "Body size, coat, tusk size, diet and seasonal timing vary across the species' broad range; the Spanish canine study describes two local districts only.",
+    "Introduced-range ecological impacts are stated for documented contexts, especially U.S. feral populations; they should not be generalized to every native population or habitat."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review; cattle conservation supplemented with FAO breed-conservation evidence; horse ecological observations explicitly scoped to feral herds and mixed grazing."
+}

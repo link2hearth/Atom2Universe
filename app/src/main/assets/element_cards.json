@@ -1,0 +1,165 @@
+{
+  "fusions": [
+    {
+      "fusionId": "pp",
+      "cardDropRate": 0.01,
+      "cards": [
+        {"atomicNumber": 1},
+        {"atomicNumber": 2}
+      ]
+    },
+    {
+      "fusionId": "triple_alpha",
+      "cardDropRate": 0.02,
+      "cards": [
+        {"atomicNumber": 3},
+        {"atomicNumber": 4},
+        {"atomicNumber": 5},
+        {"atomicNumber": 6}
+      ]
+    },
+    {
+      "fusionId": "carbon_fusion",
+      "cardDropRate": 0.04,
+      "cards": [
+        {"atomicNumber": 7},
+        {"atomicNumber": 8},
+        {"atomicNumber": 9},
+        {"atomicNumber": 10}
+      ]
+    },
+    {
+      "fusionId": "alpha_capture",
+      "cardDropRate": 0.04,
+      "cards": [
+        {"atomicNumber": 11},
+        {"atomicNumber": 12},
+        {"atomicNumber": 13}
+      ]
+    },
+    {
+      "fusionId": "oxygen_fusion",
+      "cardDropRate": 0.05,
+      "cards": [
+        {"atomicNumber": 14},
+        {"atomicNumber": 15},
+        {"atomicNumber": 16},
+        {"atomicNumber": 17},
+        {"atomicNumber": 18}
+      ]
+    },
+    {
+      "fusionId": "water",
+      "cardDropRate": 0.25,
+      "cards": [
+        {"atomicNumber": 19},
+        {"atomicNumber": 20},
+        {"atomicNumber": 21},
+        {"atomicNumber": 22},
+        {"atomicNumber": 23},
+        {"atomicNumber": 24},
+        {"atomicNumber": 25},
+        {"atomicNumber": 26},
+        {"atomicNumber": 27},
+        {"atomicNumber": 28}
+      ]
+    },
+    {
+      "fusionId": "neutron_capture",
+      "cardDropRate": 0.50,
+      "cards": [
+        {"atomicNumber": 29},
+        {"atomicNumber": 30},
+        {"atomicNumber": 31},
+        {"atomicNumber": 32},
+        {"atomicNumber": 33},
+        {"atomicNumber": 34},
+        {"atomicNumber": 35},
+        {"atomicNumber": 36},
+        {"atomicNumber": 37},
+        {"atomicNumber": 38},
+        {"atomicNumber": 39},
+        {"atomicNumber": 40},
+        {"atomicNumber": 41},
+        {"atomicNumber": 42},
+        {"atomicNumber": 43},
+        {"atomicNumber": 44},
+        {"atomicNumber": 45},
+        {"atomicNumber": 46},
+        {"atomicNumber": 47},
+        {"atomicNumber": 48},
+        {"atomicNumber": 49},
+        {"atomicNumber": 50},
+        {"atomicNumber": 51},
+        {"atomicNumber": 52},
+        {"atomicNumber": 53},
+        {"atomicNumber": 54},
+        {"atomicNumber": 55},
+        {"atomicNumber": 56},
+        {"atomicNumber": 57},
+        {"atomicNumber": 58},
+        {"atomicNumber": 59},
+        {"atomicNumber": 60},
+        {"atomicNumber": 61},
+        {"atomicNumber": 62},
+        {"atomicNumber": 63},
+        {"atomicNumber": 64},
+        {"atomicNumber": 65},
+        {"atomicNumber": 66},
+        {"atomicNumber": 67},
+        {"atomicNumber": 68},
+        {"atomicNumber": 69},
+        {"atomicNumber": 70},
+        {"atomicNumber": 71},
+        {"atomicNumber": 72},
+        {"atomicNumber": 73},
+        {"atomicNumber": 74},
+        {"atomicNumber": 75},
+        {"atomicNumber": 76},
+        {"atomicNumber": 77},
+        {"atomicNumber": 78},
+        {"atomicNumber": 79},
+        {"atomicNumber": 80},
+        {"atomicNumber": 81},
+        {"atomicNumber": 82},
+        {"atomicNumber": 83},
+        {"atomicNumber": 84},
+        {"atomicNumber": 85},
+        {"atomicNumber": 86},
+        {"atomicNumber": 87},
+        {"atomicNumber": 88},
+        {"atomicNumber": 89},
+        {"atomicNumber": 90},
+        {"atomicNumber": 91},
+        {"atomicNumber": 92},
+        {"atomicNumber": 93},
+        {"atomicNumber": 94},
+        {"atomicNumber": 95},
+        {"atomicNumber": 96},
+        {"atomicNumber": 97},
+        {"atomicNumber": 98},
+        {"atomicNumber": 99},
+        {"atomicNumber": 99},
+        {"atomicNumber": 100},
+        {"atomicNumber": 101},
+        {"atomicNumber": 102},
+        {"atomicNumber": 103},
+        {"atomicNumber": 104},
+        {"atomicNumber": 105},
+        {"atomicNumber": 106},
+        {"atomicNumber": 107},
+        {"atomicNumber": 108},
+        {"atomicNumber": 109},
+        {"atomicNumber": 110},
+        {"atomicNumber": 111},
+        {"atomicNumber": 112},
+        {"atomicNumber": 113},
+        {"atomicNumber": 114},
+        {"atomicNumber": 115},
+        {"atomicNumber": 116},
+        {"atomicNumber": 117},
+        {"atomicNumber": 118}
+      ]
+    }
+  ]
+}

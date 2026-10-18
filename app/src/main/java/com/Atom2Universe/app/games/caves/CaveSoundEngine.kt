@@ -1,0 +1,263 @@
+package com.Atom2Universe.app.games.caves
+
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.media.SoundPool
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
+import android.util.Log
+import com.Atom2Universe.app.games.caves.node.EventBus
+import com.Atom2Universe.app.games.caves.node.GameEvent
+
+/** Preloaded licensed recordings and the original shotgun. See caves/audio/CREDITS.md. */
+internal class CaveSoundEngine(private val context: Context) {
+    private var pool: SoundPool? = null
+    private val ids = mutableMapOf<String, Int>()
+    private val loaded = mutableSetOf<Int>()
+    private val lastPlayed = mutableMapOf<String, Long>()
+    private val streams = mutableMapOf<Int, Long>()
+    private var paused = false
+    private var shot = 0
+    private var animalVoice = 0
+    private var footstepStream = 0
+    private var footstepSurface = ""
+    private var footstepRate = 1f
+    private var rainStream = 0
+    private var cricketStream = 0
+
+    // Ambiance : une boucle longue, trop lourde pour le SoundPool, jouée par un MediaPlayer. Tout ce
+    // qui la touche passe par le fil principal, dans l'ordre où les événements arrivent.
+    private val main = Handler(Looper.getMainLooper())
+    private var ambienceTrack: String? = null
+    private var ambiencePlayer: MediaPlayer? = null
+    private var ambienceGeneration = 0
+
+    @Synchronized fun start() {
+        if (pool != null) return
+        val sounds = SoundPool.Builder().setMaxStreams(12).setAudioAttributes(
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        ).build()
+        pool = sounds
+        sounds.setOnLoadCompleteListener { source, id, status ->
+            synchronized(this) { if (source === pool && status == 0) loaded.add(id) }
+        }
+        val names = listOf("gun", "smg", "shotgun", "lever_rifle").flatMap { name ->
+            (0..2).map { "${name}_$it" }
+        } + listOf("bow", "crossbow", "sling", "hurt", "boss") +
+            listOf("gun", "smg", "dual_pistols", "shotgun", "lever_rifle").map { "reload_$it" } +
+            listOf("concrete", "wood", "metal").map { "impact_$it" } +
+            listOf("round_start_radio", "round_won", "round_lost") +
+            listOf("stone", "earth", "wood").map { surface -> "step_${surface}_loop" } +
+            listOf("cow", "sheep", "pig", "chicken").flatMap { species -> (0..1).map { "animal_${species}_$it" } }
+        for (name in names) {
+            try {
+                context.assets.openFd("caves/audio/$name.wav").use { ids[name] = sounds.load(it, 1) }
+            } catch (e: Exception) { Log.w("CaveAudio", "Cannot load $name", e) }
+        }
+        // Temporaire : l'arbalète se réarme sur la corde de fronde du Trébuchet, faute de son propre.
+        try {
+            context.assets.openFd("trebuchet/audio/rope_tie.ogg").use { ids["reload_crossbow"] = sounds.load(it, 1) }
+        } catch (e: Exception) { Log.w("CaveAudio", "Cannot load reload_crossbow", e) }
+        Thread({
+            try {
+                val files = CaveNatureSounds.prepare(context.cacheDir)
+                synchronized(this) {
+                    if (pool === sounds) for ((name, file) in files) ids[name] = sounds.load(file.path, 1)
+                }
+            } catch (e: Exception) { Log.w("CaveAudio", "Cannot prepare nature sounds", e) }
+        }, "CaveNatureAudio").start()
+    }
+
+    @Synchronized fun pause() {
+        paused = true
+        main.post { ambiencePlayer?.let { if (it.isPlaying) it.pause() } }
+        stopFootsteps()
+        stopNature()
+        streams.keys.forEach { pool?.stop(it) }
+        streams.clear()
+    }
+    @Synchronized fun resume() {
+        paused = false
+        main.post { ambiencePlayer?.start() }
+    }
+    @Synchronized fun destroy() {
+        paused = true
+        main.post {
+            ambienceGeneration++
+            ambiencePlayer?.release()
+            ambiencePlayer = null
+            ambienceTrack = null
+        }
+        stopFootsteps()
+        stopNature()
+        pool?.release()
+        pool = null
+        ids.clear(); loaded.clear(); streams.clear(); lastPlayed.clear()
+    }
+
+    fun subscribe(bus: EventBus) {
+        bus.subscribe { event ->
+            when (event) {
+                is GameEvent.WeaponFired -> onShot(event.weaponType)
+                is GameEvent.WeaponReload ->
+                    if (!event.complete) play("reload_${event.weaponType}", .55f, 3, "reload")
+                is GameEvent.BulletImpact ->
+                    play("impact_${event.material}", .5f * event.volume, 2, "impact", 45, event.pan)
+                is GameEvent.RoundStarted -> play("round_start_radio", .55f, 4)
+                is GameEvent.RoundEnded -> play(if (event.won) "round_won" else "round_lost", .6f, 4)
+                is GameEvent.Ambience -> main.post { switchAmbience(event.track) }
+                is GameEvent.Footstep -> onFootstep(event)
+                is GameEvent.AnimalCall -> onAnimal(event)
+                is GameEvent.NatureAmbience -> onNature(event)
+                is GameEvent.MobNearby -> Unit // Detection is silent; no unrelated creaking cue.
+                // The shot carries the hit feedback; no extra "tac" on contact.
+                is GameEvent.MobHit -> Unit
+                is GameEvent.MeleeContact -> play(if(event.armored) "impact_metal" else "impact_wood",
+                    if(event.heavy) .75f else .45f,4,"melee",65)
+                is GameEvent.PlayerHit -> play("hurt", .7f, 5, cooldown = 200)
+                is GameEvent.MobDied -> Unit // Sonivox ding handled by the activity.
+                is GameEvent.BossSpawned -> play("boss", .72f, 4)
+                is GameEvent.EnemyFired -> onShot(event.weaponType, enemy = true)
+                is GameEvent.SoldierDown -> Unit
+            }
+        }
+    }
+
+    @Synchronized private fun onNature(event: GameEvent.NatureAmbience) {
+        if (paused) return
+        val sounds = pool ?: return
+        fun loop(name: String, stream: Int, volume: Float, silenceThreshold: Float = .005f): Int {
+            if (volume < silenceThreshold) { if (stream != 0) sounds.stop(stream); return 0 }
+            if (stream != 0) { sounds.setVolume(stream, volume, volume); return stream }
+            val id = ids[name]?.takeIf { it in loaded } ?: return 0
+            return sounds.play(id, volume, volume, 8, -1, 1f)
+        }
+        // Le mix de pluie est volontairement discret : ne pas couper sa version atténuée sous abri.
+        rainStream = loop("nature_rain", rainStream, event.rain * .035f, silenceThreshold = .0005f)
+        cricketStream = loop("nature_crickets", cricketStream, event.crickets * .06f)
+    }
+
+    private fun stopNature() {
+        if (rainStream != 0) pool?.stop(rainStream)
+        if (cricketStream != 0) pool?.stop(cricketStream)
+        rainStream = 0; cricketStream = 0
+    }
+
+    @Synchronized private fun onShot(type: String, enemy: Boolean = false) {
+        val family = if (type == "dual_pistols") "gun" else type
+        val name = if (family in listOf("gun", "smg", "shotgun", "lever_rifle")) {
+            val variant = shot
+            shot = (shot + 1) % 3
+            "${family}_$variant"
+        } else family
+        if (enemy) {
+            // Same sample family as the player, quieter in the mix; bound crowd audio.
+            play(name, if (family == "smg") .30f else .38f, 1, "enemy", 65)
+        } else {
+            play(name, if (family == "smg") .46f else .64f, 3)
+        }
+    }
+
+    @Synchronized private fun onFootstep(event: GameEvent.Footstep) {
+        if (paused || !event.moving) { stopFootsteps(); return }
+        val sounds = pool ?: return
+        val id = ids["step_${event.surface}_loop"] ?: return
+        if (id !in loaded) return
+        val volume = if (event.running) .30f else .19f
+        val rate = (.46f / event.interval).coerceIn(.5f, 2f)
+        if (footstepStream == 0 || footstepSurface != event.surface) {
+            stopFootsteps()
+            // The PCM buffer contains exactly one step and its gap. Native looping owns
+            // every beat, independent of render frame timing. Highest priority prevents
+            // one-shot gunfire from stealing this continuous stream.
+            footstepStream = sounds.play(id, volume, volume, 10, -1, rate)
+            footstepSurface = event.surface
+            footstepRate = rate
+        } else {
+            sounds.setVolume(footstepStream, volume, volume)
+            if (kotlin.math.abs(rate - footstepRate) > .04f) {
+                sounds.setRate(footstepStream, rate)
+                footstepRate = rate
+            }
+        }
+    }
+
+    private fun stopFootsteps() {
+        if (footstepStream != 0) pool?.stop(footstepStream)
+        footstepStream = 0
+        footstepSurface = ""
+    }
+
+    /** Fil principal. Fondu d'une seconde : l'ancienne boucle s'éteint pendant que la nouvelle monte. */
+    private fun switchAmbience(track: String?) {
+        if (track == ambienceTrack) return
+        ambienceTrack = track
+        val generation = ++ambienceGeneration
+        ambiencePlayer?.let { old -> fade(old, AMBIENCE_VOLUME, 0f, generation) { old.release() } }
+        ambiencePlayer = null
+        if (track == null) return
+        val player = try {
+            context.assets.openFd("caves/audio/$track.ogg").use { fd ->
+                MediaPlayer().apply {
+                    setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build())
+                    setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+                    isLooping = true
+                    setVolume(0f, 0f)
+                    prepare()
+                }
+            }
+        } catch (e: Exception) { Log.w("CaveAudio", "Cannot load $track", e); return }
+        ambiencePlayer = player
+        if (!paused) player.start()
+        fade(player, 0f, AMBIENCE_VOLUME, generation, null)
+    }
+
+    private fun fade(player: MediaPlayer, from: Float, to: Float, generation: Int, then: (() -> Unit)?) {
+        var step = 0
+        main.post(object : Runnable {
+            override fun run() {
+                step++
+                val volume = from + (to - from) * step / FADE_STEPS
+                // Une montée interrompue par un nouveau changement d'étage s'arrête là ;
+                // une extinction, elle, va toujours jusqu'au bout pour libérer son lecteur.
+                if (then == null && generation != ambienceGeneration) return
+                try { player.setVolume(volume, volume) } catch (_: IllegalStateException) { return }
+                if (step < FADE_STEPS) main.postDelayed(this, FADE_STEP_MS) else then?.invoke()
+            }
+        })
+    }
+
+    @Synchronized private fun onAnimal(event: GameEvent.AnimalCall) {
+        play("animal_${event.species}_$animalVoice", event.volume, 1, "animal", 3000, event.pan)
+        animalVoice = (animalVoice + 1) % 2
+    }
+
+    @Synchronized private fun play(name: String, volume: Float, priority: Int,
+                                    group: String = name, cooldown: Long = 0, pan: Float = 0f) {
+        if (paused) return
+        val sounds = pool ?: return
+        val id = ids[name] ?: return
+        if (id !in loaded) return
+        val now = SystemClock.uptimeMillis()
+        if (lastPlayed[group]?.let { now - it < cooldown } == true) return
+        streams.entries.removeAll { it.value <= now }
+        val stream = sounds.play(id, volume * (1f - pan.coerceAtLeast(0f)),
+            volume * (1f + pan.coerceAtMost(0f)), priority, 0, 1f)
+        if (stream != 0) {
+            lastPlayed[group] = now
+            // Animal recordings can last over two seconds; retain their IDs through the tail.
+            streams[stream] = now + 4000
+        }
+    }
+
+    private companion object {
+        /** Les boucles sont égalisées à -30 dB : à ce volume, elles restent derrière les tirs. */
+        const val AMBIENCE_VOLUME = .55f
+        const val FADE_STEPS = 20
+        const val FADE_STEP_MS = 50L
+    }
+}

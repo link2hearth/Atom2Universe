@@ -1,0 +1,12 @@
+{
+  "id": 9891,
+  "name": "expedition_anvil",
+  "texture_top": "expedition:9891:top",
+  "texture_side": "expedition:9891:side",
+  "texture_bottom": "expedition:9891:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_anvil",
+  "creative_tab": "resources",
+  "placeable": true
+}

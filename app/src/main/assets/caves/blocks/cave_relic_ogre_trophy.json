@@ -1,0 +1,17 @@
+{
+  "id": 2727,
+  "name": "cave_relic_ogre_trophy",
+  "texture_top": "cave_relics:ogre_trophy_top",
+  "texture_side": "cave_relics:ogre_trophy_side",
+  "texture_bottom": "cave_relics:ogre_trophy_top",
+  "color": "#755640",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_relic_ogre_trophy",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

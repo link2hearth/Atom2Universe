@@ -1,0 +1,192 @@
+{
+  "id": "papilio_demodocus",
+  "scientific": "Papilio demodocus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Citrus swallowtail",
+    "fr": "Voilier des citronniers"
+  },
+  "sections": {
+    "overview": {
+      "en": "Papilio demodocus, the Citrus Swallowtail, is widespread across sub-Saharan Africa and is also recorded on nearby Arabian land and Socotra.",
+      "fr": "Papilio demodocus, le Voilier des citronniers, est largement répandu en Afrique subsaharienne et se rencontre aussi dans la péninsule Arabique voisine et à Socotra."
+    },
+    "identification": {
+      "en": "Its dark wings carry prominent yellow bands and spots, with the hindwing tails typical of swallowtails. Young caterpillars can resemble bird droppings.",
+      "fr": "Ses ailes sombres portent des bandes et des taches jaunes marquées, avec les queues postérieures typiques des machaons. Les jeunes chenilles peuvent ressembler à des fientes d’oiseau."
+    },
+    "habitat": {
+      "en": "It occupies many sub-Saharan habitats, including gardens and other human-modified places; the regional assessment excludes deserts and Afro-alpine environments.",
+      "fr": "Elle fréquente de nombreux milieux d’Afrique subsaharienne, y compris les jardins et d’autres espaces modifiés par l’être humain ; l’évaluation régionale l’exclut des déserts et des milieux afro-alpins."
+    },
+    "diet": {
+      "en": "Caterpillars use a broad range of citrus and other Rutaceae as food plants. Adults feed on flower nectar.",
+      "fr": "Les chenilles consomment diverses Rutacées, notamment des agrumes. Les adultes se nourrissent de nectar."
+    },
+    "behavior": {
+      "en": "When threatened, the caterpillar can expose an osmeterium, a forked scent organ characteristic of swallowtail larvae.",
+      "fr": "Menacée, la chenille peut déployer un osmeterium, organe bifide odorant caractéristique des larves de machaons."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on larval food plants; caterpillars grow through successive moults and then pupate. Timing depends on local conditions.",
+      "fr": "Les femelles pondent sur les plantes nourricières ; les chenilles grandissent par mues successives puis se nymphosent. La durée dépend des conditions locales."
+    },
+    "ecology": {
+      "en": "Like the Orchard Swallowtail, Papilio aegeus, this species belongs to Papilio and its caterpillars use Rutaceae; their ranges and recorded hosts differ, so the two are not interchangeable.",
+      "fr": "Comme le Papillon des vergers, Papilio aegeus, cette espèce appartient au genre Papilio et ses chenilles utilisent des Rutacées ; leurs aires et plantes hôtes documentées diffèrent, les deux ne sont donc pas interchangeables."
+    },
+    "conservation": {
+      "en": "The 2022 IUCN assessment lists it as Least Concern, citing its wide range, use of altered habitats and cultivated larval food plants.",
+      "fr": "L’évaluation de l’UICN de 2022 la classe en préoccupation mineure, en raison de sa vaste répartition, de l’utilisation de milieux modifiés et de plantes nourricières cultivées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Papilio demodocus — IUCN Red List assessment (2022)",
+        "fr": "Papilio demodocus — évaluation de la Liste rouge de l’UICN (2022)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T122527216A122602926.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment describes wide African and Arabian range, broad habitat use and Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 15,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio demodocus — Biodiversity Explorer, Lepidopterists’ Society of Africa",
+        "fr": "Papilio demodocus — Biodiversity Explorer, Lepidopterists’ Society of Africa"
+      },
+      "url": "https://www.biodiversityexplorer.info/butterflies/papilionidae/papilio_demodocus.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional account describes appearance, Rutaceae hosts and the larval osmeterium."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 10,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orchard Butterfly — Australian Museum",
+        "fr": "Papillon des vergers — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/insects/orchard-butterfly/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Australian museum account confirms Papilio aegeus belongs to Papilio and its larvae use Rutaceae."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio aegeus — specialist Australian butterfly account",
+        "fr": "Papilio aegeus — fiche spécialisée australienne"
+      },
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/aegeus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Specialist account documents Australian distribution and larval hosts of P. aegeus for comparison."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 13,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common butterflies of IITA — Citrus Swallowtail",
+        "fr": "Papillons communs de l’IITA — Voilier des citronniers"
+      },
+      "url": "https://www.iita.org/wp-content/uploads/2016/03/Common-butterflies-of-IITA.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "IITA field guide documents nectar feeding by adults."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 11,
+        "notes_words": 8,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant records are broad and geographically variable; not every Rutaceae is used in every region."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 2022 IUCN assessment with a southern African specialist account; the Papilio aegeus reference is a cautious genus-level comparison, not a close-relative claim."
+}

@@ -1,0 +1,143 @@
+{
+  "id": "spialia_doris",
+  "scientific": "Spialia doris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Desert grizzled skipper",
+    "fr": "Hespérie du désert"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Desert grizzled skipper is a small butterfly of North Africa, eastern Africa, Arabia and parts of western and southern Asia.",
+      "fr": "L’Hespérie du désert est un petit papillon d’Afrique du Nord et orientale, d’Arabie et de régions d’Asie occidentale et méridionale."
+    },
+    "identification": {
+      "en": "It is a skipper in the family Hesperiidae; taxonomic accounts recognize several geographically separated forms within the species.",
+      "fr": "C’est un hespérie de la famille des Hesperiidae; les comptes taxonomiques distinguent plusieurs formes géographiquement séparées au sein de l’espèce."
+    },
+    "habitat": {
+      "en": "It uses desert and semi-desert plains, foothills and rocky dry habitats.",
+      "fr": "Il fréquente les plaines désertiques et semi-désertiques, les piémonts et les milieux secs rocheux."
+    },
+    "diet": {
+      "en": "Larvae feed on bindweeds, including Convolvulus species; adults visit flowers for nectar.",
+      "fr": "Les chenilles mangent des liserons, notamment des Convolvulus; les adultes butinent des fleurs pour leur nectar."
+    },
+    "behavior": {
+      "en": "Field accounts report adults visiting flowers; an Indian record describes one resting on a grass inflorescence in arid, rocky habitat.",
+      "fr": "Les comptes de terrain signalent des adultes sur les fleurs; une observation indienne en décrit un posé sur une inflorescence de graminée dans un milieu aride et rocheux."
+    },
+    "reproduction": {
+      "en": "Flight periods vary by locality, and published accounts describe more than one seasonal flight in some regions; early stages remain poorly documented.",
+      "fr": "Les périodes de vol varient selon les lieux et certains comptes décrivent plusieurs périodes saisonnières; les premiers stades restent peu documentés."
+    },
+    "ecology": {
+      "en": "The Indian form evanida was rediscovered in the Thar Desert after a long gap in records, illustrating how little some regional populations are observed.",
+      "fr": "La forme indienne evanida a été redécouverte dans le désert du Thar après une longue absence de signalements, ce qui illustre le faible suivi de certaines populations régionales."
+    },
+    "conservation": {
+      "en": "The Mediterranean IUCN assessment lists the species as Least Concern in that region; this is not a global category.",
+      "fr": "L’évaluation UICN de la région méditerranéenne classe l’espèce en Préoccupation mineure dans cette région; il ne s’agit pas d’une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Genus Spialia: Desert grizzled skipper account",
+        "fr": "Genre Spialia : fiche de l’Hespérie du désert"
+      },
+      "url": "https://www.metamorphosis.org.za/articlesPDF/1039/045%20Genus%20Spialia%20Swinhoe.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The specialist account gives range, forms, habitat, host plants, and limited early-stage information."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 13,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rediscovery of Spialia doris evanida from the Thar Desert, India",
+        "fr": "Redécouverte de Spialia doris evanida dans le désert du Thar, en Inde"
+      },
+      "url": "https://www.threatenedtaxa.org/index.php/JoTT/article/view/6348",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed report documents an Indian rediscovery after 67 years and describes an arid, rocky habitat and a butterfly resting on a grass inflorescence."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 24,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The status and distribution of Mediterranean butterflies",
+        "fr": "Statut et répartition des papillons méditerranéens"
+      },
+      "url": "https://www.lepidoptera.life/wp-content/uploads/2020/04/The_status_and_distribution_of_mediterranean_butterflies.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Mediterranean-level IUCN table lists Spialia doris as Least Concern in the region."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 13,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The range-wide species contains regional forms and the Indian report concerns only evanida.",
+    "Host plant records vary by locality; no precise breeding schedule is inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. A specialist genus account, a peer-reviewed regional rediscovery and a Mediterranean IUCN assessment were cross-checked; the conservation category is explicitly regional."
+}

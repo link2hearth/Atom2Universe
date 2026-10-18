@@ -1,0 +1,176 @@
+{
+  "id": "geophagus_pellegrini",
+  "scientific": "Geophagus pellegrini",
+  "group": "fish",
+  "name": {
+    "en": "Yellowhump eartheater",
+    "fr": "Géophage à bosse jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Colombian eartheater is recorded from the Atrato, San Juan and Baudó river basins in the Chocó region.",
+      "fr": "Ce géophage colombien est signalé dans les bassins de l’Atrato, du San Juan et du Baudó, dans la région du Chocó."
+    },
+    "identification": {
+      "en": "The species was described from the Río San Juan at Tadó, in present-day Chocó Department.",
+      "fr": "L’espèce a été décrite du Río San Juan à Tadó, dans l’actuel département du Chocó."
+    },
+    "habitat": {
+      "en": "A study in the Tutunendo River examined stomach contents of this fish, but the abstract does not characterize a full habitat preference.",
+      "fr": "Une étude du río Tutunendo a examiné le contenu stomacal de ce poisson, mais le résumé ne décrit pas une préférence complète d’habitat."
+    },
+    "diet": {
+      "en": "In the Tutunendo sample, stomach contents indicated zooplanktivory, especially consumption of aquatic insect larvae.",
+      "fr": "Dans l’échantillon du Tutunendo, le contenu stomacal indique un régime zooplanctonophage, surtout composé de larves d’insectes aquatiques."
+    },
+    "behavior": {
+      "en": "The available study reports feeding ecology rather than social behaviour.",
+      "fr": "L’étude disponible décrit l’écologie alimentaire plutôt que le comportement social."
+    },
+    "reproduction": {
+      "en": "The species summaries consulted do not establish its reproductive behaviour.",
+      "fr": "Les résumés d’espèce consultés ne permettent pas d’établir son comportement reproducteur."
+    },
+    "ecology": {
+      "en": "Its western Colombian range is separate from the Orinoco and Guianan Geophagus in this group of profiles.",
+      "fr": "Son aire occidentale colombienne est distincte de celles des Geophagus de l’Orénoque et des Guyanes présentés dans ce lot."
+    },
+    "conservation": {
+      "en": "FishBase reports Data Deficient, assessed on 8 October 2014.",
+      "fr": "FishBase rapporte la catégorie « données insuffisantes », évaluée le 8 octobre 2014."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus pellegrini — FishBase",
+        "fr": "Geophagus pellegrini — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/geophagus-pellegrini.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives range and DD category; breeding evidence is absent from its species summary."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Estudio preliminar de algunos aspectos ambientales y ecológicos… Río Tutunendo — Revista de la Academia Colombiana de Ciencias",
+        "fr": "Étude préliminaire des aspects environnementaux et écologiques du río Tutunendo — revue de l’Académie colombienne des sciences"
+      },
+      "url": "https://raccefyn.co/index.php/raccefyn/article/view/2215",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Spanish-language study reports the sampled diet."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus pellegrini — Catalog of Fishes",
+        "fr": "Geophagus — Catalogue des poissons (Catalog of Fishes)"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16501",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Catalog gives the type locality."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Diet evidence comes from one local stomach-content study; it should not be generalized as a complete range-wide diet."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "This species is geographically distinct from the Orinoco and Guiana Shield congeners; no unsupported sister-species link is proposed."
+}

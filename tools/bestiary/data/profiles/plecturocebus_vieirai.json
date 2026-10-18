@@ -1,0 +1,142 @@
+{
+  "id": "plecturocebus_vieirai",
+  "scientific": "Plecturocebus vieirai",
+  "group": "mammals",
+  "name": {
+    "en": "Vieira’s titi",
+    "fr": "Titi de Vieira"
+  },
+  "sections": {
+    "overview": {
+      "en": "Plecturocebus vieirai is a titi monkey endemic to Brazil.",
+      "fr": "Plecturocebus vieirai est un titi endémique du Brésil."
+    },
+    "identification": {
+      "en": "Species-specific field marks are poorly documented; it belongs to the South American titi monkeys in family Pitheciidae.",
+      "fr": "Ses critères d’identification sur le terrain sont peu documentés ; ce singe appartient aux titis sud-américains de la famille des Pitheciidae."
+    },
+    "habitat": {
+      "en": "Its range includes forest between the Xingu and Iriri rivers and forest east of the Teles Pires, in the southern Amazon region.",
+      "fr": "Son aire comprend les forêts entre les rios Xingu et Iriri ainsi que celles situées à l’est du rio Teles Pires, dans le sud de l’Amazonie."
+    },
+    "diet": {
+      "en": "The sources reviewed provide no species-specific diet description.",
+      "fr": "Les sources consultées ne décrivent pas de régime alimentaire propre à cette espèce."
+    },
+    "behavior": {
+      "en": "Detailed behavior has not yet been documented well enough to summarize confidently for this species.",
+      "fr": "Le comportement de cette espèce n’est pas encore assez documenté pour être résumé avec assurance."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive information was not available in the sources reviewed.",
+      "fr": "Les sources consultées ne donnent pas d’informations propres à cette espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Forest loss in northern Mato Grosso is identified as a concern, although the full distribution and population response remain uncertain.",
+      "fr": "La perte de forêt dans le nord du Mato Grosso est signalée comme un enjeu, même si l’aire complète et la réponse de la population restent incertaines."
+    },
+    "conservation": {
+      "en": "Brazil’s 2025 assessment report records Least Concern, while noting that projected habitat loss could justify a threatened category in future reassessment.",
+      "fr": "Le rapport d’évaluation brésilien publié en 2025 indique « préoccupation mineure », tout en signalant que la perte d’habitat projetée pourrait justifier une catégorie menacée lors d’une future réévaluation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Plecturocebus vieirai — Brazilian Fauna Extinction Risk Assessment (ICMBio/SALVE)",
+        "fr": "Plecturocebus vieirai — Évaluation brésilienne du risque d’extinction de la faune (ICMBio/SALVE)"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/assuntos/centros-de-pesquisa/primatas-brasileiros/arquivos/fichas_primatas/2019_2022/pitheciidae/ficha-plecturocebus-vieirai.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Portuguese ICMBio assessment, published 2025; category date 2019. Notes forest loss and projected habitat risk."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 15,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plecturocebus vieirai — Mammal Diversity Database",
+        "fr": "Plecturocebus vieirai — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000891/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The curated mammal taxonomy places the accepted species in genus Plecturocebus, family Pitheciidae, order Primates."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 15,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vieira’s titi — New England Primate Conservancy",
+        "fr": "Titi de Vieira — New England Primate Conservancy"
+      },
+      "url": "https://neprimateconservancy.org/vieiras-titi/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The account notes few studies and distinguishes inference from other titis; these sections avoid attributing their traits directly."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 18,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Brazilian category is Least Concern under the assessment dated 2019 and republished in 2025; it should not be conflated with the paper’s earlier assessment or treated as a new 2025 reassessment.",
+    "Species-specific natural history remains sparse; details known from other titis have not been generalized here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 2025 Portuguese ICMBio assessment with curated mammal taxonomy and an English conservation account; kept sparse life-history fields explicitly cautious."
+}

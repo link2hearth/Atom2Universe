@@ -1,0 +1,165 @@
+{
+  "id": "pterocles_gutturalis",
+  "scientific": "Pterocles gutturalis",
+  "group": "birds",
+  "name": {
+    "en": "Yellow-throated Sandgrouse",
+    "fr": "Ganga à gorge jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "This ground-dwelling sandgrouse has a fragmented range across eastern and southern Africa.",
+      "fr": "Ce ganga terrestre a une aire fragmentée en Afrique orientale et australe."
+    },
+    "identification": {
+      "en": "The sexes differ in plumage; males show a yellow throat and eyebrow.",
+      "fr": "Les sexes diffèrent par le plumage; le mâle porte une gorge et un sourcil jaunes."
+    },
+    "habitat": {
+      "en": "In southern Africa it favors open grassland on fine clay soils and fallow fields.",
+      "fr": "En Afrique australe, il préfère les prairies ouvertes sur sols argileux fins et les jachères."
+    },
+    "diet": {
+      "en": "It feeds on seeds, including seeds of Amaranthus and Crotalaria in one study area.",
+      "fr": "Il mange des graines, notamment d’Amaranthus et de Crotalaria dans une zone étudiée."
+    },
+    "behavior": {
+      "en": "Its movements remain poorly understood; southern African birds include residents and arrivals.",
+      "fr": "Ses déplacements restent mal connus; en Afrique australe, des résidents côtoient des arrivants."
+    },
+    "reproduction": {
+      "en": "It nests alone in a shallow, often concealed ground scrape.",
+      "fr": "Il niche seul dans une faible dépression au sol, souvent dissimulée."
+    },
+    "ecology": {
+      "en": "Compare its clay-soil grassland with Namaqua and Spotted Sandgrouse in their linked profiles.",
+      "fr": "Comparer ses prairies argileuses aux milieux des gangas namaqua et tacheté dans leurs fiches."
+    },
+    "conservation": {
+      "en": "Global status is Least Concern; South Africa lists it as Near Threatened.",
+      "fr": "Son statut mondial est Préoccupation mineure; l’Afrique du Sud la classe quasi menacée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Yellow-throated Sandgrouse — 2025 Red Data Book, BirdLife South Africa",
+        "fr": "Ganga à gorge jaune — Livre rouge 2025, BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/yellow-throated-sandgrouse/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife reports its ecology and separate global and regional assessments."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 10,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow-throated Sandgrouse — IUCN Red List assessment 2024",
+        "fr": "Ganga à gorge jaune — évaluation 2024 de la Liste rouge de l’UICN"
+      },
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22692998A263674036.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN page gives BirdLife’s global assessment."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 7,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Namaqua Sandgrouse — Biodiversity Explorer, University of Cape Town",
+        "fr": "Ganga namaqua — Biodiversity Explorer, université du Cap"
+      },
+      "url": "https://www.biodiversityexplorer.info/birds/pteroclidae/pterocles_namaqua.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The account describes the Namaqua Sandgrouse as a southern African near-endemic of gravel and sandy habitats."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — Israel Birding Portal (Hebrew)",
+        "fr": "Ganga tacheté — portail ornithologique israélien (hébreu)"
+      },
+      "url": "https://www.birds.org.il/he/species/274",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Hebrew species profile places the Spotted Sandgrouse across a hot, dry belt from the Sahel toward South Asia."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Global and South African regional categories refer to different assessment scales.",
+    "Movement patterns are described by BirdLife as incompletely understood."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-references to the two other Pterocles species are reciprocal; conservation categories distinguish global and regional assessments."
+}

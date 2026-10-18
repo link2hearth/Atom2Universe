@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Une section de la page des stats de jeux, créée par le code (puzzles du kit). Le code lui
+     donne le nom du jeu pour étiquette, et « extra_<jeu> » au conteneur de ses lignes. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/section_title"
+        style="@style/GameStatSection" />
+
+    <LinearLayout
+        android:id="@+id/section_rows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+</LinearLayout>

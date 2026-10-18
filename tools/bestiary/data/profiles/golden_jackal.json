@@ -1,0 +1,512 @@
+{
+  "id": "golden_jackal",
+  "scientific": "Canis aureus",
+  "group": "mammals",
+  "name": {
+    "en": "Golden jackal",
+    "fr": "Chacal doré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The golden jackal is a medium-sized Eurasian canid: a flexible hunter and scavenger that also eats plant matter.",
+      "fr": "Le chacal doré est un canidé eurasiatique de taille moyenne, à la fois chasseur opportuniste, charognard et consommateur de végétaux."
+    },
+    "identification": {
+      "en": "Adults stand about 44–50 cm at the shoulder, with a head-and-body length of 80–105 cm and a 20–30 cm tail. In Europe, males weigh about 11–16 kg and females about 8–13 kg. The coat ranges from cream-gold to tawny, with dark, mixed hairs along the back, pale throat and underside, and a bushy tail often dark at its tip. Long legs, a pointed muzzle and rounded ears help distinguish it from a fox. A small Gujarat, India sample averaged 8.8 kg for adult males (n=6) and 7.3 kg for females (n=4), illustrating population-specific sex differences.",
+      "fr": "L’adulte mesure 44–50 cm au garrot ; la longueur tête et corps est de 80–105 cm et celle de la queue de 20–30 cm. En Europe, les mâles pèsent environ 11–16 kg et les femelles 8–13 kg. Son pelage crème à fauve mêle des poils sombres sur le dos ; gorge et ventre pâles, queue touffue à bout souvent foncé. Ses longues pattes, son museau pointu et ses oreilles arrondies aident à le distinguer du renard. Au Gujarat, un petit échantillon pesait en moyenne 8,8 kg chez les mâles (n=6) et 7,3 kg chez les femelles (n=4), illustrant une variation sexuelle et régionale."
+    },
+    "habitat": {
+      "en": "Across Eurasia the species occupies scrub, grassland, woodland, wetlands, farmland and rural edges. In south-eastern Europe, it often uses lowland marshes or mosaics of small fields and dense scrub: open ground offers food, while thickets provide daytime cover and breeding sites.",
+      "fr": "Dans l’ensemble de l’Eurasie, l’espèce fréquente les fourrés, prairies, bois, zones humides, terres agricoles et lisières rurales. Dans le Sud-Est européen, elle utilise souvent les marais de plaine ou les mosaïques de petites cultures et de broussailles denses : les espaces ouverts procurent de la nourriture et les fourrés des refuges diurnes et des sites de reproduction."
+    },
+    "diet": {
+      "en": "The jackal searches for food alone or with its family, seizing small mammals—especially rodents—as well as hares, birds, reptiles, amphibians and invertebrates. It also eats fallen fruit and other plant matter, and readily scavenges carcasses, discarded livestock remains and refuse where these are accessible. A review of European studies found that the balance changes with place and season: fruit is more common in summer and autumn, while ungulate remains and domestic-animal foods increase in winter. It combines active hunting of small prey with scavenging, often shifting toward the most accessible local food rather than relying on one prey type.",
+      "fr": "Le chacal capture seul ou en famille surtout de petits mammifères, notamment des rongeurs, puis des lièvres, oiseaux, reptiles, amphibiens et invertébrés. Il mange des fruits tombés et d’autres végétaux, et récupère les carcasses, restes d’élevage et déchets accessibles. En Europe, les fruits sont plus fréquents en été et en automne, tandis que les restes d’ongulés et les aliments domestiques augmentent en hiver. Il combine la chasse aux petites proies et le charognage, selon les ressources locales plutôt qu’en se limitant à une proie."
+    },
+    "behavior": {
+      "en": "The usual social unit is a breeding pair with the current litter; one or more older offspring may remain on the territory and help. A camera study of one Greek island family documented a stable adult pair and two yearlings that helped care for six pups, illustrating cooperation without making every group identical. Jackals mark and defend territories, and their complex howls carry between groups; in eastern Bulgaria, responses to broadcast calls peaked in summer, when groups answered together. Activity is chiefly nocturnal or crepuscular, although local disturbance and cover affect when animals emerge. Dispersing young can travel hundreds of kilometres to find a territory and mate.",
+      "fr": "L’unité sociale habituelle est un couple reproducteur accompagné de la portée de l’année ; un ou plusieurs jeunes plus âgés peuvent rester sur le territoire et aider. Le suivi par caméras d’une famille insulaire grecque a documenté un couple adulte stable et deux jeunes d’un an participant aux soins de six petits : cet exemple montre la coopération sans impliquer que tous les groupes soient identiques. Les chacals marquent et défendent leur territoire ; leurs hurlements complexes portent entre groupes. Dans l’est de la Bulgarie, les réponses à des appels diffusés culminaient en été et provenaient alors surtout de groupes répondant ensemble. L’activité est surtout nocturne ou crépusculaire, mais l’heure de sortie varie selon le couvert et les perturbations. Les jeunes en dispersion peuvent parcourir des centaines de kilomètres pour trouver un territoire et un partenaire."
+    },
+    "reproduction": {
+      "en": "In Europe, mating generally takes place in winter and births follow about 60–63 days later, usually in spring; timing shifts with latitude and local conditions. Litters commonly contain four or five pups, although larger litters have been recorded. European field accounts estimate that pups remain in a den, often an old fox or badger burrow, for about seven weeks. They then follow adults to forage and may return to the den until around fourteen weeks old. Females may mature at 10–11 months, but young adults can delay breeding and help raise a later litter. Both parents provision offspring, and older helpers may assist.",
+      "fr": "En Europe, les accouplements ont généralement lieu en hiver et les naissances suivent environ 60 à 63 jours plus tard, le plus souvent au printemps ; le calendrier varie avec la latitude et les conditions locales. Les portées comptent couramment quatre ou cinq petits, mais des portées plus nombreuses ont été observées. Les observations de terrain européennes estiment que les petits restent environ sept semaines dans une tanière, souvent un ancien terrier de renard ou de blaireau. Ils suivent ensuite les adultes pour chercher leur nourriture et peuvent revenir à la tanière jusqu’à l’âge d’environ quatorze semaines. Les femelles peuvent atteindre la maturité vers 10–11 mois, mais de jeunes adultes retardent parfois leur reproduction et participent aux soins d’une portée suivante. Les deux parents nourrissent les jeunes et des aînés peuvent les seconder."
+    },
+    "ecology": {
+      "en": "As a mid-sized predator, the jackal takes many rodents and other small prey, while its scavenging removes carcasses and animal waste from some landscapes. The European diet review describes it as a potential consumer of crop pests, especially where rodents are abundant, although the size of this service depends on local food webs and waste practices. A north-eastern Italian study found dietary overlap with red foxes and partial partitioning of prey and habitat: competition is possible, but overlap alone does not establish food limitation. A recent continental model based on European playback surveys identified wolf presence as the strongest predictor limiting jackal occurrence; human presence weakened the modeled relationship, so this association does not by itself demonstrate aggression at encounters.",
+      "fr": "Le chacal capture de nombreux rongeurs et autres petites proies ; en charognant, il élimine des carcasses et déchets animaux dans certains paysages. La synthèse européenne le décrit comme un consommateur potentiel de ravageurs, surtout là où les rongeurs abondent ; l’ampleur de ce service dépend toutefois des réseaux alimentaires et des déchets locaux. Dans le nord-est de l’Italie, une étude a relevé un chevauchement alimentaire et un partage partiel des proies et des habitats avec le renard roux : une compétition est possible, sans que ce chevauchement prouve une pénurie alimentaire. Un modèle européen récent, fondé sur des prospections par réponse aux hurlements, associe les loups à une moindre présence du chacal ; cette relation est atténuée près des humains, sans que l’association modélisée prouve une agression lors des rencontres."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment, published in 2018 and last assessed on 10 January 2018, classifies the golden jackal as Least Concern and records an increasing trend. In Europe, persecution and habitat change contributed to a marked contraction during the first half of the twentieth century. Legal protection in Balkan strongholds helped recovery from the 1950s, followed by natural expansion north and west. A 2023 European monitoring synthesis estimated presence across about 765,000 km² and reported expansion in 21 countries, while warning that reliable population totals are unavailable. France’s first confirmed record was in Haute-Savoie in 2017. The OFB’s March 2026 map documents scattered detections through 2025, with no confirmed reproduction in the country. Across Eurasia, local declines remain associated with habitat conversion, persecution or hunting, while the IUCN notes sparse data in parts of Asia.",
+      "fr": "L’évaluation mondiale de l’UICN, publiée en 2018 et réalisée le 10 janvier 2018, classe le chacal doré en préoccupation mineure et indique une tendance croissante. En Europe, la persécution et les changements d’habitat ont contribué à un fort recul pendant la première moitié du XXe siècle. La protection légale dans les bastions balkaniques a favorisé le rétablissement à partir des années 1950, puis l’expansion vers le nord et l’ouest. En 2023, le suivi européen estimait une présence sur 765 000 km², en expansion dans 21 pays, sans effectifs fiables. La première donnée confirmée en France date de 2017 en Haute-Savoie. La carte OFB de mars 2026 documente des détections dispersées jusqu’en 2025, sans reproduction confirmée dans le pays. En Eurasie, des déclins locaux restent liés à la conversion des habitats, aux persécutions ou à la chasse ; l’UICN signale aussi des données lacunaires dans certaines régions d’Asie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "OFB: Golden jackal species account",
+        "fr": "OFB : fiche espèce du chacal doré"
+      },
+      "url": "https://ofb.gouv.fr/especes/chacal-dore-canis-aureus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "OFB gives dimensions, pup timing, and French detections."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.5",
+        "conservation.en.6",
+        "conservation.fr.6",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 8,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "KORA: Golden jackal profile",
+        "fr": "KORA : portrait du chacal doré"
+      },
+      "url": "https://www.kora.ch/en/species/golden-jackal/profile?entry_id=262&language=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "European account reports sex-specific weight ranges and life history.",
+        "European adults are about 44–50 cm at the shoulder, 80–105 cm head-and-body with 20–30 cm tail; males weigh about 11–16 kg and females 8–13 kg."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.4",
+        "identification.fr.2",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 34,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammalian Species: Canis aureus",
+        "fr": "Mammalian Species : Canis aureus"
+      },
+      "url": "https://academic.oup.com/mspecies/article/50/957/14/4972817",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Morphology used; account explicitly retains disputed African canids."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.5",
+        "identification.fr.3",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 8,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lange et al.: European golden jackal diet review",
+        "fr": "Lange et al. : synthèse européenne du régime du chacal doré"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/mam.12235",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "European review synthesizes diet studies and food variation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 8,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Golden jackal conservation action plan for Greece",
+        "fr": "Plan d’action pour le chacal doré en Grèce"
+      },
+      "url": "https://goldenjackal.eu/documents/GreeceGoldenJackalActionPlan2004.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Greek plan reports regional habitat use and breeding timing."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 9,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Custers et al.: Golden jackal family life on Samos",
+        "fr": "Custers et al. : vie familiale du chacal doré à Samos"
+      },
+      "url": "https://research-portal.uu.nl/en/publications/the-secret-family-life-of-a-group-of-golden-jackals-on-samos-gree/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Camera study followed one Greek family and its helpers."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 9,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Acosta-Pankov et al.: Seasonal howling responses in Bulgaria",
+        "fr": "Acosta-Pankov et al. : réponses saisonnières aux hurlements en Bulgarie"
+      },
+      "url": "https://www.acta-zoologica-bulgarica.eu/downloads/acta-zoologica-bulgarica/2018/70-4-539-545.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Bulgarian playback study describes seasonal group howling."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 7,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List: Canis aureus global assessment",
+        "fr": "Liste rouge UICN : évaluation mondiale de Canis aureus"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T118264161A163507876.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 2018; last assessed 10 January."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.5",
+        "conservation.en.7",
+        "conservation.fr.1",
+        "conservation.fr.5",
+        "conservation.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 8,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Commission: Large carnivore populations across Europe",
+        "fr": "Commission européenne : populations de grands carnivores en Europe"
+      },
+      "url": "https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive/large-carnivores/large-carnivore-populations-across-europe_en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2023 monitoring reports European range growth, not reliable totals."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 9,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lanszki et al.: Dietary flexibility across Eurasia",
+        "fr": "Lanszki et al. : flexibilité alimentaire à l’échelle de l’Eurasie"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jbi.14372",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Eurasian review compares historic and newly colonized jackal diets."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 9,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ćirović et al.: Jackals as cleaners",
+        "fr": "Ćirović et al. : les chacals comme agents de nettoyage"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0006320716301641",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Serbian stomach study estimates waste removal and rodent consumption."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 9,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lanszki et al.: First telemetry evidence of natal dispersal",
+        "fr": "Lanszki et al. : première preuve télémétrique d’une dispersion natale"
+      },
+      "url": "https://doi.org/10.1016/j.mambio.2017.11.011",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Hungarian female travelled 223.7 km before settling and breeding."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 9,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spassov and Acosta-Pankov: Golden jackal dispersal history in Europe",
+        "fr": "Spassov et Acosta-Pankov : histoire de la dispersion du chacal doré en Europe"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6522460/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European history documents twentieth-century decline and later recovery."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 8,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ONCFS Faune Sauvage: The golden jackal reaches France",
+        "fr": "ONCFS Faune Sauvage : le chacal doré arrive en France"
+      },
+      "url": "https://www.fne-aura.org/uploads/2018/10/faune-sauvage-320-art-4-chacal-dore.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "2018 account describes Eurasian morphology and fox overlap."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 8,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Torretta et al.: Jackal and red fox niche partitioning in Italy",
+        "fr": "Torretta et al. : partage de niche entre chacal et renard en Italie"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8218446/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Italian study found substantial dietary overlap but partial niche partitioning."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 10,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nature Ecology & Evolution: Human shielding from wolves facilitates jackal expansion",
+        "fr": "Nature Ecology & Evolution : l’effet protecteur des humains face aux loups favorise l’expansion du chacal"
+      },
+      "url": "https://www.nature.com/articles/s41559-026-03060-y",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "European playback survey model links wolf presence and human shielding to jackal occurrence."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 13,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the reviewed existing golden jackal illustration; do not create another image.",
+  "uncertainties": [
+    "French records through 2025 remain scattered; the OFB reports no confirmed reproduction in France as of its current account, so a national breeding population is not established by these detections.",
+    "The 2018 IUCN assessment predates much of the recent European expansion. Its global Least Concern category and increasing trend are assessment-era conclusions, not a current census; IUCN notes data gaps and localized declines in Asia.",
+    "The Mammalian Species account explicitly combines African golden wolves with Canis aureus because it predates resolution of the split; only general morphology and the clearly Eurasian measurements were used here, not its African distribution or demographic results.",
+    "Mating dates and litter development vary across the broad Eurasian range. European figures here are representative regional ranges, not a single universal breeding calendar."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; Eurasian-only source scope, European sex-specific weights, matched prey lists, potential fox competition and modeled wolf association; no aggressive mechanism inferred."
+}

@@ -1,0 +1,164 @@
+{
+  "id": "nuttalliella_namaqua",
+  "scientific": "Nuttalliella namaqua",
+  "group": "invertebrates",
+  "name": {
+    "en": "Namaqua tick",
+    "fr": "Tique namaqua"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nuttalliella namaqua is the only living species in its tick family, Nuttalliellidae. It is rarely collected, so basic parts of its biology remain poorly known.",
+      "fr": "Nuttalliella namaqua est la seule espèce actuelle de sa famille de tiques, les Nuttalliellidae. Elle est rarement collectée, et plusieurs aspects élémentaires de sa biologie restent mal connus."
+    },
+    "identification": {
+      "en": "Its leathery, folded cuticle and partly hardened dorsal shield combine traits associated with soft and hard ticks. “Living fossil” is informal shorthand, not a literal fossil or a direct ancestor of other ticks.",
+      "fr": "Sa cuticule coriace et plissée et son bouclier dorsal partiellement durci réunissent des caractères associés aux tiques molles et dures. « Fossile vivant » est une formule imagée : ce n’est ni un fossile au sens propre ni l’ancêtre direct des autres tiques."
+    },
+    "habitat": {
+      "en": "Records come from southern and eastern Africa, including South Africa, Namibia, Tanzania, Botswana and Mozambique. Specimens have been found beneath stones, in rock crevices, on open ground and in bird nests.",
+      "fr": "Les observations proviennent d’Afrique australe et orientale, notamment d’Afrique du Sud, de Namibie, de Tanzanie, du Botswana et du Mozambique. Des spécimens ont été trouvés sous des pierres, dans des fissures rocheuses, à découvert et dans des nids d’oiseaux."
+    },
+    "diet": {
+      "en": "Like other ticks, it feeds on vertebrate blood. Records from rodents, reptiles and other animals suggest several possible hosts, but its host preferences are not settled.",
+      "fr": "Comme les autres tiques, elle se nourrit du sang de vertébrés. Des observations sur des rongeurs, des reptiles et d’autres animaux suggèrent plusieurs hôtes possibles, mais ses préférences ne sont pas établies."
+    },
+    "behavior": {
+      "en": "The tick is elusive and appears to feed rapidly, which helps explain why few specimens have been collected while attached to a host. Its life cycle in the wild is still unresolved.",
+      "fr": "Cette tique est discrète et semble se nourrir rapidement, ce qui contribue à la rareté des spécimens collectés sur un hôte. Son cycle de vie dans la nature n’est toujours pas élucidé."
+    },
+    "reproduction": {
+      "en": "Males and immature stages have been described, and females kept in laboratory conditions laid eggs that hatched. These observations confirm reproduction, but not a complete natural life cycle.",
+      "fr": "Les mâles et les stades immatures ont été décrits, et des femelles maintenues en laboratoire ont pondu des œufs qui ont éclos. Ces observations confirment la reproduction, sans révéler tout le cycle naturel."
+    },
+    "ecology": {
+      "en": "Anatomical and molecular studies place this unusual lineage near the base of the tick tree, apart from both hard-tick and soft-tick families.",
+      "fr": "Les études anatomiques et moléculaires placent cette lignée singulière près de la base de l’arbre des tiques, à part des familles des tiques dures et des tiques molles."
+    },
+    "conservation": {
+      "en": "The species has no assessed IUCN Red List category. Its rarity in collections is not evidence that its population is declining.",
+      "fr": "L’espèce ne possède pas de catégorie évaluée dans les listes rouges de conservation. Sa rareté dans les collections ne prouve pas que sa population décline."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nuttalliella namaqua — PLOS ONE, male and immature stages",
+        "fr": "Nuttalliella namaqua — PLOS ONE, mâle et stades immatures"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3406016/",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "Describes combined tick-family traits, male and immature stages, and egg hatching in laboratory."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 13,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nuttalliella tick — South African National Biodiversity Institute",
+        "fr": "Tique Nuttalliella — South African National Biodiversity Institute"
+      },
+      "url": "https://www.sanbi.org/animal-of-the-week/nuttaliella-tick/",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Summarizes African records, blood-feeding, hosts and uncertain life history."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 9,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nuttalliella namaqua: sole extant species — Frontiers in Parasitology review",
+        "fr": "Nuttalliella namaqua : seule espèce actuelle — synthèse de Frontiers in Parasitology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11731621/",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "overview",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "2024 review summarizes limited African localities, varied host records and unresolved biology; N. namaqua is the only extant species in its family."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 22,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The genus and family are monotypic; evolutionary ‘missing link’ language is informal, not a literal ancestral relationship.",
+    "Few records do not establish a population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept short because the species is rarely collected and its hosts and life cycle remain poorly resolved; cross-checked a primary study and SANBI."
+}

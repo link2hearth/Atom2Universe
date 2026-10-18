@@ -1,0 +1,143 @@
+{
+  "id": "sutorectus_tentaculatus",
+  "scientific": "Sutorectus tentaculatus",
+  "group": "fish",
+  "name": {
+    "en": "Cobbler wobbegong",
+    "fr": "Requin-tapis cordonnier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The cobbler wobbegong is a bottom-dwelling carpet shark found off southern and western Australia.",
+      "fr": "Le Requin-tapis cordonnier est un requin-tapis benthique présent au large du sud et de l’ouest de l’Australie."
+    },
+    "identification": {
+      "en": "Rows of rough, wart-like tubercles and dark blotches across the back help identify it.",
+      "fr": "Des rangées de tubercules rugueux évoquant des verrues et des taches sombres sur le dos aident à l’identifier."
+    },
+    "habitat": {
+      "en": "It occurs on rocky reefs and weedy seabeds in coastal waters, to at least 35 metres deep.",
+      "fr": "Il fréquente les récifs rocheux et les fonds couverts d’algues près des côtes, jusqu’à au moins 35 mètres de profondeur."
+    },
+    "diet": {
+      "en": "Its feeding habits are poorly documented; reference sources suggest it takes bottom-dwelling invertebrates and fishes.",
+      "fr": "Son régime est mal documenté ; les sources de référence indiquent qu’il consommerait des invertébrés benthiques et des poissons."
+    },
+    "behavior": {
+      "en": "The sources describe it as reef-associated but provide little detail on its day-to-day behavior.",
+      "fr": "Les sources le décrivent comme associé aux récifs, mais donnent peu de détails sur son comportement quotidien."
+    },
+    "reproduction": {
+      "en": "It is presumed to be ovoviviparous, but little is known about its reproduction.",
+      "fr": "Il est présumé ovovivipare, mais sa reproduction reste peu connue."
+    },
+    "ecology": {
+      "en": "Australian fisheries reports record it as a minor bycatch species; catches in South Australia are minimal and it is not retained there.",
+      "fr": "Les rapports australiens sur la pêche le signalent comme prise accessoire mineure ; les captures sont faibles en Australie-Méridionale et il n’y est pas conservé."
+    },
+    "conservation": {
+      "en": "The Australian government report records a global IUCN category of Least Concern, while noting that population trends are unknown.",
+      "fr": "Le rapport du gouvernement australien indique une catégorie mondiale UICN de Préoccupation mineure, tout en précisant que les tendances de population sont inconnues."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cobbler Wobbegong — Australian Museum",
+        "fr": "Cobbler Wobbegong — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/cobbler-wobbegong-sutorectus-tentaculatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Museum account gives accepted name, diagnostic tubercles and blotches, size and Australian range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 13,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cobbler Wobbegong — Australian Government shark report",
+        "fr": "Cobbler Wobbegong — Australian Government shark report"
+      },
+      "url": "https://www.fish.gov.au/docs/SharkReport/2023_FRDC_Sutorectus_tentaculatus_final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "Government report states rocky-reef and weedy habitat, status LC, little known biology and low/minor bycatch."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 15,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sharks of the World — Naturalis Biodiversity Center",
+        "fr": "Sharks of the World — Naturalis Biodiversity Center"
+      },
+      "url": "https://sharks.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=74&id=62518",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "FAO catalogue account describes biology as poorly known and presumes feeding on bottom invertebrates and fishes, with ovoviviparity presumed."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 19,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and reproductive details are explicitly tentative because published species-specific biology is sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Australian Museum and a current government shark report; reproduction and diet remain qualified as presumed or poorly documented."
+}

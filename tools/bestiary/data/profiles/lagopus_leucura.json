@@ -1,0 +1,143 @@
+{
+  "id": "lagopus_leucura",
+  "scientific": "Lagopus leucura",
+  "group": "birds",
+  "name": {
+    "en": "White-tailed Ptarmigan",
+    "fr": "Lagopède à queue blanche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The White-tailed Ptarmigan is a small grouse of alpine tundra in western North America.",
+      "fr": "Le Lagopède à queue blanche est un petit tétras des toundras alpines de l’ouest de l’Amérique du Nord."
+    },
+    "identification": {
+      "en": "Its plumage turns brown in summer and white in winter; the tail, wings and feathered feet remain white.",
+      "fr": "Son plumage devient brun en été et blanc en hiver; la queue, les ailes et les pattes emplumées restent blanches."
+    },
+    "habitat": {
+      "en": "It lives above the treeline in western mountains and remains at high elevations throughout its life cycle.",
+      "fr": "Il vit au-dessus de la limite des arbres dans les montagnes occidentales et reste en altitude durant tout son cycle de vie."
+    },
+    "diet": {
+      "en": "Its plant-rich diet includes willow buds and twigs, leaves, flowers, berries and lichens; chicks also take insects.",
+      "fr": "Son régime végétal comprend des bourgeons et rameaux de saule, des feuilles, fleurs, baies et lichens; les poussins mangent aussi des insectes."
+    },
+    "behavior": {
+      "en": "In winter it often avoids flight and shelters in snowbanks, conserving energy in its exposed mountain habitat.",
+      "fr": "En hiver, il évite souvent de voler et s’abrite dans des congères, ce qui économise son énergie dans son milieu montagnard exposé."
+    },
+    "reproduction": {
+      "en": "Females make ground nests and usually lay four to seven eggs; incubation lasts about three weeks.",
+      "fr": "Les femelles construisent un nid au sol et pondent généralement quatre à sept œufs; l’incubation dure environ trois semaines."
+    },
+    "ecology": {
+      "en": "In parts of the Yukon it shares alpine habitat with the larger Rock Ptarmigan, Lagopus muta.",
+      "fr": "Dans certaines régions du Yukon, il partage les milieux alpins avec le Lagopède des rochers, Lagopus muta, plus grand."
+    },
+    "conservation": {
+      "en": "Cornell lists the species as low concern, while noting that unusually warm weather can stress these cold-adapted birds.",
+      "fr": "Cornell classe l’espèce parmi celles de faible préoccupation, tout en signalant que les fortes chaleurs peuvent stresser ces oiseaux adaptés au froid."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "White-tailed Ptarmigan — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Lagopède à queue blanche — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/White-tailed_Ptarmigan/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell describes seasonal plumage, winter behavior, heat stress and overlap with Rock Ptarmigan."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 13,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lagopus leucura — Animal Diversity Web, University of Michigan",
+        "fr": "Lagopus leucura — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Lagopus_leucura/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The University of Michigan account details alpine range, plant foods, egg counts and incubation."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 14,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White-tailed Ptarmigan — California Wildlife Habitat Relationships, California Department of Fish and Wildlife",
+        "fr": "Lagopède à queue blanche — California Wildlife Habitat Relationships, California Department of Fish and Wildlife"
+      },
+      "url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=1697",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "California wildlife account independently reports willow buds and twigs as important foods and describes alpine meadow nesting habitat."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding and food details vary regionally; the Cornell conservation label is not a local population assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Cornell's species account with University of Michigan and California wildlife references; the Rock Ptarmigan comparison is limited to documented local overlap and relative size."
+}

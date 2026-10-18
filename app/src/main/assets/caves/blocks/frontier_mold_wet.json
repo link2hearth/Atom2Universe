@@ -1,0 +1,18 @@
+{
+  "id": 9828,
+  "name": "frontier_mold_wet",
+  "texture_top": "frontier:9828:top",
+  "texture_side": "frontier:9828:side",
+  "texture_bottom": "frontier:9828:top",
+  "color": "#9C7B63",
+  "hardness": 0.5,
+  "drop": "frontier_mold_wet",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "block_height": 0.25
+}

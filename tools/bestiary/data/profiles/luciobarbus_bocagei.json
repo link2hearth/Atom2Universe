@@ -1,0 +1,147 @@
+{
+  "id": "luciobarbus_bocagei",
+  "scientific": "Luciobarbus bocagei",
+  "group": "fish",
+  "name": {
+    "en": "Iberian Barbel",
+    "fr": "Barbeau ibérique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Iberian Barbel is a freshwater cyprinid native to Atlantic-draining river basins of the Iberian Peninsula.",
+      "fr": "Le Barbeau ibérique est un cyprinidé d’eau douce natif des bassins versants atlantiques de la péninsule Ibérique."
+    },
+    "identification": {
+      "en": "It has a protrusible, downward-facing mouth, two pairs of barbels and a serrated last dorsal-fin ray; males develop breeding tubercles on the head.",
+      "fr": "Il possède une bouche protractile tournée vers le bas, deux paires de barbillons et le dernier rayon dorsal dentelé ; les mâles développent des tubercules nuptiaux sur la tête."
+    },
+    "habitat": {
+      "en": "It occurs in rivers and streams, often using deeper, slower lower or middle reaches; reservoirs are also used.",
+      "fr": "Il fréquente rivières et ruisseaux, souvent les secteurs moyens ou aval, profonds et plus lents ; il utilise aussi les retenues."
+    },
+    "diet": {
+      "en": "It feeds mainly on bottom-dwelling detritus and insect larvae, especially chironomids, while also taking other small aquatic food.",
+      "fr": "Il consomme surtout des détritus et des larves d’insectes du fond, notamment des chironomes, ainsi que d’autres petites ressources aquatiques."
+    },
+    "behavior": {
+      "en": "Adults make seasonal movements upstream in spring, associated with spawning, and the species also makes movements within river systems as conditions change.",
+      "fr": "Au printemps, les adultes remontent les cours d’eau pour frayer ; l’espèce effectue aussi des déplacements au sein du réseau fluvial lorsque les conditions changent."
+    },
+    "reproduction": {
+      "en": "Spawning takes place in spring, often over gravel in faster, relatively shallow water; the female excavates a shallow groove for the eggs.",
+      "fr": "La ponte a lieu au printemps, souvent sur du gravier dans une eau assez peu profonde et plus rapide ; la femelle creuse un sillon peu profond pour les œufs."
+    },
+    "ecology": {
+      "en": "A Spanish synthesis identifies Luciobarbus comizo as its closest phylogenetic relative.",
+      "fr": "Une synthèse espagnole identifie Luciobarbus comizo comme son parent phylogénétique le plus proche."
+    },
+    "conservation": {
+      "en": "The cited CSIC account reports Least Concern globally in the 2008 IUCN assessment. The 2011 Spanish national synthesis classifies the species as Vulnerable in Spain.",
+      "fr": "La fiche du CSIC citée rapporte une catégorie mondiale de préoccupation mineure dans l’évaluation UICN de 2008. La synthèse nationale espagnole de 2011 classe l’espèce comme vulnérable en Espagne."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barbo común — Enciclopedia Virtual de los Vertebrados Españoles, Museo Nacional de Ciencias Naturales (CSIC)",
+        "fr": "Barbeau ibérique — Encyclopédie virtuelle des vertébrés d’Espagne, Musée national des sciences naturelles (CSIC)"
+      },
+      "url": "https://www.vertebradosibericos.org/peces/lucboc.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish synthesis describes diagnostic dorsal-fin and mouth features, habitat, benthic diet and its dated global category."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 16,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Luciobarbus bocagei — Biodiversidade da Mitra, Universidade de Évora",
+        "fr": "Luciobarbus bocagei — Biodiversité de la Mitra, Université d’Évora"
+      },
+      "url": "https://www.mitra-nature.uevora.pt/Especies-e-habitats/Peixes/Cyprinidae/Luciobarbus-bocagei",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Portuguese university account describes the native Iberian status, diagnostic body features, seasonal migration, gravel spawning habitat and diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 18,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ictiofauna Continental Española — Ministerio para la Transición Ecológica y el Reto Demográfico",
+        "fr": "Poissons continentaux d’Espagne — ministère espagnol de la Transition écologique et du Défi démographique"
+      },
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/inventarios-nacionales/2011_doadrio_et_al_seguimiento_ictiofauna_iberica_opt_tcm30-544759.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2011 Spanish national synthesis identifies L. bocagei as an endemic native species and reports its Spanish conservation category as Vulnerable; it discusses its relationship to other Iberian barbels."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 29,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conservation categories come from older assessments and are presented with their dates and geographic scope. River range and habitat vary by basin; observations from a specific site should not be generalized across the species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Spanish national and CSIC-hosted sources against a Portuguese university species account; dated the conservation statements and kept the congener comparison explicitly phylogenetic."
+}

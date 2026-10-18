@@ -1,0 +1,144 @@
+{
+  "id": "sphyraena_obtusata",
+  "scientific": "Sphyraena obtusata",
+  "group": "fish",
+  "name": {
+    "en": "Obtuse barracuda",
+    "fr": "Sphyraena obtusata"
+  },
+  "sections": {
+    "overview": {
+      "en": "This tropical barracuda occurs across the Indo-West Pacific, from the Red Sea and East Africa to the western Pacific.",
+      "fr": "Cette bécune tropicale est présente dans l’Indo-Pacifique occidental, de la mer Rouge et de l’Afrique orientale jusqu’au Pacifique ouest."
+    },
+    "identification": {
+      "en": "It has an elongated, nearly cylindrical body and a greenish back over silvery sides; diagnostic details distinguish it from other barracudas.",
+      "fr": "Son corps est allongé et presque cylindrique, avec le dos verdâtre et les flancs argentés; certains caractères permettent de la distinguer des autres bécunes."
+    },
+    "habitat": {
+      "en": "It is a marine, reef-associated fish found in shallow coastal waters, bays and estuaries; records extend to deeper water.",
+      "fr": "C’est un poisson marin associé aux récifs, présent dans les eaux côtières peu profondes, les baies et les estuaires; certaines observations viennent de profondeurs plus importantes."
+    },
+    "diet": {
+      "en": "A Sri Lankan species account lists fishes and squid as food.",
+      "fr": "Une fiche sri-lankaise indique qu’il se nourrit de poissons et de calmars."
+    },
+    "behavior": {
+      "en": "The FAO catalogue notes catches by trawls and nets, but these records do not establish distinctive behaviour.",
+      "fr": "Le catalogue de la FAO signale des captures au chalut et au filet, mais ces données ne décrivent pas de comportement particulier."
+    },
+    "reproduction": {
+      "en": "Species-specific spawning and early-life details were not provided in the accounts consulted.",
+      "fr": "Les fiches consultées ne donnent pas de détails propres à l’espèce sur la ponte ni les premiers stades de vie."
+    },
+    "ecology": {
+      "en": "Its precise range is uncertain because it has been confused with the yellowtail barracuda, Sphyraena flavicauda.",
+      "fr": "Son aire exacte reste incertaine car elle a été confondue avec la bécune à queue jaune, Sphyraena flavicauda."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern dated 2023.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN en Préoccupation mineure datant de 2023."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sphyraena obtusata — FishBase",
+        "fr": "Sphyraena obtusata — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Sphyraena-obtusata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase describes Indo-West Pacific distribution and habitat, notes range confusion with S. flavicauda and reports an IUCN LC assessment from 2023."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 21,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO species catalogue: Barracudas (Sphyraenidae)",
+        "fr": "Catalogue FAO des espèces : bécunes (Sphyraenidae)"
+      },
+      "url": "https://www.fao.org/4/y0870e/y0870e33.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "FAO describes diagnostic features, bays and estuaries, fisheries and confusion with S. flavicauda."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 13,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "National Red List of Sri Lankan marine fauna: Sphyraena obtusata",
+        "fr": "Liste rouge nationale de la faune marine du Sri Lanka : Sphyraena obtusata"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/2014-071.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Sri Lankan fish assessment lists fishes and squid in the diet; this is a regional account, not a global dietary study."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 22,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The precise distribution and maximum size vary among sources, likely in part because of confusion with Sphyraena flavicauda; no size claim is used here.",
+    "The Red List food note is region-specific; reproductive details remain unresolved in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. FishBase, a FAO identification account and a Sri Lankan IUCN-hosted fish assessment were cross-checked; local diet information is labelled as regional."
+}

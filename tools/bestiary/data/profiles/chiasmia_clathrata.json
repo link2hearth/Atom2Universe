@@ -1,0 +1,145 @@
+{
+  "id": "chiasmia_clathrata",
+  "scientific": "Chiasmia clathrata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Latticed Heath",
+    "fr": "Le Réseau"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small geometrid moth belongs to genus Chiasmia and the tribe Macariini.",
+      "fr": "Cette petite géomètre appartient au genre Chiasmia et à la tribu des Macariini."
+    },
+    "identification": {
+      "en": "Its pale wings have a dark lattice pattern, and adults span about 20–25 mm.",
+      "fr": "Ses ailes pâles portent un réseau de lignes sombres; l’adulte mesure environ 20–25 mm d’envergure."
+    },
+    "habitat": {
+      "en": "It occurs in dry and wet meadows, forest edges and scrub with legumes.",
+      "fr": "Elle fréquente les prairies sèches ou humides, les lisières forestières et les broussailles riches en légumineuses."
+    },
+    "diet": {
+      "en": "The caterpillars feed on clovers and alfalfa, linking breeding to Fabaceae rather than wetland herbs.",
+      "fr": "Les chenilles mangent des trèfles et de la luzerne; l’espèce dépend donc des Fabaceae plutôt que des herbes humides."
+    },
+    "behavior": {
+      "en": "Adults are active by day and also come to artificial lights.",
+      "fr": "Les adultes sont actifs le jour et viennent aussi aux lumières artificielles."
+    },
+    "reproduction": {
+      "en": "It usually has two generations between late April and October and overwinters as a pupa underground.",
+      "fr": "Elle produit généralement deux générations de fin avril à octobre et passe l’hiver sous forme de chrysalide dans le sol."
+    },
+    "ecology": {
+      "en": "Unlike the wetland geometrid Chariaspilates formosaria, this species belongs to tribe Macariini, not Gnophini.",
+      "fr": "Contrairement à Chariaspilates formosaria, géomètre des milieux humides, cette espèce appartient aux Macariini et non aux Gnophini."
+    },
+    "conservation": {
+      "en": "It is Least Concern in the 2023 Flemish regional assessment, not a global evaluation.",
+      "fr": "Elle est en préoccupation mineure dans l’évaluation régionale flamande de 2023, sans que cela indique son statut mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chiasmia clathrata — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Chiasmia clathrata — Catalogue des lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5784/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Belgian catalogue gives wingspan, host plants, daytime activity, generation number, pupal overwintering and regional status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 16,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chiasmia clathrata — Lepinet",
+        "fr": "Chiasmia clathrata — Lepinet"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=36210",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "The French source gives the names Le Réseau and La Géomètre à barreaux; its species page also notes larval feeding on legumes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 22,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chariaspilates formosaria — FAUNA species record",
+        "fr": "Chariaspilates formosaria — fiche espèce FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The FAUNA account places Chariaspilates formosaria in Geometridae and tribe Gnophini."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation category cited is regional to Flanders and is not presented as a global status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced the wetland species Chariaspilates formosaria from this lot to distinguish shared family membership from different tribes and host-plant ecology; retained the Flemish assessment as explicitly regional."
+}

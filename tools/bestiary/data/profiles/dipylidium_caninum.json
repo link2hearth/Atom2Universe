@@ -1,0 +1,176 @@
+{
+  "id": "dipylidium_caninum",
+  "scientific": "Dipylidium caninum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Flea Tapeworm",
+    "fr": "Dipylidium du chien et du chat"
+  },
+  "sections": {
+    "overview": {
+      "en": "Dipylidium caninum is a common tapeworm of dogs and cats and only occasionally infects people; it is also called the flea or cucumber tapeworm.",
+      "fr": "Dipylidium caninum est un ténia fréquent chez le chien et le chat, et n’infecte qu’occasionnellement l’être humain ; on l’appelle aussi ténia des puces ou ténia du concombre."
+    },
+    "identification": {
+      "en": "The adult is a segmented cestode; gravid segments can pass in stool or emerge near the anus, and each segment can release packets of eggs.",
+      "fr": "L’adulte est un cestode segmenté ; les segments gravides peuvent être évacués dans les selles ou sortir près de l’anus, puis libérer des capsules contenant des œufs."
+    },
+    "habitat": {
+      "en": "The adult tapeworm lives in the small intestine of its dog or cat definitive host, while immature stages develop in fleas or, less often, chewing lice.",
+      "fr": "Le ténia adulte vit dans l’intestin grêle de son hôte définitif, le chien ou le chat, tandis que les stades immatures se développent chez des puces ou, plus rarement, des poux broyeurs."
+    },
+    "diet": {
+      "en": "The cited veterinary accounts describe an intestinal parasite attached to the host’s gut lining, but do not give a species-specific account of nutrient uptake.",
+      "fr": "Les sources vétérinaires décrivent un parasite intestinal fixé à la muqueuse de son hôte, sans détailler spécifiquement son absorption des nutriments."
+    },
+    "behavior": {
+      "en": "Dogs and cats usually acquire infection by swallowing an infected adult flea while grooming; people can become infected accidentally by swallowing an infected flea or louse.",
+      "fr": "Le chien et le chat s’infectent généralement en avalant une puce adulte infestée pendant leur toilettage ; l’être humain peut être contaminé accidentellement en avalant une puce ou un pou infesté."
+    },
+    "reproduction": {
+      "en": "Egg packets released from gravid segments are eaten by flea or louse larvae, where the parasite develops to an infective cysticercoid before that insect reaches adulthood.",
+      "fr": "Les capsules ovifères libérées par les segments gravides sont ingérées par les larves de puces ou de poux ; le parasite devient un cysticercoïde infestant avant que l’insecte n’atteigne l’âge adulte."
+    },
+    "ecology": {
+      "en": "Its life cycle links a mammal host with flea or louse intermediate hosts, so controlling ectoparasites is central to breaking transmission between pets.",
+      "fr": "Son cycle relie un hôte mammifère à des puces ou des poux intermédiaires ; la lutte contre ces ectoparasites est donc centrale pour interrompre la transmission entre animaux domestiques."
+    },
+    "conservation": {
+      "en": "This parasite is managed as a veterinary and occasional zoonotic infection, not through a wildlife conservation assessment; prevention centers on flea control and veterinary treatment.",
+      "fr": "Ce parasite relève de la médecine vétérinaire et d’un risque zoonotique occasionnel, sans évaluation de conservation de la faune ; la prévention repose sur la lutte contre les puces et les soins vétérinaires."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "DPDx — Dipylidium caninum",
+        "fr": "DPDx — Dipylidium caninum"
+      },
+      "url": "https://www.cdc.gov/dpdx/dipylidium/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "CDC details the parasite’s hosts, segments, egg packets, intermediate arthropods and ingestion transmission route."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dipylidium caninum — ESCCAP French guideline",
+        "fr": "Dipylidium caninum — guide français ESCCAP"
+      },
+      "url": "https://www.esccap.org/uploads/docs/3vdoc860_1337_ESCCAP_GL1__French_v10_1p.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "ESCCAP describes canine/feline intestinal adults, flea and chewing-louse intermediate hosts, accidental human infections and transmission."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dipylidium caninum — Companion Animal Parasite Council",
+        "fr": "Dipylidium caninum — Conseil sur les parasites des animaux de compagnie"
+      },
+      "url": "https://capcvet.org/guidelines/dipylidium-caninum/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Veterinary guideline frames the species as a treatable companion-animal parasite and gives host-control guidance."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "This is a parasite profile, not a conservation-status entry; its section summarizes veterinary management. Human infection is uncommon and occurs through accidental ingestion of an infected arthropod."
+}

@@ -1,0 +1,186 @@
+{
+  "id": "rhopalura_ophiocomae",
+  "scientific": "Rhopalura ophiocomae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brittle-star orthonectid",
+    "fr": "Orthonectide des ophiures"
+  },
+  "sections": {
+    "overview": {
+      "en": "Rhopalura ophiocomae is a parasitic orthonectid associated with brittle stars.",
+      "fr": "Rhopalura ophiocomae est un orthonectide parasite associé aux ophiures."
+    },
+    "identification": {
+      "en": "It is a microscopic member of the genus Rhopalura; orthonectids are recognized by specialized cellular and reproductive anatomy.",
+      "fr": "C’est un représentant microscopique du genre Rhopalura; les orthonectides se reconnaissent par leur anatomie cellulaire et reproductive particulière."
+    },
+    "habitat": {
+      "en": "Records are from marine ophiuroids, including the brittle star Amphipholis squamata.",
+      "fr": "Les observations proviennent d’ophiures marines, notamment de l’espèce Amphipholis squamata."
+    },
+    "diet": {
+      "en": "It parasitizes its host rather than feeding as a free-living animal; plasmodia develop in the host’s body cavity and reproductive tissues.",
+      "fr": "Il parasite son hôte au lieu de se nourrir comme un animal libre; des plasmodes se développent dans sa cavité corporelle et ses tissus reproducteurs."
+    },
+    "behavior": {
+      "en": "Adult stages leave the host and enter seawater, where reproduction takes place.",
+      "fr": "Les stades adultes quittent l’hôte et gagnent l’eau de mer, où a lieu la reproduction."
+    },
+    "reproduction": {
+      "en": "Males and females are separate; fertilized eggs develop into ciliated larvae that seek a new host.",
+      "fr": "Les sexes sont séparés; les œufs fécondés donnent des larves ciliées qui recherchent un nouvel hôte."
+    },
+    "ecology": {
+      "en": "Its documented host differs from that of R. granosa, which was described from the bivalve Heteranomia squamula.",
+      "fr": "Son hôte documenté diffère de celui de R. granosa, décrit chez le bivalve Heteranomia squamula."
+    },
+    "conservation": {
+      "en": "The cited studies describe host biology rather than conservation status.",
+      "fr": "Les études citées portent sur la biologie de l’hôte, pas sur le statut de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The orthonectid Rhopalura ophiocomae in brittle stars from Norway — Sarsia",
+        "fr": "The orthonectid Rhopalura ophiocomae in brittle stars from Norway — Sarsia"
+      },
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/00364827.1972.10411204",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Norwegian study reports the parasite in several brittle-star hosts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 9,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Structure and Origin of the Plasmodium of Rhopalura ophiocomae — Acta Zoologica",
+        "fr": "The Structure and Origin of the Plasmodium of Rhopalura ophiocomae — Acta Zoologica"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6395.1994.tb01206.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Study details plasmodia in host body cavity and gonads."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 9,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhopalura granosa — original species description",
+        "fr": "Rhopalura granosa — original species description"
+      },
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/rhopalura-granosa-sp-nov-an-orthonectid-parasite-of-a-lamellibranch-heteranomia-squamula-l-with-a-note-on-its-swimming-behaviour/49F72F4D67763B362427CEA8F7BB638F",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Original account identifies the bivalve host of R. granosa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 9,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The genera of the phylum Orthonectida — Cahiers de Biologie Marine",
+        "fr": "Les genres du phylum Orthonectida — Cahiers de Biologie Marine"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "French and English review: microscopic structures and generic distinctions."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 9,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mesozoi — Enciclopedia Italiana",
+        "fr": "Mesozoi — Encyclopédie italienne"
+      },
+      "url": "https://www.treccani.it/enciclopedia/mesozoi_%28Enciclopedia-Italiana%29/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Italian life-cycle account: adults leave the host; ciliated larvae infect a new host."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 13,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The life cycle is summarized from older studies; direct observations of these minute parasites remain limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The reciprocal comparison is restricted to the documented host groups: ophiuroid versus bivalve."
+}

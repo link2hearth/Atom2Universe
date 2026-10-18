@@ -1,0 +1,144 @@
+{
+  "id": "theretra_alecto",
+  "scientific": "Theretra alecto",
+  "group": "invertebrates",
+  "name": {
+    "en": "Levant hawkmoth",
+    "fr": "Sphinx du Levant"
+  },
+  "sections": {
+    "overview": {
+      "en": "It ranges across tropical Asia, reaching Japan, Sulawesi and Kei. Indian records span several states.",
+      "fr": "Il est présent dans l’Asie tropicale, jusqu’au Japon, à Sulawesi et à Kei. En Inde, il est signalé dans plusieurs États."
+    },
+    "identification": {
+      "en": "Its deep-pink hindwings are shared with T. suffusa, but T. alecto has browner forewings and a pale patch near the hindwing tip.",
+      "fr": "Ses ailes postérieures rose foncé rappellent celles de T. suffusa, mais T. alecto a les ailes antérieures plus brunes et une plage pâle près de l’extrémité des postérieures."
+    },
+    "habitat": {
+      "en": "The Borneo account describes it as infrequent in lowlands and sometimes collected in cultivated places.",
+      "fr": "La fiche de Bornéo le décrit comme peu fréquent en plaine et parfois observé dans des lieux cultivés."
+    },
+    "diet": {
+      "en": "Indian records cite Dillenia, Pisum and Rubia among its larval food plants.",
+      "fr": "Les observations indiennes citent Dillenia, Pisum et Rubia parmi ses plantes-hôtes larvaires."
+    },
+    "behavior": {
+      "en": "The species accounts consulted do not describe a distinctive adult activity pattern.",
+      "fr": "Les fiches consultées ne décrivent pas de rythme d’activité particulier chez l’adulte."
+    },
+    "reproduction": {
+      "en": "The Borneo account describes the caterpillar but gives no detailed account of egg laying or development through the full life cycle.",
+      "fr": "La fiche de Bornéo décrit la chenille, mais ne détaille ni la ponte ni l’ensemble du cycle de développement."
+    },
+    "ecology": {
+      "en": "It belongs to the same genus as Theretra boisduvalii; see that profile for another regional account of larval hosts.",
+      "fr": "Il appartient au même genre que Theretra boisduvalii ; voir cette fiche pour une autre description régionale des plantes-hôtes larvaires."
+    },
+    "conservation": {
+      "en": "The species accounts consulted do not provide a global conservation category or population trend.",
+      "fr": "Les fiches consultées ne donnent ni catégorie mondiale de conservation ni tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Theretra alecto — The Moths of Borneo",
+        "fr": "Theretra alecto — The Moths of Borneo"
+      },
+      "url": "https://www.mothsofborneo.com/species/theretra-alecto",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Range, wing markings, habitat and caterpillar stages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 7,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Theretra alecto — Moths of India",
+        "fr": "Theretra alecto — Moths of India"
+      },
+      "url": "https://www.mothsofindia.org/theretra-alecto",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Indian account lists several state records and larval hosts Dillenia, Pisum and Rubia; it gives no distinctive adult activity pattern."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 21,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Theretra alecto — Sphingidae Taxonomic Inventory",
+        "fr": "Theretra alecto — inventaire taxonomique des Sphingidae"
+      },
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/2795",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The inventory recognizes T. alecto and T. boisduvalii as species of the genus Theretra."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 14,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species accounts provide host-plant and range data but little information on adult behavior, full life cycle or global conservation status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the T. boisduvalii cross-reference is a same-genus comparison, not an assertion that the two species are identical."
+}

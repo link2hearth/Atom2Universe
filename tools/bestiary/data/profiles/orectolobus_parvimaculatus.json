@@ -1,0 +1,123 @@
+{
+  "id": "orectolobus_parvimaculatus",
+  "scientific": "Orectolobus parvimaculatus",
+  "group": "fish",
+  "name": {
+    "en": "Dwarf spotted wobbegong",
+    "fr": "Orectolobus parvimaculatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The dwarf spotted wobbegong is a small carpet shark endemic to southwestern Western Australia.",
+      "fr": "Orectolobus parvimaculatus est un petit requin-tapis endémique du sud-ouest de l’Australie-Occidentale."
+    },
+    "identification": {
+      "en": "It reaches up to 94 cm total length; its colourful, spotted appearance once led to confusion with the larger spotted wobbegong, O. maculatus.",
+      "fr": "Il atteint jusqu’à 94 cm de longueur totale ; son aspect coloré et ponctué l’a autrefois fait confondre avec le plus grand Requin-tapis tacheté, O. maculatus."
+    },
+    "habitat": {
+      "en": "It is a bottom-dweller of inshore waters and the continental shelf, recorded at depths of 9–135 m.",
+      "fr": "C’est une espèce benthique des eaux côtières et du plateau continental, signalée entre 9 et 135 m de profondeur."
+    },
+    "diet": {
+      "en": "Its species-specific diet remains poorly documented in the sources consulted.",
+      "fr": "Son régime alimentaire propre reste peu documenté dans les sources consultées."
+    },
+    "behavior": {
+      "en": "It lives on the seabed; no distinct activity schedule is established in the sources used here.",
+      "fr": "Il vit sur le fond marin ; les sources utilisées ici n’établissent pas de rythme d’activité particulier."
+    },
+    "reproduction": {
+      "en": "The consulted assessment provides no species-specific reproductive measurements.",
+      "fr": "L’évaluation consultée ne fournit pas de mesures reproductives propres à l’espèce."
+    },
+    "ecology": {
+      "en": "Described with O. floridus in 2008, it is sympatric with that smaller-range cousin; the two are separated by a combination of colour and anatomical traits.",
+      "fr": "Décrit avec O. floridus en 2008, il partage une partie de son aire avec ce cousin ; les deux espèces se distinguent par une combinaison de couleurs et de caractères anatomiques."
+    },
+    "conservation": {
+      "en": "The 2025 global IUCN assessment lists it as Least Concern and reports a stable population trend.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2025 le classe en Préoccupation mineure et indique une tendance démographique stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orectolobus parvimaculatus — IUCN Red List (2025)",
+        "fr": "Orectolobus parvimaculatus — Liste rouge de l’UICN (2025)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T161651A124521951.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2025 assessment reports a southwestern Western Australian range, demersal shelf habitat at 9–135 m, stable trend and global Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 21,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Two new wobbegong sharks, Orectolobus floridus and O. parvimaculatus — Zootaxa",
+        "fr": "Deux nouveaux requins-tapis, Orectolobus floridus et O. parvimaculatus — Zootaxa"
+      },
+      "url": "https://mapress.com/zt/article/view/zootaxa.1673.1.2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The original description identifies a small, colourful species, confused with O. maculatus, and separates it from O. floridus using colour and anatomy."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 22,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species account does not establish diet, activity schedule or reproductive measurements; these gaps are left explicit rather than inferred from congeners."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the 2025 IUCN assessment for current range and conservation, and the original description for the reciprocal comparison with O. floridus and its history of confusion with O. maculatus."
+}

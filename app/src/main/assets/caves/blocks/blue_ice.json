@@ -1,0 +1,15 @@
+{
+  "id": 5002,
+  "name": "blue_ice",
+  "texture_top": "cozy:utility:11:91C0CE",
+  "texture_side": "cozy:utility:11:91C0CE",
+  "texture_bottom": "cozy:utility:11:91C0CE",
+  "color": "#87BCCF",
+  "hardness": 2.5,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

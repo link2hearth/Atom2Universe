@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_vachellia_anegadensis_name">Acacia d’Anegada</string>
+    <string name="bot_vachellia_anegadensis_latin" translatable="false">Vachellia anegadensis</string>
+    <string name="bot_vachellia_anegadensis_aliases">acacia d’anguille, acacia épineux</string>
+    <string name="bot_vachellia_anegadensis_description">Petit arbre très épineux des îles Vierges. Ses feuilles bipennées fines, ses pompons floraux jaunes et ses gousses arquées le distinguent des acacias à phyllodes; l’espèce est menacée et localisée.</string>
+    <string name="bot_vachellia_anegadensis_distribution">Endémique des îles Vierges britanniques, notamment Anegada et Virgin Gorda; broussailles sèches littorales.</string>
+    <string name="bot_vachellia_anegadensis_habit">Arbuste ou petit arbre étalé, souvent inférieur à 6 m, aux rameaux fortement armés de longues épines stipulaires.</string>
+    <string name="bot_vachellia_anegadensis_leaf">Feuilles alternes bipennées, finement divisées en nombreuses petites folioles.</string>
+    <string name="bot_vachellia_anegadensis_flower">Petits capitules sphériques jaunes, regroupés à l’aisselle des feuilles.</string>
+    <string name="bot_vachellia_anegadensis_fruit">Gousse brune arquée, s’ouvrant à maturité et contenant plusieurs graines.</string>
+    <string name="bot_acacia_mathuataensis_name">Acacia de Mathuata</string>
+    <string name="bot_acacia_mathuataensis_latin" translatable="false">Acacia mathuataensis</string>
+    <string name="bot_acacia_mathuataensis_aliases">acacia fidjien de Mathuata</string>
+    <string name="bot_acacia_mathuataensis_description">Acacia arbustif ou petit arbre de Fidji. Le spécimen type documente un port étalé et des fleurs à pétales et étamines jaune vif; les caractères des gousses sont peu documentés, donc la planche reste générique sur ce point.</string>
+    <string name="bot_acacia_mathuataensis_distribution">Fidji, connu du district de Mathuata sur Vanua Levu; forêts et formations boisées tropicales.</string>
+    <string name="bot_acacia_mathuataensis_habit">Petit arbre étalé pouvant approcher 6 m; jeunes rameaux et architecture du houppier variables.</string>
+    <string name="bot_acacia_mathuataensis_leaf">Phyllodes alternes, aplatis et étroits, caractère fréquent dans ce groupe d’acacias; dimensions variables.</string>
+    <string name="bot_acacia_mathuataensis_flower">Capitules globuleux jaune vif, avec pétales et étamines jaunes.</string>
+    <string name="bot_acacia_mathuataensis_fruit">Gousse de légumineuse; forme et détail peu documentés dans les sources consultées.</string>
+    <string name="bot_ambrella_longituba_name">Ambrelle à long labelle</string>
+    <string name="bot_ambrella_longituba_latin" translatable="false">Ambrella longituba</string>
+    <string name="bot_ambrella_longituba_aliases">orchidée Ambrella</string>
+    <string name="bot_ambrella_longituba_description">Orchidée épiphyte miniature des forêts sempervirentes humides du nord de Madagascar, avec un long labelle tubulaire. Elle porte généralement cinq ou six feuilles et une inflorescence de une à trois fleurs.</string>
+    <string name="bot_ambrella_longituba_distribution">Nord de Madagascar; épiphyte des forêts sempervirentes humides.</string>
+    <string name="bot_ambrella_longituba_habit">Orchidée épiphyte minuscule, formant une touffe de quelques feuilles; inflorescence de une à trois fleurs.</string>
+    <string name="bot_ambrella_longituba_leaf">Environ cinq à six feuilles plates, elliptiques, rassemblées en touffe.</string>
+    <string name="bot_ambrella_longituba_flower">Fleur verdâtre à labelle tubulaire pouvant mesurer environ 4,5 cm, intérieurement couvert de poils.</string>
+    <string name="bot_ambrella_longituba_fruit">Capsule allongée après fécondation; rarement observée dans les illustrations disponibles.</string>
+    <string name="bot_dioncophyllum_thollonii_name">Dioncophyllum de Thollon</string>
+    <string name="bot_dioncophyllum_thollonii_latin" translatable="false">Dioncophyllum thollonii</string>
+    <string name="bot_dioncophyllum_thollonii_aliases">liane dioncophyllum</string>
+    <string name="bot_dioncophyllum_thollonii_description">Grande liane tropicale à feuilles simples alternes dont certaines extrémités se terminent en crochets permettant l’accrochage. Contrairement à sa proche parente Triphyophyllum, elle n’est pas carnivore.</string>
+    <string name="bot_dioncophyllum_thollonii_distribution">Forêts tropicales humides du Gabon et du bassin du Congo.</string>
+    <string name="bot_dioncophyllum_thollonii_habit">Liane ligneuse grimpante, pouvant atteindre la canopée grâce à ses crochets foliaires.</string>
+    <string name="bot_dioncophyllum_thollonii_leaf">Feuilles alternes simples, nervures longitudinales marquées; extrémités parfois transformées en crochets.</string>
+    <string name="bot_dioncophyllum_thollonii_flower">Petites fleurs blanches à cinq pétales, réunies en inflorescences.</string>
+    <string name="bot_dioncophyllum_thollonii_fruit">Capsule sèche qui s’ouvre en plusieurs valves; graines munies d’ailes membraneuses.</string>
+    <string name="bot_halothamnus_glaucus_name">Halothamne glauque</string>
+    <string name="bot_halothamnus_glaucus_latin" translatable="false">Halothamnus glaucus</string>
+    <string name="bot_halothamnus_glaucus_aliases">halothamne bleuâtre</string>
+    <string name="bot_halothamnus_glaucus_description">Sous-arbrisseau gris-vert des steppes et déserts d’Asie occidentale. Ses feuilles charnues à pointe piquante et son fruit entouré d’ailes papyracées sont des caractères utiles pour le distinguer des autres chénopodiacées.</string>
+    <string name="bot_halothamnus_glaucus_distribution">De l’Europe orientale à l’Asie centrale; steppes, semi-déserts et pentes arides.</string>
+    <string name="bot_halothamnus_glaucus_habit">Sous-arbrisseau ramifié, généralement de 30 à 70 cm, aux rameaux glabres gris-vert.</string>
+    <string name="bot_halothamnus_glaucus_leaf">Feuilles alternes demi-cylindriques, charnues, linéaires, à sommet piquant.</string>
+    <string name="bot_halothamnus_glaucus_flower">Fleurs minuscules disposées en épis lâches, avec bractées membraneuses.</string>
+    <string name="bot_halothamnus_glaucus_fruit">Fruit sec entouré de cinq ailes jaune-brun, réunies en disque circulaire.</string>
+    <string name="bot_rosa_cymosa_name">Rosier en corymbes</string>
+    <string name="bot_rosa_cymosa_latin" translatable="false">Rosa cymosa</string>
+    <string name="bot_rosa_cymosa_aliases">rosier grimpant de Chine</string>
+    <string name="bot_rosa_cymosa_description">Rosier asiatique à longues tiges arquées, feuilles de trois à sept folioles dentées et bouquets de petites fleurs crème. Ses cynorrhodons globuleux, parfois rouge sombre à presque noirs, aident à le distinguer des rosiers à fruits allongés comme Rosa pendulina.</string>
+    <string name="bot_rosa_cymosa_distribution">Chine méridionale et orientale, jusqu’au Vietnam; lisières et fourrés.</string>
+    <string name="bot_rosa_cymosa_habit">Arbuste sarmenteux de 2 à 5 m, aux tiges longues et arquées.</string>
+    <string name="bot_rosa_cymosa_leaf">Feuille composée de trois à sept folioles elliptiques ou lancéolées, finement dentées.</string>
+    <string name="bot_rosa_cymosa_flower">Nombreuses fleurs blanches crème en corymbes composés; nombreuses étamines.</string>
+    <string name="bot_rosa_cymosa_fruit">Petit cynorrhodon globuleux, rouge puis parfois pourpre foncé ou noirâtre.</string>
+    <string name="bot_nectouxia_formosa_name">Nectouxie élégante</string>
+    <string name="bot_nectouxia_formosa_latin" translatable="false">Nectouxia formosa</string>
+    <string name="bot_nectouxia_formosa_aliases">nectouxie du Chisos</string>
+    <string name="bot_nectouxia_formosa_description">Vivace rhizomateuse des montagnes du nord du Mexique et du Texas. Les feuilles alternes glanduleuses, la corolle tubulaire et les baies étroites portant de nombreuses graines caractérisent cette solanacée rare.</string>
+    <string name="bot_nectouxia_formosa_distribution">Monts Chisos et Big Bend au Texas, et nord du Mexique; pentes rocheuses vers 2 100–2 300 m.</string>
+    <string name="bot_nectouxia_formosa_habit">Vivace rhizomateuse de 40 à 70 cm environ, à tiges dressées ramifiées.</string>
+    <string name="bot_nectouxia_formosa_leaf">Feuilles alternes simples, ovales, glanduleuses et souvent pubescentes.</string>
+    <string name="bot_nectouxia_formosa_flower">Fleur tubulaire pâle, à limbe évasé et lobes réfléchis.</string>
+    <string name="bot_nectouxia_formosa_fruit">Baie oblongue étroite de 15–30 mm, contenant environ 10 à 25 graines.</string>
+    <string name="bot_sclerocactus_mesae_verdae_name">Cactus hameçon de Mesa Verde</string>
+    <string name="bot_sclerocactus_mesae_verdae_latin" translatable="false">Sclerocactus mesae-verdae</string>
+    <string name="bot_sclerocactus_mesae_verdae_aliases">cactus hameçon de Mesa Verde</string>
+    <string name="bot_sclerocactus_mesae_verdae_description">Petit cactus rare des badlands gypseux du plateau du Colorado. Sa tige aplatie à 13–17 côtes et ses épines centrales recourbées en hameçon sont diagnostiques; ses fleurs crème à rosées émergent près du sommet.</string>
+    <string name="bot_sclerocactus_mesae_verdae_distribution">Sud-ouest du Colorado et nord-ouest du Nouveau-Mexique; sols gypseux arides.</string>
+    <string name="bot_sclerocactus_mesae_verdae_habit">Cactus solitaire, globuleux déprimé à ovoïde, de quelques centimètres de haut.</string>
+    <string name="bot_sclerocactus_mesae_verdae_leaf">Feuilles absentes; côtes tuberculées portant des aréoles et des épines radiales couleur paille, avec une épine centrale recourbée.</string>
+    <string name="bot_sclerocactus_mesae_verdae_flower">Fleur crème à blanc rosé, au sommet de la tige.</string>
+    <string name="bot_sclerocactus_mesae_verdae_fruit">Fruit charnu vert à beige, généralement indéhiscent.</string>
+    <string name="bot_sphagnum_magellanicum_name">Sphaigne de Magellan</string>
+    <string name="bot_sphagnum_magellanicum_latin" translatable="false">Sphagnum magellanicum</string>
+    <string name="bot_sphagnum_magellanicum_aliases">sphaigne magellanique</string>
+    <string name="bot_sphagnum_magellanicum_description">Mousse de tourbières formant des coussins rouges à bordeaux. Le nom a longtemps été appliqué à un ensemble beaucoup plus vaste; au sens strict actuel, S. magellanicum est limité au sud du Chili et de l’Argentine. L’identification fine dans le complexe peut demander des caractères microscopiques et moléculaires.</string>
+    <string name="bot_sphagnum_magellanicum_distribution">Tourbières du sud du Chili et de l’Argentine, notamment en Terre de Feu.</string>
+    <string name="bot_sphagnum_magellanicum_habit">Mousse formant des touffes denses et des coussins; pousses dressées à tête terminale.</string>
+    <string name="bot_sphagnum_magellanicum_leaf">Petites feuilles sans nervure, constituées de cellules chlorophylliennes étroites mêlées à de grandes cellules hyalines.</string>
+    <string name="bot_sphagnum_magellanicum_flower">Pas de fleurs; organes sexuels portés par des rameaux spécialisés.</string>
+    <string name="bot_sphagnum_magellanicum_fruit">Capsule sphérique portée au-dessus de la touffe par un pseudopode.</string>
+    <string name="bot_gymnocalycium_calochlorum_name">Gymnocalycium vert pâle</string>
+    <string name="bot_gymnocalycium_calochlorum_latin" translatable="false">Gymnocalycium calochlorum</string>
+    <string name="bot_gymnocalycium_calochlorum_aliases">gymnocalycium de Calochlorum</string>
+    <string name="bot_gymnocalycium_calochlorum_description">Petit cactus argentin à tige aplatie, côtes basses divisées en mentons et épines courtes. Les fleurs en entonnoir sont plus grandes que la tige chez certains individus; leur teinte varie du blanc rosé au rose.</string>
+    <string name="bot_gymnocalycium_calochlorum_distribution">Argentine, dans des habitats secs et rocailleux.</string>
+    <string name="bot_gymnocalycium_calochlorum_habit">Cactus solitaire, bas et largement globuleux, souvent bleu-vert.</string>
+    <string name="bot_gymnocalycium_calochlorum_leaf">Feuilles absentes; côtes basses portant des aréoles espacées et quelques épines courtes.</string>
+    <string name="bot_gymnocalycium_calochlorum_flower">Grande fleur en entonnoir, blanche à rose pâle, près du sommet.</string>
+    <string name="bot_gymnocalycium_calochlorum_fruit">Fruit charnu allongé, verdâtre à rosé.</string>
+    <string name="bot_turbinicarpus_saueri_name">Turbinicarpe de Sauer</string>
+    <string name="bot_turbinicarpus_saueri_latin" translatable="false">Turbinicarpus saueri</string>
+    <string name="bot_turbinicarpus_saueri_aliases">turbinicarpe de Sauer</string>
+    <string name="bot_turbinicarpus_saueri_description">Cactus miniature du nord-est du Mexique, souvent presque enfoui dans un substrat calcaire. Les tubercules portent des épines radiales fines, longues et parfois courbées; les fleurs pâles peuvent être rosées. Les caractères de la spination varient selon les populations.</string>
+    <string name="bot_turbinicarpus_saueri_distribution">Nord-est du Mexique, milieux calcaires arides.</string>
+    <string name="bot_turbinicarpus_saueri_habit">Cactus solitaire de quelques centimètres, globuleux, souvent enfoncé dans le sol.</string>
+    <string name="bot_turbinicarpus_saueri_leaf">Feuilles absentes; tubercules distincts portant plusieurs épines radiales fines.</string>
+    <string name="bot_turbinicarpus_saueri_flower">Fleur en entonnoir, blanche à rose pâle, au sommet.</string>
+    <string name="bot_turbinicarpus_saueri_fruit">Petite capsule lisse, s’ouvrant à maturité.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_name">Turbinicarpe de Gielsdorf</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_latin" translatable="false">Turbinicarpus gielsdorfianus</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_aliases">turbinicarpe de Gielsdorf</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_description">Petit cactus mexicain à tubercules saillants et épines radiales aplaties, souvent disposées en peigne. La forme des épines et la pilosité de la couronne varient; une identification sur illustration seule reste moins sûre que l’examen d’un spécimen.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_distribution">Mexique, secteurs arides du plateau central; affleurements calcaires.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_habit">Cactus solitaire compact, globuleux et en partie enfoui.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_leaf">Feuilles absentes; tubercules triangulaires portant des épines radiales aplaties et pectinées.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_flower">Petite fleur claire, blanc à rose pâle, au sommet.</string>
+    <string name="bot_turbinicarpus_gielsdorfianus_fruit">Petite capsule sèche, s’ouvrant à maturité.</string>
+    <string name="bot_tacinga_funalis_name">Tacinga funalis</string>
+    <string name="bot_tacinga_funalis_latin" translatable="false">Tacinga funalis</string>
+    <string name="bot_tacinga_funalis_aliases">tacinga de la Caatinga</string>
+    <string name="bot_tacinga_funalis_description">Cactus buissonnant de la Caatinga, à cladodes aplatis et fleurs tubulaires adaptées à la pollinisation par les oiseaux. Les jeunes feuilles sont fugaces et les aréoles gardent de fins aiguillons; le fruit charnu est une baie.</string>
+    <string name="bot_tacinga_funalis_distribution">Nord-est du Brésil, dans la Caatinga.</string>
+    <string name="bot_tacinga_funalis_habit">Cactus arbustif ramifié, dressé à étalé, formé de segments aplatis.</string>
+    <string name="bot_tacinga_funalis_leaf">Cladodes ovales à oblongs; petites feuilles fugaces sur les jeunes segments, aréoles munies de glochides.</string>
+    <string name="bot_tacinga_funalis_flower">Fleur tubulaire orange à rouge, nectarifère, avec étamines saillantes.</string>
+    <string name="bot_tacinga_funalis_fruit">Fruit charnu rougeâtre, portant des aréoles; graines incluses dans la pulpe.</string>
+    <string name="bot_tacinga_saxatilis_name">Tacinga des rochers</string>
+    <string name="bot_tacinga_saxatilis_latin" translatable="false">Tacinga saxatilis</string>
+    <string name="bot_tacinga_saxatilis_aliases">tacinga des affleurements</string>
+    <string name="bot_tacinga_saxatilis_description">Cactus de la végétation saisonnièrement sèche du Brésil central, associé aux affleurements rocheux. Ses cladodes aplatis et ses fleurs tubulaires rouge orangé rappellent les autres Tacinga, mais la forme compacte et le milieu rocheux aident à le reconnaître.</string>
+    <string name="bot_tacinga_saxatilis_distribution">Centre et nord-est du Brésil; affleurements rocheux, notamment calcaires.</string>
+    <string name="bot_tacinga_saxatilis_habit">Sous-arbrisseau succulent ramifié, compact, aux segments aplatis.</string>
+    <string name="bot_tacinga_saxatilis_leaf">Cladodes ovales aplatis, avec aréoles espacées, glochides et petites feuilles caduques sur les jeunes pousses.</string>
+    <string name="bot_tacinga_saxatilis_flower">Fleur rouge orangé à tube étroit et étamines saillantes.</string>
+    <string name="bot_tacinga_saxatilis_fruit">Baie charnue, contenant des graines aplaties.</string>
+    <string name="bot_melocactus_pachyacanthus_name">Mélocactus à épines robustes</string>
+    <string name="bot_melocactus_pachyacanthus_latin" translatable="false">Melocactus pachyacanthus</string>
+    <string name="bot_melocactus_pachyacanthus_aliases">mélocactus robuste de Bahia</string>
+    <string name="bot_melocactus_pachyacanthus_description">Cactus solitaire de Bahia reconnaissable à sa tige globuleuse côtelée et à son céphalium rouge laineux au sommet. Les minuscules fleurs roses sortent du céphalium et les fruits rouges allongés en dépassent; les côtes portent de fortes épines.</string>
+    <string name="bot_melocactus_pachyacanthus_distribution">Brésil oriental, notamment Bahia; milieux secs et affleurements calcaires.</string>
+    <string name="bot_melocactus_pachyacanthus_habit">Cactus solitaire globuleux, bleu-vert, avec céphalium rouge apparaissant à l’âge adulte.</string>
+    <string name="bot_melocactus_pachyacanthus_leaf">Feuilles absentes; côtes profondes portant des aréoles à épines robustes.</string>
+    <string name="bot_melocactus_pachyacanthus_flower">Fleurs petites, roses à magenta, insérées dans le céphalium.</string>
+    <string name="bot_melocactus_pachyacanthus_fruit">Fruit rouge allongé dépassant du céphalium; baie à graines noires.</string>
+    <string name="bot_plowmania_nyctaginoides_name">Plowmanie noctaginoïde</string>
+    <string name="bot_plowmania_nyctaginoides_latin" translatable="false">Plowmania nyctaginoides</string>
+    <string name="bot_plowmania_nyctaginoides_aliases">plowmanie des hauts volcans</string>
+    <string name="bot_plowmania_nyctaginoides_description">Rare arbuste de haute altitude mésoaméricain, célèbre pour ses fleurs tubulaires très longues, orange, à lobes écarlates et gorge jaune. Les quelques observations disponibles rendent la distribution et la variabilité mal connues.</string>
+    <string name="bot_plowmania_nyctaginoides_distribution">Sommets volcaniques du Chiapas et du Guatemala.</string>
+    <string name="bot_plowmania_nyctaginoides_habit">Arbuste ligneux ramifié, généralement de 1 à 3 m dans les descriptions disponibles.</string>
+    <string name="bot_plowmania_nyctaginoides_leaf">Feuilles simples alternes, ovales à elliptiques, à bord entier.</string>
+    <string name="bot_plowmania_nyctaginoides_flower">Longue corolle tubulaire orange, lobes rouges et gorge jaune; fleurs souvent groupées à l’extrémité des rameaux.</string>
+    <string name="bot_plowmania_nyctaginoides_fruit">Baie sphérique sombre après floraison.</string>
+    <string name="bot_halothamnus_lancifolius_name">Halothamne lancéolé</string>
+    <string name="bot_halothamnus_lancifolius_latin" translatable="false">Halothamnus lancifolius</string>
+    <string name="bot_halothamnus_lancifolius_aliases">halothamne à feuilles lancéolées</string>
+    <string name="bot_halothamnus_lancifolius_description">Sous-arbrisseau glabre et glauque des milieux désertiques du Moyen-Orient. Ses feuilles charnues à base élargie et son fruit papyracé ailé le distinguent de H. glaucus, dont les feuilles sont plus étroites et presque cylindriques.</string>
+    <string name="bot_halothamnus_lancifolius_distribution">Méditerranée orientale jusqu’à l’Iran méridional et la péninsule Arabique; désert, 0–500 m.</string>
+    <string name="bot_halothamnus_lancifolius_habit">Sous-arbrisseau glabre, glauque, ramifié surtout dans sa partie supérieure, jusqu’à environ 60 cm.</string>
+    <string name="bot_halothamnus_lancifolius_leaf">Feuilles alternes succulentes, triangulaires à lancéolées, à base élargie et légèrement décurrente.</string>
+    <string name="bot_halothamnus_lancifolius_flower">Fleurs minuscules parmi des bractées plus longues que le périanthe.</string>
+    <string name="bot_halothamnus_lancifolius_fruit">Fruit entouré de cinq ailes membraneuses, d’environ 10–15 mm de diamètre.</string>
+    <string name="bot_guamatela_tuerckheimii_name">Guamatèle de Türckheim</string>
+    <string name="bot_guamatela_tuerckheimii_latin" translatable="false">Guamatela tuerckheimii</string>
+    <string name="bot_guamatela_tuerckheimii_aliases">guamatèle</string>
+    <string name="bot_guamatela_tuerckheimii_description">Sous-arbrisseau rampant d’Amérique centrale, seul membre de la famille Guamatelaceae. Les feuilles opposées dentées à nervation palmée, pâles et feutrées dessous, contrastent avec de petites fleurs et des follicules secs.</string>
+    <string name="bot_guamatela_tuerckheimii_distribution">Mexique méridional, Guatemala et Honduras; forêts tropicales humides.</string>
+    <string name="bot_guamatela_tuerckheimii_habit">Sous-arbrisseau persistant, bas et étalé au sol.</string>
+    <string name="bot_guamatela_tuerckheimii_leaf">Feuilles opposées, simples, dentées, à nervation palmée et face inférieure densément blanchâtre.</string>
+    <string name="bot_guamatela_tuerckheimii_flower">Petites fleurs à cinq pièces florales et dix étamines.</string>
+    <string name="bot_guamatela_tuerckheimii_fruit">Fruit composé de follicules déhiscents contenant plusieurs graines.</string>
+    <string name="bot_ruizia_parviflora_name">Ruizie à petites fleurs</string>
+    <string name="bot_ruizia_parviflora_latin" translatable="false">Ruizia parviflora</string>
+    <string name="bot_ruizia_parviflora_aliases">Trochetia parviflora (ancien nom)</string>
+    <string name="bot_ruizia_parviflora_description">Arbuste rare de l’île Maurice, connu aujourd’hui sous le nom Ruizia parviflora; Trochetia parviflora est un synonyme. Ses feuilles oblongues à base arrondie et ses petits bouquets de trois fleurs blanches à rosées sont distinctifs.</string>
+    <string name="bot_ruizia_parviflora_distribution">Endémique de Maurice, actuellement connu du mont Corps de Garde.</string>
+    <string name="bot_ruizia_parviflora_habit">Arbuste très ramifié, bas à moyen, pouvant atteindre environ 3 m.</string>
+    <string name="bot_ruizia_parviflora_leaf">Feuilles oblongues, entières, fermes, à base arrondie; dessous finement couvert d’écailles brunes.</string>
+    <string name="bot_ruizia_parviflora_flower">Petites fleurs en groupes de trois; pétales pas plus longs que les sépales.</string>
+    <string name="bot_ruizia_parviflora_fruit">Capsule globuleuse; fruits parfois groupés par trois.</string>
+    <string name="bot_plagiomnium_affine_name">Mnie affine</string>
+    <string name="bot_plagiomnium_affine_latin" translatable="false">Plagiomnium affine</string>
+    <string name="bot_plagiomnium_affine_aliases">mnie à feuilles larges</string>
+    <string name="bot_plagiomnium_affine_description">Mousse des sols humides et ombragés, formant des tapis avec des tiges dressées. Les feuilles ovales nettement dentées sont plus larges et plus étalées que chez plusieurs mousses proches. Les capsules inclinées sur soie rougeâtre sont rares; la distinction d’espèces proches peut demander une loupe binoculaire.</string>
+    <string name="bot_plagiomnium_affine_distribution">Europe et régions tempérées de l’hémisphère Nord; sols frais des bois et ravins.</string>
+    <string name="bot_plagiomnium_affine_habit">Mousse formant un tapis, avec tiges dressées de quelques centimètres et sporophytes visibles.</string>
+    <string name="bot_plagiomnium_affine_leaf">Feuilles ovales, à nervure centrale et bord fortement denté, étalées sur le rameau.</string>
+    <string name="bot_plagiomnium_affine_flower">Pas de fleurs; organes sexuels portés sur les tiges feuillées.</string>
+    <string name="bot_plagiomnium_affine_fruit">Capsule inclinée à sommet obtus, rare, portée par une longue soie rougeâtre.</string>
+</resources>

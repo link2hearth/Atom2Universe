@@ -1,0 +1,16 @@
+{
+  "id": 2300,
+  "name": "cobblestone",
+  "texture_top": "base_art:cobblestone:0",
+  "texture_side": "base_art:cobblestone:0",
+  "texture_bottom": "base_art:cobblestone:0",
+  "color": "#929DA4",
+  "hardness": 3,
+  "drop": "cobblestone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

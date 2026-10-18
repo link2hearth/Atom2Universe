@@ -1,0 +1,188 @@
+{
+  "id": "etmopterus_baxteri",
+  "scientific": "Etmopterus baxteri",
+  "group": "fish",
+  "name": {
+    "en": "Baxter’s lanternshark",
+    "fr": "Requin-lanterne de Baxter"
+  },
+  "sections": {
+    "overview": {
+      "en": "This deepwater dogfish is listed as Etmopterus baxteri by the New Zealand Organisms Register, while the Australian CAAB catalogue treats that name as a synonym of E. granulosus following a taxonomic revision. Older ecological records under either name should therefore be read with their taxonomic usage in mind.",
+      "fr": "Ce sagre des grands fonds figure sous le nom Etmopterus baxteri dans le registre néo-zélandais des organismes, tandis que le catalogue australien CAAB traite ce nom comme synonyme d’E. granulosus à la suite d’une révision taxonomique. Il faut donc tenir compte du nom utilisé dans les anciennes études écologiques."
+    },
+    "identification": {
+      "en": "The New Zealand guide describes a stout, uniformly dark shark with randomly spaced dermal denticles; it contrasts with E. lucifer, whose denticles form linear rows, and E. pusillus, which has smoother skin.",
+      "fr": "Le guide néo-zélandais décrit un requin trapu, uniformément sombre, aux denticules dermiques disposés sans ordre ; il le distingue d’E. lucifer, aux denticules en rangées, et d’E. pusillus, à la peau plus lisse."
+    },
+    "habitat": {
+      "en": "Records place it around New Zealand and Australia on deep continental slopes, extending to about 1500 m in the New Zealand guide.",
+      "fr": "Les mentions le situent autour de la Nouvelle-Zélande et de l’Australie, sur les talus continentaux profonds, jusqu’à environ 1500 m selon le guide néo-zélandais."
+    },
+    "diet": {
+      "en": "A study off Tasmania found teleost fishes to be its main prey, with cephalopods also frequent and crustaceans a minor component; these results describe the sampled Australian population.",
+      "fr": "Une étude au large de la Tasmanie a trouvé que les poissons osseux constituaient ses principales proies, les céphalopodes étant également fréquents et les crustacés secondaires ; ces résultats concernent la population australienne étudiée."
+    },
+    "behavior": {
+      "en": "The guide does not describe its activity.",
+      "fr": "Le guide ne décrit pas son activité."
+    },
+    "reproduction": {
+      "en": "The guide gives no breeding details.",
+      "fr": "Le guide ne précise pas sa reproduction."
+    },
+    "ecology": {
+      "en": "It is a slope-dwelling predator that appears in New Zealand deepwater fisheries as non-target catch; this documents fishery interaction, not a population trend.",
+      "fr": "Ce prédateur des talus profonds apparaît comme capture non ciblée dans les pêcheries néo-zélandaises ; cela documente une interaction avec la pêche, pas une tendance de population."
+    },
+    "conservation": {
+      "en": "The fisheries report documents bycatch but does not assess this shark’s global conservation status or population trend.",
+      "fr": "Le rapport halieutique documente des captures accessoires, mais n’évalue ni le statut mondial de conservation ni la tendance de population de ce requin."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "New Zealand Organisms Register: Etmopterus baxteri",
+        "fr": "Registre néo-zélandais des organismes : Etmopterus baxteri"
+      },
+      "url": "https://www.nzor.org.nz/names/6a0cc6de-545e-43af-95f6-a214062004d0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "NZOR records E. baxteri as its preferred name."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 8,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CAAB Taxon Report: Etmopterus granulosus",
+        "fr": "Rapport taxonomique CAAB : Etmopterus granulosus"
+      },
+      "url": "https://www.cmar.csiro.au/data/caab/taxon_report.cfm?caab_code=37020021",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Australian CAAB record lists E. baxteri as a synonym of E. granulosus, citing a taxonomic revision that recognized a widespread southern-hemisphere species."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 23,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New Zealand Aquatic Environment and Biodiversity Report 68: Deepwater fishes",
+        "fr": "Rapport néo-zélandais sur les milieux aquatiques et la biodiversité 68 : poissons profonds"
+      },
+      "url": "https://webstatic.niwa.co.nz/library/NZAEBR68.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The New Zealand guide describes its dark coloration, denticle pattern and depth range, distinguishes it from E. lucifer and E. pusillus, and gives no activity or breeding details."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 28,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feeding ecology of Baxter’s dogfish Etmopterus baxteri off Tasmania",
+        "fr": "Écologie alimentaire du sagre de Baxter Etmopterus baxteri au large de la Tasmanie"
+      },
+      "url": "https://academic.oup.com/icesjms/article/68/1/157/629079",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Tasmanian stomach-content study found teleosts dominant among prey, cephalopods frequent and crustaceans minor."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 14,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bycatch and discards in New Zealand ling longline fisheries",
+        "fr": "Captures accessoires et rejets dans les pêcheries néo-zélandaises à la palangre ciblant la lingue"
+      },
+      "url": "https://docs.niwa.co.nz/library/public/NZAEBR-138.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "New Zealand fisheries monitoring recorded Baxter’s lantern dogfish as non-target catch; the report is a fishery dataset, not a global status assessment."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 22,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species name has differing taxonomic treatment across national catalogues; reproductive biology and global population status were not resolved by the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Retained the requested species name but made its synonymy dispute explicit. Diet claims are limited to the Tasmanian study sample; fishery records are not presented as a status assessment."
+}

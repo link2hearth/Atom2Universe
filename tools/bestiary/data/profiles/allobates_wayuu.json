@@ -1,0 +1,234 @@
+{
+  "id": "allobates_wayuu",
+  "scientific": "Allobates wayuu",
+  "group": "amphibians",
+  "name": {
+    "en": "Wayuu frog",
+    "fr": "Grenouille Wayuu"
+  },
+  "sections": {
+    "overview": {
+      "en": "Allobates wayuu is a tiny ground-dwelling frog in the family Aromobatidae; it was originally described as Colostethus wayuu. It is known only from the Serranía de la Macuira in La Guajira, northern Colombia, and is endemic to that country.",
+      "fr": "Allobates wayuu est une minuscule grenouille terrestre de la famille des Aromobatidés; elle a d’abord été décrite sous le nom de Colostethus wayuu. Elle n’est connue que de la serranía de la Macuira, dans le département de La Guajira au nord de la Colombie, et elle est endémique de ce pays."
+    },
+    "identification": {
+      "en": "The smooth body is brown, with cream limbs and lips, darker flanks, pale dorsolateral stripes and a cream belly flecked gray-brown; the hind limbs have dark bars. The original description reports snout-to-vent lengths of 13.6–16.1 mm in males and 15.8–19.7 mm in females; the ranges overlap. These are body lengths, not standing heights; no standard width or body mass is reported for either sex. Toe discs are expanded and toes partly webbed, while the fingers are unwebbed.",
+      "fr": "Le corps lisse est brun, avec les membres et les lèvres crème, les flancs sombres, des bandes dorsolatérales pâles et un ventre crème moucheté de gris-brun; les pattes postérieures portent des barres foncées. La description originale donne une longueur museau-cloaque de 13,6 à 16,1 mm chez les mâles et de 15,8 à 19,7 mm chez les femelles; les plages se chevauchent. Ce sont des longueurs corporelles, pas des hauteurs debout; aucune largeur standard ni masse n’est indiquée pour l’un ou l’autre sexe. Les disques des orteils sont élargis et les pieds partiellement palmés, contrairement aux doigts des mains."
+    },
+    "habitat": {
+      "en": "Records place it between 210 and 780 m elevation around its type locality in Macuira National Natural Park. The mountain range contains a patchwork of dry tropical, thorn, gallery, deciduous and low-elevation cloud forests; the species is associated with dry and subhumid forest settings, but its precise microhabitat is not well mapped.",
+      "fr": "Les données la situent entre 210 et 780 m d’altitude autour de sa localité type, dans le parc national naturel de Macuira. La serranía forme une mosaïque de forêts tropicales sèches, épineuses, galeries, caducifoliées et de nuages à basse altitude; l’espèce est associée aux milieux forestiers secs et subhumides, mais son microhabitat précis reste mal cartographié."
+    },
+    "diet": {
+      "en": "A Colombian biodiversity collection describes it as insectivorous, feeding on small invertebrates. No species-specific prey inventory was available in the sources consulted, so more detailed claims about preferred prey would be uncertain.",
+      "fr": "Une collection colombienne de biodiversité la décrit comme insectivore, consommant de petits invertébrés. Les sources consultées ne fournissent pas d’inventaire de proies propre à l’espèce; préciser davantage ses proies préférées serait donc incertain."
+    },
+    "behavior": {
+      "en": "The species is described as terrestrial and diurnal. Its brown, pale-striped pattern is generally cryptic against leaf litter, while a Colombian review reports that males darken overall during calling and that the pale dorsolateral stripes become more conspicuous; that color change is based on field observations rather than a dedicated experiment.",
+      "fr": "L’espèce est décrite comme terrestre et diurne. Son motif brun à bandes pâles est généralement discret dans la litière, tandis qu’une synthèse colombienne rapporte que les mâles s’assombrissent pendant leurs émissions vocales et que les bandes dorsolatérales pâles deviennent alors plus visibles; ce changement de couleur repose sur des observations de terrain, non sur une expérience dédiée."
+    },
+    "reproduction": {
+      "en": "It lays eggs on land among leaf litter or near small pools. After hatching, the male carries roughly four to ten tadpoles on his back to water, where they continue development; these details come from Colombian natural-history records, and the species’ breeding calendar remains poorly documented.",
+      "fr": "Elle pond sur la terre ferme, dans la litière ou près de petites mares. Après l’éclosion, le mâle transporte environ quatre à dix têtards sur son dos jusqu’à l’eau, où ils poursuivent leur développement; ces détails proviennent de notices colombiennes d’histoire naturelle, et le calendrier reproducteur de l’espèce reste mal documenté."
+    },
+    "ecology": {
+      "en": "Its known range lies within a protected mountain landscape that links dry forest, gallery forest and cloud-forest patches. The park authority lists A. wayuu among the reserve’s endemic amphibians, but this designation should not be read as proof that every suitable habitat patch has been surveyed.",
+      "fr": "Son aire connue se trouve dans un paysage montagneux protégé qui relie des secteurs de forêt sèche, de forêt-galerie et de forêt de nuages. L’administration du parc cite A. wayuu parmi les amphibiens endémiques de la réserve, sans que cela signifie que chaque habitat favorable ait été inventorié."
+    },
+    "conservation": {
+      "en": "The 2017 IUCN assessment changed its global category from Vulnerable to Least Concern; the assessment table records that category change. Despite that status, its documented range remains exceptionally restricted to the Macuira area, and the available sources do not establish a current population trend or a measured threat level.",
+      "fr": "L’évaluation mondiale de l’UICN de 2017 a fait passer sa catégorie de Vulnérable à Préoccupation mineure; le tableau de l’évaluation consigne ce changement. Malgré ce statut, son aire documentée reste exceptionnellement restreinte à la région de Macuira, et les sources disponibles n’établissent ni tendance actuelle de population ni niveau de menace mesuré."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Allobates wayuu — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Allobates wayuu — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Aromobatidae/Allobatinae/Allobates/Allobates-wayuu",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Current family placement, original synonym, type locality, Colombian endemism and known 210–780 m range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 14,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Una nueva especie de Colostethus de la región Caribe de Colombia — Revista de la Academia Colombiana de Ciencias, 1999",
+        "fr": "Une nouvelle espèce de Colostethus de la région caraïbe de Colombie — Revista de la Academia Colombiana de Ciencias, 1999"
+      },
+      "url": "https://www.accefyn.com/revista/Vol_23/supl/225-230.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Original species description, cited in the AMNH taxonomic record; the journal-hosted PDF was not directly retrievable during this review."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 19,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parque Nacional Natural Macuira — Parques Nacionales Naturales de Colombia",
+        "fr": "Parc national naturel de Macuira — Parques Nacionales Naturales de Colombia"
+      },
+      "url": "https://www.parquesnacionales.gov.co/nuestros-parques/pnn-macuira/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Official park authority description of the forest mosaic, climate and endemic fauna."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 12,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Allobates wayuu — Juan Manuel Renjifo biodiversity photograph collection, Banco de la República",
+        "fr": "Allobates wayuu — Collection photographique de biodiversité Juan Manuel Renjifo, Banco de la República"
+      },
+      "url": "https://babel.banrepcultural.org/digital/collection/p17054coll33/id/1421/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Colombian-language species record describes insectivory, terrestrial/diurnal activity, egg laying and male tadpole transport."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 13,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Visual communication and reproductive ecology in amphibians and reptiles of northern Colombia’s tropical dry forest — UPTC, 2019",
+        "fr": "Communication visuelle et écologie reproductive des amphibiens et reptiles du forêt sèche tropicale du nord de la Colombie — UPTC, 2019"
+      },
+      "url": "https://doi.org/10.19053/978-958-660-341-6.6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Spanish scholarly chapter reports cryptic brown coloration and a darkening of calling males from field observations."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 16,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Allobates wayuu — The IUCN Red List of Threatened Species, 2017 assessment",
+        "fr": "Allobates wayuu — Liste rouge de l’UICN des espèces menacées, évaluation 2017"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T55166A85889561.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global category changed from Vulnerable to Least Concern in the 2017-3 assessment table."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 13,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "A tiny adult Allobates wayuu on the forest floor, naturalistic scientific field-guide view: smooth brown back, cream limbs, pale lips and cream belly with gray-brown flecks, dark flanks with pale dorsolateral stripes, dark bars on hind limbs, unwebbed fingers and partly webbed toes with expanded discs. Avoid bright poison-frog warning colors, tree-frog proportions or webbed hands. No scenery or labels.",
+  "uncertainties": [
+    "Male and female snout-to-vent length ranges overlap; no consulted source provided sex-specific body mass, body width or standing height.",
+    "The original species-description PDF is cited by the AMNH taxonomic reference but was unavailable from the journal host during this review; its reported measurements and morphological diagnosis are therefore attributed to that original description with this retrieval limitation recorded.",
+    "Species-specific field observations remain sparse; calling-related color change is reported as personal field observation in the Spanish scholarly chapter.",
+    "The 2017 IUCN assessment category is Least Concern, but a narrow documented range alone does not establish the species’ present population trend."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Bilingual profile checked against the AMNH amphibian taxonomic reference, the cited original description, Colombian park and biodiversity records, a Spanish scholarly chapter and the IUCN assessment table; measurement limits are explicit."
+}

@@ -1,0 +1,91 @@
+{
+  "id": "jynx_torquilla",
+  "scientific": "Jynx torquilla",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Wryneck",
+    "fr": "Torcol fourmilier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian wryneck is an unusual woodpecker that rarely climbs trees. It is named for its snake-like way of twisting its head, and it is the only European woodpecker to migrate over long distances.",
+      "fr": "Le torcol fourmilier est un pic atypique qui grimpe rarement aux arbres. Son nom vient de sa façon de tordre la tête comme un serpent, et c’est le seul pic européen à migrer sur de longues distances."
+    },
+    "identification": {
+      "en": "A slim bird 16–18 cm long, weighing about 33 g, with a wing near 90 mm. The plumage is delicately patterned in grey, brown and buff, with a dark band running from the nape onto the back and arrowhead-shaped marks on the creamy underparts. The bill is short and less dagger-like than other woodpeckers’.",
+      "fr": "Oiseau élancé de 16 à 18 cm, pesant environ 33 g, avec une aile voisine de 90 mm. Le plumage, finement dessiné de gris, de brun et de chamois, porte une bande sombre de la nuque jusqu’au dos et des marques en pointe de flèche sur le dessous crème. Le bec est court et moins en poignard que celui des autres pics."
+    },
+    "habitat": {
+      "en": "It is mainly a bird of grassland and open country. In Britain it was once found on commons, heathland, orchards, parkland and larger gardens of central and southern England, and it nests in existing holes, wall crevices, banks or nest boxes.",
+      "fr": "C’est surtout un oiseau de prairies et de milieux ouverts. En Grande-Bretagne, on le trouvait autrefois sur les communaux, les landes, les vergers, les parcs et les grands jardins du centre et du sud de l’Angleterre, et il niche dans des trous existants, des fissures de murs, des talus ou des nichoirs."
+    },
+    "diet": {
+      "en": "It eats almost entirely ants, which it collects on the ground, along with beetles and their larvae, moths, spiders and woodlice. It catches prey with its tongue and forages mostly by hopping on the ground with the tail raised.",
+      "fr": "Il mange presque exclusivement des fourmis, qu’il récolte au sol, ainsi que des coléoptères et leurs larves, des papillons de nuit, des araignées et des cloportes. Il capture ses proies avec la langue et cherche surtout sa nourriture en sautillant au sol, la queue relevée."
+    },
+    "behavior": {
+      "en": "Unlike other woodpeckers it seldom climbs trunks. It can turn its head nearly 180 degrees, and when disturbed at the nest its neck twists in all directions while it hisses; this snake-like display is thought to deter predators. It sometimes feigns death.",
+      "fr": "Contrairement aux autres pics, il grimpe rarement sur les troncs. Il peut tourner la tête presque à 180 degrés, et dérangé au nid, il tord le cou dans tous les sens en sifflant; cette parade de serpent est censée dissuader les prédateurs. Il fait parfois le mort."
+    },
+    "reproduction": {
+      "en": "It uses no nesting material. A clutch is typically 7–10 eggs (observed 5–12), incubated for 12–14 days, mainly by the female. The naked, helpless chicks fledge after 18–22 days, and there is usually one brood. Breeding typically starts at one year of age.",
+      "fr": "Il n’utilise aucun matériau de nid. Une ponte compte en général 7 à 10 œufs (de 5 à 12), couvés pendant 12 à 14 jours, surtout par la femelle. Les poussins, nus et sans défense, s’envolent après 18 à 22 jours, et il n’y a en général qu’une couvée. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "The wryneck depends on ant supplies and on ready-made cavities and crevices, as it builds no nest of its own. It migrates to tropical Africa and to southern Asia from Iran to the Indian subcontinent, and passes through Britain in spring and autumn.",
+      "fr": "Le torcol dépend des réserves de fourmis et de cavités toutes faites, car il ne construit pas de nid. Il migre vers l’Afrique tropicale et l’Asie du Sud, de l’Iran au sous-continent indien, et traverse la Grande-Bretagne au printemps et à l’automne."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern; the world population is estimated at up to 15 million and may be declining slightly. In Britain it has been lost as a breeder: the last confirmed breeding record was in 2002, and it is now a scarce passage migrant, mostly seen in August and September.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure; la population mondiale est estimée à 15 millions au plus et pourrait diminuer légèrement. En Grande-Bretagne, il a disparu comme nicheur : la dernière nidification confirmée date de 2002, et il n’y est plus qu’un migrateur de passage peu commun, vu surtout en août et en septembre."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wryneck — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Torcol fourmilier — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/wryneck",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "Mean weight 33.4 g, wing 90.3 mm; clutch typically 7–10 (5–12); incubation 12–14 days; fledging 18–22 days; breeding typically from age 1.",
+        "Last confirmed UK breeding 2002, now a rare passage migrant mainly in August and September; formerly on commons, heathland, orchards, parkland and larger gardens; IUCN Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wryneck — RSPB",
+        "fr": "Torcol fourmilier — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/wryneck",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Grey, brown and buff mottled with a dark band from the head onto the back; mainly grassland; almost entirely ants taken on the ground; rarely climbs trunks; turns its head like a snake, thought to deter predators.",
+        "Passes through Britain in spring and autumn between Scandinavia and Africa; no longer breeds; Schedule 1."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian wryneck — Wikipedia",
+        "fr": "Torcol fourmilier — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Eurasian_wryneck",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "16–18 cm; arrowhead-shaped underpart markings; diet of ants, beetles, moths, spiders and woodlice caught with the tongue; hissing and neck twisting at the nest; nests in existing holes without nesting material.",
+        "Wintering in tropical Africa and southern Asia; only European woodpecker making long migrations; world population up to 15 million, possibly slightly declining, Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO figures for clutch and chick development are mostly from historical British breeding; Wikipedia’s similar values (about 12 and 20 days) agree.",
+    "Habitat is summarised from several regions (grassland at RSPB, old British breeding sites at BTO, nest sites at Wikipedia); the species’ habitat varies across its wide range.",
+    "Dependence on pre-existing cavities is inferred from the cited nesting in existing holes and crevices."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); diet and behaviour from RSPB and Wikipedia; illustration to be checked by the owner."
+}

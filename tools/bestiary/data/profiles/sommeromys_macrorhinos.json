@@ -1,0 +1,163 @@
+{
+  "id": "sommeromys_macrorhinos",
+  "scientific": "Sommeromys macrorhinos",
+  "group": "mammals",
+  "name": {
+    "en": "Sommer’s Sulawesi rat",
+    "fr": "Rat de Sulawesi de Sommer"
+  },
+  "sections": {
+    "overview": {
+      "en": "Sommeromys macrorhinos is a little-known murid rodent endemic to the central highlands of Sulawesi, Indonesia.",
+      "fr": "Sommeromys macrorhinos est un rongeur muridé peu connu, endémique des hautes terres du centre de Sulawesi, en Indonésie."
+    },
+    "identification": {
+      "en": "Its notably elongated snout and slender build distinguish the genus from many other Sulawesi murids.",
+      "fr": "Son museau particulièrement allongé et sa silhouette gracile distinguent ce genre de nombreux autres Muridae de Sulawesi."
+    },
+    "habitat": {
+      "en": "It has been recorded in tropical montane forest between 1600 and 2600 metres.",
+      "fr": "Il a été observé en forêt tropicale montagnarde entre 1600 et 2600 mètres d’altitude."
+    },
+    "diet": {
+      "en": "The available species account describes it as insectivorous.",
+      "fr": "La fiche spécifique disponible le décrit comme insectivore."
+    },
+    "behavior": {
+      "en": "It is nocturnal and uses both the ground and vegetation.",
+      "fr": "Il est nocturne et utilise à la fois le sol et la végétation."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide no detailed account of its reproduction.",
+      "fr": "Les sources consultées ne donnent pas de description détaillée de sa reproduction."
+    },
+    "ecology": {
+      "en": "It is known from only a few mountain localities, and further surveys are needed to clarify its range and ecology.",
+      "fr": "Il n’est connu que de quelques localités de montagne ; des prospections supplémentaires sont nécessaires pour préciser son aire et son écologie."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports the latest global IUCN category as Near Threatened.",
+      "fr": "La Mammal Diversity Database rapporte comme dernière catégorie mondiale UICN « quasi menacée »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sommeromys macrorhinos — IUCN Red List assessment",
+        "fr": "Sommeromys macrorhinos — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T136642A22422120.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The IUCN account describes its specialized snout, insect diet and nocturnal, partly arboreal habits."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 14,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sommeromys macrorhinos — Mammal Diversity Database",
+        "fr": "Sommeromys macrorhinos — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003679/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "MDD reflects the 2024 IUCN reassessment as Near Threatened."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 9,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New records of two rarely encountered endemic rats from Gunung Gandangdewata — Treubia, BRIN",
+        "fr": "New records of two rarely encountered endemic rats from Gunung Gandangdewata — Treubia, BRIN"
+      },
+      "url": "https://ejournal.brin.go.id/treubia/article/view/10099",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "This Indonesian field paper documents additional specimens from several localities and elevations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 12,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sulawesi rodents — Biodiversity Heritage Library",
+        "fr": "Sulawesi rodents — Biodiversity Heritage Library"
+      },
+      "url": "https://field.biodiversitylibrary.org/bibliography/178501",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The original genus description notes the elongated rostrum and distinctive morphology."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 11,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN page contains a 2016 assessment record plus a newer 2024 category; this draft uses the newer category for status and the older account only for natural history."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; status follows MDD’s reported 2024 reassessment, while the IUCN natural-history account is older."
+}

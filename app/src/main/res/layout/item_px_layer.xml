@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/bg_px_selected_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="6dp"
+    android:paddingEnd="2dp">
+
+    <ImageView
+        android:id="@+id/layer_thumb"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/layer_name"
+            style="@style/PxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/layer_info"
+            style="@style/PxCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/layer_visible"
+        style="@style/PxIconButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_px_eye" />
+
+    <ImageButton
+        android:id="@+id/layer_lock"
+        style="@style/PxIconButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_px_unlock" />
+</LinearLayout>

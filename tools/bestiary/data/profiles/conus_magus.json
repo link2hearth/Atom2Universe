@@ -1,0 +1,185 @@
+{
+  "id": "conus_magus",
+  "scientific": "Conus magus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Magician’s Cone",
+    "fr": "Cône magicien"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Indo-Pacific cone snail is a predatory marine gastropod in family Conidae, whose members hunt with venomous radular teeth.",
+      "fr": "Ce cône indo-pacifique est un gastéropode marin prédateur de la famille des Conidae, dont les membres chassent avec des dents radulaires venimeuses."
+    },
+    "identification": {
+      "en": "Its conical, patterned shell can resemble that of Conus consors, and shell appearance alone may not reliably separate them.",
+      "fr": "Sa coquille conique et décorée peut ressembler à celle de Conus consors, et l’apparence seule ne permet pas toujours de les distinguer."
+    },
+    "habitat": {
+      "en": "It lives in shallow Indo-Pacific waters; museum specimens have been collected on sandy reef substrate in Indonesia.",
+      "fr": "Il vit dans les eaux peu profondes de l’Indo-Pacifique; des spécimens de musée ont été récoltés sur substrat sableux récifal en Indonésie."
+    },
+    "diet": {
+      "en": "Juveniles hunt polychaete worms, then shift to fish as adults, using a hooked radular tooth and paralytic venom peptides.",
+      "fr": "Les juvéniles chassent des vers polychètes, puis passent aux poissons adultes grâce à une dent radulaire crochue et des peptides paralysants."
+    },
+    "behavior": {
+      "en": "It injects venom through a hollow radular tooth; research documents different hunting behavior and venom mixtures in juveniles and adults.",
+      "fr": "Il injecte son venin avec une dent radulaire creuse; les recherches décrivent des chasses et mélanges de venins différents chez les jeunes et les adultes."
+    },
+    "reproduction": {
+      "en": "Females deposit egg capsules on hard surfaces, and laboratory-reared larvae swim and feed before settling and metamorphosing.",
+      "fr": "Les femelles déposent des capsules d’œufs sur des surfaces dures; les larves élevées en laboratoire nagent et s’alimentent avant de se fixer et de se métamorphoser."
+    },
+    "ecology": {
+      "en": "It is the type species of subgenus Pionoconus; adults hunt fish, while juveniles retain a worm-eating phase.",
+      "fr": "C’est l’espèce type du sous-genre Pionoconus; les adultes chassent les poissons, tandis que les juvéniles passent d’abord par une phase vermivore."
+    },
+    "conservation": {
+      "en": "The French SeaLifeBase record provides no verified global threat category, so this profile assigns none.",
+      "fr": "La fiche française de SeaLifeBase ne fournit pas de catégorie mondiale de menace vérifiée; cette fiche n’en attribue donc aucune."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Coordinated adaptations define the ontogenetic shift from worm- to fish-hunting in a venomous cone snail — Nature Communications",
+        "fr": "Adaptations coordonnées du passage de la chasse aux vers à la chasse aux poissons chez un cône venimeux — Nature Communications"
+      },
+      "url": "https://www.nature.com/articles/s41467-023-38924-5",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "2023 experiment documents prey shift, venom apparatus, egg capsules, larval stages and ziconotide."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 13,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conus magus — World Register of Marine Species",
+        "fr": "Conus magus — Registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Conus+magus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "WoRMS records accepted marine nomenclature and family placement."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 8,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conus magus specimen — Smithsonian National Museum of Natural History",
+        "fr": "Spécimen de Conus magus — Muséum national d’histoire naturelle du Smithsonian"
+      },
+      "url": "https://www.si.edu/object/conus-magus%3Anmnhinvertebratezoology_463362",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Smithsonian record documents collection on sandy reef substrate in Indonesia."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 10,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conus magus — SeaLifeBase, French interface",
+        "fr": "Conus magus — SeaLifeBase, interface française"
+      },
+      "url": "https://www.sealifebase.ca/summary/SpeciesSummary.php?id=106230&lang=french",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The French-language summary exposes ecology data but does not provide a verified global threat category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 15,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pionoconus: a piscivorous subgenus of Conus gastropods",
+        "fr": "Pionoconus : un sous-genre piscivore des gastéropodes Conus"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12266717/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Review explains that C. magus shells resemble C. consors, although genetic data distinguish them; Pionoconus is fish-hunting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 17,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conus consors resembles C. magus in shell form but molecular work distinguishes them; no current global conservation assessment was confirmed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined a peer-reviewed 2023 life-history experiment with WoRMS taxonomy, museum occurrence data and malacological references; separated medicinal significance from conservation evidence."
+}

@@ -1,0 +1,410 @@
+{
+  "id": "south_american_coati",
+  "scientific": "Nasua nasua",
+  "group": "mammals",
+  "name": {
+    "en": "South American coati",
+    "fr": "Coati roux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The South American coati is a procyonid mammal of tropical and subtropical South America. Its daily life combines solitary feeding, group travel by females and young, and seasonal reproduction.",
+      "fr": "Le coati roux est un mammifère procyonidé d’Amérique du Sud tropicale et subtropicale. Sa vie quotidienne associe recherche solitaire de nourriture, déplacements en bandes de femelles et de jeunes, et reproduction saisonnière."
+    },
+    "identification": {
+      "en": "An adult measures about 41–67 cm from head to rump, with a separate 32–69 cm tail; reported mass is 3–6 kg. In a wild adult sample from three parks in Minas Gerais, Brazil, males averaged 4.36 kg and females 3.53 kg; this difference was not statistically significant. Fur ranges from grey-brown to rusty red, and the brown, flexible muzzle turns slightly upward. The ringed tail balances the animal but cannot grasp; five clawed digits and strong forelegs dig through soil and rotting wood. Mobile ankle joints let it turn its hind feet outward to climb down a trunk headfirst.",
+      "fr": "L’adulte mesure environ 41 à 67 cm de la tête au croupion, auxquels s’ajoutent 32 à 69 cm de queue ; la masse rapportée est de 3 à 6 kg. Dans un échantillon d’adultes sauvages de trois parcs du Minas Gerais, au Brésil, les mâles pesaient en moyenne 4,36 kg contre 3,53 kg pour les femelles ; cette différence n’était pas statistiquement significative. Le pelage va du brun grisâtre au roux ; le museau brun, souple, est légèrement retroussé. La queue annelée aide à garder l’équilibre sans saisir les branches ; cinq doigts griffus et de puissants membres antérieurs fouillent terre et bois pourri. Des chevilles mobiles orientent les pattes arrière vers l’extérieur, ce qui permet de descendre un tronc la tête la première."
+    },
+    "habitat": {
+      "en": "The range stretches from Colombia and Venezuela south through Ecuador and Brazil to Uruguay and northern Argentina, reaching about 2,500 m on Andean slopes. Coatis use evergreen and deciduous forests, cloud forests, riverine woods, dry scrub, Chaco, and Cerrado, with forest cover remaining central. In an urban Cerrado park in Brazil, seasonal food availability shifted coatis’ movements and daily activity.",
+      "fr": "L’aire s’étend de la Colombie et du Venezuela vers le sud, par l’Équateur et le Brésil, jusqu’à l’Uruguay et au nord de l’Argentine ; sur les versants andins, elle atteint environ 2 500 m. Le coati fréquente forêts sempervirentes ou décidues, forêts de nuages, galeries forestières, broussailles sèches, Chaco et Cerrado, tout en restant lié au couvert boisé. Dans un parc urbain du Cerrado brésilien, les ressources saisonnières modifiaient ses déplacements et son activité quotidienne."
+    },
+    "diet": {
+      "en": "Fruits and invertebrates are major foods, but their importance shifts with season and local availability. In Paraná, 426 scats contained frequent fruit, especially figs and Prunus brasiliensis, as well as leaves and beetles; winter samples held more invertebrates, plant matter, and vertebrate prey. It noses beneath leaf litter and claws into rotting wood for insects, larvae, ants, and termites, while also searching trees for fruit. Eggs, small vertebrates, and carrion broaden the menu when available. At Brazilian visitor sites, processed food and refuse have also appeared in coati diets.",
+      "fr": "Fruits et invertébrés sont des aliments majeurs, mais leur importance varie selon les saisons et les ressources locales. Dans le Paraná, 426 fèces contenaient souvent des fruits, notamment des figues et Prunus brasiliensis, ainsi que des feuilles et des coléoptères ; les échantillons d’hiver comprenaient davantage d’invertébrés, de matière végétale et de proies vertébrées. Son museau passe sous la litière et ses griffes fouillent le bois pourri à la recherche d’insectes, de larves, de fourmis et de termites ; il cherche aussi des fruits dans les arbres. Œufs, petits vertébrés et charognes complètent le régime lorsque ces aliments sont disponibles. Dans des sites de visite brésiliens, les fèces ont aussi révélé aliments transformés et déchets."
+    },
+    "behavior": {
+      "en": "Coatis are chiefly diurnal, foraging mostly on the ground but climbing to sleep, nest, and move through trees. Females and immature animals travel in bands, while adult males often live alone; a field study at Iguazú, Argentina, also recorded males staying with bands year-round. In a Cerrado population, seasonal food supply shifted movements and daily activity, showing that group life and space use are flexible. Members keep contact with calls and touch, groom one another, and retreat into trees or flee over ground when disturbed.",
+      "fr": "Le coati est surtout diurne : il cherche principalement sa nourriture au sol, mais grimpe pour dormir, nicher et circuler dans les arbres. Les femelles et les jeunes se déplacent en bandes, tandis que les mâles adultes vivent souvent seuls ; une étude de terrain à Iguazú, en Argentine, a aussi signalé des mâles présents toute l’année auprès de groupes. Dans une population du Cerrado, les ressources saisonnières modifiaient les déplacements et l’activité quotidienne, signe d’une organisation souple. Les individus gardent le contact par des cris et le toucher, se toilettent mutuellement et, dérangés, gagnent les arbres ou fuient au sol."
+    },
+    "reproduction": {
+      "en": "Breeding is seasonal; solitary males may temporarily join female bands to mate. Females may become receptive within a synchronized one- to two-week period; males compete, while genetic work has found some young fathered by males from outside the group. After mating, pregnant females build tree nests and raise the litter apart from the band. Gestation lasts about 74–77 days, with three to seven young; mothers reunite with the band after five or six weeks and nurse until weaning near four months. Young open their eyes at around ten days, walk at three to four weeks, and climb soon afterward; females mature near two years and males around three.",
+      "fr": "La reproduction est saisonnière ; des mâles solitaires peuvent rejoindre temporairement les bandes de femelles pour s’accoupler. Les femelles peuvent devenir réceptives pendant une période synchronisée d’une à deux semaines ; les mâles rivalisent, tandis que des analyses génétiques attribuent certains petits à des mâles extérieurs au groupe. Après l’accouplement, les femelles gestantes construisent un nid dans un arbre et élèvent la portée à l’écart. La gestation dure environ 74 à 77 jours et donne trois à sept petits ; la mère rejoint la bande après cinq ou six semaines et allaite jusqu’au sevrage, vers quatre mois. Les petits ouvrent les yeux vers dix jours, marchent à trois ou quatre semaines et grimpent peu après ; les femelles atteignent la maturité vers deux ans et les mâles autour de trois ans."
+    },
+    "ecology": {
+      "en": "The coati consumes litter-dwelling invertebrates and is itself prey for large cats, raptors, and boas. Fruit-eating also moves seeds away from parent plants: a 33-month study in southeastern Brazil recorded fruits from 53 plant species and seeds from at least 49 in coati diets and scats. Gut passage left germination unchanged for most tested plants, but improved it for one species after pulp removal. Seed dispersal by coatis may help connect forest patches and support plant recruitment, alongside the partly overlapping services of other fruit-eating animals.",
+      "fr": "Le coati mange des invertébrés de la litière et devient lui-même la proie de grands félins, de rapaces et de boas. En mangeant des fruits, il transporte aussi les graines loin des plantes mères : pendant 33 mois d’étude dans le sud-est du Brésil, son régime a révélé des fruits de 53 espèces végétales et des graines d’au moins 49 espèces. Pour la plupart des plantes testées, le passage digestif ne modifiait pas la germination, mais l’améliorait chez une espèce après retrait de la pulpe. La dispersion des graines par les coatis pourrait contribuer aux échanges entre fragments forestiers et au renouvellement des plantes, aux côtés d’autres animaux frugivores aux rôles en partie similaires."
+    },
+    "conservation": {
+      "en": "The IUCN’s global Red List assessment, published in 2016 and conducted in 2015, classified Nasua nasua as Least Concern. Its wide range and presence in protected areas support that status, though habitat loss and hunting threaten coatis locally. Near settlements, coatis may raid crops or take poultry. Studies at Brazilian visitor sites have also found human food and refuse in their diets, evidence that contact can alter foraging. Nasua nasua solitaria is listed in CITES Appendix III at Uruguay’s request.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN, publiée en 2016 après une évaluation menée en 2015, classe Nasua nasua en catégorie « Préoccupation mineure ». Sa vaste aire et sa présence dans des espaces protégés étayent ce statut, même si perte d’habitat et chasse menacent localement les coatis. Près des villages, ils peuvent piller des cultures ou prendre des volailles. Des études menées dans des sites de visite brésiliens ont aussi trouvé nourriture humaine et déchets dans leur régime, preuve que le contact peut modifier leur recherche alimentaire. Nasua nasua solitaria est inscrite à l’Annexe III de la CITES à la demande de l’Uruguay."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nasua nasua species monograph",
+        "fr": "Monographie de Nasua nasua"
+      },
+      "url": "https://doi.org/10.2307/3504444",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Coat, ringed tail, claws, ankle mobility, and contact calls."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 9,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Body weight of wild coatis eating discarded food",
+        "fr": "Poids de coatis sauvages consommant des déchets alimentaires"
+      },
+      "url": "https://new.scielo.br/j/cr/a/YZkmrvJLTrNBFpkFYdqk4pw/abstract/?ilang=en&lang=en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult wild-coati sample reported different male and female mean masses."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 10,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "South American coati account",
+        "fr": "Fiche du coati roux"
+      },
+      "url": "https://animaldiversity.org/accounts/Nasua_nasua/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Adult dimensions, gestation, litter size, juvenile development, and maturity."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 9,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nasua coati account",
+        "fr": "Fiche du genre Nasua"
+      },
+      "url": "https://animaldiversity.org/accounts/Nasua/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Range, food acquisition, prey, human-related impacts."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 6,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ring-tailed coati",
+        "fr": "Coati roux"
+      },
+      "url": "https://www.mnhn.fr/en/ring-tailed-coati",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Museum profile describes forest life, diet, and maternal nesting."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 9,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet of coatis in Paraná, Brazil",
+        "fr": "Régime alimentaire des coatis dans le Paraná, Brésil"
+      },
+      "url": "https://hdl.handle.net/1884/10178",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "426 scats; fruit predominated and winter samples included other foods."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 10,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coati diets at public recreation sites in Brazil",
+        "fr": "Régime des coatis dans des sites brésiliens ouverts au public"
+      },
+      "url": "https://locus.ufv.br/items/ed26e4d1-4d05-462e-8b4a-b44b731a878a",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Public-site samples included processed food and refuse in diets."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 9,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Group composition and activity patterns in Cerrado fragments",
+        "fr": "Composition des groupes et activité dans des fragments du Cerrado"
+      },
+      "url": "https://www.scielo.br/j/bjb/a/WmmDkL4tcJKMHYQ5nw8ThwQ/?lang=en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Brazilian Cerrado population showed seasonal movement and activity shifts."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 9,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sociality and reproductive success in ring-tailed coatis",
+        "fr": "Vie sociale et succès reproducteur chez les coatis à queue annelée"
+      },
+      "url": "https://repository.si.edu/server/api/core/bitstreams/a6848384-0a4a-4654-8186-033630b28844/content",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Seasonal mating; band males sired most young, with some extra-group paternity."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 11,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seed dispersal by coatis in southeastern Brazil",
+        "fr": "Dispersion des graines par les coatis dans le sud-est du Brésil"
+      },
+      "url": "https://doi.org/10.1016/j.actao.2007.03.001",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "33-month study found fruit use and seed dispersal across many plant species."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 12,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Global Red List assessment of Nasua nasua",
+        "fr": "Évaluation mondiale de Nasua nasua sur la Liste rouge"
+      },
+      "url": "https://www.iucnredlist.org/species/41684/45216227",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Global Least Concern assessment published 2016; assessment year 2015."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 9,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "I-CITES official taxon record — French government",
+        "fr": "Fiche officielle I-CITES — gouvernement français"
+      },
+      "url": "https://cites.application.developpement-durable.gouv.fr/viewtaxon.do?id=4265",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Appendix III listing at Uruguay’s request applies to Nasua nasua solitaria."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 11,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Illustration supplied and approved separately; no new image generated.",
+  "uncertainties": [
+    "Body and tail measurements are broad reference ranges; adults vary by sex and population, and the cited account does not define one universal mean.",
+    "The IUCN record was accessible through its indexed record and cited DOI; its current page blocked direct retrieval. The 2016 publication and 2015 assessment year are corroborated, but the exact assessment day was not independently verified.",
+    "Seasonal timing and group composition vary among populations; Brazilian field studies show that the classic female-band and solitary-male pattern is not universal."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; nonsignificant local mass comparison identified, year-round resident male study correctly located in Iguazu Argentina, seasonal male joining qualified and forest-patch connectivity presented as potential. Native plain text restored. Current CITES listing cross-checked in the official French government taxon database; international Appendix III request wording clarified."
+}

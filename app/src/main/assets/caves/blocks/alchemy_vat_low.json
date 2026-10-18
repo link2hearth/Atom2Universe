@@ -1,0 +1,17 @@
+{
+  "id": 2680,
+  "name": "alchemy_vat_low",
+  "texture_top": "cave_ruins:vat_low_top",
+  "texture_side": "cave_ruins:vat_low_side",
+  "texture_bottom": "cave_ruins:vat_top",
+  "color": "#57985D",
+  "hardness": 1.5,
+  "light_emission": 4,
+  "drop": "alchemy_vat_low",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

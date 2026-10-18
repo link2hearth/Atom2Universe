@@ -1,0 +1,91 @@
+{
+  "id": "northern_pintail",
+  "scientific": "Anas acuta",
+  "group": "birds",
+  "name": {
+    "en": "Northern Pintail",
+    "fr": "Canard pilet"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern pintail is an elegant dabbling duck, slightly bigger than a Mallard, with a long neck and a small head. In Britain it is mainly a winter visitor, and breeding there is rare.",
+      "fr": "Le canard pilet est un élégant canard de surface, un peu plus grand que le colvert, au long cou et à la petite tête. En Grande-Bretagne, c’est surtout un visiteur d’hiver, et sa reproduction y est rare."
+    },
+    "identification": {
+      "en": "In Britain adult males average about 1,030 g with a wing of 277 mm; females are smaller, about 819 g and 259 mm. Both sexes have a long, slender, dark grey bill. The male has a chocolate-brown head, a creamy throat and a long central tail feather of up to about 10 cm. In flight the curved back, pointed wings and tapering tail are distinctive.",
+      "fr": "En Grande-Bretagne, les mâles adultes pèsent en moyenne environ 1 030 g, avec une aile de 277 mm ; les femelles sont plus petites, environ 819 g et 259 mm. Les deux sexes ont un long bec fin gris foncé. Le mâle a la tête brun chocolat, la gorge crème et une longue plume centrale de queue pouvant atteindre environ 10 cm. En vol, le dos arqué, les ailes pointues et la queue effilée sont caractéristiques."
+    },
+    "habitat": {
+      "en": "In winter it favours sheltered coasts, grazing marshes, river floodplains and estuaries. Breeding in Britain is localised, mainly on the coast of East Anglia and in the northern and western isles of Scotland. Elsewhere it uses marshes, ponds, lakes and flooded grain fields.",
+      "fr": "En hiver, il fréquente les côtes abritées, les prairies humides pâturées, les plaines inondables et les estuaires. La reproduction en Grande-Bretagne est localisée, surtout sur la côte de l’East Anglia et dans les îles du nord et de l’ouest de l’Écosse. Ailleurs, il utilise les marais, les étangs, les lacs et les champs de céréales inondés."
+    },
+    "diet": {
+      "en": "The pintail is omnivorous. It eats grain and wild seeds, aquatic plant roots, insects, small crustaceans and snails, reaching food in deeper water by upending, helped by its longer neck.",
+      "fr": "Le canard pilet est omnivore. Il mange des grains et des graines sauvages, des racines de plantes aquatiques, des insectes, de petits crustacés et des escargots, atteignant sa nourriture en eau plus profonde en basculant, aidé par son cou plus long."
+    },
+    "behavior": {
+      "en": "It is social and migratory, often mixing with other waterfowl, and can cover long distances quickly. In Britain it is a locally common winter visitor, present from late August to May. In courtship the males whistle and display to the females.",
+      "fr": "Il est social et migrateur, se mêle souvent à d’autres oiseaux d’eau et peut parcourir de longues distances rapidement. En Grande-Bretagne, c’est un visiteur d’hiver localement commun, présent de fin août à mai. Pendant la parade, les mâles sifflent et se montrent devant les femelles."
+    },
+    "reproduction": {
+      "en": "In Britain a pair raises one brood a year. The female lays typically 7–9 eggs and incubates them alone for 22–24 days. The precocial ducklings feed themselves soon after hatching and fledge after roughly 40–45 days. Breeding usually starts at one year of age.",
+      "fr": "En Grande-Bretagne, un couple élève une seule nichée par an. La femelle pond en général 7 à 9 œufs et les couve seule pendant 22 à 24 jours. Les canetons, nidifuges, se nourrissent seuls peu après l’éclosion et prennent leur envol après environ 40 à 45 jours. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "The pintail feeds on seeds, plants and small invertebrates and is itself prey for foxes, coyotes and other predators; crows, gulls, skunks and foxes take its eggs. It is a quarry species in winter, though in Britain shooting does not appear to affect its population status.",
+      "fr": "Le canard pilet se nourrit de graines, de plantes et de petits invertébrés, et il est lui-même la proie des renards, des coyotes et d’autres prédateurs ; corneilles, goélands, mouffettes et renards pillent ses œufs. C’est une espèce chassée en hiver, mais en Grande-Bretagne la chasse ne semble pas influencer l’état de sa population."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, but it is Vulnerable in Europe and Amber-listed in the UK. About 27 pairs bred in the UK in 2013–17 and some 20,000 birds winter there; the winter population fell by 6% between 1998 and 2023. The typical life expectancy is about three years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle est vulnérable en Europe et sur la liste orange du Royaume-Uni. Environ 27 couples ont niché au Royaume-Uni en 2013-2017 et quelque 20 000 oiseaux y hivernent ; la population hivernale a baissé de 6 % entre 1998 et 2023. L’espérance de vie typique est d’environ trois ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pintail — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Canard pilet — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/pintail",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Males 1030 g, wing 276.8 mm; females 819 g, wing 259.4 mm; 7–9 eggs, incubation 22–24 days, fledging 40–45 days; UK breeding 27 pairs (2013–17), winter 20,000 (2012–17), winter -6% 1998–2023.",
+        "Winter visitors present late August to May; IUCN Least Concern, Europe Vulnerable, UK Amber; life expectancy about 3 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pintail — RSPB",
+        "fr": "Canard pilet — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/pintail",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "ecology", "conservation"],
+      "facts": [
+        "Slightly bigger than a Mallard, long-necked and small-headed; curved back, pointed wings and tapering tail in flight.",
+        "A quarry species; unlike in parts of Europe, shooting does not appear to affect its UK population status; Amber list."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anas acuta — Animal Diversity Web, University of Michigan",
+        "fr": "Anas acuta — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Anas_acuta/",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "behavior", "ecology"],
+      "facts": [
+        "Omnivorous: grain, wild seeds, insects, crustaceans, snails, aquatic plant roots reached by upending; long central tail feather up to about 10 cm.",
+        "Males whistle and display in courtship; eggs taken by crows, gulls, skunks and foxes; chicks fledge at about 46–57 days (North American data)."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Fledging age is 40–45 days in BTO (Britain) but 46–57 days in Animal Diversity Web (mostly North American data); the British figure was used.",
+    "Animal Diversity Web gives a very high average lifespan that conflicts with BTO (life expectancy about 3 years, record 15 years 11 months); it was not used.",
+    "Predator names (coyotes, skunks) come from North American data and apply only partly to Britain."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW and RSPB used for qualitative facts; illustration to be checked by the owner."
+}

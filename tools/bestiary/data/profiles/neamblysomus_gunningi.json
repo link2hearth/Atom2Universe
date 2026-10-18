@@ -1,0 +1,142 @@
+{
+  "id": "neamblysomus_gunningi",
+  "scientific": "Neamblysomus gunningi",
+  "group": "mammals",
+  "name": {
+    "en": "Gunning’s golden mole",
+    "fr": "Taupe dorée de Gunning"
+  },
+  "sections": {
+    "overview": {
+      "en": "Gunning’s golden mole is a South African member of the golden mole family, Chrysochloridae.",
+      "fr": "La taupe dorée de Gunning est un représentant sud-africain de la famille des taupes dorées, les Chrysochloridae."
+    },
+    "identification": {
+      "en": "It is one of two species in the genus Neamblysomus; published species-specific descriptions are sparse.",
+      "fr": "C’est l’une des deux espèces du genre Neamblysomus ; les descriptions détaillées propres à cette espèce sont rares."
+    },
+    "habitat": {
+      "en": "The species is known from Limpopo Province in northeastern South Africa, where it inhabits montane forest and grassland.",
+      "fr": "L’espèce est connue de la province du Limpopo, dans le nord-est de l’Afrique du Sud, où elle fréquente les forêts et prairies de montagne."
+    },
+    "diet": {
+      "en": "The sources consulted provide too little species-specific evidence to describe its diet reliably.",
+      "fr": "Les sources consultées apportent trop peu de données propres à l’espèce pour décrire son régime alimentaire avec fiabilité."
+    },
+    "behavior": {
+      "en": "Like other golden moles, it is adapted to a largely subterranean, burrowing way of life.",
+      "fr": "Comme les autres taupes dorées, elle est adaptée à un mode de vie largement souterrain et fouisseur."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive observations were not established in the sources consulted.",
+      "fr": "Les sources consultées ne permettent pas d’établir des observations propres à sa reproduction."
+    },
+    "ecology": {
+      "en": "Its restricted range links the species to montane habitats in a region where golden moles face increasing habitat degradation.",
+      "fr": "Son aire restreinte associe l’espèce aux milieux montagnards d’une région où les taupes dorées subissent une dégradation croissante de leur habitat."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports an Endangered IUCN assessment from 2024; the limited range makes habitat change a conservation concern.",
+      "fr": "La Mammal Diversity Database rapporte une évaluation UICN de 2024 classant l’espèce En danger ; son aire limitée rend les changements d’habitat préoccupants pour sa conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Neamblysomus gunningi — Mammal Diversity Database",
+        "fr": "Neamblysomus gunningi — Base de données sur la diversité des mammifères"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000473/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The database accepts Neamblysomus gunningi, records South Africa and Limpopo as its distribution and type locality, and lists an Endangered IUCN status based on the 2024 assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 27,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Golden Moles — IUCN/SSC Afrotheria Specialist Group",
+        "fr": "Taupes dorées — Groupe de spécialistes Afrotheria de l’UICN/SSC"
+      },
+      "url": "https://afrotheria.net/golden_moles/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The specialist group describes golden moles as a southern African group with subterranean ecology and reports habitat degradation from human activities as a conservation pressure on threatened species."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 28,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Mammals of the Southern African Subregion — Cambridge University Press",
+        "fr": "Les mammifères de la sous-région d’Afrique australe — Cambridge University Press"
+      },
+      "url": "https://api.pageplace.de/preview/DT0400.9781107299559_A23760665/preview-9781107299559_A23760665.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The regional mammal reference identifies montane forest and grassland as habitat for Neamblysomus gunningi."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific information on diet, behavior, reproduction, abundance and local threats is limited; genus- and family-level ecology should not be treated as a complete species account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked current mammal taxonomy and IUCN status with the IUCN/SSC Afrotheria specialist group and a regional Cambridge mammal reference. Kept diet and reproduction brief because species-level evidence was limited."
+}

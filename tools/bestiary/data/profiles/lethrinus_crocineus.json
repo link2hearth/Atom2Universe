@@ -1,0 +1,170 @@
+{
+  "id": "lethrinus_crocineus",
+  "scientific": "Lethrinus crocineus",
+  "group": "fish",
+  "name": {
+    "en": "Yellowtail emperor",
+    "fr": "Empereur à queue jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus crocineus Smith, 1959 is an emperor fish of the western Indian Ocean, recorded from East Africa and nearby islands east to Sri Lanka.",
+      "fr": "Lethrinus crocineus Smith, 1959 est un empereur de l’ouest de l’océan Indien, signalé en Afrique orientale et dans les îles voisines jusqu’au Sri Lanka."
+    },
+    "identification": {
+      "en": "It is tan to grey, often with dark scale bases and reddish or yellowish fin margins; the South African species account reports a maximum length of about 55 cm.",
+      "fr": "Il est beige à gris, souvent avec la base des écailles sombre et les bords des nageoires rougeâtres ou jaunâtres ; la fiche sud-africaine indique une longueur maximale d’environ 55 cm."
+    },
+    "habitat": {
+      "en": "It occurs on reefs and nearby sandy grounds, including deeper reefs, and is reported to about 150 m in the western Indian Ocean.",
+      "fr": "Il fréquente les récifs et les fonds sableux voisins, y compris les récifs profonds, et est signalé jusqu’à environ 150 m dans l’ouest de l’océan Indien."
+    },
+    "diet": {
+      "en": "Published accounts describe a fish-and-crustacean diet; one regional linefish review says the details remain little known.",
+      "fr": "Les comptes rendus publiés décrivent un régime de poissons et de crustacés ; une synthèse régionale précise que son alimentation reste peu connue."
+    },
+    "behavior": {
+      "en": "FishBase describes it as solitary in coastal trawling grounds and coral-reef areas.",
+      "fr": "FishBase le décrit comme solitaire dans les zones côtières chalutées et les secteurs de récifs coralliens."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted do not establish a spawning season for this emperor.",
+      "fr": "Les comptes rendus consultés ne déterminent pas de saison de reproduction pour cet empereur."
+    },
+    "ecology": {
+      "en": "Older accounts sometimes treated it as Lethrinus mahsena, but the FAO catalogue distinguishes the two by consistent scale-count differences.",
+      "fr": "Des travaux anciens l’ont parfois confondu avec Lethrinus mahsena, mais le catalogue de la FAO distingue les deux par des différences constantes dans le nombre d’écailles."
+    },
+    "conservation": {
+      "en": "FishBase lists a 2018 IUCN assessment of Least Concern; this is a dated assessment, not a measure of present local abundance.",
+      "fr": "FishBase indique une évaluation UICN de 2018 en préoccupation mineure ; il s’agit d’une évaluation datée, pas d’une mesure de l’abondance locale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus crocineus — FishBase",
+        "fr": "Lethrinus crocineus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lethrinus-crocineus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the western Indian Ocean range, solitary occurrence in coastal trawling grounds and reefs, historical confusion with L. mahsena, and Least Concern assessment dated 21 August 2018."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 28,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus crocineus — Coastal Fishes of the Western Indian Ocean, vol. 3",
+        "fr": "Lethrinus crocineus — Poissons côtiers de l’océan Indien occidental, vol. 3"
+      },
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_3_text.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "SAIAB reports range, diagnostic coloration, reef and sand habitat, fish and crustacean prey, and a regional maximum length of 55 cm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 21,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus crocineus — FAO species identification sheet",
+        "fr": "Lethrinus crocineus — fiche d’identification FAO"
+      },
+      "url": "https://www.fao.org/4/ad468e/AD468eFV.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The FAO identification sheet describes identification characters and its Indian Ocean fishery context; its French vernacular-name list confirms that FAO supplies multilingual names for lethrinids."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 25,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Southern African Marine Linefish Species Profiles — Lethrinus crocineus",
+        "fr": "Fiches des poissons marins de ligne d’Afrique australe — Lethrinus crocineus"
+      },
+      "url": "https://www.oritag.org.za/Content/UserContent/documents/Southern_African_Marine_Linefish_Species_Profiles.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "A 2013 regional review says reproductive style is unknown in its reviewed data."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 13,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published sources disagree on the maximum size (about 45 cm in the FAO 1989 catalogue versus 55 cm in the SAIAB regional account); this profile uses the newer regional account and does not infer a trend.",
+    "Species-specific reproductive information remains sparse in the consulted regional profile."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FAO, SAIAB and FishBase with a regional linefish profile; kept maximum length and reproduction claims explicit about source and limits."
+}

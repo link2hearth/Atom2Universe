@@ -1,0 +1,166 @@
+{
+  "id": "psednos_melanocephalus",
+  "scientific": "Psednos melanocephalus",
+  "group": "fish",
+  "name": {
+    "en": "Blackhead snailfish",
+    "fr": "Limace de mer à tête noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "A marine Liparidae snailfish known from the western North Atlantic south of Greenland.",
+      "fr": "Limace de mer marine de la famille des Liparidés, connue dans l’Atlantique Nord-Ouest au sud du Groenland."
+    },
+    "identification": {
+      "en": "Its prominent dark head and triangular opercular flap are noted in the species description.",
+      "fr": "La description de l’espèce relève sa tête sombre marquée et son opercule en forme de triangle."
+    },
+    "habitat": {
+      "en": "It is associated with deep water, although reported sampling depths do not establish a full habitat range.",
+      "fr": "Elle est associée aux eaux profondes, mais les profondeurs d’échantillonnage ne définissent pas toute son amplitude d’habitat."
+    },
+    "diet": {
+      "en": "The consulted accounts do not document its diet.",
+      "fr": "Les sources consultées ne documentent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "The consulted accounts give no species-specific behavior.",
+      "fr": "Les sources consultées ne décrivent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "No reproductive observations are reported in the consulted accounts.",
+      "fr": "Les sources consultées ne rapportent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Records are few; a Greenland checklist describes it as very rare and pelagic. P. mirabilis is another western North Atlantic congener; its dark head and belly contrast with the blackish head noted for this species.",
+      "fr": "Les données sont peu nombreuses ; une liste du Groenland la qualifie de très rare et pélagique. P. mirabilis est un autre congénère de l’Atlantique Nord-Ouest ; sa tête et son ventre sombres contrastent avec la tête noirâtre décrite ici."
+    },
+    "conservation": {
+      "en": "The consulted sources do not provide a current conservation assessment.",
+      "fr": "Les sources consultées ne fournissent pas d’évaluation actuelle de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59794",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase places the species south of Greenland, describes its dark head and deep-water association, and does not list an IUCN evaluation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 21,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Checklist of the fish fauna of Greenland waters — Zootaxa",
+        "fr": "Checklist of the fish fauna of Greenland waters — Zootaxa"
+      },
+      "url": "https://www.biotaxa.org/Zootaxa/article/download/zootaxa.2378.1.1/36742",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The checklist reports few Greenland records and describes the species as very rare and pelagic; its entry has no species-specific behavior or reproduction account."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 24,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — Psednos taxonomic search",
+        "fr": "ITIS — Psednos taxonomic search"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova%2C+2001",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Psednos melanocephalus Chernova and Stein, 2002 among valid species."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos mirabilis species summary",
+        "fr": "FishBase — résumé de Psednos mirabilis"
+      },
+      "url": "https://www.fishbase.se/summary/59954",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos mirabilis as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 14,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Deep trawl or midwater capture depths are not presented as the fish’s complete vertical range. The French common name is a descriptive translation, not a verified standardized vernacular."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

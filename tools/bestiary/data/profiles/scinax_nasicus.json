@@ -1,0 +1,164 @@
+{
+  "id": "scinax_nasicus",
+  "scientific": "Scinax nasicus",
+  "group": "amphibians",
+  "name": {
+    "en": "Lesser snouted treefrog",
+    "fr": "Rainette à petit museau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Lesser Snouted Treefrog is widespread in the southern part of South America, from Bolivia and Brazil to Paraguay, Uruguay and Argentina.",
+      "fr": "La Rainette à petit museau est largement répartie dans le sud de l’Amérique du Sud, de la Bolivie et du Brésil au Paraguay, à l’Uruguay et à l’Argentine."
+    },
+    "identification": {
+      "en": "It has a flattened, triangular snout, prominent eyes and a variable pale dorsal pattern.",
+      "fr": "Elle a le museau triangulaire aplati, les yeux proéminents et un motif dorsal clair variable."
+    },
+    "habitat": {
+      "en": "It uses open and wooded habitats, including altered areas, often near water.",
+      "fr": "Elle fréquente des milieux ouverts ou boisés, même modifiés, souvent près de l’eau."
+    },
+    "diet": {
+      "en": "Adult diet is not detailed in the sources reviewed.",
+      "fr": "Les sources consultées ne détaillent pas son régime adulte."
+    },
+    "behavior": {
+      "en": "Males call from branches and shrubs and may shelter under bark near water.",
+      "fr": "Les mâles chantent depuis les branches et arbustes et peuvent s’abriter sous l’écorce près de l’eau."
+    },
+    "reproduction": {
+      "en": "It lays eggs in water, where tadpoles develop; breeding seasons vary among populations.",
+      "fr": "Elle pond dans l’eau où se développent les têtards; la saison varie selon les populations."
+    },
+    "ecology": {
+      "en": "In Corrientes, Argentina, it was recorded as a prolonged breeder, while other studies report different seasonal patterns in other regions.",
+      "fr": "À Corrientes, en Argentine, elle a été décrite comme une reproductrice à période prolongée, tandis que d’autres études signalent des rythmes saisonniers différents ailleurs."
+    },
+    "conservation": {
+      "en": "The Argentine biodiversity information system reports Least Concern globally and not threatened under national assessments; these categories apply at different scales.",
+      "fr": "Le système argentin d’information sur la biodiversité rapporte le statut mondial Préoccupation mineure et des évaluations nationales non menacées; ces catégories concernent des échelles différentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scinax nasicus — Amphibian Species of the World",
+        "fr": "Scinax nasicus — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-nasicus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The AMNH account supports the broad South American range and recognized species name."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 13,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scinax nasicus — Argentine National Parks Biodiversity Information System",
+        "fr": "Scinax nasicus — Système d’information sur la biodiversité des parcs nationaux argentins"
+      },
+      "url": "https://sib.gob.ar/ficha.php?especie=ANIMALIA%2AScinax%2Anasicus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish species account describes morphology, habitat, calling, egg placement and conservation; it gives no adult diet account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 18,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parasites and reproductive traits of Scinax nasicus in a South American subtropical area",
+        "fr": "Parasites et traits reproducteurs de Scinax nasicus dans une région subtropicale d’Amérique du Sud"
+      },
+      "url": "https://ve.scielo.org/scielo.php?pid=S0378-18442009000300014&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish-language study in Corrientes describes prolonged breeding and aquatic eggs and tadpole development, while noting that other regional studies found different seasonal patterns."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 24,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First record of Scinax nasicus on the Brazilian coast and new records in Rio Grande do Sul",
+        "fr": "Première mention de Scinax nasicus sur le littoral brésilien et nouvelles mentions au Rio Grande do Sul"
+      },
+      "url": "https://doi.org/10.1590/1519-6984.03616",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Brazilian field report provides additional southern occurrence records."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding season and pattern vary among localities; adult diet was not detailed in the reviewed species accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. English taxonomic reference, Spanish national species account and Spanish-language reproductive study were cross-checked with Brazilian occurrence data."
+}

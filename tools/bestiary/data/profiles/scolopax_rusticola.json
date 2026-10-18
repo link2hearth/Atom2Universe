@@ -1,0 +1,91 @@
+{
+  "id": "scolopax_rusticola",
+  "scientific": "Scolopax rusticola",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Woodcock",
+    "fr": "Bécasse des bois"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian woodcock is a stocky, secretive wader that lives in woodland rather than on the shore. Mostly active at dusk and at night, it spends the day in dense cover, where its cryptic plumage makes it hard to see.",
+      "fr": "La bécasse des bois est un limicole trapu et discret qui vit en forêt plutôt que sur le littoral. Surtout active au crépuscule et la nuit, elle passe la journée dans un couvert dense, où son plumage cryptique la rend difficile à voir."
+    },
+    "identification": {
+      "en": "A plump bird 33–38 cm long, including a straight bill of 6–8 cm, with a wingspan of 55–65 cm. British adults weigh about 305 g and have a wing near 200 mm. The cryptic plumage is reddish-brown above and buff and barred below. The large eyes sit high and far back on the head, giving it very wide vision.",
+      "fr": "Oiseau rond de 33 à 38 cm, dont un bec droit de 6 à 8 cm, pour 55 à 65 cm d’envergure. Les adultes britanniques pèsent environ 305 g, avec une aile voisine de 200 mm. Le plumage cryptique est brun roux dessus, chamois et barré dessous. Les grands yeux, placés haut et en arrière de la tête, lui offrent une vision très étendue."
+    },
+    "habitat": {
+      "en": "It is predominantly a bird of woodland, emerging at night to feed in adjacent fields. It breeds in large, unfragmented broadleaved or mixed woods with dense undergrowth, favouring birch and avoiding beech-dominated woods. Breeding needs fairly open areas, which become scarcer as conifer plantations mature.",
+      "fr": "C’est surtout un oiseau de forêt, qui sort la nuit pour se nourrir dans les champs voisins. Il niche dans de grands bois de feuillus ou mixtes, non fragmentés, au sous-bois dense, préférant le bouleau et évitant les hêtraies. La nidification demande des zones assez ouvertes, qui se raréfient quand les plantations de conifères vieillissent."
+    },
+    "diet": {
+      "en": "It eats mainly earthworms, along with insects and their larvae, freshwater molluscs and some seeds. It probes soft ground with its long bill, which makes it vulnerable when the ground freezes.",
+      "fr": "Elle mange surtout des vers de terre, ainsi que des insectes et leurs larves, des mollusques d’eau douce et quelques graines. Elle sonde le sol meuble de son long bec, ce qui la rend vulnérable quand le sol gèle."
+    },
+    "behavior": {
+      "en": "Breeding males perform a display flight called roding at dusk, flying in straight lines above their territories while giving a grunting call. Most British birds are resident, but others arrive in autumn from Finland and Russia to spend the winter.",
+      "fr": "Au crépuscule, les mâles nicheurs effectuent un vol de parade appelé « croule », volant en lignes droites au-dessus de leur territoire en émettant un cri grognant. La plupart des oiseaux britanniques sont sédentaires, mais d’autres arrivent à l’automne de Finlande et de Russie pour passer l’hiver."
+    },
+    "reproduction": {
+      "en": "The nest is a scrape on the ground in low woodland cover. A clutch is typically 4 eggs (observed 2–5), incubated by the female for 21–24 days. The downy chicks leave the nest at once and fledge after 15–20 days. Breeding typically starts at two years of age.",
+      "fr": "Le nid est une cuvette au sol dans un couvert forestier bas. Une ponte compte en général 4 œufs (de 2 à 5), couvés par la femelle pendant 21 à 24 jours. Les poussins, couverts de duvet, quittent aussitôt le nid et s’envolent après 15 à 20 jours. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "The woodcock is a significant game bird in many countries. A study in Brittany found annual survival of 0.86 for adults and 0.67 for juveniles, and its authors urged caution in harvesting. Fragmentation of woodland is the main threat across its breeding range.",
+      "fr": "La bécasse est un gibier important dans de nombreux pays. Une étude menée en Bretagne a trouvé une survie annuelle de 0,86 chez les adultes et de 0,67 chez les jeunes, et ses auteurs ont appelé à la prudence dans les prélèvements. La fragmentation des forêts est la principale menace dans son aire de reproduction."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. In the UK it is Red-listed: about 57,000 males bred in 2016 and a 2013 survey found a 29% decline since 2003, while about 1.4 million birds wintered in 2003–04. Typical life expectancy is four years, and the oldest ringed bird reached over 15 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, elle figure sur la liste rouge : environ 57 000 mâles nichaient en 2016 et un recensement de 2013 a montré un déclin de 29 % depuis 2003, tandis qu’environ 1,4 million d’oiseaux hivernaient en 2003-2004. L’espérance de vie typique est de quatre ans, et le plus vieil oiseau bagué a dépassé 15 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Woodcock — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Bécasse des bois — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/woodcock",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Mean weight 304.5 g, wing 200.4 mm; clutch typically 4 (2–5); incubation 21–24 days; fledging 15–20 days; roding display at dusk; birch woods preferred.",
+        "UK 57,000 breeding males (2016), about 1.4 million in winter (2003–04); −29% 2003–2013 survey; UK Red; IUCN Least Concern; maximum age 15 years 5 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Woodcock — RSPB",
+        "fr": "Bécasse des bois — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodcock",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "behavior", "conservation"],
+      "facts": [
+        "Stocky wader with short legs and a long, straight bill; spends the day in dense cover, mainly nocturnal; breeding needs open areas that become scarcer as conifer plantations mature.",
+        "Most UK birds are resident, with winter arrivals from Finland and Russia; UK Red."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian woodcock — Wikipedia",
+        "fr": "Bécasse des bois — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Eurasian_woodcock",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "ecology", "conservation"],
+      "facts": [
+        "33–38 cm including a 6–8 cm bill; wingspan 55–65 cm; large eyes set high on the head; mainly earthworms, probing soft ground; Brittany study with adult survival 0.86 and juvenile survival 0.67.",
+        "Woodland fragmentation the main threat on the breeding range; Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Wikipedia mentions one or two eggs, which conflicts with BTO’s typical clutch of 4 (observed 2–5); the BTO figure is used.",
+    "Survival rates (0.86 and 0.67) come from a single study in Brittany, as summarised by Wikipedia, and may not apply elsewhere.",
+    "Hunting is allowed in many countries; no global population figure is given because the available estimates were not consistent."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); behaviour and status from RSPB; Wikipedia for size, diet and the Brittany study; illustration to be checked by the owner."
+}

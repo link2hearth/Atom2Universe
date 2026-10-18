@@ -1,0 +1,142 @@
+{
+  "id": "coleura_afra",
+  "scientific": "Coleura afra",
+  "group": "mammals",
+  "name": {
+    "en": "African Sheath-tailed Bat",
+    "fr": "Emballonure d’Afrique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This emballonurid bat occurs across parts of sub-Saharan Africa, Arabia and Madagascar.",
+      "fr": "Cette chauve-souris emballonuride vit dans plusieurs régions d’Afrique subsaharienne, d’Arabie et de Madagascar."
+    },
+    "identification": {
+      "en": "It is a small, dark-brown bat with paler underparts; published descriptions give a mass around 10–12 g.",
+      "fr": "C’est une petite chauve-souris brun foncé au ventre plus clair ; les descriptions publiées indiquent une masse d’environ 10 à 12 g."
+    },
+    "habitat": {
+      "en": "It roosts in illuminated caves, rocky crevices and sometimes house cellars, often near coasts or lakes.",
+      "fr": "Elle se repose dans des grottes éclairées, des fissures rocheuses et parfois des caves de maisons, souvent près des côtes ou des lacs."
+    },
+    "diet": {
+      "en": "It is insectivorous; reported prey includes beetles and moths, with feeding activity higher in the rainy season.",
+      "fr": "Elle est insectivore ; les proies rapportées incluent coléoptères et papillons, et l’activité alimentaire augmente pendant la saison des pluies."
+    },
+    "behavior": {
+      "en": "On mainland Africa it may form large roosting colonies numbering in the thousands.",
+      "fr": "Sur le continent africain, elle peut former de grandes colonies de repos comptant des milliers d’individus."
+    },
+    "reproduction": {
+      "en": "Species-specific breeding details were not available in the Red List account consulted.",
+      "fr": "La fiche de la Liste rouge consultée ne fournit pas de détails spécifiques sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The genus Coleura also includes the Seychelles Sheath-tailed Bat, C. seychellensis, a much more restricted island relative.",
+      "fr": "Le genre Coleura comprend aussi la Chauve-souris à queue en fourreau des Seychelles, C. seychellensis, un parent insulaire à l’aire bien plus restreinte."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2017 lists C. afra as Least Concern, while noting that population trend is unknown.",
+      "fr": "L’évaluation UICN publiée en 2017 classe C. afra en préoccupation mineure, tout en indiquant que sa tendance démographique est inconnue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "African Sheath-tailed Bat — IUCN Red List",
+        "fr": "Emballonure d’Afrique — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T5113A22089365.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment (2016) lists Least Concern, unknown population trend, roost habitat and colonies of thousands."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 15,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coleura afra — French Wikipedia (references include IUCN, GBIF and bat studies)",
+        "fr": "Coleura afra — Wikipédia en français (références UICN, GBIF et études sur les chauves-souris)"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Coleura_afra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "French account gives body mass, coloration, insect diet, seasonal feeding and French vernacular name."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 14,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bats of the Western Indian Ocean Islands — peer-reviewed review",
+        "fr": "Chauves-souris des îles de l’océan Indien occidental — revue scientifique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4513465/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Review describes C. seychellensis as a Seychelles endemic congener of C. afra."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 12,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN account is based on an assessment last conducted in 2016; avoid interpreting its status as a current population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the IUCN assessment with French-language naming and diet material and a peer-reviewed review of Coleura congeners; cited the assessment year explicitly."
+}

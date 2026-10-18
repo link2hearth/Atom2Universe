@@ -1,0 +1,446 @@
+{
+  "id": "least_weasel",
+  "scientific": "Mustela nivalis",
+  "group": "mammals",
+  "name": {
+    "en": "Least weasel",
+    "fr": "Belette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The least weasel has a very slender, elongated trunk, short limbs and a short tail, a form that lets it follow rodents into narrow burrows. Its high surface-to-volume ratio and inability to curl into a compact ball increase heat loss. Its native range spans much of Europe, northern Asia and northern North America, with introductions to some islands.",
+      "fr": "La belette a un corps très fin et allongé, des membres courts et une queue brève, une silhouette qui lui permet de suivre les rongeurs dans des terriers étroits. Son rapport surface-volume élevé et son incapacité à se mettre en boule compacte augmentent les pertes de chaleur. Son aire naturelle couvre une grande partie de l’Europe, de l’Asie septentrionale et du nord de l’Amérique du Nord ; l’espèce a été introduite dans certaines îles."
+    },
+    "identification": {
+      "en": "In Britain, adult males usually measure 19.4–21.7 cm in body length, with a 4.2–5.2 cm tail, and weigh 106–131 g; females measure 17.3–18.3 cm, with a 3.4–4.3 cm tail, and weigh 55–69 g. Adult body size also varies geographically. The British coat is reddish brown above and cream below, with an irregular boundary; its short tail lacks the stoat’s black tip. Some northern populations turn white in winter, unlike Britain’s. In northeastern Poland, observations from 1997 and 2003–07 associated fewer snow-cover days with a smaller share of white winter coats. In a separate 2015–16 experiment, predators detected coat models more often when their colour mismatched the background; snow-cover percentage did not significantly predict detection.",
+      "fr": "En Grande-Bretagne, les mâles adultes mesurent généralement 19,4–21,7 cm de corps, avec une queue de 4,2–5,2 cm, et pèsent 106–131 g ; les femelles mesurent 17,3–18,3 cm, avec une queue de 3,4–4,3 cm, et pèsent 55–69 g. La taille adulte varie aussi selon les régions. Le pelage britannique est brun roux dessus et crème dessous, avec une limite irrégulière ; la queue courte n’a pas la pointe noire de l’hermine. Certaines populations nordiques blanchissent en hiver, contrairement à celle de Grande-Bretagne. Dans le nord-est de la Pologne, des observations de 1997 et de 2003–07 ont associé la raréfaction des jours enneigés à une moindre proportion de pelages hivernaux blancs. Lors d’une expérience distincte en 2015–16, les prédateurs repéraient davantage les modèles dont la couleur contrastait avec le fond ; le pourcentage de neige ne prédisait pas significativement leur détection."
+    },
+    "habitat": {
+      "en": "Across its Holarctic range, it uses grassland, meadows, farmland, woodland edges, scrub, steppe, wetlands and some alpine or coastal habitats. It favors ground cover and prey-rich patches for ambushes, and shelters in abandoned rodent nests or burrows, often using several resting sites rather than digging a den.",
+      "fr": "Dans son aire holarctique, elle fréquente prairies, pâturages, terres agricoles, lisières boisées, broussailles, steppes, zones humides et certains milieux alpins ou côtiers. Elle privilégie le couvert au sol et les zones riches en proies pour surprendre celles-ci ; elle s’abrite dans d’anciens nids ou terriers de rongeurs et utilise souvent plusieurs refuges sans creuser de gîte."
+    },
+    "diet": {
+      "en": "In a Polish forest, five radio-tracked males attacked bank voles and yellow-necked mice above and below ground. Of 60 observed attacks, success was 23% on voles and 60% on mice, so tunnel access did not guarantee a catch. On English farmland, voles made up 16% of the diet in low-vole years and 54% at peak abundance, while birds became the main alternative when voles were scarce. Smaller weasels consumed more food relative to body mass; captive trials also found assimilation varied with diet and temperature, so they do not define a wild daily ration.",
+      "fr": "En forêt polonaise, cinq mâles suivis par radio ont attaqué des campagnols roussâtres et des mulots à collier sous terre comme en surface. Sur 60 attaques observées, le succès était de 23 % contre les campagnols et de 60 % contre les mulots : les galeries ne garantissent donc pas la capture. Dans des terres agricoles anglaises, les campagnols représentaient 16 % du régime les années creuses et 54 % au pic, tandis que les oiseaux devenaient la principale proie de remplacement lorsqu’ils manquaient. Les belettes les plus petites consommaient davantage par unité de masse ; en captivité, l’assimilation variait aussi selon le régime et la température, sans définir une ration sauvage."
+    },
+    "behavior": {
+      "en": "An English woodland study found resident male ranges varied in size and shifted with prey distribution; males generally ranged farther than females. Usually solitary, least weasels mark den sites with scent. Their small bodies need frequent feeding, and surplus prey may be cached near shelters. Measurements of free-ranging males in Poland found higher thermoregulatory costs in cold weather and daily activity adjusted with temperature, body mass, habitat and season.",
+      "fr": "Une étude en forêt anglaise a montré que la taille des domaines des mâles résidents variait avec la répartition des proies ; les mâles parcouraient généralement davantage de terrain que les femelles. Généralement solitaires, les belettes marquent leurs gîtes par l’odeur. Leur petite taille exige des prises fréquentes et elles peuvent cacher les surplus près des abris. Des mesures sur des mâles sauvages en Pologne ont révélé un coût thermorégulateur plus élevé par temps froid et une activité quotidienne ajustée à la température, à la masse, à l’habitat et à la saison."
+    },
+    "reproduction": {
+      "en": "From 18 breeding females and three immature young sampled in Poland, the author inferred a season from April mating to the last young leaving in October, cautioning that the sample was small. Unlike stoats, least weasels do not delay implantation: total gestation lasts about 34–37 days from mating, including roughly 25 days after implantation. A five-year captive study recorded 65 litters, averaging 5.1 kits among 53 litters of known size; this is not a universal wild average. Newborns weigh about 1–1.7 g and are naked, blind and deaf; ears open at 21–28 days and eyes at 26–30 days. The female alone nurses for about 32 days; weaning may continue to 42–56 days. In captivity, young can kill prey at about 47 days; they disperse and become independent at about nine to ten weeks.",
+      "fr": "En Pologne, l’autrice estimait la saison de reproduction de l’accouplement d’avril au départ des derniers jeunes en octobre, d’après seulement 18 femelles reproductrices et trois jeunes immatures ; elle jugeait l’échantillon faible. Contrairement à l’hermine, la belette ne présente pas de diapause embryonnaire ; sa gestation dure 34–37 jours après l’accouplement, dont environ 25 après l’implantation. En cinq ans de captivité, 65 portées ont été relevées ; les 53 de taille connue comptaient en moyenne 5,1 petits, moyenne non extrapolable à la nature. À la naissance, les petits pèsent environ 1 à 1,7 g et sont nus, aveugles et sourds ; leurs oreilles s’ouvrent vers 21–28 jours et leurs yeux vers 26–30 jours. La femelle seule allaite environ 32 jours ; le sevrage s’achève vers 42–56 jours. En captivité, les jeunes peuvent tuer une proie vers 47 jours ; ils se dispersent et deviennent autonomes vers neuf à dix semaines."
+    },
+    "ecology": {
+      "en": "On 25 km² of southern English farmland, vole density peaked at fourteen times its low-year level in a four-year cycle; weasel numbers lagged and females failed to breed in the trough, documenting a local predator response without showing that weasels caused the vole cycle. In Białowieża Forest, winter estimates attributed 11–21% of rodent predation to weasels, compared with 56–71% to tawny owls and 10–15% to pine martens.",
+      "fr": "Sur 25 km² de terres agricoles du sud de l’Angleterre, la densité des campagnols a culminé à quatorze fois son niveau des années creuses au cours d’un cycle de quatre ans ; les belettes réagissaient avec retard et les femelles ne se reproduisaient pas au creux du cycle, montrant une réponse locale du prédateur sans prouver que les belettes provoquaient le cycle des campagnols. Dans la forêt de Białowieża, des estimations hivernales attribuaient 11–21 % de la prédation sur les rongeurs aux belettes, contre 56–71 % aux chouettes hulottes et 10–15 % aux martres."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 2 May 2015 and amended in 2019 lists the species as Least Concern, citing its broad range, presumed large population and tolerance of some habitat change. In Britain, gamekeepers historically trapped weasels as supposed gamebird enemies; the Mammal Society says they probably killed few chicks and that trapping likely had no long-term effect because populations recover and recolonise.",
+      "fr": "L’évaluation mondiale de l’UICN datée du 2 mai 2015 et amendée en 2019 classe l’espèce en préoccupation mineure, en raison de sa vaste aire, de sa population présumée importante et de sa tolérance à certaines modifications de l’habitat. En Grande-Bretagne, les gardes-chasse piégeaient historiquement les belettes, considérées comme des ennemies du gibier à plumes ; selon la Mammal Society, elles tuaient probablement peu de poussins et le piégeage n’avait guère d’effet durable, car les populations se rétablissent et recolonisent les lieux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Least Weasel — Mammalian Species 454",
+        "fr": "Belette — Mammalian Species 454"
+      },
+      "url": "https://www.science.smith.edu/departments/Biology/VHAYSSEN/msi/pdf/i0076-3519-454-01-0001.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Species review documents body form, prey, gestation and juvenile milestones."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 10,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Society: Weasel",
+        "fr": "Mammal Society : belette"
+      },
+      "url": "https://mammal.org.uk/british-mammals/weasel",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "British account reports sex-specific size and gamekeeper history."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 8,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Animal Diversity Web: Mustela nivalis",
+        "fr": "Animal Diversity Web : Mustela nivalis"
+      },
+      "url": "https://animaldiversity.org/accounts/Mustela_nivalis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "University account reports captive prey-killing and dispersal ages."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.5",
+        "reproduction.en.6",
+        "reproduction.fr.5",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 8,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Climate change and camouflage mismatch in least weasels",
+        "fr": "Changement climatique et camouflage décalé chez les belettes"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5967304/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Polish coat observations (1997, 2003–07) and model trials (2015–16) were separate."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.4",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 11,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List: Mustela nivalis",
+        "fr": "Liste rouge de l’UICN : Mustela nivalis"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T70207409A147993366.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global Least Concern assessment dated 2015; amended publication appeared in 2019."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 11,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tapper 1979: vole cycles and weasels on English farmland",
+        "fr": "Tapper 1979 : cycles de campagnols et belettes en terres agricoles anglaises"
+      },
+      "url": "https://www.gwct.org.uk/research/scientific-publications/1970-79/1979/tapper1979/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "25 km² farmland study measured vole cycles, weasel diet and reproduction."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 11,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hunting success and rodent escape tactics in Białowieża",
+        "fr": "Succès de chasse et échappées des rongeurs à Białowieża"
+      },
+      "url": "https://rcin.org.pl/ibs/Content/11804",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Five tracked males and 60 attacks were observed in one Polish autumn."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 12,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trade-offs between activity and thermoregulation in least weasels",
+        "fr": "Compromis entre activité et thermorégulation chez la belette"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2674502/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Free-ranging males in Poland adjusted activity as temperature changed."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 9,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moors: metabolism, food consumption and assimilation in weasels",
+        "fr": "Moors : métabolisme, consommation et assimilation alimentaire chez les belettes"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28308972/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Feeding trials compared intake and assimilation across diets and temperatures."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 10,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Home Range of the Weasel in an English Woodland",
+        "fr": "Domaine vital de la belette dans un bois anglais"
+      },
+      "url": "https://doi.org/10.2307/3616",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field study followed resident and nonresident weasels near Oxford."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 9,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Autumn and winter predation on forest rodents in Białowieża",
+        "fr": "Prédation automnale et hivernale sur les rongeurs forestiers à Białowieża"
+      },
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/abs/10.1111/j.1600-0587.1993.tb00058.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Winter field estimates compared weasels, owls and martens as rodent predators."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproduction of the least weasel in captivity: basic observations",
+        "fr": "Reproduction de la belette en captivité : observations fondamentales"
+      },
+      "url": "https://doi.org/10.1007/BF03194266",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Five-year captive study recorded 65 litters; size was known for 53."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 11,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproduction in Mustela nivalis",
+        "fr": "Reproduction de Mustela nivalis"
+      },
+      "url": "https://rcin.org.pl/Content/11245/BI002_26016_Cz-40-2_Acta-T32-nr31-493-496_o.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "18 breeding females and three young; author cautioned about small sample."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 11,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Geographic variation in the least weasel",
+        "fr": "Variation géographique chez la belette"
+      },
+      "url": "https://www.zin.ru/journals/zsr/content/1999/zr_1999_8_2_Abramov_2.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Morphological study documents geographic variation in external characters."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 14,
+        "notes_words": 8,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Naturalistic European summer adult on pure white; slender low body, short russet tail without black tip. Version 2 independently reviewed; original PNG preserved.",
+  "uncertainties": [
+    "The British dimensions and year-round brown coat describe British populations; body size and winter coat vary elsewhere.",
+    "Mammal Society gives no assessment year on its British page. The global IUCN record identifies the assessment as 2 May 2015 and the amended publication as 2019; consulted 2026-10-11.",
+    "The Białowieża hunting observations involved only five males in one high-rodent autumn and should not be generalized to all populations.",
+    "The 2018 camouflage-mismatch findings are regional to northeastern Poland and include a model experiment; they do not establish a global population decline."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific review corrected camouflage experiment interpretation, Polish breeding sample scope, and juvenile independence timing; principal review confirmed bilingual corrections. Illustration version 2 independently accepted."
+}

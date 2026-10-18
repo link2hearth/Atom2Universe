@@ -1,0 +1,121 @@
+{
+  "id": "okapi",
+  "scientific": "Okapia johnstoni",
+  "group": "mammals",
+  "name": {
+    "en": "Okapi",
+    "fr": "Okapi"
+  },
+  "sections": {
+    "overview": {
+      "en": "The okapi is a forest-dwelling giraffid native to the Democratic Republic of the Congo. Its short neck and compact body contrast with the tall giraffe, its closest living relative. Pale bands on the hindquarters and legs do not make it a relative of zebras.",
+      "fr": "L’okapi est un girafidé forestier originaire de République démocratique du Congo. Son cou court et sa silhouette compacte contrastent avec la grande girafe, son plus proche parent vivant. Les bandes claires de l’arrière-train et des jambes ne témoignent pas d’une parenté avec les zèbres."
+    },
+    "identification": {
+      "en": "Adults have a sturdy body, sloping back, short neck and upright ears. The torso is dark brown to reddish; cream-white bands cross the rump and upper legs. Males bear two short, skin-covered ossicones; females lack them. Both sexes use a long dark tongue to grasp leaves and ruminate. Adults stand about 1.5 m at the shoulder and weigh roughly 200–350 kg. San Diego Zoo reports females at about 225–350 kg and males at about 200–300 kg; the female is therefore not necessarily lighter. No reliable sex-specific body-length range or body width was found in that source.",
+      "fr": "L’adulte a un corps robuste, le dos incliné, le cou court et les oreilles dressées. Le torse est brun à roux ; des bandes crème traversent l’arrière-train et le haut des jambes. Le mâle porte deux ossicônes courts couverts de peau ; la femelle n’en a pas. Les deux sexes saisissent les feuilles avec leur longue langue sombre et ruminent. L’adulte mesure environ 1,5 m au garrot et pèse approximativement 200 à 350 kg. Le zoo de San Diego indique environ 225 à 350 kg pour les femelles et 200 à 300 kg pour les mâles; la femelle n’est donc pas nécessairement plus légère. Cette source ne donne pas de plage fiable de longueur corporelle selon le sexe ni de largeur du corps."
+    },
+    "habitat": {
+      "en": "Its known range is northeastern Democratic Republic of the Congo, including Ituri. It inhabits dense tropical forest. The IUCN assessment records it from about 450 to 1,500 metres elevation. The Okapi Wildlife Reserve protects a major part of Ituri forest.",
+      "fr": "Son aire connue se trouve au nord-est de la République démocratique du Congo, notamment en Ituri. Il fréquente la forêt tropicale dense. L’évaluation de l’UICN le signale entre environ 450 et 1 500 mètres. La Réserve de faune à okapis protège une grande partie de la forêt d’Ituri."
+    },
+    "diet": {
+      "en": "This browser eats leaves, buds and shoots from shrubs and low branches, as well as fruit and fungi. The Okapi Conservation Project reports leaves from over one hundred plant and tree species in its diet. Foods vary by place and season. Okapis also eat clay or soil, probably for minerals, though its nutritional role is uncertain.",
+      "fr": "Ce brouteur mange feuilles, bourgeons et pousses basses, ainsi que fruits et champignons. L’Okapi Conservation Project indique plus de cent espèces végétales dans son régime. Les aliments varient selon le lieu et la saison. Il mange aussi de l’argile ou du sol, probablement pour les minéraux, mais leur rôle nutritionnel reste incertain."
+    },
+    "behavior": {
+      "en": "Okapis are usually solitary; females stay with calves. Adults may use overlapping areas, while males can exclude other males. Foot glands leave scent traces; males also mark with urine. Calls include coughs, bleats and whistles. Very low calls have been linked to mother–calf communication, though their function remains uncertain.",
+      "fr": "Les okapis sont généralement solitaires ; les femelles restent avec leurs petits. Les secteurs peuvent se chevaucher, mais les mâles en excluent d’autres. Des glandes des pieds laissent des traces odorantes ; les mâles marquent aussi avec leur urine. Ils émettent toux, bêlements et sifflements. Des appels graves seraient liés à la communication mère-petit, mais leur fonction reste incertaine."
+    },
+    "reproduction": {
+      "en": "Gestation lasts about fourteen to sixteen months; births are usually single. Calves resemble adults and stand soon after birth. A mother may leave a calf hidden while feeding, then return to nurse. Young sample solid food within weeks. Maturity near three years is reported mainly from managed animals.",
+      "fr": "La gestation dure quatorze à seize mois et les naissances sont généralement uniques. Les petits ressemblent aux adultes et se tiennent debout rapidement. La mère peut laisser un petit caché pendant qu’elle s’alimente, puis revenir l’allaiter. Les jeunes goûtent des aliments solides en quelques semaines. La maturité vers trois ans est surtout rapportée chez des animaux suivis."
+    },
+    "ecology": {
+      "en": "Okapis browse forest vegetation and are prey for leopards. Conservation programmes use this distinctive animal as an emblem for protecting the Ituri forest, benefiting other species sharing its habitat.",
+      "fr": "L’okapi broute la végétation forestière et constitue une proie pour le léopard. Les programmes de conservation font de cet animal distinctif un emblème de la protection de la forêt d’Ituri, dont bénéficient aussi les espèces partageant son habitat."
+    },
+    "conservation": {
+      "en": "The 2015 IUCN assessment classified the okapi as Endangered, estimating a decline over 50% across three generations. This is the assessment date, not a new 2026 measurement. Pressures include poaching, forest loss and degradation, and insecurity. The Ituri reserve and local conservation programs support protection.",
+      "fr": "En 2015, l’UICN classait l’okapi « En danger » et estimait son déclin à plus de 50 % sur trois générations. C’est la date de l’évaluation, non une mesure nouvelle en 2026. Les pressions incluent braconnage, perte et dégradation forestières, et insécurité. La réserve d’Ituri et les programmes locaux soutiennent sa protection."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Okapi",
+        "fr": "Okapi"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/okapi",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Morphology and sex differences; DRC forest range; browsing, rumination, scent marking, vocalizations, gestation and calf care."
+      ]
+    },
+    {
+      "title": {
+        "en": "Okapia johnstoni (Okapi) — IUCN Red List",
+        "fr": "Okapia johnstoni (Okapi) — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T15188A51140517.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "2015 global assessment: Endangered A2abcd+4abcd; decreasing trend; estimated decline above 50% over three generations; range roughly 450–1,500 m."
+      ]
+    },
+    {
+      "title": {
+        "en": "Okapia johnstoni (okapi) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Okapia johnstoni (okapi) — Animal Diversity Web, Museum de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Okapia_johnstoni/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Secondary university-hosted species account consulted for reproductive life history; managed-animal maturity details are qualified."
+      ]
+    },
+    {
+      "title": {
+        "en": "The Okapi — Okapi Conservation Project",
+        "fr": "L’okapi — Okapi Conservation Project"
+      },
+      "url": "https://www.okapiconservation.org/the-okapi",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist conservation organization reports DRC-only rainforest range, a diet spanning over 100 plant species, and forest protection work."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult female Okapia johnstoni on a plain white background: sturdy giraffid, sloping back, short neck, dark chestnut coat, cream-white bands across rump and upper legs, dark lower legs, large upright ears and long dark prehensile tongue. No ossicones on female; adult male has two short skin-covered ossicones.",
+  "uncertainties": [
+    "The IUCN assessment is dated 2015.",
+    "Some vocalization functions remain uncertain.",
+    "Maturity figures are mainly reported from managed animals."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR coherence and source support checked; institutional morphology cross-check; final individual illustration inspected."
+}

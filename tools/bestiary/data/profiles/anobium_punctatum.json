@@ -1,0 +1,224 @@
+{
+  "id": "anobium_punctatum",
+  "scientific": "Anobium punctatum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common furniture beetle",
+    "fr": "Petite vrillette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common furniture beetle is a small wood-boring beetle native to Europe and now established in several other regions. Its larvae develop inside seasoned timber, so adults may appear in buildings long after infested wood was installed.",
+      "fr": "La Petite vrillette est un petit coléoptère xylophage originaire d’Europe, désormais implanté dans plusieurs autres régions. Ses larves se développent dans le bois ouvré; des adultes peuvent donc apparaître longtemps après la pose d’une pièce infestée."
+    },
+    "identification": {
+      "en": "The adult is reddish to dark brown, cylindrical, and 2.5–5 mm long; its head is largely hidden beneath a hood-like pronotum. The wing cases bear rows of fine punctures, and the antennae end in a distinct club. The consulted identification sources give no sex-specific body size, height, width, or mass.",
+      "fr": "L’adulte est cylindrique, brun rougeâtre à brun foncé, et mesure 2,5–5 mm; sa tête est largement cachée sous un pronotum en capuchon. Les élytres portent des rangées de petits points et les antennes se terminent par une massue. Les sources d’identification consultées ne donnent pas de dimensions distinctes selon le sexe, ni de hauteur, largeur ou masse."
+    },
+    "habitat": {
+      "en": "Larvae live within dry, seasoned wood from both deciduous and coniferous trees, including structural timber, floorboards, furniture, and joinery. The species is common in buildings and stores; ivy stems can also provide suitable woody material.",
+      "fr": "Les larves vivent dans le bois sec et ouvré de feuillus comme de conifères, notamment les charpentes, planchers, meubles et menuiseries. L’espèce est fréquente dans les bâtiments et entrepôts; les tiges ligneuses du lierre peuvent aussi lui convenir."
+    },
+    "diet": {
+      "en": "The feeding stage is the larva, which excavates galleries through wood and leaves fine frass behind. Adults do not feed, relying on reserves accumulated during larval development before reproduction.",
+      "fr": "C’est la larve qui se nourrit: elle creuse des galeries dans le bois et rejette une vermoulure fine. L’adulte ne s’alimente pas et dépend des réserves accumulées pendant son développement larvaire jusqu’à la reproduction."
+    },
+    "behavior": {
+      "en": "Larvae remain concealed in timber for years, then tunnel toward the surface and pupate in a chamber just beneath it. Adults emerge mainly in early summer through small, round exit holes, are short-lived, and are often noticed around infested wood.",
+      "fr": "Les larves restent cachées dans le bois pendant plusieurs années, puis creusent vers la surface et se nymphosent dans une logette proche de celle-ci. Les adultes émergent surtout au début de l’été par de petits trous ronds, vivent peu de temps et sont souvent remarqués près du bois infesté."
+    },
+    "reproduction": {
+      "en": "After mating, females place eggs in cracks, pores, or old galleries rather than on smooth exposed surfaces. Larval development commonly takes three to five years.",
+      "fr": "Après l’accouplement, les femelles déposent leurs œufs dans les fentes, pores ou anciennes galeries, plutôt que sur une surface lisse. Le développement larvaire dure souvent trois à cinq ans."
+    },
+    "ecology": {
+      "en": "Its round emergence holes are usually about 1–2 mm across, with galleries and powdery frass inside the wood. It can be confused with Lyctus beetles, but Lyctus has a more exposed head, whereas Anobium’s head is hidden from above by the pronotum.",
+      "fr": "Ses trous de sortie ronds mesurent généralement 1–2 mm et s’accompagnent de galeries et de vermoulure dans le bois. On peut le confondre avec les Lyctus, mais leur tête reste visible de dessus, tandis que le pronotum masque celle d’Anobium."
+    },
+    "conservation": {
+      "en": "Its larval galleries can damage furniture and structural timber when they extend through worked wood over several years.",
+      "fr": "Ses galeries larvaires peuvent endommager meubles et charpentes lorsqu’elles progressent dans le bois ouvré pendant plusieurs années."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Furniture beetle identification guide — Natural History Museum",
+        "fr": "Guide d’identification de la Petite vrillette — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/take-part/identify-nature/common-insect-pest-species-in-homes/furniture-beetle-anobium-punctatum-identification-guide.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adult size; wood-boring larvae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 12,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Protection of new buildings against termites and other wood-boring insects — French Ministry of Ecological Transition",
+        "fr": "Protection des bâtiments neufs contre les termites et autres insectes xylophages — ministère français de la Transition écologique"
+      },
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/dgaln_guide_termites_protection_batiments_neufs_2016_0.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French government guide reports 5–7-mm larvae and 20–40 eggs."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 9,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common furniture beetle — Catalan Public Health Agency, Barcelona Provincial Council",
+        "fr": "Corc comú dels mobles — Agence de santé publique catalane, Diputació de Barcelona"
+      },
+      "url": "https://www.diba.cat/es/web/salutpublica/-/corc-comu-dels-mobles",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Catalan technical profile compares this beetle with Lyctus and describes the adult pronotum and punctures."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 15,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Manual for wood insects — Chilean Agricultural and Livestock Service (SAG)",
+        "fr": "Manuel des insectes du bois — Service agricole et d’élevage du Chili (SAG)"
+      },
+      "url": "https://www.sag.gob.cl/sites/default/files/MANUAL_INSECTOS_MADERA.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Spanish-language manual reports an independent adult-size range of 4–6 mm."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 10,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common furniture beetle (Anobium punctatum) — New Zealand Farm Forestry Association",
+        "fr": "Vrillette commune des meubles — New Zealand Farm Forestry Association"
+      },
+      "url": "https://c.pool.nzffa.org.nz/farm-forestry-model/the-essentials/forest-health-pests-and-diseases/Pests/Anobium-punctatum/household-borer-anobium-punctatum/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "New Zealand forestry source describes larvae developing in timber for about three to four years, providing non-European regional context."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 19,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a tiny, cylindrical reddish-brown beetle with a hood-like pronotum concealing the head, longitudinal rows of punctures on the wing cases, and clubbed antennae. Include an inset of the curved white larva and round exit hole for scale.",
+  "uncertainties": [
+    "Adult size references range from 2.5–5 mm in the Natural History Museum and French government guide to 4–6 mm in the Chilean manual; retain the first range as the best-aligned European reference and note the difference.",
+    "Sources reviewed do not provide reliable sex-specific adult dimensions, height, width, or mass.",
+    "Egg counts vary by reference; the Natural History Museum reports 20–100, while the French government guide gives 20–40. No sex-specific dimensions, body height, width, or mass were found in the consulted identification sources."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked English, French, Catalan, and Spanish technical accounts; kept divergent size and fecundity estimates visible and distinguished larval damage from non-feeding adults."
+}

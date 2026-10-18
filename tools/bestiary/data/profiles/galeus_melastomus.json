@@ -1,0 +1,144 @@
+{
+  "id": "galeus_melastomus",
+  "scientific": "Galeus melastomus",
+  "group": "fish",
+  "name": {
+    "en": "Blackmouth Catshark",
+    "fr": "Chien espagnol"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blackmouth catshark is a small deep-water catshark of the northeastern Atlantic and Mediterranean, in the family Pentanchidae.",
+      "fr": "Le Chien espagnol est un petit requin de profondeur de l’Atlantique nord-est et de la Méditerranée, dans la famille des Pentanchidae."
+    },
+    "identification": {
+      "en": "It has a slender body, long anal fin, dark saddles and spots, pale underside, and a distinctively black mouth interior.",
+      "fr": "Il possède un corps élancé, une longue nageoire anale, des selles et taches sombres, un ventre clair et l’intérieur de la bouche noir."
+    },
+    "habitat": {
+      "en": "It lives on the outer continental shelf and upper slope, usually at 200–500 m but reported from 55–2 000 m.",
+      "fr": "Il vit sur le rebord externe du plateau continental et le haut du talus, généralement entre 200 et 500 m, mais il est signalé de 55 à 2 000 m."
+    },
+    "diet": {
+      "en": "It feeds mainly on bottom-dwelling invertebrates such as shrimp and cephalopods, alongside small bony fishes and other small sharks.",
+      "fr": "Il mange surtout des invertébrés benthiques comme crevettes et céphalopodes, ainsi que de petits poissons osseux et d’autres petits requins."
+    },
+    "behavior": {
+      "en": "It is a demersal, offshore species, and individuals show depth segregation by size, with adults and juveniles generally deeper than recruits.",
+      "fr": "C’est une espèce démersale du large; les individus se répartissent selon leur taille, adultes et juvéniles se trouvant généralement plus profond que les recrues."
+    },
+    "reproduction": {
+      "en": "It is oviparous; females may carry up to thirteen egg cases, and regional studies describe seasonal variation in reproduction.",
+      "fr": "Il est ovipare; les femelles peuvent porter jusqu’à treize capsules d’œufs et les études régionales décrivent une saisonnalité reproductive."
+    },
+    "ecology": {
+      "en": "Galeus atlanticus and G. murinus are related catsharks in the same genus and useful comparisons, though their ranges and depth use differ.",
+      "fr": "Galeus atlanticus et G. murinus sont des espèces apparentées du même genre, utiles pour comparaison, mais leurs aires et profondeurs diffèrent."
+    },
+    "conservation": {
+      "en": "Shark Trust reports Least Concern assessments globally (2009) and regionally (2015–2016), while noting variable bycatch retention and fishery pressure.",
+      "fr": "Shark Trust rapporte des évaluations en préoccupation mineure à l’échelle mondiale (2009) et régionale (2015–2016), tout en signalant des prises accessoires et une pression de pêche variables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blackmouth Catshark — Shark Trust",
+        "fr": "Chien espagnol — Shark Trust"
+      },
+      "url": "https://www.sharktrust.org/species/blackmouth-catshark",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Shark Trust describes identifying marks, eastern Atlantic and Mediterranean distribution, depth range, diet, oviparity and dated IUCN assessments."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 18,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Galeus melastomus — FishBase",
+        "fr": "Galeus melastomus — FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/Galeus-melastomus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports demersal deep-water range, continental shelf and slope habitat, diet, maximum size and egg-laying biology."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 16,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution and biology in the Alboran Sea — NAFO Scientific Council Studies",
+        "fr": "Répartition et biologie en mer d’Alboran — NAFO Scientific Council Studies"
+      },
+      "url": "https://journal.nafo.int/Volumes/Articles/id/520/Distribution-and-Biology-of-the-Blackmouth-Catshark-emGaleus-melastomusem-in-the-Alboran-Sea-Southwestern-Mediterranean",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed Alboran Sea study examines regional distribution, abundance, size structure and reproduction."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase, Shark Trust and a regional Alboran Sea study. The close congeners G. atlanticus and G. murinus are referenced as external comparisons; date-specific assessment years and depth ranges are retained."
+}

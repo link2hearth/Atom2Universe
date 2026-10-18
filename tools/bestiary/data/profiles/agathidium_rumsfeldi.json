@@ -1,0 +1,135 @@
+{
+  "id": "agathidium_rumsfeldi",
+  "scientific": "Agathidium rumsfeldi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rumsfeld's slime-mold beetle",
+    "fr": "Agathidium de Rumsfeld"
+  },
+  "sections": {
+    "overview": {
+      "en": "Agathidium rumsfeldi is a minute round fungus beetle in the family Leiodidae, described from the Mexican states of Hidalgo and Oaxaca. Its original taxonomic treatment describes a robust, rounded beetle only about three millimetres long, with reddish head, pronotum and wing covers and yellow appendages. Members of Agathidium are commonly called slime-mold beetles, but the species account is based on sparse specimens, so the natural history of A. rumsfeldi itself remains poorly known. Its scientific name commemorates Donald Rumsfeld.",
+      "fr": "Agathidium rumsfeldi est un minuscule coléoptère Leiodidae décrit dans les États mexicains d’Hidalgo et d’Oaxaca. Sa description taxonomique originale présente un insecte robuste et arrondi d’à peine trois millimètres de long, à tête, pronotum et élytres rougeâtres, avec les appendices jaunes. Les espèces du genre Agathidium sont souvent appelées coléoptères des myxomycètes, mais la description de A. rumsfeldi repose sur peu de spécimens et son histoire naturelle reste mal connue. Son nom scientifique rend hommage à Donald Rumsfeld."
+    },
+    "identification": {
+      "en": "The original description gives a total body length of 2.73–3.03 mm. The beetle is broad, robust and strongly rounded; the head and pronotum are red, the elytra red with a slight iridescent sheen, and the underside red-yellow. Antennae, palps and legs are yellow. No mass, body height or width, or sex-specific size difference was reported in the reviewed species sources. It is extremely similar to A. aztec and related Mexican species; the original taxonomic diagnosis relies on fine structural characters, including the male genitalia, rather than colour alone. Reliable identification generally requires microscopic examination and comparison with the description.",
+      "fr": "La description originale indique une longueur totale de 2,73 à 3,03 mm. Le coléoptère est large, robuste et fortement arrondi ; la tête et le pronotum sont rouges, les élytres rouges avec un léger reflet irisé, et le dessous rouge-jaune. Les antennes, les palpes et les pattes sont jaunes. Les sources consultées ne donnent ni masse, hauteur ou largeur corporelle, ni différence de taille entre les sexes. Il ressemble beaucoup à A. aztec et à des espèces mexicaines apparentées ; le diagnostic taxonomique original repose sur des caractères structurels fins, notamment les genitalia mâles, et non sur la seule couleur. Une identification fiable demande généralement un examen à la loupe ou au microscope et une comparaison avec la description."
+    },
+    "habitat": {
+      "en": "The documented range includes Hidalgo and Oaxaca in southern Mexico. A type specimen was collected north of Tlanchinol, Hidalgo, at about 5,200 ft (1,585 m), from a white polypore fungus on a tree; reported material spans roughly 5,200–9,200 ft (1,585–2,804 m). These are collection records, not a complete habitat study, and do not establish a strict elevation preference or exclusive association with that fungus. The species is known from montane settings, but its precise microhabitat requirements remain uncertain.",
+      "fr": "L’aire documentée comprend les États d’Hidalgo et d’Oaxaca, dans le sud du Mexique. Un spécimen type a été récolté au nord de Tlanchinol, dans l’Hidalgo, vers 1 585 m d’altitude, sur un champignon polypore blanc poussant sur un arbre ; les spécimens rapportés couvrent environ 1 585 à 2 804 m. Il s’agit de données de collecte, pas d’une étude complète de l’habitat, et elles ne démontrent ni préférence altitudinale stricte ni association exclusive avec ce champignon. L’espèce est connue de milieux montagnards, mais ses exigences précises de microhabitat restent incertaines."
+    },
+    "diet": {
+      "en": "Agathidium beetles are associated with slime molds (myxomycetes), which gives the group its common name. The original specimen data for A. rumsfeldi record collection on a white polypore fungus, but that record alone does not establish whether the beetle was feeding on the fungus, on slime molds growing nearby, or using it as shelter. A species-specific diet study was not found, so its exact food should be regarded as unknown.",
+      "fr": "Les coléoptères du genre Agathidium sont associés aux myxomycètes, ce qui explique leur nom anglais de « slime-mold beetles ». Les données du spécimen type de A. rumsfeldi signalent une récolte sur un polypore blanc, mais cette mention seule ne permet pas de savoir si le coléoptère mangeait le champignon, des myxomycètes présents à proximité ou s’il s’y abritait. Aucune étude alimentaire propre à l’espèce n’a été trouvée ; sa nourriture exacte reste donc inconnue."
+    },
+    "behavior": {
+      "en": "The original description notes fully developed flight wings, indicating that the adult is anatomically capable of flight, but no direct observations of its movement or dispersal were found. Like other round fungus beetles, it is associated with fungus- and slime-mold-rich woodland microhabitats; species-specific behavior such as aggregation, daily activity and reproduction has not been described in the reviewed material. The beetle's tiny, contractile, rounded body is consistent with the defensive form noted for the genus, but that function is not separately tested for this species.",
+      "fr": "La description originale signale des ailes fonctionnelles entièrement développées, indiquant que l’adulte est anatomiquement capable de voler, mais aucune observation directe de ses déplacements ou de sa dispersion n’a été trouvée. Comme d’autres coléoptères globuleux associés aux champignons, il est lié à des microhabitats forestiers riches en champignons et myxomycètes ; le comportement propre à l’espèce — activité quotidienne, rassemblements ou reproduction — n’est pas décrit dans les sources examinées. Son corps minuscule, contractile et arrondi correspond à la morphologie défensive connue dans le genre, sans que cette fonction ait été testée séparément chez cette espèce."
+    },
+    "reproduction": {
+      "en": "No species-specific account of mating, egg-laying, larval development or generation time was found in the taxonomic sources reviewed. The genus is associated with myxomycetes and decaying woodland substrates, but details from other Agathidium species cannot be transferred to A. rumsfeldi without evidence. Its small known range and sparse collection data make targeted field study necessary to discover its larval host and breeding microhabitat.",
+      "fr": "Les sources taxonomiques consultées ne décrivent pas la parade, la ponte, le développement larvaire ou la durée du cycle propres à l’espèce. Le genre est associé aux myxomycètes et aux substrats forestiers en décomposition, mais les données d’autres Agathidium ne peuvent être attribuées à A. rumsfeldi sans preuve. Sa petite aire connue et le faible nombre de données de collecte rendent nécessaires des recherches de terrain pour découvrir ses ressources larvaires et son microhabitat de reproduction."
+    },
+    "ecology": {
+      "en": "As a member of a beetle genus associated with slime molds, A. rumsfeldi likely participates in decomposition-related food webs in humid montane forests. The type record on a polypore growing on a tree points to a close association with fungus-bearing wood, but the beetle's precise ecological role is not established. It is very small and likely overlooked in ordinary wildlife surveys; targeted searches of fungi and decaying wood are more likely to detect it.",
+      "fr": "Comme membre d’un genre de coléoptères associé aux myxomycètes, A. rumsfeldi participe probablement aux réseaux trophiques liés à la décomposition dans les forêts montagnardes humides. La récolte du type sur un polypore poussant sur un arbre indique une relation avec le bois porteur de champignons, sans établir le rôle écologique exact du coléoptère. Sa taille minuscule le rend probablement difficile à détecter lors des inventaires ordinaires ; des recherches ciblées sur les champignons et le bois en décomposition ont plus de chances de le trouver."
+    },
+    "conservation": {
+      "en": "No species-specific conservation assessment or population trend was found. The beetle is known from only a limited set of Mexican collecting localities, but available records are too sparse to distinguish genuine rarity from under-sampling. Its apparent association with montane forest and fungus-bearing wood suggests that retaining mature, humid woodland and decaying substrates is prudent, while its actual habitat dependence and threats remain to be studied.",
+      "fr": "Aucune évaluation de conservation ni tendance de population propre à l’espèce n’a été trouvée. Le coléoptère n’est connu que d’un nombre limité de localités de collecte mexicaines, mais les données sont trop rares pour distinguer une véritable rareté d’un manque d’échantillonnage. Son association apparente avec les forêts montagnardes et le bois portant des champignons suggère qu’il est prudent de conserver les boisements humides matures et les substrats en décomposition ; sa dépendance réelle à ces habitats et ses menaces restent à étudier."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Slime-mold beetles of the genus Agathidium, Part II — Bulletin of the American Museum of Natural History",
+        "fr": "Coléoptères des myxomycètes du genre Agathidium, partie II — Bulletin of the American Museum of Natural History"
+      },
+      "url": "https://doi.org/10.1206/0003-0090(2005)291%3C0001:SBOTGA%3E2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Primary taxonomic monograph describes A. rumsfeldi on pp. 123–124 as 2.73–3.03 mm long, robust and rounded, red with yellow appendages, and fully winged. Type locality is north of Tlanchinol, Hidalgo, at 5,200 ft; the specimen label records collection on a white polypore fungus on a tree."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agathidium rumsfeldi treatment — Plazi TreatmentBank",
+        "fr": "Traitement taxonomique d’Agathidium rumsfeldi — Plazi TreatmentBank"
+      },
+      "url": "https://treatment.plazi.org/GgServer/summary/FFBAFFCB374DB904FF9F5642FFD3095A",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Taxonomic treatment index identifies the original Miller and Wheeler description and pagination for A. rumsfeldi in the 2005 monograph."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agathidium rumsfeldi — Encyclopedic account in French",
+        "fr": "Agathidium rumsfeldi — notice encyclopédique en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Agathidium_rumsfeldi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "French-language summary reports the species as known from the Mexican states Hidalgo and Oaxaca and cites the Miller and Wheeler taxonomic work."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agathidium rumsfeldi — Russian-language summary citing the original description",
+        "fr": "Agathidium rumsfeldi — synthèse russophone citant la description originale"
+      },
+      "url": "https://ru.wikipedia.org/wiki/Agathidium_rumsfeldi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Russian-language article reports the 2.73–3.03 mm body length, red dorsal body, yellow antennae and legs, and Hidalgo–Oaxaca range, citing Miller and Wheeler 2005, pp. 123–124; primary-source details were checked against the monograph."
+      ]
+    },
+    {
+      "title": {
+        "en": "Slime-mold beetles named for Bush, Cheney and Rumsfeld — Cornell University news",
+        "fr": "Des coléoptères des myxomycètes nommés en hommage à Bush, Cheney et Rumsfeld — Cornell University"
+      },
+      "url": "https://news.cornell.edu/stories/2005/04/researchers-name-beetle-after-bush",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Cornell report identifies the authors' naming of A. rumsfeldi and its known occurrence in Oaxaca and Hidalgo, Mexico."
+      ]
+    }
+  ],
+  "illustration_notes": "Minute, broad, rounded beetle about 2.7–3.0 mm long; red head, pronotum and elytra with yellow antennae and legs; associated with montane Mexico.",
+  "uncertainties": [
+    "Only limited collection records are known; the white polypore specimen label does not establish a specific food relationship.",
+    "No species-specific sex differences, body mass, life history or population trend were found.",
+    "The beetle is extremely similar to related species and may require microscopic examination for reliable identification."
+  ],
+  "reviewed": true,
+  "review_note": "Based the identification and locality on Miller and Wheeler's primary monograph, then cross-checked the Mexican range through French and Russian summaries and a Cornell University notice; left undocumented natural-history details explicitly uncertain."
+}

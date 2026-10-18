@@ -1,0 +1,119 @@
+{
+  "id": "sarcophilus_harrisii",
+  "scientific": "Sarcophilus harrisii",
+  "group": "mammals",
+  "name": {
+    "en": "Tasmanian devil",
+    "fr": "Diable de Tasmanie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Tasmanian devil is the largest living carnivorous marsupial and is now native only to Tasmania.",
+      "fr": "Le diable de Tasmanie est le plus grand marsupial carnivore vivant et n’est aujourd’hui présent à l’état naturel qu’en Tasmanie."
+    },
+    "identification": {
+      "en": "Its toothy gape and loud screeches make it distinctive.",
+      "fr": "Sa gueule largement ouverte et ses cris sonores le distinguent."
+    },
+    "habitat": {
+      "en": "It uses coastal heath, open dry forests and mixed forest-rainforest habitats.",
+      "fr": "Il fréquente les landes côtières, les forêts sèches ouvertes et les milieux mêlant forêt sclérophylle et forêt humide."
+    },
+    "diet": {
+      "en": "It eats a wide range of animal prey and is also a major scavenger, consuming carcasses communally.",
+      "fr": "Il mange une grande variété de proies animales et joue aussi un rôle important de charognard, consommant les carcasses en groupe."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal, sheltering by day and searching for food at night.",
+      "fr": "Il est principalement nocturne : il se réfugie le jour et recherche sa nourriture la nuit."
+    },
+    "reproduction": {
+      "en": "The sources used for this brief profile do not give a concise reproductive summary.",
+      "fr": "Les sources utilisées pour cette fiche courte ne donnent pas de résumé reproductif suffisamment concis."
+    },
+    "ecology": {
+      "en": "Devil facial tumour disease is a transmissible cancer spread through biting and has caused severe declines in affected populations.",
+      "fr": "La maladie tumorale faciale du diable est un cancer transmissible par morsure, qui a provoqué de fortes baisses dans les populations touchées."
+    },
+    "conservation": {
+      "en": "Tasmania lists the species as Endangered and coordinates a dedicated recovery program.",
+      "fr": "La Tasmanie classe l’espèce en danger et coordonne un programme spécifique de rétablissement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tasmania Parks and Wildlife Service — Tasmanian devil",
+        "fr": "Tasmania Parks and Wildlife Service — Diable de Tasmanie"
+      },
+      "url": "https://parks.tas.gov.au/discovery-and-learning/wildlife/tasmanian-devil",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Tasmanian official account covers range, marsupial status, habitat, nocturnality and local endangered listing; no breeding summary."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 16,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammalian Species — Sarcophilus harrisii account",
+        "fr": "Mammalian Species — compte rendu de Sarcophilus harrisii"
+      },
+      "url": "https://academic.oup.com/mspecies/article/49/942/1/3786359",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Scholarly account describes carnivory and scavenging, plus tumour disease transmission through biting."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 12,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conservation status is stated specifically for Tasmania, as this is the jurisdictional listing given by the official source."
+  ],
+  "review_note": "Cross-checked the Tasmanian wildlife agency and scholarly mammal account; avoided a numeric decline not necessary for the summary.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

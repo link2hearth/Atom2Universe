@@ -1,0 +1,125 @@
+{
+  "id": "great_black_backed_gull",
+  "scientific": "Larus marinus",
+  "group": "birds",
+  "name": {
+    "en": "Great Black-backed Gull",
+    "fr": "Goéland marin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great black-backed gull is the largest gull in the world, a powerful, aggressive seabird of rocky coasts in the North Atlantic. It is an opportunistic predator and scavenger that chases other gulls to steal their food.",
+      "fr": "Le goéland marin est le plus grand goéland du monde, un puissant oiseau de mer agressif des côtes rocheuses de l’Atlantique Nord. C’est un prédateur et charognard opportuniste qui poursuit les autres goélands pour leur voler leur nourriture."
+    },
+    "identification": {
+      "en": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage. In one Welsh island sample, males were significantly larger than females in every measurement.",
+      "fr": "Long d’environ 64 à 79 cm, l’adulte britannique pèse en moyenne 1,56 kg, avec une aile d’environ 474 mm. Les adultes ont la tête, le corps et la queue blancs, le dos et les ailes noir ardoise aux extrémités blanches, des pattes roses et un gros bec jaune à tache rouge; ils paraissent plus noirs que le goéland brun. Les jeunes sont tachetés de brun et de blanc et mettent environ trois ans à acquérir le plumage adulte. Dans un échantillon d’îles galloises, les mâles étaient significativement plus grands que les femelles pour toutes les mesures."
+    },
+    "habitat": {
+      "en": "It breeds mainly on coasts, on cliff ledges, rock outcrops and small islands, with only a few pairs at inland colonies. In winter it also moves to estuaries, lakes and lowland inland sites, and birds from Scandinavia join those of Britain and Ireland.",
+      "fr": "Il se reproduit surtout sur les côtes, sur des corniches de falaises, des affleurements rocheux et de petites îles, avec seulement quelques couples dans des colonies de l’intérieur. En hiver, il gagne aussi les estuaires, les lacs et les sites bas de l’intérieur, et des oiseaux de Scandinavie rejoignent ceux de Grande-Bretagne et d’Irlande."
+    },
+    "diet": {
+      "en": "It is omnivorous and opportunistic, eating fish, shellfish, crustaceans, small mammals, birds and eggs, and carrion. It follows fishing boats and is thought to out-compete other gulls at scavenging fishery discards and offal.",
+      "fr": "Il est omnivore et opportuniste : poissons, coquillages, crustacés, petits mammifères, oiseaux et œufs, et charognes. Il suit les bateaux de pêche et supplante vraisemblablement les autres goélands pour récupérer les rejets de pêche et les abats."
+    },
+    "behavior": {
+      "en": "It is aggressive towards other gulls, fighting them off and chasing them to steal food. It has a heavy flight, looks hunched when perched and gives a loud barking call. It is often solitary but gathers at food, on migration and when breeding.",
+      "fr": "Il est agressif envers les autres goélands, qu’il chasse et poursuit pour leur voler de la nourriture. Son vol est lourd, il paraît voûté une fois posé et émet un fort aboiement. Il est souvent solitaire mais se rassemble près de la nourriture, en migration et à la reproduction."
+    },
+    "reproduction": {
+      "en": "The nest is a scrape or sits on a cliff ledge or rock outcrop near water. There is one brood a year, of typically two or three eggs laid in April or May. Both sexes incubate for 27–28 days, and the chicks fledge after about 50–55 days. Breeding typically begins at about four years.",
+      "fr": "Le nid est une simple cuvette ou se trouve sur une corniche ou un affleurement rocheux près de l’eau. Il y a une couvée par an, de deux ou trois œufs en général, pondus en avril ou en mai. Les deux sexes couvent 27 à 28 jours, et les poussins s’envolent après environ 50 à 55 jours. La reproduction débute en général vers quatre ans."
+    },
+    "ecology": {
+      "en": "Adults have no known natural predators, and cannibalism by adults is a major cause of chick mortality. Its carcasses feed scavenging insects and vertebrates. Oil pollution at sea is a major cause of death, and the species is used in beached-bird surveys as an indicator of oil. The oldest ringed bird lived over 26 years.",
+      "fr": "Les adultes n’ont pas de prédateur naturel connu, et le cannibalisme des adultes est une cause majeure de mortalité des poussins. Ses carcasses nourrissent des insectes et des vertébrés charognards. La pollution par les hydrocarbures en mer est une cause majeure de mortalité, et l’espèce sert d’indicateur dans les suivis d’oiseaux échoués. Le plus vieil oiseau bagué a vécu plus de 26 ans."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes it as Least Concern. In the UK it is Red-listed: about 15,000 breeding pairs in 2015 and 77,000 birds in winter in 2003–06. Numbers were stable from 1969–70 to 1998–2002 with a shallow 11% decline, and the recent trend is uncertain.",
+      "fr": "La Liste rouge de l’UICN le classe en préoccupation mineure. Au Royaume-Uni, il figure sur la liste rouge : environ 15 000 couples nicheurs en 2015 et 77 000 oiseaux en hiver en 2003-2006. Les effectifs étaient stables de 1969-1970 à 1998-2002, avec un léger recul de 11 %, et la tendance récente est incertaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great Black-backed Gull — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Goéland marin — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/great-black-backed-gull",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adult weight 1.56 kg, wing 473.9 mm; one brood, 2–3 eggs; incubation 27–28 days by both sexes; fledging 50–55 days; breeds from about 4 years; record age 26 years 8 months.",
+        "UK 15,000 pairs (2015), 77,000 in winter (2003–06); UK Red; IUCN Least Concern; out-competes other gulls for fishery discards.",
+        "British adults average about 1.56 kg and have a mean wing length of about 474 mm."
+      ]
+    },
+    {
+      "title": {
+        "en": "Great Black-backed Gull — RSPB Birds and Wildlife",
+        "fr": "Goéland marin — RSPB, oiseaux et faune"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/great-black-backed-gull",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "About 78 cm, the world’s largest gull; black back, white head and body, pink legs; aggressive, chases other gulls for food; loud bark; nests on cliff ledges or scrapes; usually three eggs in April–May.",
+        "Resident in the UK; Red status."
+      ]
+    },
+    {
+      "title": {
+        "en": "Larus marinus — Animal Diversity Web, University of Michigan",
+        "fr": "Larus marinus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Larus_marinus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Length 64–79 cm; young are brown and white and gain adult plumage over their first three winters; omnivorous, kleptoparasitic; no known natural predators, cannibalism causes much chick mortality.",
+        "Oil pollution a major cause of death; used as an indicator in beached-bird surveys."
+      ]
+    },
+    {
+      "title": {
+        "en": "Measurements and Weights of Great Black-backed Gulls",
+        "fr": "Mesures et poids des goélands marins"
+      },
+      "url": "https://www.britishbirds.co.uk/journal/article/measurements-and-weights-great-black-backed-gulls",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "A Welsh island sample found adult males significantly larger in all measurements; the study identifies one population and 1960s methods."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web wingspan data are internally inconsistent (range 1.5–1.7 m against an average of 2.3 m), so no wingspan is given; its mass range (0.75–2.3 kg) is wider than BTO’s adult average, which is used.",
+    "BTO does not state the geographic scope of the weight and wing figures, probably Britain and Ireland ringing data.",
+    "The IUCN category is quoted from BTO and Animal Diversity Web, not read from the IUCN site."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts, appearance and behaviour from the RSPB, ecology from the Animal Diversity Web (consulted 2026-10-12); illustration to be checked by the owner."
+}

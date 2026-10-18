@@ -1,0 +1,456 @@
+{
+  "schema": 1,
+  "stories": [
+    {
+      "id": "human",
+      "endpoint": "ott770315",
+      "title": "pt_story_human_name",
+      "subtitle": "pt_story_human_intro",
+      "steps": [
+        {
+          "node": "ott93302",
+          "art": "cell",
+          "title": "pt_story_cell_title",
+          "body": "pt_story_cell_body",
+          "caption": "pt_story_cell_caption",
+          "sources": [
+            "microbes",
+            "asgard"
+          ],
+          "cousin": "mrcaott616ott617",
+          "fork": "ott93302"
+        },
+        {
+          "node": "ott304358",
+          "art": "eukaryote",
+          "title": "pt_story_eukaryote_title",
+          "body": "pt_story_eukaryote_body",
+          "caption": "pt_story_eukaryote_caption",
+          "sources": [
+            "eukaryotes"
+          ],
+          "cousin": "ott239659",
+          "fork": "ott304358"
+        },
+        {
+          "node": "ott332573",
+          "art": "fungus",
+          "title": "pt_story_opistho_title",
+          "body": "pt_story_opistho_body",
+          "caption": "pt_story_opistho_caption",
+          "sources": [
+            "fungi"
+          ],
+          "cousin": "ott356221",
+          "fork": "ott332573"
+        },
+        {
+          "node": "ott691846",
+          "art": "colony",
+          "title": "pt_story_animal_title",
+          "body": "pt_story_animal_body",
+          "caption": "pt_story_animal_caption",
+          "sources": [
+            "animals"
+          ],
+          "cousin": "ott111442",
+          "fork": "mrcaott42ott150"
+        },
+        {
+          "node": "ott125642",
+          "art": "fish",
+          "title": "pt_story_chordate_title",
+          "body": "pt_story_chordate_body",
+          "caption": "pt_story_chordate_caption",
+          "sources": [
+            "chordates"
+          ],
+          "cousin": "ott1005914",
+          "fork": "ott114654"
+        },
+        {
+          "node": "ott229562",
+          "art": "limbs",
+          "title": "pt_story_tetrapod_title",
+          "body": "pt_story_tetrapod_body",
+          "caption": "pt_story_tetrapod_caption",
+          "sources": [
+            "amphibians"
+          ],
+          "cousin": "ott14718",
+          "fork": "ott229562"
+        },
+        {
+          "node": "ott229560",
+          "art": "egg",
+          "title": "pt_story_amniote_title",
+          "body": "pt_story_amniote_body",
+          "caption": "pt_story_amniote_caption",
+          "sources": [
+            "reptiles"
+          ],
+          "cousin": "ott938416",
+          "fork": "ott229560"
+        },
+        {
+          "node": "ott244265",
+          "art": "mammal",
+          "title": "pt_story_mammal_title",
+          "body": "pt_story_mammal_body",
+          "caption": "pt_story_mammal_caption",
+          "sources": [
+            "mammals"
+          ],
+          "cousin": "ott962377",
+          "fork": "ott244265"
+        },
+        {
+          "node": "ott913935",
+          "art": "hand",
+          "title": "pt_story_primate_title",
+          "body": "pt_story_primate_body",
+          "caption": "pt_story_primate_caption",
+          "sources": [
+            "primates"
+          ],
+          "cousin": "ott863751",
+          "fork": "mrcaott786ott3428"
+        },
+        {
+          "node": "ott770315",
+          "art": "human",
+          "title": "pt_story_human_title",
+          "body": "pt_story_human_body",
+          "caption": "pt_story_human_caption",
+          "sources": [
+            "human_origins"
+          ],
+          "cousin": "ott417950",
+          "fork": "mrcaott83926ott84217"
+        }
+      ]
+    },
+    {
+      "id": "pigeon",
+      "endpoint": "ott938416",
+      "title": "pt_story_pigeon_name",
+      "subtitle": "pt_story_pigeon_intro",
+      "steps": [
+        {
+          "node": "ott93302",
+          "art": "cell",
+          "title": "pt_story_cell_title",
+          "body": "pt_story_cell_body",
+          "caption": "pt_story_cell_caption",
+          "sources": [
+            "microbes",
+            "asgard"
+          ],
+          "cousin": "mrcaott616ott617",
+          "fork": "ott93302"
+        },
+        {
+          "node": "ott304358",
+          "art": "eukaryote",
+          "title": "pt_story_eukaryote_title",
+          "body": "pt_story_eukaryote_body",
+          "caption": "pt_story_eukaryote_caption",
+          "sources": [
+            "eukaryotes"
+          ],
+          "cousin": "ott239659",
+          "fork": "ott304358"
+        },
+        {
+          "node": "ott332573",
+          "art": "fungus",
+          "title": "pt_story_opistho_title",
+          "body": "pt_story_opistho_body",
+          "caption": "pt_story_opistho_caption",
+          "sources": [
+            "fungi"
+          ],
+          "cousin": "ott356221",
+          "fork": "ott332573"
+        },
+        {
+          "node": "ott691846",
+          "art": "colony",
+          "title": "pt_story_animal_title",
+          "body": "pt_story_animal_body",
+          "caption": "pt_story_animal_caption",
+          "sources": [
+            "animals"
+          ],
+          "cousin": "ott111442",
+          "fork": "mrcaott42ott150"
+        },
+        {
+          "node": "ott125642",
+          "art": "fish",
+          "title": "pt_story_chordate_title",
+          "body": "pt_story_chordate_body",
+          "caption": "pt_story_chordate_caption",
+          "sources": [
+            "chordates"
+          ],
+          "cousin": "ott1005914",
+          "fork": "ott114654"
+        },
+        {
+          "node": "ott229562",
+          "art": "limbs",
+          "title": "pt_story_tetrapod_title",
+          "body": "pt_story_tetrapod_body",
+          "caption": "pt_story_tetrapod_caption",
+          "sources": [
+            "amphibians"
+          ],
+          "cousin": "ott14718",
+          "fork": "ott229562"
+        },
+        {
+          "node": "ott229560",
+          "art": "egg",
+          "title": "pt_story_amniote_title",
+          "body": "pt_story_amniote_body",
+          "caption": "pt_story_amniote_caption",
+          "sources": [
+            "reptiles"
+          ],
+          "cousin": "ott770315",
+          "fork": "ott229560"
+        },
+        {
+          "node": "ott639642",
+          "art": "feather",
+          "title": "pt_story_sauropsid_title",
+          "body": "pt_story_sauropsid_body",
+          "caption": "pt_story_sauropsid_caption",
+          "sources": [
+            "birds"
+          ],
+          "cousin": "ott35864",
+          "fork": "mrcaott246ott31216"
+        },
+        {
+          "node": "ott81461",
+          "art": "bird",
+          "title": "pt_story_bird_title",
+          "body": "pt_story_bird_body",
+          "caption": "pt_story_bird_caption",
+          "sources": [
+            "flight"
+          ],
+          "cousin": "ott647692",
+          "fork": "ott81461"
+        },
+        {
+          "node": "ott938416",
+          "art": "pigeon",
+          "title": "pt_story_pigeon_title",
+          "body": "pt_story_pigeon_body",
+          "caption": "pt_story_pigeon_caption",
+          "sources": [
+            "cornell_pigeon"
+          ],
+          "cousin": "ott765167",
+          "fork": "ott241846"
+        }
+      ]
+    },
+    {
+      "id": "oak",
+      "endpoint": "ott239659",
+      "title": "pt_story_oak_name",
+      "subtitle": "pt_story_oak_intro",
+      "steps": [
+        {
+          "node": "ott93302",
+          "art": "cell",
+          "title": "pt_story_cell_title",
+          "body": "pt_story_cell_body",
+          "caption": "pt_story_cell_caption",
+          "sources": [
+            "microbes",
+            "asgard"
+          ],
+          "cousin": "mrcaott616ott617",
+          "fork": "ott93302"
+        },
+        {
+          "node": "ott304358",
+          "art": "eukaryote",
+          "title": "pt_story_eukaryote_title",
+          "body": "pt_story_eukaryote_body",
+          "caption": "pt_story_eukaryote_caption",
+          "sources": [
+            "eukaryotes"
+          ],
+          "cousin": "ott356221",
+          "fork": "ott304358"
+        },
+        {
+          "node": "ott361838",
+          "art": "plastid",
+          "title": "pt_story_green_title",
+          "body": "pt_story_green_body",
+          "caption": "pt_story_green_caption",
+          "sources": [
+            "plastids",
+            "eukaryotes"
+          ],
+          "cousin": "ott33153",
+          "fork": "ott361838"
+        },
+        {
+          "node": "ott56610",
+          "art": "moss",
+          "title": "pt_story_land_title",
+          "body": "pt_story_land_body",
+          "caption": "pt_story_land_caption",
+          "sources": [
+            "plants"
+          ],
+          "cousin": "ott56596",
+          "fork": "ott56610"
+        },
+        {
+          "node": "ott10210",
+          "art": "vessels",
+          "title": "pt_story_vascular_title",
+          "body": "pt_story_vascular_body",
+          "caption": "pt_story_vascular_caption",
+          "sources": [
+            "vascular"
+          ],
+          "cousin": "ott195639",
+          "fork": "ott1007992"
+        },
+        {
+          "node": "ott10218",
+          "art": "seed",
+          "title": "pt_story_seed_title",
+          "body": "pt_story_seed_body",
+          "caption": "pt_story_seed_caption",
+          "sources": [
+            "seeds"
+          ],
+          "cousin": "ott568619",
+          "fork": "ott10218"
+        },
+        {
+          "node": "ott99252",
+          "art": "flower",
+          "title": "pt_story_flower_title",
+          "body": "pt_story_flower_body",
+          "caption": "pt_story_flower_caption",
+          "sources": [
+            "flowers",
+            "oak"
+          ],
+          "cousin": "ott605194",
+          "fork": "ott5298374"
+        },
+        {
+          "node": "ott239659",
+          "art": "oak",
+          "title": "pt_story_oak_title",
+          "body": "pt_story_oak_body",
+          "caption": "pt_story_oak_caption",
+          "sources": [
+            "oak"
+          ],
+          "cousin": "ott267719",
+          "fork": "mrcaott32687ott37377"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "chordates",
+      "citation": "OpenStax, Biology 2e — 29-1-chordates",
+      "url": "https://openstax.org/books/biology-2e/pages/29-1-chordates",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "amphibians",
+      "citation": "OpenStax, Biology 2e — 29-3-amphibians",
+      "url": "https://openstax.org/books/biology-2e/pages/29-3-amphibians",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "reptiles",
+      "citation": "OpenStax, Biology 2e — 29-4-reptiles",
+      "url": "https://openstax.org/books/biology-2e/pages/29-4-reptiles",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "mammals",
+      "citation": "OpenStax, Biology 2e — 29-6-mammals",
+      "url": "https://openstax.org/books/biology-2e/pages/29-6-mammals",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "primates",
+      "citation": "OpenStax, Biology 2e — 29-7-the-evolution-of-primates",
+      "url": "https://openstax.org/books/biology-2e/pages/29-7-the-evolution-of-primates",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "birds",
+      "citation": "OpenStax, Biology 2e — 29-5-birds",
+      "url": "https://openstax.org/books/biology-2e/pages/29-5-birds",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "vascular",
+      "citation": "OpenStax, Biology 2e — 25-4-seedless-vascular-plants",
+      "url": "https://openstax.org/books/biology-2e/pages/25-4-seedless-vascular-plants",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "seeds",
+      "citation": "OpenStax, Biology 2e — 26-1-evolution-of-seed-plants",
+      "url": "https://openstax.org/books/biology-2e/pages/26-1-evolution-of-seed-plants",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "flowers",
+      "citation": "OpenStax, Biology 2e — 26-3-angiosperms",
+      "url": "https://openstax.org/books/biology-2e/pages/26-3-angiosperms",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "human_origins",
+      "citation": "Smithsonian Human Origins — Homo sapiens",
+      "url": "https://humanorigins.si.edu/evidence/human-fossils/species/homo-sapiens",
+      "license": "Reference only; no text or image reproduced",
+      "license_url": "https://humanorigins.si.edu/evidence/human-fossils/species/homo-sapiens"
+    },
+    {
+      "id": "cornell_pigeon",
+      "citation": "Cornell Lab of Ornithology — Rock Pigeon",
+      "url": "https://www.allaboutbirds.org/guide/Rock_Pigeon/overview",
+      "license": "Reference only; no text or image reproduced",
+      "license_url": "https://www.allaboutbirds.org/guide/Rock_Pigeon/overview"
+    },
+    {
+      "id": "oak",
+      "citation": "Woodland Trust — English oak (Quercus robur)",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/english-oak/",
+      "license": "Reference only; no text or image reproduced",
+      "license_url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/english-oak/"
+    }
+  ]
+}

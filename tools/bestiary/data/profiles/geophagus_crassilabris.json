@@ -1,0 +1,202 @@
+{
+  "id": "geophagus_crassilabris",
+  "scientific": "Geophagus crassilabris",
+  "group": "fish",
+  "name": {
+    "en": "Panamanian eartheater",
+    "fr": "Géophage du Panama"
+  },
+  "sections": {
+    "overview": {
+      "en": "This eartheater is the geographically unusual Panamanian member of Geophagus, recorded on both Atlantic and Pacific slopes of central and eastern Panama. The Catalog of Fishes also records Colombia, whereas FishBase summarizes the range as Panama.",
+      "fr": "Ce géophage est le membre géographiquement atypique du genre Geophagus au Panama, signalé sur les versants atlantique et pacifique du centre et de l’est du pays. Le Catalog of Fishes mentionne aussi la Colombie, tandis que FishBase résume l’aire comme panaméenne."
+    },
+    "identification": {
+      "en": "The species is valid in the Catalog of Fishes, although some specialist accounts put its genus name in quotation marks because its placement within the steindachneri group remains unsettled.",
+      "fr": "L’espèce est valide dans le Catalog of Fishes, bien que certaines fiches spécialisées mettent son nom de genre entre guillemets, car sa position au sein du groupe steindachneri reste incertaine."
+    },
+    "habitat": {
+      "en": "FishBase reports it from freshwater streams with moderate to fast flow over small stones, sand, rock and leaf debris.",
+      "fr": "FishBase la signale dans des cours d’eau douce à courant modéré ou rapide, sur de petits cailloux, du sable, des roches et des débris de feuilles."
+    },
+    "diet": {
+      "en": "Species-specific prey data are limited; a specialist account describes substrate-sifting and stomach contents for the broader steindachneri group, not a direct species-level diet study.",
+      "fr": "Les données propres à ses proies sont limitées ; une fiche spécialisée décrit le tamisage du substrat et les contenus stomacaux du groupe steindachneri au sens large, sans étude alimentaire directe de l’espèce."
+    },
+    "behavior": {
+      "en": "Detailed ecology available is largely group-level; the sources used here do not establish species-specific social behavior.",
+      "fr": "Les données écologiques détaillées disponibles concernent surtout le groupe ; les sources utilisées ici n’établissent pas de comportement social propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "A specialist aquarium account describes maternal mouthbrooding in the steindachneri group, but this is treated as group-level evidence rather than a firm species-specific observation.",
+      "fr": "Une fiche aquariophile spécialisée décrit une incubation buccale maternelle dans le groupe steindachneri, mais il s’agit d’une donnée de groupe et non d’une observation propre à l’espèce solidement établie."
+    },
+    "ecology": {
+      "en": "It differs geographically from G. argyrostictus of the Xingu and G. brokopondo of Suriname, described in the companion profiles.",
+      "fr": "Son aire diffère de celles de G. argyrostictus du Xingu et G. brokopondo du Suriname, décrits dans les fiches associées."
+    },
+    "conservation": {
+      "en": "FishBase lists global Least Concern from an assessment dated 2 August 2019.",
+      "fr": "FishBase indique la catégorie mondiale « préoccupation mineure », issue d’une évaluation datée du 2 août 2019."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus crassilabris — FishBase",
+        "fr": "Geophagus crassilabris — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/geophagus-crassilabris.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives range, stream conditions and LC assessment dated 2019-08-02."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Catalog of Fishes — Geophagus crassilabris",
+        "fr": "Catalog of Fishes — Geophagus crassilabris"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16494",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Eschmeyer catalog recognizes the name as valid and lists Panama and Colombia distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "“Geophagus” crassilabris — Seriously Fish",
+        "fr": "“Geophagus” crassilabris — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/geophagus-crassilabris",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Specialist account notes unresolved group placement and gives diet and breeding details largely at group level."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus argyrostictus — Cybium original description",
+        "fr": "Geophagus argyrostictus — description originale, Cybium"
+      },
+      "url": "https://sfi-cybium.fr/en/geophagus-argyrostictus-new-species-cichlid-fish-rio-xingu-brazil",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Cybium paper documents G. argyrostictus from the Xingu basin; FishBase identifies G. crassilabris on Panamanian slopes."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Species-level diet and social-behavior evidence is limited; group-level descriptions are labeled as such.",
+    "Generic placement differs between sources: FishBase and Catalog of Fishes use Geophagus, while Seriously Fish signals uncertainty with quotation marks."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "This compares the Panamanian species with the two South American congeners without conflating their ranges or reproduction evidence."
+}

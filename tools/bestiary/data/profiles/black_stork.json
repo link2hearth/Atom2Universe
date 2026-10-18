@@ -1,0 +1,90 @@
+{
+  "id": "black_stork",
+  "scientific": "Ciconia nigra",
+  "group": "birds",
+  "name": {
+    "en": "Black Stork",
+    "fr": "Cigogne noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black stork is a shy, large stork of quiet forests and wetlands. It breeds across the Palearctic from Spain to China and, in most populations, migrates south for the winter.",
+      "fr": "La cigogne noire est une grande cigogne farouche des forêts tranquilles et des zones humides. Elle se reproduit dans le Paléarctique, de l’Espagne à la Chine, et la plupart des populations migrent vers le sud pour l’hiver."
+    },
+    "identification": {
+      "en": "A bird stands 95–100 cm tall, spans 144–155 cm and weighs about 3 kg. The plumage is black with a green and purple gloss, with a white breast and belly. The bill and legs are scarlet red, brighter in the breeding season and duller in winter. Young birds are duller than adults.",
+      "fr": "L’oiseau mesure 95 à 100 cm de haut, 144 à 155 cm d’envergure et pèse environ 3 kg. Son plumage est noir à reflets verts et pourpres, avec la poitrine et le ventre blancs. Le bec et les pattes sont rouge vif, plus éclatants en saison de reproduction et plus ternes en hiver. Les jeunes sont plus ternes que les adultes."
+    },
+    "habitat": {
+      "en": "It inhabits old, undisturbed, open forests from sea level to mountains at about 2,000–2,500 m. It forages in shallow streams, pools, marshes and damp meadows, and generally avoids large bodies of water and dense forest. The nest is a large stick structure 4–25 m up in a big tree, or on cliffs in Spain.",
+      "fr": "Elle vit dans de vieilles forêts claires et tranquilles, du niveau de la mer jusqu’en montagne vers 2 000–2 500 m. Elle pêche dans les ruisseaux peu profonds, les mares, les marais et les prairies humides, et évite en général les grandes étendues d’eau et les forêts denses. Le nid, grande construction de branches, se trouve à 4–25 m de haut dans un grand arbre, ou sur des falaises en Espagne."
+    },
+    "diet": {
+      "en": "It is mainly a fish-eater, but it also takes amphibians, insects, snails, crabs, small reptiles, small mammals and birds. It hunts by sight, often standing in shallow water.",
+      "fr": "Elle se nourrit surtout de poissons, mais capture aussi des amphibiens, des insectes, des escargots, des crabes, de petits reptiles, de petits mammifères et des oiseaux. Elle chasse à vue, souvent debout dans l’eau peu profonde."
+    },
+    "behavior": {
+      "en": "Outside the breeding season it is shy and mostly solitary, and it nests alone, with pairs rarely closer than about one kilometre. It migrates singly or in small groups of up to about 100 birds, along well-defined routes. Some populations, such as those in Spain, do not migrate.",
+      "fr": "Hors de la saison de reproduction, elle est farouche et surtout solitaire, et elle niche isolément, les couples étant rarement distants de moins d’un kilomètre. Elle migre seule ou en petits groupes pouvant atteindre une centaine d’oiseaux, selon des routes bien définies. Certaines populations, comme celles d’Espagne, sont sédentaires."
+    },
+    "reproduction": {
+      "en": "In a study in Dadia National Park, north-eastern Greece (2006–2008), eggs were laid on average on 8 April, the mean clutch was 3.9 eggs, and pairs that succeeded raised an average of 3.26 young. Both parents build the nest and incubate, which takes about 32–38 days, and young fledge at 63–71 days. Maturity comes at 3–5 years.",
+      "fr": "Dans une étude menée dans le parc national de Dadia, au nord-est de la Grèce (2006–2008), la ponte avait lieu en moyenne le 8 avril, la couvée comptait en moyenne 3,9 œufs, et les couples qui réussissaient élevaient en moyenne 3,26 jeunes. Les deux parents construisent le nid et couvent pendant environ 32 à 38 jours; les jeunes s’envolent à 63–71 jours. La maturité est atteinte à 3–5 ans."
+    },
+    "ecology": {
+      "en": "The species commonly reuses its nests from year to year and may take over nests built by other birds. Large old trees with strong canopies are a limiting resource, and the birds depend on clean streams and wetlands for food. In Greece, small-scale farming that created shallow feeding grounds helped the local population to increase.",
+      "fr": "L’espèce réutilise couramment ses nids d’une année à l’autre et peut s’approprier des nids construits par d’autres oiseaux. Les grands arbres âgés à houppier solide sont une ressource limitante, et l’oiseau dépend de cours d’eau et de zones humides propres pour se nourrir. En Grèce, une agriculture à petite échelle, qui a créé des zones d’alimentation peu profondes, a favorisé l’augmentation de la population locale."
+    },
+    "conservation": {
+      "en": "The 2015 European assessment by BirdLife International rated it Least Concern, with 9,800–13,900 pairs in Europe and an increasing trend. The main threat is habitat degradation, including loss of large nesting trees, dams and drainage, with hunting in southern Europe and collisions with power lines as further causes of death.",
+      "fr": "L’évaluation européenne de BirdLife International de 2015 la classait en préoccupation mineure, avec 9 800 à 13 900 couples en Europe et une tendance à la hausse. La principale menace est la dégradation de l’habitat, notamment la perte des grands arbres de nidification, les barrages et les drainages; la chasse dans le sud de l’Europe et les collisions avec les lignes électriques causent aussi des morts."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ciconia nigra (black stork) — Animal Diversity Web, University of Michigan",
+        "fr": "Ciconia nigra (cigogne noire) — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Ciconia_nigra/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "reproduction"],
+      "facts": [
+        "95–100 cm tall, wingspan 144–155 cm, about 3 kg; black with green and purple gloss, white breast and belly, red bill and legs.",
+        "Incubation 32–38 days, fledging 63–71 days, maturity at 3–5 years; hunts by sight standing in water. The account dates from 2006 and its status and population figures were not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ciconia nigra — European Red List assessment, BirdLife International (2015)",
+        "fr": "Ciconia nigra — Évaluation de la Liste rouge européenne, BirdLife International (2015)"
+      },
+      "url": "https://www.vogelbescherming.nl/docs/55bb3154-acd0-4977-a431-4904e28b7a4f.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Assessed 31 March 2015: Least Concern in Europe; 9,800–13,900 pairs, increasing; forests, streams, nests 4–25 m up in trees or on cliffs (Spain); nests reused, pairs at least 1 km apart.",
+        "Threats: habitat degradation and deforestation of nest trees, dams, drainage, hunting in southern Europe, power-line collisions."
+      ]
+    },
+    {
+      "title": {
+        "en": "Breeding density, nest-site spacing and breeding performance of black storks in Dadia-Lefkimi-Soufli National Park — North-Western Journal of Zoology",
+        "fr": "Densité de reproduction, espacement des nids et performances de reproduction des cigognes noires dans le parc national de Dadia-Lefkimi-Soufli — North-Western Journal of Zoology"
+      },
+      "url": "https://biozoojournals.ro/nwjz/content/v12n1/nwjz_e151602_Bakaloudis.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["reproduction", "ecology"],
+      "facts": [
+        "Greece 2006–2008: mean laying date 8 April, mean clutch 3.90 eggs (n = 92), 3.26 fledglings per successful pair (n = 83).",
+        "Population increase partly attributed to small-scale agriculture creating feeding grounds."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The conservation category given is the European regional assessment (2015); a global category was not verified from a page that was fully readable. The ADW population figures (32,000–44,000 and decreasing) date from 2006 and were not used.",
+    "Breeding figures come from a single Greek study; timing and clutch size vary across the wide range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from the BirdLife European Red List PDF (2015) and the Greek field study, morphology and incubation from ADW (consulted 2026-10-12); illustration to be checked by the owner."
+}

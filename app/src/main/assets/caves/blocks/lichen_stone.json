@@ -1,0 +1,15 @@
+{
+  "id": 2320,
+  "name": "lichen_stone",
+  "texture_top": "cozy:ore:3:929A96:B1B38C",
+  "texture_side": "cozy:ore:3:929A96:B1B38C",
+  "texture_bottom": "cozy:ore:3:929A96:B1B38C",
+  "color": "#929A96",
+  "hardness": 2.5,
+  "drop": "lichen_stone",
+  "harvest_category": "recoverable",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

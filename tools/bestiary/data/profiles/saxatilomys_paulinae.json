@@ -1,0 +1,144 @@
+{
+  "id": "saxatilomys_paulinae",
+  "scientific": "Saxatilomys paulinae",
+  "group": "mammals",
+  "name": {
+    "en": "Paulina's limestone rat",
+    "fr": "Rat des karsts de Paulina"
+  },
+  "sections": {
+    "overview": {
+      "en": "Saxatilomys paulinae is a poorly known murid rodent first described from limestone karst in central Laos.",
+      "fr": "Saxatilomys paulinae est un rongeur muridé peu connu, décrit d’abord dans les karsts calcaires du centre du Laos."
+    },
+    "identification": {
+      "en": "It has dark, dense fur with partly spine-like hairs and unusually enlarged pads on its feet.",
+      "fr": "Il possède une fourrure sombre et dense, aux poils parfois presque épineux, ainsi que des coussinets plantaires particulièrement développés."
+    },
+    "habitat": {
+      "en": "Records associate it with rocky karst, including limestone forest, scrub and bamboo-covered slopes.",
+      "fr": "Les observations l’associent aux reliefs karstiques rocheux, notamment aux forêts calcaires et aux pentes couvertes de broussailles et de bambous."
+    },
+    "diet": {
+      "en": "Its diet has not been described adequately in the sources consulted.",
+      "fr": "Son régime alimentaire n’est pas suffisamment décrit dans les sources consultées."
+    },
+    "behavior": {
+      "en": "It is reported as nocturnal, but its movements and social behavior remain unknown.",
+      "fr": "Il est décrit comme nocturne, mais ses déplacements et son comportement social restent inconnus."
+    },
+    "reproduction": {
+      "en": "The available species accounts provide no reliable details on breeding.",
+      "fr": "Les fiches d’espèce disponibles ne donnent pas de renseignements fiables sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Later surveys recorded it in Vietnam as well as Laos; one study then knew only a handful of sites across this limestone region.",
+      "fr": "Des prospections l’ont ensuite recensé au Vietnam comme au Laos ; une étude ne connaissait alors que quelques sites dans cette région calcaire."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists its IUCN status as Not Evaluated. Field researchers reported trapping and habitat disturbance at known Vietnamese sites.",
+      "fr": "La Mammal Diversity Database indique que son statut UICN est « non évalué ». Des chercheurs ont signalé piégeage et perturbation de l’habitat sur les sites vietnamiens connus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Paulina’s Limestone Rat — Mammal Diversity Database",
+        "fr": "Paulina’s Limestone Rat — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003678/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Current taxonomy and IUCN evaluation field."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 6,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New data on Saxatilomys paulinae — Biodiversity Data Journal",
+        "fr": "New data on Saxatilomys paulinae — Biodiversity Data Journal"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4442251/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Vietnam surveys add records and describe limestone habitat; diet and breeding remain poorly known."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 14,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Saxatilomys paulinae — GBIF species account",
+        "fr": "Saxatilomys paulinae — GBIF species account"
+      },
+      "url": "https://www.gbif.org/species/197826217",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Handbook of Mammals account: morphology, nocturnal activity and rocky karst habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 11,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2015 field paper reported the first Vietnamese records; later taxonomic databases differ in whether to display a current IUCN status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Conservation wording follows the current MDD entry; older publications reported Data Deficient, so that older category is not presented as current."
+}

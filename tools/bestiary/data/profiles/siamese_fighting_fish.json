@@ -1,0 +1,234 @@
+{
+  "id": "siamese_fighting_fish",
+  "scientific": "Betta splendens",
+  "group": "fish",
+  "name": {
+    "en": "Siamese Fighting Fish",
+    "fr": "Combattant siamois"
+  },
+  "sections": {
+    "overview": {
+      "en": "Native to Thailand and nearby Indochina, wild B. splendens is short-finned and subdued; ornamental colours and flowing fins reflect selective breeding.",
+      "fr": "Indigène de Thaïlande et de l’Indochine voisine, le B. splendens sauvage est discret et doté de nageoires courtes; l’élevage a sélectionné couleurs vives et longues nageoires."
+    },
+    "identification": {
+      "en": "Wild adults reach a documented maximum total length of 6.5 cm; FishBase does not report a body mass. Adult males generally have longer fins than females, but no reliable sex-specific body-size or weight measurements were found in the consulted sources. Wild adults reach a documented maximum total length of 6.5 cm; males are often slimmer, longer-finned, and brighter, while females have shorter fins, especially in domestic strains.",
+      "fr": "Les adultes sauvages atteignent une longueur totale maximale documentée de 6,5 cm ; FishBase ne fournit pas de masse corporelle. Les mâles adultes ont généralement des nageoires plus longues que les femelles, mais les sources consultées ne donnent pas de mesures fiables de taille corporelle ou de masse par sexe. Les adultes atteignent une longueur totale maximale documentée de 6,5 cm; les mâles sont souvent plus fins, colorés et à longues nageoires, surtout dans les lignées domestiques."
+    },
+    "habitat": {
+      "en": "It inhabits Thailand’s central plain and nearby Indochina, in shallow marshes, floodplains and rice fields with warm, slow water and vegetation.",
+      "fr": "Il vit dans la plaine centrale thaïlandaise et l’Indochine voisine, parmi marais, plaines inondables et rizières aux eaux lentes et végétalisées."
+    },
+    "diet": {
+      "en": "It snaps up small animal prey among plants or at the surface, especially zooplankton and mosquito or other insect larvae. Small crustaceans and insects that fall onto the water also provide food, so access to animal prey is a central part of its natural feeding ecology.",
+      "fr": "Il capture de petites proies animales dans les plantes ou en surface, surtout zooplancton et larves de moustiques ou d’autres insectes. De petits crustacés et des insectes tombés sur l’eau complètent ses ressources : l’accès aux proies animales constitue ainsi une composante essentielle de son alimentation naturelle."
+    },
+    "behavior": {
+      "en": "Territorial males spread fins and flare gill covers to warn rivals; clashes can cause bites and injury. Aggression varies, and females can also be territorial. Domesticated fighting strains were selected for persistent aggression, whereas ornamental breeding later favoured elaborate fins and colours; the intensity of fighting therefore differs among strains.",
+      "fr": "Les mâles territoriaux déploient nageoires et opercules pour avertir leurs rivaux; les affrontements blessent. L’agressivité varie, et les femelles peuvent aussi défendre un territoire. Les lignées de combat ont été sélectionnées pour une agressivité persistante, tandis que la sélection ornementale a ensuite privilégié nageoires et couleurs ; l’intensité des affrontements varie donc entre lignées."
+    },
+    "reproduction": {
+      "en": "The male courts beside a floating bubble nest. During an embrace, female eggs meet male sperm in water: fertilization is external. He gathers sinking eggs and guards them; after hatching, he tends larvae until they swim freely. Keeping eggs in a surface bubble nest improves their access to oxygen in warm, poorly oxygenated water, while the male repairs damaged bubbles. Incubation typically lasts about 24–36 hours, followed by two to three days in the nest while larvae absorb their yolk reserves. Young fish initially rely on their gills, because air breathing develops later; growth rate influences this transition and the age of maturity.",
+      "fr": "Le mâle parade près d’un nid flottant de bulles. Dans l’enlacement, œufs et spermatozoïdes sont libérés dans l’eau: la fécondation est externe. Il recueille les œufs, puis veille sur les larves après éclosion jusqu’à leur nage libre. Le nid de bulles maintient les œufs près de la surface et facilite leur accès à l’oxygène dans une eau chaude et peu oxygénée ; le mâle répare les bulles endommagées. L’incubation dure habituellement environ 24–36 heures, puis les larves restent deux à trois jours dans le nid pendant qu’elles absorbent leurs réserves vitellines. Les jeunes dépendent d’abord de leurs branchies, car la respiration aérienne se développe plus tard ; leur vitesse de croissance influence cette transition et l’âge de maturité."
+    },
+    "ecology": {
+      "en": "It eats insect larvae and feeds larger aquatic predators. A blood-rich labyrinth above the gills absorbs surface air in oxygen-poor water; gills still exchange gases underwater. The labyrinth contains folded bony surfaces lined with respiratory tissue, giving inhaled air a large exchange surface above the gills.",
+      "fr": "Il mange des larves et nourrit des prédateurs aquatiques. Au-dessus des branchies, le labyrinthe vascularisé absorbe l’air de surface quand l’eau manque d’oxygène; les branchies fonctionnent sous l’eau. Le labyrinthe contient des surfaces osseuses repliées tapissées de tissu respiratoire, qui offrent à l’air inhalé une surface d’échange étendue au-dessus des branchies."
+    },
+    "conservation": {
+      "en": "The IUCN’s 2011 assessment classifies wild populations as Vulnerable, citing wetland loss and pollution. Captive abundance does not secure native fish.",
+      "fr": "L’évaluation IUCN de 2011 classe les populations sauvages Vulnérables, menacées par la perte des zones humides et la pollution. L’élevage ne garantit pas leur survie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Siamese fighting fish",
+        "fr": "Combattant siamois"
+      },
+      "url": "https://en.wikipedia.org/wiki/Siamese_fighting_fish",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Wild colours and short fins contrast with selectively bred ornamental forms."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "identification.en.1",
+        "overview.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 11,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Combattant",
+        "fr": "Combattant"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Combattant",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Page française corroborates the species identity and basic natural history."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "identification.fr.1",
+        "overview.fr.1",
+        "reproduction.en.6",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 10,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Evolution, Culture, and Care for Betta splendens",
+        "fr": "Évolution, élevage et biologie de Betta splendens"
+      },
+      "url": "https://edis.ifas.ufl.edu/publication/FA212/pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Labyrinth tissue breathes air; bubble nests keep eggs near oxygen-rich surface."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 11,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Capacitating the Local Farmers to Enhance Global Marketing of Thailand’s National Aquatic Animal, the Siamese Fighting Fish",
+        "fr": "Renforcer les producteurs locaux pour développer le marché mondial du Combattant siamois, animal aquatique national de Thaïlande"
+      },
+      "url": "https://repository.seafdec.org/bitstream/handle/20.500.12066/5516/Siamese-fighting-fish.pdf?sequence=1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Wild diet includes zooplankton and insect larvae; males defend territories."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 10,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta splendens",
+        "fr": "Betta splendens"
+      },
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2011-1.RLTS.T180889A7653828.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Wild species assessed Vulnerable; lowland habitat loss and pollution cited."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 10,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta splendens summary — FishBase",
+        "fr": "Fiche Betta splendens — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/betta-splendens.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Maximum total length 6.5 cm male/unsexed; no published body mass on the species summary."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3"
+      ]
+    }
+  ],
+  "illustration_notes": "Wild-type short-finned Betta splendens, muted brown-green body and modest fins; avoid ornamental long-finned colours.",
+  "uncertainties": [
+    "Wild population boundaries and distribution are less consistently documented than the domestic trade; the precise local extent is not stated here."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: IFAS respiratory folded surfaces and oxygenation function of bubble nests checked. Added complete larval sequence and bilingual distinction between domestic strain aggression and ornamental morphology. Wild-threat scope retained separately from captive abundance; awkward French morphology wording corrected.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,120 @@
+{
+  "id": "psalmopoeus_irminia",
+  "scientific": "Psalmopoeus irminia",
+  "group": "invertebrates",
+  "name": {
+    "en": "Venezuelan tiger tarantula",
+    "fr": "Mygale tigre du Venezuela"
+  },
+  "sections": {
+    "overview": {
+      "en": "Psalmopoeus irminia is an accepted tarantula species recorded from Venezuela, Guyana and Brazil.",
+      "fr": "Psalmopoeus irminia est une mygale reconnue comme espèce, signalée au Venezuela, au Guyana et au Brésil."
+    },
+    "identification": {
+      "en": "In the Brazilian record, a female had a dark body, orange leg stripes and two rows of orange abdominal spots.",
+      "fr": "Dans l’observation brésilienne, une femelle avait le corps sombre, des bandes orange sur les pattes et deux rangées de taches orange sur l’abdomen."
+    },
+    "habitat": {
+      "en": "One Brazilian record came from a forest near the Miang River.",
+      "fr": "Une observation brésilienne provient d’une forêt près de la rivière Miang."
+    },
+    "diet": {
+      "en": "The field report gives no diet details.",
+      "fr": "L’étude de terrain ne précise pas son régime."
+    },
+    "behavior": {
+      "en": "The female was beside a tubular silk retreat about 1.6 m above ground, extending into rock crevices.",
+      "fr": "La femelle se trouvait près d’un abri tubulaire de soie, à environ 1,6 m du sol, prolongé dans des fissures rocheuses."
+    },
+    "reproduction": {
+      "en": "Breeding details are not reported.",
+      "fr": "La reproduction n’est pas décrite."
+    },
+    "ecology": {
+      "en": "It was collected in early evening; this single record does not establish its general activity pattern.",
+      "fr": "Elle a été récoltée en début de soirée ; cette observation unique ne détermine pas son rythme d’activité général."
+    },
+    "conservation": {
+      "en": "No conservation assessment is reported.",
+      "fr": "Aucune évaluation de conservation n’est rapportée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog — Psalmopoeus irminia",
+        "fr": "World Spider Catalog — Psalmopoeus irminia"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/44467",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Natural History Museum Bern catalog accepts the name and gives its range as Venezuela, Guyana and Brazil."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 18,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First record of the genus Psalmopoeus in Brazil — Check List (2016)",
+        "fr": "First record of the genus Psalmopoeus in Brazil — Check List (2016)"
+      },
+      "url": "https://doi.org/10.15560/12.2.1860",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "One Brazilian field and distribution report; no diet, breeding or conservation account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 12,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history statements beyond the single Brazilian field observation remain poorly documented in the reviewed sources.",
+    "No species-level conservation status is inferred from absence of an assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the World Spider Catalog and a peer-reviewed Brazilian record; kept single-specimen observations localized and avoided unsupported genus-level extrapolation."
+}

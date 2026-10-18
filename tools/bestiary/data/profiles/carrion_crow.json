@@ -1,0 +1,212 @@
+{
+  "id": "carrion_crow",
+  "scientific": "Corvus corone",
+  "group": "birds",
+  "name": {
+    "en": "Carrion crow",
+    "fr": "Corneille noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The carrion crow is a large, adaptable corvid native to western Europe and parts of eastern Asia.",
+      "fr": "La Corneille noire est un grand corvidé adaptable, présent en Europe occidentale et dans une partie de l’Asie orientale."
+    },
+    "identification": {
+      "en": "Adults are about 48–52 cm long, with an 84–100 cm wingspan and a usual mass of roughly 400–600 g; males average somewhat larger, but the sexes look alike. Its plumage is glossy black, and the bill and legs are black. The slimmer-billed adult rook has bare greyish skin at the bill base; the much larger raven has a heavier bill and shaggy throat. The similarly sized hooded crow, Corvus cornix, is a distinct species with a grey body and black head, wings and tail.",
+      "fr": "L’adulte mesure environ 48–52 cm, pour une envergure de 84–100 cm et une masse habituelle d’environ 400–600 g; les mâles sont en moyenne un peu plus grands, mais les sexes se ressemblent. Le plumage, le bec et les pattes sont noirs et brillants. Adulte au bec plus fin, le Corbeau freux présente une peau grisâtre nue à la base du bec; le Grand Corbeau, bien plus grand, a un bec plus massif et la gorge ébouriffée. De gabarit proche, la Corneille mantelée, Corvus cornix, est une espèce distincte au corps gris, à la tête, aux ailes et à la queue noires."
+    },
+    "habitat": {
+      "en": "Across its broad Eurasian range, the species uses woodland edges, farmland, moorland, coasts and urban parks.",
+      "fr": "Dans sa vaste aire eurasiatique, elle fréquente lisières, terres agricoles, landes, littoraux et parcs urbains."
+    },
+    "diet": {
+      "en": "An opportunistic omnivore, it takes seeds, grain, fruit, insects, earthworms, eggs, small animals and food discarded by people. It also scavenges carcasses and picks parasites from livestock.",
+      "fr": "Omnivore opportuniste, elle consomme graines, céréales, fruits, insectes, vers de terre, œufs, petits animaux et restes alimentaires humains. Elle récupère aussi des charognes et mange des parasites sur le bétail."
+    },
+    "behavior": {
+      "en": "Breeding pairs defend territories throughout the year, while unpaired birds and young gather in flocks and winter roosts. Calls and postures convey signals. Experiments show that carrion crows recognize individual humans.",
+      "fr": "Les couples nicheurs défendent leur territoire toute l’année; jeunes et oiseaux sans territoire se rassemblent en bandes et dortoirs hivernaux. Cris et postures transmettent des signaux. Des expériences montrent que la Corneille noire reconnaît des humains individuellement."
+    },
+    "reproduction": {
+      "en": "The pair builds a deep stick nest, usually high in a tree, in early spring. A typical clutch contains three or four eggs; the female incubates them for about 18–20 days while her mate brings food. Both parents feed the helpless chicks, which leave the nest at roughly 29 days, then continue to depend on adults while learning to forage before becoming independent.",
+      "fr": "Au début du printemps, le couple construit un nid profond de brindilles, généralement haut dans un arbre. La ponte compte habituellement trois ou quatre œufs; la femelle les couve environ 18–20 jours tandis que son partenaire lui apporte de la nourriture. Les deux parents nourrissent les poussins nidicoles, qui quittent le nid vers 29 jours; les jeunes restent ensuite dépendants des adultes et apprennent à chercher leur nourriture avant de devenir autonomes."
+    },
+    "ecology": {
+      "en": "They scavenge carcasses and take invertebrates and small vertebrates, sometimes raiding eggs or chicks; they are both scavengers and active predators.",
+      "fr": "Elles consomment des charognes et capturent invertébrés et petits vertébrés, pillant parfois œufs ou poussins; ce sont des charognards et des prédateurs actifs."
+    },
+    "conservation": {
+      "en": "BirdLife International’s 2021 European Red List classifies the species as Least Concern in Europe, based on national data largely reported in 2019–2020; this is a regional assessment, not a current global reassessment. In France, perceived agricultural damage has led to campaigns of destruction and deterrence.",
+      "fr": "La Liste rouge européenne des oiseaux publiée par BirdLife International en 2021 classe l’espèce en préoccupation mineure en Europe, à partir de données nationales principalement transmises en 2019–2020; cette évaluation régionale ne constitue pas une réévaluation mondiale actuelle. En France, les dégâts agricoles qui lui sont attribués ont entraîné des campagnes de destruction et d’effarouchement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Carrion crow — Wikipedia",
+        "fr": "Corneille noire — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Carrion_crow",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "All-black adult plumage; body length about 48–52 cm and mass 400–600 g."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 12,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Corneille noire — Wikipédia",
+        "fr": "Corneille noire — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Corneille_noire",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Sexes look alike; black crow differs from grey-mantled crow."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 9,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carrion Crow — BirdFacts",
+        "fr": "Corneille noire — BirdFacts",
+        "publisher": "British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/carrion-crow",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "BTO clutch averages three or four eggs; incubation lasts 18–20 days."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 11,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021: Corvus corone supplementary material — BirdLife International",
+        "fr": "Liste rouge européenne des oiseaux 2021 : matériel complémentaire sur Corvus corone — BirdLife International"
+      },
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/5783_corvus_corone.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European assessment published in 2021; national reports mainly date to 2019–2020."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 11,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La Corneille noire — Ligue pour la Protection des Oiseaux",
+        "fr": "La Corneille noire — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/corvides/corneille-noire",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "LPO describes species ecology, nesting and French hunting classification."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 9,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Corvus corone in a naturalistic field-guide pose: glossy all-black plumage, stout black bill, feathered bill base, dark legs, broad wings and medium-length tail. Show a robust crow-sized bird with no bare grey bill base, grey mantle, oversized raven bill or shaggy throat. Plain unobtrusive background.",
+  "uncertainties": [
+    "The global IUCN assessment date was not verified; conservation wording is deliberately limited to BirdLife’s 2021 European assessment.",
+    "Fledging and post-fledging dependence timings are typical values; local timing varies with conditions."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: corrected feathers versus bare black bill/legs; individual human recognition confirmed in species-specific account; editorial warning removed. LPO reproductive nest, scavenging and human-conflict claims checked; dated European conservation scope retained without presenting current hunting regulations.",
+  "source_audit_version": 1
+}

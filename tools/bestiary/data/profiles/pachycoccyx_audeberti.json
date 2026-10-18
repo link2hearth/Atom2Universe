@@ -1,0 +1,192 @@
+{
+  "id": "pachycoccyx_audeberti",
+  "scientific": "Pachycoccyx audeberti",
+  "group": "birds",
+  "name": {
+    "en": "Thick-billed cuckoo",
+    "fr": "Coucou d’Audebert"
+  },
+  "sections": {
+    "overview": {
+      "en": "The thick-billed cuckoo is an African cuckoo distinguished by its unusually heavy bill. It is a specialized brood parasite of helmetshrikes, an uncommon host choice among cuckoos.",
+      "fr": "Le Coucou d’Audebert est un coucou africain caractérisé par son bec particulièrement épais. Il parasite les nids des prionops, un choix d’hôte inhabituel parmi les coucous."
+    },
+    "identification": {
+      "en": "At about 36 cm long, it is a large, robust cuckoo with a conspicuously thick bill. The bill gives it a somewhat raptor-like appearance, but it is not a bird of prey.",
+      "fr": "Long d’environ 36 cm, c’est un grand coucou robuste au bec remarquablement épais. Celui-ci lui donne une allure un peu rapace, mais il ne s’agit pas d’un oiseau de proie."
+    },
+    "habitat": {
+      "en": "Across sub-Saharan Africa it occurs in moist forest, miombo woodland, riverine forest and wooded savanna. In West Africa, breeding records are strongly associated with closed-canopy forest used by helmetshrike hosts, so habitat association varies across the range.",
+      "fr": "En Afrique subsaharienne, il fréquente les forêts humides, le miombo, les forêts riveraines et les savanes boisées. En Afrique de l’Ouest, les observations de reproduction sont liées aux forêts fermées occupées par les prionops hôtes; l’association à l’habitat varie donc selon la région."
+    },
+    "diet": {
+      "en": "It mainly eats large insects, including caterpillars, grasshoppers and mantids. It does much of its foraging in the tree canopy.",
+      "fr": "Il mange surtout de gros insectes, notamment chenilles, criquets et mantes. Il cherche une grande partie de ses proies dans la canopée."
+    },
+    "behavior": {
+      "en": "The species is an elusive woodland cuckoo; some southern African accounts report local seasonal movements. Its thick bill and build create a hawk-like silhouette, but its ecology is that of a cuckoo.",
+      "fr": "Ce coucou discret des milieux boisés est décrit comme effectuant parfois des déplacements saisonniers locaux en Afrique australe. Son bec épais et sa silhouette robuste évoquent un rapace, mais son écologie est celle d’un coucou."
+    },
+    "reproduction": {
+      "en": "It lays eggs in helmetshrike nests, most often those of the red-billed helmetshrike in southern Africa. The host incubates and raises the cuckoo chick; host use and breeding details differ geographically.",
+      "fr": "Il pond dans les nids de prionops, le plus souvent dans ceux du Prionops à bec rouge en Afrique australe. L’hôte couve l’œuf et élève le jeune coucou; le choix des hôtes et les détails de reproduction varient selon la région."
+    },
+    "ecology": {
+      "en": "As a specialized brood parasite, it depends on helmetshrikes and the wooded habitats where they nest. Its insect diet also links it to canopy invertebrate communities; local research reports substantial effects of parasitism on host nesting success.",
+      "fr": "Parasite de couvée spécialisé, il dépend des prionops et des milieux boisés où ceux-ci nichent. Son régime insectivore le relie aussi aux invertébrés de la canopée; des études locales signalent un effet important du parasitisme sur le succès de reproduction des hôtes."
+    },
+    "conservation": {
+      "en": "Oiseaux.net displays Least Concern on its IUCN status graphic, but its accessible page does not identify the assessment year. Southern African accounts note miombo clearance and fragmentation as concerns; these regional pressures alone do not establish a current global population trend.",
+      "fr": "Oiseaux.net affiche la catégorie Préoccupation mineure sur son graphique de statut UICN, sans préciser l’année de l’évaluation sur la page accessible. Des sources d’Afrique australe signalent le défrichement et la fragmentation du miombo; ces pressions régionales ne suffisent pas à établir une tendance mondiale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Thick-billed cuckoo — Biodiversity Explorer, University of Cape Town / ADU",
+        "fr": "Coucou d’Audebert — Biodiversity Explorer, université du Cap / ADU"
+      },
+      "url": "https://www.biodiversityexplorer.info/birds/cuculidae/pachycoccyx_audeberti.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Southern African species account describes woodland habitat, insect prey, helmetshrike brood parasitism and concern about miombo fragmentation."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "habitat.en.2",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.fr.2",
+        "reproduction.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 17,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coucou d’Audebert (Pachycoccyx audeberti) — Oiseaux.net",
+        "fr": "Coucou d’Audebert (Pachycoccyx audeberti) — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/coucou.d.audeberti.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation",
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "French ornithological page gives a body length of 36 cm and broad habitat classes; its conservation graphic shows the IUCN category but not the assessment year."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 26,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White-breasted cuckoo — Store norske leksikon",
+        "fr": "Coucou à poitrine blanche — Store norske leksikon"
+      },
+      "url": "https://snl.no/hvitbrystgj%C3%B8k",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "overview",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Norwegian encyclopedia provides an independent-language check of the species account and basic breeding details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.2",
+        "habitat.fr.2",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 14,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Is the thick-billed cuckoo a forest-dependent species in West Africa? — Malimbus",
+        "fr": "Le Coucou d’Audebert est-il dépendant des forêts en Afrique de l’Ouest ? — Malimbus"
+      },
+      "url": "https://www.researchgate.net/publication/302960010_Is_the_Thick-billed_Cuckoo_Pachycoccyx_audeberti_a_forest_dependent_species_in_West_Africa",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Allport and Fanshawe discuss this cuckoo’s specialization on helmetshrikes and association with closed-canopy forest in West Africa."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 17,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host species and habitat associations vary by region; southern and western African observations should not be generalized uncritically.",
+    "The IUCN category displayed by Oiseaux.net could not be tied to a dated, current assessment in this research."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-checked French, English and Norwegian references; regional breeding evidence is scoped explicitly."
+}

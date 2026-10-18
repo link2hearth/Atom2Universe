@@ -1,0 +1,177 @@
+{
+  "id": "cormura_brevirostris",
+  "scientific": "Cormura brevirostris",
+  "group": "mammals",
+  "name": {
+    "en": "Chestnut sac-winged bat",
+    "fr": "Cormure à ailes en sac"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small Neotropical emballonurid bat is the only living species in the genus Cormura and is also called Wagner’s sac-winged bat.",
+      "fr": "Cette petite chauve-souris néotropicale de la famille des Emballonuridés est l’unique espèce actuelle du genre Cormura et porte aussi le nom de chauve-souris à ailes en sac de Wagner."
+    },
+    "identification": {
+      "en": "Adults are about 5 cm long and 9 g, with a light-brown to black back, paler underside and elongated scent sacs on the forearms.",
+      "fr": "Les adultes mesurent environ 5 cm et pèsent 9 g ; leur dos va du brun clair au noir, le ventre est plus pâle et leurs avant-bras portent de longs sacs odorifères."
+    },
+    "habitat": {
+      "en": "It is associated with humid, continuous forests and waterways, and has been recorded across Central America and northern and western South America.",
+      "fr": "Elle fréquente les forêts humides relativement continues et leurs cours d’eau ; sa répartition couvre l’Amérique centrale et le nord et l’ouest de l’Amérique du Sud."
+    },
+    "diet": {
+      "en": "It is an aerial insectivore, hunting flying insects in forest gaps, along edges and above the canopy.",
+      "fr": "C’est un insectivore aérien qui chasse des insectes en vol dans les trouées forestières, le long des lisières et au-dessus de la canopée."
+    },
+    "behavior": {
+      "en": "The species is generally solitary and forages through several forest height layers, from canopy to near ground level.",
+      "fr": "L’espèce est généralement solitaire et chasse à plusieurs étages de la forêt, de la canopée jusqu’à proximité du sol."
+    },
+    "reproduction": {
+      "en": "The available species accounts describe its roosting and echolocation but provide little direct information on breeding or litter size.",
+      "fr": "Les fiches d’espèce disponibles décrivent ses gîtes et son écholocation, mais donnent peu d’informations directes sur la reproduction ou la taille des portées."
+    },
+    "ecology": {
+      "en": "Its activity within forest interiors and edges makes it one of the aerial insectivorous bats monitored in studies of Amazonian forest fragmentation.",
+      "fr": "Son activité à l’intérieur des forêts et près de leurs lisières en fait l’une des chauves-souris insectivores suivies dans les études sur la fragmentation des forêts amazoniennes."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports a global IUCN status of Least Concern; this broad category does not remove the importance of retaining humid forest habitat.",
+      "fr": "La Mammal Diversity Database indique un statut mondial UICN de préoccupation mineure ; cette catégorie générale ne diminue pas l’importance de préserver les forêts humides."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cormura brevirostris — INPA Bat Library",
+        "fr": "Cormura brevirostris — bibliothèque des chauves-souris de l’INPA"
+      },
+      "url": "https://ppbio.inpa.gov.br/en/Bat_Library/Species/Cormura_brevirostris",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "INPA reports adult measurements, colour, scent sacs, solitary habits, tree hollows, humid forest streams and vertical-layer foraging."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cormura brevirostris — Mammal Diversity Database",
+        "fr": "Cormura brevirostris — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004781/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The database gives the accepted taxon, Wagner’s Sac-winged Bat as another English name, Neotropical range and global IUCN Least Concern status."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Edge effects and vertical stratification of aerial insectivorous bats across Amazonian rainforest — PeerJ",
+        "fr": "Effets de lisière et stratification verticale des chauves-souris insectivores aériennes en forêt amazonienne — PeerJ"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9506665/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed study identifies the sampled bats, including Cormura brevirostris, as aerial insectivores and analyses their forest-layer and edge activity."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Direct species-level data on diet composition and reproduction are sparse in the cited material; “aerial insectivore” describes the documented feeding guild, not a verified prey inventory.",
+    "No closely related species profile was identified in the catalogue for a direct reciprocal cross-reference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Portuguese and English INPA species pages, the Mammal Diversity Database and a peer-reviewed Amazonian bat-activity study; kept diet and reproduction at the evidence level available."
+}

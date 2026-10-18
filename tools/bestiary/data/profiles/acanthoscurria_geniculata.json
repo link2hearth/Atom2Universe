@@ -1,0 +1,134 @@
+{
+  "id": "acanthoscurria_geniculata",
+  "scientific": "Acanthoscurria geniculata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brazilian whiteknee tarantula",
+    "fr": "Mygale à genoux blancs"
+  },
+  "sections": {
+    "overview": {
+      "en": "Acanthoscurria geniculata is a large, ground-dwelling tarantula native to Brazil. Its dark body and striking pale bands at the leg joints make it easy to recognize as the Brazilian whiteknee. It is a member of the New World tarantula family Theraphosidae and is frequently studied in laboratory work on spider development, although many details of its behaviour in the wild remain poorly documented.",
+      "fr": "Acanthoscurria geniculata est une grande mygale terrestre originaire du Brésil. Son corps sombre et les bandes claires très visibles aux articulations des pattes lui valent son nom de mygale à genoux blancs. Elle appartient à la famille des Theraphosidae, les mygales du Nouveau Monde, et est souvent étudiée en laboratoire pour le développement des araignées, même si son comportement sauvage reste peu documenté."
+    },
+    "identification": {
+      "en": "The spider is robust and hairy, with a dark brown to nearly black body and conspicuous white to cream bands around the leg joints; reddish or pinkish hairs may show on the abdomen. It has four pairs of walking legs, as do other spiders. Care references commonly describe mature females as larger or heavier than males, but no dependable species-specific measurements quantify this difference. Commonly cited adult dimensions are about 8–10 cm body length and an 18–20 cm diagonal leg span; these figures come mainly from care references rather than standardized wild morphometric surveys. No dependable body height, width or mass range was located. The white joint bands are the clearest field mark; do not identify it from size alone, since several large Brazilian tarantulas can look similar.",
+      "fr": "Cette araignée robuste et velue a le corps brun foncé à presque noir, avec de nettes bandes blanches à crème autour des articulations des pattes ; l’abdomen peut porter des soies roussâtres ou rosées. Elle possède quatre paires de pattes marcheuses, comme les autres araignées. Les références d’élevage décrivent souvent les femelles adultes comme plus grandes ou plus lourdes que les mâles, mais aucune mensuration propre à l’espèce ne permet de chiffrer sûrement cet écart. Les dimensions souvent citées pour l’adulte sont environ 8 à 10 cm de longueur corporelle et 18 à 20 cm d’envergure diagonale des pattes ; elles proviennent surtout de fiches d’élevage, et non de mesures standardisées de populations sauvages. Aucune fourchette fiable de hauteur, largeur ou masse n’a été trouvée. Les bandes claires aux articulations sont le meilleur critère visuel ; la taille seule ne suffit pas, car plusieurs grandes mygales brésiliennes se ressemblent."
+    },
+    "habitat": {
+      "en": "Museum specimen records place the species in Brazil, including Pará, Roraima, Rondônia and Mato Grosso. The Cincinnati Zoo describes its habitat as rainforest in the Amazon Basin. As a terrestrial tarantula it is associated with the forest floor, but detailed field studies of its natural burrows, seasonal habitat use and microclimate are scarce; captive enclosures should not be mistaken for field evidence.",
+      "fr": "Les spécimens de musée situent l’espèce au Brésil, notamment dans les États du Pará, de Roraima, de Rondônia et du Mato Grosso. Le zoo de Cincinnati décrit un habitat de forêt tropicale dans le bassin amazonien. Cette mygale terrestre est associée au sol forestier, mais les études de terrain détaillées sur ses terriers, l’usage saisonnier de l’habitat et le microclimat sont rares ; les conditions de captivité ne doivent pas être prises pour des observations naturelles."
+    },
+    "diet": {
+      "en": "Like other tarantulas, it is a predatory spider that captures animal prey and subdues it with its fangs and venom. The Cincinnati Zoo lists insects, lizards and small mammals in its diet, but the proportions of these prey in the wild have not been established. A precise species-specific field diet should therefore not be inferred from a captive menu.",
+      "fr": "Comme les autres mygales, c’est une araignée prédatrice qui capture des proies animales et les immobilise avec ses chélicères et son venin. Le zoo de Cincinnati cite les insectes, les lézards et les petits mammifères dans son régime, mais les proportions de ces proies à l’état sauvage ne sont pas établies. Il ne faut donc pas déduire un régime naturel précis à partir d’un menu de captivité."
+    },
+    "behavior": {
+      "en": "It hunts from the ground and can seize prey with a quick lunge. Like other New World tarantulas, it possesses urticating abdominal setae that it can brush or flick toward a threat; these hairs can irritate skin and especially the eyes. A defensive bite is also possible, so the animal should not be handled. The species' notoriety in captivity does not provide a reliable measure of how often it is exposed or active in the forest.",
+      "fr": "Elle chasse au sol et peut saisir une proie par une brusque détente. Comme d’autres mygales du Nouveau Monde, elle possède sur l’abdomen des soies urticantes qu’elle peut frotter ou projeter vers une menace ; elles irritent la peau et particulièrement les yeux. Une morsure défensive est également possible : il ne faut pas manipuler l’animal. Sa popularité en captivité ne permet pas de savoir à quelle fréquence elle sort ou se montre en forêt."
+    },
+    "reproduction": {
+      "en": "The female makes and guards an egg sac. A Cincinnati Zoo species account reports 50–200 eggs in a sac, while a laboratory embryology paper documented one cocoon containing about 2,000 eggs; the difference shows that clutch counts vary and depend on the individual and conditions. The laboratory study describes embryos and cocoons but does not establish a typical wild clutch size or reproductive season.",
+      "fr": "La femelle fabrique et garde un cocon d’œufs. Une fiche du zoo de Cincinnati indique 50 à 200 œufs par cocon, tandis qu’une étude embryologique en laboratoire a observé un cocon d’environ 2 000 œufs ; ces valeurs divergentes montrent que le nombre varie selon l’individu et les conditions. L’étude décrit les embryons et les cocons, mais ne permet pas d’établir une taille de ponte habituelle dans la nature ni une saison de reproduction générale."
+    },
+    "ecology": {
+      "en": "As a large ground predator, it forms part of the invertebrate food web of Brazilian rainforest. Its exact prey spectrum, natural predators and effects on local populations have not been quantified in the sources reviewed. Museum records and captive popularity are much more extensive than direct ecological studies, so claims about its abundance or ecosystem role should remain modest.",
+      "fr": "En tant que grand prédateur terrestre, elle participe au réseau alimentaire des invertébrés des forêts tropicales brésiliennes. Les sources consultées ne quantifient ni l’ensemble de ses proies, ni ses prédateurs naturels, ni ses effets sur les populations locales. Les spécimens de musée et les observations en captivité sont bien mieux documentés que son écologie directe ; il faut donc rester prudent sur son abondance et son rôle dans l’écosystème."
+    },
+    "conservation": {
+      "en": "The sources reviewed do not provide a current IUCN assessment, population trend or quantitative conservation status for Acanthoscurria geniculata. Its occurrence in museum collections and the pet trade is not evidence that wild populations are secure. More field data would be needed to assess range, abundance and any local threats.",
+      "fr": "Les sources examinées ne donnent pas d’évaluation actuelle de l’UICN, de tendance démographique ni de statut de conservation quantifié pour Acanthoscurria geniculata. Sa présence dans les collections de musée et le commerce d’animaux ne prouve pas que les populations sauvages soient en sécurité. Il faudrait davantage de données de terrain pour évaluer sa répartition, son abondance et les menaces locales éventuelles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Acanthoscurria geniculata — Tarantupedia, Theraphosidae taxonomy and specimen records",
+        "fr": "Acanthoscurria geniculata — Tarantupedia, taxonomie des Theraphosidae et spécimens"
+      },
+      "url": "https://www.tarantupedia.com/theraphosinae/acanthoscurria/acanthoscurria-geniculata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomic and specimen database based on peer-reviewed literature identifies the accepted name, records 81 museum specimens from Brazil including Pará, Roraima, Rondônia and Mato Grosso, and lists Acanthoscurria transamazonica as a synonym."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brazilian White-knee Tarantula — Cincinnati Zoo & Botanical Garden",
+        "fr": "Mygale à genoux blancs — zoo et jardin botanique de Cincinnati"
+      },
+      "url": "https://cincinnatizoo.org/animals-archive/brazilian-white-knee-tarantula/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Zoo species account describes a large Amazon Basin tarantula, rainforest habitat, predatory feeding, lists insects, lizards and small mammals, and reports 50–200 eggs per egg sac; used with the stated scope of a zoo account."
+      ]
+    },
+    {
+      "title": {
+        "en": "Embryonic development and secondary axis induction in the Brazilian white knee tarantula Acanthoscurria geniculata",
+        "fr": "Développement embryonnaire et induction d’un axe secondaire chez la mygale à genoux blancs Acanthoscurria geniculata"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7128004/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed developmental study documents mating, female cocoon production and protection, and one laboratory cocoon containing about 2,000 eggs; it notes that cocoon size and egg number depend on female size and food supply."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acanthoscurria geniculata — Herpeton Academy species fact sheet",
+        "fr": "Acanthoscurria geniculata — fiche espèce Herpeton Academy"
+      },
+      "url": "https://academy.herpeton.net/en/caresheets/tarantulas/acanthoscurria-geniculata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Specialist tarantula care reference gives commonly cited adult dimensions of about 8–10 cm body length and 18–20 cm diagonal leg span and notes females are generally heavier than mature males; these captive-oriented values are labelled as such, with no mass or height claimed."
+      ]
+    },
+    {
+      "title": {
+        "en": "Tarántula de rodillas blancas — Spanish-language species overview",
+        "fr": "Tarántula de rodillas blancas — présentation de l’espèce en espagnol"
+      },
+      "url": "https://es.wikipedia.org/wiki/Acanthoscurria_geniculata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Spanish-language overview independently reports a body near 8 cm and leg span up to 20 cm, northern Brazilian rainforest habitat, burrows and shelter beneath rocks or logs, and defensive urticating hairs; used as a secondary cross-check rather than sole authority."
+      ]
+    }
+  ],
+  "illustration_notes": "Show a large, stocky, dark tarantula with conspicuous pale bands around the leg joints and reddish hairs on the abdomen; emphasize the terrestrial build and avoid portraying a web-building orb spider.",
+  "uncertainties": [
+    "Body and leg-span figures are approximate captive-reference measurements rather than a standardized field morphometric range; no reliable height, width, mass or measured sex comparison was found.",
+    "Direct studies of natural diet, burrows, population size and conservation trend are limited.",
+    "Egg counts differ markedly between a zoo account and one laboratory cocoon; clutch size varies and these observations should not be generalized as a fixed species value."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked a taxonomic specimen database, a peer-reviewed embryology paper, a zoo profile and English- and Spanish-language species references; clearly distinguished wild observations from captive-oriented measurements and noted conflicting egg-sac counts."
+}

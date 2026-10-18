@@ -1,0 +1,234 @@
+package com.Atom2Universe.app.games.caves.world
+
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.MeadowTextures
+
+internal object LodBuilder {
+
+    fun buildColumn(cx: Int, cz: Int, world: World, cache: LodCache? = null, coarse: Boolean = false): FloatArray {
+        val H = CHUNK_SIZE
+        val buf = Buf()
+        // Une seule résolution des chunks par colonne voisine, au lieu de rescanner la
+        // table du monde pour chacun des 64 blocs situés sur le bord du LOD.
+        val neighborColumns = HashMap<Long, List<Chunk>>(4)
+        fun adjHeight(ncx: Int, ncz: Int, lx: Int, lz: Int): Int {
+            val key = world.chunkKey(ncx, 0, ncz)
+            val loaded = neighborColumns.getOrPut(key) {
+                buildList {
+                    for (cy in world.surfaceChunkMax downTo -2) {
+                        world.getChunk(ncx, cy, ncz)?.takeIf { it.generated }?.let { add(it) }
+                    }
+                }
+            }
+            for (chunk in loaded) {
+                for (ly in H - 1 downTo 0) {
+                    val b = chunk.blockAt(lx, ly, lz)
+                    if (b != AIR && !isDecoration(b) && !isWater(b)) return chunk.worldY + ly
+                }
+            }
+            val h = cache?.get(ncx, ncz)?.heights?.get(lz * H + lx)
+            return if (h == null || h == Short.MIN_VALUE) Int.MIN_VALUE else h.toInt()
+        }
+
+        // ── Heightmap ────────────────────────────────────────────────────────
+        // Hauteur (absY du bloc le plus haut) et type pour chaque cellule (lx, lz).
+        // Int.MIN_VALUE = colonne vide ou non générée.
+        //
+        // On part du cache (hauteurs déjà vues) puis on fusionne avec les chunks actuellement
+        // chargés en gardant le MAX par cellule : une montagne grandit dans le LOD au fur et à
+        // mesure qu'on l'explore en hauteur, et ne rétrécit pas quand on s'en éloigne (les chunks
+        // hauts se déchargent mais la hauteur mémorisée persiste). Les éditions joueur invalident
+        // le cache (CaveRenderer), forçant une reconstruction propre à partir des chunks chargés.
+        val cached = cache?.get(cx, cz)
+        val heights   = IntArray(H * H) { i ->
+            val c = cached?.heights?.get(i)
+            if (c == null || c == Short.MIN_VALUE) Int.MIN_VALUE else c.toInt()
+        }
+        val topBlocks = ShortArray(H * H) { i -> cached?.blocks?.get(i) ?: AIR }
+
+        // Chunks chargés de la colonne, du plus haut au plus bas (un seul balayage cy).
+        val loaded = ArrayList<Chunk>()
+        for (cy in world.surfaceChunkMax downTo -2) {
+            val chunk = world.getChunk(cx, cy, cz) ?: continue
+            if (chunk.generated) loaded.add(chunk)
+        }
+
+        // Le scan 256 cellules + la réécriture du cache ne servent que si les chunks chargés
+        // peuvent DÉPASSER la hauteur déjà mémorisée. Cas courant (terrain plat déjà visité,
+        // ou tout le ring au démarrage) : on saute, et on rebâtit le mesh à partir du cache.
+        var cachedMax = Int.MIN_VALUE
+        if (cached != null) for (h in heights) if (h > cachedMax) cachedMax = h
+        val topLoadedY = if (loaded.isNotEmpty()) loaded[0].cy * H + (H - 1) else Int.MIN_VALUE
+        val canGrow = loaded.isNotEmpty() && (cached == null || topLoadedY > cachedMax)
+
+        if (canGrow) {
+            for (lz in 0 until H) for (lx in 0 until H) {
+                val idx = lz * H + lx
+                for (chunk in loaded) {                 // haut → bas : 1er bloc solide = sommet chargé
+                    var hit = false
+                    for (ly in H - 1 downTo 0) {
+                        val b = chunk.blockAt(lx, ly, lz)
+                        if (b == AIR || isDecoration(b) || isWater(b)) continue
+                        val wy = chunk.cy * H + ly
+                        if (wy > heights[idx]) { heights[idx] = wy; topBlocks[idx] = b }
+                        hit = true; break
+                    }
+                    if (hit) break
+                }
+            }
+            if (cache != null) {
+                val shortH = ShortArray(H * H) { i ->
+                    heights[i].let { if (it == Int.MIN_VALUE) Short.MIN_VALUE else it.toShort() }
+                }
+                cache.put(cx, cz, shortH, topBlocks.copyOf())
+            }
+        }
+
+        if (coarse) return buildDistantColumn(cx, cz, world, cache)
+
+        // ── Faces supérieures (couleur du bloc, pleine lumière) ───────────────
+        for (lz in 0 until H) for (lx in 0 until H) {
+            val h = heights[lz * H + lx]
+            if (h == Int.MIN_VALUE) continue
+            val c = BlockRegistry.getColor(topBlocks[lz * H + lx])
+            val r = ((c ushr 16) and 0xFF) / 255f
+            val g = ((c ushr 8)  and 0xFF) / 255f
+            val b =  (c          and 0xFF) / 255f
+            val x = lx.toFloat(); val z = lz.toFloat(); val y1 = (h + 1).toFloat()
+            buf.add6(x,    y1, z,    r, g, b); buf.add6(x+1f, y1, z,    r, g, b)
+            buf.add6(x+1f, y1, z+1f, r, g, b); buf.add6(x,    y1, z,    r, g, b)
+            buf.add6(x+1f, y1, z+1f, r, g, b); buf.add6(x,    y1, z+1f, r, g, b)
+        }
+
+        // ── Faces latérales : comble l'écart de hauteur avec les voisins ─────
+        // Couleur du bloc × lumière de face (côtés X 0.72, côtés Z 0.62) bakée dans le vertex.
+        for (lz in 0 until H) for (lx in 0 until H) {
+            val h = heights[lz * H + lx]
+            if (h == Int.MIN_VALUE) continue
+            val c = BlockRegistry.getColor(topBlocks[lz * H + lx])
+            val br = ((c ushr 16) and 0xFF) / 255f
+            val bg = ((c ushr 8)  and 0xFF) / 255f
+            val bb =  (c          and 0xFF) / 255f
+            val xr = br * 0.72f; val xg = bg * 0.72f; val xb = bb * 0.72f   // côtés X
+            val zr = br * 0.62f; val zg = bg * 0.62f; val zb = bb * 0.62f   // côtés Z
+            val y1 = (h + 1).toFloat()
+
+            // +X
+            val hPX = if (lx < H - 1) heights[lz * H + lx + 1]
+                      else adjHeight(cx + 1, cz, 0, lz)
+            if (hPX != Int.MIN_VALUE && hPX < h) {
+                val yb = (hPX + 1).toFloat()
+                val x = (lx + 1).toFloat(); val z = lz.toFloat()
+                buf.add6(x, y1, z,    xr, xg, xb); buf.add6(x, y1, z+1f, xr, xg, xb)
+                buf.add6(x, yb, z+1f, xr, xg, xb); buf.add6(x, y1, z,    xr, xg, xb)
+                buf.add6(x, yb, z+1f, xr, xg, xb); buf.add6(x, yb, z,    xr, xg, xb)
+            }
+
+            // -X
+            val hMX = if (lx > 0) heights[lz * H + lx - 1]
+                      else adjHeight(cx - 1, cz, H - 1, lz)
+            if (hMX != Int.MIN_VALUE && hMX < h) {
+                val yb = (hMX + 1).toFloat()
+                val x = lx.toFloat(); val z = lz.toFloat()
+                buf.add6(x, y1, z+1f, xr, xg, xb); buf.add6(x, y1, z,    xr, xg, xb)
+                buf.add6(x, yb, z,    xr, xg, xb); buf.add6(x, y1, z+1f, xr, xg, xb)
+                buf.add6(x, yb, z,    xr, xg, xb); buf.add6(x, yb, z+1f, xr, xg, xb)
+            }
+
+            // +Z
+            val hPZ = if (lz < H - 1) heights[(lz + 1) * H + lx]
+                      else adjHeight(cx, cz + 1, lx, 0)
+            if (hPZ != Int.MIN_VALUE && hPZ < h) {
+                val yb = (hPZ + 1).toFloat()
+                val x = lx.toFloat(); val z = (lz + 1).toFloat()
+                buf.add6(x+1f, y1, z, zr, zg, zb); buf.add6(x,    y1, z, zr, zg, zb)
+                buf.add6(x,    yb, z, zr, zg, zb); buf.add6(x+1f, y1, z, zr, zg, zb)
+                buf.add6(x,    yb, z, zr, zg, zb); buf.add6(x+1f, yb, z, zr, zg, zb)
+            }
+
+            // -Z
+            val hMZ = if (lz > 0) heights[(lz - 1) * H + lx]
+                      else adjHeight(cx, cz - 1, lx, H - 1)
+            if (hMZ != Int.MIN_VALUE && hMZ < h) {
+                val yb = (hMZ + 1).toFloat()
+                val x = lx.toFloat(); val z = lz.toFloat()
+                buf.add6(x,    y1, z, zr, zg, zb); buf.add6(x+1f, y1, z, zr, zg, zb)
+                buf.add6(x+1f, yb, z, zr, zg, zb); buf.add6(x,    y1, z, zr, zg, zb)
+                buf.add6(x+1f, yb, z, zr, zg, zb); buf.add6(x,    yb, z, zr, zg, zb)
+            }
+        }
+
+        return buf.toArray()
+    }
+
+    /** A shared 4-block grid extends the horizon without generating full chunks.
+     * Adjacent tiles sample identical world coordinates along their edges.
+     * Analytical samples never enter the persistent cache of explored/edited terrain. */
+    fun buildDistantColumn(cx: Int, cz: Int, world: World, cache: LodCache?): FloatArray {
+        val step = 4
+        val side = CHUNK_SIZE / step + 1
+        val heights = IntArray(side * side)
+        val blocks = ShortArray(side * side)
+        for (z in 0 until side) for (x in 0 until side) {
+            val wx = cx * CHUNK_SIZE + x * step
+            val wz = cz * CHUNK_SIZE + z * step
+            val entry = cache?.get(Math.floorDiv(wx, CHUNK_SIZE), Math.floorDiv(wz, CHUNK_SIZE))
+            val cell = Math.floorMod(wz, CHUNK_SIZE) * CHUNK_SIZE + Math.floorMod(wx, CHUNK_SIZE)
+            val known = entry?.heights?.get(cell)
+            val sample = world.distantSurface(wx, wz)
+            val index = z * side + x
+            val useKnown = known != null && known != Short.MIN_VALUE &&
+                (!(isWater(sample.second) || sample.second == ICE) || known.toInt() >= sample.first)
+            heights[index] = if (useKnown) known!!.toInt() else sample.first
+            blocks[index] = if (useKnown) entry!!.blocks[cell] else sample.second
+        }
+        // Couleur propre à chaque point de la grille : la pointe d'un arbre (ses feuilles) est verte
+        // et sa base garde la couleur du sol, en dégradé. Peindre tout le triangle avec un seul
+        // coin donnait des pics couleur d'herbe ou de terre. L'herbe et les feuilles prennent la
+        // teinte de leur climat, comme sur le terrain détaillé (même calcul que le shader).
+        val colors = IntArray(side * side)
+        val reference = MeadowTextures.climateColor(0, BlockRegistry.vividStyle)
+        for (z in 0 until side) for (x in 0 until side) {
+            val index = z * side + x
+            val block = blocks[index]
+            val base = BlockRegistry.getColor(block)
+            colors[index] = if (BlockRegistry.climateMask(BlockRegistry.getLayerForFace(block, 0, AIR)) == 0) base
+                else tint(base, MeadowTextures.climateColor(
+                    world.vegetationClimateAt(cx * CHUNK_SIZE + x * step, cz * CHUNK_SIZE + z * step),
+                    BlockRegistry.vividStyle), reference)
+        }
+        val buf = Buf((side - 1) * (side - 1) * 36)
+        fun vertex(x: Int, z: Int, shade: Float) {
+            val color = colors[z * side + x]
+            buf.add6((x * step).toFloat(), (heights[z * side + x] + 1).toFloat(), (z * step).toFloat(),
+                ((color ushr 16) and 255) / 255f * shade,
+                ((color ushr 8) and 255) / 255f * shade, (color and 255) / 255f * shade)
+        }
+        for (z in 0 until side - 1) for (x in 0 until side - 1) {
+            val slope = heights[z * side + x] - heights[(z + 1) * side + x + 1]
+            val shade = (.88f + slope * .012f).coerceIn(.65f, 1f)
+            // Counter-clockwise from above, matching GL back-face culling.
+            vertex(x,z,shade); vertex(x,z+1,shade); vertex(x+1,z+1,shade)
+            vertex(x,z,shade); vertex(x+1,z+1,shade); vertex(x+1,z,shade)
+        }
+        return buf.toArray()
+    }
+
+    /** couleur × climat / climat de référence, par canal : le `1 + delta` du shader du monde. */
+    private fun tint(color: Int, climate: Int, reference: Int): Int {
+        var out = 0
+        for (shift in intArrayOf(16, 8, 0)) {
+            val c = (color ushr shift) and 255
+            val k = ((climate ushr shift) and 255).toFloat() / ((reference ushr shift) and 255).coerceAtLeast(1)
+            out = out or ((c * k).toInt().coerceIn(0, 255) shl shift)
+        }
+        return out
+    }
+
+    private class Buf(cap: Int = 8192) {
+        private var data = FloatArray(cap); private var n = 0
+        fun add(v: Float) { if (n == data.size) data = data.copyOf(n * 2); data[n++] = v }
+        fun add6(x:Float,y:Float,z:Float,r:Float,g:Float,b:Float) { add(x);add(y);add(z);add(r);add(g);add(b) }
+        fun toArray() = data.copyOf(n)
+    }
+}

@@ -1,0 +1,143 @@
+{
+  "id": "pseudotrichonotus_altivelis",
+  "scientific": "Pseudotrichonotus altivelis",
+  "group": "fish",
+  "name": {
+    "en": "Sailfin sandfish",
+    "fr": "Poisson-sable à voile"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small marine fish is known from Japanese waters, including the Izu region and nearby seas.",
+      "fr": "Ce petit poisson marin est connu des eaux japonaises, notamment de la région d’Izu et des mers voisines."
+    },
+    "identification": {
+      "en": "It has an elongated body and high anterior dorsal-fin rays.",
+      "fr": "Il a le corps allongé et les premiers rayons de la nageoire dorsale sont hauts."
+    },
+    "habitat": {
+      "en": "It lives on sandy seabeds around 30 m deep.",
+      "fr": "Il vit sur des fonds sableux vers 30 m de profondeur."
+    },
+    "diet": {
+      "en": "Its diet is not detailed in the sources consulted.",
+      "fr": "Son régime n’est pas détaillé dans les sources consultées."
+    },
+    "behavior": {
+      "en": "When threatened, it can hide in the sand.",
+      "fr": "Lorsqu’il est menacé, il peut se cacher dans le sable."
+    },
+    "reproduction": {
+      "en": "Reproduction is not described in the sources consulted.",
+      "fr": "La reproduction n’est pas décrite dans les sources consultées."
+    },
+    "ecology": {
+      "en": "A Smithsonian study describes it as a rare Japanese bottom-dweller and examines its skeletal anatomy.",
+      "fr": "Une étude du Smithsonian le décrit comme un poisson japonais rare vivant près du fond et examine son anatomie osseuse."
+    },
+    "conservation": {
+      "en": "No conservation assessment was found in the consulted sources.",
+      "fr": "Aucune évaluation de conservation n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Kotobank — Japanese encyclopedia entries",
+        "fr": "Kotobank — notices encyclopédiques japonaises"
+      },
+      "url": "https://kotobank.jp/word/%E3%81%BB%E3%81%9F%E3%81%A6%E3%81%88%E3%81%9D-167124",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Japanese encyclopedia gives the range and sandy-bottom behavior."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 9,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smithsonian Institution — osteology and relationships",
+        "fr": "Smithsonian Institution — ostéologie et relations phylogénétiques"
+      },
+      "url": "https://repository.si.edu/bitstream/handle/10088/11689/vz_95Johnson_et_al.pdf",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The paper describes this rare Japanese fish from specimens collected off Izu and examines its skeletal anatomy and relationships; it notes its sand-bottom, bottom-dwelling habit."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 25,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish — family name etymology",
+        "fr": "ETYFish — étymologie du nom de la famille"
+      },
+      "url": "https://etyfish.org/pseudotrichonotidae/",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "ETYFish links the high anterior dorsal rays with the species name."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 11,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Japanese encyclopedia sources give slightly different local depth and length descriptions; the profile uses the more conservative approximately 30 m figure and omits a size estimate. Diet, reproduction and conservation details remain unspecified."
+  ],
+  "review_note": "Cross-checked a Japanese-language encyclopedia description with the Smithsonian osteological paper; translated common name is descriptive.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

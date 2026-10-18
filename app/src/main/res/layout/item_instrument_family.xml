@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Family header (expandable) -->
+    <LinearLayout
+        android:id="@+id/layout_family_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground">
+
+        <!-- Expand/collapse arrow -->
+        <ImageView
+            android:id="@+id/icon_expand"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_expand_more"
+            android:contentDescription="@string/expand"
+            app:tint="?android:attr/textColorSecondary" />
+
+        <!-- Checkbox for entire family (used by HybridProgramSelectionDialog) -->
+        <CheckBox
+            android:id="@+id/checkbox_family"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp" />
+
+        <!-- Family name -->
+        <TextView
+            android:id="@+id/text_family_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold" />
+
+        <!-- Selected count badge -->
+        <TextView
+            android:id="@+id/text_selected_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="?attr/colorPrimary"
+            android:background="@drawable/bg_badge"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp" />
+
+    </LinearLayout>
+
+    <!-- Container for child programs (visible when expanded) -->
+    <LinearLayout
+        android:id="@+id/layout_programs_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="56dp"
+        android:visibility="gone" />
+
+</LinearLayout>

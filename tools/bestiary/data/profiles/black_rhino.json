@@ -1,0 +1,150 @@
+{
+  "id": "black_rhino",
+  "scientific": "Diceros bicornis",
+  "group": "mammals",
+  "name": {
+    "en": "Black rhinoceros",
+    "fr": "Rhinocéros noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black rhinoceros is a large African mammal that browses shrubs and woody plants. Its hooked, grasping upper lip distinguishes it from the square-lipped, grass-grazing white rhinoceros. Both species are generally grey; colour does not explain their common names.",
+      "fr": "Le rhinocéros noir est un grand mammifère africain qui broute arbustes et végétaux ligneux. Sa lèvre crochue et préhensile le distingue du rhinocéros blanc, au museau carré, qui mange de l’herbe. Les deux espèces sont généralement grises; leur couleur n’explique pas leur nom."
+    },
+    "identification": {
+      "en": "Adults stand about 1.4–1.8 metres at the shoulder. Their thick skin is nearly hairless, and they carry two keratin horns, usually with the front one longer. The pointed, flexible upper lip grasps leaves and twigs. Soil and wallowing can change the apparent skin shade; neither species has a black or white coat. Adults are about 3.0–3.75 m long and 1.4–1.8 m high at the shoulder. Adult mass is commonly reported around 800–1,400 kg; females are generally smaller than males, but a robust species-wide sex-specific mass range was not found.",
+      "fr": "Les adultes mesurent 1,4 à 1,8 mètre au garrot. Leur peau épaisse est presque sans poils; ils portent deux cornes de kératine, celle de devant généralement plus longue. La lèvre mobile saisit feuilles et brindilles. Sol et boue modifient l’aspect de la peau; aucune espèce n’a un pelage noir ou blanc. Les adultes mesurent environ 3,0 à 3,75 m de long et 1,4 à 1,8 m au garrot. La masse adulte est souvent donnée autour de 800 à 1 400 kg ; les femelles sont généralement plus petites que les mâles, mais aucune plage de masse distincte par sexe et robuste à l’échelle de l’espèce n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Its fragmented range lies in eastern and southern Africa. It uses semi-arid scrub, savanna, woodland and forest edges, where browse is available; water access also matters, though succulent plants provide moisture. In Namibia it inhabits arid north-western landscapes. Local habitat conditions influence the area each animal uses.",
+      "fr": "Son aire morcelée se trouve en Afrique orientale et australe. Elle fréquente fourrés semi-arides, savanes, boisements et lisières riches en feuillage; l’accès à l’eau compte aussi, même si les plantes succulentes apportent de l’humidité. En Namibie, elle vit dans le nord-ouest aride. Les conditions locales influencent son domaine."
+    },
+    "diet": {
+      "en": "It browses leaves, shoots, twigs, thorny shrubs and sometimes fruit; grass is occasional rather than its main fare. The prehensile lip gathers branches and guides them to cheek teeth for grinding. Food choices vary with local vegetation and season, so a plant list from one reserve is not universal.",
+      "fr": "Il broute feuilles, pousses, brindilles, arbustes épineux et parfois fruits; l’herbe reste secondaire. Sa lèvre saisit les branches et les dirige vers les molaires. Ses choix varient selon la végétation et la saison; la liste des plantes d’une réserve ne vaut pas partout."
+    },
+    "behavior": {
+      "en": "They are often solitary, though females may stay with calves and temporary groups occur. Rhinos feed and travel more in cool morning and evening hours, resting in shade or mud during midday heat. Urine and dung scent marks signal presence and can mark a range; wallowing also cools the body.",
+      "fr": "Ils sont souvent solitaires; les femelles restent avec leurs petits et des groupes temporaires se forment. Ils se nourrissent surtout aux heures fraîches, puis se reposent à l’ombre ou dans la boue à midi. Urine et crottins signalent leur présence et marquent parfois un domaine; la boue rafraîchit aussi le corps."
+    },
+    "reproduction": {
+      "en": "After courtship and 15–17 months of gestation, a female gives birth to one calf in a sheltered place. The newborn can usually stand within hours. It stays with its mother for about two to four years, nursing and learning to browse. Long birth intervals slow population recovery after losses.",
+      "fr": "Après la parade et 15 à 17 mois de gestation, la femelle met au monde un petit à l’abri. Le nouveau-né se tient généralement debout en quelques heures. Il reste avec sa mère deux à quatre ans, tète et apprend à brouter. Les naissances espacées ralentissent le rétablissement après des pertes."
+    },
+    "ecology": {
+      "en": "Browsing removes leaves and twigs and can shape woody vegetation where rhinos feed. The effect depends on local animal density and plant communities, so it is not identical across habitats. Dung piles also carry scent information used by other rhinos.",
+      "fr": "Le broutage retire feuilles et brindilles et peut façonner la végétation ligneuse. L’effet dépend de la densité locale des rhinocéros et des plantes; il varie selon les milieux. Les amas de crottins transmettent aussi des odeurs aux autres rhinocéros."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2020 classified the species as Critically Endangered; this dated category is not a new count. Poaching for horn, habitat loss and fragmentation, and insecurity threaten populations. Protected areas, anti-poaching work and carefully planned moves to suitable sites support recovery, though slow reproduction makes losses hard to reverse.",
+      "fr": "L’évaluation UICN de 2020 classait l’espèce « En danger critique »; ce statut daté n’est pas un nouveau dénombrement. Braconnage pour la corne, perte et fragmentation de l’habitat, et insécurité menacent les populations. Aires protégées, lutte antibraconnage et transferts vers des sites adaptés soutiennent le rétablissement; la reproduction lente rend les pertes difficiles à compenser."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black Rhino — South African National Parks",
+        "fr": "Rhinocéros noir — South African National Parks"
+      },
+      "url": "https://www.sanparks.org/conservation/parks/marakele-national-park/primary-consumers-herbivores/black-rhino",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Describes the prehensile pointed lip versus the white rhino's square lip, body dimensions, browsing, mud wallows and activity periods; states the IUCN assessment year as 2020 and category as Critically Endangered.",
+        "Adults 1.4–1.8 m at shoulder and 3–3.75 m long; females are smaller than males."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diceros bicornis (black rhinoceros) — Animal Diversity Web, University of Michigan",
+        "fr": "Diceros bicornis (rhinocéros noir) — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Diceros_bicornis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Species account describes fragmented African range, varied habitats, grey-to-brown soil-dependent appearance, lip and horn morphology, gestation, single calves, maternal dependence and scent marking."
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Rhino — Save the Rhino International",
+        "fr": "Rhinocéros noir — Save the Rhino International"
+      },
+      "url": "https://www.savetherhino.org/rhino-info/rhino-species/black-rhinos/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist account documents browsing, flexible sociality, urine and dung scent marking, daily activity, gestation of 15–17 months, calf development and poaching and habitat threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Rhino — World Wide Fund for Nature",
+        "fr": "Rhinocéros noir — World Wide Fund for Nature"
+      },
+      "url": "https://www.worldwildlife.org/species/rhino/black-rhino/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Describes black rhinos in Namibia's arid north-west and identifies illegal horn trade, habitat pressures and insecurity as conservation concerns."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mesoscale movement and recursion behaviors of Namibian black rhinos — Movement Ecology",
+        "fr": "Déplacements à moyenne échelle et comportements de retour des rhinocéros noirs de Namibie — Movement Ecology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6842456/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Research using relocation records for 59 Namibian black rhinos frames browsing as a potential influence on vegetation structure and emphasizes that movement and habitat effects require empirical study."
+      ]
+    },
+    {
+      "title": {
+        "en": "EAZA Best Practice Guidelines for Black Rhinoceros",
+        "fr": "Directives EAZA de bonnes pratiques pour le rhinocéros noir"
+      },
+      "url": "https://strapi.eaza.net/uploads/2020_EAZA_Black_rhinoceros_Best_Practice_Guidelines_NV_a2e09f245a.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult mass is reported around 800–1,400 kg."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult black rhinoceros with sex-appropriate natural morphology, grey skin and the characteristic hooked prehensile upper lip, on a PURE WHITE background.",
+  "uncertainties": [
+    "The IUCN category cited is from the 2020 assessment; the IUCN assessment PDF could not be opened during source checking, so the category and date are cross-checked against SANParks.",
+    "Ecological effects of browsing vary by site; the article avoids generalizing findings from individual reserves to the entire species."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source, morphology and bilingual critique passed. Mojibake in Asian elephant names/source titles repaired; publication encoding guard added."
+}

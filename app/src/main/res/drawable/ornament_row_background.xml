@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:color="@color/audio_ripple">
+    <item>
+        <drawable class="com.Atom2Universe.app.OrnamentDrawable"
+            android:drawable="@drawable/audio_dialog_background"
+            app:ornamentForm="bracket" />
+    </item>
+</ripple>

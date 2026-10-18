@@ -1,0 +1,18 @@
+{
+  "color": "#7E9779",
+  "placement_rule": "solid",
+  "texture_side": "door:7E9779:9",
+  "id": 9209,
+  "texture_bottom": "cozy:material:9:7E9779",
+  "creative_tab": "wood",
+  "transparent": true,
+  "tags": [
+    "door"
+  ],
+  "door": true,
+  "hardness": 1.5,
+  "name": "door_plank_sapin",
+  "texture_top": "cozy:material:9:7E9779",
+  "orient_mode": "facing",
+  "drop": "door_plank_sapin"
+}

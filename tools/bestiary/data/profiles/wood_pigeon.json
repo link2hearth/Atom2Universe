@@ -1,0 +1,383 @@
+{
+  "id": "wood_pigeon",
+  "scientific": "Columba palumbus",
+  "group": "birds",
+  "name": {
+    "en": "Common Wood Pigeon",
+    "fr": "Pigeon ramier"
+  },
+  "sections": {
+    "overview": {
+      "en": "A large, adaptable pigeon, the Common Wood Pigeon inhabits European woods, farmland, parks and gardens. Adults measure 40–42 cm long, weigh about 480–550 g and span 75–80 cm. Some European populations stay near their breeding grounds; others migrate, and winter flocks gather where food is abundant.",
+      "fr": "Grand pigeon adaptable, le Pigeon ramier fréquente les bois, campagnes, parcs et jardins d’Europe. Les adultes mesurent 40 à 42 cm, pèsent environ 480 à 550 g et présentent une envergure de 75 à 80 cm. Certaines populations restent près de leurs sites de reproduction; d’autres migrent et se rassemblent en hiver là où la nourriture abonde."
+    },
+    "identification": {
+      "en": "Adults are about 40–42 cm long, with a 75–80 cm wingspan and a typical mass around 480–550 g. In BTO ringing samples, adult males averaged 529 g and females 488 g; the sex-specific values come from a small British sample. Its bulky grey body, pink breast, yellow eye and orange-red bill make it distinctive. Adults have white patches on both sides of the neck, edged with green and purple iridescence, and broad white wing bars that flash in flight. Juveniles lack the white neck patches, but show the wing bars. It is larger than the Rock Pigeon, Columba livia, whose wings have dark bars; the smaller Stock Dove, Columba oenas, lacks white neck patches.",
+      "fr": "L’adulte mesure environ 40 à 42 cm, pour une envergure de 75 à 80 cm et une masse typique de 480 à 550 g. Dans les échantillons de baguage du BTO, les mâles adultes pesaient en moyenne 529 g et les femelles 488 g ; ces valeurs par sexe proviennent d’un petit échantillon britannique. Son corps gris massif, sa poitrine rosée, son œil jaune et son bec rouge orangé le distinguent. L’adulte porte deux taches blanches au cou, bordées de reflets verts et violets, et de larges bandes alaires blanches visibles en vol. Le jeune n’a pas les taches du cou, mais possède déjà les bandes alaires. Plus grand que le Pigeon biset, Columba livia, aux barres alaires sombres, il se distingue aussi du Pigeon colombin, Columba oenas, plus petit et sans taches blanches au cou."
+    },
+    "habitat": {
+      "en": "It nests in open woods, woodland edges and hedgerows, then feeds in fields, meadows and lawns. In cities, parks and tree-lined gardens offer nesting branches, grass and planted foods; some birds forage there, while others travel to farmland. This flexibility has helped it colonize European cities, though timing varies by region.",
+      "fr": "Il niche dans les bois ouverts, leurs lisières et les haies, puis se nourrit dans les champs, prairies et pelouses. En ville, les parcs et jardins arborés offrent des branches pour nicher, de l’herbe et des plantes nourricières; certains oiseaux y cherchent leur nourriture, d’autres gagnent les terres agricoles. Cette souplesse a favorisé sa présence dans les villes européennes, à des dates variables selon les régions."
+    },
+    "diet": {
+      "en": "It eats mainly plants: seeds, grain, buds, leaves, flowers, berries and fruits. It pecks seeds and cereal grain on the ground, and plucks fruits and buds from trees; crops such as oilseed rape can be important seasonal foods. The crop, an expandable pouch in the lower throat, stores food before it passes to the stomach, allowing quick gathering followed by digestion. Small invertebrates are occasional foods, not a staple.",
+      "fr": "Il mange surtout des végétaux: graines, céréales, bourgeons, feuilles, fleurs, baies et fruits. Il picore au sol graines et céréales, et prélève fruits et bourgeons dans les arbres; le colza peut être une ressource saisonnière importante. Le jabot, poche extensible au bas de la gorge, stocke les aliments avant leur passage dans l’estomac: l’oiseau peut les récolter rapidement puis les digérer. Les petits invertébrés sont consommés à l’occasion, sans constituer l’essentiel du régime."
+    },
+    "behavior": {
+      "en": "Pairs keep contact with a deep, repeated coo, often from a perch. In display, a bird climbs steeply, claps its wings loudly and glides down with wings stiff; this signals territory and courts a mate. Outside nesting, loose groups feed together and large flocks use communal winter roosts. Movements vary: some city birds stay near parks, while tracked birds in central Europe fly several kilometres to fields.",
+      "fr": "Les couples gardent le contact par un roucoulement grave et répété, souvent lancé d’un perchoir. En parade, l’oiseau monte brusquement, fait claquer ses ailes puis plane vers le bas, ailes raides; il signale ainsi son territoire et courtise un partenaire. Hors nidification, des groupes lâches se nourrissent ensemble et de grandes bandes rejoignent des dortoirs hivernaux. Les déplacements varient: certains oiseaux urbains restent près des parcs, tandis que des individus suivis en Europe centrale gagnent les champs à plusieurs kilomètres."
+    },
+    "reproduction": {
+      "en": "Courtship leads to a simple stick platform in a tree, hedge or sometimes building; both parents incubate the usual two white eggs. Incubation lasts about 17 days, and the downy chicks fledge after roughly 33–34 days. Both parents feed the young. In the final days of incubation, cells lining the crop, a food-storage pouch in the lower throat, swell and shed a nutrient-rich secretion called crop milk. Chicks rely on it at first; around day ten, parents add softened seeds and other solid foods. A long breeding season allows one or two broods yearly, depending on place and conditions.",
+      "fr": "La parade mène à une simple plate-forme de brindilles, dans un arbre, une haie ou parfois un bâtiment; les deux parents couvent généralement deux œufs blancs. L’incubation dure environ 17 jours; les poussins duveteux s’envolent vers 33 à 34 jours. Les deux parents les nourrissent. Dans les derniers jours d’incubation, les cellules du jabot, poche de stockage au bas de la gorge, s’épaississent puis se détachent en une sécrétion nutritive appelée lait de jabot. Les jeunes en dépendent d’abord; vers le dixième jour, les parents ajoutent des graines ramollies et d’autres aliments solides. La longue saison permet une ou deux nichées par an, selon le lieu et les conditions."
+    },
+    "ecology": {
+      "en": "By eating fruit, Wood Pigeons can disperse seeds; in southern Spain, many swallowed cultivated olive seeds passed intact into nearby natural vegetation. Some pairs nest near Eurasian Hobby falcons: although a falcon may take a pigeon, its defense of nearby nests can deter other intruders. Cereal feeding can conflict with farming, and local population growth has accompanied agricultural food access and reduced hunting.",
+      "fr": "En mangeant des fruits, le Pigeon ramier peut disperser des graines; dans le sud de l’Espagne, de nombreuses graines d’olives cultivées ont traversé son appareil digestif intactes et gagné la végétation naturelle voisine. Certains couples nichent près de Faucons hobereaux: malgré le risque d’être capturé, leur voisinage peut décourager d’autres intrus. La consommation de céréales peut créer des conflits agricoles; localement, la croissance des populations a accompagné l’accès à de nouvelles ressources agricoles et le recul de la chasse."
+    },
+    "conservation": {
+      "en": "The species has expanded in parts of Europe and was assessed as Least Concern in BirdLife’s 2021 European assessment, which estimated an increasing population. The RSPB estimates around 5.2 million breeding pairs in the United Kingdom, where continental birds add to winter numbers. In northern Algeria, one population grew while hunting pressure fell and agriculture supplied new foods, showing that land use can affect populations differently by region. National and European assessments cover different scales, so their categories may differ.",
+      "fr": "L’espèce a progressé dans plusieurs régions d’Europe et figure en préoccupation mineure dans l’évaluation européenne de BirdLife publiée en 2021, qui estime sa population en hausse. La RSPB estime à environ 5,2 millions les couples nicheurs au Royaume-Uni, où les oiseaux continentaux renforcent les effectifs en hiver. Dans le nord de l’Algérie, une population a augmenté tandis que la pression de chasse baissait et que l’agriculture apportait de nouvelles ressources; les effets de l’usage des terres varient donc selon les régions. Les évaluations nationales et européennes couvrent des échelles différentes et peuvent attribuer des catégories distinctes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Woodpigeon: BirdFacts",
+        "fr": "Pigeon ramier : BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/woodpigeon",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Two eggs; 17-day incubation; 33–34-day nestling period."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.6",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 7,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Woodpigeon",
+        "fr": "Woodpigeon"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodpigeon",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Call, crops, UK population estimate.",
+        "Species fact page: length 40–42 cm, wingspan 75–80 cm, mass 480–550 g."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 5,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Doves vs Pigeons. What’s the difference?",
+        "fr": "Colombes et pigeons : quelles différences ?"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/identifying-birds/pigeons-and-doves-an-id-guide",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Woodpigeon is largest UK pigeon; Stock Dove lacks white neck patch."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 11,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Wood-Pigeon: Overview",
+        "fr": "Common Wood-Pigeon : présentation"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "White wing bars; winter flocks; Hobby nesting association."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 8,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Wood-Pigeon: Life History",
+        "fr": "Common Wood-Pigeon : cycle de vie"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Plant diet, urban habitats and display flight."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 7,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crop milk",
+        "fr": "Lait de jabot"
+      },
+      "url": "https://www.bto.org/learn/about-birds/behaviour/crop-milk",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Jabot-wall cells shed nutritious material for newly hatched young."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 9,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amazing nesters: a journey through the bird breeding season",
+        "fr": "Nicheurs remarquables : parcours dans la saison de reproduction"
+      },
+      "url": "https://www.bto.org/our-work/news/blog/amazing-nesters-journey-through-bird-breeding-season",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Crop milk initially; seeds added around day ten; fledging near day 33."
+      ],
+      "prose_claims": [
+        "identification.fr.6",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 12,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BirdLife European Red List of Birds 2021",
+        "fr": "Liste rouge européenne des oiseaux de BirdLife 2021"
+      },
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European assessment: Least Concern; population trend increasing."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.4",
+        "conservation.fr.1",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 7,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Should I stay or should I fly? Migration phenology, individual-based migration decision and seasonal changes in foraging behaviour of Common Woodpigeons",
+        "fr": "Rester ou partir ? Phénologie migratoire et quête alimentaire saisonnière du Pigeon ramier"
+      },
+      "url": "https://jlupub.ub.uni-giessen.de/items/133c5b6a-6a01-4715-a269-228968259839",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "European populations show resident, partially migratory and migratory strategies."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 9,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rapid increase in numbers and change of land-use in two expanding Columbidae species",
+        "fr": "Augmentation rapide des effectifs et changement d’usage des terres chez deux Columbidés en expansion"
+      },
+      "url": "https://link.springer.com/article/10.1186/s40657-015-0027-9",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "In northern Algeria, reduced hunting and agricultural food accompanied local growth."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 11,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Introducing cultivated trees into the wild: Wood pigeons as dispersers of domestic olive seeds",
+        "fr": "Introduction d’arbres cultivés dans la nature : le Pigeon ramier disperse des graines d’olivier domestique"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1146609X15300205",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Southern Spanish pigeons transported viable cultivated olive seeds into natural vegetation."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 11,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult European wood pigeon, full body, white neck patches and folded-wing bars clearly visible; do not depict a Rock Pigeon or Stock Dove.",
+  "uncertainties": [],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual review; crop milk mechanism and approximate dietary transition checked in BTO original accounts; measurements and reproductive durations use British scope; European assessment distinct from regional field studies; art accepted.",
+  "source_audit_version": 1
+}

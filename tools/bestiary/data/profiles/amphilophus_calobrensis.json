@@ -1,0 +1,227 @@
+{
+  "id": "amphilophus_calobrensis",
+  "scientific": "Amphilophus calobrensis",
+  "group": "fish",
+  "name": {
+    "en": "Redspot cichlid",
+    "fr": "Cichlidé à points rouges"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tree’s name, Amphilophus calobrensis, is an older combination; current ichthyological catalogues accept Darienheros calobrensis. This freshwater cichlid is native to Panama’s Pacific slope.",
+      "fr": "Le nom de l’arbre, Amphilophus calobrensis, est une combinaison ancienne; les catalogues ichtyologiques actuels retiennent Darienheros calobrensis. Ce Cichlidé d’eau douce est originaire du versant pacifique du Panama."
+    },
+    "identification": {
+      "en": "Adults have thick lips, a long snout before the eye, eyes set high on the head and a slightly downward-facing mouth; dark bars break into irregular blotches rather than remaining evenly divided. FishBase reports up to 25 cm total length for a male or unsexed fish. Aquarium accounts describe mature males as often larger and deeper-bodied, with females smaller and less colorful. No dependable height, width or body-mass figures were located.",
+      "fr": "Les adultes ont des lèvres épaisses, un long museau devant l’œil, les yeux placés haut et une bouche légèrement tournée vers le bas; les bandes sombres se fragmentent en taches irrégulières plutôt que de rester uniformément divisées. FishBase indique jusqu’à 25 cm de longueur totale pour un mâle ou un individu de sexe non précisé. Des notices aquariophiles décrivent souvent les mâles adultes comme plus grands et plus hauts de corps, les femelles étant plus petites et moins colorées. Aucune donnée fiable de hauteur, de largeur ou de masse corporelle n’a été trouvée."
+    },
+    "habitat": {
+      "en": "The species is recorded in freshwater on Panama’s Pacific slope. It is reported from lakes, ponds and slower river reaches, especially around submerged rocky banks and crevices.",
+      "fr": "L’espèce est signalée en eau douce sur le versant pacifique du Panama. Elle fréquente les lacs, étangs et secteurs calmes des cours d’eau, notamment près des berges rocheuses immergées et de leurs fissures."
+    },
+    "diet": {
+      "en": "Detailed field studies of its diet were not located; aquarium references call it an adaptable omnivore, so those captive feeding notes should not be treated as a measured wild diet.",
+      "fr": "Aucune étude détaillée de son alimentation dans la nature n’a été trouvée; les références aquariophiles la décrivent comme omnivore adaptable, sans que ces observations captives mesurent son régime sauvage."
+    },
+    "behavior": {
+      "en": "Aquarium accounts describe territorial behavior and active digging in the substrate, especially around a potential spawning site; comparable wild field observations were not found.",
+      "fr": "Les notices aquariophiles décrivent un comportement territorial et des fouilles actives du substrat, surtout près d’un site de ponte; aucune observation de terrain comparable dans la nature n’a été trouvée."
+    },
+    "reproduction": {
+      "en": "Captive accounts report substrate spawning: a pair lays eggs on a firm surface and both parents guard them and the fry.",
+      "fr": "En captivité, un couple pond sur une surface solide et les deux parents protègent les œufs puis les alevins."
+    },
+    "ecology": {
+      "en": "Its known distribution is concentrated in one Panamanian Pacific-slope region, so the condition of those freshwater basins is relevant to the species’ persistence.",
+      "fr": "Son aire connue se concentre dans une région du versant pacifique panaméen; l’état de ces bassins d’eau douce est donc important pour le maintien de l’espèce."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists Darienheros calobrensis as Vulnerable (VU), under criterion B1ab(iii), assessed in 2019.",
+      "fr": "L’évaluation de l’UICN classe Darienheros calobrensis comme « vulnérable » (VU), selon le critère B1ab(iii), en 2019."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Catalog of Fishes — Darienheros calobrensis",
+        "fr": "Catalog of Fishes — Darienheros calobrensis"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16421",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Eschmeyer’s Catalog accepts Darienheros calobrensis; Amphilophus calobrensis and Cichlasoma calobrense are prior combinations, with type locality Río Calobre, Panama."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 19,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Darienheros calobrensis — FishBase species summary",
+        "fr": "Darienheros calobrensis — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Darienheros-calobrensis.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports 25 cm maximum total length for male/unsexed fish and the 2019 IUCN Vulnerable assessment."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.4",
+        "identification.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 16,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diversity and evolution of the Middle American cichlid fishes with revised classification — Vertebrate Zoology, 2016",
+        "fr": "Diversité et évolution des Cichlidés d’Amérique centrale avec classification révisée — Vertebrate Zoology, 2016"
+      },
+      "url": "https://www.senckenberg.de/wp-content/uploads/2019/08/01_vertebrate_zoology_66-1_rican_1-102.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Říčan and colleagues establish Darienheros as a distinct genus in their revised phylogenetic classification and describe its diagnostic morphology."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 19,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cichlidae of Middle America — Sven Kullander, 2003",
+        "fr": "Cichlidés d’Amérique centrale — Sven Kullander, 2003"
+      },
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander gives the Pacific-slope Panama distribution, including the Tuíra, Chucunaque and Bayano basins, and 25 cm maximum total length."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 19,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Darienheros calobrensis — Seriously Fish species account",
+        "fr": "Darienheros calobrensis — notice Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/amphilophus-calobrensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Captive account covers habitat, feeding, territoriality and spawning."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 8,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Darienheros calobrensis — Cichlidamerique account (French)",
+        "fr": "Darienheros calobrensis — fiche Cichlidamerique"
+      },
+      "url": "https://cichlidamerique.fr/darienheros-calobrensis-article-n1-generalites-taxonomie-description",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French account describes adult red spots, broken dark bars, high-set eyes, thick lips and sexual differences; its color account is not a field population survey."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 26,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a robust, laterally compressed adult Darienheros calobrensis in a natural side view: thick lips, long snout, high-set eye, slightly inferior mouth, pale silvery or yellow-green sides with red spots and irregular dark flank blotches. Leave sex unspecified; avoid an invented hump, aquarium props or labels.",
+  "uncertainties": [
+    "The tree retains Amphilophus calobrensis, while current catalogues accept Darienheros calobrensis.",
+    "The 25 cm figure is total length and applies to a male or unsexed specimen; it is not a sex-specific maximum.",
+    "No dependable body height, width or mass by sex was located.",
+    "Diet, behavior and reproduction data for wild fish are sparse; aquarium observations are explicitly identified as captive reports.",
+    "The IUCN category is Vulnerable, assessed in 2019; further threat details are not added without the assessment text."
+  ],
+  "reviewed": true,
+  "review_note": "Bilingual profile reconciles the tree’s older name with Eschmeyer’s current catalogue and a peer-reviewed classification; FishBase, Kullander, and English/French species references are used with explicit limits on body measurements and captive observations."
+}

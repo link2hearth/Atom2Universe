@@ -1,0 +1,145 @@
+{
+  "id": "tuta_absoluta",
+  "scientific": "Tuta absoluta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Tomato leafminer",
+    "fr": "Mineuse de la tomate"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tomato leafminer is a small moth whose larvae damage tomato plants.",
+      "fr": "La mineuse de la tomate est un petit papillon dont les larves endommagent les plants de tomate."
+    },
+    "identification": {
+      "en": "The larvae make conspicuous mines in leaves and can also bore into stems and fruit.",
+      "fr": "Les larves creusent des mines visibles dans les feuilles et peuvent aussi pénétrer dans les tiges et les fruits."
+    },
+    "habitat": {
+      "en": "It is closely associated with tomato crops, although other cultivated solanaceous plants can also be affected.",
+      "fr": "Elle est étroitement associée aux cultures de tomate, mais d’autres solanacées cultivées peuvent aussi être atteintes."
+    },
+    "diet": {
+      "en": "Larvae feed within plant tissues, especially tomato leaves and fruit.",
+      "fr": "Les larves se nourrissent dans les tissus végétaux, notamment les feuilles et les fruits de tomate."
+    },
+    "behavior": {
+      "en": "The larval stages remain concealed in mines or galleries, which can make early damage easy to overlook.",
+      "fr": "Les stades larvaires restent dissimulés dans des mines ou des galeries, ce qui peut rendre les premiers dégâts difficiles à repérer."
+    },
+    "reproduction": {
+      "en": "Its development is strongly affected by temperature, so generation time varies with conditions.",
+      "fr": "Son développement dépend fortement de la température ; la durée d’une génération varie donc selon les conditions."
+    },
+    "ecology": {
+      "en": "EPPO currently uses the combination Phthorimaea absoluta, while Tuta absoluta remains widely used in agricultural sources.",
+      "fr": "L’OEPP emploie actuellement le nom Phthorimaea absoluta, tandis que Tuta absoluta reste courant dans les sources agricoles."
+    },
+    "conservation": {
+      "en": "It is an agricultural pest rather than a species assessed here for wildlife conservation.",
+      "fr": "C’est un ravageur agricole, et non une espèce traitée ici sous l’angle de la conservation de la faune sauvage."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "INRAE ePhytia — Tomato leafminer",
+        "fr": "INRAE ePhytia — Mineuse de la tomate"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/5150/Tomate-Tuta-absoluta",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "INRAE describes larval mines in tomato leaves and galleries in fruit, and notes occasional damage to potato."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 17,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "EPPO Global Database — Phthorimaea absoluta",
+        "fr": "Base de données mondiale de l’OEPP — Phthorimaea absoluta"
+      },
+      "url": "https://gd.eppo.int/taxon/GNORAB",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "EPPO lists Phthorimaea absoluta as its preferred name for the pest also widely known as Tuta absoluta; its life cycle varies with conditions."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 23,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "SENASICA — Tomato moth technical sheet",
+        "fr": "SENASICA — Fiche technique de la palomilla del tomate"
+      },
+      "url": "https://prod.senasica.gob.mx/SIRVEF/ContenidoPublico/Fichas%20tecnicas/Ficha%20T%C3%A9cnica%20Palomilla%20del%20tomate.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish-language phytosanitary sheet treats this moth as a tomato pest and lists both Tuta absoluta and Phthorimaea absoluta."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 19,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The accepted generic placement has changed in some taxonomic databases; the profile ID follows the project inventory."
+  ],
+  "review_note": "Kept pest biology brief and noted the current EPPO name without silently changing the project taxon.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

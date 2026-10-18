@@ -1,0 +1,307 @@
+{
+  "id": "harbour_seal",
+  "scientific": "Phoca vitulina",
+  "group": "mammals",
+  "name": {
+    "en": "Harbour seal",
+    "fr": "Phoque commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The harbour seal, also called the common seal, is a phocid pinniped distributed around northern temperate and Arctic coasts of the Atlantic and Pacific. It uses both marine and estuarine waters, and some populations enter rivers or freshwater lakes. Its rounded head, short muzzle and spotted coat vary in colour and pattern across individuals and regions.",
+      "fr": "Le phoque commun, aussi appelé phoque veau-marin, est un pinnipède phocidé présent le long des côtes tempérées et arctiques de l’Atlantique et du Pacifique Nord. Il fréquente les eaux marines et estuariennes ; certaines populations remontent les rivières ou gagnent des lacs d’eau douce. Sa tête arrondie, son museau court et son pelage tacheté varient selon les individus et les régions."
+    },
+    "identification": {
+      "en": "Adults have a compact, spindle-shaped body, short fur, a rounded head and no external ear flaps. The coat ranges from pale grey to brown or nearly black, usually with contrasting spots; the underside is often lighter. Long hind flippers provide underwater propulsion. In this true seal, the pelvic structure prevents the hind flippers from rotating beneath the body, so it cannot walk on land like a sea lion: it moves by flexing and undulating its body. Sensitive whiskers, or vibrissae, detect water movements and help locate prey when vision is limited. Adults are about 1.5–1.8 m long and can weigh up to 82–129 kg; males are slightly larger, and Pacific populations tend to be larger than Atlantic ones.",
+      "fr": "L’adulte a un corps fuselé et trapu, un pelage court, une tête arrondie et aucune oreille externe visible. La robe va du gris pâle au brun ou presque noir, généralement marquée de taches contrastées ; le ventre est souvent plus clair. Les longues nageoires postérieures assurent la propulsion sous l’eau. Chez ce phoque véritable, la structure du bassin empêche de ramener ces nageoires sous le corps pour marcher comme une otarie : il se déplace en fléchissant et en ondulant. Ses vibrisses sensibles perçoivent les mouvements de l’eau et aident à repérer les proies lorsque la vue est limitée. Les adultes mesurent environ 1,5–1,8 m et peuvent peser jusqu’à 82–129 kg ; les mâles sont légèrement plus grands et les populations du Pacifique tendent à dépasser celles de l’Atlantique."
+    },
+    "habitat": {
+      "en": "The species occupies coastal waters across the northern hemisphere, from temperate shores to Arctic regions. Estuaries, bays, tidal channels and river mouths provide access to feeding grounds as well as sheltered haul-out sites. Seals rest on beaches, rocks, reefs and, in glacial fjords, floating ice. A haul-out is a resting place rather than a feeding habitat: seals return to water to forage and may range far beyond the nearby shore. Site use and travel distances differ among animals and populations.",
+      "fr": "L’espèce fréquente les eaux côtières de l’hémisphère Nord, des rivages tempérés aux régions arctiques. Estuaires, baies, chenaux de marée et embouchures donnent accès aux zones d’alimentation et à des reposoirs abrités. Les phoques se reposent sur les plages, les rochers, les récifs et, dans les fjords glaciaires, sur les glaces flottantes. Le reposoir sert au repos, tandis que les animaux regagnent l’eau pour chasser et peuvent s’éloigner considérablement du rivage. Les déplacements et le choix des sites varient entre populations et individus."
+    },
+    "diet": {
+      "en": "Harbour seals eat fish as well as squid, crustaceans and other available aquatic prey. Fish commonly include schooling and bottom-associated species, but the menu changes by season and place with prey availability; no single fish dominates throughout the range. Seals pursue prey underwater, using dives of different depths and durations. Before submerging, they take in oxygen at the surface; oxygen carried in blood supports aerobic activity underwater, and these stores develop rapidly in pups. Their vibrissae can sense the trails left by moving fish, an additional way to follow prey in dim or turbid water. This flexible feeding helps them exploit estuarine and coastal food webs.",
+      "fr": "Le phoque commun mange des poissons, ainsi que des calmars, des crustacés et d’autres proies aquatiques disponibles. Les poissons consommés comprennent souvent des espèces vivant en bancs ou près du fond, mais le menu change selon la saison et le lieu, en fonction de l’abondance des proies ; aucun poisson ne domine partout. Le phoque poursuit ses proies en plongée, à des profondeurs et pendant des durées variables. Avant de plonger, il prend de l’oxygène à la surface ; celui que transporte le sang soutient l’activité aérobie sous l’eau, et ces réserves se développent rapidement chez les jeunes. Ses vibrisses détectent les sillages laissés par les poissons et facilitent leur poursuite dans une eau sombre ou trouble. Cette souplesse lui permet d’exploiter les réseaux alimentaires côtiers et estuariens."
+    },
+    "behavior": {
+      "en": "Much of the seal’s day alternates between foraging at sea and resting ashore or on ice. Individuals often gather at haul-outs, especially during the annual moult, when they shed and regrow their coat over several weeks and spend more time out of the water. These groups are not tightly coordinated colonies: seals may rest close together while maintaining individual space. Mothers and pups can form temporary nursery groups. At sea, tracking studies show substantial variation in how far seals travel and where they forage.",
+      "fr": "Le phoque alterne largement entre la chasse en mer et le repos à terre ou sur la glace. Les individus se rassemblent souvent sur les reposoirs, notamment pendant la mue annuelle : ils perdent puis renouvellent leur pelage durant plusieurs semaines et passent alors davantage de temps hors de l’eau. Ces rassemblements ne forment pas des colonies fortement coordonnées ; les animaux peuvent se reposer côte à côte tout en gardant leur espace. Les mères et leurs petits peuvent former des groupes temporaires. En mer, le suivi révèle de grandes différences entre individus dans leurs déplacements et leurs zones de chasse."
+    },
+    "reproduction": {
+      "en": "Birth timing varies geographically, generally falling in spring or summer. After mating, development pauses before the embryo implants in the uterus; this delayed implantation shifts active gestation so that birth matches a favourable season. Females give birth to a single pup, usually on shore or ice. The pup can swim soon after birth and nurses for roughly four to six weeks while its mother also makes feeding trips. In the Wadden Sea, long-term observations documented an earlier pupping season, illustrating that timing can shift within a population.",
+      "fr": "La période des naissances varie selon la région et se situe généralement au printemps ou en été. Après l’accouplement, le développement marque une pause avant l’implantation de l’embryon dans l’utérus ; ce retard décale la gestation active afin que la naissance coïncide avec une saison favorable. La femelle met bas un seul petit, généralement sur la rive ou la glace. Celui-ci sait nager peu après sa naissance et tète environ quatre à six semaines, tandis que sa mère part aussi s’alimenter. Dans la mer des Wadden, les observations à long terme montrent une avancée de la saison des naissances."
+    },
+    "ecology": {
+      "en": "Harbour seals are predators in coastal food webs, and their effects depend on which prey and other predators occur locally. In the Strait of Georgia, an ecosystem model linked seal predation on hake with an indirect benefit to herring, because hake also prey on herring. The model illustrates why a seal’s consumption of fish does not by itself establish competition with fisheries. Diet records and tracking also show that foraging areas and prey differ among regions, connecting nearby coasts, estuaries and offshore waters.",
+      "fr": "Le phoque commun est un prédateur des réseaux alimentaires côtiers ; ses effets dépendent des proies et des autres prédateurs présents localement. Dans le détroit de Géorgie, un modèle écosystémique relie la prédation du phoque sur le merlu à un bénéfice indirect pour le hareng, puisque le merlu mange aussi ce poisson. Le modèle montre que la consommation de poissons par un phoque ne suffit pas à établir une compétition avec les pêcheries. Les données alimentaires et le suivi montrent aussi que proies et zones de chasse varient selon les régions, reliant côtes, estuaires et eaux du large."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment published in 2016, based on an assessment dated 4 January 2016, classified the species as Least Concern, while noting that trends were unknown for several subspecies and that local declines occurred. This global category does not describe every population. The freshwater Lacs des Loups Marins population in Québec’s Ungava region is the distinct subspecies P. v. mellonae, assessed separately as Endangered by IUCN in 2016 and considered susceptible to designation as threatened or vulnerable by Québec. Regional pressures include entanglement, disturbance at haul-outs, habitat change and contaminants; their importance varies by location.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2016, fondée sur une évaluation datée du 4 janvier 2016, classe l’espèce en préoccupation mineure, tout en signalant que les tendances sont inconnues pour plusieurs sous-espèces et que des baisses locales ont eu lieu. Cette catégorie mondiale ne décrit pas chaque population. La population d’eau douce des lacs des Loups Marins, en Ungava québécois, est la sous-espèce distincte P. v. mellonae, évaluée séparément en danger par l’UICN en 2016 ; le Québec la considère susceptible d’être désignée menacée ou vulnérable. Les pressions régionales comprennent l’enchevêtrement, le dérangement des reposoirs, les changements d’habitat et les contaminants, avec une importance variable selon les lieux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Harbor Seal — NOAA Fisheries",
+        "fr": "Phoque commun — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/harbor-seal",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA account: northern range, haul-outs, moult, pupping and listed human pressures.",
+        "Adults are about 1.5–1.8 m long and weigh up to about 82–129 kg; males are slightly larger than females, with Pacific animals generally larger than Atlantic animals."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 181,
+        "notes_en_fr_estimate": 19,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "overview:range and marine-estuarine use",
+        "habitat:haul-out options",
+        "behavior:resting and moult",
+        "reproduction:birth timing, swimming, lactation",
+        "conservation:entanglement, disturbance, habitat and contaminants"
+      ]
+    },
+    {
+      "title": {
+        "en": "Seal Anatomy — NOAA Ocean Today",
+        "fr": "Anatomie du phoque — NOAA Ocean Today"
+      },
+      "url": "https://oceantoday.noaa.gov/sealanatomy/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "NOAA anatomy account: flipper propulsion, vibrissae and blubber insulation."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 180,
+        "notes_en_fr_estimate": 20,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "identification:flippers, body form, coat, vibrissae",
+        "diet:prey detection by vibrissae"
+      ]
+    },
+    {
+      "title": {
+        "en": "Seasonal and regional variations in the diet of harbour seal in Norwegian waters — Olsen & Bjørge",
+        "fr": "Variations saisonnières et régionales du régime du phoque commun dans les eaux norvégiennes — Olsen et Bjørge"
+      },
+      "url": "https://doi.org/10.1016/S0163-6995(06)80030-2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Olsen and Bjørge report regional, seasonal and prey-availability variation in Norwegian diets."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 157,
+        "notes_en_fr_estimate": 43,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "diet:fish groups and regional variability",
+        "ecology:regional food-web roles"
+      ]
+    },
+    {
+      "title": {
+        "en": "Earlier pupping in harbour seals, Phoca vitulina — Proceedings of the Royal Society B",
+        "fr": "Avancée de la période des naissances chez le phoque commun — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3001384/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Wadden Sea study: seasonal breeding, delayed implantation, and earlier births in 1974–2009."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 158,
+        "notes_en_fr_estimate": 42,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "reproduction:delayed implantation",
+        "reproduction:Wadden Sea phenology shift"
+      ]
+    },
+    {
+      "title": {
+        "en": "Phoca vitulina, Harbor Seal — IUCN Red List of Threatened Species",
+        "fr": "Phoca vitulina, phoque commun — Liste rouge de l’UICN des espèces menacées"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T17013A45229114.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN 2016: global Least Concern; local trends vary and P. v. mellonae is assessed separately."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 164,
+        "notes_en_fr_estimate": 36,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "conservation:dated global category and variability",
+        "conservation:Ungava subspecies status"
+      ]
+    },
+    {
+      "title": {
+        "en": "Harbour seal — Lac des Loups Marins subspecies — Gouvernement du Québec",
+        "fr": "Phoque commun des lacs des Loups Marins — Gouvernement du Québec"
+      },
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/phoque-commun-lacs-loups-marins",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Québec account: freshwater subspecies isolated in the Lacs des Loups Marins area; status susceptible to threatened/vulnerable designation."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 95,
+        "notes_en_fr_estimate": 38,
+        "total_estimate": 133
+      },
+      "prose_claims": [
+        "conservation:Ungava geography and Québec status"
+      ]
+    },
+    {
+      "title": {
+        "en": "Diving Related Changes in the Blood Oxygen Stores of Rehabilitating Harbor Seal Pups — PLOS ONE",
+        "fr": "Évolution des réserves sanguines d’oxygène chez des jeunes phoques communs en réhabilitation — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4465541/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Study reports that pups begin diving within hours of birth and that blood oxygen stores develop during early life; its measurements concern rehabilitating pups."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 147,
+        "notes_en_fr_estimate": 53,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "diet:underwater pursuit and oxygen-supported submergence",
+        "reproduction:early swimming and diving capacity"
+      ]
+    },
+    {
+      "title": {
+        "en": "Hydrodynamic determination of the moving direction of an artificial fin by a harbour seal — Journal of Experimental Biology",
+        "fr": "Détermination hydrodynamique de la direction d’une nageoire artificielle par un phoque commun — Journal of Experimental Biology"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20543117/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "An experimental harbour seal used vibrissae to detect and follow water trails left by a moving object."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 123,
+        "notes_en_fr_estimate": 51,
+        "total_estimate": 174
+      },
+      "prose_claims": [
+        "identification:vibrissae as sensory structures",
+        "diet:following hydrodynamic prey trails"
+      ]
+    },
+    {
+      "title": {
+        "en": "Spatial Variation in Foraging Behaviour of a Marine Top Predator (Phoca vitulina) — PLOS ONE",
+        "fr": "Variation spatiale du comportement alimentaire d’un prédateur marin (Phoca vitulina) — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3357409/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Satellite tracking around the British Isles found individual and regional differences in foraging movements and trip distances."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 122,
+        "notes_en_fr_estimate": 43,
+        "total_estimate": 165
+      },
+      "prose_claims": [
+        "habitat:movement away from nearby haul-outs",
+        "behavior:individual travel variation",
+        "ecology:links among feeding areas"
+      ]
+    },
+    {
+      "title": {
+        "en": "Presence of harbour seals may increase exploitable fish biomass in the Strait of Georgia — Progress in Oceanography",
+        "fr": "La présence de phoques communs pourrait accroître la biomasse de poissons exploitable dans le détroit de Géorgie — Progress in Oceanography"
+      },
+      "url": "https://doi.org/10.1016/j.pocean.2010.09.006",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A food-web model for the Strait of Georgia found seals consumed herring and hake; hake predation on herring means the modeled effects can be indirect."
+      ],
+      "budget": {
+        "limit_words": 200,
+        "derived_article_en_fr_estimate": 138,
+        "notes_en_fr_estimate": 62,
+        "total_estimate": 200
+      },
+      "prose_claims": [
+        "ecology:regional model of direct and indirect seal effects in the Strait of Georgia"
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult harbour seal, sex unspecified, with a naturally variable grey-brown spotted coat, lighter underside, rounded head, short muzzle, no external ear flaps and short foreflippers. Preserve realistic phocid proportions and anatomy. Pure uniform white #FFFFFF background, with no scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Coat colour, spotting and body proportions vary geographically and among individuals; the description is a general adult form.",
+    "The global IUCN category is from the 2016 assessment; local trends differ, and the Ungava freshwater subspecies is assessed separately.",
+    "The Wadden Sea timing shift is regional and does not establish a parallel change across the species’ range."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review confirms phocid locomotion, vibrissal sensing, delayed implantation and geographically scoped ecology/status. Root removed unsupported causal criterion for weaning; nursing duration retained."
+}

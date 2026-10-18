@@ -1,0 +1,138 @@
+{
+  "id": "anax_imperator",
+  "scientific": "Anax imperator",
+  "group": "invertebrates",
+  "name": {
+    "en": "Emperor Dragonfly",
+    "fr": "Anax empereur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The emperor dragonfly is a large hawker dragonfly and Britain’s bulkiest dragonfly. It is a powerful flier that rarely settles, patrols ponds and lakes, and has spread in Britain since the 1990s.",
+      "fr": "L’anax empereur est une grande libellule de la famille des aeschnes et la plus massive des libellules de Grande-Bretagne. C’est un voilier puissant qui se pose rarement, patrouille au-dessus des étangs et des lacs, et dont l’aire s’est étendue en Grande-Bretagne depuis les années 1990."
+    },
+    "identification": {
+      "en": "The body is about 7.3 to 8.2 cm long and the wingspan about 10.5 cm. The male has a sky-blue abdomen and the female a green one, both with a continuous dark line along the back; the thorax is apple-green, the eyes green or blue, and the leading wing vein bright yellow. The wings are clear and unpatterned. In a French pond study, mature males averaged 77.2 mm and 0.97 g, while females averaged 72.9 mm and 1.26 g; these are study-sample means, not universal limits.",
+      "fr": "Le corps mesure environ 7,3 à 8,2 cm et l’envergure environ 10,5 cm. Le mâle a l’abdomen bleu ciel et la femelle vert, tous deux avec une ligne sombre continue sur le dos; le thorax est vert pomme, les yeux verts ou bleus et la nervure avant de l’aile d’un jaune vif. Les ailes sont transparentes et sans motif. Dans une étude menée sur des mares françaises, les mâles adultes mesuraient en moyenne 77,2 mm et pesaient 0,97 g, contre 72,9 mm et 1,26 g chez les femelles ; ce sont les moyennes d’un échantillon, pas des limites universelles."
+    },
+    "habitat": {
+      "en": "It lives mostly at large, well-vegetated ponds and lakes, including flooded gravel pits, and may also be found over canals, big ditches and slow-moving rivers. On the mainland it occurs across most of Europe and eastern Asia and is common in much of Africa.",
+      "fr": "Elle fréquente surtout les grands étangs et lacs bien végétalisés, y compris les gravières inondées, et peut aussi s’observer au-dessus des canaux, des grands fossés et des rivières lentes. Sur le continent, on la trouve dans la majeure partie de l’Europe et de l’Asie orientale, et elle est commune dans une grande partie de l’Afrique."
+    },
+    "diet": {
+      "en": "The adult hunts small insects over water and often eats its prey in flight, without settling. The sources consulted give no details on the diet of the larva.",
+      "fr": "L’adulte chasse de petits insectes au-dessus de l’eau et mange souvent sa proie en vol, sans se poser. Les sources consultées ne donnent pas de détails sur le régime de la larve."
+    },
+    "behavior": {
+      "en": "Males are strongly territorial: they patrol the water margins and chase off intruders. The adult can fly for long periods without resting, often with the tip of the abdomen slightly bent downward. In Britain adults fly from early June to August or early September.",
+      "fr": "Les mâles sont très territoriaux : ils patrouillent le long des rives et chassent les intrus. L’adulte peut voler longtemps sans se reposer, souvent avec l’extrémité de l’abdomen légèrement courbée vers le bas. En Grande-Bretagne, les adultes volent de début juin à août ou début septembre."
+    },
+    "reproduction": {
+      "en": "The female lays her eggs alone in floating pondweed. They hatch after about three weeks, and the larvae then spend one or two years in the water before emerging as adults, usually at night. In a study of the species, the size and mass of newly emerged adults were closely tied to the length of the larval skin they leave behind.",
+      "fr": "La femelle pond seule ses œufs dans des plantes aquatiques flottantes. Ils éclosent après environ trois semaines, puis les larves passent un ou deux ans dans l’eau avant d’émerger sous forme d’adultes, en général la nuit. Dans une étude, la taille et la masse des adultes tout juste émergés étaient étroitement liées à la longueur de l’exuvie qu’ils laissent derrière eux."
+    },
+    "ecology": {
+      "en": "The larva is stout, with large eyes that nearly meet on top of the head, and reaches 45 to 56 mm when mature, the largest of the British hawker larvae. The larva spends its first one or two years in the water. The species has been recorded in Scotland since 2003.",
+      "fr": "La larve est trapue, avec de grands yeux qui se rejoignent presque sur le dessus de la tête, et atteint 45 à 56 mm à maturité, la plus grande des larves d’aeschnes britanniques. La larve passe d’abord un ou deux ans dans l’eau. L’espèce est signalée en Écosse depuis 2003."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found. In Britain it is found across Wales and most of England, and its distribution has increased greatly since the 1990s.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, elle est présente dans tout le pays de Galles et la majeure partie de l’Angleterre, et sa répartition a fortement augmenté depuis les années 1990."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Emperor dragonfly — British Dragonfly Society",
+        "fr": "Anax empereur — British Dragonfly Society"
+      },
+      "url": "https://british-dragonflies.org.uk/species/emperor-dragonfly/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "About 78 mm long; male sky-blue abdomen, female green, central dark line; yellow costa; larvae 45–56 mm with large rounded eyes, largest of the British hawkers.",
+        "Found across Wales and most of England, spread greatly since the 1990s, in Scotland since 2003; males very territorial; rarely settles and eats prey in flight; female lays alone in floating pondweed."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anax imperator, Emperor dragonfly — First Nature",
+        "fr": "Anax imperator, anax empereur — First Nature"
+      },
+      "url": "https://www.first-nature.com/insects/o-anax-imperator.php",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Wingspan about 10.5 cm; eggs hatch after about three weeks; larvae spend one or two years in water; emerge usually at night.",
+        "On the wing from early June to August or early September; males patrol margins and chase intruders; occurs across most of mainland Europe and eastern Asia, common in much of Africa."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anax imperator — British Odonata (DELTA key)",
+        "fr": "Anax imperator — Odonates de Grande-Bretagne (clé DELTA)"
+      },
+      "url": "https://www.delta-intkey.com/britin/odo/www/imperato.htm",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Adult length about 73–82 mm; wings clear and unpatterned; nymph 45–56 mm when mature, large eyes nearly meeting at the top of the head."
+      ]
+    },
+    {
+      "title": {
+        "en": "Body size variation from larva to adult in Anax imperator — Minot et al., European Journal of Entomology, 2019 (abstract)",
+        "fr": "Variation de taille du corps de la larve à l’adulte chez Anax imperator — Minot et al., European Journal of Entomology, 2019 (résumé)"
+      },
+      "url": "https://eje.cz/doi/10.14411/eje.2019.031.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Length and body mass of teneral adults were strongly related to the length of their exuviae; males longer than females, similar body mass at emergence."
+      ]
+    },
+    {
+      "title": {
+        "en": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology",
+        "fr": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology"
+      },
+      "url": "https://doi.org/10.1111/fwb.13632",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Mature dragonflies sampled in French ponds averaged 77.2 mm and 0.97 g for males, and 72.9 mm and 1.26 g for females; sample means, not species-wide bounds."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The larval stage lasts one or two years according to the source read; the cause of the variation is not given.",
+    "Body length is given as 78 mm (society), 73–82 mm (key); the key lists male abdomen 53–61 mm and female 49–51 mm.",
+    "Distribution in Britain is described as most of England (society) but mainly south-western with rare eastern records (First Nature); the more recent society text is used.",
+    "The IUCN Red List page could not be opened and no global conservation status is stated.",
+    "Larval diet is not covered by the sources consulted."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

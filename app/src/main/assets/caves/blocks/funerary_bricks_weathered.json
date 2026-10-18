@@ -1,0 +1,17 @@
+{
+  "id": 2675,
+  "name": "funerary_bricks_weathered",
+  "texture_top": "cave_art:b_funerary_bricks",
+  "texture_side": "cave_art:b_funerary_bricks",
+  "texture_bottom": "cave_art:b_funerary_bricks",
+  "color": "#78867E",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "funerary_bricks_weathered",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

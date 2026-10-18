@@ -1,0 +1,164 @@
+{
+  "id": "pinguipes_brasilianus",
+  "scientific": "Pinguipes brasilianus",
+  "group": "fish",
+  "name": {
+    "en": "Brazilian sandperch",
+    "fr": "Pinguipes brasilianus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pinguipes brasilianus is a marine sandperch in the family Pinguipedidae, native to the southwestern Atlantic.",
+      "fr": "Pinguipes brasilianus est un poisson marin de la famille des Pinguipedidae, originaire du sud-ouest de l’Atlantique."
+    },
+    "identification": {
+      "en": "It is a demersal fish associated with rocky reef communities in northern Patagonia.",
+      "fr": "C’est un poisson démersal associé aux communautés de récifs rocheux du nord de la Patagonie."
+    },
+    "habitat": {
+      "en": "Its reported range extends along the southwestern Atlantic coast from Rio de Janeiro, Brazil, to Golfo Nuevo, Argentina.",
+      "fr": "Son aire rapportée s’étend le long de la côte sud-ouest de l’Atlantique, de Rio de Janeiro au Brésil jusqu’au golfe Nuevo en Argentine."
+    },
+    "diet": {
+      "en": "A Patagonian reef study found a narrow, specialized diet consisting mainly of reef animals such as sea urchins, limpets, bivalves, crabs and polychaete worms.",
+      "fr": "Une étude menée sur les récifs de Patagonie a relevé un régime étroit et spécialisé, composé surtout d’animaux des récifs : oursins, patelles, bivalves, crabes et vers polychètes."
+    },
+    "behavior": {
+      "en": "Field studies describe it among demersal fishes associated with shelter on rocky reefs; details of its daily activity remain poorly documented.",
+      "fr": "Les études de terrain le décrivent parmi les poissons démersaux associés aux abris des récifs rocheux ; son rythme d’activité reste peu documenté."
+    },
+    "reproduction": {
+      "en": "In northern Patagonian waters, spawning extends across spring and summer, with reproductive activity peaking around late spring and summer.",
+      "fr": "Dans les eaux du nord de la Patagonie, la reproduction s’étend du printemps à l’été et atteint son maximum vers la fin du printemps et en été."
+    },
+    "ecology": {
+      "en": "Its specialized reef diet relies strongly on local prey, and the species is recorded as native in Argentina.",
+      "fr": "Son régime spécialisé dépend fortement des proies locales des récifs ; l’espèce est répertoriée comme indigène en Argentine."
+    },
+    "conservation": {
+      "en": "The Argentine national inventory lists it as not evaluated; this is a local assessment record, not evidence of a global Red List category.",
+      "fr": "L’inventaire national argentin la classe comme non évaluée ; il s’agit d’une mention locale et non d’une catégorie mondiale de la Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pinguipes brasilianus — FishBase",
+        "fr": "Pinguipes brasilianus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/pinguipes-brasilianus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "FishBase lists the species in Pinguipedidae, as marine and demersal, with a southwestern Atlantic range from Rio de Janeiro to Golfo Nuevo."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 22,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food partitioning and spatial subsidy in shelter-limited fishes inhabiting patchy reefs of Patagonia — CONICET repository",
+        "fr": "Partage des ressources alimentaires sur les récifs de Patagonie — dépôt du CONICET"
+      },
+      "url": "https://bibliotecadigital.exactas.uba.ar/collection/paper/document/paper_00221112_v75_n10_p2585_Galvan",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The peer-reviewed study reports P. brasilianus as the narrowest-diet reef fish in its comparison, feeding mainly on local reef prey; CONICET summarizes reef fish in this assemblage as demersal and shelter-associated."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 31,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The reproductive biology of Pinguipes brasilianus in temperate rocky reefs of Argentina — Neotropical Ichthyology",
+        "fr": "Biologie de la reproduction de Pinguipes brasilianus sur les récifs tempérés d’Argentine — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/dcqy7jvVzHmgh6vg5gSRYRx/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The study finds an extended reproductive season in northern Patagonia, with a peak approximately between October and February."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 18,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pinguipes brasilianus — Argentine National Parks Biodiversity Information System",
+        "fr": "Pinguipes brasilianus — système d’information sur la biodiversité des parcs nationaux argentins"
+      },
+      "url": "https://sib.gob.ar/especies/pinguipes-brasilianus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language Argentine SIB lists the fish as native, gives Spanish names Chanchito and Turco, and reports it as not evaluated in the 2021 national inventory."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 26,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The literature located here focuses on northern Patagonian reef populations; activity patterns and global population trends were not established.",
+    "Maximum-size estimates vary among summaries, so no size figure is included."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English FishBase information against Spanish-language Argentine biodiversity and research records and a peer-reviewed reproduction study."
+}

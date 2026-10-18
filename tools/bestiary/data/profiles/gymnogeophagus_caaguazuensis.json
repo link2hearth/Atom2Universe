@@ -1,0 +1,165 @@
+{
+  "id": "gymnogeophagus_caaguazuensis",
+  "scientific": "Gymnogeophagus caaguazuensis",
+  "group": "fish",
+  "name": {
+    "en": "Caaguazú eartheater",
+    "fr": "Géophage de Caaguazú"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small Paraguayan cichlid belongs to the Gymnogeophagus mouthbrooder clade, which also includes Gymnogeophagus labiatus.",
+      "fr": "Ce petit cichlidé paraguayen appartient à la lignée buccale de Gymnogeophagus, qui comprend aussi Gymnogeophagus labiatus."
+    },
+    "identification": {
+      "en": "It has a relatively deep body, short caudal peduncle, and small overall size; adult males develop a lyre-shaped tail. The original description reports a maximum standard length of about 8.6 cm.",
+      "fr": "Son corps est relativement haut, son pédoncule caudal court et sa taille modeste; les mâles adultes développent une nageoire caudale en lyre. La description originale indique une longueur standard maximale d’environ 8,6 cm."
+    },
+    "habitat": {
+      "en": "It is known from the upper Tebicuary-mí River in Paraguay, using sandy patches among rocks in small streams and pools during low water.",
+      "fr": "Il est connu du cours supérieur du río Tebicuary-mí au Paraguay; il occupe des plages sableuses entre les rochers et des mares de petits cours d’eau à l’étiage."
+    },
+    "diet": {
+      "en": "Species-specific diet measurements were not reported in the sources consulted, so a detailed prey list cannot be given.",
+      "fr": "Les sources consultées ne rapportent pas de mesure alimentaire propre à l’espèce; il n’est donc pas possible de donner une liste détaillée de proies."
+    },
+    "behavior": {
+      "en": "The original account describes males quivering their mouths during courtship, a display associated with the genus’s mouthbrooding group.",
+      "fr": "La description originale rapporte que les mâles font vibrer leur bouche pendant la parade, un comportement associé au groupe buccal du genre."
+    },
+    "reproduction": {
+      "en": "It is a delayed maternal mouthbrooder: parents first lay eggs on a surface, then the female takes them into her mouth before hatching.",
+      "fr": "C’est un incubateur buccal maternel différé : les parents pondent d’abord sur un support, puis la femelle prend les œufs dans sa bouche avant l’éclosion."
+    },
+    "ecology": {
+      "en": "At the type locality, it uses sandy bottoms among rocks in rivulets, with stronger currents in the rainy season and quieter pools in dry periods.",
+      "fr": "À la localité type, il fréquente des fonds sableux parmi les rochers dans de petits ruisseaux, plus courants en saison des pluies et plus calmes à l’étiage."
+    },
+    "conservation": {
+      "en": "The IUCN classifies it as Endangered because its very restricted range and habitat quality are declining under agricultural modification.",
+      "fr": "L’UICN le classe en danger en raison de son aire très restreinte et du déclin de la qualité de son habitat, modifié par l’agriculture."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gymnogeophagus caaguazuensis — original description",
+        "fr": "Gymnogeophagus caaguazuensis — description originale"
+      },
+      "url": "https://kinkahobby.weebly.com/uploads/2/0/8/0/20804840/gymnogeophagus_caaguazuensis_sp_n_-_a_new_species_of_cichlid_fish_teleostei_perciformes_cichlida.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The original description provides the diagnosis and records mouth-quivering courtship display."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 11,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnogeophagus caaguazuensis — IUCN Red List",
+        "fr": "Gymnogeophagus caaguazuensis — Liste rouge de l’UICN"
+      },
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/217522/CONICET_Digital_Nro.bf483b85-78f0-4cbb-89f1-62550702b958_B.pdf?isAllowed=y&sequence=2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN gives its known range, habitat and Endangered status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 9,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnogeophagus mouthbrooder clade — Neotropical Ichthyology",
+        "fr": "Lignée incubatrice buccale de Gymnogeophagus — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/5nXYjLpcxvnZSr3bmtSfP8w/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase records maternal larvophilous mouthbrooding."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 5,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnogeophagus caaguazuensis field guide — FishBase",
+        "fr": "Guide de Gymnogeophagus caaguazuensis — FishBase"
+      },
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Gymnogeophagus&SpeciesName=caaguazuensis&print=&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "A peer-reviewed taxonomic paper places Gymnogeophagus caaguazuensis and G. labiatus in the genus mouthbrooder clade."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 15,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Known localities and habitat derive from the type locality; population trend is unknown. Diet and population size are not quantified in the IUCN account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the original species description against its IUCN assessment and a later peer-reviewed paper treating G. caaguazuensis and G. labiatus in the same mouthbrooder clade."
+}

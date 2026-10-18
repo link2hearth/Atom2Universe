@@ -1,0 +1,145 @@
+{
+  "id": "diachrysia_zosimi",
+  "scientific": "Diachrysia zosimi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Scarce Burnished Brass",
+    "fr": "Métallisée de Zosime"
+  },
+  "sections": {
+    "overview": {
+      "en": "Diachrysia zosimi is a localized noctuid moth of European wetlands, with scattered populations in parts of its range.",
+      "fr": "Diachrysia zosimi est un papillon de nuit localisé des zones humides d’Europe, dont les populations sont dispersées dans certaines régions."
+    },
+    "identification": {
+      "en": "It is a medium-sized member of the gold moth group; the greenish metallic marking on its forewings helps separate it from close Diachrysia species.",
+      "fr": "C’est un papillon de taille moyenne du groupe des noctuelles dorées; la marque métallique verdâtre de ses ailes antérieures aide à le distinguer d’espèces proches de Diachrysia."
+    },
+    "habitat": {
+      "en": "It is stenotopic and chiefly inhabits calcareous fens, transitional mires and riverine wetlands with lush vegetation.",
+      "fr": "Espèce sténotopique, elle fréquente surtout les bas-marais calcaires, les tourbières de transition et les zones humides riveraines à végétation abondante."
+    },
+    "diet": {
+      "en": "The caterpillars feed mainly on great burnet, Sanguisorba officinalis; Finnish records also mention other rose-family plants, but these appear less typical.",
+      "fr": "Les chenilles se nourrissent surtout de la sanguisorbe officinale, Sanguisorba officinalis; des données finlandaises mentionnent aussi d’autres rosacées, apparemment moins habituelles."
+    },
+    "behavior": {
+      "en": "Adults fly in midsummer and are attracted to artificial light; Finnish records also report visits to flowers.",
+      "fr": "Les adultes volent au milieu de l’été et sont attirés par les lumières artificielles; les observations finlandaises signalent aussi des visites aux fleurs."
+    },
+    "reproduction": {
+      "en": "The Polish account reports one generation annually. Caterpillars feed from summer into the following spring and overwinter before pupating.",
+      "fr": "La fiche polonaise signale une génération annuelle. Les chenilles se nourrissent de l’été au printemps suivant et passent l’hiver avant la nymphose."
+    },
+    "ecology": {
+      "en": "Because it depends on specialized wetland vegetation and host plants, populations can occupy very small sites and remain isolated from one another.",
+      "fr": "Comme elle dépend d’une végétation humide spécialisée et de plantes-hôtes, ses populations peuvent se limiter à de très petits sites et rester isolées."
+    },
+    "conservation": {
+      "en": "It has disappeared from many European localities, and the Polish species account recommends protecting occupied sites; this is not a global status category.",
+      "fr": "Elle a disparu de nombreuses localités européennes et la fiche polonaise recommande de protéger les sites occupés; il ne s’agit pas d’une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Polish Red Book of Animals — Diachrysia zosimi",
+        "fr": "Livre rouge des animaux de Pologne — Diachrysia zosimi"
+      },
+      "url": "https://www.iop.krakow.pl/pckz/opisba35.html?id=221&je=pl",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Polish Institute of Nature Conservation species account describes calcareous fens and other wetlands, Sanguisorba food, one generation and site-protection priority."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 20,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diachrysia zosimi in Finland",
+        "fr": "Diachrysia zosimi en Finlande"
+      },
+      "url": "https://www.perhoset.fi/historia/plusiinae/dia-zosimi.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Finnish lepidopterist account records the species in Finland, lists Sanguisorba and other Rosaceae, and describes light and flower visits and overwintering as a caterpillar."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 24,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diachrysia zosimi — Hortobágy National Park",
+        "fr": "Diachrysia zosimi — Parc national de Hortobágy"
+      },
+      "url": "https://www.hnp.hu/hu/szervezeti-egyseg/termeszetvedelem/natura2000/fajtar/verfu-aranybagoly",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Hungarian national park species account distinguishes the greenish sheen of D. zosimi from yellowish sheen in other Diachrysia species."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 19,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight timing and host-plant breadth vary among regional accounts; the Polish account reports one generation, while the profile avoids generalizing that life history across all populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Polish, Finnish and Hungarian sources; distinguished regional life-history observations from wider-range assumptions and treated local conservation recommendations as regional."
+}

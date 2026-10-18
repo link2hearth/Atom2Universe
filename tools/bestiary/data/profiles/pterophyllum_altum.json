@@ -1,0 +1,167 @@
+{
+  "id": "pterophyllum_altum",
+  "scientific": "Pterophyllum altum",
+  "group": "fish",
+  "name": {
+    "en": "Altum angelfish",
+    "fr": "Scalaire altum"
+  },
+  "sections": {
+    "overview": {
+      "en": "This freshwater cichlid occurs in the upper Negro and upper Orinoco basins.",
+      "fr": "Ce cichlidé d’eau douce vit dans les bassins du haut Negro et du haut Orénoque."
+    },
+    "identification": {
+      "en": "FishBase reports up to 18 cm total length and about 20 cm in height.",
+      "fr": "FishBase indique jusqu’à 18 cm de longueur totale et environ 20 cm de hauteur."
+    },
+    "habitat": {
+      "en": "It inhabits tropical rivers, including the Inírida and Atabapo tributaries.",
+      "fr": "Il fréquente les rivières tropicales, notamment les affluents Inírida et Atabapo."
+    },
+    "diet": {
+      "en": "The species summaries consulted here do not specify its diet.",
+      "fr": "Les fiches d’espèce consultées ici ne précisent pas son régime."
+    },
+    "behavior": {
+      "en": "FishBase describes it as benthopelagic and non-migratory.",
+      "fr": "FishBase le décrit comme benthopélagique et non migrateur."
+    },
+    "reproduction": {
+      "en": "The references consulted do not detail its reproduction.",
+      "fr": "Les références consultées ne détaillent pas sa reproduction."
+    },
+    "ecology": {
+      "en": "Its range links the upper Orinoco with the Amazon’s upper Negro drainage.",
+      "fr": "Son aire relie le haut Orénoque au haut bassin amazonien du Negro."
+    },
+    "conservation": {
+      "en": "FishBase gives a global Least Concern category (2020). Colombia’s 2012 Red Book lists it as Vulnerable nationally.",
+      "fr": "FishBase indique une catégorie mondiale Préoccupation mineure (2020). Le Livre rouge colombien de 2012 classe l’espèce Vulnérable à l’échelle nationale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pterophyllum altum — FishBase Portuguese summary",
+        "fr": "Pterophyllum altum — fiche FishBase en portugais"
+      },
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=47075&lang=portuguese",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives dimensions, river habitat, benthopelagic and non-migratory ecology, and global status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 12,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Libro rojo de peces dulceacuícolas de Colombia (2012)",
+        "fr": "Livre rouge des poissons d’eau douce de Colombie (2012)"
+      },
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2021/10/Libro-Rojo-de-Peces-Dulceacu%C3%ADcolas-de-Colombia.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The national Red Book lists the species as Vulnerable; FishBase reports global Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 14,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peces de la cuenca del río Orinoco — basin inventory (Spanish/English)",
+        "fr": "Poissons du bassin de l’Orénoque — inventaire (espagnol/anglais)"
+      },
+      "url": "https://citeseerx.ist.psu.edu/document?doi=080c6b0123370d055b45b2f2f951171f3d0dae59&repid=rep1&type=pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish-English basin inventory records the fish in upper Orinoco tributaries and connected waters."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 14,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biología pesquera 15 — AUNAP species account (Spanish)",
+        "fr": "Biología pesquera 15 — fiche AUNAP (espagnol)"
+      },
+      "url": "https://aunap.gov.co/documentos/OGCI/BIOLOGIA-PESQUERA-DIGITAL.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Spanish-language fisheries reference contains a species entry for Pterophyllum altum."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The national Colombian and global IUCN assessments have different scopes and dates.",
+    "Diet and reproduction are unspecified because the sources reviewed did not provide species-specific accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. FishBase is cross-checked against Spanish-language basin and Colombian conservation references; global and national status are distinguished."
+}

@@ -1,0 +1,191 @@
+{
+  "id": "circus_pygargus",
+  "scientific": "Circus pygargus",
+  "group": "birds",
+  "name": {
+    "en": "Montagu’s Harrier",
+    "fr": "Busard cendré"
+  },
+  "sections": {
+    "overview": {
+      "en": "Montagu’s Harrier is a slender migratory raptor that breeds across much of Eurasia and spends the non-breeding season mainly in sub-Saharan Africa.",
+      "fr": "Le Busard cendré est un rapace migrateur élancé qui niche dans une grande partie de l’Eurasie et passe surtout la mauvaise saison en Afrique subsaharienne."
+    },
+    "identification": {
+      "en": "The male is grey with black wing markings, while the brown female and juvenile show a pale rump; it is smaller and more slender than many other harriers.",
+      "fr": "Le mâle est gris avec des marques noires aux ailes, tandis que la femelle et le jeune, bruns, montrent un croupion pâle ; il est plus petit et plus fin que plusieurs autres busards."
+    },
+    "habitat": {
+      "en": "It hunts over open grassland, heath, marsh edges and farmland, and often nests in cereal fields where natural tall vegetation is scarce.",
+      "fr": "Il chasse au-dessus des prairies ouvertes, landes, bordures de marais et terres agricoles, et niche souvent dans les céréales lorsque la végétation naturelle haute manque."
+    },
+    "diet": {
+      "en": "Its flexible diet includes small mammals, birds, reptiles and large insects, with prey varying by place and season.",
+      "fr": "Son régime flexible comprend de petits mammifères, des oiseaux, des reptiles et de gros insectes, les proies variant selon le lieu et la saison."
+    },
+    "behavior": {
+      "en": "It quartering-flies low over open ground while hunting and makes long seasonal migrations between Eurasian breeding areas and African wintering grounds.",
+      "fr": "Il chasse en quadrillant à basse altitude les terrains ouverts et effectue de longues migrations saisonnières entre ses aires de nidification eurasiennes et ses quartiers d’hiver africains."
+    },
+    "reproduction": {
+      "en": "The species nests on the ground, often in crops; eggs and young can be lost when fields are harvested before fledging.",
+      "fr": "L’espèce niche au sol, souvent dans les cultures ; les œufs et les jeunes peuvent être détruits lorsque les champs sont moissonnés avant l’envol."
+    },
+    "ecology": {
+      "en": "It shares the open-country hunting style of other Circus harriers, including the Hen Harrier, but differs in its grey male and characteristic black wing bars.",
+      "fr": "Il partage avec les autres busards du genre Circus, dont le Busard Saint-Martin, la chasse en milieu ouvert, mais s’en distingue par le mâle gris et les barres noires caractéristiques des ailes."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern while noting a decreasing population; nest protection in farmland addresses an important local risk.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en préoccupation mineure tout en indiquant une population en déclin ; la protection des nids agricoles répond à un risque local important."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Montagu’s Harrier — IUCN Red List global assessment (2021)",
+        "fr": "Busard cendré — évaluation mondiale de la Liste rouge de l’UICN (2021)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22695405A201058261.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment lists Least Concern and decreasing trend; breeding Eurasia and non-breeding range broadly across Africa and Asia."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Busard cendré — LPO France",
+        "fr": "Busard cendré — LPO France"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/busard-cendre",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "French bird organization describes sex differences, field identification, open habitats and prey."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Montagu’s Harrier — Royal Society for the Protection of Birds",
+        "fr": "Busard cendré — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/montagus-harrier",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "RSPB describes migration, open farmland/plains/bogs, diet, ground nesting and crop-related breeding risk."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cahiers d’Habitat — Busard cendré, French National Museum of Natural History",
+        "fr": "Cahiers d’Habitat — Busard cendré, Muséum national d’histoire naturelle"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Busard-cendre.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "French habitat account details nest losses during harvest and conservation through protecting nests in crops."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Global Least Concern status coexists with declines and severe regional threats; local categories are not presented as global assessments."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the global IUCN assessment, LPO identification account, RSPB ecology and the MNHN habitat account; compared with other Circus harriers only where relevant."
+}

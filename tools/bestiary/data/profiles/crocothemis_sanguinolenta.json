@@ -1,0 +1,122 @@
+{
+  "id": "crocothemis_sanguinolenta",
+  "scientific": "Crocothemis sanguinolenta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Little Scarlet",
+    "fr": "Petite écarlate"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Little Scarlet is an African libellulid dragonfly, smaller and narrower than the related Broad Scarlet C. erythraea.",
+      "fr": "La Petite écarlate est une libellule libellulidé africaine, plus petite et plus étroite que la Grande écarlate apparentée, C. erythraea."
+    },
+    "identification": {
+      "en": "Mature males are bright red; the species is smaller than C. erythraea and has shorter pterostigmas.",
+      "fr": "Les mâles adultes sont rouge vif; l’espèce est plus petite que C. erythraea et possède des ptérostigmas plus courts."
+    },
+    "habitat": {
+      "en": "It favors open rocky streams and ponds.",
+      "fr": "Elle préfère les ruisseaux et mares rocheux dégagés."
+    },
+    "diet": {
+      "en": "It catches flying insects.",
+      "fr": "Elle capture des insectes en vol."
+    },
+    "behavior": {
+      "en": "It often perches on rocks or bare ground.",
+      "fr": "Elle se perche souvent sur les rochers ou le sol nu."
+    },
+    "reproduction": {
+      "en": "The field guides give no egg or larval details.",
+      "fr": "Les guides ne décrivent ni les œufs ni les larves."
+    },
+    "ecology": {
+      "en": "Adults may stray from water outside the breeding period.",
+      "fr": "Hors reproduction, les adultes peuvent s’éloigner de l’eau."
+    },
+    "conservation": {
+      "en": "The atlas calls it widespread but tied to flowing waters.",
+      "fr": "L’atlas la dit répandue, mais liée aux eaux courantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Scarlet — Online Atlas of South African Odonata, BDI",
+        "fr": "Little Scarlet — Online Atlas of South African Odonata, BDI"
+      },
+      "url": "https://thebdi.org/2020/06/17/little-scarlet-crocothemis-sanguinolenta/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Atlas describes rocky waters, feeding, perching and flight season."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 9,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Field Guide to the Damselflies and Dragonflies of South Africa — SANBI",
+        "fr": "Field Guide to the Damselflies and Dragonflies of South Africa — SANBI"
+      },
+      "url": "https://www.sanbi.org/wp-content/uploads/2018/04/sanbibiodiveristyseries21.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "SANBI guide gives size and shorter pterostigmas than Broad Scarlet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 10,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted field accounts give little species-specific information about reproduction; comparison with C. erythraea is limited to supported size and wing-marking differences."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the South African Odonata atlas with SANBI’s field guide; cross-reference to C. erythraea is restricted to documented size and pterostigma distinctions."
+}

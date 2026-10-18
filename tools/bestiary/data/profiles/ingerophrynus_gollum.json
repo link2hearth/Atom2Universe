@@ -1,0 +1,163 @@
+{
+  "id": "ingerophrynus_gollum",
+  "scientific": "Ingerophrynus gollum",
+  "group": "amphibians",
+  "name": {
+    "en": "Gollum’s Toad",
+    "fr": "Crapaud de Gollum"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ingerophrynus gollum is a species of bufonid toad known from Peninsular Malaysia.",
+      "fr": "Ingerophrynus gollum est une espèce de crapaud de la famille des Bufonidae connue de la péninsule Malaise."
+    },
+    "identification": {
+      "en": "The original description reported three adult males, 27–30 mm in snout–vent length, with a large head and slender body and limbs.",
+      "fr": "La description originale portait sur trois mâles adultes, longs de 27 à 30 mm du museau au cloaque, à tête large et corps et membres grêles."
+    },
+    "habitat": {
+      "en": "It has been recorded in lowland forest at Endau-Rompin and later at Sungai Tua.",
+      "fr": "Elle a été signalée en forêt de basse altitude à Endau-Rompin puis à Sungai Tua."
+    },
+    "diet": {
+      "en": "The species accounts reviewed do not document its prey.",
+      "fr": "Les fiches consultées ne documentent pas ses proies."
+    },
+    "behavior": {
+      "en": "The type-series males called in the early evening after brief afternoon rain, from dead vegetation close to the streambed.",
+      "fr": "Les mâles de la série type appelaient en début de soirée après une brève pluie l’après-midi, depuis la végétation morte près du lit du ruisseau."
+    },
+    "reproduction": {
+      "en": "Males produce a low, two-part raspy call; the reviewed sources do not describe its eggs or larval development.",
+      "fr": "Les mâles émettent un appel rauque en deux parties ; les sources consultées ne décrivent ni ses œufs ni son développement larvaire."
+    },
+    "ecology": {
+      "en": "Its close congener I. divergens is central to an unresolved taxonomic question: a 2019 molecular study found very low sequence divergence and suggested they may be conspecific.",
+      "fr": "Sa congénère I. divergens est au cœur d’une question taxonomique non résolue : une étude moléculaire de 2019 a relevé une très faible divergence génétique et suggéré qu’il pourrait s’agir d’une même espèce."
+    },
+    "conservation": {
+      "en": "A 2018 Malaysian amphibian assessment reported it as globally Endangered and recommended in-situ research; this status predates the later locality records.",
+      "fr": "Une évaluation malaisienne des amphibiens de 2018 l’indiquait en danger à l’échelle mondiale et recommandait des recherches in situ ; cette évaluation précède les données ultérieures de répartition."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A New Species of Ingerophrynus from a Lowland Rain Forest in southern Peninsular Malaysia — Journal of Herpetology",
+        "fr": "Une nouvelle espèce d’Ingerophrynus d’une forêt de basse altitude du sud de la péninsule Malaise — Journal of Herpetology"
+      },
+      "url": "https://doi.org/10.1670/0022-1511(2007)41[225:ANSOIA]2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original description documents male size and morphology, type locality, streamside habitat, evening calling and call form."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 16,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphibian Species of the World — American Museum of Natural History",
+        "fr": "Amphibian Species of the World — American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Bufonidae/Ingerophrynus/Ingerophrynus-gollum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "AMNH taxonomic account records the name and type locality, and notes the proposed possible conspecificity with I. divergens."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 18,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conservation Needs Assessment: Ingerophrynus gollum — Amphibian Ark",
+        "fr": "Évaluation des besoins de conservation : Ingerophrynus gollum — Amphibian Ark"
+      },
+      "url": "https://www.conservationneeds.org/summaryreport/1219?AspxAutoDetectCookieSupport=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "Malaysia assessment dated 2018 reports Endangered globally, recommends research, and notes records from Endau-Rompin and Sungai Tua."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 17,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chan & Grismer 2019 — BMC Evolutionary Biology",
+        "fr": "Chan et Grismer 2019 — BMC Evolutionary Biology"
+      },
+      "url": "https://doi.org/10.1186/s12862-019-1422-3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Molecular study discusses low sequence divergence between I. gollum and I. divergens and cautions about species delimitation in Southeast Asian bufonids."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The description is based on three males; diet, eggs and larval biology remain undocumented in the sources consulted. The Endangered category is from the 2018 assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 2007 description with AMNH taxonomy and the 2018 assessment; retained the unresolved I. divergens species-boundary caveat."
+}

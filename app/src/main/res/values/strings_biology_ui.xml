@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_ui_title">Anatomy</string>
+    <string name="bio_ui_layers">Layers</string>
+    <string name="bio_ui_colors">Group colours</string>
+    <string name="bio_colors_bones">Colour bones by region</string>
+    <string name="bio_colors_muscles">Colour muscles by family</string>
+    <string name="bio_colors_cartilage">Colour cartilages by type</string>
+    <string name="bio_colors_hint">Colours help identify groups. The selected structure stays turquoise.</string>
+    <string name="bio_colors_cartilage_legend">Cartilage colours: purple discs, blue costal structures, green nasal cartilages, amber laryngeal cartilages, pink menisci.</string>
+    <string name="bio_ui_regions">Regions</string>
+    <string name="bio_ui_visibility">Layers and groups</string>
+    <string name="bio_ui_visibility_filtered">Layers and groups · filters active</string>
+    <string name="bio_ui_tools">View and tools</string>
+    <string name="bio_ui_viewpoints">Viewpoints</string>
+    <string name="bio_ui_explore">Explore the atlas</string>
+    <string name="bio_ui_structure_actions">Structure actions</string>
+    <string name="bio_ui_deselect">Close the card and clear selection</string>
+    <string name="bio_ui_select_all">Select all</string>
+    <string name="bio_ui_select_none">Clear all</string>
+    <string name="bio_ui_layers_hint">Combine layers freely. Hide muscles to examine internal organs. Region filters apply to every selected layer; organ systems can be filtered below.</string>
+    <string name="bio_ui_regions_hint">Combine any regions. To see just the head and spine, clear all, then check those two regions.</string>
+    <string name="bio_ui_layer_count">%1$s · %2$d structures</string>
+    <string name="bio_ui_empty">No structures displayed</string>
+    <string name="bio_ui_empty_detail">Choose layers, regions and organ systems, or use Show all to restore hidden structures.</string>
+    <string name="bio_ui_gestures">Navigation help</string>
+    <string name="bio_ui_tap_hint">Tap a structure to identify it. Tap the background or close its card to clear the selection.</string>
+    <string name="bio_ui_double_tap_hint">Double-tap after selecting a structure to centre and zoom in on it.</string>
+    <string name="bio_ui_sides_hint">Left and right always refer to the person being viewed.</string>
+    <string name="bio_ui_surface">Interactive anatomy model. Tap a structure to identify it. Use Layers to combine regions and systems, or Find a structure to search.</string>
+    <string name="bio_ui_loading">Preparing the anatomy atlas…</string>
+    <string name="bio_ui_search">Bone, muscle, organ, cartilage…</string>
+</resources>

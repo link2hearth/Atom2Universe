@@ -1,0 +1,400 @@
+{
+  "id": "wild_yak",
+  "scientific": "Bos mutus",
+  "group": "mammals",
+  "name": {
+    "en": "Wild yak",
+    "fr": "Yack sauvage"
+  },
+  "sections": {
+    "overview": {
+      "en": "Wild yaks inhabit the cold, high Tibetan Plateau. The wild species is Bos mutus; the domestic yak, Bos grunniens, is its close relative, raised by people on the Asian highlands. Its remaining range is concentrated in northern Tibet and western Qinghai, with a small, documented occurrence in Nepal.",
+      "fr": "Les yacks sauvages vivent sur le haut plateau tibétain froid. L’espèce sauvage est Bos mutus ; le yack domestique, Bos grunniens, est son proche parent, élevé par les populations des hautes terres asiatiques. L’aire actuelle se concentre dans le nord du Tibet et l’ouest du Qinghai, avec une petite présence documentée au Népal."
+    },
+    "identification": {
+      "en": "A mature wild yak has a deep, compact body, short sturdy legs, small ears and broad rounded hooves. Long coarse guard hairs hang from the chest, flanks and thighs over a dense insulating undercoat; large lungs and a strong heart, alongside abundant red blood cells, help it obtain oxygen in thin air. Adult bulls stand about 175–203 cm at the shoulder and weigh over 800 kg, with estimates reaching 1,200 kg; cows stand 137–156 cm and average about 350 kg.",
+      "fr": "Un yack sauvage adulte possède un corps profond et compact, des pattes courtes et solides, de petites oreilles et de larges sabots arrondis. De longs poils de couverture rêches tombent sur la poitrine, les flancs et les cuisses, au-dessus d’un sous-poil dense et isolant ; ses grands poumons, son cœur puissant et ses nombreux globules rouges l’aident à capter l’oxygène dans l’air raréfié. Les taureaux adultes mesurent environ 175 à 203 cm au garrot et pèsent plus de 800 kg, avec des estimations atteignant 1 200 kg ; les femelles mesurent 137 à 156 cm et pèsent en moyenne près de 350 kg."
+    },
+    "habitat": {
+      "en": "Wild yaks occupy alpine meadows, cold steppe and high-desert grassland, generally between about 4,000 and 6,100 m. The plateau is windy and arid, with temperatures below −40 °C in some areas; yaks shift to lower valleys in winter. Field research in Arjin Shan found seasonal habitat choices, including use of rugged, higher ground during summer.",
+      "fr": "Les yacks sauvages fréquentent les prairies alpines, les steppes froides et les pâturages de haute altitude, généralement entre environ 4 000 et 6 100 m. Le plateau est venteux et aride, avec des températures inférieures à −40 °C dans certaines zones ; les yacks gagnent des vallées plus basses en hiver. Une étude de terrain dans l’Arjin Shan a relevé des choix d’habitat saisonniers, dont l’usage de terrains élevés et accidentés en été."
+    },
+    "diet": {
+      "en": "The wild yak grazes grasses, sedges and other low alpine plants, with the mix changing as plants mature and snow limits access. It is a ruminant: swallowed vegetation is first fermented by microbes in the rumen, then brought back to the mouth as cud and chewed again; later stomach chambers digest and absorb the released nutrients. This microbial fermentation makes fibrous cell walls usable as energy. A 2025 field study using DNA from wild-yak droppings found clear seasonal shifts in plant foods, consistent with flexible foraging through the short growing season and lean winter.",
+      "fr": "Le yack sauvage broute des graminées, des laîches et d’autres plantes alpines basses ; leur proportion varie avec la maturité des végétaux et l’accès limité par la neige. C’est un ruminant : les végétaux avalés fermentent d’abord grâce aux microbes de la panse, puis remontent à la bouche sous forme de bol alimentaire pour être remâchés ; les autres compartiments de l’estomac poursuivent ensuite la digestion et l’absorption. Cette fermentation microbienne permet de tirer de l’énergie des fibres végétales. Une étude de terrain publiée en 2025, fondée sur l’ADN des fèces, a mis en évidence des changements saisonniers du régime, signe d’une alimentation souple entre brève saison de croissance et hiver pauvre."
+    },
+    "behavior": {
+      "en": "Wild yaks are social: females and calves form nursery groups, while adult males may join them, remain solitary or gather in small bachelor groups. In the summer rut, bulls join female herds, compete for mates, display and fight. Wild yaks vocalize and can be noisy. In the growing season, they use higher, more rugged ground; seasonal habitat use shifts with climate and snow.",
+      "fr": "Les yacks sauvages sont sociaux : les femelles et les veaux forment des groupes familiaux, tandis que les mâles adultes peuvent les rejoindre, rester seuls ou se réunir en petits groupes de célibataires. Pendant le rut estival, les taureaux rejoignent les troupeaux de femelles, rivalisent pour les partenaires, paradent et se battent. Les yacks sauvages vocalisent et peuvent être bruyants. Pendant la pousse, ils fréquentent des terrains plus élevés et accidentés ; l’utilisation de l’habitat varie selon le climat et la neige."
+    },
+    "reproduction": {
+      "en": "Mating occurs in summer, and calves are born from April through June, with timing varying with elevation and seasonal food. After about 258–270 days of gestation, a cow usually gives birth to one calf; wild females commonly calve every two or three years, depending partly on forage and weather. A calf can stand soon after birth and learn to walk within hours; it soon follows its mother back to the herd. The maternal group offers protection while the young animal begins to graze and grow.",
+      "fr": "L’accouplement a lieu en été et les veaux naissent d’avril à juin, le calendrier variant selon l’altitude et les ressources saisonnières. Après environ 258 à 270 jours de gestation, la femelle met généralement bas un seul veau ; les femelles sauvages ont souvent un petit tous les deux ou trois ans, selon notamment le fourrage et la météo. Le veau peut se tenir debout peu après la naissance et apprend à marcher en quelques heures ; il suit bientôt sa mère lorsqu’elle rejoint le troupeau. Le groupe maternel le protège tandis qu’il commence à brouter et à grandir."
+    },
+    "ecology": {
+      "en": "As a large grazer, the wild yak shares alpine forage with Tibetan wild asses, argali, blue sheep and other plateau herbivores. In summer, movement into higher meadows can reduce overlap with animals using lower ground; competition becomes more consequential where domestic livestock concentrate on the same productive pastures. Its need for connected ranges ties survival to highland land use.",
+      "fr": "Grand brouteur, le yack sauvage partage les ressources des prairies alpines avec l’âne sauvage du Tibet, l’argali, le bharal et d’autres herbivores du plateau. En été, le déplacement vers des prairies plus élevées peut réduire le chevauchement avec les animaux des terrains bas ; la concurrence devient plus forte là où le bétail domestique se concentre sur les mêmes pâturages productifs. Son besoin de parcours reliés lie sa survie à l’usage des hautes terres."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2016 is based on a global assessment dated 9 July 2014: it classifies Bos mutus as Vulnerable and estimates 7,500–9,999 mature animals, with a continuing decline projected. Earlier surveys placed about 15,000 wild yaks across the plateau in 1995, while the Wildlife Conservation Society later reported imprecise global estimates of 15,000–20,000; these figures come from different dates and methods. Poaching for meat, shrinking and fragmented habitat, competition with livestock, and hybridization with domestic yaks threaten the species. Nepal’s presence was confirmed again in 2014 after decades without records. China’s nature reserves and anti-poaching protection offer important refuges, but the global trend remains uncertain and negative in many areas.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2016 porte la date du 9 juillet 2014 : elle classe Bos mutus comme Vulnérable et estime la population à 7 500–9 999 individus sexuellement matures, avec un déclin continu prévu. Des estimations antérieures situaient environ 15 000 yacks sauvages sur le plateau en 1995 ; la Wildlife Conservation Society a ensuite rapporté une estimation mondiale imprécise de 15 000 à 20 000 individus, chiffres établis à des dates et selon des méthodes différentes. Le braconnage pour la viande, la fragmentation et la réduction de l’habitat, la concurrence avec le bétail et les croisements avec les yacks domestiques menacent l’espèce. Sa présence au Népal a été confirmée en 2014 après des décennies sans observation. Les réserves chinoises et la lutte contre le braconnage sont des refuges importants, mais la tendance reste incertaine et négative dans de nombreuses régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bos grunniens and Bos mutus (Artiodactyla: Bovidae) — Mammalian Species",
+        "fr": "Bos grunniens et Bos mutus (Artiodactyla : Bovidae) — Mammalian Species"
+      },
+      "url": "https://doi.org/10.1644/836.1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Species account describes wild anatomy, measurements, groups and ecological relationships."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 10,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bos mutus (Wild Yak) — IUCN Red List of Threatened Species",
+        "fr": "Bos mutus (Yack sauvage) — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T2892A101293528.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global Vulnerable assessment dated 2014; estimates fewer than 10,000 mature animals."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 11,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Yak — Wildlife Conservation Society China",
+        "fr": "Yack sauvage — Wildlife Conservation Society China"
+      },
+      "url": "https://china.wcs.org/%E9%87%8E%E7%94%9F%E7%94%9F%E7%89%A9/%E9%87%8E%E7%89%A6%E7%89%9B.aspx",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Reports refuges, livestock pressure, hybridization, and population estimates."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.en.5",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "conservation.fr.5",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 8,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Understanding habitat selection of the Vulnerable wild yak Bos mutus on the Tibetan Plateau — Oryx",
+        "fr": "Comprendre le choix de l’habitat du yack sauvage vulnérable Bos mutus sur le plateau tibétain — Oryx"
+      },
+      "url": "https://www.cambridge.org/core/journals/oryx/article/understanding-habitat-selection-of-the-vulnerable-wild-yak-bos-mutus-on-the-tibetan-plateau/9A166DD55F1B07688BB2EFB8A53A8EDC",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Arjin Shan field study examines seasonal habitat choice and human disturbance."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 11,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal dietary shifts drive gut microbiome plasticity and metabolic adaptation in wild yaks on the Qinghai-Xizang Plateau — Microbiome",
+        "fr": "Les changements saisonniers du régime façonnent le microbiome intestinal du yack sauvage du plateau Qinghai-Xizang — Microbiome"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12729762/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Wild-yak fecal DNA study documents seasonal diet shifts."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 8,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogeographical analysis shows the need to protect the wild yaks’ last refuge in Nepal — Ecology and Evolution",
+        "fr": "L’analyse phylogéographique souligne la nécessité de protéger le dernier refuge du yack sauvage au Népal — Ecology and Evolution"
+      },
+      "url": "https://doi.org/10.1002/ece3.7731",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Documents two yaks in Upper Humla in 2014 after decades without records."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 12,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thirty-year Wild Yak (Bos mutus) Management Plan for the Chang Tang Nature Reserve, China",
+        "fr": "Plan de gestion trentenaire du yack sauvage (Bos mutus) pour la réserve naturelle du Chang Tang, Chine"
+      },
+      "url": "https://repository.paulsmiths.edu/files/pdf?fileid=3258544d-1808-442f-95dc-614b0db59d36",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Management plan summarizes wild yak breeding and calf development."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 9,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Understanding the Ruminant Animal Digestive System — Mississippi State University Extension",
+        "fr": "Comprendre le système digestif des ruminants — Mississippi State University Extension"
+      },
+      "url": "https://extension.msstate.edu/publications/understanding-the-ruminant-animal-digestive-system",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Explains the four stomach compartments, microbial fermentation and cud chewing in true ruminants."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.2",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 13,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild yak — Asian Wild Cattle Specialist Group",
+        "fr": "Yack sauvage — Asian Wild Cattle Specialist Group"
+      },
+      "url": "https://www.asianwildcattle.org/wild-yak.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Specialist account describes wild-yak dimensions, habitat, coat and groups."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 9,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bos grunniens and Bos mutus (Artiodactyla: Bovidae) — U.S. Geological Survey",
+        "fr": "Bos grunniens et Bos mutus (Artiodactyla : Bovidae) — U.S. Geological Survey"
+      },
+      "url": "https://www.usgs.gov/publications/bos-grunniens-and-bos-mutus-artiodactyla-bovidae",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Distinguishes domestic Bos grunniens from wild Bos mutus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sexual/aggressive behavior of wild yak (Bos mutus) during the rut: influence of female choice — Chinese Science Bulletin",
+        "fr": "Comportements sexuels et agressifs du yack sauvage (Bos mutus) pendant le rut : rôle du choix des femelles — Chinese Science Bulletin"
+      },
+      "url": "https://doi.org/10.1007/s11434-014-0247-0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field observations recorded rut behavior and male competition in wild groups."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 11,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Endangered Mammals of Tibet — Department of Information and International Relations Publications",
+        "fr": "Les mammifères menacés du Tibet — Publications du Department of Information and International Relations"
+      },
+      "url": "https://tibet.net/wp-content/uploads/2011/08/TheEndageredMammalsOfTibet.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Wild-yak account reports newborns stand soon after birth and walk within hours."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 12,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict one adult wild yak (Bos mutus), not a domestic yak: massive blackish-brown body, high shoulder hump, short sturdy legs, long shaggy hair on chest, flanks and thighs, dense coat, broad rounded hooves, and large horns. Natural proportions; full animal visible on a pure white background.",
+  "uncertainties": [
+    "The IUCN page identifies 9 July 2014 as the assessment date and 2016 as publication year; its population estimate is not a current census.",
+    "WCS China gives a later global range of 15,000–20,000 but explicitly says precise statistics are unavailable; the estimates should not be read as directly comparable.",
+    "Most reproductive observations come from a small number of plateau populations, and some calf growth measurements are from captive wild-born animals.",
+    "The 2025 diet study describes sampled populations and seasons on the Qinghai-Xizang Plateau; dietary proportions should not be generalized to every site."
+  ],
+  "review_notes": [
+    "Root corrected natural encyclopedia introduction, mature-individual terminology and consolidated allocation to avoid double budgeting the Mammalian Species publication through DOI and USGS record."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual editorial review; sensitive taxonomy, life-cycle and conservation statements checked against cited primary sources; source accounting passed; independent artwork review accepted.",
+  "source_audit_version": 1
+}

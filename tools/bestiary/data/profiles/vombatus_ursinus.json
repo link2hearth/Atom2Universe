@@ -1,0 +1,119 @@
+{
+  "id": "vombatus_ursinus",
+  "scientific": "Vombatus ursinus",
+  "group": "mammals",
+  "name": {
+    "en": "Bare-nosed wombat",
+    "fr": "Wombat à nez nu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The bare-nosed wombat is a burrowing marsupial native to southeastern Australia and Tasmania.",
+      "fr": "Le wombat à nez nu est un marsupial fouisseur originaire du sud-est de l’Australie et de Tasmanie."
+    },
+    "identification": {
+      "en": "Its broad, naked nose and coarse coat distinguish it from hairy-nosed wombats in the genus Lasiorhinus.",
+      "fr": "Son large nez dépourvu de poils et son pelage rude le distinguent des wombats à nez poilu du genre Lasiorhinus."
+    },
+    "habitat": {
+      "en": "It occupies forest, woodland, heath and grassland; it shelters in burrows dug in well-drained ground.",
+      "fr": "Il fréquente forêts, boisements, landes et prairies ; il s’abrite dans des terriers creusés dans un sol bien drainé."
+    },
+    "diet": {
+      "en": "It grazes mainly on native grasses, sedges and some roots.",
+      "fr": "Il broute surtout des graminées indigènes, des carex et certaines racines."
+    },
+    "behavior": {
+      "en": "It stays in burrows by day, sometimes sharing them with other wombats.",
+      "fr": "Il reste dans son terrier le jour et peut le partager avec d’autres wombats."
+    },
+    "reproduction": {
+      "en": "A female usually gives birth to one young, which remains in her backward-facing pouch for about seven to ten months.",
+      "fr": "La femelle donne généralement naissance à un petit, qui reste environ sept à dix mois dans sa poche tournée vers l’arrière."
+    },
+    "ecology": {
+      "en": "Its extensive burrows provide shelter and are an important part of its way of life.",
+      "fr": "Ses terriers étendus lui servent d’abri et jouent un rôle important dans son mode de vie."
+    },
+    "conservation": {
+      "en": "The species is listed as Least Concern globally, although mange and road collisions affect populations.",
+      "fr": "L’espèce est classée en préoccupation mineure à l’échelle mondiale, mais la gale et les collisions routières affectent certaines populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australian Museum — Bare-nosed Wombat",
+        "fr": "Australian Museum — Bare-nosed Wombat"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/bare-nosed-wombat/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Museum profile summarizes range, habitat, grazing and burrow use."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 9,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NSW Government — Wombats",
+        "fr": "Gouvernement de Nouvelle-Galles du Sud — Wombats"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/land-mammals/wombats",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "NSW profile describes the bare nose, burrows, pouch development and local threats."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 12,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Range, breeding timing and threat severity vary among populations; the summary avoids treating a regional pattern as universal."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

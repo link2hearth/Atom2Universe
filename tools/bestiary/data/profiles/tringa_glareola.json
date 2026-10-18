@@ -1,0 +1,145 @@
+{
+  "id": "tringa_glareola",
+  "scientific": "Tringa glareola",
+  "group": "birds",
+  "name": {
+    "en": "Wood sandpiper",
+    "fr": "Chevalier sylvain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The wood sandpiper is a small migratory wader that breeds across northern Eurasia and winters mainly in Africa, southern Asia and Australasia.",
+      "fr": "Le chevalier sylvain est un petit limicole migrateur qui niche dans le nord de l’Eurasie et hiverne surtout en Afrique, en Asie méridionale et en Australasie."
+    },
+    "identification": {
+      "en": "It has spotted upperparts, yellow-green legs, a pale eyebrow and a square white rump in flight.",
+      "fr": "Il porte un dessus ponctué, des pattes jaune verdâtre, un sourcil clair et un croupion blanc carré en vol."
+    },
+    "habitat": {
+      "en": "It breeds in northern bogs and marshes; outside the breeding season it favours shallow freshwater margins, wet meadows, pools and flooded fields.",
+      "fr": "Il niche dans les tourbières et marais du nord ; hors reproduction, il préfère les rives d’eau douce peu profondes, prairies humides, mares et champs inondés."
+    },
+    "diet": {
+      "en": "It takes insects and their larvae, along with worms and other small aquatic animals.",
+      "fr": "Il consomme des insectes et leurs larves, ainsi que des vers et d’autres petits animaux aquatiques."
+    },
+    "behavior": {
+      "en": "It migrates between Eurasian breeding grounds and African and Asian wintering areas, often gathering in small flocks on passage.",
+      "fr": "Il migre entre ses sites de reproduction eurasiens et ses quartiers d’hiver africains et asiatiques ; en passage, il se rassemble souvent en petites bandes."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in marshes and bogs, usually laying four eggs; both parents incubate, while the male commonly tends the young after the female leaves.",
+      "fr": "Il niche au sol dans les marais et tourbières et pond généralement quatre œufs ; les deux parents couvent, puis le mâle s’occupe souvent des jeunes après le départ de la femelle."
+    },
+    "ecology": {
+      "en": "The spotted redshank is among its close Tringa relatives; see that profile for comparison.",
+      "fr": "Le chevalier arlequin figure parmi ses proches parents du genre Tringa ; voir cette fiche pour comparer."
+    },
+    "conservation": {
+      "en": "BirdLife Australia reports a global IUCN status of Least Concern; the RSPB lists it as Amber in the UK, a regional assessment.",
+      "fr": "BirdLife Australia indique un statut mondial UICN de Préoccupation mineure ; le RSPB le classe en catégorie Ambre au Royaume-Uni, une évaluation régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Wood sandpiper",
+        "fr": "Oiseaux.net — Chevalier sylvain"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.sylvain.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French species account describes northern breeding, wetland habitats, prey, migration and nesting; its phylogenetic summary includes the spotted redshank among close relatives."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 23,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BirdLife Australia — Wood sandpiper",
+        "fr": "BirdLife Australia — Chevalier sylvain"
+      },
+      "url": "https://birdlife.org.au/bird-profiles/wood-sandpiper/",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The English account describes spotted plumage, eyebrow, leg and rump markings and lists global IUCN status as Least Concern."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 19,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Royal Society for the Protection of Birds — Wood sandpiper",
+        "fr": "Royal Society for the Protection of Birds — Chevalier sylvain"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/wood-sandpiper/",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The RSPB summarizes passage migration and diet; its UK conservation category is Amber."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 13,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The UK Amber listing is regional and distinct from the global IUCN category."
+  ],
+  "review_note": "Kept conservation scales explicit; cross-reference is grounded in a genus-level phylogenetic summary.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

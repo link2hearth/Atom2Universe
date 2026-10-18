@@ -1,0 +1,482 @@
+{
+  "id": "greylag_goose",
+  "scientific": "Anser anser",
+  "group": "birds",
+  "name": {
+    "en": "Greylag Goose",
+    "fr": "Oie cendrée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Greylag Goose is a large, social waterfowl native across much of Europe and temperate Asia, where it uses wetlands for breeding and open grasslands or farmland for feeding. Adults are about 76–89 cm long, with a 147–180 cm wingspan and a usual mass of roughly 2.9–3.7 kg. These are wild-species measurements: released or feral domestic geese may be larger, paler, or otherwise unlike wild birds.",
+      "fr": "L’Oie cendrée est un grand oiseau d’eau grégaire, présent à l’état sauvage dans une vaste partie de l’Europe et de l’Asie tempérée ; elle niche dans les zones humides et s’alimente aussi dans les prairies et les terres agricoles. L’adulte mesure environ 76 à 89 cm, pour une envergure de 147 à 180 cm et une masse habituelle d’environ 2,9 à 3,7 kg. Ces mesures concernent l’espèce sauvage : les oies domestiques relâchées ou férales peuvent être plus grandes, plus pâles ou autrement différentes."
+    },
+    "identification": {
+      "en": "Its bulky body, thick neck and large head carry a mottled grey-brown plumage, paler breast and belly, and a white tail with a dark band; dark bars or spots on the belly vary between individuals. Pink legs and a broad bill distinguish its silhouette, while the bill colour follows geography: western European birds are usually orange-billed, eastern birds pink-billed, with intermediate birds in central Europe. In flight, large pale patches on the upperwing and a contrasting grey-and-dark underwing help identify it; the bill pattern also separates it from Taiga Bean-Goose, whose bill has dark areas and an orange band. BTO adult British means: wing length 458.8 mm and mass 3.49 kg (males), versus 436.3 mm and 3.18 kg (females). Body length is about 76–89 cm and wingspan 147–180 cm; males average larger.",
+      "fr": "Son corps massif, son cou épais et sa grosse tête portent un plumage gris brun moucheté, une poitrine et un ventre plus clairs, ainsi qu’une queue blanche barrée d’une bande sombre ; les barres ou taches sombres du ventre varient selon les individus. Ses pattes roses et son large bec contribuent à son identification, mais la couleur du bec dépend de la région : il est généralement orange en Europe occidentale, rose à l’est, avec des individus intermédiaires en Europe centrale. En vol, les grandes plages pâles du dessus de l’aile et le contraste gris sombre du dessous sont caractéristiques ; le bec la distingue aussi de l’Oie des moissons de la taïga, qui porte des zones sombres et une bande orange. Moyennes du BTO pour les adultes britanniques : longueur d’aile de 458,8 mm et masse de 3,49 kg chez les mâles, contre 436,3 mm et 3,18 kg chez les femelles. La longueur totale est d’environ 76 à 89 cm et l’envergure de 147 à 180 cm ; les mâles sont en moyenne plus grands."
+    },
+    "habitat": {
+      "en": "Breeding pairs select lakes, marshes and other wetlands with quiet nesting cover, often reedbeds or small islands that make nests less accessible to terrestrial predators. They feed in nearby meadows and wet grassland, then use larger wetlands as resting and roosting places. Outside breeding, they also graze on stubble or crops before returning to safe water; wetlands and open feeding areas therefore complement each other.",
+      "fr": "Pour nicher, les couples choisissent des lacs, marais et autres zones humides offrant un couvert tranquille, souvent des roselières ou de petites îles qui rendent les nids moins accessibles aux prédateurs terrestres. Ils se nourrissent dans les prairies humides voisines et se reposent ou dorment dans des zones humides plus vastes. Hors reproduction, ils pâturent aussi dans les chaumes ou les cultures, puis gagnent l’eau pour se reposer ; zones humides et espaces ouverts sont complémentaires."
+    },
+    "diet": {
+      "en": "The Greylag is predominantly herbivorous. Its broad bill clips grasses and cereal leaves. It also digs out roots. In water, it reaches submerged plants by tipping forward. Seeds and spilled grain become important where fields are available, and the balance changes with season and locality. Its muscular gizzard helps grind fibrous plant food after it is swallowed. It may also take small aquatic animals, but plants dominate its diet.",
+      "fr": "L’Oie cendrée est principalement herbivore. Son large bec coupe l’herbe et les feuilles de céréales. Elle déterre aussi des racines. Dans l’eau, elle atteint les plantes immergées en basculant le corps vers l’avant. Les graines et les grains perdus prennent de l’importance lorsque des champs sont accessibles, et la composition du régime varie selon la saison et le lieu. Son gésier musculeux aide à broyer les végétaux fibreux après leur ingestion. Elle peut aussi consommer de petits animaux aquatiques, mais les plantes dominent son alimentation."
+    },
+    "behavior": {
+      "en": "Outside nesting, families and other Greylags gather into large, noisy flocks. Honking contact calls keep birds in touch; call patterns can identify individuals and reveal social relationships. Many northern populations migrate south or west for winter, while some western and introduced populations are resident, so routes vary by population. During the annual wing moult, flight feathers are replaced together, leaving the goose unable to fly for several weeks.",
+      "fr": "Hors nidification, familles et autres Oies cendrées se rassemblent en bandes nombreuses. Leurs cris rauques entretiennent le contact ; leur structure vocale distingue les individus et renseigne sur leurs liens sociaux. De nombreuses populations nordiques migrent vers le sud ou l’ouest pour l’hiver, tandis que certaines populations occidentales ou introduites sont sédentaires ; les déplacements varient donc selon les populations. Lors de la mue annuelle des ailes, les rémiges sont renouvelées simultanément et l’oie reste incapable de voler pendant plusieurs semaines."
+    },
+    "reproduction": {
+      "en": "Greylags are monogamous and breed in spring. British records give a typical clutch of five to seven eggs; the female incubates alone for 27–28 days. The male helps guard the goslings after hatching. The goslings hatch down-covered and precocial: once dry, they leave the nest, walk and swim, and pick up food themselves under parental protection. They fledge at about 50–60 days and commonly do not breed until around three years old.",
+      "fr": "Les Oies cendrées sont monogames et se reproduisent au printemps. Les données britanniques indiquent une ponte typique de cinq à sept œufs ; la femelle couve seule pendant 27 à 28 jours. Le mâle contribue à la protection des oisons après l’éclosion. Les oisons éclosent couverts de duvet et sont nidifuges : une fois secs, ils quittent le nid, marchent et nagent, puis picorent eux-mêmes sous la protection de leurs parents. Ils prennent leur envol vers 50 à 60 jours et ne se reproduisent souvent qu’à partir d’environ trois ans."
+    },
+    "ecology": {
+      "en": "Greylags carry intact seeds in droppings between aquatic and agricultural habitats, linking plant communities across the landscape. In a long-term Dutch reedbed study, repeated grazing during the geese’s flightless moult changed reed growth and increased the movement of nitrogen and phosphorus from standing plants; this is a documented local effect, not a universal result for every marsh. Their appetite for crops can bring local conflict with farmers where flocks grow. Eggs and goslings are vulnerable to predators.",
+      "fr": "Les Oies cendrées transportent dans leurs fientes des graines intactes entre milieux aquatiques et agricoles, reliant des communautés végétales du paysage. Dans une roselière néerlandaise suivie à long terme, le pâturage répété pendant la mue, lorsque les oiseaux ne volent pas, a modifié la croissance des roseaux et accru le transfert d’azote et de phosphore depuis les plantes sur pied ; cet effet local ne vaut pas nécessairement pour tous les marais. Leur consommation des cultures peut créer des conflits locaux avec les agriculteurs lorsque les groupes augmentent. Les œufs et les oisons sont exposés aux prédateurs."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2018, based on an assessment dated 9 August 2018, classifies the Greylag Goose as Least Concern and reports an increasing overall population trend. This global result reflects the species’ very large range and population; it does not describe every local group. The same assessment identifies hunting, lead poisoning from spent shot, wetland drainage and degradation, crop conflict and disturbance or alteration of nesting habitat among pressures. In Britain, native Scottish birds coexist with re-established and naturalized populations elsewhere, so management and conflict are strongly regional. European domestic geese descend mainly from Greylags, whereas most traditional Chinese domestic geese descend from the distinct Swan Goose, Anser cygnoides; feral birds can blur the boundary between wild and managed flocks.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2018 et datée du 9 août 2018 classe l’Oie cendrée en préoccupation mineure et indique une tendance générale des effectifs à la hausse. Ce résultat mondial tient compte de son aire et de sa population très vastes ; il ne décrit pas chaque groupe local. L’évaluation cite la chasse, l’intoxication par les plombs de chasse avalés, le drainage ou la dégradation des zones humides, les dégâts aux cultures et la modification des sites de nidification. En Grande-Bretagne, oiseaux indigènes d’Écosse et populations rétablies ailleurs coexistent, avec des enjeux locaux de gestion. L’oie domestique européenne descend surtout de l’Oie cendrée ; la plupart des oies chinoises viennent de l’Oie cygnoïde (Anser cygnoides), espèce distincte, mais des oiseaux férals peuvent mélanger les populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Graylag Goose Identification — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Identification de l’Oie cendrée — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Graylag_Goose/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Adult plumage, bill colour, wing marks, measurements and nesting cover.",
+        "Reports adult body length 76–89 cm and wingspan 147–180 cm."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.4",
+        "identification.en.1",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 20,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Similar Species to Graylag Goose — Cornell Lab of Ornithology",
+        "fr": "Espèces proches de l’Oie cendrée — Cornell Lab of Ornithology"
+      },
+      "url": "https://blog.allaboutbirds.org/guide/Graylag_Goose/species-compare",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Taiga Bean-Goose bill, leg and head colours contrast with Greylag."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 10,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Graylag Goose Overview — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Présentation de l’Oie cendrée — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Graylag_Goose/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Species range, wild and domestic birds, flocks and conspicuous calls."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 10,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Graylag Goose Life History — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Cycle de vie de l’Oie cendrée — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Graylag_Goose/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Seasonal foods, winter crop use and wetlands close to feeding areas."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 11,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greylag Goose — Animal Diversity Web, University of Michigan",
+        "fr": "Oie cendrée — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Anser_anser/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Nest sites, plant and animal foods, female incubation, goslings and development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.7",
+        "diet.fr.1",
+        "diet.fr.7",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 11,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greylag Goose BirdFacts — British Trust for Ornithology",
+        "fr": "Greylag Goose BirdFacts — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/greylag-goose",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "BTO measured adult British wing length and body mass by sex."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 11,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greylag Goose Facts — Royal Society for the Protection of Birds",
+        "fr": "Faits sur l’Oie cendrée — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/greylag-goose",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "UK population history, identification, diet and seasonal population context."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "diet.en.3",
+        "diet.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 9,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vocal recognition of distance calls in a group-living basal bird: the greylag goose",
+        "fr": "Reconnaissance des cris à distance chez une espèce grégaire : l’Oie cendrée"
+      },
+      "url": "https://doi.org/10.1016/j.anbehav.2022.01.001",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Call analyses investigate individual signatures and partner responses."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 8,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greylag Goose — IUCN Red List of Threatened Species",
+        "fr": "Oie cendrée — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22679889A131907747.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Global assessment dated 9 August 2018; Least Concern, trend and threats."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 11,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Origins, Timing and Introgression of Domestic Geese Revealed by Whole Genome Data",
+        "fr": "Origines, chronologie et introgression des oies domestiques révélées par les génomes"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9493997/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Genome evidence distinguishes European Greylag and Asian Swan Goose ancestry."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 10,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Long-term effects of yearly grazing by moulting Greylag geese on reed growth and nutrient dynamics",
+        "fr": "Effets du pâturage des Oies cendrées en mue sur les roseaux et les nutriments"
+      },
+      "url": "https://doi.org/10.1016/S0304-3770(02)00178-X",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Dutch reedbed study links grazing with reed growth and nutrient flux."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 11,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seed dispersal between aquatic and agricultural habitats by greylag geese",
+        "fr": "Dispersion des graines entre habitats aquatiques et agricoles par les Oies cendrées"
+      },
+      "url": "https://publications.slu.se/?file=publ%2Fshow&id=126782",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "GPS and faecal-sample study traces plant-seed transport between habitats."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 9,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Predation of greylag goose gosling by carrion crow",
+        "fr": "Prédation d’un oison d’Oie cendrée par une Corneille noire"
+      },
+      "url": "https://www.zoo.ox.ac.uk/publication/1191862/hyrax",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Oxford report documents a Carrion Crow preying on a Greylag gosling."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 11,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Functional morphology of the gizzard of the domestic goose: design of an artificial gizzard — Journal of Zoology",
+        "fr": "Morphologie fonctionnelle du gésier de l’oie domestique : conception d’un gésier artificiel — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1998.tb00139.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Goose-inspired mechanical model tests grass processing by gizzard muscle movements and grit."
+      ],
+      "prose_claims": [
+        "diet.en.6",
+        "diet.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 12,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moult migration, site fidelity and survival of British Greylag Geese Anser anser at Windermere",
+        "fr": "Migration de mue, fidélité au site et survie des Oies cendrées britanniques à Windermere"
+      },
+      "url": "https://doi.org/10.1080/03078698.2019.1887673",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Primary study documents simultaneous wing and tail moult and weeks of flightlessness."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 12,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Wild adult in grey-brown plumage, bulky body, thick neck, broad orange bill and pink legs; show pale grey upperwing in flight. Bill may be pink in eastern populations. Avoid domestic white or oversized forms as the default.",
+  "uncertainties": [
+    "Greylag measurements and plumage vary geographically; domestic ancestry can make feral birds difficult to distinguish from wild-type individuals."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review confirm life cycle, seed transport, regional grazing and dated assessment. Dark tail band corrected; clutch qualified as British typical records; gizzard citation replaced with direct functional study."
+}

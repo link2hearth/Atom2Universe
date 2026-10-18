@@ -1,0 +1,188 @@
+{
+  "id": "eidolon_dupreanum",
+  "scientific": "Eidolon dupreanum",
+  "group": "mammals",
+  "name": {
+    "en": "Madagascan Straw-coloured Fruit Bat",
+    "fr": "Roussette paillée de Madagascar"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eidolon dupreanum is a large fruit bat endemic to Madagascar and assessed as Vulnerable. It is a congener of the African straw-coloured fruit bat E. helvum; see that profile for its widespread continental relative.",
+      "fr": "Eidolon dupreanum est une grande chauve-souris frugivore endémique de Madagascar et classée vulnérable. C’est une congénère de la roussette paillée africaine E. helvum; voir cette fiche pour sa proche parente largement répandue en Afrique."
+    },
+    "identification": {
+      "en": "Regional accounts describe a large pteropodid with reported body mass around 250–340 g; they provide fewer field marks than measurements.",
+      "fr": "Les synthèses régionales décrivent un grand ptéropodidé pesant environ 250 à 340 g; elles donnent peu de critères d’identification visuelle."
+    },
+    "habitat": {
+      "en": "It occurs on Madagascar and has been documented roosting in caves, rocky cliffs and, occasionally, dense tree foliage.",
+      "fr": "Elle vit à Madagascar et a été observée dans des grottes, des falaises rocheuses et, occasionnellement, dans un feuillage dense."
+    },
+    "diet": {
+      "en": "A study in eastern Madagascar found a diet composed mainly of fruit, with Eucalyptus flowers also consumed.",
+      "fr": "Une étude menée dans l’est de Madagascar a trouvé un régime surtout composé de fruits, complété par des fleurs d’Eucalyptus."
+    },
+    "behavior": {
+      "en": "Researchers identify it as cave-dwelling and capture it at cave mouths around dusk and dawn; detailed movement data remain limited.",
+      "fr": "Les chercheurs la décrivent comme cavernicole et la capturent aux entrées des grottes au crépuscule et à l’aube; les données détaillées sur ses déplacements restent limitées."
+    },
+    "reproduction": {
+      "en": "Field monitoring recorded lactating females in November and December and estimated annual female fecundity at about 0.23 young per female.",
+      "fr": "Le suivi de terrain a relevé des femelles allaitantes en novembre et décembre et estimé la fécondité annuelle à environ 0,23 jeune par femelle."
+    },
+    "ecology": {
+      "en": "By eating fruit, it moves seeds between feeding and roosting sites; the diet study also found some evidence that gut passage can improve seed germination.",
+      "fr": "En mangeant des fruits, elle transporte des graines entre ses sites d’alimentation et ses dortoirs; l’étude alimentaire relève aussi des indices d’une germination favorisée après transit digestif."
+    },
+    "conservation": {
+      "en": "The global assessment is Vulnerable. Surveys in northern Madagascar associated recent hunting evidence at roosts with declines in a monitored colony, while emphasizing cave disturbance risks.",
+      "fr": "L’évaluation mondiale la classe vulnérable. Dans le nord de Madagascar, des indices de chasse près des dortoirs coïncidaient avec le recul d’une colonie suivie, et les auteurs signalent aussi les perturbations des grottes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eidolon dupreanum — Mammal Diversity Database",
+        "fr": "Eidolon dupreanum — base Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004388/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The database recognizes the Madagascan species and reports its Vulnerable IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 12,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Ecology and Conservation of Malagasy Bats",
+        "fr": "Écologie et conservation des chauves-souris malgaches"
+      },
+      "url": "https://www.madagasikara-voakajy.org/42-the-ecology-and-conservation-of-malagasy-bats/file",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Regional synthesis reports 250–340 g and roosts in cliffs, caves, and occasionally foliage."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 13,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The feeding ecology of Eidolon dupreanum in eastern Madagascar",
+        "fr": "Écologie alimentaire d’Eidolon dupreanum dans l’est de Madagascar"
+      },
+      "url": "https://www.persee.fr/doc/revec_0249-7395_2007_num_62_2_1361",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Field study found mainly fruit, some Eucalyptus flowers, and evidence of seed dispersal."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 13,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population trends for two Malagasy fruit bats",
+        "fr": "Tendances démographiques de deux chauves-souris frugivores malgaches"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6959543/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Longitudinal cave-roost study sampled lactating E. dupreanum in November–December and estimated female fecundity at 0.230."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 15,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hunting and cave disturbance threaten bats in Ankarana",
+        "fr": "La chasse et les perturbations des grottes menacent les chauves-souris d’Ankarana"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-2028.2008.01015.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Monitoring linked recent hunting evidence to a decline in one monitored E. dupreanum colony."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 14,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,144 @@
+{
+  "id": "chariaspilates_formosaria",
+  "scientific": "Chariaspilates formosaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Beautiful Marsh Belle",
+    "fr": "Phalène du Populage"
+  },
+  "sections": {
+    "overview": {
+      "en": "This geometrid moth occurs patchily in Eurasian wetlands.",
+      "fr": "Cette géomètre est présente de façon discontinue dans les zones humides eurasiatiques."
+    },
+    "identification": {
+      "en": "Its golden forewings carry an oblique silver-white line edged with tawny; wingspan is about 22–40 mm.",
+      "fr": "Ses ailes antérieures dorées portent une ligne oblique blanc argenté bordée de fauve; son envergure est d’environ 22–40 mm."
+    },
+    "habitat": {
+      "en": "It inhabits fens, marshes, bogs and waterlogged or overgrown meadows.",
+      "fr": "Elle fréquente les bas-marais, marais, tourbières et prairies détrempées ou envahies."
+    },
+    "diet": {
+      "en": "Larvae feed on wetland plants such as yellow loosestrife and bog myrtle, and sometimes dock.",
+      "fr": "Les larves consomment des plantes humides comme la lysimaque commune et la myrique baumier, parfois aussi des oseilles."
+    },
+    "behavior": {
+      "en": "Adults are mainly active at dusk and night; the caterpillar overwinters.",
+      "fr": "Les adultes sont surtout actifs au crépuscule et la nuit; la chenille hiverne."
+    },
+    "reproduction": {
+      "en": "It has one or two generations yearly, varying with latitude.",
+      "fr": "Elle accomplit une ou deux générations annuelles selon la latitude."
+    },
+    "ecology": {
+      "en": "The genus Chariaspilates currently has a single described species, so it has no direct congener comparison.",
+      "fr": "Le genre Chariaspilates ne compte actuellement qu’une espèce décrite; aucune comparaison directe avec un congénère n’est donc possible."
+    },
+    "conservation": {
+      "en": "Its conservation status is not uniformly assessed across its range, so regional categories should not be treated as a global result.",
+      "fr": "Son statut n’est pas évalué de façon uniforme sur toute son aire; une catégorie régionale ne doit pas être présentée comme mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chariaspilates formosaria — FAUNA species record",
+        "fr": "Chariaspilates formosaria — fiche espèce FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FAUNA gives a 22–40 mm wingspan, seasonal generations, host plants, larval overwintering and crepuscular or nocturnal adult activity.",
+        "Its generated regional account warns that status fields are not expert-consolidated."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 29,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chariaspilates formosaria — Lepidoptera Mundi",
+        "fr": "Chariaspilates formosaria — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/639",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The multi-language European reference lists fens, marshes, bogs and waterlogged meadows as habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 13,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genus Chariaspilates — LepiWiki",
+        "fr": "Genre Chariaspilates — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/taxonomy/Geometroidea/Geometridae/Ennominae/Gnophini/Chariaspilates?view=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "LepiWiki lists a single species in the genus Chariaspilates."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The FAUNA portal explicitly warns that its regional status fields are not expert-consolidated, and conservation categories cannot be extrapolated globally."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the French FAUNA species account with a European multi-language Lepidoptera reference and LepiWiki taxonomy; kept conservation interpretation regional because no global assessment was verified."
+}

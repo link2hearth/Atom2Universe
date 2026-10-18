@@ -1,0 +1,185 @@
+{
+  "id": "steindachneridion_doceanum",
+  "scientific": "Steindachneridion doceanum",
+  "group": "fish",
+  "name": {
+    "en": "Doce catfish",
+    "fr": "Surubim du Doce"
+  },
+  "sections": {
+    "overview": {
+      "en": "A Brazilian pimelodid catfish endemic to the Doce basin.",
+      "fr": "Un silure pimélodidé brésilien endémique du bassin du Doce."
+    },
+    "identification": {
+      "en": "It is one of six recognized Steindachneridion species, a genus whose revision documents shared anatomical characters.",
+      "fr": "C’est l’une des six espèces reconnues de Steindachneridion, un genre dont la révision décrit des caractères anatomiques communs."
+    },
+    "habitat": {
+      "en": "Freshwater and demersal.",
+      "fr": "D’eau douce et démersal."
+    },
+    "diet": {
+      "en": "Diet details are not reported.",
+      "fr": "Le régime n’est pas détaillé."
+    },
+    "behavior": {
+      "en": "Behaviour is poorly documented.",
+      "fr": "Son comportement est peu documenté."
+    },
+    "reproduction": {
+      "en": "Breeding details are not reported.",
+      "fr": "La reproduction n’est pas détaillée."
+    },
+    "ecology": {
+      "en": "Unlike congeners S. amblyurum (Jequitinhonha) and S. melanodermatum (Iguaçu), it is recorded from the Doce.",
+      "fr": "Contrairement à ses congénères S. amblyurum (Jequitinhonha) et S. melanodermatum (Iguaçu), il est signalé dans le Doce."
+    },
+    "conservation": {
+      "en": "FishBase lists it as Endangered (2022).",
+      "fr": "FishBase le classe En danger (2022)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Steindachneridion doceanum — FishBase",
+        "fr": "Steindachneridion doceanum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48550",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the Doce basin, freshwater demersal habitat and a global Endangered assessment dated 18 May 2022; its summary lacks diet and breeding detail."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 24,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of genus Steindachneridion — Neotropical Ichthyology",
+        "fr": "Révision du genre Steindachneridion — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/ChSqN5jf3xmWhCCVmxNXSDG/?lang=en",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The taxonomic revision includes S. doceanum among six extant species and describes characters shared within the genus."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 17,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Steindachneridion amblyurum — FishBase",
+        "fr": "Steindachneridion amblyurum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48549",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records S. amblyurum from the Jequitinhonha basin."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First chromosome data for Steindachneridion doceanum — Neotropical Ichthyology",
+        "fr": "Premières données chromosomiques sur Steindachneridion doceanum — Neotropical Ichthyology"
+      },
+      "url": "https://www.ni.bio.br/1982-0224-20180066/",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The study describes S. doceanum as endemic to the Doce basin and at high extinction risk; it reports the species as threatened on Brazil’s national list."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 26,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Steindachneridion melanodermatum — FishBase",
+        "fr": "Steindachneridion melanodermatum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/62703",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records S. melanodermatum from the Iguaçu River."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The sources provide basin-level rather than a full current distribution map; they do not establish detailed ecological differences from other congeners."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

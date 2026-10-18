@@ -1,0 +1,145 @@
+{
+  "id": "jordanita_budensis",
+  "scientific": "Jordanita budensis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Disjunct Forester",
+    "fr": "Turquoise des Achillées"
+  },
+  "sections": {
+    "overview": {
+      "en": "This forester moth is a member of Jordanita, a genus of day-flying Zygaenidae with disjunct European and Asian populations.",
+      "fr": "Ce papillon appartient au genre Jordanita, des Zygaenidés diurnes aux populations disjointes en Europe et en Asie."
+    },
+    "identification": {
+      "en": "Metallic green adults can resemble related Jordanita; expert accounts warn that reliable identification may require genital examination.",
+      "fr": "Les adultes vert métallique ressemblent à d’autres Jordanita ; les spécialistes indiquent qu’une identification sûre peut nécessiter l’examen des genitalia."
+    },
+    "habitat": {
+      "en": "It favours open steppe and dry, rocky, low-nutrient grassland, from lowlands to mountain slopes.",
+      "fr": "Il préfère les steppes ouvertes et les prairies sèches, rocailleuses et pauvres, des plaines aux versants montagnards."
+    },
+    "diet": {
+      "en": "The leaf-mining larvae feed on Asteraceae; French records report Centaurea leucophaea and Artemisia alba as hosts.",
+      "fr": "Les chenilles mineuses se nourrissent d’Astéracées ; les données françaises citent Centaurea leucophaea et Artemisia alba comme plantes-hôtes."
+    },
+    "behavior": {
+      "en": "Species-level behavioral observations are sparse in the specialist accounts consulted; adults are recorded locally in spring.",
+      "fr": "Les observations comportementales propres à l’espèce sont rares dans les sources consultées ; des adultes sont signalés localement au printemps."
+    },
+    "reproduction": {
+      "en": "Larvae mine host-plant leaves; a genus-level study reports overwintering as larvae for most Jordanita species, not specifically this moth.",
+      "fr": "Les chenilles minent les feuilles des plantes-hôtes ; une étude du genre indique que la plupart des Jordanita hivernent au stade larvaire, sans préciser ce papillon."
+    },
+    "ecology": {
+      "en": "Unlike the broader-habitat J. globulariae, J. budensis is a dry-steppe specialist; the two share the genus but differ ecologically.",
+      "fr": "Contrairement à J. globulariae, qui occupe davantage de types de milieux, J. budensis est spécialiste des steppes sèches ; les deux espèces diffèrent écologiquement."
+    },
+    "conservation": {
+      "en": "It is rare in western and central Europe; a global Red List category was not verified in the sources used.",
+      "fr": "L’espèce est rare en Europe occidentale et centrale ; les sources consultées ne permettent pas de confirmer une catégorie mondiale de Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Jordanita budensis — Lepinet, French Lepidopterist’s Notebooks",
+        "fr": "Jordanita budensis — Les Carnets du Lépidoptériste Français"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=l&id=02220",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "French specialist page gives name, local records, host plants and diagnostic caution."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 12,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Forester moths of the genus Jordanita — Ecology and Evolution",
+        "fr": "Les zygènes du genre Jordanita — Ecology and Evolution"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9465506/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed paper compares species-specific habitat and genus-level larval biology."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 9,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jordanita budensis — Lepidoptera Mundi",
+        "fr": "Jordanita budensis — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/3927",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "European species catalogue records scattered range, steppes, host plants and related Jordanita species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 13,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Specific phenology and behavior differ among regions; source records do not support a single range-wide schedule. Host plants also vary geographically."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Scoped the status statement to western/central Europe and distinguished species-specific habitat observations from broader genus-level larval biology."
+}

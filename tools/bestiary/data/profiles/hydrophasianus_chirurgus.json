@@ -1,0 +1,119 @@
+{
+  "id": "hydrophasianus_chirurgus",
+  "scientific": "Hydrophasianus chirurgus",
+  "group": "birds",
+  "name": {
+    "en": "Pheasant-tailed Jacana",
+    "fr": "Jacana à longue queue"
+  },
+  "sections": {
+    "overview": {
+      "en": "BirdLife treats this Asian jacana as a full migrant across an exceptionally broad range.",
+      "fr": "BirdLife classe ce jacana asiatique parmi les migrateurs complets, avec une aire très étendue."
+    },
+    "identification": {
+      "en": "In breeding plumage, the male has two elongated central tail feathers; the female is slightly larger.",
+      "fr": "En plumage nuptial, le mâle porte deux longues rectrices centrales ; la femelle est un peu plus grande."
+    },
+    "habitat": {
+      "en": "It uses freshwater wetlands, including lakes, rice fields and marshes.",
+      "fr": "Elle fréquente les zones humides d’eau douce : lacs, rizières et marais."
+    },
+    "diet": {
+      "en": "It eats aquatic plants, seeds and small invertebrates.",
+      "fr": "Elle mange des plantes aquatiques, des graines et de petits invertébrés."
+    },
+    "behavior": {
+      "en": "Long toes help it walk on floating vegetation.",
+      "fr": "Ses longs doigts l’aident à marcher sur la végétation flottante."
+    },
+    "reproduction": {
+      "en": "Females mate with several males; males incubate eggs and tend chicks.",
+      "fr": "Les femelles s’accouplent avec plusieurs mâles ; ceux-ci couvent et élèvent les poussins."
+    },
+    "ecology": {
+      "en": "Males place nests among emergent plants, often water lilies.",
+      "fr": "Les mâles placent le nid parmi les plantes émergentes, souvent les nénuphars."
+    },
+    "conservation": {
+      "en": "BirdLife lists the species as globally Least Concern in its 2024 assessment; its population trend is unknown.",
+      "fr": "BirdLife classe l’espèce en préoccupation mineure à l’échelle mondiale dans son évaluation de 2024 ; sa tendance démographique est inconnue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pheasant-tailed Jacana — BirdLife DataZone",
+        "fr": "Jacana à longue queue — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/pheasant-tailed-jacana-hydrophasianus-chirurgus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife reports full-migrant status, broad Asian range and global Least Concern assessment in 2024."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 14,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jacana à longue queue — Oiseaux.net",
+        "fr": "Jacana à longue queue — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/jacana.a.longue.queue.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French account describes plumage, wetlands, diet, polyandry, nest sites and male care."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 13,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding details and seasonality vary by region; the account summarizes patterns reported across the range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French species account with BirdLife taxonomy, range and global assessment."
+}

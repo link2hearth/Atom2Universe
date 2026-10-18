@@ -1,0 +1,517 @@
+{
+  "id": "great_tit",
+  "scientific": "Parus major",
+  "group": "birds",
+  "name": {
+    "en": "Great tit",
+    "fr": "Mésange charbonnière"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great tit, Parus major, belongs to the tit family Paridae and ranges from northwestern Africa and Europe east across temperate Eurasia to eastern Siberia. Short bill, strong feet and cavity nesting support flexible foraging and breeding.",
+      "fr": "La mésange charbonnière, Parus major, appartient à la famille des mésanges, les Paridés, et vit du nord-ouest de l’Afrique et de l’Europe jusqu’à la Sibérie orientale, à travers l’Eurasie tempérée. Son bec court, ses pattes fortes et la nidification en cavité favorisent une alimentation variée et la reproduction."
+    },
+    "identification": {
+      "en": "At 12.5–15 cm long, its compact body bears a short pointed bill, black cap and throat, white cheeks, greenish back, and yellow underside with a dark central stripe. The wings and tail are blue-grey, with a white bar on the wings. Males usually have a broader, darker belly stripe; juveniles are duller with yellowish cheeks. British adults average about 18.6 g; mean mass is approximately 18.1 g for females and 19.1 g for males.",
+      "fr": "Longue de 12,5 à 15 cm, elle a un corps compact, un bec court et pointu, la calotte et la gorge noires, les joues blanches, le dos verdâtre et le dessous jaune à bande sombre. Les ailes et la queue sont bleu-gris, avec une barre blanche sur les ailes. Les mâles ont généralement une bande ventrale plus large et plus sombre ; les jeunes sont plus ternes et ont les joues jaunâtres. Les adultes britanniques pèsent en moyenne environ 18,6 g ; la masse moyenne est d’environ 18,1 g chez les femelles et 19,1 g chez les mâles."
+    },
+    "habitat": {
+      "en": "The species is most characteristic of deciduous and mixed woodland, especially where mature trees, scrub and edges make food and nesting holes available. It also occupies parks, gardens, orchards and hedgerows, and readily uses nest boxes where natural cavities are scarce. This flexibility lets it persist near people, although local abundance still depends on vegetation, food and safe nesting sites.",
+      "fr": "L’espèce fréquente surtout les forêts de feuillus et mixtes où arbres mûrs, broussailles et lisières offrent nourriture et cavités. Elle vit aussi dans les parcs, jardins, vergers et haies, et utilise les nichoirs si les trous naturels manquent. Cette souplesse favorise sa présence près des humains, mais son abondance dépend encore de la végétation, des ressources et des sites sûrs."
+    },
+    "diet": {
+      "en": "Its diet changes with the demands of the year: adults take insects and other invertebrates especially during breeding, then rely more on seeds, fruit and other plant foods when cold-season prey is harder to find. To find prey, birds hop along branches, probe bark, and hang upside down; seeds are held under the feet and pecked open. In a primeval Polish forest, caterpillars formed the main food delivered to nestlings even as their availability changed, showing why breeding adults concentrate animal prey on growing young.",
+      "fr": "Son régime suit les besoins de l’année : les adultes prennent surtout des insectes et d’autres invertébrés pendant la reproduction, puis davantage de graines, de fruits et d’autres végétaux lorsque les proies animales deviennent plus difficiles à trouver en saison froide. Pour trouver leurs proies, elles sautillent sur les branches, fouillent les écorces et se suspendent la tête en bas ; elles maintiennent les graines sous leurs pattes pour les ouvrir à coups de bec. Dans une forêt ancienne de Pologne, les chenilles constituaient l’essentiel des apports aux oisillons malgré les variations de leur disponibilité ; les adultes reproducteurs concentrent donc les proies animales sur les jeunes en croissance."
+    },
+    "behavior": {
+      "en": "During the breeding season, males sing repeatedly from exposed perches; playback experiments in southern England showed that song helps maintain territories and can delay settlement by rivals. Calls complement song: field studies of wild birds document alarm and mobbing signals used around threats. At nests, males sing to females inside cavities and females answer with calls; observations link these exchanges to mate guarding and food transfer. Outside breeding, great tits form mobile winter foraging flocks before pairs establish territories. When handling a larger food item, a bird may pin it under one or both feet and work it with the bill, a behavior that develops with age and experience. In a separate experiment, five captive males sorted unfamiliar songs by the voice characteristics of two known singers, illustrating individual recognition without describing all wild song use.",
+      "fr": "Pendant la reproduction, les mâles chantent depuis des perchoirs exposés. En Angleterre méridionale, des diffusions ont montré que le chant entretient le territoire et peut retarder l’installation de rivaux. Les oiseaux sauvages émettent aussi des cris d’alarme et de harcèlement face aux menaces. Au nid, les mâles chantent aux femelles dans les cavités, qui répondent par des cris ; ces échanges accompagnent la garde du partenaire et le transfert de nourriture. En hiver, les mésanges forment des groupes mobiles, puis les couples établissent leurs territoires. Pour manger un gros aliment, l’oiseau peut le maintenir sous une ou deux pattes et le travailler du bec ; ce geste s’affine avec l’âge et l’expérience. Dans une expérience, cinq mâles captifs attribuaient des chants inconnus aux voix de deux chanteurs connus, résultat illustrant la reconnaissance individuelle plutôt que tous les usages dans la nature."
+    },
+    "reproduction": {
+      "en": "Courtship leads to a pair nesting in a tree hole or another cavity; the female builds a soft cup of moss, grasses and hair, and nest boxes can substitute where natural holes are scarce. In Britain, first eggs are usually laid in late April, and seven to nine eggs are typical; the female incubates for about 13–14 days. Both parents feed the helpless nestlings and bring animal prey as the young grow. They usually fledge about 18–21 days after hatching. Cavity choice balances shelter and predator access: deep holes with narrow entrances can deter martens and woodpeckers, yet small dormice may still enter and destroy nests.",
+      "fr": "Après la formation du couple, les oiseaux nichent dans un trou d’arbre ou une autre cavité ; la femelle construit une coupe de mousse, d’herbes et de poils, parfois dans un nichoir. En Grande-Bretagne, la ponte commence généralement fin avril et compte sept à neuf œufs ; la femelle couve 13 à 14 jours. Les deux parents nourrissent de proies animales les oisillons, encore sans autonomie. Les jeunes prennent généralement leur envol 18 à 21 jours après l’éclosion. Le choix du trou équilibre protection et accès des prédateurs : les cavités profondes à entrée étroite peuvent décourager martres et pics, mais de petits loirs peuvent entrer et détruire le nid."
+    },
+    "ecology": {
+      "en": "In spring, oak leafing starts the growth of leaf-eating caterpillars, which become a key food for great tit nestlings; chick demand therefore overlaps a short seasonal food window. A 48-year Dutch study found that caterpillar peaks initially advanced faster than egg-laying, then the mismatch narrowed as spring warming slowed, demonstrating that the timing link can shift through time. Predation also shapes breeding: in Białowieża, monitored nest failures were often caused by predators, including dormice able to enter cavities inaccessible to larger hunters.",
+      "fr": "Au printemps, le débourrement des chênes déclenche la croissance des chenilles, nourriture essentielle des oisillons ; leurs besoins coïncident avec une courte fenêtre d’abondance. Une étude néerlandaise sur 48 ans a montré que le pic des chenilles s’est d’abord avancé plus vite que la ponte, puis que le décalage s’est réduit lorsque le réchauffement printanier a ralenti. À Białowieża, les échecs de nid suivis étaient souvent dus aux prédateurs, dont des loirs pouvant entrer dans des cavités inaccessibles aux grands chasseurs."
+    },
+    "conservation": {
+      "en": "BirdLife International’s current global assessment records the great tit as Least Concern, with the assessment year listed as 2024. The species remains widespread, but abundance can vary with woodland structure, food supply and nesting sites. British surveys show a long-term rise since 1967 followed by stabilisation or a shallow decline after about 2010, a regional history rather than a uniform range-wide trend. A severe avian-pox strain was first diagnosed in a British great tit in 2006 and subsequently spread among tits, making infection a reason for continued local monitoring.",
+      "fr": "BirdLife International classe l’espèce en préoccupation mineure dans son évaluation mondiale, dont l’année d’évaluation est 2024 . L’espèce reste largement répandue, mais son abondance varie selon les boisements, la nourriture et les sites de nidification. Les relevés britanniques montrent une hausse depuis 1967, puis une stabilisation ou un léger recul après 2010, évolution régionale qui ne vaut pas partout. Une souche sévère de variole aviaire a été diagnostiquée chez une mésange britannique en 2006, puis s’est propagée parmi les mésanges, justifiant un suivi local."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great Tit Identification | Cornell Lab of Ornithology",
+        "fr": "Identification de la mésange charbonnière | Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Great_Tit/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Range, length, plumage, sexual dimorphism and juvenile appearance"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 8,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Tit Parus major Species Factsheet | BirdLife DataZone",
+        "fr": "Fiche espèce de la mésange charbonnière | BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/great-tit-parus-major",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "2024 assessment: global Least Concern"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 5,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Tit — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Mésange charbonnière — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/great-tit",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation",
+        "identification"
+      ],
+      "facts": [
+        "British clutch and incubation timing; population trend",
+        "British adults average 18.6 g and 75 mm wing length; mean mass is about 18.1 g in females and 19.1 g in males."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "identification.en.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 30,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Tit Life History | Cornell Lab of Ornithology",
+        "fr": "Biologie de la mésange charbonnière | Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Great_Tit/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Nest cavities, parental care and fledging timing"
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 7,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spatio-Temporal Variation in Diet Among Age and Sex Cohorts of a Model Generalist Bird Species, the Great Tit Parus major: New Insights Revealed by DNA Metabarcoding",
+        "fr": "Variation spatio-temporelle du régime selon l’âge et le sexe chez la mésange charbonnière : apports du métabarcoding ADN"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12256774/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "DNA-based diet sampling across seasons, age and sex groups"
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 9,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Timing of breeding and nestling diet of the Great Tit (Parus major) in relation to food supply in primeval forest (Białowieża National Park)",
+        "fr": "Timing of breeding and nestling diet of the Great Tit (Parus major) in relation to food supply in primeval forest (Białowieża National Park)"
+      },
+      "url": "https://bou.org.uk/branta/cholewa-m/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "PhD thesis dated 2015; Białowieża 2008–2011; caterpillars main nestling food"
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 10,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Song repertoires and territory defence in the great tit",
+        "fr": "Répertoires de chants et défense du territoire chez la mésange charbonnière"
+      },
+      "url": "https://www.nature.com/articles/271539a0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Southern England playback study links male song to territory maintenance"
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 10,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Interactive vocal communication at the nest by parent Great Tits Parus major",
+        "fr": "Communication vocale interactive au nid chez les mésanges charbonnières"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12374",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Wild nest observations document male songs and female answering calls"
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 10,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Subtle variations in mobbing calls are predator-specific in great tits (Parus major)",
+        "fr": "Les variations subtiles des cris de harcèlement dépendent du prédateur chez la mésange charbonnière"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6484080/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Free-living great tits produce predator-specific mobbing-call variants"
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 7,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Social carry-over effects underpin trans-seasonally linked structure in a wild bird population",
+        "fr": "Les effets sociaux différés structurent la population sauvage entre saisons"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/ele.12669",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Wytham wild population forms mobile winter flocks before territorial breeding"
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Use of the Feet in Feeding by the Great Tit Parus major",
+        "fr": "Utilisation des pattes pour se nourrir chez la mésange charbonnière"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1474-919X.1964.tb03730.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Vince: food handling develops with age and experience in hand-reared birds"
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 11,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Differential response by males and females to manipulation of partner contribution in the great tit (Parus major)",
+        "fr": "Réponse différenciée des mâles et des femelles à la manipulation de la contribution du partenaire chez la mésange charbonnière"
+      },
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-2656.2000.00373.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Wild nest observations recorded feeding by both parents"
+      ],
+      "prose_claims": [
+        "identification.fr.4",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 8,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Breeding success of the great tit Parus major in relation to attributes of natural nest cavities in a primeval forest",
+        "fr": "Succès reproducteur et caractéristiques des cavités naturelles en forêt ancienne"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/512534/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Białowieża 2008–2011; cavity features mediate predator access"
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 7,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Recent natural variability in global warming weakened phenological mismatch and selection on seasonal timing in great tits (Parus major)",
+        "fr": "La variabilité naturelle récente du réchauffement a réduit le décalage phénologique chez la mésange charbonnière"
+      },
+      "url": "https://eprints.whiterose.ac.uk/id/eprint/217583/8/Visser_et_al_2021_AAM.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Hoge Veluwe 1973–2020; mismatch changed with spring warming"
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 8,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tritrophic phenological match-mismatch in space and time",
+        "fr": "Décalage phénologique entre trois niveaux trophiques dans l’espace et le temps"
+      },
+      "url": "https://www.bto.org/our-work/science/publications/papers/tritrophic-phenological-match-mismatch-space-and-time",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "UK oak, caterpillar and tit timing compared across monitored sites"
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 10,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emergence of a Novel Avian Pox Disease in British Tit Species",
+        "fr": "Émergence d’une nouvelle variole aviaire chez les mésanges britanniques"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3504035/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "First British great tit case diagnosed in 2006; disease spread among tits"
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 12,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great tits classify songs by individual voice characteristics",
+        "fr": "Les mésanges charbonnières classent les chants selon les caractéristiques vocales individuelles"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003347205802234",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Five captive males generalized singer identity to unfamiliar songs"
+      ],
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 9,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult male and female on a deciduous branch; show black cap and throat, white cheeks, greenish back, blue-grey wings with white wingbar, yellow underside and variable-width central stripe. A nearby cavity and fledgling may be included if labels remain clear.",
+  "uncertainties": [
+    "BirdLife lists the 2024 IUCN assessment year; the factsheet does not make a separate publication date clear, and its range database may retain legacy Asian records outside current Parus major boundaries.",
+    "Seasonal diet varies with locality, year, age and sex; the European metabarcoding study gives a broad pattern rather than a universal menu.",
+    "British dates and population trends, the Dutch phenology series, and Białowieża nest outcomes are regional examples, not species-wide constants.",
+    "Foot-holding observations include hand-reared birds; the territorial-song playback findings were obtained in southern England."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique removed Japanese taxa and misleading lean-mass comparison; corrected narrative, verified primary communication sources, bilingual parity and source allocation audit; plate visually inspected."
+}

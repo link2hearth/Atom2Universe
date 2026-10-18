@@ -1,0 +1,123 @@
+{
+  "id": "nannacara_aureocephalus",
+  "scientific": "Nannacara aureocephalus",
+  "group": "fish",
+  "name": {
+    "en": "Goldenhead dwarf acara",
+    "fr": "Acara nain à tête dorée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nannacara aureocephalus is a small South American cichlid endemic to French Guiana, where records place it in the Approuague drainage. It is a dwarf cichlid, but its restricted natural range and specialist habitat distinguish it from the many aquarium fishes sold under the broad name ‘acara’.",
+      "fr": "Nannacara aureocephalus est un petit cichlidé sud-américain endémique de Guyane française, où les données le situent dans le bassin de l’Approuague. C’est un cichlidé nain, mais sa répartition naturelle restreinte et son habitat particulier le distinguent des nombreux poissons d’aquarium vendus sous le nom général d’« acara »."
+    },
+    "identification": {
+      "en": "It is a small, laterally compressed cichlid. FishBase lists a maximum of 6.7 cm standard length for a male or unsexed fish and 5.0 cm total length for a female; the different length conventions should be kept in mind. The golden-head common name is a useful field or trade label, not a stand-alone diagnostic: compare the full body pattern, fins, sex and locality with other Nannacara rather than identifying from a yellow head alone. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "C’est un petit cichlidé au corps comprimé latéralement. FishBase indique un maximum de 6,7 cm de longueur standard pour un mâle ou un individu non sexé et de 5,0 cm de longueur totale pour une femelle ; il faut tenir compte de ces conventions différentes. Le nom de « tête dorée » est un repère courant, mais ne suffit pas à lui seul : il faut comparer l’ensemble du motif, les nageoires, le sexe et la provenance avec les autres Nannacara. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
+    },
+    "habitat": {
+      "en": "The species is recorded from the Approuague River basin in French Guiana. Accounts describe shallow water along swamp margins and stagnant sections of forest streams. These quiet, shallow waters are more specific habitat clues than the general label ‘Amazonian freshwater fish’; the available distribution records remain geographically limited.",
+      "fr": "L’espèce est signalée dans le bassin de l’Approuague, en Guyane française. Les descriptions mentionnent des eaux peu profondes en bordure de marécages et des secteurs stagnants de ruisseaux forestiers. Ces eaux calmes et peu profondes sont des indices d’habitat plus précis que la simple étiquette de « poisson d’eau douce amazonien » ; les données de répartition restent géographiquement limitées."
+    },
+    "diet": {
+      "en": "Species accounts report small invertebrates and insect larvae as important natural foods. This is consistent with a small cichlid foraging among shallow-water vegetation, but the sources do not provide a measured breakdown of prey or seasonal diet.",
+      "fr": "Les fiches de l’espèce signalent les petits invertébrés et les larves d’insectes parmi ses aliments naturels importants. Cela correspond à un petit cichlidé qui recherche sa nourriture dans la végétation des eaux peu profondes, mais les sources ne donnent pas de répartition mesurée des proies ni de régime saisonnier."
+    },
+    "behavior": {
+      "en": "Its habitat descriptions suggest a fish associated with shallow, slow or still water. Published species summaries available for this profile offer little direct observation of its daily activity, social structure or territorial behavior in the wild, so these are not inferred from better-studied aquarium cichlids.",
+      "fr": "Les descriptions d’habitat associent le poisson à des eaux peu profondes, lentes ou stagnantes. Les résumés publiés consultés pour cette fiche contiennent peu d’observations directes de son activité quotidienne, de sa structure sociale ou de sa territorialité à l’état sauvage ; ces traits ne sont donc pas extrapolés à partir de cichlidés d’aquarium mieux étudiés."
+    },
+    "reproduction": {
+      "en": "FishBase reports that the species lays up to about 100 eggs, deposited on the ceiling of a small cave or in the open. The female guards the eggs and young; the source does not describe a corresponding guarding role for the male. This concise account gives a documented pattern, though it does not establish how clutch size or nesting site varies across the species’ limited range.",
+      "fr": "FishBase indique que l’espèce pond jusqu’à une centaine d’œufs, déposés au plafond d’une petite cavité ou à découvert. La femelle garde les œufs et les jeunes ; la source ne décrit pas de rôle de garde comparable chez le mâle. Cette fiche fournit un schéma documenté, sans établir les variations de ponte ou de site de nidification dans toute l’aire restreinte de l’espèce."
+    },
+    "ecology": {
+      "en": "As a small cichlid feeding on aquatic invertebrates, it is part of the food web of forest streams and swamp margins. No source reviewed here quantifies its ecological role, predators or interactions with other fish, and its narrow known range makes site-specific habitat information especially relevant. Its profile contrasts its narrow Approuague-basin range with the broader range reported for Nannacara anomala across Guyana, Suriname and French Guiana; see that profile for the reverse comparison.",
+      "fr": "Petit cichlidé consommant des invertébrés aquatiques, il fait partie du réseau alimentaire des ruisseaux forestiers et des marges marécageuses. Aucune source examinée ici ne quantifie son rôle écologique, ses prédateurs ou ses interactions avec d’autres poissons ; sa répartition connue étant étroite, les informations sur les sites précis sont particulièrement utiles. Sa fiche compare son aire restreinte du bassin de l’Approuague à celle, plus vaste, de Nannacara anomala, signalé au Guyana, au Suriname et en Guyane française ; voir cette autre fiche pour le renvoi inverse."
+    },
+    "conservation": {
+      "en": "FishBase reports an IUCN global assessment of Least Concern dated 28 December 2020. An older specialist account still says the species had not been assessed, illustrating that some pages have not been updated. The category is dated and does not establish that every local habitat or population is stable; no population trend was verified here.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure datée du 28 décembre 2020. Une fiche spécialisée plus ancienne indique encore que l’espèce n’avait pas été évaluée, signe que certaines pages n’ont pas été mises à jour. Cette catégorie est datée et ne prouve pas la stabilité de chaque habitat ou population locale ; aucune tendance de population n’a été vérifiée ici."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nannacara aureocephalus — Cichlid Room Companion",
+        "fr": "Nannacara aureocephalus — Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=1255",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist account documents the species in French Guiana and notes uncertainty about its IUCN assessment.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nannacara aureocephalus — AquaInfo",
+        "fr": "Nannacara aureocephalus — AquaInfo"
+      },
+      "url": "https://aquainfo.nl/en/article/nannacara-aureocephalus-goldhead-nannacara/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Reports French Guiana/Approuague distribution, shallow swamp and forest-stream habitats, and feeding on small invertebrates and insect larvae."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nannacara aureocephalus — FishBase",
+        "fr": "Nannacara aureocephalus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/47072",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species summary gives sex-specific size information; records the Approuague basin, shallow sheltered swamp and forest-creek habitat, up to about 100 eggs with female guarding, and Least Concern assessment dated 2020-12-28."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nannacara anomala — Eschmeyer’s Catalog of Fishes, California Academy of Sciences",
+        "fr": "Nannacara anomala — Catalogue des poissons d’Eschmeyer, California Academy of Sciences"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=21213",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The catalog records Nannacara anomala from freshwater rivers in Guyana, Suriname and French Guiana, supporting a range comparison with N. aureocephalus in the Approuague basin."
+      ]
+    }
+  ],
+  "illustration_notes": "Small, laterally compressed Nannacara aureocephalus cichlid, naturally patterned scales, subtle golden head, anatomically accurate fins, white background.",
+  "uncertainties": [
+    "Species-level field observations on behavior are limited in accessible sources.",
+    "The newer FishBase listing reports a 2020 LC assessment, while an older specialist account still states that no assessment existed."
+  ],
+  "reviewed": true,
+  "review_note": "English specialist and species accounts compared; conservation wording preserves source disagreement."
+}

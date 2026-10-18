@@ -1,0 +1,103 @@
+{
+  "id": "little_auk",
+  "scientific": "Alle alle",
+  "group": "birds",
+  "name": {
+    "en": "Little Auk",
+    "fr": "Mergule nain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The little auk, also called the dovekie, is one of the smallest seabirds in the world. It nests in huge Arctic colonies and spends the rest of the year at sea in the North Atlantic.",
+      "fr": "Le mergule nain, aussi appelé dovekie, est l’un des plus petits oiseaux marins du monde. Il niche dans d’immenses colonies arctiques et passe le reste de l’année en mer, dans l’Atlantique Nord."
+    },
+    "identification": {
+      "en": "A little auk is about the size of a Starling: roughly 19–23 cm long, with a wingspan near 40 cm and a weight around 165 g. It is black above and white below, with a stubby black bill, a short neck and tail, and dark underwings. In flight it shows very fast, whirring wingbeats.",
+      "fr": "Le mergule nain a la taille d’un étourneau : environ 19 à 23 cm de long, une envergure proche de 40 cm et un poids d’environ 165 g. Il est noir dessus et blanc dessous, avec un bec noir et court, un cou et une queue courts et le dessous des ailes sombre. En vol, ses battements d’ailes sont très rapides et vrombissants."
+    },
+    "habitat": {
+      "en": "It breeds north of the Arctic Circle among rocky scree slopes, eroded cliffs and boulder piles; Svalbard holds about 90% of the world’s breeding birds. Outside the breeding season it lives at sea, often near oceanic fronts, and in Britain it is a winter visitor in the northern North Sea.",
+      "fr": "Il se reproduit au nord du cercle polaire, dans les éboulis rocheux, les falaises érodées et les blocs de pierre ; le Svalbard abrite environ 90 % des oiseaux nicheurs du monde. Hors saison de reproduction, il vit en mer, souvent près des fronts océaniques, et en Grande-Bretagne il est un visiteur d’hiver du nord de la mer du Nord."
+    },
+    "diet": {
+      "en": "It feeds mainly on small planktonic crustaceans such as copepods, amphipods and krill-like euphausiids, with a few small fish, molluscs and worms. It dives down to about 40 m, propelling itself with its wings.",
+      "fr": "Il se nourrit surtout de petits crustacés planctoniques comme les copépodes, les amphipodes et les euphausiacés, ainsi que de quelques petits poissons, mollusques et vers. Il plonge jusqu’à environ 40 m en se propulsant avec les ailes."
+    },
+    "behavior": {
+      "en": "The little auk is social and colonial, flying low over the sea and resting in groups on the water. After breeding it heads south, and strong northerly gales can drive large numbers past the coast or, occasionally, far inland.",
+      "fr": "Le mergule nain est social et colonial ; il vole bas au-dessus de la mer et se repose en groupes sur l’eau. Après la reproduction, il descend vers le sud, et les fortes tempêtes du nord peuvent pousser de grands nombres d’oiseaux le long des côtes ou, parfois, loin à l’intérieur des terres."
+    },
+    "reproduction": {
+      "en": "Pairs are monogamous and often return to the same nest site, hidden among rocks. A single egg is laid each year and incubated by both parents for 28–31 days. The downy chick fledges after about 23–30 days and leaves the colony at dusk or night, flying out to sea.",
+      "fr": "Les couples sont monogames et reviennent souvent au même site de nid, caché entre les rochers. Un seul œuf est pondu chaque année et couvé par les deux parents pendant 28 à 31 jours. Le poussin, couvert de duvet, quitte le nid après environ 23 à 30 jours, au crépuscule ou de nuit, en gagnant la mer en volant."
+    },
+    "ecology": {
+      "en": "By eating huge numbers of zooplankton the little auk links ocean plankton to the Arctic land. Its eggs and chicks are taken by Arctic foxes and glaucous gulls, and the nitrogen-rich droppings of large colonies favour lichens and other nitrogen-tolerant plants beneath the cliffs.",
+      "fr": "En mangeant d’énormes quantités de zooplancton, le mergule nain relie le plancton océanique à la terre arctique. Ses œufs et ses poussins sont pris par les renards polaires et les goélands bourgmestres, et les fientes riches en azote des grandes colonies favorisent les lichens et d’autres plantes tolérantes à l’azote au pied des falaises."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, and the European population is estimated at about 80 million individuals. It is on the UK Green list. Past local declines were linked to oil spills and to Arctic foxes introduced for fur farming; polluted northern waters remain a risk.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, et la population européenne est estimée à environ 80 millions d’individus. Elle figure sur la liste verte du Royaume-Uni. Des déclins locaux passés ont été liés aux marées noires et aux renards polaires introduits pour l’élevage de fourrure ; la pollution des eaux nordiques reste un risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Auk — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Mergule nain — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/little-auk",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Weight 165 g; one egg, incubation 28–31 days by both sexes, fledging 23–30 days; Svalbard holds about 90% of breeders; European population about 80 million individuals.",
+        "UK: scarce autumn passage migrant and winter visitor, driven south by northerly gales, occasionally far inland; IUCN Least Concern, UK Green."
+      ]
+    },
+    {
+      "title": {
+        "en": "Little Auk — RSPB",
+        "fr": "Mergule nain — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/little-auk",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior"],
+      "facts": [
+        "Starling-sized; black above, white below, stubby black bill, short neck and tail; flies low with fast whirring wingbeats; breeds in the Arctic, winters in the North Atlantic."
+      ]
+    },
+    {
+      "title": {
+        "en": "Alle alle — Animal Diversity Web, University of Michigan",
+        "fr": "Alle alle — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Alle_alle/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "ecology", "conservation"],
+      "facts": [
+        "Length 19–23 cm, wingspan about 40 cm; eats copepods, amphipods and euphausiids, dives to about 40 m; nests on scree and talus.",
+        "Predators include Arctic foxes and glaucous gulls; guano favours nitrogen-tolerant lichens; past declines linked to oil spills and introduced Arctic foxes; IUCN Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dovekie — Audubon Field Guide",
+        "fr": "Mergule nain (dovekie) — Guide de terrain d’Audubon"
+      },
+      "url": "https://www.audubon.org/field-guide/bird/dovekie",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "One egg, both sexes incubate 28–31 days; young leave 23–30 days after hatching, usually at night, flying out to sea; pairs may reuse the same site.",
+        "Vulnerable to oil spills and pollution in northern waters; IUCN Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives a fledging age of 27–28 days and Audubon/BTO give 23–30 days; the wider range was used.",
+    "Weight is given as about 165 g by BTO while Animal Diversity Web gives roughly 140–165 g; only the BTO value was used.",
+    "The wingspan and body length come from a single source (Animal Diversity Web)."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from BTO BirdFacts and Animal Diversity Web (consulted 2026-10-12); illustration to be checked by the owner."
+}

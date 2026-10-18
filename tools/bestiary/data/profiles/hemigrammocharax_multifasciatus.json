@@ -1,0 +1,186 @@
+{
+  "id": "hemigrammocharax_multifasciatus",
+  "scientific": "Hemigrammocharax multifasciatus",
+  "group": "fish",
+  "name": {
+    "en": "Multibar citharine",
+    "fr": "Citharine multibarrée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The runtime name is Hemigrammocharax multifasciatus, but Eschmeyer’s current catalogue treats Nannocharax multifasciatus as the valid combination. An Angolan survey also recorded it in the upper Okavango system.",
+      "fr": "Le nom du référentiel interne est Hemigrammocharax multifasciatus, mais le catalogue actuel d’Eschmeyer retient la combinaison Nannocharax multifasciatus. Un inventaire angolais l’a également recensé dans le haut bassin de l’Okavango."
+    },
+    "identification": {
+      "en": "It has dark vertical bars and a dark spot at the tail base.",
+      "fr": "Il porte des barres verticales sombres et une tache foncée à la base de la queue."
+    },
+    "habitat": {
+      "en": "It favours vegetated river edges, oxbows and shallow lakes.",
+      "fr": "Il préfère les rives végétalisées, les bras morts et les lacs peu profonds."
+    },
+    "diet": {
+      "en": "It takes small invertebrates and epiphyton from plants.",
+      "fr": "Il prélève de petits invertébrés et des épiphytes sur les plantes."
+    },
+    "behavior": {
+      "en": "It moves onto floodplains in the rainy season.",
+      "fr": "Il gagne les plaines inondables pendant la saison des pluies."
+    },
+    "reproduction": {
+      "en": "Breeding is reported in the southern African summer.",
+      "fr": "La reproduction est signalée pendant l’été austral."
+    },
+    "ecology": {
+      "en": "Its range includes the Okavango and Zambezi basins.",
+      "fr": "Son aire comprend les bassins de l’Okavango et du Zambèze."
+    },
+    "conservation": {
+      "en": "FishBase lists it as Least Concern, assessed on 1 May 2009, as Nannocharax multifasciatus.",
+      "fr": "FishBase le classe en préoccupation mineure, évaluation du 1 mai 2009, sous le nom Nannocharax multifasciatus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Nannocharax multifasciatus",
+        "fr": "Catalogue des poissons d’Eschmeyer — Nannocharax multifasciatus"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=3722",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Current catalogue recognizes Nannocharax multifasciatus and lists older usage as Hemigrammocharax multifasciatus."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Nannocharax multifasciatus — FishBase field guide",
+        "fr": "Nannocharax multifasciatus — guide de terrain FishBase"
+      },
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Nannocharax&SpeciesName=multifasciatus&pda=1&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase provides body pattern, vegetated-margin habitat, prey, seasonal movements, summer breeding, range and LC assessment dated 2009-05-01."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "A survey of the fishes of the upper Okavango River system in Angola",
+        "fr": "Relevé des poissons du haut bassin de l’Okavango en Angola"
+      },
+      "url": "https://the-eis.com/elibrary/sites/default/files/downloads/literature/A%20Survey%20of%20the%20Fishes%20of%20Upper%20Okavango%20River%20System%20in%20Angola_2012.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Angola survey reports collected Hemigrammocharax multifasciatus specimens in the upper Okavango system."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Generic placement differs among sources: FishBase and older field literature use Hemigrammocharax, while Eschmeyer’s updated catalogue accepts Nannocharax."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the runtime label but made the current generic-combination disagreement explicit and sourced."
+}

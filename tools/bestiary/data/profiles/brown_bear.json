@@ -1,0 +1,172 @@
+{
+  "id": "brown_bear",
+  "scientific": "Ursus arctos",
+  "group": "mammals",
+  "name": {
+    "en": "Brown bear",
+    "fr": "Ours brun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The brown bear ranges widely across Eurasia and North America, from forests and mountains to tundra and coasts. Separated populations differ in size, coat, seasonal routines, and food choices according to local conditions. In North America, the grizzly is a brown bear subspecies within this same species.",
+      "fr": "L’ours brun vit dans une vaste aire d’Eurasie et d’Amérique du Nord, des forêts et montagnes à la toundra et aux côtes. Ses populations isolées diffèrent par la taille, le pelage, le rythme saisonnier et l’alimentation, selon les conditions locales. En Amérique du Nord, le grizzli est une sous-espèce de l’ours brun, au sein de cette même espèce."
+    },
+    "identification": {
+      "en": "Adults have a heavy body, muscular shoulder hump, and long foreclaws for digging. Their coat ranges from blond or pale brown to dark brown or black; pale tips on guard hairs can look grizzled. They walk plantigrade, with the whole foot on the ground. Adults are about 1.5–2.1 m long and 0.9–1.5 m at the shoulder; reported masses span roughly 90–450 kg depending on sex, region and season, with males generally larger.",
+      "fr": "L’adulte a un corps massif, une bosse musculaire aux épaules et de longues griffes pour creuser. Son pelage va du blond au brun foncé ou noir ; les pointes pâles des poils de garde peuvent sembler grisonnantes. Il marche en posant toute la plante du pied. Les adultes mesurent environ 1,5 à 2,1 m de long et 0,9 à 1,5 m au garrot ; la masse publiée couvre environ 90 à 450 kg selon le sexe, la région et la saison, les mâles étant généralement plus grands."
+    },
+    "habitat": {
+      "en": "The species occupies forests, shrublands, grasslands, wetlands, and other terrestrial habitats. In Alaska, bears use low slopes and wetlands for spring greens, berry openings in summer, then salmon rivers or alpine berry patches in autumn. Seasonal movements follow food.",
+      "fr": "L’espèce fréquente forêts, broussailles, prairies et zones humides. En Alaska, les ours utilisent au printemps les pentes basses et zones humides pour les jeunes pousses, les clairières à baies en été, puis les rivières à saumons ou versants alpins en automne. Leurs déplacements suivent la nourriture."
+    },
+    "diet": {
+      "en": "Brown bears are omnivores, eating grasses, roots, berries, nuts, fish, insects, small mammals, carrion, and sometimes larger prey. Yellowstone examples include trout, elk calves, roots, berries, and pine seeds; coastal Alaskan bears can exploit salmon runs.",
+      "fr": "L’ours brun est omnivore : herbes, racines, baies, noix, poissons, insectes, petits mammifères et charognes, parfois aussi de plus grandes proies. À Yellowstone, il mange notamment truites, jeunes wapitis, racines, baies et graines de pin ; les ours côtiers d’Alaska profitent des remontées de saumons."
+    },
+    "behavior": {
+      "en": "In Yellowstone, grizzlies are usually solitary outside courtship, family groups, or concentrated foods; some gather at streams, carcasses, or moth aggregations. They den through winter, though timing and emergence vary with sex and reproductive status.",
+      "fr": "À Yellowstone, les grizzlis sont généralement solitaires hors de l’accouplement, des familles ou des rassemblements alimentaires ; certains se regroupent près des cours d’eau, carcasses ou agrégations de papillons. Ils hivernent en tanière, mais le calendrier et la sortie varient selon le sexe et la reproduction."
+    },
+    "reproduction": {
+      "en": "In Yellowstone, mating is from mid-May to mid-July. After delayed implantation, cubs are born in dens in late January or February, usually one to three per litter, occasionally four. They nurse through winter and generally stay with their mother about two years.",
+      "fr": "À Yellowstone, l’accouplement a lieu de mi-mai à mi-juillet. Après une implantation différée, les oursons naissent en tanière fin janvier ou en février, généralement un à trois par portée, parfois quatre. Ils tètent pendant l’hiver et restent auprès de leur mère environ deux ans."
+    },
+    "ecology": {
+      "en": "In Alaska, seasonal movements bring bears to salmon streams and berry patches in turn; accumulated fat helps support winter denning. These rich feeding sites may attract many bears to one place, particularly where food is abundant.",
+      "fr": "En Alaska, les déplacements saisonniers conduisent les ours des cours d’eau à saumons aux zones à baies ; les réserves de graisse soutiennent l’hivernage. Ces sites nourriciers peuvent attirer de nombreux individus au même endroit, surtout lorsque la nourriture y abonde."
+    },
+    "conservation": {
+      "en": "The IUCN SSC Bear Specialist Group reports the species has been globally Least Concern since 1996 and is stable overall. This masks threatened isolated populations and past range losses. A 2023 European update reported recovery and expansion in several large populations.",
+      "fr": "Le groupe de spécialistes des ours de l’UICN indique que l’espèce est en préoccupation mineure à l’échelle mondiale depuis 1996 et que sa tendance globale est stable. Cela masque des populations isolées menacées et des pertes historiques d’aire. Un bilan européen de 2023 signalait le rétablissement et l’expansion de plusieurs grandes populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Species profile: Brown Bear, IUCN SSC Bear Specialist Group",
+        "fr": "Fiche de l’espèce : ours brun, groupe de spécialistes des ours de l’UICN"
+      },
+      "url": "https://www.globalbearconservation.org/About/leadership_page/75",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The specialist group states global Least Concern since 1996 and describes global numbers as stable.",
+        "Many isolated populations are threatened; small size, human-caused mortality, and conflict are identified risks."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ursus arctos (Brown Bear), International Association for Bear Research and Management",
+        "fr": "Ursus arctos (ours brun), International Association for Bear Research and Management"
+      },
+      "url": "https://www.bearbiology.org/the-eight-bear-species/ursus-arctos-brown-bear/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Brown bears occur across northern Eurasia, India, and North America and remain the most widely distributed bear species.",
+        "The specialist species account describes a wide variety of habitats and substantial regional variation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brown Bear (Ursus arctos arctos), U.S. Fish and Wildlife Service",
+        "fr": "Ours brun (Ursus arctos arctos), U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/brown-bear-ursus-arctos-arctos",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Coat shades range from blond through brown to black; longer guard hairs may have pale tips.",
+        "Plantigrade feet and a prominent muscular shoulder hump are characteristic; this page concerns the Eurasian subspecies."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brown Bears: Bears, U.S. National Park Service",
+        "fr": "Ours bruns : les ours, U.S. National Park Service"
+      },
+      "url": "https://www.nps.gov/subjects/bears/brown-bears.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Brown bears are omnivorous; Yellowstone examples include plant foods, trout, elk calves, and scavenged carcasses."
+      ]
+    },
+    {
+      "title": {
+        "en": "Yellowstone Grizzly Bear Facts, Yellowstone National Park (U.S. National Park Service)",
+        "fr": "Faits sur le grizzli de Yellowstone, parc national de Yellowstone (U.S. National Park Service)"
+      },
+      "url": "https://home.nps.gov/yell/learn/yellowstone-grizzly-bear-facts.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Usually solitary; bears aggregate at food sources, during courtship, or with young; denning timing varies by sex.",
+        "Yellowstone mating is mid-May–mid-July; births occur in late winter."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brown Bear Species Profile, Alaska Department of Fish and Game",
+        "fr": "Profil de l’ours brun, Alaska Department of Fish and Game"
+      },
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=brownbear.printerfriendly",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Alaska’s seasonal habitat use tracks spring greens, summer berries, and autumn salmon or alpine berry patches.",
+        "Feeding sites such as salmon streams can concentrate bears; most Alaska bears den in winter, while some Kodiak males stay active."
+      ]
+    },
+    {
+      "title": {
+        "en": "Large carnivore populations across Europe, European Commission",
+        "fr": "Populations de grands carnivores en Europe, Commission européenne"
+      },
+      "url": "https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive/large-carnivores/large-carnivore-populations-across-europe_en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Its update covering 2017–2022/23 reported an increasing European bear population, driven largely by the Baltic, Carpathian, and Karelian populations."
+      ]
+    },
+    {
+      "title": {
+        "en": "Brown Bears — U.S. National Park Service",
+        "fr": "Ours bruns — U.S. National Park Service"
+      },
+      "url": "https://home.nps.gov/subjects/bears/brown-bears.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Shoulder height about 0.9–1.5 m, length 1.5–2.1 m, mass 90–454 kg depending on sex, region and season."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated adult brown bear image; the individual’s sex is not identifiable. Preserve natural anatomy: heavy body, shoulder hump, long foreclaws, small rounded ears, short tail, and brown coat on the pure white background.",
+  "uncertainties": [
+    "The global IUCN assessment is dated 2016 (published 2017); it does not describe a new 2026 measurement, and global status does not resolve the condition of every local population.",
+    "Coat, body size, diet, denning, and activity vary substantially across the species’ range; examples tied to Alaska or Yellowstone should not be generalized to all brown bears.",
+    "The common name grizzly is used especially for inland North American brown bears; local naming and taxonomic treatment of regional populations can vary."
+  ],
+  "reviewed": true,
+  "review_note": "Independent full EN/FR/source coherence critique passed; French punctuation normalized. Existing accepted individual illustration retained."
+}

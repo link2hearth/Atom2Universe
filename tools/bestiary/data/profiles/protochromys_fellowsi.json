@@ -1,0 +1,142 @@
+{
+  "id": "protochromys_fellowsi",
+  "scientific": "Protochromys fellowsi",
+  "group": "mammals",
+  "name": {
+    "en": "Papuan mosaic-tailed rat",
+    "fr": "Rat mosaïque de Papouasie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Protochromys fellowsi is a murid rodent endemic to the mountains of Papua New Guinea and the only known species in its genus.",
+      "fr": "Protochromys fellowsi est un rongeur muridé endémique des montagnes de Papouasie-Nouvelle-Guinée et la seule espèce connue de son genre."
+    },
+    "identification": {
+      "en": "It is medium-sized, long-tailed and has dense, soft fur; its pale incisors and skull traits help distinguish its genus from related mosaic-tailed rats.",
+      "fr": "Il est de taille moyenne, à longue queue et au pelage dense et doux; ses incisives pâles et certains caractères du crâne distinguent son genre des rats mosaïqués proches."
+    },
+    "habitat": {
+      "en": "Records come from high montane forests of Papua New Guinea’s Central Cordillera, at roughly two and a half kilometres elevation.",
+      "fr": "Les observations proviennent des forêts montagnardes élevées de la cordillère Centrale de Papouasie-Nouvelle-Guinée, vers deux kilomètres et demi d’altitude."
+    },
+    "diet": {
+      "en": "Examination of preserved specimens found mushroom material in the stomachs, evidence that fungi are an important food; the small sample does not define its full diet.",
+      "fr": "L’examen de spécimens conservés a révélé des champignons dans les estomacs, signe que les fungi constituent une nourriture importante; ce petit échantillon ne définit pas tout son régime."
+    },
+    "behavior": {
+      "en": "Few localities are documented; this may partly reflect difficulty detecting it.",
+      "fr": "Peu de localités sont documentées; cela peut en partie refléter la difficulté à le détecter."
+    },
+    "reproduction": {
+      "en": "No reproductive observations are reported here.",
+      "fr": "La source ne décrit pas sa reproduction."
+    },
+    "ecology": {
+      "en": "The species was originally described in Melomys but is now placed in its own genus, Protochromys; this taxonomic change reflects distinctive anatomical traits.",
+      "fr": "L’espèce a d’abord été décrite dans le genre Melomys, mais elle est désormais placée dans son propre genre, Protochromys; ce changement taxonomique reflète des caractères anatomiques distinctifs."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports a Least Concern IUCN assessment; the limited field records still leave aspects of its ecology poorly known.",
+      "fr": "La Mammal Diversity Database rapporte une évaluation UICN en Préoccupation mineure; malgré cela, le faible nombre d’observations laisse son écologie mal connue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Systematic reviews of New Guinea Coccymys and ‘Melomys’ albidens — American Museum of Natural History Bulletin",
+        "fr": "Révisions systématiques de Coccymys et de ‘Melomys’ albidens de Nouvelle-Guinée — Bulletin de l’American Museum of Natural History"
+      },
+      "url": "https://doi.org/10.1206/635.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The paper reports mountain records, anatomy and fungal stomach contents."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 10,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Diversity Database: Protochromys fellowsi",
+        "fr": "Mammal Diversity Database : Protochromys fellowsi"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003263/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The database recognizes the species in Protochromys, endemic to Papua New Guinea, and reports its Red List category as Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 21,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS: Protochromys fellowsi",
+        "fr": "ITIS : Protochromys fellowsi"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=970886",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "ITIS lists the former combination Melomys fellowsi."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 7,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet evidence comes from stomach contents of a small number of preserved specimens; the full diet and population distribution remain poorly known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Range is described from documented high-elevation records; limited collecting may affect apparent rarity."
+}

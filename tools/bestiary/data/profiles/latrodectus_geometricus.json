@@ -1,0 +1,142 @@
+{
+  "id": "latrodectus_geometricus",
+  "scientific": "Latrodectus geometricus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brown Widow",
+    "fr": "Veuve brune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Brown Widow is a warm-region member of the widow genus Latrodectus.",
+      "fr": "La veuve brune est une veuve du genre Latrodectus, présente dans les régions chaudes."
+    },
+    "identification": {
+      "en": "Its colour varies from tan to dark brown; the underside has an orange hourglass.",
+      "fr": "Sa couleur varie du beige au brun foncé; le dessous porte un sablier orange."
+    },
+    "habitat": {
+      "en": "It often webs in sheltered spots around buildings and garden furniture.",
+      "fr": "Elle tisse souvent sa toile dans des abris autour des bâtiments et du mobilier de jardin."
+    },
+    "diet": {
+      "en": "Its irregular web catches small arthropods.",
+      "fr": "Sa toile irrégulière capture de petits arthropodes."
+    },
+    "behavior": {
+      "en": "When disturbed, it may retreat or drop from its web.",
+      "fr": "Dérangée, elle peut se retirer ou tomber de sa toile."
+    },
+    "reproduction": {
+      "en": "The egg sac is covered in distinctive pointed silk projections.",
+      "fr": "Le cocon d’œufs est couvert de pointes de soie caractéristiques."
+    },
+    "ecology": {
+      "en": "It shares its genus with the Redback (L. hasselti), Katipō (L. katipo) and Northern Black Widow (L. variolus).",
+      "fr": "Elle partage son genre avec la veuve à dos rouge (L. hasselti), le katipō (L. katipo) et la veuve noire du Nord (L. variolus)."
+    },
+    "conservation": {
+      "en": "The sources describe its biology, not a global conservation assessment.",
+      "fr": "Les sources décrivent sa biologie, sans évaluation mondiale de son état de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Widow Spiders and Their Relatives — UC Statewide IPM Program",
+        "fr": "Widow Spiders and Their Relatives — programme IPM de l’Université de Californie"
+      },
+      "url": "https://ipm.ucanr.edu/home-and-landscape/widow-spiders-and-their-relatives/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UC extension summarizes worldwide subtropical occurrence, web habits, kinship and egg sacs."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 12,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brown Widow Spider — UF/IFAS Extension, Sarasota County",
+        "fr": "Brown Widow Spider — service de vulgarisation UF/IFAS, comté de Sarasota"
+      },
+      "url": "https://sfyl.ifas.ufl.edu/sarasota/natural-resources/chemicals-in-the-environment/integrated-pest-management/brown-widow-spider/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Florida extension describes variable colour, sheltered webs and spiky egg sacs."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 11,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How to identify Brown Widow Spiders — Center for Invasive Species Research, UC Riverside",
+        "fr": "How to identify Brown Widow Spiders — centre de recherche sur les espèces envahissantes, UC Riverside"
+      },
+      "url": "https://cisr.ucr.edu/invasive-species/how-identify-brown-widow-spiders",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "UC Riverside confirms egg sacs aid identification."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 7,
+        "total": 7,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Colour varies substantially among individuals and life stages; identification should not rely on colour alone.",
+    "The global conservation status is not addressed by the natural-history accounts consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a California university IPM account and two university extension/research accounts. Kept the description short because these sources focus chiefly on identification, web sites and egg sacs; the genus-level kinship is stated without implying identical biology or risk."
+}

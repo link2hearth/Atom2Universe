@@ -1,0 +1,217 @@
+package com.Atom2Universe.app.games.caves.world
+
+/** Stairs: bits 0..1 ascend +Z, +X, -Z, -X; bit 2 selects the upper half for both shapes. */
+internal object PartialBlockModel {
+    data class Box(val x: Float, val y: Float, val z: Float,
+                   val width: Float = .5f, val height: Float = .5f, val depth: Float = .5f)
+    /** texture: -1 = usual face lookup, 0 = top, 1 = bottom, 2 = side, 3 = front. */
+    data class Face(val direction: Int, val vertices: Array<FloatArray>,
+                    val texture: Int = -1, val uv: Array<FloatArray>? = null)
+    data class Hit(val distance: Double, val nx: Int, val ny: Int, val nz: Int)
+    private val normals = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
+        intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
+    // Four horizontal quarter cells, shared by straight, inner and outer stairs.
+    private fun straightMask(meta: Byte): Int = when (meta.toInt() and 3) {
+        0 -> 12; 1 -> 10; 2 -> 3; else -> 5
+    }
+    private val dx = intArrayOf(0, 1, 0, -1)
+    private val dz = intArrayOf(1, 0, -1, 0)
+
+    /** Neighbor-driven corners, never persisted: removing a neighbor restores the straight step. */
+    fun connectedMask(meta: Byte, neighbor: (Int, Int) -> Byte?): Int {
+        val direction = meta.toInt() and 3
+        val half = meta.toInt() and 4
+        val own = straightMask(meta)
+        fun compatible(value: Byte?) = value != null && value.toInt() and 4 == half
+        fun sameAt(x: Int, z: Int): Boolean {
+            val value = neighbor(x, z)
+            return compatible(value) && value!!.toInt() and 3 == direction
+        }
+        val front = neighbor(dx[direction], dz[direction])
+        if (compatible(front)) {
+            val other = front!!.toInt() and 3
+            if ((other and 1) != (direction and 1) && !sameAt(-dx[other], -dz[other]))
+                return own and straightMask(front)
+        }
+        val back = neighbor(-dx[direction], -dz[direction])
+        if (compatible(back)) {
+            val other = back!!.toInt() and 3
+            if ((other and 1) != (direction and 1) && !sameAt(dx[other], dz[other]))
+                return own or straightMask(back)
+        }
+        return own
+    }
+
+    /**
+     * Côté plein d'une dalle, de 0 à 5 : 0 bas, 1 haut, 2 côté −X, 3 côté +X, 4 côté −Z, 5 côté +Z.
+     * Deux côtés opposés ne diffèrent que du dernier bit (`côté xor 1`), et `côté / 2` donne l'axe
+     * (0 = Y, 1 = X, 2 = Z). Dans le meta : bit 2 = haut (comme les escaliers) ; une dalle
+     * verticale porte le bit 3 et son côté 2..5 moins 2 dans les bits 0..1.
+     */
+    fun slabSide(meta: Byte): Int {
+        val m = meta.toInt()
+        return if (m and 8 != 0) 2 + (m and 3) else (m shr 2) and 1
+    }
+    fun slabMeta(side: Int): Byte = (if (side >= 2) 8 + side - 2 else side * 4).toByte()
+
+    /** Demi-largeur du carré central d'une face visée : dedans, la dalle se pose à plat contre la face. */
+    const val SLAB_AIM_CENTER = .25
+
+    /**
+     * Côté plein d'une dalle posée en visant une face, découpée en cinq zones. Au centre, la dalle
+     * se pose à plat contre la face visée ([faceSide] : le côté de la nouvelle case qui touche le
+     * bloc visé). Près d'un bord (haut, bas, gauche, droite), elle se pose perpendiculaire, contre
+     * ce bord. [hx], [hy], [hz] : le point visé, de 0 à 1 dans le bloc ; seuls les deux axes du plan
+     * de la face comptent, et le plus éloigné du centre désigne le bord.
+     */
+    fun slabSideFromAim(faceSide: Int, hx: Double, hy: Double, hz: Double): Int {
+        val normalAxis = faceSide / 2          // 0 = Y, 1 = X, 2 = Z, comme les côtés
+        val offsets = doubleArrayOf(hy - .5, hx - .5, hz - .5)
+        var edgeAxis = -1; var farthest = SLAB_AIM_CENTER
+        for (axis in 0..2) {
+            if (axis == normalAxis) continue
+            if (kotlin.math.abs(offsets[axis]) > farthest) { farthest = kotlin.math.abs(offsets[axis]); edgeAxis = axis }
+        }
+        if (edgeAxis < 0) return faceSide
+        return edgeAxis * 2 + if (offsets[edgeAxis] > 0) 1 else 0
+    }
+
+    private val boxes = Array(38) { shape ->
+        buildList {
+            val side = shape - 32
+            val half = shape and 1
+            val mask = if (shape >= 32) 0 else shape shr 1
+            for (x in 0..1) for (y in 0..1) for (z in 0..1) {
+                val inside = if (shape >= 32) when (side) {
+                    0, 1 -> y == side
+                    2, 3 -> x == side - 2
+                    else -> z == side - 4
+                } else y == half || mask and (1 shl (x + 2 * z)) != 0
+                if (inside) add(Box(x * .5f, y * .5f, z * .5f))
+            }
+        }
+    }
+    private fun index(meta: Byte, slab: Boolean, mask: Int) =
+        if (slab) 32 + slabSide(meta)
+        else 2 * (if (mask < 0) straightMask(meta) else mask) + ((meta.toInt() shr 2) and 1)
+    private val lowBoxes = java.util.concurrent.ConcurrentHashMap<Float, List<Box>>()
+    fun boxes(meta: Byte, slab: Boolean = false, height: Float = 1f, mask: Int = -1) =
+        if (height < 1f) lowBoxes.getOrPut(height) { listOf(Box(0f, 0f, 0f, 1f, height, 1f)) }
+        else boxes[index(meta, slab, mask)]
+    private val surfaces = Array(38) { meta ->
+        buildList {
+            val cells = boxes[meta]
+            for (b in cells) for ((f,n) in normals.withIndex()) {
+                if (cells.any { it.x == b.x+n[0]*.5f && it.y == b.y+n[1]*.5f && it.z == b.z+n[2]*.5f }) continue
+                val corners = Array(8) { i -> floatArrayOf(b.x+if(i and 1 == 0) 0f else .5f,
+                    b.y+if(i and 2 == 0) 0f else .5f, b.z+if(i and 4 == 0) 0f else .5f) }
+                add(Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()))
+            }
+        }
+    }
+    private val lowSurfaces = java.util.concurrent.ConcurrentHashMap<Float, List<Face>>()
+    fun faces(meta: Byte, slab: Boolean = false, height: Float = 1f, mask: Int = -1): List<Face> =
+        if (height >= 1f) surfaces[index(meta, slab, mask)] else lowSurfaces.getOrPut(height) {
+            val corners = Array(8) { i -> floatArrayOf(if (i and 1 == 0) 0f else 1f,
+                if (i and 2 == 0) 0f else height, if (i and 4 == 0) 0f else 1f) }
+            normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
+        }
+
+    // Turning parts: a 6/16 rod through the whole block (shaft, crank) or a 6/16 thick plate across it
+    // (cogwheels). Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z.
+    /** Bit 2 of a crank's meta: the part it is fixed to lies on the + side of its axis. */
+    const val CRANK_ON_PLUS = 4
+    /** Axis index of a shaft: 0 = X, 1 = Y, 2 = Z. */
+    fun shaftAxis(meta: Byte) = when (meta.toInt() and 3) { 1 -> 0; 2 -> 2; else -> 1 }
+    private const val ROD = 6f / 16f
+    private val shaftBoxes = Array(3) { axis ->
+        val low = (1f - ROD) / 2f
+        listOf(when (axis) {
+            0 -> Box(0f, low, low, 1f, ROD, ROD)
+            1 -> Box(low, 0f, low, ROD, 1f, ROD)
+            else -> Box(low, low, 0f, ROD, ROD, 1f)
+        })
+    }
+    private val plateBoxes = Array(3) { axis ->
+        val low = (1f - ROD) / 2f
+        listOf(when (axis) {
+            0 -> Box(low, 0f, 0f, ROD, 1f, 1f)
+            1 -> Box(0f, low, 0f, 1f, ROD, 1f)
+            else -> Box(0f, 0f, low, 1f, 1f, ROD)
+        })
+    }
+    private fun surfaces(b: Box) = run {
+        val corners = Array(8) { i -> floatArrayOf(b.x + if (i and 1 == 0) 0f else b.width,
+            b.y + if (i and 2 == 0) 0f else b.height, b.z + if (i and 4 == 0) 0f else b.depth) }
+        normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
+    }
+    private val cubeBox = listOf(Box(0f, 0f, 0f, 1f, 1f, 1f))
+    private val cubeSurfaces = surfaces(cubeBox[0])
+    private val shaftSurfaces = Array(3) { surfaces(shaftBoxes[it][0]) }
+    private val plateSurfaces = Array(3) { surfaces(plateBoxes[it][0]) }
+
+    /** The shape of any partial block, turning parts included. */
+    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> =
+        if (def.windowShape != 0) WindowModel.boxes(meta) else if (def.door) DoorModel.boxes(meta) else if (def.furnitureShape != 0) CaveFurnitureModel.boxes(def.furnitureShape, meta) else when (def.kineticShape) {
+        com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftBoxes[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateBoxes[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeBox
+        else -> boxes(meta, def.slab, def.blockHeight, mask)
+    }
+    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> =
+        if (def.windowShape != 0) WindowModel.faces(def.windowShape, meta) else if (def.door) DoorModel.faces(def, meta) else if (def.furnitureShape != 0) CaveFurnitureModel.faces(def.furnitureShape, meta) else when (def.kineticShape) {
+        com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftSurfaces[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateSurfaces[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeSurfaces
+        else -> faces(meta, def.slab, def.blockHeight, mask)
+    }
+    fun intersect(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, x: Double, y: Double, z: Double,
+                  dx: Double, dy: Double, dz: Double, reach: Double, mask: Int = -1): Hit? =
+        intersectBoxes(boxes(def, meta, mask), x, y, z, dx, dy, dz, reach)
+
+    /** Does a boundary expose any empty area? Also works with recessed soil heights. */
+    fun hasOpenBoundary(cells: List<Box>, face: Int): Boolean {
+        val covered = cells.sumOf { b ->
+            when (face) {
+                0 -> if (b.y + b.height == 1f) (b.width * b.depth).toDouble() else 0.0
+                1 -> if (b.y == 0f) (b.width * b.depth).toDouble() else 0.0
+                2 -> if (b.x + b.width == 1f) (b.height * b.depth).toDouble() else 0.0
+                3 -> if (b.x == 0f) (b.height * b.depth).toDouble() else 0.0
+                4 -> if (b.z + b.depth == 1f) (b.width * b.height).toDouble() else 0.0
+                else -> if (b.z == 0f) (b.width * b.height).toDouble() else 0.0
+            }
+        }
+        return covered < .99999
+    }
+
+    fun intersect(meta: Byte, x: Double, y: Double, z: Double,
+        dx: Double, dy: Double, dz: Double, reach: Double, slab: Boolean = false, height: Float = 1f, mask: Int = -1): Hit? =
+        intersectBoxes(boxes(meta, slab, height, mask), x, y, z, dx, dy, dz, reach)
+
+    private fun intersectBoxes(cells: List<Box>, x: Double, y: Double, z: Double,
+        dx: Double, dy: Double, dz: Double, reach: Double): Hit? {
+        var best: Hit? = null
+        val origin = doubleArrayOf(x,y,z); val dir = doubleArrayOf(dx,dy,dz)
+        for (b in cells) {
+            val low = floatArrayOf(b.x,b.y,b.z)
+            val size = floatArrayOf(b.width, b.height, b.depth)
+            var near = Double.NEGATIVE_INFINITY; var far = reach; var axis = 0; var sign = 0
+            for (a in 0..2) {
+                if (kotlin.math.abs(dir[a]) < 1e-12) {
+                    if (origin[a] < low[a] || origin[a] > low[a]+size[a]) far = Double.NEGATIVE_INFINITY
+                } else {
+                    val t0 = (low[a]-origin[a])/dir[a]; val t1 = (low[a]+size[a]-origin[a])/dir[a]
+                    val entry = minOf(t0,t1)
+                    if (entry > near) { near = entry; axis = a; sign = if(dir[a]>0) -1 else 1 }
+                    far = minOf(far,maxOf(t0,t1))
+                }
+            }
+            if (near <= far && far >= 0 && near <= reach) {
+                val distance = maxOf(0.0,near)
+                if (best == null || distance < best.distance) best = Hit(distance,
+                    if(axis==0) sign else 0, if(axis==1) sign else 0, if(axis==2) sign else 0)
+            }
+        }
+        return best
+    }
+}

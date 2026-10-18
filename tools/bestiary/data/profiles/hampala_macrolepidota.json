@@ -1,0 +1,119 @@
+{
+  "id": "hampala_macrolepidota",
+  "scientific": "Hampala macrolepidota",
+  "group": "fish",
+  "name": {
+    "en": "Hampala barb",
+    "fr": "Hampala à grandes écailles"
+  },
+  "sections": {
+    "overview": {
+      "en": "Hampala macrolepidota is a large Southeast Asian cyprinid of the Mekong, Chao Phraya, Malay Peninsula, and Indonesian freshwaters.",
+      "fr": "Hampala macrolepidota est un grand cyprinidé d’Asie du Sud-Est, présent au Mékong, au Chao Phraya, en Malaisie péninsulaire et en Indonésie."
+    },
+    "identification": {
+      "en": "Adults show a dark flank bar and black-edged orange-red tail; reported maximum standard length is 70 cm, versus a common 35 cm.",
+      "fr": "Les adultes portent une barre latérale sombre et une caudale rouge orangé bordée de noir; la longueur standard maximale rapportée est de 70 cm, contre 35 cm couramment."
+    },
+    "habitat": {
+      "en": "It inhabits flowing rivers and streams with clear water and sandy or muddy bottoms, and also enters flooded forest and larger water bodies.",
+      "fr": "Il fréquente les rivières et ruisseaux courants, clairs, aux fonds sableux ou vaseux; il gagne aussi les forêts inondées et les grandes étendues d’eau."
+    },
+    "diet": {
+      "en": "It is predatory, but the balance between fish and insect prey varies by locality; aquatic insects can dominate some reservoir samples.",
+      "fr": "C’est un prédateur, mais la part des poissons et des insectes varie selon le lieu; les insectes aquatiques dominent certains échantillons de réservoir."
+    },
+    "behavior": {
+      "en": "The species is potamodromous, moving within freshwater systems, and enters flooded forest habitats.",
+      "fr": "L’espèce est potamodrome : elle se déplace à l’intérieur des eaux douces et pénètre dans les forêts inondées."
+    },
+    "reproduction": {
+      "en": "FishBase reports breeding through the rainy season, but no single spawning date or detailed clutch figure is established here.",
+      "fr": "FishBase indique une reproduction pendant toute la saison des pluies, sans préciser de date de ponte unique ni de taille de ponte détaillée."
+    },
+    "ecology": {
+      "en": "Its opportunistic predation links riverine and floodplain food webs, while local diet studies show that prey availability changes its feeding profile.",
+      "fr": "Sa prédation opportuniste relie les réseaux alimentaires des rivières et des plaines inondables; les études locales montrent que les proies disponibles modifient son régime."
+    },
+    "conservation": {
+      "en": "FishBase reports Least Concern in the IUCN assessment dated 2019; the species is also taken in commercial and recreational fisheries.",
+      "fr": "FishBase rapporte la catégorie de préoccupation mineure dans une évaluation UICN de 2019; l’espèce est également pêchée à des fins commerciales et récréatives."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hampala macrolepidota summary — FishBase",
+        "fr": "Résumé de Hampala macrolepidota — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/hampala-macrolepidota.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports its range, marks, size, rainy-season breeding, fishery use and IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 13,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecology summary — Swedish Museum of Natural History FishBase node",
+        "fr": "Synthèse écologique — nœud FishBase du Musée suédois d’histoire naturelle"
+      },
+      "url": "https://nrm-fishbaselinux01.nrm.se/Ecology/Hampala_macrolepidota",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The Swedish Museum-hosted FishBase ecology page records habitats and prey including fish, prawns and aquatic insects."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 16,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 70 cm figure is a reported maximum standard length and should not be mistaken for a typical adult size. Diet observations differ markedly between study sites."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase’s species summary with the Swedish Museum-hosted ecology record; distributions and diet are summarized at broad scale because studies differ among localities."
+}

@@ -1,0 +1,16 @@
+{
+  "id": 1029,
+  "name": "leaves_pink",
+  "texture_top": "cozy:leaf:10:B59B9C",
+  "texture_side": "cozy:leaf:10:B59B9C",
+  "texture_bottom": "cozy:leaf:10:B59B9C",
+  "color": "#B59B9C",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

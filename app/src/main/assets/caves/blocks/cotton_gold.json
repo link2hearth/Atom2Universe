@@ -1,0 +1,14 @@
+{
+  "id": 9008,
+  "name": "cotton_gold",
+  "texture_top": "cozy:cloth:5:FFD700",
+  "texture_side": "cozy:cloth:5:FFD700",
+  "texture_bottom": "cozy:cloth:5:FFD700",
+  "color": "#FFD700",
+  "hardness": 1.0,
+  "drop": "cotton_gold",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

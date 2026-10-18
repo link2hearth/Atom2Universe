@@ -1,0 +1,169 @@
+{
+  "id": "long_tailed_duck",
+  "scientific": "Clangula hyemalis",
+  "group": "birds",
+  "name": {
+    "en": "Long-tailed Duck",
+    "fr": "Harelde boréale"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Long-tailed Duck is a circumpolar Arctic breeder and a strongly migratory sea duck, wintering on northern marine coasts.",
+      "fr": "L’Harelde boréale niche dans l’Arctique circumpolaire et migre largement; c’est un canard marin qui hiverne sur les côtes nordiques."
+    },
+    "identification": {
+      "en": "The adult male’s exceptionally long central tail feathers give the species its English name; plumage changes markedly through the year.",
+      "fr": "Les très longues rectrices centrales du mâle adulte donnent son nom anglais à l’espèce; son plumage varie fortement au fil de l’année."
+    },
+    "habitat": {
+      "en": "It nests on Arctic tundra near freshwater pools and lakes, but spends winter at sea, often offshore or in sheltered coastal waters.",
+      "fr": "Il niche dans la toundra arctique près de mares et lacs d’eau douce, mais hiverne en mer, souvent au large ou dans des eaux côtières abritées."
+    },
+    "diet": {
+      "en": "It dives for marine invertebrates, especially crustaceans and molluscs, with fish and freshwater prey also taken.",
+      "fr": "Il plonge pour capturer des invertébrés marins, notamment crustacés et mollusques, et prend aussi des poissons et proies d’eau douce."
+    },
+    "behavior": {
+      "en": "It is a capable deep diver and forms large, social feeding and resting flocks outside the breeding season.",
+      "fr": "Excellent plongeur, il forme de grands rassemblements sociaux pour se nourrir et se reposer en dehors de la période de reproduction."
+    },
+    "reproduction": {
+      "en": "The female lays in a concealed ground nest near water; the male leaves after incubation begins, and young are mobile soon after hatching.",
+      "fr": "La femelle pond dans un nid dissimulé au sol près de l’eau; le mâle part au début de l’incubation et les jeunes sont vite mobiles après l’éclosion."
+    },
+    "ecology": {
+      "en": "Its seasonal shift from tundra wetlands to marine feeding grounds links Arctic freshwater breeding habitat with coastal food webs.",
+      "fr": "Son passage saisonnier des zones humides de la toundra aux aires alimentaires marines relie les habitats de reproduction d’eau douce aux réseaux côtiers."
+    },
+    "conservation": {
+      "en": "BirdLife lists it as Vulnerable after a severe decline in Baltic wintering numbers, while trends elsewhere remain less certain.",
+      "fr": "BirdLife le classe vulnérable après un fort déclin des effectifs hivernant en mer Baltique, tandis que les tendances ailleurs restent moins certaines."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Long-tailed Duck — BirdLife DataZone",
+        "fr": "Harelde boréale — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/long-tailed-duck-clangula-hyemalis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s global assessment links Vulnerable status to a marked Baltic wintering decline."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 12,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Long-tailed Duck — Washington Department of Fish and Wildlife",
+        "fr": "Harelde boréale — Washington Department of Fish and Wildlife"
+      },
+      "url": "https://wdfw.wa.gov/species-habitats/species/clangula-hyemalis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The state wildlife agency describes the male’s long tail, offshore wintering, diving and marine prey including crustaceans, molluscs and fish."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 20,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Clangula hyemalis — Birds of Europe, Naturalis Biodiversity Center",
+        "fr": "Clangula hyemalis — Birds of Europe, Naturalis Biodiversity Center"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130446",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The European species account provides an additional cross-check of the diet in freshwater habitats, including aquatic insects, crustaceans, molluscs and plant matter."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 22,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Harelde kakawi — Office québécois de la langue française",
+        "fr": "Harelde kakawi — Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/8359776/harelde-kakawi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The OQLF distinguishes Canadian French Harelde kakawi from the official French-of-France name Harelde boréale."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Vulnerable assessment dates to 2018 and its strongest evidence concerns Baltic wintering birds; monitoring remains incomplete elsewhere."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared BirdLife’s global assessment with North American state-wildlife and European natural-history sources; distinguished the clear Baltic decline from less certain trends in other populations."
+}

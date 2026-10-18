@@ -1,0 +1,137 @@
+{
+  "id": "elysia_chlorotica",
+  "scientific": "Elysia chlorotica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Eastern Emerald Elysia",
+    "fr": "Élysie émeraude orientale"
+  },
+  "sections": {
+    "overview": {
+      "en": "Elysia chlorotica is an eastern North American sacoglossan sea slug in genus Elysia.",
+      "fr": "Elysia chlorotica est une limace de mer sacoglosse de l’est de l’Amérique du Nord, du genre Elysia."
+    },
+    "identification": {
+      "en": "Its vivid green, flattened body holds chloroplasts acquired from algae.",
+      "fr": "Son corps aplati vert vif contient des chloroplastes acquis auprès d’algues."
+    },
+    "habitat": {
+      "en": "It lives in shallow salt and tidal marshes, creeks and pools along the western Atlantic coast.",
+      "fr": "Elle vit dans les marais salés et tidaux, les ruisseaux et les mares peu profonds du littoral atlantique occidental."
+    },
+    "diet": {
+      "en": "It feeds on Vaucheria algae and sequesters their chloroplasts rather than digesting every plastid.",
+      "fr": "Elle mange des algues Vaucheria et en détourne les chloroplastes au lieu de digérer tous les plastes."
+    },
+    "behavior": {
+      "en": "The retained kleptoplasts can continue photosynthesizing for months inside cells lining its digestive branches.",
+      "fr": "Les kleptoplastes retenus peuvent continuer à photosynthétiser pendant des mois dans les cellules de ses ramifications digestives."
+    },
+    "reproduction": {
+      "en": "It is a simultaneous hermaphrodite with both reproductive systems in one individual.",
+      "fr": "C’est un hermaphrodite simultané possédant les deux appareils reproducteurs."
+    },
+    "ecology": {
+      "en": "Related Elysia timida also retains plastids, but obtains them from a different alga.",
+      "fr": "L’espèce apparentée Elysia timida conserve elle aussi des plastes, mais les obtient d’une autre algue."
+    },
+    "conservation": {
+      "en": "Animal Diversity Web reports no special status in the conservation lists it summarizes.",
+      "fr": "Animal Diversity Web ne signale aucun statut particulier dans les listes de conservation qu’il récapitule."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Elysia chlorotica — Animal Diversity Web, University of Michigan",
+        "fr": "Elysia chlorotica — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Elysia_chlorotica/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "ADW reports eastern North American range, salt and tidal marsh habitat, simultaneous hermaphroditism, and no special listed status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 18,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sea slug kleptoplasty and plastid maintenance in a metazoan",
+        "fr": "Kleptoplastie et maintien des plastes chez une limace de mer"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3091133/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Review reports plastid sequestration from Vaucheria and months-long functional retention in digestive cells."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 13,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sea Slugs: One Species at a Time — Smithsonian Ocean",
+        "fr": "Limaces de mer : une espèce à la fois — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/sea-slugs-one-species-time",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Smithsonian describes E. chlorotica as bright green and algae-eating."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 9,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

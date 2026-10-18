@@ -1,0 +1,143 @@
+{
+  "id": "tanysiptera_riedelii",
+  "scientific": "Tanysiptera riedelii",
+  "group": "birds",
+  "name": {
+    "en": "Biak paradise kingfisher",
+    "fr": "Martin-chasseur de Biak"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Biak paradise kingfisher is a forest kingfisher native to Biak and Supiori in Indonesia’s Cenderawasih Bay.",
+      "fr": "Le Martin-chasseur de Biak est un martin-pêcheur forestier présent sur Biak et Supiori, dans la baie de Cenderawasih en Indonésie."
+    },
+    "identification": {
+      "en": "It has blue upperparts, pale underparts, a red bill and the long tail streamers typical of paradise kingfishers.",
+      "fr": "Il a le dessus bleu, le dessous clair, un bec rouge et les longues rectrices typiques des martins-chasseurs du genre Tanysiptera."
+    },
+    "habitat": {
+      "en": "It lives in forest, including secondary growth, and is associated with forest streams.",
+      "fr": "Il fréquente les forêts, y compris secondaires, et les cours d’eau forestiers."
+    },
+    "diet": {
+      "en": "It takes invertebrates, including prey found on the forest floor.",
+      "fr": "Il capture des invertébrés, notamment au sol de la forêt."
+    },
+    "behavior": {
+      "en": "It searches for prey on the forest floor.",
+      "fr": "Il recherche ses proies au sol de la forêt."
+    },
+    "reproduction": {
+      "en": "A tree-cavity study lists the species among cavity users and treats this use as likely opportunistic; detailed breeding data remain sparse.",
+      "fr": "Une étude sur les cavités arboricoles le compte parmi les espèces utilisatrices et considère cet usage comme probablement opportuniste ; les données détaillées sur sa reproduction restent rares."
+    },
+    "ecology": {
+      "en": "It was formerly treated as a subspecies of the Common Paradise Kingfisher, Tanysiptera galatea, but recent work supports species-level separation.",
+      "fr": "Il a autrefois été traité comme une sous-espèce du Martin-chasseur paradis, Tanysiptera galatea, mais des travaux récents soutiennent son statut d’espèce distincte."
+    },
+    "conservation": {
+      "en": "A recent island avifauna study reports it as Near Threatened and notes that its known range includes both Biak and Supiori.",
+      "fr": "Une étude récente de l’avifaune insulaire le donne comme Quasi menacé et indique que son aire connue comprend Biak et Supiori."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The avifauna of Biak Island, Papua, Indonesia — Bulletin of the British Ornithologists’ Club",
+        "fr": "The avifauna of Biak Island, Papua, Indonesia — Bulletin of the British Ornithologists’ Club"
+      },
+      "url": "https://bioone.org/journals/bulletin-of-the-british-ornithologists-club/volume-143/issue-1/bboc.v143i1.2023.a2/The-avifauna-of-Biak-Island-Papua-Indonesia-with-comments-on/10.25226/bboc.v143i1.2023.a2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The study reports the species on Biak and Supiori, Near Threatened status, and its former treatment as a subspecies of T. galatea before recognition as distinct."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 26,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biak Paradise Kingfisher — Oiseaux.net",
+        "fr": "Biak Paradise Kingfisher — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/biak.paradise.kingfisher.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Species account reports forest and forest-stream habitat, invertebrate diet with ground foraging, and identifying plumage and bill features."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 18,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tree Cavity-Using Wildlife and Their Conservation in Tropical Forests — Tropical Conservation Science",
+        "fr": "Tree Cavity-Using Wildlife and Their Conservation in Tropical Forests — Tropical Conservation Science"
+      },
+      "url": "https://journals.sagepub.com/doi/full/10.1177/194008291300600602",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The study lists T. riedelii among bird species using tree cavities and treats this as likely opportunistic; it gives no detailed breeding account."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 23,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Specific breeding details are limited; cavity use is qualified as likely based on the cited study.",
+    "The recent survey extends the known range to Supiori in addition to Biak."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Uses the recent Biak/Supiori survey rather than older Biak-only range summaries; separates cavity-use evidence from detailed breeding knowledge."
+}

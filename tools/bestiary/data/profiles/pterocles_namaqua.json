@@ -1,0 +1,165 @@
+{
+  "id": "pterocles_namaqua",
+  "scientific": "Pterocles namaqua",
+  "group": "birds",
+  "name": {
+    "en": "Namaqua Sandgrouse",
+    "fr": "Ganga namaqua"
+  },
+  "sections": {
+    "overview": {
+      "en": "This near-endemic sandgrouse inhabits dry, open country in southern Africa.",
+      "fr": "Ce ganga presque endémique fréquente les milieux secs et ouverts d’Afrique australe."
+    },
+    "identification": {
+      "en": "The sexes have different plumage; the bird forages on foot.",
+      "fr": "Les sexes ont un plumage différent; l’oiseau cherche sa nourriture au sol."
+    },
+    "habitat": {
+      "en": "From Angola to South Africa, it favors gravel desert, sandy semi-desert and shrubland.",
+      "fr": "De l’Angola à l’Afrique du Sud, il préfère les déserts graveleux, semi-déserts sableux et broussailles."
+    },
+    "diet": {
+      "en": "Seeds dominate its diet, with flowers, small fruits and leaves also eaten.",
+      "fr": "Les graines dominent son régime, complété par des fleurs, fruits et feuilles."
+    },
+    "behavior": {
+      "en": "Males carry water to chicks in belly feathers, whose water-holding structure has been studied.",
+      "fr": "Les mâles transportent de l’eau aux poussins dans leurs plumes ventrales, dont la structure rétentrice a été étudiée."
+    },
+    "reproduction": {
+      "en": "It nests on the ground; both sexes incubate in day and night shifts.",
+      "fr": "Il niche au sol; les deux sexes couvent à tour de rôle, jour et nuit."
+    },
+    "ecology": {
+      "en": "Compare its arid open habitats with Yellow-throated and Spotted Sandgrouse in their linked profiles.",
+      "fr": "Comparer ses milieux arides ouverts aux gangas à gorge jaune et tacheté dans leurs fiches."
+    },
+    "conservation": {
+      "en": "The regional account calls it widespread but notes past decline in parts of the Nama Karoo.",
+      "fr": "La fiche régionale le décrit comme répandu, mais signale un déclin passé dans certaines parties du Nama Karoo."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Namaqua Sandgrouse — Biodiversity Explorer, University of Cape Town",
+        "fr": "Ganga namaqua — Biodiversity Explorer, université du Cap"
+      },
+      "url": "https://www.biodiversityexplorer.info/birds/pteroclidae/pterocles_namaqua.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The UCT account describes range, habitat, diet and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Namaqua Sandgrouse water-carrying feathers — Proceedings of the Royal Society B",
+        "fr": "Plumes porteuses d’eau du Ganga namaqua — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10091193/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The study examines water-holding belly feathers of male Namaqua Sandgrouse."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 10,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow-throated Sandgrouse — BirdLife South Africa",
+        "fr": "Ganga à gorge jaune — BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/yellow-throated-sandgrouse/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife describes short grasslands over fine-textured clay soils in the South African range."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — Israel Birding Portal (Hebrew)",
+        "fr": "Ganga tacheté — portail ornithologique israélien (hébreu)"
+      },
+      "url": "https://www.birds.org.il/he/species/274",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Hebrew profile documents the Spotted Sandgrouse’s range through the Saharo-Indus dry belt."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat and conservation comments for the Nama Karoo are regional rather than global.",
+    "The source describes seasonal and nomadic movement, not a fixed migration route."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-references to P. gutturalis and P. senegallus are reciprocal and compare ranges and habitats."
+}

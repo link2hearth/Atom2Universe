@@ -1,0 +1,141 @@
+{
+  "id": "sphinx_sequoiae",
+  "scientific": "Sphinx sequoiae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sequoia sphinx",
+    "fr": "Sphinx sequoiae"
+  },
+  "sections": {
+    "overview": {
+      "en": "This western North American hawkmoth occurs from Oregon and California into the Southwest and northern Baja California.",
+      "fr": "Ce sphinx de l’ouest nord-américain vit de l’Oregon et de la Californie jusqu’au Sud-Ouest et au nord de la Basse-Californie."
+    },
+    "identification": {
+      "en": "Its gray forewings are darker in Oregon and central California, paler in much of the juniper belt.",
+      "fr": "Ses ailes antérieures grises sont plus foncées en Oregon et au centre de la Californie, plus pâles dans une grande partie de la zone des genévriers."
+    },
+    "habitat": {
+      "en": "It inhabits desert and pinyon-juniper woodland, including dry forests with western juniper.",
+      "fr": "Il fréquente les déserts et les boisements de pins pignons et de genévriers, notamment les forêts sèches à genévrier de l’Ouest."
+    },
+    "diet": {
+      "en": "Caterpillars feed on junipers; adults take nectar from flowers including western chokecherry and California buckeye.",
+      "fr": "Les chenilles mangent des genévriers; les adultes butinent notamment le cerisier de l’Ouest et le marronnier de Californie."
+    },
+    "behavior": {
+      "en": "Adults are nocturnal and fly in midsummer; the species is reported in one annual brood from late spring through summer.",
+      "fr": "Les adultes sont nocturnes et volent au milieu de l’été; l’espèce est donnée pour une génération annuelle de la fin du printemps à l’été."
+    },
+    "reproduction": {
+      "en": "The full-grown caterpillar pupates in an underground burrow and overwinters there.",
+      "fr": "La chenille arrivée à maturité se nymphose dans une galerie souterraine et y passe l’hiver."
+    },
+    "ecology": {
+      "en": "The caterpillar stage is associated with Cupressaceae, especially Juniperus and Calocedrus.",
+      "fr": "La chenille est associée aux Cupressacées, en particulier aux genres Juniperus et Calocedrus."
+    },
+    "conservation": {
+      "en": "Its reported global NatureServe rank is G4, Apparently Secure.",
+      "fr": "Son rang mondial NatureServe rapporté est G4, « apparemment sécurisé »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sequoia sphinx species account — Butterflies and Moths of North America",
+        "fr": "Fiche du sphinx sequoiae — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-sequoiae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The species account records range, colour forms, food plants, one brood, overwintering and G4 status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 15,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lepidoptera of the Pacific Northwest — USDA Forest Service",
+        "fr": "Lépidoptères du Nord-Ouest Pacifique — USDA Forest Service"
+      },
+      "url": "https://www.fs.usda.gov/foresthealth/technology/pdfs/FHTET_03_11.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The USDA account describes nocturnal adults, midsummer flight, dry cedar/juniper forests and caterpillars feeding on western juniper."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 17,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moth Photographers Group: Sphinx sequoiae",
+        "fr": "Moth Photographers Group : Sphinx sequoiae"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?phylo=890125",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Mississippi State University-hosted species record lists Calocedrus and Juniperus as host genera."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 13,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species account gives a global G4 rank, which does not rule out local concerns."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. A North American species account and a USDA forest-service guide were cross-checked; regional host records are not generalized beyond their source."
+}

@@ -1,0 +1,124 @@
+{
+  "id": "chimpanzee",
+  "scientific": "Pan troglodytes",
+  "group": "mammals",
+  "name": {
+    "en": "Chimpanzee",
+    "fr": "Chimpanzé commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The chimpanzee (Pan troglodytes) is a great ape native to tropical Africa. It differs from the bonobo (Pan paniscus), found south of the Congo River; chimpanzees live north of it. This adaptable, social omnivore climbs and travels on the ground, and learns local traditions.",
+      "fr": "Le chimpanzé commun (Pan troglodytes) est un grand singe d’Afrique tropicale. Il diffère du bonobo (Pan paniscus), présent au sud du Congo ; les chimpanzés vivent au nord. Omnivore social, il grimpe, se déplace au sol et apprend des traditions locales."
+    },
+    "identification": {
+      "en": "Adults have long arms, a robust build and dark brown to black hair; the face, palms and soles are bare. They have no tail, walk on their knuckles and climb readily. Males are generally larger than females, and coat shade varies. Adult head-to-rump length is about 0.9 m; San Diego Zoo reports masses of 32–45 kg for females and 40–55 kg for males, with males generally larger.",
+      "fr": "L’adulte a de longs bras, un corps robuste et une fourrure brun foncé à noire ; visage, paumes et plantes sont nus. Sans queue, il marche sur ses jointures et grimpe. Les mâles sont plus grands que les femelles ; le pelage varie. La longueur tête-croupe d’un adulte est d’environ 0,9 m ; le zoo de San Diego indique une masse de 32 à 45 kg chez les femelles et de 40 à 55 kg chez les mâles, les mâles étant généralement plus grands."
+    },
+    "habitat": {
+      "en": "The range runs from West Africa to western Uganda and Tanzania, interrupted by the Congo basin of the bonobo. Chimpanzees inhabit rainforests, dry forests, woodland-savanna mosaics and mountain forests. Some populations also live in open savanna, so the species is not restricted to dense forest.",
+      "fr": "L’aire va de l’Afrique de l’Ouest à l’ouest de l’Ouganda et de la Tanzanie ; le bassin du Congo, occupé par le bonobo, la sépare. Les chimpanzés vivent en forêt humide ou sèche, en mosaïque bois-savane et en montagne. Certains fréquentent aussi la savane ouverte."
+    },
+    "diet": {
+      "en": "Fruit is often a major food, alongside leaves, seeds, flowers, bark, honey and insects; the mix varies by season and place. Chimpanzees also hunt or scavenge vertebrates such as monkeys and small antelopes. Some use probes at termite mounds or tools to fish for ants; techniques vary among communities.",
+      "fr": "Les fruits constituent souvent une part importante du régime, avec feuilles, graines, fleurs, écorce, miel et insectes ; la composition varie selon le lieu et la saison. Les chimpanzés chassent ou récupèrent aussi des vertébrés, dont des singes et de petites antilopes. Certains sondent les termitières ou pêchent les fourmis avec des outils."
+    },
+    "behavior": {
+      "en": "Communities have a fission-fusion structure: members split into flexible parties and reunite. Males usually stay in their birth community; females may transfer. Grooming, calls, gestures and alliances maintain ties. Tool practices learned socially differ locally: neighbouring groups at Gombe, Tanzania, make different tools for termite fishing.",
+      "fr": "Les communautés ont une structure de fission-fusion : les individus se séparent en petits groupes puis se réunissent. Les mâles restent dans leur communauté natale ; les femelles peuvent partir. Toilettage, cris, gestes et alliances entretiennent les liens. Les outils appris socialement varient : à Gombe, des groupes voisins pêchent les termites différemment."
+    },
+    "reproduction": {
+      "en": "After about 7½ to 8½ months, a female usually gives birth to one infant. It clings to her and remains dependent for years; nursing often lasts three to four years, followed by continued travel and learning with its mother. This long care period spaces births, though timing varies.",
+      "fr": "Après environ sept mois et demi à huit mois et demi, la femelle met généralement au monde un petit. Il s’agrippe à elle et reste dépendant des années ; l’allaitement dure souvent trois à quatre ans, puis il voyage et apprend avec sa mère. Cette dépendance espace les naissances, avec des variations."
+    },
+    "ecology": {
+      "en": "Eating fruit and travelling through forests can disperse seeds; hunting affects prey, including red colobus at Gombe. These effects depend on local foods, prey and habitat. Tools also give access to insects and other hard-to-reach resources.",
+      "fr": "En mangeant des fruits et parcourant les forêts, les chimpanzés peuvent disperser des graines ; la chasse influence aussi les proies, dont les colobes rouges à Gombe. Ces effets dépendent des ressources locales. Les outils donnent accès aux insectes et à d’autres aliments difficiles à atteindre."
+    },
+    "conservation": {
+      "en": "The IUCN Red List’s 2016 global assessment classified the species as Endangered, citing decline from hunting, habitat loss and degradation, and disease. This is the date of that assessment, not a new population count.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN publiée en 2016 classe l’espèce « en danger », en raison de la chasse, de la perte et de la dégradation de l’habitat et des maladies. Cette date est celle de l’évaluation, pas d’un nouveau décompte."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pan troglodytes — Animal Diversity Web, University of Michigan",
+        "fr": "Pan troglodytes — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pan_troglodytes/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Places the species from Gambia east to Uganda, excluding the Congo-Lualaba basin of bonobos; records forest, savanna mosaic and mountain habitats.",
+        "Describes omnivory, fission-fusion parties, long maternal care, tool variation and seed dispersal; lists the 2016 IUCN category as Endangered."
+      ]
+    },
+    {
+      "title": {
+        "en": "Chimpanzee — San Diego Zoo Wildlife Alliance",
+        "fr": "Chimpanzé — San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/chimpanzee",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Documents hairless face, hands and feet; fruit, leaves, insects and occasional prey; leaf probes and sponge tools; gestation about 7.5 months and usually one young.",
+        "Describes offspring dependence and threats from hunting and habitat loss.",
+        "Adult head-rump length about 0.9 m; mass 32–45 kg females and 40–55 kg males."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cultural variation between neighbouring communities of chimpanzees at Gombe, Tanzania — Scientific Reports",
+        "fr": "Variations culturelles entre communautés voisines de chimpanzés à Gombe, Tanzanie — Scientific Reports"
+      },
+      "url": "https://www.nature.com/articles/s41598-019-44703-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Reports differences in termite-fishing tool materials and dimensions between neighbouring Gombe communities; discusses social learning while noting ecological and genetic factors require care."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pan troglodytes — The IUCN Red List of Threatened Species, 2016 assessment",
+        "fr": "Pan troglodytes — Liste rouge de l’UICN, évaluation de 2016"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T15933A17964454.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The assessment was published in 2016 and classified the species Endangered; decline drivers include hunting, habitat loss or degradation, and disease."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult common chimpanzee, with naturally long arms, robust body, dark brown-black hair and bare face, palms and soles, in a natural knuckle-walking pose on a pure white background. The existing image chimpanzee.webp was visually checked and matches these traits.",
+  "uncertainties": [
+    "The IUCN category cited is from the global assessment published in 2016; newer population estimates or a reassessment are not asserted here.",
+    "Diet, ranging and tool traditions vary with season, habitat and community; the Gombe tool example is geographically specific, and cultural explanations do not exclude ecological influences.",
+    "Gestation and nursing durations are approximate ranges reported across sources and populations."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review; cattle conservation supplemented with FAO breed-conservation evidence; horse ecological observations explicitly scoped to feral herds and mixed grazing."
+}

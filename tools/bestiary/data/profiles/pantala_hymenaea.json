@@ -1,0 +1,144 @@
+{
+  "id": "pantala_hymenaea",
+  "scientific": "Pantala hymenaea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Spot-winged glider",
+    "fr": "Pantale à ailes tachetées"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pantala hymenaea is a strong-flying skimmer dragonfly native to the Americas and often associated with temporary pools.",
+      "fr": "Pantala hymenaea est une libellule au vol puissant, indigène des Amériques et souvent associée aux mares temporaires."
+    },
+    "identification": {
+      "en": "A dark spot at each hindwing base distinguishes it from the similar Wandering Glider, Pantala flavescens; the face may turn red as adults mature.",
+      "fr": "Une tache sombre à la base des ailes postérieures la distingue de Pantala flavescens, qui lui ressemble ; la face peut rougir avec la maturation."
+    },
+    "habitat": {
+      "en": "It uses temporary natural or artificial pools and may fly far from water over open ground, roads or towns.",
+      "fr": "Elle utilise des mares temporaires naturelles ou artificielles et peut voler loin de l’eau, au-dessus des espaces ouverts, routes ou villes."
+    },
+    "diet": {
+      "en": "Like other dragonflies it catches flying insects, but the species-specific sources consulted do not detail its prey.",
+      "fr": "Comme les autres libellules, elle capture des insectes en vol, mais les sources propres à l’espèce consultées ne détaillent pas ses proies."
+    },
+    "behavior": {
+      "en": "It is a powerful flier; an observer in Mexico recorded it as the most numerous dragonfly in a post-storm flight.",
+      "fr": "C’est une puissante voleuse ; au Mexique, un observateur l’a notée comme la libellule la plus abondante lors d’un vol après une tempête."
+    },
+    "reproduction": {
+      "en": "It is an early colonizer of temporary pools where it breeds, but sources do not establish one breeding season across its range.",
+      "fr": "Elle colonise tôt les mares temporaires où elle se reproduit, mais les sources ne définissent pas une saison unique pour toute son aire."
+    },
+    "ecology": {
+      "en": "Its close relative P. flavescens is much more widely distributed; this species is limited to the New World but also disperses widely.",
+      "fr": "Sa proche parente P. flavescens est beaucoup plus largement répartie ; cette espèce est limitée au Nouveau Monde mais se disperse aussi largement."
+    },
+    "conservation": {
+      "en": "The sources establish a broad range but not a current global population trend, so no global conservation status is inferred here.",
+      "fr": "Les sources établissent une vaste aire mais pas de tendance démographique mondiale récente ; aucun statut global n’est donc déduit ici."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spot-winged Glider — Dragonfly Society of the Americas",
+        "fr": "Pantale à ailes tachetées — Dragonfly Society of the Americas"
+      },
+      "url": "https://www.dragonflysocietyamericas.org/en/blog/2021/7/12/species-of-the-month",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A dragonfly observer describes large flight movements in Mexico and P. hymenaea as especially abundant."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 15,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spot-winged glider — Illinois Department of Natural Resources",
+        "fr": "Pantale à ailes tachetées — Illinois Department of Natural Resources"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfspotwingedglider.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Illinois account supplies adult identification and seasonal regional occurrence; detailed diet is not given."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 14,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Libélula planeadora manchada — EncicloVida, CONABIO",
+        "fr": "Libélula planeadora manchada — EncicloVida, CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/115323",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Mexico’s Spanish-language encyclopedia covers distribution, temporary-pool breeding and comparison with P. flavescens."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 12,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Movements and breeding schedules are not comprehensively established across the range.",
+    "No current global trend or assessment was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English Dragonfly Society and Illinois DNR accounts with Mexico’s Spanish-language CONABIO entry; compared its close relative P. flavescens."
+}

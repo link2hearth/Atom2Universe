@@ -1,0 +1,120 @@
+{
+  "id": "common_ringed_plover",
+  "scientific": "Charadrius hiaticula",
+  "group": "birds",
+  "name": {
+    "en": "Common Ringed Plover",
+    "fr": "Pluvier grand-gravelot"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common ringed plover is a small, dumpy wader that nests in the open on beaches. Its eggs and chicks are so well camouflaged that the birds are easily disturbed, and people on beaches are a major cause of its decline in Britain.",
+      "fr": "Le pluvier grand-gravelot est un petit limicole ramassé qui niche à découvert sur les plages. Ses œufs et ses poussins sont si bien camouflés que les oiseaux sont facilement dérangés, et la fréquentation des plages est l’une des grandes causes de son déclin en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "Adults are 18–20 cm long, with a 35–41 cm wingspan, and weigh about 54–82 g. The sexes look alike; BTO ringing data give almost identical adult wing lengths (about 135.7–135.8 mm) and mean masses (67.5 g in females, 68.7 g in males). The upperparts are greyish-brown and the underparts white, with a white collar and forehead. In summer it has a black breast band and a black “bandit” mask across the eyes, which fade to brown in winter. The bill is blunt, orange with a black tip, and the legs are bright orange.",
+      "fr": "L’adulte mesure 18 à 20 cm de long, avec une envergure de 35 à 41 cm, et pèse environ 54 à 82 g. Les sexes se ressemblent ; les données de baguage du BTO indiquent une longueur d’aile presque identique chez l’adulte (environ 135,7 à 135,8 mm) et des masses moyennes de 67,5 g chez la femelle et 68,7 g chez le mâle. Le dessus est gris-brun et le dessous blanc, avec un collier et un front blancs. En été, il porte un plastron noir et un masque noir de « bandit » sur les yeux, qui virent au brun en hiver. Le bec est court, orange à pointe noire, et les pattes sont orange vif."
+    },
+    "habitat": {
+      "en": "It breeds mainly on the coast, especially on sandy and shingle beaches, and in the Uists on machair. Inland it also uses gravel pits, river margins, lochsides and wet meadows. In the UK, resident birds stay all year and migrants from the north pass through.",
+      "fr": "Il se reproduit surtout sur la côte, en particulier sur les plages de sable et de galets, et sur le machair dans les Uist. À l’intérieur, il utilise aussi les gravières, les berges, les rives de lochs et les prairies humides. Au Royaume-Uni, des oiseaux résidents restent toute l’année et des migrateurs venus du nord y transitent."
+    },
+    "diet": {
+      "en": "It feeds on coastal and terrestrial invertebrates such as beetles, marine worms, amphipods, isopods, molluscs and spiders. It hunts by sight, running, stopping and pecking, and sometimes trembles a foot on the sand to draw prey out.",
+      "fr": "Il se nourrit d’invertébrés côtiers et terrestres : coléoptères, vers marins, amphipodes, isopodes, mollusques et araignées. Il chasse à vue, en courant, s’arrêtant et picorant, et fait parfois trembler une patte sur le sable pour faire sortir les proies."
+    },
+    "behavior": {
+      "en": "Males defend territories with tail-fanning, sparring and chases, and advertise them with slow “butterfly” flights. A male makes a shallow scrape in the shingle and shows it to the female in a “scrape ceremony”. Adults feign a broken wing to lure predators away, and the chicks crouch and hide.",
+      "fr": "Les mâles défendent leur territoire par des déploiements de queue, des passes d’armes et des poursuites, et l’annoncent par de lents vols « papillon ». Le mâle creuse une cuvette dans les galets et la présente à la femelle lors d’une « cérémonie du nid ». Les adultes simulent une aile cassée pour détourner les prédateurs, et les poussins se tapissent et se cachent."
+    },
+    "reproduction": {
+      "en": "In Britain the average first clutch date is about 14 May, and pairs typically raise two broods, occasionally three. A clutch is usually four eggs, incubated by both sexes for 23–25 days. The downy chicks fledge after about 23–25 days. Breeding typically starts at one year old.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 14 mai, et les couples élèvent généralement deux nichées, parfois trois. Une ponte compte habituellement quatre œufs, couvés par les deux sexes pendant 23 à 25 jours. Les poussins, couverts de duvet, s’envolent après environ 23 à 25 jours. La reproduction commence en général à un an."
+    },
+    "ecology": {
+      "en": "The speckled eggs blend into sand and shingle, but they are easily trampled. Disturbance on beaches reduces nesting success, and introduced hedgehogs eat eggs in the Western Isles. One estimate suggests that keeping people off beaches could raise the population by about 85%.",
+      "fr": "Les œufs tachetés se fondent dans le sable et les galets, mais ils sont facilement piétinés. Le dérangement sur les plages réduit le succès de nidification, et des hérissons introduits mangent les œufs dans les Hébrides extérieures. Selon une estimation, tenir les gens à l’écart des plages pourrait augmenter la population d’environ 85 %."
+    },
+    "conservation": {
+      "en": "The IUCN global category is Least Concern, but the species is Red-listed in the UK. The UK breeding population was 5,450 pairs in 2007, after a fall of about 37% between 1984 and 2007, with the largest declines inland. A bird that reaches breeding age lives about five years; the oldest ringed bird reached almost 22.",
+      "fr": "La catégorie mondiale de l’UICN est « préoccupation mineure », mais l’espèce figure sur la liste rouge britannique. La population nicheuse du Royaume-Uni comptait 5 450 couples en 2007, après une baisse d’environ 37 % entre 1984 et 2007, les plus fortes à l’intérieur des terres. Un oiseau qui atteint l’âge adulte vit environ cinq ans; le plus âgé bagué a presque atteint 22 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ringed Plover — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Pluvier grand-gravelot — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/ringed-plover",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adults 54–82 g; BTO biometrics: adult wing length 135.2 ± 4.2 mm overall, 135.7 mm females and 135.8 mm males; mean mass 67.5 g females and 68.7 g males; clutch typically 4, incubation 23–25 days, fledging 23–25 days; typically 2 broods; first clutch about 14 May.",
+        "UK 5,450 pairs (2007), −37% 1984–2007; Red-listed; IUCN Least Concern; disturbance, hedgehogs; record age almost 22 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ringed Plover — RSPB Birds & Wildlife",
+        "fr": "Pluvier grand-gravelot — RSPB Birds & Wildlife"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/ringed-plover",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Black bandit mask and breast band in summer, orange bill with black tip, orange legs; displays: tail fanning, butterfly flights, scrape ceremony.",
+        "Nests in a scrape on beaches; Red-listed with more than one in three lost since 1984."
+      ]
+    },
+    {
+      "title": {
+        "en": "Charadrius hiaticula — Birds of Europe species page, Naturalis Biodiversity Center",
+        "fr": "Charadrius hiaticula — fiche espèce Birds of Europe, Naturalis Biodiversity Center"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130587",
+      "consulted": "2026-10-12",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Eats terrestrial and coastal invertebrates (beetles, polychaetes, amphipods, isopods, molluscs, spiders).",
+        "Feeds by running, stopping and pecking; may use foot-trembling."
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Ringed Plover — Audubon Field Guide",
+        "fr": "Pluvier grand-gravelot — guide de terrain Audubon"
+      },
+      "url": "https://www.audubon.org/field-guide/bird/common-ringed-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Sexes similar; length 18–20 cm, wingspan 35–41 cm and mass 45–70 g."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The diet comes from a short database page without quantitative data; neither BTO nor RSPB describe diet.",
+    "Breeding and population figures are British; the “85%” figure is an estimate quoted by the BTO, not a measured result."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page, display and nest details from the RSPB page, diet from Naturalis (consulted 2026-10-12); illustration to be checked by the owner."
+}

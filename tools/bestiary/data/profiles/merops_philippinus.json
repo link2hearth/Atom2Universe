@@ -1,0 +1,206 @@
+{
+  "id": "merops_philippinus",
+  "scientific": "Merops philippinus",
+  "group": "birds",
+  "name": {
+    "en": "Blue-tailed Bee-eater",
+    "fr": "Guêpier à queue d’azur"
+  },
+  "sections": {
+    "overview": {
+      "en": "eBird maps this bee-eater's breeding and non-breeding range across South and Southeast Asia.",
+      "fr": "eBird cartographie les aires de reproduction et d’hivernage de ce guêpier en Asie du Sud et du Sud-Est."
+    },
+    "identification": {
+      "en": "Green above, it has a blue rump and tail, a dark eye-stripe edged in blue, and a yellow chin with a rufous throat. The Chestnut-headed Bee-eater has a chestnut crown; see that profile for comparison.",
+      "fr": "Vert sur le dessus, il a le croupion et la queue bleus, un trait oculaire sombre bordé de bleu et le menton jaune au-dessus d’une gorge rousse. Le Guêpier de Leschenault a la tête châtain ; voir sa fiche pour comparer."
+    },
+    "habitat": {
+      "en": "It often uses wooded places, where tall trees provide exposed hunting perches; it also occurs in urban areas.",
+      "fr": "Il fréquente les milieux boisés, où les grands arbres offrent des perchoirs de chasse dégagés ; il est aussi présent en milieu urbain."
+    },
+    "diet": {
+      "en": "It takes flying insects such as bees, wasps, beetles, flies and dragonflies, usually after an aerial chase; small fish are occasional prey.",
+      "fr": "Il capture en vol des insectes comme les abeilles, guêpes, coléoptères, mouches et libellules ; il prend parfois de petits poissons."
+    },
+    "behavior": {
+      "en": "On the breeding grounds, it nests colonially.",
+      "fr": "Sur ses lieux de reproduction, il niche en colonies."
+    },
+    "reproduction": {
+      "en": "It excavates nest burrows in sandy banks.",
+      "fr": "Il creuse des terriers de nidification dans les berges sableuses."
+    },
+    "ecology": {
+      "en": "The Chestnut-headed Bee-eater is a close relative, with a common ancestor estimated about 5.1 million years ago; see its profile for comparison.",
+      "fr": "Le Guêpier de Leschenault est un proche parent, avec un ancêtre commun estimé à environ 5,1 millions d’années ; voir sa fiche pour comparer."
+    },
+    "conservation": {
+      "en": "BirdLife DataZone lists the global IUCN category as Least Concern.",
+      "fr": "BirdLife DataZone indique la catégorie mondiale UICN de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue-tailed Bee-eater — eBird Status and Trends",
+        "fr": "Guêpier à queue d’azur — eBird Status and Trends"
+      },
+      "url": "https://science.ebird.org/status-and-trends/species/btbeat1/range-map",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Cornell Lab's modeled range shows this species' breeding and non-breeding distributions."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-tailed Bee-eater — Oiseaux.net (identification and diet)",
+        "fr": "Guêpier à queue d’azur — Oiseaux.net (identification et alimentation)"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/guepier.a.queue.d.azur.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Oiseaux.net describes the blue tail, face pattern and prey captured in flight."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 12,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-tailed Bee-eater — NParks",
+        "fr": "Guêpier à queue d’azur — NParks"
+      },
+      "url": "https://www.nparks.gov.sg/publications-resources/articles/what-is-that-blue-bird",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Singapore NParks describes its wooded habitat, hunting perches and presence in urban areas."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 13,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nest site restoration increases the breeding density of blue-tailed bee-eaters — Biological Conservation",
+        "fr": "La restauration des sites de nidification augmente la densité de couples de Guêpiers à queue d’azur — Biological Conservation"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0006320709001487",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed field research describes this species as a colony-breeding summer migrant that excavates nest burrows in sandy banks."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 18,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chestnut-headed Bee-eater — Oiseaux.net (relationship)",
+        "fr": "Guêpier de Leschenault — Oiseaux.net (parenté)"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/guepier.de.leschenault.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "BirdTree-based data place Merops philippinus among Merops leschenaulti’s close relatives and estimate the split at about 5.1 million years."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 19,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-tailed Bee-eater — BirdLife DataZone",
+        "fr": "Guêpier à queue d’azur — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/blue-tailed-bee-eater-merops-philippinus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife DataZone provides the global IUCN Red List category for this species."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 12,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

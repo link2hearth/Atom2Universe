@@ -1,0 +1,147 @@
+{
+  "id": "calidris_tenuirostris",
+  "scientific": "Calidris tenuirostris",
+  "group": "birds",
+  "name": {
+    "en": "Great Knot",
+    "fr": "Bécasseau de l’Anadyr"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Great Knot is the largest Calidris sandpiper, breeding in subarctic eastern Siberia and migrating to coastal East Asia and Australasia, especially north-western Australia.",
+      "fr": "Le Bécasseau de l’Anadyr est le plus grand des Calidris ; il niche dans la Sibérie orientale subarctique et migre vers les côtes d’Asie orientale et d’Australasie, notamment le nord-ouest de l’Australie."
+    },
+    "identification": {
+      "en": "At roughly 26–28 cm, it is a stocky, long-billed shorebird; breeding adults show dense black spotting on the breast and flanks, while non-breeding plumage is greyer and plainer.",
+      "fr": "Long d’environ 26 à 28 cm, c’est un limicole trapu au long bec ; les adultes en plumage nuptial portent de nombreuses taches noires sur la poitrine et les flancs, tandis que le plumage internuptial est plus gris et uniforme."
+    },
+    "habitat": {
+      "en": "It breeds on high subarctic plateaus with lichen, herbs and dwarf shrubs, then uses sheltered bays, estuaries and expansive intertidal mudflats during migration and winter.",
+      "fr": "Il niche sur les hauts plateaux subarctiques couverts de lichens, d’herbes et d’arbustes nains, puis fréquente les baies abritées, les estuaires et les vastes vasières intertidales en migration et en hiver."
+    },
+    "diet": {
+      "en": "Its food changes with season: berries and pine seeds are reported on the breeding grounds, whereas migrating and wintering birds take bivalves, gastropods, crustaceans and worms from tidal flats.",
+      "fr": "Son alimentation varie selon la saison : baies et graines de pins sont signalées sur les sites de reproduction, tandis qu’en migration et en hiver il prélève bivalves, gastéropodes, crustacés et vers dans les vasières."
+    },
+    "behavior": {
+      "en": "It is a long-distance migrant that gathers in large, sometimes mixed flocks at a small number of coastal staging areas.",
+      "fr": "C’est un migrateur au long cours qui se rassemble en groupes nombreux, parfois mêlés à d’autres espèces, sur un nombre restreint d’escales côtières."
+    },
+    "reproduction": {
+      "en": "The female lays a clutch of three or four eggs in a tundra scrape, and the male provides most of the care after hatching, according to Australian government species material.",
+      "fr": "La femelle pond trois ou quatre œufs dans une dépression de la toundra et, selon la documentation australienne, le mâle assure l’essentiel des soins après l’éclosion."
+    },
+    "ecology": {
+      "en": "Like the much smaller Red-necked Stint (C. ruficollis), it depends on the East Asian–Australasian Flyway, but its larger body, different seasonal diet and dependence on abundant molluscs at key stopovers distinguish its ecology.",
+      "fr": "Comme le Bécasseau à cou roux (C. ruficollis), beaucoup plus petit, il dépend de la voie migratoire est-asiatique et australasienne ; sa taille, son régime saisonnier et son besoin de mollusques abondants aux escales clés différencient toutefois son écologie."
+    },
+    "conservation": {
+      "en": "The IUCN Red List assessment published in 2025 lists the species as Endangered, with a decreasing population and continuing loss or degradation of coastal staging habitat.",
+      "fr": "L’évaluation de la Liste rouge de l’UICN publiée en 2025 classe l’espèce « en danger » ; sa population diminue et les habitats côtiers d’escale continuent d’être perdus ou dégradés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Calidris tenuirostris — The IUCN Red List of Threatened Species (2025)",
+        "fr": "Calidris tenuirostris — Liste rouge des espèces menacées de l’UICN (2025)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22693359A254641184.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment: Endangered."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 196,
+        "notes_words": 3,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Knot response to mollusc prey decline in the Yellow Sea — Peer-reviewed study (PMC)",
+        "fr": "Réponse du Bécasseau de l’Anadyr au déclin des mollusques en mer Jaune — étude évaluée par les pairs (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6468082/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Study tracks migration between north-west Australia and eastern Siberia and documents reliance on intertidal molluscs at a stopover."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 18,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calidris tenuirostris listing consultation — Australian Government",
+        "fr": "Document de consultation sur Calidris tenuirostris — gouvernement australien"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/afd5b785-2bc5-44a2-892b-2ece40fac8d1/files/calidris-tenuirostris-consultation.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Government consultation gives clutch size, male post-hatching care and breeding range."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 11,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The clutch and parental-care details are from a government consultation document and are less recently updated than the current Red List assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 2025 IUCN account, peer-reviewed Yellow Sea ecology research and Australian government reproductive data; compared its ecology explicitly with C. ruficollis."
+}

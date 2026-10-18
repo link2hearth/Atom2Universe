@@ -1,0 +1,144 @@
+{
+  "id": "taenaris_urania",
+  "scientific": "Taenaris urania",
+  "group": "invertebrates",
+  "name": {
+    "en": "Urania owl butterfly",
+    "fr": "Taenaris urania"
+  },
+  "sections": {
+    "overview": {
+      "en": "Taenaris urania is a nymphalid butterfly recorded from the Moluccan Islands of Indonesia.",
+      "fr": "Taenaris urania est un papillon nymphalidé signalé dans les îles Moluques, en Indonésie."
+    },
+    "identification": {
+      "en": "Like other Taenaris, it belongs to a group of large butterflies with conspicuous eyespots on the hindwings.",
+      "fr": "Comme les autres Taenaris, il appartient à un groupe de grands papillons aux ocelles bien visibles sur les ailes postérieures."
+    },
+    "habitat": {
+      "en": "Museum specimens document it on several Moluccan islands, but the sources consulted do not define its habitat in detail.",
+      "fr": "Des spécimens de musée le documentent sur plusieurs îles des Moluques, mais les sources consultées ne précisent pas son habitat."
+    },
+    "diet": {
+      "en": "A review reports that adult Taenaris butterflies feed on fermenting fruit and sap; species-specific diet data remain limited.",
+      "fr": "Une synthèse indique que les adultes du genre Taenaris consomment des fruits fermentés et de la sève ; les données propres à l’espèce restent limitées."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is sparsely documented in the sources consulted.",
+      "fr": "Le comportement propre à cette espèce est peu documenté dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a verified account of this species’ breeding cycle.",
+      "fr": "Les sources consultées ne donnent pas de description vérifiée du cycle reproducteur de cette espèce."
+    },
+    "ecology": {
+      "en": "Taenaris urania is the type species of its genus, which is placed among the brush-footed butterflies (Nymphalidae).",
+      "fr": "Taenaris urania est l’espèce type de son genre, classé parmi les Nymphalidés."
+    },
+    "conservation": {
+      "en": "The sources consulted do not report a global conservation assessment for Taenaris urania.",
+      "fr": "Les sources consultées ne signalent pas d’évaluation mondiale de conservation pour Taenaris urania."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Global Lepidoptera Names Index — Natural History Museum",
+        "fr": "Global Lepidoptera Names Index — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=147087",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The Natural History Museum index accepts Taenaris urania and places it in Nymphalidae."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 13,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A review of Taenaris in Queensland — The Australian Entomologist",
+        "fr": "A review of Taenaris in Queensland — The Australian Entomologist"
+      },
+      "url": "https://www.researchgate.net/publication/294779788_A_review_of_Taenaris_Hubner_lepidoptera_Nymphalidae_Amathusiinae_in_Queensland_together_with_first_Australian_records_for_T_Myops_Kirschistaudinger_and_Elymnias_agondas_melanippe_Grose-smith_satyrinae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The review names T. urania as the genus type, describes Taenaris morphology and notes fruit-and-sap feeding by adults."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 18,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lund University Biological Museum — Lepidoptera records",
+        "fr": "Lund University Biological Museum — Lepidoptera records"
+      },
+      "url": "https://ento.biomus.lu.se/search.php?country=Indonesia&family=Nymphalidae&taxa=Lepidoptera",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The collection database lists Taenaris urania specimens from Ambon in the Moluccas."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 12,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited feeding description is a genus-level pattern, not a well-studied species-specific diet.",
+    "Habitat, behavior, reproduction and conservation are poorly covered by sources located for this species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomy checked against NHM LepIndex; island occurrence checked against museum records; genus-level feeding is explicitly qualified."
+}

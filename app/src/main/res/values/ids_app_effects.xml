@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Explicit opt-in; keyed layout tags do not replace existing view IDs or tags. -->
+    <item name="app_effects_scene" type="id" />
+    <item name="app_effects_banner" type="id" />
+</resources>

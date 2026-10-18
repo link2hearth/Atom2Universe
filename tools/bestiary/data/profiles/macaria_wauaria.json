@@ -1,0 +1,164 @@
+{
+  "id": "macaria_wauaria",
+  "scientific": "Macaria wauaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "V-Moth",
+    "fr": "Damas cendré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The V-Moth is a geometrid whose British populations are often found around cultivated fruit bushes.",
+      "fr": "Le Damas cendré est un papillon géomètre dont les populations britanniques fréquentent souvent les cultures de petits fruits."
+    },
+    "identification": {
+      "en": "UKMoths gives an adult wingspan of 25–30 mm.",
+      "fr": "UKMoths indique une envergure adulte de 25 à 30 mm."
+    },
+    "habitat": {
+      "en": "It favours gardens, allotments and other cultivated places where currants or gooseberries grow.",
+      "fr": "Il fréquente les jardins, jardins familiaux et autres lieux cultivés où poussent groseilliers ou cassissiers."
+    },
+    "diet": {
+      "en": "The caterpillars feed on several currants and gooseberries in the genus Ribes.",
+      "fr": "Les chenilles se nourrissent de plusieurs groseilliers et cassissiers du genre Ribes."
+    },
+    "behavior": {
+      "en": "In central Europe, adults mainly fly in June and July, rarely in late May or early August.",
+      "fr": "En Europe centrale, les adultes volent surtout en juin et juillet, rarement à la fin mai ou au début août."
+    },
+    "reproduction": {
+      "en": "The egg overwinters, and caterpillars are usually found from mid-April to early June.",
+      "fr": "L’œuf hiverne et les chenilles sont généralement observées de la mi-avril au début juin."
+    },
+    "ecology": {
+      "en": "Unlike the conifer-feeding Macaria liturata and Macaria signaria, its caterpillars use Ribes shrubs, often grown in gardens.",
+      "fr": "Contrairement aux chenilles de Macaria liturata et Macaria signaria, qui consomment des conifères, les siennes utilisent des arbustes Ribes souvent cultivés dans les jardins."
+    },
+    "conservation": {
+      "en": "UKMoths reports that it appears to be declining in Britain, although it remains widely distributed there.",
+      "fr": "UKMoths indique que l’espèce semble décliner en Grande-Bretagne, tout en restant largement répartie dans le pays."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "V-Moth — UKMoths",
+        "fr": "Damas cendré — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-wauaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths reports 25–30 mm wingspan, apparent decline but wide British distribution, cultivated fruit areas, adult July–August flight and Ribes hosts; its account does not give clutch details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 27,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria wauaria — European Lepidoptera and their ecology",
+        "fr": "Damas cendré — European Lepidoptera and their ecology"
+      },
+      "url": "https://www.pyrgus.de/Macaria_wauaria_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "European account gives adult flight mainly in June–July, an overwintering egg and Ribes hosts in gardens, hedges and forest-edge scrub."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 20,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria wauaria — Lépidoptères du Poitou-Charentes",
+        "fr": "Macaria wauaria — Lépidoptères du Poitou-Charentes"
+      },
+      "url": "https://www.papillon-poitou-charentes.org/Macaria-wauaria-Linnaeus-1758.html?tri=num",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "French regional account lists Ribes and blackthorn as larval foodplants and calls the species rare locally in a 2011 note."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny of north European Geometridae — Lund University",
+        "fr": "Phylogénie moléculaire des Geometridae d’Europe du Nord — université de Lund"
+      },
+      "url": "https://portal.research.lu.se/en/publications/molecular-phylogeny-of-north-european-geometridae-lepidoptera-geo/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Peer-reviewed 2025 phylogeny reinstates Speranza as a valid genus and publishes the revised combination Speranza wauaria."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue retains Macaria wauaria, but a 2025 phylogenomic revision reinstated Speranza as a valid genus and published the combination Speranza wauaria; some British references still use Macaria wauaria.",
+    "British/European natural-history sources cited here do not establish a global population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UKMoths with a European ecology account and checked the genus transfer against LepiWiki and the 2025 phylogenomic revision; catalogue spelling is retained."
+}

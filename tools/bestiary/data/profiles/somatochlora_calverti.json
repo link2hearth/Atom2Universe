@@ -1,0 +1,141 @@
+{
+  "id": "somatochlora_calverti",
+  "scientific": "Somatochlora calverti",
+  "group": "invertebrates",
+  "name": {
+    "en": "Calvert’s emerald",
+    "fr": "Cordulie de Calvert"
+  },
+  "sections": {
+    "overview": {
+      "en": "Calvert’s emerald is a rare, range-restricted dragonfly recorded mainly in the Florida Panhandle and nearby southeastern states.",
+      "fr": "La cordulie de Calvert est une libellule rare à aire restreinte, signalée surtout dans le Panhandle de Floride et les États voisins du Sud-Est."
+    },
+    "identification": {
+      "en": "It is an emerald dragonfly in the family Corduliidae.",
+      "fr": "C’est une cordulie de la famille des Corduliidae."
+    },
+    "habitat": {
+      "en": "Florida surveys have recorded adults around seepage streams and sandhill forest.",
+      "fr": "En Floride, des prospections ont signalé des adultes près de ruisseaux suintants et de forêts de dunes sableuses."
+    },
+    "diet": {
+      "en": "The species sources consulted do not provide a verified prey list.",
+      "fr": "Les sources consultées sur l’espèce ne fournissent pas de liste vérifiée de ses proies."
+    },
+    "behavior": {
+      "en": "Most field records concern adults; species-specific daily behavior remains poorly documented.",
+      "fr": "La plupart des observations de terrain concernent des adultes ; le comportement quotidien propre à l’espèce reste peu documenté."
+    },
+    "reproduction": {
+      "en": "Its nymph has not been collected in the field, so its breeding microhabitat remains unconfirmed.",
+      "fr": "Sa larve n’a pas été récoltée sur le terrain ; son microhabitat de reproduction n’est donc pas confirmé."
+    },
+    "ecology": {
+      "en": "A recent review suggests seepage streams beside intact sandhill forest as likely breeding habitat, but labels this an inference.",
+      "fr": "Une étude récente propose les ruisseaux suintants bordés de forêt de dunes sableuses intacte comme habitat probable de reproduction, mais précise qu’il s’agit d’une hypothèse."
+    },
+    "conservation": {
+      "en": "The latest IUCN assessment located lists it as Data Deficient.",
+      "fr": "La dernière évaluation UICN repérée la classe dans la catégorie « données insuffisantes »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Evaluation of speculated reproductive habitat for Somatochlora calverti — International Journal of Odonatology",
+        "fr": "Evaluation of speculated reproductive habitat for Somatochlora calverti — International Journal of Odonatology"
+      },
+      "url": "https://doi.org/10.48156/1388.2024.1917274",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Review documents uncollected nymphs and hypothesized breeding habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 8,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calvert’s Emerald Field Survey Report — Florida Natural Areas Inventory",
+        "fr": "Calvert’s Emerald Field Survey Report — Florida Natural Areas Inventory"
+      },
+      "url": "https://www.fnai.org/PDFs/publications/Somatochlora_calverti_Field_Survey_Report.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "FNAI documented adults during Florida surveys at sites with seepage streams and sandhill habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 14,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Somatochlora calverti — IUCN Red List assessment",
+        "fr": "Somatochlora calverti — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-1.RLTS.T20341A80697450.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 global Red List assessment is Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 9,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Reproductive habitat remains hypothetical because field-collected nymphs are lacking; the IUCN assessment is from 2018."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; proposed seepage habitat is clearly identified as an inference rather than confirmed larval ecology."
+}

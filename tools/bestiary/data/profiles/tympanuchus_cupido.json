@@ -1,0 +1,143 @@
+{
+  "id": "tympanuchus_cupido",
+  "scientific": "Tympanuchus cupido",
+  "group": "birds",
+  "name": {
+    "en": "Greater prairie-chicken",
+    "fr": "Tétras des prairies"
+  },
+  "sections": {
+    "overview": {
+      "en": "The greater prairie-chicken is a North American grouse of open grasslands.",
+      "fr": "Le tétras des prairies est un gallinacé nord-américain des milieux herbeux ouverts."
+    },
+    "identification": {
+      "en": "Males gather at open display grounds, where their courtship includes booming calls and conspicuous movements.",
+      "fr": "Les mâles se rassemblent sur des places de parade dégagées, où la cour comprend des appels sourds et des mouvements spectaculaires."
+    },
+    "habitat": {
+      "en": "It uses tall- and mixed-grass prairie, with different grass heights and cover needed for nesting, feeding and display.",
+      "fr": "Il fréquente les prairies à herbes hautes ou mixtes, dont les hauteurs et les couverts variés servent à la nidification, à l’alimentation et aux parades."
+    },
+    "diet": {
+      "en": "Adults eat mainly plant material, while young chicks rely heavily on insects.",
+      "fr": "Les adultes consomment surtout des végétaux, tandis que les jeunes poussins dépendent beaucoup des insectes."
+    },
+    "behavior": {
+      "en": "Males display communally at leks, where females visit to choose mates.",
+      "fr": "Les mâles paradent en groupe sur des arènes appelées leks, où les femelles viennent choisir leur partenaire."
+    },
+    "reproduction": {
+      "en": "Nesting cover is important near display grounds, and chicks leave the nest soon after hatching.",
+      "fr": "Un couvert adapté à la nidification est important près des arènes de parade ; les poussins quittent le nid peu après l’éclosion."
+    },
+    "ecology": {
+      "en": "It is one of three living species in Tympanuchus, alongside the lesser prairie-chicken and sharp-tailed grouse.",
+      "fr": "C’est l’une des trois espèces actuelles du genre Tympanuchus, avec le tétras des prairies nain et le tétras à queue fine."
+    },
+    "conservation": {
+      "en": "Conversion and fragmentation of prairie have reduced populations; the Attwater’s prairie-chicken is a particularly imperiled subspecies.",
+      "fr": "La conversion et la fragmentation des prairies ont réduit les populations ; le tétras des prairies d’Attwater est une sous-espèce particulièrement menacée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "US Forest Service FEIS — Greater and lesser prairie-chickens",
+        "fr": "US Forest Service FEIS — Tétras des prairies"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/tymp",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The review describes prairie habitats, diets, nesting cover and lek displays."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 11,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. Fish and Wildlife Service — Attwater’s greater prairie-chicken",
+        "fr": "U.S. Fish and Wildlife Service — Tétras des prairies d’Attwater"
+      },
+      "url": "https://www.fws.gov/species/attwaters-greater-prairie-chicken-tympanuchus-cupido-attwateri",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The federal account identifies Attwater’s bird as a subspecies and names the lesser prairie-chicken as its closest relative."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 18,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "COSEWIC — Greater prairie-chicken status report",
+        "fr": "COSEPAC — Rapport sur le tétras des prairies"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/greater-prairie-chicken-2009.html",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Canadian assessment identifies tall- and mixed-grass prairie as suitable habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 11,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation statement about Attwater applies to that subspecies, not uniformly to every population of T. cupido."
+  ],
+  "review_note": "Distinguishes the species from its Attwater subspecies and limits conservation wording to documented prairie loss.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

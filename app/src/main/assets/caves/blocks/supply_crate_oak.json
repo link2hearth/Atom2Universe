@@ -1,0 +1,17 @@
+{
+  "id": 2672,
+  "name": "supply_crate_oak",
+  "texture_top": "cave_art:a_crate_top",
+  "texture_side": "cave_art:a_crate_side",
+  "texture_bottom": "cave_art:a_crate_top",
+  "color": "#927149",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "supply_crate_oak",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "wood"
+  ]
+}

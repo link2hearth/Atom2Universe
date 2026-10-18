@@ -1,0 +1,595 @@
+{
+  "id": "atlantic_salmon",
+  "scientific": "Salmo salar",
+  "group": "fish",
+  "name": {
+    "en": "Atlantic salmon",
+    "fr": "Saumon atlantique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Atlantic salmon is a streamlined fish native to North Atlantic rivers and coastal waters. Most populations are anadromous: juveniles grow in rivers, adults feed at sea, then return to spawn. Migration timing and distance vary among populations. Some naturally landlocked populations complete their cycle between streams and lakes.",
+      "fr": "Le Saumon atlantique vit dans les rivières et eaux côtières de l’Atlantique Nord. La plupart des populations sont anadromes : les jeunes grandissent en rivière, les adultes se nourrissent en mer puis reviennent frayer. Migration et calendrier varient. Certaines populations enclavées vivent entre rivières et lacs."
+    },
+    "identification": {
+      "en": "At sea, adults are silvery, dark-backed and pale underneath, with sparse cross-shaped spots mostly above the lateral line. The long body, small head and upper jaw ending at the eye help distinguish them from more heavily spotted brown trout. Juveniles have dark vertical parr marks and red spots; migrating smolts become slimmer and silver. Mature males darken and develop a hooked lower jaw, the kype, during spawning. Grilse return after one sea winter and are smaller than fish that spend two or more winters at sea. In Newfoundland and Labrador, adults are usually under 70 centimetres and 4.5 kilograms; the North American fly-caught record of 32.6 kilograms is exceptional.",
+      "fr": "En mer, l’adulte est argenté, dos sombre et ventre pâle ; ses rares taches en croix se trouvent surtout au-dessus de la ligne latérale. Son corps allongé, sa petite tête et sa mâchoire supérieure arrêtée à l’œil le distinguent de la Truite brune, plus tachetée. Les jeunes portent des barres sombres et des taches rouges ; les smolts deviennent plus élancés et argentés. À maturité, le mâle s’assombrit et développe une mâchoire inférieure crochue, le « kype ». Les grilses reviennent après un hiver marin et sont plus petits que ceux passés au moins deux hivers en mer. À Terre-Neuve-et-Labrador, les adultes mesurent généralement moins de 70 centimètres et pèsent moins de 4,5 kilogrammes ; le record nord-américain à la mouche, 32,6 kilogrammes, est exceptionnel."
+    },
+    "habitat": {
+      "en": "Eggs develop in clean gravel flushed by oxygen-rich current. Parr use shallow, cool streams with rocky bottoms, feeding in riffles and sheltering in pools. After one to several freshwater years, smolts descend rivers and estuaries to coastal or open-ocean feeding grounds. Returning adults need connected rivers and gravel beds; dams, culverts and poor water quality can block access. Landlocked populations feed and grow in lakes, then spawn in tributaries or lake outlets.",
+      "fr": "Les œufs se développent dans des graviers propres parcourus d’un courant oxygéné. Les tacons vivent en cours d’eau frais et peu profonds, à fond rocheux, entre radiers nourriciers et fosses abritées. Après une à plusieurs années en eau douce, les smolts descendent vers les zones d’alimentation marines. Les adultes ont besoin de rivières accessibles et de graviers ; barrages, buses et mauvaise qualité de l’eau peuvent entraver leur passage. Les populations enclavées grandissent dans les lacs et frayent dans les affluents ou émissaires."
+    },
+    "diet": {
+      "en": "Newly emerged fry seize drifting invertebrates, especially aquatic insect larvae. Parr dart at insects carried by the current or falling onto the surface. At sea, young salmon eat planktonic crustaceans and fish larvae; larger adults prey on capelin, herring and sand lance. They swallow prey whole, and abundant marine food supports faster growth than in rivers. Adults entering rivers to spawn usually stop feeding and rely on stored energy.",
+      "fr": "À la sortie du gravier, les alevins capturent des invertébrés dérivants, surtout des larves d’insectes aquatiques. Les tacons happent les insectes du courant ou de la surface. En mer, les jeunes consomment des crustacés planctoniques et larves de poissons ; les grands adultes chassent capelans, harengs et lançons. Ils avalent leurs proies entières ; les aliments marins abondants accélèrent leur croissance. Les adultes qui remontent frayer cessent généralement de s’alimenter et vivent sur leurs réserves."
+    },
+    "behavior": {
+      "en": "Parr hold feeding territories, move between seasonal habitats, and some males mature early in fresh water. During spring smoltification, the fish becomes silver and prepares for seawater. Osmoregulation, the balancing of body water and salts, changes with salinity: at sea it drinks, absorbs water through the intestine, secretes excess sodium and chloride through the gills, and sharply reduces urine flow; in fresh water it conserves salts and produces dilute urine. Adults show strong fidelity to their natal river. Evidence supports smell as a cue: juveniles learn stream chemistry that can help adults identify their home river. Odours guide the final freshwater approach, while other cues are needed at sea and the full navigation mechanism remains unresolved. At spawning sites, males compete for females; the kype is a visible feature of this breeding phase.",
+      "fr": "Les tacons défendent des postes d’alimentation et changent de milieu selon les saisons ; certains mâles mûrissent tôt en eau douce. Au printemps, la smoltification les argente et les prépare à la mer. L’osmorégulation équilibre eau et sels corporels : en mer, le saumon boit, absorbe l’eau par l’intestin, évacue sodium et chlorure par les branchies et réduit son débit urinaire ; en eau douce, il conserve les sels et produit une urine diluée. Les adultes montrent une forte fidélité et reviennent souvent dans leur rivière natale. Les jeunes mémorisent sa signature chimique, qui aide à l’approche finale en eau douce. Les odeurs n’expliquent pas seules l’orientation en mer, encore mal comprise. Sur les frayères, les mâles rivalisent pour les femelles ; le kype caractérise cette période."
+    },
+    "reproduction": {
+      "en": "In autumn, a female sweeps gravel with her tail to make a shallow nest, or redd. She releases eggs as males release sperm over them, so fertilization is external; she then covers the eggs with gravel. The eggs develop through winter among stones, where flowing water supplies oxygen. After hatching, yolk-sac alevins remain in the redd and absorb their yolk; they emerge as free-swimming fry and begin feeding after roughly a month, with timing varying with water conditions. In Maine populations, fry grow into parr, which usually spend two or three years in fresh water before smoltification; timing varies elsewhere. Depending on population, adults return to spawn after one to three years at sea. Many die afterward, but surviving kelts can return and reproduce again; death after one spawning is not inevitable.",
+      "fr": "À l’automne, la femelle balaie les graviers pour creuser un nid (redd). Elle y pond tandis que les mâles libèrent leur sperme : la fécondation est externe, puis elle recouvre les œufs. Ceux-ci se développent l’hiver entre les pierres, oxygénés par le courant. Après l’éclosion, les alevins vésiculés restent dans le redd et résorbent leur sac vitellin ; ils en sortent comme alevins nageurs et commencent à se nourrir environ un mois après, délai variable avec l’eau. Dans les populations du Maine, ils deviennent des tacons qui passent généralement deux ou trois ans en eau douce ; ailleurs, le calendrier varie. Selon la population, les adultes reviennent après un à trois ans en mer. Beaucoup meurent ensuite, mais les kelts survivants peuvent se reproduire de nouveau : mourir après une seule ponte n’est pas inévitable."
+    },
+    "ecology": {
+      "en": "River juveniles eat insect larvae; marine adults prey on schooling fish and are themselves eaten by larger fish, birds and marine mammals. Their return also carries marine-derived nutrients into rivers. Measurements in Atlantic rivers found these inputs in stream biofilm, invertebrates and resident fish during spawning periods. Eggs, excretion and occasional carcasses pass nutrients into the food web; because many adults survive, inputs are less dominated by mass die-offs than in semelparous Pacific salmon runs, where adults usually die after their single spawning.",
+      "fr": "Les jeunes de rivière mangent des larves d’insectes ; les adultes marins chassent des poissons grégaires et sont proies de grands poissons, d’oiseaux et de mammifères marins. Leur retour apporte aussi des nutriments marins aux rivières. Des mesures ont retrouvé ces apports dans le biofilm, les invertébrés et les poissons résidents au frai. Œufs, excrétions et carcasses transmettent des nutriments au réseau alimentaire ; comme beaucoup d’adultes survivent, ces apports dépendent moins des mortalités massives que chez les saumons du Pacifique semelpares, qui meurent généralement après leur unique reproduction."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment, made on 6 April 2022 and published in 2023, lists Atlantic salmon as Near Threatened. It estimates a 20–25% decline over three generations and warns the species may approach Vulnerable; river populations vary greatly. In the United States, dams, pollution and overfishing sharply reduced the historic range; the Gulf of Maine distinct population segment is listed as Endangered under federal law. The global assessment lists dams and aquaculture as ongoing threats; droughts and temperature extremes are future threats whose impacts remain uncertain. Where farms overlap wild migration routes, sea lice can raise infection risk for migrating juveniles, while escaped farm adults can breed with wild adults and reduce population productivity; effects vary by place and year. All Atlantic salmon sold in U.S. public markets are farm-raised; this production does not restore depleted wild populations or their river-specific diversity.",
+      "fr": "L’évaluation mondiale de l’UICN, réalisée le 6 avril 2022 et publiée en 2023, classe l’espèce « quasi menacée ». Elle estime un recul de 20 à 25 % en trois générations et un risque d’approcher la catégorie vulnérable ; l’état varie selon les rivières. Aux États-Unis, barrages, pollution et surpêche ont réduit l’aire historique ; le segment distinct du golfe du Maine est classé en danger par la loi fédérale. L’UICN cite barrages et aquaculture comme menaces actuelles ; sécheresses et températures extrêmes sont des menaces futures aux effets incertains. Près des fermes, les poux de mer peuvent infester les jeunes migrateurs ; des adultes d’élevage échappés peuvent s’accoupler avec des adultes sauvages et réduire la productivité, avec des effets variables selon le lieu et l’année. Tout Saumon atlantique vendu sur le marché public américain provient d’élevage ; cela ne restaure pas les populations sauvages ni leur diversité locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Atlantic salmon... a remarkable life cycle — Fisheries and Oceans Canada",
+        "fr": "Le cycle de vie remarquable du saumon atlantique — Pêches et Océans Canada"
+      },
+      "url": "https://www.dfo-mpo.gc.ca/species-especes/publications/salmon-saumon/lifecycle-cyclevital/index-eng.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "DFO describes spawning and juvenile development."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 6,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon: Resources — NOAA Fisheries",
+        "fr": "Saumon atlantique : ressources — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/resources",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA describes appearance, prey and life cycle."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 7,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Know your catch: the differences between Atlantic salmon and brown trout — Fisheries and Oceans Canada",
+        "fr": "Reconnaître sa prise : différences entre saumon atlantique et truite brune — Pêches et Océans Canada"
+      },
+      "url": "https://www.dfo-mpo.gc.ca/about-notre-sujet/publications/infographics-infographies/salmon-browntrout-saumon-truitebrune-eng.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "DFO contrasts upper-jaw length, spot distribution and adipose-fin colour."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 9,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Male Atlantic salmon showing a kype in lower jaw — U.S. Geological Survey",
+        "fr": "Saumon atlantique mâle avec un kype à la mâchoire inférieure — U.S. Geological Survey"
+      },
+      "url": "https://www.usgs.gov/media/images/male-atlantic-salmon-showing-a-kype-lower-jaw",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "USGS identifies the male kype as a seasonal feature during spawning."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 11,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Movement, migration, and smolting of Atlantic salmon — U.S. Geological Survey",
+        "fr": "Déplacements, migration et smoltification du saumon atlantique — U.S. Geological Survey"
+      },
+      "url": "https://www.usgs.gov/publications/movement-migration-and-smolting-atlantic-salmon-salmo-salar-0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The review describes smolt silvering, salinity tolerance, schooling and migration-corridor hazards."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 11,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon — Maine Department of Marine Resources",
+        "fr": "Saumon atlantique — Département des ressources marines du Maine"
+      },
+      "url": "https://www.maine.gov/dmr/fisheries/sea-run-fisheries/sea-run-species/atlantic-salmon",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Maine DMR documents redd care, iteroparity and regional decline from dams, pollution and overfishing."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 14,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Landlocked Salmon — Maine Department of Inland Fisheries and Wildlife",
+        "fr": "Saumon enclavé — Département de la pêche et de la faune du Maine"
+      },
+      "url": "https://www.maine.gov/ifw/fish-wildlife/fisheries/species-information/landlocked-salmon.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Maine recognizes self-sustaining freshwater populations with lake-feeding and stream-spawning cycles."
+      ],
+      "prose_claims": [
+        "habitat.en.5",
+        "habitat.fr.5",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 10,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Homing and olfaction in salmonids: a critical review with special reference to Atlantic salmon — Biological Reviews",
+        "fr": "Orientation et olfaction chez les salmonidés : synthèse critique centrée sur le saumon atlantique — Biological Reviews"
+      },
+      "url": "https://doi.org/10.1111/j.1469-185X.1984.tb00709.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The review assesses olfactory imprinting and other orientation hypotheses in Atlantic salmon homing."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.en.5",
+        "behavior.en.6",
+        "behavior.fr.4",
+        "behavior.fr.5",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 13,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aquatic food-web dynamics following incorporation of nutrients derived from Atlantic anadromous fishes — Journal of Fish Biology",
+        "fr": "Dynamique des réseaux alimentaires aquatiques après incorporation des nutriments issus de poissons anadromes atlantiques — Journal of Fish Biology"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29235101/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Measurements found spawning-season marine nutrients in stream biofilm, invertebrates and resident fish."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.2",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 12,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Salmo salar (Atlantic Salmon) — IUCN Red List of Threatened Species",
+        "fr": "Salmo salar (Saumon atlantique) — Liste rouge de l’UICN des espèces menacées"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T19855A67373433.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global 2022 assessment published 2023: Near Threatened, 20–25% decline; drought and temperature threats are future."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.1",
+        "conservation.fr.3",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 15,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon: Science — NOAA Fisheries",
+        "fr": "Saumon atlantique : science — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/science",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA describes anadromy, habitats and migration timing."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 7,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic salmon — Fisheries and Oceans Canada, Quebec species profile",
+        "fr": "Saumon atlantique — fiche espèce, Pêches et Océans Canada, Québec"
+      },
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/saumon-atlantique",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Quebec profile distinguishes migratory salmon from lake-feeding ouananiche and notes adults stop feeding upriver."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.4",
+        "diet.en.5",
+        "diet.fr.1",
+        "diet.fr.4",
+        "diet.fr.5",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 14,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Life Cycle of Atlantic Salmon — U.S. Fish and Wildlife Service",
+        "fr": "Cycle de vie du saumon atlantique — U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/story/life-cycle-atlantic-salmon",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "USFWS describes redd construction, spring hatching and survival of repeat-spawning adults."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.4",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 11,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon (Salmo salar) — U.S. Geological Survey Nonindigenous Aquatic Species",
+        "fr": "Saumon atlantique (Salmo salar) — base des espèces aquatiques non indigènes de l’USGS"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=926",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "USGS compiles average two-sea-winter size and exceptional historical maximum length and weight."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 12,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Possible effects of salmonid aquaculture on wild Atlantic salmon populations — ICES Advice requested by NASCO",
+        "fr": "Effets possibles de l’aquaculture des salmonidés sur les populations sauvages de saumon atlantique — avis du CIEM demandé par l’OCSAN"
+      },
+      "url": "https://ices-library.figshare.com/articles/report/NASCO_has_asked_ICES_to_advise_on_possible_effects_of_salmonid_aquaculture_on_wild_Atlantic_salmon_populations_focusing_on_the_effects_of_sea_lice_genetic_interactions_and_the_impact_on_wild_salmon_production/18686906",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "ICES finds lice and escapee effects on wild productivity vary substantially across places and times."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 15,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon: Seafood — NOAA Fisheries",
+        "fr": "Saumon atlantique : marché — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/seafood",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NOAA states all Atlantic salmon sold in U.S. public markets is cultured and commercially grown."
+      ],
+      "prose_claims": [
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 15,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Effects of spawning Atlantic salmon on total lipid content and fatty acid composition of river food webs — Ecosphere",
+        "fr": "Effets du frai du saumon atlantique sur les lipides et acides gras des réseaux alimentaires fluviaux — Ecosphere"
+      },
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.1818",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The study notes iteroparity limits carcass inputs and tests marine-derived nutrients from Atlantic salmon in stream food webs."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 18,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Salmon Male — U.S. Fish and Wildlife Service",
+        "fr": "Saumon atlantique mâle — U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/media/atlantic-salmon-male",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "USFWS identifies the male kype as a feature used in battles with rival mates."
+      ],
+      "prose_claims": [
+        "behavior.en.7",
+        "behavior.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 14,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aquaporin expression dynamics in osmoregulatory tissues of Atlantic salmon during smoltification and seawater acclimation — Journal of Experimental Biology",
+        "fr": "Évolution des aquaporines dans les organes osmorégulateurs du saumon atlantique pendant la smoltification — Journal of Experimental Biology"
+      },
+      "url": "https://doi.org/10.1242/jeb.034785",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The Atlantic salmon study describes freshwater ion retention, dilute urine, seawater drinking, gill salt secretion and reduced urine flow."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 19,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the existing validated image asset. The article describes the adult marine form: show a complete streamlined silver adult Atlantic salmon with a dark blue-green back, pale belly, sparse cross-shaped black spots concentrated above the lateral line, and natural fins and proportions on a PURE WHITE background.",
+  "uncertainties": [
+    "Adult body size varies with population, sex, and years spent at sea; the stated Newfoundland and Labrador size is regional, while the NOAA average is specifically for U.S. two-sea-winter returns.",
+    "Natal-stream odors are supported as cues in the final freshwater homing stage, but they do not by themselves explain ocean navigation; other orientation cues and their relative roles remain under study.",
+    "Landlocked Atlantic salmon populations complete their migrations between freshwater habitats and are included as forms of Salmo salar; their lake and stream schedules vary regionally.",
+    "The global IUCN estimate averages across the species and does not represent the condition of every river stock; regional populations can have much more severe status.",
+    "Aquaculture-related sea-louse and escapee effects differ by location and year; the cited ICES review does not establish one uniform impact for all wild stocks."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique followed by corrections, source allocation audit, EN/FR parity review and illustration inspection."
+}

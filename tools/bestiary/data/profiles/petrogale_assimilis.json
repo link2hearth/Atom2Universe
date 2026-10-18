@@ -1,0 +1,90 @@
+{
+  "id": "petrogale_assimilis",
+  "scientific": "Petrogale assimilis",
+  "group": "mammals",
+  "name": {
+    "en": "Allied Rock-wallaby",
+    "fr": "Petrogale assimilis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The allied rock-wallaby is a medium-sized marsupial of north-eastern Queensland, Australia, that lives among rocky outcrops, cliffs and boulder piles. It shelters in rocks by day and comes out at dusk to feed.",
+      "fr": "Le petrogale assimilis est un marsupial de taille moyenne du nord-est du Queensland, en Australie, qui vit parmi les affleurements rocheux, les falaises et les amas de blocs. Il s’abrite dans les rochers le jour et sort au crépuscule pour se nourrir."
+    },
+    "identification": {
+      "en": "Males average about 4.7 kg and females 4.3 kg. The coat is grey on freshly moulted animals and turns paler to darker brown through the year, with lighter, sandy underparts and limbs, dark paws and feet, and a tail darkening to an indistinct brush at the tip. Some animals show a pale cheek stripe and a dark stripe along the head.",
+      "fr": "Les mâles pèsent en moyenne environ 4,7 kg et les femelles 4,3 kg. Le pelage est gris chez les animaux fraîchement mués puis devient brun plus pâle ou plus foncé au fil de l’année, avec le dessous et les membres plus clairs, couleur sable, les pattes foncées, et une queue qui fonce vers un pinceau indistinct à l’extrémité. Certains individus ont une bande pâle sur la joue et une bande sombre sur la tête."
+    },
+    "habitat": {
+      "en": "It lives in rocky terrain such as cliffs, slopes, outcrops and boulder piles, usually within tropical woodland and open forest, so its distribution is fragmented. It occurs from Townsville south to the lower Burdekin and Bowen rivers, north-west to Croydon and south-west to Hughenden, and on Palm and Magnetic Islands.",
+      "fr": "Il vit en terrain rocheux, sur des falaises, des pentes, des affleurements et des amas de blocs, le plus souvent dans une forêt tropicale claire, d’où une répartition fragmentée. On le trouve de Townsville vers le sud jusqu’aux basses vallées des rivières Burdekin et Bowen, vers le nord-ouest jusqu’à Croydon, vers le sud-ouest jusqu’à Hughenden, et sur les îles Palm et Magnetic."
+    },
+    "diet": {
+      "en": "It is a generalist herbivore, eating new grass after rain, browse and small herbs, and supplementing this with fruit, seeds, flowers and some animal matter such as insect larvae. Animal Diversity Web describes it more narrowly as a leaf eater.",
+      "fr": "C’est un herbivore généraliste, qui mange de l’herbe nouvelle après la pluie, des feuilles de ligneux et de petites herbacées, complétées par des fruits, des graines, des fleurs et un peu de matière animale comme des larves d’insectes. Animal Diversity Web le décrit de façon plus étroite comme un mangeur de feuilles."
+    },
+    "behavior": {
+      "en": "It often forages at night and is most visible in the evening, when it moves from rock shelters to open feeding areas, and it stays loyal to its rocky shelter area. Stable bonds form between one adult male and one or two females, which share daytime shelters, groom each other and defend their area, though genetic studies show the bonds are not strictly exclusive.",
+      "fr": "Il se nourrit souvent la nuit et se voit surtout le soir, quand il quitte ses abris rocheux pour des zones dégagées, et il reste fidèle à sa zone d’abris. Des liens stables unissent un mâle adulte à une ou deux femelles, qui partagent les abris de jour, se toilettent mutuellement et défendent leur territoire, bien que des études génétiques montrent que ces liens ne sont pas strictement exclusifs."
+    },
+    "reproduction": {
+      "en": "Breeding is continuous, though extended drought can reduce the number of young that survive. Gestation lasts about 29–34 days and a female usually has one young, which stays in the pouch for about six to seven months and is weaned at about 11 months. Females mature at roughly 18–19 months and males at about two years.",
+      "fr": "La reproduction est continue, mais une sécheresse prolongée peut réduire le nombre de jeunes qui survivent. La gestation dure environ 29 à 34 jours et la femelle a en général un seul petit, qui reste dans la poche pendant six à sept mois environ et est sevré vers 11 mois. Les femelles sont matures vers 18 à 19 mois et les mâles vers deux ans."
+    },
+    "ecology": {
+      "en": "Its home range expands in the wet season and shrinks in the late dry season, following food availability. Known predators include feral cats and red foxes, though it is seldom threatened by predation.",
+      "fr": "Son domaine vital s’étend en saison des pluies et se réduit en fin de saison sèche, en fonction de la nourriture disponible. Ses prédateurs connus comprennent les chats errants et les renards roux, mais la prédation le menace rarement."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern on the IUCN Red List, and Animal Diversity Web describes populations as fairly stable. Introduced predators, especially during drought, are a possible threat.",
+      "fr": "La base Mammal Diversity Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN, et Animal Diversity Web décrit des populations assez stables. Les prédateurs introduits, surtout pendant les sécheresses, sont une menace possible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Petrogale assimilis — Animal Diversity Web, University of Michigan",
+        "fr": "Petrogale assimilis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Petrogale_assimilis/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "4.3–4.7 kg; folivore; nocturnal; gestation 31 days; pouch life 180–231 days; predators feral cats and red foxes.",
+        "Its status line (Least Concern) was not relied on."
+      ]
+    },
+    {
+      "title": {
+        "en": "Allied rock-wallaby fact sheet — Rootourism",
+        "fr": "Fiche sur le petrogale assimilis — Rootourism"
+      },
+      "url": "https://rootourism.com/fsheet37.htm",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Generalist diet; males 4.7 kg, females 4.3 kg; stable pair bonds with extra-pair paternity; gestation 29–34 days; weaning about 11 months; maturity about 19 and 24 months; drought reduces recruitment."
+      ]
+    },
+    {
+      "title": {
+        "en": "Petrogale assimilis — Mammal Diversity Database",
+        "fr": "Petrogale assimilis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000293",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "conservation"],
+      "facts": [
+        "Range from Townsville to the Burdekin–Bowen rivers, Croydon, Hughenden, Palm and Magnetic Islands; IUCN Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Diet differs: Animal Diversity Web says folivore, the fact sheet says generalist; the more detailed account is used.",
+    "Gestation (31 days vs 29–34) and ages at maturity differ slightly between sources; ranges are given.",
+    "The IUCN Red List page could not be opened; Least Concern comes from the Mammal Diversity Database.",
+    "Drought is the only threat named by the fact sheet; cats and foxes as a threat come from Animal Diversity Web only."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database, a specialist fact sheet and a mammal database; illustration to be checked by the owner."
+}

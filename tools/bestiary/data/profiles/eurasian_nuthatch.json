@@ -1,0 +1,231 @@
+{
+  "id": "eurasian_nuthatch",
+  "scientific": "Sitta europaea",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian nuthatch",
+    "fr": "Sittelle torchepot"
+  },
+  "sections": {
+    "overview": {
+      "en": "Across temperate Eurasia, the mostly resident Eurasian nuthatch depends on mature trees for bark rich in food and cavities for nests.",
+      "fr": "Dans l’Eurasie tempérée, la Sittelle torchepot, généralement sédentaire, dépend des arbres mûrs, riches en proies sous leur écorce et en cavités de nidification."
+    },
+    "identification": {
+      "en": "Adults are 12–14.5 cm long and weigh about 19–26 g. The compact body, short tail, pointed bill, blue-grey back and black eye stripe are distinctive; European birds often have buff underparts, while northern forms are paler. Males have darker chestnut flanks than females.",
+      "fr": "L’adulte mesure 12 à 14,5 cm et pèse environ 19 à 26 g. Son corps compact, sa queue courte, son bec pointu, son dos bleu-gris et son trait oculaire noir sont caractéristiques ; les oiseaux européens ont souvent le dessous chamois, les formes nordiques étant plus pâles. Les flancs roux du mâle sont plus foncés que ceux de la femelle."
+    },
+    "habitat": {
+      "en": "It favours mature deciduous or mixed woodland, especially old trees with holes. Parks and orchards also suit it when such trees remain; most populations stay year-round, while juveniles disperse and some northern birds move after poor cone crops.",
+      "fr": "Elle préfère les forêts mûres de feuillus ou mixtes, surtout les vieux arbres aux troncs larges, aux branches étalées et aux cavités. Les parcs et vergers conviennent aussi si ces arbres y subsistent ; la plupart des populations restent toute l’année, tandis que les jeunes se dispersent et que certains oiseaux nordiques partent après une mauvaise récolte de cônes."
+    },
+    "diet": {
+      "en": "In spring and summer it gleans caterpillars, beetles, spiders and other small invertebrates from bark, crevices and buds; nestlings receive mainly insects. Seeds and nuts matter more in autumn and winter. The bird wedges hard food into a bark crack to hammer it open, and caches surplus seeds for later.",
+      "fr": "Au printemps et en été, elle prélève chenilles, coléoptères, araignées et autres petits invertébrés dans l’écorce, les fissures et les bourgeons ; les poussins reçoivent surtout des insectes. Les graines et les noix comptent davantage en automne et en hiver. Elle coince les aliments durs dans une fente pour les ouvrir à coups de bec et y cache des graines en réserve."
+    },
+    "behavior": {
+      "en": "Curved claws grip bark, allowing headfirst descent. Pairs hold territories year-round. The species is highly vocal, with repeated loud whistles and sharper alarm calls.",
+      "fr": "Ses griffes courbes agrippent l’écorce, permettant une descente tête en bas. Les couples gardent leur territoire toute l’année. L’espèce est très vocale : elle émet des sifflements répétés et des cris d’alarme plus aigus."
+    },
+    "reproduction": {
+      "en": "The pair nests in a tree cavity, often an old woodpecker hole. A nuthatch narrows an oversized entrance with dried mud, leaving a small opening that limits access for larger competitors. The female usually lays six to eight eggs and incubates them for about 16–17 days. Young fledge at about 24 days and remain dependent for roughly one to two weeks.",
+      "fr": "Le couple niche dans une cavité d’arbre, souvent un ancien trou de pic. La sittelle rétrécit une ouverture trop large avec de la boue séchée, laissant un passage qui limite l’accès aux concurrents plus grands. La femelle pond généralement six à huit œufs et les couve environ 16 à 17 jours. Les jeunes prennent leur envol vers 24 jours et restent dépendants environ une à deux semaines."
+    },
+    "ecology": {
+      "en": "By using old woodpecker holes, the nuthatch depends on cavity-building birds as well as ageing trees. Larger competitors, such as starlings, are excluded by the mud-narrowed entrance.",
+      "fr": "En utilisant d’anciens trous de pics, la sittelle dépend des oiseaux qui creusent les cavités autant que des vieux arbres. La réduction de l’entrée par la boue écarte les concurrents plus grands, comme les étourneaux."
+    },
+    "conservation": {
+      "en": "The species is widespread; the IUCN assessment published in 2018 classified it as Least Concern, with a stable global population. Loss and fragmentation of old woodland can still remove nest cavities and feeding surfaces, causing local declines. In Britain, monitoring records a strong increase from 1967 to 2024.",
+      "fr": "L’espèce est largement répartie ; l’évaluation de l’UICN publiée en 2018 la classe en préoccupation mineure et indique une population mondiale stable. La perte et la fragmentation des vieux bois peuvent néanmoins supprimer cavités et surfaces de nourrissage, entraînant des déclins locaux. En Grande-Bretagne, les suivis relèvent une forte hausse entre 1967 et 2024."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian nuthatch",
+        "fr": "Sittelle torchepot"
+      },
+      "url": "https://en.wikipedia.org/wiki/Eurasian_nuthatch",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Range, diet, calls, nesting and global assessment."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 7,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sittelle torchepot",
+        "fr": "Sittelle torchepot"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Sittelle_torchepot",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Appearance, woodland and food seasonality."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 5,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nuthatch",
+        "fr": "Sittelle torchepot"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/nuthatch",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "British trend, incubation and calls."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 5,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sittelle torchepot — Ligue pour la Protection des Oiseaux",
+        "fr": "Eurasian nuthatch — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/sittelle-torchepot",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Adults: 12–14.5 cm long, 19–26 g; males have darker chestnut flanks."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 11,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sitta europaea — IUCN Red List 2018",
+        "fr": "Sitta europaea — Liste rouge UICN 2018"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T103879804A132199203.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global LC, stable trend; assessed 9 August 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 8,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the compact blue-grey bird gripping a trunk while descending headfirst; include black eye stripe, pointed bill, chestnut underside, strong clawed feet, and a tree cavity with a mud-narrowed entrance.",
+  "uncertainties": [
+    "LPO page gives fledging at 10–17 days; the profile retains BTO and detailed species-account figures around 24 days."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: BTO clutch/incubation/fledging checked; LPO corroborates mud entrance, competitors, pair territories and seasonal feeding. Development moved into reproduction and ecology explains woodpecker-cavity dependence. Actual IUCN 9 August 2018 global LC/stable record located and cited. BTO fledging timings retained rather than contradictory 10–17 days in LPO page."
+}

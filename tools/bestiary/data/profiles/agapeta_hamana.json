@@ -1,0 +1,139 @@
+{
+  "id": "agapeta_hamana",
+  "scientific": "Agapeta hamana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Garden straw moth",
+    "fr": "Agapète du chardon"
+  },
+  "sections": {
+    "overview": {
+      "en": "Agapeta hamana is a small tortrix moth with pale yellow forewings marked by rusty-brown patches. It is widespread across Europe and extends east through temperate parts of Asia, where its caterpillars feed on thistles. Adults are mainly active at dusk and at night, although they can be flushed from vegetation during the day. The name Garden Straw refers to the straw-yellow ground colour of the wings; in French, it is often called the thistle agapeta.",
+      "fr": "Agapeta hamana est un petit papillon de nuit de la famille des Tortricidés, aux ailes antérieures jaune pâle marquées de plages brun rouille. Il est largement réparti en Europe et s’étend vers l’est à travers les régions tempérées d’Asie ; ses chenilles se nourrissent de chardons. Les adultes sont surtout actifs au crépuscule et la nuit, mais peuvent être dérangés dans la végétation pendant la journée. Son nom anglais Garden Straw évoque le fond jaune paille des ailes ; en français, il est souvent appelé Agapète du chardon."
+    },
+    "identification": {
+      "en": "The wingspan is about 15–24 mm in British accounts; a regional Hampshire account gives 17–24 mm. No reliable body length, mass, body height or width, or sex-specific size difference was found. The forewings are straw-yellow to pale ochre, with rusty or ferruginous-brown markings that are reduced compared with many similar tortrix moths. The moth's small size and yellow ground colour distinguish it from larger brown leafrollers, but other yellow tortricids can be similar; habitat and the specific forewing pattern should be checked together. The species is described as distinctive in regional recording accounts, though close examination may be needed for worn individuals.",
+      "fr": "L’envergure est d’environ 15 à 24 mm dans les références britanniques ; une fiche régionale du Hampshire indique 17 à 24 mm. Les sources consultées ne donnent pas de longueur corporelle, de masse, de hauteur ou de largeur fiables, ni de différence de taille entre les sexes. Les ailes antérieures sont jaune paille à ocre pâle, avec des marques brun rouille ou ferrugineuses moins étendues que chez de nombreux Tortricidés proches. Sa petite taille et son fond jaune la distinguent des tordeuses brunes plus grandes, mais d’autres espèces jaunes peuvent lui ressembler ; il faut examiner ensemble le motif alaire et l’habitat. Les fiches régionales la décrivent comme distinctive, bien qu’un examen attentif reste utile pour les individus usés."
+    },
+    "habitat": {
+      "en": "It occurs in rough grassland, meadows, heathland, fens, open woodland, field margins, waste ground and gardens where thistles grow. British records are most frequent in southern and north-western England, but the species has a much wider European and Asian range. Adults are on the wing mainly from June to August in Britain; flight dates vary geographically and occasional records outside that window occur.",
+      "fr": "Elle fréquente les prairies peu entretenues, les prés, les landes, les marais, les bois ouverts, les bordures de champs, les terrains vagues et les jardins où poussent des chardons. En Grande-Bretagne, les observations sont plus fréquentes dans le sud et le nord-ouest de l’Angleterre, mais l’espèce possède une aire beaucoup plus vaste en Europe et en Asie. Les adultes volent surtout de juin à août en Grande-Bretagne ; les dates varient selon les régions et quelques observations peuvent se situer en dehors de cette période."
+    },
+    "diet": {
+      "en": "The larvae feed on thistles, including Carduus and Cirsium. They bore into the roots and lower stems, so their feeding may be overlooked unless the host plant is examined. Some Central European accounts also list Ononis and Trifolium as larval hosts; those records are geographically specific and should not be treated as universal. Adult feeding was not documented in the sources reviewed.",
+      "fr": "Les chenilles se nourrissent de chardons, notamment des genres Carduus et Cirsium. Elles creusent les racines et la base des tiges ; leur présence peut donc passer inaperçue sans inspection de la plante hôte. Certaines références d’Europe centrale indiquent aussi Ononis et Trifolium comme plantes nourricières larvaires ; ces mentions sont régionales et ne doivent pas être généralisées. L’alimentation des adultes n’était pas documentée dans les sources consultées."
+    },
+    "behavior": {
+      "en": "Adults usually fly at dusk or at night and are attracted to light, but they can be disturbed from low vegetation during daylight. The larvae develop within the roots of their host plants. Regional records describe a long adult season in parts of Central Europe, potentially with two broods, while British records are concentrated in summer; local phenology should therefore not be extrapolated across the species' full range.",
+      "fr": "Les adultes volent généralement au crépuscule ou la nuit et sont attirés par la lumière, mais on peut les faire s’envoler de la végétation basse en journée. Les chenilles se développent à l’intérieur des racines de leurs plantes hôtes. Des observations d’Europe centrale indiquent une longue période de vol adulte et possiblement deux générations, tandis qu’en Grande-Bretagne les observations se concentrent en été ; le calendrier local ne doit donc pas être extrapolé à toute l’aire de l’espèce."
+    },
+    "reproduction": {
+      "en": "Eggs are laid on or near suitable host plants, and the caterpillars develop internally in thistle roots. British accounts describe a main adult period from June through August, while a 2024 Central European treatment reports adults from May to October and a bivoltine life cycle in Hungary. The difference may reflect geography and local climate; no single breeding calendar should be assumed for the entire range. The reviewed sources did not provide a reliable clutch-size estimate.",
+      "fr": "Les œufs sont déposés sur les plantes hôtes ou à proximité, puis les chenilles se développent à l’intérieur des racines de chardons. Les références britanniques indiquent une période adulte principale de juin à août, tandis qu’une étude d’Europe centrale publiée en 2024 signale des adultes de mai à octobre et deux générations en Hongrie. Cette différence peut refléter la géographie et le climat local ; aucun calendrier unique ne doit être appliqué à toute l’aire. Les sources consultées ne fournissent pas d’estimation fiable du nombre d’œufs par ponte."
+    },
+    "ecology": {
+      "en": "The larvae are part of the herbivore community associated with thistles and other low-growing plants. Root-feeding can affect individual host plants, but the moth is not documented as a major agricultural pest in the sources reviewed. Adults and larvae are potential prey for nocturnal predators, parasitoids and insectivorous birds. Retaining flowering, structurally varied grassland with native thistles supports its known larval resources.",
+      "fr": "Les chenilles font partie de la communauté d’herbivores associée aux chardons et autres plantes basses. Leur alimentation dans les racines peut affecter certaines plantes hôtes, mais les sources consultées ne décrivent pas ce papillon comme un ravageur agricole majeur. Adultes et chenilles peuvent servir de proies aux prédateurs nocturnes, aux parasitoïdes et aux oiseaux insectivores. La conservation de prairies fleuries et diversifiées, avec des chardons indigènes, maintient les ressources larvaires connues."
+    },
+    "conservation": {
+      "en": "Regional British sources describe the moth as common and widespread where thistles and suitable rough grassland remain. No species-specific global population trend or comprehensive conservation assessment was found in the sources reviewed, so local British abundance should not be generalized to the full European–Asian range. Loss of rough grassland, field margins and host plants could reduce local habitat, while broad distribution suggests that regional status will vary substantially.",
+      "fr": "Les sources britanniques régionales décrivent le papillon comme commun et répandu là où subsistent des chardons et des prairies adaptées peu intensives. Les sources consultées ne fournissent ni tendance mondiale propre à l’espèce ni évaluation complète de conservation ; l’abondance locale en Grande-Bretagne ne doit donc pas être généralisée à toute l’aire euro-asiatique. La disparition des prairies peu entretenues, des bordures de champs et des plantes hôtes peut réduire l’habitat local, tandis que la vaste répartition implique des situations régionales variables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Agapeta hamana — UKMoths species account",
+        "fr": "Agapeta hamana — fiche britannique UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/agapeta-hamana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "English account gives wingspan 15–24 mm, yellowish colour, rusty markings, occurrence where Carduus thistles grow, and chiefly dusk/night flight from June through August."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agapeta hamana — NatureSpot regional species account",
+        "fr": "Agapeta hamana — fiche régionale NatureSpot"
+      },
+      "url": "https://www.naturespot.org/species/agapeta-hamana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Regional account gives a 15–24 mm wingspan, thistle food plant, broad range of grassland and disturbed habitats, June–August adult period, dusk/night activity and common widespread status in its British region."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agapeta hamana — Hantsmoths, Hampshire and Isle of Wight",
+        "fr": "Agapeta hamana — inventaire Hantsmoths du Hampshire et de l’île de Wight"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=49.109",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Regional moth survey gives a 17–24 mm wingspan, pale yellow forewing with reduced ferruginous-brown marks, rough meadow habitat and larvae feeding within thistle roots."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agapeta hamana in Hungary — Lepidopterologica Hungarica 2024",
+        "fr": "Agapeta hamana en Hongrie — Lepidopterologica Hungarica 2024"
+      },
+      "url": "https://www.epa.hu/04100/04144/00008/pdf/EPA04144_lepidopterologica_2024_01.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Central European treatment records May–October adults and a bivoltine cycle in Hungary, and larvae on Carduus, Cirsium, Ononis and Trifolium; these observations are geographically qualified."
+      ]
+    },
+    {
+      "title": {
+        "en": "Agapeta hamana — Essex Field Club species account",
+        "fr": "Agapeta hamana — fiche de l’Essex Field Club"
+      },
+      "url": "https://www.essexfieldclub.org.uk/portal.php/p/Species%2BAccount/s/portal.php/p/Species%2Baccount/s/portal.php/p/Species%2BAccount/s/portal.php/p/Substrate%2Band%2Bhydrology/s/portal.php/p/Species%2BAccount/s/portal.php/p/portal.php/p/Species%2BAccount/s/Agapeta%20hamana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "County recording database documents long-term presence and recent records in Essex; used as regional occurrence evidence, not as a global population estimate."
+      ]
+    }
+  ],
+  "illustration_notes": "Small straw-yellow tortrix with limited rusty-brown patches on the forewings; adult wingspan about 15–24 mm.",
+  "uncertainties": [
+    "Wingspan is given as 15–24 mm in some British references and 17–24 mm in a Hampshire account.",
+    "Two generations and additional larval host genera are reported in Central Europe but should not be generalized throughout the range.",
+    "No reliable mass, sex-specific size difference or global conservation trend was found."
+  ],
+  "reviewed": true,
+  "review_note": "Compared UK moth references and regional recording databases with a 2024 Hungarian lepidopteran account; kept regional phenology and host records geographically qualified."
+}

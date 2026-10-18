@@ -1,0 +1,114 @@
+{
+  "id": "ophiophagus_hannah",
+  "scientific": "Ophiophagus hannah",
+  "group": "reptiles",
+  "name": {
+    "en": "King Cobra",
+    "fr": "Cobra royal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The king cobra is the world’s longest venomous snake, living in the forests of South and Southeast Asia. Its scientific name means snake-eater: it feeds mainly on other snakes. It is also the only snake known to build a nest, which the female guards.",
+      "fr": "Le cobra royal est le plus long serpent venimeux du monde, vivant dans les forêts d’Asie du Sud et du Sud-Est. Son nom scientifique signifie mangeur de serpents : il se nourrit surtout d’autres serpents. C’est aussi le seul serpent connu pour construire un nid, que la femelle garde."
+    },
+    "identification": {
+      "en": "Adults usually measure about 3–4 m, and the longest known individual was 5.85 m. Adults are olive, brown, yellow or nearly black, often with pale cross-bars or chevrons, and the throat is light yellow or cream. When threatened it raises the front of the body and spreads its hood. Juveniles are black with yellow or white cross-bars. A reliable adult body-mass range, body width or sex-specific size difference was not found in the consulted species references, so none is estimated here.",
+      "fr": "Les adultes mesurent d’ordinaire environ 3 à 4 m, et le plus long individu connu atteignait 5,85 m. Ils sont olive, bruns, jaunes ou presque noirs, souvent avec des barres ou des chevrons pâles, et la gorge est jaune clair ou crème. Menacé, il redresse l’avant du corps et déploie son capuchon. Les jeunes sont noirs, avec des barres jaunes ou blanches. Les références consultées ne donnent pas de plage fiable de masse adulte, de largeur corporelle ni de différence de taille selon le sexe; aucune n’est estimée ici."
+    },
+    "habitat": {
+      "en": "It ranges from northern India east to southern China and south through the Malay Peninsula to western Indonesia and the Philippines. It lives near streams in dense or open forest, in bamboo thickets, nearby farmland and dense mangroves. In Bhutan, one survey recorded it between 650 and 2,057 m, mostly lower, and mainly where human disturbance was low.",
+      "fr": "Son aire va du nord de l’Inde au sud de la Chine vers l’est, et vers le sud à travers la péninsule malaise jusqu’à l’ouest de l’Indonésie et aux Philippines. Il vit près des cours d’eau en forêt dense ou claire, dans les bambouseraies, les cultures voisines et les mangroves denses. Au Bhoutan, un relevé l’a noté entre 650 et 2 057 m, surtout plus bas, et principalement là où les perturbations humaines étaient faibles."
+    },
+    "diet": {
+      "en": "It feeds mainly on other snakes, including large and mostly harmless species such as Asian rat snakes and pythons, as well as other cobras and kraits. Some individuals eat only one species of snake. When food is scarce, it may also take lizards, birds and other small vertebrates.",
+      "fr": "Il se nourrit surtout d’autres serpents, dont de grandes espèces le plus souvent inoffensives comme les ptyas et les pythons, ainsi que d’autres cobras et des kraits. Certains individus ne mangent qu’une seule espèce de serpent. Quand la nourriture manque, il peut aussi prendre des lézards, des oiseaux et d’autres petits vertébrés."
+    },
+    "behavior": {
+      "en": "It is active by day and usually retreats rather than attack, but it defends a nest fiercely. In a threat display it raises the front of the body about a metre off the ground, spreads its hood, hisses loudly and can strike from a distance. Its venom is a powerful neurotoxin that can cause death by respiratory failure.",
+      "fr": "Il est actif le jour et préfère d’ordinaire se retirer plutôt qu’attaquer, mais il défend son nid avec férocité. Dans sa posture de menace, il dresse l’avant du corps à environ un mètre du sol, étale son capuchon, siffle fort et peut frapper de loin. Son venin est une puissante neurotoxine qui peut provoquer la mort par insuffisance respiratoire."
+    },
+    "reproduction": {
+      "en": "It breeds from January to April. The female pushes leaves and branches into a pile and lays her eggs in it, and the heat of decay incubates them. Clutches have about 21–40 eggs in one source and 7–43 in another, with incubation of roughly 66 to 105 days. She guards the nest, often from on top of it, while the male stays nearby, and females can be very aggressive towards intruders.",
+      "fr": "Il se reproduit de janvier à avril. La femelle rassemble feuilles et branches en tas et y dépose ses œufs, que la chaleur de la décomposition incube. Les pontes comptent environ 21 à 40 œufs selon une source et 7 à 43 selon une autre, avec une incubation d’environ 66 à 105 jours. Elle garde le nid, souvent depuis le dessus, tandis que le mâle reste à proximité, et les femelles peuvent être très agressives envers les intrus."
+    },
+    "ecology": {
+      "en": "As an apex predator that eats mainly other snakes, the king cobra is placed high in forest food webs. In a Bhutan study, a nest of 37 eggs was monitored and found to be guarded by the female. It is also a popular display animal in zoos.",
+      "fr": "Superprédateur qui mange surtout d’autres serpents, le cobra royal se situe très haut dans les chaînes alimentaires forestières. Dans une étude au Bhoutan, un nid de 37 œufs a été suivi et s’est révélé gardé par la femelle. C’est aussi un animal très présent dans les zoos."
+    },
+    "conservation": {
+      "en": "The king cobra is listed as Vulnerable on the IUCN Red List and is in CITES Appendix II. The main threats are habitat destruction and persecution by people who fear snakes. It is protected by law in several countries, including China, Vietnam and India.",
+      "fr": "Le cobra royal est classé vulnérable sur la Liste rouge de l’UICN et figure à l’annexe II de la CITES. Les principales menaces sont la destruction de son habitat et la persécution par des gens qui craignent les serpents. Il est protégé par la loi dans plusieurs pays, dont la Chine, le Vietnam et l’Inde."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ophiophagus hannah — Animal Diversity Web, University of Michigan",
+        "fr": "Ophiophagus hannah — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Ophiophagus_hannah/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Range from northern India to southern China, Malay Peninsula, western Indonesia and the Philippines; near streams in forest, bamboo, farmland and mangroves; mainly eats other snakes; diurnal; eggs 21–40, nest of leaves guarded by the female; breeding January–April.",
+        "Threats: habitat destruction and persecution. Its Vulnerable status line was checked against two other sources.",
+        "The consulted species descriptions report length but do not provide a dependable adult body mass or width."
+      ]
+    },
+    {
+      "title": {
+        "en": "King cobra (Ophiophagus hannah) — Thai National Parks species profile",
+        "fr": "Cobra royal (Ophiophagus hannah) — fiche espèce des parcs nationaux de Thaïlande"
+      },
+      "url": "https://thainationalparks.com/species/ophiophagus-hannah",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adults average 3.18–4 m, longest 5.85 m; clutches 7–43 eggs, incubation 66–105 days; only snake known to build such a nest; venom of three-finger toxins, up to about 420 mg dry venom per bite.",
+        "Vulnerable on the IUCN Red List since 2010, CITES Appendix II, protected in China, Vietnam and India; shy, defends nests aggressively."
+      ]
+    },
+    {
+      "title": {
+        "en": "Distribution, habitat use, and nesting behavior of the King Cobra (Ophiophagus hannah) in the Trashigang Forest Division, Eastern Bhutan — Reptiles & Amphibians, 2021",
+        "fr": "Distribution, utilisation de l’habitat et nidification du cobra royal (Ophiophagus hannah) dans la division forestière de Trashigang, Bhoutan oriental — Reptiles & Amphibians, 2021"
+      },
+      "url": "https://journals.ku.edu/reptilesandamphibians/article/view/15786/version/17630",
+      "consulted": "2026-10-12",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Elevation 650–2,057 m, most sightings lower; no clear habitat preference; most records where human disturbance was minimal; 18 king cobras recorded in a one-year survey.",
+        "A nest of 37 eggs was monitored, guarded by a female; the species is described as Vulnerable and globally threatened."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Length figures differ (Animal Diversity Web: average 3–3.7 m, up to about 5.5 m; Thai National Parks: average 3.18–4 m, record 5.85 m; other literature up to 4.8–6 m); the text gives a typical 3–4 m and the single record of 5.85 m.",
+    "Clutch size differs between sources (21–40 versus 7–43); both are given.",
+    "The IUCN Red List page could not be opened; the Vulnerable category comes from three secondary sources, one of which dates the listing to 2010, and a newer assessment may exist.",
+    "The Thai National Parks profile’s description of two black spots on the hood was not used."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from Animal Diversity Web, the Thai National Parks profile and the Bhutan study; illustration to be checked by the owner."
+}

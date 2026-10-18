@@ -1,0 +1,18 @@
+{
+  "id": 2660,
+  "name": "mine_rail",
+  "texture_top": "cave_art:b_rail_top",
+  "texture_side": "cave_art:b_rail_side",
+  "texture_bottom": "cave_art:b_rail_side",
+  "color": "#8B969A",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "mine_rail",
+  "creative_tab": "stone",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ],
+  "block_height": 0.0625
+}

@@ -1,0 +1,19 @@
+{
+  "id": 9822,
+  "name": "frontier_crank",
+  "texture_top": "frontier:9822:top",
+  "texture_side": "frontier:9822:side",
+  "texture_bottom": "frontier:9822:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_crank",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "orient_mode": "axis",
+  "kinetic": "rod",
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

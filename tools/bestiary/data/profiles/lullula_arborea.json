@@ -1,0 +1,149 @@
+{
+  "id": "lullula_arborea",
+  "scientific": "Lullula arborea",
+  "group": "birds",
+  "name": {
+    "en": "Woodlark",
+    "fr": "Alouette lulu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Woodlark is a Palearctic lark found in Europe and extending east to Russia.",
+      "fr": "L’Alouette lulu est une alouette paléarctique présente en Europe et jusqu’en Russie à l’est."
+    },
+    "identification": {
+      "en": "Compared with the Eurasian Skylark (Alauda arvensis), it is smaller and more compact, with a markedly shorter tail and a pale eyebrow that meets behind the head.",
+      "fr": "Par rapport à l’Alouette des champs (Alauda arvensis), elle est plus petite et plus compacte, avec une queue nettement plus courte et un sourcil pâle qui se rejoint derrière la tête."
+    },
+    "habitat": {
+      "en": "It favors dry, well-drained open or semi-open ground with short, sparse grass, including heath, pasture and young woodland.",
+      "fr": "Elle préfère les milieux ouverts ou semi-ouverts secs et bien drainés, à herbe courte et clairsemée, notamment landes, pâtures et jeunes boisements."
+    },
+    "diet": {
+      "en": "It takes insects and other small invertebrates especially in the warm season, and relies more on seeds in winter.",
+      "fr": "Elle consomme surtout des insectes et autres petits invertébrés pendant la belle saison, et davantage de graines en hiver."
+    },
+    "behavior": {
+      "en": "Some birds breeding in the UK spend winter on the continent.",
+      "fr": "Certains oiseaux qui nichent au Royaume-Uni passent l’hiver sur le continent."
+    },
+    "reproduction": {
+      "en": "It nests on the ground; breeding generally starts earlier in southern populations than farther north, and a pair may raise two broods.",
+      "fr": "Elle niche au sol ; la reproduction commence généralement plus tôt dans les populations méridionales que plus au nord, et un couple peut élever deux nichées."
+    },
+    "ecology": {
+      "en": "The Eurasian Skylark is a related lark also covered in this Bestiary, but the Woodlark is smaller, shorter-tailed and more likely to use low perches.",
+      "fr": "L’Alouette des champs, également présentée dans ce bestiaire, est une alouette apparentée ; l’Alouette lulu est toutefois plus petite, a une queue plus courte et utilise plus volontiers des perchoirs bas."
+    },
+    "conservation": {
+      "en": "The consulted French account gives the global IUCN category as Least Concern; this global label does not rule out local declines.",
+      "fr": "La fiche française consultée indique la catégorie mondiale UICN de préoccupation mineure ; ce statut global n’exclut pas des déclins locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Alouette lulu — Oiseaux.net",
+        "fr": "Alouette lulu — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/alouette.lulu.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French ornithological account describes field identification against the Eurasian Skylark, perching behavior, two possible broods and the global IUCN category."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 20,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cahiers d’Habitat « Oiseaux » — Alouette lulu, MNHN / ministère français",
+        "fr": "Birds Habitat Guide — Woodlark, French National Museum of Natural History / ministry"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Alouette-lulu.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French national habitat account gives the species’ broad European range and describes its dry open habitat, seasonal diet and ground nesting."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 22,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Woodlark — Royal Society for the Protection of Birds",
+        "fr": "Woodlark — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodlark",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "RSPB confirms some UK breeding Woodlarks spend winter on the continent; it also lists woodland, farmland and heathland as UK habitats and seeds and insects as diet."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 27,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration and breeding timing vary geographically. The comparison with the Eurasian Skylark is an identification and behavior comparison, not a claim that the two are sister species. Local conservation trends are not inferred from the global category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French ornithological species account and national habitat guide against the UK RSPB account; the reciprocal comparison with the existing Eurasian Skylark profile is limited to size, tail and habitat traits."
+}

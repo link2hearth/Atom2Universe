@@ -1,0 +1,180 @@
+{
+  "id": "chonerhinos_naritus",
+  "scientific": "Chonerhinos naritus",
+  "group": "fish",
+  "name": {
+    "en": "Yellow Puffer",
+    "fr": "Tétrodon jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The yellow puffer is a Southeast Asian tetraodontid recorded from coastal, estuarine and fresh waters. It is the sole living species currently placed in Chonerhinos, although older literature also used the name Xenopterus naritus.",
+      "fr": "Le tétraodon jaune est un tétraodontidé d’Asie du Sud-Est signalé en milieu côtier, estuarien et dulçaquicole. C’est l’unique espèce actuellement placée dans Chonerhinos, même si la littérature ancienne emploie aussi le nom Xenopterus naritus."
+    },
+    "identification": {
+      "en": "It has a stout body, small scales, large eyes and a conspicuous gill opening. FishBase reports a maximum total length of about 28.5 cm.",
+      "fr": "Son corps est trapu, ses écailles petites, ses yeux grands et son ouverture branchiale marquée. FishBase rapporte une longueur totale maximale d’environ 28,5 cm."
+    },
+    "habitat": {
+      "en": "Records span freshwater to estuarine and nearshore settings in Southeast Asia, including the Indragiri estuary in Sumatra and coastal Sarawak in Borneo. It is a bottom-associated fish, so salinity and habitat can change across its life cycle and local range.",
+      "fr": "Les observations couvrent les eaux douces, les estuaires et le littoral d’Asie du Sud-Est, notamment l’estuaire de l’Indragiri à Sumatra et les eaux côtières du Sarawak à Bornéo. Ce poisson de fond peut rencontrer des salinités et milieux différents au cours de son cycle et selon les régions."
+    },
+    "diet": {
+      "en": "A study in the Indragiri estuary found that its main prey were small croakers and sillaginid fishes; shrimp, snails and crabs were eaten less often.",
+      "fr": "Une étude dans l’estuaire de l’Indragiri a trouvé que ses proies principales étaient de petits poissons sciénidés et sillaginidés ; les crevettes, escargots et crabes étaient consommés moins souvent."
+    },
+    "behavior": {
+      "en": "Like other puffers, it can inflate its body when threatened, a family-level defence rather than a feature unique to this species.",
+      "fr": "Comme les autres tétraodons, il peut gonfler son corps lorsqu’il est menacé : cette défense est commune à la famille, pas propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "In the Saribas River region, it migrates upstream to spawn in lower-salinity water; hatchery workers have also obtained fertilised eggs artificially. In the laboratory, eggs hatched after about 66 hours and larvae remained larval for around 29 days before becoming juveniles.",
+      "fr": "Dans la région de la rivière Saribas, il remonte le cours d’eau pour pondre dans une eau moins salée ; des éleveurs ont aussi obtenu artificiellement des œufs fécondés. En laboratoire, les œufs ont éclos après environ 66 heures et les larves sont restées à ce stade près de 29 jours avant de devenir juvéniles."
+    },
+    "ecology": {
+      "en": "As an estuary-using predator, it links benthic invertebrates and small fish to larger consumers. It shares its family with the freshwater Auriglobus puffers, but genus-level taxonomy and freshwater tolerance should not be confused with this species’ broader estuarine records.",
+      "fr": "Prédateur fréquentant les estuaires, il relie les invertébrés benthiques et les petits poissons aux consommateurs plus grands. Il partage sa famille avec les tétraodons dulçaquicoles Auriglobus, mais la taxonomie des genres et leur tolérance à l’eau douce ne doivent pas être confondues avec les observations estuariennes plus larges de cette espèce."
+    },
+    "conservation": {
+      "en": "FishBase reports this species as Not Evaluated in its 2025-2 global Red List field. It is commercially important in Sarawak, so fishing pressure may matter locally, but that alone does not determine its global risk category.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée dans son champ Liste rouge mondiale 2025-2. Elle est importante pour la pêche au Sarawak : la pression de pêche peut compter localement, sans suffire à déterminer son risque mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chonerhinos naritus — FishBase",
+        "fr": "Chonerhinos naritus — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Chonerhinos-naritus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives taxonomy, habitat, maximum size and global status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 9,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes: Chonerhinos naritus",
+        "fr": "Catalogue des poissons d’Eschmeyer : Chonerhinos naritus"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=23550",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "California Academy of Sciences catalog regards Chonerhinos naritus as valid and documents nomenclatural history."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 14,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natural feeding habits of yellow puffer in Indragiri River estuary",
+        "fr": "Habitudes alimentaires naturelles du tétraodon jaune dans l’estuaire de l’Indragiri"
+      },
+      "url": "https://ejournal-balitbang.kkp.go.id/index.php/btl/article/view/1141",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Indonesian fisheries study covers diet and local morphology."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 8,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early life history of yellow puffer, Chonerhinos naritus from Sarawak",
+        "fr": "Premiers stades de vie du tétraodon jaune Chonerhinos naritus au Sarawak"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/are.14593",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "habitat",
+        "conservation",
+        "behavior"
+      ],
+      "facts": [
+        "Hatchery study reports migration, spawning, inflation and larval development."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 9,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A global conservation category and robust wild-population trend were not located; one Indonesian feeding study is geographically local, and hatchery findings do not establish wild spawning behaviour."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an Indonesian fisheries paper and Sarawak hatchery study with FishBase and the California Academy’s taxonomic catalog; kept estuary and conservation claims geographically qualified."
+}

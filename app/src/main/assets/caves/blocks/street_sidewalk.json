@@ -1,0 +1,14 @@
+{
+  "id": 2702,
+  "name": "street_sidewalk",
+  "texture_top": "street:sidewalk",
+  "texture_side": "street:concrete",
+  "texture_bottom": "street:concrete",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_sidewalk",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

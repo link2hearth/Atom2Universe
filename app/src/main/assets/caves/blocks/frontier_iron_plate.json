@@ -1,0 +1,17 @@
+{
+  "id": 9875,
+  "name": "frontier_iron_plate",
+  "texture_top": "frontier:9875:top",
+  "texture_side": "frontier:9875:side",
+  "texture_bottom": "frontier:9875:top",
+  "color": "#8A9299",
+  "hardness": 1.5,
+  "drop": "frontier_iron_plate",
+  "creative_tab": "functional",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

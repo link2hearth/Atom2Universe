@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_family_Scheuchzeriaceae" translatable="false">Scheuchzeria family</string>
+    <string name="bot_family_Scheuchzeriaceae_desc">Rhizomatous wetland monocots with narrow sheathing leaves and small flowers that form three follicles.</string>
+    <string name="bot_family_Scheuchzeriaceae_aliases">Scheuchzeria family</string>
+    <string name="bot_family_Osmundaceae" translatable="false">Royal fern family</string>
+    <string name="bot_family_Osmundaceae_desc">Large terrestrial ferns with robust rhizomes, spreading fronds and conspicuous separate fertile frond portions.</string>
+    <string name="bot_family_Osmundaceae_aliases">Royal fern family</string>
+    <string name="bot_source_bsbi" translatable="false">Botanical Society of Britain and Ireland</string>
+    <string name="bot_source_aos" translatable="false">American Orchid Society</string>
+    <string name="bot_pinus_palustris_name">Pin à longues feuilles</string>
+    <string name="bot_pinus_palustris_latin" translatable="false">Pinus palustris</string>
+    <string name="bot_pinus_palustris_aliases">pin à longues feuilles; pin jaune du Sud</string>
+    <string name="bot_pinus_palustris_description">Pin sempervirent du sud-est des États-Unis, souvent porté par un long tronc dégagé et une cime ouverte. Ses aiguilles exceptionnellement longues sont réunies par trois; les grands cônes épineux mûrissent après la pollinisation, à une autre saison.</string>
+    <string name="bot_pinus_palustris_distribution">Sud-est des États-Unis, de la plaine côtière de Virginie à la Floride et vers l’ouest jusqu’à l’est du Texas; surtout dans les pinèdes sableuses soumises au feu.</string>
+    <string name="bot_pinus_palustris_habit">Pin à tronc droit et cime ouverte</string>
+    <string name="bot_pinus_palustris_leaf">Trois aiguilles très longues par faisceau</string>
+    <string name="bot_pinus_palustris_flower">Cônes mâles et femelles séparés</string>
+    <string name="bot_pinus_palustris_fruit">Grand cône ligneux à écailles piquantes</string>
+    <string name="bot_erica_cinerea_name">Bruyère cendrée</string>
+    <string name="bot_erica_cinerea_latin" translatable="false">Erica cinerea</string>
+    <string name="bot_erica_cinerea_aliases">bruyère cendrée; bruyère violette</string>
+    <string name="bot_erica_cinerea_description">Petit sous-arbrisseau sempervirent des landes, très ramifié, aux feuilles étroites disposées par trois. Ses fleurs roses à violettes en urne sont groupées parmi les feuilles; chaque fleur produit une petite capsule.</string>
+    <string name="bot_erica_cinerea_distribution">Europe atlantique occidentale, surtout landes sèches acides et milieux ouverts; également sur rochers.</string>
+    <string name="bot_erica_cinerea_habit">Sous-arbrisseau bas et ramifié</string>
+    <string name="bot_erica_cinerea_leaf">Très petites feuilles en aiguilles, par trois</string>
+    <string name="bot_erica_cinerea_flower">Fleurs roses à violettes en urne</string>
+    <string name="bot_erica_cinerea_fruit">Petite capsule sèche</string>
+    <string name="bot_scheuchzeria_palustris_name">Scheuchzérie des marais</string>
+    <string name="bot_scheuchzeria_palustris_latin" translatable="false">Scheuchzeria palustris</string>
+    <string name="bot_scheuchzeria_palustris_aliases">scheuchzérie des marais</string>
+    <string name="bot_scheuchzeria_palustris_description">Petite vivace de tourbière à rhizome rampant et feuilles dressées, étroites et engainantes. Ses fleurs vertes discrètes ont six tépales; le fruit se divise en trois follicules étalés, caractère utile pour la distinguer des laîches.</string>
+    <string name="bot_scheuchzeria_palustris_distribution">Hémisphère Nord circumboréal, dans les tourbières oligotrophes, bas-marais et tapis humides de sphaignes.</string>
+    <string name="bot_scheuchzeria_palustris_habit">Petite herbe dressée issue d’un rhizome rampant</string>
+    <string name="bot_scheuchzeria_palustris_leaf">Feuilles linéaires alternes et engainantes</string>
+    <string name="bot_scheuchzeria_palustris_flower">Petite fleur verte à six tépales</string>
+    <string name="bot_scheuchzeria_palustris_fruit">Trois follicules étalés</string>
+    <string name="bot_musa_basjoo_name">Bananier du Japon</string>
+    <string name="bot_musa_basjoo_latin" translatable="false">Musa basjoo</string>
+    <string name="bot_musa_basjoo_aliases">bananier rustique; bananier à fibres</string>
+    <string name="bot_musa_basjoo_description">Grande herbe rhizomateuse dont le « tronc » est un pseudo-tronc formé par les gaines foliaires imbriquées. Les grands limbes se déchirent facilement au vent; une inflorescence pendante porte des fleurs sous des bractées pourpres, puis des baies pleines de graines, généralement non comestibles.</string>
+    <string name="bot_musa_basjoo_distribution">Originaire du sud du Sichuan, en Chine; largement cultivé comme ornement, notamment au Japon.</string>
+    <string name="bot_musa_basjoo_habit">Touffe élevée à pseudo-tronc engainé</string>
+    <string name="bot_musa_basjoo_leaf">Très grand limbe large à forte nervure médiane</string>
+    <string name="bot_musa_basjoo_flower">Inflorescence pendante à bractées pourpres</string>
+    <string name="bot_musa_basjoo_fruit">Baie allongée à nombreuses graines dures</string>
+    <string name="bot_lilium_columbianum_name">Lis de Colombie</string>
+    <string name="bot_lilium_columbianum_latin" translatable="false">Lilium columbianum</string>
+    <string name="bot_lilium_columbianum_aliases">lis de Colombie; lis tigré de l’Ouest</string>
+    <string name="bot_lilium_columbianum_description">Lis bulbeux de l’ouest nord-américain, à tige dressée et feuilles étroites souvent verticillées. Ses fleurs orange ponctuées de sombre pendent et présentent des tépales fortement recourbés; une capsule dressée suit la floraison.</string>
+    <string name="bot_lilium_columbianum_distribution">Ouest de l’Amérique du Nord, de la Colombie-Britannique au nord-ouest Pacifique et à la Californie, ainsi que dans les montagnes de l’intérieur; bois clairs et prairies.</string>
+    <string name="bot_lilium_columbianum_habit">Lis bulbeux dressé à tige feuillée</string>
+    <string name="bot_lilium_columbianum_leaf">Feuilles étroites en verticilles nets</string>
+    <string name="bot_lilium_columbianum_flower">Fleur orange pendante et ponctuée</string>
+    <string name="bot_lilium_columbianum_fruit">Capsule dressée à trois valves</string>
+    <string name="bot_lilium_cernuum_name">Lis penché</string>
+    <string name="bot_lilium_cernuum_latin" translatable="false">Lilium cernuum</string>
+    <string name="bot_lilium_cernuum_aliases">lis penché</string>
+    <string name="bot_lilium_cernuum_description">Lis bulbeux élancé, à feuilles étroites dispersées sur la tige et une ou plusieurs fleurs penchées. Les tépales roses à pourpres, ponctués de sombre, se recourbent fortement vers l’arrière; le fruit est une capsule dressée.</string>
+    <string name="bot_lilium_cernuum_distribution">Nord-est de la Chine, Corée et Extrême-Orient russe, dans les ouvertures herbeuses et lisières boisées.</string>
+    <string name="bot_lilium_cernuum_habit">Lis élancé issu d’un bulbe écailleux</string>
+    <string name="bot_lilium_cernuum_leaf">Feuilles étroites dispersées sur la tige</string>
+    <string name="bot_lilium_cernuum_flower">Fleur rose-pourpre penchée et recourbée</string>
+    <string name="bot_lilium_cernuum_fruit">Capsule dressée à trois valves</string>
+    <string name="bot_erythronium_pluriflorum_name">Érythrone multiflore</string>
+    <string name="bot_erythronium_pluriflorum_latin" translatable="false">Erythronium pluriflorum</string>
+    <string name="bot_erythronium_pluriflorum_aliases">érythrone multiflore</string>
+    <string name="bot_erythronium_pluriflorum_description">Petite géophyte printanière de la Sierra Nevada centrale, issue d’un bulbe profond. Chaque pousse florifère porte généralement deux feuilles basales lisses et peut produire plusieurs fleurs dorées penchées, à tépales recourbés.</string>
+    <string name="bot_erythronium_pluriflorum_distribution">Haute Sierra Nevada centrale, Californie, dans les prairies humides et milieux subalpins ouverts après la fonte des neiges.</string>
+    <string name="bot_erythronium_pluriflorum_habit">Petite herbe printanière à bulbe profond</string>
+    <string name="bot_erythronium_pluriflorum_leaf">Paire de larges feuilles basales lisses</string>
+    <string name="bot_erythronium_pluriflorum_flower">Plusieurs fleurs dorées penchées</string>
+    <string name="bot_erythronium_pluriflorum_fruit">Capsule à trois valves</string>
+    <string name="bot_erythronium_citrinum_name">Érythrone citron</string>
+    <string name="bot_erythronium_citrinum_latin" translatable="false">Erythronium citrinum</string>
+    <string name="bot_erythronium_citrinum_aliases">érythrone citron</string>
+    <string name="bot_erythronium_citrinum_description">Vivace bulbeuse printanière à deux feuilles basales marbrées et une à quelques fleurs crème pâle, souvent jaunes à la base. Les tépales se recourbent à maturité; des populations peuvent s’intergrader avec des Érythrones apparentés de l’Ouest, d’où une identification parfois délicate.</string>
+    <string name="bot_erythronium_citrinum_distribution">Région Klamath-Siskiyou du nord de la Californie et du sud-ouest de l’Oregon, souvent sur substrats serpentiniques ou rocheux.</string>
+    <string name="bot_erythronium_citrinum_habit">Petite herbe printanière issue d’un bulbe</string>
+    <string name="bot_erythronium_citrinum_leaf">Deux feuilles basales marbrées</string>
+    <string name="bot_erythronium_citrinum_flower">Fleur crème à base jaune, tépales recourbés</string>
+    <string name="bot_erythronium_citrinum_fruit">Capsule à trois valves</string>
+    <string name="bot_vanda_coerulea_name">Vanda bleue</string>
+    <string name="bot_vanda_coerulea_latin" translatable="false">Vanda coerulea</string>
+    <string name="bot_vanda_coerulea_aliases">vanda bleue</string>
+    <string name="bot_vanda_coerulea_description">Orchidée épiphyte à tige monopodiale courte, feuilles coriaces en lanières et racines aériennes. Les grandes fleurs aplaties bleu-violet portent des veines plus sombres en réseau et un labelle remarquablement petit; les hampes peuvent être très florifères.</string>
+    <string name="bot_vanda_coerulea_distribution">Du nord-est de l’Inde au Myanmar et au nord de la Thaïlande, jusqu’au sud du Yunnan et à l’Indochine; souvent sur des arbres exposés vers 900–1 500 m.</string>
+    <string name="bot_vanda_coerulea_habit">Orchidée épiphyte à tige courte et racines aériennes</string>
+    <string name="bot_vanda_coerulea_leaf">Feuille coriace en lanière à gaine marquée</string>
+    <string name="bot_vanda_coerulea_flower">Grande fleur bleue aplatie à petit labelle</string>
+    <string name="bot_vanda_coerulea_fruit">Capsule sèche et étroite</string>
+    <string name="bot_herminium_monorchis_name">Herminium à un tubercule</string>
+    <string name="bot_herminium_monorchis_latin" translatable="false">Herminium monorchis</string>
+    <string name="bot_herminium_monorchis_aliases">orchidée musquée; herminium à un bulbe</string>
+    <string name="bot_herminium_monorchis_description">Petite orchidée terrestre glabre, à deux ou trois feuilles basales bleu-vert et épi grêle, souvent unilatéral, de fleurs jaune-vert minuscules. Chaque fleur possède un labelle trilobé, un périanthe en capuchon lâche et aucun éperon; des stolons relient les tubercules souterrains.</string>
+    <string name="bot_herminium_monorchis_distribution">Eurasie tempérée jusqu’à l’Himalaya, dans les pelouses rases et les gazons calcaires; les habitats varient selon la vaste aire de répartition.</string>
+    <string name="bot_herminium_monorchis_habit">Petite orchidée élancée à feuilles basales</string>
+    <string name="bot_herminium_monorchis_leaf">Deux ou trois feuilles basales elliptiques</string>
+    <string name="bot_herminium_monorchis_flower">Très petite fleur jaune-vert à labelle trilobé, sans éperon</string>
+    <string name="bot_herminium_monorchis_fruit">Petit tubercule relié par un stolon grêle</string>
+    <string name="bot_epipactis_atrorubens_name">Épipactis brun-rouge</string>
+    <string name="bot_epipactis_atrorubens_latin" translatable="false">Epipactis atrorubens</string>
+    <string name="bot_epipactis_atrorubens_aliases">épipactis brun-rouge; épipactis rouge</string>
+    <string name="bot_epipactis_atrorubens_description">Orchidée terrestre rhizomateuse, généralement haute de 25 à 80 cm, aux feuilles souvent disposées sur deux rangs et à grappe florale fournie, souvent unilatérale. Les fleurs brun-rouge à pourpres sont brièvement velues et souvent parfumées à la vanille; le fruit est une capsule.</string>
+    <string name="bot_epipactis_atrorubens_distribution">Europe jusqu’à l’Asie occidentale et centrale, surtout pinèdes claires et pelouses sèches calcaires, de plaine à l’étage subalpin.</string>
+    <string name="bot_epipactis_atrorubens_habit">Orchidée dressée et feuillée issue d’un rhizome</string>
+    <string name="bot_epipactis_atrorubens_leaf">Feuilles caulinaires souvent sur deux rangs</string>
+    <string name="bot_epipactis_atrorubens_flower">Grappe unilatérale de fleurs rouge-pourpre</string>
+    <string name="bot_epipactis_atrorubens_fruit">Capsule côtelée</string>
+    <string name="bot_neuwiedia_griffithii_name">Neuwiedia de Griffith</string>
+    <string name="bot_neuwiedia_griffithii_latin" translatable="false">Neuwiedia griffithii</string>
+    <string name="bot_neuwiedia_griffithii_aliases">neuwiedia de Griffith</string>
+    <string name="bot_neuwiedia_griffithii_description">Orchidée terrestre robuste de la lignée apostasioïde, à rhizome épais et plusieurs grandes feuilles plissées. Ses fleurs pâles conservent trois étamines libres et fonctionnelles, au lieu de la colonne unique soudée de la plupart des orchidées; ce caractère est diagnostique à l’échelle de la famille.</string>
+    <string name="bot_neuwiedia_griffithii_distribution">Asie du Sud-Est insulaire, signalée dans la péninsule Malaise, à Sumatra et au Vietnam; forêts humides ombragées.</string>
+    <string name="bot_neuwiedia_griffithii_habit">Orchidée terrestre rhizomateuse à feuilles plissées dressées</string>
+    <string name="bot_neuwiedia_griffithii_leaf">Grande feuille lancéolée à plis marqués</string>
+    <string name="bot_neuwiedia_griffithii_flower">Fleur pâle à trois étamines fertiles séparées</string>
+    <string name="bot_neuwiedia_griffithii_fruit">Capsule sèche ovoïde</string>
+    <string name="bot_narcissus_poeticus_name">Narcisse des poètes</string>
+    <string name="bot_narcissus_poeticus_latin" translatable="false">Narcissus poeticus</string>
+    <string name="bot_narcissus_poeticus_aliases">narcisse des poètes; œil-de-faisan</string>
+    <string name="bot_narcissus_poeticus_description">Vivace bulbeuse à plusieurs feuilles basales étroites et généralement une fleur par hampe. Six tépales blancs entourent une couronne jaune très courte au bord rouge crénelé bien visible; toutes les parties, surtout les bulbes, contiennent des alcaloïdes toxiques.</string>
+    <string name="bot_narcissus_poeticus_distribution">Europe centrale et sud-est, notamment prairies humides et pelouses montagnardes; largement planté et localement naturalisé ailleurs.</string>
+    <string name="bot_narcissus_poeticus_habit">Herbe printanière bulbeuse à hampe sans feuilles</string>
+    <string name="bot_narcissus_poeticus_leaf">Feuilles basales étroites bleu-vert</string>
+    <string name="bot_narcissus_poeticus_flower">Fleur blanche à minuscule couronne bordée de rouge</string>
+    <string name="bot_narcissus_poeticus_fruit">Capsule à trois valves</string>
+    <string name="bot_sansevieria_kirkii_name">Dracaena de Kirkii</string>
+    <string name="bot_sansevieria_kirkii_latin" translatable="false">Dracaena pethera</string>
+    <string name="bot_sansevieria_kirkii_aliases">Sansevieria kirkii; sansevière de Kirkii</string>
+    <string name="bot_sansevieria_kirkii_description">Plante succulente sans tige, à rhizome, désormais acceptée sous le nom Dracaena pethera; Sansevieria kirkii est conservé comme synonyme pour correspondre au terminal de l’arbre. Une à trois feuilles rigides et coriaces forment une rosette basale, à bord fortement ondulé parfois rougeâtre; les fleurs pâles tubulaires sont suivies de baies rouge-orangé.</string>
+    <string name="bot_sansevieria_kirkii_distribution">Afrique tropicale orientale et sud-est, dans les boisements et broussailles à saison sèche; cultivée ailleurs.</string>
+    <string name="bot_sansevieria_kirkii_habit">Rosette sans tige à feuilles rigides sur rhizome</string>
+    <string name="bot_sansevieria_kirkii_leaf">Feuille épaisse en lanière à bord ondulé souvent rougeâtre</string>
+    <string name="bot_sansevieria_kirkii_flower">Fleurs pâles à long tube en grappe dense</string>
+    <string name="bot_sansevieria_kirkii_fruit">Baie globuleuse rouge-orangé</string>
+    <string name="bot_dasylirion_acrotrichum_name">Dasylirion acrotrichum</string>
+    <string name="bot_dasylirion_acrotrichum_latin" translatable="false">Dasylirion acrotrichum</string>
+    <string name="bot_dasylirion_acrotrichum_aliases">sotol; dasylirion du Mexique</string>
+    <string name="bot_dasylirion_acrotrichum_description">Plante à croissance lente, généralement solitaire, à court tronc ligneux et dense rosette sphérique de longues feuilles étroites. Les marges portent de petites dents crochues; les sujets adultes émettent une haute panicule étroite de fleurs pâles groupées, puis des capsules sèches.</string>
+    <string name="bot_dasylirion_acrotrichum_distribution">Centre du Mexique, notamment broussailles semi-arides d’altitude et pentes rocheuses; cultivé dans les jardins secs.</string>
+    <string name="bot_dasylirion_acrotrichum_habit">Court tronc ligneux couronné d’une rosette sphérique dense</string>
+    <string name="bot_dasylirion_acrotrichum_leaf">Feuille étroite rigide à dents marginales crochues</string>
+    <string name="bot_dasylirion_acrotrichum_flower">Haute panicule de fleurs pâles groupées</string>
+    <string name="bot_dasylirion_acrotrichum_fruit">Petite capsule sèche</string>
+    <string name="bot_liriope_muscari_name">Liriope muscari</string>
+    <string name="bot_liriope_muscari_latin" translatable="false">Liriope muscari</string>
+    <string name="bot_liriope_muscari_aliases">liriope muscari; herbe aux turquoises</string>
+    <string name="bot_liriope_muscari_description">Vivace sempervirente rhizomateuse formant des touffes denses de feuilles arquées, semblables à celles d’une graminée. Des épis dressés portent de petites fleurs violettes à six tépales; les fruits arrondis mûrissent en violet très sombre à noir.</string>
+    <string name="bot_liriope_muscari_distribution">Originaire de Chine et de Taïwan; fréquemment cultivé comme couvre-sol dans les jardins ombragés.</string>
+    <string name="bot_liriope_muscari_habit">Touffe basale dense à courts rhizomes</string>
+    <string name="bot_liriope_muscari_leaf">Feuilles étroites arquées en lanières</string>
+    <string name="bot_liriope_muscari_flower">Épi dressé de petites fleurs violettes à six pièces</string>
+    <string name="bot_liriope_muscari_fruit">Baie violet-noir foncé</string>
+    <string name="bot_puya_alpestris_name">Puya des Alpes</string>
+    <string name="bot_puya_alpestris_latin" translatable="false">Puya alpestris</string>
+    <string name="bot_puya_alpestris_aliases">puya alpestre</string>
+    <string name="bot_puya_alpestris_description">Grande broméliacée terrestre formant une rosette basale de feuilles raides, épineuses et gris-vert. Sa haute inflorescence ramifiée porte des fleurs turquoise à bleu-vert caractéristiques; l’espèce est proche d’autres Puyas chiliennes, aussi la couleur des fleurs seule ne suffit-elle pas à l’identification.</string>
+    <string name="bot_puya_alpestris_distribution">Centre du Chili, sur pentes rocheuses sèches et broussailles, des contreforts aux étages montagnards.</string>
+    <string name="bot_puya_alpestris_habit">Grande rosette basale à haute hampe florale</string>
+    <string name="bot_puya_alpestris_leaf">Feuille gris-vert rigide à épines marginales crochues</string>
+    <string name="bot_puya_alpestris_flower">Fleur turquoise-bleu sur hampe ramifiée</string>
+    <string name="bot_puya_alpestris_fruit">Capsule sèche à trois valves</string>
+    <string name="bot_roystonea_oleracea_name">Palmier royal de la Barbade</string>
+    <string name="bot_roystonea_oleracea_latin" translatable="false">Roystonea oleracea</string>
+    <string name="bot_roystonea_oleracea_aliases">palmier royal; palmier chou royal</string>
+    <string name="bot_roystonea_oleracea_description">Très grand palmier solitaire à tronc lisse gris, marqué d’anneaux cicatriciels, et à couronne bien visible formée par un manchon vert. De grandes feuilles pennées composent la cime; les inflorescences crème émergent sous le manchon et sont suivies de petits fruits violet-noir à une graine.</string>
+    <string name="bot_roystonea_oleracea_distribution">Petites Antilles vers le sud jusqu’à Trinidad, au nord du Venezuela et au nord-est de la Colombie; planté largement sous les tropiques.</string>
+    <string name="bot_roystonea_oleracea_habit">Palmier solitaire très élevé à tronc lisse annelé</string>
+    <string name="bot_roystonea_oleracea_leaf">Grande feuille pennée aux folioles sur deux plans</string>
+    <string name="bot_roystonea_oleracea_flower">Inflorescence crème ramifiée sous le manchon vert</string>
+    <string name="bot_roystonea_oleracea_fruit">Petite drupe oblongue violet-noir</string>
+    <string name="bot_howea_forsteriana_name">Kentia</string>
+    <string name="bot_howea_forsteriana_latin" translatable="false">Howea forsteriana</string>
+    <string name="bot_howea_forsteriana_aliases">kentia; palmier de Lord Howe</string>
+    <string name="bot_howea_forsteriana_description">Palmier solitaire à croissance lente, au tronc grêle marqué d’anneaux et à couronne de feuilles pennées arquées. Les inflorescences ramifiées émergent sous les feuilles; les fruits ovoïdes mûrissent du vert au brun rougeâtre.</string>
+    <string name="bot_howea_forsteriana_distribution">Endémique de l’île Lord Howe, où il pousse en forêt de plaine et de montagne; très cultivé comme palmier d’intérieur.</string>
+    <string name="bot_howea_forsteriana_habit">Palmier solitaire à tronc grêle</string>
+    <string name="bot_howea_forsteriana_leaf">Feuille pennée arquée à folioles étroites retombantes</string>
+    <string name="bot_howea_forsteriana_flower">Grappes ramifiées de petites fleurs jaunâtres</string>
+    <string name="bot_howea_forsteriana_fruit">Fruit ovoïde mûr brun rougeâtre</string>
+    <string name="bot_osmunda_japonica_name">Osmonde du Japon</string>
+    <string name="bot_osmunda_japonica_latin" translatable="false">Osmunda japonica</string>
+    <string name="bot_osmunda_japonica_aliases">osmonde du Japon; osmonde asiatique</string>
+    <string name="bot_osmunda_japonica_description">Fougère terrestre robuste à rhizome dressé ou brièvement rampant et grandes frondes deux fois pennées. Les frondes stériles portent des pinnules larges et denticulées; les fertiles ont des segments étroits contractés, couverts de sporanges, qui tombent après la libération des spores.</string>
+    <string name="bot_osmunda_japonica_distribution">Asie orientale et sud-est, dans les forêts, bords humides de ruisseaux, pentes ouvertes et prairies, des basses terres aux montagnes.</string>
+    <string name="bot_osmunda_japonica_habit">Touffe de grandes frondes stériles et fertiles bipennées</string>
+    <string name="bot_osmunda_japonica_leaf">Pinnule large à marge finement denticulée</string>
+    <string name="bot_osmunda_japonica_flower">Penne fertile densément couverte de sporanges</string>
+    <string name="bot_osmunda_japonica_fruit">Spores libérées par les segments fertiles contractés</string>
+</resources>

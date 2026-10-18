@@ -1,0 +1,147 @@
+{
+  "id": "hoopoe",
+  "scientific": "Upupa epops",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian hoopoe",
+    "fr": "Huppe fasciée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian hoopoe is a distinctive bird of open country across Europe, Asia and Africa. Its cinnamon body, striped wings and long crest stand out; its long bill and ground-foraging habits help it find invertebrates in short vegetation and loose soil.",
+      "fr": "La Huppe fasciée vit dans les milieux ouverts d’Europe, d’Asie et d’Afrique. Le plumage cannelle, les ailes rayées et la huppe la distinguent. Son bec et sa quête au sol l’aident à trouver des invertébrés dans l’herbe rase et les sols meubles."
+    },
+    "identification": {
+      "en": "An adult has a cinnamon-orange head and body, a long, slender, slightly down-curved bill, and a fan-shaped crest tipped black and white. Broad black-and-white bars cross the wings and tail, conspicuous in flight. The sexes look alike. Adults measure 26–28 cm, have a 42–46 cm wingspan and weigh 47–87 g; sexes look alike.",
+      "fr": "L’adulte a le corps et la tête cannelle orangé, un bec long, fin et légèrement arqué vers le bas, et une huppe en éventail aux pointes noires et blanches. Ailes et queue portent des bandes noires et blanches, nettes en vol. Les sexes se ressemblent. Les adultes mesurent 26–28 cm, ont une envergure de 42–46 cm et pèsent 47–87 g ; les sexes se ressemblent."
+    },
+    "habitat": {
+      "en": "Across its broad range, the hoopoe uses semi-open pasture, orchards, farmland, heath and open woodland. It walks and probes for food, nesting in cavities in trees, walls or banks. Bare ground or short grass helps it reach prey; dense cover limits access to feeding sites.",
+      "fr": "Dans sa vaste aire, la Huppe fréquente pâtures, vergers, champs, landes et bois clairs. Elle marche et sonde le sol pour se nourrir, et niche dans des cavités d’arbres, de murs ou de berges. Les sols nus et l’herbe courte facilitent l’accès aux proies."
+    },
+    "diet": {
+      "en": "It eats insects and other invertebrates, including beetles, larvae and crickets, found at or beneath the soil surface. It probes loose earth with its bill, then opens it to seize prey. In one Swiss population, mole-cricket availability was linked with territory use and breeding output.",
+      "fr": "Elle mange des insectes et invertébrés, dont coléoptères, larves et grillons, trouvés au sol ou dessous. Elle sonde la terre meuble avec son bec pour saisir ses proies. En Suisse, la disponibilité des courtilières était liée à l’occupation des territoires et à la reproduction."
+    },
+    "behavior": {
+      "en": "Hoopoes are often seen alone or in pairs, walking over open ground and probing methodically. The song consists of a short series of hollow, repeated notes. Many populations migrate; some birds stay year-round, while others travel between breeding areas and warmer winter quarters.",
+      "fr": "On voit souvent les Huppes seules ou en couple, marchant en terrain découvert et sondant le sol. Le chant est composé de courtes séries de notes sourdes répétées. Certaines populations migrent; d’autres restent toute l’année ou rejoignent des quartiers d’hiver plus chauds."
+    },
+    "reproduction": {
+      "en": "The species nests in enclosed cavities; the female incubates as the male brings food. British records report seven to eight eggs, 15–16 days of incubation and fledging at 26–29 days. These regional figures vary. Chicks hatch downy and helpless; both parents feed them.",
+      "fr": "Elle niche en cavité; la femelle couve, nourrie par le mâle. Les relevés britanniques donnent sept à huit œufs, 15 à 16 jours d’incubation et un envol à 26–29 jours. Ces valeurs régionales varient. Les poussins naissent duvetés et les deux parents les nourrissent."
+    },
+    "ecology": {
+      "en": "Hoopoes host bacteria in the preen gland. During nesting, secretions from females and chicks become dark and odorous; experiments linked symbiotic bacteria to antimicrobial compounds. These may protect eggs and nestlings, although researchers continue to examine how the relationship works.",
+      "fr": "Les Huppes hébergent des bactéries dans leur glande uropygienne. Pendant la nidification, les sécrétions des femelles et des poussins deviennent foncées et odorantes; des expériences ont relié ces bactéries à des composés antimicrobiens. Ceux-ci pourraient protéger œufs et poussins, mais le mécanisme reste étudié."
+    },
+    "conservation": {
+      "en": "BirdLife International’s global IUCN assessment of 14 August 2020 lists Least Concern but reports a decreasing population trend. This category can conceal local pressures: the University of Bern records a past decline in Valais and conservation work to maintain suitable feeding and nesting habitat.",
+      "fr": "L’évaluation mondiale de BirdLife International pour l’UICN, datée du 14 août 2020, indique une préoccupation mineure malgré une tendance démographique à la baisse. Cette catégorie masque parfois des pressions locales : l’université de Berne décrit un déclin passé au Valais et des mesures pour préserver l’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian Hoopoe — eBird species account, Cornell Lab of Ornithology",
+        "fr": "Huppe fasciée — fiche eBird, Cornell Lab of Ornithology"
+      },
+      "url": "https://ebird.org/species/hoopoe/UZ",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Merlin-powered account describes orange body, barred wings, fan crest, long bill, semi-open habitats, ground probing for insects, and distinctive repeated song."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hoopoe — BTO BirdFacts",
+        "fr": "Huppe fasciée — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/hoopoe",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "British nest records report typical clutches of 7–8, female incubation for 15–16 days, and fledging after 26–29 days; UK timing and migration observations are geographically scoped."
+      ]
+    },
+    {
+      "title": {
+        "en": "Upupa epops — The IUCN Red List of Threatened Species, 2020 assessment",
+        "fr": "Upupa epops — Liste rouge de l’UICN, évaluation 2020"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T22682655A181836360.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International global assessment dated 14 August 2020 lists Least Concern and a decreasing population trend; listed habitat types include savanna, grassland and artificial terrestrial habitat."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hoopoe research — Conservation Biology, Institute of Ecology and Evolution, University of Bern",
+        "fr": "Recherche sur la Huppe — Conservation Biology, Institut d’écologie et d’évolution, université de Berne"
+      },
+      "url": "https://www.cb.iee.unibe.ch/research/hoopoe/index_eng.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The Valais population declined before an evidence-based programme launched in 1998; university research examines habitat, diet and reproductive ecology in central European agricultural landscapes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Antimicrobial chemicals in hoopoe preen secretions are produced by symbiotic bacteria — Proceedings of the Royal Society B",
+        "fr": "Les composés antimicrobiens des sécrétions de Huppe sont produits par des bactéries symbiotiques — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2842625/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study found dark, odorous secretions in nestlings and breeding females; experiments linked symbiotic gland bacteria to antimicrobial compounds."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hoopoe — RSPB Birds & Wildlife",
+        "fr": "Huppe fasciée — RSPB Birds & Wildlife"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hoopoe/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adults measure 26–28 cm, wingspan 42–46 cm and weight 47–87 g; sexes look alike."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Eurasian hoopoe (Upupa epops), naturalistic full-body field-guide view isolated on a PURE WHITE background. Show the correct adult cinnamon-orange head, neck and body; long, slender, gently down-curved dark bill; erectible fan-shaped cinnamon crest with black tips and small pale bases; broad black-and-white barred wings and tail; short dark legs. Adult sexes broadly similar, no exaggerated sexual dimorphism. Keep the complete bird visible with realistic proportions and natural feather structure. No nest, landscape, props, text, shadowed or colored background, extra crests, or incorrect bill shape.",
+  "uncertainties": [
+    "The IUCN page exposed the 2020 assessment date, category and trend in search metadata, but its detailed page returned access error 403; current status after that assessment was not established.",
+    "The reproductive measurements are from British nest records and may vary across the species’ wide range.",
+    "The importance of mole-cricket availability is supported by Swiss population research and should not be generalized to every region or season.",
+    "The protective function of the preen-gland microbiome is supported by experimental evidence, but the full ecological mechanisms remain under study."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source and image critique, followed by correction of identified omissions/overgeneralization."
+}

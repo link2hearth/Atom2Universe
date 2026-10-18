@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_play_album"
+        android:title="@string/music_play_album" />
+
+    <item
+        android:id="@+id/action_shuffle_album"
+        android:title="@string/music_shuffle_album" />
+
+    <item
+        android:id="@+id/action_toggle_album_favorite"
+        android:title="@string/music_add_album_to_favorites" />
+
+    <item
+        android:id="@+id/action_add_cover"
+        android:title="@string/music_add_cover" />
+
+    <item
+        android:id="@+id/action_edit_album_tags"
+        android:title="@string/music_edit_tags" />
+
+    <item
+        android:id="@+id/action_delete_album"
+        android:title="@string/music_delete_album" />
+
+</menu>

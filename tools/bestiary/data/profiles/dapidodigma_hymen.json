@@ -1,0 +1,179 @@
+{
+  "id": "dapidodigma_hymen",
+  "scientific": "Dapidodigma hymen",
+  "group": "invertebrates",
+  "name": {
+    "en": "Western virgin butterfly",
+    "fr": "Papillon vierge occidental"
+  },
+  "sections": {
+    "overview": {
+      "en": "This West African hairstreak is one of two recognized species in the small genus Dapidodigma.",
+      "fr": "Ce thécla ouest-africain est l’une des deux espèces reconnues du petit genre Dapidodigma."
+    },
+    "identification": {
+      "en": "Males have a pale hindwing patch centered on the cell; in D. demeter it lies above.",
+      "fr": "Chez les mâles, la tache pâle de l’aile postérieure est centrée sur la cellule ; chez D. demeter, elle est au-dessus."
+    },
+    "habitat": {
+      "en": "Recorded in forest, dry forest and scrub, often associated with Alchornea.",
+      "fr": "Signalé en forêt, forêt sèche et broussailles, souvent associé à Alchornea."
+    },
+    "diet": {
+      "en": "Its larval food plant is unknown.",
+      "fr": "Sa plante-hôte larvaire est inconnue."
+    },
+    "behavior": {
+      "en": "Females were found among plants attended by Oecophylla ants.",
+      "fr": "Des femelles ont été trouvées parmi des plantes fréquentées par des fourmis Oecophylla."
+    },
+    "reproduction": {
+      "en": "Larvae and pupae of Dapidodigma are attended by ants.",
+      "fr": "Les larves et les pupes de Dapidodigma sont accompagnées par des fourmis."
+    },
+    "ecology": {
+      "en": "Unlike forest-only D. demeter, it also occurs in dry forest and scrub; see its profile.",
+      "fr": "Contrairement à D. demeter, limité à la forêt, il vit aussi en forêt sèche et broussailles ; voir sa fiche."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was located in the sources reviewed.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été localisée dans les sources examinées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "418 Genus Dapidodigma Karsch — Metamorphosis, Lepidopterists’ Society of Africa",
+        "fr": "Genre Dapidodigma Karsch — Metamorphosis, Société des lépidoptéristes d’Afrique"
+      },
+      "url": "https://www.metamorphosis.org.za/articlesPDF/1213/418%20Genus%20Dapidodigma%20Karsch.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist review of markings, habitat and host records."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dapidodigma — Tree of Life Web Project",
+        "fr": "Dapidodigma — Tree of Life Web Project"
+      },
+      "url": "https://tolweb.org/Dapidodigma/112399",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "The synopsis recognizes two species in the genus and reports ant attendance of larvae and pupae."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dapidodigma — Finnish University and Research Network Lepidoptera index",
+        "fr": "Dapidodigma — index lépidoptérologique du réseau universitaire finlandais"
+      },
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/papilionoidea/lycaenidae/theclinae/dapidodigma/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The nomenclatural bibliography lists both Dapidodigma species and the taxonomy used in historical literature."
+      ],
+      "prose_claims": []
+    }
+  ],
+  "uncertainties": [
+    "No larval host has been established; Alchornea is described as an association, not a confirmed food plant.",
+    "No global conservation assessment was located in the consulted sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the specialist genus review for species comparison, habitat and host knowledge; Tree of Life and FUNET are genus and nomenclature cross-checks. D. demeter is linked reciprocally; no degraded-habitat use or larval feeding on Alchornea is inferred."
+}

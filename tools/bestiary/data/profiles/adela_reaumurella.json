@@ -1,0 +1,109 @@
+{
+  "id": "adela_reaumurella",
+  "scientific": "Adela reaumurella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Green longhorn moth",
+    "fr": "Adèle verdoyante"
+  },
+  "sections": {
+    "overview": {
+      "en": "Adela reaumurella is a small day-flying moth in the longhorn moth family Adelidae. It occurs widely in Europe and can be locally conspicuous in spring, when groups of males dance above shrubs and trees. Its metallic green wings and extraordinarily long male antennae make it one of the more recognizable European micro-moths.",
+      "fr": "Adela reaumurella est un petit papillon de nuit diurne de la famille des Adélidés, les « longicornes » au sens anglais. Il est largement répandu en Europe et peut être très visible localement au printemps, lorsque des groupes de mâles volent au-dessus des arbustes et des arbres. Ses ailes vert métallisé et les antennes exceptionnellement longues du mâle en font l’un des microlépidoptères européens les plus reconnaissables."
+    },
+    "identification": {
+      "en": "The adult has unpatterned metallic green to bronze-green forewings and a wingspan around 14–18 mm. Males have very long pale antennae, often longer than the body; female antennae are shorter. The contrast in antenna length and the green, unmarked wings help distinguish it from similar small moths, though close views and the flight season aid identification. The sources describe wingspan and sexual differences in antennae, but do not provide a dependable body-mass range.",
+      "fr": "L’adulte porte des ailes antérieures vert métallique à bronze, sans motif, et mesure environ 14 à 18 mm d’envergure. Le mâle a de très longues antennes pâles, souvent plus longues que le corps ; celles de la femelle sont plus courtes. Cette différence d’antennes et les ailes vertes unies le distinguent de petits papillons proches, même si une observation rapprochée et la période de vol restent utiles. Les sources décrivent l’envergure et les différences sexuelles des antennes, mais ne donnent pas de plage fiable de masse corporelle."
+    },
+    "habitat": {
+      "en": "The species is recorded widely in Britain and across continental Europe. It is associated with bright deciduous woodland, especially warm, relatively dry sites with oak and beech, and can be seen around trees and bushes. Regional records also include woodland edges and places with leaf litter, which provides food for the case-bearing larva.",
+      "fr": "L’espèce est largement signalée en Grande-Bretagne et dans l’Europe continentale. Elle fréquente les boisements lumineux de feuillus, surtout les sites chauds et relativement secs avec chênes et hêtres, et s’observe autour des arbres et des buissons. Les données régionales incluent aussi les lisières et les lieux riches en feuilles mortes, qui nourrissent la chenille porte-case."
+    },
+    "diet": {
+      "en": "The larva feeds on dead leaves and detritus rather than chewing fresh foliage. It carries a small portable case made from leaf pieces while feeding in the litter. Adult feeding is not described in detail by the species accounts used here.",
+      "fr": "La chenille se nourrit de feuilles mortes et de débris plutôt que de feuilles fraîches. Elle transporte une petite case mobile construite avec des fragments de feuilles tout en broutant la litière. Les fiches d’espèce consultées ne décrivent pas précisément l’alimentation de l’adulte."
+    },
+    "behavior": {
+      "en": "Adults fly in sunshine during spring. Males commonly form swarms above the tops of trees and bushes, while females remain lower in the undergrowth and fly up to join the swarm; mating occurs in flight. This visible swarming behavior is a useful clue when identifying the species in the field.",
+      "fr": "Les adultes volent au soleil au printemps. Les mâles se rassemblent souvent en essaims au-dessus des arbres et des buissons, tandis que les femelles restent dans la végétation basse et s’élèvent pour rejoindre l’essaim ; l’accouplement a lieu en vol. Ce comportement visible est un bon indice pour reconnaître l’espèce sur le terrain."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on or in the stems of low plants. The young larva makes a flattened, two-sided portable case and feeds on dead leaves; it may overwinter as a nearly full-grown larva. Pupation takes place in the case in early spring, and adults usually fly in one generation from mid-April into early June, with regional records extending later.",
+      "fr": "La femelle pond sur ou dans les tiges de plantes basses. La jeune chenille fabrique une case aplatie à deux faces et se nourrit de feuilles mortes ; elle peut hiverner presque adulte. La nymphose a lieu dans la case au début du printemps. Les adultes volent généralement en une génération, de la mi-avril au début juin, avec des données régionales plus tardives."
+    },
+    "ecology": {
+      "en": "The larva recycles leaf litter and is itself prey for small predators and parasitoids. Adult swarms provide a seasonal food resource for insectivores. The sources reviewed describe these life-history links but do not quantify the species’ contribution to decomposition or woodland food webs.",
+      "fr": "La chenille participe au recyclage de la litière et sert de proie à de petits prédateurs et parasitoïdes. Les essaims d’adultes offrent une ressource alimentaire saisonnière aux insectivores. Les sources décrivent ces liens biologiques, mais ne quantifient pas la contribution de l’espèce à la décomposition ou aux réseaux alimentaires forestiers."
+    },
+    "conservation": {
+      "en": "The species is described as common in much of Britain and Belgium, although abundance varies locally. The reviewed sources do not provide a current global Red List category or a measured long-term population trend. Its use of bright deciduous woodland and leaf-litter habitat identifies the kinds of sites important for its local persistence.",
+      "fr": "L’espèce est décrite comme commune dans une grande partie de la Grande-Bretagne et de la Belgique, même si son abondance varie localement. Les sources consultées ne donnent ni catégorie mondiale récente de Liste rouge ni tendance mesurée à long terme. Son association aux boisements lumineux de feuillus et à la litière indique les milieux importants pour son maintien local."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Adela reaumurella — UKMoths",
+        "fr": "Adela reaumurella — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/adela-reaumurella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "ecology",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Gives 14–18 mm wingspan, metallic green wings, male-female antenna difference, spring day flight, UK distribution and case-bearing larva feeding on leaf litter.",
+        "The field account provides wingspan and sex differences in antennae, but no body-mass range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Adela reaumurella — Belgian Catalogue of Lepidoptera",
+        "fr": "Adela reaumurella — catalogue des Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5290/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Dutch/French/English catalogue describes woodland habitat, case construction, feeding on detritus, egg laying, larval overwintering, spring flight and aerial swarming and mating."
+      ]
+    },
+    {
+      "title": {
+        "en": "Green Long-horn — Dumfries & Galloway Moths",
+        "fr": "Adèle verdoyante — Dumfries & Galloway Moths"
+      },
+      "url": "https://dgmoths.info/moths/adela-reaumurella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional naturalist account reports males swarming around tree and bush tops, females in undergrowth, larvae on dead leaves and adult activity from spring into summer."
+      ]
+    }
+  ],
+  "illustration_notes": "Small green longhorn moth with metallic unmarked green forewings; exceptionally long pale antennae on the male, noticeably shorter on the female; white background.",
+  "uncertainties": [
+    "Adult feeding and ecological effects are not quantified in the sources consulted.",
+    "Flight dates vary somewhat among regional recording schemes."
+  ],
+  "reviewed": true,
+  "review_note": "UK and Belgian species accounts compared; sexual difference and case-bearing larva retained as identification details."
+}

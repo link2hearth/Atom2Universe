@@ -1,0 +1,164 @@
+{
+  "id": "nesolagus_netscheri",
+  "scientific": "Nesolagus netscheri",
+  "group": "mammals",
+  "name": {
+    "en": "Sumatran striped rabbit",
+    "fr": "Lapin rayé de Sumatra"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sumatran striped rabbit is a rarely observed lagomorph endemic to the Indonesian island of Sumatra.",
+      "fr": "Le lapin rayé de Sumatra est un lagomorphe rarement observé, endémique de l’île indonésienne de Sumatra."
+    },
+    "identification": {
+      "en": "Its distinctive longitudinal stripes separate it from the introduced European rabbit, but sightings are too scarce for a fuller field description here.",
+      "fr": "Ses rayures longitudinales le distinguent du lapin européen introduit, mais les observations sont trop rares pour en donner ici une description de terrain plus complète."
+    },
+    "habitat": {
+      "en": "Records concentrate in the Barisan mountain forests, including Bukit Barisan Selatan and Kerinci Seblat, with some reports from lower elevations.",
+      "fr": "Les observations se concentrent dans les forêts des monts Barisan, notamment à Bukit Barisan Selatan et Kerinci Seblat, avec quelques signalements à plus basse altitude."
+    },
+    "diet": {
+      "en": "Its diet has not been established well enough in the research sources consulted to describe confidently.",
+      "fr": "Les sources de recherche consultées ne documentent pas assez son régime alimentaire pour le décrire avec confiance."
+    },
+    "behavior": {
+      "en": "Indonesian conservation notes describe it as elusive and mainly nocturnal; camera traps have recorded it moving along forest trails at night.",
+      "fr": "Les notes de conservation indonésiennes le décrivent comme discret et surtout nocturne ; des pièges photographiques l’ont enregistré de nuit sur des sentiers forestiers."
+    },
+    "reproduction": {
+      "en": "Reliable field information on its reproduction remains very limited.",
+      "fr": "Les données de terrain fiables sur sa reproduction restent très limitées."
+    },
+    "ecology": {
+      "en": "Its closest living relative is the Annamite striped rabbit (Nesolagus timminsi); the two are sister species within the genus.",
+      "fr": "Son plus proche parent actuel est le lapin rayé annamite (Nesolagus timminsi) ; les deux sont des espèces sœurs au sein du genre."
+    },
+    "conservation": {
+      "en": "Deforestation and encroachment threaten known forest refuges, while the species remains too poorly surveyed for a confident population trend.",
+      "fr": "La déforestation et l’empiètement menacent des refuges forestiers connus, tandis que les prospections restent trop limitées pour établir une tendance démographique fiable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Using camera-trap photos and direct sightings to identify possible refugia for the Vulnerable Sumatran striped rabbit — Oryx",
+        "fr": "Lapin rayé de Sumatra : pièges photographiques et refuges possibles — Oryx"
+      },
+      "url": "https://www.cambridge.org/core/journals/oryx/article/using-camera-trap-photos-and-direct-sightings-to-identify-possible-refugia-for-the-vulnerable-sumatran-striped-rabbit-nesolagus-netscheri/6B35A83B9C3B126A0FEB36DB68B46949",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The study documents a rare, endemic Sumatran lagomorph, camera-trap sightings in Bukit Barisan Selatan and Kerinci Seblat, very limited ecological knowledge, and forest encroachmen"
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 24,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Temuan Kelinci Belang Langka di Rimba Sriwijaya — Indonesian Ministry of Environment and Forestry",
+        "fr": "Découverte du rare lapin rayé dans la forêt de Sriwijaya — ministère indonésien de l’Environnement et des Forêts"
+      },
+      "url": "https://ksdae.kehutanan.go.id/publikasi/artikel/temuan-kelinci-belang-langka-di-rimba-sriwijaya-lQvoZMrU/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The Indonesian ministry account calls the rabbit elusive and nocturnal, relates forest camera-trap records in Isau-Isau, and describes remaining dense forest cover as important hab"
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 25,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sumatran Mammals — Fauna & Flora International / Frankfurt Zoological Society",
+        "fr": "Mammifères de Sumatra — Fauna & Flora International / Frankfurt Zoological Society"
+      },
+      "url": "https://www.internationaltigerproject.org/static/media/uploads/pdf/Sumatran_Mammals_FZS_ebook_2020.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The bilingual field reference identifies the rabbit as an uncommon Sumatran forest mammal and notes that it may be confused with the introduced European rabbit"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 25,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annamite striped rabbit — Animal Diversity Web",
+        "fr": "Lapin rayé annamite — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Nesolagus_timminsi/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Animal Diversity Web account identifies N. netscheri and N. timminsi as sister taxa in the genus Nesolagus."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 18,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older assessments and secondary summaries report differing IUCN categories; this profile therefore avoids stating a current global category.",
+    "The species is exceptionally poorly documented, especially its diet, reproduction and population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the English Oryx camera-trap study with Indonesian Ministry reporting and a bilingual Sumatran mammal field guide; the close-relative link to N. timminsi is cross-checked in Animal Diversity Web."
+}

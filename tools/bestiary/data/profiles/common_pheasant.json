@@ -1,0 +1,233 @@
+{
+  "id": "common_pheasant",
+  "scientific": "Phasianus colchicus",
+  "group": "birds",
+  "name": {
+    "en": "Common pheasant",
+    "fr": "Faisan de Colchide"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common pheasant is a large ground-dwelling bird native to temperate Asia, introduced elsewhere by people.",
+      "fr": "Le faisan de Colchide est un grand galliforme terrestre originaire d’Asie tempérée et introduit ailleurs par l’être humain."
+    },
+    "identification": {
+      "en": "Adults have a compact body, strong legs and a long tapering tail; males are usually larger, often 75–90 cm long including the tail. The male is vividly coloured with a red face, green head and copper body; females are smaller and mottled brown, and the white neck ring is not universal. Cornell reports a combined-sex range of 50–70 cm in length, 500–3,000 g in mass and 56–86 cm in wingspan; males are usually larger and have much longer tails, but the guide does not separate its measurement ranges by sex.",
+      "fr": "L’adulte a un corps trapu, des pattes robustes et une longue queue effilée ; le mâle est généralement plus grand, souvent long de 75 à 90 cm, queue comprise. Le mâle est vivement coloré, avec face rouge, tête verte et corps cuivré ; la femelle, plus petite, est brun moucheté, et le collier blanc n’est pas universel. Cornell indique, tous sexes confondus, une longueur de 50 à 70 cm, une masse de 500 à 3 000 g et une envergure de 56 à 86 cm ; les mâles sont généralement plus grands et ont une queue beaucoup plus longue, mais le guide ne distingue pas les plages de mensurations selon le sexe."
+    },
+    "habitat": {
+      "en": "Its native range reaches from the Caucasus and western Asia through China, across open woodland, scrub and grassland with nearby dense cover. Introductions spread it through Europe and North America, where self-sustaining wild populations coexist with farmed birds and seasonal releases. It also uses field margins, hedges and grassy ditches for shelter beside feeding areas.",
+      "fr": "Son aire naturelle va du Caucase à la Chine ; il fréquente bois clairs, fourrés et prairies proches d’un couvert dense. Des populations sauvages autonomes vivent en Europe et en Amérique du Nord, aux côtés d’oiseaux d’élevage et de lâchers saisonniers. Il utilise aussi les haies, fossés enherbés et bordures de champs comme abris près des zones d’alimentation."
+    },
+    "diet": {
+      "en": "It scratches the ground for seeds, grains, roots and fallen fruit, adding leaves and buds; in spring and summer it takes more insects and other invertebrates. Newly hatched chicks rely especially on animal prey before their diet shifts toward more plant food over the following weeks.",
+      "fr": "Il gratte le sol pour trouver graines, céréales, racines et fruits tombés, et mange aussi feuilles et bourgeons ; au printemps et en été, il prend davantage d’insectes et d’autres invertébrés. À l’éclosion, les poussins dépendent surtout des proies animales, puis se tournent vers les végétaux en grandissant."
+    },
+    "behavior": {
+      "en": "Breeding males announce and defend territories with loud calls, wing-drumming and spread-tail displays; one male may mate with several inconspicuous females. The species usually walks or runs, but when startled it launches almost vertically with rattling wingbeats, then flies a short distance to cover. Outside breeding, females may gather in flocks, with larger groups in winter than in summer.",
+      "fr": "Au printemps, les mâles signalent et défendent leur territoire par des cris, des battements d’ailes et des parades ; un mâle peut s’accoupler avec plusieurs femelles discrètes. Le faisan marche ou court généralement, mais surpris, il décolle presque à la verticale avec des battements sonores puis vole brièvement vers un couvert. Hors reproduction, les femelles se rassemblent parfois en groupes, surtout en hiver."
+    },
+    "reproduction": {
+      "en": "The female lays about 7–15 eggs in a shallow ground nest and alone incubates them for roughly 23–28 days; downy chicks leave soon after hatching, feed themselves, follow her, and can make short flights at about two weeks.",
+      "fr": "La femelle pond environ 7 à 15 œufs dans un nid peu profond au sol et les couve seule durant 23 à 28 jours ; les poussins duvetés quittent vite le nid, se nourrissent eux-mêmes, la suivent et volent brièvement vers deux semaines."
+    },
+    "ecology": {
+      "en": "Pheasants forage along field margins, while foxes and other predators take eggs and chicks. Introduced birds can compete with native gamebirds for food and nesting space, so local effects vary with habitat and release density.",
+      "fr": "Le faisan cherche sa nourriture en bordure des champs, tandis que renards, blaireaux et corvidés s’attaquent aux œufs et aux poussins. Les oiseaux introduits peuvent concurrencer les galliformes locaux pour la nourriture et les sites de nidification ; les effets varient selon l’habitat et l’intensité des lâchers."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2016 classified it as Least Concern but reported a decreasing trend. That assessment estimated 160–220 million mature birds worldwide, despite declines in parts of its range.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2016 le classait en préoccupation mineure, tout en signalant une tendance décroissante. Elle estimait à 160–220 millions le nombre d’individus adultes dans le monde, malgré des déclins dans certaines parties de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common pheasant",
+        "fr": "Common pheasant"
+      },
+      "url": "https://en.wikipedia.org/wiki/Common_pheasant",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Introduced populations; plumage variation and native gamebird competition."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 8,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Faisan de Colchide",
+        "fr": "Faisan de Colchide"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Faisan_de_Colchide",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Sex plumage, introductions, chick diet, predators."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 6,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ring-necked Pheasant Life History",
+        "fr": "Ring-necked Pheasant Life History"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Seasonal food; nest, incubation and chick development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 7,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ring-necked Pheasant Identification",
+        "fr": "Ring-necked Pheasant Identification"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Measurements, sex-specific plumage, cover and escape flight."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 7,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phasianus colchicus (Common Pheasant)",
+        "fr": "Phasianus colchicus (Common Pheasant)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T45100023A85926819.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global Least Concern assessment; decreasing trend and mature population estimate."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 10,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ring-necked Pheasant Identification — Cornell Lab of Ornithology",
+        "fr": "Identification du faisan de Colchide — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/id/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Combined-sex size ranges: length 50–70 cm, mass 500–3,000 g, wingspan 56–86 cm; no sex-specific measurement ranges given."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 17,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult male common pheasant; show long barred tail, iridescent green head, red facial skin and a typical white neck ring, while noting ring variation.",
+  "uncertainties": [
+    "The extent to which released birds contribute to self-sustaining populations varies by region and is not captured uniformly by global status assessments."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: Cornell clutch7–15 and incubation23–28d, precocial chicks confirmed; neck-ring variation and introductions distinguished from natural range. Redundant food/cover sentences removed. Historical global assessment date retained explicitly.",
+  "source_audit_version": 1
+}

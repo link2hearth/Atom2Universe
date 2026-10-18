@@ -1,0 +1,174 @@
+{
+  "id": "dicrossus_maculatus",
+  "scientific": "Dicrossus maculatus",
+  "group": "fish",
+  "name": {
+    "en": "Spade-tail Checkerboard Cichlid",
+    "fr": "Cichlidé damier à queue en spatule"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small South American cichlid is known from the Amazon basin, especially the Tapajós drainage in Brazil.",
+      "fr": "Ce petit cichlidé sud-américain est connu du bassin amazonien, notamment du drainage du Tapajós au Brésil."
+    },
+    "identification": {
+      "en": "Reported maximum lengths are 5.3 cm standard length for males or unsexed fish and 6.0 cm for females; the sources consulted provide little comparative field-identification detail.",
+      "fr": "Les longueurs maximales rapportées sont de 5,3 cm de longueur standard pour les mâles ou les individus non sexés et de 6,0 cm pour les femelles ; les sources consultées donnent peu de détails comparatifs d’identification sur le terrain."
+    },
+    "habitat": {
+      "en": "FishBase records it from freshwater rivers and describes it as benthopelagic; the available species account gives no finer microhabitat description.",
+      "fr": "FishBase le signale dans des rivières d’eau douce et le décrit comme benthopélagique ; la fiche consultée ne précise pas davantage son microhabitat."
+    },
+    "diet": {
+      "en": "Species-specific diet data were not provided by the principal account consulted, so a particular prey or feeding mode cannot be stated confidently here.",
+      "fr": "La principale fiche consultée ne fournit pas de données alimentaires propres à l’espèce ; aucun type de proie ou mode d’alimentation particulier ne peut donc être affirmé ici avec assurance."
+    },
+    "behavior": {
+      "en": "The available species account gives no detailed behavioral observations, and aquarium occurrence is described as rare.",
+      "fr": "La fiche disponible ne rapporte pas d’observations comportementales détaillées et indique que l’espèce est rare dans le commerce aquariophile."
+    },
+    "reproduction": {
+      "en": "Species-specific spawning and breeding information was not available in the consulted profile.",
+      "fr": "Les sources consultées ne fournissent pas d’informations propres à l’espèce sur la ponte et la reproduction."
+    },
+    "ecology": {
+      "en": "A 2005 phylogenetic analysis places Dicrossus and Crenicara together in a crenicarine clade; this links the present fish to the two Crenicara profiles in this bestiary, without implying that either is its direct sister species.",
+      "fr": "Une analyse phylogénétique de 2005 réunit Dicrossus et Crenicara dans un clade crenicarine ; elle relie ce poisson aux deux fiches Crenicara du bestiaire, sans établir que l’une ou l’autre est son espèce sœur directe."
+    },
+    "conservation": {
+      "en": "FishBase displays a global IUCN category of Least Concern, assessed on 7 November 2018; that assessment should not be mistaken for a current population estimate.",
+      "fr": "FishBase affiche la catégorie mondiale UICN « Préoccupation mineure », évaluée le 7 novembre 2018 ; cette évaluation ne constitue pas une estimation actuelle de population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dicrossus maculatus — FishBase species summary",
+        "fr": "Dicrossus maculatus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Dicrossus-maculatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives its distribution, size and assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Morphology, molecules, and character congruence in the phylogeny of South American geophagine cichlids",
+        "fr": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The combined phylogenetic analysis recovers a crenicarine clade containing Crenicara and Dicrossus."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dicrossus — Aquarium Atlas",
+        "fr": "Dicrossus — Aquarium Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/dicrossus-maculatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The aquarium account provides background on this poorly documented aquarium species; species-specific diet and spawning evidence remains sparse."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomic cross-reference to Crenicara latruncularium and Crenicara punctulatum is based on the cited 2005 phylogeny; avoid reading the genus-level clade as a direct sister-species relationship."
+}

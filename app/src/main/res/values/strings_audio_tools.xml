@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Audio editor: step 8 tools (envelope, display, mix down, analysis, marker files) -->
+    <string name="ae_tool_envelope">Volume curve</string>
+    <string name="ae_envelope_reset">Reset the volume curve</string>
+    <string name="ae_track_display">Display</string>
+    <string name="ae_display_wave">Waveform</string>
+    <string name="ae_display_spectro">Spectrogram</string>
+    <string name="ae_mixdown">Mix the tracks into one</string>
+    <string name="ae_mixdown_name">Mix</string>
+    <string name="ae_remove_lead_gap">Remove the empty space at the start</string>
+    <string name="ae_mixdown_progress_title">Mixing</string>
+    <string name="ae_menu_analyze">Analyze…</string>
+    <string name="ae_an_title">Analysis</string>
+    <string name="ae_an_computing">Analyzing…</string>
+    <string name="ae_an_range">Range</string>
+    <string name="ae_an_range_values">%1$s – %2$s</string>
+    <string name="ae_an_length">Length</string>
+    <string name="ae_an_peak">Peak (left · right)</string>
+    <string name="ae_an_pair">%1$s · %2$s</string>
+    <string name="ae_an_rms">Level (RMS)</string>
+    <string name="ae_an_clipped">Saturated samples</string>
+    <string name="ae_an_dc">DC offset</string>
+    <string name="ae_an_silence">Silence</string>
+    <string name="ae_an_spectrum">Frequency spectrum</string>
+    <string name="ae_an_mark_clips">Add markers on the saturated spots</string>
+    <string name="ae_an_clip_marker">Saturation %1$d</string>
+    <string name="ae_markers_export">Export the markers…</string>
+    <string name="ae_markers_import">Import markers…</string>
+</resources>

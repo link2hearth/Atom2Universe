@@ -1,0 +1,145 @@
+{
+  "id": "montastraea_cavernosa",
+  "scientific": "Montastraea cavernosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Great star coral",
+    "fr": "Grand corail étoilé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Montastraea cavernosa is a widespread reef-building stony coral of the tropical Atlantic and Caribbean.",
+      "fr": "Montastraea cavernosa est un corail dur constructeur de récifs, largement réparti dans l’Atlantique tropical et les Caraïbes."
+    },
+    "identification": {
+      "en": "Its colonies form rounded masses, domes or pillars, sometimes flattened at depth. The large, star-shaped polyps are about 6–12 mm across and vary from brown or green to grey or violet.",
+      "fr": "Ses colonies forment des masses arrondies, des dômes ou des piliers, parfois aplatis en profondeur. Les grands polypes étoilés mesurent environ 6 à 12 mm et sont bruns, verts, gris ou violets."
+    },
+    "habitat": {
+      "en": "It occupies many reef settings from shallow water to at least 100 m; abundance is often greatest at intermediate depths, and it tolerates some turbid conditions.",
+      "fr": "Elle vit dans de nombreux milieux récifaux, des faibles profondeurs jusqu’à au moins 100 m ; elle est souvent plus abondante à profondeur moyenne et tolère une certaine turbidité."
+    },
+    "diet": {
+      "en": "At night, extended polyps capture plankton and other small particles with their tentacles; symbiotic algae also contribute energy.",
+      "fr": "La nuit, les polypes déployés capturent du plancton et de petites particules avec leurs tentacules ; des algues symbiotiques contribuent aussi à son apport énergétique."
+    },
+    "behavior": {
+      "en": "The polyps usually retract during the day and extend at night to feed.",
+      "fr": "Les polypes se rétractent généralement le jour et se déploient la nuit pour se nourrir."
+    },
+    "reproduction": {
+      "en": "It releases eggs and sperm into the water during synchronized spawning; colonies have separate sexes, unlike many broadcast-spawning corals.",
+      "fr": "Elle libère ovules et spermatozoïdes dans l’eau lors d’un frai synchronisé ; les colonies sont de sexes séparés, contrairement à de nombreux coraux à fécondation externe."
+    },
+    "ecology": {
+      "en": "The coral’s tissues host symbiotic algae. Heat stress can disrupt this partnership, causing bleaching and weakening the colony.",
+      "fr": "Ses tissus hébergent des algues symbiotiques. Un stress thermique peut rompre cette association, provoquer le blanchissement et affaiblir la colonie."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Least Concern, but that global assessment dates to 2008 and notes reef-habitat loss and climate-related threats.",
+      "fr": "L’évaluation de l’UICN la classe en préoccupation mineure, mais cette évaluation mondiale date de 2008 et signale la perte d’habitats récifaux ainsi que les menaces liées au climat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grand corail étoilé — DORIS / FFESSM",
+        "fr": "Grand corail étoilé — DORIS / FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Montastraea-cavernosa-Grand-corail-etoile-284",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "French diving-federation species account describes colony forms, polyp size, reef depth, nocturnal feeding, spawning and algal symbiosis."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 17,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coral spawning — NOAA Flower Garden Banks National Marine Sanctuary",
+        "fr": "Fraie des coraux — sanctuaire marin NOAA Flower Garden Banks"
+      },
+      "url": "https://flowergarden.noaa.gov/education/coralspawning.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA documents M. cavernosa as a gonochoric broadcast spawner: male and female colonies release sperm or egg bundles."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 18,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Montastraea cavernosa — IUCN Red List",
+        "fr": "Montastraea cavernosa — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T133237A3646174.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN page states the global assessment is Least Concern, last assessed in 2008, and identifies reef habitat reduction and climate change as concerns."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 23,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN assessment is old (2008); its category is not a current population trend. Depth limits and local spawning dates vary among sites."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French DORIS with NOAA observations and the dated IUCN assessment; avoided presenting one local depth or spawning date as universal."
+}

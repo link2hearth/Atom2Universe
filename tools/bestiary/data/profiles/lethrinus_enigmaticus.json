@@ -1,0 +1,175 @@
+{
+  "id": "lethrinus_enigmaticus",
+  "scientific": "Lethrinus enigmaticus",
+  "group": "fish",
+  "name": {
+    "en": "Blackeye emperor",
+    "fr": "Empereur aux yeux noirs"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus enigmaticus Smith, 1959 is a western Indian Ocean emperor, with records from the Seychelles and Saya de Malha Bank.",
+      "fr": "Lethrinus enigmaticus Smith, 1959 est un empereur de l’ouest de l’océan Indien, signalé aux Seychelles et sur le banc de Saya de Malha."
+    },
+    "identification": {
+      "en": "The body is bronze or grey, often lighter below; dark purple spots mark the lower eye rim, and the maxilla is reddish. It reaches about 55 cm total length.",
+      "fr": "Le corps est bronze ou gris, souvent plus clair dessous ; des taches violet sombre bordent le bas de l’œil et la mâchoire supérieure est rougeâtre. Il atteint environ 55 cm de longueur totale."
+    },
+    "habitat": {
+      "en": "It lives over seagrass beds, coral reefs and nearby sand, to about 50 m deep.",
+      "fr": "Il fréquente les herbiers marins, les récifs coralliens et les fonds sableux voisins, jusqu’à environ 50 m de profondeur."
+    },
+    "diet": {
+      "en": "It feeds mainly on echinoderms, crustaceans and fish, with molluscs also recorded.",
+      "fr": "Il se nourrit surtout d’échinodermes, de crustacés et de poissons ; des mollusques sont également signalés."
+    },
+    "behavior": {
+      "en": "The species accounts consulted give little detail on its social behaviour beyond its habitat and feeding observations.",
+      "fr": "Les comptes rendus consultés renseignent peu son comportement social au-delà de son habitat et de son alimentation."
+    },
+    "reproduction": {
+      "en": "A spawning peak was recorded in October at Saya de Malha, but the study did not sample every part of the year; females there were smaller and more numerous than males.",
+      "fr": "Un pic de ponte a été relevé en octobre à Saya de Malha, mais l’étude ne couvrait pas toutes les périodes de l’année ; les femelles y étaient plus petites et plus nombreuses que les mâles."
+    },
+    "ecology": {
+      "en": "It was once synonymized with Lethrinus mahsena, but the FAO catalogue treats the Blackeye emperor as distinct based on its characteristic colour and combination of traits.",
+      "fr": "Il a autrefois été placé en synonymie avec Lethrinus mahsena, mais le catalogue de la FAO considère l’empereur aux yeux noirs comme distinct en raison de sa coloration et de sa combinaison de caractères."
+    },
+    "conservation": {
+      "en": "FishBase lists a 2009 IUCN assessment of Least Concern; the assessment is old and does not describe present local abundance.",
+      "fr": "FishBase indique une évaluation UICN de 2009 en préoccupation mineure ; cette évaluation est ancienne et ne décrit pas l’abondance locale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus enigmaticus — FAO emperor-fish catalogue",
+        "fr": "Lethrinus enigmaticus — catalogue FAO des empereurs"
+      },
+      "url": "https://www.fao.org/4/t0242e/T0242E08.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "FAO reports the colour marks, habitat and prey, an October spawning peak at Saya de Malha from incomplete seasonal sampling, and separation from L. mahsena."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 25,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus enigmaticus — FishBase",
+        "fr": "Lethrinus enigmaticus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lethrinus-enigmaticus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives size, habitat, prey and a 2009 Least Concern assessment."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 11,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus enigmaticus — Coastal Fishes of the Western Indian Ocean, vol. 3",
+        "fr": "Lethrinus enigmaticus — Poissons côtiers de l’océan Indien occidental, vol. 3"
+      },
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_3_text.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The later SAIAB account reports South Africa, Seychelles and Saya de Malha Bank; its entry gives no species-specific social behaviour."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 20,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus enigmaticus — National Museum of Natural History specimen record",
+        "fr": "Lethrinus enigmaticus — spécimen du Muséum national d’histoire naturelle"
+      },
+      "url": "https://science.mnhn.fr/institution/mnhn/collection/ic/item/b-2907?lang=fr_FR",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The MNHN catalogue documents a historical Lethrinus specimen identified as L. enigmaticus; it is used here only as an independent French institutional taxonomic reference, not as a source for ecology."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 30,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "FishBase gives a more restricted known range than the newer SAIAB account, which includes Saya de Malha Bank; the overview reports both localities without implying a complete range.",
+    "The October spawning peak at Saya de Malha came from sampling that did not cover the full year."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 1989 FAO catalogue with FishBase and the later SAIAB regional account; retained the limitation on seasonal sampling and the documented taxonomic separation from L. mahsena."
+}

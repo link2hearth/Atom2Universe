@@ -1,0 +1,406 @@
+{
+  "id": "raven",
+  "scientific": "Corvus corax",
+  "group": "birds",
+  "name": {
+    "en": "Common raven",
+    "fr": "Grand Corbeau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Raven is a large member of the crow family, occupying much of the Northern Hemisphere. Its success comes from a flexible way of life: it can hunt, scavenge, eat plant matter, and exploit food made available by people.",
+      "fr": "Le Grand Corbeau est un grand représentant de la famille des corvidés, présent dans une vaste partie de l’hémisphère Nord. Sa réussite tient à une grande souplesse : il chasse, récupère des charognes, consomme des végétaux et profite aussi des ressources créées par les activités humaines."
+    },
+    "identification": {
+      "en": "An adult measures about 58–69 cm from bill to tail, with a wingspan of roughly 120–150 cm and a mass of about 0.7–1.6 kg; body dimensions vary geographically. It is entirely black, with a heavy bill, thick neck, shaggy throat feathers, and a long, wedge-shaped tail. In comparison, a Carrion Crow is smaller and has a squarer tail, a slimmer bill, and a less shaggy throat; size and silhouette together are more useful than colour, which is black in both. Young ravens look browner and duller than adults. The raven's broad, pointed wings support slow flaps, soaring, and agile rolls or steep dives. Its deep, rough croak carries far, and the species also makes a varied set of softer calls; vocal sounds serve contact, alarm, and territorial contexts.",
+      "fr": "L’adulte mesure environ 58 à 69 cm du bec à la queue, pour une envergure d’environ 120 à 150 cm et une masse de 0,7 à 1,6 kg ; les dimensions varient selon les régions. Son plumage est entièrement noir ; il porte un bec puissant, un cou épais, des plumes ébouriffées sous la gorge et une longue queue en forme de coin. La Corneille noire est plus petite, a la queue plus carrée, le bec plus fin et la gorge moins hirsute : la silhouette et la taille aident davantage que la couleur, noire chez les deux espèces. Les jeunes sont plus ternes et brunâtres que les adultes. Ses ailes longues et larges permettent des battements lents, le vol plané et des tonneaux ou piqués agiles. Son croassement rauque et grave porte loin ; l’espèce possède aussi des cris plus doux et variés, utilisés notamment pour le contact, l’alarme ou la défense du territoire."
+    },
+    "habitat": {
+      "en": "Across its range, the raven uses tundra, mountains, coasts, forests, open country, farmland, and some settlements. It needs suitable ledges, trees, or structures for nesting and enough food nearby; consequently, local abundance depends on landscape and resources rather than a single preferred habitat.",
+      "fr": "Dans son aire, le Grand Corbeau fréquente la toundra, les montagnes, les côtes, les forêts, les espaces ouverts, les terres agricoles et certains lieux habités. Il lui faut un rebord, un arbre ou une structure propice au nid ainsi que des ressources alimentaires accessibles ; son abondance locale dépend donc du paysage et de la nourriture, sans habitat unique obligatoire."
+    },
+    "diet": {
+      "en": "The raven is an opportunistic omnivore. It takes carrion, small mammals, birds and their eggs or nestlings, fish, insects and other invertebrates, as well as grains, fruit, buds, and human food waste. Small prey may be swallowed whole, while hairs, feathers, bones, and other poorly digested remains can be brought back up in compact pellets. It hides surplus food in caches, particularly when a large carcass or other temporary bounty is available, and may move or conceal a cache when competitors are nearby.",
+      "fr": "Le Grand Corbeau est un omnivore opportuniste. Il consomme des charognes, de petits mammifères, des oiseaux, leurs œufs ou leurs oisillons, des poissons, des insectes et d’autres invertébrés, mais aussi des graines, des fruits, des bourgeons et des déchets alimentaires. Les petites proies peuvent être avalées entières, tandis que les poils, plumes, os et autres éléments mal digérés sont parfois régurgités en pelotes compactes. Il dissimule les surplus, surtout lorsqu’une carcasse ou une autre ressource abondante est disponible, et peut déplacer ou cacher sa réserve si des concurrents sont présents."
+    },
+    "behavior": {
+      "en": "Breeding adults usually live as territorial pairs and may remain paired year-round; they defend the nest area and key food patches. Outside these territories, young birds and nonbreeders often gather, and several ravens may converge on a carcass, rubbish tip, or seabird colony. Its characteristic call is a harsh, resonant croak; during courtship, ravens perform tumbling aerial displays. In captive studies, ravens have adjusted cache placement after observing competitors. In one controlled experiment, they guarded caches in response to a rival’s sounds when a peephole allowed that bird to see the caching area; this suggests sensitivity to visual access, without establishing human-like thought.",
+      "fr": "Les adultes reproducteurs vivent généralement en couples territoriaux, qui peuvent rester associés toute l’année ; ils défendent les abords du nid et certaines sources de nourriture. Hors de ces territoires, les jeunes et les non-reproducteurs se regroupent souvent, et plusieurs individus peuvent converger vers une carcasse, une décharge ou une colonie d’oiseaux marins. Son cri caractéristique est un croassement rauque et sonore ; pendant la cour, les corbeaux exécutent des culbutes aériennes. En captivité, des corbeaux ont modifié l’emplacement de leurs réserves après avoir observé des concurrents. Dans une expérience contrôlée, ils ont protégé leurs caches en réaction aux cris d’un rival lorsqu’un judas permettait à celui-ci de voir la zone de stockage ; cela suggère une sensibilité à l’accès visuel, sans établir une pensée comparable à celle des humains."
+    },
+    "reproduction": {
+      "en": "A pair generally establishes and defends a territory before nesting. It builds a bulky stick platform in a tree, on a cliff, or on a human-made structure, then lines the cup with softer material. The female usually incubates a clutch of three to seven eggs for about 20–25 days, while the male often brings food. Chicks hatch helpless, with closed eyes and sparse down; both parents feed them. They leave the nest after roughly four to seven weeks, though fledging does not mean immediate independence. Ravens commonly raise one brood in a year, and young birds may not breed until two to four years old.",
+      "fr": "Le couple établit et défend généralement un territoire avant de nicher. Il construit une grande plateforme de branches dans un arbre, sur une falaise ou sur une structure humaine, puis garnit la coupe de matériaux plus souples. La femelle couve généralement trois à sept œufs pendant environ 20 à 25 jours, tandis que le mâle apporte souvent de la nourriture. Les poussins éclosent démunis, les yeux fermés et avec peu de duvet ; les deux parents les nourrissent. Ils quittent le nid vers l’âge de quatre à sept semaines, mais l’envol ne signifie pas qu’ils sont immédiatement autonomes. Le Grand Corbeau élève généralement une seule nichée par an ; les jeunes peuvent attendre deux à quatre ans avant de se reproduire."
+    },
+    "ecology": {
+      "en": "At carcasses, ravens feed alongside other scavengers; in some seabird colonies, groups take eggs and chicks, so their effects on prey are strongly local. The species is thus both a consumer of carrion and a predator whose impact can matter for vulnerable nesting birds.",
+      "fr": "Sur les carcasses, les corbeaux se nourrissent avec d’autres charognards ; dans certaines colonies d’oiseaux marins, des groupes prennent œufs et poussins, de sorte que leur impact sur les proies varie localement. L’espèce consomme ainsi des charognes tout en exerçant une prédation qui peut affecter des oiseaux nicheurs vulnérables."
+    },
+    "conservation": {
+      "en": "The 2021 European Red List assessment classified the breeding population as Least Concern and increasing; this regional assessment is not a guarantee that every local population is secure. In Britain, raven numbers fell historically and the range contracted westward; as persecution eased from the mid-twentieth century, populations recovered and expanded again. The return has renewed conflicts with livestock interests and conservation managers where ravens take vulnerable young or eggs. The British Trust for Ornithology reports licensed control in Scotland and concern that illegal killing may still affect some local populations.",
+      "fr": "L’évaluation européenne de la Liste rouge publiée en 2021 classe la population nicheuse en Préoccupation mineure et en hausse ; ce statut régional ne garantit pas la sécurité de toutes les populations locales. En Grande-Bretagne, les effectifs ont historiquement baissé et l’aire s’est contractée vers l’ouest ; lorsque la persécution a diminué à partir du milieu du XXe siècle, les populations se sont rétablies et étendues de nouveau. Ce retour ravive les conflits avec l’élevage et la gestion de la conservation dans les lieux où des corbeaux prennent des œufs ou de jeunes animaux vulnérables. Le British Trust for Ornithology signale des contrôles autorisés en Écosse et craint que des destructions illégales touchent encore certaines populations locales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Raven Identification — Cornell Lab of Ornithology",
+        "fr": "Identification du Grand Corbeau — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Common_raven/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Size, shape, and plumage distinguish adults and juveniles."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 8,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Raven Life History — Cornell Lab of Ornithology",
+        "fr": "Cycle de vie du Grand Corbeau — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/common_raven/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "Diet variety, caching, pairs, and gatherings."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 6,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Raven — U.S. National Park Service",
+        "fr": "Grand Corbeau — U.S. National Park Service"
+      },
+      "url": "https://www.nps.gov/articles/000/common-raven.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Broad habitats, flight, and vocal repertoire."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 6,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Raven — Smithsonian's National Zoo and Conservation Biology Institute",
+        "fr": "Grand Corbeau — Smithsonian's National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/animals/common-raven",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Nest placement, eggs, caches, and prey."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 6,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Raven — British Trust for Ornithology",
+        "fr": "Grand Corbeau — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/raven",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British recovery, livestock conflict, and control."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 6,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021 — BirdLife International",
+        "fr": "Liste rouge européenne des oiseaux 2021 — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2021 regional breeding assessment and trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 6,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ravens as small mammal bone accumulators — Palaeogeography, Palaeoclimatology, Palaeoecology",
+        "fr": "Les corbeaux comme accumulateurs d’ossements de petits mammifères — Palaeogeography, Palaeoclimatology, Palaeoecology"
+      },
+      "url": "https://doi.org/10.1016/j.palaeo.2005.05.015",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Pellets retain poorly digested prey remains."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 6,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ravens attribute visual access to unseen competitors — Nature Communications",
+        "fr": "Les corbeaux tiennent compte de l’accès visuel de concurrents invisibles — Nature Communications"
+      },
+      "url": "https://www.nature.com/articles/ncomms10506",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Captive tests examined unseen competitors and food caches."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.en.5",
+        "behavior.fr.4",
+        "behavior.fr.5",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 8,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Raven — Alaska Department of Fish and Game",
+        "fr": "Grand Corbeau — Alaska Department of Fish and Game"
+      },
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=commonraven.main",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Alaska account of chick development and breeding ages."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.en.6",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.5",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 8,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Winter scavenging of ungulate carrion — U.S. Forest Service Research and Development",
+        "fr": "Charognage hivernal de carcasses d’ongulés — U.S. Forest Service Research and Development"
+      },
+      "url": "https://research.fs.usda.gov/treesearch/58647",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Wild ravens feed at ungulate carcasses."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 6,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Raven Overview — Cornell Lab of Ornithology",
+        "fr": "Présentation du Grand Corbeau — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Common_Raven/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Northern Hemisphere range and flexible ways of life."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 8,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common raven morphology — Spanish Vertebrate Encyclopedia, National Museum of Natural Sciences (2023)",
+        "fr": "Morphologie du Grand Corbeau — encyclopédie des vertébrés espagnols, Musée national des sciences naturelles (2023)"
+      },
+      "url": "https://www.vertebradosibericos.org/aves/identificacion/corcoraid.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Published 5 July 2023; dimensions and geographic variation summarized from specialist references."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 12,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "An original illustration is already present in the project; no new image requested.",
+  "uncertainties": [
+    "Body mass spans broad regional and seasonal variation; identification dimensions are more stable than a single weight value.",
+    "The European 2021 assessment is regional; local trends and the current effects of illegal control vary and are incompletely known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; geographically variable dimensions anchored to specialist museum encyclopedia, double punctuation corrected and captive cognition scope retained."
+}

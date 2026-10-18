@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_archipelago_course">The Archipelago</string>
+    <string name="classic_archipelago_description">Course 5 · 18 holes on real islands, completely surrounded by water. Naturally positioned greens, islands of different sizes, and several landing choices on par 4s and 5s. Choose your island according to club, wind and the next approach angle. Any shot that misses land falls into water.</string>
+    <string-array name="classic_archipelago_holes">
+        <item>The First Shore</item><item>The Six Stops</item><item>The Small Lagoon</item>
+        <item>The Three Moorings</item><item>The Twin Islands</item><item>The Blue Crossing</item>
+        <item>The Round Pearl</item><item>The Water Triangle</item><item>The Two Gardens</item>
+        <item>The Broad Basin</item><item>The Scattered Islets</item><item>The Calm Mirror</item>
+        <item>The Angled Stop</item><item>The Three Shores</item><item>The Long Chain</item>
+        <item>The Distant Island</item><item>The Last Stops</item><item>The Archipelago Heart</item>
+    </string-array>
+    <string-array name="classic_archipelago_tips">
+        <item>Two reception islands around 180 and 210 m. Choose the one that suits your club; the slightly offset green is 325 m from the tee. Allow room for rollout.</item>
+        <item>Three islands for the first shot, then three more to prepare the green. Change lines between the groups if you wish. Aim at the centre of the land before choosing the next crossing.</item>
+        <item>An island green about 126 m away. A controlled iron is enough; surrounding rough catches some misses, but water surrounds the entire island.</item>
+        <item>A broad lateral island, a central reception and a small advanced islet. Choose according to carry and the line you want for the green.</item>
+        <item>Two islands before the broad green. This is a short hole: place a wood or iron on the reception whose size and angle suit you, then cross to the flag.</item>
+        <item>Two first islands, then three possible stops before the green. The broad central island offers more land; lateral islets provide different approach angles.</item>
+        <item>About 151 m to the small isolated green. The centre leaves room before the shore. Control a long iron or hybrid and watch the wind.</item>
+        <item>Three islets scattered around the starting line. Choose the one that suits your club: no continuous fairway connects them to the green.</item>
+        <item>Two islands of different sizes provide receptions around 177 and 203 m. Choose the position that leaves a comfortable approach to the green.</item>
+        <item>A broad central reception and two lateral islets. The green stays close after the first crossing; choose your shoreline margin and approach angle.</item>
+        <item>Three islands receive the first shot. The small advanced islet needs more precision; the others provide different positions for the final crossing.</item>
+        <item>The island green is about 170 m away, almost straight ahead. A hybrid or controlled wood crosses the lake. Stop before the rear shore.</item>
+        <item>A small angled islet and a nearer broad island. Both leave short approaches to the green; choose according to club and reception size.</item>
+        <item>Three first islands, with receptions around 186 to 227 m. Switch sides for the approach if you wish; no land path links the islets.</item>
+        <item>Six reception islands form a chain around the hole line. Build your route in two stages, then aim at the green island. Check centre-to-centre carry before each crossing.</item>
+        <item>The green island is about 190 m away. A controlled wood suits the crossing. Land around the green offers some margin, but too much rollout finds water.</item>
+        <item>Three reception islands, each with a different size and angle. Choose your first stop freely, then cross to the slightly offset green.</item>
+        <item>Three first islands and three final stops before the broad central green. Build several possible routes; favour carries you can control and leave room at every shore.</item>
+    </string-array>
+</resources>

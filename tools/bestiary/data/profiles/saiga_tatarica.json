@@ -1,0 +1,119 @@
+{
+  "id": "saiga_tatarica",
+  "scientific": "Saiga tatarica",
+  "group": "mammals",
+  "name": {
+    "en": "Saiga antelope",
+    "fr": "Saïga"
+  },
+  "sections": {
+    "overview": {
+      "en": "This steppe antelope is native to Central Asia, with populations in several countries.",
+      "fr": "Cette antilope des steppes est originaire d’Asie centrale et vit dans plusieurs pays."
+    },
+    "identification": {
+      "en": "Its most distinctive feature is a swollen, flexible nose that projects beyond the mouth.",
+      "fr": "Son trait le plus distinctif est son nez renflé et souple, qui dépasse de la bouche."
+    },
+    "habitat": {
+      "en": "It inhabits dry steppe and semi-desert.",
+      "fr": "Il vit dans les steppes sèches et les semi-déserts."
+    },
+    "diet": {
+      "en": "It eats grasses and herbs, with food varying by season.",
+      "fr": "Il mange des graminées et des herbes, selon les saisons."
+    },
+    "behavior": {
+      "en": "It forms herds and moves seasonally to find grazing and avoid deep snow.",
+      "fr": "Il vit en troupeaux et se déplace selon les saisons pour trouver des pâturages et éviter la neige profonde."
+    },
+    "ecology": {
+      "en": "The unusual nose helps condition inhaled air in the species’ sharply seasonal steppe climate.",
+      "fr": "Ce nez particulier contribue à conditionner l’air inspiré dans le climat très contrasté des steppes."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment was downlisted to Near Threatened in 2023.",
+      "fr": "L’évaluation mondiale de l’UICN a été abaissée à « Quasi menacée » en 2023."
+    },
+    "reproduction": {
+      "en": "Females give birth to one or two calves, often together in open areas.",
+      "fr": "Les femelles mettent bas un ou deux petits, souvent regroupées dans des espaces ouverts."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "WWF Germany — Saiga antelope species profile",
+        "fr": "WWF Allemagne — fiche du saïga"
+      },
+      "url": "https://www.wwf.de/themen-projekte/artenlexikon/saiga-antilope",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "WWF documents the saiga’s nose, range, habitat, diet, herding and calving."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 11,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN SSC Antelope Specialist Group — 2023 report",
+        "fr": "Groupe de spécialistes des antilopes de l’UICN — rapport 2023"
+      },
+      "url": "https://iucn.org/sites/default/files/2024-08/2023-iucn-ssc-antelope-sg-report_publication.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The report states that the global saiga reassessment was published in December 2023 and changed from Critically Endangered to Near Threatened; IUCN distinguishes the Mongolian subspecies assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 27,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Population sizes and status differ sharply between the western and Mongolian forms; the profile therefore omits current population totals."
+  ],
+  "review_note": "Cross-checked a current German species profile and the IUCN specialist-group report for the 2023 global reassessment.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

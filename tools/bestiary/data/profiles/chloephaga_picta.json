@@ -1,0 +1,227 @@
+{
+  "id": "chloephaga_picta",
+  "scientific": "Chloephaga picta",
+  "group": "birds",
+  "name": {
+    "en": "Upland Goose",
+    "fr": "Ouette de Magellan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The upland goose is a South American sheldgoose of open Patagonian country and the Falkland Islands. It is one of several related Chloephaga geese, including the ruddy-headed goose C. rubidiceps and the ash-headed goose C. poliocephala.",
+      "fr": "L’ouette de Magellan est un oiseau herbivore d’Amérique du Sud, des milieux ouverts de Patagonie et des îles Malouines. Elle fait partie du genre Chloephaga, qui comprend aussi l’ouette à tête rousse C. rubidiceps et l’ouette à tête grise C. poliocephala."
+    },
+    "identification": {
+      "en": "The sexes look strikingly different: males are largely white with bold black barring on some plumage, while females are brown and barred, with yellow legs. Its black bill and generally large, goose-like build help separate it from smaller, more uniformly coloured waterfowl.",
+      "fr": "Les sexes présentent un dimorphisme marqué : le mâle est surtout blanc, parfois fortement barré de noir, tandis que la femelle est brune et barrée, avec les pattes jaunes. Son bec noir et sa silhouette de grande oie la distinguent des oiseaux d’eau plus petits et uniformes."
+    },
+    "habitat": {
+      "en": "It uses open grasslands, steppe and damp meadows, often near lakes, rivers or marshy ground. On the continent it breeds in southern Chile and Argentina, with seasonal movements northward; island populations occur in the Falklands.",
+      "fr": "Elle fréquente les prairies ouvertes, la steppe et les prés humides, souvent près des lacs, des rivières ou des zones marécageuses. Sur le continent, elle niche dans le sud du Chili et de l’Argentine et se déplace saisonnièrement vers le nord ; il existe aussi des populations insulaires aux Malouines."
+    },
+    "diet": {
+      "en": "It is primarily a grazer, feeding on grasses and other soft vegetation, including seeds.",
+      "fr": "C’est principalement une brouteuse qui consomme des graminées et d’autres végétaux tendres, ainsi que des graines."
+    },
+    "behavior": {
+      "en": "It forms large flocks, but breeding pairs defend a territory. It is rarely seen in water except when tending young.",
+      "fr": "Elle forme de grandes bandes, mais les couples nicheurs défendent un territoire. On l’observe rarement sur l’eau, sauf lorsqu’elle accompagne ses jeunes."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in grassland, often near wetlands, lining the nest with down. The female incubates a clutch while the male guards the pair’s territory; goslings leave the nest soon after hatching and are led by their parents.",
+      "fr": "Elle niche au sol dans les prairies, souvent près des zones humides, et garnit le nid de duvet. La femelle couve tandis que le mâle défend le territoire du couple ; les oisons quittent le nid peu après l’éclosion et sont conduits par leurs parents."
+    },
+    "ecology": {
+      "en": "By grazing native grassland and crop pasture, it affects forage plants and can come into conflict with ranching. The ruddy-headed goose occurs in the same broad region but is a distinct close relative, so records should not be conflated.",
+      "fr": "En broutant les prairies naturelles et les pâturages cultivés, elle influence les plantes fourragères et peut entrer en conflit avec l’élevage. L’ouette à tête rousse vit dans la même grande région mais constitue une proche parente distincte ; les données des deux espèces ne doivent pas être confondues."
+    },
+    "conservation": {
+      "en": "Chile classified the species as Vulnerable in its 2022 national assessment; this country-level category does not represent a global assessment.",
+      "fr": "Le Chili a classé l’espèce Vulnérable lors de son évaluation nationale de 2022 ; cette catégorie nationale ne représente pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cauquén común — Argentine National Parks Biodiversity Information System",
+        "fr": "Cauquén commun — Système d’information sur la biodiversité des parcs nationaux d’Argentine"
+      },
+      "url": "https://sib.gob.ar/especies/chloephaga-picta",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Argentine park account covers distribution, diet and behaviour."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 8,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Caiquén — Birds of Chile",
+        "fr": "Caiquén — Oiseaux du Chili"
+      },
+      "url": "https://www.avesdechile.cl/166.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Chilean bird account distinguishes male and female plumages and gives the Chilean range and open-country habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 16,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chloephaga picta — Chilean biodiversity platform",
+        "fr": "Chloephaga picta — Plateforme chilienne de biodiversité"
+      },
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/12400",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Chile’s biodiversity platform confirms native status and classification in Chloephaga."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 10,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny of the South American sheldgeese",
+        "fr": "Phylogénie moléculaire des tadornes d’Amérique du Sud"
+      },
+      "url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/000D3885CC8CE57B8CCB485603E4B814/S0959270913000178a.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed phylogeny discusses relationships and population structure among Chloephaga geese."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 10,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet of the Upland Goose Chloephaga picta in Patagonia — Bird Conservation International",
+        "fr": "Régime alimentaire de l’ouette de Magellan en Patagonie — Bird Conservation International"
+      },
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/abs/diet-of-the-upland-goose-chloephaga-picta-in-the-sarmiento-valley-a-breeding-and-wintering-site-in-argentine-patagonia/4B9907D813694E1FA6F4A549314B8CE9",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "2026 study measures diet across seasons and discusses crop conflict."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 10,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chloephaga picta — Chilean Species Classification 2022",
+        "fr": "Chloephaga picta — Classification chilienne des espèces 2022"
+      },
+      "url": "https://clasificacionespecies.mma.gob.cl/wp-content/uploads/2024/04/Chloephaga_picta_19RCE_FINAL.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Chile’s 19th classification process lists Chloephaga picta as Vulnerable."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 9,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "No recent global IUCN assessment was verified during this search; the conservation statement is explicitly national and regional."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Spanish government and Chilean ornithological sources with a peer-reviewed phylogeny; compared the species with other Chloephaga and kept national status separate from global assessment."
+}

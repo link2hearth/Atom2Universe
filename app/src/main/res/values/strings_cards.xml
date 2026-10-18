@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Jeux de cartes contre l'IA (games/cards) -->
+    <string name="card_rank_ace">A</string>
+    <string name="card_rank_jack">J</string>
+    <string name="card_rank_queen">Q</string>
+    <string name="card_rank_king">K</string>
+
+    <string name="cards_seat_you">You</string>
+    <string name="cards_seat_west">West</string>
+    <string name="cards_seat_north">North</string>
+    <string name="cards_seat_east">East</string>
+    <string name="cards_result_won">Won</string>
+    <string name="cards_result_lost">Lost</string>
+    <string name="cards_points">%1$d pts</string>
+    <string name="cards_new_confirm">Start a new game?</string>
+
+    <string name="crazy8_title">Crazy Eights</string>
+    <string name="crazy8_description">Empty your hand first, eights are wild</string>
+    <string name="crazy8_rules">Be the first to empty your hand.\n\nEach player starts with 5 cards. Play a card of the same suit or the same rank as the top card of the discard pile. An eight goes on anything: its player picks the suit that must follow.\n\nIf you can\'t play, draw a card (up to 5 times), then pass.\n\nThe winner scores the cards left in the others\' hands: an eight is worth 50, a face card or a ten 10, an ace 1, the others their number.\n\nDrag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
+    <string name="crazy8_draw">Draw</string>
+    <string name="crazy8_pass">Pass</string>
+
+    <string name="hearts_title">Hearts</string>
+    <string name="hearts_description">Dodge the hearts and the queen of spades</string>
+    <string name="hearts_rules">Avoid points: each heart costs 1, the queen of spades 13. The lowest score wins.\n\nEach hand starts by passing three cards (to the left, to the right, across, then none, and so on). The player holding the 2 of clubs opens. Follow the suit led if you can; otherwise play any card, but no heart and no queen of spades on the first trick unless you have nothing else. Hearts can\'t be led until one has been played. The highest card of the suit led takes the trick and leads the next one.\n\nIf one player takes all 26 points, everyone else gets 26 and they get 0.\n\nThe game ends when a player reaches %1$d points.\n\nDrag a card onto the table to play it, or tap it once to lift it and once more to play it. When passing, drag or tap three cards, then press the button.</string>
+    <string name="hearts_pass_left">Pass left</string>
+    <string name="hearts_pass_right">Pass right</string>
+    <string name="hearts_pass_across">Pass across</string>
+    <string name="hearts_hand">Hand %1$d</string>
+    <string name="hearts_caption">%1$d +%2$d</string>
+
+    <string name="spades_title">Spades</string>
+    <string name="spades_description">Bid your tricks, spades are trump</string>
+    <string name="spades_rules">Win the number of tricks you bid. You and the player across from you are a team against the other two. Spades are trump.\n\nEach hand starts with the bids: say how many tricks you expect to win (0 is a \"nil\": you promise to win none). Your team must win at least the total of its bids.\n\nThen play thirteen tricks. Follow the suit led if you can; otherwise play anything, and a spade beats any other suit. You can\'t lead a spade until one has been played, unless you have only spades. The highest card of the suit led, or the highest spade, takes the trick and leads the next one.\n\nScoring: 10 points per bid trick if the team makes its bid, plus 1 for each extra trick (a \"bag\": ten bags cost 100 points). A missed bid costs 10 per bid trick. A nil made earns 100, a nil missed costs 100.\n\nThe game ends when a team reaches %1$d points.\n\nUse − and + to choose your bid. Drag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
+    <string name="spades_bid">Bid %1$d</string>
+    <string name="spades_nil">Nil</string>
+    <string name="spades_nil_mark">∅</string>
+    <string name="cards_team_score">We %1$d · They %2$d</string>
+
+    <string name="ohhell_title">Oh Hell</string>
+    <string name="ohhell_description">Win exactly the tricks you bid</string>
+    <string name="ohhell_rules">Win exactly the number of tricks you bid. Everyone plays for themselves.\n\nEach hand deals fewer cards than the last (7, then 6, down to 1). One card is turned up: its suit is trump.\n\nEveryone bids in turn how many tricks they will win. The last player to bid can\'t pick the number that would make all the bids add up to the number of tricks: somebody has to be wrong.\n\nThen play the tricks. Follow the suit led if you can; otherwise play anything, and a trump beats any other suit. The highest card of the suit led, or the highest trump, takes the trick and leads the next one.\n\nWinning exactly your bid scores 10 plus the bid; otherwise nothing. The highest total after the last hand wins.\n\nUse − and + to choose your bid. Drag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
+    <string name="ohhell_bid">Bid %1$d</string>
+    <string name="ohhell_hand">Hand %1$d/%2$d</string>
+
+    <string name="euchre_title">Euchre</string>
+    <string name="euchre_description">Choose trump, take three tricks</string>
+    <string name="euchre_rules">Take at least three of the five tricks once trump is chosen. You and the player across from you are a team against the other two. The deck has 24 cards, from the 9 to the ace.\n\nChoosing trump. One card is turned up. In turn, each player passes or orders it up: its suit becomes trump, and the dealer picks it up and discards a card. If everyone passes, a second round lets each player name another suit as trump; the dealer can\'t pass. Whoever chooses trump may play alone: their partner sits out, and taking all five tricks then scores 4.\n\nThe jacks come first. In the trump suit, the jack is the highest card (the right bower), followed by the other jack of the same colour (the left bower, which counts as a trump), then the ace, king, queen, 10 and 9.\n\nFollow the suit led if you can (the left bower counts as trump). The highest trump, or else the highest card of the suit led, takes the trick and leads the next one.\n\nThe team that chose trump scores 1 point for three or four tricks and 2 for all five; if it takes fewer than three, the other team scores 2. The game ends when a team reaches %1$d points.\n\nPress Alone before ordering up or naming a suit to play without your partner. When you pick up the turned card, drag or tap the card you discard. Drag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
+    <string name="euchre_pass">Pass</string>
+    <string name="euchre_order">Order up</string>
+    <string name="euchre_alone">Alone</string>
+    <string name="euchre_dealer">Dealer</string>
+
+    <string name="gofish_title">Go Fish</string>
+    <string name="gofish_description">Ask for cards, collect sets of four</string>
+    <string name="gofish_rules">Collect the most books: sets of four cards of the same rank.\n\nEach player starts with 7 cards. On your turn, pick a rank you hold and ask another player for it. If they have some, they give you all of them and you play again. Otherwise it is \"Go fish!\": you draw a card, and you play again only if it is the rank you asked for.\n\nAs soon as you hold four cards of a rank, they are laid down as a book. A player left without cards draws one. The game ends when all thirteen books are made; the most books wins.\n\nTap a card to choose its rank (every card of that rank rises), then tap the player to ask. Dragging a card onto the table works too.</string>
+    <string name="cards_score_gain">%1$d +%2$d</string>
+
+    <string name="gin_title">Gin Rummy</string>
+    <string name="gin_description">Make combinations, knock with little deadwood</string>
+    <string name="gin_rules">Make combinations and keep as few loose cards as possible.\n\nA combination is three or four cards of the same rank, or three or more cards in a row of the same suit (the ace is low: A-2-3 counts, Q-K-A does not). The other cards are deadwood: an ace is worth 1, a 2 to 10 their number, a face card 10. Your deadwood is outlined.\n\nEach player starts with 10 cards. On your turn, draw a card from the stock or take the top card of the discard pile, then discard one card. To start, the player who isn\'t dealing may take the turned card; if they pass, the dealer may; if both pass, the first player draws from the stock.\n\nIf your deadwood is 10 or less once you have discarded, you can knock and the hand ends. The other player lays their cards off on your combinations (automatically), then both count their deadwood. If yours is lower, you score the difference. With no deadwood at all it is gin: you score the difference plus 20. If the other player ties or beats you, it is an undercut: they score the difference plus 10.\n\nWhen only two cards are left in the stock, the hand is a draw. The game ends when a player reaches %1$d points.\n\nTap a pile to draw. Drag a card onto the table to discard it, or tap it once to lift it and once more to discard. A lifted card offers Knock when you can.</string>
+    <string name="gin_pass">Pass</string>
+    <string name="gin_take">Take</string>
+    <string name="gin_draw">Draw</string>
+    <string name="gin_knock">Knock</string>
+    <string name="gin_gin">Gin</string>
+    <string name="gin_continue">Continue</string>
+    <string name="gin_deadwood">Deadwood %1$d</string>
+    <string name="gin_result_knock">Knock</string>
+    <string name="gin_result_gin">Gin!</string>
+    <string name="gin_result_undercut">Undercut</string>
+    <string name="gin_result_draw">Draw</string>
+
+    <string name="cribbage_title">Cribbage</string>
+    <string name="cribbage_description">Count fifteens, pairs and runs up to 121</string>
+    <string name="cribbage_rules">Be the first to score %1$d points.\n\nEach hand, six cards are dealt. Both players put two cards into the crib, an extra hand that belongs to the dealer. A card is then turned up (a jack scores 2 for the dealer).\n\nThe play: starting with the player who isn\'t dealing, take turns laying a card on a pile whose total can\'t go over 31. You score 2 for making 15 or 31, 2 for a pair, 6 for three of a kind, 12 for four of a kind, and one point per card for a run of three or more (in any order). A player who can\'t play says \"go\" automatically; when neither can, the last player to play scores 1 and the pile starts again.\n\nThe count: the player who isn\'t dealing counts their four cards with the turned-up card, then the dealer, then the dealer\'s crib. Each set of cards adding up to 15 scores 2; each pair 2; each run of three or more one point per card; four cards of one suit 4 (5 with the turned-up card, and the crib needs all five); a jack of the turned-up card\'s suit 1.\n\nThe game ends the moment someone reaches the target.\n\nTap or drag two cards to put them in the crib, then press the button. After that, drag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
+    <string name="cribbage_crib">Crib</string>
+    <string name="cribbage_to_crib">To the crib</string>
+    <string name="cribbage_continue">Continue</string>
+
+    <plurals name="gofish_books">
+        <item quantity="one">%1$d book</item>
+        <item quantity="other">%1$d books</item>
+    </plurals>
+    <string name="gofish_last">%1$s → %2$s: %3$s %4$s</string>
+</resources>

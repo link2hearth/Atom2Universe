@@ -1,0 +1,164 @@
+{
+  "id": "triops_cancriformis",
+  "scientific": "Triops cancriformis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Tadpole shrimp",
+    "fr": "Triops crabiforme"
+  },
+  "sections": {
+    "overview": {
+      "en": "Triops cancriformis is a branchiopod crustacean of the order Notostraca, commonly called a tadpole shrimp.",
+      "fr": "Triops cancriformis est un crustacé branchiopode de l’ordre des Notostraca, communément appelé « crevette-têtard »."
+    },
+    "identification": {
+      "en": "Like other tadpole shrimps, it has a distinctive shielded body and a long, forked tail.",
+      "fr": "Comme les autres crevettes-têtards, il a un corps couvert d’un bouclier et une longue queue fourchue, silhouette caractéristique."
+    },
+    "habitat": {
+      "en": "It lives in temporary freshwater pools that periodically dry out.",
+      "fr": "Il vit dans des mares temporaires d’eau douce qui s’assèchent périodiquement."
+    },
+    "diet": {
+      "en": "Species-specific diet information is sparse; field literature reports feeding on organic detritus.",
+      "fr": "Les données alimentaires propres à l’espèce sont limitées ; la littérature de terrain rapporte une consommation de détritus organiques."
+    },
+    "behavior": {
+      "en": "Its active aquatic phase follows refilling, and surveys commonly find adults a few weeks after a pool fills.",
+      "fr": "Sa phase aquatique active suit le remplissage des mares ; les suivis trouvent souvent les adultes quelques semaines après leur mise en eau."
+    },
+    "reproduction": {
+      "en": "Populations use different reproductive modes, and each mode can produce dormant cysts that survive drought in pond sediment.",
+      "fr": "Les populations présentent différents modes de reproduction, et chacun peut produire des cystes dormants qui survivent à la sécheresse dans les sédiments."
+    },
+    "ecology": {
+      "en": "It belongs to a mainly Palearctic Triops lineage, whereas the closely related T. longicaudatus–newberryi lineage is largely American.",
+      "fr": "Il appartient à une lignée de Triops surtout paléarctique, tandis que la lignée proche T. longicaudatus–newberryi est principalement américaine."
+    },
+    "conservation": {
+      "en": "In Britain it is treated as a rare, survey-priority species; this regional concern should not be mistaken for a global assessment.",
+      "fr": "En Grande-Bretagne, il est considéré comme une espèce rare à rechercher en priorité ; cette situation régionale ne vaut pas évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Toward a Global Phylogeny of the “Living Fossil” Crustacean Order of the Notostraca",
+        "fr": "Phylogénie mondiale de l’ordre des Notostraca"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3329532/",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The molecular study recognizes the Notostraca order and distinguishes the Palearctic T. cancriformis lineage from the mainly American T. longicaudatus–newberryi lineage."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 21,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Recent evolution of alternative reproductive modes in Triops cancriformis",
+        "fr": "Évolution récente des modes de reproduction alternatifs chez Triops cancriformis"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2075510/",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The study describes temporary freshwater ponds, population-level variation in reproductive modes, and drought-resistant diapausing cysts in sediment."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 17,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tadpole shrimp — rare species recording sheet",
+        "fr": "Fiche de suivi d’une espèce rare : crevette-têtard"
+      },
+      "url": "https://content.freshwaterhabitats.org.uk/2015/03/TADPOLE-SHIMP-RARE-SPECIES-RECORDING-SHEET.pdf",
+      "supports": [
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The British recording guide describes the animals’ distinctive form, temporary-pool cycle, approximate adult survey window, and their rare-species monitoring context."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 20,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First observation of Triops cancriformis in Portugal",
+        "fr": "Première observation de Triops cancriformis au Portugal"
+      },
+      "url": "https://dialnet.unirioja.es/descarga/articulo/4661732.pdf",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "A field paper on Portuguese T. cancriformis cites organic detritus as food."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 12,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The British rarity statement is local; this draft makes no global conservation-status claim.",
+    "Diet information is sparse and the detritus statement is based on limited field reporting."
+  ],
+  "review_note": "Compared its biogeographic lineage with T. longicaudatus using molecular phylogeny; reproduction and temporary-pool ecology are sourced separately.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

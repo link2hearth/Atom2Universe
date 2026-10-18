@@ -1,0 +1,141 @@
+{
+  "id": "cuckoo",
+  "scientific": "Cuculus canorus",
+  "group": "birds",
+  "name": {
+    "en": "Common cuckoo",
+    "fr": "Coucou gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common cuckoo is a migratory Eurasian bird best known for laying eggs in other birds’ nests.",
+      "fr": "Le coucou gris est un oiseau migrateur d’Eurasie surtout connu pour pondre dans les nids d’autres oiseaux."
+    },
+    "identification": {
+      "en": "Adults are slim, long-tailed birds with pointed wings; many have grey upperparts and finely barred pale underparts.",
+      "fr": "Les adultes sont élancés, à longue queue et aux ailes pointues ; beaucoup ont le dessus gris et le dessous pâle finement barré."
+    },
+    "habitat": {
+      "en": "It uses woodland edges, scrub and open country where suitable host birds and insect prey are available.",
+      "fr": "Il fréquente lisières, broussailles et milieux ouverts où se trouvent des hôtes convenables et des insectes-proies."
+    },
+    "diet": {
+      "en": "It feeds mainly on insects, including caterpillars that many birds avoid because of their hairs.",
+      "fr": "Il se nourrit surtout d’insectes, notamment de chenilles velues que beaucoup d’oiseaux évitent."
+    },
+    "behavior": {
+      "en": "The male gives the familiar repeated ‘cuck-oo’ call; females are quieter and more elusive.",
+      "fr": "Le mâle lance le familier « cou-cou » répété ; les femelles sont plus discrètes et difficiles à observer."
+    },
+    "reproduction": {
+      "en": "A female lays in the nest of a host species, which incubates the egg and feeds the chick; host choice varies among regions.",
+      "fr": "La femelle pond dans le nid d’une espèce hôte, qui couve l’œuf et nourrit le poussin ; le choix des hôtes varie selon les régions."
+    },
+    "ecology": {
+      "en": "Its breeding depends on host birds, while its insect diet links it to seasonal caterpillar populations.",
+      "fr": "Sa reproduction dépend des oiseaux hôtes, tandis que son régime insectivore le lie aux populations saisonnières de chenilles."
+    },
+    "conservation": {
+      "en": "BTO reports a decline in the British population, with marked regional variation; that trend should not be generalized to the whole range.",
+      "fr": "Le BTO signale un déclin de la population britannique, avec de fortes variations régionales ; cette tendance ne doit pas être généralisée à toute l’aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cuckoo — BTO BirdFacts",
+        "fr": "Coucou — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/cuckoo",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BTO describes migration and a UK population decline that varies regionally."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 11,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coucou gris — LPO Normandie",
+        "fr": "Coucou gris — LPO Normandie"
+      },
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/coucou-gris/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French LPO account describes habitats, caterpillar prey, brood parasitism and regional host variation."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 14,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coucou gris — LPO Provence-Alpes-Côte d’Azur",
+        "fr": "Coucou gris — LPO Provence-Alpes-Côte d’Azur"
+      },
+      "url": "https://paca.lpo.fr/protection/especes/zoom-sur-une-espece/6856-le-coucou-gris",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "French LPO account describes plumage and the different calls of the sexes."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 12,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host species and breeding success vary geographically; the notice avoids implying that every host population is used equally."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English BTO material with two French LPO accounts; the conservation trend is explicitly limited to Britain."
+}

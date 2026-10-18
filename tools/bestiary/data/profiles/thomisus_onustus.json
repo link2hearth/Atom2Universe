@@ -1,0 +1,142 @@
+{
+  "id": "thomisus_onustus",
+  "scientific": "Thomisus onustus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Flower crab spider",
+    "fr": "Thomise replet"
+  },
+  "sections": {
+    "overview": {
+      "en": "Thomisus onustus is a flower-dwelling crab spider found across much of Europe, North Africa and Asia.",
+      "fr": "Thomisus onustus est une araignée-crabe des fleurs présente dans une grande partie de l’Europe, de l’Afrique du Nord et de l’Asie."
+    },
+    "identification": {
+      "en": "Females are much larger than males and may be white, yellow or pink; their colour can change over several days.",
+      "fr": "Les femelles sont bien plus grandes que les mâles et peuvent être blanches, jaunes ou roses ; leur couleur peut changer en quelques jours."
+    },
+    "habitat": {
+      "en": "It waits on flowers, especially in warm, sunny sites, where flower visitors come within reach.",
+      "fr": "Elle attend sur les fleurs, surtout dans les endroits chauds et ensoleillés, où les insectes visiteurs passent à sa portée."
+    },
+    "diet": {
+      "en": "It ambushes visiting insects, including bees, butterflies and hoverflies.",
+      "fr": "Elle capture à l’affût les insectes visiteurs, notamment des abeilles, des papillons et des syrphes."
+    },
+    "behavior": {
+      "en": "Its flower-coloured appearance offers imperfect camouflage, and how conspicuous it is can affect its risk of attack.",
+      "fr": "Sa couleur assortie aux fleurs offre un camouflage imparfait, et son degré de visibilité peut influer sur le risque d’attaque."
+    },
+    "reproduction": {
+      "en": "The consulted identification and field sources do not provide a sufficiently detailed account of its reproduction.",
+      "fr": "Les sources d’identification et de terrain consultées ne décrivent pas sa reproduction avec assez de précision."
+    },
+    "ecology": {
+      "en": "By ambushing pollinating insects, it is a predator within flower-visiting insect communities.",
+      "fr": "En chassant à l’affût les insectes pollinisateurs, elle est un prédateur des communautés fréquentant les fleurs."
+    },
+    "conservation": {
+      "en": "The consulted sources provide a broad range but no global conservation assessment.",
+      "fr": "Les sources consultées indiquent une vaste répartition, mais pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog — Thomisus onustus",
+        "fr": "World Spider Catalog — Thomisus onustus"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/48574/Thomisus_onustus",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The catalog recognizes the species and summarizes its distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 9,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Araneae — Thomisus onustus",
+        "fr": "Araneae — Thomisus onustus"
+      },
+      "url": "https://araneae.nmbe.ch/data/940/Thomisus_onustus?lang=de",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Females measure about 7–10 mm and males 2–3.6 mm; females occur in white, yellow and pink forms and may change colour over days; the spider hunts insects on flowers; this account gives no reproductive details."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 35,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Animal Behaviour — Crypsis in a flower crab spider",
+        "fr": "Animal Behaviour — Camouflage chez une araignée-crabe des fleurs"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0003347220300944",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "An experiment found that colour matching is imperfect and that conspicuousness can influence predation risk."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 15,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted sources do not establish a global population trend or detailed reproductive account."
+  ],
+  "review_note": "Kept the account to well-supported flower hunting, marked colour variability, and experimental evidence on imperfect crypsis.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

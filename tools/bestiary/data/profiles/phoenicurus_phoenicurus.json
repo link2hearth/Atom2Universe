@@ -1,0 +1,144 @@
+{
+  "id": "phoenicurus_phoenicurus",
+  "scientific": "Phoenicurus phoenicurus",
+  "group": "birds",
+  "name": {
+    "en": "Common Redstart",
+    "fr": "Rougequeue à front blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phoenicurus phoenicurus, the Common Redstart, is a migratory Old World flycatcher.",
+      "fr": "Phoenicurus phoenicurus, le Rougequeue à front blanc, est un gobemouche migrateur de l’Ancien Monde."
+    },
+    "identification": {
+      "en": "The male has a red tail, orange breast, grey back, black face and white forehead; the female is browner.",
+      "fr": "Le mâle a la queue rousse, la poitrine orangée, le dos gris, la face noire et le front blanc ; la femelle est plus brune."
+    },
+    "habitat": {
+      "en": "It breeds mainly in open deciduous woodland, including mature woods with clearings and nest cavities.",
+      "fr": "Il niche surtout dans les boisements feuillus ouverts, notamment les vieux bois avec clairières et cavités."
+    },
+    "diet": {
+      "en": "It feeds chiefly on insects and other invertebrates; berries are also eaten.",
+      "fr": "Il mange surtout des insectes et autres invertébrés ; il consomme aussi des baies."
+    },
+    "behavior": {
+      "en": "European populations migrate to Africa for winter; the bird often flicks its red tail while perched.",
+      "fr": "Les populations européennes migrent en Afrique pour l’hiver ; l’oiseau hoche souvent sa queue rousse lorsqu’il est perché."
+    },
+    "reproduction": {
+      "en": "It nests in tree holes, wall cavities or nest boxes; the female incubates the eggs.",
+      "fr": "Il niche dans des trous d’arbres ou de murs, ou dans des nichoirs ; la femelle couve les œufs."
+    },
+    "ecology": {
+      "en": "As a long-distance migrant, it depends on suitable breeding woodland and African wintering habitat. The Black Redstart, Phoenicurus ochruros, is darker and often uses rocky or urban habitats.",
+      "fr": "Migrateur au long cours, il dépend de boisements favorables pour nicher et d’habitats africains pour hiverner. Le Rougequeue noir, Phoenicurus ochruros, est plus sombre et fréquente souvent les milieux rocheux ou urbains."
+    },
+    "conservation": {
+      "en": "The LPO reports a global IUCN category of Least Concern.",
+      "fr": "La LPO rapporte une catégorie UICN mondiale de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Redstart bird facts — British Trust for Ornithology",
+        "fr": "Faits sur le Rougequeue à front blanc — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/redstart",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "UK breeding bird that winters in sub-Saharan Africa; deciduous woodland species; nests in holes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 14,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rougequeue à front blanc — Ligue pour la Protection des Oiseaux",
+        "fr": "Rougequeue à front blanc — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-a-front-blanc",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "French bird conservation organization describes sex differences, insectivorous diet and Least Concern status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 13,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rougequeue noir — Ligue pour la Protection des Oiseaux",
+        "fr": "Rougequeue noir — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-noir",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Comparison account confirms the black redstart is much darker, with rocky and urban habitat associations."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 15,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat and migration patterns vary across the species’ broad range; this summary focuses on European populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a UK ornithological account with the French LPO species page; the migration sentence is explicitly limited to European populations."
+}

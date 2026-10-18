@@ -1,0 +1,163 @@
+{
+  "id": "hyladelphys_kalinowskii",
+  "scientific": "Hyladelphys kalinowskii",
+  "group": "mammals",
+  "name": {
+    "en": "Kalinowski's Mouse Opossum",
+    "fr": "Opossum souris de Kalinowski"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small didelphid marsupial is the sole living species in the genus Hyladelphys; it was originally placed in Gracilinanus.",
+      "fr": "Ce petit marsupial didelphidé est la seule espèce vivante du genre Hyladelphys ; il a d’abord été placé dans Gracilinanus."
+    },
+    "identification": {
+      "en": "Adults are about 67–85 mm in head-and-body length and weigh 13–18 g.",
+      "fr": "Les adultes mesurent environ 67–85 mm de la tête au corps et pèsent 13–18 g."
+    },
+    "habitat": {
+      "en": "It has been trapped in humid evergreen forest, including primary forest near streams in Peru.",
+      "fr": "Elle a été capturée en forêt sempervirente humide, notamment en forêt primaire près de cours d’eau au Pérou."
+    },
+    "diet": {
+      "en": "Its feeding habits have not been documented in the species account consulted.",
+      "fr": "Son régime alimentaire n’est pas documenté dans la fiche d’espèce consultée."
+    },
+    "behavior": {
+      "en": "It is elusive and likely nocturnal and arboreal; very little behavior has been observed directly.",
+      "fr": "Elle est discrète et probablement nocturne et arboricole ; son comportement a été très peu observé directement."
+    },
+    "reproduction": {
+      "en": "The available species account provides no confirmed details of its reproductive cycle.",
+      "fr": "La fiche d’espèce disponible ne donne aucun détail confirmé sur son cycle reproducteur."
+    },
+    "ecology": {
+      "en": "Only scattered localities are documented, and the apparent gaps may reflect the difficulty of trapping this small, rarely collected opossum.",
+      "fr": "Seules des localités dispersées sont documentées ; les lacunes apparentes peuvent refléter la difficulté de capturer cet opossum rarement collecté."
+    },
+    "conservation": {
+      "en": "The IUCN Red List assesses the species as Least Concern.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Kalinowski's mouse opossum — Animal Diversity Web",
+        "fr": "Opossum souris de Kalinowski — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Hyladelphys_kalinowskii/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "ADW reports forest habitat and sparse records, and notes that diet, reproduction and behavior remain poorly known."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 17,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyladelphys — Mammal Species of the World",
+        "fr": "Hyladelphys — Mammal Species of the World"
+      },
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=10400062",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "MSW3 recognizes Hyladelphys as a monotypic genus and lists Gracilinanus kalinowskii as its type species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 15,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Marsupiaux et rongeurs de Guyane — Kwata",
+        "fr": "Marsupiaux et rongeurs de Guyane — Kwata"
+      },
+      "url": "https://kwata.net/wp-content/uploads/2024/05/LIVRE_marsupiaux-et-rongeurs-de-guyane_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French field guide gives head-and-body length of 67–85 mm and mass of 13–18 g."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 15,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyladelphys kalinowskii — IUCN Red List",
+        "fr": "Hyladelphys kalinowskii — Liste rouge de l’UICN"
+      },
+      "url": "https://www.iucnredlist.org/species/9422/197309523",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The current IUCN species assessment classifies Hyladelphys kalinowskii as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 11,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet, behavior and reproduction remain poorly documented; only scattered collection localities are known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the French Guiana field guide for size and the current IUCN species page for global status; natural-history gaps remain explicit."
+}

@@ -1,0 +1,230 @@
+{
+  "id": "apistogramma_pertensis",
+  "scientific": "Apistogramma pertensis",
+  "group": "fish",
+  "name": {
+    "en": "Amazon Dwarf Cichlid",
+    "fr": "Apistogramme d’Amazonie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma pertensis is a small freshwater cichlid from Brazil, described by C. T. Haseman in 1911. FishBase calls it the Amazon dwarf cichlid and records it from the lower Rio Negro and the Amazon-Solimões corridor.",
+      "fr": "Apistogramma pertensis est un petit cichlidé d’eau douce du Brésil, décrit par C. T. Haseman en 1911. FishBase le nomme cichlidé nain d’Amazonie et le signale dans le bas rio Negro ainsi que le long du corridor Amazone-Solimões."
+    },
+    "identification": {
+      "en": "Adults are slender, with a dark lateral band and a distinct caudal-base spot; preserved and live color patterns can vary. FishBase lists 3.9 cm standard length for male or unsexed fish and a separate 4.5 cm total-length record for females, so those values are not directly comparable. No reliable mass, width or body-height value was found in the cited species accounts.",
+      "fr": "Les adultes sont élancés, avec une bande latérale sombre et une tache distincte à la base de la caudale ; les motifs varient selon l’état et la coloration. FishBase indique 3,9 cm de longueur standard pour les mâles ou individus non sexés et une autre valeur de 4,5 cm en longueur totale pour les femelles ; elles ne sont donc pas directement comparables. Les fiches consultées ne donnent pas de masse, de largeur ni de hauteur corporelle fiable."
+    },
+    "habitat": {
+      "en": "The range includes the lower Rio Negro and reaches along the Amazon-Solimões from near Manacapuru toward Monte Alegre. Species accounts place it in freshwater tropical river systems, but detailed site-by-site habitat measurements are sparse.",
+      "fr": "L’aire comprend le bas rio Negro et s’étend le long de l’Amazone-Solimões, près de Manacapuru jusqu’aux environs de Monte Alegre. Les fiches la situent dans les réseaux fluviaux tropicaux d’eau douce, mais les mesures détaillées de chaque habitat restent rares."
+    },
+    "diet": {
+      "en": "No species-specific diet study was located. A French aquarium reference describes small invertebrates as food, a plausible account for a bottom-foraging dwarf cichlid but not a measured stomach-content result.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été retrouvée. Une référence aquariologique française décrit les petits invertébrés comme nourriture ; c’est plausible pour un cichlidé nain fouillant le fond, mais ce n’est pas une analyse stomacale mesurée."
+    },
+    "behavior": {
+      "en": "The summary documents female care during cave spawning, but it offers no detailed field observations of social behavior outside reproduction.",
+      "fr": "La fiche décrit les soins de la femelle lors de la ponte en cavité, mais ne fournit pas d’observations de terrain détaillées sur le comportement social hors reproduction."
+    },
+    "reproduction": {
+      "en": "The female attaches about 120 eggs to a cave ceiling and guards the clutch, according to a species account. No population-level range for clutch size is provided.",
+      "fr": "La femelle fixe environ 120 œufs au plafond d’une cavité et garde la ponte, selon une fiche d’espèce. Aucune fourchette de variation entre populations n’est fournie."
+    },
+    "ecology": {
+      "en": "Apistogramma pertensis is a close lookalike of A. meinkeni and A. iniridae in the informal pertensis group. A. meinkeni has offset broken caudal bars, while A. iniridae has a lateral stripe that continues onto the caudal peduncle; compare these details before relying on range alone.",
+      "fr": "Apistogramma pertensis ressemble de près à A. meinkeni et A. iniridae, réunis dans le groupe informel pertensis. A. meinkeni porte des barres caudales interrompues et décalées, tandis que la bande latérale d’A. iniridae se prolonge sur le pédoncule caudal ; il faut comparer ces détails plutôt que se fier à l’aire seule."
+    },
+    "conservation": {
+      "en": "The global IUCN category is Least Concern, with the assessment dated 29 October 2020. This is the latest assessment date shown in FishBase.",
+      "fr": "La catégorie mondiale UICN est « préoccupation mineure », avec une évaluation datée du 29 octobre 2020. C’est la date la plus récente affichée par FishBase."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma pertensis — FishBase species summary",
+        "fr": "Apistogramma pertensis — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-pertensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists sex-specific lengths and female cave breeding."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 8,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pertensis and relatives — comparative taxonomic study",
+        "fr": "Apistogramma pertensis et espèces proches — étude taxonomique comparative"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Ferreira_Apistogramma_2005.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander and Ferreira compare the pertensis group and distinguish close species by flank and caudal patterns."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 16,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pertensis — Fischlexikon species account",
+        "fr": "Apistogramma pertensis — fiche espèce Fischlexikon"
+      },
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002217",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The German-language account describes the lower Rio Negro and river-bank habitat."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 11,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pertensis — AquaInfo French species account",
+        "fr": "Apistogramma pertensis — fiche espèce française AquaInfo"
+      },
+      "url": "https://aquainfo.nl/fr/article/apistogramma-pertensis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The French account identifies small invertebrates among the food items."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 10,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pertensis — French FishBase summary",
+        "fr": "Apistogramma pertensis — fiche FishBase en français"
+      },
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=12286&lang=french",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the global IUCN Least Concern assessment dated 29 October 2020."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 12,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma pertensis — original 1980 taxonomic study",
+        "fr": "Apistogramma pertensis — étude taxonomique originale de 1980"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Kullander’s 1980 monograph reviews Brazilian and Peruvian Apistogramma, including this species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 11,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Paint a slender small cichlid with a dark lateral band, a clear spot at the caudal-fin base, and a rounded to oval caudal fin; show the lower Rio Negro river habitat.",
+  "uncertainties": [
+    "The female 4.5 cm figure is total length while the 3.9 cm male or unsexed figure is standard length; do not compare as though they use the same convention. No body mass, height or width was found.",
+    "Diet details are not established by a species-specific gut-content study.",
+    "The informal pertensis group is useful for comparison, but group membership alone does not identify an individual fish."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase records with Kullander and Ferreira’s morphological discussion and French and German species accounts. Kept total and standard lengths separate and compared the caudal and lateral markings with A. meinkeni and A. iniridae."
+}

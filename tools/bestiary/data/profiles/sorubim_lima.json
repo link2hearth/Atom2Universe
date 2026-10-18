@@ -1,0 +1,140 @@
+{
+  "id": "sorubim_lima",
+  "scientific": "Sorubim lima",
+  "group": "fish",
+  "name": {
+    "en": "Duckbill catfish",
+    "fr": "Silure à bec de canard"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread South American pimelodid catfish occurs in several major river basins.",
+      "fr": "Ce silure pimelodidé largement répandu vit dans plusieurs grands bassins fluviaux d’Amérique du Sud."
+    },
+    "identification": {
+      "en": "FishBase gives it the English common name duckbill catfish.",
+      "fr": "FishBase lui donne le nom anglais « duckbill catfish » (silure à bec de canard)."
+    },
+    "habitat": {
+      "en": "It is a freshwater, bottom-dwelling fish recorded from the Amazon, Orinoco, Paraná and Parnaíba basins.",
+      "fr": "C’est un poisson d’eau douce vivant près du fond, signalé dans les bassins de l’Amazone, de l’Orénoque, du Paraná et du Parnaíba."
+    },
+    "diet": {
+      "en": "Adults feed mainly on fishes and crustaceans.",
+      "fr": "Les adultes se nourrissent surtout de poissons et de crustacés."
+    },
+    "behavior": {
+      "en": "Adults form schools and are mainly nocturnal.",
+      "fr": "Les adultes vivent en bancs et sont surtout nocturnes."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide no concise species-specific account of spawning or larval development.",
+      "fr": "Les sources consultées ne donnent pas de résumé précis de la ponte ni du développement larvaire de cette espèce."
+    },
+    "ecology": {
+      "en": "It co-occurs with S. elongatus; unlike S. cuspicaudus, it has rounded tail lobes, and S. trigonocephalus has a more triangular head.",
+      "fr": "Il cohabite avec S. elongatus ; contrairement à S. cuspicaudus, ses lobes caudaux sont arrondis, tandis que S. trigonocephalus a une tête plus triangulaire."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2018.",
+      "fr": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sorubim lima — FishBase",
+        "fr": "Sorubim lima — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Sorubim-lima",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports a broad four-basin range, a freshwater demersal habitat, schooling and nocturnal adults feeding on fishes and crustaceans, and Least Concern in 2018."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 24,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Systematic review of the genus Sorubim — Zootaxa",
+        "fr": "Révision systématique du genre Sorubim — Zootaxa"
+      },
+      "url": "https://mapress.com/zootaxa/article/view/zootaxa.1422.1.1",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The genus revision redescribes S. lima and distinguishes congeners by body form and fin characters; it notes overlap with S. elongatus and the triangular-headed S. trigonocephalus."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 26,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Sorubim lima",
+        "fr": "Catalogue des poissons d’Eschmeyer — Sorubim lima"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Sorubim&tbl=species",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The California Academy of Sciences catalogue recognizes Sorubim lima as a valid species."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The comparison is restricted to published morphology and shared ranges; it does not imply identical ecology among these congeners."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

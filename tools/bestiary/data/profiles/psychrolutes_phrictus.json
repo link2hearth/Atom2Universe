@@ -1,0 +1,167 @@
+{
+  "id": "psychrolutes_phrictus",
+  "scientific": "Psychrolutes phrictus",
+  "group": "fish",
+  "name": {
+    "en": "Blob sculpin",
+    "fr": "Chabot blob"
+  },
+  "sections": {
+    "overview": {
+      "en": "Psychrolutes phrictus, the blob sculpin, is a deep-water sculpin in the family Psychrolutidae.",
+      "fr": "Psychrolutes phrictus, le chabot blob, est un chabot d’eau profonde de la famille des Psychrolutidae."
+    },
+    "identification": {
+      "en": "Its head and body carry many small cirri, and the skin is loose; the Chinese-language Taiwan Fish Database also notes that the fins can be partly hidden beneath it.",
+      "fr": "Sa tête et son corps portent de nombreux petits cirres et sa peau est lâche; la base taïwanaise des poissons, en chinois, note aussi que les nageoires peuvent être en partie dissimulées dessous."
+    },
+    "habitat": {
+      "en": "It is a bathydemersal fish of the North Pacific, reported from Japan and the Bering Sea south to California, at about five hundred to two thousand eight hundred metres.",
+      "fr": "C’est un poisson bathydémersal du Pacifique nord, signalé du Japon et de la mer de Béring jusqu’à la Californie, vers cinq cents à deux mille huit cents mètres."
+    },
+    "diet": {
+      "en": "FishBase reports sea pens, crabs and molluscs among its prey.",
+      "fr": "FishBase mentionne parmi ses proies des pennatules, des crabes et des mollusques."
+    },
+    "behavior": {
+      "en": "A research record from the eastern Pacific documents a specimen collected over muddy bottom at about one thousand one hundred metres; few behavioral observations are available.",
+      "fr": "Une étude dans le Pacifique oriental signale un spécimen capturé sur fond vaseux vers mille cent mètres; les observations comportementales restent rares."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a detailed account of its reproduction.",
+      "fr": "Les sources consultées ne décrivent pas précisément sa reproduction."
+    },
+    "ecology": {
+      "en": "Its congener P. marcidus is instead known from temperate Australian waters, at a shallower reported depth range of six hundred to one thousand two hundred metres.",
+      "fr": "Son congénère P. marcidus est plutôt connu des eaux tempérées australiennes, dans une plage de profondeur signalée comme moins importante, de six cents à mille deux cents mètres."
+    },
+    "conservation": {
+      "en": "FishBase reports no IUCN assessment for this species.",
+      "fr": "FishBase n’indique pas d’évaluation UICN pour cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Psychrolutes phrictus — FishBase species summary",
+        "fr": "Psychrolutes phrictus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase: range, depth, diet, IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 6,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Psychrolutes phrictus — Taiwan Fish Database",
+        "fr": "Psychrolutes phrictus — base taïwanaise des poissons"
+      },
+      "url": "https://fishdb.sinica.edu.tw/taxon/383597-fishdb",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Chinese-language account describes head cirri, loose skin, partly covered fins and muddy deep-sea habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 15,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New eastern Pacific record of Psychrolutes phrictus — Revista Mexicana de Biodiversidad",
+        "fr": "Nouvelle mention de Psychrolutes phrictus dans le Pacifique oriental — Revista Mexicana de Biodiversidad"
+      },
+      "url": "https://revista.ib.unam.mx/index.php/bio/article/download/1448/1306/0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat"
+      ],
+      "facts": [
+        "The Mexican study reports a specimen from about 1,100 m over mud in hypoxic conditions."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 15,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Psychrolutes marcidus — FishBase species summary",
+        "fr": "Psychrolutes marcidus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/14347",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The congener is restricted to temperate Australian waters and listed at 600–1,200 m."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 13,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is seldom collected; behavioral and reproductive information remains limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal comparison with P. marcidus is limited to documented geographic and depth ranges."
+}

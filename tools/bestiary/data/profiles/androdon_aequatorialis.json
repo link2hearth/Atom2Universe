@@ -1,0 +1,265 @@
+{
+  "id": "androdon_aequatorialis",
+  "scientific": "Androdon aequatorialis",
+  "group": "birds",
+  "name": {
+    "en": "Tooth-billed hummingbird",
+    "fr": "Porte-lance d’Équateur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tooth-billed hummingbird inhabits eastern Panama, western Colombia, and north-western Ecuador. It is considered near-endemic to Colombia’s Pacific biogeographic region.",
+      "fr": "Le Porte-lance d’Équateur habite l’est du Panama, l’ouest de la Colombie et le nord-ouest de l’Équateur. Il est considéré comme presque endémique de la région biogéographique du Pacifique colombien."
+    },
+    "identification": {
+      "en": "The upperparts are glossy green with a coppery crown; the underparts are pale and dark-streaked, and the grey rounded tail has dark and white markings. The long, almost straight bill has tooth-like serrations; males have a hooked tip and stronger serrations, while the female’s tip is straighter and lacks the hook. In a Colombian field sample, males averaged 14.2 cm and 9.03 g (n=4); females averaged 13.2 cm and 6.72 g (length n=4; mass n=6). A French account gives a broader 13–15 cm body-length range and about 7.3 g; neither height nor body width is reported.",
+      "fr": "Le dessus est vert brillant avec une calotte cuivrée; le dessous pâle est strié de sombre, et la queue arrondie grise porte des marques foncées et blanches. Le bec long et presque droit est dentelé; chez le mâle, son extrémité est crochue et les dentelures plus fortes, tandis que celle de la femelle est plus droite et sans crochet. Dans un échantillon de terrain colombien, les mâles mesuraient en moyenne 14,2 cm et 9,03 g (n=4); les femelles, 13,2 cm et 6,72 g (longueur n=4; masse n=6). Une fiche française donne une longueur corporelle plus générale de 13–15 cm et environ 7,3 g; aucune hauteur ni largeur du corps n’est indiquée."
+    },
+    "habitat": {
+      "en": "It inhabits humid primary forests and nearby advanced secondary growth, from sea level to about 1,560 m. In western Colombia it was observed in forested foothill valleys at 200–600 m, usually foraging just 1–3 m above ground.",
+      "fr": "Il fréquente les forêts primaires humides et les repousses secondaires avancées voisines, du niveau de la mer à environ 1 560 m. Dans l’ouest de la Colombie, il a été observé dans des vallées boisées de piémont entre 200 et 600 m, cherchant généralement sa nourriture à 1–3 m du sol."
+    },
+    "diet": {
+      "en": "It takes nectar from flowers, including Ericaceae and Gesneriaceae, and supplements it with spiders and other small arthropods. A field study found spiders in about 85% of the stomach contents of three examined birds; males searched cavities and rolled dead leaves, while females gleaned prey beneath large leaves.",
+      "fr": "Il prélève le nectar des fleurs, notamment des Éricacées et des Gesnériacées, et le complète par des araignées et d’autres petits arthropodes. Une étude de terrain a trouvé des araignées dans environ 85 % des contenus stomacaux de trois oiseaux examinés; les mâles fouillaient les cavités et les feuilles mortes roulées, tandis que les femelles glanaient leurs proies sous de grandes feuilles."
+    },
+    "behavior": {
+      "en": "It is an inconspicuous, fast-flying bird that works the lower and middle forest layers for food.",
+      "fr": "Oiseau discret et rapide, il prospecte surtout les strates basses et moyennes de la forêt."
+    },
+    "reproduction": {
+      "en": "Its nesting biology remains poorly documented, and the nest itself is not reliably known. Gonadal observations suggest breeding in south-western Colombia around January–March, but clutch size, incubation, and care of young remain unreported.",
+      "fr": "Sa nidification reste mal documentée et le nid lui-même n’est pas connu de façon fiable. Les observations des gonades suggèrent une reproduction dans le sud-ouest de la Colombie vers janvier–mars, mais les sources ne précisent ni taille de ponte, ni incubation, ni soins aux jeunes."
+    },
+    "ecology": {
+      "en": "The serrated bill helps it extract spiders and insects from narrow cavities, rolled leaves, and other concealed sites. The genus is monotypic, so Androdon aequatorialis has no second living congener for direct comparison.",
+      "fr": "Le bec dentelé l’aide à extraire araignées et insectes des cavités étroites, des feuilles roulées et d’autres cachettes. Le genre est monotypique: Androdon aequatorialis n’a donc pas de congénère vivant à comparer."
+    },
+    "conservation": {
+      "en": "BirdLife lists the species as Least Concern because its range is still relatively large, although it is scarce and localized in places. It depends on humid Chocó forest, where deforestation has reduced suitable habitat; a Colombian habitat model estimated substantial loss but did not measure the global population trend.",
+      "fr": "BirdLife classe l’espèce en préoccupation mineure, car son aire demeure relativement vaste, même si elle est rare et localisée dans certains secteurs. Elle dépend des forêts humides du Chocó, où la déforestation a réduit les habitats favorables; un modèle colombien estime une perte importante, sans mesurer la tendance mondiale de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Taxonomy and Biology of the Tooth-billed Hummingbird — Karl-L. Schuchmann, 1995",
+        "fr": "Taxonomie et biologie du Porte-lance d’Équateur — Karl-L. Schuchmann, 1995"
+      },
+      "url": "https://doi.org/10.1002/mmnz.4830710306",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species-specific field study measured sex differences and body dimensions."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colibrí Piquidentado / Tooth-billed Hummingbird — Birds Colombia",
+        "fr": "Colibrí Piquidentado / Porte-lance d’Équateur — Birds Colombia"
+      },
+      "url": "https://birdscolombia.com/2020/01/14/colibri-piquidentado-tooth-billed-hummingbird-androdon-aequatorialis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Colombian species article: range, appearance, and humid-forest habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tooth-billed Hummingbird — Oiseaux.net English species account",
+        "fr": "Colibri d’Équateur — fiche anglaise Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/birds/tooth-billed.hummingbird.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "English account reports broad size, habitat, foraging, and nesting uncertainty."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "habitat.en.1",
+        "habitat.en.2",
+        "diet.en.1",
+        "behavior.en.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "ecology.en.1",
+        "ecology.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colibri d’Équateur — Oiseaux.net French species account",
+        "fr": "Colibri d’Équateur — fiche française Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/colibri.d.equateur.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French account reports broad size, habitat, foraging, display, and nesting uncertainty."
+      ],
+      "prose_claims": [
+        "identification.fr.4",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.fr.1",
+        "behavior.fr.1",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomy and Biology of the Tooth-billed Hummingbird — species-specific body-size summary",
+        "fr": "Taxonomie et biologie du Porte-lance d’Équateur — synthèse des mensurations par sexe"
+      },
+      "url": "https://weirdwildly.com/animals/aves/apodiformes/trochilidae/androdon-aequatorialis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Secondary synthesis transcribes Schuchmann 1995 sample size and sex-specific mean length and mass."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aportes al conocimiento de los colibríes del Chocó — Revista Facultad de Ciencias Básicas, 2023",
+        "fr": "Contributions à la connaissance des colibris du Chocó — Revista Facultad de Ciencias Básicas, 2023"
+      },
+      "url": "https://doi.org/10.18359/rfcb.6307",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language regional study records the species as near-endemic to Colombia’s Pacific region and lists Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BirdLife International species factsheet — Tooth-billed Hummingbird",
+        "fr": "Fiche d’espèce BirdLife International — Porte-lance d’Équateur"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/tooth-billed-hummingbird-androdon-aequatorialis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife assessment category and global distribution status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlas of the Birds of Colombia — Androdon aequatorialis habitat model",
+        "fr": "Atlas des oiseaux de Colombie — modèle d’habitat d’Androdon aequatorialis"
+      },
+      "url": "https://www.atlas-of-the-birds-of-colombia.org/atlas-of-the-birds-of-colombia/maps/apodiformes/androdon-aequatorialis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Colombian model uses 42 presence records and estimates 42% loss of potential original habitat; unoccupied modelled areas excluded."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the long nearly straight bill with distal saw-like serrations; a male should have a hooked tip. Include green upperparts, coppery crown, pale streaked underparts, white rump band, and grey rounded tail with dark-and-white tips.",
+  "uncertainties": [
+    "Sex-specific body dimensions come from small samples in one Colombian study; broader species accounts give about 13–15 cm and roughly 7–9 g.",
+    "No reliable body height or width measurement was found; the study’s wing measurements are not wingspan.",
+    "Nesting details remain unknown, and lek-like display reports differ between Colombia and Ecuador."
+  ],
+  "reviewed": true,
+  "review_note": "Combined the species-specific 1995 field study with English and French natural-history accounts, a Colombian bilingual species profile, a 2023 Spanish-language Chocó study, and BirdLife’s conservation assessment; sample sizes and regional uncertainties are explicit."
+}

@@ -1,0 +1,17 @@
+{
+  "id": 9874,
+  "name": "frontier_molten_silver",
+  "texture_top": "frontier:9874:top",
+  "texture_side": "frontier:9874:side",
+  "texture_bottom": "frontier:9874:top",
+  "color": "#F4F1E8",
+  "hardness": 1.5,
+  "drop": "frontier_molten_silver",
+  "creative_tab": "functional",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -1,0 +1,96 @@
+{
+  "id": "eurycea_sosorum",
+  "scientific": "Eurycea sosorum",
+  "group": "amphibians",
+  "name": {
+    "en": "Barton Springs Salamander",
+    "fr": "Eurycea sosorum"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Barton Springs salamander is a small, fully aquatic salamander of the springs of Austin, Texas. It keeps its larval, gill-breathing form for its whole life and never leaves the water, depending entirely on groundwater from the Edwards Aquifer.",
+      "fr": "La salamandre de Barton Springs, Eurycea sosorum, est une petite salamandre entièrement aquatique des sources d’Austin, au Texas. Elle garde toute sa vie sa forme larvaire à branchies et ne quitte jamais l’eau, dépendant entièrement des eaux souterraines de l’aquifère d’Edwards."
+    },
+    "identification": {
+      "en": "Adults measure about 6–8 cm in total length. The head is broad and deep, with reduced eyes and three bright red, feathery gills on each side. The limbs are long and slender, and the short tail has a well-developed upper fin. The mottled upper body ranges from brown to purple, reddish or orange, and the underside is cream and often translucent. Its relative the Austin blind salamander has skin-covered eyespots. Adults reach about 63–76 mm total length; the consulted species accounts do not report a reliable adult body-mass range.",
+      "fr": "Les adultes mesurent environ 6 à 8 cm de longueur totale. La tête est large et haute, avec des yeux réduits et trois branchies rouge vif, plumeuses, de chaque côté. Les membres sont longs et grêles, et la queue courte porte une nageoire supérieure bien développée. Le dessus du corps, marbré, va du brun au violet, au roux ou à l’orange, et le dessous est crème et souvent translucide. La salamandre aveugle d’Austin, sa proche voisine, a des taches oculaires recouvertes de peau. Les adultes atteignent environ 63–76 mm de longueur totale ; les fiches consultées ne donnent pas de fourchette fiable de masse adulte."
+    },
+    "habitat": {
+      "en": "It lives in clean water fed by the Edwards Aquifer, usually in the wet upper layer of gravel and rock in or near spring openings, pools and spring runs. The water stays near 20 °C all year. It first became known from four spring sites in Zilker Park, and has since been found at 12 more spring and cave sites in Hays and Travis Counties.",
+      "fr": "Elle vit dans une eau propre alimentée par l’aquifère d’Edwards, le plus souvent dans la couche humide superficielle de graviers et de roches, dans ou près des sources, des bassins et des écoulements. L’eau reste proche de 20 °C toute l’année. Elle n’était d’abord connue que de quatre sources du parc Zilker, et on l’a depuis trouvée dans 12 autres sources et grottes des comtés de Hays et de Travis."
+    },
+    "diet": {
+      "en": "It is an opportunistic predator of small live invertebrates and prefers planarian flatworms. When these become scarce it switches to midge larvae and the amphipod Hyalella azteca, which an earlier account gave as its main food.",
+      "fr": "C’est un prédateur opportuniste de petits invertébrés vivants, qui préfère les planaires. Quand elles se raréfient, elle se rabat sur des larves de chironomes et sur l’amphipode Hyalella azteca, que des observations plus anciennes donnaient comme sa principale nourriture."
+    },
+    "behavior": {
+      "en": "It spends much of its time in the spaces among stones and gravel of the streambed, which give it food, shelter from predators and refuge in drought. It is secretive and appears to be nocturnal, and it can tell low-risk predators from high-risk ones.",
+      "fr": "Elle passe une grande partie de son temps dans les interstices entre les pierres et les graviers du lit, qui lui offrent nourriture, abri contre les prédateurs et refuge pendant la sécheresse. Elle est discrète et semble nocturne, et elle sait distinguer les prédateurs peu dangereux des plus dangereux."
+    },
+    "reproduction": {
+      "en": "Females with eggs and young larvae are found all year, suggesting breeding in every season. Courtship includes a tail-straddling walk; the male leaves a sperm packet that the female picks up, and fertilisation is internal. Eggs have rarely been found in the wild. In captivity they hatch 15–40 days after laying, and the larvae begin to feed about 10–11 days later.",
+      "fr": "On trouve des femelles avec des œufs et de jeunes larves toute l’année, ce qui suggère une reproduction en toute saison. La parade comprend une marche où la femelle enjambe la queue du mâle; celui-ci dépose un spermatophore que la femelle ramasse, et la fécondation est interne. Les œufs ont rarement été trouvés dans la nature. En captivité, ils éclosent 15 à 40 jours après la ponte, et les larves se mettent à se nourrir environ 10 à 11 jours plus tard."
+    },
+    "ecology": {
+      "en": "It feeds on small invertebrates of the spring’s stream bed, and its own predators are thought to include small fishes and crayfish. Its survival is tied to the quality and quantity of groundwater from the Edwards Aquifer.",
+      "fr": "Elle se nourrit de petits invertébrés du fond des sources, et ses propres prédateurs seraient de petits poissons et des écrevisses. Sa survie est liée à la qualité et à la quantité des eaux souterraines de l’aquifère d’Edwards."
+    },
+    "conservation": {
+      "en": "It was listed as Endangered under the US Endangered Species Act on 30 April 1997, mainly because urban growth was reducing the quality and quantity of water feeding the springs. Its small range leaves it exposed to groundwater contamination, hazardous spills and increased water withdrawals. Its range is larger than first thought, but no population counts are given in the federal profile.",
+      "fr": "Elle a été inscrite comme espèce en danger (Endangered) par la loi américaine sur les espèces menacées le 30 avril 1997, surtout parce que l’urbanisation réduisait la qualité et la quantité de l’eau alimentant les sources. Sa petite aire l’expose à la contamination des eaux souterraines, aux déversements de substances dangereuses et aux prélèvements d’eau accrus. Son aire est plus vaste qu’on ne le pensait d’abord, mais la fiche fédérale ne donne aucun effectif."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barton Springs salamander (Eurycea sosorum) — U.S. Fish and Wildlife Service",
+        "fr": "Salamandre des sources de Barton (Eurycea sosorum) — U.S. Fish and Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/barton-springs-salamander-eurycea-sosorum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adults 63–76 mm total length; reduced eyes; three red feathery gills each side; wet top layer of substrate near springs; now at 12 additional spring and cave sites; prefers planarians, then midge larvae and amphipods; eggs hatch 15–40 days after laying, larvae feed 10–11 days after hatching.",
+        "Federally listed as Endangered on 30 April 1997 because of declining water quality and quantity from urban expansion; threats include groundwater contamination, hazardous spills and water withdrawals.",
+        "Adults reach about 63–76 mm total length. The species account does not report an adult body-mass range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurycea sosorum — Animal Diversity Web, University of Michigan",
+        "fr": "Eurycea sosorum — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Eurycea_sosorum",
+      "consulted": "2026-10-12",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spring water constant near 20 °C; mainly eats the amphipod Hyalella azteca; secretive and nocturnal; breeding apparently year-round; predators are small fish and crayfish; wild egg-laying never observed.",
+        "Declines attributed to urbanisation, pollution and reduced water quality and quantity. Its IUCN category and old population counts were not used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account is older: it places the species in two of the four Barton Springs pools and gives amphipods as the main food, while the federal profile reports 12 more sites and planarians as the preferred prey; the text follows the federal profile and mentions the older view.",
+    "Adult size is 63–76 mm in the federal profile and about 63.5 mm on average in Animal Diversity Web; a range of about 6–8 cm is used.",
+    "No population estimate is given because the sources are dated or give none. No IUCN category is stated, since no page that could be read gave one with a date.",
+    "No established French common name was found, so the scientific name is used."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

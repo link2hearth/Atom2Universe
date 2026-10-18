@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_ui_title">Anatomie</string>
+    <string name="bio_ui_layers">Couches</string>
+    <string name="bio_ui_colors">Couleurs des groupes</string>
+    <string name="bio_colors_bones">Colorer les os par région</string>
+    <string name="bio_colors_muscles">Colorer les muscles par famille</string>
+    <string name="bio_colors_cartilage">Colorer les cartilages par type</string>
+    <string name="bio_colors_hint">Les couleurs aident à repérer les groupes. La structure sélectionnée reste turquoise.</string>
+    <string name="bio_colors_cartilage_legend">Cartilages : disques violets, structures costales bleues, cartilages nasaux verts, laryngés ambrés et ménisques roses.</string>
+    <string name="bio_ui_regions">Régions</string>
+    <string name="bio_ui_visibility">Couches et groupes</string>
+    <string name="bio_ui_visibility_filtered">Couches et groupes · filtres actifs</string>
+    <string name="bio_ui_tools">Vue et outils</string>
+    <string name="bio_ui_viewpoints">Points de vue</string>
+    <string name="bio_ui_explore">Explorer l’atlas</string>
+    <string name="bio_ui_structure_actions">Actions sur la structure</string>
+    <string name="bio_ui_deselect">Fermer la fiche et désélectionner</string>
+    <string name="bio_ui_select_all">Tout</string>
+    <string name="bio_ui_select_none">Aucun</string>
+    <string name="bio_ui_layers_hint">Combinez les couches librement. Masquez les muscles pour examiner les organes internes. Les régions filtrent chaque couche cochée ; les appareils des organes se règlent ci-dessous.</string>
+    <string name="bio_ui_regions_hint">Combinez les régions librement. Pour voir seulement la tête et la colonne, décochez tout, puis cochez ces deux régions.</string>
+    <string name="bio_ui_layer_count">%1$s · %2$d structures</string>
+    <string name="bio_ui_empty">Aucune structure affichée</string>
+    <string name="bio_ui_empty_detail">Choisissez les couches, régions et appareils des organes, ou utilisez Tout afficher pour rétablir les structures masquées.</string>
+    <string name="bio_ui_gestures">Aide à la navigation</string>
+    <string name="bio_ui_tap_hint">Touchez une structure pour l’identifier. Touchez le fond ou fermez sa fiche pour la désélectionner.</string>
+    <string name="bio_ui_double_tap_hint">Après avoir sélectionné une structure, touchez deux fois le modèle pour la centrer et zoomer dessus.</string>
+    <string name="bio_ui_sides_hint">La gauche et la droite sont toujours celles de la personne représentée.</string>
+    <string name="bio_ui_surface">Modèle anatomique interactif. Touchez une structure pour l’identifier. Utilisez Couches pour combiner régions et systèmes, ou Rechercher une structure.</string>
+    <string name="bio_ui_loading">Préparation de l’atlas anatomique…</string>
+    <string name="bio_ui_search">Os, muscle, organe, cartilage…</string>
+</resources>

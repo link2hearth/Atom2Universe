@@ -1,0 +1,104 @@
+{
+  "id": "accipiter_gentilis",
+  "scientific": "Accipiter gentilis",
+  "group": "birds",
+  "name": {
+    "en": "Northern Goshawk",
+    "fr": "Autour des palombes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern goshawk is a large, powerful hawk of mature woodland, secretive and easily overlooked. It was driven to extinction as a British breeding bird by the late 1800s and has since returned, mostly from birds escaped or released by falconers.",
+      "fr": "L’autour des palombes est un grand rapace puissant des forêts matures, discret et facile à manquer. Il avait disparu comme nicheur de Grande-Bretagne à la fin du XIXe siècle et y est revenu depuis, surtout à partir d’oiseaux échappés ou relâchés par des fauconniers."
+    },
+    "identification": {
+      "en": "Almost as large as a buzzard, with females clearly bigger than males: about 49–56 cm and 850 g for a male, 58–64 cm and 1.5 kg for a female, with wingspans of roughly 90–120 cm. Adults are grey above and white below with fine grey barring, with a white eyebrow, orange to red eyes and thick yellow legs. Juveniles are brown above, with streaked underparts.",
+      "fr": "Presque aussi grand qu’une buse, avec des femelles nettement plus grosses que les mâles : environ 49 à 56 cm et 850 g pour un mâle, 58 à 64 cm et 1,5 kg pour une femelle, avec une envergure d’environ 90 à 120 cm. Les adultes sont gris dessus et blancs dessous, finement barrés de gris, avec un sourcil blanc, des yeux orange à rouges et de fortes pattes jaunes. Les jeunes sont bruns dessus, le dessous strié."
+    },
+    "habitat": {
+      "en": "It is largely tied to large forests, often conifer plantations; in Britain many territories lie in state-owned forests such as the New Forest and Thetford Forest. It is most numerous in Wales, northern England and southern Scotland. In parts of mainland Europe it also lives in towns and cities, hunting feral pigeons.",
+      "fr": "Il est surtout lié aux grandes forêts, souvent des plantations de conifères ; en Grande-Bretagne, de nombreux territoires se trouvent dans des forêts publiques comme la New Forest et la forêt de Thetford. Il est le plus nombreux au pays de Galles, dans le nord de l’Angleterre et le sud de l’Écosse. Dans certaines régions d’Europe continentale, il vit aussi en ville, où il chasse les pigeons ferals."
+    },
+    "diet": {
+      "en": "It hunts mostly birds such as woodpigeons, crows and game birds, and also takes squirrels, rabbits and other mammals. It catches prey in flight with its feet and talons, using surprise and agility to pursue it through trees and dense undergrowth.",
+      "fr": "Il chasse surtout des oiseaux comme les pigeons ramiers, les corvidés et le gibier à plumes, et prend aussi des écureuils, des lapins et d’autres mammifères. Il attrape ses proies en vol avec ses pattes et ses serres, usant de surprise et d’agilité pour les poursuivre entre les arbres et dans les sous-bois denses."
+    },
+    "behavior": {
+      "en": "Its broad wings and long rounded tail let it fly fast through trees, and it can also soar for long periods. It is resident all year, and is most often noticed in late winter and early spring, when pairs perform display flights, a “sky-dance”, over their woodland territories.",
+      "fr": "Ses ailes larges et sa longue queue arrondie lui permettent de voler vite entre les arbres, et il peut aussi planer longtemps. Il est présent toute l’année et se remarque surtout à la fin de l’hiver et au début du printemps, quand les couples exécutent des vols de parade, une « danse du ciel », au-dessus de leur territoire forestier."
+    },
+    "reproduction": {
+      "en": "There is one brood a year, typically three or four eggs, incubated for 35–38 days mainly by the female while the male hunts. The downy chicks fledge after 35–42 days and stay dependent for about three months. The nest, built close to a tree trunk, is often reused for several years. Breeding typically starts at two years of age.",
+      "fr": "Il y a une nichée par an, en général de trois ou quatre œufs, couvés pendant 35 à 38 jours surtout par la femelle, pendant que le mâle chasse. Les poussins, couverts de duvet, s’envolent après 35 à 42 jours et restent dépendants environ trois mois. Le nid, bâti près du tronc d’un arbre, est souvent réutilisé plusieurs années. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "As a top predator of woodland birds and mammals, the goshawk helps shape the numbers of its prey, including the grey partridge. Its nests are frequently robbed and persecution continues in Britain. Loss of woodland and persecution by gamekeepers caused its disappearance there, and both remain threats.",
+      "fr": "Grand prédateur des oiseaux et des mammifères forestiers, l’autour contribue à façonner les effectifs de ses proies, dont la perdrix grise. Ses nids sont souvent pillés et la persécution se poursuit en Grande-Bretagne. La perte des forêts et la persécution par les gardes-chasse ont causé sa disparition de ce pays, et ces deux menaces demeurent."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern. The UK breeding population was about 620 pairs in 2013–17, with county recorders estimating over 1,200, and it has increased strongly in recent decades. It is Green-listed and protected by Schedule 1 of the Wildlife and Countryside Act. A goshawk typically lives about seven years once adult, and the oldest ringed bird exceeded 18.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était d’environ 620 couples en 2013-2017, les recenseurs de comtés en estimant plus de 1 200, et elle a fortement augmenté ces dernières décennies. L’espèce est sur la liste verte et protégée par l’annexe 1 de la loi sur la faune et la campagne. Un autour vit en général environ sept ans une fois adulte, et le plus vieil oiseau bagué a dépassé 18 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Goshawk — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Autour des palombes — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/goshawk",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Clutch 3–4 eggs; incubation 35–38 days, mainly by female; fledging 35–42 days; breeding at 2 years; max age 18 y 8 m; large forests, often conifer plantations; continental urban populations.",
+        "UK 620 pairs (2013–17), county recorders 1,200+ (2021); Green-listed; Schedule 1; extinct as a breeder by late 1800s, recovery from falconers’ releases from the 1960s; IUCN Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Goshawk — RSPB",
+        "fr": "Autour des palombes — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/goshawk",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Adults steel-grey above, barred white chest, white eyebrow; juveniles brown; eyes red to yellow; yellow legs; prey pigeons, crows, squirrels, rabbits caught in flight; sky-dance display; nests frequently robbed; persecution continues.",
+        "Green-listed, Schedule 1 species."
+      ]
+    },
+    {
+      "title": {
+        "en": "Goshawk — The Wildlife Trusts",
+        "fr": "Autour des palombes — The Wildlife Trusts"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/birds-prey/goshawk",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "conservation"],
+      "facts": [
+        "Males 49–56 cm, wingspan 90–105 cm, ~850 g; females 58–64 cm, wingspan 108–120 cm, ~1.5 kg; lives in towns in parts of mainland Europe, hunting feral pigeons.",
+        "Green-listed (BoCC5, 2021); persecuted to extinction in UK in late 19th century; recovery began late 1960s after falconry birds escaped or were released."
+      ]
+    },
+    {
+      "title": {
+        "en": "Goshawk — Woodland Trust",
+        "fr": "Autour des palombes — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/goshawk/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "reproduction", "conservation"],
+      "facts": [
+        "Nest built close to trunk and reused over years; female incubates while male hunts; fledglings independent after about three months; mature at two years.",
+        "Habitat loss and persecution by gamekeepers caused near-extinction; both remain threats."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The UK population estimate varies by source: 620 pairs (BTO, 2013–17), a mean of 712 pairs (Rare Breeding Birds Panel 2015–19) and over 1,200 (county recorders); the range is given in the text.",
+    "Animal Diversity Web’s account was read but not used: its figures are mainly North American and mix different populations. The IUCN Red List pages could not be opened; Least Concern is taken from the BTO page.",
+    "Size and weight figures are from the Wildlife Trusts page; other sources give slightly different ranges, and the species varies geographically."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts and the Wildlife Trusts (consulted 2026-10-12); plumage and diet from RSPB; illustration to be checked by the owner."
+}

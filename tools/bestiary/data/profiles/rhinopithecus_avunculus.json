@@ -1,0 +1,79 @@
+{
+  "id": "rhinopithecus_avunculus",
+  "scientific": "Rhinopithecus avunculus",
+  "group": "mammals",
+  "name": {
+    "en": "Tonkin Snub-nosed Monkey",
+    "fr": "Rhinopithèque du Tonkin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Tonkin snub-nosed monkey is a leaf-eating monkey found only in northern Vietnam, and the only snub-nosed monkey of subtropical forests. It is Critically Endangered and has long been counted among the 25 most endangered primates in the world.",
+      "fr": "Le rhinopithèque du Tonkin est un singe mangeur de feuilles que l’on ne trouve que dans le nord du Viêt Nam, et le seul rhinopithèque des forêts subtropicales. Il est en danger critique d’extinction et figure depuis longtemps parmi les 25 primates les plus menacés du monde."
+    },
+    "identification": {
+      "en": "A fairly slender monkey with a body of 51–65 cm and a tail of 66–92 cm, longer than the body. Males average about 13.8 kg and females about 8.3 kg. The back, outer limbs, hands and feet are black, while the chest, elbows and inner limbs are creamy white. The nose is upturned and the skin around it and the eyes is bare and pale blue; the throat is orange, more strongly in males. Juveniles are greyish black.",
+      "fr": "Singe assez élancé au corps de 51 à 65 cm et à la queue de 66 à 92 cm, plus longue que le corps. Les mâles pèsent en moyenne environ 13,8 kg et les femelles environ 8,3 kg. Le dos, les membres externes, les mains et les pieds sont noirs, tandis que la poitrine, les coudes et l’intérieur des membres sont blanc crème. Le nez est retroussé et la peau qui l’entoure, ainsi que celle des yeux, est nue et bleu pâle; la gorge est orange, davantage chez les mâles. Les jeunes sont gris-noir."
+    },
+    "habitat": {
+      "en": "It lives in subtropical broad-leaf and bamboo evergreen forest with monsoon rains, usually on limestone hills below 1,000 m. It is confined to northern Vietnam and now survives in a few areas of karst limestone peaks, among them the Khau Ca conservation area.",
+      "fr": "Il vit dans la forêt subtropicale sempervirente de feuillus et de bambous soumise à la mousson, le plus souvent sur des collines calcaires au-dessous de 1 000 m. Il est limité au nord du Viêt Nam et ne subsiste plus que dans quelques secteurs de pitons calcaires, dont la zone de conservation de Khau Ca."
+    },
+    "diet": {
+      "en": "It eats mainly leaves, especially bamboo and other evergreen leaves, but is not strictly a leaf-eater: fruit, flowers and seeds are also eaten. One study listed 31 food species from 21 plant families. Like other leaf-eating monkeys it has a stomach with several compartments and strong jaw muscles for tough plant food.",
+      "fr": "Il mange surtout des feuilles, en particulier de bambou et d’autres arbres sempervirents, mais il n’est pas strictement folivore : fruits, fleurs et graines complètent son régime. Une étude a recensé 31 espèces consommées, appartenant à 21 familles de plantes. Comme d’autres singes mangeurs de feuilles, il a un estomac à plusieurs poches et de puissants muscles de la mâchoire adaptés aux végétaux coriaces."
+    },
+    "behavior": {
+      "en": "It is active by day and lives in the trees, walking on all fours and also climbing and leaping. Groups are either all-male or made of one male with several females and young. Groups split and merge and the species does not appear to be territorial. It sleeps on lower branches near steep slopes, sheltered from cold night winds, and its main call is a hiccup-like sound used as alarm and contact.",
+      "fr": "Il est actif le jour et vit dans les arbres, marchant à quatre pattes mais aussi grimpant et sautant. Les groupes sont soit uniquement des mâles, soit formés d’un mâle avec plusieurs femelles et leurs jeunes. Les groupes se séparent et se rejoignent, et l’espèce ne semble pas territoriale. Il dort sur les branches basses près de pentes raides, à l’abri des vents froids de la nuit, et son cri principal, proche d’un hoquet, sert d’alarme et de contact."
+    },
+    "reproduction": {
+      "en": "The mating system is polygynous. Gestation lasts about 200 days and females give birth to one or two young in spring or summer. Females mature at about 4 years and males at about 7. The breeding season, the interval between births and the length of nursing have not been reported.",
+      "fr": "Le système d’accouplement est polygyne. La gestation dure environ 200 jours et les femelles mettent bas un ou deux petits au printemps ou en été. Les femelles sont matures vers 4 ans et les mâles vers 7 ans. La saison de reproduction, l’intervalle entre les naissances et la durée de l’allaitement n’ont pas été décrits."
+    },
+    "ecology": {
+      "en": "As a plant-eater it may shape the vegetation around it, and the fruit it eats may help spread seeds. Humans are its only confirmed predator; snakes, large birds of prey and forest cats probably take some, but this has not been confirmed.",
+      "fr": "Mangeur de plantes, il peut influencer la végétation qui l’entoure, et les fruits qu’il consomme peuvent contribuer à disperser des graines. L’humain est son seul prédateur confirmé; serpents, grands rapaces et félins de forêt en capturent probablement, mais cela n’est pas confirmé."
+    },
+    "conservation": {
+      "en": "It is considered Critically Endangered and is listed in CITES Appendix I. A 2025 census by Fauna & Flora counted about 160 animals in the Khau Ca conservation area, a stable population, and the total is estimated at about 250. Hunting for food and traditional medicine was once the key threat and is illegal; the main current threats are habitat loss and deforestation, notably for farmland, along with bamboo harvesting and gold mining.",
+      "fr": "Il est considéré comme en danger critique d’extinction et figure à l’annexe I de la CITES. Un recensement de Fauna & Flora en 2025 a compté environ 160 individus dans la zone de conservation de Khau Ca, une population stable, et le total est estimé à environ 250. La chasse pour la viande et la médecine traditionnelle fut la menace principale et elle est illégale; les principales menaces actuelles sont la perte d’habitat et la déforestation, notamment pour les cultures, ainsi que la récolte du bambou et l’extraction d’or."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rhinopithecus avunculus — Animal Diversity Web, University of Michigan",
+        "fr": "Rhinopithecus avunculus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Rhinopithecus_avunculus/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Body 51–65 cm, tail 66–92 cm; males 13.8 kg, females 8.3 kg; groups all-male or one male with females; gestation about 200 days; females mature at about 4 years, males about 7.",
+        "Threats: hunting for food and medicine, bamboo harvest, gold mining. Critically Endangered, CITES Appendix I. Its 2006 population figure (about 150) is dated and was not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Blue-faced, puffy-lipped monkey scores a rare conservation win — Popular Science (February 2026)",
+        "fr": "Un singe à face bleue et grosses lèvres remporte une rare victoire pour la conservation — Popular Science (février 2026)"
+      },
+      "url": "https://www.popsci.com/environment/tonkin-snub-nosed-monkey-conservation-vietnam/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "conservation"],
+      "facts": [
+        "Fauna & Flora census of about 160 monkeys in Khau Ca, stable; total estimate about 250; poaching once key, now habitat loss and deforestation from agricultural expansion.",
+        "Most of the species lives in northern Vietnam’s karst limestone peaks; white and black fur, bluish face, large lips."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; Critically Endangered is taken from Animal Diversity Web and the 2026 news report, and the date of the current assessment was not checked.",
+    "Population figures differ by source and date (about 150 in a 2006 survey, about 250 in the latest estimate); the recent figure is used.",
+    "Reproduction data rest on very few observations and the breeding season is not documented.",
+    "Predators other than humans are inferred, not confirmed."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database and a recent report on the Fauna & Flora census; illustration to be checked by the owner."
+}

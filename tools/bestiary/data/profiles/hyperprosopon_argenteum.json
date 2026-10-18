@@ -1,0 +1,166 @@
+{
+  "id": "hyperprosopon_argenteum",
+  "scientific": "Hyperprosopon argenteum",
+  "group": "fish",
+  "name": {
+    "en": "Walleye Surfperch",
+    "fr": "Ditrème-vairon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Walleye Surfperch is an eastern Pacific surfperch in Embiotocidae. Its family relative Hypsurus caryi uses rocky shores and kelp edges more often.",
+      "fr": "Le Ditrème-vairon est un surfpercheur du Pacifique oriental, de la famille Embiotocidae. Son parent Hypsurus caryi fréquente davantage les rivages rocheux et les lisières de kelp."
+    },
+    "identification": {
+      "en": "It reaches about 30 cm, with a dark blue back, silver sides and narrow golden bars in juveniles.",
+      "fr": "Il atteint environ 30 cm, avec un dos bleu sombre, des flancs argentés et de fines barres dorées chez les jeunes."
+    },
+    "habitat": {
+      "en": "It ranges from Vancouver Island to central Baja, often in sandy surf near rocks or piers.",
+      "fr": "Il vit de l’île de Vancouver au centre de la Basse-Californie, souvent dans les vagues sableuses près des rochers ou des jetées."
+    },
+    "diet": {
+      "en": "It feeds on small crustaceans.",
+      "fr": "Il mange de petits crustacés."
+    },
+    "behavior": {
+      "en": "It forms large schools and is a recreational fishery species.",
+      "fr": "Il forme de grands bancs et fait l’objet d’une pêche récréative."
+    },
+    "reproduction": {
+      "en": "Females carry developing young and usually bear five to twelve.",
+      "fr": "Les femelles portent les jeunes en développement et en mettent généralement au monde cinq à douze."
+    },
+    "ecology": {
+      "en": "It uses sandy surf as well as areas near rocks and piers.",
+      "fr": "Il fréquente les vagues sableuses ainsi que les secteurs proches des rochers et des jetées."
+    },
+    "conservation": {
+      "en": "California monitoring describes substantial recreational catches, but the cited sources do not establish a global population trend.",
+      "fr": "Le suivi californien décrit des prises récréatives importantes, mais les sources citées ne déterminent pas la tendance mondiale de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Walleye surfperch — FishBase",
+        "fr": "Ditrème-vairon — FishBase"
+      },
+      "url": "https://fishbase.se/summary/3631",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports eastern Pacific range, sandy surf habitat, size and color, crustacean diet, and live-bearing with usually five to twelve young."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 21,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyperprosopon argenteum — California Department of Fish and Wildlife, Marine Species Portal",
+        "fr": "Hyperprosopon argenteum — portail des espèces marines du California Department of Fish and Wildlife"
+      },
+      "url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=151024",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "California profile describes large schools and substantial local recreational catches; its fishery figures are not a global status assessment."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 19,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hypsurus caryi — FishBase",
+        "fr": "Hypsurus caryi — FishBase"
+      },
+      "url": "https://fishbase.se/summary/3633",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "FishBase places the related family member Hypsurus caryi around rocky shores and kelp beds, occasionally over sand but not in surf."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 21,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Names of Fishes — American Fisheries Society, English, Spanish and French common names",
+        "fr": "Noms des poissons — American Fisheries Society, noms communs anglais, espagnols et français"
+      },
+      "url": "https://www.afs-oc.org/wp-content/uploads/2014/02/pub_fish_names.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The multilingual fish-name list records Walleye Surfperch and mojarra ojona; GBIF records the French name ditrème-vairon."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The fishery source is Californian and does not by itself establish the species-wide conservation trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase biology with California fishery monitoring and checked English, Spanish and French name records; the reciprocal surfperch comparison is limited to documented habitat differences."
+}

@@ -1,0 +1,195 @@
+{
+  "id": "geophagus_winemilleri",
+  "scientific": "Geophagus winemilleri",
+  "group": "fish",
+  "name": {
+    "en": "Winemiller’s eartheater",
+    "fr": "Géophage de Winemiller"
+  },
+  "sections": {
+    "overview": {
+      "en": "Described from Venezuela in 2004, this eartheater occurs in the lower Casiquiare and upper Negro drainages. FishBase lists a maximum standard length of 20 cm.",
+      "fr": "Décrit du Venezuela en 2004, ce géophage vit dans le cours inférieur du Casiquiare et le haut bassin du Negro. FishBase indique une longueur standard maximale de 20 cm."
+    },
+    "identification": {
+      "en": "Its type description distinguishes it within Geophagus by a combination of scale and colour-pattern characters.",
+      "fr": "Sa description originale le distingue au sein de Geophagus par une combinaison de caractères d’écaillure et de coloration."
+    },
+    "habitat": {
+      "en": "It is a freshwater fish of tropical river systems linking the Orinoco and Negro basins.",
+      "fr": "C’est un poisson d’eau douce des réseaux fluviaux tropicaux reliant les bassins de l’Orénoque et du Negro."
+    },
+    "diet": {
+      "en": "A species-specific prey list was not present in the accounts consulted; the eartheater genus name alone is not enough to infer its exact diet.",
+      "fr": "Les fiches consultées ne fournissaient pas de liste de proies propre à l’espèce ; le nom de géophage ne suffit pas à déduire précisément son régime."
+    },
+    "behavior": {
+      "en": "Aquarium accounts describe this cichlid as a schooling or group-living fish, but detailed wild behaviour is limited.",
+      "fr": "Les fiches aquariophiles décrivent ce cichlidé comme grégaire, mais les données sur son comportement sauvage restent limitées."
+    },
+    "reproduction": {
+      "en": "FishBase gives no species-level spawning account in its summary; no reproductive mode is asserted here.",
+      "fr": "Le résumé FishBase ne donne pas de description de ponte propre à l’espèce ; aucun mode de reproduction n’est affirmé ici."
+    },
+    "ecology": {
+      "en": "Seriously Fish places it among the G. surinamensis-group eartheaters; this contrasts with G. argyrostictus, which its account places outside that group, and links it to the group containing G. brokopondo. Seriously Fish places it in the G. surinamensis group, unlike G. argyrostictus.",
+      "fr": "Seriously Fish le place parmi les géophages du groupe G. surinamensis ; cela le distingue de G. argyrostictus, classé hors de ce groupe, et le rapproche du groupe contenant G. brokopondo. Seriously Fish le place dans le groupe G. surinamensis, contrairement à G. argyrostictus."
+    },
+    "conservation": {
+      "en": "FishBase lists Least Concern, assessed on 28 October 2020; this is the date of the global assessment shown in its record.",
+      "fr": "FishBase indique la catégorie « préoccupation mineure », évaluée le 28 octobre 2020 ; c’est la date de l’évaluation mondiale affichée dans sa fiche."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus abalios, G. dicrozoster and G. winemilleri — original description, Zootaxa",
+        "fr": "Geophagus abalios, G. dicrozoster and G. winemilleri — original description, Zootaxa"
+      },
+      "url": "https://www.mapress.com/zootaxa/2004f/z00439f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "López-Fernández and Taphorn describe the new Venezuelan species and its drainage localities."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus winemilleri summary — FishBase",
+        "fr": "Geophagus winemilleri summary — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Geophagus-winemilleri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "habitat",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase lists range, freshwater ecology, and LC assessed 2020-10-28; its life-history fields provide no diet or reproduction record."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus winemilleri — Seriously Fish",
+        "fr": "Geophagus winemilleri — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/geophagus-winemilleri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Specialist profile discusses group placement, aquarium group behaviour and diagnostic characters."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet and reproductive data are sparse in the consulted database summary; behavioural material is largely from aquarium accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference to Geophagus argyrostictus distinguishes a species outside the surinamensis group; Geophagus brokopondo belongs to the group. This denotes group membership, not necessarily closest sister species."
+}

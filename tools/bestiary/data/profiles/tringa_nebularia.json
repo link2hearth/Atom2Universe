@@ -1,0 +1,143 @@
+{
+  "id": "tringa_nebularia",
+  "scientific": "Tringa nebularia",
+  "group": "birds",
+  "name": {
+    "en": "Common greenshank",
+    "fr": "Chevalier aboyeur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common greenshank is a migratory Eurasian wader, breeding in northern wetlands and wintering from western Europe to Africa and farther south and east.",
+      "fr": "Le chevalier aboyeur est un limicole migrateur d’Eurasie : il niche dans les zones humides du nord et hiverne de l’Europe occidentale à l’Afrique, ainsi que plus au sud et à l’est."
+    },
+    "identification": {
+      "en": "It is a large, long-legged wader with greenish legs, a slightly upturned bill and a white rump; it lacks the broad white wing-bar of the common redshank.",
+      "fr": "C’est un grand limicole aux longues pattes verdâtres, au bec légèrement retroussé et au croupion blanc ; il n’a pas la large barre alaire blanche du chevalier gambette."
+    },
+    "habitat": {
+      "en": "It breeds on the ground near water in northern moors and tundra; on migration it uses a range of freshwater and coastal wetlands.",
+      "fr": "Il niche au sol près de l’eau dans les landes et la toundra du nord ; en migration, il fréquente diverses zones humides côtières et continentales."
+    },
+    "diet": {
+      "en": "It hunts aquatic insects and small fish in shallow water, sometimes walking or swimming as it searches.",
+      "fr": "Il chasse les insectes aquatiques et les petits poissons en eau peu profonde, en marchant ou parfois en nageant."
+    },
+    "behavior": {
+      "en": "Its repeated three-note call is often heard during autumn passage through British wetlands.",
+      "fr": "Son cri répété en trois notes s’entend souvent lors du passage automnal dans les zones humides britanniques."
+    },
+    "reproduction": {
+      "en": "It lays usually four eggs in a simple ground nest; both parents incubate and lead the downy young to water.",
+      "fr": "Il pond généralement quatre œufs dans un nid sommaire au sol ; les deux parents couvent et conduisent les poussins duveteux vers l’eau."
+    },
+    "ecology": {
+      "en": "The spotted redshank is among its close relatives in phylogenetic summaries; see that profile for a comparison of plumage and migration.",
+      "fr": "Le chevalier arlequin figure parmi ses proches parents dans les synthèses phylogénétiques ; voir cette fiche pour comparer plumage et migration."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment is Least Concern; in Britain it is amber-listed, a regional conservation category.",
+      "fr": "L’évaluation mondiale UICN est Préoccupation mineure ; au Royaume-Uni, il figure en catégorie Ambre, un statut régional."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Greenshank",
+        "fr": "British Trust for Ornithology — Chevalier aboyeur"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/greenshank",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The BTO describes the three-note call, northern breeding habitat and nesting biology; it lists Least Concern globally and Amber in the UK."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 22,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LPO Normandie — Common greenshank",
+        "fr": "LPO Normandie — Chevalier aboyeur"
+      },
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/chevalier-aboyeur/",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The French account gives its range, migration to western Africa, wetland habitats and fish and aquatic-insect prey."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 17,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oiseaux.net — Common greenshank",
+        "fr": "Oiseaux.net — Chevalier aboyeur"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.aboyeur.html",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The species account describes the upturned bill and white rump, gives the Least Concern category, and places the spotted redshank among close relatives in a phylogenetic summary."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 27,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The UK conservation category applies locally; it is separate from the global IUCN assessment."
+  ],
+  "review_note": "The reciprocal spotted-redshank comparison follows the phylogenetic summaries for both species.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

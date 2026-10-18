@@ -1,0 +1,140 @@
+{
+  "id": "tetrapturus_georgii",
+  "scientific": "Tetrapturus georgii",
+  "group": "fish",
+  "name": {
+    "en": "Roundscale spearfish",
+    "fr": "Tetrapturus georgii"
+  },
+  "sections": {
+    "overview": {
+      "en": "The roundscale spearfish is a poorly documented oceanic billfish of the Atlantic and Mediterranean.",
+      "fr": "Tetrapturus georgii est un istiophoridé océanique peu documenté de l’Atlantique et de la Méditerranée."
+    },
+    "identification": {
+      "en": "It resembles other spearfishes, but its rounded, multi-pointed mid-body scales and anal-fin proportions aid identification.",
+      "fr": "Il ressemble aux autres poissons porte-épée, mais ses écailles médianes arrondies et pluridentées et les proportions de sa nageoire anale aident à l’identifier."
+    },
+    "habitat": {
+      "en": "It is pelagic and oceanic; confirmed records include Madeira, Sicily, the Strait of Gibraltar and waters off southern Portugal.",
+      "fr": "Il est pélagique et océanique ; les mentions confirmées comprennent Madère, la Sicile, le détroit de Gibraltar et les eaux au large du sud du Portugal."
+    },
+    "diet": {
+      "en": "Species-specific dietary information is scarce in the accounts consulted.",
+      "fr": "Les sources consultées donnent peu d’informations sur le régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "It is highly migratory, but the scale of its movements remains uncertain because records are sparse.",
+      "fr": "C’est un poisson très migrateur, mais l’ampleur de ses déplacements reste incertaine faute de données nombreuses."
+    },
+    "reproduction": {
+      "en": "A 2025 study genetically confirmed an egg and a juvenile, but much of its reproductive biology remains unknown.",
+      "fr": "Une étude de 2025 a confirmé génétiquement un œuf et un juvénile, mais une grande partie de sa biologie reproductive reste inconnue."
+    },
+    "ecology": {
+      "en": "It is occasionally encountered in fisheries, and accurate identification matters because it can be confused with other billfishes.",
+      "fr": "Il est parfois rencontré dans les pêcheries ; une identification correcte importe car il peut être confondu avec d’autres istiophoridés."
+    },
+    "conservation": {
+      "en": "The IUCN assessment listed the species as Data Deficient in 2021.",
+      "fr": "L’évaluation de l’UICN a classé l’espèce dans la catégorie Données insuffisantes en 2021."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Tetrapturus georgii",
+        "fr": "FishBase — Tetrapturus georgii"
+      },
+      "url": "https://www.fishbase.se/summary/Tetrapturus-georgii.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase describes an oceanic migrant, lists confirmed Atlantic and Mediterranean records, and reports the 2021 IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 17,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "NOAA — Roundscale Spearfish: Updated Morphology, Distribution and Relative Abundance",
+        "fr": "NOAA — Morphologie, répartition et abondance actualisées du roundscale spearfish"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/8614",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "NOAA reviews diagnostic features and North Atlantic fishery records; the fish can be confused with other billfishes."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 17,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Genetically confirmed first records of an egg and juvenile roundscale spearfish",
+        "fr": "Premières mentions génétiquement confirmées d’un œuf et d’un juvénile"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12244303/",
+      "supports": [
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "The 2025 paper reports a genetically confirmed egg and juvenile and notes limited biological data."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 15,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "FishBase states that further study is needed to clarify species validity; reproductive and dietary information remain limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

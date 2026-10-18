@@ -1,0 +1,184 @@
+{
+  "id": "betta_brownorum",
+  "scientific": "Betta brownorum",
+  "group": "fish",
+  "name": {
+    "en": "Brown's Betta",
+    "fr": "Combattant de Brown"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small wild betta is native to peat-swamp forests of Sarawak and West Kalimantan. It belongs to the coccina group, whose members are often red-toned blackwater specialists; unlike the mouthbrooding B. channoides, B. brownorum builds a bubble nest.",
+      "fr": "Ce petit combattant sauvage est indigène des forêts marécageuses tourbeuses du Sarawak et du Kalimantan occidental. Il appartient au groupe coccina, souvent composé d’espèces rougeâtres des eaux noires ; contrairement au combattant à tête de serpent (B. channoides), B. brownorum construit un nid de bulles."
+    },
+    "identification": {
+      "en": "Adults reach about 3 cm standard length. The reddish-magenta body bears a conspicuous iridescent green flank spot in both sexes, a useful distinction from similarly red B. coccina; spot size varies among local populations.",
+      "fr": "Les adultes atteignent environ 3 cm de longueur standard. Le corps rouge magenta porte une grande tache irisée verte sur le flanc chez les deux sexes, ce qui aide à le distinguer du B. coccina également rougeâtre ; la taille de la tache varie selon les populations."
+    },
+    "habitat": {
+      "en": "It occupies shaded, shallow peat-swamp pools and sluggish blackwater streams, with leaf litter, submerged roots and very soft, acidic water. These forest wetlands may dry seasonally, leaving fish in damp litter or isolated pools.",
+      "fr": "Il fréquente les mares peu profondes et ombragées des tourbières ainsi que les petits cours d’eau noirs et lents, parmi les feuilles mortes et les racines immergées, dans une eau très douce et acide. Ces milieux forestiers peuvent s’assécher en saison sèche, laissant des poissons dans la litière humide ou des mares isolées."
+    },
+    "diet": {
+      "en": "It is a small predator of insects and other invertebrates. Stomach examinations of wild fish found arthropods including terrestrial ants and aquatic mites, showing that prey comes from both the water and its surface.",
+      "fr": "C’est un petit prédateur d’insectes et d’autres invertébrés. L’examen de poissons sauvages a révélé des arthropodes, dont des fourmis terrestres et des acariens aquatiques : ses proies viennent donc de l’eau comme de sa surface."
+    },
+    "behavior": {
+      "en": "Like other labyrinth fishes, it can gulp air at the surface using a respiratory labyrinth in addition to its gills. It is territorial and secretive in dense cover; observations of group tolerance vary, so wild behaviour should not be reduced to the reputation of domesticated B. splendens.",
+      "fr": "Comme les autres poissons labyrinthidés, il peut prendre de l’air en surface grâce à un organe respiratoire labyrinthique, en plus de ses branchies. Territorial et discret dans les abris denses, il tolère parfois ses congénères, mais les observations varient : le comportement des combattants domestiques B. splendens ne lui est pas directement transposable."
+    },
+    "reproduction": {
+      "en": "It is a bubble-nesting species: the male guards a surface nest containing eggs and newly hatched young. Reports of occasional mouthbrooding exist, but the standard species accounts describe bubble nesting, so that unusual observation should not be treated as its established mode.",
+      "fr": "Cette espèce construit un nid de bulles en surface, que le mâle garde avec les œufs et les alevins nouvellement éclos. Des cas occasionnels d’incubation buccale ont été signalés, mais les descriptions habituelles indiquent le nid de bulles ; cette observation inhabituelle ne doit pas être présentée comme le mode reproducteur établi."
+    },
+    "ecology": {
+      "en": "Its specialised peat-swamp habitat links it to other blackwater bettas, including B. rutilans and B. coccina, but each has its own range and identification characters. Loss of forest cover changes both the shallow-water structure and the acidic chemistry on which this fish depends.",
+      "fr": "Son habitat spécialisé le rapproche d’autres combattants des eaux noires, notamment B. rutilans et B. coccina, mais chacun possède sa propre aire et ses caractères d’identification. La disparition du couvert forestier modifie à la fois la structure des eaux peu profondes et leur chimie acide, dont dépend ce poisson."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2019 classified it as Vulnerable, citing its restricted range and continuing peat-swamp degradation and clearance. This wild status is distinct from the availability of captive-bred fish.",
+      "fr": "L’évaluation de l’UICN publiée en 2019 le classe Vulnérable, en raison de son aire restreinte et de la dégradation ainsi que du défrichement persistants des tourbières. Ce statut à l’état sauvage est distinct de la disponibilité de poissons élevés en captivité."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Betta brownorum — IUCN Red List",
+        "fr": "Betta brownorum — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T91309202A91309211.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN Red List assessment: Vulnerable."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 5,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta brownorum species account — Seriously Fish",
+        "fr": "Fiche de Betta brownorum — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/betta-brownorum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Habitat, diet and morphology account."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 5,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fighting fishes of Singapore, Malaysia and Brunei — Raffles Bulletin of Zoology",
+        "fr": "Combattants de Singapour, Malaisie et Brunei — Raffles Bulletin of Zoology"
+      },
+      "url": "https://lkcnhm.nus.edu.sg/wp-content/uploads/sites/10/2021/01/S13_43-99.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic and morphology study."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 4,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta brownorum — IGL Lexikon",
+        "fr": "Betta brownorum — lexique IGL (allemand)"
+      },
+      "url": "https://www.igl-home.de/lexikon/betta/betta-brownorum/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "German account."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 197,
+        "notes_words": 2,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Unusual occasional mouthbrooding reports conflict with the standard bubble-nesting account; the usual reproductive mode is retained here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a Red List assessment, taxonomic treatment and multilingual species accounts; distinguished its bubble nesting and coccina-group affinity from mouthbrooding Betta relatives."
+}

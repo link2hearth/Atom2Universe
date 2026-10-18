@@ -1,0 +1,175 @@
+{
+  "id": "myxobolus_cerebralis",
+  "scientific": "Myxobolus cerebralis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Whirling disease myxozoan",
+    "fr": "Myxobolus cerebralis"
+  },
+  "sections": {
+    "overview": {
+      "en": "Myxobolus cerebralis is a microscopic freshwater parasite that causes whirling disease in salmon and trout and other salmonids.",
+      "fr": "Myxobolus cerebralis est un parasite microscopique d’eau douce qui provoque la maladie du tournis chez les saumons, les truites et d’autres salmonidés."
+    },
+    "identification": {
+      "en": "Its microscopic spore stages are not recognizable by ordinary visual inspection, so diagnosis depends on laboratory examination of fish or parasite material.",
+      "fr": "Ses stades sporulés microscopiques ne sont pas reconnaissables à l’œil nu ; le diagnostic nécessite donc l’examen en laboratoire des poissons ou du matériel parasitaire."
+    },
+    "habitat": {
+      "en": "It occurs in freshwater systems where susceptible salmonid fish and the oligochaete worm Tubifex tubifex overlap.",
+      "fr": "Il se rencontre dans les milieux d’eau douce où coexistent des salmonidés sensibles et le ver oligochète Tubifex tubifex."
+    },
+    "diet": {
+      "en": "It is a parasite rather than a free-living feeder, developing in the tissues of its fish and worm hosts.",
+      "fr": "C’est un parasite et non un organisme qui se nourrit librement ; il se développe dans les tissus de ses hôtes poisson et ver."
+    },
+    "behavior": {
+      "en": "Infected young salmonids may show abnormal circling, darkened tails or skeletal deformities, though infection can occur without visible signs.",
+      "fr": "Les jeunes salmonidés infectés peuvent tourner en rond, avoir la queue foncée ou présenter des déformations du squelette, mais certaines infections restent sans signe visible."
+    },
+    "reproduction": {
+      "en": "Its two-host cycle alternates between spores developing in salmonid cartilage and an infective stage released by Tubifex worms into the water.",
+      "fr": "Son cycle à deux hôtes alterne entre des spores qui se développent dans le cartilage des salmonidés et un stade infectieux libéré dans l’eau par les vers Tubifex."
+    },
+    "ecology": {
+      "en": "The parasite can damage cartilage and impair fish movement, and the resulting disease may affect wild salmonid populations as well as fish farms.",
+      "fr": "Le parasite peut léser le cartilage et gêner les déplacements des poissons ; la maladie peut toucher les populations sauvages de salmonidés comme les élevages."
+    },
+    "conservation": {
+      "en": "No conservation status is applicable to the parasite in the sources consulted; its importance is as a pathogen whose spread threatens susceptible fish populations.",
+      "fr": "Les sources consultées ne lui attribuent pas de statut de conservation ; son importance tient à son rôle pathogène et au risque de propagation pour les poissons sensibles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Whirling disease — Government of Québec",
+        "fr": "Maladie du tournis — Gouvernement du Québec"
+      },
+      "url": "https://www.quebec.ca/en/agriculture-environment-and-natural-resources/animal-health/animal-diseases/list-animal-diseases/whirling-disease",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Québec government describes cause, symptoms and salmonid hosts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 8,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whirling disease of salmonid fish: life cycle, biology, and disease — PubMed",
+        "fr": "Maladie du tournis des salmonidés : cycle, biologie et pathologie — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14533670/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed review describes the parasite's two-host cycle and salmonid hosts."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 10,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whirling disease — Canadian Food Inspection Agency",
+        "fr": "Tournis des truites — Agence canadienne d’inspection des aliments"
+      },
+      "url": "https://inspection.canada.ca/fr/sante-animaux/animaux-aquatiques/maladies/maladies-declarables/tournis-truites/fiche-renseignements?wbdisable=false",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "French government factsheet independently identifies M. cerebralis as a microscopic fish parasite and the cause of trout whirling disease."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biology and mucosal immunity to myxozoans — PubMed Central",
+        "fr": "Biologie et immunité muqueuse contre les myxozoaires — PubMed Central"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4216934/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Review describes the parasite's host tissue and microscopic infection."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 9,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Disease severity varies among salmonid species, host age and exposure; the profile avoids presenting every infection as clinically obvious or fatal."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined the Québec government life-cycle and disease account with peer-reviewed review literature; broad taxonomy language is kept to the term myxozoan."
+}

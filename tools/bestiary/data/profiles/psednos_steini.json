@@ -1,0 +1,166 @@
+{
+  "id": "psednos_steini",
+  "scientific": "Psednos steini",
+  "group": "fish",
+  "name": {
+    "en": "Stein’s dwarf snailfish",
+    "fr": "Limace naine de Stein"
+  },
+  "sections": {
+    "overview": {
+      "en": "A marine snailfish known from the Crozet Basin near the southwest Indian Ridge.",
+      "fr": "Limace de mer marine connue du bassin de Crozet, près de la dorsale sud-ouest indienne."
+    },
+    "identification": {
+      "en": "The description notes tan coloration and a vertical gill slit about as long as the eye.",
+      "fr": "La description signale une coloration beige et une fente branchiale verticale d’une longueur voisine de celle de l’œil."
+    },
+    "habitat": {
+      "en": "It has been collected in deep oceanic waters, but the available record does not establish a full depth range.",
+      "fr": "Elle a été recueillie dans des eaux océaniques profondes, mais les données disponibles ne définissent pas toute son amplitude bathymétrique."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not describe its diet.",
+      "fr": "Les fiches consultées ne décrivent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is not documented in the consulted accounts.",
+      "fr": "Les sources consultées ne documentent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted accounts report no reproductive observations.",
+      "fr": "Les sources consultées ne rapportent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The species is named for ichthyologist David L. Stein; its known ecological record is limited. Its Crozet Basin congener P. microps is named for its very small eyes, in contrast to the tan coloration noted for this species.",
+      "fr": "L’espèce porte le nom de l’ichtyologiste David L. Stein ; les données écologiques connues sont limitées. Son congénère du bassin de Crozet P. microps est nommé pour ses très petits yeux, contrairement à la coloration beige signalée pour cette espèce."
+    },
+    "conservation": {
+      "en": "FishBase lists the species as not evaluated by the IUCN.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59964",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records Crozet Basin near the southwest Indian Ridge, tan color, deep-water association, no diet/behavior/reproduction account, and no IUCN assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 20,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Redescription and review of Psednos — Zootaxa",
+        "fr": "Redescription and review of Psednos — Zootaxa"
+      },
+      "url": "https://citeseerx.ist.psu.edu/document?doi=f1f17be1ca362b413454e3e00e8953317a4b1254&repid=rep1&type=pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The later taxonomic treatment explains that the original description of P. steini relied on an earlier account and corrects several anatomical observations."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 22,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — valid-species search",
+        "fr": "ITIS — valid-species search"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova%2C+2001",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Psednos steini Chernova, 2001 among valid species."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos microps species summary",
+        "fr": "FishBase — résumé de Psednos microps"
+      },
+      "url": "https://www.fishbase.se/summary/59952",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos microps as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 14,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A later taxonomic treatment corrects aspects of the original description; the profile avoids disputed details and uses the FishBase locality and cautious diagnostic characters. The French name is descriptive."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "id": 2608,
+  "name": "cave_root",
+  "texture_top": "underground:root",
+  "texture_side": "underground:root",
+  "texture_bottom": "underground:root",
+  "color": "#98745B",
+  "hardness": 0.6,
+  "light_emission": 0,
+  "drop": "cave_root",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "orient_mode": "axis"
+}

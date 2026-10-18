@@ -1,0 +1,142 @@
+{
+  "id": "menophra_abruptaria",
+  "scientific": "Menophra abruptaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Waved Umber",
+    "fr": "Boarmie pétrifiée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Waved Umber is a geometrid moth found across much of Europe and into North Africa and western Asia.",
+      "fr": "La Boarmie pétrifiée est une phalène présente dans une grande partie de l’Europe, jusqu’en Afrique du Nord et en Asie occidentale."
+    },
+    "identification": {
+      "en": "Adults have a bark-like brown pattern and a wingspan of about 36–42 mm.",
+      "fr": "L’adulte porte un motif brun mimant l’écorce et mesure environ 36 à 42 mm d’envergure."
+    },
+    "habitat": {
+      "en": "It occurs in woodland, parks and gardens; French records also include edges and other planted places.",
+      "fr": "Elle fréquente les bois, les parcs et les jardins ; les données françaises la signalent aussi dans les lisières et d’autres milieux plantés."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on several woody plants, including privet and lilac; regional sources also report ash and blackthorn.",
+      "fr": "Ses chenilles consomment plusieurs plantes ligneuses, notamment troène et lilas ; des sources régionales citent aussi le frêne et le prunellier."
+    },
+    "behavior": {
+      "en": "Adults fly from spring into summer, with a partial second generation possible in favourable conditions in Belgium.",
+      "fr": "Les adultes volent du printemps à l’été ; une seconde génération partielle est possible lorsque les conditions sont favorables en Belgique."
+    },
+    "reproduction": {
+      "en": "It overwinters as a pupa in a cocoon on its food plant.",
+      "fr": "Elle hiverne au stade de chrysalide, dans un cocon fixé à sa plante nourricière."
+    },
+    "ecology": {
+      "en": "The larvae use a range of shrubs and trees, so the moth can occur in both semi-natural woodland and planted habitats.",
+      "fr": "Les chenilles utilisent divers arbustes et arbres, ce qui permet à la phalène de vivre en forêt semi-naturelle comme dans des milieux plantés."
+    },
+    "conservation": {
+      "en": "A Belgian catalogue lists it as Least Concern in Flanders (2023); this is a regional category, not a global assessment.",
+      "fr": "Un catalogue belge la classe en préoccupation mineure en Flandre (2023) ; cette catégorie est régionale et non mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Waved Umber — UKMoths",
+        "fr": "Boarmie pétrifiée — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/menophra-abruptaria/larva/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "UKMoths gives the adult wingspan, British woodland/park/garden habitat and larvae feeding on privet and lilac."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 15,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Menophra abruptaria — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Menophra abruptaria — Catalogue des Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5222/",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Belgian catalogue gives regional Flanders 2023 Least Concern status, flight period/possible partial second generation and pupal overwintering in a cocoon on the food plant."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 25,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Menophra abruptaria — Observatoire Artemisiae, France",
+        "fr": "Menophra abruptaria — Observatoire Artemisiae, France"
+      },
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248901&module=fiche",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The French observatory records the species from North Africa through Europe into western Asia and a range of planted and semi-natural habitats."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 22,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight seasons differ regionally; the profile distinguishes the southern-British flight account from a Belgian possible partial second generation.",
+    "Host-plant lists vary among regions and are not exhaustive."
+  ],
+  "review_note": "Combines English, Belgian and French lepidopteran references; flight and conservation statements retain their geographic scope.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2711,
+  "name": "street_stop_ew",
+  "texture_top": "street:stop_ew",
+  "texture_side": "street:asphalt",
+  "texture_bottom": "street:asphalt",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_stop_ew",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

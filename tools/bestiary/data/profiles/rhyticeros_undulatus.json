@@ -1,0 +1,142 @@
+{
+  "id": "rhyticeros_undulatus",
+  "scientific": "Rhyticeros undulatus",
+  "group": "birds",
+  "name": {
+    "en": "Wreathed Hornbill",
+    "fr": "Calao festonné"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Wreathed Hornbill is a large forest hornbill of South and South-East Asia.",
+      "fr": "Le Calao festonné est un grand calao forestier d’Asie du Sud et du Sud-Est."
+    },
+    "identification": {
+      "en": "The male has a pale yellow gular pouch crossed by a dark band; the female’s head and throat are darker.",
+      "fr": "Le mâle possède une poche gulaire jaune pâle barrée d’une bande sombre; la tête et la gorge de la femelle sont plus foncées."
+    },
+    "habitat": {
+      "en": "It depends mainly on extensive evergreen forest, from lowlands into foothills, and may also use mangroves.",
+      "fr": "Il dépend surtout des vastes forêts sempervirentes, des plaines aux contreforts, et fréquente aussi les mangroves."
+    },
+    "diet": {
+      "en": "Fruit, especially figs, forms much of its diet, supplemented by animal prey such as insects and small vertebrates.",
+      "fr": "Les fruits, notamment les figues, constituent une grande part de son régime, complété par des proies animales comme des insectes et de petits vertébrés."
+    },
+    "behavior": {
+      "en": "It forages in the canopy and can travel in noisy groups between feeding sites.",
+      "fr": "Il se nourrit dans la canopée et peut se déplacer en groupes bruyants entre les sites d’alimentation."
+    },
+    "reproduction": {
+      "en": "The female seals herself inside a tree cavity during nesting and depends on the male to bring food.",
+      "fr": "Pendant la nidification, la femelle se mure dans une cavité d’arbre et dépend du mâle pour son ravitaillement."
+    },
+    "ecology": {
+      "en": "A Thai study of hornbill-dispersed fruits included this species among the fruit consumers.",
+      "fr": "Une étude thaïlandaise sur les fruits dispersés par les calaos incluait cette espèce parmi les consommateurs de fruits."
+    },
+    "conservation": {
+      "en": "BirdLife assesses it as Vulnerable, citing forest loss and hunting pressure.",
+      "fr": "BirdLife le classe vulnérable, en raison de la perte des forêts et de la pression de chasse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wreathed Hornbill — BirdLife DataZone",
+        "fr": "Wreathed Hornbill — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/wreathed-hornbill-rhyticeros-undulatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife: range, primary forest dependence and Vulnerable assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 8,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calao festonné — Oiseaux.net",
+        "fr": "Calao festonné — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/calao.festonne.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French account: throat pouch, fruit diet, flocking and nesting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 9,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Characteristics of hornbill-dispersed fruits in Thailand — Bird Conservation International",
+        "fr": "Characteristics of hornbill-dispersed fruits in Thailand — Bird Conservation International"
+      },
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/characteristics-of-hornbilldispersed-fruits-in-a-tropical-seasonal-forest-in-thailand/568A3545A54A0E14631EC3F497C057D6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Thai study documents fruit consumption by Wreathed Hornbills."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 8,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older sources sometimes use the former combination Aceros undulatus."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Distribution and threat claims follow BirdLife; descriptive and reproductive details follow French Oiseaux.net; fruit-dispersal framing is kept cautious."
+}

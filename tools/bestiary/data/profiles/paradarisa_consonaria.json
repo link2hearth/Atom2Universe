@@ -1,0 +1,134 @@
+{
+  "id": "paradarisa_consonaria",
+  "scientific": "Paradarisa consonaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Square spot",
+    "fr": "Boarmie du tilleul"
+  },
+  "sections": {
+    "overview": {
+      "en": "Paradarisa consonaria, the Square Spot, is a geometrid moth recorded in parts of western Europe. Older sources may use the combination Ectropis consonaria.",
+      "fr": "Paradarisa consonaria, la Boarmie du tilleul, est un papillon de nuit géométridé présent dans une partie de l’Europe occidentale. Des sources plus anciennes peuvent employer le nom Ectropis consonaria."
+    },
+    "identification": {
+      "en": "The adult wingspan is about 40–45 mm. A dark square mark on the forewing is useful for identification, although the species is variable and dark melanistic forms occur.",
+      "fr": "L’adulte a une envergure d’environ 40 à 45 mm. Une tache carrée sombre sur l’aile antérieure aide à l’identification, même si l’espèce est variable et présente des formes mélaniques foncées."
+    },
+    "habitat": {
+      "en": "It is associated with woodland. French records place it mainly in northern and central France.",
+      "fr": "Elle est associée aux boisements. En France, elle est surtout signalée dans le nord et le centre."
+    },
+    "diet": {
+      "en": "The caterpillars feed on trees, including oak and birch.",
+      "fr": "Les chenilles mangent des arbres, notamment des chênes et des bouleaux."
+    },
+    "behavior": {
+      "en": "In Britain adults fly mainly from April to June.",
+      "fr": "En Grande-Bretagne, les adultes volent surtout d’avril à juin."
+    },
+    "reproduction": {
+      "en": "The caterpillars develop on woody food plants before pupating. The sources consulted document eggs and larvae but do not establish a species-wide development schedule.",
+      "fr": "Les chenilles se développent sur des plantes ligneuses avant la nymphose. Les sources consultées documentent les œufs et les larves, mais pas un calendrier de développement valable pour toute l’espèce."
+    },
+    "ecology": {
+      "en": "Because wing colour varies, the square forewing mark is more dependable than overall darkness alone. The larvae use several kinds of trees rather than one narrowly specialized host.",
+      "fr": "Comme la couleur des ailes varie, la tache carrée antérieure est plus fiable que la seule teinte générale. Les chenilles utilisent plusieurs types d’arbres plutôt qu’une plante hôte très spécialisée."
+    },
+    "conservation": {
+      "en": "The consulted sources describe regional records but do not establish a global conservation assessment or population trend for this moth.",
+      "fr": "Les sources consultées décrivent des observations régionales, mais ne permettent pas d’établir une évaluation mondiale de conservation ni une tendance démographique pour ce papillon."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Square Spot, Paradarisa consonaria — UKMoths",
+        "fr": "Boarmie du tilleul, Paradarisa consonaria — UKMoths"
+      },
+      "url": "https://www.handeln.ukmoths.org.uk/species/paradarisa-consonaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UK moth description and range.",
+        "This regional UK moth account gives no global conservation assessment."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 5,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Paradarisa consonaria — Lepinet, Espace Lépidoptères",
+        "fr": "Paradarisa consonaria — Lepinet, Espace Lépidoptères"
+      },
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?id=37250",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "French records, hosts and early stages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 6,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional flight periods and distributions vary; British dates are not presented as universal.",
+    "Detailed phenology and population trends were not established."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared a British moth reference with French Lepinet records, including the alternate generic combination and host plants."
+}

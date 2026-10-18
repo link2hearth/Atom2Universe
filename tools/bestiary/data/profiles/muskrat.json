@@ -1,0 +1,524 @@
+{
+  "id": "muskrat",
+  "scientific": "Ondatra zibethicus",
+  "group": "mammals",
+  "name": {
+    "en": "Muskrat",
+    "fr": "Rat musqué"
+  },
+  "sections": {
+    "overview": {
+      "en": "The muskrat is a medium-sized rodent of fresh and brackish wetlands, with an insulating coat and aquatic adaptations for foraging among emergent plants and retreating to shelters with underwater entrances. Native to North America, it has also established introduced populations across parts of Europe and Asia.",
+      "fr": "Le rat musqué est un rongeur de taille moyenne des zones humides douces ou saumâtres, doté d’un pelage isolant et d’adaptations aquatiques qui lui permettent de chercher sa nourriture parmi les plantes émergentes et de regagner un abri par une entrée immergée. Originaire d’Amérique du Nord, il a aussi formé des populations introduites en Europe et en Asie."
+    },
+    "identification": {
+      "en": "Adults have a head-and-body length of about 23–33 cm, a tail 18–30 cm, and a mass of roughly 0.7–1.9 kg; size varies among populations. The tail is nearly naked, scaly and compressed from side to side, about as long as the head and body. Stiff hairs fringe the toes, and the hind toes are partly webbed; small ears sit almost hidden in dense brown fur. Unlike the much larger beaver, it has a narrow, laterally flattened tail; nutria are far heavier and have a rounded tail with conspicuous pale whiskers.",
+      "fr": "L’adulte mesure environ 23 à 33 cm de la tête au corps, avec une queue de 18 à 30 cm, et pèse environ 0,7 à 1,9 kg ; la taille varie selon les populations. La queue, presque nue et écailleuse, est comprimée latéralement et mesure à peu près autant que la tête et le corps. Des poils raides bordent les orteils, partiellement palmés aux pieds postérieurs ; les petites oreilles se perdent dans le pelage brun dense. Plus petit que le castor, il a une queue étroite aplatie latéralement ; le ragondin est beaucoup plus lourd, à queue arrondie et vibrisses claires."
+    },
+    "habitat": {
+      "en": "Muskrats use marshes, ponds, lakes, streams, drainage canals and estuarine wetlands where water and food remain available. Dense stands of cattails, bulrushes, sedges or reeds provide both edible shoots and cover, while open water lets them travel between feeding and resting sites. In Texas, shallow marshes with stable water around 15–60 cm supported especially favorable conditions; that local range should not be treated as a universal requirement. Houses of cut marsh vegetation rise above water, whereas animals along rivers and canals may excavate bank burrows with underwater entrances.",
+      "fr": "Le rat musqué fréquente marais, étangs, lacs, cours d’eau, fossés et zones humides estuariennes où l’eau et la nourriture restent accessibles. Les massettes, scirpes, carex et roseaux denses fournissent pousses comestibles et couvert, tandis que l’eau libre relie les sites d’alimentation et de repos. Au Texas, des marais peu profonds à niveau stable, autour de 15 à 60 cm, étaient particulièrement favorables ; cette plage locale n’est pas universelle. Les animaux bâtissent des huttes végétales au-dessus de l’eau ou creusent des terriers de berge à entrée immergée."
+    },
+    "diet": {
+      "en": "The diet consists mostly of aquatic plants, especially roots, rhizomes and lower stems of cattails, sedges, bulrushes and water lilies. Strong incisors cut this vegetation, and lips that close behind the incisors allow the animal to gnaw while submerged without taking water into its mouth. It often carries plant pieces to a feeding platform or shelter to eat. Animal food is occasional rather than the norm: documented items include crayfish, mussels, frogs, fish and small turtles, particularly when plant food is scarce. A large, compartmentalized cecum retains fibrous food for microbial fermentation, helping process its plant-heavy diet.",
+      "fr": "L’alimentation est surtout végétale : racines, rhizomes et bases des tiges de massettes, carex, scirpes et nénuphars. Les incisives coupent ces végétaux ; des lèvres qui se ferment derrière elles permettent de ronger sous l’eau sans remplir la bouche. L’animal transporte souvent des morceaux jusqu’à une plateforme ou un abri. Les aliments animaux restent occasionnels : écrevisses, moules, grenouilles, poissons et petites tortues sont signalés, surtout quand les végétaux se raréfient. Un cæcum volumineux et compartimenté retient les fibres pour leur fermentation microbienne, ce qui aide à digérer une alimentation riche en végétaux."
+    },
+    "behavior": {
+      "en": "Muskrats are active throughout the day but often become most active from mid-afternoon into dusk. Family members may share a lodge, but crowding and breeding-season competition can cause aggression; scent from musk glands and squeaks or squeals provide communication. In winter, animals in icy regions dig for submerged roots and may build a protective feeding shelter over a hole in the ice.",
+      "fr": "Le rat musqué est actif à toute heure, souvent surtout du milieu de l’après-midi au crépuscule. Une famille peut partager une hutte, mais la surpopulation et la compétition reproductrice provoquent parfois de l’agressivité ; sécrétions musquées et cris aigus servent à communiquer. En hiver, il déterre des racines sous la glace et peut bâtir un abri autour d’un trou pour manger."
+    },
+    "reproduction": {
+      "en": "The breeding season shifts with latitude; in Indiana, most litters arrive in May and June, and females may produce two to four litters per year. After about 28–30 days of gestation, a female gives birth in a grass- or cattail-lined nest, commonly to around six kits. They are born blind and helpless, begin swimming at roughly ten days, and can eat green plants at about three weeks. The mother nurses them until weaning at three to four weeks; young may remain with her longer, especially in the final litter of the season. A two-season field study found that male care varied with mating strategy, and juvenile survival in that study did not depend on the amount of paternal care.",
+      "fr": "La saison de reproduction varie selon la latitude ; en Indiana, la plupart des portées naissent en mai et juin, et les femelles peuvent avoir deux à quatre portées par an. Après 28 à 30 jours de gestation, la femelle met bas dans un nid d’herbes ou de massettes, souvent six petits. Aveugles et dépendants à la naissance, ils nagent vers dix jours et mangent des plantes vertes vers trois semaines. La mère les allaite jusqu’au sevrage, à trois ou quatre semaines ; les jeunes peuvent rester avec elle plus longtemps, surtout ceux de la dernière portée. Une étude de terrain menée sur deux saisons a montré que les soins du mâle variaient selon la stratégie d’accouplement ; dans cette étude, la survie des jeunes ne dépendait pas de l’importance de ces soins paternels."
+    },
+    "ecology": {
+      "en": "Muskrats are prey for mink, otters, foxes, coyotes, owls, hawks and other wetland predators, linking plant production to higher trophic levels. Their grazing and the vegetation they pile into lodges or feeding platforms can open dense marsh stands into a mosaic of channels, grazed patches and emergent cover. This effect depends on local density and plant growth: heavy grazing can strip vegetation or weaken banks, while moderate activity creates structural variety. Lodges can also be used by other wetland animals as nesting or resting sites.",
+      "fr": "Le rat musqué est la proie du vison, de la loutre, du renard, du coyote et de rapaces ; il relie la production végétale aux niveaux trophiques supérieurs. Son broutage et les végétaux entassés dans ses huttes ou plateformes ouvrent parfois les peuplements denses en mosaïque de chenaux, secteurs broutés et couvert émergent. L’effet dépend de la densité et de la croissance végétale : un broutage intense peut dénuder le marais ou fragiliser les berges, tandis qu’une activité modérée diversifie les structures. D’autres animaux des marais utilisent parfois les huttes pour nicher ou se reposer."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment completed on 20 August 2016 classified the species as Least Concern, citing its broad range and lack of major global threats; this is not a current census of every population. A 42-year analysis of harvest records from 37 U.S. states found evidence of decline from 1970 to 2012 after accounting for pelt prices, with a steeper trend in the Southeast; harvest data remain an indirect measure. The European Union’s consolidated regulation of 7 August 2025 still lists the muskrat as an invasive alien species of Union concern. It was added to that list by Commission Implementing Regulation 2017/1263 in 2017. Burrowing can damage dikes and banks, and intense grazing can alter wetlands, so European management addresses local ecological and infrastructure impacts.",
+      "fr": "L’évaluation mondiale de l’UICN, achevée le 20 août 2016, classe l’espèce en Préoccupation mineure, vu sa vaste aire et l’absence de menace mondiale majeure ; ce n’est pas un recensement actuel de chaque population. Une analyse de 42 ans de données de captures dans 37 États américains révèle un déclin entre 1970 et 2012 après correction des prix des fourrures, plus marqué dans le Sud-Est ; les captures restent un indicateur indirect. Le règlement consolidé de l’Union européenne du 7 août 2025 maintient le rat musqué sur la liste des espèces exotiques envahissantes préoccupantes pour l’Union. Il a été ajouté à cette liste par le règlement d’exécution 2017/1263 en 2017. Ses terriers peuvent endommager digues et berges, et un broutage intense transformer les marais ; la gestion européenne vise ces impacts écologiques et matériels locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Muskrat — Texas Tech Natural Science Research Laboratory",
+        "fr": "Rat musqué — Natural Science Research Laboratory de Texas Tech"
+      },
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Rodentia/Ondatra_zibethicus.php",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Regional account documents wetlands, shelters and localized declines."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 8,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Muskrat — Indiana Department of Natural Resources",
+        "fr": "Rat musqué — Indiana Department of Natural Resources"
+      },
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/muskrat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Indiana seasonal activity, kits, food and predators."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 7,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Muskrat Species Review — USDA Forest Service",
+        "fr": "Monographie du rat musqué — USDA Forest Service"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/onzi",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Wetland plants, burrows, feeding shelters, and regional ecology."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.4",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 8,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ondatra zibethicus — Animal Diversity Web, University of Michigan",
+        "fr": "Ondatra zibethicus — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Ondatra_zibethicus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Range, juvenile development and musk-based communication."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 6,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Muskrat — Connecticut Department of Energy and Environmental Protection",
+        "fr": "Rat musqué — Connecticut Department of Energy and Environmental Protection"
+      },
+      "url": "https://portal.ct.gov/deep/wildlife/fact-sheets/muskrat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Closed lips permit underwater gnawing; plants dominate diet."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.4",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 8,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nutria identification — California Department of Fish and Wildlife",
+        "fr": "Identification du ragondin — California Department of Fish and Wildlife"
+      },
+      "url": "https://wildlife.ca.gov/Conservation/Invasives/Species/Nutria",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Relative sizes and tails distinguish nutria from muskrat and beaver."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 10,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Muskrats in Treatment Wetlands — Ecological Engineering",
+        "fr": "Le rat musqué dans les zones humides aménagées — Ecological Engineering"
+      },
+      "url": "https://doi.org/10.1016/j.ecoleng.2006.06.008",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study documents vegetation mosaics and severe local eat-outs."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.2",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 8,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Muskrat Red List Assessment — IUCN",
+        "fr": "Évaluation Liste rouge du rat musqué — UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T15324A22344525.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Global Least Concern assessment completed 20 August 2016."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 8,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Commission Implementing Regulation (EU) 2017/1263 — EUR-Lex",
+        "fr": "Règlement d’exécution (UE) 2017/1263 — EUR-Lex"
+      },
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ:L:2017:182:FULL",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "EU list addition in 2017; Union concern and invasive designation."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cross-border management of invasive alien species — European Commission",
+        "fr": "Gestion transfrontalière des espèces exotiques envahissantes — Commission européenne"
+      },
+      "url": "https://environment.ec.europa.eu/news/towards-joint-european-management-invasive-alien-species-through-innovation-and-cooperation-2024-03-14_en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European authorities report burrow erosion and infrastructure impacts."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 8,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Empirical Evidence for Declines in Muskrat Populations Across the United States — Journal of Wildlife Management",
+        "fr": "Preuves empiriques du déclin du rat musqué aux États-Unis — Journal of Wildlife Management"
+      },
+      "url": "https://doi.org/10.1002/jwmg.21328",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Harvest-price-adjusted records show United States declines during 1970–2012."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 8,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Muskrats — West Virginia University Extension",
+        "fr": "Rats musqués — West Virginia University Extension"
+      },
+      "url": "https://extension.wvu.edu/natural-resources/wildlife/muskrats",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Feeding platforms and underwater plant cutting."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 6,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How Are Muskrat Push-ups Made? — Alaska Department of Fish and Game",
+        "fr": "Comment les rats musqués construisent-ils leurs abris de glace ? — Alaska Department of Fish and Game"
+      },
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=wildlifenews.view_article&articles_id=330",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Alaska winter shelters provide concealed breathing and feeding sites."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 9,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Union list of invasive alien species of Union concern, consolidated 7 August 2025 — EUR-Lex",
+        "fr": "Liste de l’Union des espèces exotiques envahissantes préoccupantes, version consolidée du 7 août 2025 — EUR-Lex"
+      },
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:02016R1141-20250807",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The consolidated Union regulation still includes Ondatra zibethicus."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 8,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nutritional Ecology and Bioenergetics of Muskrats — University of Manitoba dissertation",
+        "fr": "Écologie nutritionnelle et bioénergétique du rat musqué — thèse de l’Université du Manitoba"
+      },
+      "url": "https://www.collectionscanada.gc.ca/obj/s4/f2/dsk3/ftp05/nq23585.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Anatomical study documents an enlarged, haustrated cecum."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 7,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Consequences of Following a Mixed Reproductive Strategy in Muskrats — Journal of Mammalogy",
+        "fr": "Conséquences d’une stratégie reproductive mixte chez le rat musqué — Journal of Mammalogy"
+      },
+      "url": "https://doi.org/10.2307/1382649",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Field study links male care to mating strategy, not juvenile survival."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 11,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Muskrat (Ondatra zibethicus) — Comparative Mammalian Brain Collections, Michigan State University",
+        "fr": "Rat musqué (Ondatra zibethicus) — Comparative Mammalian Brain Collections, Michigan State University"
+      },
+      "url": "https://brains.anatomy.msu.edu/museum/brain/specimens/rodentia/muskrat/index.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult head-body, tail and mass ranges."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 6,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Image validated by root: compact body and vertically flattened tail silhouette; keep the muskrat tail laterally compressed, not vertically flattened. No image changes requested.",
+  "uncertainties": [
+    "Breeding timing and litter size vary with latitude and local conditions; the juvenile milestones given here are documented field and agency estimates.",
+    "Muskrat grazing can create open-water and emergent-vegetation mosaics, but intense grazing can also cause local eat-outs and bank damage; the outcome is site- and density-dependent."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific review and principal review confirm anatomy, generalized adult dimensions, aquatic feeding, fermentation, regional breeding, habitat effects and dated IUCN/EU records. Illustration independently accepted."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "strongylocentrotus_purpuratus",
+  "scientific": "Strongylocentrotus purpuratus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Purple sea urchin",
+    "fr": "Oursin violet"
+  },
+  "sections": {
+    "overview": {
+      "en": "This purple sea urchin is a common echinoderm of the northeast Pacific rocky shore.",
+      "fr": "Cet oursin violet est un échinoderme commun des côtes rocheuses du nord-est du Pacifique."
+    },
+    "identification": {
+      "en": "Its round test bears movable purple spines, tube feet and tiny pincers called pedicellariae.",
+      "fr": "Son test rond porte des piquants violets mobiles, des pieds ambulacraires et de minuscules pinces appelées pédicellaires."
+    },
+    "habitat": {
+      "en": "It ranges from Vancouver Island to Isla Cedros, Baja California, on rocky shores.",
+      "fr": "Il vit sur les côtes rocheuses, de l’île de Vancouver à l’île Cedros, en Basse-Californie."
+    },
+    "diet": {
+      "en": "It grazes red, brown and green algae, including kelp where available.",
+      "fr": "Il broute des algues rouges, brunes et vertes, dont le kelp lorsqu’il est présent."
+    },
+    "behavior": {
+      "en": "Its spines and tube feet help it move, hold on and handle food.",
+      "fr": "Ses piquants et ses pieds ambulacraires l’aident à se déplacer, s’accrocher et manipuler sa nourriture."
+    },
+    "reproduction": {
+      "en": "Adults release eggs and sperm into the water for external fertilization; planktonic larvae later settle.",
+      "fr": "Les adultes libèrent ovules et spermatozoïdes dans l’eau, où a lieu la fécondation ; les larves planctoniques se fixent ensuite."
+    },
+    "ecology": {
+      "en": "When populations become unusually dense, grazing can reduce kelp forests and create urchin barrens.",
+      "fr": "Quand les populations deviennent exceptionnellement denses, le broutage peut réduire les forêts de kelp et créer des zones dénudées dominées par les oursins."
+    },
+    "conservation": {
+      "en": "These local overabundance events are an ecosystem-management issue, not evidence of a global decline of the species.",
+      "fr": "Ces proliférations locales relèvent de la gestion des écosystèmes ; elles ne démontrent pas un déclin mondial de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Monterey Bay Aquarium — Purple sea urchin",
+        "fr": "Monterey Bay Aquarium — Oursin violet"
+      },
+      "url": "https://www.montereybayaquarium.org/animals-the-ocean/animals-a-to-z/purple-sea-urchin",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The aquarium gives the species range, rocky-shore ecosystem, algal diet, and test, spine, pedicellaria and tube-foot features."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 17,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "California Sea Grant — Purple sea urchin",
+        "fr": "California Sea Grant — Oursin violet"
+      },
+      "url": "https://caseagrant.ucsd.edu/seafood-profiles/purple-sea-urchin",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The California Sea Grant profile describes seasonal breeding and external spawning."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 11,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOAA — Purple urchin and kelp-forest restoration",
+        "fr": "NOAA — Oursin violet et restauration des forêts de kelp"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/43114",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A NOAA-hosted research record describes the regional rise of purple urchins in kelp barrens and studies their role in restoration and fisheries."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 22,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation note is limited to the local kelp-forest context discussed in the cited North American sources."
+  ],
+  "review_note": "Kept regional ecosystem impacts separate from the species’ global conservation status; sources include California and NOAA research.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

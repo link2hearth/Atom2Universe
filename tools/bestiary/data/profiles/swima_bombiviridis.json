@@ -1,0 +1,168 @@
+{
+  "id": "swima_bombiviridis",
+  "scientific": "Swima bombiviridis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Green bomber worm",
+    "fr": "Ver bombardier vert"
+  },
+  "sections": {
+    "overview": {
+      "en": "The green bomber worm is a free-swimming deep-sea annelid in the family Acrocirridae.",
+      "fr": "Le Ver bombardier vert est un annélide des grands fonds qui nage librement dans la famille des Acrocirridae."
+    },
+    "identification": {
+      "en": "Its mostly transparent body bears paired branchial sacs that glow green when detached.",
+      "fr": "Son corps presque transparent porte des sacs branchiaux jumelés qui brillent en vert lorsqu’ils sont détachés."
+    },
+    "habitat": {
+      "en": "It lives in the deep water column of the northeastern Pacific; records include midwater off California.",
+      "fr": "Il vit dans la colonne d’eau profonde du Pacifique nord-est ; des observations proviennent notamment des eaux au large de la Californie."
+    },
+    "diet": {
+      "en": "Its diet has not been established in the sources consulted.",
+      "fr": "Les sources consultées ne permettent pas d’établir son régime alimentaire."
+    },
+    "behavior": {
+      "en": "When disturbed, it can release glowing branchial sacs. The light may distract predators while it swims away.",
+      "fr": "Lorsqu’il est dérangé, il peut libérer ses sacs branchiaux lumineux. Cette lumière pourrait détourner l’attention des prédateurs pendant sa fuite."
+    },
+    "reproduction": {
+      "en": "Its reproductive biology is not described in the sources consulted.",
+      "fr": "Sa biologie reproductive n’est pas décrite dans les sources consultées."
+    },
+    "ecology": {
+      "en": "The detached luminous structures are modified gills and are interpreted as a defensive decoy, not a reproductive release.",
+      "fr": "Les structures lumineuses détachées sont des branchies modifiées, interprétées comme un leurre défensif et non comme un mécanisme reproducteur."
+    },
+    "conservation": {
+      "en": "The scientific sources consulted describe its discovery and biology but give no conservation category.",
+      "fr": "Les sources scientifiques consultées décrivent sa découverte et sa biologie, mais ne donnent aucune catégorie de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Deep-sea, swimming worms with luminescent “bombs” — Science via PubMed",
+        "fr": "Deep-sea, swimming worms with luminescent “bombs” — Science via PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19696343/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Original research introduces the swimming annelids and reports detachable bioluminescent branchiae; it does not establish diet, reproduction or conservation status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 20,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Green Bomber — NOAA Ocean Exploration",
+        "fr": "The Green Bomber — NOAA Ocean Exploration"
+      },
+      "url": "https://oceanexplorer.noaa.gov/multimedia/okeanos-explorations-ex2104-dives-dive05-media-dive05-greenbomber/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "NOAA account describes swimming and release of glowing green fluid sacs as a likely predator distraction."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 16,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bioluminescência profunda — FAPESP",
+        "fr": "Bioluminescência profunda — FAPESP"
+      },
+      "url": "https://agencia.fapesp.br/bioluminescencia-profunda/10952",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Portuguese science agency report describes the green luminous sacs and their release for several seconds."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 15,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Deep midwater Annelida from the NORI-D exploration area — Elementa",
+        "fr": "Deep midwater Annelida from the NORI-D exploration area — Elementa"
+      },
+      "url": "https://online.ucpress.edu/elementa/article/13/1/00087/212190/Deep-midwater-Annelida-from-the-NORI-D-exploration",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Peer-reviewed 2025 report documents the species in deep midwater from California to the Gulf of California."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 16,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The proposed defensive role is an interpretation in the cited research; species-specific diet and reproduction remain unresolved."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used original peer-reviewed research, NOAA observation, a Portuguese science report and recent range records; no close Swima profile is listed in the catalogue."
+}

@@ -1,0 +1,16 @@
+{
+  "id": 7020,
+  "name": "wheat1",
+  "texture_top": "cozy:groundcover:8",
+  "texture_side": "cozy:groundcover:8",
+  "texture_bottom": "cozy:groundcover:8",
+  "color": "#88AA44",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "",
+  "harvest_category": "unharvestable_crop",
+  "creative_tab": "nature",
+  "placement_rule": "soil",
+  "replaceable": false,
+  "tags": []
+}

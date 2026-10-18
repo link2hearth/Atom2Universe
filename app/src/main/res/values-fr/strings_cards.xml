@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Jeux de cartes contre l'IA (games/cards) -->
+    <string name="card_rank_ace">A</string>
+    <string name="card_rank_jack">V</string>
+    <string name="card_rank_queen">D</string>
+    <string name="card_rank_king">R</string>
+
+    <string name="cards_seat_you">Toi</string>
+    <string name="cards_seat_west">Ouest</string>
+    <string name="cards_seat_north">Nord</string>
+    <string name="cards_seat_east">Est</string>
+    <string name="cards_result_won">Gagné</string>
+    <string name="cards_result_lost">Perdu</string>
+    <string name="cards_points">%1$d pts</string>
+    <string name="cards_new_confirm">Commencer une nouvelle partie ?</string>
+
+    <string name="crazy8_title">Huit américain</string>
+    <string name="crazy8_description">Vide ta main en premier, les huit sont des jokers</string>
+    <string name="crazy8_rules">Sois le premier à vider ta main.\n\nChaque joueur commence avec 5 cartes. Pose une carte de la même couleur ou de la même hauteur que celle du dessus de la défausse. Un huit se pose sur n\'importe quoi : son joueur choisit la couleur à suivre.\n\nSi tu ne peux pas jouer, pioche une carte (jusqu\'à 5 fois), puis passe.\n\nLe gagnant marque les cartes qui restent dans la main des autres : un huit vaut 50, une figure ou un dix 10, un as 1, les autres leur chiffre.\n\nGlisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer.</string>
+    <string name="crazy8_draw">Piocher</string>
+    <string name="crazy8_pass">Passer</string>
+
+    <string name="hearts_title">Dame de pique</string>
+    <string name="hearts_description">Évite les cœurs et la dame de pique</string>
+    <string name="hearts_rules">Évite les points : chaque cœur coûte 1, la dame de pique 13. Le score le plus bas gagne.\n\nChaque manche commence par le passage de trois cartes (à gauche, à droite, en face, puis aucun passage, et ainsi de suite). Celui qui a le 2 de trèfle ouvre. Fournis la couleur demandée si tu le peux ; sinon joue ce que tu veux, mais ni cœur ni dame de pique au premier pli si tu as autre chose. On ne peut pas demander cœur tant qu\'un cœur n\'est pas tombé. La plus forte carte de la couleur demandée ramasse le pli et ouvre le suivant.\n\nSi un joueur ramasse les 26 points, tous les autres en prennent 26 et lui aucun.\n\nLa partie s\'arrête quand un joueur atteint %1$d points.\n\nGlisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer. Au passage, glisse ou touche trois cartes, puis appuie sur le bouton.</string>
+    <string name="hearts_pass_left">Passer à gauche</string>
+    <string name="hearts_pass_right">Passer à droite</string>
+    <string name="hearts_pass_across">Passer en face</string>
+    <string name="hearts_hand">Manche %1$d</string>
+    <string name="hearts_caption">%1$d +%2$d</string>
+
+    <string name="spades_title">Spades</string>
+    <string name="spades_description">Annonce tes plis, le pique est atout</string>
+    <string name="spades_rules">Fais le nombre de plis que tu as annoncé. Toi et le joueur d\'en face formez une équipe contre les deux autres. Le pique est l\'atout.\n\nChaque manche commence par les annonces : dis combien de plis tu comptes faire (0 est un « nil » : tu promets de n\'en faire aucun). Ton équipe doit faire au moins le total de ses annonces.\n\nOn joue ensuite treize plis. Fournis la couleur demandée si tu le peux ; sinon joue ce que tu veux, et un pique bat toute autre couleur. On ne peut pas ouvrir à pique tant qu\'un pique n\'est pas tombé, sauf si on n\'a que des piques. La plus forte carte de la couleur demandée, ou le plus fort pique, ramasse le pli et ouvre le suivant.\n\nPoints : 10 par pli annoncé si l\'équipe tient son annonce, plus 1 par pli en trop (un « sac » : dix sacs coûtent 100 points). Une annonce manquée coûte 10 par pli annoncé. Un nil réussi rapporte 100, un nil raté coûte 100.\n\nLa partie s\'arrête quand une équipe atteint %1$d points.\n\nChoisis ton annonce avec − et +. Glisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer.</string>
+    <string name="spades_bid">Annonce %1$d</string>
+    <string name="spades_nil">Nil</string>
+    <string name="spades_nil_mark">∅</string>
+    <string name="cards_team_score">Nous %1$d · Eux %2$d</string>
+
+    <string name="ohhell_title">Oh Hell</string>
+    <string name="ohhell_description">Fais exactement les plis annoncés</string>
+    <string name="ohhell_rules">Fais exactement le nombre de plis que tu as annoncé. Chacun joue pour soi.\n\nChaque manche donne moins de cartes que la précédente (7, puis 6, jusqu\'à 1). Une carte est retournée : sa couleur est l\'atout.\n\nChacun annonce à son tour combien de plis il fera. Le dernier à parler ne peut pas choisir le nombre qui ferait coïncider le total des annonces avec le nombre de plis : quelqu\'un doit forcément se tromper.\n\nOn joue ensuite les plis. Fournis la couleur demandée si tu le peux ; sinon joue ce que tu veux, et l\'atout bat toute autre couleur. La plus forte carte de la couleur demandée, ou le plus fort atout, ramasse le pli et ouvre le suivant.\n\nFaire exactement son annonce rapporte 10 plus l\'annonce ; sinon rien. Le total le plus haut après la dernière manche gagne.\n\nChoisis ton annonce avec − et +. Glisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer.</string>
+    <string name="ohhell_bid">Annonce %1$d</string>
+    <string name="ohhell_hand">Manche %1$d/%2$d</string>
+
+    <string name="euchre_title">Euchre</string>
+    <string name="euchre_description">Choisis l\'atout, fais trois plis</string>
+    <string name="euchre_rules">Fais au moins trois des cinq plis une fois l\'atout choisi. Toi et le joueur d\'en face formez une équipe contre les deux autres. Le jeu compte 24 cartes, du 9 à l\'as.\n\nChoix de l\'atout. Une carte est retournée. À son tour, chacun passe ou la prend : sa couleur devient l\'atout, et le donneur la ramasse en écartant une carte. Si tout le monde passe, un second tour permet de nommer une autre couleur comme atout ; le donneur ne peut pas passer. Celui qui fait l\'atout peut jouer seul : son partenaire reste de côté, et ramasser les cinq plis rapporte alors 4 points.\n\nLes valets passent en premier. À l\'atout, le valet est la plus forte carte (le bower droit), suivi de l\'autre valet de la même couleur (le bower gauche, qui compte comme un atout), puis l\'as, le roi, la dame, le dix et le neuf.\n\nFournis la couleur demandée si tu le peux (le bower gauche compte comme atout). Le plus fort atout, sinon la plus forte carte de la couleur demandée, ramasse le pli et ouvre le suivant.\n\nL\'équipe qui a fait l\'atout marque 1 point avec trois ou quatre plis et 2 avec les cinq ; si elle fait moins de trois plis, l\'autre équipe marque 2. La partie s\'arrête quand une équipe atteint %1$d points.\n\nAppuie sur Seul avant de prendre ou de nommer une couleur pour jouer sans ton partenaire. Quand tu ramasses la carte retournée, glisse ou touche la carte à écarter. Glisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer.</string>
+    <string name="euchre_pass">Passer</string>
+    <string name="euchre_order">Prendre</string>
+    <string name="euchre_alone">Seul</string>
+    <string name="euchre_dealer">Donneur</string>
+
+    <string name="gofish_title">Pêche</string>
+    <string name="gofish_description">Demande des cartes, forme des carrés</string>
+    <string name="gofish_rules">Forme le plus de carrés : quatre cartes de la même hauteur.\n\nChacun commence avec 7 cartes. À ton tour, choisis une hauteur que tu as en main et demande-la à un autre joueur. S\'il en a, il te les donne toutes et tu rejoues. Sinon, c\'est « Pêche ! » : tu piches une carte, et tu ne rejoues que si c\'est la hauteur demandée.\n\nDès que tu as quatre cartes de la même hauteur, elles sont posées en carré. Un joueur qui n\'a plus de carte en pioche une. La partie s\'arrête quand les treize carrés sont faits ; celui qui en a le plus gagne.\n\nTouche une carte pour choisir sa hauteur (toutes les cartes de cette hauteur se soulèvent), puis touche le joueur à qui la demander. Glisser une carte vers la table marche aussi.</string>
+    <string name="cards_score_gain">%1$d +%2$d</string>
+
+    <string name="gin_title">Gin rami</string>
+    <string name="gin_description">Forme des combinaisons, frappe avec peu de bois mort</string>
+    <string name="gin_rules">Forme des combinaisons et garde le moins possible de cartes isolées.\n\nUne combinaison est un brelan ou un carré (trois ou quatre cartes de la même hauteur), ou une suite de trois cartes ou plus de la même couleur (l\'as est le plus bas : A-2-3 compte, D-R-A non). Les autres cartes sont du bois mort : un as vaut 1, un 2 à 10 leur chiffre, une figure 10. Ton bois mort est entouré.\n\nChacun commence avec 10 cartes. À ton tour, pioche une carte à la pioche ou prends celle du dessus de la défausse, puis écarte une carte. Au début, le joueur qui ne donne pas peut prendre la carte retournée ; s\'il passe, le donneur le peut ; si les deux passent, le premier joueur pioche à la pioche.\n\nSi ton bois mort est de 10 ou moins une fois ta carte écartée, tu peux frapper : la manche s\'arrête. L\'autre joueur charge ses cartes sur tes combinaisons (automatiquement), puis chacun compte son bois mort. Si le tien est plus petit, tu marques l\'écart. Sans aucun bois mort, c\'est gin : tu marques l\'écart plus 20. Si l\'autre fait égalité ou mieux, c\'est une contre : il marque l\'écart plus 10.\n\nQuand il ne reste que deux cartes à la pioche, la manche est nulle. La partie s\'arrête quand un joueur atteint %1$d points.\n\nTouche une pile pour piocher. Glisse une carte vers la table pour l\'écarter, ou touche-la une fois pour la soulever et une seconde fois pour l\'écarter. Une carte soulevée propose Frapper quand c\'est possible.</string>
+    <string name="gin_pass">Passer</string>
+    <string name="gin_take">Prendre</string>
+    <string name="gin_draw">Piocher</string>
+    <string name="gin_knock">Frapper</string>
+    <string name="gin_gin">Gin</string>
+    <string name="gin_continue">Continuer</string>
+    <string name="gin_deadwood">Bois mort %1$d</string>
+    <string name="gin_result_knock">Frappe</string>
+    <string name="gin_result_gin">Gin !</string>
+    <string name="gin_result_undercut">Contre</string>
+    <string name="gin_result_draw">Manche nulle</string>
+
+    <string name="cribbage_title">Cribbage</string>
+    <string name="cribbage_description">Compte quinze, paires et suites jusqu\'à 121</string>
+    <string name="cribbage_rules">Sois le premier à marquer %1$d points.\n\nÀ chaque manche, six cartes sont données. Chacun met deux cartes dans le crib, une main de plus qui appartient au donneur. Une carte est ensuite retournée (un valet fait marquer 2 au donneur).\n\nLe jeu : en commençant par celui qui ne donne pas, on pose chacun son tour une carte sur une pile dont le total ne peut pas dépasser 31. On marque 2 en faisant 15 ou 31, 2 pour une paire, 6 pour un brelan, 12 pour un carré, et un point par carte pour une suite de trois cartes ou plus (dans n\'importe quel ordre). Un joueur qui ne peut pas poser dit « go » automatiquement ; quand aucun ne peut, le dernier à avoir posé marque 1 et la pile repart de zéro.\n\nLe compte : celui qui ne donne pas compte ses quatre cartes avec la retournée, puis le donneur, puis le crib du donneur. Chaque groupe de cartes qui fait 15 vaut 2 ; chaque paire 2 ; chaque suite de trois cartes ou plus un point par carte ; quatre cartes de la même couleur 4 (5 avec la retournée, et le crib exige les cinq) ; un valet de la couleur de la retournée 1.\n\nLa partie s\'arrête dès que quelqu\'un atteint l\'objectif.\n\nTouche ou glisse deux cartes pour les mettre au crib, puis appuie sur le bouton. Ensuite, glisse une carte vers la table pour la jouer, ou touche-la une fois pour la soulever et une seconde fois pour la jouer.</string>
+    <string name="cribbage_crib">Crib</string>
+    <string name="cribbage_to_crib">Au crib</string>
+    <string name="cribbage_continue">Continuer</string>
+
+    <plurals name="gofish_books">
+        <item quantity="one">%1$d carré</item>
+        <item quantity="other">%1$d carrés</item>
+    </plurals>
+    <string name="gofish_last">%1$s → %2$s : %3$s %4$s</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_tab_courses">Courses</string>
+    <string name="golf_tab_minigolf">Mini-golf</string>
+    <string name="golf_tab_seeds">Seeds</string>
+    <string name="golf_random_new">New seed course</string>
+    <string name="golf_random_title">Seed course</string>
+    <string name="golf_random_name">%2$s %1$s</string>
+    <string name="golf_random_favourite">Favourite</string>
+    <string name="golf_random_description">Pars, lengths, relief, hazards and scenery all come from the seed.</string>
+    <string name="golf_random_round">Play</string>
+    <string name="golf_random_hole">Hole %1$d</string>
+    <string name="golf_random_seed">Seed</string>
+    <string name="golf_random_roll">New seed</string>
+    <string name="golf_random_holes">Holes</string>
+    <string name="golf_random_theme">Theme</string>
+    <string name="golf_random_create">Play</string>
+    <string name="golf_random_delete">Delete</string>
+    <string name="golf_random_delete_confirm">Delete this course and its scores?</string>
+    <string name="golf_random_info">%1$s · par %2$d · %3$s · #%4$d</string>
+    <string-array name="golf_random_counts"><item>3 holes</item><item>5 holes</item><item>9 holes</item><item>18 holes</item></string-array>
+    <string-array name="golf_random_themes"><item>Mixed</item><item>Garden</item><item>Fairy tale</item><item>Halloween</item><item>Christmas</item><item>Archipelago</item></string-array>
+    <string-array name="golf_random_nouns"><item>Constellation</item><item>Starbridge</item><item>Horizon</item><item>Meadow</item><item>Summit</item><item>Valley</item><item>Comet</item><item>Orchard</item><item>Canyon</item><item>Lagoon</item><item>Ridge</item><item>Glade</item><item>Harbour</item><item>Nebula</item><item>Plateau</item><item>Dune</item><item>Grove</item><item>Cliff</item><item>Delta</item><item>Moor</item><item>Prairie</item><item>Fjord</item><item>Oasis</item><item>Mesa</item><item>Atoll</item><item>Lighthouse</item><item>Aurora</item><item>Citadel</item><item>Garden</item><item>Cascade</item><item>Haven</item><item>Isle</item><item>Pinnacle</item><item>Terrace</item><item>Vista</item><item>Lantern</item><item>Crossing</item><item>Outpost</item><item>Orbit</item><item>Canopy</item></string-array>
+    <string-array name="golf_random_adjectives"><item>Golden</item><item>Silent</item><item>Wild</item><item>Hidden</item><item>Crimson</item><item>Frozen</item><item>Misty</item><item>Ancient</item><item>Silver</item><item>Emerald</item><item>Lonely</item><item>Windswept</item><item>Sunlit</item><item>Velvet</item><item>Distant</item><item>Crystal</item><item>Amber</item><item>Wandering</item><item>Quiet</item><item>Hollow</item><item>Radiant</item><item>Stormy</item><item>Gentle</item><item>Endless</item><item>Twilight</item><item>Verdant</item><item>Shimmering</item><item>Rugged</item><item>Secret</item><item>Cosmic</item><item>Drifting</item><item>Blazing</item><item>Sleepy</item><item>Mossy</item><item>Lofty</item><item>Starlit</item><item>Salty</item><item>Dusty</item><item>Tranquil</item><item>Majestic</item></string-array>
+</resources>

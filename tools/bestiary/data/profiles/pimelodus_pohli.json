@@ -1,0 +1,197 @@
+{
+  "id": "pimelodus_pohli",
+  "scientific": "Pimelodus pohli",
+  "group": "fish",
+  "name": {
+    "en": "Pimelodus pohli",
+    "fr": "Pimelodus pohli"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pimelodus pohli is a South American long-whiskered catfish described from Brazil’s São Francisco River drainage.",
+      "fr": "Pimelodus pohli est un poisson-chat sud-américain à longs barbillons, décrit dans le bassin du São Francisco au Brésil."
+    },
+    "identification": {
+      "en": "It has a relatively deep body and a long adipose fin. Adults may show dark spots near the front of the back, while smaller fish have rows of small spots along the sides; a dark bar may mark the lower caudal-fin lobe.",
+      "fr": "Son corps est relativement haut et sa nageoire adipeuse longue. Les adultes peuvent porter des taches sombres sur l’avant du dos, tandis que les jeunes ont des rangées de petites taches sur les flancs; une barre sombre peut marquer le lobe inférieur de la caudale."
+    },
+    "habitat": {
+      "en": "Its documented range is the São Francisco drainage in Brazil; the sources consulted do not establish finer habitat preferences.",
+      "fr": "Son aire documentée se limite au bassin du São Francisco, au Brésil; les sources consultées ne précisent pas davantage ses préférences d’habitat."
+    },
+    "diet": {
+      "en": "A species-specific diet has not been established in the taxonomic sources consulted.",
+      "fr": "Les sources taxonomiques consultées ne permettent pas d’établir un régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The original description is taxonomic and provides little information on the species’ behavior.",
+      "fr": "La description originale est taxonomique et renseigne peu sur le comportement de l’espèce."
+    },
+    "reproduction": {
+      "en": "Reproductive details are not provided in the species description; a later population study exists, but its findings are not summarized here without a verified full-text review.",
+      "fr": "La description de l’espèce ne donne pas de détails sur sa reproduction; une étude ultérieure de population existe, mais ses résultats ne sont pas résumés ici sans examen vérifié du texte intégral."
+    },
+    "ecology": {
+      "en": "Its São Francisco distribution distinguishes it from the other three Pimelodus profiles here. P. pintado is associated with the Laguna Merín basin and is densely spotted. P. stewarti occurs in the Tocantins and is a much smaller species. P. tetramerus is known from the Tapajós–Tocantins region and has four dark flank bands.",
+      "fr": "Sa présence dans le bassin du São Francisco le distingue des trois autres Pimelodus présentés ici. P. pintado est associé au bassin de la lagune Merín et est très tacheté. P. stewarti vit dans le Tocantins et est une espèce bien plus petite. P. tetramerus est connu de la région Tapajós–Tocantins et porte quatre bandes sombres sur les flancs."
+    },
+    "conservation": {
+      "en": "The sources consulted do not provide a species-specific conservation assessment.",
+      "fr": "Les sources consultées ne donnent pas d’évaluation de conservation propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A new species of Pimelodus from the São Francisco drainage — original description",
+        "fr": "Une nouvelle espèce de Pimelodus du bassin du São Francisco — description originale"
+      },
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Original description: diagnostic form, spots and São Francisco range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 9,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pohli — FishBase-linked Encyclopedia of Life species account",
+        "fr": "Pimelodus pohli — fiche espèce de l’Encyclopedia of Life, liée à FishBase"
+      },
+      "url": "https://eol.org/pages/7197933/articles",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species-level ecology and conservation fields are sparse in this profile."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 10,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus pintado — original species description",
+        "fr": "Pimelodus pintado — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The original description documents the Laguna Merín range and dense spotting of P. pintado."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 14,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus stewarti — FishBase species summary",
+        "fr": "Pimelodus stewarti — fiche espèce FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/64684",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase gives the Tocantins drainage and a maximum standard length of 6.6 cm for P. stewarti."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 16,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodus tetramerus — original description",
+        "fr": "Pimelodus tetramerus — description scientifique originale"
+      },
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The description records the Tapajós and Tocantins systems and the four dark flank bands."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 14,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific feeding, behavior, reproduction and conservation data are limited in the sources reviewed.",
+    "A population and reproduction study is known, but was not used to make specific claims in this draft."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal comparisons with P. pintado, P. stewarti and P. tetramerus use diagnostic range, size and pattern differences."
+}

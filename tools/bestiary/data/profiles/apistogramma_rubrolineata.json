@@ -1,0 +1,257 @@
+{
+  "id": "apistogramma_rubrolineata",
+  "scientific": "Apistogramma rubrolineata",
+  "group": "fish",
+  "name": {
+    "en": "Red-line Dwarf Cichlid",
+    "fr": "Apistogramme à lignes rouges"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma rubrolineata is a small dwarf cichlid described in 2002 from the Rio Manuripi in Bolivia. The species is known only from its type locality in the Pando Department, according to FishBase.",
+      "fr": "Apistogramma rubrolineata est un petit cichlidé nain décrit en 2002 du rio Manuripi, en Bolivie. Selon FishBase, l’espèce n’est connue que de sa localité type, dans le département de Pando."
+    },
+    "identification": {
+      "en": "Seven dark-red longitudinal lines and a curved junction between the postorbital stripe and midlateral band distinguish it from other described Apistogramma. FishBase lists a maximum standard length of 4.0 cm for male or unsexed fish; no female maximum, mass, width or body height was found. The epithet means red-lined.",
+      "fr": "Sept lignes longitudinales rouge sombre et une jonction arquée entre la bande postorbitale et la bande médiane la distinguent des autres Apistogramma décrits. FishBase indique une longueur standard maximale de 4,0 cm pour les mâles ou individus non sexés ; aucune longueur maximale des femelles, masse, largeur ou hauteur n’a été trouvée. L’épithète signifie « à lignes rouges »."
+    },
+    "habitat": {
+      "en": "The type locality is the Rio Manuripi in Bolivia’s Pando Department, in a tropical blackwater river with loamy banks. The known distribution remains very restricted in published records.",
+      "fr": "La localité type se trouve sur le rio Manuripi, dans le département bolivien de Pando, au sein d’un cours d’eau tropical à eau noire et berges limoneuses. Les données publiées décrivent une aire très restreinte."
+    },
+    "diet": {
+      "en": "No species-specific diet study was located. FishBase’s trophic estimate is derived from close relatives, so it should not be presented as a measured stomach-content result for this species.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été retrouvée. L’estimation trophique de FishBase est déduite de proches parents ; elle ne doit donc pas être présentée comme une analyse stomacale mesurée chez cette espèce."
+    },
+    "behavior": {
+      "en": "The available species accounts contain little direct information about wild social behavior or daily activity. Reports from aquaria should be treated as observations in captivity rather than a complete field description.",
+      "fr": "Les fiches disponibles apportent peu d’informations directes sur le comportement social sauvage ou l’activité quotidienne. Les observations d’aquarium décrivent la captivité et ne constituent pas un tableau complet sur le terrain."
+    },
+    "reproduction": {
+      "en": "No reliable clutch-size estimate or detailed species-specific breeding observations were found in the accounts available for this fish.",
+      "fr": "Aucune taille de ponte fiable ni observation détaillée de reproduction propre à cette espèce n’a été trouvée dans les fiches consultées."
+    },
+    "ecology": {
+      "en": "Some aquarium classifications place it in the informal resticulosa complex alongside A. resticulosa, but that grouping is provisional. Its seven red lines and arched stripe junction are more dependable identification clues than the group label.",
+      "fr": "Certaines classifications aquariophiles le placent dans le complexe informel resticulosa avec A. resticulosa, mais ce regroupement reste provisoire. Ses sept lignes rouges et sa jonction arquée sont des repères plus fiables que l’étiquette de groupe."
+    },
+    "conservation": {
+      "en": "FishBase reports the IUCN category Data Deficient, assessed on 25 April 2014. The assessment cites limited information on the species, so lack of a higher-risk category is not evidence that it is secure.",
+      "fr": "FishBase rapporte la catégorie UICN « données insuffisantes », évaluée le 25 avril 2014. L’évaluation souligne le peu d’informations sur l’espèce ; l’absence d’une catégorie plus menaçante ne prouve donc pas qu’elle est hors de danger."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma rubrolineata — FishBase species summary",
+        "fr": "Apistogramma rubrolineata — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-rubrolineata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists standard length, diagnostic markings and limited biological information."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 10,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Original description of Apistogramma rubrolineata (German-language citation)",
+        "fr": "Description originale d’Apistogramma rubrolineata (référence en allemand)"
+      },
+      "url": "https://www.fishbase.net.br/references/FBRefSummary.php?ID=48504&database=FB",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Hein, Zarske and Zapata described the species in a German-language article in Das Aquarium in 2002."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 16,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma rubrolineata — Cichlid Room Companion profile",
+        "fr": "Apistogramma rubrolineata — fiche Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=617",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The account records the type locality and Data Deficient conservation category."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 11,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma rubrolineata — Aquarist Atlas account",
+        "fr": "Apistogramma rubrolineata — fiche Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-rubrolineata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The account cites the original description and summarizes the species’ restricted Bolivian range."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 13,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: Cichlidae name etymology",
+        "fr": "ETYFish : étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Rubrolineata means red-lined and refers to seven dark-red longitudinal stripes."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 11,
+        "notes_words": 10,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "French aquarium classification of Apistogramma groups",
+        "fr": "Classification aquariophile française des groupes d’Apistogramma"
+      },
+      "url": "https://aquapassion1234.forumactif.org/t431-classification-des-apistogramma-datz",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "This hobby classification tentatively associates A. rubrolineata with the resticulosa complex."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 11,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bolivian freshwater fish conservation status — IUCN regional assessment, Spanish-language edition",
+        "fr": "État de conservation des poissons d’eau douce boliviens — évaluation UICN, édition espagnole"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language IUCN assessment table lists Apistogramma rubrolineata as Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 11,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small Bolivian dwarf cichlid with exactly seven dark-red longitudinal lines and a curved connection between the postorbital and midlateral stripes; use a shallow, loamy-bank blackwater stream.",
+  "uncertainties": [
+    "Only 4.0 cm standard length for male or unsexed fish is reported; there is no reliable female size or body mass, width or height. FishBase’s length-weight figure is a genus-level model, not a measured weight.",
+    "The range is known from very few published records centered on the type locality; avoid depicting it as broadly distributed across the Amazon.",
+    "Behavior, diet and reproduction are poorly documented for this species. The resticulosa-complex assignment is an informal aquarium classification, not a formal taxonomic synonym."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase with the German original-description citation, a Spanish IUCN assessment table, and independent English and French-language summaries. Used the seven red lines as the main diagnostic feature and labelled the group placement informal."
+}

@@ -1,0 +1,163 @@
+{
+  "id": "hylotrupes_bajulus",
+  "scientific": "Hylotrupes bajulus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Old House Borer",
+    "fr": "Capricorne des maisons"
+  },
+  "sections": {
+    "overview": {
+      "en": "This longhorn beetle is chiefly known as a pest of structural softwood timber.",
+      "fr": "Ce coléoptère longicorne est surtout connu comme ravageur des bois résineux de construction."
+    },
+    "identification": {
+      "en": "The French building guide gives adults as 10–20 mm long and cream-colored larvae as 20–25 mm.",
+      "fr": "Le guide français du bâtiment indique des adultes de 10–20 mm et des larves blanc crème de 20–25 mm."
+    },
+    "habitat": {
+      "en": "Larvae develop in seasoned conifer wood, especially pine and spruce used in buildings.",
+      "fr": "Les larves se développent dans le bois résineux sec, notamment le pin et l’épicéa employés dans les bâtiments."
+    },
+    "diet": {
+      "en": "Larvae tunnel through the wood; adults do not feed, according to the Argentine pest-monitoring account.",
+      "fr": "Les larves creusent le bois ; les adultes ne s’alimentent pas, selon la fiche argentine de surveillance phytosanitaire."
+    },
+    "behavior": {
+      "en": "Adults are short-lived and can walk or fly after emerging from the wood.",
+      "fr": "Les adultes vivent peu de temps et peuvent marcher ou voler après leur sortie du bois."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in cracks in wood or bark, from which the wood-boring larvae hatch.",
+      "fr": "Les femelles pondent dans les fissures du bois ou de l’écorce, où éclosent les larves xylophages."
+    },
+    "ecology": {
+      "en": "The larval galleries weaken timber; the insect was historically a forest species but is now mainly associated with buildings.",
+      "fr": "Les galeries larvaires fragilisent le bois ; autrefois forestier, l’insecte est maintenant surtout associé aux bâtiments."
+    },
+    "conservation": {
+      "en": "The consulted sources treat it as a timber pest and provide no wild-species conservation assessment.",
+      "fr": "Les sources consultées le traitent comme un ravageur du bois et ne donnent pas d’évaluation de conservation des populations sauvages."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hylotrupes bajulus — Penn State Extension",
+        "fr": "Hylotrupes bajulus — Penn State Extension"
+      },
+      "url": "https://extension.psu.edu/old-house-borer",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Extension profile identifies the old house borer and describes larval attack on coniferous structural wood."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 15,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guía de insectos de la madera — DREAL Centre-Val de Loire",
+        "fr": "Guide des insectes du bois — DREAL Centre-Val de Loire"
+      },
+      "url": "https://www.centre-val-de-loire.developpement-durable.gouv.fr/IMG/pdf/Guide_Termites_dans_batiments_neufs_-_septembre_2011_cle7153b7.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French government building guide gives adult and larval size and names the house longhorn beetle."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 15,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hylotrupes bajulus — SINAVIMO",
+        "fr": "Hylotrupes bajulus — SINAVIMO"
+      },
+      "url": "https://www.sinavimo.gob.ar/plaga/hylotrupes-bajulus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Argentine pest account describes adult movement and feeding, egg placement, and larval wood damage."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 14,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hylotrupes bajulus — EPPO Global Database",
+        "fr": "Hylotrupes bajulus — Base de données mondiale de l’OEPP"
+      },
+      "url": "https://gd.eppo.int/taxon/HYLTBA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "EPPO confirms the preferred scientific name and English, French, German and Spanish common names."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 14,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Development time varies with wood and environmental conditions; no single duration is given here. No conservation status was found in the pest-oriented sources used."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used building-pest and phytosanitary sources for the insect’s domestic ecology, without implying a threatened wild status."
+}

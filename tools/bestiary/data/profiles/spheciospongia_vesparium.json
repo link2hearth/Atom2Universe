@@ -1,0 +1,144 @@
+{
+  "id": "spheciospongia_vesparium",
+  "scientific": "Spheciospongia vesparium",
+  "group": "invertebrates",
+  "name": {
+    "en": "Loggerhead sponge",
+    "fr": "Éponge tête-de-bois"
+  },
+  "sections": {
+    "overview": {
+      "en": "The loggerhead sponge is a large Caribbean and south Florida sponge that forms conspicuous structure on shallow hard-bottom habitat.",
+      "fr": "L’éponge tête-de-bois est une grande éponge des Caraïbes et du sud de la Floride, qui forme un relief marqué sur les fonds durs peu profonds."
+    },
+    "identification": {
+      "en": "In Florida Bay it can exceed a metre in diameter and contributes disproportionately to sponge-community biomass.",
+      "fr": "Dans la baie de Floride, elle peut dépasser un mètre de diamètre et représente une part importante de la biomasse des communautés d’éponges."
+    },
+    "habitat": {
+      "en": "In the Florida Keys it occurs on nearshore hard-bottom on both the bay and ocean sides of the islands.",
+      "fr": "Dans les Keys de Floride, elle vit sur les fonds durs côtiers, côté baie comme côté océan."
+    },
+    "diet": {
+      "en": "It is a suspension feeder, drawing food particles from the surrounding water.",
+      "fr": "Elle se nourrit par filtration en prélevant des particules alimentaires dans l’eau environnante."
+    },
+    "behavior": {
+      "en": "Its internal spaces shelter small animals, including snapping shrimps.",
+      "fr": "Ses cavités internes abritent de petits animaux, notamment des crevettes pistolets."
+    },
+    "reproduction": {
+      "en": "As a clionaid sponge, it is described as oviparous: sperm and eggs are released into the water, where fertilization and larval development occur.",
+      "fr": "Comme les autres éponges clionaïdes, elle est décrite comme ovipare : spermatozoïdes et ovules sont libérés dans l’eau, où ont lieu fécondation et développement larvaire."
+    },
+    "ecology": {
+      "en": "Loggerhead sponges create vertical structure and shelter diverse infauna, including snapping shrimps.",
+      "fr": "Les éponges tête-de-bois forment un relief vertical et abritent une faune interne variée, notamment des crevettes pistolets."
+    },
+    "conservation": {
+      "en": "Sponge die-offs in Florida Bay led to restoration research that includes this species; this is a regional habitat concern, not a global status category.",
+      "fr": "Des mortalités d’éponges dans la baie de Floride ont conduit à des recherches de restauration incluant cette espèce; il s’agit d’un enjeu régional d’habitat, pas d’une catégorie mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Loggerhead sponge mitochondrial genome and ecological role",
+        "fr": "Génome mitochondrial et rôle écologique de l’éponge tête-de-bois"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8667908/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The peer-reviewed article describes the species as an ecologically important marine sponge in the Caribbean and along Florida."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 18,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Setting the foundation for renewal: restoring sponge communities aids the ecological recovery of Florida Bay",
+        "fr": "Restaurer les communautés d’éponges favorise le rétablissement écologique de la baie de Floride"
+      },
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.3876",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The study identifies S. vesparium as a large structure-forming sponge in Florida Bay, a suspension feeder, an oviparous clionaid, and a focus of restoration after sponge-community losses."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 27,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Loggerhead sponge internal morphology and infauna in the Florida Keys",
+        "fr": "Morphologie interne et faune associée de l’éponge tête-de-bois dans les Keys de Floride"
+      },
+      "url": "https://scholarship.miami.edu/esploro/outputs/graduate/Characterizing-Internal-Morphology-and-Infauna-of/991032024720202976",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The University of Miami thesis reports occurrence on bay and ocean sides of the Florida Keys and documents diverse infauna, particularly snapping shrimp."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 23,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Oviparity is reported for the family-level clionaid group in the cited review; detailed species-specific spawning timing is not given.",
+    "The restoration evidence and mortality history cited here concern Florida Bay and should not be generalized to the whole Caribbean."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Peer-reviewed and university sources were cross-checked; restoration statements are restricted to the Florida Bay context."
+}

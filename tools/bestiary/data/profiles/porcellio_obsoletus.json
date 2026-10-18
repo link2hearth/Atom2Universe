@@ -1,0 +1,142 @@
+{
+  "id": "porcellio_obsoletus",
+  "scientific": "Porcellio obsoletus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Obsolete woodlouse",
+    "fr": "Porcellio obsoletus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Porcellio obsoletus is a terrestrial isopod historically known mainly from the eastern Mediterranean.",
+      "fr": "Porcellio obsoletus est un isopode terrestre historiquement connu surtout dans l’est de la Méditerranée."
+    },
+    "identification": {
+      "en": "A 2026 taxonomic paper provides an updated description, but accessible accounts do not summarize simple field marks.",
+      "fr": "Un article taxonomique de 2026 en propose une description actualisée, mais les sources accessibles ne résument pas de critères simples d’identification."
+    },
+    "habitat": {
+      "en": "The reviewed sources do not establish a well-supported habitat profile for this species.",
+      "fr": "Les sources examinées ne permettent pas d’établir un profil d’habitat bien étayé pour cette espèce."
+    },
+    "diet": {
+      "en": "Species-specific diet information was not found in the sources consulted.",
+      "fr": "Aucune information propre à l’espèce sur son régime alimentaire n’a été trouvée dans les sources consultées."
+    },
+    "behavior": {
+      "en": "Its behavior is poorly documented in the sources reviewed.",
+      "fr": "Son comportement est peu documenté dans les sources examinées."
+    },
+    "reproduction": {
+      "en": "The sources reviewed provide no species-specific reproductive details.",
+      "fr": "Les sources consultées ne fournissent pas de détails propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "A 2026 study reported it for the first time from mainland Portugal and Spain; the fragmented range may reflect natural history or human transport.",
+      "fr": "Une étude de 2026 l’a signalé pour la première fois au Portugal continental et en Espagne ; sa répartition fragmentée peut résulter de l’histoire naturelle ou de transports humains."
+    },
+    "conservation": {
+      "en": "No species-level conservation assessment was identified in the sources consulted.",
+      "fr": "Aucune évaluation de conservation au niveau de l’espèce n’a été repérée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Porcellio obsoletus in the Iberian Peninsula — Entomological News (2026)",
+        "fr": "Porcellio obsoletus dans la péninsule Ibérique — Entomological News (2026)"
+      },
+      "url": "https://doi.org/10.3157/021.133.0206",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed paper provides an updated description."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 6,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio obsoletus — VLIZ reference record for the 2026 paper",
+        "fr": "Porcellio obsoletus — notice VLIZ de l’article de 2026"
+      },
+      "url": "https://www.vliz.be/en/imis?module=ref&refid=441061&show=html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Abstract reports first Iberian records in mainland Portugal and Spain and discusses the fragmented range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 15,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio obsoletus — ITIS",
+        "fr": "Porcellio obsoletus — ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=554381",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes Porcellio obsoletus Budde-Lund, 1885 as valid."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2026 Iberian records do not by themselves show recent arrival.",
+    "Natural history beyond taxonomy and distribution remains sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Tied distribution and dispersal claims to the 2026 peer-reviewed paper; cross-checked the accepted name with ITIS."
+}

@@ -1,0 +1,168 @@
+{
+  "id": "lethrinus_atlanticus",
+  "scientific": "Lethrinus atlanticus",
+  "group": "fish",
+  "name": {
+    "en": "Atlantic emperor",
+    "fr": "Empereur atlantique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus atlanticus, the Atlantic emperor, is a marine fish in the emperor family Lethrinidae.",
+      "fr": "Lethrinus atlanticus, l’empereur atlantique, est un poisson marin de la famille des Lethrinidae."
+    },
+    "identification": {
+      "en": "It has an olive-brown or pinkish body, fine cheek reticulations and a pointed snout; maximum length is about 50 centimetres.",
+      "fr": "Son corps est olive-brun ou rosâtre, ses joues portent de fines réticulations et son museau est pointu ; sa longueur maximale est d’environ 50 centimètres."
+    },
+    "habitat": {
+      "en": "It inhabits shallow coastal waters of the eastern central Atlantic, from Senegal to Gabon and nearby islands, generally to about 50 metres.",
+      "fr": "Elle fréquente les eaux côtières peu profondes de l’Atlantique centre-oriental, du Sénégal au Gabon et aux îles voisines, généralement jusqu’à environ 50 mètres."
+    },
+    "diet": {
+      "en": "It feeds mainly on invertebrates living on the seabed.",
+      "fr": "Elle se nourrit surtout d’invertébrés vivant sur le fond."
+    },
+    "behavior": {
+      "en": "FishBase describes it as non-migratory; species-specific behavioural observations are limited.",
+      "fr": "FishBase la décrit comme non migratrice ; les observations comportementales propres à l’espèce restent limitées."
+    },
+    "reproduction": {
+      "en": "FishBase reports maturity near 23 centimetres, but the sources consulted give little detail on spawning.",
+      "fr": "FishBase rapporte une maturité proche de 23 centimètres, mais les sources consultées donnent peu de détails sur la ponte."
+    },
+    "ecology": {
+      "en": "It shares its genus with the Indian Ocean snubnose emperor, Lethrinus borbonicus, but occupies the eastern Atlantic; it has a pointed snout and conical teeth, unlike that species.",
+      "fr": "Elle partage son genre avec l’empereur à museau court de l’océan Indien, Lethrinus borbonicus, mais vit dans l’Atlantique oriental ; son museau pointu et ses dents coniques la distinguent de cette espèce."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 2013 classified it as Least Concern.",
+      "fr": "L’évaluation mondiale de l’UICN datée de 2013 la classe en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus atlanticus — FishBase",
+        "fr": "Lethrinus atlanticus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lethrinus-atlanticus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the eastern central Atlantic range, shallow reef-associated habitat at 1–50 m, maximum length 50 cm TL, benthic invertebrate diet, non-migratory status, maturity around 22.8 cm and Least Concern (IUCN assessment 2013); body olive/brown/pink with fine cheek reticulations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 39,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO Species Catalogue: L. atlanticus and L. borbonicus",
+        "fr": "Catalogue FAO des espèces : Lethrinus atlanticus et L. borbonicus"
+      },
+      "url": "https://www.fao.org/4/t0242e/T0242E07.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "FAO records L. atlanticus in West Africa and nearby islands, in shallow coastal waters to 50 m, feeding on bottom invertebrates."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 21,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus atlanticus — ITIS Taxonomic Report",
+        "fr": "Lethrinus atlanticus — fiche taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0169149",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Lethrinus atlanticus Valenciennes, 1830 as a valid species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guide to the Identification of Bony Fishes: Atlantic emperor — FAO",
+        "fr": "Guide d’identification des poissons osseux : empereur atlantique — FAO"
+      },
+      "url": "https://www.fao.org/4/t0438f/t0438f17.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French FAO guide gives Empereur atlantique as the French FAO name for Lethrinus atlanticus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conservation status is dated 2013; trends may have changed since that assessment.",
+    "Lethrinus borbonicus is a congeneric profile in this batch and should receive the reciprocal range and morphology comparison."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase with the FAO species catalogue and its cited IUCN assessment. The cross-reference with L. borbonicus describes shared genus and diagnostic differences, not a sister-species relationship."
+}

@@ -1,0 +1,165 @@
+{
+  "id": "motacilla_alba",
+  "scientific": "Motacilla alba",
+  "group": "birds",
+  "name": {
+    "en": "White Wagtail",
+    "fr": "Bergeronnette grise"
+  },
+  "sections": {
+    "overview": {
+      "en": "The White Wagtail is a slender, long-tailed wagtail that often uses open ground near water and settlements; see the Yellow Wagtail profile for its yellow-plumaged relative.",
+      "fr": "La Bergeronnette grise est une bergeronnette élancée à longue queue, qui fréquente souvent les espaces ouverts près de l’eau et des habitations ; voir la fiche de la Bergeronnette printanière, sa proche parente au plumage jaune."
+    },
+    "identification": {
+      "en": "Adults of the continental alba form are mainly grey, black and white, with a continuously bobbing tail; at about 18 cm it is larger than the Yellow Wagtail, which is yellow below.",
+      "fr": "Les adultes de la forme continentale alba sont surtout gris, noirs et blancs, avec une queue qu’ils agitent régulièrement ; autour de 18 cm, elle est plus grande que la Bergeronnette printanière, jaune dessous."
+    },
+    "habitat": {
+      "en": "It uses varied open habitats with short vegetation, including pastures, villages and parks, often close to water.",
+      "fr": "Elle occupe divers milieux ouverts à végétation basse, dont les pâtures, les villages et les parcs, souvent près de l’eau."
+    },
+    "diet": {
+      "en": "Its food consists mainly of invertebrates, caught while walking or running on the ground and sometimes during short aerial pursuits.",
+      "fr": "Elle se nourrit surtout d’invertébrés, capturés en marchant ou en courant au sol, parfois après une courte poursuite aérienne."
+    },
+    "behavior": {
+      "en": "It walks briskly while wagging its tail, and may gather in large communal roosts outside the breeding season.",
+      "fr": "Elle marche rapidement en agitant la queue et peut se rassembler en dortoirs collectifs importants hors de la saison de reproduction."
+    },
+    "reproduction": {
+      "en": "In the European account, it nests in crevices and other sheltered cavities; the breeding season and timing vary with latitude.",
+      "fr": "Dans les sources européennes, elle niche dans des fissures et d’autres cavités abritées ; la saison de reproduction varie avec la latitude."
+    },
+    "ecology": {
+      "en": "The continental alba form differs from the British yarrellii form, which has black upperparts and a black rump.",
+      "fr": "La forme continentale alba diffère de la forme britannique yarrellii, qui a le dessus noir et le croupion noir."
+    },
+    "conservation": {
+      "en": "The RSPB lists the UK breeding population as Green, a regional assessment that should not be treated as a global status.",
+      "fr": "La RSPB classe la population nicheuse du Royaume-Uni en catégorie verte ; cette évaluation régionale ne constitue pas un statut mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Motacilla alba — Birds of Europe 3.1, Naturalis Biodiversity Center",
+        "fr": "Motacilla alba — Birds of Europe 3.1, Centre de biodiversité Naturalis"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130829",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "The continental alba form is about 18 cm, grey/black/white and larger than Yellow Wagtail; it wags its tail.",
+        "The page distinguishes British yarrellii, with black upperparts and rump, from the continental alba form."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 18,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bergeronnette grise — Ligue pour la Protection des Oiseaux (LPO)",
+        "fr": "White Wagtail — French League for the Protection of Birds"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/bergeronnette-grise",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The French LPO account describes the long tail, frequent wagging and use of open habitats, including settled areas."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 18,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pied/White Wagtail — British Trust for Ornithology bird facts",
+        "fr": "Bergeronnette grise — fiche ornithologique du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/piedwhite-wagtail",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The BTO account covers lifecycle, food and nesting for Pied/White Wagtails; it reports a mainly invertebrate diet and cavity nests."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 20,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pied Wagtail — Royal Society for the Protection of Birds",
+        "fr": "Bergeronnette grise — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/pied-wagtail",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The RSPB assigns the UK Pied Wagtail population Green status; this is a UK category."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 15,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The continental Motacilla alba form is compared here; the British yarrellii form differs in plumage.",
+    "The conservation category cited is specifically the UK assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Built the interspecific comparison from the Naturalis Birds of Europe account and the French LPO species page; scoped conservation to the UK population."
+}

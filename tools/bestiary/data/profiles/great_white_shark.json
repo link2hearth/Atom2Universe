@@ -1,0 +1,534 @@
+{
+  "id": "great_white_shark",
+  "scientific": "Carcharodon carcharias",
+  "group": "fish",
+  "name": {
+    "en": "Great white shark",
+    "fr": "Grand requin blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great white shark is a large predator of temperate and subtropical seas worldwide. Tagging shows that some individuals travel between distant regions.",
+      "fr": "Le grand requin blanc est un grand prédateur des mers tempérées et subtropicales du monde entier. Le suivi montre que certains individus parcourent de grandes distances."
+    },
+    "identification": {
+      "en": "Its streamlined body has a pointed snout, triangular dorsal fin and crescent-shaped tail. Dark grey upper skin contrasts sharply with the pale underside. The skeleton is mostly cartilage. Its jaws carry broad, serrated teeth, and replacement rows move forward as teeth are lost. Males mature at roughly 3.5–4.1 metres and females at 4.5–5 metres; estimated maxima are about 5–6 metres, while reports above 7 metres are unverified. In counter-current exchangers, warm and cool blood flow in opposite directions through adjacent vessels, limiting heat loss to cold water and keeping muscles and some organs warmer. The best-supported length figures in the cited account are about 6 m as a typical estimated maximum (possibly 6.4 m); males mature at 3.5–4.1 m and females at 4.5–5.0 m. The profile sources do not provide a sufficiently reliable adult mass or body-width range, so neither is estimated here.",
+      "fr": "Son corps fuselé porte un museau conique, une nageoire dorsale triangulaire et une queue en croissant. Le dos gris sombre contraste nettement avec le ventre clair. Son squelette est surtout cartilagineux. Ses mâchoires portent des dents larges et dentelées, et des rangées de remplacement avancent quand les dents tombent. Les mâles atteignent la maturité vers 3,5–4,1 mètres et les femelles vers 4,5–5 mètres ; la longueur maximale est estimée à 5–6 mètres, les records de plus de 7 mètres n’étant pas vérifiés. Dans les échangeurs à contre-courant, le sang chaud et le sang plus froid circulent en sens opposés dans des vaisseaux voisins, ce qui limite les pertes de chaleur vers l’eau froide et garde certains muscles et organes plus chauds. Les longueurs les mieux étayées dans la source citée sont d’environ 6 m comme maximum estimé habituel (éventuellement 6,4 m) ; les mâles atteignent la maturité vers 3,5–4,1 m et les femelles vers 4,5–5,0 m. Les sources de la fiche ne fournissent pas de plage assez fiable pour la masse adulte ou la largeur du corps ; aucune n’est donc estimée ici."
+    },
+    "habitat": {
+      "en": "The species uses coastal shelves, islands and open ocean, often where prey are abundant. Pups and juveniles commonly use shallow, warmer nursery areas; larger sharks also visit seal colonies and pelagic waters. Tracking in the eastern North Pacific documented seasonal travel from California toward offshore waters west of Baja California. Tags in southern Africa recorded a return migration between South Africa and Australia. Individuals also dive deeply.",
+      "fr": "L’espèce fréquente les plateaux côtiers, les îles et le large, souvent là où les proies abondent. Les jeunes occupent couramment des nurseries peu profondes et plus chaudes ; les grands requins fréquentent aussi les colonies de phoques et les eaux océaniques. Le suivi dans le Pacifique Nord-Est a documenté des déplacements saisonniers de Californie vers le large à l’ouest de la Basse-Californie. En Afrique australe, des balises ont enregistré un aller-retour entre l’Afrique du Sud et l’Australie. Les individus plongent aussi profondément."
+    },
+    "diet": {
+      "en": "Diet changes with age and differs among individuals. Juveniles eat fish, small sharks, rays and squid; stomach samples from eastern Australia also reveal both bottom-dwelling and open-water prey. Larger sharks take seals and sea lions and sometimes scavenge whale carcasses. At South African seal colonies, some attacks rise rapidly from below and end in a breach; this is a local hunting tactic, not a universal pattern.",
+      "fr": "Le régime change avec l’âge et varie selon les individus. Les jeunes mangent des poissons, de petits requins, des raies et des calmars ; des contenus stomacaux de l’est de l’Australie révèlent aussi des proies de fond et du large. Les grands requins capturent des phoques et des otaries, et consomment parfois des carcasses de baleines. Près de colonies sud-africaines, certaines attaques montent vivement depuis le fond et se terminent par un saut hors de l’eau ; cette tactique locale n’est pas universelle."
+    },
+    "behavior": {
+      "en": "White sharks often forage alone, although seasonal prey concentrations bring them together. Biologging at Guadalupe Island recorded brief encounters and a few stronger associations; researchers proposed that these associations may provide information about the location of large prey or their remains, but this remains a hypothesis. Tagged animals differed in depth use and activity, and hunting tactics varied between Guadalupe and South African seal colonies. Ampullae of Lorenzini, sensory organs connected to pores near the snout, detect weak electrical fields at close range.",
+      "fr": "Les requins blancs cherchent souvent leur nourriture seuls, mais les concentrations saisonnières de proies les réunissent. À l’île Guadalupe, le suivi a enregistré des rencontres brèves et quelques associations plus marquées ; les chercheurs proposent que ces associations puissent fournir des informations sur la localisation de grosses proies ou de leurs restes, mais cela reste une hypothèse. Les individus suivis différaient par leur profondeur et leur activité, et les tactiques variaient entre Guadalupe et les colonies de phoques sud-africaines. Les ampoules de Lorenzini, organes sensoriels reliés à des pores près du museau, détectent de faibles champs électriques à courte distance."
+    },
+    "reproduction": {
+      "en": "The great white shark gives birth to live young without a placental connection. Embryos use yolk and lipid-rich uterine fluid, then feed on unfertilized eggs from the mother, a process called oophagy. Litters are reported as two to ten pups, sometimes more, and newborns measure about 1.1–1.65 metres. Gestation may last 18–20 months, but its duration and the multi-year interval between litters remain uncertain. In the Northwest Atlantic, an indirect estimate placed maturity at about 26 years for males and 33 for females; substantial uncertainty remains.",
+      "fr": "Le grand requin blanc met au monde des petits sans connexion placentaire. Les embryons utilisent le vitellus et un liquide utérin riche en lipides, puis se nourrissent d’ovules non fécondés de leur mère : c’est l’oophagie. Les portées recensées comptent deux à dix petits, parfois davantage, et les nouveau-nés mesurent environ 1,1–1,65 mètre. La gestation pourrait durer 18–20 mois, mais sa durée et l’intervalle de plusieurs années entre les portées restent incertains. Dans l’Atlantique Nord-Ouest, une estimation indirecte situe la maturité vers 26 ans chez les mâles et 33 ans chez les femelles ; une incertitude importante demeure."
+    },
+    "ecology": {
+      "en": "White sharks prey on fishes, rays and marine mammals. Killer whales can kill them, and tagged sharks have left feeding areas during documented encounters. At California’s Farallon Islands, killer-whale visits coincided with a short-term reduction in white-shark attacks on elephant seals. This local observation shows how predator interactions can change pressure on prey, but it does not establish a global effect on shark populations.",
+      "fr": "Les requins blancs mangent des poissons, des raies et des mammifères marins. Les orques peuvent les tuer, et des requins marqués ont quitté des zones d’alimentation lors de rencontres documentées. Aux îles Farallon, en Californie, les visites d’orques ont coïncidé avec une baisse temporaire des attaques de requins blancs sur les éléphants de mer. Cette observation locale montre comment les interactions entre prédateurs peuvent modifier la pression sur les proies, sans établir un effet mondial sur les populations de requins."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment, made on 7 November 2018 and published in 2019, lists the species as Vulnerable; its 2022 amendment corrected the distribution map and country list. Regional assessments differ: COSEWIC designated Canada’s Atlantic population Endangered in 2006 and reconfirmed that assessment in 2021. Targeted fishing and accidental bycatch remain important threats; fins, jaws and teeth have also entered trade. Slow growth and few young hinder recovery, despite protections in several countries and international trade controls.",
+      "fr": "L’évaluation mondiale de l’UICN, réalisée le 7 novembre 2018 et publiée en 2019, classe l’espèce Vulnérable ; son amendement de 2022 a corrigé la carte de répartition et la liste des pays. Les évaluations régionales diffèrent : le COSEPAC a désigné la population atlantique du Canada En voie de disparition en 2006, puis a confirmé cette évaluation en 2021. La pêche ciblée et les prises accidentelles restent des menaces importantes ; les nageoires, mâchoires et dents ont aussi fait l’objet de commerce. La croissance lente et le faible nombre de jeunes freinent le rétablissement, malgré des protections nationales et des contrôles du commerce international."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "White Shark — Florida Museum of Natural History, University of Florida",
+        "fr": "Requin blanc — Florida Museum of Natural History, Université de Floride"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/white-shark/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Museum species account covers morphology, prey and reproduction.",
+        "Estimated maximum length is about 6 m, possibly 6.4 m; larger reports are unconfirmed."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 22,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White Shark Atlantic Population: COSEWIC Assessment and Status Report 2021 — Government of Canada",
+        "fr": "Population atlantique du requin blanc : rapport de situation 2021 du COSEPAC — Gouvernement du Canada"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/white-shark-2021.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Government assessment summarizes regional biology, life history and Atlantic status history."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 11,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White Shark — NOAA Fisheries",
+        "fr": "Requin blanc — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/white-shark",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA account summarizes global range, juvenile diet, regional endothermy and protections."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 11,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet Composition and Nutritional Niche Breadth Variability in Juvenile White Sharks — Frontiers in Marine Science",
+        "fr": "Composition alimentaire et largeur de niche nutritionnelle chez les jeunes requins blancs — Frontiers in Marine Science"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2020.00422/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Stomach contents from juvenile eastern Australian sharks included varied benthic and pelagic prey."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 13,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Social Dynamics and Individual Hunting Tactics of White Sharks Revealed by Biologging — Biology Letters",
+        "fr": "Dynamique sociale et tactiques de chasse individuelles révélées par le suivi des requins blancs — Biology Letters"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8941395/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Guadalupe Island biologging recorded variable associations, depth use and activity among individuals."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "habitat.en.5",
+        "habitat.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 12,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Transoceanic Migration, Spatial Dynamics, and Population Linkages of White Sharks — Science",
+        "fr": "Migration transocéanique, dynamique spatiale et liens entre populations de requins blancs — Science"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16210537/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Electronic tags documented return migration and linkage between South Africa and Australia."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 12,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Migration and Habitat of White Sharks in the Eastern Pacific Ocean — Marine Biology",
+        "fr": "Migration et habitat des requins blancs dans le Pacifique oriental — Marine Biology"
+      },
+      "url": "https://doi.org/10.1007/s00227-007-0739-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Satellite telemetry documented seasonal California-to-offshore movements and Hawaii routes."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 9,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Regulation of Body Temperature in the White Shark, Carcharodon carcharias — Journal of Comparative Physiology B",
+        "fr": "Régulation de la température corporelle chez Carcharodon carcharias — Journal of Comparative Physiology B"
+      },
+      "url": "https://doi.org/10.1007/s003600050092",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Telemetry recorded stomach temperatures up to 14.3 degrees Celsius above surrounding water."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 12,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Effects of an Electric Field on White Sharks: In Situ Testing of an Electric Deterrent — PLOS ONE",
+        "fr": "Effets d’un champ électrique sur les requins blancs : étude in situ d’un dispositif répulsif — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3642219/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "In situ experiments tested white-shark responses to electric fields detected by ampullae."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 12,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Killer Whales Redistribute White Shark Foraging Pressure on Seals — Scientific Reports",
+        "fr": "Les orques redistribuent la pression de prédation du requin blanc sur les phoques — Scientific Reports"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467992/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Farallon observations linked killer-whale visits with temporary changes in shark predation on seals."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 13,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carcharodon carcharias — IUCN Red List of Threatened Species, amended 2019 assessment (2022 record)",
+        "fr": "Carcharodon carcharias — Liste rouge de l’UICN, évaluation 2019 amendée (fiche 2022)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T3855A212629880.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global Red List record lists Vulnerable; 2022 amendment corrects occurrence countries and map."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 13,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Teeth and Jaws — Hawaiʻi Sharks, Department of Land and Natural Resources",
+        "fr": "Dents et mâchoires — Hawaiʻi Sharks, département des Ressources foncières et naturelles"
+      },
+      "url": "https://dlnr.hawaii.gov/sharks/anatomy/teeth-jaws/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Shark replacement rows advance as teeth are lost; white-shark teeth are serrated."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 12,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How Great White Sharks Nourish Their Embryos to a Large Size: Evidence of Lipid Histotrophy — Biology Open",
+        "fr": "Comment le grand requin blanc nourrit ses embryons : données sur l’histotrophie lipidique — Biology Open"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5051657/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "A gravid female contained embryos, nutrient eggs and lipid-rich uterine fluid."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 11,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Do Sharks Have Bones? — Natural History Museum, London",
+        "fr": "Les requins ont-ils des os ? — Natural History Museum, Londres"
+      },
+      "url": "https://www.nhm.ac.uk/discover/quick-questions/do-sharks-have-bones.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Shark skeletons consist of cartilage strengthened by mineral deposits."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 10,
+        "notes_words": 9,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Predatory Behavior of White Sharks at Seal Island, South Africa — Journal of the Marine Biological Association of the United Kingdom",
+        "fr": "Comportement prédateur des requins blancs à Seal Island, Afrique du Sud — Journal of the Marine Biological Association of the United Kingdom"
+      },
+      "url": "https://doi.org/10.1017/S002531540501218X",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Field observations describe attacks on Cape fur seals at Seal Island."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Age and Growth of the White Shark in the Western North Atlantic — Marine & Freshwater Research",
+        "fr": "Âge et croissance du requin blanc dans l’Atlantique Nord-Ouest — Marine & Freshwater Research"
+      },
+      "url": "https://doi.org/10.1071/MF14127",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Natanson and Skomal derived age and growth estimates from vertebral band pairs and bomb-radiocarbon validation in 81 western North Atlantic specimens; minimum size-at-maturity estimates informed the reported ages."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 28,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carcharodon carcharias — FAO species catalogue for fishery purposes",
+        "fr": "Carcharodon carcharias — Catalogue FAO des espèces à fins halieutiques"
+      },
+      "url": "https://www.fao.org/docrep/pdf/009/y4160e/y4160e30.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO catalogue lists estimated maximum total length near 6 m, possibly 6.4 m, and male/female maturity length ranges; it gives no adult mass or body width."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.en.8",
+        "identification.fr.7",
+        "identification.fr.8"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 26,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a single adult great white shark in accurate natural proportions, side three-quarter view: spindle-shaped body, conical snout, pointed triangular dorsal fin, crescent tail, dark grey back sharply separated from pale underside, and subtle pectoral axil mark. Sex unspecified. Plain white background only; no water, props, labels, border or watermark.",
+  "uncertainties": [
+    "Maximum length records above roughly seven metres are unverified; mature size ranges vary among regions and studies.",
+    "Gestation duration, mating and pupping locations, litter size, and time between litters remain poorly observed; embryonic nutrition includes yolk, uterine fluid and late oophagy, while embryo cannibalism is not established for this species.",
+    "The global IUCN assessment was assessed on 7 November 2018 and published in 2019; the amended 2022 version corrects the occurrence list and map. The latest assessment record remains Vulnerable, while regional conservation categories differ.",
+    "White-shark social associations, sensory roles and hunting methods vary by site and individual; the social information explanation remains a hypothesis from a Guadalupe Island study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review; distinguished COSEWIC assessment from legal listing, qualified indirect regional maturity ages and observed litters, clarified counter-current heat exchangers and Lorenzini receptors, aligned hypothetical social information across languages. Verified2018 global assessment published2019 and amended2022. Original illustration retained after root visual check."
+}

@@ -1,0 +1,106 @@
+{
+  "id": "eurasian_bittern",
+  "scientific": "Botaurus stellaris",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Bittern",
+    "fr": "Butor étoilé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian bittern is a secretive heron of dense reedbeds. It is far more often heard than seen: in spring the male’s deep, far-carrying boom announces his territory.",
+      "fr": "Le butor étoilé est un héron discret des roselières denses. On l’entend bien plus souvent qu’on ne le voit : au printemps, le grondement grave et lointain du mâle annonce son territoire."
+    },
+    "identification": {
+      "en": "It is a stocky, mid-sized heron, about 64–80 cm long with a wingspan of 125–135 cm, weighing around 1.2 kg in Britain. The plumage is streaked brown, buff and black, which makes it strongly cryptic among reeds. Males are larger than females.",
+      "fr": "C’est un héron trapu de taille moyenne, long d’environ 64 à 80 cm pour une envergure de 125 à 135 cm, qui pèse autour de 1,2 kg en Grande-Bretagne. Son plumage strié de brun, de beige et de noir le rend remarquablement discret parmi les roseaux. Les mâles sont plus grands que les femelles."
+    },
+    "habitat": {
+      "en": "It lives in reedbeds, and breeding birds favour the largest and least disturbed ones. It does best in shallow water that deepens gradually beside deeper, sparsely vegetated water. On migration and in winter it also uses smaller, more open wetlands, but still prefers dense cover.",
+      "fr": "Il vit dans les roselières, et les oiseaux nicheurs préfèrent les plus vastes et les moins dérangées. Il se plaît dans une eau peu profonde qui s’approfondit progressivement à côté d’une eau plus profonde et peu végétalisée. En migration et en hiver, il utilise aussi des zones humides plus petites et plus ouvertes, mais recherche toujours un couvert dense."
+    },
+    "diet": {
+      "en": "The bittern is a carnivore that eats mainly fish, amphibians, insects and aquatic crustaceans. It hunts in the shallow water of reedbeds.",
+      "fr": "Le butor est carnivore et mange surtout des poissons, des amphibiens, des insectes et des crustacés aquatiques. Il chasse dans les eaux peu profondes des roselières."
+    },
+    "behavior": {
+      "en": "It is highly secretive. When alarmed it stretches its neck and body upright so that its streaks line up with the reeds, and it may sway like reeds in the wind. It stalks prey slowly before striking, and the male’s boom, given in the breeding season, can carry for kilometres.",
+      "fr": "Il est extrêmement discret. Lorsqu’il est alarmé, il étire le cou et le corps à la verticale pour que ses stries s’alignent sur les roseaux, et peut se balancer comme eux dans le vent. Il traque lentement ses proies avant de frapper, et le grondement du mâle, émis en période de reproduction, porte à plusieurs kilomètres."
+    },
+    "reproduction": {
+      "en": "Males are polygynous and may mate with several females, which alone build the nest, incubate and rear the young. In Britain a clutch is typically four to six eggs, incubated for 25–26 days. The chicks are downy and fledge after about 50–55 days.",
+      "fr": "Les mâles sont polygynes et peuvent s’accoupler avec plusieurs femelles, qui seules construisent le nid, couvent et élèvent les jeunes. En Grande-Bretagne, une couvée compte typiquement quatre à six œufs, couvés pendant 25 à 26 jours. Les poussins, couverts de duvet, s’envolent après environ 50 à 55 jours."
+    },
+    "ecology": {
+      "en": "Nests are woven into vegetation over water, and the main causes of nest loss are predation and starvation of chicks. Predators such as the Eurasian mink and the raccoon dog are known to take its nests. Because its needs cover whole reedbed ecosystems, protecting the bittern benefits many other marsh species. The Little Bittern also uses reedbeds; see its profile for this smaller relative.",
+      "fr": "Les nids sont tissés dans la végétation au-dessus de l’eau, et les principales causes de perte sont la prédation et la mort de faim des poussins. Des prédateurs comme le vison d’Europe et le chien viverrin sont connus pour s’en prendre à ses nids. Comme ses besoins couvrent des roselières entières, protéger le butor profite à beaucoup d’autres espèces des marais. Le Blongios nain fréquente aussi les roselières ; voir sa fiche pour ce parent plus petit."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Amber-listed, legally protected and scarce. Britain fell to a low of only 11 booming males in 1997, then recovered to 191 males in 2017. The oldest ringed bird reached nearly 12 years.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais au Royaume-Uni elle figure sur la liste ambre, est protégée par la loi et rare. La Grande-Bretagne est tombée à seulement 11 mâles chanteurs en 1997, puis est remontée à 191 mâles en 2017. Le plus vieil oiseau bagué a atteint près de 12 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bittern — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Butor étoilé — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/bittern",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Mean weight 1.2 kg; strongly cryptic; clutch typically 4–6; incubation 25–26 days by the female; fledging 50–55 days.",
+        "UK 191 booming males (2017), low of 11 in 1997; Amber-listed; IUCN Least Concern; record age 11 years 11 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Botaurus stellaris — Animal Diversity Web, University of Michigan",
+        "fr": "Botaurus stellaris — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Botaurus_stellaris/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Length 64–80 cm, wingspan 125–135 cm; diet of fish, amphibians, insects, crustaceans; freezes with neck stretched and sways; polygynous, females do all parental care.",
+        "Predators include Eurasian mink and raccoon dogs; nest loss from starvation and predation; umbrella species. Its mass range (243–874 g) was not used.",
+        "Total length 64–80 cm and wingspan 125–135 cm; males are larger than females."
+      ]
+    },
+    {
+      "title": {
+        "en": "Little Bittern — Office français de la biodiversité",
+        "fr": "Blongios nain — Office français de la biodiversité"
+      },
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "OFB describes Little Bittern reedbed habitat and lists Eurasian Bittern among species with similar habitats; OFB identifies Little Bittern as Europe’s smallest heron."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives a mass of 243–874 g, inconsistent with the BTO mean of 1.2 kg; the BTO figure was used.",
+    "Breeding figures and population counts are for Britain."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW used for qualitative facts and size; illustration checked against sources."
+}

@@ -1,0 +1,161 @@
+{
+  "id": "paragonimus_westermani",
+  "scientific": "Paragonimus westermani",
+  "group": "invertebrates",
+  "name": {
+    "en": "Oriental lung fluke",
+    "fr": "Douve pulmonaire orientale"
+  },
+  "sections": {
+    "overview": {
+      "en": "Paragonimus westermani is a parasitic flatworm commonly called the Oriental Lung Fluke. It is one of the most frequently reported Paragonimus species in human infections.",
+      "fr": "Paragonimus westermani est un ver plat parasite appelé douve pulmonaire orientale. C’est l’une des espèces de Paragonimus les plus souvent signalées dans les infections humaines."
+    },
+    "identification": {
+      "en": "Adults are robust, oval flukes about 7.5–12 mm long and 4–6 mm wide. Their eggs have a thick shell and a visible lid-like operculum.",
+      "fr": "Les adultes sont des douves robustes et ovales, longues d’environ 7,5 à 12 mm et larges de 4 à 6 mm. Leurs œufs ont une coque épaisse et un opercule visible en forme de clapet."
+    },
+    "habitat": {
+      "en": "The species is reported from Southeast Asia and Japan. Mature worms usually become encapsulated in the lungs of mammalian hosts, including humans and other mammals.",
+      "fr": "L’espèce est signalée en Asie du Sud-Est et au Japon. Les vers adultes s’enkystent généralement dans les poumons d’hôtes mammifères, dont les humains."
+    },
+    "diet": {
+      "en": "Its exact food intake is not detailed in the sources consulted.",
+      "fr": "Les sources consultées ne précisent pas son alimentation."
+    },
+    "behavior": {
+      "en": "Its larvae pass through a freshwater snail and then a crustacean such as a crab or crayfish. Mammals become infected when they eat the crustacean raw or insufficiently cooked.",
+      "fr": "Ses larves passent par un escargot d’eau douce puis un crustacé, tel qu’un crabe ou une écrevisse. Les mammifères s’infectent en consommant le crustacé cru ou insuffisamment cuit."
+    },
+    "reproduction": {
+      "en": "Eggs leave the mammalian host in sputum or, after being swallowed, in faeces. In water they develop before larvae enter the snail host. CDC describes adult flukes as hermaphroditic.",
+      "fr": "Les œufs quittent l’hôte mammifère dans les expectorations ou, après déglutition, dans les selles. Dans l’eau, ils se développent avant que les larves n’entrent chez l’escargot hôte. Le CDC décrit les douves adultes comme hermaphrodites."
+    },
+    "ecology": {
+      "en": "More than 30 species of Paragonimus are known; P. westermani is a common cause of human infection in Asia.",
+      "fr": "Plus de 30 espèces de Paragonimus sont connues ; P. westermani est une cause fréquente d’infection humaine en Asie."
+    },
+    "conservation": {
+      "en": "No conservation assessment was located in the references consulted.",
+      "fr": "Aucune évaluation de conservation n’a été trouvée dans les références consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "DPDx: Paragonimiasis — U.S. Centers for Disease Control and Prevention",
+        "fr": "DPDx : paragonimose — Centers for Disease Control and Prevention des États-Unis"
+      },
+      "url": "https://www.cdc.gov/dpdx/paragonimiasis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "CDC life-cycle and morphology reference.",
+        "No conservation assessment provided."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foodborne parasitic infections: paragonimiasis — World Health Organization",
+        "fr": "Parasitoses d’origine alimentaire : la paragonimose — Organisation mondiale de la Santé"
+      },
+      "url": "https://www.who.int/fr/publications/i/item/WHO-UCN-NTD-VVE-2021.5",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "OMS en français : espèce et hôtes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 7,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foodborne trematode infections — World Health Organization",
+        "fr": "Trematodiasis de transmisión alimentaria — Organización Mundial de la Salud"
+      },
+      "url": "https://www.who.int/es/news-room/fact-sheets/detail/foodborne-trematode-infections",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "OMS en espagnol : Paragonimus."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 5,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "CDC gives species distribution as Southeast Asia and Japan; wider genus distributions should not be transferred to this species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the CDC life-cycle description with WHO materials in French and Spanish; distinguished species-level facts from genus-wide details."
+}

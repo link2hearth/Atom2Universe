@@ -1,0 +1,199 @@
+{
+  "id": "bison_bonasus",
+  "scientific": "Bison bonasus",
+  "group": "mammals",
+  "name": {
+    "en": "European bison",
+    "fr": "Bison d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European bison, or wisent, is Europe’s largest land mammal. Hunting and habitat loss erased its free-living populations; descendants of a small managed breeding group later founded reintroduced herds.",
+      "fr": "Le bison d’Europe, ou wisent, est le plus grand mammifère terrestre du continent. La chasse et la perte d’habitats ont anéanti ses populations libres ; des descendants d’un petit noyau d’élevage ont ensuite fondé les troupeaux réintroduits."
+    },
+    "identification": {
+      "en": "Adult bulls are larger than cows and have more muscular forequarters, a shoulder hump, and thicker, wider-set horns. Both sexes have short horns, a long-haired head and forebody with a beard, and shorter rear hair; the coat ranges from tawny to dark brown. At Białowieża, adult bulls weigh 440–920 kg and can reach 188 cm at the withers; cows weigh 320–640 kg. Their forequarters are less developed and their horns curve more inward.",
+      "fr": "Les taureaux adultes sont plus grands que les vaches, avec l’avant-train plus musclé, une bosse et des cornes plus épaisses et écartées. Les deux sexes ont des cornes courtes, des poils longs sur la tête et l’avant du corps, une barbe et un arrière au poil court ; la robe va du fauve au brun foncé. À Białowieża, les taureaux pèsent 440 à 920 kg et peuvent atteindre 188 cm au garrot ; les vaches pèsent 320 à 640 kg. Leur avant-train est moins développé et leurs cornes se recourbent davantage."
+    },
+    "habitat": {
+      "en": "Wisent use woodland mosaics with meadows and clearings, as well as forest-steppe and mountain forest–meadow landscapes. In Białowieża, records include mixed woods, alder stands and river meadows. Closed forest alone may limit winter forage, prompting movements into farmland. Historical records also place them in forest-steppe, so they are not strict forest specialists. Reintroduced free-ranging herds were established from 1952.",
+      "fr": "Les wisents fréquentent des mosaïques boisées avec prairies et clairières, ainsi que des paysages de forêt-steppe et de montagne. À Białowieża, les observations incluent forêts mixtes, aulnaies et prairies riveraines. Une forêt fermée peut limiter le fourrage hivernal et entraîner des déplacements vers les cultures. Les archives les situent aussi en forêt-steppe : ce ne sont donc pas des spécialistes stricts des forêts. Les troupeaux libres réintroduits se sont établis à partir de 1952."
+    },
+    "diet": {
+      "en": "They ruminate and eat grasses, sedges, herbs and woody plants. DNA metabarcoding in Białowieża found 105 plant taxa during the growing season; woody plants made up 59.4% of detected dietary sequences. Forbs contributed 33.6%. Sample richness rose with food availability, and selection shifted with seasonal resources. These local sequence proportions are not a universal diet ratio or a measure by food mass.",
+      "fr": "Ils ruminent et consomment graminées, laîches, herbes et plantes ligneuses. Le métabarcoding de l’ADN à Białowieża a relevé 105 taxons végétaux pendant la saison de croissance ; les plantes ligneuses formaient 59,4 % des séquences alimentaires détectées. Les plantes herbacées non graminoïdes en formaient 33,6 %. La richesse des échantillons augmentait avec les ressources disponibles et les choix suivaient leur évolution saisonnière. Ces proportions locales de séquences ne sont ni un régime universel ni une mesure des masses consommées."
+    },
+    "behavior": {
+      "en": "Groups are fluid rather than fixed family units: mixed herds include cows, calves and young, while bulls may gather in small groups or stay alone. Individuals join and leave; bison alternate feeding, resting and rumination. In a 1976–1990 Białowieża study, bulls were solitary in 62% of observations, and bull groups were smaller during the rut than before it.",
+      "fr": "Les groupes sont mobiles plutôt que constitués de familles stables : les troupeaux mixtes réunissent vaches, veaux et jeunes, tandis que les mâles se regroupent parfois ou restent seuls. Les individus circulent entre groupes ; les bisons alternent alimentation, repos et rumination. Dans une étude menée à Białowieża de 1976 à 1990, les mâles étaient seuls dans 62 % des observations, et les groupes de taureaux étaient plus petits pendant le rut qu’avant celui-ci."
+    },
+    "reproduction": {
+      "en": "The rut occurs in late summer and autumn; gestation lasts about 254–277 days, with births usually occurring from May to July. A cow leaves the herd to give birth and returns with her calf after several days. Calves may suckle beyond their first year. Cows usually bear one calf about every second year in free-ranging herds; first birth is generally around age four. Bulls join female-and-young groups during the August–September breeding period and move between them while seeking cows.",
+      "fr": "Le rut a lieu à la fin de l’été et en automne ; la gestation dure environ 254 à 277 jours et les naissances ont généralement lieu de mai à juillet. La vache s’isole pour mettre bas, puis revient avec son veau après quelques jours. Celui-ci peut téter au-delà de sa première année. Dans les troupeaux libres, les vaches ont généralement un seul petit tous les deux ans ; la première mise bas survient vers quatre ans. En août et septembre, les taureaux rejoignent les groupes de femelles et de jeunes, puis passent de l’un à l’autre à la recherche de vaches."
+    },
+    "ecology": {
+      "en": "Grazing removes plant biomass and can open space for other plants; bison also create small disturbed patches and disperse seeds. An eight-year Danish study found higher vascular-plant richness under grazing in old oak and Norway spruce forest, with no response in closed-canopy beech. Effects were strongest where ground vegetation was dense; bryophytes also increased. The result shows context-dependent habitat engineering, not a universal biodiversity gain.",
+      "fr": "Le pâturage retire de la biomasse et peut libérer de l’espace pour d’autres plantes ; les bisons créent aussi de petites zones perturbées et dispersent des graines. Une étude danoise de huit ans a trouvé davantage d’espèces végétales sous pâturage dans les vieilles chênaies et les forêts d’épicéas, sans effet sous hêtraie fermée. L’effet était plus fort lorsque la végétation du sol était dense ; les bryophytes ont aussi augmenté. Cette ingénierie des habitats dépend du contexte et ne garantit pas un gain de biodiversité partout."
+    },
+    "conservation": {
+      "en": "The species became extinct in the wild in 1927; reintroductions began in the 1950s. IUCN’s global assessment published on 10 December 2020 classified it as Near Threatened. A 2022 conservation plan reported c. 6,800 free-ranging animals, c. 500 semi-free and c. 1,700 in ex-situ facilities by 2020—separate categories. Descendants of only 12 founders retain low genetic diversity, and herds remain fragmented. The estimate covered 47 free-ranging subpopulations in 10 countries. The official pedigree book recorded 12,209 animals on 31 December 2024: 9,762 free-living, 722 semi-free and 1,725 captive. These dated records are not a new assessment of extinction risk.",
+      "fr": "L’espèce a disparu de la nature en 1927 ; les réintroductions ont commencé dans les années 1950. L’évaluation mondiale de l’UICN publiée le 10 décembre 2020 la classait « quasi menacée ». Un plan de conservation de 2022 rapportait, pour 2020, environ 6 800 animaux libres, 500 semi-libres et 1 700 en structures ex situ : des catégories distinctes. Descendants de seulement 12 fondateurs, les troupeaux gardent une faible diversité génétique et restent fragmentés. L’estimation couvrait 47 sous-populations libres dans 10 pays. Le registre officiel recensait 12 209 animaux au 31 décembre 2024 : 9 762 libres, 722 semi-libres et 1 725 captifs. Ces effectifs datés ne constituent pas une nouvelle évaluation du risque d’extinction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Białowieża National Park: Białowieża bison",
+        "fr": "Parc national de Białowieża : le bison de Białowieża"
+      },
+      "url": "https://bpn.com.pl/index.php?Itemid=105&id=53&lang=en&option=com_content&task=view",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Adult mass, withers height and male/female morphology."
+      ]
+    },
+    {
+      "title": {
+        "en": "Białowieża National Park: Reproduction",
+        "fr": "Parc national de Białowieża : reproduction"
+      },
+      "url": "https://bpn.com.pl/index.php?Itemid=109&id=58&lang=en&option=com_content&task=view",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Rut, breeding ages, calving interval, gestation and calf development."
+      ]
+    },
+    {
+      "title": {
+        "en": "European bison recovering – IUCN Red List update",
+        "fr": "Rétablissement du bison d’Europe – mise à jour de la Liste rouge de l’UICN"
+      },
+      "url": "https://iucn.org/news/species/202012/european-bison-recovering-31-species-declared-extinct-iucn-red-list",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Near Threatened announced 10 December 2020; reintroductions began in the 1950s."
+      ]
+    },
+    {
+      "title": {
+        "en": "European Bison Strategic Species Status Review 2020",
+        "fr": "Bilan stratégique de statut du bison d’Europe 2020"
+      },
+      "url": "https://sav21bc.cz/wp-content/uploads/2022/04/iucn_bison_ver220217a_reduced.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Historical forest-steppe range, 1926/27 wild extinction and 12 founders; non-peer-reviewed specialist review."
+      ]
+    },
+    {
+      "title": {
+        "en": "Foraging plasticity allows a large herbivore to persist in a sheltering forest habitat: European bison diet metabarcoding",
+        "fr": "La plasticité alimentaire permet à un grand herbivore de persister en forêt : métabarcoding du régime du bison d’Europe"
+      },
+      "url": "https://doi.org/10.1016/j.foreco.2019.117474",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Growing-season Białowieża samples: 105 taxa; woody plants 59.4% and forbs 33.6% of reads; diet followed seasonal availability."
+      ]
+    },
+    {
+      "title": {
+        "en": "European bison increase plant species richness in forest habitats",
+        "fr": "Le bison d’Europe accroît la richesse végétale dans les habitats forestiers"
+      },
+      "url": "https://doi.org/10.1016/j.foreco.2024.121891",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Eight-year trial found effects varying by forest type, strongest with dense ground vegetation; bryophytes increased."
+      ]
+    },
+    {
+      "title": {
+        "en": "Animal Diversity Web: Bison bonasus",
+        "fr": "Animal Diversity Web : Bison bonasus"
+      },
+      "url": "https://animaldiversity.org/accounts/Bison_bonasus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Fluid group structure and rumination; its obsolete population estimates were excluded."
+      ]
+    },
+    {
+      "title": {
+        "en": "A range-wide conservation action plan for the European bison",
+        "fr": "Un plan de conservation à l’échelle de l’aire de répartition du bison d’Europe"
+      },
+      "url": "https://doi.org/10.1017/S003060532100185X",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "By 2020: c. 6,800 free-ranging, 500 semi-free and 1,700 ex-situ animals, in separate categories."
+      ]
+    },
+    {
+      "title": {
+        "en": "Composition, group size, and spatial distribution of European bison bulls in Białowieża Forest",
+        "fr": "Composition, taille des groupes et répartition spatiale des taureaux de Białowieża"
+      },
+      "url": "https://rcin.org.pl/Content/12334/BI002_2613_Cz-40-2_Acta-T40-nr1-1-21_o.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "1976–1990 study: bulls solitary in 62% of observations; bull groups were smaller during rut than pre-rut."
+      ]
+    },
+    {
+      "title": {
+        "en": "European Bison Pedigree Book 2024 — Białowieża National Park",
+        "fr": "Registre généalogique du bison d’Europe 2024 — Parc national de Białowieża"
+      },
+      "url": "https://bpn.gov.pl/pliki-do-pobrania/pobierz/1f4662f1-37b5-4d5b-b5d2-178222bb229c.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "31 December 2024 register: 12,209 total; 9,762 free, 722 semi-free, 1,725 captive."
+      ]
+    }
+  ],
+  "illustration_notes": "Pure white background; adult male European bison, moderate shoulder hump, muscular forequarters, short high-set horns, long head/neck hair and beard, shorter tawny-brown hindquarters.",
+  "uncertainties": [
+    "Population counts refer separately to 2020 and 31 December 2024; living categories remain explicit.",
+    "Diet proportions apply to growing-season Białowieża samples and DNA-sequence shares, not food mass.",
+    "The Danish vegetation trial covered one enclosure; effects varied by forest type.",
+    "The specialist status review is grey literature; its title year is not the IUCN assessment date."
+  ],
+  "reviewed": true,
+  "review_note": "Independent primary-source and bilingual review; corrected gestation range, scoped birth season and added official 2024 register counts. Illustration approved as adult male."
+}

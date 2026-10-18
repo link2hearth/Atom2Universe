@@ -1,0 +1,176 @@
+{
+  "id": "cimberis_attelaboides",
+  "scientific": "Cimberis attelaboides",
+  "group": "invertebrates",
+  "name": {
+    "en": "Pine-flower snout beetle",
+    "fr": "Charançon des fleurs de pin"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cimberis attelaboides is a small, relatively primitive weevil associated with pines across Europe.",
+      "fr": "Cimberis attelaboides est un petit charançon relativement primitif associé aux pins dans toute l’Europe."
+    },
+    "identification": {
+      "en": "The adult has a narrow elongated snout, straight antennae and orange appendages; it is only a few millimetres long and can be confused with other snouted beetles.",
+      "fr": "L’adulte porte un rostre étroit et allongé, des antennes droites et des appendices orangés ; il ne mesure que quelques millimètres et peut être confondu avec d’autres coléoptères à rostre."
+    },
+    "habitat": {
+      "en": "It occurs in lowland and mountain pine woods, where adults are found on pines during the warmer season.",
+      "fr": "Il fréquente les pinèdes de plaine et de montagne, où les adultes se trouvent sur les pins pendant la saison chaude."
+    },
+    "diet": {
+      "en": "Larvae feed in pollen-bearing male pine flowers, and adults are also associated with pine pollen.",
+      "fr": "Les larves se nourrissent dans les fleurs mâles des pins, riches en pollen, et les adultes sont eux aussi associés au pollen des pins."
+    },
+    "behavior": {
+      "en": "Adults are flower-visiting beetles seen on pines, especially during spring and early summer.",
+      "fr": "Les adultes visitent les fleurs et s’observent sur les pins, surtout au printemps et au début de l’été."
+    },
+    "reproduction": {
+      "en": "The documented life cycle links larval development to male pine flowers; detailed courtship or egg-laying behavior is not well covered in the sources consulted.",
+      "fr": "Le cycle documenté lie le développement larvaire aux fleurs mâles des pins ; les sources consultées décrivent peu la parade ou la ponte."
+    },
+    "ecology": {
+      "en": "This specialized pollen association connects the beetle closely to Pinus, especially Scots pine in British records; no other Cimberis profile in this catalogue is available for a species-by-species comparison.",
+      "fr": "Cette association spécialisée au pollen lie étroitement le coléoptère aux Pinus, notamment au pin sylvestre dans les données britanniques ; le catalogue ne contient pas d’autre fiche de Cimberis pour une comparaison entre espèces."
+    },
+    "conservation": {
+      "en": "The sources consulted provide no formal species-level threat category, so local occurrence should not be mistaken for a global conservation assessment.",
+      "fr": "Les sources consultées ne donnent aucune catégorie de menace propre à l’espèce ; une présence locale ne doit donc pas être confondue avec une évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cimberis attelaboides — Observatoire FAUNA species account",
+        "fr": "Cimberis attelaboides — fiche espèce de l’Observatoire FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/242807",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "French regional species account."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Database of Insects and their Food Plants — British Research Centre for Ecology and Hydrology",
+        "fr": "Base de données des insectes et de leurs plantes-hôtes — UK Centre for Ecology & Hydrology"
+      },
+      "url": "https://dbif.brc.ac.uk/familiesresults.aspx?id=98",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "British food-plant database records larvae feeding in male flowers of Scots pine (Pinus sylvestris)."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Phylogeny and classification of Cimberididae — European Journal of Entomology (2024)",
+        "fr": "Phylogénie et classification des Cimberididae — European Journal of Entomology (2024)"
+      },
+      "url": "https://www.eje.cz/pdfs/eje/2024/01/47.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed taxonomic study."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Older sources place this weevil in Nemonychidae, while recent phylogenetic work treats Cimberididae separately; the draft avoids depending on disputed family-level placement."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared a French regional species account, British food-plant records and a recent peer-reviewed taxonomic study; no same-genus catalogue entry exists for direct cross-linking."
+}

@@ -1,0 +1,119 @@
+{
+  "id": "prionace_glauca",
+  "scientific": "Prionace glauca",
+  "group": "fish",
+  "name": {
+    "en": "Blue shark",
+    "fr": "Requin bleu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue shark is a wide-ranging oceanic shark in the family Carcharhinidae.",
+      "fr": "Le requin bleu est un requin océanique à vaste répartition, de la famille des Carcharhinidés."
+    },
+    "identification": {
+      "en": "Its streamlined body has a cobalt-blue back, pale sides and a white underside; the snout is long and narrow, and the pectoral fins are notably long.",
+      "fr": "Son corps fuselé présente un dos bleu cobalt, des flancs clairs et un ventre blanc ; son museau est long et étroit, et ses nageoires pectorales sont particulièrement longues."
+    },
+    "habitat": {
+      "en": "It lives in tropical, subtropical and warm-temperate waters across the world’s oceans.",
+      "fr": "Il fréquente les eaux tropicales, subtropicales et tempérées chaudes des océans du monde entier."
+    },
+    "diet": {
+      "en": "Its mainly pelagic diet includes fishes and squid, alongside other prey when available.",
+      "fr": "Son régime, principalement pélagique, comprend des poissons et des calmars, ainsi que d’autres proies selon les occasions."
+    },
+    "behavior": {
+      "en": "It undertakes long seasonal migrations and may travel alone or in groups often segregated by sex and size.",
+      "fr": "Il entreprend de longues migrations saisonnières et peut se déplacer seul ou en groupes souvent séparés selon le sexe et la taille."
+    },
+    "reproduction": {
+      "en": "It is viviparous, and reproductive characteristics vary among ocean basins.",
+      "fr": "Il est vivipare, et ses caractéristiques reproductives varient selon les bassins océaniques."
+    },
+    "ecology": {
+      "en": "As a pelagic predator feeding high in the marine food web, it can connect distant ocean regions through its migrations.",
+      "fr": "Prédateur pélagique situé haut dans le réseau alimentaire marin, il relie des régions océaniques éloignées par ses migrations."
+    },
+    "conservation": {
+      "en": "The CMS account reports a global IUCN category of Near Threatened and a Mediterranean category of Critically Endangered; fishing, including bycatch, is a major pressure.",
+      "fr": "La fiche de la CMS rapporte un statut UICN mondial de « Quasi menacé » et un statut « En danger critique » en Méditerranée ; la pêche, y compris les captures accessoires, exerce une forte pression."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue Shark — Convention on the Conservation of Migratory Species",
+        "fr": "Requin bleu — Convention sur la conservation des espèces migratrices"
+      },
+      "url": "https://www.cms.int/species/prionace-glauca",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "CMS identifies the species in Carcharhinidae, describes a circumglobal warm-water range, migrations, viviparity, pelagic fish and squid in its diet, and global Near Threatened / Mediterranean Critically Endangered categories with fishing pressure."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 32,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Requin peau bleue — DORIS, Fédération française d’études et de sports sous-marins",
+        "fr": "Requin peau bleue — DORIS, Fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Prionace-glauca-Requin-peau-bleue-1660",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "DORIS describes the blue-cobalt back, pale flanks, white belly, long narrow snout and long pectoral fins; it also reports seasonal grouping and migrations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 23,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The CMS page reports conservation categories without showing their assessment dates; the draft reproduces the categories as presented on the consulted page."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the English CMS species account with the French DORIS account. Kept the account general and omitted litter sizes, migration distances and other numerical claims."
+}

@@ -1,0 +1,478 @@
+{
+  "id": "magpie",
+  "scientific": "Pica pica",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian magpie",
+    "fr": "Pie bavarde"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian magpie is a familiar corvid of Europe and much of northern and central Asia, recognizable by its black-and-white pattern and exceptionally long tail.",
+      "fr": "La Pie bavarde est un corvidé bien connu d’Europe et d’une grande partie de l’Asie septentrionale et centrale, reconnaissable à son plumage noir et blanc et à sa queue exceptionnellement longue."
+    },
+    "identification": {
+      "en": "An adult is about 46–50 cm long and usually weighs 185–268 grams. More than half the bird’s length is tail, creating a striking silhouette in flight and on the ground. The head, back, and breast are black, with white belly, shoulder patches, and large white wing panels; juveniles are duller and have a shorter tail. In strong light, the dark wing and tail feathers flash blue and green: layers of hollow melanosomes in the feather barbules reflect light selectively, producing structural iridescence. A harsh, rattling chatter is its characteristic call.",
+      "fr": "L’adulte mesure environ 46 à 50 cm et pèse généralement de 185 à 268 grammes. Sa queue, plus de la moitié de sa longueur, distingue sa silhouette au sol et en vol. Son plumage est noir, avec le ventre, les épaules et de grandes zones des ailes blancs. Les jeunes sont plus ternes et ont la queue plus courte. En pleine lumière, les plumes sombres des ailes et de la queue brillent de bleu et de vert : des couches de mélanosomes creux dans leurs barbules réfléchissent sélectivement la lumière et produisent une iridescence structurelle. Son cri caractéristique est un bavardage rauque et crépitant."
+    },
+    "habitat": {
+      "en": "Magpies use farmland, villages, gardens, parks, open woodland, and the edges of towns. Trees and hedges provide nesting sites. They generally avoid dense forest, extensive wetlands, and treeless country, so the meeting of cover and open feeding ground matters more than any single habitat type.",
+      "fr": "Elle fréquente les terres agricoles, villages, parcs, bois clairsemés et abords des villes. Arbres et haies lui offrent des sites de nidification. Elle évite généralement les forêts denses, les vastes zones humides et les paysages sans arbres : la présence conjointe d’abris et de terrains de nourrissage ouverts compte davantage qu’un habitat unique."
+    },
+    "diet": {
+      "en": "This opportunistic omnivore searches mostly while walking or hopping over the ground, pausing to inspect likely prey before picking it up with its bill. Beetles and other invertebrates are important, alongside seeds, fruit, scraps, carrion, and occasionally eggs or nestlings; vertebrate food is usually a small share overall. A study of urban Manchester birds found a varied diet dominated by surface-dwelling invertebrates, with plant foods especially important in winter. Magpies also hide surplus food in small caches and retrieve it later, using nearby visual landmarks and other cues; some buried acorns are left behind and can germinate.",
+      "fr": "Omnivore opportuniste, elle cherche surtout au sol, où elle marche ou sautille avant de saisir ses proies. Elle mange insectes, graines, fruits, charognes et restes, parfois œufs ou oisillons ; les vertébrés restent minoritaires. À Manchester, une étude a relevé surtout des invertébrés de surface et davantage de végétaux en hiver. La pie dissimule aussi des surplus dans de petites réserves qu’elle retrouve plus tard grâce à des repères proches et à d’autres indices ; certains glands enterrés ne sont pas récupérés et peuvent germer."
+    },
+    "behavior": {
+      "en": "Pairs usually defend a breeding territory, while young or nonbreeding birds may gather in family groups or communal roosts. Their harsh alarm chatter warns other magpies when cats and other predators are nearby. Magpies can store and relocate food, and experiments show that they use local cues to recover caches. The familiar tale that they are compelled to steal shiny trinkets is unsupported: captive and free-living birds in one experiment showed no unconditional preference for shiny objects and often hesitated around unfamiliar items. A 2008 mirror-mark experiment was interpreted as evidence of self-recognition. A larger 2020 replication did not confirm that result, so the test does not establish a universal capacity for self-awareness.",
+      "fr": "Les couples reproducteurs défendent généralement un territoire, tandis que les jeunes ou non-reproducteurs se réunissent en groupes familiaux ou en dortoirs collectifs. Leur cri rauque avertit les autres pies de la présence de chats et d’autres prédateurs. Les pies peuvent stocker puis déplacer leur nourriture, et des expériences montrent qu’elles se servent de repères proches pour retrouver leurs réserves. Une expérience sur des pies captives et sauvages n’a relevé aucune attirance innée pour les objets brillants ; les objets inconnus suscitaient plutôt la méfiance. En 2008, un test au miroir a suggéré une reconnaissance de soi. Une réplication plus vaste en 2020 ne l’a pas confirmé : ce test ne prouve donc pas une conscience de soi."
+    },
+    "reproduction": {
+      "en": "A pair builds a domed stick nest with a side entrance, usually in a tree; both sexes gather material, with the male bringing most and the female doing most construction. The female lays a typical clutch of five or six eggs and incubates them for about 20 days, while her mate supplies food. Chicks hatch naked and helpless, and both parents feed them. They usually fledge at about 26–31 days, then receive food from the adults for several more weeks. One brood is usual each year, and British records indicate that breeding commonly begins at about two years old.",
+      "fr": "Le couple bâtit dans un arbre un nid de branches en dôme, à entrée latérale ; le mâle apporte surtout les matériaux et la femelle construit. La femelle pond généralement cinq ou six œufs et les couve pendant environ 20 jours, tandis que son partenaire lui apporte de la nourriture. Les poussins éclosent nus et dépendants, et les deux parents les nourrissent. Ils prennent généralement leur envol vers 26 à 31 jours, puis reçoivent encore de la nourriture des adultes pendant plusieurs semaines. Une seule nichée annuelle est habituelle et, selon les données britanniques, la reproduction commence souvent vers l’âge de deux ans."
+    },
+    "ecology": {
+      "en": "By taking eggs and nestlings, magpies can affect particular nests, especially when dependent fledglings increase the food demands of territorial adults. In a UK farmland study, artificial nests faced greater magpie predation inside breeding territories late in the season, but wider research has not found a simple national link between corvid increases and songbird declines. Their ecological role also includes seed dispersal: in western Mediterranean farmland, magpies carry and bury holm-oak acorns, and some caches produce seedlings. The balance between predation and seed movement therefore depends on local prey, habitat, and plant communities.",
+      "fr": "Lorsque les jeunes réclament beaucoup de nourriture, les adultes territoriaux prennent parfois œufs et oisillons d’autres oiseaux. Dans une étude britannique, la prédation de nids artificiels augmentait en fin de saison, mais les suivis ne lient pas simplement la hausse des corvidés au déclin des oiseaux chanteurs. Dans les agroforêts méditerranéennes, elles enterrent des glands de chêne vert ; certains glands oubliés germent. L’équilibre entre prédation et dispersion des graines dépend du contexte local."
+    },
+    "conservation": {
+      "en": "The latest global IUCN assessment, published in 2024, classifies the Eurasian Magpie as Least Concern. That category does not rule out declines in particular local populations. In Britain, the BTO reports a 104% increase in the monitored population index between 1967 and 2024, alongside a 6.4% expansion in breeding distribution. Magpies have also been culled in British game management; a 2022 review documents this history and notes that control policies differ among UK nations. Evidence does not support treating magpies as a general cause of songbird decline; habitat change and food availability also shape those populations.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2024 classe la Pie bavarde en Préoccupation mineure. Cette catégorie n’exclut pas des déclins dans certaines populations locales. En Grande-Bretagne, le BTO relève un indice de population en hausse de 104 % entre 1967 et 2024 et une aire de reproduction élargie de 6,4 %. La Pie bavarde a aussi été abattue dans le cadre de la gestion britannique du gibier ; une synthèse de 2022 documente cette histoire et signale des politiques variables selon les nations. Les données ne font pas des pies une cause générale du déclin des oiseaux chanteurs ; habitats et ressources alimentaires influencent aussi ces populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian Magpie Identification — Cornell Lab of Ornithology",
+        "fr": "Identification de la Pie bavarde — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult measurements, plumage, and ground-foraging identification."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 6,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Magnificent magpie colours by feathers with layers of hollow melanosomes — Journal of Experimental Biology",
+        "fr": "Les couleurs de la Pie bavarde sont produites par des plumes aux couches de mélanosomes creux — Journal of Experimental Biology"
+      },
+      "url": "https://doi.org/10.1242/jeb.174656",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Pica pica feather barbules use hollow melanosome layers to produce structural colours."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 12,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Magpie Life History — Cornell Lab of Ornithology",
+        "fr": "Cycle de vie de la Pie bavarde — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Nest form, habitat, caching, and parental care."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 7,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The diet of urban Magpies Pica pica — Ibis",
+        "fr": "Le régime alimentaire des pies urbaines Pica pica — Ibis"
+      },
+      "url": "https://doi.org/10.1111/j.1474-919X.1983.tb03086.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Manchester stomach, pellet, and faecal analysis found seasonal diet differences."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 10,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Magpies can use local cues to retrieve their food caches — Animal Cognition",
+        "fr": "Les pies utilisent des repères locaux pour retrouver leurs réserves — Animal Cognition"
+      },
+      "url": "https://doi.org/10.1007/s10071-010-0357-2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Controlled caching task demonstrated retrieval using local beacons and landmarks."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 10,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Caching territoriality and site preferences by a scatter-hoarder drive the spatial pattern of seed dispersal and affect seedling emergence — Journal of Ecology",
+        "fr": "La territorialité et les préférences de site influencent la dispersion des graines et l’émergence des plantules — Journal of Ecology"
+      },
+      "url": "https://doi.org/10.1111/1365-2745.13642",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Radio-tracking in Mediterranean agroforestry linked magpie acorn caches with oak seedling emergence."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 12,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Birds of Europe 3.1: Pica pica (Magpie) — Naturalis Biodiversity Center",
+        "fr": "Oiseaux d’Europe 3.1 : Pica pica (Pie) — Naturalis Biodiversity Center"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=207&id=130985",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Resident European species account describes habitat, pair life, calls, and roosts."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.3",
+        "identification.en.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 11,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Magpie — British Trust for Ornithology",
+        "fr": "Pie bavarde — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/magpie",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British nesting records and population monitoring through 2024."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 8,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "‘The thieving magpie’? No evidence for attraction to shiny objects — Animal Cognition",
+        "fr": "« La pie voleuse » ? Aucune preuve d’une attirance pour les objets brillants — Animal Cognition"
+      },
+      "url": "https://doi.org/10.1007/s10071-014-0794-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Captive and free-living tests found no unconditional shiny-object attraction."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 9,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mirror-Induced Behavior in the Magpie (Pica pica): Evidence of Self-Recognition — PLOS Biology",
+        "fr": "Comportement induit par le miroir chez la pie : indices de reconnaissance de soi — PLOS Biology"
+      },
+      "url": "https://doi.org/10.1371/journal.pbio.0060202",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "2008 experiment reported mark-directed behavior in two of five tested magpies."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 11,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Replication of the mirror mark test experiment in the magpie (Pica pica) does not provide evidence of self-recognition — Journal of Comparative Psychology",
+        "fr": "La réplication du test de la marque au miroir chez la pie n’apporte pas de preuve de reconnaissance de soi — Journal of Comparative Psychology"
+      },
+      "url": "https://doi.org/10.1037/com0000223",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Larger 2020 replication did not confirm the earlier mark-test result."
+      ],
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 10,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pica pica (Eurasian Magpie) — The IUCN Red List of Threatened Species (2024 assessment)",
+        "fr": "Pica pica (Pie bavarde) — Liste rouge de l’UICN des espèces menacées (évaluation 2024)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T103727048A264575751.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "2024 global assessment classifies the Eurasian Magpie as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 10,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Predation of artificial nests in UK farmland by magpies (Pica pica): interacting environmental, temporal, and social factors influence a nest’s risk — European Journal of Wildlife Research",
+        "fr": "Prédation de nids artificiels par les pies dans les terres agricoles britanniques : facteurs écologiques, saisonniers et sociaux — European Journal of Wildlife Research"
+      },
+      "url": "https://doi.org/10.1007/s10344-019-1290-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UK artificial nests suffered locally and seasonally variable magpie predation; national links are complex."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 14,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Review of Gamebird Management — Game & Wildlife Conservation Trust (2022)",
+        "fr": "Synthèse sur la gestion du gibier à plumes — Game & Wildlife Conservation Trust (2022)"
+      },
+      "url": "https://www.gwct.org.uk/media/1528491/Review2022.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Review graphs British magpie culls from 1961–2021 and notes nation-specific policy."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 11,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Magpie Sounds — Cornell Lab of Ornithology",
+        "fr": "Chants et cris de la Pie bavarde — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/sounds",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Harsh rattle is a frequent alarm call in response to cats and other predators."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 14,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "The original magpie illustration is retained.",
+  "uncertainties": [
+    "UK population and control data in this profile are regional and do not represent trends across the species’ whole range.",
+    "The mirror-mark result remains disputed: an initial small study reported evidence, but the larger replication did not confirm it.",
+    "The precise current effect of magpie predation on songbird population trends varies by species, place, and season; the cited UK artificial-nest study does not measure all real nest outcomes."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review confirm strict Eurasian identity, diet and breeding, experimental qualifications and updated 2024 IUCN citation. Alarm-call translation and structural reflection corrected. Original illustration preserved."
+}

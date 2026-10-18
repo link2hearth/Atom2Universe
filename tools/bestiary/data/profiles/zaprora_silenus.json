@@ -1,0 +1,119 @@
+{
+  "id": "zaprora_silenus",
+  "scientific": "Zaprora silenus",
+  "group": "fish",
+  "name": {
+    "en": "Prowfish",
+    "fr": "Poisson-prow Zaprora silenus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Prowfish is a North Pacific marine fish, ranging from Japan and Russia through the Bering Sea to California.",
+      "fr": "Le poisson-prow est un poisson marin du Pacifique Nord, du Japon et de la Russie à la mer de Béring et à la Californie."
+    },
+    "identification": {
+      "en": "It has a compressed body and rounded tail; reported adults may reach about 88 cm total length.",
+      "fr": "Son corps est comprimé et sa queue arrondie ; des adultes peuvent atteindre environ 88 cm de longueur totale."
+    },
+    "habitat": {
+      "en": "Adults live near the bottom, with records from the surface to several hundred metres deep.",
+      "fr": "Les adultes vivent près du fond, avec des observations depuis la surface jusqu’à plusieurs centaines de mètres de profondeur."
+    },
+    "diet": {
+      "en": "A study of the species found a diet dominated by gelatinous zooplankton, especially jellyfish and salps.",
+      "fr": "Une étude de l’espèce a trouvé un régime dominé par le zooplancton gélatineux, surtout les méduses et les salpes."
+    },
+    "behavior": {
+      "en": "Small juveniles shelter beneath jellyfish and may be mistaken for medusafishes.",
+      "fr": "Les petits juvéniles s’abritent sous les méduses et peuvent être confondus avec des poissons-méduses."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted provide little detail on its natural spawning or early development.",
+      "fr": "Les fiches consultées donnent peu de détails sur sa ponte naturelle ou son développement précoce."
+    },
+    "ecology": {
+      "en": "It is an infrequent component of bottom-trawl survey catches in the northeast Pacific.",
+      "fr": "Il est rarement présent dans les prises des campagnes de chalutage de fond du Pacifique nord-est."
+    },
+    "conservation": {
+      "en": "FishBase reports no IUCN Red List assessment for this species.",
+      "fr": "FishBase ne signale pas d’évaluation de cette espèce sur la Liste rouge de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Prowfish — FishBase",
+        "fr": "Poisson-prow — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Zaprora-silenus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the range, size, habitat and life stages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 9,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution and biology of prowfish — NOAA Scientific Publications Office",
+        "fr": "Distribution et biologie du poisson-prow — NOAA Scientific Publications Office"
+      },
+      "url": "https://spo.nmfs.noaa.gov/content/distribution-and-biology-prowfish-zaprora-silenus-northeast-pacific",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The 2004 survey study reports gelatinous prey and infrequent occurrence in bottom-trawl surveys."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 13,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Available natural-history details are limited; life-history notes are largely based on surveys and reference summaries."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; statements on juveniles, adult habitat and distribution are kept distinct by life stage and source."
+}

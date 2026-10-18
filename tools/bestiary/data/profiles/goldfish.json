@@ -1,0 +1,266 @@
+{
+  "id": "goldfish",
+  "scientific": "Carassius auratus",
+  "group": "fish",
+  "name": {
+    "en": "Goldfish",
+    "fr": "Poisson rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "Native to East Asia, especially China, this freshwater carp was selectively bred into an ornamental fish now kept worldwide. Selective breeding in China for more than a thousand years produced colours and body forms that were later spread through the ornamental trade.",
+      "fr": "Originaire d’Asie orientale, notamment de Chine, ce cyprinidé d’eau douce a été sélectionné comme poisson d’ornement, aujourd’hui élevé partout. Plus de mille ans de sélection en Chine ont produit des couleurs et des formes corporelles ensuite diffusées par le commerce des poissons d’ornement."
+    },
+    "identification": {
+      "en": "The wild-looking form is elongated, bronze-grey and single-tailed; ordinary domestic fish retain this shape but are often orange. Adults commonly reach 20 cm, though exceptional wild or pond fish approach 45 cm. Lifespan varies; reports beyond 40 years are exceptional, not normal. Selected varieties may have a rounded body, double tail, enlarged eyes or head growths, and some lack a dorsal fin; these traits differ from the ordinary single-tailed form. Wild and feral fish typically reach 12–22 cm standard length and 100–300 g; exceptional records reach 41 cm standard length and about 3 kg. Standard length excludes the tail fin.",
+      "fr": "La forme sauvage est allongée, gris doré à bronze, avec une queue simple ; le poisson rouge ordinaire garde cette silhouette, souvent orange. Les adultes atteignent souvent 20 cm, mais certains poissons sauvages ou de bassin approchent 45 cm. La longévité varie ; dépasser 40 ans reste exceptionnel. Les variétés sélectionnées peuvent avoir un corps arrondi, une queue double, des yeux agrandis ou des excroissances sur la tête, et certaines sont dépourvues de nageoire dorsale ; ces caractères diffèrent de ceux de la forme ordinaire à queue simple. Les poissons sauvages ou retournés à l’état sauvage atteignent typiquement 12–22 cm de longueur standard et 100–300 g ; des records exceptionnels atteignent 41 cm de longueur standard et environ 3 kg. La longueur standard exclut la nageoire caudale."
+    },
+    "habitat": {
+      "en": "It inhabits temperate ponds, lakes, wetlands and slow rivers; introductions have spread it beyond East Asia. It can survive temporary oxygen deprivation, especially in cold conditions, using stored energy; survival becomes shorter at higher temperatures.",
+      "fr": "Il fréquente étangs, lacs, marais et rivières lentes ; des introductions l’ont dispersé hors d’Asie orientale. Il peut survivre à un manque temporaire d’oxygène, surtout au froid, en utilisant ses réserves énergétiques ; cette survie se raccourcit lorsque la température augmente."
+    },
+    "diet": {
+      "en": "Omnivorous, it eats algae, plants, insect larvae, crustaceans, eggs and detritus. It sucks up food and sediment, sorting particles before pharyngeal processing. A muscular structure in the roof of its mouth, the palatal organ, detects particles through taste and helps separate edible material from gravel before swallowing. The rejected gravel is spat out, so movements that resemble chewing can instead be the sorting of a mixed mouthful of food and substrate.",
+      "fr": "Omnivore, il mange algues, plantes, larves, crustacés, œufs et débris. Il aspire nourriture et sédiments, trie les particules puis les traite dans le pharynx. Une structure musculaire du plafond buccal, l’organe palatin, détecte les particules par le goût et aide à séparer la nourriture des graviers avant leur déglutition. Les graviers rejetés sont recrachés : des mouvements ressemblant à une mastication peuvent ainsi correspondre au tri d’une bouchée mêlant nourriture et sédiments."
+    },
+    "behavior": {
+      "en": "It schools loosely, learns feeding cues and remembers learned associations, disproving the three-second memory myth.",
+      "fr": "Il vit en bancs lâches et apprend les signaux alimentaires ; sa mémoire dépasse trois secondes."
+    },
+    "reproduction": {
+      "en": "At spring spawning, males chase females; eggs stick to plants and sperm fertilizes them externally. Fry hatch in about two to nine days, without parental care. Hatchlings are about 5 mm, dark at first, and mature after three to four years.",
+      "fr": "Au frai printanier, les mâles poursuivent les femelles ; leurs œufs adhésifs sont fécondés dans l’eau. Les alevins éclosent en environ deux à neuf jours sans soins parentaux. Longs d’environ 5 mm et d’abord sombres, ils mûrissent vers trois ou quatre ans."
+    },
+    "ecology": {
+      "en": "Goldfish eat aquatic animals and native fish eggs; introduced populations compete with local fish and disturb bottom habitats while feeding. Bottom feeding can uproot plants and resuspend sediments, increasing water turbidity and changing conditions for other aquatic organisms.",
+      "fr": "Il mange des animaux aquatiques et des œufs de poissons indigènes ; introduit, il concurrence les poissons locaux et remue les fonds. L’alimentation sur le fond peut déraciner les plantes et remettre les sédiments en suspension, ce qui accroît la turbidité de l’eau et modifie les conditions de vie d’autres organismes aquatiques."
+    },
+    "conservation": {
+      "en": "IUCN’s global 2013 assessment classed it Least Concern. Released fish are invasive in some regions.",
+      "fr": "L’évaluation mondiale 2013 de l’UICN le classait en préoccupation mineure. Les poissons relâchés deviennent envahissants localement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Goldfish — Wikipedia",
+        "fr": "Goldfish — Wikipédia en anglais"
+      },
+      "url": "https://en.wikipedia.org/wiki/Goldfish",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Selective breeding in China produced many colour and body forms.",
+        "Goldfish learn routines and associations lasting beyond a few seconds."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 20,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Poisson rouge — Wikipédia",
+        "fr": "Poisson rouge — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Poisson_rouge",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French article contrasts wild bronze-grey and domestic ornamental forms."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 10,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carassius auratus — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Carassius auratus — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Carassius_auratus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "The account documents native East Asian freshwater habitats and adult size variation.",
+        "Females lay eggs externally fertilized; adults provide no care."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 21,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sorting Food from Stones: The Vagal Taste System in Goldfish, Carassius auratus",
+        "fr": "Sorting Food from Stones: The Vagal Taste System in Goldfish, Carassius auratus"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2543128/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Goldfish sort sucked substrate and food before pharyngeal processing."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 9,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Goldfish (Carassius auratus) — Nonindigenous Aquatic Species Profile, U.S. Geological Survey",
+        "fr": "Goldfish (Carassius auratus) — fiche Nonindigenous Aquatic Species, U.S. Geological Survey"
+      },
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?SpeciesID=508",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Introduced populations affect native fishes and aquatic habitat through predation and benthic disturbance."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 13,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carassius auratus — The IUCN Red List of Threatened Species (2013 assessment)",
+        "fr": "Carassius auratus — Liste rouge de l’UICN des espèces menacées (évaluation de 2013)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2013-1.RLTS.T166083A1110472.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Huckstorf and Freyhof assessed the species as Least Concern in 2013."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 11,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Goldfish (Carassius auratus) — U.S. Geological Survey Nonindigenous Aquatic Species Database",
+        "fr": "Poisson rouge (Carassius auratus) — base de données USGS sur les espèces aquatiques non indigènes"
+      },
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=508",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Typically 120–220 mm standard length, maximum 410 mm standard length; typical mass 100–300 g and reported maximum up to 3 kg. Standard length differs from total length."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 27,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show one ordinary domesticated goldfish, streamlined with single forked tail and normal fins, orange scales, visible opercula, anatomically realistic head and gills. Adult, sex unspecified, three-quarter side view on a pure white background; no water, aquarium, text or watermark.",
+  "uncertainties": [
+    "Wild and domestic size varies with population and conditions; exceptional maxima are not presented as ordinary adult size.",
+    "The 2013 global IUCN category and regional invasive impacts describe distinct conservation contexts."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: ordinary orange domestic image distinguished from bronze wild form; ADW size and larval hatching checked. Added explanatory domestication, morphological selection, temporary anoxia, palatal taste-based food sorting from Finger2008 and regional USGS sediment/vegetation impacts. All additions translated.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,163 @@
+{
+  "id": "pyrilia_aurantiocephala",
+  "scientific": "Pyrilia aurantiocephala",
+  "group": "birds",
+  "name": {
+    "en": "Bald parrot",
+    "fr": "Caïque chauve"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Brazilian parrot is known from the central Amazon, between the lower Madeira and Xingu rivers.",
+      "fr": "Ce perroquet brésilien est connu du centre de l’Amazonie, entre les cours inférieurs du Madeira et du Xingu."
+    },
+    "identification": {
+      "en": "It is distinguished by a bare, intensely orange head; the original description established it as a species rather than a young Vulturine Parrot.",
+      "fr": "Il se distingue par sa tête nue d’un orange intense ; la description originale l’a établi comme espèce et non comme jeune perroquet vautourin."
+    },
+    "habitat": {
+      "en": "It is associated with humid tropical forest and tropical swamp forest in Brazil.",
+      "fr": "Il est associé aux forêts tropicales humides et aux forêts marécageuses tropicales du Brésil."
+    },
+    "diet": {
+      "en": "The selected sources do not provide enough species-specific detail to summarize its diet.",
+      "fr": "Les sources retenues ne donnent pas assez de détails propres à l’espèce pour résumer son régime."
+    },
+    "behavior": {
+      "en": "Its flight shape and behavior are reported as very similar to those of its sister species, P. vulturina.",
+      "fr": "Sa silhouette en vol et son comportement sont décrits comme très proches de ceux de son espèce sœur, P. vulturina."
+    },
+    "reproduction": {
+      "en": "The Norwegian species account reports nesting in cavities.",
+      "fr": "La fiche norvégienne signale une nidification dans des cavités."
+    },
+    "ecology": {
+      "en": "It is endemic to Brazil, with records from the Madeira–Tapajós interfluve eastward to the Xingu.",
+      "fr": "Elle est endémique du Brésil, avec des observations entre le Madeira–Tapajós et le Xingu."
+    },
+    "conservation": {
+      "en": "The World Parrot Trust lists it as Near Threatened.",
+      "fr": "Le World Parrot Trust la classe « Quasi menacée »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Auk — original species description",
+        "fr": "The Auk — description originale de l’espèce"
+      },
+      "url": "https://academic.oup.com/auk/article/119/3/815/5561817",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The original paper describes the bare, intensely orange head and explains that the bird was distinguished from immature P. vulturina."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 20,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "SciELO — central Amazon bird records",
+        "fr": "SciELO — observations d’oiseaux en Amazonie centrale"
+      },
+      "url": "https://www.scielo.br/j/zool/a/RLVtzbxdkhDQcLN3rTbk9qr/?format=html",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "This Brazilian study gives the range from lower Madeira to Xingu and reports similarity to sister species P. vulturina."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 19,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Store norske leksikon — species entry",
+        "fr": "Store norske leksikon — notice sur l’espèce"
+      },
+      "url": "https://snl.no/kondorpapeg%C3%B8ye",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "The Norwegian encyclopedia associates it with humid tropical and swamp forests and says it nests in cavities."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 17,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "World Parrot Trust — species encyclopedia",
+        "fr": "World Parrot Trust — encyclopédie des perroquets"
+      },
+      "url": "https://parrots.org/encyclopedia/orange-headed-parrot/",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The World Parrot Trust lists the species as Near Threatened."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 10,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The diet is left unspecified because the selected accounts do not provide species-specific evidence. A reciprocal P. vulturina link is not added because no such draft exists in this inventory."
+  ],
+  "review_note": "Cross-checked the original description and Brazilian field records; habitat and nesting statements use a Norwegian reference and status the World Parrot Trust.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,140 @@
+{
+  "id": "syndemis_musculana",
+  "scientific": "Syndemis musculana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Dark-barred twist",
+    "fr": "Syndémis commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Syndemis musculana is a tortrix moth recorded across Europe, including Britain and Ireland.",
+      "fr": "Syndemis musculana est une tordeuse signalée dans une grande partie de l’Europe, dont la Grande-Bretagne et l’Irlande."
+    },
+    "identification": {
+      "en": "Its grey forewings vary from pale to brownish grey and may have faint or indistinct markings; wingspan is 15–22 mm.",
+      "fr": "Ses ailes antérieures grises vont du gris pâle au gris brun et peuvent porter des marques peu visibles ; l’envergure est de 15–22 mm."
+    },
+    "habitat": {
+      "en": "In Britain and Ireland it occurs in varied settings, including woodland, moorland and mountain habitats.",
+      "fr": "En Grande-Bretagne et en Irlande, elle fréquente des milieux variés, notamment les bois, landes et habitats montagnards."
+    },
+    "diet": {
+      "en": "The caterpillars are highly polyphagous and feed on many plants; British records include bramble, birch and oak.",
+      "fr": "Les chenilles sont très polyphages et consomment de nombreuses plantes ; les sources britanniques citent notamment ronces, bouleaux et chênes."
+    },
+    "behavior": {
+      "en": "Adults fly in late afternoon and evening in May and June in Britain, and can come to light after dusk.",
+      "fr": "En Grande-Bretagne, les adultes volent en fin d’après-midi et le soir en mai et juin, et viennent à la lumière après le crépuscule."
+    },
+    "reproduction": {
+      "en": "Larvae feed from leaves spun or folded around them, then overwinter fully grown before pupating in spring.",
+      "fr": "Les chenilles vivent dans des feuilles enroulées ou pliées, puis passent l’hiver à maturité avant de se nymphoser au printemps."
+    },
+    "ecology": {
+      "en": "Its broad larval diet lets it use trees, shrubs, herbs and grasses rather than a single host plant.",
+      "fr": "La diversité de son régime larvaire lui permet d’utiliser arbres, arbustes, herbes et graminées plutôt qu’une seule plante hôte."
+    },
+    "conservation": {
+      "en": "A French regional records portal says the species has not been assessed in a regional red list; this is not a global status assessment.",
+      "fr": "Un portail français de données régionales indique que l’espèce n’a pas été évaluée sur une liste rouge régionale ; cela ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "UKMoths — Dark-barred Twist",
+        "fr": "UKMoths — Dark-barred Twist"
+      },
+      "url": "https://www.ukmoths.org.uk/species/syndemis-musculana/distribution-map/",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UKMoths reports wingspan, variable grey wings, British habitats and flight season, host examples, and larval overwintering."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 16,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "FAUNA — Syndemis musculana",
+        "fr": "FAUNA — Syndemis musculana"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/247712",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The regional portal states the species has not been assessed in a regional red list and warns that shared records are not exhaustive."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 23,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Les Carnets du Lépidoptériste Français — Syndemis musculana",
+        "fr": "Les Carnets du Lépidoptériste Français — Syndemis musculana"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?e=&id=47290",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The French account describes a widely distributed species with highly polyphagous caterpillars."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 12,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The flight period and habitats quoted here are specific to Britain and Ireland; they should not be assumed to describe all populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

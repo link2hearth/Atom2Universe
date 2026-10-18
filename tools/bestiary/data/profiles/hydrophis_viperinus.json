@@ -1,0 +1,144 @@
+{
+  "id": "hydrophis_viperinus",
+  "scientific": "Hydrophis viperinus",
+  "group": "reptiles",
+  "name": {
+    "en": "Viperine Sea Snake",
+    "fr": "Hydrophis vipérine"
+  },
+  "sections": {
+    "overview": {
+      "en": "This marine elapid occurs in the Indo-West Pacific. Older literature also uses names such as Thalassophis viperina and Praescutata viperina.",
+      "fr": "Cet élapidé marin vit dans l’Indo-Pacifique occidental. Des publications anciennes emploient aussi des noms comme Thalassophis viperina et Praescutata viperina."
+    },
+    "identification": {
+      "en": "SeaLifeBase records a maximum total length of 78 cm for males or specimens of unspecified sex.",
+      "fr": "SeaLifeBase indique une longueur totale maximale de 78 cm chez les mâles ou les individus de sexe non précisé."
+    },
+    "habitat": {
+      "en": "It is reported from coastal, reef-associated tropical waters, with records from 15–40 m depth.",
+      "fr": "Elle est signalée dans les eaux tropicales côtières associées aux récifs, à des profondeurs de 15–40 m."
+    },
+    "diet": {
+      "en": "The species is reported to feed on fish.",
+      "fr": "L’espèce se nourrit de poissons selon les données disponibles."
+    },
+    "behavior": {
+      "en": "Along the Indian coast, published records remain sparse and include strandings and fishing bycatch.",
+      "fr": "Sur la côte indienne, les observations publiées restent rares et comprennent des échouages et des prises accessoires de pêche."
+    },
+    "reproduction": {
+      "en": "The Reptile Database describes it as ovoviviparous.",
+      "fr": "The Reptile Database la décrit comme ovovivipare."
+    },
+    "ecology": {
+      "en": "Its ecology is poorly documented; a recent review specifically identifies major gaps in knowledge along India’s coast.",
+      "fr": "Son écologie est peu documentée ; une synthèse récente souligne d’importantes lacunes de connaissances sur la côte indienne."
+    },
+    "conservation": {
+      "en": "SeaLifeBase reports a global Least Concern assessment dated 15 February 2009.",
+      "fr": "SeaLifeBase rapporte une évaluation mondiale en préoccupation mineure datée du 15 février 2009."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hydrophis viperinus — SeaLifeBase",
+        "fr": "Hydrophis viperinus — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.ca/summary/83975",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase reports Indo-West Pacific range, reef-associated coastal habitat, depth, fish diet, maximum length and a 2009 global assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 18,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hydrophis viperinus — The Reptile Database",
+        "fr": "Hydrophis viperinus — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Hydrophis/viperinus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "The reptile taxonomy account lists older combinations and describes reproduction as ovoviviparous."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 12,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Insights into the rare Viperine sea snake — Indian Journal of Geo-Marine Sciences",
+        "fr": "Données sur le rare Hydrophis vipérine — Indian Journal of Geo-Marine Sciences"
+      },
+      "url": "https://scm.niscair.res.in/index.php/IJMS/article/view/7060",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Indian review discusses sparse coastal records, bycatch and strandings, and identifies research gaps."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 13,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2009 conservation assessment is old; no newer species-level global assessment was verified for this draft. Indian records do not establish abundance across the full range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the historical naming and the limited Indian-coast observations distinct from the broader Indo-West Pacific distribution."
+}

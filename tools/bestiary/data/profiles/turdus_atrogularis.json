@@ -1,0 +1,163 @@
+{
+  "id": "turdus_atrogularis",
+  "scientific": "Turdus atrogularis",
+  "group": "birds",
+  "name": {
+    "en": "Black-throated Thrush",
+    "fr": "Grive à gorge noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Black-throated Thrush breeds across eastern Eurasia and migrates south to Central and South Asia for winter.",
+      "fr": "La Grive à gorge noire niche dans l’est de l’Eurasie et migre vers l’Asie centrale et méridionale pour l’hiver."
+    },
+    "identification": {
+      "en": "The male has a grey back, white belly and black throat and chest; the female is brown-streaked below and lacks the male’s black throat.",
+      "fr": "Le mâle a le dos gris, le ventre blanc et la gorge et la poitrine noires ; la femelle est striée de brun dessous et n’a pas la gorge noire du mâle."
+    },
+    "habitat": {
+      "en": "It breeds in damp coniferous and mixed forests, often with dense undergrowth; in winter it also uses scrub, river woods and parks.",
+      "fr": "Elle niche dans des forêts humides de conifères ou mixtes, souvent à sous-bois dense ; en hiver, elle fréquente aussi les fourrés, les bois riverains et les parcs."
+    },
+    "diet": {
+      "en": "It takes invertebrates in the warm season and relies heavily on berries and other fruits in winter.",
+      "fr": "Elle consomme des invertébrés pendant la saison chaude et se nourrit beaucoup de baies et d’autres fruits en hiver."
+    },
+    "behavior": {
+      "en": "Outside the breeding season it often gathers in flocks, sometimes alongside other thrushes.",
+      "fr": "Hors de la saison de reproduction, elle se rassemble souvent en groupes, parfois avec d’autres grives."
+    },
+    "reproduction": {
+      "en": "The regional accounts consulted focus on migration and wintering and give little detail about nesting.",
+      "fr": "Les fiches régionales consultées portent surtout sur la migration et l’hivernage et donnent peu de détails sur la nidification."
+    },
+    "ecology": {
+      "en": "Central Asian winter flocks can include Fieldfares (T. pilaris); see that profile for this shared winter setting.",
+      "fr": "En Asie centrale, les groupes hivernants peuvent comprendre des litornes (T. pilaris) ; voir cette fiche pour ce contexte commun."
+    },
+    "conservation": {
+      "en": "The BTO lists it as Least Concern globally, while noting that it is a very rare vagrant in Britain.",
+      "fr": "Le BTO la classe en préoccupation mineure à l’échelle mondiale, tout en la signalant comme visiteuse très rare en Grande-Bretagne."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black-throated Thrush — eBird",
+        "fr": "Grive à gorge noire — eBird"
+      },
+      "url": "https://ebird.org/species/datthr1/RU",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "eBird distinguishes the adult male and female plumage and notes occasional confusion with Red-throated Thrush."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 15,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-throated Thrush — Birds.uz, Birds of Uzbekistan",
+        "fr": "Grive à gorge noire — Birds.uz, oiseaux d’Ouzbékistan"
+      },
+      "url": "https://www.birds.uz/species/399",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Russian regional account describes its Central Asian wintering, forest and city habitats, flocking, and gives little nesting detail."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 19,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-throated Thrush — Birds of Europe (Russian-language account)",
+        "fr": "Grive à gorge noire — Birds of Europe (fiche en russe)"
+      },
+      "url": "https://www.ebirds.ru/article/692.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The account describes seasonal food, Central Asian winter ecology and mixed flocks that may include Fieldfares."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 16,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-throated Thrush — BTO BirdFacts",
+        "fr": "Grive à gorge noire — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-throated-thrush",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BTO reports global Least Concern status and describes the species as a very rare British vagrant."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 16,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The habitat, food and flocking notes describe Central Asian wintering areas, not the full annual range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the Fieldfare cross-reference reflects a documented mixed-flock association, not taxonomic closeness beyond genus."
+}

@@ -1,0 +1,164 @@
+{
+  "id": "macaria_liturata",
+  "scientific": "Macaria liturata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Tawny-barred Angle",
+    "fr": "Philobie effacée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Tawny-barred Angle is a geometrid moth associated with coniferous woodland in Britain.",
+      "fr": "La Philobie effacée est un papillon géomètre associé aux boisements de conifères en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "Its wingspan is 22–27 mm; the dark form nigrofulvata is reported especially often in northern Britain.",
+      "fr": "Son envergure est de 22 à 27 mm ; la forme sombre nigrofulvata est surtout signalée dans le nord de la Grande-Bretagne."
+    },
+    "habitat": {
+      "en": "The British account describes it as fairly common through much of the islands, in landscapes with conifer woodland.",
+      "fr": "La fiche britannique le décrit comme assez commun dans une grande partie des îles, dans les paysages boisés de conifères."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on conifers, especially Scots pine.",
+      "fr": "Ses chenilles se nourrissent de conifères, surtout du pin sylvestre."
+    },
+    "behavior": {
+      "en": "A Finnish species account says it flies at dusk and at night and is attracted to light.",
+      "fr": "Une fiche finlandaise indique que le papillon vole au crépuscule et la nuit et qu’il est attiré par la lumière."
+    },
+    "reproduction": {
+      "en": "In Finland, the pupa overwinters; local flight timing differs from the British pattern.",
+      "fr": "En Finlande, la chrysalide hiverne ; le calendrier local diffère de celui rapporté en Grande-Bretagne."
+    },
+    "ecology": {
+      "en": "Like Macaria signaria, it is a congener whose larvae use conifers, although Scots pine is especially noted for this species.",
+      "fr": "Comme Macaria signaria, c’est un congénère dont les chenilles utilisent des conifères, mais le pin sylvestre est particulièrement signalé pour cette espèce."
+    },
+    "conservation": {
+      "en": "UKMoths describes it as fairly common in much of Britain; that regional account does not establish a global population trend.",
+      "fr": "UKMoths le décrit comme assez commun dans une grande partie de la Grande-Bretagne ; cette donnée régionale ne permet pas d’établir une tendance mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tawny-barred Angle — UKMoths",
+        "fr": "Tawny-barred Angle — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-liturata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths gives the wingspan, British distribution and habitat, Scots pine as a main foodplant, flight season and northern melanic form."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 20,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria liturata — Finnish Biodiversity Information Facility",
+        "fr": "Macaria liturata — Centre finlandais d’information sur la biodiversité"
+      },
+      "url": "https://laji.fi/taxon/MX.61556/biology",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Finnish-language species account reports dusk/night activity, attraction to light, an overwintering pupa and Scots pine as the larval host; ecology comparison also cross-checks a separate signaria record."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 27,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria signaria — Moth Photographers Group",
+        "fr": "Macaria signaria — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=6344&state=IA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "This related species also uses conifers; the account lists Pinaceae host genera for its larvae."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 15,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria liturata — Lepidoptera Mundi",
+        "fr": "Macaria liturata — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/417",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French-language vernacular-name table calls it Philobie effacée; the European record lists conifer and mixed-forest habitats and conifer hosts including Scots pine."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight and host details summarize British or North American accounts and should not be generalized to every population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UKMoths with a North American host account for the congener signaria. The ecology sentence points to the adjacent signaria profile for their shared conifer-feeding pattern."
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2704,
+  "name": "street_manhole",
+  "texture_top": "street:manhole",
+  "texture_side": "street:asphalt",
+  "texture_bottom": "street:asphalt",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_manhole",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

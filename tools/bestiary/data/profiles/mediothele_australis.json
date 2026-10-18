@@ -1,0 +1,120 @@
+{
+  "id": "mediothele_australis",
+  "scientific": "Mediothele australis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Mediothele australis",
+    "fr": "Médiothèle australe"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mediothele australis is a mygalomorph spider in the family Hexathelidae, native to Chile; the World Spider Catalog accepts the genus in that family.",
+      "fr": "Mediothele australis est une araignée mygalomorphe de la famille des Hexathelidae, indigène du Chili ; le World Spider Catalog accepte le genre dans cette famille."
+    },
+    "identification": {
+      "en": "It was originally described from an adult male, and its female was formally described later using diagnostic anatomical characters.",
+      "fr": "Elle a d’abord été décrite à partir d’un mâle adulte, puis sa femelle a été formellement décrite à l’aide de caractères anatomiques diagnostiques."
+    },
+    "habitat": {
+      "en": "It is known from Chile, including central and southern records, but its precise habitat and range are poorly documented.",
+      "fr": "Elle est connue du Chili, avec des mentions du centre et du sud, mais son habitat et son aire précise sont peu documentés."
+    },
+    "diet": {
+      "en": "No species-specific prey records were found; it is a predatory spider, but a more detailed diet cannot be established from the reviewed sources.",
+      "fr": "Aucune donnée propre à l’espèce sur ses proies n’a été trouvée ; c’est une araignée prédatrice, mais les sources examinées ne permettent pas de préciser son régime."
+    },
+    "behavior": {
+      "en": "The sources consulted focus on taxonomy and morphology, so behavior and web structure remain undocumented here.",
+      "fr": "Les sources consultées portent sur la taxonomie et la morphologie ; son comportement et la structure de sa toile restent donc non documentés ici."
+    },
+    "reproduction": {
+      "en": "The reviewed catalog and description papers provide no species-specific reproductive observations.",
+      "fr": "Les catalogues et articles descriptifs examinés ne donnent pas d’observations propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The original description established Mediothele from Chile, and later taxonomic work added several congeners while retaining M. australis as the type species.",
+      "fr": "La description originale a établi Mediothele au Chili ; des travaux taxonomiques ultérieurs ont ajouté plusieurs espèces apparentées tout en conservant M. australis comme espèce type."
+    },
+    "conservation": {
+      "en": "No global conservation assessment or population trend was located in the sources consulted.",
+      "fr": "Aucune évaluation mondiale de conservation ni tendance démographique n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mediothele australis — World Spider Catalog",
+        "fr": "Mediothele australis — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/19843",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The current catalog accepts M. australis in Hexathelidae, gives Chile as its distribution and lists the original description and later female description."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 22,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New species of Chilean Hexathelidae — Zootaxa 3422 (2012)",
+        "fr": "Nouvelles espèces de Hexathelidae du Chili — Zootaxa 3422 (2012)"
+      },
+      "url": "https://www.mapress.com/zootaxa/2012/f/z03422p051f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Taxonomic paper describes the female of M. australis for the first time and treats additional Chilean Mediothele species; it supplies taxonomic rather than field-ecology evidence."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 25,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is poorly studied outside taxonomic description; habitat, prey, behavior, reproduction and population status should be treated as unknown rather than inferred from relatives.",
+    "L’espèce est peu étudiée en dehors des descriptions taxonomiques ; habitat, proies, comportement, reproduction et état des populations doivent rester inconnus plutôt que d’être déduits de ses parentes."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked current placement and Chilean distribution in the World Spider Catalog against the original description and the later female description. Kept the life-history sections explicitly sparse because the taxonomic sources do not establish them."
+}

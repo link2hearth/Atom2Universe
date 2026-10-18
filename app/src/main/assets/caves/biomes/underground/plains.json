@@ -1,0 +1,36 @@
+{
+  "id": "us_plains",
+  "noise_offsets": [0, 0, 0],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": 0.50},
+    {"block": "sand", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.035,
+  "surface_variety_offset": 600,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 0.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.04,
+  "tree_density_noise_scale": 0.04,
+  "tree_type": "oak",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.0,
+  "decoration_density": 0.01,
+  "decoration_blocks": ["rock", "rock_moss"],
+  "vegetation_density": 0.22,
+  "vegetation_blocks": [
+    {"block": "grass_wild1", "weight": 1},
+    {"block": "grass_wild2", "weight": 1},
+    {"block": "grass_wild3", "weight": 1},
+    {"block": "grass_wild4", "weight": 1},
+    {"block": "grass_brown", "weight": 1},
+    {"block": "grass_tan", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

@@ -1,0 +1,335 @@
+{
+  "id": "grey_seal",
+  "scientific": "Halichoerus grypus",
+  "group": "mammals",
+  "name": {
+    "en": "Grey seal",
+    "fr": "Phoque gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey seal is a large North Atlantic mammal that hunts at sea and returns ashore to rest and breed. Its name means “hook-nosed sea pig,” describing the male’s arched muzzle.",
+      "fr": "Le phoque gris est un grand mammifère de l’Atlantique Nord qui chasse en mer et revient à terre pour se reposer et se reproduire. Son nom signifie « porc de mer au nez crochu » et décrit le museau arqué du mâle."
+    },
+    "identification": {
+      "en": "As a true seal, it has no external ear flaps and cannot turn its hind flippers forward to walk; on land it moves in a caterpillar-like undulation. Adult females commonly reach about 2.0–2.3 metres and 150–200 kilograms, while large males can exceed 2.3 metres and 300 kilograms. Females are usually lighter silver-grey or brown with dark spots; males tend to be darker, with a longer muzzle and pale patches. A thick blubber layer insulates the body and stores energy.",
+      "fr": "Comme les autres phoques véritables, il n’a pas de pavillons auriculaires externes et ne peut pas ramener ses nageoires postérieures vers l’avant pour marcher ; à terre, il avance par ondulations, comme une chenille. Les femelles adultes atteignent couramment 2 à 2,3 mètres et 150 à 200 kilogrammes, tandis que les grands mâles peuvent dépasser 2,3 mètres et 300 kilogrammes. Les femelles sont généralement gris argenté ou brunes avec des taches sombres ; les mâles sont plus foncés, ont le museau plus long et portent des marques pâles. Une épaisse couche de graisse isole le corps et emmagasine de l’énergie."
+    },
+    "habitat": {
+      "en": "It ranges along temperate and subarctic North Atlantic coasts, especially off Canada and north-western Europe. It rests and breeds on islands, reefs, sandbanks, rocky beaches and, in some regions, seasonal ice. The Baltic population is distinct from the eastern North Atlantic group.",
+      "fr": "Il fréquente les côtes tempérées et subarctiques de l’Atlantique Nord, surtout au Canada et en Europe du Nord-Ouest. Il se repose et se reproduit sur des îles, des récifs, des bancs de sable, des plages rocheuses et, dans certaines régions, sur la glace saisonnière. La population baltique est distincte de celle de l’Atlantique Nord-Est."
+    },
+    "diet": {
+      "en": "It catches fish near the seabed and in open water, especially sandeels, cod-family fish and flatfish, but also squid, octopus and some crustaceans. The local menu shifts with season and prey availability; adults may eat several kilograms daily, depending on body size and the energy content of their prey.",
+      "fr": "Il capture des poissons près du fond ou en pleine eau, surtout des lançons, des poissons de la famille des morues et des poissons plats, mais aussi des calmars, des poulpes et certains crustacés. Le menu local varie selon la saison et les proies disponibles ; un adulte peut consommer plusieurs kilogrammes par jour, selon sa taille et la richesse énergétique de ses proies."
+    },
+    "behavior": {
+      "en": "The foreflippers steer while the hind flippers propel the seal underwater. The species has been recorded diving to about 475 metres and remaining submerged for nearly an hour; these are upper reported capacities, not every hunt. At Sable Island, playback experiments showed that mothers distinguished their own pup’s call; at Isle of May, playback tests found no detectable discrimination, revealing variation between populations.",
+      "fr": "Les nageoires antérieures orientent le phoque, tandis que les postérieures le propulsent sous l’eau. Des phoques ont été enregistrés à près de 475 mètres de profondeur et presque une heure sous l’eau ; ce sont des capacités maximales rapportées, pas la durée de chaque chasse. À l’île Sable, des expériences de diffusion sonore ont montré que les mères distinguaient le cri de leur petit ; à l’île de May, les tests n’ont révélé aucune discrimination détectable, signe de différences entre populations."
+    },
+    "reproduction": {
+      "en": "After mating, a dormant embryo delays uterine implantation for about three months, timing birth for the following breeding season. Births fall in autumn in much of the eastern Atlantic, winter in the west and late winter in the Baltic. A female usually gives birth to one white-coated pup and nurses it for about two to three weeks on energy-rich milk. On studied Atlantic breeding grounds, mothers fast during lactation and use stored reserves; after weaning they return to sea. Females often return to familiar colonies, where dominant males may mate with several females. The pup sheds its lanugo near weaning and remains ashore while it matures before entering the sea without further maternal care. At Isle of May, pups can fast ashore for several weeks after weaning; timing varies among colonies.",
+      "fr": "Après l’accouplement, l’embryon reste dormant environ trois mois avant l’implantation, ce qui ajuste la naissance à la saison de reproduction suivante. Les naissances ont lieu en automne dans une grande partie de l’Atlantique oriental, en hiver à l’ouest et en fin d’hiver en Baltique. La femelle met généralement bas un seul petit au pelage blanc et l’allaite environ deux à trois semaines avec un lait très énergétique. Sur les sites atlantiques étudiés, les mères jeûnent pendant l’allaitement et utilisent leurs réserves ; après le sevrage, elles repartent en mer. Les femelles reviennent souvent aux colonies connues, où les mâles dominants peuvent s’accoupler avec plusieurs femelles. Le petit perd son lanugo près du sevrage et reste à terre pendant qu’il se développe, avant de gagner la mer sans soins maternels supplémentaires. À l’île de May, les jeunes peuvent jeûner plusieurs semaines à terre après le sevrage ; le calendrier varie selon les colonies."
+    },
+    "ecology": {
+      "en": "Grey seals alternate feeding trips with visits ashore to rest, moult and breed, sometimes travelling far offshore before returning to familiar areas. Their fish consumption links them to marine food webs and fisheries. Some North Sea porpoise carcasses show injuries judged consistent with grey seal predation, although its frequency remains uncertain.",
+      "fr": "Les phoques gris alternent les sorties alimentaires et les retours à terre pour se reposer, muer et se reproduire, parfois après de longs trajets au large. En consommant des poissons, ils s’insèrent dans les réseaux alimentaires marins et interagissent avec les pêcheries. Certaines carcasses de marsouins de mer du Nord portent des blessures jugées compatibles avec une prédation par le phoque gris, dont la fréquence reste incertaine."
+    },
+    "conservation": {
+      "en": "In the Baltic, hunting and pollution had sharply reduced grey seal numbers by the 1970s; the monitored population has since increased over several decades. HELCOM’s regional 2024 Red List assessment classed the population as Least Concern, but cites coastal development, fishing-gear entanglement and contaminants; warming could shift more pupping from ice onto land, where pup survival is lower, potentially affecting population growth. In U.S. waters, the species is protected under the Marine Mammal Protection Act, although vessel strikes and disturbance remain local concerns. HELCOM’s 2024 account also reports Least Concern for global IUCN status.",
+      "fr": "En Baltique, la chasse et la pollution avaient fortement réduit les phoques gris dans les années 1970 ; la population suivie a depuis augmenté pendant plusieurs décennies. L’évaluation régionale HELCOM 2024 classe la population en préoccupation mineure, mais cite l’aménagement côtier, l’enchevêtrement dans les engins de pêche et les contaminants ; le réchauffement pourrait déplacer davantage de naissances de la glace vers la terre, où la survie des jeunes est moindre, avec un effet possible sur la croissance de la population. Dans les eaux américaines, l’espèce est protégée par le Marine Mammal Protection Act, mais les collisions avec les bateaux et les dérangements restent des risques locaux. La fiche HELCOM de 2024 indique aussi un classement mondial UICN en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gray Seal — NOAA Fisheries",
+        "fr": "Phoque gris — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/gray-seal",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Females: 2.0–2.3 m, 150–200 kg; large males: >2.3 m, >300 kg."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 11,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scientific Advice on Matters Related to the Management of Seal Populations: 2019",
+        "fr": "Avis scientifique sur la gestion des populations de phoques : 2019"
+      },
+      "url": "https://www.smru.st-andrews.ac.uk/files/2020/08/SCOS-2019.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "UK stock report summarizes diet, movements and breeding"
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 8,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Grey Seal Milk Shows Continuous Changes in Key Metabolites",
+        "fr": "Le lait du phoque gris atlantique évolue continuellement en métabolites clés"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2020.596904/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Isle of May mothers fast during lactation"
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 7,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "HELCOM Red List II: Grey Seal Species Information Sheet",
+        "fr": "Liste rouge HELCOM II : fiche d’information sur le phoque gris"
+      },
+      "url": "https://helcom.fi/wp-content/uploads/2025/11/HELCOM-Red-List-II-Halichoerus-grypus.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Baltic population: regional 2024 Least Concern assessment"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.en.4",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "conservation.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 7,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Assessing Harbour Porpoise Carcasses Potentially Subjected to Grey Seal Predation",
+        "fr": "Évaluation des carcasses de marsouins possiblement victimes du phoque gris"
+      },
+      "url": "https://www.nature.com/articles/s41598-020-73258-y",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Necropsy criteria for suspected porpoise predation cases"
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 7,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gray Seal | Smithsonian’s National Zoo",
+        "fr": "Phoque gris | Smithsonian’s National Zoo"
+      },
+      "url": "https://www.nationalzoo.si.edu/animals/gray-seal",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Delayed implantation times birth to breeding season"
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 7,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mother–pup Vocal Recognition in the Grey Seal",
+        "fr": "Reconnaissance vocale entre la mère et le petit chez le phoque gris"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/abs/10.1111/j.1469-7998.2000.tb00800.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Sable Island mothers discriminate among pup calls"
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 7,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey Seal | The Mammal Society",
+        "fr": "Phoque gris | The Mammal Society"
+      },
+      "url": "https://mammal.org.uk/british-mammals/grey-seal",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Fish are staple prey; seals occupy North Atlantic coasts"
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 9,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "What’s the Difference Between Seals and Sea Lions? | NOAA Ocean Service",
+        "fr": "Quelle différence entre phoques et otaries ? | NOAA Ocean Service"
+      },
+      "url": "https://oceanservice.noaa.gov/facts/seal-sealion.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Phocids lack ear flaps and cannot turn hind flippers forward"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Grey seal (Halichoerus grypus), adult female and pup on a North Atlantic shore; accurate phocid body, no external ear flaps, pale spotted female coat, white lanugo pup; no text or labels.",
+  "uncertainties": [
+    "Post-weaning fasting duration varies by colony; the several-week example comes from the Isle of May study population.",
+    "The North Sea carcass study identifies possible or likely grey seal predation in some cases but does not establish its frequency across the species range.",
+    "Global IUCN LC is reported in HELCOM 2024; that sheet does not provide an exact global assessment date. The original Bowen 2016 DOI was identified but inaccessible; no original assessment day is claimed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; detectable call discrimination scoped to playback tests, maternal and post-weaning fasting clarified, delayed implantation explained, global IUCN category reported via dated HELCOM account without invented assessment date. Illustration revision 2 independently accepted."
+}

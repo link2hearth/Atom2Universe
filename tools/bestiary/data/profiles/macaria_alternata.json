@@ -1,0 +1,143 @@
+{
+  "id": "macaria_alternata",
+  "scientific": "Macaria alternata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sharp-angled Peacock",
+    "fr": "Philobie alternée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Macaria alternata is a geometrid moth also known as the Sharp-angled Peacock; it is readily confused with its close look-alike, Macaria notata, the Peacock Moth.",
+      "fr": "Macaria alternata est un papillon de nuit géométridé aussi appelé Sharp-angled Peacock ; il se confond facilement avec Macaria notata, la Peacock Moth, qui lui ressemble beaucoup."
+    },
+    "identification": {
+      "en": "Compared with M. notata, it usually has a deeper notch near the forewing tip and a darker, often broken edge band, but difficult specimens may need expert examination.",
+      "fr": "Par rapport à M. notata, elle présente généralement une encoche plus profonde près de la pointe de l’aile antérieure et une bande marginale plus sombre, souvent interrompue ; les spécimens difficiles peuvent nécessiter un examen spécialisé."
+    },
+    "habitat": {
+      "en": "It occurs in deciduous and mixed woodland, clearings and scrub; British records also include sand dunes.",
+      "fr": "Elle fréquente les boisements de feuillus ou mixtes, les clairières et les broussailles ; les observations britanniques comprennent aussi des dunes sableuses."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on several deciduous shrubs and trees, including willows, alder, blackthorn and sea-buckthorn.",
+      "fr": "Ses chenilles se nourrissent de plusieurs arbres et arbustes caducifoliés, notamment des saules, de l’aulne, du prunellier et de l’argousier."
+    },
+    "behavior": {
+      "en": "Adults are active around dusk and are attracted to lights.",
+      "fr": "Les adultes sont actifs au crépuscule et attirés par les lumières."
+    },
+    "reproduction": {
+      "en": "In Belgium it has two adult generations from spring into late summer, and the pupa overwinters underground in a cocoon.",
+      "fr": "En Belgique, elle présente deux générations adultes du printemps à la fin de l’été, et la chrysalide hiverne sous terre dans un cocon."
+    },
+    "ecology": {
+      "en": "The shared name and similar wing pattern can obscure its distinction from M. notata, so the deeper forewing notch is a useful but not infallible field clue.",
+      "fr": "Le nom commun et le motif alaire proche peuvent faire confondre l’espèce avec M. notata ; l’encoche plus profonde de l’aile antérieure est un indice utile sur le terrain, mais pas infaillible."
+    },
+    "conservation": {
+      "en": "The sources consulted document it across several European countries but do not provide a current population trend or global threat assessment.",
+      "fr": "Les sources consultées la signalent dans plusieurs pays européens, mais ne fournissent ni tendance actuelle des effectifs ni évaluation mondiale des menaces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sharp-angled Peacock — UKMoths",
+        "fr": "Philobie alternée — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-alternata/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The forewing notch and hindwing border distinguish it from Macaria notata; UK habitat includes woodland and sand dunes, and larvae use willows, alder, blackthorn and sea-buckthorn."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 26,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria alternata — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Macaria alternata — Catalogue des Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5190/",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Belgian account: adults active at dusk and attracted to light; two generations, mid-April to late August; pupa overwinters in a subterranean cocoon."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 22,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria alternata — Lepidoptera Mundi",
+        "fr": "Macaria alternata — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/593",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The European species page lists deciduous and mixed woodland, clearings and scrub, and identifies Macaria notata as a similar species; country records include France, Austria, Germany and Poland."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 28,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The number and timing of generations can vary with region; the two-generation statement applies to the Belgian account.",
+    "No current global conservation assessment was located in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UKMoths, the Belgian biodiversity catalogue and multilingual Lepidoptera Mundi records; M. notata is named as a close look-alike, not asserted to be a proven sister species."
+}

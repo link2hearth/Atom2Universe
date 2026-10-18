@@ -1,0 +1,167 @@
+{
+  "id": "lymnocryptes_minimus",
+  "scientific": "Lymnocryptes minimus",
+  "group": "birds",
+  "name": {
+    "en": "Jack Snipe",
+    "fr": "Bécassine sourde"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Jack Snipe is a secretive migratory wader and a winter visitor to Britain.",
+      "fr": "La Bécassine sourde est un limicole migrateur discret et un visiteur hivernal de Grande-Bretagne."
+    },
+    "identification": {
+      "en": "At 17–19 cm long, it is smaller and shorter-billed than the Common Snipe, Gallinago gallinago, and often crouches in cover until approached closely.",
+      "fr": "Longue de 17 à 19 cm, elle est plus petite et a le bec plus court que la Bécassine des marais, Gallinago gallinago, et reste souvent accroupie dans le couvert jusqu’à ce qu’on l’approche."
+    },
+    "habitat": {
+      "en": "It breeds in wet grassland, bogs and marshes in northern Europe and Russia, then uses vegetated wetlands and flooded ground during migration and winter.",
+      "fr": "Elle niche dans les prairies humides, tourbières et marais du nord de l’Europe et de la Russie, puis fréquente les zones humides végétalisées et les terrains inondés pendant la migration et l’hiver."
+    },
+    "diet": {
+      "en": "Its food includes adult and larval insects, worms, small snails, and some seeds and aquatic plant material.",
+      "fr": "Son alimentation comprend des insectes adultes et larvaires, des vers, de petits escargots, ainsi que quelques graines et végétaux aquatiques."
+    },
+    "behavior": {
+      "en": "When flushed, it usually makes a short, low flight and drops back into cover, unlike the Common Snipe’s more conspicuous zigzag escape.",
+      "fr": "Lorsqu’elle est dérangée, elle effectue généralement un vol bref et bas avant de se reposer dans le couvert, contrairement au vol d’évasion en zigzag plus visible de la Bécassine des marais."
+    },
+    "reproduction": {
+      "en": "The usual clutch has four eggs, incubated by the female. It breeds in the far north during the warmer months.",
+      "fr": "La ponte habituelle compte quatre œufs, couvés par la femelle. L’espèce se reproduit dans l’extrême nord pendant les mois chauds."
+    },
+    "ecology": {
+      "en": "Its camouflage and habit of remaining motionless make it easy to overlook, so British records may understate how often it occurs.",
+      "fr": "Son camouflage et son habitude de rester immobile la rendent facile à manquer ; les observations britanniques peuvent donc sous-estimer sa fréquence."
+    },
+    "conservation": {
+      "en": "The current BTO account lists it as globally Least Concern, while the LPO identifies wetland loss and degradation and lead poisoning as pressures.",
+      "fr": "La fiche actuelle du BTO la classe en préoccupation mineure à l’échelle mondiale, tandis que la LPO cite la perte et la dégradation des zones humides ainsi que l’intoxication au plomb parmi les pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Jack Snipe — BTO BirdFacts",
+        "fr": "Bécassine sourde — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jack-snipe",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "In Britain it is a winter visitor with no confirmed breeding records; adult mean mass is 58.7 g, usual clutch four, female incubation 17–24 days, and global IUCN category Least Concern."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 31,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bécassine sourde — Ligue pour la Protection des Oiseaux",
+        "fr": "Bécassine sourde — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/becassine-sourde",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The LPO describes a fully migratory species, its wet northern breeding grounds, western wintering range, secretive behaviour, and threats from wetland degradation and lead ingestion."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 25,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lymnocryptes minimus — IUCN Red List, BirdLife International assessment",
+        "fr": "Lymnocryptes minimus — Liste rouge de l’UICN, évaluation de BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22693133A86640472.en",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The IUCN page reproduces the 2016 BirdLife assessment; it describes northern marsh and bog breeding habitat and a diet of insects, worms, small gastropods and some plant matter."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 28,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jack Snipe — RSPB",
+        "fr": "Bécassine sourde — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/jack-snipe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "RSPB describes the Jack Snipe as smaller and more compact than the Common Snipe, with a shorter bill; it crouches in cover and flushes low."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 25,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN page found during research is the 2016 assessment and explicitly points to a newer assessment; its older population estimates were not reused.",
+    "The description of British winter habits should not be mistaken for the species’ full northern breeding range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English BTO data with the French LPO account and BirdLife material reproduced on IUCN; comparison with the existing Common Snipe profile is explicit."
+}

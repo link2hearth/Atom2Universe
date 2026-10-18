@@ -1,0 +1,140 @@
+{
+  "id": "schinia_cognata",
+  "scientific": "Schinia cognata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cognate flower moth",
+    "fr": "Héliothine du laitron"
+  },
+  "sections": {
+    "overview": {
+      "en": "This noctuid moth is recorded across parts of southeastern Europe and western Asia.",
+      "fr": "Cette noctuelle est signalée dans certaines régions du sud-est de l’Europe et de l’Asie occidentale."
+    },
+    "identification": {
+      "en": "It belongs to Schinia, in the heliothine subfamily of Noctuidae.",
+      "fr": "Elle appartient au genre Schinia, dans la sous-famille des Heliothinae (Noctuidae)."
+    },
+    "habitat": {
+      "en": "It is associated with warm, dry places such as steppe, sandy grassland and dry slopes.",
+      "fr": "Elle est associée aux milieux chauds et secs, comme les steppes, pelouses sableuses et pentes arides."
+    },
+    "diet": {
+      "en": "The larvae feed on Chondrilla juncea, a plant in the daisy family.",
+      "fr": "Les chenilles se nourrissent de Chondrilla juncea, une plante de la famille des Astéracées."
+    },
+    "behavior": {
+      "en": "Adults fly by day, usually from late June to mid-August.",
+      "fr": "Les adultes volent le jour, généralement de la fin juin à la mi-août."
+    },
+    "reproduction": {
+      "en": "Larvae occur on the host plant’s flowers and fruits in late summer.",
+      "fr": "À la fin de l’été, les chenilles se trouvent sur les fleurs et les fruits de la plante hôte."
+    },
+    "ecology": {
+      "en": "A molecular study groups it with S. cardui; both were specialists on the plant tribe Lactuceae in that study.",
+      "fr": "Une étude moléculaire la regroupe avec S. cardui ; dans cette étude, les deux espèces étaient spécialisées sur la tribu végétale des Lactuceae."
+    },
+    "conservation": {
+      "en": "The Belgian catalogue treats it as an exotic visitor there and records one specimen from 1909.",
+      "fr": "Le catalogue belge la considère comme visiteuse exotique et mentionne un spécimen de 1909."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Schinia cognata — Lepiforum",
+        "fr": "Schinia cognata — Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Schinia_Cognata",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The German-language Lepiforum account treats S. cognata as a European and western Asian moth and provides taxonomic and identification records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 20,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Schinia cognata — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Schinia cognata — Catalogue des lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/7839/",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Belgian catalogue reports the dry habitat, host plant Chondrilla juncea, daytime activity, seasonal flight and a single 1909 Belgian record, treated as exotic."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 24,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogenetics of heliothine moths — Systematic Entomology",
+        "fr": "Phylogénie moléculaire des héliothines — Systematic Entomology"
+      },
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1111/j.1365-3113.2008.00427.x",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The study recovers S. cardui and S. cognata as a strongly supported sister pair and identifies them as the only sampled Lactuceae specialists."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 23,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Belgian catalogue describes a single historical record outside the species’ usual eastern European range; it is not evidence of an established Belgian population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

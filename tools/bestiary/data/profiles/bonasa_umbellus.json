@@ -1,0 +1,162 @@
+{
+  "id": "bonasa_umbellus",
+  "scientific": "Bonasa umbellus",
+  "group": "birds",
+  "name": {
+    "en": "Ruffed Grouse",
+    "fr": "Gélinotte huppée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Ruffed Grouse is a forest-dwelling grouse native to North America. It is the sole living species of Bonasa, within the pheasant family Phasianidae.",
+      "fr": "La Gélinotte huppée est un tétraonidé forestier originaire d’Amérique du Nord. C’est l’unique espèce vivante du genre Bonasa, au sein de la famille des faisans, les Phasianidae."
+    },
+    "identification": {
+      "en": "It has a short crest, broad fan-shaped tail and dark neck ruff, which males display. Plumage occurs in gray, brown and rufous color forms.",
+      "fr": "Elle porte une courte huppe, une large queue en éventail et une collerette sombre que le mâle déploie. Son plumage existe sous des formes grises, brunes et rousses."
+    },
+    "habitat": {
+      "en": "It uses mixed and deciduous forests with dense understory and a patchwork of young and older growth. Aspen is especially important in much of the northern range, while other hardwood forests provide habitat farther south.",
+      "fr": "Elle fréquente les forêts mixtes et feuillues à sous-bois dense, dans une mosaïque de peuplements jeunes et âgés. Le tremble est particulièrement important dans le nord de son aire; plus au sud, d’autres forêts feuillues conviennent."
+    },
+    "diet": {
+      "en": "Adults eat buds, catkins, twigs, fruits, seeds and herbs, with foods varying by season and region. Chicks rely heavily on insects during their first weeks.",
+      "fr": "Les adultes consomment bourgeons, chatons, rameaux, fruits, graines et herbes selon la saison et la région. Durant leurs premières semaines, les poussins dépendent beaucoup des insectes."
+    },
+    "behavior": {
+      "en": "Males advertise from territories with a rapid wing-drum that sounds like a low throb. The display peaks in spring and gives the species its familiar drumming call.",
+      "fr": "Les mâles signalent leur territoire par un roulement d’ailes rapide qui produit un grondement sourd. Cette parade culmine au printemps et donne à l’espèce son tambourinage caractéristique."
+    },
+    "reproduction": {
+      "en": "The female nests on the ground, usually laying about seven to twelve eggs and incubating them for roughly 23 to 24 days. Chicks leave the nest soon after hatching and are cared for by the female.",
+      "fr": "La femelle niche au sol; sa ponte compte généralement environ sept à douze œufs qu’elle couve durant quelque 23 à 24 jours. Les poussins quittent le nid peu après l’éclosion et sont élevés par la femelle."
+    },
+    "ecology": {
+      "en": "Its need for dense cover, young forest patches and seasonal food makes forest structure important year-round. Aspen supplies key winter buds in northern populations, while insect-rich openings help broods.",
+      "fr": "Son besoin de couvert dense, de secteurs forestiers jeunes et de nourriture saisonnière rend la structure forestière importante toute l’année. Le tremble fournit des bourgeons essentiels en hiver dans le nord, tandis que les clairières riches en insectes profitent aux couvées."
+    },
+    "conservation": {
+      "en": "The species is secure across much of its range but depends on forest mosaics maintained by disturbance or active management. Local declines can follow loss of young forest and dense understory.",
+      "fr": "L’espèce est sûre dans une grande partie de son aire, mais dépend de mosaïques forestières entretenues par les perturbations ou la gestion. Des déclins locaux peuvent suivre la disparition des jeunes forêts et du sous-bois dense."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bonasa umbellus — USDA Forest Service Fire Effects Information System",
+        "fr": "Bonasa umbellus — système d’information du Service des forêts des États-Unis"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/boum",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "USFS synthesis summarizes forest structure, seasonal foods, wing-drumming, clutch sizes and incubation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 12,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ruffed Grouse — Indiana Department of Natural Resources",
+        "fr": "Gélinotte huppée — Département des ressources naturelles de l’Indiana"
+      },
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/ruffed-grouse/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Indiana DNR describes North American range, plumage forms and dependence on forested areas."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 13,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grévol engolado — Oiseaux.net Spanish-language account",
+        "fr": "Gélinotte huppée — fiche espagnole Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/es/oiseaux/gelinotte.huppee.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish-language ornithological account independently covers range, forest habitat, diet and nesting."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 11,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat and population trends differ across the broad range; the conservation summary is not a regional status assessment."
+  ],
+  "review_note": "Cross-checked a US Forest Service synthesis and a state wildlife profile with a Spanish-language ornithological account; emphasized forest structure and seasonal diet.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

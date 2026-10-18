@@ -1,0 +1,171 @@
+{
+  "id": "parascyllium_sparsimaculatum",
+  "scientific": "Parascyllium sparsimaculatum",
+  "group": "fish",
+  "name": {
+    "en": "Ginger carpet shark",
+    "fr": "Requin-carpette beige"
+  },
+  "sections": {
+    "overview": {
+      "en": "The ginger carpetshark is a rarely recorded member of the Australian collar carpetsharks, known from a short stretch of Western Australia.",
+      "fr": "Le requin-carpette beige est un requin-carpette australien rarement observé, connu sur une courte portion de la côte d’Australie-Occidentale."
+    },
+    "identification": {
+      "en": "Its pale brown body bears a few relatively large, diffuse rusty spots and a faint collar-shaped mark behind the gills. The largest documented specimen was 78 cm long.",
+      "fr": "Son corps brun pâle porte quelques grandes taches rouille diffuses et une marque peu visible en forme de collier derrière les branchies. Le plus grand spécimen documenté mesurait 78 cm."
+    },
+    "habitat": {
+      "en": "It is recorded off southwestern Western Australia, from Fremantle to Cape Leeuwin. The three known specimens came from the upper continental slope at about 204–245 m.",
+      "fr": "Il est signalé au large du sud-ouest de l’Australie-Occidentale, de Fremantle au cap Leeuwin. Les trois spécimens connus proviennent de la partie supérieure du talus continental, vers 204–245 m."
+    },
+    "diet": {
+      "en": "Its diet has not been established; the available species accounts describe its biology as unknown.",
+      "fr": "Son régime alimentaire n’est pas établi; les fiches disponibles indiquent que sa biologie reste inconnue."
+    },
+    "behavior": {
+      "en": "Species-specific behavior has not been documented in the sources consulted.",
+      "fr": "Les sources consultées ne décrivent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The FAO account classifies it as egg-laying, but the known specimens do not reveal its reproductive cycle.",
+      "fr": "La fiche de la FAO le classe parmi les espèces ovipares, mais les spécimens connus ne renseignent pas son cycle reproducteur."
+    },
+    "ecology": {
+      "en": "It is a deep-water relative of the varied carpetshark, P. variolatum, which is more broadly recorded in southern Australian coastal waters. Unlike that nearshore species, P. sparsimaculatum is known only from the upper slope off southwestern Australia.",
+      "fr": "C’est un parent du requin-carpette varié, P. variolatum, signalé plus largement dans les eaux côtières du sud de l’Australie. À la différence de cette espèce côtière, P. sparsimaculatum n’est connu que du haut du talus au large du sud-ouest australien."
+    },
+    "conservation": {
+      "en": "Its IUCN status is Data Deficient: the small number of records and lack of population data prevent a reliable risk estimate.",
+      "fr": "Son statut UICN est « données insuffisantes » : le faible nombre d’observations et l’absence de données démographiques empêchent une estimation fiable du risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ginger Carpetshark — Fishes of Australia, Australian National Fish Collection",
+        "fr": "Requin-carpette beige — Fishes of Australia, collection nationale australienne de poissons"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3289",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "CSIRO-hosted account describes its colour pattern, range and original 2002 description."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 11,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ginger Carpetshark — Australian Fisheries Status Reports",
+        "fr": "Requin-carpette beige — rapports australiens sur l’état des pêcheries"
+      },
+      "url": "https://www.fish.gov.au/docs/SharkReport/FRDC_Parascyllium_sparsimaculatum.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "National report: three specimens known, upper slope records at 204–245 m, 78 cm maximum, biology unknown and global status Data Deficient."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 21,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Deep-Sea Cartilaginous Fishes of the Indian Ocean, Vol. 1 — FAO/IUCN Shark Specialist Group",
+        "fr": "Poissons cartilagineux profonds de l’océan Indien, vol. 1 — FAO/Groupe de spécialistes des requins de l’UICN"
+      },
+      "url": "https://www.iucnssg.org/uploads/5/4/1/2/54120303/2013_-_deep%E2%80%93sea_cartilaginous_fishes_of_the_indian_ocean_-_volume_1_-_sharks.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "FAO account records the species as oviparous and gives the French FAO common name."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 14,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Varied Carpetshark — Australian Museum",
+        "fr": "Requin-carpette varié — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/varied-carpetshark-parascyllium-variolatum-dumril-1853/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Australian Museum account places P. variolatum in temperate southern Australian inshore waters."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 12,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific feeding and behavior have not been described in the sources consulted.",
+    "The published range is based on very few specimens; treat it as the known record, not proof of continuous occupancy."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft préparé à partir de Fishes of Australia, du rapport national australien et du catalogue FAO multilingue. Comparaison réciproque avec P. variolatum par profondeur et aire connue."
+}

@@ -1,0 +1,91 @@
+{
+  "id": "ochotona_koslowi",
+  "scientific": "Ochotona koslowi",
+  "group": "mammals",
+  "name": {
+    "en": "Kozlov’s Pika",
+    "fr": "Pika de Kozlov"
+  },
+  "sections": {
+    "overview": {
+      "en": "Kozlov’s pika is a rare pika living only in the high mountains of western China. It was collected in 1884 and described in 1894, then went unseen by scientists for about a century until its rediscovery in 1984. It is listed as Endangered, largely because so little is known about it.",
+      "fr": "Le pika de Kozlov est un pika rare qui vit seulement dans les hautes montagnes de l’ouest de la Chine. Il a été collecté en 1884 et décrit en 1894, puis il est resté sans observation scientifique pendant près d’un siècle jusqu’à sa redécouverte en 1984. Il est classé en danger, en grande partie parce qu’on en sait très peu."
+    },
+    "identification": {
+      "en": "A medium-sized pika with a body of 170–240 mm and a weight of 100–300 g. White lips and an almost cubic skull set it apart from the Ladakh pika and the plateau pika, two species it can be mistaken for: some museum specimens labelled as Kozlov’s pika actually belong to those species.",
+      "fr": "Pika de taille moyenne, avec un corps de 170 à 240 mm et un poids de 100 à 300 g. Des lèvres blanches et un crâne presque cubique le distinguent du pika du Ladakh et du pika des plateaux, avec lesquels on peut le confondre : certains spécimens de musée étiquetés pika de Kozlov appartiennent en réalité à ces espèces."
+    },
+    "habitat": {
+      "en": "It lives in alpine grassland and mountain steppe at about 4,100–4,800 m, on high, isolated mountains near the meeting point of Qinghai, Xinjiang and Tibet. Records come from the Kunlun Mountains, the Kongka mountains and the Aerjin Mountain Nature Reserve. The first animals, in 1884, were found in burrows dug in mounds of salty loess. Its range is very fragmented, with about 800 km between some subpopulations.",
+      "fr": "Il vit dans les prairies alpines et la steppe de montagne, vers 4 100 à 4 800 m, sur des montagnes hautes et isolées près du point de rencontre du Qinghai, du Xinjiang et du Tibet. Les signalements viennent des monts Kunlun, des monts Kongka et de la réserve naturelle du mont Aerjin. Les premiers animaux, en 1884, ont été trouvés dans des terriers creusés dans des buttes de loess salé. Son aire est très morcelée, avec environ 800 km entre certaines sous-populations."
+    },
+    "diet": {
+      "en": "It eats green plants, and 15 plant species have been recorded in its diet. No hay-making has been documented for it.",
+      "fr": "Il mange des plantes vertes, et 15 espèces de plantes ont été relevées dans son régime. Aucune constitution de réserves de foin n’a été documentée chez lui."
+    },
+    "behavior": {
+      "en": "It is active by day and lives in communal family groups, in burrows with several entrances. Densities of roughly 300–400 animals per km² have been reported, but the sources warn that some older studies may have involved other pika species, so these figures deserve caution.",
+      "fr": "Il est actif le jour et vit en groupes familiaux communautaires, dans des terriers à plusieurs entrées. Des densités d’environ 300 à 400 animaux par km² ont été rapportées, mais les sources avertissent que certaines études anciennes ont pu porter sur d’autres espèces de pikas : ces chiffres demandent donc de la prudence."
+    },
+    "reproduction": {
+      "en": "Little is known. Litters of 4–8 embryos have been recorded and a second breeding in the same season has been reported. Gestation, weaning and lifespan are not documented in the sources read.",
+      "fr": "On en sait peu. Des portées de 4 à 8 embryons ont été relevées et une seconde reproduction a été signalée. La gestation, le sevrage et la longévité ne sont pas documentés dans les sources lues."
+    },
+    "ecology": {
+      "en": "Its role in its ecosystem has not been studied. It is probably a sister species of the Ladakh pika and may be an ancestral lineage in decline, according to a review of the genus.",
+      "fr": "Son rôle dans l’écosystème n’a pas été étudié. Il est probablement une espèce sœur du pika du Ladakh et pourrait être une lignée ancestrale en déclin, selon une synthèse sur le genre."
+    },
+    "conservation": {
+      "en": "It is listed as Endangered because little is known about its distribution and abundance. Little new information has appeared since 1998, and its current status is unknown at two of its three known locations. A climate model has predicted a decrease in the species, with no date given. More fieldwork is needed to plan its protection.",
+      "fr": "Il est classé en danger parce qu’on connaît mal sa répartition et son abondance. Peu d’informations nouvelles sont parues depuis 1998, et son état actuel est inconnu dans deux de ses trois localités connues. Un modèle climatique a prédit un recul de l’espèce, sans date. Davantage de travail de terrain est nécessaire pour planifier sa protection."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ochotona koslowi — Handbook of the Mammals of the World treatment (Zenodo record)",
+        "fr": "Ochotona koslowi — notice du Handbook of the Mammals of the World (dépôt Zenodo)"
+      },
+      "url": "https://zenodo.org/records/6617953",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Body 170–240 mm, 100–300 g; white lips and nearly cubic skull; alpine grassland and mountain steppe at 4,100–4,800 m; 15 food plants; diurnal, family groups, roughly 300–400 per km².",
+        "Litters of 4–8 embryos, a second breeding reported; some museum specimens are other species; Endangered for lack of data."
+      ]
+    },
+    {
+      "title": {
+        "en": "State of knowledge and conservation of endangered and critically endangered lagomorphs worldwide — Therya (2015)",
+        "fr": "État des connaissances et conservation des lagomorphes en danger et en danger critique dans le monde — Therya (2015)"
+      },
+      "url": "https://www.redalyc.org/journal/4023/402336276002/html/",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "ecology", "conservation"],
+      "facts": [
+        "Rediscovered in 1984; very restricted and fragmented distribution, 800 km between subpopulations; status unknown at two of three locations; little new information since 1998.",
+        "Probably sister species of the Ladakh pika; a bioclimatic model predicts decline; Endangered."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ochotona koslowi — Mammal Diversity Database",
+        "fr": "Ochotona koslowi — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1001164",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Described by Büchner in 1894; endemic to China; animals found in December 1884 at about 14,000 feet in burrows in mounds of saline loess; IUCN status Endangered."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; Endangered comes from the Mammal Diversity Database, the Handbook treatment and the 2015 review, and the date of the assessment was not checked.",
+    "Density and habitat figures come from a handbook summary and may include records of other pika species, as the same source warns.",
+    "No source read describes the coat colour or ear shape; the identification relies on the white lips and the skull.",
+    "Reproduction is poorly known; the figures given are embryo counts, not litter sizes at birth."
+  ],
+  "reviewed": true,
+  "review_note": "Based on a mammal handbook treatment, a review article and the Mammal Diversity Database; very little field data exist; illustration to be checked by the owner."
+}

@@ -1,0 +1,200 @@
+{
+  "id": "amatitlania_siquia",
+  "scientific": "Amatitlania siquia",
+  "group": "fish",
+  "name": {
+    "en": "Siquia convict cichlid",
+    "fr": "Cichlidé du Siquia"
+  },
+  "sections": {
+    "overview": {
+      "en": "Amatitlania siquia is a freshwater cichlid native to Central America. It belongs to the convict-cichlid group, whose species boundaries remain under study.",
+      "fr": "Amatitlania siquia est un Cichlidé d’eau douce d’Amérique centrale. Il appartient au groupe des cichlidés zébrés, dont les limites entre espèces restent à l’étude."
+    },
+    "identification": {
+      "en": "Its relatively deep, laterally compressed body usually has about six diffuse dark bars, with the third more conspicuous as an oval blotch; the first bar is not forked. FishBase reports a maximum standard length of 7.9 cm for a male or unsexed specimen. A Costa Rican reserve paper illustrates a mature female of about 6.4 cm and male of about 5.3 cm standard length, local examples rather than sex-specific maxima. No reliable height, width or body-mass data were found.",
+      "fr": "Son corps relativement haut et comprimé latéralement porte généralement environ six bandes sombres diffuses, dont la troisième est plus marquée et forme une tache ovale; la première bande n’est pas bifide. FishBase indique une longueur standard maximale de 7,9 cm pour un mâle ou un individu de sexe non précisé. Un article sur une réserve costaricienne illustre une femelle adulte d’environ 6,4 cm et un mâle d’environ 5,3 cm de longueur standard : ce sont des exemples locaux, pas des maxima propres à chaque sexe. Aucune donnée fiable sur la hauteur, la largeur ou la masse corporelle n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Its reported range extends from eastern Honduras through Nicaragua to central Costa Rica, on both Atlantic and Pacific slopes in Costa Rica. It occurs in freshwater river drainages and lakes; breeding fish have been studied at Lake Xiloá in Nicaragua.",
+      "fr": "Son aire signalée s’étend de l’est du Honduras au centre du Costa Rica, en passant par le Nicaragua; au Costa Rica, elle couvre les versants Atlantique et Pacifique. Il fréquente les bassins d’eau douce et les lacs; des poissons reproducteurs ont été étudiés au lac Xiloá, au Nicaragua."
+    },
+    "diet": {
+      "en": "Species-specific feeding observations were not available in the reviewed taxonomic reference or field studies, so a detailed diet is left undescribed.",
+      "fr": "Les références taxonomiques et études de terrain examinées ne fournissent pas d’observations alimentaires propres à l’espèce; son régime détaillé reste donc non décrit ici."
+    },
+    "behavior": {
+      "en": "Breeding fish occupy and defend nesting territories, and experiments in Lake Xiloá found that pairs adjust territory boundaries in response to nearby landmarks.",
+      "fr": "Les poissons reproducteurs occupent et défendent des territoires de nidification; des expériences au lac Xiloá ont montré que les couples ajustent leurs limites territoriales selon les repères voisins."
+    },
+    "reproduction": {
+      "en": "Pairs care for eggs and free-swimming young; in a 2025 Lake Xiloá field study, broods with both parents were less often unattended and stayed in tighter shoals than those with one parent.",
+      "fr": "Les couples s’occupent des œufs puis des jeunes nageant librement; dans une étude de terrain menée en 2025 au lac Xiloá, les pontes avec deux parents étaient moins souvent laissées seules et formaient des bancs plus resserrés que celles gardées par un seul parent."
+    },
+    "ecology": {
+      "en": "The species is recorded across several Central American drainages, but its precise distribution depends on which populations are assigned to this taxon.",
+      "fr": "L’espèce est signalée dans plusieurs bassins d’Amérique centrale, mais son aire précise dépend de l’attribution des populations à ce taxon."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Data Deficient because its taxonomy is uncertain; the assessment notes localized threats from deforestation, pollution and interactions with non-native species, but no evidence of major range-wide decline at that time.",
+      "fr": "L’UICN la classe dans la catégorie « données insuffisantes » en raison des incertitudes taxonomiques; l’évaluation mentionne des menaces locales liées à la déforestation, aux pollutions et aux interactions avec des espèces introduites, sans preuve d’un fort déclin à l’échelle de toute l’aire à cette date."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Amatitlania siquia — FishBase species summary",
+        "fr": "Amatitlania siquia — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/amatitlania-siquia",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "FishBase gives the 7.9 cm maximum standard length for male/unsexed fish, diagnostic morphology, freshwater ecology and current range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 18,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amatitlania siquia — IUCN Red List assessment",
+        "fr": "Amatitlania siquia — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T150106872A150107062.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment is Data Deficient because validity and boundaries of the taxon are uncertain; it records Central American range and localized threats."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 23,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fishes from the Tirimbina Biological Reserve, Costa Rica — Check List, 2017",
+        "fr": "Poissons de la réserve biologique de Tirimbina, Costa Rica — Check List, 2017"
+      },
+      "url": "https://doi.org/10.15560/13.5.683",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The paper describes the coloration and bar pattern and illustrates a mature female of about 64 mm SL and male of about 53 mm SL from one locality."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 28,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A field study investigating effects of landmarks on territory size and shape — Biology Letters, 2014",
+        "fr": "Effets des repères sur la taille et la forme des territoires : étude de terrain — Biology Letters, 2014"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4013695/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "A Lake Xiloá field experiment reports that A. siquia breeding pairs adjust territory boundaries in response to landmarks."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 18,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Defense Limitations of Single Parents in the Biparental Convict Cichlid Fish: A Field Study — Diversity, 2025",
+        "fr": "Limites de défense des parents seuls chez un Cichlidé biparental : étude de terrain — Diversity, 2025"
+      },
+      "url": "https://www.mdpi.com/2673-9917/4/2/14",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "At Lake Xiloá, offspring with both parents present were less often unattended and showed greater shoal cohesion than offspring with one parent."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 22,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Illustrate an adult Amatitlania siquia in naturalistic field-guide side view: deep laterally compressed brown-gray body, approximately six diffuse dark bars, with the third bar forming a more conspicuous oval blotch and no Y-shaped first bar. Do not add a red throat or exaggerated convict-cichlid striping absent from the cited description; no aquarium setting or labels.",
+  "uncertainties": [
+    "FishBase reports a 7.9 cm maximum standard length for male/unsexed fish; the two sexed specimens in the Tirimbina paper are local mature individuals and do not establish general sexual size dimorphism.",
+    "No dependable species-specific height, width or body-mass data were found in the consulted sources.",
+    "The IUCN assessment explicitly flags taxonomic uncertainty; range and conservation interpretation may change if populations are split or reassigned.",
+    "Diet specifics were omitted because the consulted reliable sources did not substantiate a detailed species-level account."
+  ],
+  "reviewed": true,
+  "review_note": "Species account based on FishBase, the IUCN assessment, a Costa Rican field checklist, a Lake Xiloá territory study and a 2025 field experiment; measurement method, locality limits and taxonomic uncertainty are explicit."
+}

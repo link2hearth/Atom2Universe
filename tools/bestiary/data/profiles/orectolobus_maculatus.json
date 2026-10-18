@@ -1,0 +1,131 @@
+{
+  "id": "orectolobus_maculatus",
+  "scientific": "Orectolobus maculatus",
+  "group": "fish",
+  "name": {
+    "en": "Spotted Wobbegong",
+    "fr": "Orectolobus maculatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The spotted wobbegong is a flattened carpet shark of the coastal waters of southern and eastern Australia. It spends the day motionless on the bottom and hunts at night, relying on camouflage and ambush rather than speed.",
+      "fr": "Orectolobus maculatus est un requin-tapis aplati des eaux côtières du sud et de l’est de l’Australie. Il passe la journée immobile sur le fond et chasse la nuit, en comptant sur le camouflage et l’embuscade plutôt que sur la vitesse."
+    },
+    "identification": {
+      "en": "The head is flat and fringed on each side with 6–10 branched, fleshy lobes. The body is yellowish to greenish-brown with large dark saddles and whitish O-shaped rings, and there are two dorsal fins but no fin spines. Most adults measure 150–180 cm, though the maximum is cited as about 320 cm, and newborns are about 21–23 cm. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "La tête est plate et frangée de chaque côté de 6 à 10 lobes charnus ramifiés. Le corps est jaunâtre à brun verdâtre, avec de grandes selles sombres et des anneaux blanchâtres en forme de O, et il porte deux nageoires dorsales sans épines. La plupart des adultes mesurent de 150 à 180 cm, même si le maximum cité est d’environ 320 cm, et les nouveau-nés font environ 21 à 23 cm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
+    },
+    "habitat": {
+      "en": "It lives on the continental shelf from the intertidal zone to about 218 m, mostly in shallow water, on rocky and coral reefs, sand, seagrass beds and under piers. Its range runs from Queensland around southern Australia to Western Australia; records from Japan and the South China Sea are probably misidentifications.",
+      "fr": "Il vit sur le plateau continental, de la zone de marée jusqu’à environ 218 m, surtout en eau peu profonde, sur les récifs rocheux et coralliens, le sable, les herbiers et sous les jetées. Son aire s’étend du Queensland au pourtour sud de l’Australie jusqu’à l’Australie-Occidentale; les mentions du Japon et de la mer de Chine méridionale sont probablement des erreurs d’identification."
+    },
+    "diet": {
+      "en": "It eats bottom invertebrates such as crabs, lobsters and octopuses, and bony fishes including sea basses, scorpionfishes and luderick. Smaller sharks are also taken. It catches prey by sucking it in with a sudden opening of the jaws.",
+      "fr": "Il mange des invertébrés du fond comme les crabes, les langoustes et les poulpes, ainsi que des poissons osseux, dont des serrans, des rascasses et le luderick. Il capture aussi de plus petits requins. Il attrape ses proies en les aspirant par une ouverture soudaine des mâchoires."
+    },
+    "behavior": {
+      "en": "It is sluggish and often rests on the sea floor for long periods, mostly in daytime. The fringe of lobes around its head breaks up its outline and acts as a lure, and prey sometimes nibble it before being seized. It looks docile but can bite hard if provoked or stepped on, and often does not let go.",
+      "fr": "Il est lent et reste souvent longtemps immobile sur le fond, surtout de jour. La frange de lobes autour de sa tête brise sa silhouette et sert d’appât, et des proies viennent parfois la grignoter avant d’être saisies. Il paraît placide, mais peut mordre fort s’il est provoqué ou piétiné, et lâche souvent difficilement sa prise."
+    },
+    "reproduction": {
+      "en": "It is ovoviviparous: the eggs develop inside the female, and the young are born independent. Litters reach up to 37 pups after a gestation of 10–11 months, with births in spring. Females have a cycle of about three years, and males hold a female by biting near her gills during mating.",
+      "fr": "Il est ovovivipare : les œufs se développent dans la femelle, et les petits naissent indépendants. Les portées atteignent 37 petits après une gestation de 10 à 11 mois, avec des naissances au printemps. Les femelles ont un cycle d’environ trois ans, et le mâle retient la femelle en la mordant près des branchies pendant l’accouplement."
+    },
+    "ecology": {
+      "en": "As a nocturnal ambush predator with a trophic level of about 4.2, it feeds on both invertebrates and fishes of reefs and sand. It carries many parasites, including 33 species of tapeworm reported in one account.",
+      "fr": "Prédateur nocturne à l’affût, au niveau trophique d’environ 4,2, il se nourrit à la fois d’invertébrés et de poissons des récifs et du sable. Il héberge de nombreux parasites, dont 33 espèces de ténias signalées dans une synthèse."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Least Concern (assessed 2015, as reported by FishBase). It is caught as bycatch in trawls and lobster pots and by spearfishing. In New South Wales, trawling caused declines in the early 1990s and the species was listed as Vulnerable there; numbers later stabilised, and bag and size limits now apply to recreational fishing.",
+      "fr": "L’UICN le classe en préoccupation mineure (évaluation de 2015, d’après FishBase). Il est capturé accessoirement dans les chaluts et les casiers à langoustes et à la chasse sous-marine. En Nouvelle-Galles du Sud, le chalutage a provoqué des déclins au début des années 1990 et l’espèce y a été classée vulnérable; les effectifs se sont ensuite stabilisés, et des limites de prise et de taille s’appliquent désormais à la pêche de loisir."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orectolobus maculatus, Spotted wobbegong — FishBase",
+        "fr": "Orectolobus maculatus, requin-tapis tacheté — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Orectolobus-maculatus.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Max 320 cm, common 180 cm, newborns about 21 cm; 0–248 m, usually 0–110 m; no fin spines; litters up to 37; trophic level 4.2.",
+        "IUCN Least Concern, assessed 23 March 2015; Japan and South China Sea records need confirmation.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
+      ]
+    },
+    {
+      "title": {
+        "en": "Spotted Wobbegong, Orectolobus maculatus — Fishes of Australia (Museums Victoria)",
+        "fr": "Orectolobus maculatus — Fishes of Australia (Museums Victoria)"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/1975",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "6–10 branched dermal lobes each side of the head; yellowish to greenish-brown with dark saddles and whitish rings; rests by day; ovoviviparous, up to 37 pups, 10–11 months gestation, births in spring.",
+        "Seems docile but can cause severe lacerations if provoked; vulnerable in New South Wales; fished commercially and recreationally and taken as bycatch."
+      ]
+    },
+    {
+      "title": {
+        "en": "Spotted Wobbegong — Florida Museum, Discover Fish",
+        "fr": "Requin-tapis tacheté — Florida Museum, Discover Fish"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/spotted-wobbegong/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Most adults 150–180 cm, maximum about 320 cm, newborns about 23 cm; lobes act as camouflage and bait; triennial cycle; male bites female near the gills; births September–October.",
+        "Bycatch in trawls, lobster pots and spearfishing; New South Wales trawl declines in the early 1990s, later stabilisation, new bag and size limits."
+      ]
+    },
+    {
+      "title": {
+        "en": "Orectolobus maculatus — Animal Diversity Web, University of Michigan",
+        "fr": "Orectolobus maculatus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Orectolobus_maculatus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Jaw protrusion creates suction to ambush prey; sluggish, nocturnal; hosts 33 tapeworm species. Its Near Threatened status line is out of date and was not used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Maximum size differs widely: 320 cm (FishBase, Florida Museum), 360 cm (Animal Diversity Web) and 170 cm (Fishes of Australia); the text says about 320 cm is the cited maximum and gives the typical adult range.",
+    "FishBase gives a length at maturity of 60 cm, which the Florida Museum says was probably a confusion with another species; the figure is not used.",
+    "No established French common name was found, so the scientific name is used. Maximum depth is 218 m (Florida Museum, Fishes of Australia) or 248 m (FishBase).",
+    "The IUCN category is taken from the FishBase page; Fishes of Australia lists both Near Threatened and Least Concern on the same page, and Animal Diversity Web's Near Threatened line is old."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

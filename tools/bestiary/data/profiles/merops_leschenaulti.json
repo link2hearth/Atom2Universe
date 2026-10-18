@@ -1,0 +1,159 @@
+{
+  "id": "merops_leschenaulti",
+  "scientific": "Merops leschenaulti",
+  "group": "birds",
+  "name": {
+    "en": "Chestnut-headed Bee-eater",
+    "fr": "Guêpier de Leschenault"
+  },
+  "sections": {
+    "overview": {
+      "en": "eBird maps this bee-eater's breeding and non-breeding range across South and Southeast Asia.",
+      "fr": "eBird cartographie les aires de reproduction et d’hivernage de ce guêpier en Asie du Sud et du Sud-Est."
+    },
+    "identification": {
+      "en": "Adults have a chestnut head, yellow throat and blue rump above a green body.",
+      "fr": "L’adulte a la tête châtain, la gorge jaune et le croupion bleu sur un corps vert."
+    },
+    "habitat": {
+      "en": "It occupies open woodland, forest edges and orchards, often near water or earthen banks for nesting.",
+      "fr": "Il fréquente les boisements ouverts, lisières et vergers, souvent près de l’eau ou de berges terreuses propices à la nidification."
+    },
+    "diet": {
+      "en": "It catches flying insects, especially honeybees and wasps, but also ants, termites, dragonflies, butterflies and grasshoppers.",
+      "fr": "Il capture des insectes en vol, surtout des abeilles et des guêpes, mais aussi des fourmis, termites, libellules, papillons et sauterelles."
+    },
+    "behavior": {
+      "en": "It often watches from a perch before pursuing prey in the air; birds may gather at communal evening roosts.",
+      "fr": "Il guette souvent depuis un perchoir avant de poursuivre ses proies dans les airs ; des oiseaux peuvent se rassembler dans des dortoirs communs en soirée."
+    },
+    "reproduction": {
+      "en": "Pairs excavate a burrow in a bank or similar earthen slope, nesting alone or in loose colonies; both parents incubate the eggs.",
+      "fr": "Le couple creuse un terrier dans une berge ou un talus terreux et niche seul ou en colonie lâche ; les deux parents couvent les œufs."
+    },
+    "ecology": {
+      "en": "The Blue-tailed Bee-eater is among its close relatives; BirdTree-based summaries estimate their divergence at about 5.1 million years, and its linked profile compares the pair.",
+      "fr": "Le Guêpier à queue d’azur est un proche parent ; les synthèses fondées sur BirdTree estiment leur divergence à environ 5,1 millions d’années, et sa fiche liée compare les deux espèces."
+    },
+    "conservation": {
+      "en": "The cited bird account reports a global IUCN status of Least Concern; this category does not mean every local population is stable.",
+      "fr": "La source ornithologique citée rapporte le statut mondial UICN de préoccupation mineure ; cette catégorie ne signifie pas que toutes les populations locales sont stables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chestnut-headed Bee-eater — eBird Status and Trends",
+        "fr": "Guêpier de Leschenault — eBird Status and Trends"
+      },
+      "url": "https://science.ebird.org/status-and-trends/species/chbeat1/range-map",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Cornell Lab's modeled range includes breeding and non-breeding seasons."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 9,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chestnut-headed Bee-eater — India Biodiversity Portal",
+        "fr": "Guêpier de Leschenault — India Biodiversity Portal"
+      },
+      "url": "https://indiabiodiversity.org/species/show/239002",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "This Indian biodiversity account describes plumage, wooded habitats, insect prey and communal roosting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 13,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chestnut-headed Bee-eater — Oiseaux.net",
+        "fr": "Guêpier de Leschenault — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/guepier.de.leschenault.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Oiseaux.net reports burrow nesting in loose colonies and a BirdTree-based close relationship to Merops philippinus."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 15,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "State of India's Birds: Chestnut-headed Bee-eater",
+        "fr": "State of India's Birds : Guêpier de Leschenault"
+      },
+      "url": "https://stateofindiasbirds.in/species/2023/pas-chbeat1/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "State of India's Birds reports a global IUCN category of Least Concern and stable trends in its Indian analysis."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 19,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

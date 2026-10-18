@@ -1,0 +1,147 @@
+{
+  "id": "macrophyllum_macrophyllum",
+  "scientific": "Macrophyllum macrophyllum",
+  "group": "mammals",
+  "name": {
+    "en": "Long-legged bat",
+    "fr": "Grand phyllostome"
+  },
+  "sections": {
+    "overview": {
+      "en": "Macrophyllum macrophyllum is a small leaf-nosed bat of the Americas.",
+      "fr": "Macrophyllum macrophyllum est une petite chauve-souris à feuille nasale des Amériques."
+    },
+    "identification": {
+      "en": "Long hind limbs and tail set it apart from similar small bats.",
+      "fr": "Ses longues pattes arrière et sa queue le distinguent de petites chauves-souris proches."
+    },
+    "habitat": {
+      "en": "It roosts near water in forests, caves, culverts and tunnels.",
+      "fr": "Il se repose près de l’eau, en forêt, dans des grottes, buses et tunnels."
+    },
+    "diet": {
+      "en": "It eats mainly insects, including flying and aquatic species; fish hunting is unconfirmed.",
+      "fr": "Il mange surtout des insectes volants et aquatiques ; la pêche n’est pas confirmée."
+    },
+    "behavior": {
+      "en": "Echolocation guides its fluttering flight over water.",
+      "fr": "L’écholocation guide son vol papillonnant au-dessus de l’eau."
+    },
+    "reproduction": {
+      "en": "Females give birth to one young; breeding-season data are sparse.",
+      "fr": "Les femelles donnent naissance à un seul petit ; la saison de reproduction est mal documentée."
+    },
+    "ecology": {
+      "en": "It may affect local populations of aquatic insects.",
+      "fr": "Il peut influer sur les populations locales d’insectes aquatiques."
+    },
+    "conservation": {
+      "en": "Animal Diversity Web reports the global IUCN category as Least Concern. Argentina's 2019 assessment classified it as Data Deficient nationally.",
+      "fr": "Animal Diversity Web rapporte la catégorie mondiale de l’UICN « préoccupation mineure ». L’évaluation argentine de 2019 l’a classée « données insuffisantes » dans ce pays."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Macrophyllum macrophyllum — Animal Diversity Web, University of Michigan",
+        "fr": "Macrophyllum macrophyllum — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Macrophyllum_macrophyllum/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Summarizes the bat's distribution, distinctive hind limbs, diet, echolocation, surface gleaning and the few known birth records.",
+        "Stomach remains indicate mostly insect prey and do not support the presumed fish-eating habit."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 31,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Long-legged bat — Compendium of Mexican bat calls (Spanish/English)",
+        "fr": "Chauve-souris à longues pattes — Compendium des cris de chauves-souris du Mexique (espagnol/anglais)"
+      },
+      "url": "https://mamiferosmexico.org/books/Compendio%20de%20llamados%20de%20murci%C3%A9lagos.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Spanish-language mammal reference describes the range from southeastern Mexico through Central and South America."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 14,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macrophyllum macrophyllum — Argentine mammal conservation assessment (SAREM, 2019)",
+        "fr": "Macrophyllum macrophyllum — évaluation de la conservation des mammifères d’Argentine (SAREM, 2019)"
+      },
+      "url": "https://doi.org/10.31687/SaremLR.19.055",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Argentine national assessment is summarized as Data Deficient; this is a national category, not a global assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 18,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history and reproductive observations remain sparse. The sources report assessments at different geographic scales, so the Argentine Data Deficient category should be read alongside, not substituted for, the global category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an English university species account with Spanish-language regional mammal references; kept the conservation category explicitly national."
+}

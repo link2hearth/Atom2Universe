@@ -1,0 +1,329 @@
+{
+  "id": "common_moorhen",
+  "scientific": "Gallinula chloropus",
+  "group": "birds",
+  "name": {
+    "en": "Common moorhen",
+    "fr": "Gallinule poule-d’eau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common moorhen is a medium-sized member of the rail family, widespread in Europe, Africa and Asia. It lives at the boundary between land and fresh water, using both vegetated shores and the water surface. The similar American common gallinule, Gallinula galeata, is a separate species; American records published under the old combined name do not describe its present range.",
+      "fr": "La gallinule poule-d’eau est un membre de taille moyenne de la famille des rallidés, répandu en Europe, en Afrique et en Asie. Elle vit à la frontière entre terre et eau douce, utilisant les berges végétalisées comme la surface de l’eau. La gallinule d’Amérique, Gallinula galeata, lui ressemble mais constitue une espèce distincte ; les observations américaines publiées sous leur ancien nom commun ne décrivent donc pas son aire actuelle."
+    },
+    "identification": {
+      "en": "Adults are about 32–35 centimetres long, weigh roughly 250–400 grams and have a 50–55 centimetre wingspan. The back and wings are dark brown, contrasting with bluish-black underparts; white streaks mark the flanks. The red bill ends in a yellow tip, and the frontal shield is red. Greenish legs and white patches beneath the tail are conspicuous when the bird walks or flicks its tail. A coot instead has a white bill and forehead.",
+      "fr": "L’adulte mesure environ 32 à 35 centimètres, pèse quelque 250 à 400 grammes et présente une envergure de 50 à 55 centimètres. Le dos et les ailes brun foncé contrastent avec le dessous noir bleuté ; des lignes blanches marquent les flancs. Le bec rouge se termine par une pointe jaune, et la plaque du front est rouge. Les pattes verdâtres et les plages blanches sous la queue se remarquent lorsqu’elle marche ou relève celle-ci. La foulque possède au contraire un bec et un front blancs."
+    },
+    "habitat": {
+      "en": "Vegetated lake margins, ponds, marshes and rivers provide feeding places and shelter. The moorhen readily occupies park ponds and other small urban wetlands, as well as rural waters. Dense waterside plants let it withdraw from danger, although it also ventures into open spaces. Its nest may rest among floating plants, on a small island or in a tree above the water.",
+      "fr": "Les bordures végétalisées des lacs, les mares, les marais et les rivières offrent nourriture et abri. La gallinule occupe volontiers les pièces d’eau des parcs et les petites zones humides urbaines, ainsi que les eaux rurales. Une végétation riveraine dense lui permet de se soustraire au danger, même si elle s’aventure aussi dans les espaces ouverts. Son nid peut reposer parmi des plantes flottantes, sur un îlot ou dans un arbre au-dessus de l’eau."
+    },
+    "diet": {
+      "en": "It is an omnivore, eating water plants, seeds, fruit and grasses as well as insects, snails, worms and small fish. Food is gathered both in water and on land: it picks items from the surface, dips its head to reach submerged food, or grazes and searches vegetation along the shore. This varied feeding strategy allows it to exploit the foods available locally rather than depend on a single kind of prey.",
+      "fr": "Omnivore, elle consomme plantes aquatiques, graines, fruits et herbes, mais aussi insectes, escargots, vers et petits poissons. Elle récolte sa nourriture dans l’eau comme à terre : elle prélève des éléments en surface, plonge la tête pour atteindre des aliments immergés ou broute et fouille la végétation des berges. Cette diversité de méthodes lui permet d’exploiter les ressources disponibles localement sans dépendre d’une seule catégorie de proies."
+    },
+    "behavior": {
+      "en": "During spring courtship, a male approaches a female with its bill dipped in the water; the partners may then nibble at each other’s feathers. Both build and fiercely defend the nest. When disturbed, a moorhen usually runs into nearby cover instead of immediately flying away. If it does fly locally, the flight is often short and laboured. Outside breeding, winter feeding groups can form, while northern populations move away from severe cold.",
+      "fr": "Pendant la parade printanière, le mâle approche la femelle avec le bec plongé dans l’eau ; les partenaires peuvent ensuite se mordiller les plumes. Tous deux construisent et défendent vigoureusement le nid. Dérangée, la gallinule court généralement se cacher plutôt que de s’envoler immédiatement. Lorsqu’elle vole à proximité, son vol est souvent bref et laborieux. Hors reproduction, des groupes alimentaires peuvent se former en hiver, tandis que les populations septentrionales s’éloignent des grands froids."
+    },
+    "reproduction": {
+      "en": "British nesting records indicate usually five to seven eggs, incubated by both parents for about 20–22 days, and commonly two broods in a season. The chicks hatch covered in down and already mobile. Mobility does not mean immediate independence: adults continue to feed them, and older siblings sometimes help. Flight develops at roughly eight weeks, much later than the chicks’ first movements around the nest.",
+      "fr": "Les observations britanniques indiquent généralement cinq à sept œufs, couvés par les deux parents durant environ 20 à 22 jours, et souvent deux nichées par saison. Les poussins éclosent couverts de duvet et déjà mobiles. Cette mobilité ne signifie pas une indépendance immédiate : les adultes continuent de les nourrir, parfois aidés par des frères ou sœurs plus âgés. Le vol se développe vers huit semaines, bien après les premiers déplacements des poussins autour du nid."
+    },
+    "ecology": {
+      "en": "Family relationships can extend beyond a single brood. Some independent young from the first brood remain on their natal territory and feed younger siblings from a second brood. In a three-year study, adults with juvenile helpers reduced their own feeding effort, while the total feeding rate of the family remained similar. Such cooperation changes how care is shared between parents and offspring, rather than simply multiplying every chick’s food supply.",
+      "fr": "Les relations familiales peuvent dépasser une seule nichée. Certains jeunes devenus autonomes après la première restent sur leur territoire natal et nourrissent les cadets d’une seconde nichée. Dans une étude de trois ans, les adultes aidés par ces jeunes réduisaient leur propre effort de nourrissage, tandis que le rythme alimentaire total de la famille restait comparable. Cette coopération modifie la répartition des soins entre parents et descendants, plutôt que de multiplier automatiquement la nourriture reçue par chaque poussin."
+    },
+    "conservation": {
+      "en": "The species is listed globally as Least Concern, but local trends need separate attention. In the United Kingdom it entered the Amber list of conservation concern in the 2021 assessment. BTO’s winter series shows a 25 percent decrease between 1998 and 2023; these counts include continental visitors as well as residents. Loss of wetlands can isolate local populations and increase their vulnerability, despite the species’ ability to use modified and urban environments.",
+      "fr": "L’espèce est classée en préoccupation mineure à l’échelle mondiale, mais les tendances locales demandent une attention distincte. Au Royaume-Uni, elle figure sur la liste orange de préoccupation pour la conservation dans l’évaluation de 2021. La série hivernale du BTO montre une baisse de 25 % entre 1998 et 2023 ; ces comptages incluent des visiteurs continentaux comme des résidents. La disparition des zones humides peut isoler les populations locales et accroître leur vulnérabilité, malgré leur capacité à utiliser des milieux modifiés et urbains."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common moorhen",
+        "fr": "Gallinule poule-d’eau"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/species/common-moorhen",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Current Old World range; American gallinule separated; winter groups and migration."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.2",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 11,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moorhen Bird Facts",
+        "fr": "Faits sur la gallinule poule-d’eau"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/moorhen",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Adult dimensions and plumage; plant and animal foods."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 8,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gallinula chloropus (common moorhen)",
+        "fr": "Gallinula chloropus (gallinule poule-d’eau)"
+      },
+      "url": "https://animaldiversity.org/accounts/Gallinula_chloropus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Foraging on land, vegetation and water surface."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.2",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 7,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Where have all the moorhens gone?",
+        "fr": "Où sont passées les gallinules ?"
+      },
+      "url": "https://www.wwt.org.uk/wetland-centres/caerlaverock/news/where-have-all-the-moorhens-gone",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Diverse wetland nest sites; habitat fragmentation concern."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 7,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moorhen",
+        "fr": "Gallinule poule-d’eau"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/moorhen",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Courtship, nest defence, escape behavior and UK Amber 2021."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 9,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moorhen: BirdFacts",
+        "fr": "Gallinule poule-d’eau : BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/moorhen",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British reproduction records and winter monitoring; global Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 9,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Children’s checklist of birds",
+        "fr": "Liste des oiseaux pour les enfants"
+      },
+      "url": "https://www.wwt.org.uk/uploads/documents/1410609403_learnslselfguidedchildrenschecklist.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Older moorhen chicks sometimes help feed younger siblings."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 8,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Juvenile helping in the moorhen, Gallinula chloropus",
+        "fr": "L’aide des jeunes chez la gallinule poule-d’eau, Gallinula chloropus"
+      },
+      "url": "https://doi.org/10.1016/S0003-3472(87)80222-1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Three-year study: juvenile helpers partly replaced parental feeding effort."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 9,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rails and crakes found in UK wetlands",
+        "fr": "Rallidés des zones humides britanniques"
+      },
+      "url": "https://www.wwt.org.uk/discover-wetlands/wetland-wildlife/meet-the-family/rails-and-crakes-found-in-uk-wetlands",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Coot has white bill and forehead."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 6,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult dark moorhen, brown-black back, white flank line and white undertail, red frontal shield and red bill with yellow tip, long green-yellow legs, separate unwebbed toes; full body on white.",
+  "uncertainties": [
+    "The older ADW account includes American forms now separated as Gallinula galeata; only general foraging descriptions corroborated by European accounts are used.",
+    "BTO presents long-term breeding change both as stable in a summary and as a 19 percent numerical decrease; the article uses the unambiguous winter series instead."
+  ],
+  "reviewed": true,
+  "review_note": "Root authored and checked bilingual account against institutional sources; exact Old World taxon, British nesting durations, winter population series and source-specific helper study kept distinct; independent art accepted.",
+  "source_audit_version": 1
+}

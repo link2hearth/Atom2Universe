@@ -1,0 +1,186 @@
+{
+  "id": "amphilophus_lyonsi",
+  "scientific": "Amphilophus lyonsi",
+  "group": "fish",
+  "name": {
+    "en": "Lyons' cichlid",
+    "fr": "Mojarra de Lyons"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lyons' cichlid is a freshwater fish of the Cichlidae, restricted to the Pacific slope of southern Costa Rica and western Panama. Its range is small and scattered across river basins.",
+      "fr": "La mojarra de Lyons est un poisson d’eau douce de la famille des Cichlidés, limité au versant pacifique du sud du Costa Rica et de l’ouest du Panama. Son aire est petite et fragmentée entre plusieurs bassins."
+    },
+    "identification": {
+      "en": "Adults show seven dark bars and about eight flank blotches, often edged in turquoise, over grey-brown, green-brown or yellowish sides. The Spanish key distinguishes it from the thick-lipped Amphilophus labiatus by its less prominent lips, shorter pectoral fin and diffuse bars. Females have a dark spot at the dorsal-fin base. FishBase gives 15 cm standard length; at that length the study’s body proportions imply 5.6–7.5 cm depth and 2.6–3.1 cm width, while its mass model estimates about 130 g, without a sex-specific range.",
+      "fr": "Les adultes montrent sept barres sombres et environ huit taches latérales, souvent bordées de turquoise, sur des flancs gris-brun, vert-brun ou jaunâtres. La clé espagnole le distingue de l’Amphilophus labiatus aux lèvres épaisses par ses lèvres moins saillantes, sa nageoire pectorale plus courte et ses barres diffuses. Les femelles ont une tache sombre à la base de la dorsale. FishBase indique 15 cm de longueur standard; à cette longueur, les proportions corporelles impliquent 5,6–7,5 cm de hauteur et 2,6–3,1 cm de largeur, tandis que le modèle de masse estime environ 130 g, sans fourchette selon le sexe."
+    },
+    "habitat": {
+      "en": "It lives in lowland rivers and ponds with sandy or silty bottoms and moderate to very slow current. Verified sites are warm, around 26–29 °C, in southern Costa Rica and western Panama.",
+      "fr": "Il vit dans des rivières et mares de basse altitude, sur des fonds sableux ou limoneux, avec un courant modéré à très lent. Les sites confirmés sont chauds, autour de 26–29 °C, au sud du Costa Rica et à l’ouest du Panama."
+    },
+    "diet": {
+      "en": "It eats seeds, aquatic and terrestrial insects, crustaceans and bottom detritus. A 2022 stomach-content sample of only two preserved fish was dominated by aquatic insects and detritus, so those proportions are indicative, not a broad diet estimate.",
+      "fr": "Il consomme des graines, des insectes aquatiques et terrestres, des crustacés et des détritus du fond. Une analyse stomacale de 2022 ne portait que sur deux poissons conservés: les insectes aquatiques et les détritus dominaient, mais ces proportions restent indicatives."
+    },
+    "behavior": {
+      "en": "Both parents tend and fan the eggs, guard young, and carry newly hatched fry to pits excavated in the substrate, often in dark cavities.",
+      "fr": "Les deux parents ventilent les œufs, gardent les jeunes et transportent les alevins vers des fosses creusées dans le substrat, souvent dans des cavités sombres."
+    },
+    "reproduction": {
+      "en": "Eggs are laid on cleaned rocks or branches, usually once or twice yearly and occasionally up to six times; clutch size is not reliably recorded.",
+      "fr": "Les œufs sont déposés sur des rochers ou branches nettoyés, généralement une ou deux fois par an, parfois jusqu’à six; aucune taille de ponte fiable n’est publiée."
+    },
+    "ecology": {
+      "en": "Rediscovered in Costa Rica in 2022 after no verified records there since 1973, it was found at three of 15 surveyed sites and described as rare to locally uncommon.",
+      "fr": "Redécouvert au Costa Rica en 2022 après l’absence de données vérifiées depuis 1973, il a été trouvé dans trois des quinze sites étudiés et décrit comme rare à localement peu commun."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Endangered (EN), assessed in 2019: its estimated range is about 2,077 km² and includes fewer than five locations. The assessment identifies deforestation, agricultural pollution and river dredging as pressures on habitat; population size remains unknown.",
+      "fr": "L’UICN le classe « en danger » (EN), évaluation de 2019: son aire estimée couvre environ 2 077 km² et moins de cinq sites. L’évaluation cite la déforestation, la pollution agricole et le dragage des rivières comme pressions sur l’habitat; l’effectif reste inconnu."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rediscovery of the endangered Amphilophus lyonsi — Zootaxa, 2022",
+        "fr": "Redécouverte d’Amphilophus lyonsi, espèce menacée — Zootaxa, 2022"
+      },
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.5182.6.2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Zootaxa 2022 reports morphology, body proportions, diet and rediscovery records."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 10,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphilophus lyonsi — Costa Rican freshwater-fish identification key, UNED Research Journal, 2022",
+        "fr": "Amphilophus lyonsi — clé d’identification des poissons d’eau douce du Costa Rica, Revista de Investigación UNED, 2022"
+      },
+      "url": "https://revistas.uned.ac.cr/index.php/cuadernos/article/download/4029/5868",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Spanish scientific key distinguishes congeners and records range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 8,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphilophus lyonsi — FishBase species summary",
+        "fr": "Amphilophus lyonsi — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/26737",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "FishBase lists length, habitat and diet data."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 7,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphilophus lyonsi — IUCN Red List assessment, 2020",
+        "fr": "Amphilophus lyonsi — évaluation de la Liste rouge de l’UICN, 2020"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T150122865A150123332.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment covers status, range, habitat and reproduction."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 8,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a side-on mature Amphilophus lyonsi from a Costa Rican or Panamanian Pacific-slope river. Use a grey-brown to greenish body, seven diffuse dark bars and a row of dark mid-flank blotches with restrained turquoise edging; include the female’s dorsal-base spot if depicting a female. Avoid the heavy lips of A. labiatus and aquarium props.",
+  "uncertainties": [
+    "The 15 cm maximum is standard length. In the 2022 morphometric sample, body depth was 37.14–50.00% of standard length and width 17.47–20.68%; these are sample proportions, not sex-specific measurements.",
+    "The 2022 study measured body mass and derived a length–mass equation, but it did not publish a sex-specific mass range; an approximate 130 g at 15 cm SL is a model estimate, not a recorded maximum.",
+    "The wild stomach-content sample comprised only two specimens, so its diet percentages are not representative of all populations or seasons.",
+    "The Endangered classification and threats reflect the IUCN assessment made in 2019."
+  ],
+  "reviewed": true,
+  "review_note": "Profile reconciles the FishBase maximum with a 2022 Costa Rican field study, uses a Spanish identification key to distinguish congeners, and preserves the IUCN assessment’s date and explicit uncertainty."
+}

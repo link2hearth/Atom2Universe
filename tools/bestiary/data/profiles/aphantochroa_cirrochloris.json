@@ -1,0 +1,261 @@
+{
+  "id": "aphantochroa_cirrochloris",
+  "scientific": "Aphantochroa cirrochloris",
+  "group": "birds",
+  "name": {
+    "en": "Sombre Hummingbird",
+    "fr": "Colibri vert et gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sombre Hummingbird is a Brazilian hummingbird of the Atlantic Forest region and nearby gardens and secondary growth. Many modern checklists use Eupetomena cirrochloris, while this bestiary retains the tree’s name Aphantochroa cirrochloris.",
+      "fr": "Le Colibri vert et gris est un colibri du Brésil, présent dans la région de la forêt Atlantique ainsi que dans les jardins et les forêts secondaires. Plusieurs listes récentes emploient Eupetomena cirrochloris, tandis que cette fiche conserve le nom de l’arbre, Aphantochroa cirrochloris."
+    },
+    "identification": {
+      "en": "It is about 12 cm long, with a robust, slightly down-curved black bill, broad dark wings and a large tail. The plumage is subdued grey-green, with coppery green upperparts, a small white spot behind the eye, dark grey underparts, and white rump and undertail tufts; females are a little smaller but look much like males.",
+      "fr": "Il mesure environ 12 cm, avec un bec noir robuste légèrement courbé vers le bas, de larges ailes sombres et une grande queue. Son plumage discret est gris-vert, avec le dessus vert cuivré, une petite tache blanche derrière l’œil, le dessous gris foncé et des touffes blanches au croupion et sous la queue ; la femelle, un peu plus petite, ressemble au mâle."
+    },
+    "habitat": {
+      "en": "It occurs in humid lowland and foothill forests, including forest edges, secondary growth, parks and gardens in eastern and central Brazil. It can persist in altered woodland and is sometimes seen near flower beds or artificial feeders.",
+      "fr": "Il vit dans les forêts humides de basse altitude et de piémont, notamment les lisières, les bois secondaires, les parcs et les jardins du centre et de l’est du Brésil. Il peut subsister dans des boisements modifiés et apparaît parfois près des massifs fleuris ou des mangeoires artificielles."
+    },
+    "diet": {
+      "en": "Nectar supplies most of its energy, while small arthropods add protein. It visits flowers and feeders but may also chase insects in flight, especially along forest edges.",
+      "fr": "Le nectar fournit l’essentiel de son énergie, tandis que de petits arthropodes apportent des protéines. Il visite les fleurs et les mangeoires, mais peut aussi poursuivre des insectes en vol, notamment en lisière forestière."
+    },
+    "behavior": {
+      "en": "It usually lives alone or in pairs and vigorously defends a small feeding territory throughout the year. In field studies, a male’s defended area could be no larger than one medium-sized tree near flowers or a feeder.",
+      "fr": "Il vit généralement seul ou en couple et défend avec vigueur un petit territoire alimentaire tout au long de l’année. Lors d’études de terrain, le secteur défendu par un mâle pouvait se limiter à un arbre de taille moyenne près de fleurs ou d’une mangeoire."
+    },
+    "reproduction": {
+      "en": "In southeastern Brazil the breeding season is reported from September to March. The female alone builds an open cup nest from soft plant fibres, often fastening mosses or lichens outside with spider silk, then incubates and feeds the young; a typical clutch is two eggs.",
+      "fr": "Dans le sud-est du Brésil, la période de reproduction est signalée de septembre à mars. La femelle construit seule un nid en coupe ouvert, fait de fibres végétales souples et souvent garni extérieurement de mousses ou de lichens fixés par de la soie d’araignée ; elle couve puis nourrit les jeunes, et la ponte compte généralement deux œufs."
+    },
+    "ecology": {
+      "en": "Its modest colouring makes it less conspicuous than many hummingbirds, but its persistent defense of flowers and feeders can reveal it. At some Brazilian sites it is confused with the Green-throated Hummingbird; compare the grey breast and belly and the all-dark bill described in the local field guide.",
+      "fr": "Sa coloration discrète le rend moins voyant que beaucoup de colibris, mais sa défense insistante des fleurs et mangeoires peut le trahir. Dans certains sites brésiliens, on peut le confondre avec le Colibri à gorge verte ; le guide local recommande de comparer le ventre et la poitrine gris ainsi que le bec entièrement sombre."
+    },
+    "conservation": {
+      "en": "The species is reported as globally Least Concern and listed in CITES Appendix II, which regulates international trade rather than extinction risk.",
+      "fr": "L’espèce est classée en préoccupation mineure à l’échelle mondiale et inscrite à l’Annexe II de la CITES, qui réglemente le commerce international plutôt que le risque d’extinction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sombre Hummingbird — WikiAves Brazil bird encyclopedia",
+        "fr": "Colibri vert et gris — encyclopédie ornithologique WikiAves"
+      },
+      "url": "https://www.wikiaves.com.br/wiki/beija-flor-cinza",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Brazilian account describes field marks, 12 cm length, slight female size difference, food, nest, eggs, habitat, range and IUCN Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 22,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vocalizations and Associated Behaviors of the Sombre Hummingbird — The Auk",
+        "fr": "Vocalisations et comportements associés du Colibri vert et gris — The Auk"
+      },
+      "url": "https://academic.oup.com/auk/article/123/4/1129/5562821",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Peer-reviewed study reports gardens and forests in mideastern Brazil, year-round territoriality, male size dimorphism and a September–March breeding season."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 19,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Birds of Carijós Ecological Station — ICMBio field guide",
+        "fr": "Oiseaux de la station écologique de Carijós — guide de terrain ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/dcom-guia-de-aves-da-esec-carij-c3-b3s-web-comp-pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Brazilian federal field guide reports endemism, 12 cm size, nectar feeding, territoriality, and confusion with the Green-throated Hummingbird."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 18,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic Report — Integrated Taxonomic Information System",
+        "fr": "Rapport taxonomique — Système intégré d’information taxonomique"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1150056",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS accepts Eupetomena cirrochloris and lists Aphantochroa cirrochloris as a synonym, citing the IOC World Bird List."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 17,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CITES list of species — Belgian Federal Public Service Health, Food Chain Safety and Environment",
+        "fr": "Liste CITES des espèces — Service public fédéral belge Santé publique, Sécurité de la chaîne alimentaire et Environnement"
+      },
+      "url": "https://www.health.belgium.be/sites/default/files/uploads/fields/fpshealth_theme_file/cites_list_full_02_2015.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "French, English and Dutch entries identify the bird and list it in CITES Appendix II."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bird Guide of RPPN Parque Florestal São Marcelo",
+        "fr": "Guide des oiseaux de la réserve privée Parque Florestal São Marcelo"
+      },
+      "url": "https://assets.sylvamo.com/m/3234ae67ca95d586/original/Manual-de-Aves-da-RPPN.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Portuguese reserve field guide describes 12 cm length, grey-green plumage, forest and park habitat, territorial behavior and Least Concern status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 20,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Birds of the Planalto — field guide",
+        "fr": "Oiseaux du Planalto — guide de terrain"
+      },
+      "url": "https://portal.ifsuldeminas.edu.br/images/PDFs/proex/publicacoes_livros/Livro_-_Aves_do_Planalto.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Brazilian field guide confirms approximately 12 cm length, nectar feeding and the female-built cup nest with a usual clutch of two eggs."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 22,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Compact, robust hummingbird with grey-green body, coppery green crown and back, small white spot behind eye, charcoal wings and tail, dark slightly down-curved bill, and small white rump/undertail tufts. Keep the plumage muted rather than brilliant.",
+  "uncertainties": [
+    "Mass and body-width measurements were not reported in the species sources reviewed, so only the approximately 12 cm total length is given.",
+    "Several authorities now place the bird in Eupetomena, while some checklists and the bestiary tree retain Aphantochroa; the profile follows the tree name and records the current synonym relationship.",
+    "The Green-throated Hummingbird comparison is a local field-identification warning; the sources reviewed do not establish a close evolutionary relationship between those two species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Portuguese field accounts, a peer-reviewed behavioral study, the federal ICMBio guide, taxonomic records, and the French-language CITES list. Kept the tree's scientific name while documenting the current Eupetomena synonym."
+}

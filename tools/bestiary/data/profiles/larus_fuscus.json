@@ -1,0 +1,194 @@
+{
+  "id": "larus_fuscus",
+  "scientific": "Larus fuscus",
+  "group": "birds",
+  "name": {
+    "en": "Lesser Black-backed Gull",
+    "fr": "Goéland brun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Lesser Black-backed Gull breeds widely in Eurasia and winters along coasts and inland waters. It shares genus Larus with the Common Gull and Glaucous Gull profiled here.",
+      "fr": "Le Goéland brun niche dans une grande partie de l’Eurasie et hiverne sur les côtes et les eaux intérieures. Il partage le genre Larus avec le Goéland cendré et le Goéland bourgmestre présentés ici."
+    },
+    "identification": {
+      "en": "Adults are long-winged gulls with dark grey backs and yellow legs. Against pale Larus hyperboreus, the dark back and yellow legs are useful contrasts.",
+      "fr": "Les adultes ont de longues ailes, le dos gris foncé et les pattes jaunes. Face au pâle Larus hyperboreus, le dos sombre et les pattes jaunes sont des contrastes utiles."
+    },
+    "habitat": {
+      "en": "It breeds on coastal cliffs, dunes, marshy heaths and buildings, then winters on coasts, estuaries, lakes and reservoirs.",
+      "fr": "Il niche sur les falaises côtières, les dunes, les landes marécageuses et les bâtiments, puis hiverne sur les côtes, les estuaires, les lacs et les réservoirs."
+    },
+    "diet": {
+      "en": "This omnivore eats fish, molluscs, worms and insects, as well as carrion and discarded food.",
+      "fr": "Cet omnivore mange des poissons, mollusques, vers et insectes, ainsi que des charognes et des déchets alimentaires."
+    },
+    "behavior": {
+      "en": "It is a partial migrant, often traveling overland, and commonly follows fishing boats or feeds at ports and rubbish tips.",
+      "fr": "C’est un migrateur partiel, qui traverse souvent les terres et suit fréquemment les bateaux de pêche ou cherche sa nourriture dans les ports et décharges."
+    },
+    "reproduction": {
+      "en": "Pairs nest in colonies, usually on the ground; both adults build the nest and incubate the clutch.",
+      "fr": "Les couples nichent en colonies, généralement au sol; les deux adultes construisent le nid et couvent la ponte."
+    },
+    "ecology": {
+      "en": "Its scavenging links marine fisheries, coastal settlements and inland feeding areas.",
+      "fr": "Son comportement charognard relie les pêcheries marines, les établissements côtiers et les zones d’alimentation intérieures."
+    },
+    "conservation": {
+      "en": "The IUCN UK Peatland Programme lists the species as Amber in the UK, a regional designation rather than a global status.",
+      "fr": "Le programme britannique des tourbières de l’UICN classe l’espèce en catégorie Amber au Royaume-Uni, un statut régional et non mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lesser Black-backed Gull — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Goéland brun — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Lesser_Black-backed_Gull",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell describes the broad Eurasian range, long wings, yellow legs and fish-based diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 13,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "English By Taxonomic Order — Canadian migratory bird names",
+        "fr": "Noms anglais par ordre taxonomique — oiseaux migrateurs du Canada"
+      },
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Canadian bilingual checklist lists Larus fuscus, Larus canus and Larus hyperboreus under Laridae with their English and French common names."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 21,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Goéland brun — Oiseaux.net",
+        "fr": "Goéland brun — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/goeland.brun.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French account describes coastal and inland seasonal habitats, varied diet, scavenging and shared nest care."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 15,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lesser Black-backed Gull — IUCN UK Peatland Programme",
+        "fr": "Goéland brun — programme britannique des tourbières de l’UICN"
+      },
+      "url": "https://www.iucn-uk-peatlandprogramme.org/wildlife-explorer/seabirds/lesser-black-backed-gull",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The UK profile gives Amber status in the British Birds of Conservation Concern assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 14,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Glaucous Gull — Oiseaux.net",
+        "fr": "Goéland bourgmestre — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/goeland.bourgmestre.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French account directly contrasts the pale Glaucous Gull with the slender, dark-backed, yellow-legged Lesser Black-backed Gull."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 16,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Amber designation applies to the United Kingdom; it should not be presented as the species-wide IUCN category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Cornell's overview with Oiseaux.net and the IUCN UK peatland account; comparison with Glaucous Gull is limited to sourced plumage and structure differences."
+}

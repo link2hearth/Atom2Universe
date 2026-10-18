@@ -1,0 +1,165 @@
+{
+  "id": "thalasseus_sandvicensis",
+  "scientific": "Thalasseus sandvicensis",
+  "group": "birds",
+  "name": {
+    "en": "Sandwich Tern",
+    "fr": "Sterne caugek"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sandwich Tern is a coastal seabird breeding around the Atlantic and adjacent seas, then migrating widely after nesting.",
+      "fr": "La Sterne caugek est un oiseau marin côtier qui niche autour de l’Atlantique et des mers voisines, puis migre largement après la reproduction."
+    },
+    "identification": {
+      "en": "It has a black shaggy crest and a long black bill tipped yellow, with a pale grey back and white underside. Unlike the Greater Crested Tern (T. bergii), its bill is not wholly yellow; see that profile.",
+      "fr": "Elle porte une huppe noire ébouriffée et un long bec noir à pointe jaune, avec le dos gris pâle et le dessous blanc. Contrairement à la Sterne huppée (T. bergii), son bec n’est pas entièrement jaune ; voir sa fiche."
+    },
+    "habitat": {
+      "en": "It nests colonially on low sandy or shingle coasts and islands, and feeds mainly in nearby shallow marine waters and estuaries.",
+      "fr": "Elle niche en colonies sur les côtes basses sableuses ou graveleuses et les îles, et s’alimente surtout dans les eaux marines peu profondes et estuaires voisins."
+    },
+    "diet": {
+      "en": "It takes mostly small schooling fish by plunge-diving, and may also eat squid, shrimp and other small prey.",
+      "fr": "Elle capture surtout de petits poissons grégaires par plongeon, et peut aussi consommer calmars, crevettes et autres petites proies."
+    },
+    "behavior": {
+      "en": "It is a long-distance migrant and forms dense breeding colonies.",
+      "fr": "C’est une migratrice au long cours qui forme des colonies de nidification denses."
+    },
+    "reproduction": {
+      "en": "Pairs nest in a shallow ground scrape and usually lay one or two eggs, incubated by both parents.",
+      "fr": "Les couples nichent dans une cuvette au sol et pondent généralement un ou deux œufs, couvés par les deux parents."
+    },
+    "ecology": {
+      "en": "Its chiefly fish diet and nearshore feeding connect it to coastal shoals and estuarine food webs.",
+      "fr": "Son régime surtout piscivore et sa pêche près du rivage la relient aux bancs de poissons côtiers et aux réseaux estuariens."
+    },
+    "conservation": {
+      "en": "The global IUCN category is Least Concern, though local colonies can be affected by disturbance, habitat change and reduced fish resources.",
+      "fr": "La catégorie mondiale de l’UICN est Préoccupation mineure, mais les colonies locales peuvent subir dérangement, changements d’habitat et baisse des ressources en poissons."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Sandwich Tern",
+        "fr": "Oiseaux.net — Sterne caugek"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/sterne.caugek.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "French account describes the black-tipped bill, coastal nesting and migration."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 10,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Cornell Lab — Sandwich Tern",
+        "fr": "Cornell Lab — Sterne caugek"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Sandwich_Tern/lifehistory",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell describes fish-dominated foraging, small prey, and a Low Concern conservation summary."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 12,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Oiseaux.net — Greater Crested Tern",
+        "fr": "Oiseaux.net — Sterne huppée"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/sterne.huppee.html",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Greater Crested Tern has a yellow bill, unlike the Sandwich Tern's black bill with a yellow tip."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 18,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "DORIS — Sterne caugek",
+        "fr": "DORIS — Sterne caugek"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Sterna-sandvicensis-Sterne-caugek-4195",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "DORIS reports migration and dense colonial nesting of the Sandwich Tern."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 11,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The English common name is applied to a complex with geographically distinct forms; the inventory follows Thalasseus sandvicensis sensu stricto."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

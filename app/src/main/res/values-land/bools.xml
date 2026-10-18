@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lecteur plein écran : page à deux colonnes (scène à gauche, liste à droite) -->
+    <bool name="player_two_pane">true</bool>
+</resources>

@@ -1,0 +1,15 @@
+{
+  "id": 2685,
+  "name": "cave_barrel_fir",
+  "texture_top": "cave_furniture:fir_barrel_end",
+  "texture_side": "cave_furniture:fir_barrel_side",
+  "texture_bottom": "cave_furniture:fir_barrel_end",
+  "color": "#715741",
+  "hardness": 1.5,
+  "drop": "cave_barrel_fir",
+  "creative_tab": "wood",
+  "furniture": "barrel",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": ["wood"]
+}

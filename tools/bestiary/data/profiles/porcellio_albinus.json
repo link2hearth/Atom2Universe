@@ -1,0 +1,191 @@
+{
+  "id": "porcellio_albinus",
+  "scientific": "Porcellio albinus",
+  "group": "invertebrates",
+  "name": {
+    "en": "White Porcellio Woodlouse",
+    "fr": "Cloporte blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "Porcellio albinus is a desert-adapted terrestrial isopod studied in southern Tunisia.",
+      "fr": "Porcellio albinus est un isopode terrestre adapté aux milieux désertiques, étudié dans le sud de la Tunisie."
+    },
+    "identification": {
+      "en": "It is a woodlouse in the family Porcellionidae; the sources consulted focus on ecology rather than a field identification key.",
+      "fr": "C’est un cloporte de la famille des Porcellionidae; les sources consultées portent sur son écologie plutôt que sur une clé d’identification de terrain."
+    },
+    "habitat": {
+      "en": "It occupies arid and Saharan regions of North Africa, including sandy habitats in southern Tunisia; records also extend to the Canary Islands and Niger Sahara.",
+      "fr": "Il occupe les régions arides et sahariennes d’Afrique du Nord, notamment des milieux sableux du sud tunisien; des mentions existent aussi aux Canaries et dans le Sahara nigérien."
+    },
+    "diet": {
+      "en": "The species-specific diet is not detailed in the studies consulted.",
+      "fr": "Les études consultées ne détaillent pas le régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "It is a burrowing, mainly nocturnal species; surface activity varies with time of day and season in the Tunisian desert population studied.",
+      "fr": "C’est une espèce fouisseuse, surtout nocturne; l’activité en surface varie selon l’heure et la saison dans la population désertique tunisienne étudiée."
+    },
+    "reproduction": {
+      "en": "A field study in Zarat found seasonal breeding, with two breeding periods during the year; this result is specific to that population.",
+      "fr": "Une étude de terrain à Zarat a relevé une reproduction saisonnière, avec deux périodes de reproduction dans l’année; ce résultat concerne cette population."
+    },
+    "ecology": {
+      "en": "It is adapted to sandy desert soils. Unlike P. albinus, P. dilatatus is often found around human settlements.",
+      "fr": "Il est adapté aux sols sableux désertiques. À la différence de P. albinus, P. dilatatus est souvent trouvé près des habitations."
+    },
+    "conservation": {
+      "en": "The ecological studies consulted do not give a global conservation assessment for this species.",
+      "fr": "Les études écologiques consultées ne donnent pas d’évaluation mondiale de conservation pour cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Daily and seasonal time partitioning in surface activity of Porcellio albinus — Journal of Arid Environments",
+        "fr": "Répartition journalière et saisonnière de l’activité de surface de Porcellio albinus — Journal of Arid Environments"
+      },
+      "url": "https://www.sciencedirect.com/org/science/article/pii/S131329892200338X",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The study describes a burrowing isopod and examines activity rhythms."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 10,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population dynamics and reproductive aspects of Porcellio albinus — Invertebrate Reproduction & Development",
+        "fr": "Dynamique de population et aspects reproductifs de Porcellio albinus — Invertebrate Reproduction & Development"
+      },
+      "url": "https://doi.org/10.1080/07924259.2016.1263242",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "behavior",
+        "habitat"
+      ],
+      "facts": [
+        "The Zarat study reports nocturnal xeric-habitat life and seasonal reproduction in two periods."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 13,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Behavioral and Reproductive Strategies of Porcellio Species in Tunisian Pre-Desert Ecosystems",
+        "fr": "Stratégies comportementales et reproductives des Porcellio des écosystèmes présahariens tunisiens"
+      },
+      "url": "https://www.porcellio.nl/_downloads/79c8368a5f9101fb1cdf7090b7aa939d",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The chapter reports Saharan and Canary records and burrowing in sandy soil."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 12,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio dilatatus — French regional species record",
+        "fr": "Porcellio dilatatus — fiche espèce régionale française"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237085",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The INPN-based record describes P. dilatatus as often synanthropic."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 9,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Porcellio albinus — ITIS taxonomic record",
+        "fr": "Porcellio albinus — fiche taxonomique ITIS"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt;jsessionid=4215DD5E330AEBC3C53F6A58257FC69B?search_topic=TSN&search_value=596265",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "ITIS recognizes Porcellio albinus as a species in Porcellionidae."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 9,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Distribution outside the studied Tunisian localities is compiled from regional accounts and older records.",
+    "Diet and species-level identification characters are not described in detail by the studies consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-reference with P. dilatatus contrasts documented arid burrowing with synanthropic records; reciprocal text is included there."
+}

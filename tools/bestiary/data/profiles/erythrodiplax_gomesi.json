@@ -1,0 +1,211 @@
+{
+  "id": "erythrodiplax_gomesi",
+  "scientific": "Erythrodiplax gomesi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Gomes’ Dragonlet",
+    "fr": "Libellule de Gomes"
+  },
+  "sections": {
+    "overview": {
+      "en": "Erythrodiplax gomesi is a Brazilian dragonfly first described from Pirassununga, São Paulo. A 2023 survey recorded it for the first time in Minas Gerais.",
+      "fr": "Erythrodiplax gomesi est une libellule brésilienne décrite initialement de Pirassununga, dans l’État de São Paulo. Un inventaire de 2023 l’a signalée pour la première fois dans le Minas Gerais."
+    },
+    "identification": {
+      "en": "The taxonomic sources confirm the accepted species name and its placement among libellulid dragonflies, but the brief online records reviewed do not provide a usable field diagnosis.",
+      "fr": "Les sources taxonomiques confirment le nom accepté et son classement parmi les libellulidés, mais les courtes notices en ligne examinées ne donnent pas de diagnose de terrain exploitable."
+    },
+    "habitat": {
+      "en": "The 2023 Minas Gerais record came from Sempre-Vivas National Park, a highland landscape containing Cerrado, gallery forest and rocky-field vegetation; the paper does not assign the species to one of those habitats.",
+      "fr": "La mention du Minas Gerais publiée en 2023 provient du parc national de Sempre-Vivas, paysage d’altitude comprenant cerrado, forêt-galerie et champs rocheux ; l’article n’associe pas l’espèce à un seul de ces habitats."
+    },
+    "diet": {
+      "en": "The cited species records provide no prey information specific to Erythrodiplax gomesi.",
+      "fr": "Les notices citées ne donnent pas d’information sur les proies propre à Erythrodiplax gomesi."
+    },
+    "behavior": {
+      "en": "The 2023 park inventory records the species but gives no species-specific behavioral details.",
+      "fr": "L’inventaire du parc de 2023 signale l’espèce sans détailler son comportement propre."
+    },
+    "reproduction": {
+      "en": "The cited records give no species-specific breeding information.",
+      "fr": "Les notices citées ne donnent pas d’information sur sa reproduction."
+    },
+    "ecology": {
+      "en": "A recent Brazilian inventory calls it a generalist that is often overlooked in collections, while also emphasizing persistent gaps in South American odonate distribution data.",
+      "fr": "Un inventaire brésilien récent la qualifie de généraliste souvent négligée dans les collections, tout en soulignant les lacunes persistantes sur la répartition des odonates sud-américains."
+    },
+    "conservation": {
+      "en": "GBIF currently displays the global IUCN category Data Deficient. Brazil’s 2014 national assessment listed Least Concern; the scopes and dates differ.",
+      "fr": "GBIF affiche actuellement la catégorie mondiale UICN « Données insuffisantes ». L’évaluation nationale brésilienne de 2014 indiquait « Préoccupation mineure » ; les échelles et les dates diffèrent."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Odonata from Sempre-Vivas National Park, Minas Gerais, Brazil",
+        "fr": "Odonata du parc national de Sempre-Vivas, Minas Gerais, Brésil"
+      },
+      "url": "https://portal.ifs.ifsuldeminas.edu.br/arquivos/artigo.lib%C3%A9lulas.sempreVivas.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "2023 peer-reviewed inventory records Erythrodiplax gomesi for the first time in Minas Gerais and calls overlooked examples generalists.",
+        "The checklist records occurrence, not species-specific prey, behavior or breeding details."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Erythrodiplax gomesi — GBIF taxon page",
+        "fr": "Erythrodiplax gomesi — fiche taxonomique GBIF"
+      },
+      "url": "https://www.gbif.org/es/taxon/3BDR6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "GBIF accepts the name, cites the original 1946 description from Pirassununga and displays IUCN Data Deficient."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Erythrodiplax gomesi — ITIS report",
+        "fr": "Erythrodiplax gomesi — fiche ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=593159",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "ITIS lists the current standing as valid and places the species in its accepted taxonomic hierarchy."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Brazilian Red Book of Threatened Species — Odonata listings",
+        "fr": "Livre rouge brésilien des espèces menacées — liste des Odonata"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Brazil’s 2014 national evaluation lists Erythrodiplax gomesi as Least Concern."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "This species is poorly documented in the reviewed sources; do not infer its microhabitat, diet, behavior or reproduction from congeners. The conservation category difference reflects global versus Brazilian national assessments and distinct assessment dates."
+}

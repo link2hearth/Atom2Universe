@@ -1,0 +1,324 @@
+{
+  "id": "common_swift",
+  "scientific": "Apus apus",
+  "group": "birds",
+  "name": {
+    "en": "Common swift",
+    "fr": "Martinet noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common swift is a bird built around open air: it catches food, drinks, gathers nest material and often rests while flying. Its brief breeding season is the exception, when a pair returns to a cavity to raise its young. The species usually raises one brood in a year, then leaves its European breeding grounds for Africa as summer ends.",
+      "fr": "Le martinet noir est un oiseau de l’espace aérien : il y chasse, boit, collecte des matériaux pour son nid et se repose souvent en volant. Sa courte saison de reproduction fait exception, car le couple regagne alors une cavité pour élever ses jeunes. L’espèce élève généralement une nichée par an, puis quitte ses sites européens à la fin de l’été pour gagner l’Afrique."
+    },
+    "identification": {
+      "en": "In British adults, the mean wing length is about 175 mm and mean body mass is 39.5 g. Their sooty-brown plumage, pale throat, long swept-back wings and short forked tail form a dark, curved silhouette overhead; the small throat patch is easily missed as they speed past.",
+      "fr": "Chez les adultes britanniques, la longueur moyenne de l’aile est d’environ 175 mm et la masse corporelle moyenne de 39,5 g. Leur plumage brun suie, leur gorge pâle, leurs longues ailes en faucille et leur courte queue fourchue dessinent une silhouette sombre et arquée ; la petite tache de la gorge passe facilement inaperçue lorsque l’oiseau file."
+    },
+    "habitat": {
+      "en": "It breeds across much of Europe and Asia, nesting in enclosed spaces such as roof gaps, eaves, old walls, cliffs and tree hollows. In Britain and Ireland, swifts nest almost entirely in buildings, where roof cavities can support colonies even in busy towns. Outside the breeding season, tracked birds range across sub-Saharan Africa, with winter destinations differing among European populations.",
+      "fr": "Il se reproduit dans une grande partie de l’Europe et de l’Asie, nichant dans des espaces fermés comme les interstices des toits, les corniches, les vieux murs, les falaises et les arbres creux. En Grande-Bretagne et en Irlande, il niche presque exclusivement dans des bâtiments, où les cavités sous les toits accueillent des colonies jusque dans les villes animées. Hors reproduction, les oiseaux suivis parcourent l’Afrique subsaharienne, et les destinations hivernales diffèrent selon les populations européennes."
+    },
+    "diet": {
+      "en": "The swift takes flying insects and spiders, from aphids and flies to beetles and small wasps, sweeping them from the air with its wide gape. Adults accumulate many tiny prey in a saliva-bound throat pouch, then regurgitate the compact food bolus to their chicks; its contents change with the insects available. Both adults forage in the air and bring this concentrated meal back to the nest, where several small prey items arrive together rather than one at a time.",
+      "fr": "Le martinet capture en vol des insectes et des araignées, des pucerons et mouches aux coléoptères et petites guêpes, qu’il cueille dans l’air avec la large ouverture de sa bouche. L’adulte rassemble de nombreuses petites proies dans une poche de la gorge, agglutinées par la salive, puis régurgite cette boulette aux poussins ; sa composition varie selon les insectes disponibles. Les deux adultes chassent dans l’air et rapportent ce repas concentré au nid, où plusieurs petites proies arrivent ensemble plutôt qu’une par une."
+    },
+    "behavior": {
+      "en": "Long, narrow, sickle-shaped wings and short feathered feet suit rapid, agile flight and gliding, while making take-off from level ground difficult. Swifts call with piercing screams as they wheel in social groups near nest sites. Tracking showed that during the ten-month non-breeding period, tagged birds spent over 99% of their time airborne; this does not describe the breeding season. Most tracked birds nevertheless showed occasional periods without flight.",
+      "fr": "Les longues ailes étroites en faucille et les pieds courts emplumés favorisent un vol rapide, agile et plané, mais rendent le décollage difficile depuis un sol plat. Les martinets poussent des cris perçants en tournoyant en groupes près des sites de nidification. Le suivi d’oiseaux munis d’enregistreurs a montré que, durant les dix mois sans reproduction, ils passaient plus de 99 % de leur temps en vol ; cette observation ne décrit pas la saison de nidification. La plupart des oiseaux suivis ont néanmoins présenté quelques périodes sans activité de vol."
+    },
+    "reproduction": {
+      "en": "A pair lays a usual clutch of two or three eggs in a shallow cup of feathers and plant fibres glued with saliva inside a cavity. Both parents incubate for about 18–24 days and feed the naked, helpless hatchlings. Young normally leave the nest after roughly 37–56 days, with timing affected by conditions; they then fly independently. The species generally rears a single brood during its short stay on the breeding grounds.",
+      "fr": "Le couple pond généralement deux ou trois œufs dans une coupe peu profonde de plumes et de fibres végétales, collées avec de la salive à l’intérieur d’une cavité. Les deux parents couvent pendant environ 18 à 24 jours et nourrissent les nouveau-nés nus et dépendants. Les jeunes quittent habituellement le nid après quelque 37 à 56 jours, selon les conditions, puis volent de façon autonome. L’espèce élève généralement une seule nichée durant son court séjour sur ses sites de reproduction."
+    },
+    "ecology": {
+      "en": "By feeding on airborne arthropods, swifts are tied to weather: cold or prolonged rain can make prey harder to find and adults less able to forage, leaving nestlings short of food. Researchers have confirmed occasional nocturnal torpor in families resting in nests during cold breeding-season nights; torpor is a temporary, controlled reduction in metabolism, not a routine state for every bird. In a monitored Italian colony, nestling survival also varied with hatching order and brood conditions, showing how a spell of poor feeding can affect the youngest chicks.",
+      "fr": "En consommant des arthropodes aériens, les martinets dépendent de la météo : le froid ou une pluie persistante peuvent raréfier les proies et gêner la chasse des adultes, laissant les poussins manquer de nourriture. Des chercheurs ont confirmé des épisodes occasionnels de torpeur nocturne chez des familles au nid lors de nuits froides en période de reproduction ; la torpeur est une baisse temporaire et contrôlée du métabolisme, pas un état habituel chez tous les oiseaux. Dans une colonie italienne suivie, la survie des poussins variait aussi selon l’ordre d’éclosion et les conditions de nichée, montrant qu’un manque de nourriture peut peser sur les plus jeunes."
+    },
+    "conservation": {
+      "en": "BTO monitoring shows that British breeding numbers fell by 70% between 1995 and 2024. Building renovations close roof gaps and remove nest sites; this loss contributed to the swift’s addition to the UK red list in 2021.",
+      "fr": "Le suivi du BTO indique que les effectifs nicheurs britanniques ont baissé de 70 % entre 1995 et 2024. Les rénovations ferment les accès sous les toits et suppriment des sites de nidification ; cette perte a contribué à l’inscription du martinet sur la liste rouge britannique en 2021."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Swift: BirdFacts",
+        "fr": "Martinet noir : BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/swift",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British decline; nest and adult measurements"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 194,
+        "notes_words": 6,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apodidae – Swifts",
+        "fr": "Apodidae – les martinets"
+      },
+      "url": "https://www.bto.org/learn/about-birds/bird-families/apodidae-swifts",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Sickle wings and short feathered feet",
+        "Swift flight and vocal behavior"
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 11,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Swift Bird Facts | Apus apus",
+        "fr": "Fiche du martinet noir"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/swift",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Identification, nesting and conservation account"
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 194,
+        "notes_words": 5,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annual 10-Month Aerial Life Phase in the Common Swift Apus apus",
+        "fr": "Phase annuelle de dix mois de vie aérienne chez Apus apus"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28094028/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Tagged adults airborne over 99% in non-breeding phase",
+        "Study explicitly separates non-breeding from annual life cycle"
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 16,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cool birds: first evidence of energy-saving nocturnal torpor in free-living common swifts",
+        "fr": "Des oiseaux économes : première preuve de torpeur nocturne chez des martinets noirs sauvages"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9006018/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Field colony: occasional family torpor on cold nights",
+        "Metabolic reductions measured in six events"
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 14,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Weather conditions, brood size and hatching order affect Common Swift nestlings’ survival and growth",
+        "fr": "Météo, taille de la nichée et ordre d’éclosion influencent survie et croissance des poussins"
+      },
+      "url": "https://www.tandfonline.com/doi/full/10.1080/00063657.2014.989193",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Italian study links weather and brood conditions to growth",
+        "Aerial prey capture makes nestling provisioning weather-sensitive"
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 16,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food / Nestling Food",
+        "fr": "Nourriture et alimentation des poussins"
+      },
+      "url": "https://apus-apus.com/der-mauersegler/biologie/nahrung-nestlingsfutter",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Aerial prey includes insects and spiders",
+        "Adults bind prey into saliva-bound food balls"
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 13,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Swift sampling of farmland aerial invertebrates offers insights into foraging behaviour",
+        "fr": "Échantillonnage des invertébrés aériens éclaire la recherche de nourriture du martinet"
+      },
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1002/wlb3.01294",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Suffolk colony boluses varied with prey and brood",
+        "Regurgitated food bolus provisions swift nestlings"
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 14,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bird Migration Atlas: Common Swift",
+        "fr": "Atlas de la migration des oiseaux : martinet noir"
+      },
+      "url": "https://migrationatlas.org/node/1756",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Breeding occurs across Europe and Asia",
+        "Sub-Saharan winter areas differ by population"
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.3",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 12,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "",
+  "uncertainties": [],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual review; BTO population decline dates and wing anatomy checked; broad gape translation corrected; tracked non-breeding flight scope retained; artwork accepted.",
+  "source_audit_version": 1
+}

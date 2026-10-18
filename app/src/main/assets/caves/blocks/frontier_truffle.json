@@ -1,0 +1,17 @@
+{
+  "id": 9853,
+  "name": "frontier_truffle",
+  "texture_top": "frontier:9853:top",
+  "texture_side": "frontier:9853:side",
+  "texture_bottom": "frontier:9853:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_truffle",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

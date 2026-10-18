@@ -1,0 +1,119 @@
+{
+  "id": "oplurus_fierinensis",
+  "scientific": "Oplurus fierinensis",
+  "group": "reptiles",
+  "name": {
+    "en": "Oplurus fierinensis",
+    "fr": "Oplurus fierinensis"
+  },
+  "sections": {
+    "overview": {
+      "en": "This rock-dwelling iguana is endemic to southwestern Madagascar.",
+      "fr": "Cet iguane rupicole est endémique du sud-ouest de Madagascar."
+    },
+    "identification": {
+      "en": "It has a flattened body, fine keeled scales and a blue-grey back.",
+      "fr": "Son corps est aplati, ses écailles sont finement carénées et son dos bleu-gris."
+    },
+    "habitat": {
+      "en": "It uses rocky or limestone outcrops and nearby thorn scrub.",
+      "fr": "Il fréquente les affleurements rocheux ou calcaires et les fourrés épineux voisins."
+    },
+    "diet": {
+      "en": "The regional species account reports an insect diet.",
+      "fr": "La fiche régionale de l’espèce indique un régime insectivore."
+    },
+    "behavior": {
+      "en": "It is diurnal and saxicolous.",
+      "fr": "Il est diurne et rupicole."
+    },
+    "reproduction": {
+      "en": "It lays eggs; a regional account reports clutches of four to six.",
+      "fr": "Il pond des œufs ; une fiche régionale signale des pontes de quatre à six."
+    },
+    "ecology": {
+      "en": "The Reptile Database places it in arid southwestern Madagascar, including the Fiherenana and Onilahy valleys.",
+      "fr": "Selon The Reptile Database, il vit dans les régions arides du sud-ouest malgache, notamment dans les vallées de la Fiherenana et de l’Onilahy."
+    },
+    "conservation": {
+      "en": "A regional guide lists habitat loss and degradation as threats and reports Least Concern; this is not a new assessment.",
+      "fr": "Un guide régional cite la perte et la dégradation de l’habitat et rapporte le statut « préoccupation mineure » ; il ne s’agit pas d’une nouvelle évaluation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Malagasy environmental guide: Oplurus fierinensis",
+        "fr": "Guide environnemental malgache : Oplurus fierinensis"
+      },
+      "url": "https://www.environnement.mg/wp-content/uploads/2025/01/2-FICHE-TECHNIQUE-COMPLETE-richesse-biologique-NAP-TSinjoriake_A4_2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Regional species account: endemic, diurnal, saxicolous; insect prey; four to six eggs; habitat threats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 14,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Reptile Database: Oplurus fierinensis",
+        "fr": "The Reptile Database : Oplurus fierinensis"
+      },
+      "url": "https://reptile-database.reptarium.cz/Oplurus/fierinensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Taxonomic record gives southwestern range and oviparity."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 7,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The inventory supplies no separate common name in either language. Conservation category and threat summary come from a regional guide; they are not a new population assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared a Malagasy regional species account with The Reptile Database; kept claims brief and attributed the reported conservation category to the regional guide."
+}

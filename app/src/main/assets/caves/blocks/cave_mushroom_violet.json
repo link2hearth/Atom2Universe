@@ -1,0 +1,17 @@
+{
+  "id": 2622,
+  "name": "cave_mushroom_violet",
+  "texture_top": "cave_art:a_mushroom_violet",
+  "texture_side": "cave_art:a_mushroom_violet",
+  "texture_bottom": "cave_art:a_mushroom_violet",
+  "color": "#BB91E8",
+  "hardness": 0.3,
+  "light_emission": 4,
+  "drop": "cave_mushroom_violet",
+  "creative_tab": "nature",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": [],
+  "decoration": true,
+  "sprite_height": 0.9
+}

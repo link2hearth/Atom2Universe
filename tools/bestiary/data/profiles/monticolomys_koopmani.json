@@ -1,0 +1,142 @@
+{
+  "id": "monticolomys_koopmani",
+  "scientific": "Monticolomys koopmani",
+  "group": "mammals",
+  "name": {
+    "en": "Koopman’s forest mouse",
+    "fr": "Monticolomys de Koopman"
+  },
+  "sections": {
+    "overview": {
+      "en": "Monticolomys koopmani is a Malagasy rodent in the endemic family Nesomyidae, known from the central and southern highlands.",
+      "fr": "Monticolomys koopmani est un rongeur malgache de la famille endémique des Nesomyidés, connu des hautes terres centrales et méridionales."
+    },
+    "identification": {
+      "en": "The taxonomic accounts consulted establish its identity as a nesomyid rodent but do not provide a concise field description or diagnostic measurements.",
+      "fr": "Les comptes rendus taxonomiques consultés le reconnaissent comme un rongeur nesomyidé, mais ne donnent ni description de terrain concise ni mesures diagnostiques."
+    },
+    "habitat": {
+      "en": "Mammal Species of the World records it in scattered sclerophyllous montane forest at about 1.6–2 km in eastern Madagascar; its type locality is at about 1.8 km.",
+      "fr": "Mammal Species of the World le signale dans des forêts sclérophylles montagnardes discontinues, vers 1,6–2 km dans l’est de Madagascar ; sa localité-type se trouve vers 1,8 km."
+    },
+    "diet": {
+      "en": "The taxonomic and distribution sources reviewed do not document a species-specific diet, so particular foods are left unspecified.",
+      "fr": "Les sources taxonomiques et de répartition examinées ne documentent pas le régime propre à l’espèce ; aucun aliment précis n’est donc indiqué."
+    },
+    "behavior": {
+      "en": "The sources reviewed do not establish its daily activity pattern or locomotion, so these behaviours remain undescribed here.",
+      "fr": "Les sources examinées n’établissent ni son rythme d’activité ni son mode de déplacement ; ces comportements ne sont donc pas précisés ici."
+    },
+    "reproduction": {
+      "en": "The sources reviewed provide no verified breeding dates, litter size or gestation data for this species.",
+      "fr": "Les sources examinées ne donnent aucune donnée vérifiée sur les périodes de reproduction, la taille des portées ou la gestation de cette espèce."
+    },
+    "ecology": {
+      "en": "Molecular phylogenies consistently place Monticolomys as the sister genus of Macrotarsomys, another Malagasy nesomyine lineage.",
+      "fr": "Les phylogénies moléculaires placent régulièrement Monticolomys comme genre-frère de Macrotarsomys, une autre lignée de Nesomyinés malgaches."
+    },
+    "conservation": {
+      "en": "The American Society of Mammalogists’ Mammal Diversity Database reports the IUCN category Least Concern, citing the 2024 Red List record.",
+      "fr": "La base Mammal Diversity Database de l’American Society of Mammalogists indique la catégorie « préoccupation mineure » de l’UICN, d’après la fiche de la Liste rouge de 2024."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Monticolomys koopmani — Mammal Diversity Database, American Society of Mammalogists",
+        "fr": "Monticolomys koopmani — Mammal Diversity Database, American Society of Mammalogists"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003761/",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The database is taxonomic: it identifies the Malagasy nesomyid rodent and gives Least Concern, citing IUCN 2024; it has no diet, behaviour or breeding account."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 25,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Monticolomys koopmani — Mammal Species of the World, 3rd edition",
+        "fr": "Monticolomys koopmani — Mammal Species of the World, 3e édition"
+      },
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13000140",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The summary gives forest at 1,625–2,000 m and a type locality at 1,800 m; no diet, behaviour or breeding account."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 20,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Skull morphological evolution in Malagasy endemic Nesomyinae rodents — peer-reviewed study",
+        "fr": "Évolution morphologique du crâne chez les Nesomyinés endémiques de Madagascar — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8815910/",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed study places Monticolomys sister to Macrotarsomys in molecular phylogenies."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed species-specific diet, behaviour and reproductive data were not established from the taxonomic sources consulted.",
+    "The habitat range quoted is an older taxonomic synthesis; newer field records may extend it."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept biological claims to the taxonomic facts available; checked the genus-level relationship against a peer-reviewed molecular and morphological study."
+}

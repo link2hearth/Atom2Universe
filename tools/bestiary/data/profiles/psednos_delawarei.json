@@ -1,0 +1,168 @@
+{
+  "id": "psednos_delawarei",
+  "scientific": "Psednos delawarei",
+  "group": "fish",
+  "name": {
+    "en": "Delaware snailfish",
+    "fr": "Limace de mer du Delaware"
+  },
+  "sections": {
+    "overview": {
+      "en": "This marine snailfish (Liparidae) is known from the western North Atlantic; records place it east of New Jersey.",
+      "fr": "Cette limace de mer (Liparidae) est connue dans l’Atlantique Nord-Ouest ; les données la situent à l’est du New Jersey."
+    },
+    "identification": {
+      "en": "It is a small species described from a single type specimen; detailed identification relies on specialist anatomical characters.",
+      "fr": "C’est une petite espèce décrite à partir d’un unique spécimen type ; son identification détaillée repose sur des caractères anatomiques spécialisés."
+    },
+    "habitat": {
+      "en": "The type record is from the continental slope region of the western North Atlantic. Available sources do not establish its full depth range.",
+      "fr": "La localité type se trouve dans la région du talus continental de l’Atlantique Nord-Ouest. Les sources disponibles n’établissent pas toute son amplitude bathymétrique."
+    },
+    "diet": {
+      "en": "No species-specific diet data were found in the consulted accounts.",
+      "fr": "Aucune donnée alimentaire propre à l’espèce n’a été trouvée dans les sources consultées."
+    },
+    "behavior": {
+      "en": "Its behavior is not described in the consulted sources.",
+      "fr": "Son comportement n’est pas décrit dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "The consulted sources report no reproductive observations.",
+      "fr": "Les sources consultées ne rapportent aucune observation sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The species is exceptionally poorly documented: the taxonomic account reports only the type specimen. P. griseus is another Psednos, recorded off Isla Guadalupe in the eastern Pacific, far from this western North Atlantic type locality.",
+      "fr": "L’espèce est exceptionnellement peu documentée : la source taxonomique ne signale que le spécimen type. P. griseus est un autre Psednos, signalé au large de l’île Guadalupe dans le Pacifique oriental, loin de cette localité type de l’Atlantique Nord-Ouest."
+    },
+    "conservation": {
+      "en": "The consulted FishBase listing does not provide an IUCN assessment for this species.",
+      "fr": "La liste FishBase consultée ne fournit pas d’évaluation UICN pour cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "Psednos species list"
+      },
+      "url": "https://fishbase.se/identification/SpeciesList.php?genus=Psednos",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the species in the Northwest Atlantic."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 8,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Family Liparidae",
+        "fr": "snailfishes, taxonomic account"
+      },
+      "url": "https://www.researchgate.net/publication/242550096_Family_Liparidae_Scopoli_1777_-_Snailfishes",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The family account reports one holotype, from east of New Jersey."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 11,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS",
+        "fr": "taxonomic report"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644402",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes Psednos delawarei Chernova and Stein, 2002 as a valid Liparidae species."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos griseus species summary",
+        "fr": "FishBase — résumé de Psednos griseus"
+      },
+      "url": "https://www.fishbase.se/summary/Psednos-griseus.html",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos griseus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 14,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "A search result on Wikipedia gives a conflicting southwest-Pacific distribution; it is disregarded because FishBase and the specialist Liparidae treatment agree on the western North Atlantic. No precise depth value is asserted. The French vernacular is descriptive, not verified as standardized."
+  ],
+  "review_note": "Kept the entry concise because published species-specific observations are sparse. Cross-checked taxonomic identity and locality across taxonomic and species accounts; unsupported life-history details are left unstated.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

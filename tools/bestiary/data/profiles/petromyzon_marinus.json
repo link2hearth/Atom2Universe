@@ -1,0 +1,114 @@
+{
+  "id": "petromyzon_marinus",
+  "scientific": "Petromyzon marinus",
+  "group": "fish",
+  "name": {
+    "en": "Sea Lamprey",
+    "fr": "Lamproie marine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sea lamprey is a jawless, eel-like fish of the North Atlantic. Adults live at sea as parasites of other fish and return to rivers to spawn once. Landlocked populations exist in some North American lakes, and in the Great Lakes it is a notorious invader.",
+      "fr": "La lamproie marine est un poisson sans mâchoires, de forme anguilliforme, de l’Atlantique Nord. Les adultes vivent en mer en parasites d’autres poissons et remontent les rivières pour se reproduire une seule fois. Des populations enclavées existent dans certains lacs nord-américains, et dans les Grands Lacs elle est une envahisseuse redoutée."
+    },
+    "identification": {
+      "en": "The body is scaleless and cartilaginous, with no jaws and no paired fins. The mouth is a round suction disc lined with horny teeth, with a rasping tongue inside. There is a single nostril, an eye on each side of the head, seven gill openings and two dorsal fins. Adults are brownish-gray and usually reach 60 cm, rarely up to 120 cm. FishBase lists a maximum published mass of 2.5 kg; this is a recorded maximum, not a typical adult weight. No sex-specific mass or body width was found.",
+      "fr": "Le corps est sans écailles et cartilagineux, sans mâchoires ni nageoires paires. La bouche est un disque de succion rond garni de dents cornées, avec une langue râpeuse à l’intérieur. On compte une seule narine, un œil de chaque côté de la tête, sept orifices branchiaux et deux nageoires dorsales. Les adultes sont gris-brun et atteignent le plus souvent 60 cm, rarement jusqu’à 120 cm. FishBase indique une masse maximale publiée de 2,5 kg; il s’agit d’un record, non d’un poids typique d’adulte. Aucune masse selon le sexe ni largeur du corps n’a été trouvée."
+    },
+    "habitat": {
+      "en": "It is anadromous: adults live in the sea and return to freshwater to breed. Its range runs from Norway and Iceland south to North Africa in the Northeast Atlantic, and from Labrador to the Gulf coast of Florida in the west. Larvae live in streams with sandy or gravelly bottoms and slow edges.",
+      "fr": "Elle est anadrome : les adultes vivent en mer et regagnent l’eau douce pour se reproduire. Son aire s’étend de la Norvège et de l’Islande au nord de l’Afrique dans l’Atlantique nord-est, et du Labrador au golfe de Floride à l’ouest. Les larves vivent dans des ruisseaux au fond de sable ou de gravier et aux bords calmes."
+    },
+    "diet": {
+      "en": "Larvae filter-feed on diatoms, algae and detritus. Adults are parasites that attach to fishes, and in the sea sometimes to marine mammals, with their suction mouth and feed on blood and body fluids, often without killing the host. Adults stop feeding when they reach sexual maturity and during spawning.",
+      "fr": "Les larves filtrent des diatomées, des algues et des débris. Les adultes sont des parasites qui se fixent par leur bouche en ventouse sur des poissons et, en mer, parfois sur des mammifères marins, et se nourrissent de sang et de liquides corporels, souvent sans tuer l’hôte. Ils cessent de se nourrir à la maturité sexuelle et pendant la ponte."
+    },
+    "behavior": {
+      "en": "Adults are highly mobile and have no home range or territory. They are solitary or gather in small groups while attached to hosts. During spawning, males use chemical signals, bile-acid pheromones, to attract females.",
+      "fr": "Les adultes sont très mobiles et n’ont ni domaine vital ni territoire. Ils sont solitaires ou forment de petits groupes lorsqu’ils sont fixés sur leurs hôtes. Pendant la reproduction, les mâles émettent des signaux chimiques, des phéromones d’acides biliaires, pour attirer les femelles."
+    },
+    "reproduction": {
+      "en": "Adults run up rivers in spring and early summer, at water temperatures of 10–18 °C, to spawn once and die. Males build nests and females lay tens to hundreds of thousands of small eggs, which hatch after about one to two weeks. The larvae burrow in mud for years, typically 3 to 7 or more, then transform and go to sea, where adults spend about two to three years before returning.",
+      "fr": "Les adultes remontent les rivières au printemps et au début de l’été, à des températures de 10 à 18 °C, pour frayer une fois puis mourir. Les mâles construisent des nids et les femelles pondent des dizaines à des centaines de milliers de petits œufs, qui éclosent après une à deux semaines environ. Les larves s’enfouissent dans la vase pendant des années, en général de 3 à 7 ou plus, puis se transforment et gagnent la mer, où les adultes passent environ deux à trois ans avant de revenir."
+    },
+    "ecology": {
+      "en": "As a parasite, the sea lamprey can harm its host fishes, and adults have few natural predators. Introduced to the Great Lakes, it contributed to the collapse of lake trout, whitefish and cisco fisheries. The catch of lake trout in the upper lakes fell from about 15 million pounds a year to about 300,000 pounds by the early 1960s.",
+      "fr": "Parasite, la lamproie marine peut nuire à ses poissons hôtes, et les adultes ont peu de prédateurs naturels. Introduite dans les Grands Lacs, elle a contribué à l’effondrement des pêcheries de touladi, de corégone et de cisco. La prise de touladi dans les lacs supérieurs est passée d’environ 15 millions de livres par an à environ 300 000 livres au début des années 1960."
+    },
+    "conservation": {
+      "en": "In its native range the species is Least Concern on the IUCN Red List (assessed in 2022). In the Great Lakes, where it is invasive, it is the target of control: lampricides applied to larval streams, plus barriers and traps that stop adults from reaching spawning grounds.",
+      "fr": "Dans son aire d’origine, l’espèce est classée en préoccupation mineure sur la Liste rouge de l’UICN (évaluation de 2022). Dans les Grands Lacs, où elle est envahissante, elle fait l’objet d’une lutte : produits lampricides dans les cours d’eau à larves, barrières et pièges qui empêchent les adultes d’atteindre les frayères."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Petromyzon marinus, Sea lamprey — FishBase",
+        "fr": "Petromyzon marinus, lamproie marine — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Petromyzon-marinus.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Max 120 cm, common 60 cm; range Norway/Iceland to North Africa and Labrador to Florida; larvae burrow about 5.5–8 years (range 2–19+); adults 20–36 months at sea; spawning at 10–18 °C, eggs hatch in 7–14 days.",
+        "Least Concern, assessed 29 May 2022; parasitic on fishes and marine mammals.",
+        "Lists common adult length of 60 cm and maximum published mass of 2.5 kg; this is not a typical weight."
+      ]
+    },
+    {
+      "title": {
+        "en": "Petromyzon marinus — Animal Diversity Web, University of Michigan",
+        "fr": "Petromyzon marinus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Petromyzon_marinus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Jawless, scaleless, cartilaginous; single nostril, seven gill openings, two dorsal fins, no paired fins; adults stop feeding at maturity; pheromones used during spawning.",
+        "Introduced to the Great Lakes; parasitism contributed to the collapse of commercial fisheries."
+      ]
+    },
+    {
+      "title": {
+        "en": "Sea lamprey — Great Lakes Fishery Commission",
+        "fr": "Lamproie marine — Commission des pêcheries des Grands Lacs"
+      },
+      "url": "https://www.glfc.org/sea-lamprey.php",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Suction disc with horny teeth and rasping tongue; female can produce up to 100,000 eggs; first recorded in Lake Ontario in 1835.",
+        "Upper Great Lakes lake trout catch fell from about 15 million pounds to about 300,000 pounds by the early 1960s; control by lampricides, barriers and traps."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Larval duration and egg numbers differ between sources (Animal Diversity Web gives 1–3 years of larval life and 30,000–100,000 eggs; FishBase gives about 5.5–8 years and up to about 305,000 eggs in anadromous populations); the text uses wide ranges.",
+    "Animal Diversity Web’s adult depth range and its statement that attachment usually kills the host were not used; FishBase and the Great Lakes Fishery Commission differ on how often hosts die.",
+    "The IUCN Red List page could not be opened; the Least Concern category and date are taken from FishBase."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from FishBase, Animal Diversity Web and the Great Lakes Fishery Commission; illustration to be checked by the owner."
+}

@@ -1,0 +1,142 @@
+{
+  "id": "macropygia_emiliana",
+  "scientific": "Macropygia emiliana",
+  "group": "birds",
+  "name": {
+    "en": "ruddy cuckoo-dove",
+    "fr": "Phasianelle rousse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The ruddy cuckoo-dove is a reddish-brown pigeon native to Brunei, Indonesia and Malaysia.",
+      "fr": "La phasianelle rousse est un pigeon au plumage brun roux, originaire de Brunei, d’Indonésie et de Malaisie."
+    },
+    "identification": {
+      "en": "Its overall rufous-brown plumage and paler yellowish head help distinguish it from other cuckoo-doves.",
+      "fr": "Son plumage uniformément brun roux et sa tête plus pâle, jaunâtre, aident à la distinguer des autres phasianelles."
+    },
+    "habitat": {
+      "en": "It inhabits forest, wooded country and tree-rich plantations in lowlands and foothills.",
+      "fr": "Elle fréquente les forêts, les paysages boisés et les plantations arborées des basses terres et des piémonts."
+    },
+    "diet": {
+      "en": "Species accounts describe quiet foraging in the middle and lower forest layers, but the sources consulted do not establish a detailed diet.",
+      "fr": "Les fiches décrivent une recherche discrète de nourriture dans les strates moyennes et basses de la forêt, sans préciser son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It is shy and unobtrusive, usually feeding within forest cover and giving a repeated, low, cooing call.",
+      "fr": "Discrète et farouche, elle se nourrit généralement sous le couvert forestier et émet une série répétée de roucoulements graves."
+    },
+    "reproduction": {
+      "en": "The concise species accounts consulted provide no reliable detail on nesting or breeding timing.",
+      "fr": "Les fiches synthétiques consultées ne donnent pas d’informations fiables sur la nidification ou la période de reproduction."
+    },
+    "ecology": {
+      "en": "The Enggano Cuckoo-Dove (Macropygia cinnamomea), once grouped with it, is now treated as a separate species partly on the basis of plumage and voice.",
+      "fr": "La phasianelle d’Enggano (Macropygia cinnamomea), autrefois regroupée avec elle, est aujourd’hui considérée comme une espèce distincte, notamment d’après son plumage et son chant."
+    },
+    "conservation": {
+      "en": "Oiseaux.net reports a global IUCN category of Least Concern; that category does not mean every local population is secure.",
+      "fr": "Oiseaux.net indique la catégorie mondiale « préoccupation mineure » de l’UICN ; cela ne signifie pas que toutes les populations locales sont à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Uncal buau (Macropygia emiliana) — eBird, Cornell Lab of Ornithology, Indonesian-language account",
+        "fr": "Uncal buau (Macropygia emiliana) — eBird, Cornell Lab of Ornithology, fiche en indonésien"
+      },
+      "url": "https://ebird.org/species/rucdov1?siteLanguage=in",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Indonesian-language account describes rufous plumage, wooded habitat, quiet forest foraging and repeated cooing."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 13,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ruddy Cuckoo-Dove — Oiseaux.net",
+        "fr": "Phasianelle rousse — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/ruddy.cuckoo-dove.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Gives the range, reports IUCN Least Concern, and notes the split of Macropygia cinnamomea from the former broad emiliana treatment based on plumage and voice."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 25,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Using bioacoustic data to test species limits in an Indo-Pacific island radiation of Macropygia cuckoo-doves — Biological Journal of the Linnean Society",
+        "fr": "Délimiter les espèces d’une lignée insulaire indo-pacifique de phasianelles à l’aide des données bioacoustiques — Biological Journal of the Linnean Society"
+      },
+      "url": "https://doi.org/10.1111/bij.12768",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "This study tested species limits in the island cuckoo-dove complex and found multiple vocally distinct lineages."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The quick species summaries consulted do not describe breeding biology or quantify diet; detailed life-history claims are therefore omitted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an Indonesian eBird account, a French ornithology portal and a peer-reviewed study of cuckoo-dove species limits."
+}

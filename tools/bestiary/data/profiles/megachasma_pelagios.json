@@ -1,0 +1,142 @@
+{
+  "id": "megachasma_pelagios",
+  "scientific": "Megachasma pelagios",
+  "group": "fish",
+  "name": {
+    "en": "Megamouth shark",
+    "fr": "Requin grande-gueule"
+  },
+  "sections": {
+    "overview": {
+      "en": "The megamouth is a large, rarely encountered oceanic filter-feeding shark and the only living member of its genus.",
+      "fr": "Le requin grande-gueule est un grand requin océanique filtreur, rarement observé, et le seul représentant vivant de son genre."
+    },
+    "identification": {
+      "en": "Its unusually broad head and large terminal mouth distinguish it from most sharks, and the largest reported individuals approach eight to nine metres.",
+      "fr": "Sa tête particulièrement large et sa grande bouche terminale le distinguent de la plupart des requins, et les plus grands individus rapportés approchent huit à neuf mètres."
+    },
+    "habitat": {
+      "en": "It ranges widely through tropical and warm-temperate oceans, from near the surface to about fifteen hundred metres, with many records from Japan, Taiwan and the Philippines.",
+      "fr": "Il est largement réparti dans les océans tropicaux et tempérés chauds, près de la surface jusqu’à environ mille cinq cents mètres, avec de nombreuses observations au Japon, à Taïwan et aux Philippines."
+    },
+    "diet": {
+      "en": "It filter-feeds on planktonic animals, including krill, taking small drifting prey from the water.",
+      "fr": "Il filtre des animaux planctoniques, notamment du krill, en retenant de petites proies dérivantes dans l’eau."
+    },
+    "behavior": {
+      "en": "Tagging and capture records suggest vertical movements that may follow prey migrating between depths during day and night.",
+      "fr": "Les marquages et les captures suggèrent des déplacements verticaux qui pourraient suivre des proies migrant entre les profondeurs au cours du cycle jour-nuit."
+    },
+    "reproduction": {
+      "en": "Reproduction is poorly documented; the species is thought to bear live young nourished by yolk, while uterine cannibalism remains uncertain.",
+      "fr": "La reproduction est mal documentée ; on pense que l’espèce met au monde des petits vivants nourris par leur vitellus, tandis que le cannibalisme intra-utérin reste incertain."
+    },
+    "ecology": {
+      "en": "Off Taiwan, it has been recorded as bycatch in a fishery targeting sharptail mola (Masturus lanceolatus); see that profile for the reciprocal link.",
+      "fr": "Au large de Taïwan, il a été capturé accessoirement dans une pêcherie ciblant le poisson-lune lancéolé (Masturus lanceolatus) ; voir cette fiche pour le renvoi réciproque."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2019 classified it as Least Concern but recommended monitoring catches because it is rare and potentially sensitive to overexploitation.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2019 le classait en préoccupation mineure, mais recommandait de surveiller les captures, car il est rare et potentiellement sensible à la surexploitation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Megamouth Shark — IUCN Red List, 2019",
+        "fr": "Requin grande-gueule — Liste rouge de l’UICN, 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T39338A124402302.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "2019 IUCN assessment: Least Concern; recommends catch monitoring."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 8,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution, body size and biology of Megachasma pelagios — Journal of Fish Biology (2019)",
+        "fr": "Répartition, taille et biologie de Megachasma pelagios — Journal of Fish Biology (2019)"
+      },
+      "url": "https://doi.org/10.1111/jfb.14007",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Review of 117 global records; hotspots in Japan, Taiwan and Philippines."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 11,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Requin grande-gueule — Guide de bord FAO, édition française",
+        "fr": "Megamouth shark — FAO field guide, French edition"
+      },
+      "url": "https://cites.org/sites/default/files/document/FAO%20Pelagic%20Guide%20IO-FR-COMPLETE.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French FAO guide provides field-identification context."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 6,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Direct observations and life-history data remain sparse; reproductive mode is inferred and its finer details are unresolved.",
+    "Les observations directes et les données de cycle de vie restent rares ; le mode de reproduction est inféré et ses détails demeurent incertains."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the IUCN account against a peer-reviewed global-record review and a French FAO identification guide. Includes a supported reciprocal link with the sharptail mola because the IUCN assessment documents megamouth bycatch in that fishery."
+}

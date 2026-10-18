@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Le bandeau du bas est le sol de l'aire de jeu qui continue sous la scène : même terre
+    sombre, même liseré d'herbe en haut. Les couleurs sont celles de TrebuchetView
+    (pGround #1B2A1E, pGrass #3E6B43) — si l'une bouge là-bas, elle bouge ici.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- La terre : un peu plus claire en surface, comme dans la scène. -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#22331F"
+                android:endColor="#141E16" />
+        </shape>
+    </item>
+
+    <!-- Le brin d'herbe qui court sur toute la largeur : la ligne du sol. -->
+    <item
+        android:gravity="top"
+        android:height="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#3E6B43" />
+        </shape>
+    </item>
+
+</layer-list>

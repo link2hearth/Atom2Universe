@@ -1,0 +1,229 @@
+{
+  "id": "biotodoma_cupido",
+  "scientific": "Biotodoma cupido",
+  "group": "fish",
+  "name": {
+    "en": "Cupid Cichlid",
+    "fr": "Cichlidé cupidon"
+  },
+  "sections": {
+    "overview": {
+      "en": "Biotodoma cupido is a South American freshwater cichlid of the geophagine lineage, native to the Amazon and Essequibo systems. Its only congener is B. wavrini; older names such as Geophagus cupido reflect past genus placements, not a separate species.",
+      "fr": "Biotodoma cupido est un cichlidé d’eau douce sud-américain de la lignée des géophaginés, indigène des bassins de l’Amazone et de l’Essequibo. Son seul congénère est B. wavrini ; les anciens noms comme Geophagus cupido reflètent des placements passés dans d’autres genres, et non une espèce distincte."
+    },
+    "identification": {
+      "en": "Adults reach about 12–13 cm. The oval, laterally compressed body usually has a dark stripe through the eye and a dark mid-flank spot, with fine greenish-blue streaks; regional colour forms vary and should not automatically be named as separate taxa.",
+      "fr": "Les adultes atteignent environ 12 à 13 cm. Le corps ovale et comprimé latéralement porte généralement une bande sombre à travers l’œil et une tache au milieu du flanc, avec de fines lignes bleu-vert ; les variations régionales de couleur ne doivent pas être automatiquement élevées au rang de taxons distincts."
+    },
+    "habitat": {
+      "en": "Its wide range includes clear, tannin-stained and seasonally changing rivers, floodplain waters and tributaries. It tolerates varied flow, from still backwaters to flowing channels, but accounts suggest it avoids the most torrential conditions.",
+      "fr": "Sa vaste aire couvre des rivières claires ou teintées de tanins, des eaux de plaine inondable et des affluents soumis aux saisons. Il tolère des courants variés, des bras calmes aux chenaux courants, mais les observations suggèrent qu’il évite les conditions les plus torrentielles."
+    },
+    "diet": {
+      "en": "It picks small bottom-dwelling prey such as insect larvae, tiny crustaceans and other invertebrates from the substrate. This benthic feeding is characteristic of the eartheater-like geophagine lineage, though it is not a specialised sand-sifter to the same degree as many Geophagus species.",
+      "fr": "Il prélève sur le fond de petites proies comme des larves d’insectes, de minuscules crustacés et d’autres invertébrés. Cette alimentation benthique rappelle celle des géophaginés « mangeurs de terre », sans qu’il tamise le sable aussi intensément que de nombreuses espèces de Geophagus."
+    },
+    "behavior": {
+      "en": "Outside breeding, it is generally a relatively peaceful cichlid and browses close to the bottom. Its behaviour and appearance may be compared with other geophagines, but the two Biotodoma species are the closest genus-level comparison: B. wavrini is a separate species, not a colour morph of B. cupido.",
+      "fr": "Hors période de reproduction, c’est généralement un cichlidé relativement paisible qui recherche sa nourriture près du fond. On peut le comparer à d’autres géophaginés, mais son parent le plus proche dans le genre est B. wavrini : celui-ci constitue une espèce distincte et non une forme de couleur de B. cupido."
+    },
+    "reproduction": {
+      "en": "It is a biparental substrate spawner: the pair cleans a firm surface, lays and guards eggs, then protects the free-swimming fry. This differs from mouthbrooding in some cichlid lineages and resembles the parental care seen in several other geophagines.",
+      "fr": "Il pond sur substrat avec des soins biparentaux : le couple nettoie une surface ferme, y dépose les œufs et les surveille, puis protège les alevins nageant librement. Ce mode diffère de l’incubation buccale de certaines lignées de cichlidés et rappelle les soins parentaux de plusieurs autres géophaginés."
+    },
+    "ecology": {
+      "en": "Seasonal flooding alters water depth, turbidity and current across much of its range, so populations encounter changing river and floodplain habitats. As a benthic predator it consumes small invertebrates and forms part of the food web for larger fishes.",
+      "fr": "Les crues saisonnières modifient la profondeur, la turbidité et le courant dans une grande partie de son aire ; les populations rencontrent donc des milieux fluviaux et inondés changeants. Prédateur benthique, il consomme de petits invertébrés et participe au réseau alimentaire des poissons plus grands."
+    },
+    "conservation": {
+      "en": "FishBase lists the IUCN Red List category as Least Concern, assessed on 30 November 2020. This global assessment does not establish that every local population is stable; population trends and species-specific threats remain poorly documented.",
+      "fr": "FishBase indique le classement Préoccupation mineure de la Liste rouge de l’UICN, évalué le 30 novembre 2020. Cette catégorie mondiale ne prouve pas que toutes les populations locales soient stables ; les tendances de population et les menaces propres à l’espèce restent peu documentées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biotodoma cupido — Seriously Fish",
+        "fr": "Biotodoma cupido — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/biotodoma-cupido",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Biparental substrate spawner."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 3,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotodoma cupido — Deutsche Cichliden-Gesellschaft",
+        "fr": "Biotodoma cupido — société allemande des cichlidés"
+      },
+      "url": "https://dcg-online.de/biotodoma-cupido-heckel-1840/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "German cichlid society profile."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 4,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotodoma cupido — Nordiska Ciklidsällskapet",
+        "fr": "Biotodoma cupido — association nordique des cichlidés (suédois)"
+      },
+      "url": "https://ciklid.org/artregister/art.php?ID=311",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Swedish cichlid society profile."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 4,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotodoma cupido — French Wikipedia",
+        "fr": "Biotodoma cupido — Wikipédia en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Biotodoma_cupido",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "French-language cross-check."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 2,
+        "total": 2,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cupid Cichlid — Aquarist Atlas",
+        "fr": "Cichlidé cupidon — Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/biotodoma-cupido/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Specialist species profile."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 3,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotodoma cupido — FishBase",
+        "fr": "Biotodoma cupido — FishBase"
+      },
+      "url": "https://fishbase.se/summary/12291",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the IUCN Least Concern category, assessed on 30 November 2020, and links it to the global assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 19,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional colour variation has been reported, but its taxonomic interpretation is not settled in the sources used; no global status was inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared specialist cichlid accounts in English, German and Swedish; retained the accepted Biotodoma placement and flagged uncertain colour-form taxonomy."
+}

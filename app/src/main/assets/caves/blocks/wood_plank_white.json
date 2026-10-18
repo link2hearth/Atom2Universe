@@ -1,0 +1,16 @@
+{
+  "id": 1011,
+  "name": "wood_plank_white",
+  "texture_top": "cozy:material:9:D7CDB4",
+  "texture_side": "cozy:material:9:D7CDB4",
+  "texture_bottom": "cozy:material:9:D7CDB4",
+  "color": "#D7CDB4",
+  "hardness": 1.5,
+  "drop": "wood_plank_white",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "planks"
+  ]
+}

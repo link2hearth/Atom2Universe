@@ -1,0 +1,109 @@
+{
+  "id": "latimeria_chalumnae",
+  "scientific": "Latimeria chalumnae",
+  "group": "fish",
+  "name": {
+    "en": "West Indian Ocean Coelacanth",
+    "fr": "Cœlacanthe africain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The West Indian Ocean coelacanth is a large, deep-water fish of the western Indian Ocean. Its paired fins sit on fleshy lobes and move in a diagonal pattern, like the legs of a four-limbed land animal. The best-known population lives around the Comoro Islands.",
+      "fr": "Le cœlacanthe africain est un grand poisson d’eau profonde de l’ouest de l’océan Indien. Ses nageoires paires sont portées par des lobes charnus et bougent en diagonale, comme les pattes d’un animal terrestre à quatre membres. La population la mieux connue vit autour des Comores."
+    },
+    "identification": {
+      "en": "The body is dark metallic blue with irregular white or pale bluish spots, a pattern unique to each fish, and it turns brownish after death. The head is naked, the lower jaw has two large overlapping plates, and the brain fills only about 1% of the cranial cavity. Females are larger, reaching about 2 m, while males stay around 1.7 m. The maximum published mass is about 95 kg; this is a recorded maximum, not a typical weight. The available length records differ by sex, but a reliable general body-width measure was not found.",
+      "fr": "Le corps est bleu métallique sombre, parsemé de taches blanches ou bleutées irrégulières, un motif propre à chaque poisson, et il devient brunâtre après la mort. La tête est nue, la mâchoire inférieure porte deux grandes plaques qui se chevauchent, et le cerveau n’occupe qu’environ 1 % de la cavité crânienne. Les femelles sont plus grandes, jusqu’à environ 2 m, alors que les mâles font autour de 1,7 m. La masse maximale publiée est d’environ 95 kg; il s’agit d’un record, non d’un poids typique. Les longueurs maximales disponibles diffèrent selon le sexe, mais je n’ai pas trouvé de mesure générale fiable de la largeur du corps."
+    },
+    "habitat": {
+      "en": "It lives on steep rocky slopes at 150–700 m, usually 180–250 m, in water of 13–25 °C, and shelters in caves by day. Besides Grande Comore and Anjouan in the Comoros, populations are known from South Africa, Madagascar and Mozambique.",
+      "fr": "Il vit sur des pentes rocheuses abruptes entre 150 et 700 m, le plus souvent entre 180 et 250 m, dans une eau de 13 à 25 °C, et s’abrite dans des grottes le jour. Outre la Grande Comore et Anjouan, aux Comores, des populations sont connues en Afrique du Sud, à Madagascar et au Mozambique."
+    },
+    "diet": {
+      "en": "It preys on fishes and squid, and known prey includes Beryx fishes, cardinalfishes, a skate, an eel and a swell shark. It does not chase prey but snaps up animals that pass within about 20 cm of its mouth.",
+      "fr": "Il se nourrit de poissons et de calmars, et ses proies connues comprennent des Beryx, des apogons, une raie, une anguille et un requin-chat. Il ne poursuit pas ses proies mais happe les animaux qui passent à environ 20 cm de sa bouche."
+    },
+    "behavior": {
+      "en": "It is nocturnal. By day several fish gather in caves, though no social interaction has been seen; at night each drifts alone in search of food, covering several kilometres. Tagged fish travelled 2–8 km in a day, and the species can swim in any direction, even upside down.",
+      "fr": "Il est nocturne. Le jour, plusieurs poissons se rassemblent dans des grottes, sans interaction sociale observée; la nuit, chacun dérive seul en quête de nourriture sur plusieurs kilomètres. Des poissons marqués ont parcouru 2 à 8 km en un jour, et l’espèce peut nager dans toutes les directions, même à l’envers."
+    },
+    "reproduction": {
+      "en": "It is ovoviviparous: the eggs, about 9 cm across, develop inside the female, who gives birth to fully formed young of 35–38 cm. Litters of 5 to 29 young have been reported. Gestation is estimated at 13 months or about three years, so females may breed only every second or third year; males give no known care.",
+      "fr": "Il est ovovivipare : les œufs, d’environ 9 cm de diamètre, se développent dans la femelle, qui met au monde des jeunes complètement formés de 35 à 38 cm. Des portées de 5 à 29 petits ont été signalées. La gestation est estimée à 13 mois ou à environ trois ans, si bien que les femelles ne se reproduiraient qu’une année sur deux ou trois; les mâles ne donnent aucun soin connu."
+    },
+    "ecology": {
+      "en": "The coelacanth is a predator high in the food web, with a trophic level of about 4.4. Humans are its only known predator, and its spotted pattern may help it blend into cave walls.",
+      "fr": "Le cœlacanthe est un prédateur haut placé dans le réseau alimentaire, avec un niveau trophique d’environ 4,4. L’être humain est son seul prédateur connu, et son motif tacheté pourrait l’aider à se fondre dans les parois des grottes."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Critically Endangered (assessed 2000, as reported by FishBase), and international trade is banned under CITES Appendix I. It is not eaten but is caught by accident, mainly in gill nets and deep-water fishing for other species, and the population is believed to be small and declining.",
+      "fr": "L’UICN le classe en danger critique d’extinction (évaluation de 2000, d’après FishBase), et son commerce international est interdit par l’annexe I de la CITES. Il n’est pas consommé mais capturé par accident, surtout dans des filets maillants et des pêches profondes visant d’autres espèces, et la population serait réduite et en déclin."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Latimeria chalumnae, Coelacanth — FishBase",
+        "fr": "Latimeria chalumnae, cœlacanthe — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Latimeria-chalumnae.html",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Max 168 cm (males) and 200 cm (females); 150–700 m, usually 180–250 m; dark metallic blue with white spots; two gular plates; brain about 1% of cranial cavity; trophic level 4.4.",
+        "Ovoviviparous; 5–29 young; eggs about 9 cm; gestation 13 months or about 3 years; newborns 35–38 cm. IUCN Critically Endangered, assessed 30 June 2000; CITES Appendix I."
+      ]
+    },
+    {
+      "title": {
+        "en": "Latimeria chalumnae — Animal Diversity Web, University of Michigan",
+        "fr": "Latimeria chalumnae — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Latimeria_chalumnae/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Diagonal, synchronized movement of paired fins; blue body, individual white speckling; cave shelter by day; drift-hunting at night, 2–8 km travelled in a day; swims in any direction including upside down.",
+        "Humans the only known predator; bycatch in gill nets and deep fishing is the main mortality; population believed small. Its IUCN status line was not used for the category."
+      ]
+    },
+    {
+      "title": {
+        "en": "Latimeria chalumnae summary | FishBase",
+        "fr": "Latimeria chalumnae summary | FishBase"
+      },
+      "url": "https://www.fishbase.se/Summary/Latimeria-chalumnae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports maximum published weight of 95 kg and maximum total lengths by sex."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Sources differ on litter size (5–29 in FishBase, 5–26 in Animal Diversity Web) and on gestation (13 months to about three years), so ranges are given.",
+    "Body size differs between sources: FishBase gives 168 cm for males and 200 cm for females, Animal Diversity Web gives an average of about 125 cm for males and 170 cm for females; the text uses approximate maximum values.",
+    "Lifespan estimates differ widely (at least 22 years observed, 48 years estimated, and 85 years reported by FishBase) and are not stated. Depth by day is given as 100–200 m by Animal Diversity Web and 150–700 m overall by FishBase.",
+    "The population size is not given as a number because the sources are old and imprecise; the IUCN category is taken from the FishBase page."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

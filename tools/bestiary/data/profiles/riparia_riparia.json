@@ -1,0 +1,166 @@
+{
+  "id": "riparia_riparia",
+  "scientific": "Riparia riparia",
+  "group": "birds",
+  "name": {
+    "en": "Sand Martin",
+    "fr": "Hirondelle de rivage"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Sand Martin is a small migratory swallow breeding across much of the Northern Hemisphere.",
+      "fr": "L’Hirondelle de rivage est une petite hirondelle migratrice qui niche dans une grande partie de l’hémisphère Nord."
+    },
+    "identification": {
+      "en": "It is brown above, pale below, with a distinct brown breast band.",
+      "fr": "Elle est brune dessus, claire dessous, avec une nette bande pectorale brune."
+    },
+    "habitat": {
+      "en": "It nests in sandy riverbanks, coastal bluffs and suitable gravel pits or quarries.",
+      "fr": "Elle niche dans les berges sableuses, les falaises côtières et certaines gravières ou carrières."
+    },
+    "diet": {
+      "en": "It catches small flying insects, often while foraging low over water.",
+      "fr": "Elle capture de petits insectes en vol, souvent en chassant près de la surface de l’eau."
+    },
+    "behavior": {
+      "en": "It is social and migrates to Africa south of the Sahara for winter.",
+      "fr": "Elle est grégaire et migre vers l’Afrique subsaharienne pour hiverner."
+    },
+    "reproduction": {
+      "en": "Pairs excavate a nesting tunnel in a soft bank and line the chamber at its end.",
+      "fr": "Les couples creusent une galerie de nidification dans une berge meuble et garnissent la chambre terminale."
+    },
+    "ecology": {
+      "en": "Colonies depend on exposed, eroding banks; artificial sand and gravel workings can also provide nest sites.",
+      "fr": "Les colonies dépendent de berges érodées et dégagées; les sablières et gravières peuvent aussi offrir des sites de nidification."
+    },
+    "conservation": {
+      "en": "The 2025 global assessment lists it as Least Concern, although its population trend is decreasing.",
+      "fr": "L’évaluation mondiale de 2025 la classe en Préoccupation mineure, bien que sa population soit en baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sand Martin — Biodiv’Écrins, Écrins National Park",
+        "fr": "Hirondelle de rivage — Biodiv’Écrins, parc national des Écrins"
+      },
+      "url": "https://biodiversite.ecrins-parcnational.fr/espece/3688",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The park species account describes plumage, habitats, insect feeding, migration and burrow nesting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 13,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sand Martin — British Trust for Ornithology BirdFacts",
+        "fr": "Hirondelle de rivage — BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn-about-birds/birdfacts/sand-martin",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "BTO provides an English species account and monitoring information for Sand Martins."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 12,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sand Martin migration and roosting — PIAF, French Civil Aviation Authority",
+        "fr": "Migration et dortoirs de l’Hirondelle de rivage — PIAF, Direction générale de l’aviation civile"
+      },
+      "url": "https://piaf.stac.aviation-civile.gouv.fr/index.php/birds/33",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The French PIAF account describes subsaharan wintering and communal reedbed roosts."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 11,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Collared Sand Martin — IUCN Red List 2025",
+        "fr": "Hirondelle de rivage — Liste rouge de l’UICN 2025"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T103815961A281862538.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s 2025 global assessment gives Least Concern and a decreasing population trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 12,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Nest timing and the number of broods vary among regions.",
+    "The global category does not describe local population trends everywhere."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. English and French institutional sources are cross-checked with BirdLife’s 2025 global assessment; local trends are not generalized."
+}

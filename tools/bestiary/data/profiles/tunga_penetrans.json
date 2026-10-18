@@ -1,0 +1,119 @@
+{
+  "id": "tunga_penetrans",
+  "scientific": "Tunga penetrans",
+  "group": "invertebrates",
+  "name": {
+    "en": "Chigoe flea",
+    "fr": "Puce chique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tunga penetrans is a flea that causes tungiasis in people and other animals.",
+      "fr": "Tunga penetrans est une puce qui provoque la tungose chez l’humain et d’autres animaux."
+    },
+    "identification": {
+      "en": "The tiny adult female remains embedded in the skin, most often on the feet.",
+      "fr": "La petite femelle adulte reste incrustée dans la peau, le plus souvent aux pieds."
+    },
+    "habitat": {
+      "en": "Its immature stages develop in dry, shaded soil in tropical and subtropical settings.",
+      "fr": "Ses stades immatures se développent dans des sols secs et ombragés des régions tropicales et subtropicales."
+    },
+    "diet": {
+      "en": "Both sexes take blood meals; only fertilized females burrow into the host’s skin.",
+      "fr": "Les deux sexes prennent des repas de sang ; seules les femelles fécondées pénètrent dans la peau de l’hôte."
+    },
+    "behavior": {
+      "en": "After burrowing, the female remains partly exposed through a small skin opening while feeding and producing eggs.",
+      "fr": "Après avoir pénétré la peau, la femelle reste en partie exposée par une petite ouverture, où elle se nourrit et produit des œufs."
+    },
+    "reproduction": {
+      "en": "The embedded female releases eggs into the environment, where larvae feed on organic debris before pupating.",
+      "fr": "La femelle incrustée libère ses œufs dans l’environnement ; les larves s’y nourrissent de débris organiques avant la nymphose."
+    },
+    "ecology": {
+      "en": "Tungiasis is a zoonosis affecting people and animals.",
+      "fr": "La tungose est une zoonose qui touche les humains et les animaux."
+    },
+    "conservation": {
+      "en": "WHO presents tungiasis as a zoonotic health problem.",
+      "fr": "L’OMS présente la tungose comme un problème de santé zoonotique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "CDC DPDx — Tungiasis",
+        "fr": "CDC DPDx — Tungose"
+      },
+      "url": "https://www.cdc.gov/dpdx/tungiasis/",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "CDC describes the embedded flea and its life cycle."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 9,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "World Health Organization — Tungose",
+        "fr": "Organisation mondiale de la Santé — Tungose"
+      },
+      "url": "https://www.who.int/fr/news-room/fact-sheets/detail/tungiasis",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "WHO describes tungiasis as a zoonosis affecting humans and animals in tropical and subtropical regions."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 15,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Tungiasis burden is uneven and underreported; ecology statements here concern the parasite, not conservation of the flea."
+  ],
+  "review_note": "Bilingual draft kept concise; species-specific limits and the scope of regional or dated evidence are stated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

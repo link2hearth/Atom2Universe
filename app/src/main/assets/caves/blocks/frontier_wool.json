@@ -1,0 +1,17 @@
+{
+  "id": 9850,
+  "name": "frontier_wool",
+  "texture_top": "frontier:9850:top",
+  "texture_side": "frontier:9850:side",
+  "texture_bottom": "frontier:9850:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_wool",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

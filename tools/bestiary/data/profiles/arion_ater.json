@@ -1,0 +1,116 @@
+{
+  "id": "arion_ater",
+  "scientific": "Arion ater",
+  "group": "invertebrates",
+  "name": {
+    "en": "Black Slug",
+    "fr": "Grande limace noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black slug is a very large land slug of north-western Europe. The name covers a complex of close relatives that can only be told apart reliably by dissection or DNA, so records are often made for the group as a whole. It is a nocturnal omnivore that favours moist, vegetated ground.",
+      "fr": "La grande limace noire est une très grosse limace terrestre du nord-ouest de l’Europe. Le nom recouvre un complexe d’espèces proches que seules la dissection ou l’ADN distinguent de façon fiable, si bien que les observations sont souvent notées pour le groupe entier. C’est une omnivore nocturne qui préfère les sols humides et végétalisés."
+    },
+    "identification": {
+      "en": "Adults measure about 75–180 mm in one source and 90–140 mm in another. The body is bulky, with long coarse tubercles along the back and sides and no keel, and it contracts into a bell shape. Colour varies from black to brown, grey, green, orange or red, and a jet-black form lives on peatlands. Young slugs are pale yellow to orange and darken with age. Reliable adult body-mass and sex-specific size figures were not found in the consulted sources.",
+      "fr": "Les adultes mesurent environ 75 à 180 mm selon une source et 90 à 140 mm selon une autre. Le corps est massif, avec de longs tubercules grossiers sur le dos et les flancs, sans carène, et il se contracte en forme de cloche. La couleur varie du noir au brun, gris, vert, orange ou rouge, et une forme noir de jais vit dans les tourbières. Les jeunes sont jaune pâle à orange et foncent en grandissant. Les sources consultées ne donnent pas de masse adulte fiable ni de mensurations distinctes selon le sexe."
+    },
+    "habitat": {
+      "en": "It is found in farmland, hedge bottoms, woodland, wetland margins and peatland, up to moderate altitudes, and is common in any well-vegetated area. Sources disagree on gardens: one calls it common there, another rare there because of competition from other slugs. Its exact world range is uncertain because of the identification problem.",
+      "fr": "On la trouve dans les terres agricoles, les pieds de haies, les bois, les bords de zones humides et les tourbières, jusqu’à des altitudes modérées, et elle est commune dans tout lieu bien végétalisé. Les sources divergent sur les jardins : l’une la dit commune, une autre rare à cause de la concurrence d’autres limaces. Son aire mondiale exacte reste incertaine à cause des difficultés d’identification."
+    },
+    "diet": {
+      "en": "It is omnivorous, eating carrion, dung, fungi and plants, with occasional worms and insects. It prefers rotting vegetation to living plants, so it often does little harm in gardens, although it can damage crops. It feeds mostly at night with a rasping tongue, the radula.",
+      "fr": "Elle est omnivore et mange charognes, crottes, champignons et plantes, avec à l’occasion des vers et des insectes. Elle préfère la végétation en décomposition aux plantes vivantes et fait donc souvent peu de dégâts au jardin, bien qu’elle puisse abîmer des cultures. Elle s’alimente surtout la nuit, avec une langue râpeuse, la radula."
+    },
+    "behavior": {
+      "en": "It is largely nocturnal and most easily found after rain or at night, from spring to autumn, and needs moist surfaces to move. Large numbers can gather on freshly mown verges after daytime rain. When irritated it contracts and rocks strongly from side to side.",
+      "fr": "Elle est surtout nocturne et se trouve le plus facilement après la pluie ou la nuit, du printemps à l’automne, et a besoin de surfaces humides pour se déplacer. De grands nombres peuvent se rassembler sur des bas-côtés fraîchement fauchés après une pluie de jour. Quand on l’irrite, elle se contracte et se balance fortement de côté."
+    },
+    "reproduction": {
+      "en": "The slug is hermaphroditic. One source says it cross-fertilises when a mate is available and lays 20–50 eggs in soil crevices or decaying wood, hatching in about six weeks, while an Irish source says reproduction is mainly by self-fertilisation, with copulation rarely seen. The eggs are pearly white and about 5 mm across, often found in compost heaps.",
+      "fr": "La limace est hermaphrodite. Une source dit qu’elle se féconde de façon croisée quand un partenaire est disponible et pond 20 à 50 œufs dans des fissures du sol ou du bois pourri, qui éclosent en six semaines environ, tandis qu’une source irlandaise indique une reproduction surtout par autofécondation, l’accouplement étant rarement vu. Les œufs sont blanc nacré, d’environ 5 mm, souvent trouvés dans les tas de compost."
+    },
+    "ecology": {
+      "en": "By eating dead plant matter, carrion and dung, the black slug recycles nutrients back into the soil. In towns it becomes less frequent, apparently through competition with other slug species.",
+      "fr": "En mangeant matières végétales mortes, charognes et crottes, la grande limace noire remet des nutriments dans le sol. En ville, elle devient moins fréquente, apparemment à cause de la concurrence d’autres espèces de limaces."
+    },
+    "conservation": {
+      "en": "The Irish mollusc survey lists Arion ater ater as Least Concern, and it is described as extremely common and widespread in Britain. Animal Diversity Web lists no special conservation status; these are not a global assessment of the whole species complex.",
+      "fr": "Le recensement irlandais des mollusques classe Arion ater ater en « préoccupation mineure », et l’espèce est décrite comme extrêmement commune et répandue en Grande-Bretagne. L’Animal Diversity Web n’indique aucun statut de conservation particulier; ce ne sont pas des évaluations mondiales de tout le complexe d’espèces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Arion ater agg. (Black Slug) — NatureSpot",
+        "fr": "Arion ater agg. (grande limace noire) — NatureSpot"
+      },
+      "url": "https://www.naturespot.org/species/Arion_ater_agg.",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "75–180 mm, bulky, long coarse tubercles, no keel, bell-shaped when contracted; colour brown, black, grey, green, orange or red; separated from relatives only by dissection or DNA.",
+        "Omnivorous on carrion, dung and vegetation, prefers rotting plants; largely nocturnal; eggs pearly white, about 5 mm; extremely common in Britain.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arion ater ater — Mollusca of Ireland, Habitas",
+        "fr": "Arion ater ater — Mollusques d’Irlande, Habitas"
+      },
+      "url": "https://www2.habitas.org.uk/molluscireland/species.php?item=18",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "90–140 mm; young pale yellow to orange; jet-black form on peatlands; rocks from side to side when stroked; less frequent in towns through competition, rarely in gardens.",
+        "Mainly self-fertilising, copulation extremely rare in Ireland; IUCN Least Concern; world range uncertain, probably British Isles, southern and western Scandinavia and Denmark."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arion ater — Animal Diversity Web, University of Michigan",
+        "fr": "Arion ater — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Arion_ater/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Eats mostly fungi and plants with occasional worms, insects and decaying matter; radula; feeds at night; needs moist soil to move.",
+        "Cross-fertilises when a mate is available; 20–50 eggs in soil crevices or decaying wood hatching in about six weeks; no special conservation status."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Length differs between sources (75–180 mm, 90–140 mm, and about 15 cm in Animal Diversity Web); two ranges are given.",
+    "Reproduction differs: cross-fertilisation (Animal Diversity Web) versus mainly self-fertilisation (Irish survey); both are reported.",
+    "Garden presence differs between NatureSpot and the Irish survey; both are reported.",
+    "Animal Diversity Web places the species in the Nearctic and Pacific Northwest, which conflicts with the Irish source on its range; the range is not stated precisely.",
+    "Identification within the Arion ater complex is uncertain, so facts may mix several close species; Least Concern comes from the Irish survey, and no Red List page was read."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

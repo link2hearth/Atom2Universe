@@ -1,0 +1,92 @@
+{
+  "id": "callorhinus_ursinus",
+  "scientific": "Callorhinus ursinus",
+  "group": "mammals",
+  "name": {
+    "en": "Northern Fur Seal",
+    "fr": "Otarie à fourrure du Nord"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern fur seal is an eared seal of the North Pacific that spends most of its life at sea and comes ashore in dense colonies to breed. Most of the population breeds on the Pribilof Islands in the Bering Sea. Males are far larger than females.",
+      "fr": "L’otarie à fourrure du Nord est un otariidé du Pacifique nord qui passe l’essentiel de sa vie en mer et vient à terre en colonies denses pour se reproduire. La plupart de la population se reproduit sur les îles Pribilof, en mer de Béring. Les mâles sont bien plus grands que les femelles."
+    },
+    "identification": {
+      "en": "It has a stocky body, a small head, a very short snout, small external ears and extremely dense fur. Its fore flippers are the longest of any eared seal. Adult males reach about 2 m and up to 270 kg and are dark brown to black,, while females are about 1.5 m, grey or brown above and paler below. Pups are born black and turn silver-grey after about three months.",
+      "fr": "Elle a un corps trapu, une petite tête, un museau très court, de petites oreilles externes et une fourrure extrêmement dense. Ses nageoires antérieures sont les plus longues de tous les otariidés. Les mâles adultes atteignent environ 2 m et jusqu’à 270 kg, sont brun foncé à noirs,, tandis que les femelles mesurent environ 1,5 m, grises ou brunes dessus et plus claires dessous. Les petits naissent noirs et deviennent gris argenté vers trois mois."
+    },
+    "habitat": {
+      "en": "It breeds in the Bering Sea and along the eastern North Pacific, on islands such as St. Paul, St. George and Bogoslof in Alaska and on several Russian islands. Outside the breeding season it ranges widely over the North Pacific, the Bering Sea and the Sea of Okhotsk, and in winter reaches as far south as southern California and Honshu in Japan.",
+      "fr": "Elle se reproduit en mer de Béring et le long du Pacifique nord-est, sur des îles comme Saint-Paul, Saint-Georges et Bogoslof en Alaska ainsi que sur plusieurs îles russes. Hors de la saison de reproduction, elle parcourt le Pacifique nord, la mer de Béring et la mer d’Okhotsk, et descend en hiver jusqu’au sud de la Californie et à Honshū, au Japon."
+    },
+    "diet": {
+      "en": "It is an opportunistic hunter of midwater fish and squid, and feeds mostly at night. Walleye pollock is the main prey over the Bering Sea shelf, while off the US West Coast it takes mackerel, squid, sardines and anchovies, among others.",
+      "fr": "C’est un chasseur opportuniste de poissons et de calmars des eaux moyennes, qui se nourrit surtout la nuit. Le lieu d’Alaska est la proie principale sur le plateau de la mer de Béring, tandis qu’au large de la côte ouest des États-Unis elle prend notamment des maquereaux, des calmars, des sardines et des anchois."
+    },
+    "behavior": {
+      "en": "It is highly pelagic and mostly solitary at sea, and can stay out in the open ocean for nearly two years before returning to its breeding colonies. On land during the breeding season it is aggressive: males defend territories by pushing and biting, and fights between males can be fatal.",
+      "fr": "Elle est très pélagique et le plus souvent solitaire en mer, et peut rester en plein océan près de deux ans avant de regagner ses colonies de reproduction. À terre pendant la saison de reproduction, elle est agressive : les mâles défendent leur territoire en poussant et en mordant, et les combats entre mâles peuvent être mortels."
+    },
+    "reproduction": {
+      "en": "Males return to the breeding islands from May and hold territories, typically from about age 10. Females give birth to a single pup and mate again within about five days. Females usually have their first pup at 5–6 years and are most productive from about 8 to 13. Pups nurse until weaning at about four months.",
+      "fr": "Les mâles reviennent sur les îles de reproduction dès mai et tiennent un territoire, en général à partir d’environ 10 ans. Les femelles mettent bas un seul petit et s’accouplent de nouveau dans les cinq jours environ. Elles ont d’ordinaire leur premier petit à 5-6 ans et sont les plus productives de 8 à 13 ans. Les petits tètent jusqu’au sevrage, vers quatre mois."
+    },
+    "ecology": {
+      "en": "As a predator of schooling fish and squid, the northern fur seal links the open North Pacific to its breeding islands. It is itself preyed on by killer whales, Steller sea lions and sharks. Pups are taken by Steller sea lions, and entanglement in marine debris and lost fishing gear is a major hazard.",
+      "fr": "Prédatrice de poissons grégaires et de calmars, l’otarie à fourrure du Nord relie le large du Pacifique nord à ses îles de reproduction. Elle est elle-même la proie d’orques, d’otaries de Steller et de requins. Les petits sont capturés par les otaries de Steller, et l’emmêlement dans les débris marins et les engins de pêche perdus est un danger majeur."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Vulnerable (assessed in 2015). In the US it is protected under the Marine Mammal Protection Act, and the Pribilof Islands and Eastern Pacific stock was listed as depleted in 1988 after falling by more than half from about 2.2 million seals in the 1950s. Its 2019 abundance estimate was about 627,000, and pup production declined roughly 1.8% a year from 1999 to 2019.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce comme vulnérable (évaluation de 2015). Aux États-Unis, elle est protégée par la loi sur la protection des mammifères marins, et le stock des îles Pribilof et du Pacifique oriental a été déclaré épuisé en 1988 après avoir perdu plus de la moitié de ses quelque 2,2 millions d’individus des années 1950. Son effectif estimé en 2019 était d’environ 627 000, et la production de petits a baissé d’environ 1,8 % par an de 1999 à 2019."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Northern Fur Seal — NOAA Fisheries species profile",
+        "fr": "Otarie à fourrure du Nord — fiche espèce de NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/northern-fur-seal",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Stocky body, short snout, longest fore flippers among otariids; males about 7 ft and up to 600 lb, females about 5 ft; pups black until about 3 months; first pup at 5–6 years; weaning at about 4 months; Pribilof stock depleted in 1988 after falling over 50% from about 2.2 million; Eastern Pacific stock 626,618 in 2019; pup production down about 1.8% a year 1999–2019.",
+        "Walleye pollock main prey over the Bering Sea shelf; threats include entanglement, fisheries, climate change; predators killer whales, Steller sea lions, sharks. The page gives no IUCN category."
+      ]
+    },
+    {
+      "title": {
+        "en": "Callorhinus ursinus — Animal Diversity Web, University of Michigan",
+        "fr": "Callorhinus ursinus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Callorhinus_ursinus/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Males 180 to over 275 kg and up to 213 cm, females 40–50 kg and up to 142 cm; most of the population breeds on the Pribilof Islands; mostly solitary at sea, colonial in summer rookeries; feeds mostly at night on fish and squid; one pup per season.",
+        "Predators include great white sharks, killer whales and Steller sea lions (which take pups). Its gestation figures are inconsistent and were not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Callorhinus ursinus, Northern fur seal — SeaLifeBase",
+        "fr": "Callorhinus ursinus, otarie à fourrure du Nord — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.se/Summary/SpeciesSummary.php?id=69422",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "conservation"],
+      "facts": [
+        "Max 210 cm (male) and 150 cm (female); published max weight 270 kg; feeds at night on schooling and non-schooling fish and squid.",
+        "IUCN Red List: Vulnerable (VU), criteria A2b, assessed 26 March 2015."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Gestation length is not given because Animal Diversity Web’s figures are inconsistent (51 days, 51 weeks and 240 days).",
+    "Body size differs slightly between sources (NOAA: males about 7 ft; Animal Diversity Web: up to 213 cm; SeaLifeBase: 210 cm); the text uses about 2 m and 270 kg, with a female length of about 1.5 m.",
+    "The IUCN Red List page could not be opened; the Vulnerable category and date are taken from SeaLifeBase, and a newer assessment may exist.",
+    "Population figures are for the Eastern Pacific stock only; other stocks (for example the Russian and Californian ones) differ."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from NOAA Fisheries, Animal Diversity Web and SeaLifeBase; illustration to be checked by the owner."
+}

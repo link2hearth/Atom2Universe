@@ -1,0 +1,119 @@
+{
+  "id": "eagle_owl",
+  "scientific": "Bubo bubo",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian eagle-owl",
+    "fr": "Grand-duc d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian eagle-owl is a large owl of Europe and Asia.",
+      "fr": "Le grand-duc d’Europe est un grand-duc d’Eurasie."
+    },
+    "identification": {
+      "en": "Orange eyes, feather tufts and mottled brown plumage are distinctive.",
+      "fr": "Ses yeux orange, ses aigrettes et son plumage brun tacheté sont distinctifs."
+    },
+    "habitat": {
+      "en": "It occupies varied landscapes and often nests on cliffs or sheltered ledges.",
+      "fr": "Il fréquente des paysages variés et niche souvent sur des falaises ou des replats abrités."
+    },
+    "diet": {
+      "en": "It takes mammals and birds, as well as other locally available prey.",
+      "fr": "Il capture des mammifères et des oiseaux, ainsi que d’autres proies disponibles localement."
+    },
+    "behavior": {
+      "en": "It is mainly active at dusk and night, when its territorial calls can carry far.",
+      "fr": "Il est surtout actif au crépuscule et la nuit, lorsque ses appels territoriaux portent au loin."
+    },
+    "reproduction": {
+      "en": "It lays in a sheltered site, often on a cliff ledge or directly on the ground.",
+      "fr": "Il pond dans un site abrité, souvent sur une corniche ou directement au sol."
+    },
+    "ecology": {
+      "en": "Its broad prey range makes it a top predator in many habitats.",
+      "fr": "La diversité de ses proies en fait un prédateur supérieur dans de nombreux habitats."
+    },
+    "conservation": {
+      "en": "BirdLife International lists Bubo bubo as Least Concern globally, while regional populations can face different pressures.",
+      "fr": "BirdLife International classe Bubo bubo en Préoccupation mineure à l’échelle mondiale, tandis que les populations régionales peuvent subir des pressions différentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grand-duc d’Europe — LPO",
+        "fr": "Grand-duc d’Europe — LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/grand-duc-d-europe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French LPO account describes appearance, varied habitats, broad opportunistic prey, nesting and dispersal."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 14,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "List of owl species — BirdLife International",
+        "fr": "Liste des espèces de chouettes et hiboux — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/birds/list-of-owl-species/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife's owl species list identifies Bubo bubo as Eurasian Eagle-owl and gives its global category as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 18,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Nest sites and prey composition vary among regions; this notice gives broad species-level patterns."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the French LPO species account with BirdLife's global owl list; global status is distinguished from regional pressures."
+}

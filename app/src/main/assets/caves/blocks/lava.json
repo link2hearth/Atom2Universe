@@ -1,0 +1,16 @@
+{
+  "id": 6000,
+  "name": "lava",
+  "texture_top": "cozy:utility:8",
+  "texture_side": "cozy:utility:8",
+  "texture_bottom": "cozy:utility:8",
+  "color": "#DA8668",
+  "hardness": 100.0,
+  "light_emission": 15,
+  "drop": "",
+  "harvest_category": "liquid",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

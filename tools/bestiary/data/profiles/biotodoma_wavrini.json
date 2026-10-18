@@ -1,0 +1,184 @@
+{
+  "id": "biotodoma_wavrini",
+  "scientific": "Biotodoma wavrini",
+  "group": "fish",
+  "name": {
+    "en": "Orinoco Eartheater",
+    "fr": "Géophage de l’Orénoque"
+  },
+  "sections": {
+    "overview": {
+      "en": "Biotodoma wavrini is a South American geophagine cichlid known from the Orinoco and Negro river systems. Its genus also includes B. cupido, whose breeding biology is better documented.",
+      "fr": "Biotodoma wavrini est un cichlidé géophaginé d’Amérique du Sud connu des bassins de l’Orénoque et du Negro. Son genre comprend aussi B. cupido, dont la reproduction est mieux documentée."
+    },
+    "identification": {
+      "en": "It is a small, elongated eartheater with iridescent blue cheek spots and a flank blotch set lower and farther forward than in B. cupido. Like other eartheaters, it sifts sediment through the gills to retain edible particles.",
+      "fr": "Ce petit géophage au corps allongé porte des points bleus irisés sur les joues et une tache des flancs plus basse et avancée que chez B. cupido. Comme d’autres géophages, il filtre les sédiments par les branchies pour retenir les particules comestibles."
+    },
+    "habitat": {
+      "en": "Records place it in the upper and middle Orinoco and Negro basins, including tributaries and quiet margins with sand or leaf litter. Accounts describe both clear-water streams and soft, acidic blackwater habitats.",
+      "fr": "Les observations le situent dans les bassins supérieur et moyen de l’Orénoque et du Negro, notamment leurs affluents et des bordures calmes sableuses ou couvertes de feuilles. Les descriptions mentionnent des ruisseaux d’eau claire et des milieux d’eau noire douce et acide."
+    },
+    "diet": {
+      "en": "It takes small benthic invertebrates and organic material while sorting bottom sediment. A comparative dietary study found benthic invertebrates alongside variable detritus in this species.",
+      "fr": "Il prélève de petits invertébrés benthiques et de la matière organique en triant les sédiments du fond. Une étude comparative a relevé chez cette espèce des invertébrés benthiques et des quantités variables de détritus."
+    },
+    "behavior": {
+      "en": "It forages close to the bottom by taking and expelling mouthfuls of substrate. Aquarium observations describe territorial activity near possible spawning sites, but not a complete breeding account.",
+      "fr": "Il cherche sa nourriture près du fond en aspirant puis en rejetant des bouchées de substrat. Des observations en aquarium décrivent une activité territoriale près de sites de ponte possibles, sans documenter toute la reproduction."
+    },
+    "reproduction": {
+      "en": "The spawning method of B. wavrini remains poorly documented. Biparental substrate spawning is known in its congener B. cupido, but should not be treated as confirmed for B. wavrini.",
+      "fr": "Le mode de ponte de B. wavrini reste peu documenté. La ponte sur substrat avec soins biparentaux est connue chez B. cupido, mais n’est pas confirmée chez B. wavrini."
+    },
+    "ecology": {
+      "en": "As a bottom-feeding fish, it participates in the turnover of small invertebrates and detritus in river margins. Its reported habitats span more than one water type, so it is not established as an obligate blackwater species.",
+      "fr": "Poisson benthique, il participe au cycle des petits invertébrés et détritus des bordures fluviales. Les habitats rapportés couvrent plusieurs types d’eau; rien n’établit qu’il soit exclusivement lié à l’eau noire."
+    },
+    "conservation": {
+      "en": "The sources consulted here do not establish a current global threat category for this species. Distribution records and reproductive uncertainty are better documented than population trends.",
+      "fr": "Les sources consultées ici n’établissent pas de catégorie mondiale actuelle de menace pour cette espèce. Les données de répartition et les incertitudes reproductives sont mieux documentées que les tendances de population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biotodoma wavrini — Nordiska Ciklidsällskapet species register",
+        "fr": "Biotodoma wavrini — registre des espèces de la Société nordique des cichlidés"
+      },
+      "url": "https://ciklid.org/artregister/art.php?ID=312",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Swedish-language account compares B. wavrini with B. cupido and describes its range, habitat and sand-sifting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 15,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet–Morphology Correlations in South American Geophagine Cichlids — PLOS ONE",
+        "fr": "Corrélations régime-morphologie chez les cichlidés géophaginés d’Amérique du Sud — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3317448/",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed comparative study reports benthic invertebrates and variable detritus in B. wavrini diets."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 13,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotodoma wavrini — Aquarist Atlas",
+        "fr": "Biotodoma wavrini — Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/biotodoma-wavrini/",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist account states completed spawning remains undocumented and separates observations from inference based on B. cupido."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 16,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orinoco eartheater — Practical Fishkeeping field account",
+        "fr": "Géophage de l’Orénoque — récit de terrain Practical Fishkeeping"
+      },
+      "url": "https://www.practicalfishkeeping.co.uk/features/orinoco-eartheater-biotodoma-wavrini/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Field account documents Orinoco and Negro localities and sandy habitats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 10,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Spawning and parental care have not been securely described for B. wavrini; details for B. cupido are comparative context only.",
+    "A global conservation category was not verified."
+  ],
+  "review_note": "Cross-checked a Swedish species account, peer-reviewed diet study and specialist atlas; retained uncertainty on reproduction and status.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

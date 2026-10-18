@@ -1,0 +1,17 @@
+{
+  "id": 2666,
+  "name": "supply_crate",
+  "texture_top": "cave_ruins:crate_top",
+  "texture_side": "cave_ruins:crate_side",
+  "texture_bottom": "cave_ruins:crate_top",
+  "color": "#927149",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "supply_crate",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "wood"
+  ]
+}

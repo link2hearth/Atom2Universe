@@ -1,0 +1,165 @@
+{
+  "id": "eudendrium_dispar",
+  "scientific": "Eudendrium dispar",
+  "group": "invertebrates",
+  "name": {
+    "en": "Western Atlantic hydroid",
+    "fr": "Hydraire de l’Atlantique occidental"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eudendrium dispar is a valid hydroid species in the cnidarian class Hydrozoa, reported from the western Atlantic.",
+      "fr": "Eudendrium dispar est une espèce valide d’hydraire, cnidaire de la classe des Hydrozoa, signalée dans l’Atlantique occidental."
+    },
+    "identification": {
+      "en": "The species belongs to Eudendriidae; genus-level colonies are upright and irregularly branched, but shape alone is not diagnostic.",
+      "fr": "L’espèce appartient aux Eudendriidae; les colonies du genre sont dressées et ramifiées irrégulièrement, mais leur forme seule ne suffit pas à l’identification."
+    },
+    "habitat": {
+      "en": "The species is recorded in the western Atlantic; genus-level accounts describe hydroids attached to hard surfaces, often in shaded places.",
+      "fr": "L’espèce est signalée dans l’Atlantique occidental; les comptes rendus du genre décrivent des hydraires fixés aux substrats durs, souvent à l’ombre."
+    },
+    "diet": {
+      "en": "As a hydroid, it has feeding polyps, but the consulted sources do not establish prey or diet specifically for this species.",
+      "fr": "Comme hydraire, elle possède des polypes nourriciers, mais les sources consultées ne précisent ni proies ni régime propres à cette espèce."
+    },
+    "behavior": {
+      "en": "It is a fixed colonial animal rather than a free-swimming adult; the available species pages offer little behavioral detail.",
+      "fr": "C’est un animal colonial fixé plutôt qu’un adulte nageant librement; les pages spécifiques disponibles donnent peu de détails comportementaux."
+    },
+    "reproduction": {
+      "en": "Reproductive structures are important in distinguishing Eudendrium species, but a species-specific seasonal cycle was not verified here.",
+      "fr": "Les structures reproductrices aident à distinguer les espèces d’Eudendrium, mais aucun cycle saisonnier propre à cette espèce n’a été vérifié ici."
+    },
+    "ecology": {
+      "en": "The genus grows on hard natural or biological surfaces, including rock, pebbles and shells; these are genus-level observations.",
+      "fr": "Le genre pousse sur des supports durs naturels ou biologiques, notamment roche, galets et coquilles; ce sont des observations au niveau du genre."
+    },
+    "conservation": {
+      "en": "The reviewed taxonomic records provide no species-level conservation assessment or population trend for Eudendrium dispar.",
+      "fr": "Les notices taxonomiques examinées ne fournissent ni évaluation de conservation ni tendance démographique propres à Eudendrium dispar."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eudendrium dispar — Integrated Taxonomic Information System",
+        "fr": "Eudendrium dispar — Integrated Taxonomic Information System"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=49113",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "ITIS treats Eudendrium dispar as a valid species of Hydrozoa, family Eudendriidae, and reports the western Atlantic as its geographic division."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 21,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eudendrium spp. — DORIS, FFESSM",
+        "fr": "Eudendriums — DORIS, FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Eudendrium-spp.-Eudendriums-de-Mediterranee-632",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "DORIS describes Eudendrium genus colonies as attached, irregularly branched hydroids on hard substrates, often in shaded sites; identification needs close examination."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 21,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "COPEPEDIA summary for Eudendrium dispar",
+        "fr": "Résumé COPEPEDIA pour Eudendrium dispar"
+      },
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T4051320/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA-linked COPEPEDIA identifies the same species and records its accepted WoRMS taxon status; the page is still under development."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 19,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eudendriidae: morphology and reproductive organs",
+        "fr": "Eudendriidae : morphologie et organes reproducteurs"
+      },
+      "url": "https://repository.naturalis.nl/pub/215736",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "A comparative scientific study examines morphology and reproductive organs across multiple Eudendriidae species, not all traits specifically for E. dispar."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 20,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Species-level taxonomic records are stronger than ecological evidence. DORIS information is explicitly genus-level and Mediterranean; it is used only for cautious morphology and substrate context, not as a species distribution claim."
+}

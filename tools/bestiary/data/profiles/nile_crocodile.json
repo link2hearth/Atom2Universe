@@ -1,0 +1,391 @@
+{
+  "id": "nile_crocodile",
+  "scientific": "Crocodylus niloticus",
+  "group": "reptiles",
+  "name": {
+    "en": "Nile crocodile",
+    "fr": "Crocodile du Nil"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Nile crocodile is a large African crocodilian of rivers, lakes, swamps and estuaries, with a modern range centred in eastern and southern Africa and Madagascar. The Red List’s current taxonomic scope separates it from Crocodylus suchus, the West and Central African species once included in many broad Nile crocodile accounts. It waits at the water’s edge with only its eyes and nostrils exposed, then lunges when prey comes within reach. Fish and other aquatic animals connect its hunting to the food webs of African wetlands.",
+      "fr": "Le crocodile du Nil est un grand crocodilien africain des rivières, lacs, marais et estuaires, dont l’aire moderne se concentre en Afrique orientale et australe ainsi qu’à Madagascar. La Liste rouge distingue désormais ce taxon de Crocodylus suchus, l’espèce d’Afrique occidentale et centrale autrefois incluse dans de nombreux récits généraux sur le crocodile du Nil. Il attend au bord de l’eau, yeux et narines seuls émergés, puis bondit lorsque des proies s’approchent. Les poissons et autres animaux aquatiques relient sa chasse aux réseaux alimentaires des zones humides africaines."
+    },
+    "identification": {
+      "en": "Its muscular tail supplies the main thrust in water, while strong limbs support movement on land. An Okavango account describes typical adults around 3.5 m long, with males able to reach 5 m. Exceptional males may approach 6 m, an exceptional value rather than a representative adult size. The pointed crocodile muzzle differs from an alligator’s broader one, and its fourth lower tooth remains visible when the jaws close. Eyes, ears and nostrils sit high on the head, and nostrils can close underwater. A San Diego Zoo Wildlife Alliance reference gives a usual mass of about 70–100 kg for males and females together, while noting that adults above 3.5 m are rarely weighed; the largest reported masses are exceptional and should not be read as typical. No sex-specific weight range or reliable body width was found.",
+      "fr": "Sa queue musclée fournit l’essentiel de la propulsion dans l’eau, tandis que ses membres puissants permettent les déplacements à terre. Dans un travail sur le delta de l’Okavango, les adultes mesurent habituellement environ 3,5 m, les mâles pouvant atteindre 5 m. Des mâles exceptionnels approchent 6 m, une valeur exceptionnelle plutôt qu’une taille représentative. Le museau pointu du crocodile diffère de celui, plus large, d’un alligator ; sa quatrième dent inférieure reste visible bouche fermée. Yeux, oreilles et narines sont placés haut, et les narines se ferment sous l’eau. Une référence de la San Diego Zoo Wildlife Alliance indique une masse habituelle d’environ 70 à 100 kg pour les mâles et les femelles réunis, tout en précisant que les adultes de plus de 3,5 m sont rarement pesés; les masses maximales rapportées sont exceptionnelles et ne représentent pas une valeur typique. Je n’ai pas trouvé de plage de poids selon le sexe ni de largeur fiable du corps."
+    },
+    "habitat": {
+      "en": "The species uses slow and still waters, including rivers, lakes, seasonal swamps, reservoirs and coastal estuaries. It also occurs in desert oasis pools and, in Madagascar, underground streams. Around the Nile, its northernmost modern population is localized at Lake Nasser in Egypt. Older accounts include western populations now assigned to C. suchus.",
+      "fr": "L’espèce fréquente des eaux lentes ou calmes : rivières, lacs, marais saisonniers, réservoirs et estuaires côtiers. Elle vit aussi dans des mares d’oasis désertiques et, à Madagascar, dans des cours d’eau souterrains. Au nord de son aire, la population du Nil est localisée autour du lac Nasser, en Égypte. Les anciens récits incluent des populations occidentales désormais classées parmi C. suchus."
+    },
+    "diet": {
+      "en": "Its diet changes as it grows. Young juveniles take insects and invertebrates, later adding frogs, crabs, snails, small fish, birds and rodents. Adults eat fish, reptiles, birds and mammals; local prey availability shapes the menu. Large land animals are occasional prey, not the routine food of every large crocodile. It ambushes from water or shore; a crocodile may roll to tear large prey apart.",
+      "fr": "Son régime évolue avec la croissance. Les jeunes capturent insectes et invertébrés, puis ajoutent grenouilles, crabes, escargots, petits poissons, oiseaux et rongeurs. Les adultes mangent poissons, reptiles, oiseaux et mammifères ; les proies disponibles localement déterminent le menu. Les grands animaux terrestres sont des proies occasionnelles, pas le repas habituel de chaque crocodile. Il chasse à l’affût dans l’eau ou depuis la berge ; il peut tourner sur lui-même pour démembrer une grosse proie."
+    },
+    "behavior": {
+      "en": "As an ectotherm, it adjusts body temperature by moving between sunlit banks, shade and water. It often basks by day and spends much of the night in or near water, with activity shifting by weather and season. When submerged, it can expose only its eyes, ears and nostrils and close its nostrils underwater. Nile crocodiles tolerate one another at basking sites, but large males may defend shoreline stretches. Hatchling calls draw adults to the nest and help keep young together.",
+      "fr": "Ectotherme, il règle sa température en alternant entre berges ensoleillées, ombre et eau. Il se chauffe souvent le jour et passe beaucoup de nuits dans l’eau ou à proximité, selon la météo et la saison. Immergé, il peut ne laisser émerger que ses yeux, ses oreilles et ses narines, puis fermer ces dernières. Les crocodiles tolèrent leurs congénères sur les sites de repos, mais les grands mâles défendent parfois une portion de rive. Les appels des nouveau-nés attirent les adultes au nid et maintiennent les petits groupés."
+    },
+    "reproduction": {
+      "en": "In local dry seasons, females dig sandy hole nests near permanent water and lay around 40–60 eggs. Incubation commonly lasts about 80–90 days, although temperature changes its duration. Egg temperature also influences sex: one Zimbabwe study produced only females at constant 31 °C or below, while the threshold for males varied among clutches above that range. The female guards the nest and responds to calls from hatching young, uncovering them and carrying hatchlings in her mouth to water. Hatchlings measure about 28 cm and stay guarded in groups for up to three months before dispersing.",
+      "fr": "Pendant la saison sèche locale, la femelle creuse un nid dans le sable près de l’eau et y pond environ 40 à 60 œufs. L’incubation dure couramment environ 80 à 90 jours, mais sa durée varie avec la température. Celle-ci influence aussi le sexe : dans une étude menée au Zimbabwe, une incubation constante à 31 °C ou moins n’a produit que des femelles, tandis que le seuil de production des mâles variait selon les pontes au-dessus de cette plage. La femelle garde le nid et répond aux appels des jeunes prêts à éclore, les dégage puis transporte les nouveau-nés dans sa gueule jusqu’à l’eau. Les nouveau-nés mesurent environ 28 cm et restent groupés sous surveillance jusqu’à trois mois, avant de se disperser."
+    },
+    "ecology": {
+      "en": "In the Okavango Delta, studies describe crocodiles taking fish, recycling nutrients and maintaining wet refuges during drought. Eggs and young also feed other animals: fish, herons, storks, monitor lizards and mammals can prey on them, while larger crocodiles may eat juveniles. These relationships vary by site, water level and life stage, making the crocodile both predator and prey in a changing wetland community.",
+      "fr": "Dans le delta de l’Okavango, des études décrivent la capture de poissons, le recyclage des nutriments et le maintien de refuges humides pendant les sécheresses. Œufs et jeunes nourrissent aussi d’autres animaux : poissons, hérons, cigognes, varans et mammifères peuvent les capturer, tandis que de grands crocodiles mangent parfois les petits. Ces relations varient selon le site, le niveau de l’eau et le stade de vie ; le crocodile est ainsi prédateur et proie dans une communauté humide changeante."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment completed on 30 April 2017 and published in 2019 listed the species as Least Concern, estimating 50,000–70,000 mature individuals. The assessment reports that hunting depleted populations in many countries from the 1940s through the 1960s, while legal protection and CITES trade controls supported recovery in many areas. Habitat conversion, pollution, uncontrolled harvest and conflict killings remain regional pressures; local declines and die-offs are documented within the wider range. Some commercial skins come from ranching or captive breeding, while local harvest still needs careful management in the wild.",
+      "fr": "L’évaluation mondiale de l’UICN achevée le 30 avril 2017 et publiée en 2019 classe l’espèce en Préoccupation mineure et estime 50 000 à 70 000 individus adultes. Selon l’évaluation, la chasse a appauvri les populations de nombreux pays des années 1940 aux années 1960, tandis que la protection légale et le contrôle du commerce par la CITES ont favorisé des reprises dans plusieurs régions. Transformation des habitats, pollution, prélèvements non contrôlés et mises à mort liées aux conflits restent des pressions régionales ; des déclins locaux et des mortalités massives sont documentés. Une partie des peaux commerciales vient de l’élevage ou de l’élevage en ranch, tandis que les prélèvements locaux de crocodiles sauvages doivent rester encadrés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crocodylus niloticus — The IUCN Red List of Threatened Species, 2019 assessment",
+        "fr": "Crocodylus niloticus — Liste rouge de l’UICN des espèces menacées, évaluation de 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T45433088A3010181.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "2017 global assessment: Least Concern, 50,000–70,000 mature animals; hunting recovery and regional pressures."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "identification.en.3",
+        "identification.en.7",
+        "identification.fr.3",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 13,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fine scale patterns of genetic partitioning in the rediscovered African crocodile, Crocodylus suchus — PeerJ",
+        "fr": "Structure génétique fine du crocodile africain redécouvert, Crocodylus suchus — PeerJ"
+      },
+      "url": "https://doi.org/10.7717/peerj.1901",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Genetic evidence separates western and central African C. suchus from eastern and southern C. niloticus."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 15,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Physical Characteristics — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library",
+        "fr": "Caractéristiques physiques — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/characteristics",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Records crocodilian tooth placement, closing nostrils, high-set senses, appearance, tail propulsion and sexual size dimorphism."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "identification.en.1",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.1",
+        "identification.fr.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 15,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution & Habitat — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library",
+        "fr": "Répartition et habitat — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/distribution",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Summarizes modern range, Lake Nasser limit, Madagascar, wetland types, oasis pools and cave streams."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 14,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet & Feeding — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library",
+        "fr": "Régime et alimentation — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/diet",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Juvenile and adult prey differ; fish, varied vertebrates, ambush and prey rotation are documented."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.en.5",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.4",
+        "diet.fr.5",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 14,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Behavior & Ecology — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library",
+        "fr": "Comportement et écologie — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/behavior",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Summarizes basking, temperature behavior, submerged posture, shoreline territories and social tolerance."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 11,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Incubation temperatures, sex ratios and sex determination in a population of Nile crocodiles — Journal of Zoology",
+        "fr": "Températures d’incubation, sex-ratios et détermination du sexe chez une population de crocodiles du Nil — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1987.tb07458.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Zimbabwe experiment: at or below 31 °C only females; male threshold varied; incubation lasted 85–110 days."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 16,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproduction & Development — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library",
+        "fr": "Reproduction et développement — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/reproduction",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Clutch, nest care, mouth transport, hatchling size, guarded groups and juvenile dispersal are described."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 14,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A preliminary disease survey in the wild Nile crocodile population in the Okavango Delta, Botswana — Journal of the South African Veterinary Association",
+        "fr": "Étude préliminaire des maladies chez le crocodile du Nil sauvage du delta de l’Okavango — Journal of the South African Veterinary Association"
+      },
+      "url": "https://scielo.org.za/scielo.php?pid=S1019-91282011000300004&script=sci_arttext",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Okavango account reports fish predation, nutrient recycling, wet refuges, basking thermoregulation and local adult lengths."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.3",
+        "identification.en.2",
+        "identification.fr.2",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 15,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parent-offspring communication in the Nile crocodile Crocodylus niloticus: do newborns’ calls show an individual signature? — The Science of Nature",
+        "fr": "Communication parent-jeune chez le crocodile du Nil Crocodylus niloticus : les appels des nouveau-nés ont-ils une signature individuelle ? — The Science of Nature"
+      },
+      "url": "https://doi.org/10.1007/s00114-006-0156-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Newborn calls trigger maternal care and influence nearby young; call patterns change during the first days."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 16,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crocodiles: Status Survey and Conservation Action Plan, Third Edition — IUCN SSC Crocodile Specialist Group",
+        "fr": "Crocodiles : état des populations et plan d’action pour la conservation, troisième édition — Groupe de spécialistes des crocodiles de la CSE de l’UICN"
+      },
+      "url": "https://www.iucncsg.org/365_docs/attachments/protarea/15_C-cf25967f.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Specialist review distinguishes ranching and captive production from wild harvest and conflict."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 12,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Retain the existing crocodile artwork. No new image requested.",
+  "uncertainties": [
+    "The global IUCN status and estimate refer to the 2017 assessment published in 2019; later local population changes may not be reflected.",
+    "Adult size varies by sex and population; values are typical adult ranges, while six metres is an exceptional male maximum.",
+    "The modern Egyptian occurrence is localized around Lake Nasser; historical northern and western records may concern now separately recognized C. suchus or extinct populations.",
+    "Nesting dates, clutch sizes and hatchling guarding vary with local climate and study population; incubation and sex results are not universal constants."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review distinguish niloticus from suchus, correct adult dimensions using species-specific Okavango account, and align French nesting season. Regional incubation findings and dated assessment retained; feet corrected with independent art critique."
+}

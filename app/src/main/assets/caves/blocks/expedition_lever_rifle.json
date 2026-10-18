@@ -1,0 +1,12 @@
+{
+  "id": 9918,
+  "name": "expedition_lever_rifle",
+  "texture_top": "expedition:9918:top",
+  "texture_side": "expedition:9918:side",
+  "texture_bottom": "expedition:9918:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_lever_rifle",
+  "creative_tab": "resources",
+  "placeable": false
+}

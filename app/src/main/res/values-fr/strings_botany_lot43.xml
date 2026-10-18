@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_parasitaxus_usta_name">Parasitaxe de Nouvelle-Calédonie</string>
+    <string name="bot_parasitaxus_usta_latin" translatable="false">Parasitaxus usta</string>
+    <string name="bot_parasitaxus_usta_aliases">parasitaxe</string>
+    <string name="bot_parasitaxus_usta_description">Conifère parasite des racines de Falcatifolium taxoides. Ses rameaux aplatis portent de minuscules feuilles opposées, souvent pourpres; il ne forme pas de racines indépendantes.</string>
+    <string name="bot_parasitaxus_usta_distribution">Endémique de Nouvelle-Calédonie, dans les forêts humides où croît son hôte.</string>
+    <string name="bot_parasitaxus_usta_habit">Arbuste parasite bas, généralement sous 2 m, à rameaux denses et dressés.</string>
+    <string name="bot_parasitaxus_usta_leaf">Feuilles écailleuses opposées et décussées, serrées contre les rameaux.</string>
+    <string name="bot_parasitaxus_usta_flower">Petits cônes reproducteurs sur les rameaux; la source locale décrit l’espèce comme monoïque.</string>
+    <string name="bot_parasitaxus_usta_fruit">Graine entourée d’un arille charnu rouge à maturité.</string>
+    <string name="bot_trevoa_quinquenervia_name">Trevoa à cinq nervures</string>
+    <string name="bot_trevoa_quinquenervia_latin" translatable="false">Trevoa quinquenervia</string>
+    <string name="bot_trevoa_quinquenervia_aliases">trevoa à cinq nervures</string>
+    <string name="bot_trevoa_quinquenervia_description">Arbuste chilien des versants secs, reconnaissable à ses rameaux épineux et à ses feuilles opposées à cinq ou sept nervures marquées. Les fleurs blanchâtres donnent des akènes velus.</string>
+    <string name="bot_trevoa_quinquenervia_distribution">Endémique du centre du Chili, dans les broussailles sèches et les rocailles.</string>
+    <string name="bot_trevoa_quinquenervia_habit">Arbuste ramifié de 0,5–3 m; rameaux opposés terminés en épines.</string>
+    <string name="bot_trevoa_quinquenervia_leaf">Feuilles opposées, petites, elliptiques, à 5–7 nervures longitudinales; revers parfois pubescent.</string>
+    <string name="bot_trevoa_quinquenervia_flower">Petites fleurs blanchâtres en fascicules axillaires.</string>
+    <string name="bot_trevoa_quinquenervia_fruit">Akène aplati, sec, velu, terminé par un court bec.</string>
+    <string name="bot_ostrya_rehderiana_name">Ostryer de Rehder</string>
+    <string name="bot_ostrya_rehderiana_latin" translatable="false">Ostrya rehderiana</string>
+    <string name="bot_ostrya_rehderiana_aliases">ostryer de Rehder</string>
+    <string name="bot_ostrya_rehderiana_description">Arbre très rare de Tianmu Shan, apparenté aux charmes-houblons. Ses feuilles doublement dentées et ses fruits enfermés dans des enveloppes papyracées gonflées sont distinctifs.</string>
+    <string name="bot_ostrya_rehderiana_distribution">Endémique du massif Tianmu, Zhejiang, Chine orientale; forêts montagnardes.</string>
+    <string name="bot_ostrya_rehderiana_habit">Arbre caduc pouvant atteindre environ 20 m.</string>
+    <string name="bot_ostrya_rehderiana_leaf">Feuille alterne elliptique, nettement doublement dentée, avec 13–16 paires de nervures latérales.</string>
+    <string name="bot_ostrya_rehderiana_flower">Fleurs mâles en chatons pendants; les fleurs femelles donnent des grappes de fruits.</string>
+    <string name="bot_ostrya_rehderiana_fruit">Petite noisette incluse dans une enveloppe vésiculeuse papyracée à base pédonculée.</string>
+    <string name="bot_cottendorfia_florida_name">Cottendorfia floride</string>
+    <string name="bot_cottendorfia_florida_latin" translatable="false">Cottendorfia florida</string>
+    <string name="bot_cottendorfia_florida_aliases">cottendorfia</string>
+    <string name="bot_cottendorfia_florida_description">Grande broméliacée terrestre des campos rupestres brésiliens. Elle forme une rosette de feuilles étroites et une inflorescence très ramifiée portant des épis denses.</string>
+    <string name="bot_cottendorfia_florida_distribution">Nord-est du Brésil, sur terrains rocheux du Piauí et de Bahia.</string>
+    <string name="bot_cottendorfia_florida_habit">Vivace en rosette; la hampe florale peut porter la plante à 2–4 m.</string>
+    <string name="bot_cottendorfia_florida_leaf">Feuilles en lanières jusqu’à 1 m × 1,2 cm, entières, squameuses dessous.</string>
+    <string name="bot_cottendorfia_florida_flower">Inflorescence lâche tripennée, avec épis compacts de fleurs à six pièces.</string>
+    <string name="bot_cottendorfia_florida_fruit">Capsule sèche développée après la floraison.</string>
+    <string name="bot_heliamphora_glabra_name">Héliamphore glabre</string>
+    <string name="bot_heliamphora_glabra_latin" translatable="false">Heliamphora glabra</string>
+    <string name="bot_heliamphora_glabra_aliases">héliamphore glabre</string>
+    <string name="bot_heliamphora_glabra_description">Plante carnivore des hauts plateaux humides des Guyanes. Ses feuilles en urnes piègent les arthropodes; un appendice nectarifère aide à distinguer les urnes dans le genre.</string>
+    <string name="bot_heliamphora_glabra_distribution">Guyana et régions voisines du plateau des Guyanes; tepuis très humides.</string>
+    <string name="bot_heliamphora_glabra_habit">Vivace en rosettes d’urnes; hampe florale dressée au-dessus des pièges.</string>
+    <string name="bot_heliamphora_glabra_leaf">Feuilles transformées en urnes tubulaires dressées, ouvertes au sommet et munies d’un appendice nectarifère.</string>
+    <string name="bot_heliamphora_glabra_flower">Fleurs peu nombreuses sur une hampe, à pièces blanches et nombreuses étamines.</string>
+    <string name="bot_heliamphora_glabra_fruit">Capsule à graines; les urnes sont des feuilles, pas des fruits.</string>
+    <string name="bot_garcinia_travancorica_name">Garcinia de Travancore</string>
+    <string name="bot_garcinia_travancorica_latin" translatable="false">Garcinia travancorica</string>
+    <string name="bot_garcinia_travancorica_aliases">garcinia du Travancore</string>
+    <string name="bot_garcinia_travancorica_description">Arbre endémique des Ghats occidentaux méridionaux. Ses feuilles opposées coriaces accompagnent des fleurs unisexuées et une grosse baie charnue.</string>
+    <string name="bot_garcinia_travancorica_distribution">Forêts humides sempervirentes du sud des Ghats occidentaux, Inde.</string>
+    <string name="bot_garcinia_travancorica_habit">Arbre sempervirent d’environ 10–15 m; la flore consultée décrit des fleurs mâles et femelles séparées.</string>
+    <string name="bot_garcinia_travancorica_leaf">Feuilles opposées, étroitement elliptiques à lancéolées, coriaces, parfois à marge révolutée.</string>
+    <string name="bot_garcinia_travancorica_flower">Fleurs unisexuées axillaires; quatre pétales sont rapportés dans la source consultée.</string>
+    <string name="bot_garcinia_travancorica_fruit">Baie charnue d’environ 3–4 cm, à sépales et stigmate persistants.</string>
+    <string name="bot_miersiella_umbellata_name">Miersiella en ombelle</string>
+    <string name="bot_miersiella_umbellata_latin" translatable="false">Miersiella umbellata</string>
+    <string name="bot_miersiella_umbellata_aliases">miersiella ombellée</string>
+    <string name="bot_miersiella_umbellata_description">Petite herbe mycohétérotrophe sans chlorophylle, dépendante des champignons du sol. Sa tige pâle porte des écailles et une ombelle terminale.</string>
+    <string name="bot_miersiella_umbellata_distribution">Forêts tropicales humides de Colombie et régions adjacentes, dans la litière ombragée.</string>
+    <string name="bot_miersiella_umbellata_habit">Herbe discrète de quelques centimètres, sans photosynthèse autonome.</string>
+    <string name="bot_miersiella_umbellata_leaf">Feuilles réduites à de petites écailles translucides le long de la tige.</string>
+    <string name="bot_miersiella_umbellata_flower">Ombelle terminale de quelques fleurs minuscules blanchâtres.</string>
+    <string name="bot_miersiella_umbellata_fruit">Capsule contenant des graines minuscules; la plante reste liée aux champignons du sol.</string>
+    <string name="bot_rosa_pendulina_name">Rosier des Alpes</string>
+    <string name="bot_rosa_pendulina_latin" translatable="false">Rosa pendulina</string>
+    <string name="bot_rosa_pendulina_aliases">rose des Alpes</string>
+    <string name="bot_rosa_pendulina_description">Rosier sauvage montagnard souvent presque sans aiguillons. Ses fleurs rose foncé isolées donnent des cynorrhodons rouges allongés et pendants.</string>
+    <string name="bot_rosa_pendulina_distribution">Montagnes d’Europe centrale et méridionale, lisières et pentes fraîches.</string>
+    <string name="bot_rosa_pendulina_habit">Arbuste caduc de 0,5–2,5 m; tiges dressées, peu épineuses ou inermes.</string>
+    <string name="bot_rosa_pendulina_leaf">Feuilles alternes à 7–11 folioles allongées et dentées, souvent glandulaires sur les dents.</string>
+    <string name="bot_rosa_pendulina_flower">Fleurs solitaires rose à rouge pourpré; sépales réfléchis après floraison.</string>
+    <string name="bot_rosa_pendulina_fruit">Cynorrhodon rouge oblong et pendant, souvent avec calice persistant.</string>
+    <string name="bot_plocosperma_buxifolium_name">Plocosperma à feuilles de buis</string>
+    <string name="bot_plocosperma_buxifolium_latin" translatable="false">Plocosperma buxifolium</string>
+    <string name="bot_plocosperma_buxifolium_aliases">plocosperma à feuilles de buis</string>
+    <string name="bot_plocosperma_buxifolium_description">Arbuste mésoaméricain, seul représentant d’une famille distincte. Ses feuilles opposées coriaces contrastent avec des fleurs tubulaires violettes et des graines velues.</string>
+    <string name="bot_plocosperma_buxifolium_distribution">Forêts sèches et lisières du Mexique au Costa Rica, souvent sur rochers.</string>
+    <string name="bot_plocosperma_buxifolium_habit">Arbuste ou petit arbre ramifié, généralement de quelques mètres.</string>
+    <string name="bot_plocosperma_buxifolium_leaf">Feuilles simples opposées, coriaces, elliptiques, à bord entier.</string>
+    <string name="bot_plocosperma_buxifolium_flower">Fleurs bisexuées à corolle tubulaire en entonnoir, généralement cinq-lobée, souvent violette.</string>
+    <string name="bot_plocosperma_buxifolium_fruit">Capsule allongée à deux valves; graines munies de longs poils soyeux.</string>
+    <string name="bot_setchellanthus_caeruleus_name">Setchellanthus bleu</string>
+    <string name="bot_setchellanthus_caeruleus_latin" translatable="false">Setchellanthus caeruleus</string>
+    <string name="bot_setchellanthus_caeruleus_aliases">setchellanthus bleu</string>
+    <string name="bot_setchellanthus_caeruleus_description">Arbuste aromatique des broussailles arides mexicaines, seul membre connu des Setchellanthaceae. Ses grandes fleurs axillaires bleu-violet possèdent de nombreuses pièces.</string>
+    <string name="bot_setchellanthus_caeruleus_distribution">Endémique du Mexique, dans les broussailles sèches et zones semi-arides.</string>
+    <string name="bot_setchellanthus_caeruleus_habit">Arbuste aromatique ramifié de 1–3 m.</string>
+    <string name="bot_setchellanthus_caeruleus_leaf">Feuilles simples alternes, petites, elliptiques et entières.</string>
+    <string name="bot_setchellanthus_caeruleus_flower">Grandes fleurs axillaires bleu-violet, à pièces florales nombreuses.</string>
+    <string name="bot_setchellanthus_caeruleus_fruit">Capsule sèche contenant les graines, différente d’une silique.</string>
+    <string name="bot_stenocereus_eruca_name">Cierge rampant</string>
+    <string name="bot_stenocereus_eruca_latin" translatable="false">Stenocereus eruca</string>
+    <string name="bot_stenocereus_eruca_aliases">cierge rampant</string>
+    <string name="bot_stenocereus_eruca_description">Cactus rampant endémique de Basse-Californie. Ses tiges épineuses reposent sur le sable et progressent par leur extrémité qui se redresse; l’arrière peut mourir.</string>
+    <string name="bot_stenocereus_eruca_distribution">Basse-Californie du Sud, notamment les plaines côtières sableuses de la baie Magdalena.</string>
+    <string name="bot_stenocereus_eruca_habit">Cactus prostré aux tiges cylindriques de plusieurs mètres, qui s’enracinent adventivement.</string>
+    <string name="bot_stenocereus_eruca_leaf">Feuilles absentes; tiges succulentes côtelées portant des aréoles épineuses.</string>
+    <string name="bot_stenocereus_eruca_flower">Fleurs nocturnes blanches à rosées, près des extrémités relevées.</string>
+    <string name="bot_stenocereus_eruca_fruit">Baie charnue rougeâtre à épines caduques ou soies.</string>
+    <string name="bot_retzia_capensis_name">Retzia du Cap</string>
+    <string name="bot_retzia_capensis_latin" translatable="false">Retzia capensis</string>
+    <string name="bot_retzia_capensis_aliases">retzia du Cap</string>
+    <string name="bot_retzia_capensis_description">Petit arbuste endémique du fynbos du Cap. Ses feuilles étroites et ses fleurs tubulaires rouge-orange aux extrémités sombres et poilues sont distinctives.</string>
+    <string name="bot_retzia_capensis_distribution">Cap-Occidental, Afrique du Sud; pentes et affleurements de grès.</string>
+    <string name="bot_retzia_capensis_habit">Arbrisseau dressé, dense et feuillé, généralement jusqu’à 1,5 m.</string>
+    <string name="bot_retzia_capensis_leaf">Feuilles alternes étroites, simples, coriaces et entières.</string>
+    <string name="bot_retzia_capensis_flower">Fleurs tubulaires rouge-orange en grappes, avec extrémités sombres et touffes de poils blancs.</string>
+    <string name="bot_retzia_capensis_fruit">Petite capsule sèche après la floraison.</string>
+    <string name="bot_terminalia_paniculata_name">Terminalia paniculée</string>
+    <string name="bot_terminalia_paniculata_latin" translatable="false">Terminalia paniculata</string>
+    <string name="bot_terminalia_paniculata_aliases">terminalia paniculée</string>
+    <string name="bot_terminalia_paniculata_description">Grand arbre des forêts décidues humides de l’Inde péninsulaire. Ses feuilles peuvent porter des glandes basales; ses petites fleurs verdâtres donnent un fruit ailé inégal.</string>
+    <string name="bot_terminalia_paniculata_distribution">Inde péninsulaire, notamment les Ghats occidentaux et régions voisines.</string>
+    <string name="bot_terminalia_paniculata_habit">Arbre caduc d’environ 12–16 m, au tronc droit et à la couronne étalée.</string>
+    <string name="bot_terminalia_paniculata_leaf">Feuilles simples alternes lancéolées à oblongues; glandes parfois près de la base du pétiole.</string>
+    <string name="bot_terminalia_paniculata_flower">Petites fleurs verdâtres en grappes axillaires ou terminales.</string>
+    <string name="bot_terminalia_paniculata_fruit">Samare comprimée brun-rouge à trois ailes inégales, la médiane la plus développée.</string>
+    <string name="bot_abarema_turbinata_name">Abarema turbinata</string>
+    <string name="bot_abarema_turbinata_latin" translatable="false">Jupunba turbinata</string>
+    <string name="bot_abarema_turbinata_aliases">abarema turbinata</string>
+    <string name="bot_abarema_turbinata_description">Petit arbre côtier brésilien publié sous Abarema turbinata, synonyme de Jupunba turbinata selon Kew. Ses longues étamines dépassent les fleurs; la gousse mûre se tord.</string>
+    <string name="bot_abarema_turbinata_distribution">Endémique de la forêt atlantique côtière de Bahia, dans les formations sableuses.</string>
+    <string name="bot_abarema_turbinata_habit">Arbre ou grand arbuste de 3–4,5 m.</string>
+    <string name="bot_abarema_turbinata_leaf">Feuilles alternes bipennées, souvent avec une paire de pennes et de grandes folioles.</string>
+    <string name="bot_abarema_turbinata_flower">Fleurs en têtes ou racèmes; longues étamines blanches exsertes.</string>
+    <string name="bot_abarema_turbinata_fruit">Gousse comprimée, réticulée et spiralée, contenant plusieurs graines.</string>
+    <string name="bot_erythrina_euodiphylla_name">Érythrine de Java</string>
+    <string name="bot_erythrina_euodiphylla_latin" translatable="false">Erythrina euodiphylla</string>
+    <string name="bot_erythrina_euodiphylla_aliases">érythrine de Java</string>
+    <string name="bot_erythrina_euodiphylla_description">Érythrine de Java et des Petites îles de la Sonde, souvent fleurie sur des rameaux presque nus. Les feuilles sont trifoliolées; les graines violettes la distinguent de proches espèces à graines rouges.</string>
+    <string name="bot_erythrina_euodiphylla_distribution">Java oriental, Bali et Timor; l’aire Kew comprend les Petites îles de la Sonde.</string>
+    <string name="bot_erythrina_euodiphylla_habit">Arbre ou arbuste épineux, caduc ou brièvement défeuillé à la floraison.</string>
+    <string name="bot_erythrina_euodiphylla_leaf">Feuille alterne trifoliolée, à folioles largement elliptiques.</string>
+    <string name="bot_erythrina_euodiphylla_flower">Fleurs papilionacées rouge-orangé en grappes; couleur rapportée au niveau du genre par la source consultée.</string>
+    <string name="bot_erythrina_euodiphylla_fruit">Gousse allongée étranglée entre les graines; graines violettes selon la comparaison taxonomique publiée.</string>
+    <string name="bot_rhoiptelea_chiliantha_name">Rhoiptelea de Chine</string>
+    <string name="bot_rhoiptelea_chiliantha_latin" translatable="false">Rhoiptelea chiliantha</string>
+    <string name="bot_rhoiptelea_chiliantha_aliases">rhoiptelea de Chine</string>
+    <string name="bot_rhoiptelea_chiliantha_description">Arbre de Chine méridionale et du nord du Vietnam, aux longs panicules pendants. Les axes et jeunes parties sont couverts de poils glanduleux jaune pâle.</string>
+    <string name="bot_rhoiptelea_chiliantha_distribution">Sud-est de la Chine et nord du Vietnam; forêts montagnardes.</string>
+    <string name="bot_rhoiptelea_chiliantha_habit">Arbre pouvant atteindre environ 20 m.</string>
+    <string name="bot_rhoiptelea_chiliantha_leaf">Feuille alterne pennée de 7–13 folioles dentées; rachis glanduleux.</string>
+    <string name="bot_rhoiptelea_chiliantha_flower">Petites fleurs verdâtres en longues panicules lâches et pendantes.</string>
+    <string name="bot_rhoiptelea_chiliantha_fruit">Très petit akène à quatre côtes et quatre ailes arrondies.</string>
+    <string name="bot_turbinicarpus_alonsoi_name">Turbinicarpus d’Alonso</string>
+    <string name="bot_turbinicarpus_alonsoi_latin" translatable="false">Turbinicarpus alonsoi</string>
+    <string name="bot_turbinicarpus_alonsoi_aliases">turbinicarpus d’Alonso</string>
+    <string name="bot_turbinicarpus_alonsoi_description">Petit cactus globuleux mexicain très localisé et gravement menacé. Ses tubercules proéminents et sa grande fleur rose au sommet sont caractéristiques.</string>
+    <string name="bot_turbinicarpus_alonsoi_distribution">Guanajuato, Mexique; aire très restreinte sur substrat calcaire.</string>
+    <string name="bot_turbinicarpus_alonsoi_habit">Cactus solitaire bas, environ 5–12 cm de diamètre, partiellement enfoui.</string>
+    <string name="bot_turbinicarpus_alonsoi_leaf">Tige globuleuse aux tubercules en spirale, aréoles portant de courtes épines pâles.</string>
+    <string name="bot_turbinicarpus_alonsoi_flower">Grande fleur funneliforme rose à magenta au sommet de la tige.</string>
+    <string name="bot_turbinicarpus_alonsoi_fruit">Petite capsule sèche; les graines sont sombres.</string>
+    <string name="bot_dracaena_forskaliana_name">Sansevieria forskaliana</string>
+    <string name="bot_dracaena_forskaliana_latin" translatable="false">Sansevieria forskaliana</string>
+    <string name="bot_dracaena_forskaliana_aliases">sansevière de Forsskål</string>
+    <string name="bot_dracaena_forskaliana_description">Sansevieria forskaliana est le nom conservé dans l’arbre; Kew traite le taxon comme Dracaena forskaliana. Rosette rhizomateuse à feuilles rigides marbrées, hampe en grappe et baies.</string>
+    <string name="bot_dracaena_forskaliana_distribution">Nord-est de l’Afrique et péninsule Arabique, dans les broussailles et savanes sèches.</string>
+    <string name="bot_dracaena_forskaliana_habit">Herbe vivace acaulescente en rosette; rhizome souterrain.</string>
+    <string name="bot_dracaena_forskaliana_leaf">Feuilles dressées raides, lancéolées, marbrées, à pointe brune rigide et bande marginale pâle.</string>
+    <string name="bot_dracaena_forskaliana_flower">Grappe dressée de fleurs blanchâtres tubulaires, réunies par petits groupes.</string>
+    <string name="bot_dracaena_forskaliana_fruit">Baie orange contenant une à trois graines.</string>
+    <string name="bot_bivonaea_lutea_name">Bivonée jaune</string>
+    <string name="bot_bivonaea_lutea_latin" translatable="false">Bivonaea lutea</string>
+    <string name="bot_bivonaea_lutea_aliases">bivonée jaune</string>
+    <string name="bot_bivonaea_lutea_description">Très petite annuelle méditerranéenne de la famille des Brassicaceae. Une rosette de feuilles oblongues précède une tige grêle à petites fleurs jaunes; les siliques courtes sont réticulées.</string>
+    <string name="bot_bivonaea_lutea_distribution">Italie méridionale, Sicile, Malte et Méditerranée centrale, surtout milieux secs.</string>
+    <string name="bot_bivonaea_lutea_habit">Annuelle de quelques centimètres, généralement 4–22 cm.</string>
+    <string name="bot_bivonaea_lutea_leaf">Feuilles basales oblongues et dentées; feuilles caulinaires plus petites, alternes.</string>
+    <string name="bot_bivonaea_lutea_flower">Petites fleurs à quatre pétales jaunes sur une grappe terminale.</string>
+    <string name="bot_bivonaea_lutea_fruit">Silicule oblongue comprimée, de quelques millimètres, avec nervures transversales réticulées.</string>
+    <string name="bot_melocactus_lemairei_name">Mélocactus de Lemaire</string>
+    <string name="bot_melocactus_lemairei_latin" translatable="false">Melocactus lemairei</string>
+    <string name="bot_melocactus_lemairei_aliases">mélocactus de Lemaire</string>
+    <string name="bot_melocactus_lemairei_description">Cactus globuleux des Caraïbes portant un céphalium laineux rougeâtre au sommet. Les petites fleurs émergent du céphalium; ce caractère distingue le genre des cactus sans céphalium.</string>
+    <string name="bot_melocactus_lemairei_distribution">Caraïbes orientales, notamment Hispaniola; milieux secs et rocailleux.</string>
+    <string name="bot_melocactus_lemairei_habit">Cactus solitaire globuleux à cylindrique court, surmonté à maturité d’un céphalium.</string>
+    <string name="bot_melocactus_lemairei_leaf">Tige côtelée avec aréoles épineuses; le céphalium apical est couvert de laine et soies.</string>
+    <string name="bot_melocactus_lemairei_flower">Petites fleurs roses à tubulaires, émises depuis le céphalium.</string>
+    <string name="bot_melocactus_lemairei_fruit">Baie oblongue rouge, émergeant du céphalium à maturité.</string>
+</resources>

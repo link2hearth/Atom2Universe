@@ -1,0 +1,17 @@
+{
+  "id": 2634,
+  "name": "columnar_basalt",
+  "texture_top": "cave_art:b_columnar_basalt_top",
+  "texture_side": "cave_art:b_columnar_basalt",
+  "texture_bottom": "cave_art:b_columnar_basalt_top",
+  "color": "#50515B",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "columnar_basalt",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

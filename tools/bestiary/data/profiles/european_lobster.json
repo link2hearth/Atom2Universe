@@ -1,0 +1,245 @@
+{
+  "id": "european_lobster",
+  "scientific": "Homarus gammarus",
+  "group": "invertebrates",
+  "name": {
+    "en": "European lobster",
+    "fr": "Homard européen"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European lobster is a clawed marine crustacean native to the northeastern Atlantic, Mediterranean and western Black Sea.",
+      "fr": "Le homard européen est un crustacé marin à grandes pinces, indigène de l’Atlantique nord-est, de la Méditerranée et de l’ouest de la mer Noire."
+    },
+    "identification": {
+      "en": "Its blue, mottled upper shell contrasts with a pale yellowish underside, long antennae and a segmented abdomen. Pot-caught animals commonly measure about 23–38 centimetres, rather than the much larger sizes reported for exceptional specimens. The ten walking limbs include a massive crushing claw and a sharper cutting claw, which perform complementary feeding functions. Growth requires shedding the rigid shell and expanding before the new shell hardens: this is moulting. Heating breaks the protein complex holding the red pigment astaxanthin, explaining the colour change from blue to red during cooking. Large specimens are commonly 23–50 cm; maximum total length is about 60 cm and maximum mass about 5–6 kg. These are large-size records, not a typical catch mass.",
+      "fr": "Sa carapace supérieure bleue et tachetée contraste avec un dessous jaunâtre pâle, de longues antennes et un abdomen segmenté. Les individus pris au casier mesurent couramment environ 23–38 centimètres, loin des dimensions beaucoup plus grandes rapportées pour des spécimens exceptionnels. Les dix membres marcheurs comprennent une grande pince broyeuse et une pince coupante plus tranchante, aux fonctions alimentaires complémentaires. La croissance exige de quitter la carapace rigide puis de grossir avant le durcissement de la nouvelle : c’est la mue. La chaleur détruit le complexe protéique qui retient le pigment rouge appelé astaxanthine, ce qui explique le passage du bleu au rouge à la cuisson. Les grands spécimens mesurent couramment 23–50 cm ; la longueur totale maximale est d’environ 60 cm et la masse maximale de 5–6 kg. Ce sont des valeurs de grands spécimens, pas une masse de capture typique."
+    },
+    "habitat": {
+      "en": "It occupies rocky seabeds from the lower shore to around 60 metres, sheltering in crevices, holes and excavated tunnels. The short, spiny projection at the front of the head is the rostrum, another useful identification feature.",
+      "fr": "Il fréquente les fonds rocheux du bas du littoral jusqu’à environ 60 mètres, s’abritant dans les fissures, trous et tunnels qu’il creuse. Le rostre, courte projection épineuse à l’avant de la tête, constitue un autre caractère utile pour reconnaître l’espèce."
+    },
+    "diet": {
+      "en": "Adults eat crabs, molluscs, sea urchins, marine worms and other bottom-living animals, sometimes taking fish or algae. Feeding declines in winter as colder water slows metabolism, so food intake changes with seasonal conditions.",
+      "fr": "L’adulte mange des crabes, mollusques, oursins, vers marins et autres animaux du fond, prenant parfois aussi des poissons ou des algues. L’alimentation diminue en hiver lorsque l’eau froide ralentit le métabolisme ; la consommation varie donc avec les conditions saisonnières."
+    },
+    "behavior": {
+      "en": "Usually solitary and territorial, it hides during the day and emerges mainly at night to search for food. A rapid contraction of the abdomen and tail can propel it backwards when escape is needed.",
+      "fr": "Généralement solitaire et territorial, il se cache pendant la journée et sort surtout la nuit pour chercher sa nourriture. Une contraction rapide de l’abdomen et de la queue le propulse vers l’arrière lorsqu’il doit fuir."
+    },
+    "reproduction": {
+      "en": "Mating generally joins a hard-shelled male with a recently moulted, soft-shelled female, which can store his sperm before laying. Fertilized eggs remain attached beneath her abdomen for roughly nine to twelve months, with development influenced by water temperature. She fans water over the eggs to maintain oxygenation; hatchlings then enter the plankton, drifting near the sea surface. Successive moults produce the first juvenile stage, which resembles a miniature lobster and settles into sand or gravel rather than remaining in surface waters.",
+      "fr": "L’accouplement réunit généralement un mâle à carapace dure et une femelle récemment muée, à carapace molle, capable de conserver son sperme avant la ponte. Les œufs fécondés restent fixés sous son abdomen pendant environ neuf à douze mois, leur développement étant influencé par la température de l’eau. Elle ventile les œufs pour maintenir leur oxygénation ; les larves entrent ensuite dans le plancton, dérivant près de la surface marine. Des mues successives produisent le premier stade juvénile, ressemblant à un homard miniature, qui gagne le sable ou le gravier au lieu de rester dans les eaux de surface."
+    },
+    "ecology": {
+      "en": "The planktonic phase exposes larvae to many predators; after settlement, buried juveniles gain protection from seabed shelter. Newly moulted lobsters are particularly vulnerable until their replacement shell hardens, making access to shelter essential.",
+      "fr": "La phase planctonique expose les larves à de nombreux prédateurs ; après leur installation sur le fond, les jeunes enfouis trouvent une protection dans les abris du substrat. Les homards fraîchement mués sont particulièrement vulnérables avant le durcissement de leur nouvelle carapace, ce qui rend essentiel l’accès à un abri."
+    },
+    "conservation": {
+      "en": "Its global status is Least Concern, although commercial fishing creates substantial pressure in parts of its range; lobster pots are the main capture method. In Cornwall, hatchery programmes rear young through their vulnerable planktonic phase before releasing juveniles to coastal seabeds.",
+      "fr": "Son statut mondial est de préoccupation mineure, mais la pêche commerciale exerce une forte pression dans certaines parties de son aire ; le casier est le principal moyen de capture. En Cornouailles, des programmes d’écloserie élèvent les jeunes durant leur phase planctonique vulnérable avant de relâcher les juvéniles sur les fonds côtiers."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Homarus gammarus — Wikipedia",
+        "fr": "Homarus gammarus — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Homarus_gammarus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Size, colour, mating and global status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.2",
+        "identification.en.5",
+        "identification.fr.2",
+        "identification.fr.5",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 6,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Homard européen — Wikipédia",
+        "fr": "Homard européen — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Homard_europ%C3%A9en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "overview"
+      ],
+      "facts": [
+        "Range, benthic food and nocturnal activity."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 6,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common lobster — MarLIN, Emily Wilson (2008)",
+        "fr": "Homard européen — MarLIN, Emily Wilson (2008)"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1171",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Blue shell, rocky shelter and depth."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 6,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biology of the European lobster — National Lobster Hatchery",
+        "fr": "Biologie du homard européen — National Lobster Hatchery"
+      },
+      "url": "https://nationallobsterhatchery.co.uk/lobster-biology/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Claws, moult vulnerability and egg carrying."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 6,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Journey of a hatchery-reared lobster — National Lobster Hatchery",
+        "fr": "Parcours d’un homard élevé en écloserie — National Lobster Hatchery"
+      },
+      "url": "https://nationallobsterhatchery.co.uk/journey-of-a-hatchery-reared-lobster/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Egg ventilation, development and Cornish release programme."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 7,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Homarus gammarus — FAO species catalogue",
+        "fr": "Homarus gammarus — catalogue FAO des espèces"
+      },
+      "url": "https://www.fao.org/4/t0411e/t0411e09.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Maximum total length is about 60 cm and maximum mass about 5–6 kg; larger specimens are usually 23–50 cm. These are maxima/large specimens, not a typical catch mass."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.en.7",
+        "identification.fr.6",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 28,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Blue living adult, asymmetrical crushing and cutting claws, ten walking limbs including claws, long antennae, segmented abdomen and tail fan on white background.",
+  "uncertainties": [
+    "Exceptional maximum dimensions differ between sources; ordinary pot-catch dimensions are retained.",
+    "Larval duration varies with conditions and differs among accounts; no universal fixed duration is asserted."
+  ],
+  "reviewed": true,
+  "review_note": "Root-authored and scientifically checked: EN and FR Wikipedia compared with MarLIN and NationalLobsterHatchery biology/development. Unsupported190-year lifespan and19kg French maximum omitted. Eggs, planktonic larvae and benthic juveniles separated; moult and colour mechanisms explained.",
+  "source_audit_version": 1
+}

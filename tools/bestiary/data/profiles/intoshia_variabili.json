@@ -1,0 +1,191 @@
+{
+  "id": "intoshia_variabili",
+  "scientific": "Intoshia variabili",
+  "group": "invertebrates",
+  "name": {
+    "en": "Orthonectid Parasite",
+    "fr": "Orthonectide parasite"
+  },
+  "sections": {
+    "overview": {
+      "en": "Intoshia variabili is an orthonectid parasite of marine flatworms, with a documented host now called Graffiellus croceus.",
+      "fr": "Intoshia variabili est un parasite orthonectide de vers plats marins ; un hôte documenté porte aujourd’hui le nom de Graffiellus croceus."
+    },
+    "identification": {
+      "en": "Its adult forms are minute and structurally reduced; a 2020 study reported the smallest known orthonectid genome at 15.3 Mbp.",
+      "fr": "Ses formes adultes sont minuscules et très simplifiées ; une étude de 2020 a décrit le plus petit génome connu chez les orthonectides, avec 15,3 Mbp."
+    },
+    "habitat": {
+      "en": "The parasitic stage inhabits its flatworm host; older studies examined it in Macrorhynchus crocea under a former host identification.",
+      "fr": "Le stade parasite vit dans son hôte ver plat ; des études anciennes l’ont examinée chez Macrorhynchus crocea, sous une ancienne identification de l’hôte."
+    },
+    "diet": {
+      "en": "Adult orthonectids lack a digestive system, while the host-dwelling plasmodium is the feeding stage.",
+      "fr": "Les orthonectides adultes n’ont pas d’appareil digestif, tandis que la plasmodie vivant chez l’hôte constitue le stade nourricier."
+    },
+    "behavior": {
+      "en": "Male and female adults emerge from the host; comparative work has investigated how that emergence occurs.",
+      "fr": "Les adultes mâles et femelles sortent de l’hôte ; des travaux comparatifs ont étudié le mécanisme de cette émergence."
+    },
+    "reproduction": {
+      "en": "After leaving the host, the brief adult stage reproduces sexually; species-specific details remain sparse.",
+      "fr": "Après avoir quitté l’hôte, le bref stade adulte se reproduit sexuellement ; les détails propres à l’espèce restent rares."
+    },
+    "ecology": {
+      "en": "Its congener I. linei is included with it in comparative studies of orthonectid mitochondrial genomes. I. linei parasitizes the ribbon worm Lineus ruber, whereas I. variabili parasitizes flatworms.",
+      "fr": "Sa congénère I. linei est étudiée avec elle dans des comparaisons des génomes mitochondriaux d’orthonectides. I. linei parasite le ver rubané Lineus ruber, tandis que I. variabili parasite des vers plats."
+    },
+    "conservation": {
+      "en": "The literature located concerns anatomy, parasitism and genomics, not population trends or a conservation assessment.",
+      "fr": "Les publications trouvées portent sur l’anatomie, le parasitisme et la génomique, non sur les tendances de population ni sur une évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Extreme Genome and Nervous System Streamlining in the Invertebrate Parasite Intoshia variabili — Current Biology",
+        "fr": "Simplification extrême du génome et du système nerveux chez le parasite invertébré Intoshia variabili — Current Biology"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32084405/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Study describes I. variabili in Graffiellus croceus and a 15.3 Mbp genome, placing it among parasitic orthonectids."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 17,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fine Structure of the Mature Plasmodium of Intoshia variabili — Journal of Morphology",
+        "fr": "Structure fine de la plasmodie mature d’Intoshia variabili — Journal of Morphology"
+      },
+      "url": "https://doi.org/10.1111/j.1463-6395.1998.tb01281.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Transmission electron microscopy study examined mature I. variabili plasmodia in the flatworm then identified as Macrorhynchus crocea."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 17,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Analysis of possible mechanisms of orthonectid emergence from their hosts — Parazitologiia",
+        "fr": "Analyse des mécanismes possibles de sortie des orthonectides de leurs hôtes — Parazitologiia"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11605459/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Russian-language comparative study explicitly includes I. variabili and considers male and female emergence from hosts."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 15,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Genome of Intoshia linei Affirms Orthonectids as Highly Simplified Spiralians — Current Biology",
+        "fr": "Le génome d’Intoshia linei confirme la simplification extrême des orthonectides — Current Biology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0960982216304584",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "Comparative study describes digestive-system-free free adults and identifies I. linei as a congener with a nemertean host."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 17,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Comparative analysis of mitochondrial genomes of Orthonectida — PubMed",
+        "fr": "Analyse comparative des génomes mitochondriaux des Orthonectida — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30848356/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Comparative genomic study analyzes I. linei and I. variabili as separate orthonectid taxa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 13,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older papers call the host Macrorhynchus crocea, whereas the 2020 genome paper identifies Graffiellus croceus; names are retained with this caveat."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked 2020 genome research with older ultrastructural and Russian comparative studies; I. linei is a congener comparison, not a sister-species claim."
+}

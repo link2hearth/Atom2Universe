@@ -1,0 +1,177 @@
+{
+  "id": "parachromis_managuensis",
+  "scientific": "Parachromis managuensis",
+  "group": "fish",
+  "name": {
+    "en": "Jaguar cichlid",
+    "fr": "Cichlidé jaguar"
+  },
+  "sections": {
+    "overview": {
+      "en": "Parachromis managuensis, the Jaguar Cichlid or Jaguar Guapote, is a large freshwater fish native to the Atlantic-draining rivers and lakes of Central America.",
+      "fr": "Parachromis managuensis, le Cichlidé jaguar ou Guapote jaguar, est un grand poisson d’eau douce indigène des lacs et rivières du versant atlantique d’Amérique centrale."
+    },
+    "identification": {
+      "en": "It has a large mouth, projecting lower jaw and prominent canine-like teeth. Dark marks along the flank and spots on the fins contribute to its jaguar-like pattern.",
+      "fr": "Il possède une grande bouche, une mâchoire inférieure proéminente et des dents caniniformes marquées. Des taches sombres sur les flancs et les nageoires composent son motif évoquant celui du jaguar."
+    },
+    "habitat": {
+      "en": "It occurs from the Ulúa River in Honduras south to the Matina River in Costa Rica. Accounts describe lakes, springs and ponds, often over muddy or sandy bottoms.",
+      "fr": "Elle vit du fleuve Ulúa au Honduras jusqu’au fleuve Matina au Costa Rica. Les sources la signalent dans des lacs, sources et étangs, souvent sur des fonds vaseux ou sableux."
+    },
+    "diet": {
+      "en": "Adults are strongly fish-eating predators; aquatic invertebrates are an important part of the juvenile diet.",
+      "fr": "Les adultes sont des prédateurs qui mangent surtout des poissons ; les invertébrés aquatiques occupent une place importante dans le régime des jeunes."
+    },
+    "behavior": {
+      "en": "Both parents guard the eggs and fry. It has also been introduced beyond its native range.",
+      "fr": "Les deux parents protègent les œufs et les alevins. Elle a aussi été introduite hors de son aire native."
+    },
+    "reproduction": {
+      "en": "It lays batches of eggs on hard surfaces such as rocks, and both parents care for the eggs and young.",
+      "fr": "Elle pond des lots d’œufs sur des surfaces dures, comme des rochers, et les deux parents prennent soin des œufs puis des jeunes."
+    },
+    "ecology": {
+      "en": "It is one of several cichlids in the genus Parachromis. Effects on ecosystems where it is introduced remain uncertain.",
+      "fr": "C’est l’un des cichlidés du genre Parachromis. Ses effets sur les écosystèmes où elle a été introduite restent incertains."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure en 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Parachromis managuensis — FishBase",
+        "fr": "Parachromis managuensis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/parachromis-managuensis.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summary: range, diet, reproduction and status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 7,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jaguar Guapote species profile — USGS Nonindigenous Aquatic Species",
+        "fr": "Fiche du Guapote jaguar — USGS Nonindigenous Aquatic Species"
+      },
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=445",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "USGS: range, feeding and introductions."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 5,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biological investigation of Parachromis managuensis in Taal Lake — UPLB Journals Online",
+        "fr": "Étude biologique de Parachromis managuensis dans le lac Taal — UPLB Journals Online"
+      },
+      "url": "https://www.ukdr.uplb.edu.ph/journal-articles/4255/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed field study documents an introduced population and measured conditions in Taal Lake."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parachromis managuensis — Mexican National Fish Collection",
+        "fr": "Parachromis managuensis — collection nationale mexicaine de poissons"
+      },
+      "url": "https://datosabiertos.unam.mx/IBUNAM%3ACNPE%3A8887",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Mexican national collection records a voucher specimen under the accepted species name."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Size and habitat details vary among source summaries; no precise adult size or single habitat type is generalized."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase and USGS summaries with a peer-reviewed introduced-population study and a Mexican national collection record; kept only well-supported biological details."
+}

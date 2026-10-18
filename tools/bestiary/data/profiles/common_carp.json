@@ -1,0 +1,439 @@
+{
+  "id": "common_carp",
+  "scientific": "Cyprinus carpio",
+  "group": "fish",
+  "name": {
+    "en": "Common carp",
+    "fr": "Carpe commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common carp is a large freshwater fish native to the Black, Caspian and Aral Sea drainages. People have cultured it for food for centuries and transported it widely, creating a sharp distinction between native wild river populations and abundant farmed or introduced fish.",
+      "fr": "La Carpe commune est un grand poisson d’eau douce originaire des bassins de la mer Noire, de la mer Caspienne et de la mer d’Aral. Élevée pour l’alimentation depuis des siècles et transportée loin de son aire d’origine, elle comprend aujourd’hui des populations sauvages natives très différentes des poissons d’élevage ou introduits, souvent abondants."
+    },
+    "identification": {
+      "en": "Its deep, slightly compressed body carries large scales and a long-based dorsal fin with a strong spine at the front; the spine’s rear edge bears small serrations. Two pairs of barbels beside the protrusible mouth, which can extend forward, identify it; the upper-lip pair is shorter. Wild fish are usually brownish green above and golden below, while colour and scale coverage vary among cultured strains. Adults commonly measure about 30–60 centimetres and weigh roughly 0.5–4 kilograms. Exceptional fish exceed a metre and 20 kilograms.",
+      "fr": "Son corps haut et légèrement comprimé porte de grandes écailles et une longue nageoire dorsale avec une forte épine à l’avant, dont le bord arrière est dentelé. Deux paires de barbillons près de la bouche protractile, qui peut se projeter vers l’avant, l’identifient ; la paire de la lèvre supérieure est plus courte. Les sujets sauvages sont généralement brun verdâtre sur le dos et dorés dessous, tandis que couleurs et écaillure varient chez les lignées d’élevage. Les adultes mesurent souvent 30 à 60 centimètres et pèsent environ 0,5 à 4 kilogrammes. Des individus exceptionnels dépassent un mètre et 20 kilogrammes."
+    },
+    "habitat": {
+      "en": "Wild carp favor the middle and lower reaches of rivers, floodplains, oxbow lakes and shallow lakes or reservoirs, often over soft bottoms with aquatic vegetation. They feed mainly near the bottom but search through middle and upper water layers as well. Flooded margins are especially important when rising water connects the river to spawning and nursery grounds; dams and channel changes can remove or mistime that access.",
+      "fr": "Les carpes sauvages fréquentent surtout les cours moyens et inférieurs des rivières, les plaines inondables, les bras morts et les lacs ou réservoirs peu profonds, souvent au-dessus de fonds meubles couverts de végétation aquatique. Elles cherchent leur nourriture principalement près du fond, mais aussi dans les couches moyennes et supérieures. Les rives inondées sont particulièrement importantes lorsque la montée des eaux relie la rivière aux zones de ponte et de croissance ; barrages et chenalisation peuvent supprimer cet accès ou en décaler le calendrier."
+    },
+    "diet": {
+      "en": "A carp pushes its soft, protrusible mouth into sediment and selects edible particles from mud, plant fragments and other debris. Sensitive barbels and taste-rich mouth surfaces help it sort food; modified throat bones bear stout pharyngeal teeth that crush and grind seeds, insect larvae, worms, molluscs and other small prey against a hard chewing pad. It has no true stomach: enzymes digest food along the intestine, where amino acids are absorbed, especially in its front section.",
+      "fr": "La carpe enfonce sa bouche souple et protractile dans le sédiment, puis trie les particules comestibles parmi la vase, les fragments végétaux et les débris. Ses barbillons sensibles et les surfaces gustatives de la bouche l’aident à sélectionner la nourriture ; des os modifiés de la gorge portent des dents pharyngiennes robustes qui broient graines, larves d’insectes, vers, mollusques et autres petites proies contre un coussinet dur. Elle n’a pas de véritable estomac : les enzymes digèrent les aliments le long de l’intestin, où les acides aminés sont absorbés, surtout dans sa partie antérieure."
+    },
+    "behavior": {
+      "en": "Common carp may feed alone or gather in shifting social groups. At Kleiner Döllnsee, a lake in northern Brandenburg, telemetry of stocked, hatchery-born and pond-reared carp found stronger daytime grouping in winter and smaller, longer-lasting groups in summer. The same individuals met repeatedly, consistent with social memory lasting up to about two weeks; the researchers suggested this could help fish locate patchy food, though they did not identify a communication signal.",
+      "fr": "La Carpe commune peut se nourrir seule ou se rassembler en groupes sociaux changeants. Au Kleiner Döllnsee, un lac du nord du Brandebourg, le suivi télémétrique de carpes introduites, nées en écloserie et élevées en étang, a révélé des regroupements diurnes plus forts en hiver et des groupes plus petits et durables en été. Les mêmes individus se retrouvaient régulièrement, ce qui correspond à une mémoire sociale pouvant durer environ deux semaines ; les chercheurs suggèrent que cela pourrait aider à trouver une nourriture dispersée, sans avoir identifié de signal de communication."
+    },
+    "reproduction": {
+      "en": "In temperate Europe, spawning starts near 17–18 °C, with local variation. In shallow, plant-rich water, females scatter eggs among aquatic plants, where males fertilize them externally. Water makes the egg coat sticky, so eggs adhere to vegetation. Wild females can spawn fractionally, releasing eggs in repeated bouts rather than depositing the full clutch at once; this pattern was documented in the lower River Murray, Australia. At 20–23 °C, embryos develop and hatch in about three days; newly hatched larvae cling to the substrate, then swim horizontally and begin feeding on microscopic aquatic animals called rotifers roughly three days later.",
+      "fr": "En Europe tempérée, la ponte commence vers 17–18 °C, avec des variations locales. Dans les eaux peu profondes et végétalisées, les femelles dispersent leurs œufs parmi les plantes aquatiques, où les mâles les fécondent à l’extérieur. Au contact de l’eau, l’enveloppe des œufs devient collante et ceux-ci adhèrent à la végétation. Les femelles sauvages peuvent pondre par fractions, en plusieurs épisodes plutôt que de déposer toute leur ponte d’un coup ; ce mode a été documenté dans le cours inférieur du Murray, en Australie. À 20–23 °C, les embryons se développent et éclosent en environ trois jours ; les larves nouvellement écloses restent fixées au substrat, puis nagent horizontalement et commencent à manger des rotifères, de minuscules animaux aquatiques, environ trois jours plus tard."
+    },
+    "ecology": {
+      "en": "By stirring sediment while feeding, carp release suspended particles and nutrients into the water and can uproot submerged plants. Experiments with juvenile carp found reduced abundance of a submerged pondweed, while a floating-leaved plant increased; turbidity and light availability help determine which species respond. Carp also eat invertebrates, including snails and zooplankton, so they can affect plant growth indirectly through food-web links. Their ecological effects are strongest in some introduced or densely stocked waters and vary with fish size, abundance, habitat and season.",
+      "fr": "En remuant le sédiment pour se nourrir, les carpes remettent en suspension des particules et des nutriments, et peuvent déraciner des plantes immergées. Des expériences avec de jeunes carpes ont montré une baisse d’une plante aquatique submergée, tandis qu’une espèce à feuilles flottantes augmentait ; turbidité et lumière contribuent à ces réponses différentes. Les carpes consomment aussi des invertébrés, notamment des escargots et du zooplancton, et peuvent donc agir indirectement sur les plantes par les relations alimentaires. Leurs effets écologiques sont marqués dans certaines eaux introduites ou fortement peuplées, mais varient selon la taille et l’abondance des poissons, l’habitat et la saison."
+    },
+    "conservation": {
+      "en": "The 2008 IUCN global assessment classified the common carp as Vulnerable. The IUCN Red List update published in 2024 now lists it as Least Concern. The IUCN indicates that this category change does not reflect a genuine improvement in the species’ condition; it therefore does not document a recovery of wild stocks. The 2008 account described native populations in the Black, Caspian and Aral basins as declining, linking the trend to river regulation that disrupts floodplain spawning and hybridization with introduced cultured stocks and related carp.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2008 classait la Carpe commune comme vulnérable. La mise à jour de la Liste rouge publiée en 2024 la classe désormais en préoccupation mineure. L’UICN indique que ce changement de catégorie ne traduit pas une amélioration réelle de l’état de l’espèce ; il ne démontre donc pas un rétablissement des populations sauvages. Le compte rendu de 2008 décrivait un déclin des populations natives des bassins des mers Noire, Caspienne et d’Aral, lié à la régulation des rivières qui perturbe la ponte en plaine inondable et à l’hybridation avec des stocks d’élevage introduits et des carpes apparentées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cyprinus carpio — Cultured Aquatic Species Information Programme, FAO",
+        "fr": "Cyprinus carpio — Programme d’information sur les espèces aquatiques cultivées, FAO"
+      },
+      "url": "https://www.fao.org/fishery/docs/CDrom/aquaculture/I1129m/file/en/en_commoncarp.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "FAO describes wild habitat, food, reproduction and the history of carp farming."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 12,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cyprinus carpio — Florida Museum of Natural History, Discover Fishes",
+        "fr": "Cyprinus carpio — Florida Museum of Natural History, Discover Fishes"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/florida-fishes-gallery/common-carp/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Museum account confirms barbels, lateral-line scales and freshwater habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 9,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cyprinus carpio — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Cyprinus carpio — Animal Diversity Web, Musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Cyprinus_carpio/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Typical adult length and mass are reported as 30–60 cm and 0.5–4 kg."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 13,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food handling and mastication in the carp — Wageningen University & Research",
+        "fr": "Préhension et mastication des aliments chez la carpe — Wageningen University & Research"
+      },
+      "url": "https://doi.org/10.18174/203139",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Sibbing documents suction, particle selection and pharyngeal grinding against a keratinized pad."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 12,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Protein digestion and amino acid absorption along the intestine of the common carp — PubMed",
+        "fr": "Digestion des protéines et absorption des acides aminés dans l’intestin de la carpe commune — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/3749594/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "In vivo study reports stomachless digestion and strong amino-acid absorption in anterior intestine."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 13,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhythm of relationships in a social fish over the course of a full year in the wild — Movement Ecology",
+        "fr": "Rythme des relations d’un poisson social au fil d’une année en milieu sauvage — Movement Ecology"
+      },
+      "url": "https://doi.org/10.1186/s40462-023-00410-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Year-long tracking found seasonal social associations and memory in one lake population."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 12,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Warming alters juvenile carp effects on macrophytes in freshwater mesocosms — Journal of Applied Ecology",
+        "fr": "Le réchauffement modifie les effets des jeunes carpes sur les macrophytes en mésocosmes d’eau douce — Journal of Applied Ecology"
+      },
+      "url": "https://doi.org/10.1111/1365-2664.14040",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Mesocosm study found plant responses differed by growth form and water clarity."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 12,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cyprinus carpio — The IUCN Red List of Threatened Species",
+        "fr": "Cyprinus carpio — La Liste rouge des espèces menacées de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T6181A12559362.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The 2008 account links native-range decline to floodplain loss and hybridization with introduced stocks."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.4",
+        "conservation.fr.1",
+        "conservation.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 14,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Origin and domestication of the wild carp, Cyprinus carpio: from Roman gourmets to the swimming flowers — Aquaculture",
+        "fr": "Origine et domestication de la carpe sauvage, Cyprinus carpio : des gourmets romains aux fleurs nageuses — Aquaculture"
+      },
+      "url": "https://doi.org/10.1016/0044-8486(94)00227-F",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Historical synthesis traces European pond culture and human-mediated expansion from native drainages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 12,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cyprinus carpio — FishBase species summary",
+        "fr": "Cyprinus carpio — fiche espèce FishBase"
+      },
+      "url": "https://www.fishbase.org/summary/1450",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Notes wild colour, body and scale variation, and maxima of 120 cm and 40 kg."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.5",
+        "identification.fr.3",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 15,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carp spawning dynamics and early growth in the lower River Murray, South Australia — University of Adelaide thesis",
+        "fr": "Dynamique de ponte et croissance précoce de la carpe dans le cours inférieur du Murray — thèse de l’Université d’Adélaïde"
+      },
+      "url": "https://digital.library.adelaide.edu.au/items/c51cc83d-4451-46c9-bd86-eef2625c45d4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Lower Murray thesis describes common carp as fractional spawners."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 9,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cyprinus carpio — The IUCN Red List of Threatened Species, assessment published 2024-2",
+        "fr": "Cyprinus carpio — Liste rouge de l’UICN, évaluation publiée en 2024-2"
+      },
+      "url": "https://www.iucnredlist.org/species/6181/3107721",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Current Red List record lists the species as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 10,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List version 2024-2: Table 7 — species changing status",
+        "fr": "Liste rouge de l’UICN version 2024-2 : tableau 7, changements de statut"
+      },
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/2024-2_RL_Table_7.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Official table classifies the VU-to-LC change as non-genuine."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 8,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species Account: Cyprinus carpio, Common Carp — Colorado State University guide",
+        "fr": "Fiche espèce : Cyprinus carpio, Carpe commune — guide de la Colorado State University"
+      },
+      "url": "https://warnercnr.colostate.edu/wp-content/uploads/sites/2/2020/02/Snyder-et-al-2019-Cypriniform-Guide-MRG-final-report-r2a-small-size.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Guide describes the long dorsal fin and the serrated posterior edge of its spine."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 14,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a naturally coloured wild-type common carp with a relatively slender brown-green body, large scales, two pairs of barbels, and a long dorsal fin.",
+  "uncertainties": [
+    "Adult size, body depth, scale pattern, maturation and spawning timing vary substantially by population and growing conditions; the stated ordinary size range is a compiled guide rather than a global wild-population estimate.",
+    "The IUCN page preserves the detailed rationale for a 2008 Vulnerable assessment while displaying a 2024 Least Concern reassessment; this article reports both dates and does not infer that introduced or farmed fish represent the condition of native wild stocks.",
+    "Social findings come from hatchery-born, pond-reared carp stocked into one German lake; they should not be generalized to native rivers or all populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique corrected barbels, dorsal ray, native versus cultured taxa, reproduction sequence and genuine scope of IUCN status change; bilingual and source budget audit; existing illustration inspected."
+}

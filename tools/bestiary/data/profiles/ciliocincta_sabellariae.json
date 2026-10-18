@@ -1,0 +1,191 @@
+{
+  "id": "ciliocincta_sabellariae",
+  "scientific": "Ciliocincta sabellariae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ciliocincta sabellariae",
+    "fr": "Ciliocincta sabellariae"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ciliocincta sabellariae is a microscopic marine orthonectid first described from the tube-building polychaete Sabellaria cementarium in Washington State.",
+      "fr": "Ciliocincta sabellariae est un orthonectide marin microscopique décrit pour la première fois chez le polychète tubicole Sabellaria cementarium, dans l’État de Washington."
+    },
+    "identification": {
+      "en": "Its ciliated adults are organized in repeated body rings and include separate male and female forms; these details require microscopic examination.",
+      "fr": "Ses adultes ciliés sont organisés en anneaux corporels répétés et comprennent des formes mâles et femelles distinctes ; ces détails nécessitent un examen microscopique."
+    },
+    "habitat": {
+      "en": "The original specimens came from the San Juan Islands, where the parasite was found in its marine polychaete host.",
+      "fr": "Les spécimens originaux provenaient des îles San Juan, où le parasite a été trouvé chez son hôte polychète marin."
+    },
+    "diet": {
+      "en": "It lives parasitically in the host rather than capturing free-living prey; no species-specific feeding study was located.",
+      "fr": "Il vit en parasite chez son hôte au lieu de capturer des proies libres ; aucune étude alimentaire propre à l’espèce n’a été trouvée."
+    },
+    "behavior": {
+      "en": "The host can contain numerous microscopic reproductive worms, but the natural timing and transmission behavior of this parasite remain poorly documented.",
+      "fr": "L’hôte peut contenir de nombreux vers reproducteurs microscopiques, mais le calendrier naturel et le mode de transmission de ce parasite restent peu documentés."
+    },
+    "reproduction": {
+      "en": "The original description documented males and females in infected worms; broader orthonectid research describes a parasitic plasmodium producing ciliated reproductive stages.",
+      "fr": "La description originale a documenté des mâles et des femelles chez des vers infestés ; les études générales sur les orthonectides décrivent un plasmodium parasite produisant des stades reproducteurs ciliés."
+    },
+    "ecology": {
+      "en": "Its known association with Sabellaria cementarium distinguishes it from C. julini, reported from Scolelepis fuliginosa; both belong to the same small genus.",
+      "fr": "Son association connue avec Sabellaria cementarium la distingue de C. julini, signalée chez Scolelepis fuliginosa ; toutes deux appartiennent au même petit genre."
+    },
+    "conservation": {
+      "en": "Records remain too sparse to establish a population trend or conservation status for this microscopic parasite.",
+      "fr": "Les données restent trop rares pour établir une tendance démographique ou un statut de conservation pour ce parasite microscopique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ciliocincta sabellariae — original description, Journal of Parasitology (1965)",
+        "fr": "Ciliocincta sabellariae — description originale, Journal of Parasitology (1965)"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14259478/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Kozloff described the species from Sabellaria cementarium at Friday Harbor and reported male and female orthonectids emerging from infected host tissue."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "The genera of the phylum Orthonectida (Mesozoa) — peer-reviewed study",
+        "fr": "Les genres du phylum Orthonectida (Mesozoa) — étude évaluée par les pairs"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed genus-level comparative study."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Orthonectida life cycles and body-plan simplification — Frontiers in Genetics",
+        "fr": "Cycles de vie et simplification du plan corporel des orthonectides — Frontiers in Genetics"
+      },
+      "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00443/full",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Review describes orthonectid parasitic plasmodia and ciliated reproductive stages as group-level biology, not a complete species-specific cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Ciliocincta sabellariae — Ocean Biodiversity Information System",
+        "fr": "Ciliocincta sabellariae — Système d’information sur la biodiversité océanique"
+      },
+      "url": "https://obis.org/taxon/265734",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "OBIS lists very few occurrence records, insufficient to establish population trends or status."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet, life-cycle timing, distribution beyond the cited collection record and population status remain poorly studied; group-level orthonectid biology is explicitly labeled as such."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked species-level host and taxonomy records against original/peer-reviewed descriptions and a modern review of orthonectid life history; compared directly with the other Ciliocincta entry."
+}

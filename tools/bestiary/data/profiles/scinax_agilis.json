@@ -1,0 +1,118 @@
+{
+  "id": "scinax_agilis",
+  "scientific": "Scinax agilis",
+  "group": "amphibians",
+  "name": {
+    "en": "Agile snouted treefrog",
+    "fr": "Rainette agile à museau pointu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The catalogue uses Scinax agilis; Amphibian Species of the World currently treats it as Ololygon agilis.",
+      "fr": "Le catalogue retient Scinax agilis ; Amphibian Species of the World la traite actuellement sous le nom Ololygon agilis."
+    },
+    "identification": {
+      "en": "The field paper gives no diagnostic description in its abstract.",
+      "fr": "L’article de terrain ne donne pas de description diagnostique dans son résumé."
+    },
+    "habitat": {
+      "en": "It inhabits coastal restinga in four Brazilian states.",
+      "fr": "Elle vit dans la restinga côtière de quatre États brésiliens."
+    },
+    "diet": {
+      "en": "No species-specific diet is given in the sources consulted.",
+      "fr": "Les sources consultées ne précisent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Bromeliads were the most-used microhabitat in one Bahia study.",
+      "fr": "Les broméliacées étaient le microhabitat le plus utilisé dans une étude à Bahia."
+    },
+    "reproduction": {
+      "en": "The current ASW account notes that the larva remains undescribed.",
+      "fr": "La fiche actuelle d’ASW indique que la larve n’a pas encore été décrite."
+    },
+    "ecology": {
+      "en": "The study links it to flooded coastal plains and their plant communities.",
+      "fr": "L’étude la relie aux plaines côtières inondées et à leurs communautés végétales."
+    },
+    "conservation": {
+      "en": "The study flags local loss of restinga vegetation as a concern.",
+      "fr": "L’étude signale la perte locale de végétation de restinga comme un risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Amphibian Species of the World — Ololygon agilis",
+        "fr": "Amphibian Species of the World — Ololygon agilis"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-agilis",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "ASW lists Scinax agilis as a synonym under Ololygon agilis and notes that the larva remains undescribed; it also cautions that some northeastern records may refer to Scinax melanodactylus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 29,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Habitat use and activity of Scinax agilis on the north coast of Bahia — Herpetological Bulletin",
+        "fr": "Utilisation de l’habitat et activité de Scinax agilis sur la côte nord de Bahia — Herpetological Bulletin"
+      },
+      "url": "https://www.thebhs.org/publications/the-herpetological-bulletin/issue-number-129-autumn-2014/322-03-habitat-use-and-activity-with-new-records-of-the-agile-snouted-tree-frog-i-scinax-agilis-i-on-the-north-coast-of-bahia-brazil/file",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Study documents restinga range, microhabitats and vegetation loss."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 8,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "Some northeastern records may belong to Scinax melanodactylus, as noted by ASW; diet and larval biology are not established by the sources used here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

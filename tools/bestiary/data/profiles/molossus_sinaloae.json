@@ -1,0 +1,165 @@
+{
+  "id": "molossus_sinaloae",
+  "scientific": "Molossus sinaloae",
+  "group": "mammals",
+  "name": {
+    "en": "Sinaloan Mastiff Bat",
+    "fr": "Molossus sinaloae"
+  },
+  "sections": {
+    "overview": {
+      "en": "Molossus sinaloae is a free-tailed bat whose current range records are centred in Mexico; recent taxonomic revisions narrowed a range once reported across Central and northern South America.",
+      "fr": "Molossus sinaloae est une chauve-souris à queue libre dont l’aire actuelle est centrée sur le Mexique ; des révisions taxonomiques récentes ont restreint une aire autrefois décrite jusqu’en Amérique centrale et dans le nord de l’Amérique du Sud."
+    },
+    "identification": {
+      "en": "It is a medium-sized member of the mastiff-bat family Molossidae; field identification can be difficult among similar Molossus species.",
+      "fr": "C’est une chauve-souris de taille moyenne de la famille des Molossidés ; son identification peut être difficile parmi les espèces proches du genre Molossus."
+    },
+    "habitat": {
+      "en": "In Mexico it has been recorded in varied settings, including the Pacific coastal plain; older accounts also describe use of both dry and wet forests.",
+      "fr": "Au Mexique, elle a été signalée dans des milieux variés, dont la plaine côtière du Pacifique ; des sources plus anciennes rapportent aussi sa présence en forêts sèches et humides."
+    },
+    "diet": {
+      "en": "It catches flying insects in open air; moths and beetles are among reported prey.",
+      "fr": "Elle capture des insectes en vol ; des papillons de nuit et des coléoptères figurent parmi les proies signalées."
+    },
+    "behavior": {
+      "en": "Like other free-tailed bats, it roosts by day in sheltered cavities; historic records include building roosts, sometimes with dozens of bats.",
+      "fr": "Comme d’autres chauves-souris à queue libre, elle se repose le jour dans des cavités abritées ; d’anciens relevés signalent des colonies dans des bâtiments, parfois de plusieurs dizaines d’individus."
+    },
+    "reproduction": {
+      "en": "Available accounts report reproduction in Mexico, but timing and colony patterns are not well established across its revised range.",
+      "fr": "Des sources rapportent sa reproduction au Mexique, mais les périodes et les colonies restent mal documentées à l’échelle de son aire révisée."
+    },
+    "ecology": {
+      "en": "The name reflects its type locality in Sinaloa. Older Central American records need care because similar Molossus bats were later separated or re-identified.",
+      "fr": "Son nom rappelle sa localité type, dans l’État mexicain de Sinaloa. Les anciens signalements d’Amérique centrale sont à interpréter prudemment, car des Molossus proches ont depuis été séparés ou réidentifiés."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern, but the restricted range shown by current taxonomic treatments differs from older assessments and merits updated monitoring.",
+      "fr": "La Mammal Diversity Database la classe en préoccupation mineure, mais l’aire restreinte indiquée par les traitements taxonomiques actuels diffère des anciennes évaluations et justifie un suivi actualisé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Molossus sinaloae — Mammalian Species, American Society of Mammalogists",
+        "fr": "Molossus sinaloae — Mammalian Species, American Society of Mammalogists"
+      },
+      "url": "https://doi.org/10.1644/0.691.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species monograph describes morphology, habitat, insect diet, roosts and reproduction based on early records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 14,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molossus sinaloae — Therya Notes (English and Spanish)",
+        "fr": "Molossus sinaloae — Therya Notes (anglais et espagnol)"
+      },
+      "url": "https://doi.org/10.12933/therya_notes-24-186",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Recent Mexican specimens confirm occurrence in Sinaloa; their analysis summarizes the changed understanding of distribution and unresolved biogeography."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 18,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Updated list of mammals of Costa Rica — Zootaxa 2023",
+        "fr": "Mise à jour des mammifères du Costa Rica — Zootaxa 2023"
+      },
+      "url": "https://mapress.com/zt/article/download/zootaxa.5357.4.1/52086/60607",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic review explains that Molossus sinaloae is now considered restricted to Mexico west and north of the Isthmus of Tehuantepec; former Central American records largely refer to Molossus alvarezi."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 29,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molossus sinaloae — Mammal Diversity Database",
+        "fr": "Molossus sinaloae — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005206/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Database lists current accepted species and Least Concern; its range notes broader historical sources but country distribution is Mexico."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 19,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older summaries assign this bat a much broader distribution; recent taxonomy separates Molossus alvarezi and restricts Molossus sinaloae to Mexico. Ecology and reproduction remain poorly known for the narrowed range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 2002 species account against a 2023 taxonomic review, a 2024 Mexican record and the Mammal Diversity Database; kept legacy ecological records and current range distinct."
+}

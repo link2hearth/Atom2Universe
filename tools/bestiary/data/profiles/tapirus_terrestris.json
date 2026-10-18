@@ -1,0 +1,145 @@
+{
+  "id": "tapirus_terrestris",
+  "scientific": "Tapirus terrestris",
+  "group": "mammals",
+  "name": {
+    "en": "Lowland tapir",
+    "fr": "Tapir terrestre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lowland tapir is a large browsing mammal native to tropical South America.",
+      "fr": "Le Tapir terrestre est un grand mammifère brouteur originaire des régions tropicales d’Amérique du Sud."
+    },
+    "identification": {
+      "en": "Its flexible, short trunk helps it grasp leaves and fruit; young tapirs have a striped and spotted coat.",
+      "fr": "Sa courte trompe préhensile l’aide à saisir feuilles et fruits ; les jeunes portent un pelage rayé et tacheté."
+    },
+    "habitat": {
+      "en": "It uses a range of tropical forest habitats, including terra firme and seasonally flooded forest.",
+      "fr": "Il fréquente divers habitats forestiers tropicaux, des forêts de terre ferme aux forêts inondées."
+    },
+    "diet": {
+      "en": "It browses on leaves and fruit, with fruit forming an important part of its diet.",
+      "fr": "Il broute des feuilles et consomme des fruits, qui occupent une place importante dans son régime."
+    },
+    "behavior": {
+      "en": "It is generally solitary and often active at night or around dusk and dawn.",
+      "fr": "Il est généralement solitaire et souvent actif la nuit, à l’aube ou au crépuscule."
+    },
+    "reproduction": {
+      "en": "After a gestation lasting more than a year, a female usually gives birth to one calf.",
+      "fr": "Après une gestation de plus d’un an, la femelle met généralement au monde un seul petit."
+    },
+    "ecology": {
+      "en": "By passing intact seeds in its dung, the tapir helps disperse plants through tropical forests.",
+      "fr": "En rejetant des graines intactes dans ses fèces, le tapir contribue à disperser les plantes dans les forêts tropicales."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment classifies the lowland tapir as Vulnerable; habitat loss and hunting are major pressures.",
+      "fr": "L’évaluation mondiale de l’UICN classe le Tapir terrestre comme Vulnérable ; la perte d’habitat et la chasse font partie des principales pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tapir — Muséum national d’Histoire naturelle",
+        "fr": "Tapir — Muséum national d’Histoire naturelle"
+      },
+      "url": "https://www.mnhn.fr/fr/tapir",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The museum describes a South American forest-dwelling herbivore with a grasping snout, nocturnal/solitary habits, one calf after a gestation exceeding a year, and Vulnerable status with habitat and hunting pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 30,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tapir terrestre — Observatoire National des Mammifères / SFEPM",
+        "fr": "Tapir terrestre — Observatoire National des Mammifères / SFEPM"
+      },
+      "url": "https://www.observatoire-mammiferes.fr/espece/443756",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "French account covers forest habitat, diet, seed dispersal, solitude and one calf after 13–14 months."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 15,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet of the Lowland Tapir in French Guiana — Biotropica",
+        "fr": "Diet of the Lowland Tapir in French Guiana — Biotropica"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1744-7429.2009.00549.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed field study records fruit consumption and dispersal of intact seeds by lowland tapirs."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Gestation length varies among accounts; wording avoids a precise month count.",
+    "Conservation wording refers to the global category, not a local population assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checks a French mammal observatory, the French natural history museum and a peer-reviewed seed-dispersal study."
+}

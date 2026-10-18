@@ -1,0 +1,17 @@
+{
+  "id": 9868,
+  "name": "frontier_molten_iron",
+  "texture_top": "frontier:9868:top",
+  "texture_side": "frontier:9868:side",
+  "texture_bottom": "frontier:9868:top",
+  "color": "#F2A23C",
+  "hardness": 1.5,
+  "drop": "frontier_molten_iron",
+  "creative_tab": "functional",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

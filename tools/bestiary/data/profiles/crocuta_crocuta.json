@@ -1,0 +1,139 @@
+{
+  "id": "crocuta_crocuta",
+  "scientific": "Crocuta crocuta",
+  "group": "mammals",
+  "name": {
+    "en": "Spotted Hyena",
+    "fr": "Hyène tachetée"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large African carnivore is the sole living member of genus Crocuta.",
+      "fr": "Ce grand carnivore africain est l’unique représentant actuel du genre Crocuta."
+    },
+    "identification": {
+      "en": "Its spotted coat fades with age; strong forequarters create a sloping back.",
+      "fr": "Son pelage tacheté s’éclaircit avec l’âge; ses épaules puissantes donnent un dos incliné."
+    },
+    "habitat": {
+      "en": "It lives in African savannas and swamps, but not rainforest.",
+      "fr": "Elle vit dans les savanes et marécages africains, mais pas en forêt tropicale humide."
+    },
+    "diet": {
+      "en": "Its prey is mainly hoofed mammals and their young.",
+      "fr": "Ses proies sont surtout des mammifères ongulés et leurs petits."
+    },
+    "behavior": {
+      "en": "Clans are female-dominated and forage in changing subgroups.",
+      "fr": "Les clans sont dominés par les femelles et s’alimentent en sous-groupes changeants."
+    },
+    "reproduction": {
+      "en": "Females give birth in dens and move cubs to communal sites.",
+      "fr": "Les femelles mettent bas dans des terriers et déplacent les petits vers des tanières communes."
+    },
+    "ecology": {
+      "en": "The IUCN account notes human conflict and prey decline as pressures.",
+      "fr": "La fiche UICN relève les conflits humains et le déclin des proies parmi les pressions."
+    },
+    "conservation": {
+      "en": "It is globally Least Concern, though its population is declining.",
+      "fr": "L’espèce est en préoccupation mineure dans le monde, mais sa population diminue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crocuta crocuta (Carnivora: Hyaenidae) — Mammalian Species",
+        "fr": "Crocuta crocuta (Carnivora: Hyaenidae) — Mammalian Species"
+      },
+      "url": "https://academic.oup.com/mspecies/article/53/1000/1/6231977",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed mammal account covers morphology, range, habitat, prey, social life and reproduction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 12,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crocuta crocuta — IUCN Red List assessment",
+        "fr": "Crocuta crocuta — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-2.RLTS.T5674A45194782.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment documents status, trend and principal pressures."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 8,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyène tachetée — Muséum de Toulouse collections",
+        "fr": "Hyène tachetée — Muséum de Toulouse collections"
+      },
+      "url": "https://collections.sciences-naturelles.museum.toulouse-metropole.fr/fr/notice/mhnt-ost-1996-20-crocuta-crocuta-erxleben-1777-d7e47ea2-e809-44bb-b7be-24ca17b5755b",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French museum catalogue confirms French common name and taxon."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the peer-reviewed Mammalian Species review, the IUCN assessment and a French museum catalogue; the short ecology and status notes retain the assessment date context."
+}

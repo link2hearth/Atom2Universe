@@ -1,0 +1,14 @@
+{
+  "id": 9006,
+  "name": "cotton_cyan",
+  "texture_top": "cozy:cloth:5:00CED1",
+  "texture_side": "cozy:cloth:5:00CED1",
+  "texture_bottom": "cozy:cloth:5:00CED1",
+  "color": "#00CED1",
+  "hardness": 1.0,
+  "drop": "cotton_cyan",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

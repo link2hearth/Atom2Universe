@@ -1,0 +1,141 @@
+{
+  "id": "scyliorhinus_stellaris",
+  "scientific": "Scyliorhinus stellaris",
+  "group": "fish",
+  "name": {
+    "en": "Nursehound",
+    "fr": "Scyliorhinus stellaris"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scyliorhinus stellaris is a large bottom-dwelling catshark of the northeastern Atlantic and Mediterranean.",
+      "fr": "Scyliorhinus stellaris est une grande roussette benthique de l’Atlantique nord-est et de la Méditerranée."
+    },
+    "identification": {
+      "en": "Its back bears large, widely spaced dark spots; unlike the smaller Scyliorhinus canicula, it has fewer, larger markings.",
+      "fr": "Son dos porte de grandes taches sombres espacées; contrairement à Scyliorhinus canicula, plus petite, ses marques sont moins nombreuses et plus grandes."
+    },
+    "habitat": {
+      "en": "It rests under rocks or in crevices by day and becomes active at night, over hard or rocky seabeds.",
+      "fr": "Elle se repose le jour sous les rochers ou dans les crevasses et devient active la nuit, sur des fonds durs ou rocheux."
+    },
+    "diet": {
+      "en": "Its prey includes crustaceans, molluscs, cephalopods and fishes.",
+      "fr": "Ses proies comprennent des crustacés, des mollusques, des céphalopodes et des poissons."
+    },
+    "behavior": {
+      "en": "It is a nocturnal predator that spends daylight hours sheltered on the seabed.",
+      "fr": "C’est un prédateur nocturne qui passe la journée à l’abri sur le fond."
+    },
+    "reproduction": {
+      "en": "Females lay egg cases with long tendrils that catch on sea fans or algae.",
+      "fr": "Les femelles pondent des capsules munies de longues vrilles qui s’accrochent aux gorgones ou aux algues."
+    },
+    "ecology": {
+      "en": "Its egg cases resemble those of Scyliorhinus canicula but are substantially larger.",
+      "fr": "Ses capsules d’œufs ressemblent à celles de Scyliorhinus canicula, mais sont nettement plus grandes."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List assessment classifies the Nursehound as Vulnerable.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN classe la Grande roussette parmi les espèces vulnérables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grande roussette — DORIS",
+        "fr": "Grande roussette — DORIS"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Scyliorhinus-stellaris-Grande-roussette-518",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "DORIS provides species biology and the reciprocal comparison with its close congener."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 12,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eggcases of the British Isles and northwestern Europe — The Shark Trust",
+        "fr": "Eggcases of the British Isles and northwestern Europe — The Shark Trust"
+      },
+      "url": "https://www.sharktrust.org/Pages/FAQs/Category/eggcases-of-british-isles-nw-europe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Shark Trust compares the similar egg-case shapes and markedly different sizes of the two species."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 15,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scyliorhinus stellaris — IUCN Red List assessment",
+        "fr": "Scyliorhinus stellaris — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T161484A124493465.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The global IUCN assessment provides range and current category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 9,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional assessments differ from the current global category; this draft reports the global IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; sibling comparison is reciprocal and restricted to the documented spot pattern and egg-case size."
+}

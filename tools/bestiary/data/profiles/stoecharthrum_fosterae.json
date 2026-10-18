@@ -1,0 +1,144 @@
+{
+  "id": "stoecharthrum_fosterae",
+  "scientific": "Stoecharthrum fosterae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Fosterae orthonectid",
+    "fr": "Stoecharthrum fosterae"
+  },
+  "sections": {
+    "overview": {
+      "en": "A microscopic marine parasite in the group Orthonectida.",
+      "fr": "Un parasite marin microscopique du groupe des Orthonectides."
+    },
+    "identification": {
+      "en": "Its body narrows between epidermal rings 9 and 10.",
+      "fr": "Son corps se resserre entre les anneaux épidermiques 9 et 10."
+    },
+    "habitat": {
+      "en": "It was found in Mytilus trossulus in Puget Sound.",
+      "fr": "Il a été trouvé chez Mytilus trossulus, dans le Puget Sound."
+    },
+    "diet": {
+      "en": "Its diet has not been described in detail.",
+      "fr": "Son régime n’est pas décrit en détail."
+    },
+    "behavior": {
+      "en": "Behavior outside its host is not documented.",
+      "fr": "Son comportement hors de l’hôte n’est pas documenté."
+    },
+    "reproduction": {
+      "en": "The original study recorded reproductive cells.",
+      "fr": "L’étude originale a signalé des cellules reproductrices."
+    },
+    "ecology": {
+      "en": "Its congener S. burresoni parasitizes an ascidian and differs in body length and reproductive traits.",
+      "fr": "Son congénère S. burresoni parasite une ascidie et diffère par la longueur du corps et des caractères reproductifs."
+    },
+    "conservation": {
+      "en": "No conservation assessment was found.",
+      "fr": "Aucune évaluation de conservation n’a été trouvée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Kozloff 1993 — Three new species of Stoecharthrum",
+        "fr": "Kozloff 1993 — Three new species of Stoecharthrum"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/287036.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original description records host, morphology, reproductive structures and comparison with S. burresoni."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 12,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "WoRMS — Stoecharthrum fosterae",
+        "fr": "WoRMS — Stoecharthrum fosterae"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?id=265736&p=taxdetails",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "WoRMS accepts this species; no conservation assessment is listed."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 12,
+        "notes_words": 9,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — Stoecharthrum fosterae",
+        "fr": "ITIS — Stoecharthrum fosterae"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=696254",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "ITIS confirms species rank in Rhopaluridae and cites Kozloff (1993)."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Microscopic behavior, exact diet and conservation have not been assessed in the consulted references."
+  ],
+  "review_note": "Concise account follows the original description and notes the comparison with S. burresoni.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

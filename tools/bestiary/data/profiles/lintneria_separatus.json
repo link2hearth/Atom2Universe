@@ -1,0 +1,143 @@
+{
+  "id": "lintneria_separatus",
+  "scientific": "Lintneria separatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Separated sphinx",
+    "fr": "Lintneria separatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This sphinx moth occurs from the southwestern United States into Mexico.",
+      "fr": "Ce sphinx est présent du sud-ouest des États-Unis jusqu’au Mexique."
+    },
+    "identification": {
+      "en": "Its dark-grey forewings have wavy black and pale-grey lines; its black hindwings have two pale bands.",
+      "fr": "Ses ailes antérieures gris foncé portent des lignes ondulées noires et grises; ses ailes postérieures noires ont deux bandes pâles."
+    },
+    "habitat": {
+      "en": "The species account reports no habitat.",
+      "fr": "La fiche ne précise pas son habitat."
+    },
+    "diet": {
+      "en": "Larval host records are uncertain: one species account lists tomato only as a possibility, whereas a 2025 North American host-plant checklist records *Salvia* and explicitly does not list tomato.",
+      "fr": "Les plantes-hôtes larvaires restent incertaines : une fiche ne mentionne la tomate qu’à titre possible, tandis qu’une liste nord-américaine de 2025 signale des *Salvia* et ne retient pas la tomate."
+    },
+    "behavior": {
+      "en": "It probably has one brood, from late June to early August.",
+      "fr": "Il aurait probablement une génération, de fin juin à début août."
+    },
+    "reproduction": {
+      "en": "The fully grown caterpillar pupates in an underground burrow, where it overwinters.",
+      "fr": "La chenille arrivée à maturité se nymphose dans un terrier souterrain, où elle passe l’hiver."
+    },
+    "ecology": {
+      "en": "Adult nectar-feeding is only suggested, not confirmed.",
+      "fr": "Une alimentation des adultes au nectar est seulement supposée, sans confirmation."
+    },
+    "conservation": {
+      "en": "Its G4 rank is apparently secure, but it may be locally rare near the range edge.",
+      "fr": "Son rang G4 est « apparemment en sécurité », mais l’espèce pourrait être rare en limite d’aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Separated sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx séparé — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Lintneria-separatus",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BAMONA account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 2,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lintneria separatus — Moth Photographers Group annotated host list",
+        "fr": "Lintneria separatus — liste annotée de plantes-hôtes du Moth Photographers Group"
+      },
+      "url": "https://www.mothphotographersgroup.msstate.edu/species.php?hodges=7798",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The list cites Shropshire and Tallamy (2025), names Salvia hosts and notes that tomato is not listed there."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 18,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lintneria separatus — ITIS taxonomic record",
+        "fr": "Lintneria separatus — notice taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=936086",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes the species in Sphingidae."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 6,
+        "total": 6,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Larval host records conflict and remain incomplete; tomato is not confirmed.",
+    "The flight period is presented as probable, and the cited account reports no habitat preference.",
+    "The G4 rank is from a North American species account, not a recent global IUCN review."
+  ],
+  "review_note": "Kept poorly supported host and adult feeding information explicitly uncertain; cross-checked taxonomic treatment and host records against more recent references.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

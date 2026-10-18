@@ -1,0 +1,141 @@
+{
+  "id": "pied_flycatcher",
+  "scientific": "Ficedula hypoleuca",
+  "group": "birds",
+  "name": {
+    "en": "Pied Flycatcher",
+    "fr": "Gobemouche noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The pied flycatcher is a small Old World flycatcher that breeds across much of Europe and winters south of the Sahara.",
+      "fr": "Le Gobemouche noir est un petit gobemouche de l’Ancien Monde, nicheur dans une grande partie de l’Europe et hivernant au sud du Sahara."
+    },
+    "identification": {
+      "en": "Breeding males are contrasting black and white with a white forehead spot; females are browner, while the similar collared flycatcher male has a broad white neck collar.",
+      "fr": "Le mâle nuptial est contrasté noir et blanc avec une tache blanche au front; la femelle est plus brune, tandis que le mâle du Gobemouche à collier porte un large collier blanc."
+    },
+    "habitat": {
+      "en": "It favors mature deciduous woodland, especially oak woods, where suitable tree cavities provide nest sites.",
+      "fr": "Il préfère les forêts feuillues âgées, notamment les chênaies, où les cavités d’arbres offrent des sites de nidification."
+    },
+    "diet": {
+      "en": "It feeds mainly on arthropods, including flying insects and caterpillars; small fruits and seeds are taken occasionally during migration.",
+      "fr": "Il consomme surtout des arthropodes, dont des insectes volants et des chenilles; il prend parfois de petits fruits et des graines en migration."
+    },
+    "behavior": {
+      "en": "This migratory species crosses the Sahara between European breeding grounds and African winter quarters; it catches prey in flight and from perches.",
+      "fr": "Cette espèce migratrice traverse le Sahara entre ses sites de nidification européens et ses quartiers d’hiver africains; elle capture ses proies en vol ou depuis un perchoir."
+    },
+    "reproduction": {
+      "en": "It nests in tree holes and readily uses nest boxes; breeding success can depend on the availability of suitable cavities.",
+      "fr": "Il niche dans des cavités d’arbres et utilise volontiers les nichoirs; le succès reproducteur peut dépendre des cavités disponibles."
+    },
+    "ecology": {
+      "en": "Breeding birds depend on mature woodland and nesting holes, while competition for cavities can occur with earlier-nesting tits.",
+      "fr": "Les nicheurs dépendent des forêts âgées et des cavités; une compétition pour les sites peut survenir avec les mésanges qui nichent plus tôt."
+    },
+    "conservation": {
+      "en": "Globally it is Least Concern, but BTO reports a 52 percent decline in the UK breeding population from 1995 to 2024.",
+      "fr": "L’espèce est classée en préoccupation mineure à l’échelle mondiale, mais le BTO rapporte un recul de 52 % des nicheurs britanniques entre 1995 et 2024."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pied Flycatcher — BTO BirdFacts",
+        "fr": "Gobemouche noir — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/pied-flycatcher",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BTO reports a trans-Saharan migrant, British breeding distribution, global Least Concern status and a 52 percent UK breeding decline from 1995 to 2024."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 23,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ficedula hypoleuca — INPN, Muséum national d’Histoire naturelle",
+        "fr": "Ficedula hypoleuca — INPN, Muséum national d’Histoire naturelle"
+      },
+      "url": "https://inpn.mnhn.fr/explorer/especes/ficedula_hypoleuca/4330",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "French INPN describes plumage, active flycatching, tree cavities, mature deciduous woods, range and similarity to the collared flycatcher."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 18,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pied Flycatcher: Birds in Europe — BTO research report",
+        "fr": "Gobemouche noir : Oiseaux en Europe — rapport de recherche BTO"
+      },
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2005/rr414.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "BTO synthesis describes breeding woodland, nesting-hole limitation, insect diet, migration routes and nest-box use."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 14,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked current BTO trends with French INPN and an ecological synthesis. The collared flycatcher is a useful plumage comparison; no profile for it was found in the current catalog, so this is a one-way reference."
+}

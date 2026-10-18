@@ -1,0 +1,521 @@
+{
+  "schema": 1,
+  "groups": [
+    {
+      "id": "ott93302",
+      "key": "pt_group_life",
+      "sources": [
+        "opentree",
+        "microbes",
+        "asgard"
+      ]
+    },
+    {
+      "id": "ott844192",
+      "key": "pt_group_bacteria",
+      "sources": [
+        "opentree",
+        "microbes"
+      ]
+    },
+    {
+      "id": "ott996421",
+      "key": "pt_group_archaea",
+      "sources": [
+        "opentree",
+        "microbes",
+        "asgard"
+      ]
+    },
+    {
+      "id": "ott304358",
+      "key": "pt_group_eukaryotes",
+      "sources": [
+        "opentree",
+        "eukaryotes",
+        "asgard"
+      ]
+    },
+    {
+      "id": "ott332573",
+      "key": "pt_group_opisthokonts",
+      "sources": [
+        "opentree",
+        "eukaryotes"
+      ]
+    },
+    {
+      "id": "ott691846",
+      "key": "pt_group_animals",
+      "sources": [
+        "opentree",
+        "animals"
+      ]
+    },
+    {
+      "id": "ott117569",
+      "key": "pt_group_bilaterians",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott632179",
+      "key": "pt_group_arthropods",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott1062253",
+      "key": "pt_group_insects",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott802117",
+      "key": "pt_group_molluscs",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott641033",
+      "key": "pt_group_cnidarians",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott451020",
+      "key": "pt_group_echinoderms",
+      "sources": [
+        "opentree",
+        "invertebrates"
+      ]
+    },
+    {
+      "id": "ott229562",
+      "key": "pt_group_tetrapods",
+      "sources": [
+        "opentree",
+        "vertebrates"
+      ]
+    },
+    {
+      "id": "ott229560",
+      "key": "pt_group_amniotes",
+      "sources": [
+        "opentree",
+        "vertebrates"
+      ]
+    },
+    {
+      "id": "ott244265",
+      "key": "pt_group_mammals",
+      "sources": [
+        "opentree",
+        "hair"
+      ]
+    },
+    {
+      "id": "ott81461",
+      "key": "pt_group_birds",
+      "sources": [
+        "opentree",
+        "vertebrates"
+      ]
+    },
+    {
+      "id": "ott574724",
+      "key": "pt_group_bats",
+      "sources": [
+        "opentree",
+        "flight"
+      ]
+    },
+    {
+      "id": "ott352914",
+      "key": "pt_group_fungi",
+      "sources": [
+        "opentree",
+        "fungi"
+      ]
+    },
+    {
+      "id": "ott439373",
+      "key": "pt_group_ascomycetes",
+      "sources": [
+        "opentree",
+        "fungi"
+      ]
+    },
+    {
+      "id": "ott634628",
+      "key": "pt_group_basidiomycetes",
+      "sources": [
+        "opentree",
+        "fungi"
+      ]
+    },
+    {
+      "id": "ott361838",
+      "key": "pt_group_green",
+      "sources": [
+        "opentree",
+        "plastids"
+      ]
+    },
+    {
+      "id": "ott56610",
+      "key": "pt_group_land",
+      "sources": [
+        "opentree",
+        "plants"
+      ]
+    },
+    {
+      "id": "ott10210",
+      "key": "pt_group_vascular",
+      "sources": [
+        "opentree",
+        "plants"
+      ]
+    },
+    {
+      "id": "ott10218",
+      "key": "pt_group_seeds",
+      "sources": [
+        "opentree",
+        "plants"
+      ]
+    },
+    {
+      "id": "ott225495",
+      "key": "pt_group_cyanobacteria",
+      "sources": [
+        "opentree",
+        "plastids"
+      ]
+    }
+  ],
+  "heritages": [
+    {
+      "key": "pt_hair",
+      "steps": [
+        {
+          "text": "pt_hair_0",
+          "targets": [
+            "ott244265"
+          ],
+          "sources": [
+            "hair"
+          ]
+        },
+        {
+          "text": "pt_hair_1",
+          "targets": [
+            "ott698422",
+            "ott124230"
+          ],
+          "sources": [
+            "hair"
+          ]
+        },
+        {
+          "text": "pt_hair_2",
+          "targets": [
+            "ott966432",
+            "ott563166"
+          ],
+          "sources": [
+            "hair",
+            "flight"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pt_flight",
+      "steps": [
+        {
+          "text": "pt_flight_0",
+          "targets": [
+            "ott938416",
+            "ott966432"
+          ],
+          "sources": [
+            "flight"
+          ]
+        },
+        {
+          "text": "pt_flight_1",
+          "targets": [
+            "ott461645",
+            "ott938416"
+          ],
+          "sources": [
+            "flight"
+          ]
+        },
+        {
+          "text": "pt_flight_2",
+          "targets": [
+            "ott647692",
+            "ott938416"
+          ],
+          "sources": [
+            "flight",
+            "vertebrates"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pt_photosynthesis",
+      "steps": [
+        {
+          "text": "pt_photosynthesis_0",
+          "targets": [
+            "ott893796",
+            "ott33153"
+          ],
+          "sources": [
+            "plastids"
+          ]
+        },
+        {
+          "text": "pt_photosynthesis_1",
+          "targets": [
+            "ott33153",
+            "ott309263"
+          ],
+          "sources": [
+            "plastids"
+          ]
+        },
+        {
+          "text": "pt_photosynthesis_2",
+          "targets": [
+            "ott1073327",
+            "ott753596"
+          ],
+          "sources": [
+            "plastids"
+          ]
+        }
+      ]
+    }
+  ],
+  "tours": [
+    {
+      "key": "pt_tour_fork",
+      "steps": [
+        {
+          "text": "pt_tour_fork_0",
+          "targets": [
+            "ott461645",
+            "ott161197"
+          ],
+          "sources": [
+            "opentree"
+          ]
+        },
+        {
+          "text": "pt_tour_fork_1",
+          "targets": [
+            "ott1062253"
+          ],
+          "sources": [
+            "opentree"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pt_tour_life",
+      "steps": [
+        {
+          "text": "pt_tour_life_0",
+          "targets": [
+            "ott93302"
+          ],
+          "sources": [
+            "opentree"
+          ]
+        },
+        {
+          "text": "pt_tour_life_1",
+          "targets": [
+            "mrcaott616ott617",
+            "ott33192"
+          ],
+          "sources": [
+            "microbes"
+          ]
+        },
+        {
+          "text": "pt_tour_life_2",
+          "targets": [
+            "ott356221",
+            "ott309263"
+          ],
+          "sources": [
+            "fungi",
+            "eukaryotes"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pt_tour_mammals",
+      "steps": [
+        {
+          "text": "pt_tour_mammals_0",
+          "targets": [
+            "ott244265"
+          ],
+          "sources": [
+            "vertebrates"
+          ]
+        },
+        {
+          "text": "pt_tour_mammals_1",
+          "targets": [
+            "ott962377",
+            "ott542509"
+          ],
+          "sources": [
+            "vertebrates"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pt_tour_similarity",
+      "steps": [
+        {
+          "text": "pt_tour_similarity_0",
+          "targets": [
+            "ott124230",
+            "ott554297"
+          ],
+          "sources": [
+            "opentree",
+            "vertebrates"
+          ]
+        },
+        {
+          "text": "pt_tour_similarity_1",
+          "targets": [
+            "ott124230",
+            "ott510762"
+          ],
+          "sources": [
+            "opentree",
+            "hair"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "wikidata",
+      "citation": "Wikidata contributors (2026-10-05). Wikidata.",
+      "url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    {
+      "id": "asgard",
+      "citation": "Eme L., Tamarit D., Caceres E. F. et al. (2023). Inference and reconstruction of the heimdallarchaeial ancestry of eukaryotes. Nature 618:992–999.",
+      "url": "https://doi.org/10.1038/s41586-023-06186-2",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "opentree",
+      "citation": "Open Tree of Life — opentree16.1 (2025-12-20), OTT 3.7draft3; Hinchliff et al. (2015), doi:10.1073/pnas.1423041112",
+      "url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/",
+      "license": "CC0; prior terms may apply",
+      "license_url": "https://tree.opentreeoflife.org/opentree/about/licenses"
+    },
+    {
+      "id": "flight",
+      "citation": "Cao T. & Jin J.-P. (2020). Evolution of Flight Muscle Contractility and Energetic Efficiency. Frontiers in Physiology 11:1038.",
+      "url": "https://doi.org/10.3389/fphys.2020.01038",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "hair",
+      "citation": "Sun X., Zhang Z., Sun Y., Li J., Xu S. & Yang G. (2017). Comparative genomics analyses of alpha-keratins reveal insights into evolutionary adaptation of marine mammals. Frontiers in Zoology 14:41.",
+      "url": "https://doi.org/10.1186/s12983-017-0225-x",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "plastids",
+      "citation": "Oborník M. (2019). Endosymbiotic Evolution of Algae, Secondary Heterotrophy and Parasitism. Biomolecules 9:266.",
+      "url": "https://doi.org/10.3390/biom9070266",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "microbes",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/22-1-prokaryotic-diversity",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "eukaryotes",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/23-1-eukaryotic-origins",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "fungi",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/24-1-characteristics-of-fungi",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "plants",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/25-1-early-plant-life",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "animals",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/27-1-features-of-the-animal-kingdom",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "invertebrates",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/28-introduction",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "vertebrates",
+      "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
+      "url": "https://openstax.org/books/biology-2e/pages/29-introduction",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+  ]
+}

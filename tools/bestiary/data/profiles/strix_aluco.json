@@ -1,0 +1,460 @@
+{
+  "id": "strix_aluco",
+  "scientific": "Strix aluco",
+  "group": "birds",
+  "name": {
+    "en": "Tawny owl",
+    "fr": "Chouette hulotte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tawny owl is a stocky, resident woodland owl of much of Europe and parts of Asia and North Africa. It hunts mainly at night, often from a perch, and stays close to a familiar territory through the year. A rounded head without ear tufts, dark eyes and richly patterned brown or grey plumage make it recognizable even when its bark-like colours conceal it against a tree. The North African form mauritanica, sometimes separated as the Maghreb owl, is included within Strix aluco by the 2025 Clements checklist.",
+      "fr": "La chouette hulotte est un rapace forestier trapu et sédentaire, présent dans une grande partie de l’Europe ainsi que dans des régions d’Asie et d’Afrique du Nord. Elle chasse surtout la nuit, souvent depuis un perchoir, et reste toute l’année près d’un territoire familier. Sa tête arrondie sans aigrettes, ses yeux sombres et son plumage brun ou gris fortement marqué la caractérisent, même lorsque son plumage se confond avec l’écorce. La forme nord-africaine mauritanica, parfois séparée comme chouette du Maghreb, est incluse dans Strix aluco par la liste Clements de 2025."
+    },
+    "identification": {
+      "en": "In BTO ringing samples, adult females averaged 502 g and a 274 mm wing, while males averaged 396 g and a 259 mm wing. A general reference gives 37–46 cm body length and 81–104 cm wingspan; no reliable body-width measure was found. Adults have a rounded head, a plain facial disc, a short hooked bill and no raised ear tufts. The eyes are dark brown to nearly black and face forward. Across Europe, plumage ranges from chestnut red-brown through grey-brown to paler grey; these are colour forms within the species, not separate sexes. Males and females look alike, although females are larger on average and the size ranges overlap. Fine streaks and mottling break up the outline against bark. The broad, rounded wings and compact body suit manoeuvring among trees.",
+      "fr": "Dans les échantillons de baguage du BTO, les femelles adultes pesaient en moyenne 502 g et avaient une aile de 274 mm, contre 396 g et 259 mm chez les mâles. Une référence générale donne 37 à 46 cm de longueur corporelle et 81 à 104 cm d’envergure ; aucune largeur corporelle fiable n’a été trouvée. L’adulte porte une tête arrondie, un disque facial peu marqué, un bec court et crochu, et aucune aigrette dressée. Ses yeux brun foncé à presque noirs sont orientés vers l’avant. En Europe, le plumage varie du brun roux au gris brun et au gris plus clair : ce sont des formes de couleur au sein de l’espèce, et non des différences entre les sexes. Mâles et femelles se ressemblent, mais les femelles sont en moyenne plus grandes, avec des tailles qui se chevauchent. Les fines stries et marbrures brouillent sa silhouette sur l’écorce. Ses ailes larges et arrondies et son corps compact facilitent les manœuvres entre les arbres."
+    },
+    "habitat": {
+      "en": "Broad-leaved and mixed woodland provide mature trees, sheltered roosts and cavities for nesting. Tawny owls also occupy conifer plantations, wooded parks and large gardens, provided that trees or nest boxes offer a suitable cavity and nearby ground supplies prey. They avoid extensive open country and uplands without tree cover. Adults remain on established territories year-round; young birds usually disperse only a few kilometres, and large stretches of water can impede their spread. Habitat quality therefore depends on both nesting sites and connected, huntable cover.",
+      "fr": "Les forêts de feuillus et les boisements mixtes offrent des arbres mûrs, des reposoirs abrités et des cavités de nidification. La hulotte fréquente aussi les plantations de conifères, les parcs boisés et les grands jardins, si des arbres ou des nichoirs fournissent une cavité et si les environs hébergent des proies. Elle évite les espaces largement découverts et les hauts reliefs sans arbres. Les adultes gardent leur territoire toute l’année ; les jeunes ne se dispersent généralement que sur quelques kilomètres, et les grandes étendues d’eau peuvent freiner leur expansion. La qualité de l’habitat dépend donc des sites de nidification comme d’un couvert accessible pour chasser."
+    },
+    "diet": {
+      "en": "Small mammals, especially mice and voles, are common prey, but the owl takes whatever suitable animals are available: small birds, amphibians, large insects and earthworms. On damp nights it may catch worms on lawns; observations also include bats near roosts. Pellet studies show why a single menu cannot describe every pair: prey remains vary with season, habitat and local animal abundance, and the owls can switch to other prey when rodents are scarce. Fur, feathers and bones that cannot be digested are regurgitated as compact pellets, which let researchers reconstruct local feeding patterns.",
+      "fr": "Les petits mammifères, notamment les souris et les campagnols, constituent des proies fréquentes, mais la hulotte capture les animaux accessibles : petits oiseaux, amphibiens, grands insectes et lombrics. Par nuit humide, elle peut prendre des vers sur les pelouses ; des observations documentent aussi la capture de chauves-souris près de leurs gîtes. Les études de pelotes montrent qu’un menu unique ne décrit pas tous les couples : les restes varient selon la saison, l’habitat et l’abondance locale des animaux, et les chouettes peuvent changer de proies lorsque les rongeurs se raréfient. Fourrure, plumes et os indigestes sont régurgités en pelotes compactes, dont l’analyse reconstitue les habitudes alimentaires locales."
+    },
+    "behavior": {
+      "en": "This is a mainly nocturnal hunter that often waits on a perch, watches for movement, then glides down to seize prey with its feet. Its broad facial disc helps collect sound, while forward-facing eyes provide overlapping vision for judging distance. Tawny owls can locate prey by listening as well as looking. Their flight is very quiet, though not literally soundless: experiments on tawny owl wings found that removing leading-edge feather serrations increased noise shortly before landing, showing that the effect depends on flight phase. A male’s territorial hoot and a female’s sharper “keewik” may overlap as a pair duet. The familiar “twit-twoo” is therefore often two birds’ calls, not one individual producing a single phrase.",
+      "fr": "Principalement nocturne, la hulotte attend souvent sur un perchoir, repère un mouvement, puis plane jusqu’à sa proie et la saisit avec ses serres. Son disque facial contribue à recueillir les sons, tandis que ses yeux dirigés vers l’avant offrent un champ visuel qui se recoupe et aide à estimer les distances. Elle repère ses proies aussi à l’ouïe. Son vol est très discret, sans être totalement silencieux : des essais sur des ailes de hulotte ont montré que le retrait des petites dents de plumes du bord d’attaque augmente le bruit juste avant l’atterrissage. L’effet varie donc selon la phase de vol. Le hululement territorial du mâle et le “keewik” plus aigu de la femelle peuvent se chevaucher en duo. Le fameux “twit-twoo” correspond souvent aux appels de deux oiseaux, et non à une phrase émise par un seul individu."
+    },
+    "reproduction": {
+      "en": "Pairs nest in tree cavities or nest boxes and may lay their first eggs as early as February in Britain, although many begin in March or later. Incubation starts with the first egg, so chicks hatch at different times; when food is limited, this can allow at least some of the brood to survive. Young leave the nest while still unable to fly. During this “branching” stage they climb, hop and flutter around nearby branches, calling to adults, which continue to find and feed them outside the cavity. Leaving the nest is thus a normal developmental step, not proof that a chick has been abandoned.",
+      "fr": "Les couples nichent dans des cavités d’arbres ou des nichoirs et peuvent pondre dès février en Grande-Bretagne, même si beaucoup commencent en mars ou plus tard. L’incubation débute avec le premier œuf : les poussins éclosent donc à des dates différentes. Si la nourriture manque, ce décalage peut permettre à une partie de la nichée de survivre. Les jeunes quittent le nid avant de savoir voler. Durant cette phase dite de “branching”, ils grimpent, sautillent et battent des ailes sur les branches proches, en appelant les adultes, qui continuent à les retrouver et à les nourrir hors de la cavité. Quitter le nid est donc une étape normale du développement, et ne signifie pas qu’un jeune a été abandonné."
+    },
+    "ecology": {
+      "en": "By feeding on small mammals and changing prey when their numbers fluctuate, tawny owls link woodland food webs to local prey communities. Pellet contents offer a practical record of that relationship: a two-territory study in Ukraine found seasonal, annual and habitat variation in mammal remains, with alternative prey represented as well as rodents. The owl’s dependence on cavities also ties its breeding distribution to the supply of old trees and nest boxes. Because established pairs defend territories through the year, suitable nesting cavities and hunting ground must occur within the same local landscape.",
+      "fr": "En consommant de petits mammifères et en changeant de proies quand leurs effectifs fluctuent, les hulottes relient les réseaux alimentaires forestiers aux communautés animales locales. Les pelotes fournissent une trace concrète de cette relation : une étude menée dans deux territoires d’Ukraine a relevé des variations saisonnières, annuelles et liées à l’habitat dans les restes de mammifères, ainsi que la présence de proies de remplacement. La dépendance de l’espèce aux cavités relie aussi sa répartition de nidification à la disponibilité de vieux arbres et de nichoirs. Comme les couples établis défendent leur territoire toute l’année, sites de nidification et terrains de chasse doivent coexister dans le même paysage local."
+    },
+    "conservation": {
+      "en": "BirdLife International’s global owl-species account consulted on 11 October 2026 lists the tawny owl as Least Concern. That global category does not mean every national population is secure: in Britain, the British Trust for Ornithology reports that the species has been Amber-listed since 2015 because of concern about long-term decline. British monitoring remains incomplete because a nocturnal bird is difficult to survey, and the BTO identifies population change, breeding success and survival as continuing knowledge gaps. Availability of nest cavities and prey also shapes local suitability, so national concern and global category describe different geographic scales.",
+      "fr": "La liste mondiale des espèces de chouettes de BirdLife International, consultée le 11 octobre 2026, classe la hulotte en catégorie “Préoccupation mineure”. Cette catégorie mondiale ne signifie pas que chaque population nationale est en sécurité : au Royaume-Uni, le British Trust for Ornithology indique que l’espèce figure sur la liste de vigilance Amber depuis 2015, en raison d’un déclin à long terme redouté. Le suivi britannique reste incomplet, car il est difficile de recenser un oiseau nocturne ; le BTO cite encore l’évolution des populations, le succès reproducteur et la survie parmi les lacunes à combler. La disponibilité des cavités et des proies conditionne aussi la qualité locale de l’habitat : le statut national et la catégorie mondiale portent sur des échelles géographiques différentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Strix aluco (tawny owl) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Strix aluco (chouette hulotte) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Strix_aluco/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "ADW describes the species as a resident owl, gives its broad Eurasian and North African range, and summarizes variation in plumage, dark forward-set eyes and female-biased size.",
+        "Its species account describes nocturnal perch hunting, varied prey and pellet regurgitation; older research citations are treated as secondary context.",
+        "Species averages: 38 cm length, 99 cm wingspan, 420 g male and 520 g female; females more than 25% heavier and 5% longer on average."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 94,
+        "total": 200
+      },
+      "prose_claims": [
+        {
+          "section": "overview",
+          "claims": "European/Asian/North African range; resident woodland owl"
+        },
+        {
+          "section": "identification",
+          "claims": "rounded head without ear tufts; dark forward-facing eyes; color morph and female size pattern"
+        },
+        {
+          "section": "diet",
+          "claims": "broad prey list and regurgitated indigestible remains"
+        },
+        {
+          "section": "behavior",
+          "claims": "nocturnal perch hunting and sensory context"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tawny Owl — British Trust for Ornithology, Project Owl species account",
+        "fr": "Chouette hulotte — compte rendu d’espèce du British Trust for Ornithology, Project Owl"
+      },
+      "url": "https://www.bto.org/get-involved/volunteer/projects/completed/owl/learn-about-owls/tawny-owl",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BTO account reports three European colour forms, sex similarity and larger females; it distinguishes the male territorial hoot from the female keewik and describes pair duets.",
+        "It documents British woodland/cavity habitat, territorial residence, early laying and asynchronous hatching, plus Amber listing from 2015 and monitoring gaps."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 98,
+        "total": 200
+      },
+      "prose_claims": [
+        {
+          "section": "identification",
+          "claims": "European colour forms, similar sexes with larger females"
+        },
+        {
+          "section": "habitat",
+          "claims": "woodland, cavities, territorial residents, juvenile dispersal"
+        },
+        {
+          "section": "behavior",
+          "claims": "male hoot and female keewik contact call; duet"
+        },
+        {
+          "section": "reproduction",
+          "claims": "laying timing and asynchronous hatching"
+        },
+        {
+          "section": "conservation",
+          "claims": "Amber status reported from 2015 and monitoring knowledge gaps"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Features of owl wings that promote silent flight — Journal of the Royal Society Interface",
+        "fr": "Caractéristiques des ailes des chouettes qui favorisent un vol silencieux — Journal of the Royal Society Interface"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5206597/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review reports the species-specific tawny owl experiment: removing leading-edge serrations raised flight noise shortly before landing, but not during flapping flight."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 39,
+        "total": 199
+      },
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "claims": "tawny owl wing experiment: serration removal raised noise before landing, but not during flapping flight"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Mammals in Tawny Owl (Strix aluco) pellets from Kharkiv Region, Ukraine — Ukrainian Journal of Ecology",
+        "fr": "Mammifères dans les pelotes de chouette hulotte (Strix aluco) de la région de Kharkiv, Ukraine — Ukrainian Journal of Ecology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10848618/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Systematic pellet data from two Ukrainian territories showed seasonal, annual and habitat variation in mammal remains, with prey switching beyond rodents."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 51,
+        "total": 200
+      },
+      "prose_claims": [
+        {
+          "section": "diet",
+          "claims": "pellet results vary by season, year, habitat and local prey; alternative prey"
+        },
+        {
+          "section": "ecology",
+          "claims": "two-territory Ukrainian evidence connecting local mammal remains with habitat and seasonal change"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "List of Owl Species — BirdLife International",
+        "fr": "Liste des espèces de chouettes — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/birds/list-of-owl-species/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife global owl list gives Strix aluco as Least Concern; the page does not state an assessment year."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 31,
+        "total": 191
+      },
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "claims": "global Least Concern category; list page provides no assessment year"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "What to do if you find a young Tawny Owl — The Barn Owl Trust",
+        "fr": "Que faire si vous trouvez une jeune chouette hulotte — The Barn Owl Trust"
+      },
+      "url": "https://www.barnowltrust.org.uk/picking-up-a-live-owl/find-young-tawny-owl/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Species-specific guidance documents the pre-flight branching stage: young leave the nest, climb and flutter nearby, call to adults, and are fed where they settle."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 45,
+        "total": 190
+      },
+      "prose_claims": [
+        {
+          "section": "reproduction",
+          "claims": "young leave before flight, climb and flutter during branching, call and remain fed by adults outside the cavity"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Age-dependent diet change, parental care and reproductive cost in tawny owls Strix aluco — Journal of Avian Biology",
+        "fr": "Variation du régime selon l’âge, soins parentaux et coût reproducteur chez la chouette hulotte Strix aluco — Journal of Avian Biology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1146609X00010808",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "A 1992–1999 Hungarian nest-box study reports resident monogamous pairs and age-related differences in breeding output; findings are geographically scoped."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 46,
+        "total": 196
+      },
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "claims": "1992–1999 Hungarian nest-box study and local food/provisioning setting"
+        },
+        {
+          "section": "reproduction",
+          "claims": "parental care and age-related breeding results in the specified population"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Quiet flight, the leading edge comb, and their ecological correlates in owls — Biological Journal of the Linnean Society",
+        "fr": "Vol silencieux, peigne du bord d’attaque et corrélats écologiques chez les chouettes — Biological Journal of the Linnean Society"
+      },
+      "url": "https://academic.oup.com/biolinnean/article/135/1/84/6446340",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Comparative owl study describes the leading-edge feather comb and discusses quiet flight in relation to prey hearing as an ecological hypothesis, not a proven universal mechanism."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 42,
+        "total": 172
+      },
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "claims": "feather comb structure and cautious comparative discussion of quiet flight and prey hearing"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "BirdFacts: Tawny Owl — British Trust for Ornithology",
+        "fr": "BirdFacts : Chouette hulotte — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/tawny-owl",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "BTO BirdFacts summarizes UK habitat, nesting and life-cycle measures from BTO monitoring, and reports UK population-index decline and Amber status.",
+        "BTO biometrics: adult female wing 273.9 mm and mass 502.2 g; male wing 259 mm and mass 396 g; UK ringing sample."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 49,
+        "total": 200
+      },
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "claims": "UK habitat association evidence"
+        },
+        {
+          "section": "reproduction",
+          "claims": "nesting and life-cycle measures from BTO recording/ringing data"
+        },
+        {
+          "section": "conservation",
+          "claims": "UK population-index decline and Amber status context"
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tawny Owl — RSPB species account",
+        "fr": "Chouette hulotte — fiche espèce de la RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/tawny-owl",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Describes UK tawny owl appearance (rounded tuftless head, dark eyes, broad rounded wings), mature-tree woodland habitat and resident pairs.",
+        "Reports the UK population decline between 1995 and 2023, Amber status, and uncertainty about causes, with habitat loss and reduced prey identified as possible factors."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 73,
+        "total": 200
+      },
+      "prose_claims": [
+        {
+          "section": "identification",
+          "claims": "UK morphology and colour details in identification paragraph."
+        },
+        {
+          "section": "habitat",
+          "claims": "Mature trees and woodland/garden habitat."
+        },
+        {
+          "section": "conservation",
+          "claims": "UK trend, Amber category and uncertainty."
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tawny Owl nest-box instructions — RSPB",
+        "fr": "Instructions pour nichoir à chouette hulotte — RSPB"
+      },
+      "url": "https://shopping.rspb.org.uk/INTERSHOP/static/WFS/RSPB-rspbUK-Site/-/RSPB/en_GB/Product%20PDFs/rspb-tawny-owl-nest-box-instructions.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "RSPB instructions describe territorial occupancy of nest boxes and report that chicks leave the box at about three and a half weeks to branch in the canopy."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 47,
+        "total": 177
+      },
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "claims": "Cavity provision and territorial occupancy."
+        },
+        {
+          "section": "reproduction",
+          "claims": "Approximate age at leaving the box and branching behavior."
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tawny Owl — The Wildlife Trusts",
+        "fr": "Chouette hulotte — The Wildlife Trusts"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/birds-prey/tawny-owl",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account describes nesting in spring in hollow trees and notes reuse of old crow nests."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 33,
+        "total": 138
+      },
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "claims": "Natural nesting cavities and occasional reused nests."
+        },
+        {
+          "section": "reproduction",
+          "claims": "Cavity nesting in spring."
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Clements Checklist — Tawny Owl taxonomy update, October 2025",
+        "fr": "Liste Clements — mise à jour taxonomique de la hulotte, octobre 2025"
+      },
+      "url": "https://www.birds.cornell.edu/clementschecklist/updates-and-corrections-october-2025-page-2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Clements and AviList 2025 return North African mauritanica to subspecies status within Strix aluco, pending further study."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult tawny owl of unspecified sex, with exact natural Strix aluco morphology: compact stocky body, rounded head with no ear tufts, dark forward-facing eyes, plain facial disc, short hooked bill, broad rounded wings and naturally mottled chestnut-brown plumage with fine streaking. Perched in a neutral three-quarter view. PURE WHITE #FFFFFF background only; no branch, scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Plumage colour varies geographically; the article gives the broad European variation without assigning a form to a specific location beyond the BTO’s UK note.",
+    "The flight-noise mechanism is described narrowly from experiments on tawny owl wings; broader feather adaptations are not presented as making flight literally silent.",
+    "BirdLife’s accessible global species list shows Least Concern but does not expose an assessment year on that page; the consultation date is given instead. The UK Amber listing is a separate national status, reported by BTO as dating from 2015."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review confirms species-specific flight-noise experiment and juvenile branching. Root corrected French sound-collection wording and documented 2025 Clements/AviList taxonomy. Revised illustration independently approved."
+}

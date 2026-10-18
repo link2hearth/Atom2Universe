@@ -1,0 +1,186 @@
+{
+  "id": "helicophagus_waandersii",
+  "scientific": "Helicophagus waandersii",
+  "group": "fish",
+  "name": {
+    "en": "Helicophagus waandersii",
+    "fr": "Helicophagus waandersii"
+  },
+  "sections": {
+    "overview": {
+      "en": "This freshwater pangasiid catfish occurs in the Mekong and Chao Phraya basins and in Sumatra.",
+      "fr": "Ce pangasiidé d’eau douce est présent dans les bassins du Mékong et du Chao Phraya ainsi qu’à Sumatra."
+    },
+    "identification": {
+      "en": "It has an elongated catfish body; the largest reported length is 70 cm total length. Eschmeyer’s catalogue recognizes the species as valid and records its type locality at Palembang.",
+      "fr": "Son corps de poisson-chat est allongé ; la plus grande longueur totale rapportée est de 70 cm. Le catalogue d’Eschmeyer reconnaît l’espèce comme valide et indique Palembang comme localité-type."
+    },
+    "habitat": {
+      "en": "It inhabits medium to large rivers and can enter flooded forest during seasonal high water.",
+      "fr": "Il fréquente les rivières moyennes à grandes et peut pénétrer dans la forêt inondée lors des hautes eaux saisonnières."
+    },
+    "diet": {
+      "en": "Stomach examinations found molluscs, usually bivalves, and the species is a specialized mollusc feeder.",
+      "fr": "L’examen des estomacs a révélé des mollusques, surtout des bivalves ; l’espèce est spécialisée dans cette ressource."
+    },
+    "behavior": {
+      "en": "It migrates upstream as flood-season water levels rise and returns downstream as the water clears.",
+      "fr": "Elle migre vers l’amont lorsque le niveau monte au début des crues, puis redescend lorsque l’eau s’éclaircit."
+    },
+    "reproduction": {
+      "en": "In the Mekong, spawning is reported at the start of the flood season, around May and June.",
+      "fr": "Dans le Mékong, la ponte est signalée au début de la saison des crues, vers mai et juin."
+    },
+    "ecology": {
+      "en": "Adults feed in the main river and large tributaries and use deep pools as dry-season refuges.",
+      "fr": "Les adultes s’alimentent dans le cours principal et les grands affluents, et utilisent les fosses profondes comme refuges en saison sèche."
+    },
+    "conservation": {
+      "en": "FishBase reports a global Least Concern assessment dated 1 September 2018.",
+      "fr": "FishBase rapporte une évaluation mondiale en préoccupation mineure datée du 1 septembre 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Helicophagus waandersii — FishBase",
+        "fr": "Helicophagus waandersii — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Helicophagus-waandersii",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports range, body form, maximum length, river habitat, mollusc diet, seasonal migration and LC assessment dated 2018-09-01."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Distribution and Ecology of Some Important Riverine Fish Species of the Mekong River Basin — Mekong River Commission",
+        "fr": "Répartition et écologie de poissons importants du bassin du Mékong — Commission du Mékong"
+      },
+      "url": "https://www.mrcmekong.org/?document_id=01BMXYOABQQBR5FY7EAZFZRXEKJEP6NRZM&download_document=1&name=Distribution-and-Ecology-of-Some-Important-Riverine-Fish-Species-of-the-Mekong-River-Basin.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Mekong technical account describes large river and flooded-forest habitat, spawning at flood onset, downstream larval drift and dry-season deep-pool refuges."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Helicophagus waandersii",
+        "fr": "Catalogue des poissons d’Eschmeyer — Helicophagus waandersii"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=52575",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Catalog recognizes Helicophagus waandersii Bleeker, 1858 as valid and records its type locality at Palembang."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Seasonal breeding details are reported specifically for the Mekong basin and should not automatically be applied to the Sumatran populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the species account against the Mekong River Commission account and Eschmeyer’s taxonomic catalogue."
+}

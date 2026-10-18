@@ -1,0 +1,196 @@
+{
+  "id": "rabbit",
+  "scientific": "Oryctolagus cuniculus",
+  "group": "mammals",
+  "name": {
+    "en": "European rabbit",
+    "fr": "Lapin de garenne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European rabbit is a burrowing lagomorph native to the Iberian Peninsula and parts of southwestern Europe. Human transport and escape from domestication have spread it far beyond that range, so the same species can be a threatened native animal in one landscape and an invasive grazer in another. It is also the wild ancestor of domestic rabbits.",
+      "fr": "Le lapin de garenne est un lagomorphe fouisseur originaire de la péninsule Ibérique et de régions du sud-ouest de l’Europe. Les transports humains et les échappées d’élevage l’ont propagé bien au-delà de cette aire : une même espèce peut donc être menacée dans un paysage d’origine et devenir un herbivore envahissant ailleurs. Il est aussi l’ancêtre sauvage des lapins domestiques."
+    },
+    "identification": {
+      "en": "A wild adult is usually 38–50 cm long and weighs 1.5–2.5 kg. Its compact body, short ears and strong hind legs support quick dashes between feeding ground and cover. The grey-brown coat is paler underneath; the white underside of its short tail flashes as it bounds away. Compared with a hare, it has shorter ears and legs and relies on underground refuge. Its young are helpless at birth, unlike furred, mobile leverets.",
+      "fr": "Un adulte sauvage mesure généralement 38 à 50 cm et pèse 1,5 à 2,5 kg. Son corps compact, ses oreilles courtes et ses pattes arrière puissantes favorisent les bonds rapides entre nourriture et abri. Le pelage gris-brun est plus clair dessous ; le dessous blanc de sa courte queue apparaît lorsqu’il détale. Par rapport au lièvre, il a des oreilles et des pattes plus courtes et dépend davantage d’abris souterrains. Ses petits sont dépendants à la naissance, contrairement aux levrauts couverts de fourrure et mobiles."
+    },
+    "habitat": {
+      "en": "In its native range the rabbit favours open, short-grass ground near dense cover, especially where soft soil allows digging. Scrub, grassland, woodland edges and some farms or urban spaces provide food and shelter, though ploughing can destroy burrows. A warren’s linked entrances and chambers offer escape routes and protected places to rest or nest. Where soil is unsuitable, rabbits use surface cover such as dense vegetation.",
+      "fr": "Dans son aire d’origine, le lapin préfère les espaces ouverts à herbe courte proches d’un couvert dense, surtout si le sol meuble permet de creuser. Maquis, prairies, lisières boisées et certains espaces agricoles ou urbains fournissent nourriture et abri, même si le labour peut détruire les terriers. Les entrées et chambres reliées d’une garenne offrent des issues et des lieux protégés pour se reposer ou nicher. Si le sol ne s’y prête pas, les lapins utilisent un couvert de surface, comme une végétation épaisse."
+    },
+    "diet": {
+      "en": "The rabbit selectively eats grasses, tender shoots, leaves and buds, sometimes roots or bark. Because plant fibre is difficult to digest, microbes ferment fine particles in its enlarged caecum while coarse particles pass quickly through the gut. The rabbit periodically re-ingests soft, nutrient-rich caecotrophs, allowing their contents another passage through the small intestine. These differ from ordinary firm, dry pellets, which carry much of the indigestible fibre and are not recycled.",
+      "fr": "Le lapin choisit graminées, jeunes pousses, feuilles et bourgeons, parfois racines ou écorce. Les fibres végétales étant difficiles à digérer, les microbes fermentent les particules fines dans son cæcum volumineux, tandis que les particules grossières traversent rapidement l’intestin. Le lapin réingère périodiquement les cæcotrophes mous et nutritifs, dont le contenu repasse ainsi par l’intestin grêle. Ils diffèrent des crottes ordinaires, fermes et sèches, qui contiennent beaucoup de fibres indigestibles et ne sont pas recyclées."
+    },
+    "behavior": {
+      "en": "European rabbits are unusually social for a leporid. Where food and soil permit, groups share warrens and defend a territory. Several females and males may live together; dominance shapes access to space and mates, with conflict clearest between males. Rabbits feed mainly at dusk and night, then retreat underground by day. Scent marks signal occupancy, while a hind-foot thump warns nearby animals of danger. Group boundaries and a familiar warren provide security.",
+      "fr": "Le lapin de garenne est particulièrement social pour un léporidé. Quand nourriture et sol le permettent, les groupes partagent des terriers et défendent un territoire. Plusieurs femelles et mâles cohabitent ; la dominance influence l’accès à l’espace et aux partenaires, avec des conflits plus nets entre mâles. Les lapins se nourrissent surtout au crépuscule et la nuit, puis se retirent sous terre le jour. Les marques odorantes signalent l’occupation et un coup de patte arrière avertit du danger. Limites du groupe et garenne familière apportent une sécurité."
+    },
+    "reproduction": {
+      "en": "Wild breeding is seasonal and responds to food and local conditions. After mating-triggered ovulation, gestation lasts about 30 days and litters commonly contain five or six young. A doe digs a nursery burrow and lines its nest with dry plants and fur. Kittens are born naked and blind, unlike furred, open-eyed hare leverets. The mother returns briefly to nurse, then leaves the nest concealed. Young leave the nest and are weaned at about four weeks; first-year mortality can be high from predation, weather and disease.",
+      "fr": "La reproduction sauvage est saisonnière et dépend de la nourriture et des conditions locales. Après une ovulation déclenchée par l’accouplement, la gestation dure environ 30 jours et les portées comptent souvent cinq ou six petits. La lapine creuse un terrier de naissance et tapisse le nid de végétaux secs et de poils. Les lapereaux naissent nus et aveugles, contrairement aux levrauts couverts de fourrure et aux yeux ouverts. La mère revient brièvement allaiter puis s’éloigne en laissant le nid dissimulé. Les petits quittent le nid et sont sevrés vers quatre semaines ; la mortalité de première année peut être élevée à cause des prédateurs, du climat et des maladies."
+    },
+    "ecology": {
+      "en": "In Mediterranean Iberia, rabbits are key prey for many predators, including the Iberian lynx and Spanish imperial eagle. Their grazing changes plant cover, while burrows shelter other animals and communal latrines concentrate nutrients that affect plant growth. Rabbits therefore act as ecosystem engineers, with effects that depend on density and habitat. Their role in native food webs can become damaging when dense introduced populations overgraze and compete with local wildlife.",
+      "fr": "Dans les milieux méditerranéens ibériques, le lapin est une proie clé pour de nombreux prédateurs, dont le lynx ibérique et l’aigle impérial ibérique. Son pâturage modifie le couvert végétal ; les terriers abritent d’autres animaux et les latrines communes concentrent des nutriments qui influencent la croissance des plantes. Le lapin agit donc comme ingénieur de l’écosystème, avec des effets dépendant de sa densité et du milieu. Son rôle dans les réseaux trophiques d’origine peut devenir nuisible quand des populations introduites denses surpâturent et concurrencent la faune locale."
+    },
+    "conservation": {
+      "en": "The latest global IUCN assessment located was published in 2019 from an assessment dated 15 August 2018. It classified rabbits as Endangered across their native range in Spain, Portugal and southern France. Myxomatosis, rabbit haemorrhagic disease and habitat degradation drove declines; GI.2/RHDV2 added pressure after reaching Iberia in 2011–12. A 2025 study of hunting records from about 6,000 central-Spain estates found declines in most areas without emergency crop-damage control during 2009–22, but trends differed where rabbits damage crops. In Australia, feral rabbits are widespread and harm native vegetation and threatened species. Conservation priorities therefore differ between the native range and introduced populations.",
+      "fr": "La dernière évaluation mondiale de l’UICN repérée a été publiée en 2019 à partir d’une évaluation datée du 15 août 2018. Elle classe le lapin en danger dans son aire native, en Espagne, au Portugal et dans le sud de la France. La myxomatose, la maladie hémorragique du lapin et la dégradation de l’habitat ont entraîné des déclins ; GI.2/RHDV2 a accru la pression après son arrivée en Ibérie en 2011–2012. Une étude publiée en ligne en décembre 2024 et parue dans le volume 2025 de la revue, fondée sur les tableaux de chasse d’environ 6 000 domaines du centre de l’Espagne, relève une baisse dans la plupart des secteurs sans contrôle d’urgence des dégâts agricoles entre 2009 et 2022, mais des tendances différentes là où les lapins endommagent les cultures. En Australie, les lapins féraux sont répandus et nuisent à la végétation indigène et aux espèces menacées. Les priorités diffèrent donc entre aire d’origine et populations introduites."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oryctolagus cuniculus (European rabbit) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Oryctolagus cuniculus (lapin de garenne) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Wild adults are usually 38–50 cm and 1.5–2.5 kg; grey coats, pale undersides, shorter ears and legs than hares.",
+        "Soft-soil open habitats, warrens, 30-day gestation, commonly five or six young, blind naked neonates and weaning near four weeks."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nutrition of Rabbits — MSD Veterinary Manual, authored by a University of Georgia veterinary faculty member",
+        "fr": "Nutrition des lapins — MSD Veterinary Manual, rédigé par un membre du corps professoral vétérinaire de l’Université de Géorgie"
+      },
+      "url": "https://www.msdvetmanual.com/en/exotic-and-laboratory-animals/rabbits/nutrition-of-rabbits",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The enlarged caecum ferments small particles; coarse fibre passes rapidly and leaves as firm pellets.",
+        "Soft caecotrophs are re-ingested and supply microbial protein, B vitamins and volatile fatty acids; they differ from hard pellets."
+      ]
+    },
+    {
+      "title": {
+        "en": "The Social Nature of European Rabbits (Oryctolagus cuniculus) — Journal of the American Association for Laboratory Animal Science",
+        "fr": "La vie sociale du lapin de garenne (Oryctolagus cuniculus) — Journal of the American Association for Laboratory Animal Science"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5113872/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Free-living rabbits form stable groups around multi-entrance warrens, with territories and dominance relationships.",
+        "The review distinguishes wild observations from captive and laboratory behavior; hierarchy and male territoriality vary by setting."
+      ]
+    },
+    {
+      "title": {
+        "en": "What Are the Keys to the Adaptive Success of European Wild Rabbit in the Iberian Peninsula? — Animals (MDPI), peer-reviewed review",
+        "fr": "Quelles sont les clés du succès adaptatif du lapin sauvage européen dans la péninsule Ibérique ? — Animals (MDPI), revue scientifique évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8388719/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Wild rabbit breeding is seasonal and influenced by nutrition; it differs from continuous breeding in domestic rabbits.",
+        "The species uses diverse plants, a large fermenting caecum and caecotrophy; burrows and adaptability aid colonisation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Lepus europaeus (Lagomorpha: Leporidae) — Mammalian Species, Oxford University Press",
+        "fr": "Lepus europaeus (Lagomorpha : Leporidae) — Mammalian Species, Oxford University Press"
+      },
+      "url": "https://academic.oup.com/mspecies/article/52/997/125/6046128",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "European hares are born furred, with eyes open, and are precocial; rabbit young are altricial by comparison."
+      ]
+    },
+    {
+      "title": {
+        "en": "Oryctolagus cuniculus (European Rabbit) — The IUCN Red List of Threatened Species, 2019 assessment",
+        "fr": "Oryctolagus cuniculus (lapin de garenne) — Liste rouge de l’UICN des espèces menacées, évaluation de 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T41291A170619657.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Published in 2019 from a 15 August 2018 global assessment; Endangered, with the assessed natural range limited to Spain, Portugal and southern France.",
+        "The assessment links decline to myxomatosis, rabbit haemorrhagic disease and habitat loss; it treats introduced populations separately."
+      ]
+    },
+    {
+      "title": {
+        "en": "Negative trends in rabbit populations in pest and non-pest areas of central Spain after rabbit haemorrhagic disease virus 2 — European Journal of Wildlife Research",
+        "fr": "Tendances négatives des populations de lapins dans les zones agricoles et non agricoles du centre de l’Espagne après le virus de la maladie hémorragique du lapin 2 — European Journal of Wildlife Research"
+      },
+      "url": "https://doi.org/10.1007/s10344-024-01888-y",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A 2025 study analysed hunting yields from about 6,000 Castilla-La Mancha estates over 2009–2022.",
+        "Most non-emergency-control areas showed continuing declines, while trends varied in crop-damage control areas and between subspecies."
+      ]
+    },
+    {
+      "title": {
+        "en": "Key role of European rabbits in the conservation of the Western Mediterranean basin hotspot — Conservation Biology",
+        "fr": "Rôle clé des lapins européens dans la conservation du hotspot du bassin méditerranéen occidental — Conservation Biology"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18680504/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "In Iberian Mediterranean ecosystems, rabbit grazing alters vegetation, warrens shelter other species, latrines affect soil fertility, and rabbits feed threatened predators."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rabbits — NSW Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Lapins — ministère de l’Environnement de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/rabbits",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Introduced to Australia in 1788, feral rabbits now occupy over three-quarters of New South Wales.",
+        "Overgrazing and competition damage native vegetation and threaten plants, ecological communities and native animals."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult European rabbit (sex unspecified), with the natural compact grey-brown wild coat, pale underside, short ears, strong hind legs and white underside of the tail. Accurate adult proportions, natural fur texture, standing alert in a three-quarter side view. Pure uniform white #FFFFFF background; no scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Wild body size, coat and breeding season vary with population, climate and food; figures are typical values rather than universal limits.",
+    "IUCN’s latest global assessment located is dated 2018 and was published in 2019. The 2025 central-Spain study is regional, based on hunting yields, and does not establish a current trend for every population.",
+    "Rabbit abundance can be low in native Iberian landscapes yet high and damaging in introduced regions; local ecological effects depend on density and habitat."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual bilingual review accepts caecotrophy, newborn-development contrast, local ecological role and dated assessment; online-publication versus journal-volume dates clarified."
+}

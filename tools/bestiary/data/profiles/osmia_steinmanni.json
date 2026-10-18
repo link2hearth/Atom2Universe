@@ -1,0 +1,209 @@
+{
+  "id": "osmia_steinmanni",
+  "scientific": "Osmia steinmanni",
+  "group": "invertebrates",
+  "name": {
+    "en": "Steinmann's mason bee",
+    "fr": "Osmie de Steinmann"
+  },
+  "sections": {
+    "overview": {
+      "en": "Steinmann's mason bee is a solitary bee in the genus Osmia, subgenus Melanosmia. Described from the Swiss Alps, it is a rare, localized alpine species; a 2023 report added the first known Slovenian record.",
+      "fr": "L’Osmie de Steinmann est une abeille solitaire du genre Osmia, sous-genre Melanosmia. Décrite des Alpes suisses, elle est rare et localisée; une publication de 2023 a ajouté la première observation connue en Slovénie."
+    },
+    "identification": {
+      "en": "It is a small dark mason bee, about 8–10 mm long in the German species account. The original description compares it with European Melanosmia and reports its closest morphological relationship with O. svenssoni; specialist characters are needed for identification.",
+      "fr": "C’est une petite abeille maçonne sombre, longue d’environ 8–10 mm selon la source allemande. La description originale la compare aux Melanosmia d’Europe et la rapproche morphologiquement d’O. svenssoni; l’identification requiert des caractères spécialisés."
+    },
+    "habitat": {
+      "en": "The original specimens came from stony, south-east-facing slopes in the subalpine and alpine zones of eastern Switzerland. A later Slovenian record suggests that its distribution may extend along more of the Alpine arc, but the known records remain few.",
+      "fr": "Les spécimens d’origine proviennent de pentes pierreuses exposées au sud-est, dans les étages subalpin et alpin de l’est de la Suisse. Une observation ultérieure en Slovénie suggère que sa répartition pourrait s’étendre le long de l’arc alpin, mais les mentions restent peu nombreuses."
+    },
+    "diet": {
+      "en": "The original description records pollen collection from horseshoe vetch (Hippocrepis comosa) and bird’s-foot trefoil (Lotus corniculatus), both legumes. These are documented pollen sources, not proof that it uses only these plants.",
+      "fr": "La description originale signale la collecte de pollen sur l’Hippocrépide à toupet (Hippocrepis comosa) et le Lotier corniculé (Lotus corniculatus), deux légumineuses. Ce sont des sources de pollen documentées, sans prouver que l’abeille se limite à ces plantes."
+    },
+    "behavior": {
+      "en": "It is solitary; field behavior is poorly documented, and its specialist account leaves nesting biology unknown.",
+      "fr": "Elle est solitaire; comportement peu documenté et la source spécialisée indique que sa nidification est inconnue."
+    },
+    "reproduction": {
+      "en": "The specialist account gives no nesting or development details, so nest site, brood cells and number of generations remain unknown.",
+      "fr": "La source spécialisée ne décrit ni nidification ni développement; le site du nid, les cellules et le nombre de générations restent inconnus."
+    },
+    "ecology": {
+      "en": "As a pollen-collecting bee, it links alpine flowers with insect pollination, but its ecological role and breadth of pollen sources have not been quantified. It is grouped with close Melanosmia relatives such as O. svenssoni, whose known northern distribution contrasts with this bee’s Alpine records.",
+      "fr": "En récoltant du pollen, elle contribue à la pollinisation des plantes alpines, mais son rôle écologique et l’étendue de ses ressources polliniques n’ont pas été quantifiés. Elle est rapprochée de Melanosmia comme O. svenssoni, dont l’aire nordique connue contraste avec les observations alpines de cette abeille."
+    },
+    "conservation": {
+      "en": "No global Red List assessment was located; the species is described as rare, but its few records cannot establish a population trend.",
+      "fr": "Aucune évaluation mondiale de Liste rouge n’a été trouvée; l’espèce est dite rare, mais ses quelques observations ne permettent pas d’établir une tendance des effectifs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Osmia (Melanosmia) steinmanni sp. n., a new bee species from the Swiss Alps — Revue Suisse de Zoologie",
+        "fr": "Osmia (Melanosmia) steinmanni sp. n., une nouvelle abeille des Alpes suisses — Revue Suisse de Zoologie"
+      },
+      "url": "https://biostor.org/reference/115406",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "Andreas Müller’s 2002 primary description gives the Alpine locations and two pollen hosts, and compares the bee with European Melanosmia, especially O. svenssoni."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 23,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Osmia steinmanni — Palaearctic Osmiine Bees, ETH Zürich",
+        "fr": "Osmia steinmanni — Palaearctic Osmiine Bees, ETH Zurich"
+      },
+      "url": "https://blogs.ethz.ch/osmiini/2023/09/22/osmia-steinmanni/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "ETH Zürich specialist account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 196,
+        "notes_words": 4,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Osmia steinmanni — German wild-bee account",
+        "fr": "Osmia steinmanni — fiche allemande d’abeille sauvage"
+      },
+      "url": "https://de.wikipedia.org/wiki/Osmia_steinmanni",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "German-language species account gives an approximate length of 8–10 mm and notes resemblance to O. inermis."
+      ],
+      "prose_claims": [
+        "overview.fr.2",
+        "identification.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 16,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Review of non-metallic Osmia (Melanosmia) in North America, with notes on Palaearctic Melanosmia — ZooKeys / PMC",
+        "fr": "Révision des Osmia (Melanosmia) non métalliques d’Amérique du Nord, avec des notes sur les Melanosmia paléarctiques — ZooKeys / PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3088345/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Taxonomic review lists O. steinmanni within the inermis species group alongside related Melanosmia."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 13,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution of Osmia steinmanni in Slovenia — Beiträge zur Entomofaunistik",
+        "fr": "Répartition d’Osmia steinmanni en Slovénie — Beiträge zur Entomofaunistik"
+      },
+      "url": "https://www.zobodat.at/pdf/BEF_24_0055-0062.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Heinz Wiesbauer documents the first Slovenian record in this regional peer-reviewed bee survey."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 13,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Nesting biology is explicitly unknown in the specialist source.",
+    "The known range is based on few collection records and one later Slovenian report; it may be incomplete.",
+    "No global conservation assessment or population trend was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Primary description and specialist ETH Zürich source cross-checked; unknown nesting details remain unspecified."
+}

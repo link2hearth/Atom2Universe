@@ -1,0 +1,142 @@
+{
+  "id": "dasyatis_marianae",
+  "scientific": "Dasyatis marianae",
+  "group": "fish",
+  "name": {
+    "en": "Brazilian Large-eye Stingray",
+    "fr": "Raie mariquita du Brésil"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Brazilian coastal ray is now Hypanus marianae, formerly Dasyatis. The Izu stingray profile is another former Dasyatis species, now placed in Hemitrygon.",
+      "fr": "Cette raie côtière brésilienne est aujourd’hui Hypanus marianae, anciennement Dasyatis. La fiche de la pasténague d’Izu concerne une autre espèce autrefois classée dans Dasyatis, désormais placée dans Hemitrygon."
+    },
+    "identification": {
+      "en": "It is a small stingray, recorded to at least 31 cm disc width, with notably large eyes.",
+      "fr": "C’est une petite raie, mesurée jusqu’à au moins 31 cm de largeur de disque, aux yeux particulièrement grands."
+    },
+    "habitat": {
+      "en": "It uses coral reefs, seagrass beds, sandy shores and estuaries at roughly 1–30 m depth.",
+      "fr": "Elle fréquente les récifs coralliens, herbiers marins, plages sableuses et estuaires, vers 1–30 m de profondeur."
+    },
+    "diet": {
+      "en": "Stomach studies found a benthic diet dominated by shrimps, other crustaceans and polychaete worms.",
+      "fr": "Les analyses stomacales montrent un régime benthique dominé par les crevettes, d’autres crustacés et les vers polychètes."
+    },
+    "behavior": {
+      "en": "It is a coastal benthic predator whose prey composition shifts with age.",
+      "fr": "C’est un prédateur benthique côtier dont les proies varient avec l’âge."
+    },
+    "reproduction": {
+      "en": "Females have low fecundity, usually producing one pup; this limits recovery from fishing mortality.",
+      "fr": "La fécondité est faible, les femelles produisant généralement un seul petit, ce qui limite le rétablissement après la mortalité due à la pêche."
+    },
+    "ecology": {
+      "en": "Endemic to Brazil, it is a mesopredator in shallow coastal benthic food webs.",
+      "fr": "Endémique du Brésil, elle est un mésoprédateur des réseaux trophiques benthiques côtiers peu profonds."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Endangered because intensive fishing and coastal habitat degradation threaten this low-fecundity ray.",
+      "fr": "L’UICN la classe en danger, car la pêche intensive et la dégradation des habitats côtiers menacent cette raie peu féconde."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hypanus marianae — IUCN Red List",
+        "fr": "Hypanus marianae — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T45925A104130004.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN supports species range, habitat, low fecundity and Endangered assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 10,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dietary composition and trophic level of Hypanus marianae — Latin American Journal of Aquatic Research",
+        "fr": "Régime et niveau trophique de Hypanus marianae — Latin American Journal of Aquatic Research"
+      },
+      "url": "https://lajar.cl/index.php/rlajar/article/view/vol47-issue5-fulltext-10",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed Brazilian study found mainly shrimps and polychaetes; prey proportions varied by life stage."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 15,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dasyatis names and accepted combinations — WoRMS",
+        "fr": "Noms Dasyatis et combinaisons acceptées — WoRMS"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Dasyatis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "WoRMS lists H. marianae and H. izuensis as accepted combinations for former Dasyatis names."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 14,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the IUCN assessment with peer-reviewed Brazilian diet data and WoRMS nomenclature; reciprocal reference to H. izuensis distinguishes their Brazilian and Japanese ranges."
+}

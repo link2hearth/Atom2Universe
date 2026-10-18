@@ -1,0 +1,123 @@
+{
+  "id": "eurasian_teal",
+  "scientific": "Anas crecca",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Teal",
+    "fr": "Sarcelle d’hiver"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian teal is a small, fast dabbling duck of marshes and estuaries. In Britain it is much more numerous in winter, when about half a million birds arrive from the Continent, than in the breeding season.",
+      "fr": "La sarcelle d’hiver est un petit canard de surface rapide, des marais et des estuaires. En Grande-Bretagne, elle est bien plus nombreuse en hiver, quand environ un demi-million d’oiseaux arrivent du continent, que pendant la saison de reproduction."
+    },
+    "identification": {
+      "en": "In Britain, males average about 336 g with a wing of 190 mm; females are smaller, around 303 g and 182 mm. The male has a chestnut head with a broad green eye patch, a spotted chest, grey flanks and a black-edged yellow patch under the tail. The female is mottled brown. Both sexes show a bright green wing patch.",
+      "fr": "En Grande-Bretagne, les mâles pèsent en moyenne environ 336 g, avec une aile de 190 mm ; les femelles sont plus petites, autour de 303 g et 182 mm. Le mâle a la tête marron roux avec un large masque vert, la poitrine tachetée, les flancs gris et une tache jaune bordée de noir sous la queue. La femelle est brune et mouchetée. Les deux sexes montrent un miroir vert vif."
+    },
+    "habitat": {
+      "en": "In winter it uses low-lying wetlands in the south and west, from small pools to large estuaries, on coast and fresh water. In the breeding season it is thinly and patchily distributed, with a preference for northern moors and mires and some sites in southern Britain and Ireland.",
+      "fr": "En hiver, elle utilise les zones humides de basse altitude du sud et de l’ouest, des petites mares aux grands estuaires, sur la côte comme en eau douce. Pendant la reproduction, elle est rare et dispersée, avec une préférence pour les landes et tourbières du nord et quelques sites dans le sud de la Grande-Bretagne et en Irlande."
+    },
+    "diet": {
+      "en": "The teal is an opportunistic feeder, taking insects and their larvae, seeds and aquatic plants. It skims food from the surface or filters it through the comb-like plates of its bill. Ducklings eat mostly insect larvae at first.",
+      "fr": "La sarcelle se nourrit de façon opportuniste : insectes et leurs larves, graines et plantes aquatiques. Elle prélève sa nourriture à la surface ou la filtre à travers les lamelles de son bec. Les canetons mangent surtout des larves d’insectes au début."
+    },
+    "behavior": {
+      "en": "Winter flocks are made up largely of birds from around the Baltic and Siberia. Numbers in Britain peak between October and February, and the species is scarce in summer. Teal gather in large groups, which helps them find food and spot danger, and they rarely dive except to escape predators.",
+      "fr": "Les groupes d’hiver sont formés en grande partie d’oiseaux venus de la Baltique et de Sibérie. Les effectifs britanniques culminent entre octobre et février, et l’espèce est rare en été. Les sarcelles se rassemblent en grands groupes, ce qui les aide à trouver de la nourriture et à repérer les dangers, et elles plongent rarement, sauf pour échapper aux prédateurs."
+    },
+    "reproduction": {
+      "en": "In Britain a pair typically raises one brood a year. The female lays 8–11 eggs and incubates them alone for 21–23 days; the ducklings leave the nest soon after hatching and fledge at about 25–30 days. Teal can breed from one year of age.",
+      "fr": "En Grande-Bretagne, un couple élève en général une nichée par an. La femelle pond 8 à 11 œufs et les couve seule pendant 21 à 23 jours ; les canetons quittent le nid peu après l’éclosion et s’envolent à environ 25 à 30 jours. Les sarcelles peuvent se reproduire dès un an."
+    },
+    "ecology": {
+      "en": "Teal carry seeds in their droppings and feed alongside other dabbling ducks, sharing vigilance. Eagles, harriers and falcons hunt loafing birds, foxes take incubating females, and crows and other nest raiders eat eggs. The UK supports a significant share of the north-west European wintering population.",
+      "fr": "Les sarcelles transportent des graines dans leurs fientes et se nourrissent aux côtés d’autres canards de surface, partageant la vigilance. Aigles, busards et faucons chassent les oiseaux au repos, les renards prennent les femelles qui couvent, et les corneilles et autres pillards mangent les œufs. Le Royaume-Uni accueille une part importante de la population hivernante d’Europe du Nord-Ouest."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, but it is Amber-listed in the UK. About 2,700 pairs bred there in 2016, and about 435,000 birds wintered in 2012–17; the winter population rose by 14% between 1998 and 2023, though the breeding range has shrunk by 16.5% since 1968–72. The oldest ringed bird lived over 18 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste orange du Royaume-Uni. Environ 2 700 couples y ont niché en 2016, et environ 435 000 oiseaux y ont hiverné en 2012-2017 ; la population hivernale a augmenté de 14 % entre 1998 et 2023, alors que l’aire de reproduction a diminué de 16,5 % depuis 1968-1972. Le plus vieil oiseau bagué a vécu plus de 18 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Teal — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Sarcelle d’hiver — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/teal",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Males 336.2 g, wing 190.5 mm; females 302.8 g, wing 182.2 mm; 8–11 eggs, incubation 21–23 days, fledging 25–30 days.",
+        "UK breeding about 2,700 pairs (2016), winter about 435,000 (2012–17), winter +14% 1998–2023, breeding range -16.5%; peak October–February; record age 18 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Teal — RSPB",
+        "fr": "Sarcelle d’hiver — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/teal",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Small dabbling duck; males chestnut head with green eye patch, spotted chest, black-edged yellow tail; females mottled brown; both with green speculum.",
+        "Winter flocks largely continental birds from the Baltic and Siberia; Amber-listed because the UK holds a significant share of the north-west European wintering population."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anas crecca — Animal Diversity Web, University of Michigan",
+        "fr": "Anas crecca — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Anas_crecca/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Opportunistic feeder on insects, larvae, seeds and aquatic plants; filters food with bill lamellae; ducklings eat mostly insect larvae; rarely dives except to escape predators.",
+        "Sexual maturity at about one year; seed dispersal by droppings; raptors prey on loafing birds, foxes on incubating females, crows on eggs."
+      ]
+    },
+    {
+      "title": {
+        "en": "Teal — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Sarcelle d’hiver — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/teal",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "British adults average about 336 g and 190 mm wing length for males, versus 303 g and 182 mm for females."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account covers the species in the broad sense and its data are largely from North America (where the birds are now often treated as a separate species, the green-winged teal); only generic, qualitative facts were used.",
+    "BTO gives about 4,000 breeding pairs in its introduction and 2,700 (range 2,700–4,750) in the population section; the latter was used.",
+    "Predator examples are general and not all apply to Britain."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB and ADW used for qualitative facts; illustration to be checked by the owner."
+}

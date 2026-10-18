@@ -1,0 +1,165 @@
+{
+  "id": "macaria_brunneata",
+  "scientific": "Macaria brunneata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rannoch Looper",
+    "fr": "Arpenteuse brune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Rannoch Looper is a geometrid moth recorded here under the catalogue name Macaria brunneata; a 2024 molecular revision transferred it to Speranza.",
+      "fr": "Le Rannoch Looper est un papillon de nuit géométridé répertorié ici sous le nom Macaria brunneata ; une révision moléculaire de 2024 l’a transféré dans le genre Speranza."
+    },
+    "identification": {
+      "en": "In Britain, adults are day-flying and often rest with their wings held closed like a butterfly.",
+      "fr": "En Grande-Bretagne, les adultes volent le jour et se reposent souvent les ailes fermées, à la manière d’un papillon diurne."
+    },
+    "habitat": {
+      "en": "In Britain it is associated with mature woodland in central Scotland, although occasional migrants are recorded farther south.",
+      "fr": "En Grande-Bretagne, il est associé aux boisements matures du centre de l’Écosse, même si des migrateurs occasionnels sont observés plus au sud."
+    },
+    "diet": {
+      "en": "The caterpillars feed on bilberry, Vaccinium myrtillus.",
+      "fr": "Les chenilles se nourrissent de myrtille, Vaccinium myrtillus."
+    },
+    "behavior": {
+      "en": "Adults appear in June and July in Britain and fly by day.",
+      "fr": "En Grande-Bretagne, les adultes apparaissent en juin et juillet et volent de jour."
+    },
+    "reproduction": {
+      "en": "The available accounts identify bilberry as the larval food plant but do not establish clutch size or brood number.",
+      "fr": "Les fiches disponibles indiquent la myrtille comme plante nourricière des chenilles, mais ne précisent ni la taille des pontes ni le nombre de générations."
+    },
+    "ecology": {
+      "en": "Older checklists grouped it with Epelis carbonaria under Macaria, but recent molecular taxonomy places them in separate genera.",
+      "fr": "Les anciennes listes regroupaient l’espèce avec Epelis carbonaria dans Macaria, mais la taxonomie moléculaire récente les place dans des genres distincts."
+    },
+    "conservation": {
+      "en": "Butterfly Conservation assigns the Rannoch Looper medium threat priority in its Scotland strategy; this is a regional planning priority, not a global Red List category.",
+      "fr": "Butterfly Conservation attribue au Rannoch Looper une priorité moyenne dans sa stratégie écossaise ; il s’agit d’une priorité régionale de planification, et non d’une catégorie mondiale de Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rannoch Looper — UKMoths",
+        "fr": "Rannoch Looper — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-brunneata/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Adults fly by day in June–July in Britain, often resting with wings closed; British populations are associated with mature central Scottish woodland and larvae feed on bilberry."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 27,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny of north European Geometridae — Systematic Entomology",
+        "fr": "Phylogénie moléculaire des Géométridés d’Europe du Nord — Systematic Entomology"
+      },
+      "url": "https://doi.org/10.1111/syen.12638",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Õunap et al. (2024) reinstated Speranza and transferred Macaria brunneata and M. carbonaria into Speranza and Epelis, respectively."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 18,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scotland Conservation Strategy — Butterfly Conservation",
+        "fr": "Stratégie de conservation de l’Écosse — Butterfly Conservation"
+      },
+      "url": "https://butterfly-conservation.org/sites/default/files/2024-02/Scotland%20Conservation%20Strategy%202025.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The strategy table assigns Rannoch Looper medium threat priority in Scotland; this is not a global IUCN category."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 18,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arpenteuse brune — IRIIS, MAPAQ",
+        "fr": "Arpenteuse brune — IRIIS, MAPAQ"
+      },
+      "url": "https://iriisphytoprotection.qc.ca/fr/insectes-et-autres-invertebres/ravageur/arpenteuse-brune",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French-language MAPAQ account treats the species as Speranza brunneata and provides an independent adult and larval description from North America."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The project’s illustrated-species inventory still uses Macaria brunneata, while recent molecular taxonomy uses Speranza brunneata; the inventory label is retained for taxon matching.",
+    "British distribution and flight-season details are regional and should not be generalized to the full Holarctic range.",
+    "No current species-specific global conservation assessment or full reproductive account was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomic transfer checked against the 2024 molecular paper and 2025 Scottish strategy; compared with Epelis carbonaria without treating the former genus as current close kinship."
+}

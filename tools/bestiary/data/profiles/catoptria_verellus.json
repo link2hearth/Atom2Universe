@@ -1,0 +1,143 @@
+{
+  "id": "catoptria_verellus",
+  "scientific": "Catoptria verellus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Marbled Grass-veneer",
+    "fr": "Crambus enfumé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Catoptria verellus is a small European grass-veneer moth in the family Crambidae, known in French as crambus enfumé.",
+      "fr": "Catoptria verellus est un petit papillon européen de la famille des Crambidae, appelé crambus enfumé en français."
+    },
+    "identification": {
+      "en": "Its wingspan is about 17–18 mm; the forewings are brown with pale markings, giving a marbled appearance.",
+      "fr": "Son envergure est d’environ 17 à 18 mm ; les ailes antérieures sont brunes avec des marques pâles qui donnent un aspect marbré."
+    },
+    "habitat": {
+      "en": "It occurs in varied European habitats; larvae are associated with mosses growing on tree trunks.",
+      "fr": "Elle vit dans divers milieux européens ; les chenilles sont associées aux mousses qui poussent sur les troncs."
+    },
+    "diet": {
+      "en": "The caterpillars feed on mosses, including those growing on apple, plum and poplar trees.",
+      "fr": "Les chenilles mangent des mousses, notamment celles qui poussent sur les pommiers, pruniers et peupliers."
+    },
+    "behavior": {
+      "en": "Adults come to light and are recorded mainly in early summer, with later flight possible in mild weather.",
+      "fr": "Les adultes viennent à la lumière et sont observés surtout au début de l’été, avec des vols plus tardifs possibles par temps doux."
+    },
+    "reproduction": {
+      "en": "Larvae develop on moss substrates; detailed species-specific egg and pupal timing is not established by the accounts consulted.",
+      "fr": "Les larves se développent sur les mousses ; les sources consultées ne précisent pas le calendrier des œufs et des chrysalides."
+    },
+    "ecology": {
+      "en": "It belongs to Catoptria, a genus of grass-veneer moths; the related C. pinella is another European congener but its larvae use different plant substrates.",
+      "fr": "Elle appartient à Catoptria, genre de crambus ; C. pinella est une autre espèce européenne du genre, mais ses chenilles utilisent d’autres supports végétaux."
+    },
+    "conservation": {
+      "en": "No species-specific conservation assessment was located; the Belgian catalogue describes it as common there, which does not establish status across its full range.",
+      "fr": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; le catalogue belge la dit commune dans ce pays, sans établir son statut sur toute son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Catoptria verellus — Belgian Lepidoptera Catalogue",
+        "fr": "Catoptria verellus — Catalogue belge des Lépidoptères"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5745/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian catalogue provides classification, wingspan, seasonal records and several European-language names.",
+        "Regional catalogue lists native occurrence and calls it common in Belgium."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 22,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catoptria verellus — lepinet.fr",
+        "fr": "Catoptria verellus — lepinet.fr"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=24000",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "French moth account states that caterpillars feed on mosses on tree trunks."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 12,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catoptria verellus — Lepiforum",
+        "fr": "Catoptria verellus — Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Catoptria_verellus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German-language specialist record supports identification and moth phenology."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 8,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Phenology and local abundance depend on region; no range-wide trend or conservation category was found.",
+    "The exact French common name differs between sources; crambus enfumé is used by the French specialist account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Belgian catalogue and French lepinet.fr with German Lepiforum. C. pinella is mentioned as a congener without transferring its host-plant details."
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2614,
+  "name": "cave_crystal",
+  "texture_top": "underground:crystal",
+  "texture_side": "underground:crystal",
+  "texture_bottom": "underground:crystal",
+  "color": "#A5C9D9",
+  "hardness": 2.0,
+  "drop": "cave_crystal",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": ["stone"]
+}

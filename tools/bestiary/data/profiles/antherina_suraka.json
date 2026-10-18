@@ -1,0 +1,207 @@
+{
+  "id": "antherina_suraka",
+  "scientific": "Antherina suraka",
+  "group": "invertebrates",
+  "name": {
+    "en": "Madagascar Bullseye Moth",
+    "fr": "Bombyx de Madagascar"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large saturniid moth is native to Madagascar and the Comoros, where it occupies several climate and forest regions.",
+      "fr": "Ce grand papillon de nuit saturniidé est originaire de Madagascar et des Comores, où il occupe plusieurs régions climatiques et forestières."
+    },
+    "identification": {
+      "en": "Adults have broad, scalloped wings in tones ranging from pale ochre to deep brown, with a small translucent-looking spot on each forewing and a much larger ringed eyespot on each hindwing. Eastern Madagascar specimens of the typical form average about 105 mm in wingspan; the Comorian subspecies Antherina suraka comorana is larger at about 125–130 mm and has paler, more ochre forewings. Males tend to have more falcate forewing tips and longer comb-like antenna branches, while females have shorter antennal branches; the available sources do not provide a reliable sex-specific body length, body width, height, or mass.",
+      "fr": "L’adulte porte de larges ailes festonnées, de l’ocre pâle au brun foncé, avec un petit point translucide sur chaque aile antérieure et un grand ocelle cerclé sur chaque aile postérieure. Les spécimens de la forme typique de l’est de Madagascar ont une envergure moyenne d’environ 105 mm; la sous-espèce comorienne Antherina suraka comorana est plus grande, autour de 125 à 130 mm, et possède des ailes antérieures plus claires, jaune ocré. Les pointes des ailes antérieures des mâles sont généralement plus falquées et leurs antennes plus longuement pectinées, tandis que les branches antennaires des femelles sont plus courtes; les sources consultées ne donnent pas de longueur corporelle, largeur, hauteur ou masse fiable selon le sexe."
+    },
+    "habitat": {
+      "en": "On Madagascar it occurs across humid, subhumid, dry, and subarid regions, from near sea level to about 1,900 m elevation. Typical populations favor humid evergreen forests; smaller western forms occur in dry deciduous forest, and the Comorian subspecies also inhabits degraded woodland and urban trees.",
+      "fr": "À Madagascar, l’espèce est signalée dans les régions humides, subhumides, sèches et subarides, depuis le niveau de la mer jusqu’à environ 1 900 m d’altitude. Les populations typiques fréquentent les forêts sempervirentes humides; les formes occidentales plus petites vivent en forêt sèche décidue, et la sous-espèce comorienne occupe aussi des bois dégradés et des arbres urbains."
+    },
+    "diet": {
+      "en": "The caterpillar is strongly polyphagous: field observations and rearing records list host plants from 23 families. Examples include Maesa, Strophanthus, Eugenia, Schinus, oleander, grapevine, and several fruit trees, so it is not tied to a single tree species.",
+      "fr": "La chenille est très polyphage : les observations de terrain et d’élevage recensent des plantes hôtes appartenant à 23 familles. Parmi les exemples figurent Maesa, Strophanthus, Eugenia, Schinus, le laurier-rose, la vigne et plusieurs arbres fruitiers; elle ne dépend donc pas d’une seule espèce végétale."
+    },
+    "behavior": {
+      "en": "Males are attracted to light, but the hour at which they arrive varies by region: one field study caught western males mostly around 10–11 at night and eastern or central males around midnight to 1 after midnight. These are local light-trap observations, not a fixed schedule for every individual.",
+      "fr": "Les mâles sont attirés par la lumière, mais leur heure d’arrivée varie selon la région : une étude de terrain a capturé surtout les mâles de l’ouest vers 22–23 h, et ceux de l’est ou du centre vers minuit–1 h. Il s’agit d’observations locales au piège lumineux, pas d’un horaire fixe pour chaque individu."
+    },
+    "reproduction": {
+      "en": "The caterpillar spins a yellowish, net-like cocoon with two layers, within which the pupa develops.",
+      "fr": "La chenille tisse un cocon jaunâtre en réseau, constitué de deux enveloppes, où se développe la chrysalide."
+    },
+    "ecology": {
+      "en": "The Comorian population is treated as the subspecies Antherina suraka comorana, while the smaller western “australis” form is not formally recognized as a separate species. A 2016 barcode study found regional lineages but judged the evidence insufficient to split them into species.",
+      "fr": "La population des Comores est traitée comme la sous-espèce Antherina suraka comorana, tandis que la forme occidentale plus petite dite « australis » n’est pas formellement reconnue comme une espèce distincte. Une étude de 2016 par codes-barres génétiques a relevé des lignées régionales, mais juge les données insuffisantes pour les séparer en espèces."
+    },
+    "conservation": {
+      "en": "Researchers document forest loss across parts of its range and argue that habitat protection matters for preserving regional diversity.",
+      "fr": "Les chercheurs documentent la perte de forêts dans certaines parties de son aire et soulignent que leur protection compte pour préserver la diversité régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Intraspecific Variation in Antherina suraka — Annals of the Entomological Society of America",
+        "fr": "Variation intraspécifique chez Antherina suraka — Annals of the Entomological Society of America"
+      },
+      "url": "https://doi.org/10.1093/aesa/saw006",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed article; regional male flight times and barcode-lineage analysis."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 9,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antherina suraka comorana from the Comoros — Bulletin de la Société entomologique de France",
+        "fr": "L’Antherina suraka de l’archipel des Comores — Bulletin de la Société entomologique de France"
+      },
+      "url": "https://www.persee.fr/doc/bsef_0037-928x_1965_num_70_1_20795",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Article taxonomique français; compares the Comorian subspecies with eastern Madagascar by wingspan and wing color."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 15,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Insectes Lépidoptères Eupterotidae et Attacidae — ORSTOM/IRD monograph",
+        "fr": "Insectes Lépidoptères Eupterotidae et Attacidae — monographie ORSTOM/IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers20-09/06696.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Monographie française; adult wing pattern and sex differences, larval cocoon, host examples, and two plateau generations."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 16,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Host Plant Records of Antherina suraka — Journal of the Lepidopterists’ Society",
+        "fr": "Plantes hôtes d’Antherina suraka — Journal of the Lepidopterists’ Society"
+      },
+      "url": "https://doi.org/10.18473/lepi.v68i2.a6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Peer-reviewed survey updates host plants from field records across Madagascar and documents hosts in 23 plant families."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 17,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Intraspecific Variation in Antherina suraka — University of Illinois Experts",
+        "fr": "Variation intraspécifique chez Antherina suraka — University of Illinois Experts"
+      },
+      "url": "https://experts.illinois.edu/en/publications/intraspecific-variation-in-antherina-suraka-lepidoptera-saturniid/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "University of Illinois record of the 2016 peer-reviewed study; species range, habitats and forest-loss context."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 15,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the broad, rounded wings in a natural ochre-brown phase, with a small forewing eyespot and a larger, vividly ringed hindwing eyespot. A small inset can contrast the larger, paler Comorian subspecies; avoid presenting the western australis form as a separate species.",
+  "uncertainties": [
+    "The 105 mm wingspan refers to typical eastern Malagasy populations; the 125–130 mm figure is for the Comorian subspecies. The paper also describes smaller dry-region western specimens but does not give a comparable sex-specific range for them.",
+    "A 2016 molecular study found regional genetic structure but explicitly called for more data before taxonomic division. The Comorian subspecies name is established in the cited literature, while the western australis form is not formally recognized as a separate species.",
+    "No dependable mass, body length, height, or width by sex, nor a current global IUCN category, was located in the sources used."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked a 2016 peer-reviewed population study, a peer-reviewed host-plant survey, French taxonomic literature from Persée and an ORSTOM/IRD morphology monograph. Kept population-level wingspans separate from sex differences and distinguished the Comorian subspecies from the unrecognized western form."
+}

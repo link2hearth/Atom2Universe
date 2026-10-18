@@ -1,0 +1,141 @@
+{
+  "id": "pterapherapteryx_sexalata",
+  "scientific": "Pterapherapteryx sexalata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Small seraphim",
+    "fr": "Phalène à six ailes"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pterapherapteryx sexalata is a geometrid moth ranging across much of Europe and eastwards into Siberia.",
+      "fr": "Pterapherapteryx sexalata est un géomètre présent dans une grande partie de l’Europe et jusque vers la Sibérie."
+    },
+    "identification": {
+      "en": "It is a small moth with a wingspan of about twenty-two to twenty-six millimetres.",
+      "fr": "C’est un petit papillon de nuit dont l’envergure atteint environ vingt-deux à vingt-six millimètres."
+    },
+    "habitat": {
+      "en": "It favours damp places where willows grow, including woodland, hedgerows, fens, wetlands and riverbanks.",
+      "fr": "Elle préfère les lieux humides où poussent des saules, notamment les bois, haies, marais, zones humides et berges."
+    },
+    "diet": {
+      "en": "The caterpillars feed on willows (Salix); British records call sallow the larval foodplant.",
+      "fr": "Les chenilles se nourrissent de saules (Salix); les sources britanniques citent le saule marsault comme plante hôte."
+    },
+    "behavior": {
+      "en": "In southern England there are usually two broods; elsewhere in Britain, a single brood is more usual.",
+      "fr": "Dans le sud de l’Angleterre, il y a généralement deux générations; ailleurs en Grande-Bretagne, une seule est plus habituelle."
+    },
+    "reproduction": {
+      "en": "The pupa overwinters, and the caterpillars feed in autumn on their willow hosts.",
+      "fr": "La chrysalide hiverne, et les chenilles se nourrissent en automne sur leurs saules hôtes."
+    },
+    "ecology": {
+      "en": "The moth is associated with wet, willow-rich habitats; records from Britain show that local flight periods vary within the country.",
+      "fr": "Cette phalène est liée aux milieux humides riches en saules; les observations britanniques montrent que la période de vol varie selon les régions."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found in the sources consulted.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Small Seraphim — UKMoths",
+        "fr": "Phalène à six ailes — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/pterapherapteryx-sexalata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "UK account: adult size, British flight broods, habitats, willow host and overwintering pupa."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 13,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pterapherapteryx sexalata — European Lepidoptera and their ecology",
+        "fr": "Pterapherapteryx sexalata — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://www.pyrgus.de/Pterapherapteryx_sexalata_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "German/English account: range, habitat, host and pupa."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 7,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Belgian Lepidoptera Catalogue: Pterapherapteryx sexalata",
+        "fr": "Catalogue des Lépidoptères de Belgique : Pterapherapteryx sexalata"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4644/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Belgian catalogue classifies it in Geometridae, subfamily Larentiinae."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Number of broods is region-dependent; the two-brood pattern is reported for southern England only."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. British brood timing is kept regional and cross-checked against a German-language ecology account."
+}

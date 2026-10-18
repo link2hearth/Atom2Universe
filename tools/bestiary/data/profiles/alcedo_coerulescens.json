@@ -1,0 +1,238 @@
+{
+  "id": "alcedo_coerulescens",
+  "scientific": "Alcedo coerulescens",
+  "group": "birds",
+  "name": {
+    "en": "Cerulean kingfisher",
+    "fr": "Martin-pêcheur aigue-marine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The cerulean kingfisher is a very small member of the kingfisher family, Alcedinidae. Its natural range is restricted to Indonesia, including southern Sumatra, Java, Bali and islands east toward Flores.",
+      "fr": "Le martin-pêcheur aigue-marine est un très petit représentant de la famille des Alcédinidés. Son aire naturelle est limitée à l’Indonésie, notamment au sud de Sumatra, à Java, Bali et aux îles orientales jusqu’à Flores."
+    },
+    "identification": {
+      "en": "It is a tiny, compact kingfisher with bright blue to turquoise upperparts, a narrow blue breast band, and white throat, face patches and underparts. The dark bill is long and pointed; the legs are reddish brown. Adults measure about 13–14 cm and weigh around 35 g; these references give no standard wingspan, body height or width. Males are usually bluer, while females have a greener cast and a narrower breast band; juveniles are duller, greyish and may lack a clear band. These contrasts help separate it from the dark, blue-eared kingfisher and from larger, white-and-orange common kingfishers.",
+      "fr": "Ce minuscule martin-pêcheur compact a le dessus bleu vif à turquoise, une étroite bande bleue sur la poitrine, la gorge, des taches faciales et le dessous blancs. Son bec sombre est long et pointu; ses pattes sont brun-rouge. L’adulte mesure environ 13 à 14 cm et pèse autour de 35 g; les sources ne donnent pas d’envergure, de hauteur ou de largeur corporelle standard. Le mâle est généralement plus bleu, tandis que la femelle tire davantage sur le vert avec une bande pectorale plus étroite; le jeune est plus terne et grisâtre, avec une bande parfois peu visible. Ces différences aident à le distinguer du martin-pêcheur méninting, plus sombre, et du martin-pêcheur d’Europe, plus grand, blanc et orangé."
+    },
+    "habitat": {
+      "en": "It lives beside coastal marshes, mangroves, estuaries, small streams, canals, ponds and fishponds, using both fresh and brackish water. Records extend from southern Sumatra and Java through Bali and the Lesser Sunda Islands, with local reports reaching Flores.",
+      "fr": "Il vit au bord des marais côtiers, mangroves, estuaires, petits cours d’eau, canaux, étangs et bassins piscicoles, en eau douce comme saumâtre. Les observations s’étendent du sud de Sumatra et de Java à Bali et aux petites îles de la Sonde, avec des mentions jusqu’à Flores."
+    },
+    "diet": {
+      "en": "It takes small fish, aquatic insects and crustaceans. It watches from a waterside perch and plunges for prey; over open water it may hover briefly before diving.",
+      "fr": "Il capture de petits poissons, des insectes aquatiques et des crustacés. Il guette depuis un perchoir près de l’eau puis plonge sur sa proie; au-dessus des eaux dégagées, il peut brièvement faire du surplace avant de piquer."
+    },
+    "behavior": {
+      "en": "The bird often sits on low branches or posts beside water, then dives rapidly after prey. Field observations from Java also describe short hovering dives, sometimes from about 2–4 m above the water; this is a locally documented hunting technique, not a claim that it hovers constantly.",
+      "fr": "Il se perche souvent sur une branche basse ou un piquet au bord de l’eau, puis plonge rapidement sur sa proie. Des observations à Java décrivent aussi de brefs plongeons après un vol stationnaire, parfois à environ 2–4 m au-dessus de l’eau; cette technique est documentée localement et ne signifie pas qu’il plane en permanence."
+    },
+    "reproduction": {
+      "en": "In Java, breeding has been recorded in April–June, August and October, so the available records do not indicate one short, island-wide season. The pair excavates a sloping tunnel in an earthen bank; reported clutches contain three to six white eggs.",
+      "fr": "À Java, des reproductions ont été relevées d’avril à juin, en août et en octobre; les données disponibles n’indiquent donc pas une seule courte saison valable partout. Le couple creuse un tunnel incliné dans une berge terreuse; les pontes signalées comptent trois à six œufs blancs."
+    },
+    "ecology": {
+      "en": "Field observations on Java’s north coast found it hunting from perches around mangrove creeks, mudflats and fishponds, then hovering briefly and diving for aquatic prey.",
+      "fr": "Sur la côte nord de Java, des observations l’ont vu chasser depuis des perchoirs près des ruisseaux de mangrove, vasières et bassins piscicoles, puis brièvement faire du surplace et plonger sur des proies aquatiques."
+    },
+    "conservation": {
+      "en": "The Indonesian biodiversity record lists the species as Least Concern, and an Indonesian fauna guide quotes a 2019 summary as Least Concern with a stable trend. This is a dated broad assessment and does not establish the trend of every local wetland population.",
+      "fr": "La fiche indonésienne de biodiversité classe l’espèce en préoccupation mineure, et un guide faunistique indonésien cite un résumé de 2019 indiquant cette catégorie avec une tendance stable. Cette évaluation générale et datée ne détermine pas la tendance de chaque population locale de zone humide."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cerulean Kingfisher — eBird, Cornell Lab of Ornithology",
+        "fr": "Martin-pêcheur aigue-marine — eBird, laboratoire d’ornithologie de Cornell"
+      },
+      "url": "https://ebird.org/species/smbkin1?siteLanguage=en_IN",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Merlin-powered eBird identification describes plumage, sex differences, habitats and perch-and-hover hunting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 11,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cerulean Kingfisher — Oiseaux.net",
+        "fr": "Martin-pêcheur aigue-marine — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/martin-pecheur.aigue-marine.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French species account: about 13 cm, reported mass 34.9 g; female greener with a narrower breast band; dull juveniles."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 19,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hovering Cerulean Kingfishers — Forktail",
+        "fr": "Vol stationnaire du martin-pêcheur aigue-marine — Forktail"
+      },
+      "url": "https://www.researchgate.net/publication/236856372_Hovering_Cerulean_Kingfishers",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Bas van Balen’s 1998 field note: coastal Java and western Lesser Sunda sites; aquatic prey, waterside perches and hovering dives over open water."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 23,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Raja-udang biru — Cirebon Power fauna guide",
+        "fr": "Martin-pêcheur bleu — guide faunistique de Cirebon Power"
+      },
+      "url": "https://www.cirebonpower.co.id/wp-content/uploads/Buku-Fauna-CEP-2019.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Indonesian-language guide lists mangroves, coastal marshes and estuaries; range in Sumatra, Java, Bali, Lombok and Sumbawa; 2019 LC/stable summary."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 19,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Raja-udang biru — Ayo Ketaman biodiversity profile",
+        "fr": "Raja-udang biru — fiche biodiversité Ayo Ketaman"
+      },
+      "url": "https://ayoketaman.com/web/satwa/b0ZsRWI5dWZDdmE2TzB1R09ySW9Sdz09",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Indonesian account based on the LIPI field guide and Burungnesia: prey, bank burrows, 3–6 eggs and Java breeding records."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 19,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alcedo coerulescens — Biodiversitas Nusantara, species record",
+        "fr": "Alcedo coerulescens — fiche Biodiversitas Nusantara"
+      },
+      "url": "https://www.gbif.co.id/spesies/alcedo-coerulescens",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Accepted taxon, Indonesian distribution and vernacular names; current displayed IUCN category is Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 14,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Cerulean Kingfisher (Alcedo coerulescens), isolated full-body naturalistic field-guide view on a pure white background: extremely small compact kingfisher perched in a natural upright posture; turquoise to sky-blue crown, back and wings, narrow blue-green chest band, snowy white throat, facial patches and belly, long straight dark bill with subtle reddish lower-base mark, dark brown-red short legs. A small white patch is visible at the side of the neck. No orange belly, large body, long crest, or broad white collar. Accurate bird anatomy and proportion.",
+  "uncertainties": [
+    "Adult length is reported as 13 cm by Oiseaux.net and about 14 cm in Indonesian references; body length is therefore given as an approximate 13–14 cm. Oiseaux.net reports 34.9 g, but a robust sex-specific mass range was not found.",
+    "No standard wingspan, body-height or body-width measurement was located in the consulted species sources.",
+    "The breeding months cited are Java records; breeding timing elsewhere in the Indonesian range may differ.",
+    "The stable population trend in the Cirebon guide is a 2019 summary, not a current local trend estimate."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Cross-checked the English Cornell eBird account, French Oiseaux.net species entry, Indonesian field references and a published field note; sex, size, range and locality limits are stated explicitly."
+}

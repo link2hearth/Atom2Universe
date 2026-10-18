@@ -1,0 +1,390 @@
+{
+  "id": "eurasian_jay",
+  "scientific": "Garrulus glandarius",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian jay",
+    "fr": "Geai des chênes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian jay is a woodland corvid whose conspicuous blue wing patch contrasts with a life spent moving quietly through foliage. It forages both in trees and on the ground, shifting between seasonal food sources across its broad Eurasian range. Its reputation as an acorn carrier is well earned, but insects, fruits, seeds and animal prey also shape its diet and ecological effects.",
+      "fr": "Le Geai des chênes est un corvidé forestier dont la tache bleue très visible contraste avec une vie souvent discrète dans le feuillage. Il cherche sa nourriture dans les arbres et au sol, en passant d’une ressource saisonnière à l’autre sur une vaste aire eurasiatique. Sa réputation de transporteur de glands est fondée, mais les insectes, les fruits, les graines et les proies animales comptent aussi dans son alimentation et ses effets écologiques."
+    },
+    "identification": {
+      "en": "In the European form, the body is warm pinkish brown, with a pale throat, black facial moustache and a crown of black-and-white streaked feathers that can be raised. The folded wing shows a vivid blue panel barred with black, beside white and black markings; in flight, the white rump flashes against the dark tail. In the British sample, adults averaged 167 grams; 90% of the 1,113 recorded weights fell between 144 and 189 grams. In northern Europe and France the nominate form has a pale, black-spotted crown, while British island forms are darker russet. The European form is about 34 cm long; British adults averaged 167 g (90% of recorded weights: 144–189 g).",
+      "fr": "Chez la forme européenne, le corps est brun rosé chaud, avec la gorge pâle, une moustache noire et une calotte de plumes striées de noir et de blanc qu’il peut redresser. L’aile repliée montre un panneau bleu vif barré de noir, près de marques blanches et noires ; en vol, le croupion blanc tranche sur la queue sombre. Dans l’échantillon britannique, les adultes pesaient en moyenne 167 grammes ; 90 % des 1 113 poids relevés se situaient entre 144 et 189 grammes. En Europe du Nord et en France, la forme nominale porte une calotte pâle tachetée de noir, tandis que les formes des îles Britanniques sont d’un roux plus sombre. La forme européenne mesure environ 34 cm ; les adultes britanniques pesaient en moyenne 167 g (90 % des poids relevés : 144–189 g)."
+    },
+    "habitat": {
+      "en": "The species ranges from western Europe and North Africa east through much of temperate Asia, with local forms differing across this enormous span. It occupies mature deciduous, mixed and conifer woods, as well as parks and wooded farmland with cover.",
+      "fr": "L’espèce s’étend de l’Europe occidentale et de l’Afrique du Nord vers l’est à travers une grande partie de l’Asie tempérée, avec des formes locales qui varient sur cette vaste aire. Elle fréquente les forêts matures de feuillus, mixtes et de conifères, ainsi que les parcs et campagnes arborées offrant un abri."
+    },
+    "diet": {
+      "en": "This omnivore takes insects and other invertebrates, especially during the breeding season, as well as acorns, beech nuts, seeds, berries and cultivated fruit. It searches foliage and branches for caterpillars and beetle larvae, probes leaf litter and soil, and takes eggs or nestlings when opportunities arise. A strong bill helps open hard foods, while its seasonal variety reduces dependence on any single crop and supplies protein to growing chicks.",
+      "fr": "Cet omnivore consomme des insectes et d’autres invertébrés, surtout pendant la reproduction, ainsi que des glands, faînes, graines, baies et fruits cultivés. Il explore le feuillage et les branches à la recherche de chenilles et de larves de coléoptères, fouille la litière et le sol, et prend parfois des œufs ou des oisillons. Son bec puissant ouvre les aliments durs, tandis que cette diversité saisonnière réduit sa dépendance envers une seule récolte et fournit des protéines aux poussins en croissance."
+    },
+    "behavior": {
+      "en": "A rough, rasping screech often gives away a bird hidden in the canopy; calls can alert nearby animals, and playback experiments found that red squirrels increased vigilance or fled after hearing jay alarms. In autumn, jays carry acorns away from oak crowns and bury them singly or in small caches, then retrieve many later. In a laboratory food-hiding task, seven jays that watched an experimenter hide mealworms under cups later used incidental visual details of that event in an unexpected test after a delay.",
+      "fr": "Un cri rauque et râpeux révèle souvent un oiseau dissimulé dans la cime ; les appels peuvent alerter les animaux voisins, et des expériences de diffusion sonore ont montré que les écureuils roux devenaient plus vigilants ou fuyaient après des cris d’alarme du geai. En automne, les geais emportent les glands loin des chênes et les enterrent seuls ou en petits dépôts, puis en récupèrent beaucoup par la suite. Dans une expérience de laboratoire, sept geais ayant observé un expérimentateur cacher des vers de farine sous des coupelles ont ensuite utilisé des détails visuels accessoires de cet événement lors d’un test inattendu après un délai."
+    },
+    "reproduction": {
+      "en": "Pairs usually produce one brood a year, laying commonly four or five eggs in a well-concealed nest of twigs in a tree or shrub. Both sexes incubate for about 18 days, and the naked, helpless nestlings typically remain in the nest for roughly 21 days before fledging. Parents continue feeding young after they leave, while breeding timing and success vary with food and local conditions.",
+      "fr": "Les couples élèvent généralement une seule nichée par an et pondent le plus souvent quatre ou cinq œufs dans un nid de brindilles bien caché, dans un arbre ou un arbuste. Les deux sexes couvent pendant environ 18 jours ; les oisillons nus et dépendants restent normalement au nid près de 21 jours avant l’envol. Les parents continuent de nourrir les jeunes après leur départ, tandis que le calendrier et la réussite varient avec la nourriture et les conditions locales."
+    },
+    "ecology": {
+      "en": "By carrying viable acorns and burying them away from parent trees, jays provide seed dispersal: some unrecovered seeds can germinate in suitable conditions and establish new oaks. In a four-country Central European field study, jays foraged on oak trees whose acorns were narrower than those on the nearest unused trees. Nest cameras in Britain and Ireland also recorded jays taking songbird broods, showing how seed dispersal coexists with predation on other birds. A diet study in southern Finland recorded Eurasian jays among the prey of northern goshawks.",
+      "fr": "En transportant des glands viables et en les enterrant loin des arbres parents, les geais dispersent les graines : certains glands oubliés peuvent germer dans des conditions favorables et donner de nouveaux chênes. Dans une étude de terrain menée dans quatre pays d’Europe centrale, les geais fréquentaient des chênes dont les glands étaient plus étroits que ceux des arbres voisins non utilisés. Des caméras de nids en Grande-Bretagne et en Irlande ont aussi filmé des geais prenant des nichées de passereaux, montrant que la dispersion des graines coexiste avec la prédation d’autres oiseaux. Une étude alimentaire menée dans le sud de la Finlande a recensé le Geai des chênes parmi les proies de l’Autour des palombes."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List assessment published in 2025 classifies the Eurasian jay as Least Concern. The 2021 European Red List classifies it as Least Concern with a stable EU population trend. European monitoring reported a moderate increase; in France, counts rose 23 percent between 2001 and 2019. These broad indicators do not describe every local population.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN publiée en 2025 classe le Geai des chênes en préoccupation mineure. La Liste rouge européenne de 2021 le classe en préoccupation mineure et indique une tendance stable pour sa population dans l’Union européenne. Le suivi européen signalait une hausse modérée ; en France, les effectifs ont augmenté de 23 % entre 2001 et 2019. Ces indicateurs généraux ne décrivent pas chaque population locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Garrulus glandarius (Eurasian Jay), Birds of Europe 3.1",
+        "fr": "Garrulus glandarius (geai des chênes), Birds of Europe 3.1"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130979",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "European field marks; 34 cm overall length.",
+        "European field account gives an overall length of about 34 cm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 18,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jay BirdFacts",
+        "fr": "Fiche BirdFacts du geai"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jay",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "British adult mean weight 167 g; 90% of 1,113 recorded weights were 144–189 g; incubation about 18 days and fledging about 21 days."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 23,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Garrulus glandarius, IUCN Red List assessment",
+        "fr": "Garrulus glandarius, évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T103723684A153832514.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global Least Concern classification in the 2025 assessment; assessment date and population trend not verified."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 15,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Garrulus glandarius, Animal Diversity Web",
+        "fr": "Garrulus glandarius, Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Garrulus_glandarius/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Omnivory includes acorns, invertebrates, fruit and occasional nest prey."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 9,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian jays show episodic-like memory through incidental encoding",
+        "fr": "La mémoire épisodique-like du geai par encodage incident"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11095760/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Seven jays used incidental visual details from an observed food-hiding event in an unexpected test after a delay."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 18,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red Squirrels Respond to Alarm Calls of Eurasian Jays",
+        "fr": "Les écureuils roux réagissent aux cris d’alarme des geais"
+      },
+      "url": "https://doi.org/10.1111/j.1439-0310.2006.01191.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback: seven of thirteen squirrels escaped after jay alarms."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 9,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging Eurasian Jays prefer oaks and acorns in central Europe",
+        "fr": "Les geais choisissent chênes et glands en Europe centrale"
+      },
+      "url": "https://doi.org/10.2478/orhu-2020-0010",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Four-country autumn field study found selected acorns narrower."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 8,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nest cameras identify predators of wild birds’ nests in Britain and Ireland",
+        "fr": "Les caméras de nids identifient les prédateurs en Grande-Bretagne et Irlande"
+      },
+      "url": "https://www.bto.org/our-work/science/publications/papers/identity-predators-bird-nests-british-islands",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Jay was a major recorded predator of passerine broods."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 9,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Geai des chênes, LPO species account",
+        "fr": "Fiche espèce du Geai des chênes, LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/geai-des-chenes",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Regional plumage differences; French count increase 23% from 2001 to 2019; European monitoring reported moderate increase."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 16,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jay Garrulus glandarius species account",
+        "fr": "Fiche espèce du geai Garrulus glandarius"
+      },
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/ganaderia/temas/produccion-y-mercados-ganaderos/caza/aspectos-generales/documentos/kcd_speciesaccounts_2021_11_14.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Broad Eurasian distribution; mature woodland use and juvenile independence period."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 10,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vulnerability of Prey Species to Predation by Two Sympatric Accipitrine Hawks in Rural and Peri-Urban Landscapes in Southern Finland",
+        "fr": "Vulnérabilité des proies à deux éperviers sympatriques dans le sud de la Finlande"
+      },
+      "url": "https://doi.org/10.3390/ani15040512",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Southern Finland goshawk diet included Eurasian jay prey."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 8,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021",
+        "fr": "Liste rouge européenne des oiseaux 2021"
+      },
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "EU Least Concern classification; stable EU population trend in 2021."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 10,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "European form: pink-brown body, raised striped crown, blue-black barred wing panel, pale throat, white rump and dark tail. Show the whole bird clearly; subspecies and plumage vary across the broad range.",
+  "uncertainties": [
+    "The 2025 global IUCN record supports Least Concern; its assessment date and population trend were not independently confirmed.",
+    "European measurements and breeding timings are regional samples and vary with subspecies, latitude, sex, season and year."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Corrected cited memory experiment to incidental visual details rather than unsupported what/where/when recall, explained BTO percentile sample, used actual2025 global assessment and removed interface workflow/legal speculation. Scoped acorn selection and predator studies; European adult illustration accepted independently."
+}

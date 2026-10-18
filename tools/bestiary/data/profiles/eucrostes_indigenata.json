@@ -1,0 +1,139 @@
+{
+  "id": "eucrostes_indigenata",
+  "scientific": "Eucrostes indigenata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rusty Emerald",
+    "fr": "Smaragdine rouillée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eucrostes indigenata is a Mediterranean geometrid moth recorded from Europe, North Africa and the eastern Mediterranean.",
+      "fr": "Eucrostes indigenata est un papillon de nuit géométridé méditerranéen, signalé en Europe, en Afrique du Nord et dans l’est méditerranéen."
+    },
+    "identification": {
+      "en": "The French lepidopterist account places it in Geometridae, subfamily Geometrinae, but gives no standard body measurements.",
+      "fr": "Le compte rendu lépidoptériste français le classe parmi les Geometridae, sous-famille Geometrinae, sans fournir de dimensions standard."
+    },
+    "habitat": {
+      "en": "French records shown by Lepinet are concentrated along the Mediterranean coast; the broader records span the Mediterranean region.",
+      "fr": "Les observations françaises affichées par Lepinet se concentrent sur le littoral méditerranéen; les données plus larges couvrent la région méditerranéenne."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on spurges, plants of the genus Euphorbia.",
+      "fr": "Ses chenilles se nourrissent d’euphorbes, des plantes du genre Euphorbia."
+    },
+    "behavior": {
+      "en": "LepiWiki documents adults as well as immature stages, including observations of adults attracted to light.",
+      "fr": "LepiWiki documente les adultes et les stades immatures, notamment des adultes observés attirés par la lumière."
+    },
+    "reproduction": {
+      "en": "The LepiWiki record includes eggs, caterpillars and pupae, but does not establish a complete seasonal breeding schedule.",
+      "fr": "La page LepiWiki présente des œufs, des chenilles et des chrysalides, sans établir un calendrier saisonnier complet de reproduction."
+    },
+    "ecology": {
+      "en": "The recorded larval association with Euphorbia links its development to spurge plants within its Mediterranean range.",
+      "fr": "L’association larvaire documentée avec les Euphorbia relie son développement aux euphorbes de son aire méditerranéenne."
+    },
+    "conservation": {
+      "en": "The sources consulted document taxonomy and regional occurrence but provide no current global population trend or status assessment.",
+      "fr": "Les sources consultées documentent la taxonomie et la présence régionale, mais ne donnent ni tendance mondiale actuelle ni évaluation du statut."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eucrostes indigenata — LepiWiki",
+        "fr": "Eucrostes indigenata — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Eucrostes_indigenata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "LepiWiki lists the species across Mediterranean Europe, North Africa and the eastern Mediterranean, with adult, larval, pupal and egg records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 20,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eucrostes indigenata — Les Carnets du Lépidoptériste Français",
+        "fr": "Eucrostes indigenata — Carnets du Lépidoptériste Français"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/?id=32180",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The French account places it in Geometridae and Geometrinae, names Euphorbia as larval food, and reports a Mediterranean-coast French distribution."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 20,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eucrostes — Lepidoptera and some other life forms",
+        "fr": "Eucrostes — Lepidoptera and some other life forms"
+      },
+      "url": "https://mirrors.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/geometroidea/geometridae/geometrinae/eucrostes/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomic catalogue records Eucrostes indigenata and its published synonymy; it is a checklist, not a population assessment."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked German-language LepiWiki records with a French lepidopterist account and a taxonomic catalogue. Biology beyond the larval host and recorded stages is sparsely summarized; no formal conservation category was found."
+}

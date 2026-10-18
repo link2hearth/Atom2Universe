@@ -1,0 +1,229 @@
+{
+  "id": "apistogramma_personata",
+  "scientific": "Apistogramma personata",
+  "group": "fish",
+  "name": {
+    "en": "Masked Dwarf Cichlid",
+    "fr": "Apistogramme masqué"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma personata is a small South American dwarf cichlid described by Sven Kullander in 1980. Its type locality is Assai on the Rio Uaupés in Amazonas, Brazil. The epithet personata means masked and refers to the band across the forehead between the eyes.",
+      "fr": "Apistogramma personata est un petit cichlidé nain sud-américain décrit par Sven Kullander en 1980. Sa localité type est Assai, sur le rio Uaupés, dans l’État d’Amazonas au Brésil. L’épithète personata signifie « masquée » et évoque la bande frontale entre les yeux."
+    },
+    "identification": {
+      "en": "The dark band between the eyes gives the fish its mask-like name. Adult males have elongated front dorsal-fin lappets and trailing rays on the caudal fin, features that make mature specimens easier to recognize. FishBase lists a maximum standard length of 5.2 cm for male or unsexed fish; it gives no reliable mass, width or body-height measurement.",
+      "fr": "La bande sombre entre les yeux donne au poisson son nom de « masqué ». Les mâles adultes ont les premiers rayons de la dorsale allongés et des rayons caudaux prolongés, des caractères qui facilitent l’identification des individus matures. FishBase indique une longueur standard maximale de 5,2 cm pour les mâles ou individus non sexés ; aucune masse, largeur ou hauteur corporelle fiable n’est fournie."
+    },
+    "habitat": {
+      "en": "The documented range is the upper Uaupés drainage, a tributary system of the Rio Negro in the Amazon basin. Swedish aquarium field notes describe shallow, slow blackwater reaches with soft, mildly acidic water and cover from roots, branches and leaf litter.",
+      "fr": "L’aire documentée couvre le haut bassin de l’Uaupés, un réseau d’affluents du rio Negro dans le bassin amazonien. Des observations aquariologiques suédoises décrivent des zones peu profondes et lentes, à eau noire douce et légèrement acide, avec des abris formés par les racines, les branches et la litière de feuilles."
+    },
+    "diet": {
+      "en": "No gut-content study exists; a specialist synthesis infers small-invertebrate feeding from related Apistogramma, rather than from direct measurements of this species.",
+      "fr": "Aucune étude du contenu digestif n’existe ; une synthèse spécialisée infère un régime de petits invertébrés par comparaison avec des Apistogramma apparentés, sans mesure directe chez cette espèce."
+    },
+    "behavior": {
+      "en": "Aquarium reports describe aggression between conspecifics, while field observations of wild social groups remain limited; captive behavior cannot represent the full natural pattern.",
+      "fr": "Des comptes rendus d’aquarium décrivent une agressivité entre individus de la même espèce, tandis que les observations de groupes sauvages restent limitées ; le comportement captif ne représente pas tout le comportement naturel."
+    },
+    "reproduction": {
+      "en": "Like other Apistogramma, it deposits eggs on the ceiling of a cave, where the female tends the clutch and larvae. The available species summary reports no clutch-size range for this fish.",
+      "fr": "Comme d’autres Apistogramma, elle dépose ses œufs au plafond d’une cavité, où la femelle veille sur la ponte puis les larves. La fiche d’espèce consultée ne donne pas de fourchette de taille de ponte pour ce poisson."
+    },
+    "ecology": {
+      "en": "Colombian fish from around Mitú are often labelled possible Apistogramma personata, but their identity with the Brazilian type population remains unconfirmed.",
+      "fr": "Des poissons colombiens des environs de Mitú sont souvent étiquetés comme Apistogramma personata probable, mais leur identité avec la population type du Brésil reste à confirmer."
+    },
+    "conservation": {
+      "en": "FishBase reports the global IUCN category Data Deficient, assessed on 7 November 2018. This status means the available information was insufficient to assess extinction risk, not that the species is known to be safe.",
+      "fr": "FishBase rapporte la catégorie mondiale UICN « données insuffisantes », évaluée le 7 novembre 2018. Ce statut signifie que les informations disponibles ne permettaient pas d’estimer le risque d’extinction, et non que l’espèce est reconnue comme hors de danger."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A taxonomic study of the genus Apistogramma — Bonner Zoologische Monographien",
+        "fr": "Étude taxonomique du genre Apistogramma — Bonner Zoologische Monographien"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Kullander described A. personata in 1980 from the Rio Uaupés."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 10,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma personata — FishBase species summary",
+        "fr": "Apistogramma personata — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/46675",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase provides size, spawning and IUCN status."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 7,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma personata — Nordiska Ciklidsällskapet species register",
+        "fr": "Apistogramma personata — registre de la société nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1576",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Swedish register describes the shallow, slow blackwater habitat and upper Uaupés range."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 13,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma personata — Aquarist Atlas species account",
+        "fr": "Apistogramma personata — fiche espèce Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-personata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The account distinguishes Brazilian personata from uncertain Colombian cf. personata fish and flags inferred diet and aquarium observations."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 18,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: Etymology of Cichlidae",
+        "fr": "ETYFish : étymologie des Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The species epithet means masked and refers to the band between the eyes across the forehead."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 16,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catalogues of recent fish types at the Royal Belgian Institute of Natural Sciences",
+        "fr": "Catalogues des types de poissons récents de l’Institut royal des Sciences naturelles de Belgique"
+      },
+      "url": "https://biblio.naturalsciences.be/rbins-publications/working-documents-of-the-royal-belgian-institute-of-natural-sciences/40-1987-catalogues-des-types-de-poissons-recents-de-linstitut-royal-des-sciences-naturelles-de-belgique/irscnb_p5535_025215x_40-5-69-red.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French type catalogue records the holotype from Assai on the Rio Uaupés, Amazonas, Brazil."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 15,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small, elongate dwarf cichlid with a dark mask-like band across the forehead between the eyes. Mature males have produced anterior dorsal-fin lappets and caudal streamers; include the lateral band and flank spot, and suggest a shallow, root- and leaf-strewn Uaupés tributary.",
+  "uncertainties": [
+    "FishBase gives 5.2 cm standard length for male or unsexed fish, but no reliable width, body height or mass measurement. Do not turn estimated genus-level length-weight models into a measured species weight.",
+    "Field and aquarium observations from Colombia often concern fish labelled cf. personata. Those records should not be treated as confirmed data for the Brazilian type population.",
+    "Diet and social observations are mostly inferred from relatives or reported in aquaria; species-specific field studies remain limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 1980 description, FishBase, Swedish and German-language aquarium material, and a French type catalogue. Kept the Colombian cf. personata population separate from confirmed records of the Brazilian nominal species."
+}

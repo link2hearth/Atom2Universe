@@ -1,0 +1,142 @@
+{
+  "id": "tholera_decimalis",
+  "scientific": "Tholera decimalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Feathered gothic",
+    "fr": "Noctuelle gothique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This noctuid moth ranges from the Iberian Peninsula eastward to Siberia.",
+      "fr": "Cette noctuelle est présente de la péninsule Ibérique jusqu’en Sibérie vers l’est."
+    },
+    "identification": {
+      "en": "UKMoths gives a wingspan of 32–45 mm and notes its grassland association; adult size alone does not separate it from T. cespitis.",
+      "fr": "UKMoths indique une envergure de 32 à 45 mm et son association aux prairies ; la taille seule ne le distingue pas de T. cespitis."
+    },
+    "habitat": {
+      "en": "In Britain it uses rough grassland and downland.",
+      "fr": "En Grande-Bretagne, il fréquente les prairies grossières et les coteaux herbeux."
+    },
+    "diet": {
+      "en": "Its larvae feed on grasses, including fescues.",
+      "fr": "Ses larves mangent des graminées, dont des fétuques."
+    },
+    "behavior": {
+      "en": "Adults fly mainly in August and September, and males are often attracted to lights.",
+      "fr": "Les adultes volent surtout en août et septembre, et les mâles sont souvent attirés par les lumières."
+    },
+    "reproduction": {
+      "en": "The caterpillar overwinters, then feeds on grasses before pupating; species accounts give no detailed courtship description.",
+      "fr": "La chenille passe l’hiver puis se nourrit de graminées avant la nymphose ; les fiches ne détaillent pas la parade nuptiale."
+    },
+    "ecology": {
+      "en": "Like T. cespitis, it is grass-feeding; its caterpillars become brown and develop earlier after winter, so see that profile for the contrast.",
+      "fr": "Comme T. cespitis, il se nourrit de graminées ; ses chenilles brunissent et se développent plus tôt après l’hiver : voir cette fiche pour comparer."
+    },
+    "conservation": {
+      "en": "The German species account describes T. decimalis as not threatened; local distribution can still vary by region.",
+      "fr": "La fiche européenne germanophone décrit T. decimalis comme non menacé ; sa répartition locale peut néanmoins varier selon les régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Feathered Gothic — UKMoths",
+        "fr": "Feathered Gothic — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/tholera-decimalis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "UKMoths lists adult size and flight months, British grassland habitats, and male attraction to light."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 15,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tholera decimalis — European Lepidoptera and their ecology",
+        "fr": "Tholera decimalis — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://www.pyrgus.de/Tholera_decimalis_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "This account covers the Eurasian range, fescue hosts, overwintering and comparison with T. cespitis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 14,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tholera decimalis — Butterflies and Moths of Northern Ireland",
+        "fr": "Tholera decimalis — Papillons et papillons de nuit d’Irlande du Nord"
+      },
+      "url": "https://habitas.org.uk/moths/species.asp?item=6271",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "This regional species account describes flight timing, grass feeding, ground-level larvae and overwintering as an egg."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation statement follows a European field account and is not presented as a formal global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the reciprocal Tholera comparison is limited to larval timing and shared grass feeding."
+}

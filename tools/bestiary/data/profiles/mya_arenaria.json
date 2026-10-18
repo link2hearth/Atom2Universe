@@ -1,0 +1,172 @@
+{
+  "id": "mya_arenaria",
+  "scientific": "Mya arenaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Soft-shell clam",
+    "fr": "Mye des sables"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mya arenaria is a burrowing marine bivalve native to the northwest Atlantic and now established on many European coasts and elsewhere after human transport.",
+      "fr": "Mya arenaria est un bivalve marin fouisseur, originaire du nord-ouest de l’Atlantique et désormais établi sur de nombreuses côtes européennes et ailleurs à la suite de transports humains."
+    },
+    "identification": {
+      "en": "Its thin, elongated oval shell remains gaping at both ends, and two long siphons reach the sediment surface while the animal stays buried.",
+      "fr": "Sa coquille mince et allongée reste béante aux deux extrémités, tandis que deux longs siphons atteignent la surface du sédiment où l’animal est enfoui."
+    },
+    "habitat": {
+      "en": "It buries itself in sand or mud on tidal shores, estuaries and lagoons, from the intertidal into shallow subtidal water, and tolerates a broad range of salinities.",
+      "fr": "Elle s’enfouit dans le sable ou la vase des estrans, estuaires et lagunes, de la zone intertidale aux eaux subtidales peu profondes, et tolère une large gamme de salinités."
+    },
+    "diet": {
+      "en": "Water drawn through its inhalant siphon supplies suspended food, especially phytoplankton and other organic particles, before leaving through the exhalant siphon.",
+      "fr": "L’eau aspirée par son siphon inhalant lui apporte des aliments en suspension, notamment du phytoplancton et d’autres particules organiques, avant de ressortir par le siphon exhalant."
+    },
+    "behavior": {
+      "en": "It lives mostly buried in a mucus-lined vertical burrow and extends its paired siphons through the sediment to feed and exchange water.",
+      "fr": "Elle vit généralement enfouie dans un terrier vertical tapissé de mucus et fait dépasser ses deux siphons du sédiment pour se nourrir et renouveler l’eau."
+    },
+    "reproduction": {
+      "en": "The sexes are separate and release gametes into the water for external fertilization; planktonic larvae later settle onto the seabed.",
+      "fr": "Les sexes sont séparés et libèrent leurs gamètes dans l’eau où la fécondation est externe ; les larves planctoniques se déposent ensuite sur le fond."
+    },
+    "ecology": {
+      "en": "As a suspension feeder it recycles planktonic production and is prey for fish, crabs and shorebirds; abundant introduced populations can compete with native bivalves.",
+      "fr": "En filtrant l’eau, elle exploite la production planctonique et nourrit poissons, crabes et oiseaux littoraux ; des populations introduites abondantes peuvent concurrencer les bivalves indigènes."
+    },
+    "conservation": {
+      "en": "SeaLifeBase lists the global IUCN Red List category as Not Evaluated; this differs from the documented ecological effects of introduced populations in some regions.",
+      "fr": "SeaLifeBase indique que l’espèce n’est pas évaluée sur la Liste rouge mondiale de l’UICN ; cela diffère des effets écologiques documentés de populations introduites dans certaines régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mya arenaria — DORIS, FFESSM",
+        "fr": "Mya arenaria — DORIS, FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Mya-arenaria-Mye-des-sables-2048",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French species account describes morphology, feeding, and spawning."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 8,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sand gaper — Marine Life Information Network",
+        "fr": "Mye des sables — Marine Life Information Network"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1404",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UK marine review."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 3,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mya arenaria — Smithsonian NEMESIS species summary",
+        "fr": "Mya arenaria — synthèse Smithsonian NEMESIS"
+      },
+      "url": "https://invasions.si.edu/nemesis/species_summary/-60",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Smithsonian synthesis documents the native range and human-mediated introductions."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 9,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mya arenaria — SeaLifeBase",
+        "fr": "Mya arenaria — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.ca/summary/Mya-arenaria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase shows the global IUCN category as Not Evaluated."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 9,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Mya japonica is very similar and may account for some older western North Pacific records assigned to M. arenaria; those reports were excluded from the stated native range.",
+    "No global conservation assessment was found; regional regulation should not be read as a global risk category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the French DORIS species account against the MarLIN synthesis and Smithsonian NEMESIS range and invasion account; retained only well-supported natural-history details."
+}

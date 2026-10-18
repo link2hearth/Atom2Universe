@@ -1,0 +1,191 @@
+{
+  "id": "borbo_borbonica",
+  "scientific": "Borbo borbonica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Borbo skipper",
+    "fr": "Hespérie de l’île Bourbon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Borbo skipper is a grass-feeding butterfly in the family Hesperiidae, ranging widely through sub-Saharan Africa and nearby islands, with a small European foothold in southern Spain.",
+      "fr": "L’Hespérie de l’île Bourbon est un papillon de la famille des Hesperiidae dont les chenilles consomment des graminées ; elle vit largement en Afrique subsaharienne et dans les îles voisines, avec une présence européenne limitée au sud de l’Espagne."
+    },
+    "identification": {
+      "en": "Dark brown wings carry translucent forewing spots; a Kenyan guide gives a wingspan of 25–30 mm.",
+      "fr": "Ses ailes brun sombre portent des taches translucides aux antérieures ; un guide kényan indique une envergure de 25 à 30 mm."
+    },
+    "habitat": {
+      "en": "In southern Spain it occurs along lake margins and waterways, within a small European foothold far from its broad African range.",
+      "fr": "Dans le sud de l’Espagne, elle fréquente les rives des lacs et les cours d’eau, dans un petit foyer européen éloigné de sa vaste aire africaine."
+    },
+    "diet": {
+      "en": "Larvae eat grasses including sorghum and panic grasses. Polypogon viridis is recorded as a European host.",
+      "fr": "Les chenilles mangent des graminées, notamment sorghos et panicums. Polypogon viridis est attesté comme plante hôte en Europe."
+    },
+    "behavior": {
+      "en": "Adults fly year-round in Africa but only from May to October in Spain, and avoid the hottest part of the day.",
+      "fr": "Les adultes volent toute l’année en Afrique, mais seulement de mai à octobre en Espagne ; ils évitent aussi les heures les plus chaudes."
+    },
+    "reproduction": {
+      "en": "The account notes seasonal adult flight, but gives no comparable brood counts across the range.",
+      "fr": "La source note une saison de vol des adultes, mais ne compare pas le nombre de générations selon les régions."
+    },
+    "ecology": {
+      "en": "Like the related grass skippers Gegenes nostrodamus and G. pumilio, it is tied to open grassy habitats, though Borbo is readily recognized by its translucent forewing spots and has a much broader African range.",
+      "fr": "Comme les hespéries du genre proche Gegenes, notamment Gegenes nostrodamus et G. pumilio, elle dépend des milieux herbeux ouverts ; Borbo se reconnaît toutefois à ses taches translucides et possède une aire africaine bien plus vaste."
+    },
+    "conservation": {
+      "en": "The Taita Hills field guide reports Least Concern, and the species remains widespread, although this regional assessment should not be read as a current global population trend.",
+      "fr": "Le guide des monts Taita la donne comme Préoccupation mineure ; l’espèce reste largement répandue, mais cette indication régionale ne constitue pas une mesure actuelle de la tendance mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A field guide to Taita Hills Butterflies",
+        "fr": "Guide de terrain des papillons des monts Taita"
+      },
+      "url": "https://naturekenya.org/wp-content/uploads/2021/06/A-field-guide-to-Taita-Hills-Butterflies-NMK-JRS-2021.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The field guide describes the spotted wings, 25–30 mm wingspan and Least Concern status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 14,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Borbo borbonica — European Lepidoptera and their ecology",
+        "fr": "Borbo borbonica — Lépidoptères européens et leur écologie (site en anglais)"
+      },
+      "url": "https://pyrgus.de/Borbo_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The account reports Poaceae hosts, year-round African adults, seasonal Spanish adults, heat avoidance, nectar plants and southern Spanish occurrence."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 19,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Borbo borbonica — Europäische Schmetterlinge und ihre Ökologie",
+        "fr": "Borbo borbonica — Lépidoptères européens et leur écologie (site en allemand)"
+      },
+      "url": "https://pyrgus.de/Borbo.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The German-language account independently lists grasses as larval food plants."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 10,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Borbo borbonica — Lepidoptera Mundi",
+        "fr": "Borbo borbonica — Lepidoptera Mundi (fiche multilingue)"
+      },
+      "url": "https://lepidoptera.eu/species/6633",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The page names Gegenes nostrodamus and G. pumilio among similar European skippers."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 12,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Borbo borbonica — African Butterfly Database",
+        "fr": "Borbo borbonica — base de données des papillons d’Afrique"
+      },
+      "url": "https://abdb-africa.org/species/Borbo_borbonica_borbonica",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The database classifies the taxon among Hesperiidae and records it across numerous African countries and islands."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 16,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published wingspan estimates differ among regional sources; the Kenyan guide’s measurement is used with that qualification."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a Kenyan butterfly field guide, the African Butterfly Database and an English-language European ecology account; compared its grass-skippers with the related genus Gegenes. No matching close-genus profile is currently in the catalogue."
+}

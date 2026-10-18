@@ -1,0 +1,137 @@
+{
+  "id": "hippo",
+  "scientific": "Hippopotamus amphibius",
+  "group": "mammals",
+  "name": {
+    "en": "Hippopotamus",
+    "fr": "Hippopotame commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large African mammal links freshwater and grassland in its daily life. It rests in rivers, lakes or pools by day, then usually leaves after dusk to graze. This routine shapes its anatomy, feeding and social life.",
+      "fr": "Ce grand mammifère africain relie eaux douces et prairies dans son quotidien. Il se repose le jour dans les rivières, lacs ou mares, puis en sort généralement après le crépuscule pour brouter. Ce rythme façonne son anatomie, son alimentation et sa vie sociale."
+    },
+    "identification": {
+      "en": "Its barrel-shaped body has sparse hair, thick purple-grey skin and short, strong legs. High-set eyes, ears and nostrils let it remain submerged; nostrils close underwater. Its broad mouth bears prominent incisors and long canine tusks, especially developed in males. Adults are 3.3–5 m long and up to 1.6 m at the shoulder; females average about 1,400 kg and males about 1,600–4,500 kg.",
+      "fr": "Son corps en tonneau porte peu de poils, une peau épaisse gris violacé et des pattes courtes. Yeux, oreilles et narines placés haut lui permettent de rester immergé ; ses narines se ferment sous l’eau. Sa bouche porte de longues canines, surtout chez le mâle. Les adultes mesurent 3,3–5 m de long et jusqu’à 1,6 m au garrot ; les femelles pèsent en moyenne environ 1 400 kg et les mâles environ 1 600–4 500 kg."
+    },
+    "habitat": {
+      "en": "It ranges across sub-Saharan Africa where permanent freshwater and grazing ground remain available. Hippos rest in rivers, lakes and pools, then feed on nearby grassland. During dry periods they may crowd around shrinking water, while suitable grazing can lie farther inland.",
+      "fr": "Il vit en Afrique subsaharienne là où subsistent eaux permanentes et pâturages. Les hippopotames se reposent dans les rivières, lacs et mares, puis gagnent les prairies voisines. En période sèche, ils peuvent se concentrer autour des points d’eau qui diminuent et s’éloigner pour brouter."
+    },
+    "diet": {
+      "en": "Grass is its main food. At dusk, hippos follow familiar routes from water and graze for several hours, mainly on grasses, sometimes reeds or other plants. They feed mostly on land; when forage near the bank is scarce, they travel farther before returning.",
+      "fr": "L’herbe est son aliment principal. Au crépuscule, les hippopotames suivent des trajets familiers et broutent plusieurs heures, surtout des graminées, parfois des roseaux. Ils s’alimentent surtout à terre et s’éloignent davantage si les plantes des berges manquent."
+    },
+    "behavior": {
+      "en": "Hippos rest in water during much of the hot day, often in groups, and become active at night. In shallow water they push off or walk along the bottom. Dominant males defend stretches of water and mark boundaries by scattering dung with the tail; crowding can intensify disputes.",
+      "fr": "Les hippopotames se reposent dans l’eau les jours chauds, souvent en groupe, puis deviennent actifs la nuit. En eau peu profonde, ils se propulsent ou marchent sur le fond. Les mâles dominants défendent des portions de rive et marquent leur territoire avec leurs excréments ; la promiscuité peut intensifier les conflits."
+    },
+    "reproduction": {
+      "en": "After a gestation of about eleven months, a female usually gives birth to one calf. Birth occurs on land or in water; the newborn can swim and nurse underwater, closing its nostrils to suckle. The mother may isolate before birth and cares for the calf. Breeding can occur year-round, though seasonal peaks are reported in some populations.",
+      "fr": "Après environ onze mois, la femelle met généralement au monde un petit. La naissance a lieu à terre ou dans l’eau ; le nouveau-né sait nager et téter sous l’eau en fermant ses narines. La mère peut s’isoler avant la mise bas. La reproduction est possible toute l’année, avec des pics saisonniers dans certaines populations."
+    },
+    "ecology": {
+      "en": "Dung and urine carry nutrients from grassland into water. In Kenya’s Mara River, research linked hippo inputs to aquatic food webs; experiments also showed heavy waste loading in hippo pools can deplete oxygen and contribute to fish kills. These measured effects depend on local density and river conditions.",
+      "fr": "Les excréments et l’urine transportent des nutriments des prairies vers l’eau. Dans la rivière Mara, au Kenya, des recherches relient les apports des hippopotames aux réseaux alimentaires aquatiques ; des expériences montrent aussi qu’une forte charge de déchets peut épuiser l’oxygène et contribuer à des mortalités de poissons. Ces effets dépendent de la densité locale et des conditions du cours d’eau."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2017 and dated 2016 classified the species as Vulnerable, estimating 115,000–130,000 animals globally and a stable trend at that time. It identified habitat loss and unregulated hunting as major threats. These are historical assessment figures, not a current census.",
+      "fr": "L’évaluation de l’UICN publiée en 2017 et datée de 2016 classait l’espèce comme Vulnérable, estimait 115 000–130 000 individus et jugeait la tendance stable à cette époque. Elle désignait la perte d’habitat et la chasse non réglementée comme des menaces majeures. Ces chiffres sont historiques, pas un recensement actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hippopotamus amphibius — Animal Diversity Web, University of Michigan",
+        "fr": "Hippopotamus amphibius — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Hippopotamus_amphibius/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Describes sub-Saharan freshwater habitat, elevated sensory organs and closing nostrils, dusk grazing, social behavior, single births and underwater nursing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hippo — San Diego Zoo Animals & Plants",
+        "fr": "Hippopotame — San Diego Zoo Animals & Plants"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/hippo",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "identification"
+      ],
+      "facts": [
+        "Describes daytime water use, nocturnal grazing, shallow-water movement, group territories and mother-calf care; zoo-specific feeding and captive records were excluded.",
+        "Adults are 3.3–5 m long and up to 1.6 m at the shoulder; females average about 1,400 kg and males about 1,600–4,500 kg."
+      ]
+    },
+    {
+      "title": {
+        "en": "The IUCN Red List of Threatened Species: Hippopotamus amphibius",
+        "fr": "Liste rouge de l’UICN : Hippopotamus amphibius"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T10103A18567364.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 16 June 2016 and published 2017: Vulnerable, estimated 115,000–130,000 animals, trend stable at assessment; habitat loss and unregulated hunting identified as threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Organic matter loading by hippopotami causes subsidy overload resulting in downstream hypoxia and fish kills — Nature Communications",
+        "fr": "Les apports de matière organique par les hippopotames provoquent une surcharge, une hypoxie en aval et des mortalités de poissons — Nature Communications"
+      },
+      "url": "https://www.nature.com/articles/s41467-018-04391-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Field and experimental work in the Mara River system documents low-oxygen events associated with high hippo-waste loading and fish kills; the result is site- and loading-dependent."
+      ]
+    },
+    {
+      "title": {
+        "en": "How large herbivores subsidize aquatic food webs in African savannas — Proceedings of the National Academy of Sciences",
+        "fr": "Comment les grands herbivores alimentent les réseaux trophiques aquatiques des savanes africaines — Proceedings of the National Academy of Sciences"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5530709/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Reports estimated annual carbon, nitrogen and phosphorus transfer by the Mara River hippo population through dung and urine, linking terrestrial grazing to aquatic food webs."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated image. Adult Hippopotamus amphibius with natural, sex-appropriate morphology: massive barrel-shaped purple-grey body, sparse hair, short sturdy legs, broad muzzle, high-set eyes and ears, small ears and nostrils, accurate incisor and canine tusks. Isolate the full animal on a PURE WHITE background.",
+  "uncertainties": [
+    "The global conservation estimate and trend are from the IUCN assessment dated 2016 and published in 2017; they are not current population measurements.",
+    "Reproductive timing varies among populations; the account avoids presenting a single seasonal pattern as universal.",
+    "River nutrient effects are specifically documented in the Mara system and vary with loading and local conditions."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source critique passed; bison genetic conservation risks clarified and historical assessment wording corrected."
+}

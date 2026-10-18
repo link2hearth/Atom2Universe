@@ -1,0 +1,260 @@
+{
+  "id": "great_cormorant",
+  "scientific": "Phalacrocorax carbo",
+  "group": "birds",
+  "name": {
+    "en": "Great cormorant",
+    "fr": "Grand Cormoran"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great cormorant is a large fish-eating waterbird found across Europe, Asia, Africa, Australasia and the Atlantic coast of North America. It occupies marine coasts and inland waters; northern populations may migrate when waters freeze.",
+      "fr": "Le Grand Cormoran est un grand oiseau piscivore présent en Europe, en Asie, en Afrique, en Australasie et sur la côte atlantique nord-américaine. Il fréquente les côtes et les eaux intérieures. Au nord, les populations migrent parfois vers des eaux libres en hiver."
+    },
+    "identification": {
+      "en": "Adults are usually 84–98 cm long, with a 130–160 cm wingspan and a mass of about 2–3.7 kg; males are larger on average. The glossy dark body, hooked bill and fully webbed feet are distinctive; breeding adults show white patches on head and thighs, while young birds have pale underparts. In Europe it is larger and heavier than the European shag, with a thicker bill and no crest.",
+      "fr": "L’adulte mesure généralement 84 à 98 cm, avec une envergure de 130 à 160 cm et une masse de 2 à 3,7 kg ; le mâle est en moyenne plus grand. Le corps sombre et lustré, le bec crochu et les pieds entièrement palmés sont caractéristiques ; en plumage nuptial, la tête et les cuisses portent des taches blanches, tandis que les jeunes ont le dessous pâle. En Europe, il dépasse le Cormoran huppé par sa taille, son bec plus épais et l’absence de huppe."
+    },
+    "habitat": {
+      "en": "It feeds along marine shores, estuaries, lakes and rivers, often in sheltered, relatively shallow water. Perches, cliffs and trees near fishing grounds provide places to rest, dry the plumage and nest.",
+      "fr": "Il pêche sur les côtes, dans les estuaires, les lacs et les rivières, souvent en eau abritée et peu profonde. Des perchoirs, falaises et arbres proches lui servent à se reposer, sécher son plumage et nicher."
+    },
+    "diet": {
+      "en": "Fish form most of its diet, supplemented by crustaceans, amphibians, molluscs and occasionally nestling birds. It dives from the surface and pursues prey underwater, driving itself with webbed feet and seizing fish with its hooked bill; large prey is brought up before being swallowed.",
+      "fr": "Les poissons constituent l’essentiel de son alimentation, complétée par des crustacés, des amphibiens, des mollusques et parfois de jeunes oiseaux au nid. Il plonge et poursuit ses proies sous l’eau, propulsé par ses pieds palmés ; son bec crochu saisit le poisson, et les grosses prises sont remontées puis avalées."
+    },
+    "behavior": {
+      "en": "Each body feather has a wettable outer part and a waterproof inner portion, retaining a thin layer of air that provides insulation while limiting buoyancy. After fishing it often spreads its wings to dry. The feet provide most underwater thrust, with occasional wing strokes for steering; it usually fishes alone but roosts and nests socially, calling with guttural notes in colonies.",
+      "fr": "Chaque plume du corps possède une partie externe mouillable et une partie interne imperméable, retenant une fine couche d’air qui assure l’isolation tout en limitant la flottabilité. Après la pêche, l’oiseau étend souvent ses ailes pour sécher. Les pieds assurent l’essentiel de la propulsion, les ailes aidant parfois à diriger ; il pêche généralement seul, mais dort et niche en groupe, avec des cris gutturaux dans les colonies."
+    },
+    "reproduction": {
+      "en": "Breeding timing varies with region: northern birds often nest in spring, while tropical populations may follow rainy seasons. Pairs nest in trees, on cliffs or rocky ground; three to five blue-green eggs are incubated for about a month. Both parents feed the naked hatchlings by regurgitation; chicks leave the nest at about seven weeks but remain dependent for several more weeks.",
+      "fr": "La reproduction varie selon la région : les oiseaux nordiques nichent souvent au printemps, tandis que les populations tropicales peuvent suivre les saisons des pluies. Les couples nichent dans les arbres, sur les falaises ou au sol rocheux ; trois à cinq œufs bleu-vert sont couvés environ un mois. Les deux parents nourrissent par régurgitation les poussins nus ; ceux-ci quittent le nid vers sept semaines, mais restent dépendants plusieurs semaines encore."
+    },
+    "ecology": {
+      "en": "Colonies deposit guano that changes vegetation around their regularly occupied communal roosts and nesting trees.",
+      "fr": "Les fientes accumulées peuvent modifier la végétation autour des dortoirs et des arbres occupés durablement."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2018 classified the widespread species as Least Concern. European populations were heavily persecuted as supposed competitors for fish, then recovered after protection; current pressures include persecution, bycatch, pollution, disturbance and fish-farm conflicts.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2018 classe cette espèce largement répartie en préoccupation mineure. Les populations européennes, longtemps persécutées comme concurrentes des pêcheurs, se sont rétablies après leur protection ; les pressions actuelles incluent persécution, captures accidentelles, pollution, dérangement et conflits avec les piscicultures."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great cormorant",
+        "fr": "Grand Cormoran"
+      },
+      "url": "https://en.wikipedia.org/wiki/Great_cormorant",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Range and identification."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "diet.en.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.3",
+        "reproduction.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 3,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grand Cormoran",
+        "fr": "Grand Cormoran"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Grand_Cormoran",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Development, guano."
+      ],
+      "prose_claims": [
+        "conservation.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.fr.1",
+        "identification.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 198,
+        "notes_words": 2,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great cormorant: species information for marine Special Protection Area consultations",
+        "fr": "Grand Cormoran : informations sur l’espèce pour les consultations des zones de protection spéciale marines"
+      },
+      "url": "https://publications.naturalengland.org.uk/file/3897615",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Diving and habitat."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 3,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seabird of the month: Great Cormorant (Phalacrocorax carbo)",
+        "fr": "Oiseau marin du mois : Grand Cormoran (Phalacrocorax carbo)"
+      },
+      "url": "https://www.birdlife.org/news/2022/06/02/seabird-of-the-month-great-cormorant-phalacrocorax-carbo/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Diet and nesting."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "diet.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 3,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phalacrocorax carbo (Great Cormorant)",
+        "fr": "Phalacrocorax carbo (Grand Cormoran)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22696792A155523636.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Global status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 2,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Unusual feather structure allows partial plumage wettability in diving great cormorants Phalacrocorax carbo",
+        "fr": "Structure inhabituelle des plumes et mouillabilité partielle chez le Grand Cormoran"
+      },
+      "url": "https://doi.org/10.1111/j.0908-8857.2005.03331.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Wettable outer feather."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 3,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phalacrocorax carbo — Animal Diversity Web, University of Michigan",
+        "fr": "Phalacrocorax carbo — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Phalacrocorax_carbo/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adults are 84–90 cm long, wingspan 130–160 cm, mass 2.6–3.7 kg; males are about 5–10% longer and up to 20% heavier."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Large black cormorant with hooked bill, white breeding-season thigh patches, fully webbed feet; show wings spread drying beside shallow water.",
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: corrected feather mechanism to actual Grémillet 2005 dual structure; Natural England confirms occasional wing steering and foot propulsion; BirdLife confirms clutch and approximate month incubation. Moved chick care into reproduction; restored short evidence notes and bilingual coastal/inland habitat qualifier."
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_door_plank">Porte en chêne</string>
+    <string name="cave_block_door_wood_plank_white">Porte en bouleau</string>
+    <string name="cave_block_door_plank_red">Porte en séquoia</string>
+    <string name="cave_block_door_plank_dark">Porte en bois sombre</string>
+    <string name="cave_block_door_plank_jungle">Porte de jungle</string>
+    <string name="cave_block_door_plank_blue">Porte bleue</string>
+    <string name="cave_block_door_plank_purple">Porte violette</string>
+    <string name="cave_block_door_plank_yellow">Porte jaune</string>
+    <string name="cave_block_door_plank_pink">Porte rose</string>
+    <string name="cave_block_door_plank_sapin">Porte en sapin</string>
+    <string name="cave_door_hint">Hauteur : deux blocs. Visez un bord du sol pour choisir sa position et ses gonds. Interagissez avec la porte pour ouvrir ou fermer. Accroupissez-vous pour poser des blocs contre elle.</string>
+</resources>

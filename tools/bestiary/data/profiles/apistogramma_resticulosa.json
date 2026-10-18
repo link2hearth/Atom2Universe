@@ -1,0 +1,225 @@
+{
+  "id": "apistogramma_resticulosa",
+  "scientific": "Apistogramma resticulosa",
+  "group": "fish",
+  "name": {
+    "en": "Thin-line Dwarf Cichlid",
+    "fr": "Apistogramme à fines lignes"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma resticulosa is a small freshwater cichlid described by Sven Kullander in 1980 from the Rio Madeira system near Humaitá, Brazil.",
+      "fr": "Apistogramma resticulosa est un petit cichlidé d’eau douce décrit par Sven Kullander en 1980 dans le système du rio Madeira, près d’Humaitá au Brésil."
+    },
+    "identification": {
+      "en": "FishBase lists a maximum standard length of 3.9 cm for male or unsexed fish. The name resticulosa refers to fine, thread-like markings on the abdomen. No reliable female maximum, mass, width or body-height value was found.",
+      "fr": "FishBase indique une longueur standard maximale de 3,9 cm pour les mâles ou individus non sexés. Le nom resticulosa évoque les marques abdominales fines comme des fils. Aucune longueur maximale fiable des femelles, masse, largeur ou hauteur corporelle n’a été trouvée."
+    },
+    "habitat": {
+      "en": "The known range is the Madeira drainage near Humaitá, with a type locality at Igarapé Xicanga about 5 km west of the town.",
+      "fr": "L’aire connue se trouve dans le bassin du Madeira, près d’Humaitá, avec une localité type à l’igapó Xicanga, à environ 5 km à l’ouest de la ville."
+    },
+    "diet": {
+      "en": "No species-specific diet study was located. A specialist account infers that it picks small invertebrates from leaf litter and sediment, but this has not been confirmed by stomach-content samples for A. resticulosa.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été retrouvée. Une fiche spécialisée infère qu’elle prélève de petits invertébrés dans la litière et les sédiments, mais cela n’a pas été confirmé par des analyses stomacales chez A. resticulosa."
+    },
+    "behavior": {
+      "en": "FishBase notes a modest sex difference: males have pointed fins, whereas females have rounded fins.",
+      "fr": "FishBase signale une différence sexuelle modeste : les mâles ont des nageoires pointues, tandis que celles des femelles sont arrondies."
+    },
+    "reproduction": {
+      "en": "Eggs are attached to a cave ceiling and cared for by the female; the species summary gives no reliable clutch-size range.",
+      "fr": "Les œufs sont fixés au plafond d’une cavité et gardés par la femelle ; la fiche d’espèce ne donne aucune fourchette fiable de taille de ponte."
+    },
+    "ecology": {
+      "en": "Kullander placed the species in the Apistogramma regani group. Compared with A. regani, it has short diagonal abdominal dashes rather than full stripes; both have a striped tail, so the belly pattern is the clearer clue.",
+      "fr": "Kullander a placé l’espèce dans le groupe Apistogramma regani. Par rapport à A. regani, elle porte de courts tirets abdominaux obliques plutôt que des bandes complètes ; les deux ont une caudale rayée, le ventre est donc le repère le plus clair."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern for the species, assessed on 29 October 2020.",
+      "fr": "FishBase rapporte pour cette espèce la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Description of Apistogramma resticulosa from the Rio Madeira system",
+        "fr": "Description d’Apistogramma resticulosa du système du rio Madeira"
+      },
+      "url": "https://repository.naturalis.nl/pub/505303",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander described the species from near Humaitá and diagnosed its short vertical abdominal dash markings."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 15,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma resticulosa — FishBase species summary",
+        "fr": "Apistogramma resticulosa — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/46692",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives maximum standard length, fin-shape differences by sex and female cave care."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 13,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma resticulosa — Nordiska Ciklidsällskapet register",
+        "fr": "Apistogramma resticulosa — registre nordique des cichlidés"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=286",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Swedish register gives the Xicanga type locality, Madeira range and a 3.5 cm size with unspecified convention."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 18,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase field guide — Apistogramma resticulosa",
+        "fr": "Guide de terrain FishBase — Apistogramma resticulosa"
+      },
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=resticulosa&print=&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The field guide reports Least Concern, assessed 29 October 2020."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 10,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma resticulosa complex — species-group account",
+        "fr": "Complexe Apistogramma resticulosa — fiche de groupe"
+      },
+      "url": "https://tomc.no/page.aspx?PageID=116",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "diet"
+      ],
+      "facts": [
+        "The specialist account describes abdominal dashes and the striped caudal pattern of this complex."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 14,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: Cichlidae name etymology",
+        "fr": "ETYFish : étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Resticulosa is a diminutive referring to fine vertical dash-like abdominal markings."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 11,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small, fairly deep-bodied cichlid with short diagonal dark dashes below the lateral band, distinct vertical flank bars, and a striped rounded tail. Male fin tips are pointed; female fins are rounded.",
+  "uncertainties": [
+    "FishBase reports a 3.9 cm standard-length maximum for male or unsexed fish; the Swedish register’s 3.5 cm does not identify the length convention. Type specimens measured 12.8–26.5 mm SL, which describes the type series, not the species maximum.",
+    "No reliable body mass, width or height was found. Diet and detailed field social behavior remain poorly documented.",
+    "The informal resticulosa-complex classification is useful for comparisons but does not replace species-level identification."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the original description, FishBase and the Swedish cichlid register. Separated the measured type series from reported maximum size, compared abdominal dashes with A. regani, and kept diet claims explicitly inferential."
+}

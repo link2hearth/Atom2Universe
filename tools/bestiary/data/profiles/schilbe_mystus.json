@@ -1,0 +1,119 @@
+{
+  "id": "schilbe_mystus",
+  "scientific": "Schilbe mystus",
+  "group": "fish",
+  "name": {
+    "en": "African butter catfish",
+    "fr": "Schilbe mystus"
+  },
+  "sections": {
+    "overview": {
+      "en": "An African Schilbeidae catfish.",
+      "fr": "Un silure africain des Schilbeidae."
+    },
+    "identification": {
+      "en": "Up to 35 cm standard length.",
+      "fr": "Jusqu’à 35 cm de longueur standard."
+    },
+    "habitat": {
+      "en": "Lakes and medium to large rivers.",
+      "fr": "Lacs et rivières moyennes à grandes."
+    },
+    "diet": {
+      "en": "It eats fish, insects, shrimp, snails, seeds and fruit.",
+      "fr": "Il mange poissons, insectes, crevettes, escargots, graines et fruits."
+    },
+    "behavior": {
+      "en": "Adults shoal; activity peaks at night.",
+      "fr": "Les adultes vivent en bancs et sont surtout actifs la nuit."
+    },
+    "reproduction": {
+      "en": "It spawns in rainy seasons; eggs are laid on plants.",
+      "fr": "Il pond pendant les saisons des pluies, sur la végétation."
+    },
+    "ecology": {
+      "en": "It is potamodromous; spawning migrations are reported.",
+      "fr": "Il est potamodrome ; des migrations de reproduction sont signalées."
+    },
+    "conservation": {
+      "en": "Global status: Least Concern (2019).",
+      "fr": "Statut mondial : Préoccupation mineure (2019)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Schilbe mystus — FishBase",
+        "fr": "Schilbe mystus — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Schilbe-mystus",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase describes its African range, freshwater habitats, maximum size, varied diet, shoaling and dim-light activity, rainy-season spawning and Least Concern assessment in 2019."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 23,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meristic characters and biology of Schilbe mystus in Côte d’Ivoire — IRD",
+        "fr": "Caractères méristiques et biologie de Schilbe mystus en Côte d’Ivoire — IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/cahiers/hydrobio/00204.pdf",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "This French-language study documents S. mystus in several Ivorian basins and describes its wider African distribution, allowing comparison with FishBase’s more cautious range notes."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 24,
+        "total": 24,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older reports of the species outside its better-supported Nilo-Sudanese and western African range may include misidentifications; FishBase flags several such records as uncertain."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

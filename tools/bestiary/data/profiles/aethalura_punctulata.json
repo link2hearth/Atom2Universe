@@ -1,0 +1,121 @@
+{
+  "id": "aethalura_punctulata",
+  "scientific": "Aethalura punctulata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Grey birch moth",
+    "fr": "Boarmie ponctuée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey birch moth is a small geometrid moth associated with birch and alder woodland across much of Europe and parts of northern Asia. Adults are grey and finely speckled, with narrow, scalloped cross-lines that break up the outline against bark and foliage. The caterpillars feed on birches and alders, and the species overwinters as a pupa. Its modest size and fine pattern are more reliable clues than the common name, which varies between countries.",
+      "fr": "La Boarmie ponctuée est un petit papillon de nuit de la famille des Géométridés, lié aux bois de bouleaux et d’aulnes dans une grande partie de l’Europe et certaines régions du nord de l’Asie. Les adultes sont gris et finement ponctués, avec de fines lignes transversales festonnées qui brouillent leur silhouette contre l’écorce et le feuillage. Les chenilles consomment des bouleaux et des aulnes, et l’espèce hiverne au stade de chrysalide. Sa petite taille et son dessin fin sont des indices plus sûrs que son nom commun, variable selon les pays."
+    },
+    "identification": {
+      "en": "British regional moth accounts give the adult a wingspan of about 30–35 mm. No reliable body length, mass, body height or width, or sex-specific size difference was found in the sources reviewed. The wings are grey to grey-brown, densely dusted with dark points and crossed by fine, irregular, darker lines; the hindwing is also patterned, and the overall outline is more delicate than in many larger bark-like geometrids. At rest, the moth often holds its wings roof-like over the body. It may be confused with other small grey geometrids, but its size, fine speckling and association with birch or alder habitats help narrow the identification; close comparison with local species is still advisable.",
+      "fr": "Des fiches régionales britanniques donnent à l’adulte une envergure d’environ 30 à 35 mm. Les sources consultées ne donnent pas de longueur corporelle, de masse, de hauteur ou de largeur fiables, ni de différence de taille entre les sexes. Les ailes sont grises à gris brun, densément saupoudrées de points sombres et traversées de fines lignes irrégulières plus foncées ; les ailes postérieures sont également dessinées, et la silhouette est plus délicate que celle de nombreux Géométridés corticoles plus grands. Au repos, le papillon tient souvent les ailes en toit au-dessus du corps. Il peut être confondu avec d’autres petites espèces grises, mais sa taille, son ponctué fin et son association avec les bouleaux ou les aulnes aident à orienter l’identification ; une comparaison avec les espèces locales reste utile."
+    },
+    "habitat": {
+      "en": "It is found in birch woodland, alder-rich woods, heathland and mixed woodland where its larval host trees occur. Its wider distribution extends across much of Europe and eastward through northern Eurasia, though local frequency varies. British records describe it as widespread in suitable birch habitats, but those regional abundance observations should not be generalized to its entire range. Adults are nocturnal and are regularly recorded at light in the spring flight period.",
+      "fr": "Elle fréquente les bois de bouleaux, les forêts riches en aulnes, les landes et les boisements mixtes où poussent ses arbres nourriciers. Sa répartition couvre une grande partie de l’Europe et se prolonge vers l’est à travers le nord de l’Eurasie, mais son abondance varie selon les régions. Les observations britanniques la décrivent comme répandue dans les habitats à bouleaux qui lui conviennent ; cette fréquence régionale ne doit pas être étendue à toute son aire. Les adultes sont nocturnes et sont régulièrement observés à la lumière pendant leur période de vol printanière."
+    },
+    "diet": {
+      "en": "The caterpillars feed on the leaves of birches (Betula), including downy and silver birch, and on alder (Alnus). They are phytophagous foliage feeders. Adults do not feed in a way documented by the species sources reviewed, so no adult diet is specified here.",
+      "fr": "Les chenilles consomment les feuilles de bouleaux (Betula), dont le bouleau pubescent et le bouleau verruqueux, ainsi que celles d’aulnes (Alnus). Elles sont phytophages et se nourrissent du feuillage. Les sources consultées ne documentent pas l’alimentation des adultes ; aucun régime alimentaire adulte n’est donc indiqué ici."
+    },
+    "behavior": {
+      "en": "Adults fly at night and are attracted to artificial lights. Their grey, finely mottled wings provide camouflage when they rest on bark or among branches. Larvae feed openly on the foliage of host trees during the summer; the species then passes the winter as a pupa. Records in Britain show adults chiefly in spring, with occasional later-season observations, but flight timing varies with latitude and local climate.",
+      "fr": "Les adultes volent la nuit et sont attirés par les lumières artificielles. Leurs ailes grises finement marbrées les camouflent lorsqu’ils se reposent sur l’écorce ou parmi les rameaux. Les chenilles se nourrissent sur le feuillage des arbres hôtes pendant l’été, puis l’espèce passe l’hiver sous forme de chrysalide. En Grande-Bretagne, les adultes sont surtout observés au printemps, avec quelques mentions plus tardives ; les périodes de vol varient selon la latitude et le climat local."
+    },
+    "reproduction": {
+      "en": "The species has one main adult flight period in spring in Britain, where records commonly fall from April to June. Females lay eggs on or near host trees, and larvae develop on birch and alder foliage. The pupa overwinters, with adults emerging the following spring. Detailed information on courtship, clutch size and egg placement was not consistently available in the sources reviewed, so these particulars are not quantified here.",
+      "fr": "En Grande-Bretagne, l’espèce présente une principale période de vol printanière, avec des observations courantes d’avril à juin. Les femelles pondent sur les arbres hôtes ou à proximité, puis les chenilles se développent sur le feuillage des bouleaux et des aulnes. La chrysalide hiverne et les adultes émergent au printemps suivant. Les sources consultées ne documentent pas de manière cohérente la parade, le nombre d’œufs ou le site exact de ponte ; ces détails ne sont donc pas chiffrés ici."
+    },
+    "ecology": {
+      "en": "The caterpillars are part of the foliage-feeding insect community of birch and alder woods and provide prey for insectivorous predators. Their host plants are common trees, so the moth can occur in both natural woodland and managed landscapes where these trees remain. Its wintering pupae and seasonal adult emergence connect the moth's life cycle to the annual growth cycle of temperate trees.",
+      "fr": "Les chenilles font partie de la communauté d’insectes phytophages des bois de bouleaux et d’aulnes et servent de proies aux prédateurs insectivores. Ses plantes hôtes étant des arbres communs, le papillon peut vivre dans des forêts naturelles comme dans des paysages gérés où ces essences sont conservées. La chrysalide hivernante et l’émergence saisonnière des adultes relient son cycle de vie au rythme annuel des arbres tempérés."
+    },
+    "conservation": {
+      "en": "No species-specific global conservation assessment or population trend was established in the sources reviewed. The moth is reported as common in suitable birch woodland in parts of Britain, but local records from those regions do not demonstrate stability everywhere. Maintaining a mix of birch and alder stands, woodland edges and structurally varied habitats supports its known larval food plants; broad claims about threat status would require range-wide data.",
+      "fr": "Les sources consultées n’établissent ni évaluation mondiale de conservation propre à l’espèce ni tendance de population. Le papillon est décrit comme commun dans les bois de bouleaux adaptés de certaines régions britanniques, mais ces relevés locaux ne démontrent pas une stabilité dans toute son aire. La conservation de peuplements mêlant bouleaux et aulnes, de lisières et d’habitats variés maintient ses plantes nourricières connues ; toute conclusion générale sur son niveau de menace nécessiterait des données couvrant son aire entière."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grey Birch — Hantsmoths, Hampshire and Isle of Wight Lepidoptera",
+        "fr": "Boarmie ponctuée — Hantsmoths, inventaire des Lépidoptères du Hampshire et de l’île de Wight"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.274",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Regional account gives 30–35 mm wingspan, birch woodland and heathland habitat, confusion with two other grey geometrids, larvae on downy and silver birch and alder, and overwintering as a pupa."
+      ]
+    },
+    {
+      "title": {
+        "en": "Boarmie ponctuée — Lepinet French moth database",
+        "fr": "Boarmie ponctuée — base française Lepinet"
+      },
+      "url": "https://lepinet.fr/especes/nation/lep/?id=37270",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "French-language source identifies birch and alder as larval food plants and records the species in the French fauna."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aethalura punctulata — Lepiforum specialist Lepidoptera resource",
+        "fr": "Aethalura punctulata — ressource spécialisée Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Aethalura_Punctulata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "German specialist portal provides verified life-stage photographs and records from European countries, including adults and larvae associated with birch; it documents occurrence in mixed woodland and garden-edge habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Aethalura punctulata — UK Database of Insects and their Food Plants",
+        "fr": "Aethalura punctulata — base britannique des insectes et de leurs plantes hôtes"
+      },
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=753&insectid=226",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Records Betula as a host for A. punctulata larvae, citing K. Noble's 1975 foodplant working draft."
+      ]
+    }
+  ],
+  "illustration_notes": "Small grey geometrid with fine dark speckling and narrow irregular cross-lines; adult wingspan 30–35 mm; birch and alder are key habitat clues.",
+  "uncertainties": [
+    "Wingspan and host-plant records are based mainly on European and British sources; local timing and abundance vary across the wider range.",
+    "No reliable body mass, body dimensions or sex-specific size difference was found.",
+    "Species-specific population trend and global conservation category were not established."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked British regional moth records with a French host-plant database and the German Lepiforum specialist portal; kept regional flight timing and abundance geographically qualified."
+}

@@ -1,0 +1,16 @@
+{
+  "id": 2502,
+  "name": "slab_plank_dark",
+  "texture_top": "cozy:material:9:706353",
+  "texture_side": "cozy:material:9:706353",
+  "texture_bottom": "cozy:material:9:706353",
+  "color": "#706353",
+  "hardness": 1.5,
+  "drop": "slab_plank_dark",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

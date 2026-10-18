@@ -1,0 +1,436 @@
+{
+  "id": "common_frog",
+  "scientific": "Rana temporaria",
+  "group": "amphibians",
+  "name": {
+    "en": "Common frog",
+    "fr": "Grenouille rousse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common frog is widespread across Europe and divides its life between water and land. Its cycle links ponds, where eggs and larvae develop, with damp terrestrial places where adults feed and shelter. Adults exchange gases through both their lungs and moist skin; this allows some gas exchange underwater, while powerful hind limbs propel jumps and swimming.",
+      "fr": "La Grenouille rousse est largement répandue en Europe et partage sa vie entre l’eau et la terre. Son cycle relie les mares, où se développent œufs et larves, aux milieux terrestres humides où les adultes se nourrissent et s’abritent. Chez l’adulte, les échanges gazeux se font par les poumons et par la peau humide ; celle-ci permet aussi des échanges sous l’eau, tandis que les puissantes pattes arrière assurent saut et nage."
+    },
+    "identification": {
+      "en": "Adults are compact frogs with smooth, damp skin and a dark patch behind the eye covering the eardrum. Their hind legs are moderately long and robust, unlike the agile frog Rana dalmatina, whose legs are very long and slender; exceptions occur, so use several traits together. Colour and markings vary widely, from brown and olive to grey, reddish, yellowish or greenish; colour alone is not enough for identification. In Britain, reported adult lengths reach about 9 cm in males and 13 cm in females, which are generally larger; these are upper figures, not typical sizes everywhere. Where similar brown frogs co-occur, combine several cues, including the eye patch, leg pattern, call and local range, rather than relying on one universal mark. A comparable, reliable adult body-mass range was not found in the consulted sources; body mass varies with sex, season and condition.",
+      "fr": "L’adulte est une grenouille trapue à peau lisse et humide, avec une tache sombre derrière l’œil qui recouvre le tympan. Ses pattes arrière sont modérément longues et robustes, contrairement à celles de la Grenouille agile (Rana dalmatina), très longues et fines ; il existe des exceptions, donc plusieurs critères doivent être croisés. La couleur et les marques varient fortement, du brun et de l’olive au gris, au rougeâtre, au jaunâtre ou au verdâtre ; la couleur seule ne suffit pas à l’identification. En Grande-Bretagne, les longueurs adultes rapportées atteignent environ 9 cm chez le mâle et 13 cm chez la femelle, généralement plus grande ; ce sont des maxima, non des tailles habituelles partout. Là où coexistent d’autres grenouilles brunes, croisez plusieurs indices, dont la tache oculaire, les motifs des pattes, le chant et la répartition locale, plutôt que de vous fier à un critère universel. Les sources consultées ne donnent pas de plage fiable de masse adulte comparable ; la masse varie selon le sexe, la saison et l’état corporel."
+    },
+    "habitat": {
+      "en": "Across its range, the species uses cool or damp landscapes, from woodland edges, grassland and moor to gardens and farmland. Adults may travel away from water after breeding, so a pond is only one part of their habitat: nearby cover and moist feeding grounds matter too. It breeds in shallow freshwater, including small ponds, lake margins, ditches and sometimes temporary puddles; local populations use the sites available in their landscape.",
+      "fr": "Dans son aire, l’espèce fréquente des milieux frais ou humides : lisières, prairies, landes, jardins et campagnes cultivées. Après la reproduction, les adultes peuvent s’éloigner de l’eau ; la mare n’est donc qu’une partie de leur habitat, qui comprend aussi des abris et des zones terrestres humides où ils chassent. La ponte a lieu en eau douce peu profonde : petites mares, bordures de lacs, fossés et parfois flaques temporaires, selon les sites présents dans chaque paysage."
+    },
+    "diet": {
+      "en": "After metamorphosis, the frog hunts small invertebrates, including insects, slugs, snails and earthworms. It seizes suitable prey with its mouth and sticky tongue, then swallows it; prey size is limited by its mouth. Aquatic tadpoles feed differently: they scrape or gather algae and organic material from surfaces and pond sediment, with animal matter also recorded in some diets. Their feeding links fine detritus and plant growth to larger animals.",
+      "fr": "Après la métamorphose, la grenouille chasse de petits invertébrés, notamment insectes, limaces, escargots et vers de terre. Elle saisit les proies accessibles avec sa bouche et sa langue collante, puis les avale ; leur taille dépend de l’ouverture de sa bouche. Les têtards aquatiques se nourrissent autrement : ils râpent ou recueillent algues et matière organique sur les surfaces et dans les sédiments, et certaines observations relèvent aussi des éléments animaux. Leur alimentation relie débris fins et production végétale de la mare aux animaux plus grands."
+    },
+    "behavior": {
+      "en": "The common frog is ectothermic: body temperature and metabolic pace depend strongly on surrounding conditions. It often forages at night or in damp weather, when its skin is less exposed to drying, and retreats beneath vegetation, stones or other cover. In cold seasons, activity and feeding fall and frogs overwinter in sheltered terrestrial sites or in water; refuges vary locally, and this species does not show the extreme freeze tolerance of some other frogs. At breeding ponds, males give a soft, repeated croak to attract mates and compete with nearby males.",
+      "fr": "La Grenouille rousse est ectotherme : sa température corporelle et son rythme métabolique dépendent largement des conditions ambiantes. Elle chasse souvent la nuit ou par temps humide, lorsque sa peau risque moins de se dessécher, et se retire sous la végétation, les pierres ou d’autres abris. Pendant la saison froide, activité et alimentation diminuent ; les grenouilles hivernent dans des refuges terrestres ou dans l’eau selon les conditions locales, sans présenter la tolérance extrême au gel de certaines autres espèces. Aux mares de reproduction, les mâles émettent un croassement doux et répété pour attirer les femelles et rivaliser avec leurs voisins."
+    },
+    "reproduction": {
+      "en": "Breeding dates shift with spring temperatures and local weather rather than following one universal calendar. In Britain, spawning can start in the southwest in January and is often seen from February onward elsewhere; these are regional examples. Males clasp females in amplexus; as the female releases eggs into water, the male releases sperm over them, so fertilisation is external. Each egg has its own gelatinous covering, and many eggs are laid together as a jelly mass floating just below the water surface. In British ponds, eggs hatch in about three weeks. Tadpoles then breathe underwater with gills. During metamorphosis, lungs develop and take part in air breathing as the gills regress; hind legs appear before forelegs, and the tail is gradually resorbed before froglets leave the water.",
+      "fr": "Les dates de reproduction varient avec les températures printanières et la météo locale ; il n’existe pas de calendrier universel. En Grande-Bretagne, les pontes peuvent commencer en janvier dans le sud-ouest et apparaissent souvent à partir de février ailleurs : ce sont des exemples régionaux. Le mâle s’agrippe à la femelle en amplexus ; quand celle-ci libère ses ovules dans l’eau, il y dépose son sperme : la fécondation est externe. Chaque œuf possède sa propre enveloppe gélatineuse, et les œufs sont pondus ensemble en une masse qui flotte juste sous la surface. Dans les mares britanniques, les œufs éclosent au bout de trois semaines environ. Les têtards respirent ensuite sous l’eau grâce à leurs branchies. Pendant la métamorphose, les poumons se développent et participent à la respiration aérienne à mesure que les branchies régressent ; les pattes arrière apparaissent avant les pattes avant, et la queue est progressivement résorbée avant la sortie de l’eau."
+    },
+    "ecology": {
+      "en": "Adult frogs and froglets are prey for herons, foxes, otters, snakes and other predators, while their aquatic eggs and tadpoles face fish, newts and insect larvae. The frog thus links terrestrial and pond food webs as both predator and prey.",
+      "fr": "Les hérons, renards, loutres, serpents et autres prédateurs capturent les adultes et les jeunes grenouilles, tandis que poissons, tritons et larves d’insectes s’attaquent aux œufs et têtards aquatiques. La grenouille relie ainsi les réseaux alimentaires terrestres et aquatiques, comme prédatrice et comme proie."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dates to 14 December 2008 and was published in 2009. It classified Rana temporaria as Least Concern with a stable trend, but the Red List record says this assessment needs updating; this historic result does not establish current status. Regional pressures include loss or degradation of breeding ponds and disease. In Britain, Natural England says garden ponds have partly offset the loss of traditional farm ponds. Protecting pond networks and nearby cover supports the full life cycle.",
+      "fr": "L’évaluation mondiale de l’UICN date du 14 décembre 2008 et a été publiée en 2009. Elle classait Rana temporaria en « préoccupation mineure », avec une tendance stable, mais la Liste rouge indique que cette évaluation doit être actualisée ; ce résultat historique ne renseigne pas sur le statut actuel. Parmi les pressions régionales figurent la disparition ou la dégradation des mares de reproduction et les maladies. En Grande-Bretagne, Natural England indique que les mares de jardin ont partiellement compensé la perte des mares agricoles. Préserver un réseau de mares et les abris voisins favorise tout le cycle de vie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Frog",
+        "fr": "Grenouille commune"
+      },
+      "url": "https://www.froglife.org/info-advice/amphibians-and-reptiles/common-frog-2/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UK adult maxima: male 9 cm; female 13 cm.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 26,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How to find frogspawn, tadpoles and froglets",
+        "fr": "Observer les pontes, têtards et jeunes grenouilles"
+      },
+      "url": "https://www.nhm.ac.uk/discover/frogspawn-tadpoles-and-froglets.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "UK hatch and metamorphosis timings vary with pond conditions."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.4",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 9,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "S1213, Common Frog, Rana temporaria",
+        "fr": "S1213, Grenouille rousse, Rana temporaria"
+      },
+      "url": "https://assets.publishing.service.gov.uk/media/6972006b3f2908a34904051e/Annex-1-Habitats-regulations-9A-individual-summaries-of-habitats-and-non-bird-species-assessments.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Natural England describes land and water habitats.",
+        "Garden ponds partly offset English farm pond losses."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.en.5",
+        "conservation.fr.4",
+        "conservation.fr.5",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 15,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rana temporaria: The IUCN Red List of Threatened Species 2009",
+        "fr": "Rana temporaria : Liste rouge mondiale de l’UICN 2009"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2009.RLTS.T58734A11834246.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NeedsUpdating: global assessment dated 14 December 2008, published 2009; Least Concern, stable."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 12,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Behavioural and physiological adaptations to low-temperature environments in the common frog, Rana temporaria",
+        "fr": "Adaptations comportementales et physiologiques de Rana temporaria aux basses températures"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4037278/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Study discusses limits of adult freeze survival."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 7,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproduction of Common Frogs, Rana temporaria, in a Managed Conifer Forest and Bog Landscape in Western Ireland",
+        "fr": "Reproduction de Rana temporaria dans un paysage forestier et tourbeux de l’ouest irlandais"
+      },
+      "url": "https://www.herpconbio.org/Volume_9/Issue_1/Dibner_etal_2014.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Irish adults use terrestrial bogs and grasslands after spawning.",
+        "Shallow pools and adjacent land cover both matter."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 17,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food and feeding relations of common frog and common toad tadpoles at a pond in mid-Wales",
+        "fr": "Alimentation des têtards de grenouille rousse et de crapaud commun dans le centre du pays de Galles"
+      },
+      "url": "https://www.thebhs.org/publications/the-herpetological-journal/volume-1-number-4-june-1987/1148-05-food-and-feeding-relations-of-common-frog-and-common-toad-tadpoles-rana-temporaria-and-bufo-bufo-at-a-pond-in-mid-wales/file",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Welsh tadpoles ate algae and pond sediment detritus."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 8,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pulmonary and cutaneous O2 gas exchange: a student laboratory exercise in the frog",
+        "fr": "Échanges gazeux pulmonaires et cutanés chez la grenouille : exercice de laboratoire"
+      },
+      "url": "https://journals.physiology.org/doi/full/10.1152/advan.00087.2012",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Study includes Rana temporaria in skin and lung gas exchange."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 10,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thermal tolerance and acclimation capacity in the European common frog (Rana temporaria) change throughout ontogeny",
+        "fr": "Tolérance thermique et acclimatation de Rana temporaria au cours de l’ontogenèse"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jez.2582",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Thermal limits differ across developmental stages."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 6,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rana temporaria",
+        "fr": "Rana temporaria"
+      },
+      "url": "https://animaldiversity.org/accounts/Rana_temporaria/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "External fertilisation; nocturnal feeding reported."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 5,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common frog (Rana temporaria) - Woodland Trust",
+        "fr": "Grenouille rousse (Rana temporaria) - Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/reptiles-and-amphibians/common-frog/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Males croak to attract mates and compete.",
+        "Habitat loss and disease threaten UK populations."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 14,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common frog",
+        "fr": "Grenouille commune"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/amphibians/common-frog",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "UK breeding season varies with weather."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 6,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brown frog identification guide",
+        "fr": "Fiche d’aide à la détermination des grenouilles brunes"
+      },
+      "url": "https://geonature.arb-idf.fr/sites/default/files/articles/documents/ClefIdent/Amphibiens/fiche-grenouilles_brunes.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Massif Central key compares R. temporaria and R. dalmatina; combine several traits."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.5",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 12,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use existing common frog illustration; preserve dark eye patch and barred hind legs while showing colour variation.",
+  "uncertainties": [
+    "British spawning and hatching dates are regional examples; timing varies with weather, altitude and pond conditions.",
+    "The IUCN record gives a global assessment date of 14 December 2008 and publication year 2009; it does not establish current national status.",
+    "Sources do not establish one typical adult length applicable across populations; British figures are maxima."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Refined robust moderately long hindlimbs versus agile frog, egg jelly capsules, larval gills and metamorphic respiratory transition; qualified British values and historical2008 global assessment requiring updating. ImageGen forefinger correction accepted by root and independent anatomical critic, compressed WebP retained with original PNG."
+}

@@ -1,0 +1,18 @@
+{
+  "hardness": 1.5,
+  "placement_rule": "any",
+  "texture_bottom": "base_art:planks:0",
+  "orient_mode": "facing",
+  "texture_side": "base_art:planks:0",
+  "tags": [
+    "window"
+  ],
+  "id": 9220,
+  "transparent": true,
+  "window": 1,
+  "color": "#B69058",
+  "drop": "window_plank",
+  "name": "window_plank",
+  "creative_tab": "wood",
+  "texture_top": "base_art:planks:0"
+}

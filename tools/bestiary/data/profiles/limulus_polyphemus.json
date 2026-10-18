@@ -1,0 +1,148 @@
+{
+  "id": "limulus_polyphemus",
+  "scientific": "Limulus polyphemus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Atlantic Horseshoe Crab",
+    "fr": "Limule atlantique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Atlantic horseshoe crab is a marine arthropod of the North American coast. Despite its name it is not a crab: it belongs to a separate group, more closely related to arachnids, and is one of four living horseshoe crab species, a lineage with fossil relatives about 450 million years old.",
+      "fr": "La limule atlantique est un arthropode marin des côtes nord-américaines. Malgré son nom, ce n’est pas un crabe : elle appartient à un groupe distinct, plus proche des arachnides, et c’est l’une des quatre espèces actuelles de limules, une lignée dont des parents fossiles remontent à environ 450 millions d’années."
+    },
+    "identification": {
+      "en": "It carries chelicerae, small pincer-like appendages that pass food toward the mouth, and six flap-like abdominal appendages; the first covers the genital pore and the others act as gills. Mature males have claspers used to hold a female, and females may show scars from being clasped. Adult females can reach about 60 cm in total length, including the long telson; males are smaller. A reliable adult body-mass range or sex-specific width was not found, so neither is estimated here.",
+      "fr": "Elle porte des chélicères, petits appendices en pince qui acheminent la nourriture vers la bouche, et six appendices abdominaux en lames; le premier recouvre l’orifice génital et les autres servent de branchies. Les mâles matures ont des crochets pour retenir une femelle, et les femelles peuvent garder des cicatrices de cette étreinte. La femelle adulte peut atteindre environ 60 cm de longueur totale, longue queue comprise; le mâle est plus petit. Je n’ai pas trouvé de plage fiable de masse adulte ni de largeur selon le sexe, et aucune n’est donc estimée ici."
+    },
+    "habitat": {
+      "en": "It lives along the Atlantic coast of North America and the Gulf of Mexico, from Maine to Alabama, with a separate population on the Yucatán Peninsula. It uses shallow coastal water over sandy or muddy bottoms, and tolerates a wide range of environmental conditions.",
+      "fr": "Elle vit le long de la côte atlantique de l’Amérique du Nord et du golfe du Mexique, du Maine à l’Alabama, avec une population distincte sur la péninsule du Yucatán. Elle fréquente les eaux côtières peu profondes à fond sableux ou vaseux et tolère des conditions environnementales très variées."
+    },
+    "diet": {
+      "en": "It feeds at night on worms, small molluscs and algae. It picks food up with its chelicerae, passes it to the bristly leg bases to be crushed, then moves it to the mouth.",
+      "fr": "Elle se nourrit la nuit de vers, de petits mollusques et d’algues. Elle saisit la nourriture avec ses chélicères, la transmet aux bases de pattes hérissées pour la broyer, puis la conduit à la bouche."
+    },
+    "behavior": {
+      "en": "It walks along the bottom of shallow water and can swim clumsily on its back, using its flap-like gills as paddles. Individuals are highly mobile and migratory; tagging in Delaware Bay found animals ranging from the bay’s mouth south to Virginia Beach.",
+      "fr": "Elle marche sur le fond des eaux peu profondes et peut nager maladroitement sur le dos, en se servant de ses branchies en lames comme de rames. Les individus sont très mobiles et migrateurs; un marquage dans la baie du Delaware a retrouvé des animaux de l’entrée de la baie jusqu’à Virginia Beach."
+    },
+    "reproduction": {
+      "en": "Spawning takes place on beaches, where mature males come ashore alone or clasping a female. In a New Hampshire estuary, males appeared to mature at about nine years, after roughly 17 moults, while females moulted once more; this skews spawning-beach sex ratios toward males. Stranding during spawning is a main natural cause of adult death.",
+      "fr": "La ponte a lieu sur les plages, où les mâles matures arrivent seuls ou accrochés à une femelle. Dans un estuaire du New Hampshire, les mâles semblaient mûrir vers neuf ans, après environ 17 mues, les femelles muant une fois de plus; cela donne un excès de mâles sur les plages de ponte. L’échouage pendant la ponte est une cause naturelle majeure de mortalité des adultes."
+    },
+    "ecology": {
+      "en": "In Delaware Bay, the abundance of horseshoe crab eggs was the strongest predictor of which beaches migrating red knots used in spring. The knots, shorebirds on a long migration, have few alternative foods there, so the crab’s spawning supports a wider food web.",
+      "fr": "Dans la baie du Delaware, l’abondance des œufs de limule était le meilleur prédicteur des plages utilisées au printemps par les bécasseaux maubèche en migration. Ces oiseaux de rivage en longue migration y ont peu d’autres ressources : la ponte de la limule soutient donc un réseau alimentaire plus large."
+    },
+    "conservation": {
+      "en": "The IUCN ranks the species as Vulnerable, and a regional assessment found it vulnerable to local extinction, with risk varying by region: highest in the Gulf of Maine, declines in New England, stable and regulated stocks in Delaware Bay. Bait use removes up to about one million animals a year along the coast. Blood is also taken for Limulus amebocyte lysate, which detects bacterial endotoxin in medicines; about 525,000 crabs were bled yearly in 2013–2017, with short-term mortality estimated at 15%.",
+      "fr": "L’UICN classe l’espèce comme vulnérable, et une évaluation régionale la juge exposée à des extinctions locales, avec un risque variable : maximal dans le golfe du Maine, déclins en Nouvelle-Angleterre, stocks stables et encadrés dans la baie du Delaware. L’usage comme appât prélève jusqu’à environ un million d’animaux par an sur la côte. Son sang sert aussi à produire le lysat d’amibocytes de limule, qui détecte les endotoxines bactériennes dans les médicaments; environ 525 000 limules étaient saignées chaque année en 2013-2017, avec une mortalité à court terme estimée à 15 %."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Limulus polyphemus — Animal Diversity Web, University of Michigan",
+        "fr": "Limulus polyphemus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Limulus_polyphemus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "habitat"
+      ],
+      "facts": [
+        "Not a crab; related to arachnids. Six flap-like abdominal appendages, the first covering the genital pore; chelicerae pass food to the leg bases then the mouth.",
+        "Feeds at night on worms, small molluscs and algae; walks on the bottom and swims awkwardly on its back. Its Near Threatened status line is out of date and was not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Conservation status of the American horseshoe crab, Limulus polyphemus: a regional assessment — Reviews in Fish Biology and Fisheries (USGS record)",
+        "fr": "Statut de conservation de la limule américaine, Limulus polyphemus : évaluation régionale — Reviews in Fish Biology and Fisheries (notice USGS)"
+      },
+      "url": "https://pubs.usgs.gov/publication/70193485",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "One of four living species; fossil relatives about 450 million years old; Atlantic and Gulf coast plus Yucatán population.",
+        "Vulnerable to local extinction; high risk in Gulf of Maine; New England declines; Delaware Bay stable and regulated; Southeast stable or growing."
+      ]
+    },
+    {
+      "title": {
+        "en": "The long-term effect of bleeding for Limulus amebocyte lysate on annual survival and recapture of tagged horseshoe crabs — Frontiers in Marine Science, 2020",
+        "fr": "Effet à long terme du prélèvement de sang pour le lysat d’amibocytes de limule sur la survie annuelle et la recapture de limules marquées — Frontiers in Marine Science, 2020"
+      },
+      "url": "https://www.frontiersin.org/articles/10.3389/fmars.2020.607668/full",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Ranked Vulnerable by IUCN; mature males carry claspers, females show amplexus scars; males come ashore alone or in amplexus.",
+        "Over 525,000 crabs bled per year in 2013–2017; short-term bleeding mortality 15% (4–30%); coastwide landings up to one million per year, mostly bait; stranding is a primary natural adult mortality."
+      ]
+    },
+    {
+      "title": {
+        "en": "Horseshoe crab eggs determine red knot distribution in Delaware Bay — Journal of Wildlife Management, 2006",
+        "fr": "Les œufs de limule déterminent la distribution des bécasseaux maubèche dans la baie du Delaware — Journal of Wildlife Management, 2006"
+      },
+      "url": "https://bioone.org/journals/journal-of-wildlife-management/volume-70/issue-6/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2/Horseshoe-Crab-Eggs-Determine-Red-Knot-Distribution-in-Delaware-Bay/10.2193/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2.full",
+      "consulted": "2026-10-12",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "65 radio-tagged knots in 2004: egg abundance was the strongest predictor of beach use; knots have few alternative food sources in the bay."
+      ]
+    },
+    {
+      "title": {
+        "en": "The life history cycle of Limulus polyphemus in the Great Bay Estuary, New Hampshire — Watson, Cheng and Chabot, 2015",
+        "fr": "Cycle de vie de Limulus polyphemus dans l’estuaire de Great Bay, New Hampshire — Watson, Cheng et Chabot, 2015"
+      },
+      "url": "https://scholars.unh.edu/jel/143",
+      "consulted": "2026-10-12",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Males appear to mature at about 9 years (17th instar); females molt once more; spawning beaches skew male."
+      ]
+    },
+    {
+      "title": {
+        "en": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS",
+        "fr": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS"
+      },
+      "url": "https://invasions.si.edu/nemesis/species_summary/82703",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "States adult females reach 600 mm total length and males are smaller; does not give adult weight."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Egg number, larval stages and lifespan are not covered, because the sources consulted do not agree or do not give them.",
+    "The IUCN Red List page could not be opened; the Vulnerable category is taken from the 2020 paper and the regional assessment (2016 IUCN assessment, unread).",
+    "Maturity ages differ between regions; the nine-year figure comes from one New Hampshire estuary."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

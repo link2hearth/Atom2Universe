@@ -1,0 +1,166 @@
+{
+  "id": "crotalus_aquilus",
+  "scientific": "Crotalus aquilus",
+  "group": "reptiles",
+  "name": {
+    "en": "Querétaro Dusky Rattlesnake",
+    "fr": "Crotale sombre de Querétaro"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Mexican highland rattlesnake is also called the Querétaro dusky rattlesnake; it is a close relative of C. triseriatus, with which it was historically grouped.",
+      "fr": "Ce crotale des hautes terres mexicaines est aussi appelé crotale sombre de Querétaro; il est proche de C. triseriatus, avec lequel il a autrefois été regroupé."
+    },
+    "identification": {
+      "en": "It is robust and gray-brown, with dark dorsal blotches, paired dark nape marks and pale-edged lateral stripes.",
+      "fr": "Il est trapu et gris brun, avec des taches dorsales sombres, deux marques nucales foncées et des bandes latérales bordées de clair."
+    },
+    "habitat": {
+      "en": "Mexican natural-history records place it in temperate pine–oak woodland, mesquite scrub and grassland on the central plateau and eastern highlands.",
+      "fr": "Les données naturalistes mexicaines la situent dans les forêts tempérées de pins et de chênes, les broussailles à mesquite et les prairies du plateau central et des hautes terres orientales."
+    },
+    "diet": {
+      "en": "Field observations recorded mammals, lizards and other snakes as prey, suggesting a varied diet that can include other snakes.",
+      "fr": "Des observations de terrain ont relevé des mammifères, des lézards et d’autres serpents parmi ses proies, indiquant un régime varié pouvant inclure des serpents."
+    },
+    "behavior": {
+      "en": "The CONABIO report describes it as active by day and at twilight.",
+      "fr": "Le rapport de la CONABIO la décrit comme active le jour et au crépuscule."
+    },
+    "reproduction": {
+      "en": "The sources consulted here do not provide a robust species-specific account of breeding timing or litter size.",
+      "fr": "Les sources consultées ici ne fournissent pas de données solides propres à l’espèce sur la période de reproduction ou la taille des portées."
+    },
+    "ecology": {
+      "en": "By consuming rodents and other vertebrates, it is a predator of highland grassland and woodland food webs.",
+      "fr": "En consommant des rongeurs et d’autres vertébrés, elle est un prédateur des réseaux trophiques des prairies et boisements d’altitude."
+    },
+    "conservation": {
+      "en": "Mexico’s NOM-059 lists it under special protection (Pr); this national legal category is distinct from a global IUCN assessment.",
+      "fr": "La NOM-059 du Mexique la classe sous protection spéciale (Pr); cette catégorie juridique nationale est distincte d’une évaluation mondiale de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crotalus aquilus in the Mexican state of México consumes a diverse summer diet — USGS",
+        "fr": "Crotalus aquilus in the Mexican state of México consumes a diverse summer diet — USGS"
+      },
+      "url": "https://pubs.usgs.gov/publication/5224941",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Field observations recovered mammal, lizard and snake prey."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 8,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Informe final, proyecto JM001 — CONABIO",
+        "fr": "Informe final, proyecto JM001 — CONABIO"
+      },
+      "url": "https://www.conabio.gob.mx/institucion/proyectos/resultados/InfJM001.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "CONABIO summarizes markings, central Mexican habitat and activity."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 8,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NOM-059 entries for the Central Mexican highlands — CONANP",
+        "fr": "NOM-059 entries for the Central Mexican highlands — CONANP"
+      },
+      "url": "https://simec.conanp.gob.mx/pdf_especies/7.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Mexico’s official listing is Pr, special protection."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 7,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomy and phylogenetic relationship of Crotalus aquilus and C. triseriatus — peer-reviewed study",
+        "fr": "Taxonomy and phylogenetic relationship of Crotalus aquilus and C. triseriatus — peer-reviewed study"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13308136/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Phylogenetic study documents close relationship to C. triseriatus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 8,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available field prey sample is small and seasonal; reproductive details were not established by the sources reviewed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Spanish-language CONABIO habitat and morphology, a USGS-hosted peer-reviewed diet study, Mexico’s official Pr listing and a phylogenetic study of its close relative C. triseriatus."
+}

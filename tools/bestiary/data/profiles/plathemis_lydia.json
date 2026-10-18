@@ -1,0 +1,119 @@
+{
+  "id": "plathemis_lydia",
+  "scientific": "Plathemis lydia",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Whitetail",
+    "fr": "Plathemis lydia"
+  },
+  "sections": {
+    "overview": {
+      "en": "Plathemis lydia is a widespread North American dragonfly in the skimmer family Libellulidae.",
+      "fr": "Plathemis lydia est une libellule largement répandue en Amérique du Nord, de la famille des Libellulidae."
+    },
+    "identification": {
+      "en": "Mature males have a chalky white abdomen and broad dark bands across the wings; females are brown with pale side markings and three dark spots on each wing.",
+      "fr": "Les mâles adultes ont l’abdomen blanc poudreux et de larges bandes sombres sur les ailes ; les femelles sont brunes, avec des marques claires sur les flancs et trois taches sombres par aile."
+    },
+    "habitat": {
+      "en": "It breeds around lakes, ponds and slow streams, often where the bottom is muddy.",
+      "fr": "Elle se reproduit près des lacs, des étangs et des cours d’eau lents, souvent là où le fond est vaseux."
+    },
+    "diet": {
+      "en": "Adults catch small insects in flight.",
+      "fr": "Les adultes capturent de petits insectes en vol."
+    },
+    "behavior": {
+      "en": "It perches low in open places; males defend waterside territories.",
+      "fr": "Elle se pose bas dans les espaces ouverts ; les mâles défendent un territoire au bord de l’eau."
+    },
+    "reproduction": {
+      "en": "Females tap eggs into water or wet mud near vegetation; males may guard them.",
+      "fr": "Les femelles déposent leurs œufs dans l’eau ou la vase près des plantes ; les mâles peuvent les garder."
+    },
+    "ecology": {
+      "en": "The aquatic larvae develop in freshwater and tolerate a range of water conditions.",
+      "fr": "Les larves aquatiques se développent en eau douce et tolèrent des conditions variées."
+    },
+    "conservation": {
+      "en": "The Illinois agency describes it as common and native in that state.",
+      "fr": "L’agence de l’Illinois la décrit comme commune et indigène dans cet État."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Whitetail — Illinois Department of Natural Resources",
+        "fr": "Common Whitetail — Illinois Department of Natural Resources"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfcommonwhitetail.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "conservation",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Illinois lists it as common and native and describes its biology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 11,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Whitetail — South Dakota Game, Fish and Parks dragonfly field guide",
+        "fr": "Common Whitetail — guide des libellules de South Dakota Game, Fish and Parks"
+      },
+      "url": "https://gfp.sd.gov/userdocs/docs/odonata_field_guide_sdgfp_2025.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 state field guide confirms typical standing-water habitat, muddy-bottom tolerance and aquatic larvae."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 14,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The field-guide status is local to Illinois and is not a global conservation assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used an Illinois state species account and a 2025 South Dakota field guide; no reciprocal species cross-reference was necessary."
+}

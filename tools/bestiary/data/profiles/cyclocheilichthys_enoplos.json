@@ -1,0 +1,178 @@
+{
+  "id": "cyclocheilichthys_enoplos",
+  "scientific": "Cyclocheilichthys enoplos",
+  "group": "fish",
+  "name": {
+    "en": "Soldier river barb",
+    "fr": "Barbe soldat du Mékong"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large Southeast Asian cyprinid is a strongly migratory river fish of the Mekong and other regional drainages.",
+      "fr": "Ce grand Cyprinidé d’Asie du Sud-Est est un poisson migrateur des cours du Mékong et d’autres bassins régionaux."
+    },
+    "identification": {
+      "en": "It is a robust barb known locally by several names, including Trey chhkok in Khmer and ca coc in Vietnamese.",
+      "fr": "C’est un barbeau robuste, connu sous plusieurs noms locaux, dont Trey chhkok en khmer et ca coc en vietnamien."
+    },
+    "habitat": {
+      "en": "It occupies the Mekong main channel and large tributaries, moving between river reaches and downstream nursery areas.",
+      "fr": "Il fréquente le cours principal du Mékong et ses grands affluents, et circule entre tronçons fluviaux et zones d’alevinage en aval."
+    },
+    "diet": {
+      "en": "Adults are omnivorous, taking molluscs, algae, worms, insects, crustaceans and sometimes fish; young fish feed mainly on zooplankton.",
+      "fr": "Les adultes sont omnivores et consomment mollusques, algues, vers, insectes, crustacés et parfois poissons ; les jeunes mangent surtout du zooplancton."
+    },
+    "behavior": {
+      "en": "Its migrations follow changing river levels: fish move upstream in some seasons and return downstream toward the delta and floodplain.",
+      "fr": "Ses déplacements suivent les variations du niveau des eaux : il remonte le fleuve certaines saisons puis redescend vers le delta et les plaines inondables."
+    },
+    "reproduction": {
+      "en": "Mature, egg-bearing fish have been recorded moving upstream during the rising-water period, consistent with a seasonal spawning migration.",
+      "fr": "Des adultes mûrs portant des œufs ont été observés en migration vers l’amont à la montée des eaux, ce qui correspond à une migration saisonnière de frai."
+    },
+    "ecology": {
+      "en": "Pelagic eggs and drifting larvae depend on river flow to reach nursery habitat, linking reproduction to an uninterrupted flood pulse.",
+      "fr": "Les œufs pélagiques et les larves dérivantes dépendent du courant pour atteindre les zones de croissance ; la reproduction est donc liée au rythme des crues."
+    },
+    "conservation": {
+      "en": "FishBase relays a global Least Concern assessment from 2011, while also recording local declines around the Khone Falls.",
+      "fr": "FishBase relaie une évaluation mondiale de préoccupation mineure datant de 2011, tout en signalant des déclins locaux près des chutes de Khone."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Distribution and Ecology of Some Important Riverine Fish Species of the Mekong River Basin — Mekong River Commission",
+        "fr": "Répartition et écologie d’espèces fluviales importantes du bassin du Mékong — Commission du Mékong"
+      },
+      "url": "https://www.mrcmekong.org/?document_id=01BMXYOABQQBR5FY7EAZFZRXEKJEP6NRZM&download_document=1&name=Distribution-and-Ecology-of-Some-Important-Riverine-Fish-Species-of-the-Mekong-River-Basin.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The report gives local Khmer, Lao, Thai and Vietnamese names, omnivorous diet, pelagic spawning and larval drift, and basin-wide distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cyclocheilichthys enoplos — FishBase Field Guide",
+        "fr": "Cyclocheilichthys enoplos — guide de terrain FishBase"
+      },
+      "url": "https://fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=418&genusname=Cyclocheilichthys&speciesname=enoplos",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summarizes Mekong river habitat, seasonal migrations, mature upstream migrants and a global Least Concern assessment dated 2011."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cyclocheilichthys enoplos — global mitochondrial genome study",
+        "fr": "Cyclocheilichthys enoplos — étude du génome mitochondrial"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7799820/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The molecular paper describes the species as a freshwater potamodromous cyprinid distributed across mainland Southeast Asia."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The global Least Concern assessment cited by FishBase dates from 2011; local fishing and migration trends may have changed since that assessment.",
+    "No related Cyclocheilichthys profile was found in the current catalogue for a direct cross-reference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Mekong River Commission basin ecology and multilingual local names against FishBase movement summaries and a peer-reviewed mitochondrial study; distinguished old global status from local decline reports."
+}
