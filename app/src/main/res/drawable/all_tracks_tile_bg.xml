@@ -5,5 +5,5 @@
         android:type="linear"
         android:angle="135"
         android:startColor="?attr/a2uPanelStartColor"
-        android:endColor="@color/audio_surface" />
+        android:endColor="?attr/a2uSurfaceColor" />
 </shape>
