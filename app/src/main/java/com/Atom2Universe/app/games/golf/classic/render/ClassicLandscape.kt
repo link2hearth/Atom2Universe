@@ -46,7 +46,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
 
     val millX = hole.width * -.35f
     val millZ = hole.length * .63f
-    val millY = hole.heightAt(millX,millZ) + 7.5f
+    val millY = hole.heightAt(millX,millZ) + 10.2f
 
     fun terrain(): GroundMesh {
         if(hole.mini!=null) return MiniLandscape(hole,this).terrain()
@@ -394,61 +394,51 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
 
     private fun highlandLodge(b:MeshBuilder,x:Float,z:Float) {
         val y=hole.heightAt(x,z)
-        b.box(x,y,z,8f,3.4f,6f,C(.49f,.48f,.43f))
-        val roof=if(hole.snowy) C(.87f,.91f,.95f) else C(.23f,.28f,.30f)
-        b.quad(P(x-4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+5.4f,z),P(x-4.6f,y+5.4f,z),roof)
-        b.quad(P(x-4.6f,y+5.4f,z),P(x+4.6f,y+5.4f,z),P(x+4.6f,y+3.4f,z+3.6f),P(x-4.6f,y+3.4f,z+3.6f),roof)
-        b.box(x,y,z-3.05f,1.5f,2.4f,.15f,C(.27f,.22f,.18f))
-        for(side in listOf(-1f,1f)) b.box(x+side*2.6f,y+1.5f,z-3.1f,1.2f,1.1f,.15f,C(.75f,.58f,.32f))
-        b.box(x+2.6f,y+3.4f,z+1f,.8f,2.7f,.8f,C(.43f,.43f,.40f))
-        // A ruined watchtower beyond the boundary replaces the pastoral windmill.
+        b.append(GolfBuildings.house(C(.56f,.55f,.50f),
+            if(hole.snowy) C(.87f,.91f,.95f) else C(.23f,.28f,.30f),lodge=true),P(x,y,z),PI.toFloat())
+        // A substantial stone landmark with a plinth, masonry belts and an inset doorway.
         val tx=millX; val tz=millZ; val ty=hole.heightAt(tx,tz)
-        b.cone(tx,ty,tz,2.8f,8.5f,C(.43f,.45f,.44f),8,2.5f)
-        for(i in 0..7) {
-            val a=i*PI.toFloat()/4f
-            b.box(tx+cos(a)*2.3f,ty+8.5f,tz+sin(a)*2.3f,.85f,1.1f,.85f,C(.48f,.49f,.46f))
+        val stone=C(.46f,.47f,.44f)
+        b.cone(tx,ty-.6f,tz,4.3f,1.2f,stone.shade(.8f),12,4.1f)
+        b.cone(tx,ty+.6f,tz,3.9f,12f,stone,12,3.5f)
+        for(h in listOf(1f,4f,8f,12.3f)) {
+            val r=3.9f-(h-.6f)/12f*.4f
+            b.cone(tx,ty+h,tz,r+.15f,.24f,stone.shade(1.13f),12,r+.15f)
+        }
+        b.box(tx,ty+.1f,tz-3.88f,1.55f,2.6f,.12f,C(.20f,.24f,.23f))
+        for(h in listOf(5.1f,9f)) b.box(tx,ty+h,tz-3.77f,.55f,1.35f,.20f,C(.19f,.23f,.23f))
+        for(i in 0..11) {
+            val a=i*PI.toFloat()/6f
+            b.box(tx+cos(a)*3.35f,ty+12.6f,tz+sin(a)*3.35f,.9f,1.35f,.9f,stone)
         }
     }
 
-    private fun cottage(b: MeshBuilder,x: Float,z: Float) {
-        val y=hole.heightAt(x,z)
-        b.box(x,y,z,9f,4.7f,7f,C(.96f,.86f,.66f))
-        val roof=C(.66f,.27f,.19f)
-        b.quad(P(x-5.2f,y+4.6f,z-4.2f),P(x+5.2f,y+4.6f,z-4.2f),P(x+5.2f,y+7.1f,z),P(x-5.2f,y+7.1f,z),roof)
-        b.quad(P(x-5.2f,y+7.1f,z),P(x+5.2f,y+7.1f,z),P(x+5.2f,y+4.6f,z+4.2f),P(x-5.2f,y+4.6f,z+4.2f),roof)
-        b.tri(P(x-4.5f,y+4.7f,z-3.5f),P(x-4.5f,y+7f,z),P(x-4.5f,y+4.7f,z+3.5f),C(.89f,.78f,.59f))
-        b.tri(P(x+4.5f,y+4.7f,z+3.5f),P(x+4.5f,y+7f,z),P(x+4.5f,y+4.7f,z-3.5f),C(.89f,.78f,.59f))
-        b.box(x,y-.10f,z,9.4f,.40f,7.4f,C(.56f,.53f,.44f))
-        b.box(x,y+.10f,z-4.0f,2.6f,.18f,1.1f,C(.68f,.65f,.54f))
-        // Eaves, roof courses and window frames give depth without a texture atlas.
-        for(i in 1..6) for(side in intArrayOf(-1,1)) {
-            val zz=z+side*i*.58f;val yy=y+7.1f-i*.58f*2.5f/4.2f
-            b.beam(P(x-5.15f,yy+.025f,zz),P(x+5.15f,yy+.025f,zz),.028f,C(.49f,.24f,.17f),4)
-        }
-        for(side in intArrayOf(-1,1))b.box(x,y+4.49f,z+side*3.6f,9.9f,.15f,.15f,C(.39f,.30f,.22f))
-        b.box(x,y,z-3.55f,1.7f,2.8f,.1f,C(.27f,.39f,.39f))
-        for(side in listOf(-1f,1f)) {
-            b.box(x+side*2.8f,y+1.9f,z-3.58f,1.4f,1.45f,.15f,C(.39f,.71f,.79f))
-            val wx=x+side*2.8f
-            for(edge in intArrayOf(-1,1))b.box(wx+edge*.75f,y+1.82f,z-3.69f,.12f,1.62f,.12f,C(.93f,.88f,.72f))
-            for(h in listOf(1.82f,2.6f,3.35f))b.box(wx,y+h,z-3.69f,1.6f,.08f,.12f,C(.93f,.88f,.72f))
-            b.box(wx,y+1.85f,z-3.70f,.075f,1.6f,.10f,C(.93f,.88f,.72f))
-            b.box(x+side*2.8f,y+1.78f,z-3.8f,1.8f,.25f,.5f,C(.53f,.29f,.15f))
-            bush(b,x+side*5.7f,z-2.5f)
-        }
-        b.box(x+2.7f,y+5.1f,z+1f,1f,3f,1f,C(.68f,.49f,.36f))
-        b.box(x+2.7f,y+8.05f,z+1f,1.25f,.16f,1.25f,C(.44f,.37f,.31f))
+    private fun cottage(b:MeshBuilder,x:Float,z:Float) {
+        b.append(GolfBuildings.house(C(.94f,.85f,.68f),C(.60f,.28f,.20f),lodge=true),
+            P(x,hole.heightAt(x,z),z),PI.toFloat())
+        for(side in intArrayOf(-1,1)) bush(b,x+side*8.3f,z-3.4f)
     }
 
-    private fun mill(b: MeshBuilder) {
-        val y=hole.heightAt(millX,millZ)
-        b.cone(millX,y,millZ,2.5f,9f,C(.90f,.86f,.70f),8,1.7f)
-        b.cone(millX,y+9f,millZ,2.3f,2.5f,C(.52f,.29f,.22f),8)
-        b.box(millX,y,millZ-2.35f,1.2f,2.2f,.2f,C(.37f,.29f,.20f))
-        for(h in listOf(3.6f,6.2f)) {
-            b.box(millX,y+h,millZ-2.08f,.85f,1.15f,.20f,C(.32f,.43f,.43f))
-            b.box(millX,y+h+.53f,millZ-2.21f,.88f,.06f,.06f,C(.89f,.85f,.72f))
+    private fun mill(b:MeshBuilder) {
+        val x=millX; val z=millZ; val y=hole.heightAt(x,z)
+        val plaster=C(.90f,.86f,.73f); val stone=C(.55f,.52f,.44f)
+        b.cone(x,y-.8f,z,4.1f,1.3f,stone,16,3.8f)
+        b.cone(x,y+.5f,z,3.5f,13f,plaster,16,2.3f)
+        for(h in listOf(.5f,4.5f,8.5f,13.3f)) {
+            val r=3.5f-(h-.5f)/13f*1.2f
+            b.cone(x,y+h,z,r+.10f,.18f,stone,16,r+.10f)
         }
+        b.cone(x,y+13.5f,z,2.9f,3.1f,C(.48f,.26f,.20f),16)
+        b.box(x,y+.35f,z-3.53f,1.7f,2.6f,.18f,stone.shade(.8f))
+        b.box(x,y+.42f,z-3.64f,1.3f,2.30f,.08f,C(.30f,.24f,.18f))
+        for(h in listOf(4.9f,8f)) {
+            val front=z-(3.5f-(h-.5f)/13f*1.2f)
+            b.box(x,y+h,front-.08f,1.15f,1.45f,.18f,stone)
+            b.box(x,y+h+.12f,front-.20f,.86f,1.15f,.06f,C(.30f,.44f,.48f))
+            b.box(x,y+h+.12f,front-.25f,.07f,1.15f,.06f,plaster)
+            b.box(x,y+h+.67f,front-.25f,.86f,.07f,.06f,plaster)
+        }
+        b.beam(P(x,y+10.2f,z-2.5f),P(x,y+10.2f,z-3.0f),.30f,C(.30f,.25f,.20f),10)
     }
 
     private fun cart(b: MeshBuilder,x: Float,z: Float) {
@@ -485,13 +475,16 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
 
     fun blades(): ClassicMesh {
         val b=MeshBuilder()
+        val wood=C(.36f,.28f,.19f); val canvas=C(.93f,.89f,.74f)
         for(i in 0..3) {
             val a=i*PI.toFloat()/2
-            fun p(r:Float,w:Float)=P(cos(a)*r-sin(a)*w,sin(a)*r+cos(a)*w,0f)
-            b.quad(p(.3f,-.09f),p(5.2f,-.09f),p(5.2f,.09f),p(.3f,.09f),C(.39f,.31f,.21f))
-            b.quad(p(2.1f,.1f),p(5.1f,.1f),p(5.1f,.84f),p(2.1f,.84f),C(.96f,.93f,.78f))
+            fun p(r:Float,w:Float,z:Float=0f)=P(cos(a)*r-sin(a)*w,sin(a)*r+cos(a)*w,z)
+            b.beam(p(.2f,0f),p(7.2f,0f),.10f,wood,6)
+            b.quad(p(2.7f,.13f),p(7.1f,.13f),p(7.1f,1.12f),p(2.7f,1.12f),canvas)
+            for(r in listOf(2.7f,3.8f,4.9f,6f,7.1f)) b.beam(p(r,.10f,-.025f),p(r,1.16f,-.025f),.035f,wood,4)
+            b.beam(p(2.7f,1.12f,-.025f),p(7.1f,1.12f,-.025f),.045f,wood,4)
         }
-        b.sphere(0f,0f,0f,.29f,C(.44f,.34f,.22f),8,4)
+        b.sphere(0f,0f,0f,.40f,wood,10,5)
         return b.build()
     }
 }

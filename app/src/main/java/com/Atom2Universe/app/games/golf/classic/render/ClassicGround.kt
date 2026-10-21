@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.games.golf.classic.render
 
+import android.content.res.AssetManager
+import android.graphics.BitmapFactory
+import android.opengl.GLUtils
 import android.opengl.GLES20 as GL
 import com.Atom2Universe.app.games.golf.classic.core.ClassicHole
 import java.nio.ByteBuffer
@@ -116,9 +119,15 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
     private var highlandsLoc = 0
     private var snowLoc = 0
     private var archipelagoLoc = 0
+    private val turfTextures = IntArray(4)
+    private val turfSamplers = IntArray(4)
+    private var textured = false
 
-    fun create() {
-        program = link(VERTEX, FRAGMENT)
+    fun create(assets: AssetManager?) {
+        textured = assets != null
+        program = link(VERTEX, if (textured) FRAGMENT.replace(
+            "#extension GL_OES_standard_derivatives : enable",
+            "#extension GL_OES_standard_derivatives : enable\n#define TURF_TEXTURES") else FRAGMENT)
         mvpLoc = GL.glGetUniformLocation(program, "uMvp")
         eyeLoc = GL.glGetUniformLocation(program, "uEye")
         timeLoc = GL.glGetUniformLocation(program, "uTime")
@@ -133,6 +142,25 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
         highlandsLoc = GL.glGetUniformLocation(program, "uHighlands")
         snowLoc = GL.glGetUniformLocation(program, "uSnow")
         archipelagoLoc = GL.glGetUniformLocation(program, "uArchipelago")
+        // Menu snapshots never open, decode or upload the terrain image assets.
+        if (assets == null) return
+        GL.glGenTextures(turfTextures.size, turfTextures, 0)
+        val names = arrayOf("rough", "fairway", "green", "fringe")
+        names.forEachIndexed { index, name ->
+            turfSamplers[index] = GL.glGetUniformLocation(program, "uTurf$index")
+            GL.glBindTexture(GL.GL_TEXTURE_2D, turfTextures[index])
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
+            val bitmap = assets.open("golf/textures/$name.webp").use {
+                checkNotNull(BitmapFactory.decodeStream(it))
+            }
+            try { GLUtils.texImage2D(GL.GL_TEXTURE_2D, 0, bitmap, 0) }
+            finally { bitmap.recycle() }
+            GL.glGenerateMipmap(GL.GL_TEXTURE_2D)
+        }
+        GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
     }
 
     /**
@@ -144,6 +172,12 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
     fun draw(mesh: GroundMesh, viewProjection: FloatArray, eyeX: Float, eyeY: Float, eyeZ: Float, time: Float, overview: Boolean,
              board: SlopeBoard?, cell: Float, fineWeight: Float, holeX: Float, holeZ: Float, pixel: Float, lineScale: Float) {
         GL.glUseProgram(program)
+        if (textured) turfTextures.forEachIndexed { index, texture ->
+            GL.glActiveTexture(GL.GL_TEXTURE0 + index)
+            GL.glBindTexture(GL.GL_TEXTURE_2D, texture)
+            GL.glUniform1i(turfSamplers[index], index)
+        }
+        GL.glActiveTexture(GL.GL_TEXTURE0)
         GL.glUniform1f(highlandsLoc,if(highlands)1f else 0f)
         GL.glUniform1f(snowLoc,if(snowy)1f else 0f)
         GL.glUniform1f(archipelagoLoc,if(archipelago)1f else 0f)
@@ -164,6 +198,8 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
     }
 
     fun release() {
+        GL.glDeleteTextures(turfTextures.size, turfTextures, 0)
+        turfTextures.fill(0)
         if (program != 0) GL.glDeleteProgram(program)
         program = 0
     }
@@ -225,6 +261,12 @@ uniform float uHighlands;
 uniform float uSnow;
 uniform float uArchipelago;
 uniform vec2 uCutWidths;
+#ifdef TURF_TEXTURES
+uniform sampler2D uTurf0;
+uniform sampler2D uTurf1;
+uniform sampler2D uTurf2;
+uniform sampler2D uTurf3;
+#endif
 // Slope board: squares fixed on the ground, lines along the world axes through the hole (uHole).
 // Window: the squares whose centre lies within radius of the segment uBoard (from xz, to xz);
 // window radius, on; square size, weight of the half-size lines, reference height, rise shown in full colour.
@@ -382,6 +424,19 @@ void main() {
         tint=mix(tint,vec3(1.04,1.015,.94),sand);
     }
     vec3 colour=base*shade*tint;
+#ifdef TURF_TEXTURES
+    // Neutral ImageGen materials modulate any seasonal palette. Mipmaps filter the blades;
+    // the gentle distance fade leaves the broad mowing bands legible from the aerial view.
+    if(vCuts.w>.5 && rough+fairway+green+semi+fringe>.001) {
+        float grain=texture2D(uTurf0,p/2.8).r*rough
+            +texture2D(uTurf1,p/2.0).r*fairway
+            +texture2D(uTurf2,p/1.2).r*green
+            +texture2D(uTurf3,p/1.7).r*(semi+fringe);
+        float grassWeight=rough+fairway+green+semi+fringe;
+        float detail=1.0-smoothstep(.06,.35,waterPixel);
+        colour*=1.0+(grain-.7843*grassWeight)*1.15*detail*(1.0-uSnow*rough);
+    }
+#endif
     if(inlandLake && vLakeDistance<10.0) {
         // Damp mineral edge, fresh bankside grass, then the seasonal meadow.
         // Keep the golf cuts readable and use existing meadow noise for an irregular width.

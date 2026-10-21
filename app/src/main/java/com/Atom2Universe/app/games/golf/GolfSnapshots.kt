@@ -51,7 +51,7 @@ internal object GolfSnapshots {
     /** Also called by the hub's background worker; concurrent requests share the same frame. */
     @Synchronized fun load(context: Context, key: String): Bitmap {
         cache.get(key)?.let { return it }
-        val file = File(context.cacheDir, "golf-views/v${snapshotVersion(key)}-$key.png")
+        val file = File(context.cacheDir, "golf-views/v${snapshotVersion(key)}-buildings2-$key.png")
         BitmapFactory.decodeFile(file.path)?.let { cache.put(key, it); return it }
         val bitmap = capture(context, key)
         cache.put(key, bitmap)
@@ -95,7 +95,7 @@ internal object GolfSnapshots {
             val x = if (mini) hole.tee.x else hole.fairwayCenter(z)
             val ball = GolfPoint(x, hole.heightAt(x, z) + .022f, z)
             val target = if (mini) hole.recommendedLanding(ball) else hole.cup
-            val renderer = ClassicRenderer(hole)
+            val renderer = ClassicRenderer(hole, context.assets, terrainTextures = false)
             renderer.frame = ClassicFrame(ball, atan2(target.x - x, target.z - z), false,
                 ShotPreview.NONE, club = if (mini) GolfClub.PUTTER else GolfClub.SW)
             renderer.onSurfaceCreated(null, null)

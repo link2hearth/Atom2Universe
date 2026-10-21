@@ -23,7 +23,7 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
                 hole.lieAt(x+dx,z+dz)==GolfLie.ROUGH && hole.fairwaySignedDistance(x+dx,z+dz)>4f &&
                     hole.greenSignedDistance(x+dx,z+dz)>5f &&
                     hole.hazards.none { it.signedDistance(x+dx,z+dz)<3f } &&
-                    abs(hole.heightAt(x+dx,z+dz)-y)<1.8f
+                    abs(hole.heightAt(x+dx,z+dz)-y)<.9f
             } } && hole.trees.none { hypot(x-it.x,z-it.z)<it.radius+9f })
                 return Site(P(x,y,z),atan2(-side,0f))
         }
@@ -43,8 +43,19 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
             else -> Unit
         }
     } }
-    // Follow the modest local crossfall so flowers, gifts and snowmen never float over a slope.
+    private val dwelling by lazy {
+        val colours = when(hole.decorTheme) {
+            GolfDecorTheme.HALLOWEEN -> C(.52f,.41f,.32f) to C(.28f,.22f,.31f)
+            GolfDecorTheme.CHRISTMAS -> C(.60f,.35f,.25f) to white
+            else -> C(.88f,.77f,.60f) to C(.52f,.35f,.66f)
+        }
+        MeshBuilder().apply {
+            append(GolfBuildings.house(colours.first,colours.second),P(0f,0f,-4.4f))
+        }
+    }
+    // Rigid architecture on a deep plinth; garden ornaments alone follow the crossfall.
     val scenery by lazy { sites.map { MeshBuilder().apply {
+        append(dwelling,it.origin,it.yaw)
         append(village,it.origin,it.yaw,groundHeight=hole::heightAt)
     }.build() } }
     private val light by lazy { MeshBuilder().apply { ellipsoid(0f,0f,0f,.06f,.06f,.06f,gold) }.build() }
@@ -117,9 +128,8 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
     }
 
     private fun fairyVillage(b:MeshBuilder) = with(b) {
-        house(this,C(.88f,.77f,.60f),C(.52f,.35f,.66f))
         // Toybox's polka-dot mushrooms become garden sculptures around the little dwelling.
-        for(i in 0..2) append(GolfToyboxModels.mushroom,P(-3.3f+i*.85f,0f,-1.6f),scale=.30f+i*.08f)
+        for(i in 0..2) append(GolfToyboxModels.mushroom,P(-3.3f+i*.85f,0f,.4f),scale=.30f+i*.08f)
         for(i in 0..8) {
             val x=-3.7f+i*.9f; val z=2.8f+sin(i*1.7f)*.6f
             beam(P(x,0f,z),P(x,.55f,z),.025f,mint,6)
@@ -133,24 +143,7 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
         repeat(9) { i -> ellipsoid(-1.15f+i*.28f,2.62f+.07f*sin(i*2f),2.4f,.12f,.10f,.12f,pink) }
     }
 
-    private fun house(b:MeshBuilder,wall:C,roof:C) = with(b) {
-        box(0f,-.3f,0f,3.6f,.45f,3.2f,C(.54f,.52f,.46f))
-        box(0f,.15f,0f,3.2f,2.3f,2.8f,wall)
-        quad(P(-1.9f,2.35f,-1.7f),P(1.9f,2.35f,-1.7f),P(1.9f,3.65f,0f),P(-1.9f,3.65f,0f),roof)
-        quad(P(-1.9f,3.65f,0f),P(1.9f,3.65f,0f),P(1.9f,2.35f,1.7f),P(-1.9f,2.35f,1.7f),roof)
-        for(s in intArrayOf(-1,1)) tri(P(s*1.6f,2.4f,-1.4f),P(s*1.6f,2.4f,1.4f),P(s*1.6f,3.5f,0f),wall)
-        box(0f,.16f,1.415f,.75f,1.65f,.08f,wood)
-        ellipsoid(.23f,.94f,1.48f,.035f,.035f,.035f,gold)
-        for(s in intArrayOf(-1,1)) {
-            box(s*.99f,1.0f,1.42f,.64f,.76f,.06f,gold)
-            box(s*.99f,.96f,1.46f,.74f,.07f,.07f,wood)
-            box(s*.99f,1f,1.46f,.06f,.83f,.07f,wood)
-        }
-        box(1f,2.7f,-.6f,.45f,1.1f,.45f,C(.51f,.42f,.38f))
-    }
-
     private fun halloweenVillage(b:MeshBuilder) = with(b) {
-        house(this,C(.47f,.36f,.28f),C(.28f,.22f,.31f))
         for(i in 0..2) pumpkin(this,2.8f+i*.85f,1.2f,.48f-i*.07f)
         // A bare tree with tapering branches and crooked tips.
         beam(P(-3.7f,0f,-1f),P(-3.5f,3.6f,-.8f),.22f,wood,10,.07f)
@@ -176,7 +169,6 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
     }
 
     private fun christmasVillage(b:MeshBuilder) = with(b) {
-        house(this,C(.56f,.31f,.22f),white)
         append(GolfToyboxModels.snowman,P(3.4f,0f,1.0f),scale=.34f)
         cone(-2.3f,0f,0f,.20f,.9f,wood,10,.17f)
         repeat(4) { i -> cone(-2.3f,.4f+i*.83f,0f,1.5f-i*.30f,1.55f,C(.12f,.34f,.24f),20) }
@@ -199,9 +191,9 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
             for(s in intArrayOf(-1,1)) ellipsoid(x+s*.09f,h+.08f,z,.10f,.065f,.055f,gold)
         }
         for(i in 0..12) {
-            val x=-1.7f+i*.28f; val y=2.32f-.17f*sin(i*PI.toFloat()/12)
-            if(i>0) beam(P(x-.28f,y+.015f,1.73f),P(x,y,1.73f),.012f,wood,4)
-            ellipsoid(x,y,1.74f,.042f,.06f,.042f,if(i%2==0)gold else C(.91f,.24f,.23f))
+            val x=-3.65f+i*.61f; val y=3.03f-.17f*sin(i*PI.toFloat()/12)
+            if(i>0) beam(P(x-.61f,y+.015f,-1.38f),P(x,y,-1.38f),.012f,wood,4)
+            ellipsoid(x,y,-1.37f,.042f,.06f,.042f,if(i%2==0)gold else C(.91f,.24f,.23f))
         }
     }
 }

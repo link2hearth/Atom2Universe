@@ -14,7 +14,8 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.*
 
-internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Renderer {
+internal class ClassicRenderer(private val hole: ClassicHole, private val assets: android.content.res.AssetManager,
+    private val terrainTextures: Boolean = true) : GLSurfaceView.Renderer {
     var onReady: (() -> Unit)? = null
     @Volatile var frame = ClassicFrame(hole.tee, 0f, false, ShotPreview.NONE)
     private val landscape=ClassicLandscape(hole)
@@ -123,7 +124,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         highlandsLoc=GL.glGetUniformLocation(program,"uHighlands")
         snowLoc=GL.glGetUniformLocation(program,"uSnow")
         meshes.forEach { it.upload() }
-        terrain.upload(); groundShader.create(); lightShader.create()
+        terrain.upload(); groundShader.create(if (terrainTextures && hole.mini == null) assets else null); lightShader.create()
         grass.create()
         golfer.create()
         val ids=IntArray(1)
@@ -205,7 +206,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         }
         identity()
         if(!hole.highlands && hole.islands.isEmpty() && hole.mini==null) {
-            Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
+            Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-3.0f)
             Matrix.rotateM(model,0,time*12f,0f,0f,1f)
             draw(blades,.05f)
         }

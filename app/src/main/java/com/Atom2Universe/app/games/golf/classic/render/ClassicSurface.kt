@@ -76,7 +76,7 @@ data class ClassicFrame(
 @SuppressLint("ViewConstructor")
 class ClassicSurface(context: Context, hole: ClassicHole) : GLSurfaceView(context) {
     var onReady: (() -> Unit)? = null
-    private val golfRenderer = ClassicRenderer(hole).apply { onReady = { post { this@ClassicSurface.onReady?.invoke() } } }
+    private val golfRenderer = ClassicRenderer(hole, context.assets).apply { onReady = { post { this@ClassicSurface.onReady?.invoke() } } }
     private val renderScale = (1.65f / resources.displayMetrics.density).coerceIn(.55f, 1f)
     private var lastRenderRequest = 0L
 
