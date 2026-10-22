@@ -88,7 +88,7 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.toyboxracers.ToyboxHubTileDrawable::class,
         com.Atom2Universe.app.games.orbite.OrbiteActivity::class.java.name to
             com.Atom2Universe.app.games.orbite.OrbiteHubTileDrawable::class,
-        com.Atom2Universe.app.games.colorstack.ColorStackActivity::class.java.name to
+        com.Atom2Universe.app.games.colorstack.ColorStackMenuActivity::class.java.name to
             com.Atom2Universe.app.games.colorstack.ColorStackHubTileDrawable::class,
         com.Atom2Universe.app.games.hexrunner.HexRunnerActivity::class.java.name to
             com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,

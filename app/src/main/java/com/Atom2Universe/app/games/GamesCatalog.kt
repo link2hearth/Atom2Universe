@@ -26,7 +26,7 @@ import com.Atom2Universe.app.games.circles.CirclesActivity
 import com.Atom2Universe.app.games.orbite.OrbiteActivity
 import com.Atom2Universe.app.games.pipetap.PipeTapActivity
 import com.Atom2Universe.app.games.starbridges.StarBridgesActivity
-import com.Atom2Universe.app.games.colorstack.ColorStackActivity
+import com.Atom2Universe.app.games.colorstack.ColorStackMenuActivity
 import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
@@ -347,7 +347,7 @@ object GamesCatalog {
             descriptionRes = R.string.color_stack_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_colorstack,
-            activityClass = ColorStackActivity::class.java
+            activityClass = ColorStackMenuActivity::class.java
         ),
         // Puzzles de logique et de tracé
         HubTile(

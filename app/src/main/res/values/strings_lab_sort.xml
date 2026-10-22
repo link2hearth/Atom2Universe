@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lab_sort_title">Test tubes</string>
+    <string name="lab_sort_description">Pour the liquids until each tube holds a single color</string>
+    <string name="lab_sort_rules">Pour the liquids until every tube holds a single color. Touch a tube, then another: the whole top group of the same color is poured if the destination is empty or has the same color on top.\n\nPipette: moves a single top layer to any tube that has room, even onto another color. You start with one and earn one for each finished tube (3 at most). Touch the button, then the tube to take from, then the tube to drop into.\n\nUndo: 10 per game. Restarting is unlimited.\n\nMystery: only the top color is visible; the others show up as they reach the top.\n\nFormulas: shows the chemical formula of each liquid, to tell them apart without relying on color.</string>
+    <string name="lab_sort_mystery">Mystery</string>
+    <string name="lab_sort_formulas">Formulas</string>
+    <string name="lab_sort_pipette">Pipette</string>
+    <string name="lab_sort_win_title">All sorted!</string>
+    <string name="lab_sort_win_reward">+%1$d neutrinos</string>
+    <string name="color_stack_menu_tokens">Tokens</string>
+    <string name="color_stack_menu_tokens_desc">Stack colored tokens, one at a time or by group</string>
+</resources>

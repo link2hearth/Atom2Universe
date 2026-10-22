@@ -51,6 +51,10 @@ object NeutrinoRewards {
     private val COLORSTACK_VALUES = intArrayOf(1, 3, 7)
     fun colorStack(difficultyOrdinal: Int) = COLORSTACK_VALUES[difficultyOrdinal]
 
+    // ── Éprouvettes (second jeu de Color Stack) : EASY/MEDIUM/HARD ─────────────────────────────
+    private val LABSORT_VALUES = intArrayOf(2, 5, 10)
+    fun labSort(difficultyOrdinal: Int) = LABSORT_VALUES[difficultyOrdinal]
+
     // ── PipeTap : (ordinal+1)×2 → 2..10 ────────────────────────────────────────
     fun pipeTap(difficultyOrdinal: Int) = (difficultyOrdinal + 1) * 2
     private val PIPETAP_VALUES get() = (0 until 5).map { pipeTap(it) }
@@ -251,6 +255,7 @@ object NeutrinoRewards {
             Entry(R.string.sudoku_title, list(SUDOKU_VALUES.toList()), R.string.neutrino_info_note_difficulty),
             Entry(R.string.minesweeper_title, list(MINESWEEPER_VALUES), R.string.neutrino_info_note_difficulty),
             Entry(R.string.color_stack_title, list(COLORSTACK_VALUES.toList()), R.string.neutrino_info_note_difficulty),
+            Entry(R.string.lab_sort_title, list(LABSORT_VALUES.toList()), R.string.neutrino_info_note_difficulty),
             Entry(R.string.pipetap_title, list(PIPETAP_VALUES), R.string.neutrino_info_note_difficulty),
             Entry(
                 R.string.circles_hub_title,

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lab_sort_title">Éprouvettes</string>
+    <string name="lab_sort_description">Versez les liquides jusqu\'à ce que chaque tube n\'ait qu\'une couleur</string>
+    <string name="lab_sort_rules">Verse les liquides jusqu\'à ce que chaque fiole n\'ait plus qu\'une couleur. Touche une fiole, puis une autre : tout le groupe de la couleur du dessus se verse si l\'arrivée est vide ou porte la même couleur au sommet.\n\nPipette : déplace un seul niveau du dessus vers n\'importe quelle fiole qui a de la place, même sur une autre couleur. Tu en as une au départ et tu en gagnes une à chaque fiole terminée (3 au maximum). Touche le bouton, puis la fiole de départ, puis celle d\'arrivée.\n\nAnnuler : 10 par partie. Recommencer est illimité.\n\nMystère : seule la couleur du dessus est visible ; les autres se dévoilent en arrivant au sommet.\n\nFormules : affiche la formule chimique de chaque liquide, pour les distinguer sans se fier à la couleur.</string>
+    <string name="lab_sort_mystery">Mystère</string>
+    <string name="lab_sort_formulas">Formules</string>
+    <string name="lab_sort_pipette">Pipette</string>
+    <string name="lab_sort_win_title">Tout est trié !</string>
+    <string name="lab_sort_win_reward">+%1$d neutrinos</string>
+    <string name="color_stack_menu_tokens">Jetons</string>
+    <string name="color_stack_menu_tokens_desc">Empilez des jetons colorés, un par un ou par groupe</string>
+</resources>

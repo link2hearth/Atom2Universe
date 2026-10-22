@@ -295,7 +295,17 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".games.colorstack.ColorStackMenuActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.colorstack.ColorStackActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".games.colorstack.LabSortActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
