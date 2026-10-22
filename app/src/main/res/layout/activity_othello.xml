@@ -31,6 +31,16 @@
             android:textStyle="bold"
             android:textColor="@color/startup_text_primary"
             android:layout_marginStart="8dp" />
+
+        <ImageButton
+            android:id="@+id/othello_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_info"
+            android:tint="@color/audio_text_primary"
+            android:padding="10dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
     </LinearLayout>
 
     <!-- Score -->

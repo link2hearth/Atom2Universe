@@ -18,6 +18,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListener {
 
@@ -80,6 +81,9 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
         newGameButton.setOnClickListener { startNewGame() }
 
         findViewById<ImageButton>(R.id.btn_back).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.minesweeper_info_button).setOnClickListener {
+            showGameRules(R.string.minesweeper_title, R.string.minesweeper_rules)
+        }
     }
 
     private fun setupDifficultySpinner() {

@@ -42,6 +42,16 @@
             android:gravity="center"
             android:fontFamily="monospace"
             android:textColor="?android:attr/textColorSecondary" />
+
+        <ImageButton
+            android:id="@+id/draughts_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_info"
+            android:tint="@color/audio_text_primary"
+            android:padding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
     </LinearLayout>
 
     <TextView

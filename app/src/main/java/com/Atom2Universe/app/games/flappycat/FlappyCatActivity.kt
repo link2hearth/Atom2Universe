@@ -8,6 +8,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class FlappyCatActivity : ThemedActivity() {
 
@@ -26,6 +27,10 @@ class FlappyCatActivity : ThemedActivity() {
         gameView = findViewById(R.id.flappy_cat_view)
         findViewById<ImageButton>(R.id.flappy_cat_btn_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.flappy_cat_btn_pause).setOnClickListener { gameView.togglePause() }
+        findViewById<ImageButton>(R.id.flappy_cat_btn_info).setOnClickListener {
+            gameView.pauseForRules()
+            showGameRules(R.string.flappy_cat_title, R.string.flappy_cat_rules)
+        }
     }
 
     override fun onResume() {

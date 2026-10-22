@@ -20,6 +20,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import org.json.JSONObject
 import org.json.JSONArray
 
@@ -100,6 +101,18 @@ class Match3Activity : ThemedActivity() {
         minHeight = dp(48); setPadding(dp(12), dp(8), dp(12), dp(8))
         setOnClickListener { action() }
     }
+    /** Le « i » commun à tous les jeux : ouvre la bulle de règles. */
+    private fun infoButton() = ImageButton(this).apply {
+        setImageResource(R.drawable.ic_info)
+        setColorFilter(0xffecf2f2.toInt())
+        contentDescription = getString(R.string.kit_rules)
+        val ripple = obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackgroundBorderless))
+        background = ripple.getDrawable(0)
+        ripple.recycle()
+        setPadding(dp(10), dp(10), dp(10), dp(10))
+        layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
+        setOnClickListener { showGameRules(R.string.match3_title, R.string.match3_rules) }
+    }
     private fun LinearLayout.addFull(view: View, height: Int = -2) {
         addView(view, LinearLayout.LayoutParams(-1, height).apply { topMargin = dp(8) })
     }
@@ -153,6 +166,7 @@ class Match3Activity : ThemedActivity() {
         head.addView(label(getString(R.string.match3_title), 26f).apply {
             setTypeface(typeface, Typeface.BOLD); gravity = Gravity.END
         }, LinearLayout.LayoutParams(0, -2, 1f))
+        head.addView(infoButton())
         outer.addFull(head)
         val wide = isLandscape()
         val body = LinearLayout(this).apply { orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL }
@@ -221,14 +235,6 @@ class Match3Activity : ThemedActivity() {
         val arcadeBest = getSharedPreferences("match3_save", MODE_PRIVATE).getInt("best_score", 0)
         if (arcadeBest > 0) overheat.addView(label(getString(R.string.forge_best_score, arcadeBest.toLong()), 13f, 0xffbdced1.toInt()))
         choices.addFull(overheat)
-        val links = LinearLayout(this)
-        links.addView(button(getString(R.string.forge_rules)) {
-            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
-                .setTitle(R.string.forge_rules)
-                .setMessage(getString(R.string.forge_rules_body, getString(R.string.forge_how), getString(R.string.forge_bonuses_help)))
-                .setPositiveButton(android.R.string.ok, null).show()
-        }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
-        choices.addFull(links)
     }
 
     private fun showForge(game: ForgeGame) {
@@ -245,10 +251,14 @@ class Match3Activity : ThemedActivity() {
         head.addView(button(getString(R.string.forge_menu)) { showMenu() })
         status = label("", 14f, 0xffedb56b.toInt()).apply { gravity = Gravity.END }
         if (wide) {
+            head.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
+            head.addView(infoButton())
             information.addFull(head)
             information.addFull(status.apply { gravity = Gravity.START })
         } else {
-            head.addView(status, LinearLayout.LayoutParams(0, -2, 1f)); information.addFull(head)
+            head.addView(status, LinearLayout.LayoutParams(0, -2, 1f))
+            head.addView(infoButton())
+            information.addFull(head)
         }
         metrics = label("", 14f, 0xff78e0d8.toInt())
         val gravityIndicator = GravityIndicatorView(this)
@@ -355,6 +365,9 @@ class Match3Activity : ThemedActivity() {
         }
         findViewById<View>(R.id.match3_btn_back).setOnClickListener { showMenu() }
         findViewById<View>(R.id.match3_btn_new).setOnClickListener { board.resetGame() }
+        findViewById<View>(R.id.match3_info_button).setOnClickListener {
+            showGameRules(R.string.match3_title, R.string.match3_rules)
+        }
     }
 
     override fun onPause() { timerHandler.removeCallbacks(timerTick); store(); forge?.pause(); sensor.disable(); super.onPause() }

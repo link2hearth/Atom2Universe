@@ -65,6 +65,16 @@
             android:textStyle="bold"
             android:minWidth="80dp"
             android:gravity="end" />
+
+        <ImageButton
+            android:id="@+id/roulette_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_info"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            app:tint="#B0BEC5" />
     </LinearLayout>
 
     <!-- ── Grille 3×3 (ImageViews) ─────────────────────────────────────── -->

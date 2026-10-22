@@ -11,6 +11,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Orbite : fais tourner l'électron autour du noyau, tape pour inverser son sens,
@@ -56,6 +57,10 @@ class OrbiteActivity : ThemedActivity() {
         findViewById<Button>(R.id.orbite_btn_restart).setOnClickListener { launchGame() }
         findViewById<Button>(R.id.orbite_btn_back_start).setOnClickListener { finish() }
         findViewById<Button>(R.id.orbite_btn_back_gameover).setOnClickListener { finish() }
+        findViewById<View>(R.id.orbite_info_button).setOnClickListener {
+            gameView.held = true
+            showGameRules(R.string.orbite_title, R.string.orbite_rules) { gameView.held = false }
+        }
 
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { finish() }

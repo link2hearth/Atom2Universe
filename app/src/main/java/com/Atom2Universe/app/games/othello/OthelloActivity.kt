@@ -12,6 +12,7 @@ import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -48,6 +49,9 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
 
         boardView.cellClickListener = this
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
+        findViewById<View>(R.id.othello_info_button).setOnClickListener {
+            showGameRules(R.string.othello_title, R.string.othello_rules)
+        }
         modeButton.setOnClickListener { toggleMode() }
         newGameButton.setOnClickListener { startNewGame() }
 

@@ -63,6 +63,16 @@
                 android:src="@android:drawable/ic_menu_zoom"
                 android:tint="@color/audio_text_primary" />
 
+            <ImageButton
+                android:id="@+id/memory_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="@color/audio_text_primary" />
+
         </LinearLayout>
 
         <HorizontalScrollView

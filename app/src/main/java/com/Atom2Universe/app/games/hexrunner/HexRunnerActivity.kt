@@ -11,6 +11,7 @@ import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class HexRunnerActivity : ThemedActivity() {
 
@@ -74,6 +75,10 @@ class HexRunnerActivity : ThemedActivity() {
             hexView.startGame(numFaces)
         }
         findViewById<Button>(R.id.hex_btn_back_gameover).setOnClickListener { finish() }
+        findViewById<View>(R.id.hex_info_button).setOnClickListener {
+            hexView.held = true
+            showGameRules(R.string.hex_runner_title, R.string.hex_runner_rules) { hexView.held = false }
+        }
     }
 
     private fun toggleMode() {

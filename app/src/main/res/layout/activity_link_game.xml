@@ -85,6 +85,16 @@
             android:src="@drawable/ic_restart"
             app:tint="?attr/a2uSecondaryTextColor" />
 
+        <ImageButton
+            android:id="@+id/link_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uSecondaryTextColor" />
+
     </LinearLayout>
 
     <!-- Plateau -->

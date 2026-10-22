@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class HotPotatoActivity : ThemedActivity() {
 
@@ -20,6 +21,10 @@ class HotPotatoActivity : ThemedActivity() {
         gameView = findViewById(R.id.hot_potato_view)
         findViewById<ImageButton>(R.id.hot_potato_btn_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.hot_potato_btn_pause).setOnClickListener { gameView.togglePause() }
+        findViewById<ImageButton>(R.id.hot_potato_btn_info).setOnClickListener {
+            gameView.pauseForRules()
+            showGameRules(R.string.hot_potato_title, R.string.hot_potato_rules)
+        }
     }
 
     override fun onResume() {

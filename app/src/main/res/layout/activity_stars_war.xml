@@ -57,6 +57,16 @@
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/sw_pause_action" />
 
+        <ImageButton
+            android:id="@+id/stars_war_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            android:tint="@color/sw_ivory"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
+
     </LinearLayout>
 
     <com.Atom2Universe.app.games.starswar.StarsWarView

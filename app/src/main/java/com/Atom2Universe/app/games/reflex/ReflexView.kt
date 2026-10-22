@@ -213,6 +213,9 @@ class ReflexView @JvmOverloads constructor(
         if (game.phase == ReflexPhase.PLAYING) game.phase = ReflexPhase.PAUSED
     }
 
+    /** Ouvre la bulle de règles : une partie en cours se met en pause. */
+    fun pauseForRules() { if (game.phase == ReflexPhase.PLAYING) game.phase = ReflexPhase.PAUSED }
+
     fun resume() { if (!running && holder.surface?.isValid == true) start() }
 
     /** Retour système : l'activité demande, le fil de jeu décide. */
@@ -906,10 +909,10 @@ class ReflexView @JvmOverloads constructor(
             canvas.drawText(multStr, w / 2f + 96f * dp, 36f * dp, text)
         }
 
-        // Vies : trois petits atomes en haut à droite.
+        // Vies : trois petits atomes en haut à droite, à gauche du bouton « i » de l'activité.
         val lifeR = 8f * dp
         for (i in 0 until ReflexGame.MAX_LIVES) {
-            val x = w - 22f * dp - i * 28f * dp
+            val x = w - 66f * dp - i * 28f * dp
             val y = 30f * dp
             val has = i < game.lives
             val popScale = if (i == game.lives - 1 && lifePop > 0f) 1f + lifePop * 0.6f

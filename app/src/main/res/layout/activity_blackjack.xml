@@ -116,6 +116,16 @@
             android:contentDescription="@string/settings_title"
             app:tint="?attr/a2uSecondaryTextColor"
             android:padding="8dp" />
+
+        <ImageButton
+            android:id="@+id/bj_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_info"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            app:tint="?attr/a2uSecondaryTextColor"
+            android:padding="10dp" />
     </LinearLayout>
 
     <!-- Bottom controls container -->

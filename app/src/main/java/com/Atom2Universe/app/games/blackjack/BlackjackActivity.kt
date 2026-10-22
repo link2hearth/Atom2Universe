@@ -19,6 +19,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class BlackjackActivity : ThemedActivity() {
 
@@ -120,6 +121,9 @@ class BlackjackActivity : ThemedActivity() {
     private fun setupListeners() {
         findViewById<ImageButton>(R.id.bj_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.bj_settings).setOnClickListener { showSettingsDialog() }
+        findViewById<ImageButton>(R.id.bj_info).setOnClickListener {
+            showGameRules(R.string.blackjack_title, R.string.blackjack_rules)
+        }
 
         btnBetMinus.setOnClickListener {
             val step = betStep()

@@ -16,6 +16,7 @@ import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 
 class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
@@ -70,6 +71,9 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         difficultySpinner = findViewById(R.id.color_stack_difficulty_spinner)
 
         findViewById<ImageButton>(R.id.color_stack_back_button).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.color_stack_info_button).setOnClickListener {
+            showGameRules(R.string.color_stack_title, R.string.color_stack_rules)
+        }
         findViewById<TextView>(R.id.color_stack_btn_new).setOnClickListener { startNewGame(game.difficulty) }
         findViewById<TextView>(R.id.color_stack_btn_restart).setOnClickListener { restartGame() }
         findViewById<TextView>(R.id.color_stack_btn_undo).setOnClickListener { undoMove() }

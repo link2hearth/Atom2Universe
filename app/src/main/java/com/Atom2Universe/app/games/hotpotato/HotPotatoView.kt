@@ -275,6 +275,9 @@ class HotPotatoView @JvmOverloads constructor(
     }
 
     // ── Contrôles publics ─────────────────────────────────────────────────────────
+    /** Ouvre la bulle de règles : une partie en cours se met en pause. */
+    fun pauseForRules() { if (phase == Phase.RUNNING) phase = Phase.PAUSED }
+
     fun togglePause() {
         phase = when (phase) {
             Phase.RUNNING -> Phase.PAUSED

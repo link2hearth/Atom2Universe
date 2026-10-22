@@ -21,6 +21,7 @@ import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 
 class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
@@ -74,6 +75,9 @@ class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
         gameView.listener = this
 
         findViewById<ImageButton>(R.id.pipetap_back_button).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.pipetap_info_button).setOnClickListener {
+            showGameRules(R.string.pipetap_title, R.string.pipetap_rules)
+        }
         findViewById<MaterialButton>(R.id.pipetap_btn_again).setOnClickListener {
             startNewGame(game.difficulty)
         }

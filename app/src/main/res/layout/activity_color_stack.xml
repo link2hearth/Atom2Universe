@@ -49,10 +49,23 @@
         android:text="@string/color_stack_moves_zero"
         android:textColor="?attr/a2uTertiaryTextColor"
         android:textSize="13sp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toStartOf="@id/color_stack_info_button"
         app:layout_constraintTop_toTopOf="@id/color_stack_back_button"
         app:layout_constraintBottom_toBottomOf="@id/color_stack_back_button" />
+
+    <!-- Bouton règles -->
+    <ImageButton
+        android:id="@+id/color_stack_info_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/kit_rules"
+        android:padding="10dp"
+        android:src="@drawable/ic_info"
+        app:tint="?attr/a2uSecondaryTextColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Vue du jeu -->
     <com.Atom2Universe.app.games.colorstack.ColorStackView

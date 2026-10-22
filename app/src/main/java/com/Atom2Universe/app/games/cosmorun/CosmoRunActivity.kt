@@ -18,6 +18,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class CosmoRunActivity : ThemedActivity() {
     private lateinit var root: FrameLayout
@@ -111,6 +112,21 @@ class CosmoRunActivity : ThemedActivity() {
         setPadding(dp(14), dp(10), dp(14), dp(10))
         setOnClickListener { action() }
     }
+    /** Le « i » commun à tous les jeux : ouvre la bulle de règles (la course se met en pause d'abord). */
+    private fun infoButton() = ImageButton(this).apply {
+        val ripple = android.util.TypedValue()
+        theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)
+        setBackgroundResource(ripple.resourceId)
+        setImageResource(R.drawable.ic_info)
+        imageTintList = android.content.res.ColorStateList.valueOf(muted)
+        setPadding(dp(10), dp(10), dp(10), dp(10))
+        contentDescription = getString(R.string.kit_rules)
+        setOnClickListener { showRules() }
+    }
+    private fun showRules() {
+        if (panel == Panel.RUN) showPanel(Panel.PAUSE)
+        showGameRules(R.string.cosmo_run_hub_title, R.string.cosmo_run_rules)
+    }
     private fun LinearLayout.addSpaced(view: View, margin: Int = 10) {
         addView(view, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(margin) })
     }
@@ -127,6 +143,7 @@ class CosmoRunActivity : ThemedActivity() {
         scoreColumn.addView(sectorText); scoreColumn.addView(scoreText)
         top.addView(scoreColumn, LinearLayout.LayoutParams(0, -2, 1f))
         top.addView(button(getString(R.string.cosmo_pause)) { showPanel(Panel.PAUSE) }, LinearLayout.LayoutParams(-2, dp(48)))
+        top.addView(infoButton(), LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(6) })
         hud.addView(top)
         chainBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 1000; progressBackgroundTintList = android.content.res.ColorStateList.valueOf(palette.raised)
@@ -244,6 +261,9 @@ class CosmoRunActivity : ThemedActivity() {
         overlay.addView(scroll, FrameLayout.LayoutParams(width, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
             bottomMargin = dp(18); topMargin = dp(18)
         })
+        overlay.addView(infoButton(), FrameLayout.LayoutParams(dp(48), dp(48), Gravity.TOP or Gravity.END).apply {
+            topMargin = dp(6); marginEnd = dp(6)
+        })
         when (next) {
             Panel.HANGAR -> {
                 card.addView(label(getString(R.string.cosmo_kicker), 11f, mint, true))
@@ -254,7 +274,7 @@ class CosmoRunActivity : ThemedActivity() {
                 card.addSpaced(button(getString(R.string.cosmo_run_btn_start), true) { startRun() }, 18)
                 card.addSpaced(button(getString(R.string.cosmo_suit_button, suitName())) { showSuits() })
                 val row = LinearLayout(this)
-                row.addView(button(getString(R.string.cosmo_guide)) { showGuide() }, LinearLayout.LayoutParams(0, -2, 1f))
+                row.addView(button(getString(R.string.cosmo_options)) { showOptions() }, LinearLayout.LayoutParams(0, -2, 1f))
                 row.addView(button(getString(R.string.cosmo_run_btn_back)) { finish() }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
                 card.addSpaced(row)
             }
@@ -262,7 +282,7 @@ class CosmoRunActivity : ThemedActivity() {
                 card.addView(label(getString(R.string.cosmo_pause_title), 30f, white, true))
                 card.addSpaced(label(missionList(), 15f, mint))
                 card.addSpaced(button(getString(R.string.cosmo_resume), true) { resumeRun() }, 20)
-                card.addSpaced(button(getString(R.string.cosmo_guide)) { showGuide() })
+                card.addSpaced(button(getString(R.string.cosmo_options)) { showOptions() })
                 card.addSpaced(button(getString(R.string.cosmo_finish_run)) { settleRun(); showPanel(Panel.RESULTS) })
             }
             Panel.RESULTS -> {
@@ -331,10 +351,10 @@ class CosmoRunActivity : ThemedActivity() {
                 }
             }.setNegativeButton(R.string.cosmo_close, null).show()
     }
-    private fun showGuide() {
+    /** Vibrations et son : les règles, elles, sont dans la bulle « i » commune à tous les jeux. */
+    private fun showOptions() {
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
-            .setTitle(R.string.cosmo_guide)
-            .setMessage(R.string.cosmo_run_instructions)
+            .setTitle(R.string.cosmo_options)
             .setPositiveButton(R.string.cosmo_close, null)
             .setNeutralButton(if (runView.feedbackEnabled) R.string.cosmo_haptics_off else R.string.cosmo_haptics_on) { _, _ ->
                 runView.feedbackEnabled = !runView.feedbackEnabled

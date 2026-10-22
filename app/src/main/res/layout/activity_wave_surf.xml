@@ -75,19 +75,17 @@
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/wave_surf_restart" />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/wave_surf_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uMidiAccent"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:gravity="center"
-        android:text="@string/wave_surf_hint"
-        android:textSize="13sp"
-        android:textColor="?attr/a2uMidiAccent" />
+    </LinearLayout>
 
     <com.Atom2Universe.app.games.wavesurf.WaveSurfView
         android:id="@+id/wave_surf_view"

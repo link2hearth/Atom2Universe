@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -40,6 +41,16 @@
             android:src="@drawable/ic_pause"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/hot_potato_paused" />
+
+        <ImageButton
+            android:id="@+id/hot_potato_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="@android:color/white"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
 
     </LinearLayout>
 

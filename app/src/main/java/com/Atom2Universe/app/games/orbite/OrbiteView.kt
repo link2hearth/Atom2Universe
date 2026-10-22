@@ -67,6 +67,9 @@ class OrbiteView @JvmOverloads constructor(
     @Volatile private var pendingStart = false
     private var thread: Thread? = null
 
+    /** Vrai pendant la lecture des règles : la partie est figée, l'affichage continue. */
+    @Volatile var held = false
+
     var onScoreChanged: ((Int) -> Unit)? = null
     var onGameOver: (() -> Unit)? = null
     private var lastScore = -1
@@ -159,7 +162,7 @@ class OrbiteView @JvmOverloads constructor(
                 game.start()
             }
 
-            if (game.isRunning) {
+            if (game.isRunning && !held) {
                 game.update(dtMs)
                 pushTrail()
             }

@@ -87,6 +87,8 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
         Choreographer.getInstance().removeFrameCallback(this)
         scheduled = false; lastFrame = 0L; accumulator = 0f
     }
+    /** Ouvre la bulle de règles : une partie en cours se met en pause, on reprend d'un tap. */
+    fun pauseForRules() { if (phase == Phase.RUNNING) { phase = Phase.PAUSED; invalidate() } }
     fun togglePause() {
         phase = when (phase) { Phase.RUNNING -> Phase.PAUSED; Phase.PAUSED -> Phase.RUNNING; else -> phase }
         accumulator = 0f; invalidate(); schedule()

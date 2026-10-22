@@ -3,7 +3,6 @@
     <string name="orbite_title">Orbit</string>
     <string name="orbite_description">Spin the electron, dodge the asteroids, harvest the energy quanta!</string>
     <string name="orbite_subtitle">One tap reverses the electron\'s orbit</string>
-    <string name="orbite_instructions">Dodge the cosmic debris drawn to the nucleus · sweep the green quanta to build combos</string>
     <string name="orbite_btn_start">Start</string>
     <string name="orbite_btn_restart">Retry</string>
     <string name="orbite_btn_back">Back</string>

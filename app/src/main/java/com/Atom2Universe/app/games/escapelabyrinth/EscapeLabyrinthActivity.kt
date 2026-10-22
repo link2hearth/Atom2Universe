@@ -14,6 +14,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,6 +82,9 @@ class EscapeLabyrinthActivity : ThemedActivity() {
 
     private fun setupListeners() {
         findViewById<View>(R.id.escape_btn_back).setOnClickListener { finish() }
+        findViewById<View>(R.id.escape_info_button).setOnClickListener {
+            showGameRules(R.string.escape_title, R.string.escape_rules)
+        }
         btnNew.setOnClickListener { startNewGame() }
 
         btnEasy.setOnClickListener   { changeDifficulty(Difficulty.EASY) }

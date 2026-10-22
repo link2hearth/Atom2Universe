@@ -25,6 +25,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -95,6 +96,9 @@ class MemoryActivity : ThemedActivity() {
         findViewById<ImageButton>(R.id.memory_back_button).setOnClickListener { finish() }
         findViewById<MaterialButton>(R.id.memory_btn_again).setOnClickListener {
             startNewGame(game.difficulty)
+        }
+        findViewById<ImageButton>(R.id.memory_info_button).setOnClickListener {
+            showGameRules(R.string.memory_title, R.string.memory_rules)
         }
         zoomButton.setOnClickListener {
             boardZoomed = !boardZoomed

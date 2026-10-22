@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 class GameOfLifeActivity : ThemedActivity() {
@@ -163,11 +164,7 @@ class GameOfLifeActivity : ThemedActivity() {
     }
 
     private fun showInfoDialog() {
-        ImmersiveAlertDialogBuilder(this)
-            .setTitle(R.string.gol_info_title)
-            .setMessage(R.string.gol_info_text)
-            .setPositiveButton(R.string.close, null)
-            .show()
+        showGameRules(R.string.gol_info_title, R.string.gol_info_text)
     }
 
     private fun buildBottomBar(): LinearLayout {

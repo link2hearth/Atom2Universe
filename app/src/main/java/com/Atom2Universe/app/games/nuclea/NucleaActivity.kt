@@ -16,6 +16,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class NucleaActivity : ThemedActivity() {
 
@@ -72,6 +73,10 @@ class NucleaActivity : ThemedActivity() {
         }
         findViewById<ImageButton>(R.id.nuclea_btn_pause).setOnClickListener {
             gameView.requestPause()
+        }
+        findViewById<ImageButton>(R.id.nuclea_btn_info).setOnClickListener {
+            gameView.requestPause()
+            showGameRules(R.string.nuclea_title, R.string.nuclea_rules)
         }
     }
 

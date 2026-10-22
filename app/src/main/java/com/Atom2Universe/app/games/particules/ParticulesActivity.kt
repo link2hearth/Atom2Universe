@@ -11,6 +11,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.particules.data.ParticulesDatabase
 import com.Atom2Universe.app.games.particules.data.ParticulesMetaEntity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,6 +60,15 @@ class ParticulesActivity : ThemedActivity() {
                     pauseButton.contentDescription = getString(R.string.particules_resume)
                 }
             }
+        }
+
+        findViewById<ImageButton>(R.id.info_button).setOnClickListener {
+            if (gameView.isPlaying()) {
+                gameView.pause()
+                pauseButton.setImageResource(R.drawable.ic_play)
+                pauseButton.contentDescription = getString(R.string.particules_resume)
+            }
+            showGameRules(R.string.particules_title, R.string.particules_rules)
         }
 
         // Load meta progression, then wire callback for saves

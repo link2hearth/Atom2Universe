@@ -19,6 +19,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.draughts.ai.DraughtsAI
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 
 class DraughtsActivity : ThemedActivity(),
@@ -78,6 +79,9 @@ class DraughtsActivity : ThemedActivity(),
 
     private fun setupBackButton() {
         findViewById<View>(R.id.draughts_back_button).setOnClickListener { finish() }
+        findViewById<View>(R.id.draughts_info_button).setOnClickListener {
+            showGameRules(R.string.draughts_title, R.string.draughts_rules)
+        }
     }
 
     private fun setupDifficultySpinner() {

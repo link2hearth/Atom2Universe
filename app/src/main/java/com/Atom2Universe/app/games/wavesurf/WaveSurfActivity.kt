@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class WaveSurfActivity : ThemedActivity() {
 
@@ -45,6 +47,13 @@ class WaveSurfActivity : ThemedActivity() {
 
         findViewById<ImageButton>(R.id.wave_surf_btn_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.wave_surf_btn_restart).setOnClickListener { gameView.resetGame() }
+        findViewById<ImageButton>(R.id.wave_surf_btn_info).setOnClickListener {
+            // Le jeu n'a pas de pause : on arrête la boucle le temps de lire, puis on la relance.
+            gameView.pause()
+            showGameRules(R.string.wave_surf_title, R.string.wave_surf_rules) {
+                if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) gameView.resume()
+            }
+        }
     }
 
     override fun onResume() {

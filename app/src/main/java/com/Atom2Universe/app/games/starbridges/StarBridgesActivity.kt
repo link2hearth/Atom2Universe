@@ -17,6 +17,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Constellations (ancien « Star Bridges ») : relier les étoiles par des traits qui ne se
@@ -71,6 +72,9 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
 
         findViewById<ImageButton>(R.id.sb_back_button).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.sb_restart_button).setOnClickListener { restartPuzzle() }
+        findViewById<ImageButton>(R.id.sb_info_button).setOnClickListener {
+            showGameRules(R.string.starbridges_title, R.string.starbridges_rules)
+        }
         findViewById<ImageButton>(R.id.sb_atlas_button).setOnClickListener { openAtlas() }
         findViewById<MaterialButton>(R.id.sb_btn_atlas).setOnClickListener { openAtlas() }
         findViewById<MaterialButton>(R.id.sb_btn_again).setOnClickListener { startNewGame(game.size) }

@@ -19,6 +19,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,6 +67,8 @@ class CirclesActivity : ThemedActivity() {
 
         findViewById<ImageButton>(R.id.circles_back_button)
             .setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.circles_info_button)
+            .setOnClickListener { showGameRules(R.string.circles_title, R.string.circles_rules) }
         findViewById<MaterialButton>(R.id.circles_btn_new)
             .setOnClickListener { startNewGame(game.difficulty) }
         btnRestart.setOnClickListener { restartGame() }

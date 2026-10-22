@@ -11,11 +11,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Accrétion (ancien « Bigger ») : on lâche des astres dans un bocal, deux jumeaux qui se
@@ -70,6 +72,13 @@ class BiggerActivity : ThemedActivity() {
             @Suppress("DEPRECATION") onBackPressed()
         }
         findViewById<ImageButton>(R.id.bigger_btn_restart).setOnClickListener { askRestart(it) }
+        findViewById<ImageButton>(R.id.bigger_btn_info).setOnClickListener {
+            // Le temps de lire, la chute des astres est suspendue ; elle repart à la fermeture de la bulle.
+            gameView.pause()
+            showGameRules(R.string.bigger_title, R.string.bigger_rules) {
+                if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) gameView.resume()
+            }
+        }
     }
 
     /**

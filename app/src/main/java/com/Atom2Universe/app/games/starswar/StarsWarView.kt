@@ -417,6 +417,8 @@ class StarsWarView @JvmOverloads constructor(
     }
 
     fun togglePause() { pendingPauseToggle = true }
+    /** Ouvre la bulle de règles : une partie en cours se met en pause (on reprend avec le bouton ou un tap). */
+    fun pauseForRules() { if (phase == Phase.RUNNING || phase == Phase.METEOR) pendingPauseToggle = true }
     fun requestMagnet() { pendingPower = 1 }
     fun requestNova() { pendingPower = 2 }
 

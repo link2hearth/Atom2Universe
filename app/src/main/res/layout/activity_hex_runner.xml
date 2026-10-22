@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
@@ -39,15 +40,9 @@
             android:paddingHorizontal="40dp"
             android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hex_runner_instructions"
-            android:textColor="#778899"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:paddingHorizontal="40dp"
-            android:layout_marginBottom="40dp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="34dp" />
 
         <Button
             android:id="@+id/hex_btn_mode_start"
@@ -146,5 +141,17 @@
             android:textColor="#AAAAAA" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/hex_info_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="6dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_info"
+        app:tint="@android:color/white"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/kit_rules" />
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class StarsWarActivity : ThemedActivity() {
 
@@ -29,6 +30,10 @@ class StarsWarActivity : ThemedActivity() {
         val magnetButton = findViewById<Button>(R.id.sw_magnet_button)
         val novaButton = findViewById<Button>(R.id.sw_nova_button)
         pauseButton.setOnClickListener { gameView.togglePause() }
+        findViewById<ImageButton>(R.id.stars_war_btn_info).setOnClickListener {
+            gameView.pauseForRules()
+            showGameRules(R.string.sw_brand_name, R.string.stars_war_rules)
+        }
         magnetButton.setOnClickListener { gameView.requestMagnet() }
         novaButton.setOnClickListener { gameView.requestNova() }
         // Ces commandes sont hors de l'aire de combat : aucun projectile n'est masqué.

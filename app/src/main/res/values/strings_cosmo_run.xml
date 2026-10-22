@@ -2,7 +2,6 @@
 <resources>
     <string name="cosmo_run_title">COSMO RUN</string>
     <string name="cosmo_run_subtitle">Five lanes. Three worlds. One escape through the stars.</string>
-    <string name="cosmo_run_instructions">CONTROLS\nSwipe left / right to change lanes, up to jump, down to slide (in the air, down dives). One swipe per touch: lift your finger between swipes (a sharp swipe back also works). A tap also jumps. The four buttons work too.\n\nTHE TRACK\nAmber hurdles: jump. Pink gates and drones: slide. Containers: change lanes; brushing one only bumps you back. Ramps lead up to container roofs, where the atoms are.\nA hit smashes the obstacle and makes you stumble. The Warden is on your heels for 5 seconds, and a second hit ends the run.\n\nEQUIPMENT\nCyan shield: cancels one hit.\nPurple magnet: draws in atoms from the lanes beside you for 8 seconds.\nPink overdrive: 6 seconds of speed that smashes everything.\n\nSCORE\nAtoms and clean passes build your chain: ×2 at 10, ×3 at 25, ×4 at 50, ×5 at 100. It fades after 2 seconds without a gain and resets on a hit. A gate marks your best distance.\n\nMISSIONS\nThree missions are always running. Finish all three to rise in rank and unlock flight suits at ranks 1 and 4. Rank never changes your score. Neutrinos follow the usual distance reward.\n\nPause before leaving: you can bank your run from the pause menu.</string>
     <string name="cosmo_run_btn_start">Launch expedition</string>
     <string name="cosmo_run_btn_restart">Run again</string>
     <string name="cosmo_run_btn_back">Back</string>
@@ -40,7 +39,6 @@
     <string name="cosmo_finish_run">Bank run and finish</string>
     <string name="cosmo_run_banked">Expedition banked. Progress and rewards saved.</string>
     <string name="cosmo_hangar">Return to hangar</string>
-    <string name="cosmo_guide">Pilot guide</string>
     <string name="cosmo_close">Close</string>
     <string name="cosmo_left">← Left</string>
     <string name="cosmo_right">Right →</string>

@@ -13,6 +13,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -120,6 +121,9 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
 
         newButton.setOnClickListener { confirmNewGame() }
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
+        findViewById<View>(R.id.game2048_info_button).setOnClickListener {
+            showGameRules(R.string.game2048_title, R.string.game2048_rules)
+        }
     }
 
     private fun setupSizeSpinner() {

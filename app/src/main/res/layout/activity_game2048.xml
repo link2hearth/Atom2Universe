@@ -31,6 +31,16 @@
             android:textSize="22sp"
             android:textColor="@color/startup_text_primary"
             android:layout_marginStart="8dp" />
+
+        <ImageButton
+            android:id="@+id/game2048_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            android:tint="@color/audio_text_primary" />
     </LinearLayout>
 
     <!-- Score panel -->

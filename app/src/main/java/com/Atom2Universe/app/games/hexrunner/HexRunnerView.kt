@@ -52,6 +52,9 @@ class HexRunnerView @JvmOverloads constructor(
     @Volatile private var running = false
     @Volatile private var pendingStart = false
     @Volatile private var pendingNumFaces = 6
+
+    /** Vrai pendant la lecture des règles : la partie est figée, l'affichage continue. */
+    @Volatile var held = false
     private var thread: Thread? = null
 
     private val outgoingRings = ArrayDeque<HexRunnerGame.PassedRingSnapshot>(7)
@@ -104,7 +107,7 @@ class HexRunnerView @JvmOverloads constructor(
                 game.numFaces = pendingNumFaces
                 game.start()
             }
-            if (game.isRunning) {
+            if (game.isRunning && !held) {
                 game.update(dtMs)
                 colorTime = (colorTime + dtMs * 0.018f) % 360f
                 if (game.isGameOver && !gameOverFired) {

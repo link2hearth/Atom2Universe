@@ -52,7 +52,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="4dp"
             android:background="?attr/a2uChipBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -76,6 +76,16 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/circles_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uSecondaryTextColor" />
 
     </LinearLayout>
 

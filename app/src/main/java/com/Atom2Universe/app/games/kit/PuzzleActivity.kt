@@ -23,7 +23,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
-import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
@@ -555,11 +555,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     }
 
     private fun showRules() {
-        ImmersiveAlertDialogBuilder(this)
-            .setTitle(titleRes)
-            .setMessage(rulesRes)
-            .setPositiveButton(R.string.close, null)
-            .show()
+        showGameRules(titleRes, rulesRes)
     }
 
     private fun iconButton(icon: Int, description: Int, tint: Int, onClick: () -> Unit) = ImageButton(this).apply {

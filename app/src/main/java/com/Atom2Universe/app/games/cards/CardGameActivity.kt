@@ -21,6 +21,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
@@ -399,11 +400,7 @@ abstract class CardGameActivity : ThemedActivity() {
     }
 
     private fun showRules() {
-        ImmersiveAlertDialogBuilder(this)
-            .setTitle(titleRes)
-            .setMessage(rulesText())
-            .setPositiveButton(R.string.close, null)
-            .show()
+        showGameRules(titleRes, rulesText())
     }
 
     private fun iconButton(icon: Int, description: Int, tint: Int, onClick: () -> Unit) = ImageButton(this).apply {

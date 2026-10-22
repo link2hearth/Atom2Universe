@@ -16,6 +16,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.chess.ai.ChessAI
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 
 /**
@@ -124,6 +125,9 @@ class ChessActivity : ThemedActivity(),
     private fun setupListeners() {
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
         newGameButton.setOnClickListener { onNewGameClicked() }
+        findViewById<View>(R.id.info_button).setOnClickListener {
+            showGameRules(R.string.chess_title, R.string.chess_rules)
+        }
     }
 
     /**

@@ -43,6 +43,16 @@
             android:singleLine="true"
             android:paddingStart="4dp" />
 
+        <ImageButton
+            android:id="@+id/escape_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uSecondaryTextColor" />
+
     </LinearLayout>
     <LinearLayout
         android:id="@+id/escape_difficulty_row"

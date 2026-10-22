@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
 
@@ -134,6 +135,10 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
 
     private fun setupListeners() {
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
+
+        findViewById<View>(R.id.sudoku_info_button).setOnClickListener {
+            showGameRules(R.string.sudoku_title, R.string.sudoku_rules)
+        }
 
         newGameButton.setOnClickListener { onNewGameClicked() }
 

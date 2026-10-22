@@ -58,6 +58,16 @@
             app:tint="#F2C36C"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/motocross_new_track" />
+
+        <ImageButton
+            android:id="@+id/motocross_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uTextColor"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules" />
     </LinearLayout>
 
     <LinearLayout

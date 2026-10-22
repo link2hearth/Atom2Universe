@@ -15,6 +15,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
@@ -66,6 +67,9 @@ class SokobanActivity : ThemedActivity() {
         btnUndo     = findViewById(R.id.sokoban_btn_undo)
 
         findViewById<ImageButton>(R.id.sokoban_back).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.sokoban_info_button).setOnClickListener {
+            showGameRules(R.string.sokoban_title, R.string.sokoban_rules)
+        }
         findViewById<MaterialButton>(R.id.sokoban_btn_new).setOnClickListener {
             cancelAutoNext(); startNewPuzzle()
         }

@@ -9,6 +9,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Collisionneur (ancien « Réflexes ») : des particules apparaissent, un anneau se resserre sur chacune, et
@@ -48,6 +49,10 @@ class ReflexActivity : ThemedActivity() {
         }
         findViewById<View>(R.id.back_button).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+        findViewById<View>(R.id.reflex_info_button).setOnClickListener {
+            gameView.pauseForRules()
+            showGameRules(R.string.reflex_title, R.string.reflex_rules)
         }
     }
 

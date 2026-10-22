@@ -32,6 +32,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.SystemBarsManager
 import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -535,8 +536,7 @@ class JigsawActivity : ThemedActivity() {
         }
     }
     private fun showRules() {
-        ImmersiveAlertDialogBuilder(this).setTitle(R.string.jigsaw_title).setMessage(R.string.jigsaw_rules)
-            .setPositiveButton(R.string.close, null).show()
+        showGameRules(R.string.jigsaw_title, R.string.jigsaw_rules)
     }
     private fun sheetPage(titleRes: Int) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL; setPadding(dp(24), dp(20), dp(24), dp(28)); setBackgroundColor(palette.surface)

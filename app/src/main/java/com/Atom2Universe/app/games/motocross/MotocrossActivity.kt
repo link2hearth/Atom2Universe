@@ -11,6 +11,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class MotocrossActivity : ThemedActivity() {
 
@@ -49,6 +50,10 @@ class MotocrossActivity : ThemedActivity() {
             releaseControls(); gameView.restartTrack(); true
         }
         findViewById<ImageButton>(R.id.motocross_btn_new).setOnClickListener { releaseControls(); gameView.newTrack() }
+        // La fenêtre de règles prend le focus : le jeu se met en pause tout seul (voir onWindowFocusChanged).
+        findViewById<ImageButton>(R.id.motocross_btn_info).setOnClickListener {
+            showGameRules(R.string.motocross_title, R.string.motocross_rules)
+        }
         bindControl(R.id.motocross_lean_back, 0)
         bindControl(R.id.motocross_lean_forward, 1)
         bindControl(R.id.motocross_brake, 2)

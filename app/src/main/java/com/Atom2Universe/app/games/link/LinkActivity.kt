@@ -15,6 +15,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Intrication (ancien « Link ») : une partie de [LinkGame.FLOORS] étages. À chaque étage,
@@ -72,6 +73,9 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
         handView.game = game
 
         findViewById<ImageButton>(R.id.link_back_button).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.link_info_button).setOnClickListener {
+            showGameRules(R.string.link_title, R.string.link_rules)
+        }
         btnUndo.setOnClickListener { undo() }
         btnRestart.setOnClickListener { showRestartMenu() }
         overlayButton.setOnClickListener { if (game.isRunOver) newRun() else nextFloor() }

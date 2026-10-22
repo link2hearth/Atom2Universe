@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
 
@@ -135,6 +136,9 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
 
     private fun setupListeners() {
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
+        findViewById<View>(R.id.info_button).setOnClickListener {
+            showGameRules(R.string.solitaire_title, R.string.solitaire_rules)
+        }
 
         newGameButton.setOnClickListener { onNewGameClicked() }
         autoFinishButton.setOnClickListener { startAutoFinish() }

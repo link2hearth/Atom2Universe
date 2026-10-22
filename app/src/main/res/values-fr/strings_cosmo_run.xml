@@ -2,7 +2,6 @@
 <resources>
     <string name="cosmo_run_title">COSMO RUN</string>
     <string name="cosmo_run_subtitle">Cinq voies. Trois mondes. Une échappée dans les étoiles.</string>
-    <string name="cosmo_run_instructions">COMMANDES\nGlisse à gauche ou à droite pour changer de voie, vers le haut pour sauter, vers le bas pour glisser (en l’air, vers le bas plonge). Un geste par contact : lève le doigt entre deux gestes (un demi-tour franc marche aussi). Un appui saute aussi. Les quatre boutons fonctionnent aussi.\n\nLA PISTE\nBarrières orange : saute. Portiques roses et drones : glisse dessous. Conteneurs : change de voie ; les frôler te renvoie simplement dans ta voie. Les rampes mènent au toit des conteneurs, où sont les atomes.\nUn choc fracasse l’obstacle et te fait trébucher. Le Gardien est sur tes talons pendant 5 secondes, et un second choc termine la course.\n\nÉQUIPEMENT\nBouclier cyan : annule un choc.\nAimant violet : attire les atomes des voies voisines pendant 8 secondes.\nSurcharge rose : 6 secondes de vitesse qui fracasse tout.\n\nSCORE\nLes atomes et les obstacles franchis proprement construisent ta chaîne : ×2 à 10, ×3 à 25, ×4 à 50, ×5 à 100. Elle baisse après 2 secondes sans gain et retombe à zéro sur un choc. Une arche marque ta meilleure distance.\n\nMISSIONS\nTrois missions tournent en permanence. Termine-les toutes les trois pour monter en rang et débloquer des combinaisons aux rangs 1 et 4. Le rang ne change jamais ton score. Les neutrinos suivent la récompense habituelle de distance.\n\nAvant de partir, mets en pause : tu peux valider ta course depuis ce menu.</string>
     <string name="cosmo_run_btn_start">Lancer l’expédition</string>
     <string name="cosmo_run_btn_restart">Repartir</string>
     <string name="cosmo_run_btn_back">Retour</string>
@@ -40,7 +39,6 @@
     <string name="cosmo_finish_run">Valider et terminer la course</string>
     <string name="cosmo_run_banked">Expédition validée. Progression et récompenses enregistrées.</string>
     <string name="cosmo_hangar">Retour au hangar</string>
-    <string name="cosmo_guide">Guide du pilote</string>
     <string name="cosmo_close">Fermer</string>
     <string name="cosmo_left">← Gauche</string>
     <string name="cosmo_right">Droite →</string>

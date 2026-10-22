@@ -54,6 +54,16 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_info"
+            android:padding="10dp"
+            android:contentDescription="@string/kit_rules"
+            app:tint="?attr/a2uTextColor" />
     </LinearLayout>
 
     <!-- Boutons -->

@@ -15,6 +15,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -68,6 +69,9 @@ class TheLineActivity : ThemedActivity() {
 
         findViewById<ImageButton>(R.id.the_line_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.the_line_btn_reset).setOnClickListener { clearTraces() }
+        findViewById<ImageButton>(R.id.the_line_info_button).setOnClickListener {
+            showGameRules(R.string.the_line_title, R.string.the_line_rules)
+        }
         findViewById<MaterialButton>(R.id.the_line_btn_next).setOnClickListener { startNewPuzzle() }
 
         loadLevels()

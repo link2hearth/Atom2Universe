@@ -22,6 +22,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 class RouletteActivity : ThemedActivity() {
 
@@ -127,6 +128,9 @@ class RouletteActivity : ThemedActivity() {
 
     private fun setupListeners() {
         findViewById<ImageButton>(R.id.roulette_back).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.roulette_info).setOnClickListener {
+            showGameRules(R.string.roulette_title, R.string.roulette_rules)
+        }
         spinButton.setOnClickListener { if (!spinning && bitmapsReady) onSpinClicked() }
         winOverlay.setOnClickListener { dismissWinOverlay() }
 
