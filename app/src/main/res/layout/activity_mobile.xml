@@ -50,6 +50,17 @@
             android:textColor="@color/audio_text_secondary"
             android:textSize="13sp" />
 
+        <ImageButton
+            android:id="@+id/mobile_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="@color/audio_text_primary" />
+
     </LinearLayout>
 
     <!-- Scène : le mobile -->

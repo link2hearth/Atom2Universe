@@ -24,6 +24,8 @@
     <string name="balance_status_lost_tipped">Le levier a complètement basculé !</string>
     <string name="balance_notice_dead_zone">Rien sur le pivot — laissez le milieu libre</string>
     <string name="balance_reward_next">Une réussite maintenant : %1$d ✦</string>
+    <string name="balance_rules">Place tous les poids sur le levier pour qu\'il reste à l\'horizontale quand tu le lâches. Fais glisser les poids du plateau sur la planche ; le milieu, au-dessus du pivot, est interdit, et chaque poids doit reposer surtout sur la planche.\n\nQuand ils sont tous posés, lâche le levier. S\'il se stabilise dans la tolérance et que rien ne tombe, tu gagnes des neutrinos et le niveau suivant est plus dur. S\'il bascule ou qu\'un poids tombe, ajuste et réessaie, ou vide la planche. La difficulté fixe le nombre de poids.</string>
+    <string name="mobile_rules">Accroche tous les objets aux crochets pour que le mobile entier pende droit. Une tige est en équilibre quand le poids multiplié par la longueur du bras est le même des deux côtés : un bras deux fois plus court porte deux fois plus de poids. Les points sur chaque objet disent combien il pèse.\n\nFais glisser un objet de l\'étagère vers un crochet libre. Un simple appui ne fait rien, il faut glisser. À partir de Moyen, certains objets de l\'étagère ne servent pas. Recommencer remet tout sur l\'étagère, Nouveau tire un autre mobile.</string>
     <string name="balance_menu_plank">Levier</string>
     <string name="balance_menu_plank_desc">Répartissez les poids sur la planche</string>
     <string name="balance_menu_mobile">Mobile</string>

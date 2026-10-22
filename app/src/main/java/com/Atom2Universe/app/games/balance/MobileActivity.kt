@@ -15,6 +15,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 
 /**
  * Le mobile : accrocher les objets aux crochets pour que toutes les tiges pendent droit.
@@ -59,6 +60,9 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         gameView.sfx = sfx
 
         findViewById<ImageButton>(R.id.mobile_btn_back).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.mobile_btn_info).setOnClickListener {
+            showGameRules(R.string.balance_menu_mobile, R.string.mobile_rules)
+        }
         findViewById<TextView>(R.id.mobile_btn_restart).setOnClickListener {
             synchronized(gameView.game) { gameView.game.recommencer() }
             gameView.syncLevel()

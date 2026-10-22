@@ -15,6 +15,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.showGameRules
 import kotlin.math.abs
 
 /**
@@ -55,6 +56,9 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
         gameView.listener = this
 
         findViewById<ImageButton>(R.id.balance_btn_back).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.balance_btn_info).setOnClickListener {
+            showGameRules(R.string.balance_menu_plank, R.string.balance_rules)
+        }
         findViewById<TextView>(R.id.balance_btn_new).setOnClickListener { newLevel() }
         findViewById<TextView>(R.id.balance_btn_reset).setOnClickListener { resetPlacement() }
         testButton.setOnClickListener { onTestButton() }

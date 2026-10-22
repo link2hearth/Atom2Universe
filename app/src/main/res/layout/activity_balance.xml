@@ -42,6 +42,17 @@
             android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
+        <ImageButton
+            android:id="@+id/balance_btn_info"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            app:tint="?attr/a2uSecondaryTextColor" />
+
     </LinearLayout>
 
     <!-- Scène : plateau de poids en haut, balance en bas -->

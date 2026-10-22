@@ -24,6 +24,8 @@
     <string name="balance_status_lost_tipped">The lever tipped right over!</string>
     <string name="balance_notice_dead_zone">Nothing over the pivot — keep the middle clear</string>
     <string name="balance_reward_next">Success now worth %1$d ✦</string>
+    <string name="balance_rules">Place every weight on the lever so that it stays level once you release it. Drag the weights from the tray onto the plank; the middle, over the pivot, is off-limits, and each weight must rest mostly on the plank.\n\nWhen they are all placed, release the lever. If it settles within the tolerance and nothing falls, you win neutrinos and the next level is harder. If it tips or a weight falls, adjust and try again, or clear the plank. The difficulty sets how many weights you get.</string>
+    <string name="mobile_rules">Hang every object on the hooks so that the whole mobile hangs level. A rod is balanced when weight times arm length is the same on both sides: an arm half as long carries twice the weight. The dots on each object tell you how much it weighs.\n\nDrag an object from the shelf to a free hook. A simple tap does nothing, you have to drag. From Medium on, some objects on the shelf are not needed. Start over puts everything back on the shelf, New draws another mobile.</string>
     <string name="balance_menu_plank">Lever</string>
     <string name="balance_menu_plank_desc">Spread the weights along the plank</string>
     <string name="balance_menu_mobile">Mobile</string>
