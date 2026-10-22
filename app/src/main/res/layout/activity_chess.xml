@@ -49,7 +49,7 @@
             android:contentDescription="@string/kit_rules"
             android:padding="10dp"
             android:src="@drawable/ic_info"
-            app:tint="@color/audio_text_primary" />
+        android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
 
     <!-- Status Text -->

@@ -95,9 +95,9 @@
                 android:layout_height="44dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_info"
-                app:tint="?attr/a2uSecondaryTextColor"
                 android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/kit_rules" />
+                android:contentDescription="@string/kit_rules"
+        android:tint="?attr/a2uMusicAccent" />
         </LinearLayout>
     </FrameLayout>
 

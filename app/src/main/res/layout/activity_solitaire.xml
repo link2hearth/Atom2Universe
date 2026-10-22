@@ -63,7 +63,7 @@
             android:src="@drawable/ic_info"
             android:padding="10dp"
             android:contentDescription="@string/kit_rules"
-            app:tint="?attr/a2uTextColor" />
+        android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
 
     <!-- Boutons -->

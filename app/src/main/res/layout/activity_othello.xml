@@ -37,10 +37,10 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_info"
-            android:tint="@color/audio_text_primary"
             android:padding="10dp"
             android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules" />
+            android:contentDescription="@string/kit_rules"
+        android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
 
     <!-- Score -->

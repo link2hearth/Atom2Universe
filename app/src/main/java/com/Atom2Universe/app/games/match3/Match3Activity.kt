@@ -104,7 +104,7 @@ class Match3Activity : ThemedActivity() {
     /** Le « i » commun à tous les jeux : ouvre la bulle de règles. */
     private fun infoButton() = ImageButton(this).apply {
         setImageResource(R.drawable.ic_info)
-        setColorFilter(0xffecf2f2.toInt())
+        setColorFilter(com.Atom2Universe.app.audio.AudioStyle.accent(this@Match3Activity))
         contentDescription = getString(R.string.kit_rules)
         val ripple = obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackgroundBorderless))
         background = ripple.getDrawable(0)

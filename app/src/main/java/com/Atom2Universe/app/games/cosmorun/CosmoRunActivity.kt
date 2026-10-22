@@ -118,7 +118,7 @@ class CosmoRunActivity : ThemedActivity() {
         theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)
         setBackgroundResource(ripple.resourceId)
         setImageResource(R.drawable.ic_info)
-        imageTintList = android.content.res.ColorStateList.valueOf(muted)
+        imageTintList = android.content.res.ColorStateList.valueOf(com.Atom2Universe.app.audio.AudioStyle.accent(this@CosmoRunActivity))
         setPadding(dp(10), dp(10), dp(10), dp(10))
         contentDescription = getString(R.string.kit_rules)
         setOnClickListener { showRules() }

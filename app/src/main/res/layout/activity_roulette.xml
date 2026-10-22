@@ -74,7 +74,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/kit_rules"
             android:padding="10dp"
-            app:tint="#B0BEC5" />
+        android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
 
     <!-- ── Grille 3×3 (ImageViews) ─────────────────────────────────────── -->

@@ -82,7 +82,7 @@
             android:contentDescription="@string/kit_rules"
             android:padding="10dp"
             android:src="@drawable/ic_info"
-            app:tint="?attr/a2uSecondaryTextColor" />
+        android:tint="?attr/a2uMusicAccent" />
 
     </LinearLayout>
 

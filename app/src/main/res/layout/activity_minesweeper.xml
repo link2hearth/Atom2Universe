@@ -19,8 +19,9 @@
             android:src="@drawable/ic_refresh" android:tint="?attr/a2uMusicAccent"
             android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/minesweeper_new_game" />
         <ImageButton android:id="@+id/minesweeper_info_button" android:layout_width="48dp" android:layout_height="48dp"
-            android:padding="10dp" android:src="@drawable/ic_info" android:tint="?attr/a2uSecondaryTextColor"
-            android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/kit_rules" />
+            android:padding="10dp" android:src="@drawable/ic_info"
+            android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/kit_rules"
+        android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
         android:orientation="horizontal" android:gravity="center_vertical" android:background="?attr/a2uPanelBackground" android:padding="8dp">

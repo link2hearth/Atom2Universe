@@ -150,8 +150,8 @@
         android:layout_margin="6dp"
         android:padding="10dp"
         android:src="@drawable/ic_info"
-        app:tint="@android:color/white"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/kit_rules" />
+        android:contentDescription="@string/kit_rules"
+        android:tint="?attr/a2uMusicAccent" />
 
 </FrameLayout>
