@@ -76,6 +76,24 @@
             android:padding="8dp"
             android:popupBackground="?attr/a2uPopupBackground" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/lab_sort_btn_new"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/color_stack_btn_new"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            app:backgroundTint="?attr/a2uMusicAccent"
+            app:icon="@drawable/ic_refresh"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="@color/audio_on_accent" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -120,24 +138,6 @@
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/lab_sort_btn_new"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/color_stack_btn_new"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="@color/sudoku_pad_button_background"
-            app:icon="@drawable/ic_refresh"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="24dp"
-            app:iconTint="@color/startup_text_primary"
-            app:strokeColor="?attr/a2uOutlineColor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/lab_sort_btn_restart"
