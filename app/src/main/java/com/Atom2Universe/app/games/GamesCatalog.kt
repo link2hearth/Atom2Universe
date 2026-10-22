@@ -402,11 +402,24 @@ object GamesCatalog {
         com.Atom2Universe.app.games.cards.CardGames.tiles
 
 
+    /**
+     * Les tuiles de la seconde file du hub (action, simulation, jeux « gros ») ; toutes les autres
+     * commencent dans la file des casse-têtes. Le joueur peut ensuite les passer d'une file à l'autre.
+     */
+    val bigGameIds: Set<String> = setOf(
+        "clicker", "billiards", "golf", "trebuchet", "infernale", "toybox_racers",
+        "caves", "farm", "roguelike", "survivor", "starswar", "nuclea", "orbite", "reflex", "particules",
+        "motocross", "cosmorun", "hexrunner", "wavesurf", "flappycat", "hotpotato",
+        "roulette", "escape_labyrinth"
+    )
+
     fun orderedTiles(context: Context): List<HubTile> {
         val prefs = context.getSharedPreferences("games_hub_prefs", Context.MODE_PRIVATE)
-        val ids = prefs.getString("tile_order", "").orEmpty().split(",").filter { it.isNotBlank() }.distinct()
+        fun order(key: String) = prefs.getString(key, "").orEmpty().split(",").filter { it.isNotBlank() }
+        // Les deux files l'une après l'autre : casse-têtes, puis grands jeux.
+        val ids = (order("tile_order") + order("tile_order_1")).distinct()
         val ordered = ids.mapNotNull { id -> tiles.find { it.id == id } } + tiles.filter { it.id !in ids }
-        // Même migration que le hub : tant qu'elle n'a pas eu lieu, l'ordre enregistré est ignoré.
-        return if (prefs.getBoolean("catalog_order_families", false)) ordered else tiles
+        // Tant que le hub n'a pas rangé ses deux files, l'ordre enregistré est ignoré.
+        return if (prefs.getBoolean("panes_v2", false)) ordered else tiles
     }
 }

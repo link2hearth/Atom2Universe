@@ -38,6 +38,8 @@ abstract class BaseHubActivity : ThemedActivity() {
     companion object {
         private const val KEY_VIEW_MODE = "view_mode"
         private const val KEY_TILE_ORDER = "tile_order"
+        private const val KEY_TILE_PANES = "tile_panes"
+        private const val KEY_LAST_PANE = "last_pane"
         private const val KEY_TILE_COLORS = "tile_colors"
         private const val KEY_QUICK_ACCESS = "quick_access"
         private const val VIEW_MODE_GRID = "grid"
@@ -49,6 +51,10 @@ abstract class BaseHubActivity : ThemedActivity() {
     protected lateinit var tilesAdapter: HubTilesAdapter
 
     private lateinit var recyclerView: RecyclerView
+    /** Un hub à plusieurs files (voir [getPaneCount]) : une grille et un adaptateur par file, la première étant [recyclerView] / [tilesAdapter]. */
+    private val paneRecyclers = mutableListOf<RecyclerView>()
+    protected val paneAdapters = mutableListOf<HubTilesAdapter>()
+    private var carousel: HubCarouselLayout? = null
     private var listViewContainer: ScrollView? = null
     private lateinit var viewToggleButton: ImageButton
     private lateinit var editModeButton: ImageButton
@@ -114,6 +120,22 @@ abstract class BaseHubActivity : ThemedActivity() {
     /** Tuiles carrées en grille. Par défaut, seul un hub sans mode liste les veut carrées. */
     open fun usesSquareTiles(): Boolean = !supportsListMode()
 
+    /**
+     * Nombre de files de tuiles. Plus d'une : le hub les met côte à côte dans un carrousel (balayage
+     * horizontal, sans fin) et il faut fournir `R.id.hub_carousel` avec une grille par file dans le
+     * layout (`hub_recycler_view`, `hub_recycler_view_2`). Une tuile peut passer d'une file à l'autre.
+     */
+    open fun getPaneCount(): Int = 1
+
+    /** La file où une tuile commence, tant que le joueur ne l'a pas changée. */
+    open fun defaultPaneOf(tile: HubTile): Int = 0
+
+    /** Le nom d'une file, écrit sous le titre du hub. */
+    open fun getPaneTitle(pane: Int): Int? = null
+
+    /** Appelé avant de lire l'ordre et les files enregistrés (pour une migration unique, par exemple). */
+    open fun onBeforeLoadTiles() {}
+
     open fun onQuickAccessClicked(tile: HubTile, item: QuickAccessItem) {}
     open fun supportsQuickAccess(): Boolean = false
 
@@ -123,6 +145,11 @@ abstract class BaseHubActivity : ThemedActivity() {
 
     private fun initViews() {
         recyclerView = findViewById(R.id.hub_recycler_view)
+        paneRecyclers.add(recyclerView)
+        if (getPaneCount() > 1) {
+            paneRecyclers.add(findViewById(R.id.hub_recycler_view_2))
+            carousel = findViewById(R.id.hub_carousel)
+        }
         listViewContainer = findViewById(R.id.hub_list_container)
         viewToggleButton = findViewById(R.id.hub_view_toggle)
         editModeButton = findViewById(R.id.hub_edit_mode)
@@ -130,7 +157,18 @@ abstract class BaseHubActivity : ThemedActivity() {
         subtitleView = findViewById(R.id.hub_subtitle)
 
         titleView.setText(getHubTitle())
-        getHubSubtitle()?.let { subtitleView?.setText(it) } ?: run { subtitleView?.visibility = View.GONE }
+        if (getPaneCount() > 1) {
+            subtitleView?.visibility = View.VISIBLE
+        } else {
+            getHubSubtitle()?.let { subtitleView?.setText(it) } ?: run { subtitleView?.visibility = View.GONE }
+        }
+    }
+
+    /** Le nom de la file affichée, avec un point par file dont la courante est pleine. */
+    private fun updatePaneSubtitle(pane: Int) {
+        val title = getPaneTitle(pane) ?: return
+        val dots = (0 until getPaneCount()).joinToString(" ") { if (it == pane) "●" else "○" }
+        subtitleView?.text = "$dots  ${getString(title)}"
     }
 
     private fun setupBackButton() {
@@ -154,7 +192,7 @@ abstract class BaseHubActivity : ThemedActivity() {
     private fun setupEditModeButton() {
         editModeButton.setOnClickListener {
             isEditMode = !isEditMode
-            tilesAdapter.setEditMode(isEditMode)
+            paneAdapters.forEach { it.setEditMode(isEditMode) }
             updateEditModeUI()
         }
     }
@@ -170,20 +208,22 @@ abstract class BaseHubActivity : ThemedActivity() {
     }
 
     private fun updateViewMode() {
-        if (isGridMode) {
-            val spanCount = calculateSpanCount()
-            // On garde le gestionnaire existant quand c'en est déjà un en grille :
-            // changer seulement le nombre de colonnes conserve la position de défilement.
-            val grid = recyclerView.layoutManager as? GridLayoutManager
-            if (grid != null) grid.spanCount = spanCount
-            else recyclerView.layoutManager = GridLayoutManager(this, spanCount)
-            tilesAdapter.setSpanCount(spanCount)
-            viewToggleButton.setImageResource(R.drawable.ic_view_list)
-        } else {
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            viewToggleButton.setImageResource(R.drawable.ic_view_grid)
+        paneRecyclers.forEachIndexed { i, rv ->
+            val adapter = paneAdapters[i]
+            if (isGridMode) {
+                val spanCount = calculateSpanCount()
+                // On garde le gestionnaire existant quand c'en est déjà un en grille :
+                // changer seulement le nombre de colonnes conserve la position de défilement.
+                val grid = rv.layoutManager as? GridLayoutManager
+                if (grid != null) grid.spanCount = spanCount
+                else rv.layoutManager = GridLayoutManager(this, spanCount)
+                adapter.setSpanCount(spanCount)
+            } else {
+                rv.layoutManager = LinearLayoutManager(this)
+            }
+            adapter.setGridMode(isGridMode)
         }
-        tilesAdapter.setGridMode(isGridMode)
+        viewToggleButton.setImageResource(if (isGridMode) R.drawable.ic_view_list else R.drawable.ic_view_grid)
 
         awaitCorrectTileHeightBeforeDraw()
     }
@@ -199,32 +239,67 @@ abstract class BaseHubActivity : ThemedActivity() {
     }
 
     private fun setupRecyclerView() {
-        tilesAdapter = HubTilesAdapter(
-            context = this,
-            onTileClick = { tile -> onTileClicked(tile) },
-            onOrderChanged = { order -> saveTileOrder(order) },
-            onEditTile = if (supportsTileColors()) { tile -> showColorPicker(tile) } else null,
-            onQuickAccessClick = { tile, item -> onQuickAccessClicked(tile, item) },
-            onLongPressTile = { tile -> handleTileLongPress(tile) }
-        )
+        paneRecyclers.forEachIndexed { pane, rv ->
+            val adapter = HubTilesAdapter(
+                context = this,
+                onTileClick = { tile -> onTileClicked(tile) },
+                onOrderChanged = { order -> savePaneOrder(pane, order) },
+                onEditTile = if (supportsTileColors()) { tile -> showColorPicker(tile) } else null,
+                onQuickAccessClick = { tile, item -> onQuickAccessClicked(tile, item) },
+                onLongPressTile = { tile -> handleTileLongPress(tile) }
+            )
+            paneAdapters.add(adapter)
 
-        tilesAdapter.setShowQuickAccessButtons(supportsQuickAccess())
-        tilesAdapter.setIllustratedListMode(true)
-        tilesAdapter.setSquareTiles(usesSquareTiles())
+            adapter.setShowQuickAccessButtons(supportsQuickAccess())
+            adapter.setIllustratedListMode(true)
+            adapter.setSquareTiles(usesSquareTiles())
 
-        recyclerView.adapter = tilesAdapter
-        // Une grille de tuiles lourdes : garder les vues juste sorties de l'écran liées évite de les
-        // reconstruire au moindre aller-retour de défilement.
-        recyclerView.setItemViewCacheSize(12)
+            rv.adapter = adapter
+            // Une grille de tuiles lourdes : garder les vues juste sorties de l'écran liées évite de les
+            // reconstruire au moindre aller-retour de défilement.
+            rv.setItemViewCacheSize(12)
 
-        val touchCallback = HubTileTouchCallback(tilesAdapter)
-        val itemTouchHelper = ItemTouchHelper(touchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-        tilesAdapter.attachItemTouchHelper(itemTouchHelper)
+            val edgeListener = if (getPaneCount() > 1) object : HubTileTouchCallback.EdgeDragListener {
+                override fun onDragState(dragging: Boolean, hot: Boolean) {
+                    carousel?.setEdgeDrag(dragging, hot)
+                }
+
+                override fun onDroppedOnEdge(tileId: String) {
+                    // Hors de la boucle de dessin du glisser-déposer qui vient de finir.
+                    rv.post { moveTileToNextPane(pane, tileId) }
+                }
+            } else null
+            val itemTouchHelper = ItemTouchHelper(HubTileTouchCallback(adapter, edgeListener))
+            itemTouchHelper.attachToRecyclerView(rv)
+            adapter.attachItemTouchHelper(itemTouchHelper)
+        }
+        tilesAdapter = paneAdapters[0]
 
         loadTiles()
 
+        carousel?.let { c ->
+            c.onPaneChanged = { pane ->
+                hubPrefs.edit { putInt(KEY_LAST_PANE, pane) }
+                updatePaneSubtitle(pane)
+            }
+            val last = hubPrefs.getInt(KEY_LAST_PANE, 0).coerceIn(0, getPaneCount() - 1)
+            c.showPane(last, animated = false)
+            updatePaneSubtitle(last)
+        }
+
         awaitCorrectTileHeightBeforeDraw()
+    }
+
+    /** Dépose une tuile en tête de l'autre file, puis y glisse pour la montrer. */
+    private fun moveTileToNextPane(fromPane: Int, tileId: String) {
+        val toPane = (fromPane + 1) % getPaneCount()
+        val tile = paneAdapters[fromPane].removeTile(tileId) ?: return
+        paneAdapters[toPane].insertTile(0, tile)
+        paneRecyclers[toPane].scrollToPosition(0)
+        savePaneOrder(fromPane, paneAdapters[fromPane].getTileIds())
+        savePaneOrder(toPane, paneAdapters[toPane].getTileIds())
+        savePaneAssignments()
+        carousel?.showPane(toPane, animated = true)
     }
 
     /**
@@ -237,30 +312,34 @@ abstract class BaseHubActivity : ThemedActivity() {
      * ce qui évite complètement ce flash.
      */
     private fun awaitCorrectTileHeightBeforeDraw() {
-        var appliedWidth = -1
-        var appliedHeight = -1
-        recyclerView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                val width = recyclerView.width
-                val height = recyclerView.height
-                if (width <= 0 || height <= 0) return false
-                // La largeur compte aussi : c'est elle qui donne le côté des tuiles carrées.
-                if (width != appliedWidth || height != appliedHeight) {
-                    appliedWidth = width
-                    appliedHeight = height
-                    tilesAdapter.setRecyclerViewSize(width, height)
-                    return false
+        paneRecyclers.forEachIndexed { i, rv ->
+            val adapter = paneAdapters[i]
+            var appliedWidth = -1
+            var appliedHeight = -1
+            rv.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    val width = rv.width
+                    val height = rv.height
+                    if (width <= 0 || height <= 0) return false
+                    // La largeur compte aussi : c'est elle qui donne le côté des tuiles carrées.
+                    if (width != appliedWidth || height != appliedHeight) {
+                        appliedWidth = width
+                        appliedHeight = height
+                        adapter.setRecyclerViewSize(width, height)
+                        return false
+                    }
+                    rv.viewTreeObserver.removeOnPreDrawListener(this)
+                    return true
                 }
-                recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-                return true
-            }
-        })
+            })
+        }
     }
 
     private fun loadTiles() {
+        onBeforeLoadTiles()
         val defaultTiles = getDefaultTiles()
-        val savedOrder = loadTileOrder()
         val savedColors = loadTileColors()
+        val assignments = if (getPaneCount() > 1) loadPaneAssignments() else emptyMap()
 
         val tilesWithCustomization = defaultTiles.map { tile ->
             // Une couleur enregistrée avant qu'un hub ne les retire resterait sinon pour toujours.
@@ -275,24 +354,54 @@ abstract class BaseHubActivity : ThemedActivity() {
             )
         }
 
-        val orderedTiles = if (savedOrder.isNotEmpty()) {
-            val ordered = savedOrder.mapNotNull { id -> tilesWithCustomization.find { it.id == id } }
-            val newTiles = tilesWithCustomization.filter { tile -> tile.id !in savedOrder }
-            ordered + newTiles
-        } else {
-            tilesWithCustomization
+        for (pane in 0 until getPaneCount()) {
+            val paneTiles = tilesWithCustomization.filter { tile ->
+                val wanted = if (getPaneCount() > 1) assignments[tile.id] ?: defaultPaneOf(tile) else 0
+                wanted.coerceIn(0, getPaneCount() - 1) == pane
+            }
+            val savedOrder = loadPaneOrder(pane)
+            val orderedTiles = if (savedOrder.isNotEmpty()) {
+                val ordered = savedOrder.mapNotNull { id -> paneTiles.find { it.id == id } }
+                val newTiles = paneTiles.filter { tile -> tile.id !in savedOrder }
+                ordered + newTiles
+            } else {
+                paneTiles
+            }
+            paneAdapters[pane].setTiles(normalizeTileOrder(orderedTiles))
         }
-
-        tilesAdapter.setTiles(normalizeTileOrder(orderedTiles))
     }
 
-    protected fun loadTileOrder(): List<String> {
-        val saved = hubPrefs.getString(KEY_TILE_ORDER, null)
+    protected fun loadTileOrder(): List<String> = loadPaneOrder(0)
+
+    protected fun saveTileOrder(order: List<String>) = savePaneOrder(0, order)
+
+    /** La première file garde la clé historique ; les suivantes ont la leur. */
+    private fun paneOrderKey(pane: Int) = if (pane == 0) KEY_TILE_ORDER else "${KEY_TILE_ORDER}_$pane"
+
+    protected fun loadPaneOrder(pane: Int): List<String> {
+        val saved = hubPrefs.getString(paneOrderKey(pane), null)
         return saved?.split(",")?.filter { it.isNotEmpty() } ?: emptyList()
     }
 
-    protected fun saveTileOrder(order: List<String>) {
-        hubPrefs.edit { putString(KEY_TILE_ORDER, order.joinToString(",")) }
+    protected fun savePaneOrder(pane: Int, order: List<String>) {
+        hubPrefs.edit { putString(paneOrderKey(pane), order.joinToString(",")) }
+    }
+
+    /** Quelle file porte chaque tuile que le joueur a déplacée ("id:file;id:file"). */
+    private fun loadPaneAssignments(): Map<String, Int> {
+        val saved = hubPrefs.getString(KEY_TILE_PANES, null) ?: return emptyMap()
+        return saved.split(";").mapNotNull { entry ->
+            val parts = entry.split(":")
+            val pane = parts.getOrNull(1)?.toIntOrNull()
+            if (parts.size == 2 && pane != null) parts[0] to pane else null
+        }.toMap()
+    }
+
+    private fun savePaneAssignments() {
+        val encoded = paneAdapters.withIndex().joinToString(";") { (pane, adapter) ->
+            adapter.getTileIds().joinToString(";") { "$it:$pane" }
+        }
+        hubPrefs.edit { putString(KEY_TILE_PANES, encoded) }
     }
 
     private fun loadTileColors(): Map<String, Pair<String, String>> {

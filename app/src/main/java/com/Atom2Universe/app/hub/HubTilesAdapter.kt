@@ -87,6 +87,23 @@ class HubTilesAdapter(
 
     fun getTileIds(): List<String> = tiles.map { it.id }
 
+    fun tileIdAt(position: Int): String? = tiles.getOrNull(position)?.id
+
+    /** Retire une tuile de cette file (elle part vers l'autre) et la rend. */
+    fun removeTile(tileId: String): HubTile? {
+        val index = tiles.indexOfFirst { it.id == tileId }
+        if (index == -1) return null
+        val tile = tiles.removeAt(index)
+        notifyItemRemoved(index)
+        return tile
+    }
+
+    fun insertTile(index: Int, tile: HubTile) {
+        val at = index.coerceIn(0, tiles.size)
+        tiles.add(at, tile)
+        notifyItemInserted(at)
+    }
+
     fun attachItemTouchHelper(helper: ItemTouchHelper) {
         itemTouchHelper = helper
     }
@@ -666,8 +683,21 @@ class HubTilesAdapter(
  * ItemTouchHelper.Callback pour le drag & drop des tuiles
  */
 class HubTileTouchCallback(
-    private val adapter: HubTilesAdapter
+    private val adapter: HubTilesAdapter,
+    private val edge: EdgeDragListener? = null
 ) : ItemTouchHelper.Callback() {
+
+    /**
+     * Pour un hub à deux files : dit quand une tuile est tenue et si elle est tout au bord de l'écran
+     * (zone de dépôt vers l'autre file), et reçoit la tuile lâchée dans cette zone.
+     */
+    interface EdgeDragListener {
+        fun onDragState(dragging: Boolean, hot: Boolean)
+        fun onDroppedOnEdge(tileId: String)
+    }
+
+    private var hot = false
+    private var draggedId: String? = null
 
     override fun isLongPressDragEnabled(): Boolean = false
 
@@ -696,14 +726,52 @@ class HubTileTouchCallback(
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
         viewHolder.itemView.alpha = 1.0f
+        val dropOnEdge = hot
+        val id = draggedId
+        hot = false
+        draggedId = null
+        edge?.onDragState(false, false)
         adapter.onDragEnd()
+        if (dropOnEdge && id != null) edge?.onDroppedOnEdge(id)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
             viewHolder?.itemView?.alpha = 0.8f
+            draggedId = viewHolder?.bindingAdapterPosition?.let { adapter.tileIdAt(it) }
+            hot = false
+            edge?.onDragState(true, false)
         }
+    }
+
+    override fun onChildDraw(
+        c: android.graphics.Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        if (edge == null || !isCurrentlyActive || actionState != ItemTouchHelper.ACTION_STATE_DRAG) return
+        val centerX = viewHolder.itemView.left + dX + viewHolder.itemView.width / 2f
+        val zone = EDGE_ZONE_DP * recyclerView.resources.displayMetrics.density
+        val nowHot = centerX < zone || centerX > recyclerView.width - zone
+        if (nowHot != hot) {
+            hot = nowHot
+            edge.onDragState(true, nowHot)
+        }
+    }
+
+    private companion object {
+        /**
+         * Distance au bord de l'écran, en dp, où le centre de la tuile tenue doit arriver pour que la
+         * lâcher l'envoie dans l'autre file. Le centre d'une tuile de la colonne du bord en est à plus
+         * de 80 dp : un simple rangement ne s'y approche pas.
+         */
+        const val EDGE_ZONE_DP = 36f
     }
 }
 

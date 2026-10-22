@@ -40,6 +40,8 @@
     <string name="common_new">New</string>
     <string name="common_resize">Resize</string>
     <string name="games_title">Games</string>
+    <string name="games_pane_puzzles">Puzzles</string>
+    <string name="games_pane_games">Big games</string>
     <string name="games_back">Back</string>
     <string name="games_coming_soon">Coming soon</string>
     <string name="games_sync_button">Sync now</string>

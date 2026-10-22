@@ -40,6 +40,8 @@
     <string name="common_new">Nouveau</string>
     <string name="common_resize">Redimensionner</string>
     <string name="games_title">Jeux</string>
+    <string name="games_pane_puzzles">Casse-têtes</string>
+    <string name="games_pane_games">Gros jeux</string>
     <string name="games_back">Retour</string>
     <string name="games_coming_soon">À venir</string>
     <string name="games_sync_button">Synchroniser maintenant</string>

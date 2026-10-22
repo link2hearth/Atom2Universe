@@ -7,13 +7,21 @@ import com.Atom2Universe.app.games.farm.FarmState
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 
+/**
+ * Le hub des jeux, en deux files côte à côte : les casse-têtes (puzzles, plateau, cartes) et les
+ * grands jeux (action, simulation). On passe de l'une à l'autre en balayant, et une tuile tenue
+ * jusqu'au bord de l'écran se dépose dans l'autre file.
+ */
 class GamesActivity : BaseHubActivity() {
 
     private companion object {
-        const val KEY_CATALOG_ORDER = "catalog_order_families"
+        /** Les files de tuiles ont remplacé la liste unique : l'ancien ordre et l'ancienne migration sont à jeter une fois. */
+        const val KEY_PANES_V1 = "panes_v2"
+        const val PANE_PUZZLES = 0
+        const val PANE_GAMES = 1
     }
 
-    override fun getLayoutResId(): Int = R.layout.activity_base_hub
+    override fun getLayoutResId(): Int = R.layout.activity_games_hub
 
     override fun getPrefsName(): String = "games_hub_prefs"
 
@@ -33,15 +41,22 @@ class GamesActivity : BaseHubActivity() {
 
     override fun getDefaultTiles(): List<HubTile> = GamesCatalog.tiles
 
-    /**
-     * Le catalogue est rangé par familles de jeux. L'ordre enregistré l'emporterait sur lui ;
-     * on l'efface donc **une seule fois** : ensuite, chaque tuile reste là où le joueur la range.
-     */
-    override fun normalizeTileOrder(tiles: List<HubTile>): List<HubTile> {
-        if (hubPrefs.getBoolean(KEY_CATALOG_ORDER, false)) return tiles
-        hubPrefs.edit().putBoolean(KEY_CATALOG_ORDER, true).remove("tile_order").apply()
-        val rank = GamesCatalog.tiles.withIndex().associate { it.value.id to it.index }
-        return tiles.sortedBy { rank[it.id] ?: Int.MAX_VALUE }
+    override fun getPaneCount(): Int = 2
+
+    override fun defaultPaneOf(tile: HubTile): Int =
+        if (tile.id in GamesCatalog.bigGameIds) PANE_GAMES else PANE_PUZZLES
+
+    override fun getPaneTitle(pane: Int): Int =
+        if (pane == PANE_GAMES) R.string.games_pane_games else R.string.games_pane_puzzles
+
+    override fun onBeforeLoadTiles() {
+        if (hubPrefs.getBoolean(KEY_PANES_V1, false)) return
+        hubPrefs.edit()
+            .putBoolean(KEY_PANES_V1, true)
+            .remove("tile_order")
+            .remove("tile_order_1")
+            .remove("tile_panes")
+            .apply()
     }
 
     override fun onTileClicked(tile: HubTile) {
@@ -59,6 +74,7 @@ class GamesActivity : BaseHubActivity() {
      */
     override fun onResume() {
         super.onResume()
-        tilesAdapter.setNotificationCount("farm", FarmState.readyToHarvest(this))
+        val ready = FarmState.readyToHarvest(this)
+        paneAdapters.forEach { it.setNotificationCount("farm", ready) }
     }
 }
