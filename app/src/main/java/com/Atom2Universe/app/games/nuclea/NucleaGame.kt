@@ -564,6 +564,8 @@ class NucleaGame(private val ctx: Context) {
 
     fun update(dt: Float, mx: Float, my: Float, ax: Float, ay: Float) {
         if (phase != NucleaPhase.PLAYING) return
+        // Tant que la vue n'a pas de taille, rien à faire : les bornes de l'écran seraient vides.
+        if (screenW <= 0f || screenH <= 0f) return
 
         // Timers globaux
         if (comboTimer > 0f) { comboTimer -= dt; if (comboTimer <= 0f) comboCount = 0 }
