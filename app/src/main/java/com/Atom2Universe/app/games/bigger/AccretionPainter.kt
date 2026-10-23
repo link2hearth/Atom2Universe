@@ -29,7 +29,7 @@ object AccretionPainter {
 
     /** Teinte dominante de chaque objet : éclats de fusion, halos. */
     val TINT = intArrayOf(
-        0xFFB8A590.toInt(), 0xFFA4A4AE.toInt(), 0xFF9A8670.toInt(), 0xFFDADAD4.toInt(),
+        0xFFE9BD59.toInt(), 0xFF74B8BE.toInt(), 0xFFCA8A64.toInt(), 0xFFDADAD4.toInt(),
         0xFFE0704A.toInt(), 0xFF4A9CF0.toInt(), 0xFF7AB4F0.toInt(), 0xFFE8A868.toInt(),
         0xFFFF6A3A.toInt(), 0xFFFFD54A.toInt(), 0xFF9CCBFF.toInt(), 0xFFFFA040.toInt()
     )
@@ -88,17 +88,18 @@ object AccretionPainter {
 
     private fun dust(c: Canvas, rnd: Random, cx: Float, cy: Float, r: Float) {
         p.shader = RadialGradient(cx, cy, r,
-            intArrayOf(Color.argb(120, 150, 128, 104), Color.argb(70, 120, 104, 88), Color.argb(25, 110, 98, 88)),
+            intArrayOf(Color.argb(150, 235, 190, 80), Color.argb(80, 215, 160, 55), Color.argb(0, 190, 130, 40)),
             floatArrayOf(0f, 0.7f, 1f), Shader.TileMode.CLAMP)
-        c.drawCircle(cx, cy, r, p)
+        c.drawPath(blob(rnd, cx, cy, r, 10, 0.28f, smooth = true), p)
         p.shader = null
-        // Des volutes plus denses : un nuage, pas une assiette de grains.
-        repeat(4) {
-            val (dx, dy) = inDisc(rnd, r * 0.45f)
-            fill(Color.argb(45, 190, 170, 140))
-            c.drawPath(blob(rnd, cx + dx, cy + dy, r * (0.3f + rnd.nextFloat() * 0.2f), 9, 0.5f, smooth = true), p)
+        // Des volutes dorées séparées par des creux : une silhouette de nuage, sans cerclage.
+        repeat(5) { i ->
+            val a = i * 2f * PI.toFloat() / 5f
+            val dx = cos(a) * r * 0.42f; val dy = sin(a) * r * 0.42f
+            fill(Color.argb(100, 245, 198, 94))
+            c.drawPath(blob(rnd, cx + dx, cy + dy, r * 0.48f, 9, 0.3f, smooth = true), p)
         }
-        val colors = intArrayOf(0xFFC8B498.toInt(), 0xFF8C7C6C.toInt(), 0xFFA89478.toInt(), 0xFF6E6258.toInt())
+        val colors = intArrayOf(0xFFFFDE88.toInt(), 0xFFD5A344.toInt(), 0xFFF0C15C.toInt(), 0xFFB98130.toInt())
         repeat(120) {
             val (dx, dy) = inDisc(rnd, r * 0.92f)
             fill(alpha(colors[rnd.nextInt(colors.size)], 90 + rnd.nextInt(110)))
@@ -109,8 +110,6 @@ object AccretionPainter {
             fill(Color.argb(210, 255, 248, 230))
             c.drawCircle(cx + dx, cy + dy, r * 0.022f, p)
         }
-        p.style = Paint.Style.STROKE; p.strokeWidth = r * 0.03f; p.color = Color.argb(45, 220, 205, 180)
-        c.drawCircle(cx, cy, r * 0.97f, p)
     }
 
     /** Disque d'accrétion, blanc brûlant au bord intérieur, rouge sombre au bord extérieur. */

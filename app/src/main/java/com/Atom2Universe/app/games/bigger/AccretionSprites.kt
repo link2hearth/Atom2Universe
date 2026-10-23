@@ -12,6 +12,7 @@ import kotlin.math.PI
 import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.ceil
+import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -196,14 +197,23 @@ class AccretionSprites(context: Context) {
         }
     }
 
-    /** Contour bosselé et déterministe pour les petits corps. */
-    private fun lumps(seed: Int, depth: Float): (Float) -> Float {
-        val phases = FloatArray(4) { ((seed * 131 + it * 71) % 360) * PI.toFloat() / 180f }
-        return { a ->
-            1f - depth * (0.5f + 0.2f * sin(3f * a + phases[0]) + 0.15f * sin(5f * a + phases[1]) +
-                0.1f * sin(7f * a + phases[2]) + 0.05f * sin(11f * a + phases[3]))
+    /** Sept arêtes franches : le caillou reste reconnaissable même dans la petite frise. */
+    private fun pebbleOutline(): (Float) -> Float {
+        val radii = floatArrayOf(1f, 0.86f, 0.98f, 0.9f, 1f, 0.84f, 0.94f)
+        val step = 2f * PI.toFloat() / radii.size
+        return { angle ->
+            val a = (angle + 2f * PI.toFloat()) % (2f * PI.toFloat())
+            val i = (a / step).toInt().coerceAtMost(radii.lastIndex)
+            val local = a - i * step
+            val r0 = radii[i]; val r1 = radii[(i + 1) % radii.size]
+            // Intersection du rayon avec l'arête, sans arrondir les coins.
+            r0 * r1 * sin(step) / (r1 * sin(step - local) + r0 * sin(local))
         }
     }
+
+    /** Astéroïde allongé et bosselé, contenu dans son disque de collision. */
+    private fun asteroidOutline(a: Float) = 0.85f + 0.11f * cos(2f * a) +
+        0.04f * sin(3f * a + 0.7f)
 
     // ── Les astres ───────────────────────────────────────────────────────────
 
@@ -213,8 +223,16 @@ class AccretionSprites(context: Context) {
         val size = half * 2
         return when (tier) {
             0, Accretion.BLACK_HOLE -> painted(tier, r, size)
-            1 -> textured(size) { sphere(it, size, r, "textures/planets/mercury.jpg", 1.2f, 0xFFA0A4B4.toInt(), 0.4f, lumps(1, 0.16f), lit = true) }
-            2 -> textured(size) { sphere(it, size, r, "textures/moon.jpg", 2.4f, 0xFFB89470.toInt(), 0.6f, lumps(2, 0.1f), lit = true) }
+            1 -> textured(size) {
+                sphere(it, size, r, "textures/planets/mercury.jpg", 1.2f,
+                    AccretionPainter.TINT[1], 0.95f, pebbleOutline(), lit = true,
+                    surfaceTone = { color -> scaleRgb(color, 1.6f) })
+            }
+            2 -> textured(size) {
+                sphere(it, size, r, "textures/moon.jpg", 2.4f,
+                    AccretionPainter.TINT[2], 0.95f, ::asteroidOutline, lit = true,
+                    surfaceTone = { color -> scaleRgb(color, 1.6f) })
+            }
             3 -> textured(size) { sphere(it, size, r, "textures/moon.jpg", 0f) }
             4 -> textured(size) { sphere(it, size, r, "textures/planets/mars.jpg", 0.8f) }
             5 -> textured(size) { sphere(it, size, r, "textures/earth.jpg", -1.4f) }
