@@ -102,7 +102,21 @@ class LabSortGame(private val rng: Random = Random.Default) {
         tubes = colors.map { col -> ArrayList(col.map { Cell(it, !mysteryMode) }) }.toMutableList()
         revealTops()
         initialTubes = snapshot()
+        arrangeStartingTubes()
         resetCounters()
+    }
+
+    /** Place les tubes initialement vides à la fin, puis garde cet ordre pendant toute la partie. */
+    private fun arrangeStartingTubes() {
+        val order = initialTubes.indices.sortedBy { initialTubes[it].isEmpty() }
+        val newIndices = IntArray(order.size)
+        order.forEachIndexed { new, old -> newIndices[old] = new }
+        tubes = order.map { tubes[it] }.toMutableList()
+        initialTubes = order.map { initialTubes[it] }
+        // La preuve de résolution utilise les mêmes indices que le plateau réordonné.
+        generationTrail = generationTrail.map { m ->
+            intArrayOf(newIndices[m[0]], newIndices[m[1]], m[2])
+        }
     }
 
     fun restart() {
@@ -345,6 +359,8 @@ class LabSortGame(private val rng: Random = Random.Default) {
         pipetteCharges = o.getInt("pipette")
         bestCompleted = o.getInt("bestCompleted")
         history.clear()
+        generationTrail = emptyList()
+        arrangeStartingTubes()
         solved = checkSolved()
         true
     } catch (e: Exception) {

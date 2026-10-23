@@ -147,11 +147,13 @@ class LabSortView @JvmOverloads constructor(
         val startY = (height - total) / 2f + tubeW * TOP_ROOM
         lefts = FloatArray(n)
         tops = FloatArray(n)
+        val gridW = per * tubeW + (per - 1) * gapX
         for (i in 0 until n) {
             val row = i / per
             val inRow = min(per, n - row * per)
             val rowW = inRow * tubeW + (inRow - 1) * gapX
-            lefts[i] = (width - rowW) / 2f + (i % per) * (tubeW + gapX)
+            // Les derniers tubes restent en bas à droite, même si la rangée est incomplète.
+            lefts[i] = (width + gridW) / 2f - rowW + (i % per) * (tubeW + gapX)
             tops[i] = startY + row * (tubeH + gapY)
         }
 
