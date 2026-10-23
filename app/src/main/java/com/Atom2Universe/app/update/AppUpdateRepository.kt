@@ -4,9 +4,14 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.content.edit
 import com.Atom2Universe.app.BuildConfig
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Mutex
@@ -33,8 +38,44 @@ class AppUpdateRepository(context: Context) {
         private const val CHECK_INTERVAL = 6 * 60 * 60 * 1000L
         private val checkMutex = Mutex()
         private val downloadMutex = Mutex()
+        private val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         private val client = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).followSslRedirects(false).build()
+
+        fun cleanupInstalledApkAsync(context: Context, onFinished: () -> Unit = {}) {
+            val repository = AppUpdateRepository(context)
+            cleanupScope.launch {
+                try {
+                    repository.cleanupInstalledApk()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (error: Exception) {
+                    Log.w("AppUpdate", "Installed APK cleanup failed; will retry at next startup", error)
+                } finally {
+                    onFinished()
+                }
+            }
+        }
+    }
+
+    /** Une annulation laisse une version plus récente sur disque : elle doit rester réutilisable. */
+    @Suppress("DEPRECATION")
+    suspend fun cleanupInstalledApk() = withContext(Dispatchers.IO) {
+        downloadMutex.withLock {
+            val file = apk
+            if (!file.isFile) return@withLock
+            val pm = app.packageManager
+            val downloaded = pm.getPackageArchiveInfo(file.absolutePath, 0) ?: return@withLock
+            if (downloaded.packageName != app.packageName) return@withLock
+            val installed = pm.getPackageInfo(app.packageName, 0)
+            val alreadyInstalled = if (Build.VERSION.SDK_INT >= 28)
+                installed.longVersionCode >= downloaded.longVersionCode
+            else installed.versionCode >= downloaded.versionCode
+            if (alreadyInstalled) {
+                if (!file.delete()) throw IOException("Cannot delete installed update APK")
+                prefs.edit { remove("apk_url") }
+            }
+        }
     }
 
     fun cachedRelease(): UpdateRelease? = if (BuildConfig.DEBUG) null else runCatching {

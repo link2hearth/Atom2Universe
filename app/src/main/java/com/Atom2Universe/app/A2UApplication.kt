@@ -16,6 +16,8 @@ class A2UApplication : Application() {
         LocaleHelper.syncApplicationLocale(this)
         LocaleHelper.ensureLocale(this)
         instance = this
+        // Repli si le signal de fin de mise à jour n'a pas pu terminer le nettoyage.
+        com.Atom2Universe.app.update.AppUpdateRepository.cleanupInstalledApkAsync(this)
         AudioFocusManager.init(this)
         StatsTracker.init(this)
         StatsSyncManager.init(this)
