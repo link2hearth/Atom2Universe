@@ -120,6 +120,10 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.caves.CaveWorldHubTileDrawable::class,
         com.Atom2Universe.app.games.bigger.BiggerActivity::class.java.name to
             com.Atom2Universe.app.games.bigger.BiggerHubTileDrawable::class,
+        com.Atom2Universe.app.games.bigger.BiggerMenuActivity::class.java.name to
+            com.Atom2Universe.app.games.bigger.BiggerHubTileDrawable::class,
+        com.Atom2Universe.app.games.enamel.EnamelActivity::class.java.name to
+            com.Atom2Universe.app.games.enamel.EnamelHubTileDrawable::class,
         com.Atom2Universe.app.games.starbridges.StarBridgesActivity::class.java.name to
             com.Atom2Universe.app.games.starbridges.StarBridgesHubTileDrawable::class,
         com.Atom2Universe.app.games.theline.TheLineActivity::class.java.name to

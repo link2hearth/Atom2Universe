@@ -32,7 +32,7 @@ import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.balance.BalanceMenuActivity
 import com.Atom2Universe.app.games.trebuchet.TrebuchetActivity
-import com.Atom2Universe.app.games.bigger.BiggerActivity
+import com.Atom2Universe.app.games.bigger.BiggerMenuActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
 import com.Atom2Universe.app.games.nuclea.NucleaActivity
@@ -105,11 +105,11 @@ object GamesCatalog {
         ),
         HubTile(
             id = "bigger",
-            titleRes = R.string.bigger_title,
-            descriptionRes = R.string.bigger_description,
+            titleRes = R.string.fusion_hub_title,
+            descriptionRes = R.string.fusion_hub_description,
             iconRes = android.R.drawable.ic_menu_upload,
             defaultColorRes = R.color.game_tile_bigger,
-            activityClass = BiggerActivity::class.java
+            activityClass = BiggerMenuActivity::class.java
         ),
         // Mondes et aventure
         HubTile(

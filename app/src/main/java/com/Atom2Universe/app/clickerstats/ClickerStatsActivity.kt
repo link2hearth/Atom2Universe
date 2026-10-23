@@ -628,7 +628,8 @@ class ClickerStatsActivity : ThemedActivity() {
         }
         bindKitStats()
         bindCardStats()
-        recordRow("bigger", getString(R.string.game_stat_score), "bigger_save", "best_score")
+        recordRow("bigger", getString(R.string.bigger_title), "bigger_save", "best_score")
+        recordRow("bigger", getString(R.string.enamel_title), "enamel_save", "best_score")
         recordRow("link", getString(R.string.game_stat_score), "link_save", "best_score")
         recordRow("reflex", getString(R.string.game_stat_combo), "reflex_save", "best_combo")
         recordRow("match3", getString(R.string.forge_endless_title), "match3_forge", "best_endless")
@@ -639,6 +640,9 @@ class ClickerStatsActivity : ThemedActivity() {
         }
         val tier = getSharedPreferences("bigger_save", MODE_PRIVATE).getInt("discovered_tier", -1)
         addExtraStat("bigger", getString(R.string.game_stat_tier), if (tier < 0) getString(R.string.game_stat_empty) else number(tier + 1))
+        val enamelTier = getSharedPreferences("enamel_save", MODE_PRIVATE).getInt("discovered_tier", -1)
+        addExtraStat("bigger", getString(R.string.enamel_stat_rank), if (enamelTier < 0) getString(R.string.game_stat_empty) else number(enamelTier + 1),
+            listOf(SyncedStat("enamel_save", "discovered_tier")))
         val hits = getSharedPreferences("trebuchet_game", MODE_PRIVATE).all.filterKeys { it.startsWith("best_hits") }
             .values.mapNotNull { (it as? Int)?.takeIf { n -> n > 0 } }.minOrNull()
         addExtraStat("trebuchet", getString(R.string.game_stat_hits), hits?.let { number(it) } ?: getString(R.string.game_stat_empty),

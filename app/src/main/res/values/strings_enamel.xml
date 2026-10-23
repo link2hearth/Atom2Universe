@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fusion_hub_title">Accretion &amp; Enamel</string>
+    <string name="fusion_hub_description">Two ways to merge: falling stars or sliding ceramic pucks</string>
+    <string name="enamel_title">Enamel</string>
+    <string name="enamel_description">Aim, slide and merge ceramic pucks on a wooden board</string>
+    <string name="enamel_board_label">THE CERAMIC WORKSHOP</string>
+    <string name="enamel_hud">%1$d points · Best %2$d</string>
+    <string name="enamel_controls">Touch the launch strip, pull back, release</string>
+    <string name="enamel_power">Power %1$d%% · Release to launch</string>
+    <string name="enamel_moving">Pucks in motion…</string>
+    <string name="enamel_blocked">Choose a clear spot and pull down to aim</string>
+    <string name="enamel_next">NEXT</string>
+    <string name="enamel_merge_points">+%1$d · ×%2$d</string>
+    <string name="enamel_restart">New board</string>
+    <string name="enamel_restart_confirm">Start a new board? Points earned on this board will be converted into neutrinos.</string>
+    <string name="enamel_over_title">Board full</string>
+    <string name="enamel_over_hint">No room left on the launch line</string>
+    <string name="enamel_result">%1$d points</string>
+    <string name="enamel_reward">+%1$d neutrinos</string>
+    <string name="enamel_stat_rank">Enamel · Highest rank</string>
+    <string name="enamel_play_again">Play again</string>
+    <string name="enamel_rules">Touch a clear spot on the strip at the bottom of the board. Pull your finger backwards to choose your direction and power, then release. A short pull makes a gentle shot; a longer pull sends the puck further. To cancel a shot, bring your finger back to its starting point.\n\nPucks glide, slow down, bounce off the rails and push one another. Two matching ranks merge into a larger puck. Chain several merges in the same shot for a multiplier of up to ×8. Two rank XI pucks produce a smaller rank XII puck; two rank XII pucks disappear for a bonus and free up space.\n\nWait for the pucks to stop before shooting again. The dotted guide estimates the path up to the first puck; it includes rail bounces. The game ends when there is no space left to place your next puck on the launch line.\n\nYour board is saved when you leave. Best scores are separate from Accretion. Earn one neutrino per %1$d points, paid when the game ends or you start a new board.</string>
+    <string-array name="enamel_marks">
+        <item>I</item><item>II</item><item>III</item><item>IV</item><item>V</item><item>VI</item>
+        <item>VII</item><item>VIII</item><item>IX</item><item>X</item><item>XI</item><item>XII</item>
+    </string-array>
+</resources>

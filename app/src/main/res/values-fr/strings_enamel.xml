@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fusion_hub_title">Accrétion &amp; Émail</string>
+    <string name="fusion_hub_description">Deux façons de fusionner : des astres qui tombent ou des palets qui glissent</string>
+    <string name="enamel_title">Émail</string>
+    <string name="enamel_description">Vise, fais glisser et fusionne les palets de céramique sur une planche en bois</string>
+    <string name="enamel_board_label">L\'ATELIER DES ÉMAUX</string>
+    <string name="enamel_hud">%1$d points · Record %2$d</string>
+    <string name="enamel_controls">Touche la zone de départ, tire en arrière, relâche</string>
+    <string name="enamel_power">Puissance %1$d%% · Relâche pour lancer</string>
+    <string name="enamel_moving">Les palets glissent…</string>
+    <string name="enamel_blocked">Choisis une place libre et tire vers le bas pour viser</string>
+    <string name="enamel_next">SUIVANT</string>
+    <string name="enamel_merge_points">+%1$d · ×%2$d</string>
+    <string name="enamel_restart">Nouvelle planche</string>
+    <string name="enamel_restart_confirm">Commencer une nouvelle planche ? Les points acquis seront convertis en neutrinos.</string>
+    <string name="enamel_over_title">Planche pleine</string>
+    <string name="enamel_over_hint">Plus de place sur la ligne de départ</string>
+    <string name="enamel_result">%1$d points</string>
+    <string name="enamel_reward">+%1$d neutrinos</string>
+    <string name="enamel_stat_rank">Émail · Plus haut rang</string>
+    <string name="enamel_play_again">Rejouer</string>
+    <string name="enamel_rules">Touche un emplacement libre dans la bande en bas de la planche. Tire ton doigt en arrière pour régler la direction et la puissance, puis relâche. Un petit recul donne un tir doux ; un grand recul envoie le palet plus loin. Pour annuler, ramène ton doigt à son point de départ.\n\nLes palets glissent, ralentissent, rebondissent sur les bandes et se poussent. Deux rangs identiques fusionnent en un palet plus gros. Enchaîne plusieurs fusions pendant le même tir pour multiplier les points, jusqu\'à ×8. Deux palets de rang XI donnent un palet XII plus petit ; deux palets XII disparaissent avec un bonus et libèrent de la place.\n\nAttends l\'arrêt des palets avant de rejouer. Le guide pointillé estime le trajet jusqu\'au premier palet rencontré, en tenant compte des rebonds sur les bandes. La partie se termine quand il ne reste aucun emplacement libre sur la ligne pour poser le prochain palet.\n\nLa planche est sauvegardée quand tu quittes. Les records sont séparés de ceux d\'Accrétion. Tu gagnes un neutrino tous les %1$d points, versés en fin de partie ou quand tu recommences.</string>
+    <string-array name="enamel_marks">
+        <item>I</item><item>II</item><item>III</item><item>IV</item><item>V</item><item>VI</item>
+        <item>VII</item><item>VIII</item><item>IX</item><item>X</item><item>XI</item><item>XII</item>
+    </string-array>
+</resources>

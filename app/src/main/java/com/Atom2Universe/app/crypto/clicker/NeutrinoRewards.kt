@@ -148,6 +148,10 @@ object NeutrinoRewards {
     const val BIGGER_POINTS_PER_NEUTRINO = 150
     fun bigger(score: Int) = score / BIGGER_POINTS_PER_NEUTRINO
 
+    // Émail : même barème de fusions, avec une partie et un record indépendants.
+    const val ENAMEL_POINTS_PER_NEUTRINO = 150
+    fun enamel(score: Int) = score / ENAMEL_POINTS_PER_NEUTRINO
+
     // ── Puzzles du kit (Simon Tatham) : par grille résolue, dans l'ordre des pastilles ──
     // Repère : le rythme des jeux payés au temps (1 neutrino / 15 s). Une grille se paie à
     // sa première résolution seulement, mais « Nouvelle partie » en fournit sans fin : les
@@ -286,6 +290,7 @@ object NeutrinoRewards {
             Entry(R.string.nuclea_title, "$NUCLEA_PER_WAVE", R.string.neutrino_info_note_wave),
             Entry(R.string.reflex_title, "1 / $REFLEX_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.bigger_title, "1 / $BIGGER_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
+            Entry(R.string.enamel_title, "1 / $ENAMEL_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),

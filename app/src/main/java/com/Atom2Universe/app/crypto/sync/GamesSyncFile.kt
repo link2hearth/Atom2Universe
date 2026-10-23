@@ -241,6 +241,8 @@ val HIGH_SCORE_KEYS = listOf(
     HighScoreKey("bigger_save",        "best_score",      HighScoreType.INT),
     // Le plus gros astre jamais formé : la frise d'Accrétion.
     HighScoreKey("bigger_save",        "discovered_tier", HighScoreType.INT),
+    HighScoreKey("enamel_save",        "best_score",      HighScoreType.INT),
+    HighScoreKey("enamel_save",        "discovered_tier", HighScoreType.INT),
     HighScoreKey("circles_save",       "best_moves_",     HighScoreType.INT,   L, isPrefix = true),
     HighScoreKey("cosmo_run_save",     "best_score",      HighScoreType.INT),
     HighScoreKey("flappy_cat_save",    "best_score",      HighScoreType.INT),
