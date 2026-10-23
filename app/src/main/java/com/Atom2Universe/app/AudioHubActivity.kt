@@ -400,6 +400,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         playbackController.refreshState()
         updateLanguageButtonLabel()
         updateCloudButtonState()
+        refreshAppUpdateButton()
         // Reload tiles to pick up any new quick-access shortcuts set from sub-hubs
         if (::tilesAdapter.isInitialized) {
             loadTiles()
@@ -407,6 +408,28 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             // tuile Jeux : sans raccourci epingle, rien ne s'affiche, la tuile Jeux ne compte pas.
             tilesAdapter.setQuickAccessNotificationCount(TILE_GAMES, FarmActivity::class.java.name,
                 FarmState.readyToHarvest(this))
+        }
+    }
+
+    private fun refreshAppUpdateButton() {
+        val button = findViewById<ImageButton>(R.id.app_update_button)
+        val repository = com.Atom2Universe.app.update.AppUpdateRepository(this)
+        fun showAvailable() {
+            button.visibility = if (repository.cachedRelease() != null) View.VISIBLE else View.GONE
+        }
+        button.setOnClickListener {
+            startActivity(Intent(this, com.Atom2Universe.app.update.AppUpdateActivity::class.java))
+        }
+        showAvailable()
+        activityScope.launch {
+            try {
+                repository.check()
+                showAvailable()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Log.d("AppUpdate", "Background release check unavailable", error)
+            }
         }
     }
 

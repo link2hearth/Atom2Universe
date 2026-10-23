@@ -265,6 +265,9 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
     }
 
     private fun setupViews() {
+        findViewById<Button>(R.id.app_update_setting).setOnClickListener {
+            startActivity(Intent(this, com.Atom2Universe.app.update.AppUpdateActivity::class.java))
+        }
         backButton = findViewById(R.id.back_button)
         autoResumeSwitch = findViewById(R.id.auto_resume_switch)
         autoResumeSetting = findViewById(R.id.auto_resume_setting)

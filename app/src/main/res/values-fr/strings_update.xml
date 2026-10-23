@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_title">Mises à jour de l’application</string>
+    <string name="update_entry">Rechercher une nouvelle version sur GitHub</string>
+    <string name="update_badge">Mise à jour disponible</string>
+    <string name="update_installed">Version installée : %1$s</string>
+    <string name="update_checking">Vérification sur GitHub…</string>
+    <string name="update_no_release">Aucune version stable plus récente avec un APK installable n’est publiée sur GitHub.</string>
+    <string name="update_available">Une nouvelle version est disponible.</string>
+    <string name="update_check">Vérifier maintenant</string>
+    <string name="update_releases">Voir les versions sur GitHub</string>
+    <string name="update_action">Mettre à jour</string>
+    <string name="update_install">Installer la mise à jour téléchargée</string>
+    <string name="update_confirm_download">Télécharger la mise à jour (%1$s) ? Les données mobiles peuvent être utilisées. Android te demandera ensuite de confirmer l’installation.</string>
+    <string name="update_downloading">Téléchargement…</string>
+    <string name="update_progress">Téléchargement : %1$d%%</string>
+    <string name="update_ready">Téléchargement vérifié. Confirme l’installation dans la fenêtre Android. Si tu annules, tu peux réessayer ici.</string>
+    <string name="update_release_details">Version %1$s\n\n%2$s</string>
+    <string name="update_check_error">Impossible de vérifier sur GitHub. Vérifie ta connexion et réessaie plus tard.</string>
+    <string name="update_download_error">Le téléchargement a échoué. Vérifie ta connexion et l’espace disponible, puis réessaie.</string>
+    <string name="update_invalid_apk">Cet APK est endommagé ou incompatible avec l’application installée (paquet, version ou signature). L’installation a été arrêtée.</string>
+    <string name="update_install_error">Impossible d’ouvrir l’installation. Tu peux télécharger l’APK depuis les versions GitHub et l’ouvrir manuellement.</string>
+    <string name="update_permission_title">Autoriser les mises à jour</string>
+    <string name="update_permission_message">Sur le prochain écran Android, autorise Atom2Universe à installer des applications depuis cette source, puis reviens ici. Android te demandera encore de confirmer la mise à jour.</string>
+    <string name="update_open_settings">Ouvrir les paramètres Android</string>
+    <string name="update_permission_denied">L’autorisation d’installation n’a pas été accordée. Tu peux réessayer avec le bouton d’installation.</string>
+    <string name="update_debug">Ceci est une version de développement. Les mises à jour GitHub concernent l’application normale et ne peuvent pas mettre à jour le paquet .debug séparé.</string>
+</resources>

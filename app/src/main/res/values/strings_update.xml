@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_title">App updates</string>
+    <string name="update_entry">Check GitHub for a new version</string>
+    <string name="update_badge">Update available</string>
+    <string name="update_installed">Installed version: %1$s</string>
+    <string name="update_checking">Checking GitHub…</string>
+    <string name="update_no_release">No newer stable version with an installable APK is published on GitHub.</string>
+    <string name="update_available">A new version is available.</string>
+    <string name="update_check">Check now</string>
+    <string name="update_releases">View GitHub releases</string>
+    <string name="update_action">Update</string>
+    <string name="update_install">Install downloaded update</string>
+    <string name="update_confirm_download">Download the update (%1$s)? Mobile data may be used. Android will then ask you to confirm installation.</string>
+    <string name="update_downloading">Downloading…</string>
+    <string name="update_progress">Downloading: %1$d%%</string>
+    <string name="update_ready">Download verified. Confirm installation in the Android window. If you cancel, you can try again here.</string>
+    <string name="update_release_details">Version %1$s\n\n%2$s</string>
+    <string name="update_check_error">Unable to check GitHub. Check your connection and try again later.</string>
+    <string name="update_download_error">Download failed. Check your connection and available storage, then try again.</string>
+    <string name="update_invalid_apk">This APK is damaged or incompatible with the installed app (package, version or signature). Installation was stopped.</string>
+    <string name="update_install_error">Unable to open installation. You can download the APK from GitHub releases and open it manually.</string>
+    <string name="update_permission_title">Allow app updates</string>
+    <string name="update_permission_message">On the next Android screen, allow Atom2Universe to install apps from this source, then return here. Android will still ask you to confirm the update.</string>
+    <string name="update_open_settings">Open Android settings</string>
+    <string name="update_permission_denied">Installation permission was not granted. You can try again using the install button.</string>
+    <string name="update_debug">This is a development build. GitHub updates target the normal app and cannot update the separate .debug package.</string>
+</resources>

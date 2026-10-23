@@ -62,6 +62,16 @@
                     app:cornerRadius="?attr/a2uCorner16" />
 
                 <ImageButton
+                    android:id="@+id/app_update_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/update_badge"
+                    android:src="@drawable/ic_app_update"
+                    android:visibility="gone"
+                    app:tint="?attr/a2uMusicAccent" />
+
+                <ImageButton
                     android:id="@+id/cloud_button"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
