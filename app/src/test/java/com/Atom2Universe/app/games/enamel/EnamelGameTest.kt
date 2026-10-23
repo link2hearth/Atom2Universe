@@ -6,6 +6,7 @@ import kotlin.random.Random
 
 /** Garde-fous du lancer, des contacts et de la reprise, sans moteur Android. */
 class EnamelGameTest {
+    private fun EnamelGame.launch(x: Float, dx: Float, dy: Float, power: Float) = launch(x, launchY, dx, dy, power)
     private fun scene(pucks: String, current: Int = 0) = EnamelGame(Random(1)).apply {
         assertTrue(restoreState("1|0|1|-1|$current|0|0|1|$pucks"))
     }
@@ -22,7 +23,7 @@ class EnamelGameTest {
         val gentle = EnamelGame(Random(7))
         val strong = EnamelGame(Random(7))
         assertTrue(gentle.launch(5f, 0f, -1f, .12f))
-        assertTrue(strong.launch(5f, 0f, -1f, .6f))
+        assertTrue(strong.launch(5f, 0f, -1f, .4f))
         assertFalse(strong.launch(5f, 0f, -1f, 1f))
         settle(gentle); settle(strong)
         assertTrue(strong.pucks.single().y < gentle.pucks.single().y - 5f)
@@ -72,19 +73,97 @@ class EnamelGameTest {
         assertTrue(finale.events.single().finale)
     }
 
-    @Test fun blockedLaunchEndsOnlyWhenEntireLineIsBlocked() {
-        val rows = (0..10).joinToString(";") { "0,${.4f + it * .92f},14,0,0,0" }
-        val game = scene(rows, current = 4)
+    @Test fun launchUsesBothCoordinatesAndGentleShotsClearTheBase() {
+        for (tier in EnamelRules.WEIGHTS.indices) for (depth in floatArrayOf(.85f, 1.5f, 2.15f)) {
+            val game = scene("", current = tier)
+            settle(game)
+            val y = game.baseTop + depth
+            assertTrue(game.launch(3f, y, 0f, -1f, .03f))
+            assertEquals(y, game.pucks.single().y, .0001f)
+            settle(game)
+            assertFalse(game.over)
+            assertTrue(game.pucks.single().y + game.pucks.single().radius < game.baseTop)
+        }
+        val game = EnamelGame(Random(2))
+        assertFalse(game.launch(5f, game.baseTop - .5f, 0f, -1f, .5f))
+        assertFalse(game.launch(5f, game.height, 0f, -1f, .5f))
+        assertFalse(game.launch(5f, Float.NaN, 0f, -1f, .5f))
+    }
+
+    @Test fun returningSmallPuckBouncesWithoutLosingOrGainingEnergy() {
+        val game = scene("0,5,12.5,0,8,0")
+        var bounced = false
+        var speed = 8f
+        repeat(500) {
+            game.step(1f / 120)
+            val p = game.pucks.single()
+            if (p.vy < 0) bounced = true
+            val nextSpeed = kotlin.math.hypot(p.vx, p.vy)
+            assertTrue(nextSpeed <= speed + .0001f)
+            speed = nextSpeed
+            assertTrue(p.y + p.radius <= game.baseTop + .001f)
+            assertFalse(game.over)
+            assertEquals(0f, game.danger, 0f)
+        }
+        assertTrue(bounced)
+        assertTrue(game.canLaunch)
+    }
+
+    @Test fun shotDeflectedBeforeLeavingTheBaseIsAlsoProtected() {
+        val game = scene("7,5,11.55,0,0,0")
         settle(game)
-        assertTrue(game.over)
-        assertNull(game.availableLaunchX(5f))
-        val open = scene("4,5,14,0,0,0", current = 4)
-        settle(open)
-        assertFalse(open.over)
-        val x = open.availableLaunchX(5f)
-        assertNotNull(x)
-        assertTrue(open.isLaunchClear(x!!))
-        assertFalse(open.launch(5f, 0f, -1f, 1f))
+        assertTrue(game.launch(5f, game.baseTop + .4f, 0f, -1f, .5f))
+        settle(game)
+        assertFalse("Un seul grand palet ne doit pas faire perdre sur un rebond", game.over)
+        assertTrue(game.pucks.all { it.y + it.radius <= game.baseTop + .06f })
+    }
+
+    @Test fun gentleDiagonalShotsLeaveTheBaseAfterSideBounces() {
+        for (x in floatArrayOf(.9f, 5f, 9.1f)) for (dx in floatArrayOf(-1f, 1f)) {
+            val game = EnamelGame(Random(2))
+            assertTrue(game.launch(x, game.height - .85f, dx, -1f, .03f))
+            settle(game)
+            assertFalse(game.over)
+            assertTrue(game.pucks.single().entered)
+        }
+    }
+
+    @Test fun packedBoardLosesOnlyAfterSustainedPressure() {
+        val game = scene( (0..3).flatMap { row -> (0..2).map { col ->
+            "${8 + (row + col) % 2},${1.8f + col * 3.2f},${1.8f + row * 3.3f},0,0,0"
+        } }.joinToString(";"))
+        repeat(30) { game.step(1f / 120) }
+        assertFalse("Le tas doit avoir un délai pour se dégager", game.over)
+        settle(game)
+        assertTrue("Une planche saturée doit déborder malgré la bande de renvoi", game.over)
+        assertEquals(1f, game.danger, .001f)
+    }
+
+    @Test fun clearingPressureDuringGracePeriodSavesTheBoard() {
+        val game = scene("0,5,6,0,0,0")
+        val p = game.pucks.single()
+        p.entered = false; p.y = 14.5f; p.age = EnamelRules.LAUNCH_GRACE
+        repeat(60) { game.step(1f / 120) }
+        assertTrue(game.danger > 0f)
+        assertFalse(game.over)
+        p.y = 8f
+        settle(game)
+        assertFalse(game.over)
+        assertTrue(game.canLaunch)
+    }
+
+    @Test fun resizeAndLegacyRestorePreserveThePlayableBoard() {
+        val game = scene("0,2,14,0,0,0;4,7,5,0,0,0")
+        settle(game)
+        assertFalse(game.over)
+        game.resize(10f)
+        assertTrue(game.pucks.all { it.y >= it.radius && it.y + it.radius <= game.baseTop })
+        game.resize(24f)
+        val restored = EnamelGame(Random(3))
+        assertTrue(restored.restoreState(game.saveState()!!))
+        assertEquals(24f, restored.height, 0f)
+        settle(restored)
+        assertFalse(restored.over)
     }
 
     @Test fun savedMovingBoardResumesWithSameQueueAndScore() {

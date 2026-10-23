@@ -243,6 +243,8 @@ val HIGH_SCORE_KEYS = listOf(
     HighScoreKey("bigger_save",        "discovered_tier", HighScoreType.INT),
     HighScoreKey("enamel_save",        "best_score",      HighScoreType.INT),
     HighScoreKey("enamel_save",        "discovered_tier", HighScoreType.INT),
+    // Défi Ricochet : minimum de coups, séparé par version du plateau, difficulté et seed.
+    HighScoreKey("ricochet_puzzle",    "best_",           HighScoreType.INT,   L, isPrefix = true),
     HighScoreKey("circles_save",       "best_moves_",     HighScoreType.INT,   L, isPrefix = true),
     HighScoreKey("cosmo_run_save",     "best_score",      HighScoreType.INT),
     HighScoreKey("flappy_cat_save",    "best_score",      HighScoreType.INT),

@@ -148,7 +148,7 @@ object NeutrinoRewards {
     const val BIGGER_POINTS_PER_NEUTRINO = 150
     fun bigger(score: Int) = score / BIGGER_POINTS_PER_NEUTRINO
 
-    // Émail : même barème de fusions, avec une partie et un record indépendants.
+    // Ricochet : même barème de fusions, avec une partie et un record indépendants.
     const val ENAMEL_POINTS_PER_NEUTRINO = 150
     fun enamel(score: Int) = score / ENAMEL_POINTS_PER_NEUTRINO
 

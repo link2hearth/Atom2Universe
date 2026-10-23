@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
@@ -21,6 +22,7 @@ import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
 class EnamelActivity : ThemedActivity() {
     companion object { const val PREFS = "enamel_save" }
     private val prefs by lazy { getSharedPreferences(PREFS, MODE_PRIVATE) }
+    private val colors by lazy { SciencePalette(this) }
     private val sound = BiggerSoundEngine()
     private lateinit var board: EnamelView
     private lateinit var score: TextView
@@ -35,11 +37,11 @@ class EnamelActivity : ThemedActivity() {
         fun px(n: Int) = (n * dp).toInt()
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(EnamelPainter.INK)
+            setBackgroundColor(colors.background)
         }
-        val bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        val bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
         fun button(icon: Int, title: Int, action: () -> Unit) = ImageButton(this).apply {
-            setImageResource(icon); setColorFilter(EnamelPainter.CREAM); background = null
+            setImageResource(icon); setColorFilter(colors.text); background = null
             contentDescription = getString(title); setPadding(px(12), px(12), px(12), px(12))
             setOnClickListener { action() }
         }
@@ -47,11 +49,11 @@ class EnamelActivity : ThemedActivity() {
         val title = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addView(TextView(this@EnamelActivity).apply {
-                setText(R.string.enamel_title); setTextColor(EnamelPainter.CREAM)
-                typeface = Typeface.create("serif", Typeface.BOLD); textSize = 24f
+                setText(R.string.enamel_title); setTextColor(colors.text)
+                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL); textSize = 23f
             })
         }
-        score = TextView(this).apply { setTextColor(EnamelPainter.GOLD); textSize = 11f }
+        score = TextView(this).apply { setTextColor(colors.ink(colors.accent, colors.background)); textSize = 14f }
         title.addView(score)
         bar.addView(title, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
         bar.addView(button(android.R.drawable.ic_menu_rotate, R.string.enamel_restart) { askRestart() }, LinearLayout.LayoutParams(px(48), px(48)))
@@ -63,7 +65,7 @@ class EnamelActivity : ThemedActivity() {
                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) board.resume()
             }
         }, LinearLayout.LayoutParams(px(48), px(48)))
-        root.addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, px(64)))
+        root.addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         board = EnamelView(this).apply {
             sound = this@EnamelActivity.sound
             bestScore = prefs.getInt("best_score", 0)

@@ -32,7 +32,8 @@ import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.balance.BalanceMenuActivity
 import com.Atom2Universe.app.games.trebuchet.TrebuchetActivity
-import com.Atom2Universe.app.games.bigger.BiggerMenuActivity
+import com.Atom2Universe.app.games.bigger.BiggerActivity
+import com.Atom2Universe.app.games.enamel.RicochetMenuActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
 import com.Atom2Universe.app.games.nuclea.NucleaActivity
@@ -105,11 +106,19 @@ object GamesCatalog {
         ),
         HubTile(
             id = "bigger",
-            titleRes = R.string.fusion_hub_title,
-            descriptionRes = R.string.fusion_hub_description,
+            titleRes = R.string.bigger_title,
+            descriptionRes = R.string.bigger_description,
             iconRes = android.R.drawable.ic_menu_upload,
             defaultColorRes = R.color.game_tile_bigger,
-            activityClass = BiggerMenuActivity::class.java
+            activityClass = BiggerActivity::class.java
+        ),
+        HubTile(
+            id = "ricochet",
+            titleRes = R.string.enamel_title,
+            descriptionRes = R.string.ricochet_menu_description,
+            iconRes = android.R.drawable.ic_menu_compass,
+            defaultColorRes = R.color.game_tile_bigger,
+            activityClass = RicochetMenuActivity::class.java
         ),
         // Mondes et aventure
         HubTile(
@@ -415,6 +424,7 @@ object GamesCatalog {
 
     fun orderedTiles(context: Context): List<HubTile> {
         val prefs = context.getSharedPreferences("games_hub_prefs", Context.MODE_PRIVATE)
+        GamesHubMigration.separateRicochet(prefs)
         fun order(key: String) = prefs.getString(key, "").orEmpty().split(",").filter { it.isNotBlank() }
         // Les deux files l'une après l'autre : casse-têtes, puis grands jeux.
         val ids = (order("tile_order") + order("tile_order_1")).distinct()

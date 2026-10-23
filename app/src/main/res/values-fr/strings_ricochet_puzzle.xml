@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="puzzle_stat_mode">Défi · %1$s</string>
+    <string name="puzzle_stat_cleared">Voir %1$d records</string>
+    <string name="puzzle_stat_record">Seed %1$d · %2$d coups</string>
+    <string name="puzzle_title">Ricochet · Défi</string>
+    <string name="puzzle_description">Pousse les paires pour vider le plateau en un minimum de coups, puis bats ton record sur la même seed</string>
+    <string name="puzzle_controls">Place le projectile métallique dans la base, tire en arrière et relâche pour pousser les palets colorés</string>
+    <string name="puzzle_hud">%1$d coups · %2$d paires restantes · %3$s</string>
+    <string name="puzzle_finished_hud">Vidé en %1$d coups · %3$s</string>
+    <string name="puzzle_no_record">Aucun record</string>
+    <string name="puzzle_record">Record : %1$d coups</string>
+    <string name="puzzle_seed_mode">Seed %1$d · %2$s · Modifier</string>
+    <string name="puzzle_easy">Facile</string>
+    <string name="puzzle_hard">Difficile</string>
+    <string name="puzzle_easy_description">Facile · Sans obstacle</string>
+    <string name="puzzle_hard_description">Difficile · Mur mouvant</string>
+    <string name="puzzle_choose">Choisir un plateau</string>
+    <string name="puzzle_seed_hint">Numéro de seed (0–999999999)</string>
+    <string name="puzzle_seed_error">Entre un nombre de 0 à 999999999</string>
+    <string name="puzzle_choose_hint">Une même seed recrée les mêmes paires. Chaque difficulté possède son propre record.</string>
+    <string name="puzzle_replay">Rejouer la seed</string>
+    <string name="puzzle_new">Nouveau plateau</string>
+    <string name="puzzle_history">Seeds récentes</string>
+    <string name="puzzle_recent_item">%1$d · %2$s · %3$s</string>
+    <string name="puzzle_play">Jouer</string>
+    <string name="puzzle_replace_title">Commencer un autre essai ?</string>
+    <string name="puzzle_replace_hint">Cet essai sera remplacé. Tes records et tes seeds récentes seront conservés.</string>
+    <string name="puzzle_complete">Plateau vidé !</string>
+    <string name="puzzle_new_record">Nouveau record !</string>
+    <string name="puzzle_result">Plateau vidé en %1$d coups.\n\nSeed %2$d · %3$s\n%4$s</string>
+    <string name="puzzle_rules">Vide les six paires en un minimum de coups. Place le projectile métallique où tu veux dans la base ombrée, tire en arrière pour viser et relâche. Le projectile sert uniquement à pousser : deux palets de même couleur doivent se toucher pour disparaître. Aucun palet plus gros ne se crée.\n\nLe projectile disparaît à la fin de chaque tour. Les tirs sont illimités. Plusieurs paires peuvent disparaître pendant un même coup. La base renvoie les palets vers le plateau.\n\nEn facile, il n\'y a aucun obstacle. En difficile, un mur coulisse : attends une ouverture ou utilise-le pour dévier les palets. Entre deux tirs, il fait demi-tour au contact d\'un palet au repos sans le déplacer. Pendant le tir, il peut pousser les palets. Le tour se termine quand les mouvements cessent, ou après 10 secondes si le mur entretient le mouvement.\n\nLe guide pointillé s\'arrête au premier impact prévu, avec la position actuelle du mur. Celui-ci peut bouger avant l\'arrivée du projectile.\n\nRejouer la seed remet les paires et le mur à leur position initiale. Choisir un plateau permet de saisir une seed et de changer de difficulté. Seeds récentes permet de retrouver les plateaux précédents. Le record retient le minimum de coups pour un plateau terminé, séparément pour chaque seed et difficulté. Ton essai en cours est sauvegardé quand tu quittes.</string>
+</resources>

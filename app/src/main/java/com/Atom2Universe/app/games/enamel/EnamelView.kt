@@ -10,6 +10,7 @@ import android.graphics.Typeface
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
 import kotlin.math.hypot
@@ -23,8 +24,8 @@ class EnamelView(context: Context) : View(context) {
     var onStateChanged: (() -> Unit)? = null
     var onGameOver: (() -> Unit)? = null
     private val dp = resources.displayMetrics.density
-    private val labels = resources.getStringArray(R.array.enamel_marks)
-    private val art = EnamelPainter(labels)
+    private val colors = SciencePalette(context)
+    private val art = EnamelPainter()
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -44,6 +45,7 @@ class EnamelView(context: Context) : View(context) {
     private var startY = 0f
     private var startX = 0f
     private var launchX = 5f
+    private var launchY = game.launchY
     private var aimX = 0f
     private var aimY = -1f
     private var power = 0f
@@ -60,19 +62,25 @@ class EnamelView(context: Context) : View(context) {
     fun pause() { active = false; cancelAim(); last = 0L }
     fun reset() {
         game.reset(); reported = false; rings.clear(); messageLife = 0f; accumulator = 0f
-        cancelAim(); launchX = 5f; blocked = false; last = 0L
+        cancelAim(); launchX = 5f; launchY = game.launchY; blocked = false; last = 0L
         onStateChanged?.invoke(); invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        scale = min((w - 32 * dp) / 10.7f, (h - 138 * dp) / 16.7f).coerceAtLeast(1f)
+        val availableW = (w - 12 * dp).coerceAtLeast(1f)
+        val availableH = (h - 52 * dp).coerceAtLeast(1f)
+        val boardHeight = (availableH / (availableW / 10.4f) - .4f)
+            .coerceIn(EnamelRules.MIN_HEIGHT, EnamelRules.MAX_HEIGHT)
+        game.resize(boardHeight)
+        scale = min(availableW / 10.4f, availableH / (game.height + .4f)).coerceAtLeast(.1f)
         left = (w - 10 * scale) / 2
-        top = 33 * dp + maxOf(0f, (h - 138 * dp - 16.7f * scale) / 2) + .35f * scale
-        val bw = (10.7f * scale).toInt().coerceAtLeast(1)
-        val bh = (16.7f * scale).toInt().coerceAtLeast(1)
+        top = 4 * dp + maxOf(0f, (availableH - (game.height + .4f) * scale) / 2) + .2f * scale
+        launchY = game.launchY
+        val bw = kotlin.math.ceil(10.4f * scale).toInt().coerceAtLeast(1)
+        val bh = kotlin.math.ceil((game.height + .4f) * scale).toInt().coerceAtLeast(1)
         board?.recycle()
         board = Bitmap.createBitmap(bw, bh, Bitmap.Config.ARGB_8888).also {
-            val c = Canvas(it); c.scale(scale, scale); c.translate(.35f, .35f); art.board(c)
+            val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, game.height)
         }
         cancelAim()
     }
@@ -95,17 +103,17 @@ class EnamelView(context: Context) : View(context) {
             }
             game.events.clear()
             if (wasMoving && !game.moving) {
-                launchX = game.availableLaunchX(launchX) ?: launchX
                 onStateChanged?.invoke()
             }
             if (game.over && !reported) { reported = true; sound?.onGameOver(); onGameOver?.invoke() }
         }
         rings.forEach { it.life -= dt }; rings.removeAll { it.life <= 0f }
         messageLife -= dt
-        canvas.drawColor(EnamelPainter.INK)
-        text(canvas, context.getString(R.string.enamel_board_label), width / 2f, 20 * dp, 11f, EnamelPainter.GOLD)
-        board?.let { canvas.drawBitmap(it, left - .35f * scale, top - .35f * scale, null) }
+        canvas.drawColor(colors.background)
+        board?.let { canvas.drawBitmap(it, left - .2f * scale, top - .2f * scale, null) }
         canvas.save(); canvas.translate(left, top); canvas.scale(scale, scale)
+        canvas.save(); canvas.clipRect(0f, 0f, 10f, game.height)
+        drawBase(canvas)
         for (puck in game.pucks) art.puck(canvas, puck.tier, puck.x, puck.y, puck.radius, puck.angle)
         for (ring in rings) {
             val t = 1 - ring.life / .8f
@@ -115,24 +123,57 @@ class EnamelView(context: Context) : View(context) {
             canvas.drawCircle(e.x, e.y, EnamelRules.RADII[e.tier] + t * 1.1f, p)
             p.style = Paint.Style.FILL; p.alpha = 255
             p.color = EnamelPainter.INK; p.textAlign = Paint.Align.CENTER
-            p.typeface = Typeface.DEFAULT_BOLD; p.textSize = .36f
-            canvas.drawText(context.getString(R.string.enamel_merge_points, e.points, e.chain), e.x, e.y - .6f - t, p)
+            p.typeface = Typeface.DEFAULT_BOLD
+            boardText(canvas, context.getString(R.string.enamel_merge_points, e.points, e.chain), e.x, e.y - .6f - t, .36f)
         }
         if (game.canLaunch) {
-            if (!aiming) launchX = game.availableLaunchX(launchX) ?: launchX
-            val clear = game.isLaunchClear(launchX)
-            art.puck(canvas, game.current, launchX, EnamelRules.LAUNCH_Y, EnamelRules.RADII[game.current], alpha = if (clear) 200 else 90)
-            if (aiming && power > .025f && clear && aimY < 0) drawAim(canvas)
+            val radius = EnamelRules.RADII[game.current]
+            launchX = launchX.coerceIn(radius, 10f - radius)
+            launchY = launchY.coerceIn(game.baseTop + radius, game.height - radius)
+            val clear = game.isLaunchClear(launchX, launchY)
+            if (aiming && !blocked) drawAim(canvas)
+            art.puck(canvas, game.current, launchX, launchY, radius, alpha = if (clear) 240 else 90)
             p.color = if (clear) EnamelPainter.INK else 0xFFC0503C.toInt()
             p.style = Paint.Style.STROKE; p.strokeWidth = .03f
-            canvas.drawCircle(launchX, EnamelRules.LAUNCH_Y, EnamelRules.RADII[game.current] + .14f, p)
+            canvas.drawCircle(launchX, launchY, radius + .14f, p)
             p.style = Paint.Style.FILL
         }
         canvas.restore()
+        canvas.restore()
+        if (messageLife > 0f) text(canvas, message, width / 2f, top + (game.baseTop + .5f) * scale, 11f, EnamelPainter.INK)
         drawFooter(canvas)
         if (game.over) drawOver(canvas)
         if (active && (game.moving || rings.isNotEmpty() || messageLife > 0f)) postInvalidateOnAnimation()
         else last = 0L
+    }
+
+    private fun drawBase(c: Canvas) {
+        if (game.danger > 0f) {
+            p.color = 0xFFC0503C.toInt(); p.alpha = (game.danger * 75).toInt()
+            c.drawRect(0f, game.baseTop, 10f, game.height, p)
+            p.alpha = 255; p.strokeWidth = .065f
+            c.drawLine(0f, game.baseTop, 10f * game.danger, game.baseTop, p)
+        } else if (aiming) {
+            p.color = EnamelPainter.GOLD; p.strokeWidth = .065f
+            c.drawLine(0f, game.baseTop, 10f * power, game.baseTop, p)
+        }
+        // L'aperçu suivant reste dans la base, libérant le bas pour toute la frise.
+        if (!aiming || launchX < 7.6f || launchY < game.height - 1.1f) {
+            p.color = EnamelPainter.INK; p.alpha = 155
+            p.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            p.textAlign = Paint.Align.RIGHT
+            boardText(c, context.getString(R.string.enamel_next), 8.9f, game.height - .39f, .22f)
+            art.puck(c, game.next, 9.4f, game.height - .47f, .29f)
+        }
+        p.alpha = 255
+    }
+
+    /** Des tailles de police en pixels évitent que les glyphes de moins d'une unité se superposent. */
+    private fun boardText(c: Canvas, label: String, x: Float, y: Float, size: Float) {
+        c.save(); c.scale(1f / scale, 1f / scale)
+        p.textSize = size * scale
+        c.drawText(label, x * scale, y * scale, p)
+        c.restore()
     }
 
     /** Indique la direction et la distance de freinage, avec les rebonds sur les bandes. */
@@ -140,15 +181,15 @@ class EnamelView(context: Context) : View(context) {
         val length = hypot(aimX, aimY)
         if (length < .001f) return
         var dx = aimX / length; var dy = aimY / length
-        val speed = 1.5f + power * (EnamelRules.MAX_SPEED - 1.5f)
+        val speed = game.shotSpeed(launchY, aimX, aimY, power) ?: return
         var distance = speed * speed / (2 * EnamelRules.DRAG)
-        var x = launchX; var y = EnamelRules.LAUNCH_Y
+        var x = launchX; var y = launchY
         val r = EnamelRules.RADII[game.current]
         line.color = EnamelPainter.INK; line.alpha = 130
         repeat(4) {
             if (distance <= .01f) return@repeat
             val tx = if (dx > .001f) (10 - r - x) / dx else if (dx < -.001f) (r - x) / dx else Float.POSITIVE_INFINITY
-            val ty = if (dy > .001f) (16 - r - y) / dy else if (dy < -.001f) (r - y) / dy else Float.POSITIVE_INFINITY
+            val ty = if (dy > .001f) (game.baseTop - r - y) / dy else if (dy < -.001f) (r - y) / dy else Float.POSITIVE_INFINITY
             val wall = min(tx, ty).coerceAtLeast(0f)
             val travel = min(distance, wall)
             val ex = x + dx * travel; val ey = y + dy * travel
@@ -176,40 +217,32 @@ class EnamelView(context: Context) : View(context) {
     }
 
     private fun drawFooter(c: Canvas) {
-        val base = top + 16.35f * scale
-        val caption = when {
-            messageLife > 0 -> message
-            game.over -> context.getString(R.string.enamel_over_hint)
-            game.moving -> context.getString(R.string.enamel_moving)
-            aiming && blocked -> context.getString(R.string.enamel_blocked)
-            aiming -> context.getString(R.string.enamel_power, (power * 100).toInt())
-            else -> context.getString(R.string.enamel_controls)
-        }
-        text(c, caption, width / 2f, base + 21 * dp, 12f, EnamelPainter.CREAM)
-        val meterW = min(width * .32f, 140 * dp)
-        val mx = width / 2f - meterW / 2
-        p.color = 0xFF416162.toInt(); c.drawRoundRect(mx, base + 31 * dp, mx + meterW, base + 35 * dp, 2 * dp, 2 * dp, p)
-        p.color = EnamelPainter.GOLD
-        c.drawRoundRect(mx, base + 31 * dp, mx + meterW * power, base + 35 * dp, 2 * dp, 2 * dp, p)
-        text(c, context.getString(R.string.enamel_next), width - 80 * dp, base + 44 * dp, 10f, EnamelPainter.GOLD)
-        art.puck(c, game.next, width - 30 * dp, base + 40 * dp, 11 * dp)
-        val unit = min(25 * dp, (width - 32 * dp) / 12)
-        val start = (width - unit * 11) / 2
+        val unit = (width - 24 * dp) / 12
+        val start = 12 * dp + unit / 2
+        val y = height - 23 * dp
+        p.color = colors.outline; p.strokeWidth = dp
+        c.drawLine(start, y, width - start, y, p)
         repeat(12) { tier ->
-            art.puck(c, tier, start + tier * unit, base + 62 * dp, unit * .35f, alpha = if (tier <= discoveredTier) 255 else 70)
+            val x = start + tier * unit
+            val r = min(13 * dp, unit * .35f)
+            art.puck(c, tier, x, y, r, alpha = if (tier <= maxOf(discoveredTier, game.current)) 255 else 85)
+            if (tier == game.current) {
+                p.style = Paint.Style.STROKE; p.color = colors.accent; p.strokeWidth = dp
+                c.drawCircle(x, y, r + 3 * dp, p); p.style = Paint.Style.FILL
+            }
         }
     }
 
     private fun drawOver(c: Canvas) {
-        p.color = 0xDE173E40.toInt(); c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
+        p.color = colors.background; c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
         val cy = height * .42f
-        text(c, context.getString(R.string.enamel_over_title), width / 2f, cy, 29f, EnamelPainter.CREAM)
-        text(c, context.getString(R.string.enamel_result, game.score), width / 2f, cy + 39 * dp, 20f, EnamelPainter.GOLD)
-        text(c, context.getString(R.string.enamel_reward, NeutrinoRewards.enamel(game.score)), width / 2f, cy + 66 * dp, 14f, EnamelPainter.GOLD)
-        text(c, context.getString(R.string.enamel_over_hint), width / 2f, cy + 92 * dp, 13f, EnamelPainter.CREAM)
+        text(c, context.getString(R.string.enamel_over_title), width / 2f, cy, 29f, colors.text)
+        text(c, context.getString(R.string.enamel_result, game.score), width / 2f, cy + 39 * dp, 20f, colors.ink(colors.accent, colors.background))
+        text(c, context.getString(R.string.enamel_reward, NeutrinoRewards.enamel(game.score)), width / 2f, cy + 66 * dp, 14f, colors.secondary)
+        text(c, context.getString(R.string.enamel_over_hint), width / 2f, cy + 92 * dp, 14f, colors.text)
         replay.set(width * .2f, cy + 113 * dp, width * .8f, cy + 163 * dp)
-        p.color = EnamelPainter.GOLD; c.drawRoundRect(replay, 10 * dp, 10 * dp, p)
-        text(c, context.getString(R.string.enamel_play_again), width / 2f, replay.centerY() + 6 * dp, 17f, EnamelPainter.INK)
+        p.color = colors.accent; c.drawRoundRect(replay, 10 * dp, 10 * dp, p)
+        text(c, context.getString(R.string.enamel_play_again), width / 2f, replay.centerY() + 6 * dp, 17f, colors.onAccent)
     }
 
     private fun text(c: Canvas, text: String, x: Float, y: Float, size: Float, color: Int) {
@@ -220,14 +253,19 @@ class EnamelView(context: Context) : View(context) {
         c.drawText(text, x, y, p)
     }
 
-    private fun cancelAim() { aiming = false; pointer = -1; power = 0f }
+    private fun cancelAim() {
+        aiming = false; pointer = -1; power = 0f
+        parent?.requestDisallowInterceptTouchEvent(false)
+    }
 
     private fun updateAim(event: MotionEvent): Boolean {
         val index = event.findPointerIndex(pointer)
         if (index < 0) { cancelAim(); return false }
         aimX = startX - event.getX(index); aimY = startY - event.getY(index)
-        power = (hypot(aimX, aimY) / min(110 * dp, scale * 3.5f)).coerceIn(0f, 1f)
-        blocked = !game.isLaunchClear(launchX) || aimY >= -2 * dp
+        // Même depuis le bas de la base, une traction accessible atteint la pleine puissance.
+        val pull = min(min(110 * dp, scale * 2.8f), height - startY - 8 * dp).coerceAtLeast(18 * dp)
+        power = (hypot(aimX, aimY) / pull).coerceIn(0f, 1f)
+        blocked = !game.isLaunchClear(launchX, launchY) || game.shotSpeed(launchY, aimX, aimY, power) == null
         return true
     }
 
@@ -239,20 +277,22 @@ class EnamelView(context: Context) : View(context) {
         }
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                if (!game.canLaunch || event.y < top + 12.8f * scale || event.y > top + 16.3f * scale) return true
+                if (!game.canLaunch || event.x < left || event.x > left + 10f * scale ||
+                    event.y < top + game.baseTop * scale || event.y > top + game.height * scale) return true
                 parent?.requestDisallowInterceptTouchEvent(true)
                 pointer = event.getPointerId(0); startX = event.x; startY = event.y
                 launchX = ((event.x - left) / scale).coerceIn(EnamelRules.RADII[game.current], 10f - EnamelRules.RADII[game.current])
-                blocked = !game.isLaunchClear(launchX); aiming = true; power = 0f; aimX = 0f; aimY = -1f
+                launchY = ((event.y - top) / scale).coerceIn(game.baseTop + EnamelRules.RADII[game.current], game.height - EnamelRules.RADII[game.current])
+                blocked = !game.isLaunchClear(launchX, launchY); aiming = true; power = 0f; aimX = 0f; aimY = -1f
             }
             MotionEvent.ACTION_MOVE -> if (aiming) {
                 updateAim(event)
             }
             MotionEvent.ACTION_UP -> if (aiming) {
                 if (!updateAim(event)) return true
-                if (!blocked && game.launch(launchX, aimX / scale, aimY / scale, power)) {
+                if (!blocked && game.launch(launchX, launchY, aimX / scale, aimY / scale, power)) {
                     sound?.onDrop(); onStateChanged?.invoke(); performClick()
-                } else if (blocked) { message = context.getString(R.string.enamel_blocked); messageLife = 1.8f }
+                } else if (blocked && power >= .025f) { message = context.getString(R.string.enamel_blocked); messageLife = 1.8f }
                 cancelAim(); parent?.requestDisallowInterceptTouchEvent(false)
             }
             MotionEvent.ACTION_CANCEL -> { cancelAim(); parent?.requestDisallowInterceptTouchEvent(false) }

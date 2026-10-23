@@ -4,13 +4,18 @@ import kotlin.math.ceil
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 /** Physique locale, vue du dessus : aucune gravité et aucun changement au moteur partagé. */
 object EnamelRules {
     const val WIDTH = 10f
     const val HEIGHT = 16f
-    const val LAUNCH_Y = 14f
+    const val MIN_HEIGHT = 10f
+    const val MAX_HEIGHT = 24f
+    const val BASE_DEPTH = 3f
+    const val RETURN_LIMIT = 1.5f
+    const val LAUNCH_GRACE = 1.2f
     const val MAX_SPEED = 19f
     const val DRAG = 4.2f
     const val LAST_TIER = 11
@@ -23,6 +28,9 @@ class EnamelPuck(val tier: Int, var x: Float, var y: Float, var vx: Float = 0f, 
     val radius get() = EnamelRules.RADII[tier]
     val mass get() = radius * radius
     var angle = 0f
+    var entered = true
+    var age = EnamelRules.LAUNCH_GRACE
+    var overflow = 0f
 }
 
 data class EnamelEvent(val x: Float, val y: Float, val tier: Int, val points: Int, val chain: Int, val finale: Boolean)
@@ -38,6 +46,10 @@ class EnamelGame(private val random: Random = Random.Default) {
     var chain = 0; private set
     var moving = false; private set
     var over = false; private set
+    var height = EnamelRules.HEIGHT; private set
+    val baseTop get() = height - EnamelRules.BASE_DEPTH
+    val launchY get() = baseTop + EnamelRules.BASE_DEPTH / 2
+    var danger = 0f; private set
     private var quiet = 0f
     private var elapsed = 0f
     val canLaunch get() = !moving && !over
@@ -47,7 +59,7 @@ class EnamelGame(private val random: Random = Random.Default) {
     fun reset() {
         pucks.clear(); events.clear()
         score = 0; shots = 0; bestTier = -1; chain = 0
-        moving = false; over = false; quiet = 0f; elapsed = 0f
+        moving = false; over = false; quiet = 0f; elapsed = 0f; danger = 0f
         current = roll(); next = roll()
     }
 
@@ -60,43 +72,50 @@ class EnamelGame(private val random: Random = Random.Default) {
         return 0
     }
 
-    fun isLaunchClear(x: Float): Boolean {
-        val r = EnamelRules.RADII[current]
-        if (!x.isFinite() || x < r || x > EnamelRules.WIDTH - r) return false
-        return pucks.none {
-            hypot(it.x - x, it.y - EnamelRules.LAUNCH_Y) < it.radius + r + .025f
+    /** Le plateau suit l'écran, en conservant les palets du même côté de la limite. */
+    fun resize(newHeight: Float) {
+        if (!newHeight.isFinite()) return
+        val target = newHeight.coerceIn(EnamelRules.MIN_HEIGHT, EnamelRules.MAX_HEIGHT)
+        val oldBase = baseTop
+        height = target
+        for (p in pucks) {
+            val safe = oldBase - p.radius
+            p.y = if (p.y <= safe) {
+                p.radius + (p.y - p.radius) / (safe - p.radius) * (baseTop - 2 * p.radius)
+            } else p.y + baseTop - oldBase
+            p.y = p.y.coerceIn(p.radius, height - p.radius)
         }
     }
 
-    /** Intervalles interdits sur la ligne, plutôt qu'un échantillonnage qui peut rater un trou. */
-    fun availableLaunchX(preferred: Float): Float? {
+    fun isLaunchClear(x: Float, y: Float): Boolean {
         val r = EnamelRules.RADII[current]
-        val blocked = pucks.mapNotNull {
-            val reach = it.radius + r + .03f
-            val dy = it.y - EnamelRules.LAUNCH_Y
-            if (kotlin.math.abs(dy) >= reach) null else {
-                val dx = kotlin.math.sqrt(reach * reach - dy * dy)
-                (it.x - dx) to (it.x + dx)
-            }
-        }.sortedBy { it.first }
-        val candidates = ArrayList<Float>()
-        var left = r
-        for ((a, b) in blocked) {
-            if (a > left) candidates.add(preferred.coerceIn(left, min(a, EnamelRules.WIDTH - r)))
-            left = max(left, b)
-            if (left > EnamelRules.WIDTH - r) break
+        if (!x.isFinite() || !y.isFinite() || x < r || x > EnamelRules.WIDTH - r ||
+            y < baseTop + r || y > height - r) return false
+        return pucks.none {
+            hypot(it.x - x, it.y - y) < it.radius + r + .025f
         }
-        if (left <= EnamelRules.WIDTH - r) candidates.add(preferred.coerceIn(left, EnamelRules.WIDTH - r))
-        return candidates.filter { isLaunchClear(it) }.minByOrNull { kotlin.math.abs(it - preferred) }
+    }
+
+    /** Même un tir doux peut sortir de la base ; les tirs presque horizontaux sont refusés. */
+    fun shotSpeed(y: Float, dx: Float, dy: Float, power: Float): Float? {
+        if (!y.isFinite() || !dx.isFinite() || !dy.isFinite() || !power.isFinite()) return null
+        val length = hypot(dx, dy)
+        if (!length.isFinite() || length < .001f || dy / length > -.15f || power < .025f) return null
+        val r = EnamelRules.RADII[current]
+        // La composante verticale suffit même si une bande latérale absorbe de la vitesse.
+        val minimum = sqrt(2 * EnamelRules.DRAG * max(.1f, y - baseTop + r + .16f)) / (-dy / length)
+        if (minimum > EnamelRules.MAX_SPEED) return null
+        return minimum + power.coerceIn(0f, 1f) * (EnamelRules.MAX_SPEED - minimum)
     }
 
     /** dx/dy : vecteur de visée vers le haut de la planche ; puissance dans [0, 1]. */
-    fun launch(x: Float, dx: Float, dy: Float, power: Float): Boolean {
-        if (!canLaunch || !isLaunchClear(x) || !dx.isFinite() || !dy.isFinite() || !power.isFinite()) return false
+    fun launch(x: Float, y: Float, dx: Float, dy: Float, power: Float): Boolean {
+        if (!canLaunch || !isLaunchClear(x, y)) return false
+        val speed = shotSpeed(y, dx, dy, power) ?: return false
         val length = hypot(dx, dy)
-        if (length < .001f || dy >= -.05f || power < .025f) return false
-        val speed = 1.5f + power.coerceIn(0f, 1f) * (EnamelRules.MAX_SPEED - 1.5f)
-        pucks.add(EnamelPuck(current, x, EnamelRules.LAUNCH_Y, dx / length * speed, dy / length * speed))
+        pucks.add(EnamelPuck(current, x, y, dx / length * speed, dy / length * speed).apply {
+            entered = false; age = 0f
+        })
         current = next; next = roll(); shots++; chain = 0
         quiet = 0f; elapsed = 0f; moving = true
         return true
@@ -116,7 +135,7 @@ class EnamelGame(private val random: Random = Random.Default) {
                 p.vx *= factor; p.vy *= factor
                 p.x += p.vx * h; p.y += p.vy * h
                 p.angle += (p.vx - p.vy) * h * .08f
-                wall(p)
+                wall(p, returnToBoard = true)
             }
             mergeContacts()
             // Corrections de position sans ajout de vitesse : les piles serrées restent calmes.
@@ -124,22 +143,47 @@ class EnamelGame(private val random: Random = Random.Default) {
                 for (i in pucks.indices) for (j in i + 1 until pucks.size) collide(pucks[i], pucks[j])
                 pucks.forEach { wall(it) }
             }
+            checkReturn(h)
+            if (over) return
         }
         elapsed += frame
         if (pucks.all { hypot(it.vx, it.vy) < .035f }) quiet += frame else quiet = 0f
-        if (quiet >= .18f || elapsed > 10f) {
+        if ((quiet >= .18f || elapsed > 10f) && danger == 0f && pucks.none { it.y + it.radius > baseTop + .06f }) {
             pucks.forEach { it.vx = 0f; it.vy = 0f }
             moving = false
-            over = availableLaunchX(EnamelRules.WIDTH / 2) == null
         }
     }
 
-    private fun wall(p: EnamelPuck) {
+    private fun checkReturn(dt: Float) {
+        var worst = 0f
+        for (p in pucks) {
+            p.age += dt
+            if (p.y + p.radius <= baseTop + .025f) p.entered = true
+            if ((p.entered || p.age >= EnamelRules.LAUNCH_GRACE) && p.y + p.radius > baseTop + .06f) {
+                p.overflow += dt
+            } else p.overflow = max(0f, p.overflow - 2 * dt)
+            worst = max(worst, p.overflow)
+        }
+        danger = (worst / EnamelRules.RETURN_LIMIT).coerceIn(0f, 1f)
+        if (worst >= EnamelRules.RETURN_LIMIT) {
+            over = true; moving = false
+            pucks.forEach { it.vx = 0f; it.vy = 0f }
+        }
+    }
+
+    private fun wall(p: EnamelPuck, returnToBoard: Boolean = false) {
         val r = p.radius
         if (p.x < r) { p.x = r; if (p.vx < 0) p.vx *= -.72f }
         if (p.x > EnamelRules.WIDTH - r) { p.x = EnamelRules.WIDTH - r; if (p.vx > 0) p.vx *= -.72f }
         if (p.y < r) { p.y = r; if (p.vy < 0) p.vy *= -.72f }
-        if (p.y > EnamelRules.HEIGHT - r) { p.y = EnamelRules.HEIGHT - r; if (p.vy > 0) p.vy *= -.72f }
+        // Bande à sens unique : le tir sort librement, puis les retours rebondissent.
+        // Seulement avant les contacts : leur correction reste libre de dépasser la limite,
+        // ce qui permet de mesurer une vraie pression du tas, sans punir un rebond isolé.
+        if (returnToBoard && p.entered && p.y > baseTop - r) {
+            p.y = baseTop - r
+            if (p.vy > 0) p.vy *= -.72f
+        }
+        if (p.y > height - r) { p.y = height - r; if (p.vy > 0) p.vy = 0f }
     }
 
     private fun collide(a: EnamelPuck, b: EnamelPuck) {
@@ -147,6 +191,8 @@ class EnamelGame(private val random: Random = Random.Default) {
         val reach = a.radius + b.radius
         val distance = hypot(dx, dy)
         if (distance >= reach) return
+        // Un tir contré dès l'entrée bénéficie déjà de la bande de renvoi.
+        if (a.entered || b.entered) { a.entered = true; b.entered = true }
         val nx = if (distance > .00001f) dx / distance else 1f
         val ny = if (distance > .00001f) dy / distance else 0f
         val invA = 1f / a.mass; val invB = 1f / b.mass
@@ -183,6 +229,8 @@ class EnamelGame(private val random: Random = Random.Default) {
                     val mass = max(p.mass, a.mass + b.mass)
                     p.vx = (a.mass * a.vx + b.mass * b.vx) / mass
                     p.vy = (a.mass * a.vy + b.mass * b.vy) / mass
+                    p.entered = a.entered || b.entered
+                    p.age = max(a.age, b.age); p.overflow = max(a.overflow, b.overflow)
                     wall(p); born.add(p)
                 }
                 events.add(EnamelEvent(x, y, tier, points, chain, finale))
@@ -194,32 +242,46 @@ class EnamelGame(private val random: Random = Random.Default) {
 
     fun saveState(): String? {
         if (over || shots == 0) return null
-        return listOf("1", score, shots, bestTier, current, next, chain, if (moving) 1 else 0,
-            pucks.joinToString(";") { "${it.tier},${it.x},${it.y},${it.vx},${it.vy},${it.angle}" }).joinToString("|")
+        return listOf("2", score, shots, bestTier, current, next, chain, if (moving) 1 else 0,
+            pucks.joinToString(";") { "${it.tier},${it.x},${it.y},${it.vx},${it.vy},${it.angle},${if (it.entered) 1 else 0},${it.age},${it.overflow}" }, height).joinToString("|")
     }
 
     /** Validation entière avant mutation : une sauvegarde tronquée ne laisse pas un demi-plateau. */
     fun restoreState(state: String): Boolean = try {
         val s = state.split('|')
-        require(s.size == 9 && s[0] == "1")
+        val legacy = s.size == 9 && s[0] == "1"
+        require(legacy || (s.size == 10 && s[0] == "2"))
+        val savedHeight = if (legacy) EnamelRules.HEIGHT else s[9].toFloat()
+        require(savedHeight.isFinite() && savedHeight in EnamelRules.MIN_HEIGHT..EnamelRules.MAX_HEIGHT)
         val numbers = (1..7).map { s[it].toInt() }
         require(numbers[0] >= 0 && numbers[1] > 0 && numbers[2] in -1..EnamelRules.LAST_TIER)
         require(numbers[3] in EnamelRules.WEIGHTS.indices && numbers[4] in EnamelRules.WEIGHTS.indices && numbers[5] >= 0)
         require(s[7] == "0" || s[7] == "1")
         val restored = if (s[8].isEmpty()) emptyList() else s[8].split(';').map { row ->
             val f = row.split(',')
-            require(f.size == 6)
+            require(f.size == if (legacy) 6 else 9)
             val tier = f[0].toInt(); require(tier in EnamelRules.RADII.indices)
             val v = (1..5).map { f[it].toFloat().also { value -> require(value.isFinite()) } }
             val r = EnamelRules.RADII[tier]
-            require(v[0] in r - .01f..EnamelRules.WIDTH - r + .01f && v[1] in r - .01f..EnamelRules.HEIGHT - r + .01f)
+            require(v[0] in r - .01f..EnamelRules.WIDTH - r + .01f && v[1] in r - .01f..savedHeight - r + .01f)
             require(hypot(v[2], v[3]) <= 100f)
-            EnamelPuck(tier, v[0], v[1], v[2], v[3]).apply { angle = v[4] }
+            EnamelPuck(tier, v[0], v[1], v[2], v[3]).apply {
+                angle = v[4]
+                if (legacy) {
+                    // Reprend les anciennes planches sans condamner les palets posés dans l'ancienne base.
+                    y = min(y, savedHeight - EnamelRules.BASE_DEPTH - r - .06f)
+                } else {
+                    require(f[6] == "0" || f[6] == "1")
+                    entered = f[6] == "1"; age = f[7].toFloat(); overflow = f[8].toFloat()
+                    require(age.isFinite() && age >= 0f && overflow.isFinite() && overflow in 0f..EnamelRules.RETURN_LIMIT)
+                }
+            }
         }
         require(restored.size <= 256)
-        reset(); pucks.addAll(restored)
+        reset(); height = savedHeight; pucks.addAll(restored)
         score = numbers[0]; shots = numbers[1]; bestTier = numbers[2]; current = numbers[3]; next = numbers[4]; chain = numbers[5]
-        // Un sous-pas même pour un plateau au repos, afin de recalculer la ligne bloquée.
+        danger = (pucks.maxOfOrNull { it.overflow } ?: 0f) / EnamelRules.RETURN_LIMIT
+        // Recalcule contacts et dépassement, même pour un plateau sauvegardé au repos.
         moving = true
         true
     } catch (_: RuntimeException) { false }

@@ -5,11 +5,10 @@ import android.graphics.Canvas
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
-import com.Atom2Universe.app.R
 import com.Atom2Universe.app.hub.CachedHubArtworkDrawable
 
 class EnamelHubTileDrawable(context: Context) : CachedHubArtworkDrawable() {
-    private val art = EnamelPainter(context.resources.getStringArray(R.array.enamel_marks))
+    private val art = EnamelPainter()
     override fun render(canvas: Canvas, w: Float, h: Float) {
         canvas.drawColor(EnamelPainter.INK)
         canvas.save()

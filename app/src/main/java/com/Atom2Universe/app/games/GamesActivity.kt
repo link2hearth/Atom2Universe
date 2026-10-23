@@ -50,13 +50,13 @@ class GamesActivity : BaseHubActivity() {
         if (pane == PANE_GAMES) R.string.games_pane_games else R.string.games_pane_puzzles
 
     override fun onBeforeLoadTiles() {
-        if (hubPrefs.getBoolean(KEY_PANES_V1, false)) return
-        hubPrefs.edit()
+        if (!hubPrefs.getBoolean(KEY_PANES_V1, false)) hubPrefs.edit()
             .putBoolean(KEY_PANES_V1, true)
             .remove("tile_order")
             .remove("tile_order_1")
             .remove("tile_panes")
             .apply()
+        GamesHubMigration.separateRicochet(hubPrefs)
     }
 
     override fun onTileClicked(tile: HubTile) {

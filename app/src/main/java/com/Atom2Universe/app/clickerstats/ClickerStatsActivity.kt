@@ -613,6 +613,35 @@ class ClickerStatsActivity : ThemedActivity() {
         }
     }
 
+    private fun bindRicochetStats() {
+        val store = com.Atom2Universe.app.games.enamel.RicochetPuzzleStore(this)
+        val records = store.records()
+        for (hard in listOf(false, true)) {
+            val mode = getString(if (hard) R.string.puzzle_hard else R.string.puzzle_easy)
+            val entries = records.filter { it.hard == hard }
+            addExtraStat("ricochet", getString(R.string.puzzle_stat_mode, mode),
+                if (entries.isEmpty()) getString(R.string.game_stat_empty)
+                else getString(R.string.puzzle_stat_cleared, entries.size))
+            // Les records de seeds différentes ne sont pas comparables entre eux.
+            // La liste détaillée reste accessible sans allonger toutes les statistiques.
+            if (entries.isNotEmpty()) {
+                val container = extraContainer("ricochet")
+                container.getChildAt(container.childCount - 1).apply {
+                    isFocusable = true
+                    setOnClickListener {
+                        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this@ClickerStatsActivity)
+                            .setTitle(getString(R.string.puzzle_stat_mode, mode))
+                            .setItems(entries.map { getString(R.string.puzzle_stat_record, it.seed, it.shots) }.toTypedArray(), null)
+                            .setPositiveButton(R.string.close, null).show()
+                    }
+                }
+                onLongPressDelete(container.getChildAt(container.childCount - 1), entries.map {
+                    SyncedStat(com.Atom2Universe.app.games.enamel.RicochetPuzzleStore.PREFS, it.key)
+                })
+            }
+        }
+    }
+
     private fun bindAdditionalStats() {
         val sections = findViewById<LinearLayout>(R.id.game_stats_sections)
         // Certaines tuiles n'ont pas encore de statistiques pertinentes à afficher.
@@ -629,7 +658,8 @@ class ClickerStatsActivity : ThemedActivity() {
         bindKitStats()
         bindCardStats()
         recordRow("bigger", getString(R.string.bigger_title), "bigger_save", "best_score")
-        recordRow("bigger", getString(R.string.enamel_title), "enamel_save", "best_score")
+        recordRow("ricochet", getString(R.string.ricochet_classic), "enamel_save", "best_score")
+        bindRicochetStats()
         recordRow("link", getString(R.string.game_stat_score), "link_save", "best_score")
         recordRow("reflex", getString(R.string.game_stat_combo), "reflex_save", "best_combo")
         recordRow("match3", getString(R.string.forge_endless_title), "match3_forge", "best_endless")
@@ -641,7 +671,7 @@ class ClickerStatsActivity : ThemedActivity() {
         val tier = getSharedPreferences("bigger_save", MODE_PRIVATE).getInt("discovered_tier", -1)
         addExtraStat("bigger", getString(R.string.game_stat_tier), if (tier < 0) getString(R.string.game_stat_empty) else number(tier + 1))
         val enamelTier = getSharedPreferences("enamel_save", MODE_PRIVATE).getInt("discovered_tier", -1)
-        addExtraStat("bigger", getString(R.string.enamel_stat_rank), if (enamelTier < 0) getString(R.string.game_stat_empty) else number(enamelTier + 1),
+        addExtraStat("ricochet", getString(R.string.enamel_stat_rank), if (enamelTier < 0) getString(R.string.game_stat_empty) else number(enamelTier + 1),
             listOf(SyncedStat("enamel_save", "discovered_tier")))
         val hits = getSharedPreferences("trebuchet_game", MODE_PRIVATE).all.filterKeys { it.startsWith("best_hits") }
             .values.mapNotNull { (it as? Int)?.takeIf { n -> n > 0 } }.minOrNull()

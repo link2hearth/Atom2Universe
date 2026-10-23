@@ -292,9 +292,13 @@
                 <LinearLayout android:tag="extra_balance" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
             </LinearLayout>
             <LinearLayout android:tag="bigger" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                <TextView style="@style/GameStatSection" android:text="@string/fusion_hub_title" />
+                <TextView style="@style/GameStatSection" android:text="@string/bigger_title" />
 
                 <LinearLayout android:tag="extra_bigger" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="ricochet" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/enamel_title" />
+                <LinearLayout android:tag="extra_ricochet" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
             </LinearLayout>
             <LinearLayout android:tag="chess" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
                 <TextView style="@style/GameStatSection" android:text="@string/chess_title" />
