@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.colorstack
 
+import org.json.JSONArray
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -29,6 +31,15 @@ class LabSortGameTest {
                     assertTrue("coup interdit ${m.toList()}", game.canPour(m[1], m[0]))
                     assertEquals(m[2], game.pour(m[1], m[0]))
                 }
+                // La trace trie les couleurs ; en mystère, dévoiler aussi les niveaux restés au fond.
+                if (game.mystery) {
+                    for (i in game.tubes.indices) {
+                        if (game.tubes[i].any { !it.revealed }) {
+                            val empty = game.tubes.indices.first { game.tubes[it].isEmpty() }
+                            assertEquals(LabSortGame.CAPACITY, game.pour(i, empty))
+                        }
+                    }
+                }
                 assertTrue("diff=$diff seed=$seed non résolu", game.solved)
             }
             println("LabSort $diff : ${totalMs / 60} ms par niveau en moyenne")
@@ -49,6 +60,42 @@ class LabSortGameTest {
         val to = game.tubes.indices.first { game.canPour(from, it) }
         game.pour(from, to)
         assertTrue(game.tubes[from].last().revealed)
+    }
+
+    @Test
+    fun sortedMysteryBoardIsOnlyWonAfterEveryLayerIsRevealed() {
+        val game = LabSortGame(Random(11))
+        game.newGame(LabSortGame.Difficulty.EASY, mysteryMode = true)
+        val cfg = LabSortGame.CONFIGS.getValue(game.difficulty)
+        val sorted = JSONArray()
+        repeat(cfg.colors) { color ->
+            sorted.put(JSONArray().apply {
+                repeat(LabSortGame.CAPACITY) { layer ->
+                    put(color * 2 + if (layer == LabSortGame.CAPACITY - 1) 1 else 0)
+                }
+            })
+        }
+        repeat(cfg.empties) { sorted.put(JSONArray()) }
+        val saved = JSONObject(game.serialize()).apply {
+            put("tubes", sorted)
+            put("initial", sorted)
+        }
+
+        assertTrue(game.deserialize(saved.toString()))
+        assertFalse("couleurs triées mais encore cachées", game.solved)
+        assertEquals(0, game.completedCount())
+
+        // Chaque tube se dévoile en le versant dans l'un des tubes vides.
+        repeat(cfg.colors) { source ->
+            val empty = game.tubes.indices.first { game.tubes[it].isEmpty() }
+            assertEquals(LabSortGame.CAPACITY, game.pour(source, empty))
+            assertTrue(game.tubes[empty].all { it.revealed })
+            assertEquals(source + 1, game.completedCount())
+            assertEquals(source == cfg.colors - 1, game.solved)
+        }
+        val restored = LabSortGame()
+        assertTrue(restored.deserialize(game.serialize()))
+        assertTrue(restored.solved)
     }
 
     @Test

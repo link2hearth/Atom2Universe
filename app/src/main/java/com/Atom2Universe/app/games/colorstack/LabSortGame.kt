@@ -211,11 +211,11 @@ class LabSortGame(private val rng: Random = Random.Default) {
         solved = checkSolved()
     }
 
-    /** Tubes pleins d'une seule couleur. */
+    /** Tubes pleins d'une seule couleur, entièrement révélés. */
     fun completedCount() = tubes.count { isComplete(it) }
 
     fun isComplete(t: List<Cell>) =
-        t.size == CAPACITY && t.all { it.colorId == t[0].colorId }
+        t.size == CAPACITY && t.all { it.revealed && it.colorId == t[0].colorId }
 
     private fun checkSolved() = tubes.all { it.isEmpty() || isComplete(it) }
 
