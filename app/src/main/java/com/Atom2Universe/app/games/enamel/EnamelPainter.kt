@@ -18,9 +18,21 @@ class EnamelPainter {
         val INK = 0xFF173E40.toInt()
         val CREAM = 0xFFF5E9D2.toInt()
         val GOLD = 0xFFCCA86A.toInt()
-        val COLORS = intArrayOf(0xFFE8DCC3.toInt(), 0xFFE4AF65.toInt(), 0xFFDC795F.toInt(),
-            0xFF76ADA4.toInt(), 0xFF568C9E.toInt(), 0xFFB17888.toInt(), 0xFF98A769.toInt(),
-            0xFFC26443.toInt(), 0xFF527977.toInt(), 0xFF685E86.toInt(), 0xFFBA8D3E.toInt(), 0xFF263E48.toInt())
+        // Teintes franches et luminosités variées : chaque rang doit se repérer sans chiffre.
+        val COLORS = intArrayOf(
+            0xFFF4E8CE.toInt(), // Ivoire
+            0xFFF19A38.toInt(), // Orange
+            0xFFD94F46.toInt(), // Rouge corail
+            0xFF2FAD72.toInt(), // Vert émeraude
+            0xFF3564CE.toInt(), // Bleu cobalt
+            0xFFBE4FA1.toInt(), // Magenta
+            0xFFB4CF3A.toInt(), // Vert citron
+            0xFF873D28.toInt(), // Terre cuite sombre
+            0xFF26BCD0.toInt(), // Cyan
+            0xFF7543AA.toInt(), // Violet
+            0xFFF2D447.toInt(), // Jaune d'or
+            0xFF243854.toInt()  // Bleu nuit
+        )
     }
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
