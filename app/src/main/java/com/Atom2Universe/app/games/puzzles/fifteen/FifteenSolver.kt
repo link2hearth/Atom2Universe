@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.fifteen
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 /**
  * Résoudre le taquin comme on l'apprend, étape par étape, pour la démonstration :
  * - les rangées du haut une à une, sauf les deux dernières : plaque par plaque de gauche à
@@ -67,6 +68,7 @@ object FifteenSolver {
         parent[startKey] = -1L to -1
         queue.add(startPos to startGap)
         while (queue.isNotEmpty()) {
+            checkPuzzleWork()
             val (pos, gap) = queue.removeFirst()
             val here = key(pos, gap)
             val gx = gap % w; val gy = gap / w
@@ -83,6 +85,7 @@ object FifteenSolver {
                     val moves = ArrayList<Int>()
                     var c = nk
                     while (true) {
+                        checkPuzzleWork()
                         val (p, m) = parent.getValue(c)
                         if (m < 0) break
                         moves.add(m); c = p

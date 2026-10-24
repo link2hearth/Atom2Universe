@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.dominosa
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import kotlin.random.Random
 
@@ -107,6 +108,7 @@ class DominosaState(
         fun generate(n: Int, random: Random): DominosaState {
             val w = n + 2; val h = n + 1
             while (true) {
+                checkPuzzleWork()
                 val mate = tiling(w, h, random) ?: continue
                 val pairs = ArrayList<Pair<Int, Int>>()
                 for (a in 0..n) for (b in a..n) pairs.add(a to b)

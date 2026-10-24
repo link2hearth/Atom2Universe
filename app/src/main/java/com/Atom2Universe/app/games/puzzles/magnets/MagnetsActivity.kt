@@ -7,6 +7,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -42,6 +43,8 @@ class MagnetsActivity : PuzzleActivity<MagnetsState>() {
  * dans l'autre sens. Les comptes de + sont en haut et à gauche, ceux de − en bas et à droite.
  */
 class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
+    private val analysis = PuzzleStateCache<MagnetsState, Set<Int>> { it.clashes() }
+
     private val grid = GridGeometry()
     private val r = RectF()
     private val path = Path()
@@ -49,7 +52,7 @@ class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
     override fun drawBoard(canvas: Canvas, state: MagnetsState, area: RectF) {
         grid.fit(area, state.w, state.h, 0.8f, 0.8f, 0.8f, 0.8f)
         val cell = grid.cell
-        val clash = state.clashes()
+        val clash = analysis[state]
         val plus = context.getString(R.string.magnets_plus)
         val minus = context.getString(R.string.magnets_minus)
         val warm = palette.piece(0); val cold = palette.piece(5)

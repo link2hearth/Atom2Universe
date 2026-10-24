@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.cube
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 /**
  * Le solveur du Cube, pour la démonstration : une recherche en largeur, donc le plus court
  * chemin. Un état tient dans un entier de 64 bits : la case du cube (6 bits), ses six faces
@@ -33,6 +34,7 @@ object CubeSolver {
         val queue = ArrayDeque<Long>()
         queue.add(first)
         while (queue.isNotEmpty()) {
+            checkPuzzleWork()
             val here = queue.removeFirst()
             val s = unpack(here)
             for (d in 0..3) {
@@ -83,6 +85,7 @@ object CubeSolver {
         parent[first] = first; best[first] = 0
         open.add(Node(start, first, 0, estimate(start)))
         while (open.isNotEmpty()) {
+            checkPuzzleWork()
             val n = open.poll()!!
             if (n.s.isSolved) {
                 val dirs = ArrayList<Int>()

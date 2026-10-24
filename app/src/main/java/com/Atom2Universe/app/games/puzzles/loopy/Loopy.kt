@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.loopy
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.GridSearch
@@ -109,6 +110,7 @@ class LoopyState(val w: Int, val h: Int, val clues: IntArray, val edges: IntArra
 
         fun generate(w: Int, h: Int, random: Random): LoopyState {
             while (true) {
+                checkPuzzleWork()
                 // Un dedans qui grandit au hasard sans faire de trou.
                 val inside = IntArray(w * h)
                 inside[random.nextInt(w * h)] = 1

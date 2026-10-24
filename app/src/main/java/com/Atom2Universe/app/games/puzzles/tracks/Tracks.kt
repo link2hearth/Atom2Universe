@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.tracks
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.GridSearch
@@ -82,6 +83,7 @@ class TracksState(
             var from = grid.left(0, entry)
             var visited = 0
             while (true) {
+                checkPuzzleWork()
                 visited++
                 val next = grid.around(cell).firstOrNull { g[it] == 1 && it != from } ?: return false
                 if (next == grid.bottom(exit, h - 1) && cell == (h - 1) * w + exit) break
@@ -122,6 +124,7 @@ class TracksState(
         fun generate(w: Int, h: Int, random: Random): TracksState {
             val grid = EdgeGrid(w, h)
             while (true) {
+                checkPuzzleWork()
                 val entry = random.nextInt(h)
                 val exit = random.nextInt(w)
                 // Une marche au hasard sans se recouper, de l'entrée à la sortie.

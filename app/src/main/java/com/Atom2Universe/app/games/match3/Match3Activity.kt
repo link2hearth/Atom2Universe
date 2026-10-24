@@ -357,11 +357,11 @@ class Match3Activity : ThemedActivity() {
         gravityIndicator.direction = board.gravityDirection
         board.onGravityChanged = { gravityIndicator.direction = it }
         val timer = findViewById<ProgressBar>(R.id.match3_timer)
+        timer.progressTintList = ColorStateList.valueOf(0xffedb56b.toInt())
         score.text = getString(R.string.match3_score, 0)
         board.onScoreChanged = { score.text = getString(R.string.match3_score, it) }
         board.onTimerChanged = { value, max ->
             timer.progress = ((value / max).coerceIn(0f, 1f) * 1000).toInt()
-            timer.progressTintList = ColorStateList.valueOf(0xffedb56b.toInt())
         }
         findViewById<View>(R.id.match3_btn_back).setOnClickListener { showMenu() }
         findViewById<View>(R.id.match3_btn_new).setOnClickListener { board.resetGame() }

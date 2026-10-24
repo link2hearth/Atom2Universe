@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -37,6 +38,8 @@ class SlantActivity : PuzzleActivity<SlantState>() {
 
 /** Appui : vide → \ → / ; appui long dans l'autre sens. Les boucles sont tracées en rouge. */
 class SlantView(context: Context) : PuzzleView<SlantState>(context) {
+    private val loopCache = PuzzleStateCache<SlantState, Set<Int>> { it.loopCells() }
+
     private val grid = GridGeometry()
     private val r = RectF()
 
@@ -49,7 +52,7 @@ class SlantView(context: Context) : PuzzleView<SlantState>(context) {
         stroke.strokeWidth = cell * 0.02f
         for (k in 0..state.w) canvas.drawLine(grid.x(k), grid.top, grid.x(k), grid.bottom, stroke)
         for (k in 0..state.h) canvas.drawLine(grid.left, grid.y(k), grid.right, grid.y(k), stroke)
-        val loops = state.loopCells()
+        val loops = loopCache[state]
         stroke.strokeWidth = cell * 0.09f
         for (c in state.cells.indices) {
             val v = state.cells[c]

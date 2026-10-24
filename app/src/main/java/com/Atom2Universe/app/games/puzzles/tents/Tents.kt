@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.tents
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -120,6 +121,7 @@ class TentsState(
 
         fun generate(w: Int, h: Int, random: Random): TentsState {
             while (true) {
+                checkPuzzleWork()
                 val tent = BooleanArray(w * h)
                 val trees = BooleanArray(w * h)
                 val target = w * h / 5

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.netslide
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.MoveLog
 import kotlin.random.Random
 
@@ -36,6 +37,7 @@ class NetslideState(
         val out = ArrayList<NetslideState>()
         var s = this
         while (s.log.size >= 2) {
+            checkPuzzleWork()
             val what = s.log[s.log.size - 2]; val by = s.log[s.log.size - 1]
             s = if (what < h) s.shiftRow(what, -by) else s.shiftCol(what - h, -by)
             out.add(s)
@@ -123,6 +125,7 @@ class NetslideState(
             tiles[centre] = tiles[centre] or SOURCE
             var s = NetslideState(w, h, tiles, 0)
             while (true) {
+                checkPuzzleWork()
                 repeat(10 * (w + h)) {
                     s = if (random.nextBoolean()) s.shiftRow(random.nextInt(h), if (random.nextBoolean()) 1 else -1)
                     else s.shiftCol(random.nextInt(w), if (random.nextBoolean()) 1 else -1)

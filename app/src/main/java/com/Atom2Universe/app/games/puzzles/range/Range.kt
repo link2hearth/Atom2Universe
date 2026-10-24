@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.range
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -85,6 +86,7 @@ class RangeState(val w: Int, val h: Int, val numbers: IntArray, val cells: IntAr
 
         fun generate(w: Int, h: Int, random: Random): RangeState {
             while (true) {
+                checkPuzzleWork()
                 val g = IntArray(w * h)
                 val none = IntArray(w * h) { -1 }
                 for (i in (0 until w * h).shuffled(random)) {

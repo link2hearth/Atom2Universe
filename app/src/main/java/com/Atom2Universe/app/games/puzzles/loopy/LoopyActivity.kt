@@ -7,6 +7,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.EdgeView
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import kotlin.random.Random
@@ -35,6 +36,8 @@ class LoopyActivity : PuzzleActivity<LoopyState>() {
 }
 
 class LoopyView(context: Context) : EdgeView<LoopyState>(context) {
+    private val analysis = PuzzleStateCache<LoopyState, Set<Int>> { it.badVertices() }
+
     override fun edgeGrid(state: LoopyState) = state.grid
     override fun edgeValue(state: LoopyState, e: Int) = state.edges[e]
     override fun setEdges(state: LoopyState, edges: Collection<Int>, value: Int) = state.set(edges, value)
@@ -42,7 +45,7 @@ class LoopyView(context: Context) : EdgeView<LoopyState>(context) {
     override fun drawBoard(canvas: Canvas, state: LoopyState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val bad = state.badVertices()
+        val bad = analysis[state]
         for (i in state.clues.indices) {
             val c = state.clues[i]
             if (c < 0) continue

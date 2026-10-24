@@ -32,6 +32,7 @@ object GridSearch {
         var exhausted = false
 
         fun search(grid: IntArray) {
+            checkPuzzleWork()
             if (found >= limit || exhausted) return
             if (++nodes > budget) { exhausted = true; return }
             val g = grid.copyOf()
@@ -40,6 +41,7 @@ object GridSearch {
             var bestCell = -1
             var bestOptions = Int.MAX_VALUE
             while (changed) {
+                checkPuzzleWork()
                 changed = false
                 bestCell = -1; bestOptions = Int.MAX_VALUE
                 for (c in 0 until cells) {

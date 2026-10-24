@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.pattern
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.random.Random
 
 /**
@@ -169,6 +170,7 @@ class PatternState(
 
         fun generate(w: Int, h: Int, random: Random): PatternState {
             while (true) {
+                checkPuzzleWork()
                 // Un peu de lissage : des taches plutôt que du bruit, comme Tatham.
                 var grid = IntArray(w * h) { if (random.nextFloat() < 0.55f) 1 else 0 }
                 repeat(1) {
@@ -184,7 +186,7 @@ class PatternState(
                 }
                 val rows = (0 until h).map { r -> blocks(IntArray(w) { grid[r * w + it] }) }
                 val cols = (0 until w).map { c -> blocks(IntArray(h) { grid[it * w + c] }) }
-                if (lineSolvable(w, h, rows, cols)) return PatternState(w, h, rows, cols, IntArray(w * h))
+                if (lineSolvable(w, h, rows, cols)) return PatternState(w, h, rows, cols, IntArray(w * h), solved = grid)
             }
         }
     }

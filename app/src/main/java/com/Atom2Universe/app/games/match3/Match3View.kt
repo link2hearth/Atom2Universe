@@ -65,6 +65,7 @@ class Match3View @JvmOverloads constructor(
     // ── Grille ────────────────────────────────────────────────────────────────
     private val grid    = Array(gridRows) { IntArray(gridCols) }
     private val cleared = Array(gridRows) { BooleanArray(gridCols) }
+    private val popping = BooleanArray(gridRows * gridCols)
 
     // ── Layout ────────────────────────────────────────────────────────────────
     private var tileSize = 0f
@@ -251,13 +252,14 @@ class Match3View @JvmOverloads constructor(
         val gemPad  = tileSize * 0.06f
 
         val anim    = swapAnim
-        val swapSet = if (anim != null) setOf(anim.r1 to anim.c1, anim.r2 to anim.c2) else emptySet()
-        val popSet  = popCells.map { it.r to it.c }.toSet()
+        popping.fill(false)
+        for (pop in popCells) popping[pop.r * gridCols + pop.c] = true
 
         // Gemmes normales
         for (r in 0 until gridRows) {
             for (c in 0 until gridCols) {
-                if ((r to c) in swapSet || (r to c) in popSet || cleared[r][c]) continue
+                if ((anim != null && ((r == anim.r1 && c == anim.c1) || (r == anim.r2 && c == anim.c2))) ||
+                    popping[r * gridCols + c] || cleared[r][c]) continue
                 val isHeld = r == dragRow && c == dragCol
                 val scale = if (isHeld) {
                     val t = ((now - dragPressTime).toFloat() / DRAG_SCALE_MS).coerceIn(0f, 1f)
@@ -317,10 +319,12 @@ class Match3View @JvmOverloads constructor(
         // Overlay game over
         if (gameOver) drawGameOverOverlay(canvas)
 
-        if (hasAnim || (!gameOver && timerValue > 0f)) postInvalidateOnAnimation()
-
-        if (dragRow != -1 && !swipeTriggered && (now - dragPressTime) < DRAG_SCALE_MS.toLong()) {
+        val lifting = dragRow != -1 && !swipeTriggered && (now - dragPressTime) < DRAG_SCALE_MS.toLong()
+        if (hasAnim || anim != null || bonusBurst != null || lifting) {
             postInvalidateOnAnimation()
+        } else if (!gameOver && timerValue > 0f) {
+            // Au repos seul le sablier évolue : inutile de repeindre les 160 gemmes à 60 Hz.
+            postInvalidateDelayed(50L)
         }
     }
 

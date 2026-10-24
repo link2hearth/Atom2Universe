@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -71,6 +72,27 @@ class MapActivity : PuzzleActivity<MapState>() {
 
 /** Appui : peindre le pays de la couleur choisie ; appui long : l'effacer. */
 class MapView(context: Context) : PuzzleView<MapState>(context) {
+    private val markers = PuzzleStateCache<MapState, IntArray> { s ->
+        val counts = IntArray(s.regions)
+        val xs = FloatArray(s.regions); val ys = FloatArray(s.regions)
+        for (i in s.region.indices) {
+            val k = s.region[i]
+            counts[k]++; xs[k] += i % s.w; ys[k] += i / s.w
+        }
+        for (k in counts.indices) if (counts[k] > 0) { xs[k] /= counts[k]; ys[k] /= counts[k] }
+        val best = IntArray(s.regions) { -1 }
+        val distance = FloatArray(s.regions) { Float.POSITIVE_INFINITY }
+        for (i in s.region.indices) {
+            val k = s.region[i]
+            val dx = i % s.w - xs[k]; val dy = i / s.w - ys[k]
+            val d = dx * dx + dy * dy
+            if (d < distance[k]) { distance[k] = d; best[k] = i }
+        }
+        best
+    }
+
+    private val analysis = PuzzleStateCache<MapState, Set<Int>> { it.clashes() }
+
     private val grid = GridGeometry()
     private val r = RectF()
     var brush = 0
@@ -78,7 +100,7 @@ class MapView(context: Context) : PuzzleView<MapState>(context) {
     override fun drawBoard(canvas: Canvas, state: MapState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val clash = state.clashes()
+        val clash = analysis[state]
         for (i in state.region.indices) {
             grid.rect(i % state.w, i / state.w, r)
             val c = state.colours[state.region[i]]
@@ -101,12 +123,11 @@ class MapView(context: Context) : PuzzleView<MapState>(context) {
         stroke.color = palette.gridBold
         canvas.drawRect(grid.left, grid.top, grid.right, grid.bottom, stroke)
         // Un point au cœur des pays donnés.
+        val centres = markers[state]
         for (k in 0 until state.regions) {
             if (!state.fixed[k]) continue
-            val cells = state.region.indices.filter { state.region[it] == k }
-            val cx = cells.map { grid.cx(it % state.w) }.average().toFloat()
-            val cy = cells.map { grid.cy(it / state.w) }.average().toFloat()
-            val best = cells.minByOrNull { (grid.cx(it % state.w) - cx).let { d -> d * d } + (grid.cy(it / state.w) - cy).let { d -> d * d } }!!
+            val best = centres[k]
+            if (best < 0) continue
             fill.color = palette.withAlpha(0xFF000000.toInt(), 0.45f)
             canvas.drawCircle(grid.cx(best % state.w), grid.cy(best / state.w), cell * 0.16f, fill)
         }

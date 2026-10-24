@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.palisade
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.GridSearch
@@ -123,6 +124,7 @@ class PalisadeState(val w: Int, val h: Int, val k: Int, val clues: IntArray, val
         fun generate(w: Int, h: Int, k: Int, random: Random): PalisadeState {
             val grid = EdgeGrid(w, h)
             while (true) {
+                checkPuzzleWork()
                 // Découpage en polyominos de k cases, à rebours.
                 val region = IntArray(w * h) { -1 }
                 var nodes = 0

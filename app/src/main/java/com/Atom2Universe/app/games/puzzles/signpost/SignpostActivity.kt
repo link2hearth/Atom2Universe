@@ -7,6 +7,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -40,6 +41,11 @@ class SignpostActivity : PuzzleActivity<SignpostState>() {
  * encore libres prennent chacune leur couleur.
  */
 class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
+    private val numbering = PuzzleStateCache<SignpostState, Pair<IntArray, IntArray>> { s ->
+        val chain = IntArray(s.n)
+        chain to s.numbering(chain)
+    }
+
     private val grid = GridGeometry()
     private val r = RectF()
     private val arrow = Path()
@@ -50,8 +56,7 @@ class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
     override fun drawBoard(canvas: Canvas, state: SignpostState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val chain = IntArray(state.n)
-        val num = state.numbering(chain)
+        val (chain, num) = numbering[state]
         for (i in 0 until state.n) {
             grid.rect(i % state.w, i / state.w, r, cell * 0.05f)
             val linked = state.next[i] >= 0 || state.prev(i) >= 0

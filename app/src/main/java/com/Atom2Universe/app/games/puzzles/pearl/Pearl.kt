@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.pearl
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.GridSearch
@@ -197,6 +198,7 @@ class PearlState(val w: Int, val h: Int, val pearls: IntArray, val edges: IntArr
             val none = IntArray(w * h)
             var attempt = 0
             while (true) {
+                checkPuzzleWork()
                 attempt++
                 val g = IntArray(sw * sh)
                 g[random.nextInt(sw * sh)] = 1

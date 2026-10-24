@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.sixteen
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.MoveLog
 import kotlin.random.Random
 
@@ -34,6 +35,7 @@ class SixteenState(
         val out = ArrayList<SixteenState>()
         var s = this
         while (s.log.size >= 2) {
+            checkPuzzleWork()
             val what = s.log[s.log.size - 2]; val by = s.log[s.log.size - 1]
             s = if (what < h) s.shiftRow(what, -by) else s.shiftCol(what - h, -by)
             out.add(s)
@@ -55,6 +57,7 @@ class SixteenState(
         fun generate(w: Int, h: Int, random: Random): SixteenState {
             var s = SixteenState(w, h, IntArray(w * h) { it + 1 }, 0)
             while (true) {
+                checkPuzzleWork()
                 repeat(12 * (w + h)) {
                     s = if (random.nextBoolean()) s.shiftRow(random.nextInt(h), if (random.nextBoolean()) 1 else -1)
                     else s.shiftCol(random.nextInt(w), if (random.nextBoolean()) 1 else -1)

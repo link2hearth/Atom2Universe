@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.slant
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -114,6 +115,7 @@ class SlantState(val w: Int, val h: Int, val clues: IntArray, val cells: IntArra
 
         fun generate(w: Int, h: Int, random: Random): SlantState {
             while (true) {
+                checkPuzzleWork()
                 val g = IntArray(w * h) { -1 }
                 for (c in (0 until w * h).shuffled(random)) {
                     val first = random.nextInt(2)

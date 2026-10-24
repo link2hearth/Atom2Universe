@@ -12,6 +12,10 @@ import android.graphics.RectF
 abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
     protected val grid = GridGeometry()
     protected val r = RectF()
+    private val analysis = PuzzleStateCache<S, Pair<Set<Int>, BooleanArray>> { state ->
+        val (w, h) = size(state)
+        errors(state) to BooleanArray(w * h) { labelDone(state, it) }
+    }
 
     protected abstract fun size(state: S): Pair<Int, Int>
     /** 0 indécis, 1 noir, 2 marqué blanc. */
@@ -31,7 +35,7 @@ abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
         val (w, h) = size(state)
         grid.fit(area, w, h)
         val cell = grid.cell
-        val bad = errors(state)
+        val (bad, done) = analysis[state]
         for (i in 0 until w * h) {
             grid.rect(i % w, i / w, r)
             revealColour(state, i)?.let { fill.color = it; canvas.drawRect(r, fill); continue }
@@ -47,7 +51,7 @@ abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
                 val colour = when {
                     v == 1 -> palette.withAlpha(palette.surface, 0.55f)
                     i in bad -> palette.error
-                    labelDone(state, i) -> palette.tertiary
+                    done[i] -> palette.tertiary
                     else -> palette.text
                 }
                 canvas.centeredText(text, r.centerX(), r.centerY(), cell * 0.5f, colour, bold = v != 1)

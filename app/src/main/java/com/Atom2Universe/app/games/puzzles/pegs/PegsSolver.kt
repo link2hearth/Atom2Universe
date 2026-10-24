@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.pegs
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 /**
  * Le solveur du solitaire à fiches, pour la démonstration : une recherche en profondeur qui
  * retient les positions déjà reconnues sans issue. Deux choses la rendent assez rapide :
@@ -73,6 +74,7 @@ object PegsSolver {
         var nodes = 0
 
         fun search(): Boolean {
+            checkPuzzleWork()
             if (java.lang.Long.bitCount(pos) == 1) return true
             if (++nodes > budget) return false
             val key = canonical(pos)

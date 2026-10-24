@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.signpost
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import kotlin.random.Random
 
@@ -170,6 +171,7 @@ class SignpostState(
         fun generate(w: Int, h: Int, random: Random): SignpostState {
             val n = w * h
             while (true) {
+                checkPuzzleWork()
                 val path = randomPath(w, h, random) ?: continue
                 val dirs = IntArray(n) { -1 }
                 for (k in 0 until n - 1) {

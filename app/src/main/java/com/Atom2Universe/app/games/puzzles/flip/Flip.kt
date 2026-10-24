@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.flip
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.random.Random
 
 /**
@@ -94,6 +95,7 @@ class FlipState(
         fun generate(w: Int, h: Int, random: Boolean, rng: Random): FlipState {
             val patterns = if (random) randomPatterns(w, h, rng) else crosses(w, h)
             while (true) {
+                checkPuzzleWork()
                 val lit = BooleanArray(w * h)
                 val pressed = BooleanArray(w * h) { rng.nextBoolean() }
                 for (i in 0 until w * h) if (pressed[i]) for (j in patterns[i]) lit[j] = !lit[j]

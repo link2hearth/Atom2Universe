@@ -200,10 +200,12 @@ class Game2048View @JvmOverloads constructor(
         }
     }
 
+    private val cellBounds = RectF()
     private fun cellRect(row: Int, col: Int): RectF {
         val left = gap + col * (cellSize + gap)
         val top = gap + row * (cellSize + gap)
-        return RectF(left, top, left + cellSize, top + cellSize)
+        cellBounds.set(left, top, left + cellSize, top + cellSize)
+        return cellBounds
     }
 
     private fun computeTextSize(value: Int, cellSizePx: Float): Float {

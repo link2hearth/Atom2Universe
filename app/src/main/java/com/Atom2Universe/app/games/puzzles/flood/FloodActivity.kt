@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -80,13 +81,15 @@ class FloodActivity : PuzzleActivity<FloodState>() {
 }
 
 class FloodView(context: Context) : PuzzleView<FloodState>(context) {
+    private val analysis = PuzzleStateCache<FloodState, BooleanArray> { it.region() }
+
     private val grid = GridGeometry()
     private val r = RectF()
 
     override fun drawBoard(canvas: Canvas, state: FloodState, area: RectF) {
         grid.fit(area, state.size, state.size)
         val cell = grid.cell
-        val region = state.region()
+        val region = analysis[state]
         fill.color = palette.raised
         canvas.drawRoundRect(grid.left - cell * 0.15f, grid.top - cell * 0.15f, grid.right + cell * 0.15f,
             grid.bottom + cell * 0.15f, cell * 0.4f, cell * 0.4f, fill)

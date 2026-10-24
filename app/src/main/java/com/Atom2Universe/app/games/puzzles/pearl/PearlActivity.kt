@@ -7,6 +7,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.EdgeView
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import kotlin.random.Random
@@ -35,6 +36,8 @@ class PearlActivity : PuzzleActivity<PearlState>() {
 }
 
 class PearlView(context: Context) : EdgeView<PearlState>(context) {
+    private val overloadCache = PuzzleStateCache<PearlState, Set<Int>> { it.overloaded() }
+
     override val dual = true
     override fun edgeGrid(state: PearlState) = state.grid
     override fun edgeValue(state: PearlState, e: Int) = state.edges[e]
@@ -45,7 +48,7 @@ class PearlView(context: Context) : EdgeView<PearlState>(context) {
     override fun drawBoard(canvas: Canvas, state: PearlState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val over = state.overloaded()
+        val over = overloadCache[state]
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r, cell * 0.04f)
             fill.color = palette.cell

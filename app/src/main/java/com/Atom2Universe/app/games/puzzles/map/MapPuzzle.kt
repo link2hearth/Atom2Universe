@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.map
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import kotlin.random.Random
 
@@ -81,6 +82,7 @@ class MapState(val w: Int, val h: Int, val region: IntArray, val colours: IntArr
 
         fun generate(w: Int, h: Int, count: Int, random: Random): MapState {
             while (true) {
+                checkPuzzleWork()
                 // Des pays qui poussent à partir de graines, case par case, au hasard.
                 val region = IntArray(w * h) { -1 }
                 val frontier = ArrayList<Int>()

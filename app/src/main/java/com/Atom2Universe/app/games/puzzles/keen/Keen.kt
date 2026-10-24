@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.keen
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.LatinBoard
 import com.Atom2Universe.app.games.kit.LatinHolder
 import kotlin.random.Random
@@ -100,6 +101,7 @@ class KeenState(
 
         fun generate(n: Int, random: Random): KeenState {
             while (true) {
+                checkPuzzleWork()
                 val solution = LatinBoard.randomSquare(n, random)
                 val cage = partition(n, random)
                 val count = cage.max() + 1

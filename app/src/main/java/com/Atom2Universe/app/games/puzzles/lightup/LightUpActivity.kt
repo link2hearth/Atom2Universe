@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.puzzles.lightup
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
@@ -11,6 +12,7 @@ import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import kotlin.random.Random
 
 class LightUpActivity : PuzzleActivity<LightUpState>() {
@@ -40,12 +42,23 @@ class LightUpActivity : PuzzleActivity<LightUpState>() {
 class LightUpView(context: Context) : PuzzleView<LightUpState>(context) {
     private val grid = GridGeometry()
     private val r = RectF()
+    private val lighting = PuzzleStateCache<LightUpState, LightUpState.Lighting> { it.lighting() }
+    private val shaderMatrix = Matrix()
+    private var shaderPalette: KitPalette? = null
+    private lateinit var bulbShader: RadialGradient
+    private lateinit var errorShader: RadialGradient
 
     override fun drawBoard(canvas: Canvas, state: LightUpState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val lit = state.lit()
-        val clash = state.clashingLights()
+        val (lit, clash) = lighting[state].let { it.lit to it.clashes }
+        if (shaderPalette !== palette) {
+            shaderPalette = palette
+            fun bulb(colour: Int) = RadialGradient(0f, -0.05f, 0.32f,
+                palette.blend(colour, 0xFFFFFFFF.toInt(), 0.55f), colour, Shader.TileMode.CLAMP)
+            bulbShader = bulb(palette.accent)
+            errorShader = bulb(palette.error)
+        }
         for (i in state.walls.indices) {
             grid.rect(i % state.w, i / state.w, r)
             if (state.isOpen(i)) {
@@ -74,9 +87,11 @@ class LightUpView(context: Context) : PuzzleView<LightUpState>(context) {
             grid.rect(i % state.w, i / state.w, r)
             when (state.cells[i]) {
                 1 -> {
-                    val colour = if (i in clash) palette.error else palette.accent
-                    fill.shader = RadialGradient(r.centerX(), r.centerY() - cell * 0.05f, cell * 0.32f,
-                        palette.blend(colour, 0xFFFFFFFF.toInt(), 0.55f), colour, Shader.TileMode.CLAMP)
+                    val shader = if (i in clash) errorShader else bulbShader
+                    shaderMatrix.setScale(cell, cell)
+                    shaderMatrix.postTranslate(r.centerX(), r.centerY())
+                    shader.setLocalMatrix(shaderMatrix)
+                    fill.shader = shader
                     canvas.drawCircle(r.centerX(), r.centerY() - cell * 0.04f, cell * 0.26f, fill)
                     fill.shader = null
                     fill.color = palette.secondary

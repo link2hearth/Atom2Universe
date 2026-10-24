@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.pegs
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -21,17 +22,22 @@ class PegsState(
 
     /** Le saut de [from] vers [to] s'il est permis, sinon null. */
     fun jump(from: Int, to: Int): PegsState? {
-        if (from !in cells.indices || to !in cells.indices) return null
-        if (cells[from] != PEG || cells[to] != HOLE) return null
-        val fx = from % w; val fy = from / w
-        val tx = to % w; val ty = to / w
-        val ok = (fy == ty && abs(fx - tx) == 2) || (fx == tx && abs(fy - ty) == 2)
-        if (!ok) return null
-        val mid = ((fy + ty) / 2) * w + (fx + tx) / 2
-        if (cells[mid] != PEG) return null
+        if (!canJump(from, to)) return null
+        val mid = ((from / w + to / w) / 2) * w + (from % w + to % w) / 2
         val next = cells.copyOf()
         next[from] = HOLE; next[mid] = HOLE; next[to] = PEG
         return PegsState(w, h, next, moves + 1, log + intArrayOf(from, to))
+    }
+
+    private fun canJump(from: Int, to: Int): Boolean {
+        if (from !in cells.indices || to !in cells.indices) return false
+        if (cells[from] != PEG || cells[to] != HOLE) return false
+        val fx = from % w; val fy = from / w
+        val tx = to % w; val ty = to / w
+        val ok = (fy == ty && abs(fx - tx) == 2) || (fx == tx && abs(fy - ty) == 2)
+        if (!ok) return false
+        val mid = ((fy + ty) / 2) * w + (fx + tx) / 2
+        return cells[mid] == PEG
     }
 
     /** Défait le dernier saut (la fiche revient, la fiche sautée réapparaît). */
@@ -67,15 +73,17 @@ class PegsState(
 
     /** Les arrivées possibles de la fiche en [from]. */
     fun targets(from: Int): List<Int> {
-        val x = from % w; val y = from / w
-        return listOf(2 to 0, -2 to 0, 0 to 2, 0 to -2).mapNotNull { (dx, dy) ->
-            val nx = x + dx; val ny = y + dy
-            if (nx !in 0 until w || ny !in 0 until h) null
-            else (ny * w + nx).takeIf { jump(from, it) != null }
-        }
+        if (from !in cells.indices || cells[from] != PEG) return emptyList()
+        val out = ArrayList<Int>(4)
+        if (from % w + 2 < w && canJump(from, from + 2)) out.add(from + 2)
+        if (from % w >= 2 && canJump(from, from - 2)) out.add(from - 2)
+        if (canJump(from, from + 2 * w)) out.add(from + 2 * w)
+        if (canJump(from, from - 2 * w)) out.add(from - 2 * w)
+        return out
     }
 
-    val hasMoves: Boolean get() = cells.indices.any { cells[it] == PEG && targets(it).isNotEmpty() }
+    val hasMoves: Boolean get() = cells.indices.any { cells[it] == PEG &&
+        (canJump(it, it + 2) || canJump(it, it - 2) || canJump(it, it + 2 * w) || canJump(it, it - 2 * w)) }
 
     fun encode(): String = "$w,$h,$moves:" + cells.joinToString("") + ":" + log.joinToString(",")
 
@@ -128,10 +136,12 @@ class PegsState(
          */
         fun random(w: Int, h: Int, random: Random): PegsState {
             while (true) {
+                checkPuzzleWork()
                 val cells = IntArray(w * h) { WALL }
                 cells[random.nextInt(h) * w + random.nextInt(w)] = PEG
                 var steps = 0
                 while (true) {
+                    checkPuzzleWork()
                     val options = ArrayList<Triple<Int, Int, Int>>() // fiche, direction, coût
                     for (i in cells.indices) {
                         if (cells[i] != PEG) continue

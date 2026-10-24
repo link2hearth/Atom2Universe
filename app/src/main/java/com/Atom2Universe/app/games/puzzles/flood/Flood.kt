@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.flood
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.random.Random
 
 /**
@@ -27,7 +28,7 @@ class FloodState(val size: Int, val colours: Int, val cells: IntArray, val moves
     fun demo(): List<FloodState> {
         val out = ArrayList<FloodState>()
         var s = FloodState(size, colours, cells, moves, Int.MAX_VALUE)
-        while (!s.isSolved) { s = s.flood(greedyColour(size, colours, s.cells)) ?: break; out.add(s) }
+        while (!s.isSolved) { checkPuzzleWork(); s = s.flood(greedyColour(size, colours, s.cells)) ?: break; out.add(s) }
         // La limite affichée s'allonge juste assez pour que la démonstration aille au bout.
         val cap = maxOf(limit, out.lastOrNull()?.moves ?: limit)
         return out.map { FloodState(size, colours, it.cells, it.moves, cap) }
@@ -72,6 +73,7 @@ class FloodState(val size: Int, val colours: Int, val cells: IntArray, val moves
             var cells = start
             var count = 0
             while (!cells.all { it == cells[0] }) {
+                checkPuzzleWork()
                 cells = fill(size, cells, greedyColour(size, colours, cells))
                 count++
             }
@@ -80,6 +82,7 @@ class FloodState(val size: Int, val colours: Int, val cells: IntArray, val moves
 
         /** La couleur qui fait le plus grossir la tache, en regardant deux coups devant. */
         fun greedyColour(size: Int, colours: Int, cells: IntArray): Int {
+            checkPuzzleWork()
             var best = -1
             var bestScore = -1
             for (c in 0 until colours) {

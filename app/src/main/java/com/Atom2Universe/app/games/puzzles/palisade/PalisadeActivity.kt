@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.EdgeView
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import kotlin.random.Random
@@ -36,6 +37,13 @@ class PalisadeActivity : PuzzleActivity<PalisadeState>() {
 
 /** Une région fermée qui a la bonne taille prend une couleur. */
 class PalisadeView(context: Context) : EdgeView<PalisadeState>(context) {
+    private val analysis = PuzzleStateCache<PalisadeState, Pair<IntArray, IntArray>> {
+        val ids = it.regions()
+        val sizes = IntArray(it.w * it.h)
+        for (id in ids) sizes[id]++
+        ids to sizes
+    }
+
     override fun edgeGrid(state: PalisadeState) = state.grid
     override fun edgeValue(state: PalisadeState, e: Int) = state.edges[e]
     override fun setEdges(state: PalisadeState, edges: Collection<Int>, value: Int) = state.set(edges, value)
@@ -44,9 +52,7 @@ class PalisadeView(context: Context) : EdgeView<PalisadeState>(context) {
     override fun drawBoard(canvas: Canvas, state: PalisadeState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val id = state.regions()
-        val sizes = IntArray(state.w * state.h)
-        for (r0 in id) sizes[r0]++
+        val (id, sizes) = analysis[state]
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r)
             fill.color = if (sizes[id[i]] == state.k) palette.blend(palette.cell, palette.piece(id[i] * 3), if (palette.isLight) 0.3f else 0.35f)

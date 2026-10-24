@@ -47,12 +47,10 @@ class KitPalette(
      * Couleurs de pièces (Flood, Same Game, Map…) : des teintes bien séparées, un peu plus
      * sombres sur fond clair pour garder le contraste.
      */
-    fun piece(index: Int): Int {
-        val hues = PIECE_HUES
-        val hue = hues[Math.floorMod(index, hues.size)]
-        val hsl = floatArrayOf(hue, if (isLight) 0.62f else 0.68f, if (isLight) 0.50f else 0.60f)
-        return ColorUtils.HSLToColor(hsl)
+    private val pieceColours = IntArray(PIECE_HUES.size) { i ->
+        ColorUtils.HSLToColor(floatArrayOf(PIECE_HUES[i], if (isLight) 0.62f else 0.68f, if (isLight) 0.50f else 0.60f))
     }
+    fun piece(index: Int): Int = pieceColours[Math.floorMod(index, pieceColours.size)]
 
     fun withAlpha(color: Int, alpha: Float): Int =
         ColorUtils.setAlphaComponent(color, (alpha.coerceIn(0f, 1f) * 255).toInt())

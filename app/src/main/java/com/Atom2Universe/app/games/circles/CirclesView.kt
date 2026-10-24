@@ -37,7 +37,6 @@ class CirclesView @JvmOverloads constructor(
     /** Called after each rotation animation ends. */
     var onRotationEnd: ((solved: Boolean) -> Unit)? = null
 
-    private val segPath = Path()
     private val outerRect = RectF()
     private val innerRect = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -61,6 +60,7 @@ class CirclesView @JvmOverloads constructor(
     private var ringOuter = FloatArray(0)
     private var ringInner = FloatArray(0)
     private var ringShaders = arrayOfNulls<Shader>(0)
+    private var ringSlices = emptyArray<Array<Path>>()
     private var haloShader: Shader? = null
     private var nucleusShader: Shader? = null
 
@@ -202,6 +202,16 @@ class CirclesView @JvmOverloads constructor(
         }
 
         // Tube lumineux : bords sombres, arête claire au centre.
+        val segment = 360f / CirclesGame.SEGMENTS
+        ringSlices = Array(n) { i ->
+            outerRect.set(-ringOuter[i], -ringOuter[i], ringOuter[i], ringOuter[i])
+            innerRect.set(-ringInner[i], -ringInner[i], ringInner[i], ringInner[i])
+            Array(CirclesGame.SEGMENTS) { s -> Path().apply {
+                arcTo(outerRect, s * segment, segment, true)
+                arcTo(innerRect, (s + 1) * segment, -segment, false)
+                close()
+            } }
+        }
         ringShaders = Array(n) { i ->
             val o = ringOuter[i].coerceAtLeast(1f)
             val inner = ringInner[i]
@@ -243,11 +253,14 @@ class CirclesView @JvmOverloads constructor(
             val rotDeg = displayRot * segDeg
 
             // Chaque arc de couleur
+            canvas.save()
+            canvas.rotate(rotDeg)
             for (s in 0 until CirclesGame.SEGMENTS) {
                 paint.color = g.rings[i][s]
                 paint.style = Paint.Style.FILL
-                drawDonutSlice(canvas, outer, inner, rotDeg + s * segDeg, segDeg)
+                canvas.drawPath(ringSlices[i][s], paint)
             }
+            canvas.restore()
 
             // Relief du tube
             shadePaint.shader = ringShaders[i]
@@ -278,16 +291,6 @@ class CirclesView @JvmOverloads constructor(
             }
             drawHighlight(canvas, ringOuter[primary], ringInner[primary], PRIMARY_COLOR)
         }
-    }
-
-    private fun drawDonutSlice(canvas: Canvas, outer: Float, inner: Float, startDeg: Float, sweepDeg: Float) {
-        segPath.reset()
-        outerRect.set(-outer, -outer, outer, outer)
-        innerRect.set(-inner, -inner, inner, inner)
-        segPath.arcTo(outerRect, startDeg, sweepDeg, true)
-        segPath.arcTo(innerRect, startDeg + sweepDeg, -sweepDeg, false)
-        segPath.close()
-        canvas.drawPath(segPath, paint)
     }
 
     /** Voile coloré sur toute l'épaisseur de l'anneau et liseré net sur ses deux bords. */

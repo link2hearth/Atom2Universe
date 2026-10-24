@@ -106,6 +106,7 @@ class LatinBoard(
         fun randomSquare(n: Int, random: Random): IntArray {
             val grid = IntArray(n * n)
             fun fill(cell: Int): Boolean {
+                checkPuzzleWork()
                 if (cell == n * n) return true
                 val r = cell / n; val c = cell % n
                 for (d in (1..n).shuffled(random)) {
@@ -138,6 +139,7 @@ class LatinBoard(
             var count = 0
             var nodes = 0
             fun solve() {
+                checkPuzzleWork()
                 if (count >= limit || nodes++ > budget) return
                 var best = -1; var bestMask = 0; var bestBits = 99
                 for (i in grid.indices) {
@@ -180,6 +182,7 @@ interface LatinHolder<S> {
 abstract class LatinView<S : LatinHolder<S>>(context: Context) : PuzzleView<S>(context) {
     protected val grid = GridGeometry()
     protected val r = RectF()
+    private val errorCache = PuzzleStateCache<S, Set<Int>> { it.board.duplicates() + clueErrors(it) }
     var selected = -1
         set(value) { field = value; invalidate() }
 
@@ -196,7 +199,7 @@ abstract class LatinView<S : LatinHolder<S>>(context: Context) : PuzzleView<S>(c
         val m = margin(state)
         grid.fit(area, b.n, b.n, m[0], m[1], m[2], m[3])
         val cell = grid.cell
-        val errors = b.duplicates() + clueErrors(state)
+        val errors = errorCache[state]
         val selValue = b.values.getOrElse(selected) { 0 }
         for (i in 0 until b.n * b.n) {
             grid.rect(i % b.n, i / b.n, r, gridGap * cell)

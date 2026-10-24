@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -35,13 +36,15 @@ class UnrulyActivity : PuzzleActivity<UnrulyState>() {
 
 /** Un appui fait défiler vide → couleur du thème → couleur claire → vide ; l'appui long à l'envers. */
 class UnrulyView(context: Context) : PuzzleView<UnrulyState>(context) {
+    private val analysis = PuzzleStateCache<UnrulyState, Set<Int>> { it.errors() }
+
     private val grid = GridGeometry()
     private val r = RectF()
 
     override fun drawBoard(canvas: Canvas, state: UnrulyState, area: RectF) {
         grid.fit(area, state.n, state.n)
         val cell = grid.cell
-        val errors = state.errors()
+        val errors = analysis[state]
         for (i in state.cells.indices) {
             grid.rect(i % state.n, i / state.n, r, cell * 0.06f)
             val v = state.cells[i]

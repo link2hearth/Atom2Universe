@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.filling
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -95,6 +96,7 @@ class FillingState(val w: Int, val h: Int, val givens: IntArray, val values: Int
 
         fun generate(w: Int, h: Int, maxSize: Int, random: Random): FillingState {
             while (true) {
+                checkPuzzleWork()
                 val region = IntArray(w * h) { -1 }
                 var id = 0
                 for (start in (0 until w * h).shuffled(random)) {

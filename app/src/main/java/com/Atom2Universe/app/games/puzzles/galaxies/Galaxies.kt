@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.galaxies
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.EdgeGrid
 import com.Atom2Universe.app.games.kit.GridSearch
@@ -65,8 +66,7 @@ class GalaxiesState(val w: Int, val h: Int, val dotX: IntArray, val dotY: IntArr
     }
 
     /** Les régions fermées qui sont de vraies galaxies (un point, symétriques), pour les colorier. */
-    fun goodRegions(): Map<Int, Int> {
-        val id = regions()
+    fun goodRegions(id: IntArray = regions()): Map<Int, Int> {
         val out = HashMap<Int, Int>()
         for (d in dotX.indices) {
             val core = coreCells(w, h, dotX[d], dotY[d])
@@ -83,7 +83,7 @@ class GalaxiesState(val w: Int, val h: Int, val dotX: IntArray, val dotY: IntArr
     val isSolved: Boolean
         get() {
             val id = regions()
-            val good = goodRegions()
+            val good = goodRegions(id)
             if (!id.all { it in good }) return false
             // Pas de mur qui pend à l'intérieur d'une galaxie.
             for (e in 0 until grid.count) if (!border(e) && edges[e] == 1) {
@@ -160,10 +160,12 @@ class GalaxiesState(val w: Int, val h: Int, val dotX: IntArray, val dotY: IntArr
         fun generate(w: Int, h: Int, random: Random): GalaxiesState {
             var attempts = 0
             while (true) {
+                checkPuzzleWork()
                 attempts++
                 val owner = IntArray(w * h) { -1 }
                 val xs = ArrayList<Int>(); val ys = ArrayList<Int>()
                 while (true) {
+                    checkPuzzleWork()
                     val free = owner.indices.filter { owner[it] < 0 }
                     if (free.isEmpty()) break
                     val c = free.random(random)

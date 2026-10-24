@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.SlideGridView
@@ -35,6 +36,8 @@ class NetslideActivity : PuzzleActivity<NetslideState>() {
 
 /** Les tuyaux reliés à la source s'allument de la couleur du thème. */
 class NetslideView(context: Context) : SlideGridView<NetslideState>(context) {
+    private val powerCache = PuzzleStateCache<NetslideState, BooleanArray> { it.powered() }
+
     private var powered = BooleanArray(0)
 
     override fun cols(state: NetslideState) = state.w
@@ -43,7 +46,7 @@ class NetslideView(context: Context) : SlideGridView<NetslideState>(context) {
     override fun shiftCol(state: NetslideState, col: Int, by: Int) = state.shiftCol(col, by)
 
     override fun drawUnder(canvas: Canvas, state: NetslideState) {
-        powered = state.powered()
+        powered = powerCache[state]
     }
 
     override fun drawTile(canvas: Canvas, state: NetslideState, index: Int, r: RectF, cell: Float) {

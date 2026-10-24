@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.undead
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -100,6 +101,7 @@ class UndeadState(
 
         fun generate(w: Int, h: Int, random: Random): UndeadState {
             while (true) {
+                checkPuzzleWork()
                 val mirrors = IntArray(w * h) { if (random.nextInt(100) < 35) 1 + random.nextInt(2) else 0 }
                 val free = (0 until w * h).filter { mirrors[it] == 0 }
                 if (free.size < w * h / 2) continue

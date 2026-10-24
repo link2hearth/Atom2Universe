@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.EdgeView
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import kotlin.random.Random
@@ -35,6 +36,11 @@ class GalaxiesActivity : PuzzleActivity<GalaxiesState>() {
 
 /** Chaque galaxie bien découpée prend la couleur de son point ; les points sont des étoiles. */
 class GalaxiesView(context: Context) : EdgeView<GalaxiesState>(context) {
+    private val analysis = PuzzleStateCache<GalaxiesState, Pair<IntArray, Map<Int, Int>>> {
+        val regions = it.regions()
+        regions to it.goodRegions(regions)
+    }
+
     override fun edgeGrid(state: GalaxiesState) = state.grid
     override fun edgeValue(state: GalaxiesState, e: Int) = state.edges[e]
     override fun setEdges(state: GalaxiesState, edges: Collection<Int>, value: Int) = state.set(edges, value)
@@ -43,8 +49,7 @@ class GalaxiesView(context: Context) : EdgeView<GalaxiesState>(context) {
     override fun drawBoard(canvas: Canvas, state: GalaxiesState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val id = state.regions()
-        val good = state.goodRegions()
+        val (id, good) = analysis[state]
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r)
             val d = good[id[i]]

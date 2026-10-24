@@ -364,17 +364,14 @@ class MemoryActivity : ThemedActivity() {
                 val path = com.Atom2Universe.app.games.cards.CardBacks.resolveLegacyPath(
                     this@MemoryActivity, "$ASSETS_CARTES/$folder/$filename"
                 )
-                assets.open(path).use { stream ->
-                    val bytes = stream.readBytes()
-                    val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
-                    var sample = 1
-                    while (opts.outWidth / sample > CARD_TARGET_PX || opts.outHeight / sample > CARD_TARGET_PX) {
-                        sample *= 2
-                    }
-                    val decodeOpts = BitmapFactory.Options().apply { inSampleSize = sample }
-                    bitmapCache[idx] = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, decodeOpts)!!
+                val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                assets.open(path).use { BitmapFactory.decodeStream(it, null, opts) }
+                var sample = 1
+                while (opts.outWidth / sample > CARD_TARGET_PX || opts.outHeight / sample > CARD_TARGET_PX) {
+                    sample *= 2
                 }
+                val decodeOpts = BitmapFactory.Options().apply { inSampleSize = sample }
+                bitmapCache[idx] = requireNotNull(assets.open(path).use { BitmapFactory.decodeStream(it, null, decodeOpts) })
             }
         }
         if (game.cards.any { it.imageIndex !in bitmapCache }) {

@@ -39,8 +39,11 @@ class FifteenActivity : PuzzleActivity<FifteenState>() {
     override val hasHints = true
     override val demoStepMs = 380L
     private var demoFocus: List<IntArray> = emptyList()
-    override fun demo(state: FifteenState): List<FifteenState>? =
-        FifteenSolver.solve(state)?.also { steps -> demoFocus = steps.map { it.focus } }?.map { it.state }
+    override fun prepareDemo(state: FifteenState): Demonstration<FifteenState>? {
+        val steps = FifteenSolver.solve(state) ?: return null
+        val focus = steps.map { it.focus }
+        return Demonstration(steps.map { it.state }) { demoFocus = focus }
+    }
     override fun onDemoStep(step: Int?) {
         (board as FifteenView).focus = step?.let { demoFocus.getOrNull(it) }
     }

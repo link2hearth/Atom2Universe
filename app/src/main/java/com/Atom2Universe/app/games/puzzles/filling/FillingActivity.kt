@@ -12,6 +12,7 @@ import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -68,6 +69,8 @@ class FillingActivity : PuzzleActivity<FillingState>() {
  * chiffre sur les cases traversées. Un bloc complet prend la couleur de son chiffre.
  */
 class FillingView(context: Context) : PuzzleView<FillingState>(context) {
+    private val analysis = PuzzleStateCache<FillingState, Set<Int>> { it.errors() }
+
     private val grid = GridGeometry()
     private val r = RectF()
     private var selected = -1
@@ -83,7 +86,7 @@ class FillingView(context: Context) : PuzzleView<FillingState>(context) {
     override fun drawBoard(canvas: Canvas, state: FillingState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val errors = state.errors()
+        val errors = analysis[state]
         for (i in state.values.indices) {
             grid.rect(i % state.w, i / state.w, r)
             val v = if (i in trail) trailValue else state.values[i]

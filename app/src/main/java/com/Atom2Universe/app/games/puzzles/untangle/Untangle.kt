@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.untangle
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -77,6 +78,7 @@ class UntangleState(
          */
         fun generate(n: Int, random: Random): UntangleState {
             while (true) {
+                checkPuzzleWork()
                 val px = FloatArray(n) { random.nextFloat() }
                 val py = FloatArray(n) { random.nextFloat() }
                 val candidates = ArrayList<Pair<Int, Int>>()

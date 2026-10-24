@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.samegame
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.random.Random
 
 /**
@@ -12,7 +13,8 @@ import kotlin.random.Random
 class SameGameState(val w: Int, val h: Int, val colours: Int, val cells: IntArray, val score: Int) {
 
     val isSolved: Boolean get() = cells.all { it < 0 }
-    val hasMoves: Boolean get() = cells.indices.any { cells[it] >= 0 && groupOf(it).size >= 2 }
+    val hasMoves: Boolean get() = cells.indices.any { i -> cells[i] >= 0 &&
+        ((i % w + 1 < w && cells[i + 1] == cells[i]) || (i + w < cells.size && cells[i + w] == cells[i])) }
     val remaining: Int get() = cells.count { it >= 0 }
 
     fun groupOf(index: Int): List<Int> {
@@ -37,16 +39,23 @@ class SameGameState(val w: Int, val h: Int, val colours: Int, val cells: IntArra
     fun remove(index: Int): SameGameState? {
         val group = groupOf(index)
         if (group.size < 2) return null
+        return removeGroup(group)
+    }
+
+    private fun removeGroup(group: List<Int>): SameGameState {
         val next = cells.copyOf()
         for (i in group) next[i] = -1
         // Gravité, puis colonnes resserrées.
-        val columns = ArrayList<IntArray>()
-        for (x in 0 until w) {
-            val col = (0 until h).map { next[it * w + x] }.filter { it >= 0 }
-            if (col.isNotEmpty()) columns.add(IntArray(h) { y -> col.getOrElse(y - (h - col.size)) { -1 } })
-        }
         val packed = IntArray(w * h) { -1 }
-        columns.forEachIndexed { x, col -> for (y in 0 until h) packed[y * w + x] = col[y] }
+        var column = 0
+        for (x in 0 until w) {
+            var row = h - 1
+            for (y in h - 1 downTo 0) {
+                val value = next[y * w + x]
+                if (value >= 0) { packed[row * w + column] = value; row-- }
+            }
+            if (row < h - 1) column++
+        }
         val gain = (group.size - 2) * (group.size - 2)
         return SameGameState(w, h, colours, packed, score + gain)
     }
@@ -79,6 +88,7 @@ class SameGameState(val w: Int, val h: Int, val colours: Int, val cells: IntArra
             val deadline = System.nanoTime() + 1_500_000_000L
             var last: SameGameState
             do {
+                checkPuzzleWork()
                 last = SameGameState(w, h, colours, IntArray(w * h) { random.nextInt(colours) }, 0)
                 if (clearable(last, 60_000)) return last
             } while (System.nanoTime() < deadline)
@@ -99,10 +109,11 @@ class SameGameState(val w: Int, val h: Int, val colours: Int, val cells: IntArra
             var best: List<Int> = emptyList()
             var bestLeft = start.remaining
             fun search(s: SameGameState): Boolean {
+                checkPuzzleWork()
                 if (s.isSolved) { best = ArrayList(path); return true }
                 if (s.remaining < bestLeft) { bestLeft = s.remaining; best = ArrayList(path) }
                 if (++nodes > budget) return false
-                val key = s.cells.joinToString("")
+                val key = buildString(s.cells.size) { for (value in s.cells) append((value + 1).toChar()) }
                 if (key in dead) return false
                 // Une couleur réduite à une seule case ne s'en ira jamais.
                 val counts = IntArray(s.colours)
@@ -118,7 +129,7 @@ class SameGameState(val w: Int, val h: Int, val colours: Int, val cells: IntArra
                 }
                 for (g in groups.sortedBy { it.size }) {
                     path.add(g[0])
-                    if (search(s.remove(g[0])!!)) return true
+                    if (search(s.removeGroup(g))) return true
                     path.removeAt(path.size - 1)
                     if (nodes > budget) return false
                 }

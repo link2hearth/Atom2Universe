@@ -12,6 +12,7 @@ import androidx.core.content.edit
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleView
 import kotlin.math.abs
@@ -176,6 +177,17 @@ class PictureThumb(
  * bloc bien placé est barré. Une image réussie se révèle en couleurs.
  */
 class PatternView(context: Context) : PuzzleView<PatternState>(context) {
+    private class Clues(val solved: Boolean, val rows: BooleanArray, val cols: BooleanArray)
+    private val clues = PuzzleStateCache<PatternState, Clues> { s ->
+        val rows = BooleanArray(s.h) { s.lineDone(true, it) }
+        val cols = BooleanArray(s.w) { s.lineDone(false, it) }
+        Clues(rows.all { it } && cols.all { it }, rows, cols)
+    }
+    private val blocks = PuzzleStateCache<PatternState, Pair<Array<BooleanArray>, Array<BooleanArray>>> { s ->
+        Array(s.h) { row -> BooleanArray(s.rows[row].size) { s.blockDone(true, row, it) } } to
+            Array(s.w) { col -> BooleanArray(s.cols[col].size) { s.blockDone(false, col, it) } }
+    }
+
     private val grid = GridGeometry()
     private val r = RectF()
     var tool = 1
@@ -205,8 +217,10 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         grid.fit(area, state.w, state.h, ml, mt, 0.1f, 0.1f)
         val cell = grid.cell
         val shown = preview(state)
+        val doneClues = clues[state]
+        val doneBlocks = if (help) blocks[state] else null
         // Révélée, l'image se peint entière : aussi les cases colorées qu'on ne noircissait pas.
-        val picture = if (state.picture >= 0 && state.isSolved) PatternPictures.all[state.picture] else null
+        val picture = if (state.picture >= 0 && doneClues.solved) PatternPictures.all[state.picture] else null
         for (i in state.cells.indices) {
             grid.rect(i % state.w, i / state.w, r)
             val v = shown[i] ?: state.cells[i]
@@ -237,20 +251,20 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         val size = cell * 0.42f
         for (row in 0 until state.h) {
             val clue = state.rows[row]
-            val done = state.lineDone(true, row)
+            val done = doneClues.rows[row]
             if (clue.isEmpty()) clueNumber(canvas, 0, grid.left - cell * 0.45f, grid.cy(row), size, done, false)
             for ((j, v) in clue.withIndex()) {
                 clueNumber(canvas, v, grid.left - (clue.size - j) * cell * 0.55f + cell * 0.1f, grid.cy(row), size,
-                    done, help && state.blockDone(true, row, j))
+                    done, doneBlocks?.first?.get(row)?.get(j) == true)
             }
         }
         for (col in 0 until state.w) {
             val clue = state.cols[col]
-            val done = state.lineDone(false, col)
+            val done = doneClues.cols[col]
             if (clue.isEmpty()) clueNumber(canvas, 0, grid.cx(col), grid.top - cell * 0.35f, size, done, false)
             for ((j, v) in clue.withIndex()) {
                 clueNumber(canvas, v, grid.cx(col), grid.top - (clue.size - j) * cell * 0.55f + cell * 0.2f, size,
-                    done, help && state.blockDone(false, col, j))
+                    done, doneBlocks?.second?.get(col)?.get(j) == true)
             }
         }
         label.textAlign = Paint.Align.CENTER

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.magnets
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -82,6 +83,7 @@ class MagnetsState(
 
         fun generate(w: Int, h: Int, random: Random): MagnetsState {
             while (true) {
+                checkPuzzleWork()
                 // Pavage par dominos au hasard.
                 val mate = IntArray(w * h) { -1 }
                 fun tile(): Boolean {

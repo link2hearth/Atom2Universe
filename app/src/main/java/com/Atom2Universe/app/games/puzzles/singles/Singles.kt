@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.singles
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import com.Atom2Universe.app.games.kit.LatinBoard
@@ -96,6 +97,7 @@ class SinglesState(val n: Int, val numbers: IntArray, val cells: IntArray, val s
          */
         fun generate(n: Int, random: Random): SinglesState {
             while (true) {
+                checkPuzzleWork()
                 val numbers = LatinBoard.randomSquare(n, random)
                 val g = IntArray(n * n)
                 for (i in (0 until n * n).shuffled(random)) {

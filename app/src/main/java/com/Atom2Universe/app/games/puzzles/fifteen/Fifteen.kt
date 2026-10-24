@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.fifteen
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -58,6 +59,7 @@ class FifteenState(val w: Int, val h: Int, val tiles: IntArray, val moves: Int) 
         fun generate(w: Int, h: Int, random: Random): FifteenState {
             val n = w * h
             while (true) {
+                checkPuzzleWork()
                 val tiles = IntArray(n) { it }.also { it.shuffle(random) }
                 if (!solvable(w, h, tiles)) {
                     val a = (0 until n).first { tiles[it] != 0 }

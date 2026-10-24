@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.inertia
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import kotlin.random.Random
 
 /**
@@ -22,6 +23,7 @@ class InertiaState(val w: Int, val h: Int, val cells: IntArray, val ball: Int, v
         var pos = ball
         var moved = false
         while (true) {
+            checkPuzzleWork()
             val x = pos % w + DX[d]; val y = pos / w + DY[d]
             if (x !in 0 until w || y !in 0 until h || next[y * w + x] == WALL) break
             pos = y * w + x
@@ -96,6 +98,7 @@ class InertiaState(val w: Int, val h: Int, val cells: IntArray, val ball: Int, v
          */
         fun generate(w: Int, h: Int, random: Random): InertiaState {
             while (true) {
+                checkPuzzleWork()
                 val cells = IntArray(w * h) {
                     when (random.nextInt(20)) {
                         0, 1 -> WALL
@@ -113,6 +116,7 @@ class InertiaState(val w: Int, val h: Int, val cells: IntArray, val ball: Int, v
                     var pos = p
                     val path = ArrayList<Int>()
                     while (true) {
+                        checkPuzzleWork()
                         val x = pos % w + DX[d]; val y = pos / w + DY[d]
                         if (x !in 0 until w || y !in 0 until h || bare[y * w + x] == WALL) break
                         pos = y * w + x

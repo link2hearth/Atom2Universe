@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -43,23 +44,40 @@ class TentsActivity : PuzzleActivity<TentsState>() {
  * semé d'étoiles fixes.
  */
 class TentsView(context: Context) : PuzzleView<TentsState>(context) {
+    private val errors = PuzzleStateCache<TentsState, Pair<Set<Int>, Set<Int>>> {
+        (it.touchingTents() + it.orphanMoons()) to it.lonelyPlanets()
+    }
+    private var starWidth = 0
+    private var stars = FloatArray(0)
+    private fun starsFor(state: TentsState): FloatArray {
+        if (starWidth != state.w || stars.size != state.cells.size * 4) {
+            starWidth = state.w
+            stars = FloatArray(state.cells.size * 4)
+            for (i in state.cells.indices) {
+                val seed = Random(i * 7919 + state.w)
+                for (k in 0..3) stars[i * 4 + k] = 0.1f + 0.8f * seed.nextFloat()
+            }
+        }
+        return stars
+    }
+
     private val grid = GridGeometry()
     private val r = RectF()
 
     override fun drawBoard(canvas: Canvas, state: TentsState, area: RectF) {
         grid.fit(area, state.w, state.h, 0f, 0f, 0.8f, 0.8f)
         val cell = grid.cell
-        val touching = state.touchingTents() + state.orphanMoons()
-        val lonely = state.lonelyPlanets()
+        val (touching, lonely) = errors[state]
+        val points = starsFor(state)
         val space = palette.blend(palette.cell, 0xFF1A237E.toInt(), if (palette.isLight) 0.06f else 0.18f)
         for (i in state.cells.indices) {
             grid.rect(i % state.w, i / state.w, r)
             fill.color = space
             canvas.drawRect(r, fill)
             // Deux étoiles par case, toujours au même endroit (tirées de l'indice de la case).
-            val seed = Random(i * 7919 + state.w)
             fill.color = palette.withAlpha(palette.text, 0.18f)
-            repeat(2) { canvas.drawCircle(r.left + cell * (0.1f + 0.8f * seed.nextFloat()), r.top + cell * (0.1f + 0.8f * seed.nextFloat()), cell * 0.018f, fill) }
+            for (k in 0..1) canvas.drawCircle(r.left + cell * points[i * 4 + k * 2],
+                r.top + cell * points[i * 4 + k * 2 + 1], cell * 0.018f, fill)
             when {
                 state.trees[i] -> {
                     planet(canvas, i, cell)

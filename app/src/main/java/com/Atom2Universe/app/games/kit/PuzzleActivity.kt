@@ -29,7 +29,7 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import kotlin.random.Random
 
 /**
@@ -100,6 +100,9 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
      * remplace [hint]. [onDemoStep] dit au jeu où en est la lecture (null : terminée ou arrêtée).
      */
     protected open fun demo(state: S): List<S>? = null
+    /** Calculée hors interface ; les éventuelles données visuelles sont publiées ensuite. */
+    protected class Demonstration<S>(val steps: List<S>, val onReady: () -> Unit = {})
+    protected open fun prepareDemo(state: S): Demonstration<S>? = demo(state)?.let { Demonstration(it) }
     protected open val demoStepMs: Long = 350L
     /** Vrai si la démonstration sait repartir d'une partie perdue (en revenant en arrière). */
     protected open val demoWhenLost: Boolean = false
@@ -129,6 +132,9 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     private var elapsedMs = 0L
     private var runningSince = 0L
     private var generation: Job? = null
+    private var hintCalculation: Job? = null
+    private var stateStatus: String? = null
+    private var resumed = false
 
     protected val current: S? get() = history.getOrNull(cursor)
 
@@ -143,6 +149,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val ticker = object : Runnable {
         override fun run() {
+            if (!timed || runningSince == 0L) return
             updateStatus()
             handler.postDelayed(this, 1000L)
         }
@@ -169,11 +176,13 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        resumed = true
         if (!solved && !lost && current != null && generation?.isActive != true) startClock()
-        handler.post(ticker)
     }
 
     override fun onPause() {
+        resumed = false
+        cancelHint()
         stopDemo()
         stopClock()
         handler.removeCallbacks(ticker)
@@ -184,6 +193,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     // ── Partie ──────────────────────────────────────────────────────────────────────────────
 
     protected fun newGame(presetIndex: Int = preset) {
+        cancelHint()
         stopDemo()
         generation?.cancel()
         stopClock()
@@ -194,7 +204,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         board.alpha = 0.25f
         val seed = Random.nextLong()
         generation = lifecycleScope.launch {
-            val state = withContext(Dispatchers.Default) { generate(presetIndex, Random(seed)) }
+            val state = runInterruptible(Dispatchers.Default) { generate(presetIndex, Random(seed)) }
+            generation = null
             progress.visibility = View.GONE
             board.alpha = 1f
             history.clear()
@@ -213,7 +224,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
     /** Joue un coup : l'état suivant remplace tout ce qui avait été annulé. */
     protected fun play(next: S) {
-        if (solved || lost || cursor < 0) return
+        if (solved || lost || cursor < 0 || generation?.isActive == true) return
+        cancelHint()
         while (history.size > cursor + 1) history.removeAt(history.size - 1)
         history.add(next)
         if (history.size > MAX_HISTORY) history.removeAt(1)
@@ -225,18 +237,23 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     /** Remplace l'état affiché sans l'empiler (animations, effets qui ne s'annulent pas seuls). */
     protected fun replaceCurrent(next: S) {
         if (cursor < 0) return
+        cancelHint()
         history[cursor] = next
         show(next)
         checkEnd(next)
     }
 
     private fun undo() {
+        if (generation?.isActive == true) return
+        cancelHint()
         if (cursor <= 0) return
         cursor--
         reopen()
     }
 
     private fun redo() {
+        if (generation?.isActive == true) return
+        cancelHint()
         if (cursor >= history.size - 1) return
         cursor++
         reopen()
@@ -273,13 +290,48 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     private fun useHint() {
         if (demoSteps != null) { stopDemo(); return }
         val s = current ?: return
-        if (solved || (lost && !demoWhenLost) || generation?.isActive == true) return
-        val steps = demo(s)
+        if (solved || (lost && !demoWhenLost) || generation?.isActive == true || hintCalculation != null) return
+        board.inputEnabled = false
+        progress.visibility = View.VISIBLE
+        hintButton?.let { setEnabled(it, false) }
+        hintCalculation = lifecycleScope.launch {
+            try {
+                val (demonstration, next) = runInterruptible(Dispatchers.Default) {
+                    val plan = prepareDemo(s)
+                    plan to if (plan == null) hint(s) else null
+                }
+                // Un autre bouton peut avoir changé la partie pendant la recherche.
+                if (current !== s || generation?.isActive == true) return@launch
+                hintCalculation = null
+                applyHint(demonstration, next)
+            } finally {
+                if (hintCalculation === coroutineContext[Job] || hintCalculation == null) {
+                    hintCalculation = null
+                    progress.visibility = if (generation?.isActive == true) View.VISIBLE else View.GONE
+                    board.inputEnabled = !solved && !lost && demoSteps == null && generation?.isActive != true
+                    updateButtons()
+                }
+            }
+        }
+    }
+
+    private fun cancelHint() {
+        val job = hintCalculation ?: return
+        hintCalculation = null
+        job.cancel()
+        progress.visibility = if (generation?.isActive == true) View.VISIBLE else View.GONE
+        board.inputEnabled = !solved && !lost && demoSteps == null && generation?.isActive != true
+        updateButtons()
+    }
+
+    private fun applyHint(demonstration: Demonstration<S>?, next: S?) {
+        val steps = demonstration?.steps
         if (steps != null) {
             if (steps.isEmpty() || !NeutrinoRepository(this).subtractBalance(NeutrinoRewards.HINT_COST)) return
             // Une partie perdue (plus aucun coup) se rouvre : la démonstration commence par revenir en arrière.
             if (lost) reopen()
             assisted = true
+            demonstration.onReady()
             board.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
             demoSteps = steps
             demoIndex = 0
@@ -290,7 +342,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             return
         }
         if (lost) return
-        val next = hint(s) ?: return
+        if (next == null) return
         if (!NeutrinoRepository(this).subtractBalance(NeutrinoRewards.HINT_COST)) return
         assisted = true
         board.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
@@ -298,6 +350,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     }
 
     private fun restart() {
+        if (generation?.isActive == true) return
+        cancelHint()
         val first = history.firstOrNull() ?: return
         if (cursor == 0 && !solved && !lost) return
         reopen()
@@ -319,6 +373,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         board.state = state
         board.inputEnabled = !solved && !lost && demoSteps == null
         onStateShown(state)
+        stateStatus = statusText(state)
         updateButtons()
         updateStatus()
     }
@@ -366,10 +421,13 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     // ── Chrono ──────────────────────────────────────────────────────────────────────────────
 
     private fun startClock() {
-        if (runningSince == 0L) runningSince = SystemClock.elapsedRealtime()
+        if (runningSince != 0L || !resumed) return
+        runningSince = SystemClock.elapsedRealtime()
+        if (timed) { handler.removeCallbacks(ticker); handler.post(ticker) }
     }
 
     private fun stopClock() {
+        handler.removeCallbacks(ticker)
         if (runningSince != 0L) {
             elapsedMs += SystemClock.elapsedRealtime() - runningSince
             runningSince = 0L
@@ -395,19 +453,21 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
                 lost -> parts.add(getString(R.string.kit_lost))
                 timed -> parts.add(formatTime(elapsed()))
             }
-            statusText(state)?.let { parts.add(it) }
+            stateStatus?.let { parts.add(it) }
             if (timed && solved) {
                 val best = prefs.getLong(bestKey(preset, state), 0L)
                 if (best > 0L) parts.add(getString(R.string.kit_best, formatTime(best)))
             }
         }
-        statusView.text = parts.joinToString(getString(R.string.kit_separator))
+        val text = parts.joinToString(getString(R.string.kit_separator))
+        if (statusView.text.toString() != text) statusView.text = text
         statusView.setTextColor(if (solved) palette.ink else palette.secondary)
     }
 
     // ── Sauvegarde ──────────────────────────────────────────────────────────────────────────
 
     private fun save() {
+        if (generation?.isActive == true) return
         val state = current ?: return
         val first = history.firstOrNull() ?: return
         prefs.edit {
@@ -612,11 +672,12 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
     private fun updateButtons() {
         if (!::undoButton.isInitialized) return
-        setEnabled(undoButton, cursor > 0)
-        setEnabled(redoButton, cursor < history.size - 1)
-        setEnabled(restartButton, cursor > 0 || solved || lost)
+        val generating = generation?.isActive == true
+        setEnabled(undoButton, !generating && cursor > 0)
+        setEnabled(redoButton, !generating && cursor < history.size - 1)
+        setEnabled(restartButton, !generating && (cursor > 0 || solved || lost))
         hintButton?.let {
-            setEnabled(it, demoSteps != null || (!solved && (!lost || demoWhenLost) && NeutrinoRepository(this).getBalance() >= NeutrinoRewards.HINT_COST))
+            setEnabled(it, !generating && hintCalculation == null && (demoSteps != null || (!solved && (!lost || demoWhenLost) && NeutrinoRepository(this).getBalance() >= NeutrinoRewards.HINT_COST)))
         }
     }
 

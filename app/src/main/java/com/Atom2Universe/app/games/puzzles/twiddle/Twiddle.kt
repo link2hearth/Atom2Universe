@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.twiddle
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.MoveLog
 import kotlin.random.Random
 
@@ -31,6 +32,7 @@ class TwiddleState(
         val out = ArrayList<TwiddleState>()
         var s = this
         while (s.log.size >= 2) {
+            checkPuzzleWork()
             val block = s.log[s.log.size - 2]; val turns = s.log[s.log.size - 1]
             // Défaire « turns » quarts horaires : un quart dans l'autre sens (ou un seul horaire pour 3).
             s = s.rotate(block % n, block / n, clockwise = turns == 3)
@@ -52,6 +54,7 @@ class TwiddleState(
         fun generate(n: Int, k: Int, random: Random): TwiddleState {
             var s = TwiddleState(n, k, IntArray(n * n) { it + 1 }, 0)
             while (true) {
+                checkPuzzleWork()
                 repeat(n * n * 6) {
                     s = s.rotate(random.nextInt(n - k + 1), random.nextInt(n - k + 1), random.nextBoolean())
                 }

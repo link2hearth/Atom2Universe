@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.rect
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import kotlin.random.Random
 
@@ -126,6 +127,7 @@ class RectState(
 
         fun generate(w: Int, h: Int, maxArea: Int, random: Random): RectState {
             while (true) {
+                checkPuzzleWork()
                 val owner = IntArray(w * h) { -1 }
                 val numbers = IntArray(w * h)
                 var id = 0

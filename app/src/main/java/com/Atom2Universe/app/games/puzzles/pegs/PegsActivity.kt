@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.puzzles.pegs
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
@@ -56,6 +57,9 @@ class PegsView(context: Context) : PuzzleView<PegsState>(context) {
     private var dragX = 0f
     private var dragY = 0f
     private var dragging = false
+    private val shaderMatrix = Matrix()
+    private val shaders = HashMap<Int, RadialGradient>()
+    private var shaderPalette: KitPalette? = null
 
     override fun onStateChanged() {
         selected = -1
@@ -92,8 +96,15 @@ class PegsView(context: Context) : PuzzleView<PegsState>(context) {
 
     private fun drawPeg(canvas: Canvas, cx: Float, cy: Float, cell: Float, lifted: Boolean) {
         val base = if (lifted) palette.accent else palette.blend(palette.accent, palette.text, 0.25f)
-        fill.shader = RadialGradient(cx - cell * 0.1f, cy - cell * 0.12f, cell * 0.4f,
-            palette.blend(base, 0xFFFFFFFF.toInt(), 0.45f), base, Shader.TileMode.CLAMP)
+        if (shaderPalette !== palette) { shaders.clear(); shaderPalette = palette }
+        val shader = shaders.getOrPut(base) {
+            RadialGradient(-0.1f, -0.12f, 0.4f,
+                palette.blend(base, 0xFFFFFFFF.toInt(), 0.45f), base, Shader.TileMode.CLAMP)
+        }
+        shaderMatrix.setScale(cell, cell)
+        shaderMatrix.postTranslate(cx, cy)
+        shader.setLocalMatrix(shaderMatrix)
+        fill.shader = shader
         canvas.drawCircle(cx, cy, cell * 0.33f, fill)
         fill.shader = null
     }

@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.random.Random
@@ -44,11 +45,16 @@ class UntangleView(context: Context) : PuzzleView<UntangleState>(context) {
     private var held = -1
     private var heldX = 0f
     private var heldY = 0f
-    private var crossing: Set<Int> = emptySet()
+    private val crossing = PuzzleStateCache<UntangleState, BooleanArray> { s ->
+        val bad = s.crossingEdges()
+        BooleanArray(s.edges.size / 2) { it in bad }
+    }
+    private var preview: UntangleDragAnalysis? = null
     private val box = RectF()
 
     override fun onStateChanged() {
-        crossing = state?.crossingEdges() ?: emptySet()
+        held = -1
+        preview = null
     }
 
     private fun layout(area: RectF) {
@@ -64,19 +70,15 @@ class UntangleView(context: Context) : PuzzleView<UntangleState>(context) {
     override fun drawBoard(canvas: Canvas, state: UntangleState, area: RectF) {
         layout(area)
         val unit = box.width()
-        val live = if (held >= 0) {
-            val xs = state.xs.copyOf(); val ys = state.ys.copyOf()
-            xs[held] = (heldX - box.left) / unit; ys[held] = (heldY - box.top) / unit
-            UntangleState(xs, ys, state.edges, 0, state.goalX, state.goalY).crossingEdges()
-        } else if (this.state === state) crossing else state.crossingEdges()
-        val solved = live.isEmpty()
+        val live = preview?.at((heldX - box.left) / unit, (heldY - box.top) / unit) ?: crossing[state]
+        val solved = live.none { it }
         stroke.strokeWidth = unit * 0.008f
         for (e in 0 until state.edges.size / 2) {
             val a = state.edges[2 * e]; val b = state.edges[2 * e + 1]
             val near = held >= 0 && (a == held || b == held)
             stroke.color = when {
                 solved -> palette.accent
-                e in live -> palette.error
+                live[e] -> palette.error
                 near -> palette.accent
                 else -> palette.secondary
             }
@@ -107,6 +109,7 @@ class UntangleView(context: Context) : PuzzleView<UntangleState>(context) {
 
     override fun onDragStart(x: Float, y: Float) {
         held = nearest(x, y)
+        preview = state?.takeIf { held >= 0 }?.let { UntangleDragAnalysis(it, held) }
         heldX = x; heldY = y
         invalidate()
     }
@@ -121,12 +124,14 @@ class UntangleView(context: Context) : PuzzleView<UntangleState>(context) {
         val s = state
         val p = held
         held = -1
+        preview = null
         if (s == null || p < 0) { invalidate(); return }
         move(s.moved(p, (heldX - box.left) / box.width(), (heldY - box.top) / box.height()))
     }
 
     override fun onDragCancel() {
         held = -1
+        preview = null
         invalidate()
     }
 }

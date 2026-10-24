@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.puzzles.lightup
 
+import com.Atom2Universe.app.games.kit.checkPuzzleWork
 import com.Atom2Universe.app.games.kit.Hints
 import com.Atom2Universe.app.games.kit.GridSearch
 import kotlin.random.Random
@@ -25,15 +26,37 @@ class LightUpState(val w: Int, val h: Int, val walls: IntArray, val cells: IntAr
     /** Les cases vues depuis [i] (elle comprise), jusqu'aux murs. */
     fun sight(i: Int): List<Int> = sightOf(w, h, walls, i)
 
-    fun lit(): BooleanArray {
-        val out = BooleanArray(w * h)
-        for (i in cells.indices) if (cells[i] == 1) for (j in sight(i)) out[j] = true
-        return out
+    class Lighting(val lit: BooleanArray, val clashes: Set<Int>)
+
+    /** Deux balayages des couloirs : chaque case est visitée un nombre constant de fois. */
+    fun lighting(): Lighting {
+        val lit = BooleanArray(w * h)
+        val clashes = HashSet<Int>()
+        fun scan(start: Int, stride: Int, length: Int) {
+            var p = 0
+            while (p < length) {
+                if (!isOpen(start + p * stride)) { p++; continue }
+                val first = p
+                var lights = 0
+                while (p < length && isOpen(start + p * stride)) {
+                    if (cells[start + p * stride] == 1) lights++
+                    p++
+                }
+                if (lights == 0) continue
+                for (k in first until p) {
+                    val i = start + k * stride
+                    lit[i] = true
+                    if (lights > 1 && cells[i] == 1) clashes.add(i)
+                }
+            }
+        }
+        for (row in 0 until h) scan(row * w, 1, w)
+        for (col in 0 until w) scan(col, w, h)
+        return Lighting(lit, clashes)
     }
 
-    fun clashingLights(): Set<Int> = cells.indices.filter { i ->
-        cells[i] == 1 && sight(i).any { it != i && cells[it] == 1 }
-    }.toSet()
+    fun lit(): BooleanArray = lighting().lit
+    fun clashingLights(): Set<Int> = lighting().clashes
 
     fun lightsAround(i: Int): Int = around(i).count { cells[it] == 1 }
 
@@ -45,8 +68,8 @@ class LightUpState(val w: Int, val h: Int, val walls: IntArray, val cells: IntAr
 
     val isSolved: Boolean
         get() {
-            val lit = lit()
-            return (0 until w * h).all { !isOpen(it) || lit[it] } && clashingLights().isEmpty() &&
+            val lighting = lighting()
+            return (0 until w * h).all { !isOpen(it) || lighting.lit[it] } && lighting.clashes.isEmpty() &&
                 (0 until w * h).all { walls[it] < 0 || lightsAround(it) == walls[it] }
         }
 
@@ -81,6 +104,7 @@ class LightUpState(val w: Int, val h: Int, val walls: IntArray, val cells: IntAr
 
         fun generate(w: Int, h: Int, wallRate: Float, random: Random): LightUpState {
             while (true) {
+                checkPuzzleWork()
                 // Murs symétriques par rotation, comme chez Tatham.
                 val walls = IntArray(w * h) { OPEN }
                 for (i in 0 until w * h) {
@@ -91,6 +115,7 @@ class LightUpState(val w: Int, val h: Int, val walls: IntArray, val cells: IntAr
                 val light = IntArray(w * h)
                 val lit = BooleanArray(w * h)
                 while (true) {
+                    checkPuzzleWork()
                     val dark = (0 until w * h).filter { walls[it] == OPEN && !lit[it] }
                     if (dark.isEmpty()) break
                     val p = dark.random(random)

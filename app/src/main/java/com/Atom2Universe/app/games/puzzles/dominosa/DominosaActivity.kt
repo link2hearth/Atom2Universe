@@ -6,6 +6,7 @@ import android.graphics.RectF
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
 import com.Atom2Universe.app.games.kit.PuzzleView
@@ -38,6 +39,8 @@ class DominosaActivity : PuzzleActivity<DominosaState>() {
  * deux cases (ou glisser de l'une à l'autre) pose le domino ; le retoucher l'enlève.
  */
 class DominosaView(context: Context) : PuzzleView<DominosaState>(context) {
+    private val analysis = PuzzleStateCache<DominosaState, Set<Int>> { it.duplicates() }
+
     private val grid = GridGeometry()
     private val r = RectF()
     private var dragFrom = -1
@@ -45,7 +48,7 @@ class DominosaView(context: Context) : PuzzleView<DominosaState>(context) {
     override fun drawBoard(canvas: Canvas, state: DominosaState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val dup = state.duplicates()
+        val dup = analysis[state]
         for (i in state.numbers.indices) {
             val j = state.partner[i]
             if (j in 0 until i) continue
