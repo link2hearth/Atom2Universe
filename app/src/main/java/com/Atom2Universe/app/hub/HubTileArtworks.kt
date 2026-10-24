@@ -72,6 +72,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.othello.ReversiHubTileDrawable::class,
         com.Atom2Universe.app.games.solitaire.SolitaireActivity::class.java.name to
             com.Atom2Universe.app.games.solitaire.SolitaireHubTileDrawable::class,
+        com.Atom2Universe.app.games.mahjong.MahjongActivity::class.java.name to
+            com.Atom2Universe.app.games.mahjong.MahjongHubTileDrawable::class,
         com.Atom2Universe.app.games.memory.MemoryActivity::class.java.name to
             com.Atom2Universe.app.games.memory.MemoryHubTileDrawable::class,
         com.Atom2Universe.app.games.jigsaw.JigsawActivity::class.java.name to

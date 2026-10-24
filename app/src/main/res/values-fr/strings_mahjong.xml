@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mj_title">Jardin Mahjong</string>
+    <string name="mj_description">Six casse-tête de tuiles : glissades sur glace, gravité tournante, réserve et chemins à ouvrir.</string>
+    <string name="mj_tagline">Un peu de concentration. Une cascade de petits plaisirs.</string>
+    <string name="mj_sound">Sons de porcelaine</string>
+    <string name="mj_journey_title">Le sentier de porcelaine</string>
+    <string name="mj_journey_desc">Six façons de jouer dans un voyage sans fin. Chaque plateau apporte un nouveau rythme.</string>
+    <string name="mj_journey_next">Étape %1$d · %2$s</string>
+    <string name="mj_play">Poursuivre le voyage</string>
+    <string name="mj_continue">Reprendre · %1$s</string>
+    <string name="mj_profile">%1$d victoires · %2$d perles</string>
+    <string name="mj_gift_progress">Cadeau du jardin · %1$d / %2$d victoires</string>
+    <string name="mj_arcade">Selon ton envie</string>
+    <string name="mj_classic">Solitaire</string>
+    <string name="mj_triple">Triples</string>
+    <string name="mj_connect">Connexion</string>
+    <string name="mj_cascade">Cascade</string>
+    <string name="mj_slide">Glissières</string>
+    <string name="mj_ten">Pile dix</string>
+    <string name="mj_classic_desc">Associe deux tuiles identiques dont le dessus est dégagé et qui ont un côté gauche ou droit libre. Plusieurs exemplaires d’un motif peuvent être disponibles : choisis ceux qui découvrent les bonnes tuiles dessous. Retirer les mauvais exemplaires peut laisser leurs partenaires prisonniers des couches. Annuler permet de revoir ce choix.</string>
+    <string name="mj_triple_desc">Prends les tuiles découvertes dans une réserve de sept places. Trois motifs identiques disparaissent ensemble. Le troisième exemplaire peut être enfoui sous d’autres familles : prévois les séries incomplètes que tu peux garder pour l’atteindre. Les nouveaux plateaux imposent plusieurs places occupées ; prendre une famille de trop au mauvais moment peut remplir la réserve. Annuler permet d’essayer un autre ordre.</string>
+    <string name="mj_connect_desc">Relie deux tuiles identiques à travers les cases vides, avec deux virages à angle droit au maximum ; le bord extérieur compte. Si plusieurs exemplaires sont disponibles, choisis les partenaires qui ouvrent le bon passage. Une liaison valide peut laisser les exemplaires restants sans chemin. Observe les angles et les passages communs avant de fusionner.</string>
+    <string name="mj_cascade_desc">Relie deux tuiles identiques à travers les cases vides avec deux virages au maximum, bord extérieur compris. Après chaque paire, toutes les tuiles restantes tombent dans le sens indiqué : bas, gauche, haut, droite, puis à nouveau bas. Imagine leur position après la chute avant de choisir une paire : elle peut ouvrir un chemin ou bloquer les associations restantes.</string>
+    <string name="mj_slide_desc">Sur la glace, tu choisis la direction, jamais la distance ! Balaie une tuile horizontalement ou verticalement : elle file jusqu’au mur ou juste avant la prochaine tuile, sans la pousser. Tu peux aussi sélectionner une tuile puis toucher une case vide dans la direction voulue. Les cases éclairées indiquent les arrêts possibles.\n\nUne seule tuile est active, en doré. Déplace-la autant de fois que nécessaire, puis touche une tuile identique alignée sans obstacle pour valider la paire. Si tu choisis une autre tuile sans former de paire, la précédente revient à son origine en pointillés : sa tentative est annulée.\n\nLa plupart des paires ont besoin d’une autre famille comme butée. Fusionner une famille trop tôt peut rendre la suite impossible : repère les butées à conserver. Annuler te permet d’essayer un autre ordre. Indice utilise une solution complète pour proposer la prochaine sélection, glissade ou paire.</string>
+    <string name="mj_ten_desc">Fais dix avec deux nombres sur une ligne ou une colonne dégagée : 1 + 9, 2 + 8, 3 + 7, 4 + 6 ou 5 + 5. La famille du motif ne compte pas. Un nombre peut avoir plusieurs partenaires possibles. Choisis les sommes qui ouvrent une ligne ou une colonne croisée ; utiliser le mauvais partenaire peut isoler les nombres restants.</string>
+    <string name="mj_daily">Plateau du jour · bonus de 40 perles</string>
+    <string name="mj_daily_replay">Rejouer le plateau du jour</string>
+    <string name="mj_daily_note">Un même plateau quotidien, jouable hors ligne. Bonus accordé une fois par date du plateau. Aucune série à maintenir.</string>
+    <string name="mj_collection">Textures et porcelaines</string>
+    <string name="mj_collection_desc">Deux collections indépendantes : textures de matière et illustrations de porcelaine. Débloque-les avec des perles, puis touche Utiliser.</string>
+    <string name="mj_theme_jade">Jardin de jade</string>
+    <string name="mj_theme_sakura">Porcelaine sakura</string>
+    <string name="mj_theme_ocean">Verre océan</string>
+    <string name="mj_theme_amethyst">Nuit améthyste</string>
+    <string name="mj_theme_gold">Pavillon doré</string>
+    <string name="mj_theme_sunset">Coucher de terre cuite</string>
+    <string name="mj_theme_selected">%1$s · sélectionné</string>
+    <string name="mj_theme_choose">%1$s · choisir</string>
+    <string name="mj_theme_locked">%1$s · déblocage à %2$d perles</string>
+    <string name="mj_free_promise">100 % gratuit · Hors ligne · Aides illimitées\nSans pub, achat, vie ni chronomètre.</string>
+    <string name="mj_back">Retour</string>
+    <string name="mj_garden">Jardin</string>
+    <string name="mj_cancel">Annuler</string>
+    <string name="mj_new_board">Nouveau plateau</string>
+    <string name="mj_replace_title">Commencer un nouveau plateau ?</string>
+    <string name="mj_replace_desc">Ton plateau en cours sera remplacé. Tes perles, tes palettes et ta progression dans le voyage sont déjà sauvegardées.</string>
+    <string name="mj_encouragement">Prends ton temps. Toutes les aides sont gratuites.</string>
+    <string name="mj_undo">Annuler</string>
+    <string name="mj_hint">Indice</string>
+    <string name="mj_preparing">Préparation du casse-tête…</string>
+    <string name="mj_thinking">Recherche d’un coup gagnant…</string>
+    <string name="mj_hint_limit">Pas d’indice sûr pour cette position. Essaie d’annuler un coup ou de mélanger.</string>
+    <string name="mj_prepare_failed">Le casse-tête n’a pas pu être préparé. Réessaie.</string>
+    <string name="mj_shuffle">Mélanger</string>
+    <string name="mj_undo_done">Un coup en arrière. Essaie un autre chemin.</string>
+    <string name="mj_hint_done">Suis le contour doré.</string>
+    <string name="mj_shuffle_done">De nouvelles possibilités. Ton score est conservé.</string>
+    <string name="mj_match_good">Belle association !</string>
+    <string name="mj_blocked">Libère le dessus et, au Solitaire, au moins un côté.</string>
+    <string name="mj_tray_full">Réserve pleine ? Reviens en arrière ou mélange gratuitement.</string>
+    <string name="mj_pair_miss">Essaie une autre paire.</string>
+    <string name="mj_stuck">Aucun coup trouvé. Essaie Annuler ou Mélanger.</string>
+    <string name="mj_difficulty">Difficulté des prochains plateaux libres</string>
+    <string name="mj_difficulty_normal">Normal</string>
+    <string name="mj_difficulty_hard">Corsé</string>
+    <string name="mj_difficulty_note">Les parties en cours gardent leur plateau. Nouveau applique ton choix.</string>
+    <string name="mj_new_short">Nouveau</string>
+    <string name="mj_classic_rule">Choisis les exemplaires qui libèrent les bonnes tuiles.</string>
+    <string name="mj_triple_rule">Prévois tes séries incomplètes avant de remplir la réserve.</string>
+    <string name="mj_connect_rule">Choisis les partenaires qui ouvrent le bon passage.</string>
+    <string name="mj_cascade_rule">Anticipe la position des tuiles après la prochaine chute.</string>
+    <string name="mj_slide_rule">Préserve tes butées : l’ordre des fusions compte.</string>
+    <string name="mj_slide_focus_rule">Garde cette tuile jusqu’à la fusion ; en changer annule sa tentative.</string>
+    <string name="mj_slide_focus_hint">Sélectionne la tuile dorée ; la tentative précédente reviendra à son origine.</string>
+    <string name="mj_ten_rule">Fais dix en ouvrant les lignes et colonnes croisées.</string>
+    <string name="mj_tray_status">Réserve %1$d / 7 · trois identiques libèrent de la place.</string>
+    <string name="mj_cascade_status">Prochaine chute : %1$s · deux virages maximum.</string>
+    <string-array name="mj_gravity_directions"><item>↓ bas</item><item>← gauche</item><item>↑ haut</item><item>→ droite</item></string-array>
+    <string name="mj_slide_hint">Suis la flèche : la tuile dorée file jusqu’à sa butée.</string>
+    <string name="mj_slide_blocked">Cette direction est bloquée. La tuile doit glisser jusqu’à sa butée.</string>
+    <string name="mj_ice_migration">Ton plateau a été adapté à la glace. Score et tuiles restantes conservés ; les anciennes annulations sont effacées.</string>
+    <string name="mj_path_miss">Même motif et chemin vide avec deux virages maximum.</string>
+    <string name="mj_ten_miss">Il faut une somme de 10, alignée et sans obstacle.</string>
+    <string name="mj_slide_miss">Aligne deux motifs identiques sans obstacle entre eux.</string>
+    <string name="mj_score">%1$d points</string>
+    <string name="mj_remaining">%1$d / %2$d tuiles</string>
+    <string name="mj_combo">Élan ×%1$d · points bonus !</string>
+    <string name="mj_stage">Voyage · étape %1$d</string>
+    <string name="mj_relaxed">Sans limite de temps · à ton rythme</string>
+    <string name="mj_victory_stars">✦ ✦ ✦</string>
+    <string name="mj_victory">Un jardin en fleurs !</string>
+    <string name="mj_result">%1$d points · %2$d coups</string>
+    <string name="mj_reward">+%1$d perles</string>
+    <string name="mj_gift_open">Cinq victoires ! Le cadeau du jardin ajoute 100 perles à cette récompense.</string>
+    <string name="mj_theme_unlocked">Une nouvelle palette de porcelaine t’attend dans la collection.</string>
+    <string name="mj_best">Record personnel · %1$d points</string>
+    <string name="mj_next">Plateau suivant</string>
+    <string name="mj_board_description">Plateau de mahjong. Touche les tuiles pour les sélectionner, puis associe-les selon le mode choisi.</string>
+    <string name="mj_rules">TON JARDIN CÉLESTE\nSix modes, le Voyage et le Cadeau du jour possèdent chacun leur sauvegarde. Toutes les règles et toutes les aides restent disponibles gratuitement.\n\nGAGNER DES PERLES\nUne victoire rapporte 30 perles, plus une par tranche de trois tuiles et un bonus de combos. Chaque paire réussie fait monter le combo jusqu’à ×8 ; une erreur le réinitialise. La moitié des centaines de points gagnées au-delà des points de base devient un bonus de perles, arrondi à l’entier inférieur.\n\nRENDEZ-VOUS ÉTOILÉS\nChaque jour, un mode vedette double les perles de partie, bonus de combos compris. Le samedi et le dimanche, tous les modes les doublent ! Le bonus est fixé au début du plateau, même si tu le termines plus tard. Les bonus ×2 ne se cumulent pas. Toutes les cinq victoires : +100 perles. Le plateau quotidien : +40 une fois par date. Ces deux cadeaux ne sont pas doublés. Aucune série quotidienne à entretenir.\n\nTEXTURES ET PORCELAINES\nOuvre Textures et porcelaines dans le menu, ou Textures pendant une partie. Deux onglets permettent de choisir et débloquer séparément la matière des tuiles et les illustrations des 1 et 2. Trois visuels sont offerts dans chaque onglet. Achète les autres dans l’ordre que tu veux : 350 perles pour le premier, puis un prix croissant après chaque achat dans le même onglet. Les perles sont dépensées, les dessins restent acquis. Aucun temps de jeu imposé. Tes anciennes porcelaines sont conservées.\n\nAucune publicité, aucun achat en argent réel, aucune vie ni date limite.</string>
+    <string name="mj_settings">Réglages</string>
+    <string name="mj_effects">Animations et éclats</string>
+    <string name="mj_haptics">Vibrations légères</string>
+    <string name="mj_collection_short">Textures et porcelaines</string>
+    <string name="mj_journey_short">Voyage</string>
+    <string name="mj_daily_short">Cadeau du jour</string>
+    <string name="mj_number">%1$d</string>
+    <string name="mj_fraction">%1$d / %2$d</string>
+    <string name="mj_multiplier">×%1$d</string>
+    <string name="mj_gain_short">+%1$d</string>
+    <string name="mj_pearl_count">◈ %1$d</string>
+    <string name="mj_pearl_gain">+%1$d ◈</string>
+    <string name="mj_victory_short">Magnifique !</string>
+    <string name="mj_new_porcelain">Nouvelle porcelaine !</string>
+    <string name="mj_big_gift">Trésor du jardin !</string>
+    <string name="mj_result_short">★ %1$d · ×%2$d</string>
+    <string name="mj_collection_count">%1$d / %2$d · ◈ %3$d</string>
+    <string name="mj_style_available">%1$s. Touche Utiliser pour appliquer ce visuel.</string>
+    <string name="mj_style_waiting">%1$s. Touche pour voir le prix et débloquer ce visuel avec des perles.</string>
+    <string name="mj_style_preview_help">Chaque collection possède sa texture de matière. Les illustrations décorent seulement les valeurs 1 et 2 ; de 3 à 9, les motifs se comptent au centre. Choisis librement tes dessins : chaque achat augmente le prix du suivant, sans condition de temps.</string>
+    <string name="mj_reward_accessible">Victoire : %1$d perles et %2$d nouvelles porcelaines. Touche une tuile révélée pour utiliser son dessin.</string>
+    <string name="mj_mode_help">%1$s\n\n%2$s</string>
+    <string name="mj_help_tools">LES TROIS AIDES\nAnnuler revient un coup en arrière. Indice montre une paire ou un déplacement dans Glissières. Mélanger reconstruit le plateau ; dans Triples, cela vide aussi la réserve. Toutes les aides sont gratuites et illimitées.\n\nCOMBOS ET PERLES\nEnchaîne les bonnes associations : le multiplicateur monte jusqu’à ×8. Une paire incorrecte remet le combo à zéro, sans retirer les points acquis. Les points bonus des combos rapportent des perles à la victoire. Aucun besoin de jouer vite. Annuler restaure les points précédents : rejouer le même coup ne rapporte pas davantage.\n\nTES PORCELAINES\nOuvre la collection pour acheter un dessin ou choisir une porcelaine acquise. Les chiffres indiquent la valeur ; le cercle, le losange et l’étoile distinguent les trois familles. Les illustrations sont décoratives.\n\nChaque mode conserve séparément ton plateau et son historique.</string>
+    <string name="mj_garden_help">TON JARDIN CÉLESTE\nSix modes, le Voyage et le Cadeau du jour possèdent chacun leur sauvegarde. Toutes les règles et toutes les aides restent disponibles gratuitement.\n\nGAGNER DES PERLES\nUne victoire rapporte 30 perles, plus une par tranche de trois tuiles et un bonus de combos. Chaque paire réussie fait monter le combo jusqu’à ×8 ; une erreur le réinitialise. La moitié des centaines de points gagnées au-delà des points de base devient un bonus de perles, arrondi à l’entier inférieur.\n\nRENDEZ-VOUS ÉTOILÉS\nChaque jour, un mode vedette double les perles de partie, bonus de combos compris. Le samedi et le dimanche, tous les modes les doublent ! Le bonus est fixé au début du plateau, même si tu le termines plus tard. Les bonus ×2 ne se cumulent pas. Toutes les cinq victoires : +100 perles. Le plateau quotidien : +40 une fois par date. Ces deux cadeaux ne sont pas doublés. Aucune série quotidienne à entretenir.\n\nTEXTURES ET PORCELAINES\nOuvre Textures et porcelaines dans le menu, ou Textures pendant une partie. Deux onglets permettent de choisir et débloquer séparément la matière des tuiles et les illustrations des 1 et 2. Trois visuels sont offerts dans chaque onglet. Achète les autres dans l’ordre que tu veux : 350 perles pour le premier, puis un prix croissant après chaque achat dans le même onglet. Les perles sont dépensées, les dessins restent acquis. Aucun temps de jeu imposé. Tes anciennes porcelaines sont conservées.\n\nAucune publicité, aucun achat en argent réel, aucune vie ni date limite.</string>
+    <string name="mj_collection_help">CHOISIR TES VISUELS\nDans le menu, touche Textures et porcelaines. Pendant une partie, touche le bouton Textures en haut.\n\nTEXTURES\n24 matières pour le fond, la couleur et les bordures des tuiles. Touche Utiliser sur une texture acquise pour l’appliquer. Pour une texture verrouillée, touche sa carte puis Débloquer et utiliser.\n\nPORCELAINES\n24 illustrations pour les valeurs 1 et 2, à associer à la texture de ton choix. Les tuiles 3 à 9 conservent leurs motifs comptables. Change d’onglet pour les choisir ou les acheter.\n\nPERLES\nTrois visuels sont offerts dans chaque collection. Chaque collection a ses propres prix progressifs : 350 perles, puis 350 + 100 × n + 12 × n² après n achats dans cet onglet. Le solde de perles est partagé. Aucun temps de jeu imposé.\n\nLes textures déjà comprises dans tes anciennes porcelaines restent acquises gratuitement. Changer un visuel conserve tes parties et leurs historiques.</string>
+    <string name="mj_journey_help">LE SENTIER DE PORCELAINE\nUn voyage qui alterne les six jeux. Termine un plateau pour passer à l’étape suivante. Sa sauvegarde est indépendante des modes libres.\n\nChaque étape rapporte des perles pour acheter les dessins de ton choix. Le bonus ×2 s’applique si le mode est à l’honneur ou si le plateau commence le week-end. Les aides restent gratuites.</string>
+    <string name="mj_daily_help">CADEAU DU JOUR\nUn nouveau plateau hors ligne chaque jour, avec 40 perles supplémentaires à la première victoire de cette date. Son mode tourne entre les six jeux.\n\nUn plateau quotidien inachevé reste sauvegardé après minuit. Termine-le quand tu veux ; le suivant utilisera la date courante. Rejouer offre toujours les récompenses normales. Aucune série à perdre et aucune date limite.</string>
+    <string-array name="mj_porcelain_names">
+        <item>Atome de jade</item><item>Lotus impérial</item><item>Lait de sakura</item><item>Sakura doré</item>
+        <item>Écume nacrée</item><item>Opale du lagon</item><item>Ciel lavande</item><item>Étoiles améthyste</item>
+        <item>Fleur de miel</item><item>Soleil d’ambre</item><item>Sorbet pêche</item><item>Lanterne corail</item>
+        <item>Givre azur</item><item>Marée saphir</item><item>Feuille de menthe</item><item>Jardin émeraude</item>
+        <item>Nuage de mûre</item><item>Rêve de rubis</item><item>Perle de lotus</item><item>Jardin turquoise</item>
+        <item>Brume de lune</item><item>Saturne dorée</item><item>Papillon abricot</item><item>Trésor du couchant</item>
+    </string-array>
+    <string name="mj_collection_complete">Tous les visuels de cet onglet sont acquis !</string>
+    <string name="mj_next_price">Prochaine porcelaine · %1$d perles</string>
+    <string name="mj_can_buy">Tu peux débloquer un visuel dans cet onglet.</string>
+    <string name="mj_save_pearls">Encore %1$d perles pour un visuel de cet onglet.</string>
+    <string name="mj_price">◈ %1$d</string>
+    <string name="mj_equipped">Équipée</string>
+    <string name="mj_owned">Acquise</string>
+    <string name="mj_purchase_balance">Tes perles : %1$d · Prix : %2$d</string>
+    <string name="mj_buy">Débloquer et utiliser · %1$d perles</string>
+    <string name="mj_purchase_done">%1$s est débloquée et équipée !</string>
+    <string name="mj_weekend_bonus">Week-end étoilé · toutes les parties ×2 perles</string>
+    <string name="mj_featured_bonus">À l’honneur aujourd’hui · %1$s · ×2 perles</string>
+    <string name="mj_run_bonus">Partie étoilée · récompense de perles ×2</string>
+    <string name="mj_reward_breakdown">Combos : +%1$d ◈ · partie ×%2$d · cadeau +%3$d ◈</string>
+    <string name="mj_reward_daily_bonus">Cadeau quotidien : +40 ◈</string>
+    <string name="mj_mode_bonus_title">%1$s · ◈ ×2</string>
+    <string name="mj_customize_action">Choisir / débloquer mes visuels ›</string>
+    <string name="mj_textures">Textures</string>
+    <string name="mj_porcelains">Porcelaines</string>
+    <string name="mj_next_texture_price">Prochaine texture · %1$d perles</string>
+    <string name="mj_texture_selection">Texture appliquée : %1$s · touche Utiliser pour changer.</string>
+    <string name="mj_porcelain_selection">Porcelaine appliquée : %1$s · indépendante de la texture.</string>
+    <string name="mj_apply_visual">Utiliser</string>
+    <string name="mj_visual_applied">%1$s : appliqué !</string>
+    <string name="mj_texture_preview_help">Cette texture change la matière, la couleur et les bordures de toutes les tuiles. Tes illustrations restent les mêmes. L’achat débloque et applique la texture ; tu pourras ensuite la changer gratuitement.</string>
+    <string name="mj_porcelain_preview_help">Cette porcelaine change les illustrations des valeurs 1 et 2. Ta texture reste la même. L’achat débloque et applique ces illustrations ; tu pourras ensuite les changer gratuitement.</string>
+    <string-array name="mj_texture_names">
+        <item>Jade craquelé</item>
+        <item>Jade veiné d’or</item>
+        <item>Émail sakura</item>
+        <item>Quartz rose</item>
+        <item>Nacre marine</item>
+        <item>Opale du lagon</item>
+        <item>Satin lavande</item>
+        <item>Marbre améthyste</item>
+        <item>Céramique de miel</item>
+        <item>Albâtre ambré</item>
+        <item>Émail pêche</item>
+        <item>Laque corail</item>
+        <item>Givre cristallin</item>
+        <item>Marbre saphir</item>
+        <item>Nervures de menthe</item>
+        <item>Malachite claire</item>
+        <item>Brume mauve</item>
+        <item>Émail rubis</item>
+        <item>Nacre de soie</item>
+        <item>Verre turquoise</item>
+        <item>Pierre de lune</item>
+        <item>Ivoire doré</item>
+        <item>Soie abricot</item>
+        <item>Grès du couchant</item>
+    </string-array>
+</resources>

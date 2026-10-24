@@ -278,6 +278,14 @@ object GamesCatalog {
             activityClass = SolitaireActivity::class.java
         ),
         HubTile(
+            id = "mahjong",
+            titleRes = R.string.mj_title,
+            descriptionRes = R.string.mj_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_solitaire,
+            activityClass = com.Atom2Universe.app.games.mahjong.MahjongActivity::class.java
+        ),
+        HubTile(
             id = "memory",
             titleRes = R.string.memory_title,
             descriptionRes = R.string.memory_description,
