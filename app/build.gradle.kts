@@ -19,9 +19,9 @@ android {
         applicationId = "com.Atom2Universe.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
+        versionCode = 12
 
-        versionName = "0.2.1"
+        versionName = "0.2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -146,6 +146,7 @@ tasks.withType<Test>().configureEach {
  * rien. Quand un nouveau banc apparait, l'ajouter a cette liste.
  */
 val bancsDeMesure = listOf(
+    "*.atomblocks.AtomBlocksBalanceSimulationTest",
     "*.roguelike.RoguelikeSimulationTest",
     "*.cosmorun.CosmoRunSimTest",
     "*.cosmorun.CosmoRunPreviewTest",
@@ -165,6 +166,13 @@ val bancsDeMesure = listOf(
 if (!providers.gradleProperty("bancsMesure").isPresent) {
     tasks.withType<Test>().configureEach {
         filter { bancsDeMesure.forEach { excludeTestsMatching(it) } }
+    }
+} else {
+    // Changing a campaign's seed/sample set must run it again even when the code is unchanged.
+    tasks.withType<Test>().configureEach {
+        listOf("ATOM_BLOCKS_SIM_TAG", "ATOM_BLOCKS_SIM_SAMPLES", "ATOM_BLOCKS_SIM_SEED_OFFSET").forEach { name ->
+            inputs.property(name, providers.environmentVariable(name).orElse(""))
+        }
     }
 }
 

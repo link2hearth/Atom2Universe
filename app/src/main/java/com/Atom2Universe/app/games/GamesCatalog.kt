@@ -303,6 +303,14 @@ object GamesCatalog {
         ),
         // Puzzles classiques
         HubTile(
+            id = "atomblocks",
+            titleRes = R.string.ab_title,
+            descriptionRes = R.string.ab_description,
+            iconRes = android.R.drawable.ic_menu_slideshow,
+            defaultColorRes = R.color.game_tile_match3,
+            activityClass = com.Atom2Universe.app.games.atomblocks.AtomBlocksActivity::class.java
+        ),
+        HubTile(
             id = "jigsaw",
             titleRes = R.string.jigsaw_title,
             descriptionRes = R.string.jigsaw_description,
