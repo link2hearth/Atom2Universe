@@ -15,6 +15,9 @@ import com.Atom2Universe.app.games.kit.KitGames
  */
 object NeutrinoRewards {
 
+    const val MOCHI_POINTS_PER_NEUTRINO = 100
+    fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO
+
     const val BILLIARD_MEDAL = 3
     const val BILLIARD_LESSON = 3
     const val BILLIARD_CLUB = 25
@@ -292,6 +295,7 @@ object NeutrinoRewards {
             Entry(R.string.bigger_title, "1 / $BIGGER_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.enamel_title, "1 / $ENAMEL_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
+            Entry(R.string.mochi_title, context.getString(R.string.mochi_reward_rate, MOCHI_POINTS_PER_NEUTRINO), R.string.neutrino_info_note_score),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance),
