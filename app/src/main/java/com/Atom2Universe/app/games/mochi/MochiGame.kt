@@ -3,19 +3,26 @@ package com.Atom2Universe.app.games.mochi
 import kotlin.math.*
 import kotlin.random.Random
 
-/** Monde en unités logiques, Y vers le haut. Aucune dépendance Android. */
-class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = false) {
-    enum class Phase { ATTACHED, FLYING, CHOOSING, OVER }
+/**
+ * Monde en unités logiques, Y vers le haut. Aucune dépendance Android.
+ *
+ * Une seule boucle : tirer, lire l'arc, relâcher. La pression vient des fleurs
+ * qui fanent sous Mochi ; la seconde chance vient d'une bulle de rosée visible,
+ * gagnée aux fleurs d'or et en ramassant des pêches. Aucun menu en cours de partie.
+ */
+class MochiGame(val seed: Long = Random.nextLong()) {
+    enum class Phase { ATTACHED, FLYING, OVER }
     enum class Danger { THORN, BEE }
     enum class End { FALL, THORN, BEE }
-    enum class FlowerKind { NORMAL, SPRING, DRIFT, FRAGILE, SANCTUARY }
-    enum class Upgrade { BUBBLE, MAGNET, GRIP, NECTAR, HARVEST }
-    enum class Effect { CATCH, PERFECT, SWEET, GOLD, REST, RESCUE, BREAK, BOUNCE }
+    enum class FlowerKind { NORMAL, SPRING, DRIFT, SANCTUARY }
+    enum class Effect { CATCH, PERFECT, SWEET, GOLD, REST, RESCUE, WILT, POP, BOUNCE, BUBBLE }
+    enum class Outcome { NONE, LAND, DANGER, FALL }
     data class Flower(val id: Int, val x: Float, val y: Float, var visited: Boolean = false,
         val kind: FlowerKind = FlowerKind.NORMAL, val offset: Float = 0f,
-        var life: Float = FRAGILE_TIME, var alive: Boolean = true) {
+        var life: Float = -1f, var alive: Boolean = true) {
         val row get() = abs(id)
         val bonus get() = id < 0
+        val wilts get() = kind != FlowerKind.SANCTUARY
         val travel get() = if (kind == FlowerKind.DRIFT) 22f else 0f
         fun at(time: Float) = x + sin(time * 1.4f + offset) * travel
     }
@@ -27,10 +34,14 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     }
     data class Point(val x: Float, val y: Float)
     data class Spark(val x: Float, val y: Float, val effect: Effect, val points: Int = 0, val bounces: Int = 0)
+    /** L'arc complet jusqu'au premier contact, et ce qui l'attend au bout. */
+    data class Preview(val points: List<Point>, val outcome: Outcome, val flowerId: Int) {
+        companion object { val EMPTY = Preview(emptyList(), Outcome.NONE, 0) }
+    }
     private data class Landing(val flower: Flower, val fraction: Float, val error: Float)
     internal data class FlowerContact(val fraction: Float, val error: Float)
     private data class Trace(val motion: MochiFlight.Result, val limit: Float,
-        val landing: Landing?, val danger: Hazard?, val thornContact: MochiFlight.Hit?, val fallen: Boolean)
+        val landing: Landing?, val danger: Hazard?, val fallen: Boolean)
 
     val flowers = ArrayList<Flower>()
     val sweets = ArrayList<Sweet>()
@@ -56,24 +67,27 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     var bankShots = 0; private set
     var maxHeight = START_Y; private set
     var shots = 0; private set
-    var shields = 0; private set
-    var magnet = 0; private set
-    var grip = 0; private set
-    var nectar = 0; private set
+    /** Une seule bulle portée ; les pêches en préparent une autre. */
+    var bubbles = 0; private set
+    var peaches = 0; private set
+    var bubbleLife = 0f; private set
     var detours = 0; private set
     var sanctuaries = 0; private set
-    var offers: List<Upgrade> = emptyList(); private set
-    /** Le guide complet devient une amorce : le geste reste lisible sans résoudre le saut. */
-    val showTrajectory get() = easyMode || shots < INTRO_SHOTS
+    val inBubble get() = phase == Phase.ATTACHED && attachedId == BUBBLE_ID
     val chapter get() = sanctuaryCountThrough(highestFlower)
     val biome get() = chapter % 3
-    val stepsToRest get() = restRowAfter(highestFlower) - highestFlower
     val attachedFlower get() = flowers.firstOrNull { it.id == attachedId }
-    val catchRadius get() = (if (easyMode) 24f else CATCH_RADIUS) + grip * 1.5f
-    val pickupRadius get() = 23f + magnet * 5f
+    val catchRadius get() = CATCH_RADIUS
     val launchPower get() = if (attachedFlower?.kind == FlowerKind.SPRING) 1.2f else 1f
     val heightMetres get() = ((maxHeight - START_Y) / 10f).toInt().coerceAtLeast(0)
-    val passiveSlotsUsed get() = listOf(magnet, grip, nectar).count { it > 0 }
+    /** Temps restant sur la prise actuelle, de 1 à 0 ; négatif quand rien ne presse. */
+    val wiltFraction: Float get() {
+        if (phase != Phase.ATTACHED) return -1f
+        if (inBubble) return (bubbleLife / BUBBLE_TIME).coerceIn(0f, 1f)
+        val flower = attachedFlower ?: return -1f
+        if (!flower.wilts || flower.life < 0f) return -1f
+        return (flower.life / wiltTime(flower.row)).coerceIn(0f, 1f)
+    }
 
     fun catchRadiusFor(flower: Flower) = catchRadius + when {
         flower.kind == FlowerKind.SANCTUARY -> 4f
@@ -87,6 +101,7 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     private var departure = 0
     private var departureY = START_Y
     private var highestFlower = 0
+    /** La fleur de départ attend le premier tir ; elle ne fane qu'une fois revisitée. */
     private var frontier = Flower(0, x, y, true)
 
     init {
@@ -107,7 +122,7 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     fun launch(dx: Float, dy: Float): Boolean {
         if (phase != Phase.ATTACHED || !dx.isFinite() || !dy.isFinite()) return false
         val v = velocityForDrag(dx, dy)
-        if (hypot(v.x, v.y) < 65f) return false
+        if (hypot(v.x, v.y) < MIN_LAUNCH) return false
         vx = v.x; vy = v.y
         departure = attachedId
         departureY = y
@@ -119,37 +134,42 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     }
 
     /** Même intégration et mêmes contacts que le vol, sans modifier le monde. */
-    fun preview(dx: Float, dy: Float): List<Point> {
-        if (phase != Phase.ATTACHED || !dx.isFinite() || !dy.isFinite()) return emptyList()
+    fun preview(dx: Float, dy: Float): Preview {
+        if (phase != Phase.ATTACHED || !dx.isFinite() || !dy.isFinite()) return Preview.EMPTY
         val v = velocityForDrag(dx, dy)
-        if (hypot(v.x, v.y) < 65f) return emptyList()
+        if (hypot(v.x, v.y) < MIN_LAUNCH) return Preview.EMPTY
         var state = MochiFlight.State(x, y, v.x, v.y)
         var previewBottom = bottom
-        val points = ArrayList<Point>(40)
-        val limit = if (showTrajectory) 240 else 24
-        for (i in 1..limit) {
+        val points = ArrayList<Point>(PREVIEW_STEPS / PREVIEW_EVERY + 2)
+        var outcome = Outcome.NONE
+        var flowerId = 0
+        for (i in 1..PREVIEW_STEPS) {
             val future = time + i * STEP
             val trace = traceFlight(state, future, attachedId, i * STEP, max(20f, previewBottom - RADIUS))
             val segments = travelled(trace)
             val endpoint = segments.lastOrNull()?.let { Point(it.bx, it.by) } ?: Point(state.x, state.y)
             state = trace.motion.state
             previewBottom = max(previewBottom, min(endpoint.y - 330f, y - 70f))
-            if (i % 5 == 0 || i == limit) points += endpoint
-            if (trace.landing != null || trace.danger != null || trace.thornContact != null || trace.fallen) {
+            if (i % PREVIEW_EVERY == 0) points += endpoint
+            when {
+                trace.landing != null -> { outcome = Outcome.LAND; flowerId = trace.landing.flower.id }
+                trace.danger != null -> outcome = Outcome.DANGER
+                trace.fallen -> outcome = Outcome.FALL
+            }
+            if (outcome != Outcome.NONE) {
                 if (points.lastOrNull() != endpoint) points += endpoint
                 break
             }
-            if (endpoint.y < max(20f, previewBottom - RADIUS)) break
         }
-        return points
+        return Preview(points, outcome, flowerId)
     }
 
     fun update(seconds: Float) {
         events.clear()
-        if (phase == Phase.OVER || phase == Phase.CHOOSING || !seconds.isFinite() || seconds <= 0) return
+        if (phase == Phase.OVER || !seconds.isFinite() || seconds <= 0) return
         // Une interruption de l'UI ne se transforme pas en chute instantanée à la reprise.
         accumulator += seconds.coerceAtMost(.1f)
-        while (accumulator + .000001f >= STEP && phase != Phase.OVER && phase != Phase.CHOOSING) {
+        while (accumulator + .000001f >= STEP && phase != Phase.OVER) {
             accumulator -= STEP
             tick()
         }
@@ -169,10 +189,8 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     /** Contacts dans l'ordre du vol, y compris de part et d'autre d'un ricochet. */
     private fun traceFlight(state: MochiFlight.State, atTime: Float, origin: Int, elapsed: Float,
         floor: Float = max(20f, bottom - RADIUS)): Trace {
-        val motion = MochiFlight.step(state, STEP, walls)
-        // Les ronces renvoient Mochi ; retomber sans assez d'élan dessus pique au lieu de créer un appui.
-        var thornContact = motion.hits.firstOrNull { it.wallId >= 0 && it.ny > .99f && it.speed < 65f }
-        var limit = thornContact?.fraction ?: 1f
+        val motion = MochiFlight.step(state, STEP, walls, minBounce = MIN_BOUNCE)
+        var limit = 1f
         var landing: Landing? = null
         var danger: Hazard? = null
         var fallen = false
@@ -185,19 +203,19 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
                 origin, elapsed - STEP + segment.endFraction * STEP, span * STEP)
             if (candidate != null) {
                 val fraction = segment.startFraction + candidate.fraction * span
-                if (fraction <= limit) { limit = fraction; landing = candidate; thornContact = null; danger = null; fallen = false }
+                if (fraction <= limit) { limit = fraction; landing = candidate; danger = null; fallen = false }
             }
             for (hazard in hazards) {
                 val fraction = hazardFraction(hazard, segment, atTime) ?: continue
                 val hitTime = segment.startFraction + span * fraction
-                if (hitTime <= limit) { limit = hitTime; danger = hazard; landing = null; thornContact = null; fallen = false }
+                if (hitTime <= limit) { limit = hitTime; danger = hazard; landing = null; fallen = false }
             }
             if (segment.by < floor && segment.by < segment.ay) {
                 val fraction = segment.startFraction + span * ((segment.ay - floor) / (segment.ay - segment.by)).coerceIn(0f, 1f)
-                if (fraction <= limit) { limit = fraction; fallen = true; danger = null; landing = null; thornContact = null }
+                if (fraction <= limit) { limit = fraction; fallen = true; danger = null; landing = null }
             }
         }
-        return Trace(motion, limit, landing, danger, thornContact, fallen)
+        return Trace(motion, limit, landing, danger, fallen)
     }
 
     private fun hazardFraction(hazard: Hazard, segment: MochiFlight.Segment, atTime: Float): Float? {
@@ -230,20 +248,21 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
     private fun tick() {
         time += STEP
         if (phase == Phase.ATTACHED) {
-            attachedFlower?.let { flower ->
+            if (inBubble) {
+                bubbleLife -= STEP
+                y += BUBBLE_RISE * STEP
+                if (bubbleLife <= 0f) {
+                    drop()
+                    events += Spark(x, y, Effect.POP)
+                }
+            } else attachedFlower?.let { flower ->
                 x = flower.at(time)
-                if (flower.kind == FlowerKind.FRAGILE) {
+                if (flower.wilts && flower.life >= 0f) {
                     flower.life -= STEP
-                    if (flower.life <= 0) {
+                    if (flower.life <= 0f) {
                         flower.alive = false
-                        departure = flower.id
-                        departureY = y
-                        flightTime = 0f
-                        flightBounces = 0
-                        vx = 0f; vy = -30f
-                        combo = 0
-                        phase = Phase.FLYING
-                        events += Spark(x, y, Effect.BREAK)
+                        drop()
+                        events += Spark(x, y, Effect.WILT)
                     }
                 }
             }
@@ -255,7 +274,7 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
         x = segments.lastOrNull()?.bx ?: x
         y = segments.lastOrNull()?.by ?: y
         vx = trace.motion.state.vx; vy = trace.motion.state.vy
-        val terminal = trace.landing != null || trace.danger != null || trace.thornContact != null || trace.fallen
+        val terminal = trace.landing != null || trace.danger != null || trace.fallen
         for (hit in trace.motion.hits) if ((if (terminal) hit.fraction < trace.limit - .00001f else hit.fraction <= trace.limit) && hit.speed >= 25f) {
             if (hit.wallId >= 0) flightBounces++
             events += Spark(hit.x - hit.nx * RADIUS, hit.y - hit.ny * RADIUS, Effect.BOUNCE)
@@ -265,29 +284,40 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
         bottom = max(bottom, min(y - 330f, departureY - 70f))
 
         for (sweet in sweets) {
-            if (!sweet.taken && segments.any { distanceToSegment(sweet.x, sweet.y, it.ax, it.ay, it.bx, it.by) < pickupRadius }) {
+            if (!sweet.taken && segments.any { distanceToSegment(sweet.x, sweet.y, it.ax, it.ay, it.bx, it.by) < PICKUP_RADIUS }) {
                 sweet.taken = true
                 treats++
-                val points = if (sweet.golden) 25 else 5
+                val points = if (sweet.golden) GOLD_POINTS else PEACH_POINTS
                 score += points
                 events += Spark(sweet.x, sweet.y, if (sweet.golden) Effect.GOLD else Effect.SWEET, points)
+                if (sweet.golden) gainBubble() else {
+                    peaches = min(peaches + 1, PEACHES_PER_BUBBLE)
+                    ripenBubble()
+                }
             }
         }
         when {
             trace.fallen -> fail(End.FALL)
-            trace.danger != null -> fail(if (trace.danger.kind == Danger.BEE) End.BEE else End.THORN)
+            trace.danger != null -> fail(if (trace.danger.kind == Danger.BEE) End.BEE else End.THORN, trace.danger)
             trace.landing != null -> land(trace.landing)
-            trace.thornContact != null -> fail(End.THORN)
         }
         if (phase == Phase.FLYING && y < max(20f, bottom - RADIUS)) fail(End.FALL)
         extend()
-        // Une seule ancienne prise de secours est conservée, pas toute l'ascension.
-        val recoveryId = flowers.filter { it.visited && it.alive && it.kind != FlowerKind.FRAGILE }
-            .maxByOrNull { it.y }?.id
-        flowers.removeAll { it.y < bottom - 100 && it.id != attachedId && it.id != departure && it.id != recoveryId }
+        flowers.removeAll { (it.y < bottom - 100 || !it.alive) && it.id != attachedId && it.id != departure }
         sweets.removeAll { it.y < bottom - 100 }
         hazards.removeAll { it.y < bottom - 100 }
         walls.removeAll { it.top < bottom - 100 }
+    }
+
+    /** La prise cède : Mochi tombe sans élan, la série est perdue. */
+    private fun drop() {
+        departure = attachedId
+        departureY = y
+        flightTime = 0f
+        flightBounces = 0
+        vx = 0f; vy = -30f
+        combo = 0
+        phase = Phase.FLYING
     }
 
     private fun land(landing: Landing) {
@@ -298,6 +328,7 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
         vx = 0f; vy = 0f
         attachedId = hit.id
         phase = Phase.ATTACHED
+        if (hit.life < 0f) hit.life = wiltTime(hit.row)
         if (hit.visited) {
             combo = 0
             return
@@ -311,65 +342,64 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
         highestFlower = max(highestFlower, hit.row)
         if (hit.bonus) detours++
         if (flightBounces > 0) bankShots++
-        val points = (if (hit.bonus) 30 else 10) + (if (perfect) 6 * combo + nectar * 3 else 0) + min(flightBounces, 2) * 10
+        val points = (if (hit.bonus) BONUS_POINTS else LANDING_POINTS) +
+            (if (perfect) PERFECT_POINTS * combo else 0) + min(flightBounces, 2) * BANK_POINTS
         score += points
         events += Spark(x, y, if (perfect) Effect.PERFECT else Effect.CATCH, points, flightBounces)
         if (hit.kind == FlowerKind.SANCTUARY) {
             sanctuaries++
-            offers = makeOffers(hit.id)
-            phase = Phase.CHOOSING
             events += Spark(x, y, Effect.REST)
+            gainBubble()
         }
     }
 
-    private fun makeOffers(id: Int): List<Upgrade> {
-        val eligible = listOf(Upgrade.MAGNET, Upgrade.GRIP, Upgrade.NECTAR).filter {
-            val level = when (it) {
-                Upgrade.MAGNET -> magnet
-                Upgrade.GRIP -> grip
-                else -> nectar
-            }
-            level < MAX_UPGRADE_LEVEL && (level > 0 || passiveSlotsUsed < MAX_PASSIVE_SLOTS)
-        }.shuffled(Random(seed xor (id * 7919L)))
-        val result = ArrayList<Upgrade>(3)
-        if (shields == 0) result += Upgrade.BUBBLE
-        result += eligible.take(3 - result.size)
-        if (result.size < 3) result += Upgrade.HARVEST
-        return result
+    /** Une bulle en main ; au-delà, les pêches restent prêtes pour la suivante. */
+    internal fun gainBubble() {
+        if (bubbles < 1) {
+            bubbles = 1
+            events += Spark(x, y, Effect.BUBBLE)
+        } else peaches = PEACHES_PER_BUBBLE
     }
 
-    fun chooseUpgrade(upgrade: Upgrade): Boolean {
-        if (phase != Phase.CHOOSING || upgrade !in offers) return false
-        when (upgrade) {
-            Upgrade.BUBBLE -> shields++
-            Upgrade.MAGNET -> magnet++
-            Upgrade.GRIP -> grip++
-            Upgrade.NECTAR -> nectar++
-            Upgrade.HARVEST -> {
-                score += HARVEST_POINTS
-                events += Spark(x, y, Effect.GOLD, HARVEST_POINTS)
-            }
+    private fun ripenBubble() {
+        if (peaches >= PEACHES_PER_BUBBLE && bubbles < 1) {
+            peaches = 0
+            bubbles = 1
+            events += Spark(x, y, Effect.BUBBLE)
         }
-        offers = emptyList()
-        accumulator = 0f
-        phase = Phase.ATTACHED
-        return true
     }
 
-    private fun fail(reason: End) {
-        // Aucun téléportage vers une fleur encore inconnue, ni vers une fleur déjà fanée.
-        val rescue = flowers.firstOrNull {
-            it.id == departure && it.visited && it.alive && it.kind != FlowerKind.FRAGILE
-        } ?: flowers.filter { it.visited && it.alive && it.kind != FlowerKind.FRAGILE && it.y <= departureY }
-            .maxByOrNull { it.y }
-        if (shields > 0 && rescue != null) {
-            shields--
-            x = rescue.at(time); y = rescue.y
-            attachedId = rescue.id
+    private fun fail(reason: End, hazard: Hazard? = null) {
+        if (bubbles > 0) {
+            bubbles--
+            ripenBubble()
+            val floor = max(20f, bottom - RADIUS)
+            if (hazard != null) {
+                // La bulle se forme à l'écart du danger : relancer ne retouche pas aussitôt l'épine.
+                val hx = hazard.at(time)
+                var nx = x - hx; var ny = y - hazard.y
+                val length = hypot(nx, ny)
+                if (length < .001f) { nx = 0f; ny = 1f } else { nx /= length; ny /= length }
+                val distance = hazard.radius + RADIUS + BUBBLE_CLEARANCE
+                x = hx + nx * distance
+                y = hazard.y + ny * distance
+            }
+            y = max(y, floor + 50f)
+            x = x.coerceIn(RADIUS + 6f, WIDTH - RADIUS - 6f)
+            for (wall in walls) if (MochiFlight.overlaps(wall, x, y, RADIUS + 2f)) y = wall.top + RADIUS + 4f
             vx = 0f; vy = 0f
             combo = 0
-            bottom = min(bottom, max(0f, y - 330f))
             phase = Phase.ATTACHED
+            // Une fleur vivante à portée : la bulle y dépose Mochi plutôt que de flotter dessus.
+            val perch = flowers.firstOrNull { it.alive && hypot(it.at(time) - x, it.y - y) < catchRadiusFor(it) + RADIUS }
+            if (perch != null) {
+                x = perch.at(time); y = perch.y
+                attachedId = perch.id
+                if (perch.life < 0f) perch.life = wiltTime(perch.row)
+            } else {
+                attachedId = BUBBLE_ID
+                bubbleLife = BUBBLE_TIME
+            }
             events += Spark(x, y, Effect.RESCUE)
         } else {
             end = reason
@@ -415,19 +445,32 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
         const val START_Y = 110f
         const val RADIUS = 17f
         const val CATCH_RADIUS = 18f
-        const val PERFECT_RADIUS = 6f
+        const val PERFECT_RADIUS = 7f
+        const val PICKUP_RADIUS = 26f
         const val GRAVITY = 760f
         const val MAX_SPEED = 650f
+        const val MIN_LAUNCH = 65f
         const val DRAG_POWER = 4.6f
         const val STEP = 1f / 120f
-        const val ROUTE_TIME = .9f
-        const val INTRO_SHOTS = 3
-        const val REST_EVERY = 10
-        const val FRAGILE_TIME = 3f
+        const val PREVIEW_STEPS = 300
+        const val PREVIEW_EVERY = 4
+        /** Les ronces renvoient toujours Mochi : aucune prise, aucun piège, aucun repos. */
+        const val MIN_BOUNCE = 220f
         const val MAX_COMBO = 5
-        const val MAX_PASSIVE_SLOTS = 2
-        const val MAX_UPGRADE_LEVEL = 3
-        const val HARVEST_POINTS = 40
+        const val BUBBLE_ID = Int.MIN_VALUE
+        const val BUBBLE_TIME = 5f
+        const val BUBBLE_RISE = 6f
+        const val BUBBLE_CLEARANCE = 34f
+        const val PEACHES_PER_BUBBLE = 6
+        const val LANDING_POINTS = 10
+        const val BONUS_POINTS = 20
+        const val PERFECT_POINTS = 10
+        const val BANK_POINTS = 10
+        const val PEACH_POINTS = 5
+        const val GOLD_POINTS = 25
+
+        /** Généreux au départ, plus pressant en altitude, jamais injouable. */
+        fun wiltTime(row: Int) = max(3.5f, 7f - row * .06f)
 
         internal fun restRowAfter(row: Int): Int = when {
             row < 10 -> 10
@@ -460,14 +503,6 @@ class MochiGame(val seed: Long = Random.nextLong(), val easyMode: Boolean = fals
             val duration = routeDuration(from, to)
             return Point((to.x - from.x) / duration,
                 (to.y - from.y) / duration + .5f * GRAVITY * duration)
-        }
-
-        private fun worstRouteSpeed(from: Flower, to: Flower): Float {
-            val dx = abs(to.x - from.x) + from.travel + to.travel
-            val a = from.copy(x = 0f)
-            val b = to.copy(x = dx)
-            val v = routeVelocity(a, b)
-            return hypot(v.x, v.y)
         }
 
         internal fun routePoint(from: Flower, velocity: Point, t: Float) =

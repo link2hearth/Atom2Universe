@@ -22,7 +22,6 @@ internal class MochiGarden(seed: Long) {
         val kind = when {
             MochiGame.isSanctuaryRow(id) -> MochiGame.FlowerKind.SANCTUARY
             id <= 3 -> MochiGame.FlowerKind.NORMAL
-            id % 8 == 0 -> MochiGame.FlowerKind.FRAGILE
             id % 12 == 5 || id >= 12 && id % 5 == 2 -> MochiGame.FlowerKind.DRIFT
             id % 11 == 7 -> MochiGame.FlowerKind.SPRING
             else -> MochiGame.FlowerKind.NORMAL
@@ -72,11 +71,8 @@ internal class MochiGarden(seed: Long) {
                 for (bx in desired) {
                     if (bx !in 50f..370f || abs(bx - target.x) < 65f) continue
                     val candidate = MochiGame.Flower(-id, bx, target.y - between(35f, 52f),
-                        kind = if (needBank) MochiGame.FlowerKind.NORMAL else when (random.nextInt(3)) {
-                            0 -> MochiGame.FlowerKind.SPRING
-                            1 -> MochiGame.FlowerKind.FRAGILE
-                            else -> MochiGame.FlowerKind.NORMAL
-                        })
+                        kind = if (!needBank && random.nextInt(3) == 0) MochiGame.FlowerKind.SPRING
+                            else MochiGame.FlowerKind.NORMAL)
                     if (walls.any { closeToFlower(it, candidate) }) continue
                     val allFlowers = existingFlowers + target + candidate
                     val entrance = solveLaunch(previous, candidate, walls, flowers = allFlowers,
@@ -192,8 +188,7 @@ internal class MochiGarden(seed: Long) {
     private fun hazard(from: MochiGame.Flower, to: MochiGame.Flower, branch: MochiGame.Flower?,
         main: Shot, entrance: Shot?, exit: Shot?, walls: List<MochiWall>): MochiGame.Hazard? {
         if (to.id < 6 || to.kind == MochiGame.FlowerKind.SANCTUARY || to.id % 4 == 0) return null
-        val kind = if ((to.id % 7 == 6 || to.id % 11 == 2) && from.kind != MochiGame.FlowerKind.FRAGILE &&
-            branch?.kind != MochiGame.FlowerKind.FRAGILE) MochiGame.Danger.BEE else MochiGame.Danger.THORN
+        val kind = if (to.id % 7 == 6 || to.id % 11 == 2) MochiGame.Danger.BEE else MochiGame.Danger.THORN
         // L'accroche peut écourter le vol : chercher une place libre avec une fenêtre de passage.
         val positions = if (kind == MochiGame.Danger.BEE) listOf(.27f, .4f, .5f, .6f, .7f) else listOf(.27f)
         val phase = between(0f, 6.28f)
@@ -268,8 +263,7 @@ internal class MochiGarden(seed: Long) {
             points += MochiGame.Point(state.x, state.y)
             var bounces = 0
             for (step in 1..210) {
-                val result = MochiFlight.step(state, MochiGame.STEP, walls)
-                val thornContact = result.hits.firstOrNull { it.ny > .99f && it.speed < 65f }
+                val result = MochiFlight.step(state, MochiGame.STEP, walls, minBounce = MochiGame.MIN_BOUNCE)
                 for (segment in result.segments) {
                     val landing = flowers.asSequence().filter {
                         it.alive && (it.id != from.id || step > 30)
@@ -287,13 +281,11 @@ internal class MochiGarden(seed: Long) {
                     if (landing != null) {
                         if (landing.first.id != to.id) return null
                         val fraction = segment.startFraction + (segment.endFraction - segment.startFraction) * landing.second
-                        if (thornContact != null && thornContact.fraction <= fraction) return null
                         bounces += result.hits.count { it.wallId >= 0 && it.speed >= 25f && it.fraction < fraction - .00001f }
                         points += MochiGame.Point(to.at(time + step * MochiGame.STEP), to.y)
                         return Shot(velocity, step * MochiGame.STEP, points, bounces)
                     }
                 }
-                if (thornContact != null) return null
                 bounces += result.hits.count { it.wallId >= 0 && it.speed >= 25f }
                 state = result.state
                 if (step % 2 == 0) points += MochiGame.Point(state.x, state.y)

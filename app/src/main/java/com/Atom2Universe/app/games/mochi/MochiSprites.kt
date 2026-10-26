@@ -15,8 +15,9 @@ internal class MochiSprites private constructor(context: Context) {
         })) { "Invalid Mochi asset: $name" }
     }
     val gardens = arrayOf(read("garden_dawn"), read("garden_sunset"), read("garden_moon"))
-    val flowers = arrayOf(read("flower_gold"), read("flower_spring"), read("flower_drift"),
-        read("flower_fragile"), read("flower_rest"))
+    /** Même ordre que [MochiGame.FlowerKind] ; la corolle corail signale un détour. */
+    val flowers = arrayOf(read("flower_gold"), read("flower_spring"), read("flower_drift"), read("flower_rest"))
+    val bonusFlower = read("flower_fragile")
     val faces = arrayOf(read("mochi_happy"), read("mochi_blink"), read("mochi_fly"), read("mochi_hurt"))
     val hero = read("mochi_hero")
     val leaves = read("leaves")

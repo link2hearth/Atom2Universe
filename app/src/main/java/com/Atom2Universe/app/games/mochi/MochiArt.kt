@@ -74,8 +74,9 @@ internal class MochiArt(context: Context) {
         }
     }
 
+    /** [life] de 1 à 0 : la fleur fane sous Mochi ; négatif quand rien ne presse. */
     fun flower(c: Canvas, x: Float, y: Float, visited: Boolean, active: Boolean, time: Float,
-        kind: MochiGame.FlowerKind = MochiGame.FlowerKind.NORMAL, life: Float = 1f) {
+        kind: MochiGame.FlowerKind = MochiGame.FlowerKind.NORMAL, life: Float = -1f, bonus: Boolean = false) {
         val edge = if (x < 210f) -15f else 435f
         path.reset(); path.moveTo(edge, y + 105)
         path.cubicTo(edge + (x - edge) * .6f, y + 82, x - 18, y + 62, x, y + 15)
@@ -89,21 +90,27 @@ internal class MochiArt(context: Context) {
         if (active || sanctuary) halo(c, x, y + 12, if (sanctuary) 70f else 55f, .7f)
         c.save(); c.translate(x, y + 12)
         c.rotate(sin(time * .9f + x) * 3f)
+        val wilting = active && life in 0f..1f
+        // La fleur se referme et pâlit : la pression se lit sans compteur.
+        val droop = if (wilting) (1f - life) * .22f else 0f
         val pulse = 1f + sin(time * 2f + x) * if (sanctuary) .035f else .012f
-        c.scale(pulse, pulse)
+        c.scale(pulse * (1f - droop), pulse * (1f - droop * 1.6f))
+        if (wilting && life < .3f) c.rotate(sin(time * 14f) * (1f - life / .3f) * 4f)
         val size = if (sanctuary) 94f else 79f
-        sprite(c, sprites.flowers[kind.ordinal], 0f, 0f, size, alpha = if (visited && !active) 215 else 255)
+        val alpha = if (visited && !active) 215 else if (wilting) (150 + 105 * life).toInt() else 255
+        val image = if (bonus && kind == MochiGame.FlowerKind.NORMAL) sprites.bonusFlower else sprites.flowers[kind.ordinal]
+        sprite(c, image, 0f, 0f, size, alpha = alpha)
         if (visited && !active) {
             p.color = 0xDD255C51.toInt(); c.drawCircle(21f, 24f, 8f, p)
             p.style = Paint.Style.STROKE; p.strokeWidth = 1.8f; p.color = 0xFFDCF6B6.toInt()
             path.reset(); path.moveTo(17f, 24f); path.lineTo(20f, 27f); path.lineTo(25f, 21f)
             c.drawPath(path, p); p.style = Paint.Style.FILL
         }
-        if (active && kind == MochiGame.FlowerKind.FRAGILE) {
+        if (wilting) {
             p.style = Paint.Style.STROKE; p.strokeWidth = 4f
             p.color = 0x883F354C.toInt(); c.drawCircle(0f, 0f, 43f, p)
             p.color = if (life < .3f) 0xFFFF8699.toInt() else 0xFFFFEDC5.toInt()
-            c.drawArc(-43f, -43f, 43f, 43f, -90f, life.coerceIn(0f, 1f) * 360, false, p)
+            c.drawArc(-43f, -43f, 43f, 43f, -90f, life * 360, false, p)
             p.style = Paint.Style.FILL
         }
         if (sanctuary || kind == MochiGame.FlowerKind.SPRING) {
@@ -185,6 +192,59 @@ internal class MochiArt(context: Context) {
         }]
         sprite(c, image, gaze.coerceIn(-1f, 1f) * .7f, -7f, 69f)
         c.restore()
+    }
+
+    /** Cible de l'arc : la fleur qui attrapera Mochi si le doigt lâche maintenant. */
+    fun target(c: Canvas, x: Float, y: Float, time: Float) {
+        val breath = 1f + sin(time * 6f) * .06f
+        halo(c, x, y + 12f, 62f * breath, .55f)
+        p.style = Paint.Style.STROKE; p.strokeWidth = 3f
+        p.color = 0xFFFFF3C4.toInt()
+        c.drawCircle(x, y + 12f, 46f * breath, p)
+        p.style = Paint.Style.FILL
+    }
+
+    /** Croix rouge au bout de l'arc : ce tir touche une épine ou une abeille. */
+    fun cross(c: Canvas, x: Float, y: Float, time: Float) {
+        val r = 11f + sin(time * 8f) * 1.5f
+        p.style = Paint.Style.STROKE; p.strokeCap = Paint.Cap.ROUND
+        p.color = 0xCC5A2232.toInt(); p.strokeWidth = 7f
+        c.drawLine(x - r, y - r, x + r, y + r, p); c.drawLine(x - r, y + r, x + r, y - r, p)
+        p.color = 0xFFFF8699.toInt(); p.strokeWidth = 3.5f
+        c.drawLine(x - r, y - r, x + r, y + r, p); c.drawLine(x - r, y + r, x + r, y - r, p)
+        p.style = Paint.Style.FILL
+    }
+
+    /** Bulle de rosée qui retient Mochi ; elle tremble quand elle va éclater. */
+    fun bubble(c: Canvas, x: Float, y: Float, time: Float, life: Float) {
+        val shiver = if (life < .3f) sin(time * 30f) * (1f - life / .3f) * 2.5f else 0f
+        val r = 40f + sin(time * 3f) * 1.5f + shiver
+        c.save(); c.translate(x, y - 4f)
+        c.scale(1f + sin(time * 4f) * .03f, 1f - sin(time * 4f) * .03f)
+        halo(c, 0f, 0f, r * 1.3f, .5f, true)
+        p.style = Paint.Style.FILL; p.color = 0x33DDFFFF
+        c.drawCircle(0f, 0f, r, p)
+        p.style = Paint.Style.STROKE; p.strokeWidth = 2.2f; p.color = 0xC8EFFFFF.toInt()
+        c.drawCircle(0f, 0f, r, p)
+        p.strokeWidth = 3.2f; p.color = 0xF0FFFFFF.toInt()
+        c.drawArc(-r * .8f, -r * .8f, r * .8f, r * .8f, 205f, 45f, false, p)
+        p.style = Paint.Style.FILL
+        sparkle(c, r * .55f, -r * .6f, 4f, 0xFFF6FFFF.toInt())
+        c.restore()
+    }
+
+    /** Doigt fantôme qui montre le geste avant le premier tir. */
+    fun finger(c: Canvas, x: Float, y: Float, fromX: Float, fromY: Float, alpha: Float) {
+        val a = (alpha.coerceIn(0f, 1f) * 255).toInt()
+        p.style = Paint.Style.STROKE; p.strokeWidth = 3f; p.strokeCap = Paint.Cap.ROUND
+        p.color = 0xFFFFE7B8.toInt(); p.alpha = a / 2
+        c.drawLine(fromX, fromY, x, y, p)
+        p.style = Paint.Style.FILL
+        p.color = 0xFFFFF4DD.toInt(); p.alpha = a * 2 / 3
+        c.drawCircle(x, y, 17f, p)
+        p.color = 0xFF2E5A55.toInt(); p.alpha = a
+        c.drawCircle(x, y, 6f, p)
+        p.alpha = 255
     }
 
     fun sweet(c: Canvas, x: Float, y: Float, time: Float, golden: Boolean = false) {

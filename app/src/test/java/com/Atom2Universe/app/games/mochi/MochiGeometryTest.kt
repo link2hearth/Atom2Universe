@@ -11,7 +11,7 @@ class MochiGeometryTest {
         MochiWall(701, 130f, 180f, 220f, 200f)
     )
 
-    private fun bankGarden(): MochiGame = MochiGame(31, easyMode = true).also { g ->
+    private fun bankGarden(): MochiGame = MochiGame(31).also { g ->
         g.flowers.clear()
         g.flowers += MochiGame.Flower(0, 210f, MochiGame.START_Y, visited = true)
         // À t=.9 : après un rebond à x=273, vx passe de 300 à -282.
@@ -76,12 +76,15 @@ class MochiGeometryTest {
         assertEquals(0f, g.time, 0f)
         assertEquals(0, g.score)
         assertEquals(0, g.flightBounces)
-        assertTrue(preview.size >= 16)
+        assertEquals(MochiGame.Outcome.LAND, preview.outcome)
+        assertEquals(1, preview.flowerId)
+        assertTrue(preview.points.size >= 16)
         shoot(g, 300f, 550f)
+        val every = MochiGame.PREVIEW_EVERY
         repeat(80) { tick ->
             step(g)
-            if ((tick + 1) % 5 == 0) {
-                val point = preview[(tick + 1) / 5 - 1]
+            if ((tick + 1) % every == 0) {
+                val point = preview.points[(tick + 1) / every - 1]
                 assertEquals("Guide x après ${tick + 1} pas", point.x, g.x, .002f)
                 assertEquals("Guide y après ${tick + 1} pas", point.y, g.y, .002f)
             }
@@ -91,25 +94,30 @@ class MochiGeometryTest {
         assertEquals(MochiGame.Phase.FLYING, g.phase)
     }
 
-    @Test fun obstacleTopsBounceButNeverBecomeLaunchPoints() {
+    @Test fun obstacleTopsAlwaysBounceMochiOffInsteadOfTrappingHim() {
         val g = MochiGame(2)
         g.flowers.removeAll { it.id != 0 }
         g.hazards.clear(); g.sweets.clear(); g.walls.clear()
-        g.walls += MochiWall(777, 0f, 40f, 420f, 60f)
-        shoot(g, 100f, 100f)
-        var bounced = false
+        // Mochi passe au-dessus du bord gauche et retombe sur le sommet plat.
+        g.walls += MochiWall(777, 290f, 160f, 410f, 180f)
+        shoot(g, 150f, 420f)
+        var bounces = 0
         var ticks = 0
-        while (g.phase == MochiGame.Phase.FLYING && ticks++ < 360) {
+        var highestAfterFirstBounce = 0f
+        while (g.phase == MochiGame.Phase.FLYING && ticks++ < 600) {
             g.update(MochiGame.STEP)
-            bounced = bounced || g.events.any { it.effect == MochiGame.Effect.BOUNCE }
-            assertFalse("On ne peut jamais se relancer depuis les ronces", g.launch(0f, 100f))
+            g.flowers.removeAll { it.id != 0 }
+            g.hazards.clear(); g.sweets.clear(); g.walls.removeAll { it.id != 777 }
+            if (g.events.any { it.effect == MochiGame.Effect.BOUNCE }) bounces++
+            if (bounces > 0) highestAfterFirstBounce = max(highestAfterFirstBounce, g.y)
+            if (g.phase == MochiGame.Phase.FLYING) assertFalse("On ne peut jamais se relancer depuis les ronces", g.launch(0f, 100f))
         }
-        assertTrue("Les rebonds sont conserves", bounced)
-        assertEquals(MochiGame.Phase.OVER, g.phase)
-        assertEquals(MochiGame.End.THORN, g.end)
-        assertEquals(0, g.caught)
-        assertEquals(0, g.score)
+        assertTrue("Les rebonds sont conservés", bounces > 0)
+        assertTrue("Un sommet plat repousse Mochi de côté au lieu de le garder", ticks < 600)
+        assertTrue("Chaque rebond garde une vraie hauteur", highestAfterFirstBounce > 180f + MochiGame.RADIUS + 20f)
+        assertTrue(g.phase == MochiGame.Phase.ATTACHED || g.end == MochiGame.End.FALL)
     }
+
     @Test fun aShelfBelowTheFallLineCannotTrapMochiOffScreen() {
         val g = MochiGame(2)
         g.flowers.removeAll { it.id != 0 }
@@ -121,7 +129,6 @@ class MochiGeometryTest {
         repeat(90) { g.update(MochiGame.STEP) }
         assertEquals(MochiGame.Phase.OVER, g.phase)
         assertEquals(MochiGame.End.FALL, g.end)
-
     }
 
     @Test fun aBankShotIsIndependentOfTheDisplayRefreshRate() {

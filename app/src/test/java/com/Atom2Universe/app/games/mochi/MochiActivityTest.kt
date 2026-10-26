@@ -6,8 +6,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import com.Atom2Universe.app.R
 import org.junit.Assert.*
 import org.junit.Before
@@ -18,7 +16,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
-/** Intégration des vrais contrôles : choix du mode, annulation tactile et pause. */
+/** Intégration des vrais contrôles : annulation tactile, pause et record. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [33], application = Application::class, qualifiers = "w412dp-h820dp-port")
 class MochiActivityTest {
@@ -46,27 +44,7 @@ class MochiActivityTest {
         event.recycle()
     }
 
-    @Test fun normalIsDefaultAndEasyChoicePersistsWithoutChangingTheOldRecord() {
-        prefs.edit().putInt("best", 250).commit()
-        val first = Robolectric.buildActivity(MochiActivity::class.java).setup()
-        try {
-            val activity = first.get()
-            val toggle = views(activity).filterIsInstance<SwitchCompat>().single()
-            assertFalse(toggle.isChecked)
-            toggle.isChecked = true
-            click(activity, R.string.mochi_play)
-            assertTrue(views(activity).filterIsInstance<MochiView>().single().game.easyMode)
-            assertTrue(prefs.getBoolean("easy_mode", false))
-        } finally { first.pause().stop().destroy() }
-        assertEquals(250, prefs.getInt("best_easy", 0))
-        assertEquals(0, prefs.getInt("best_normal", 0))
-        val next = Robolectric.buildActivity(MochiActivity::class.java).setup()
-        try {
-            assertTrue(views(next.get()).filterIsInstance<SwitchCompat>().single().isChecked)
-        } finally { next.pause().stop().destroy() }
-    }
-
-    @Test fun cancelledGestureAndPauseDoNotSpendTheThreeGuidedLaunches() {
+    @Test fun cancelledGestureAndPauseDoNotLaunchMochi() {
         val controller = Robolectric.buildActivity(MochiActivity::class.java).setup()
         try {
             val activity = controller.get()
@@ -91,22 +69,15 @@ class MochiActivityTest {
         } finally { controller.pause().stop().destroy() }
     }
 
-    @Test fun climbingJournalKeepsProgressSeparateBetweenModes() {
-        prefs.edit().putInt("mastery_normal_chain3", 3).putInt("mastery_normal_rest1", 1).commit()
+    @Test fun theRecordSurvivesLeavingTheActivity() {
+        prefs.edit().putInt("best", 250).commit()
         val controller = Robolectric.buildActivity(MochiActivity::class.java).setup()
         try {
             val activity = controller.get()
-            fun displayedJournal(completed: Int, easy: Boolean, challenge: String) = activity.getString(
-                R.string.mochi_mastery, completed, 6,
-                activity.getString(if (easy) R.string.mochi_mode_easy else R.string.mochi_mode_normal), challenge)
-            val normal = displayedJournal(2, false, activity.getString(R.string.mochi_mastery_next,
-                activity.getString(R.string.mochi_goal_detours, 2), 0, 2))
-            assertTrue(views(activity).filterIsInstance<TextView>().any { it.text.toString() == normal })
-            views(activity).filterIsInstance<SwitchCompat>().single().isChecked = true
-            val easy = displayedJournal(0, true, activity.getString(R.string.mochi_mastery_next,
-                activity.getString(R.string.mochi_goal_chain, 3), 0, 3))
-            assertTrue(views(activity).filterIsInstance<TextView>().any { it.text.toString() == easy })
-            assertEquals(3, prefs.getInt("mastery_normal_chain3", 0))
+            click(activity, R.string.mochi_play)
+            val view = views(activity).filterIsInstance<MochiView>().single()
+            assertEquals(0, view.game.score)
         } finally { controller.pause().stop().destroy() }
+        assertEquals(250, prefs.getInt("best", 0))
     }
 }

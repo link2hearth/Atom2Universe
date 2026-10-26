@@ -18,7 +18,7 @@ class MochiGameTest {
         var state = MochiFlight.State(g.x, g.y, velocity.x, velocity.y)
         val hits = mutableSetOf<MochiGame.Hazard>()
         for (step in 0..ceil(duration / MochiGame.STEP).toInt()) {
-            val flight = MochiFlight.step(state, MochiGame.STEP, g.walls)
+            val flight = MochiFlight.step(state, MochiGame.STEP, g.walls, minBounce = MochiGame.MIN_BOUNCE)
             for (segment in flight.segments) {
                 val start = startTime + (step + segment.startFraction) * MochiGame.STEP
                 val end = startTime + (step + segment.endFraction) * MochiGame.STEP
@@ -32,22 +32,28 @@ class MochiGameTest {
         return hits
     }
 
+    /** update() plafonne chaque appel à 0,1 s : simuler une vraie attente demande plusieurs appels. */
+    private fun wait(g: MochiGame, seconds: Float) {
+        var left = seconds
+        while (left > 0f) { g.update(min(.1f, left)); left -= .1f }
+    }
+
     private fun segmentDistance(x: Float, y: Float, ax: Float, ay: Float, bx: Float, by: Float): Float {
         val dx = bx - ax; val dy = by - ay
         val t = (((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy).coerceAtLeast(.00001f)).coerceIn(0f, 1f)
         return hypot(x - ax - t * dx, y - ay - t * dy)
     }
 
-    private fun advanceToNext(g: MochiGame, choose: Boolean = true) {
-        advanceTo(g, g.flowers.first { it.id == g.attachedId + 1 }, choose)
+    private fun advanceToNext(g: MochiGame) {
+        advanceTo(g, g.flowers.first { it.id == g.attachedId + 1 })
     }
 
-    private fun advanceTo(g: MochiGame, next: MochiGame.Flower, choose: Boolean = true) {
+    private fun advanceTo(g: MochiGame, next: MochiGame.Flower) {
         val from = g.flowers.first { it.id == g.attachedId }
         var v = safeShot(g, next)
         var waits = 0
-        val maxWaits = if (from.kind == MochiGame.FlowerKind.FRAGILE) 6 else 40
-        while (v == null && waits++ < maxWaits) {
+        // Les fleurs fanent : une fenêtre doit s'ouvrir bien avant que la prise ne cède.
+        while (v == null && waits++ < 25) {
             g.update(.1f)
             v = safeShot(g, next)
         }
@@ -57,10 +63,6 @@ class MochiGameTest {
         assertTrue(g.launch(-shot.x / power, shot.y / power))
         var steps = 0
         while (g.phase == MochiGame.Phase.FLYING && steps++ < 180) g.update(1f / 60f)
-        if (g.phase == MochiGame.Phase.CHOOSING && choose) {
-            assertTrue(g.chooseUpgrade(g.offers.firstOrNull { it == MochiGame.Upgrade.NECTAR } ?: g.offers.first()))
-        }
-        if (!choose && g.phase == MochiGame.Phase.CHOOSING) return
         assertEquals("seed=${g.seed}, fleur=${next.id}, fin=${g.end}", MochiGame.Phase.ATTACHED, g.phase)
         assertEquals(next.id, g.attachedId)
     }
@@ -83,54 +85,40 @@ class MochiGameTest {
     }
 
     @Test fun aGeneratedBeeMakesTheSameJumpUnsafeThenSafeAfterWaiting() {
-        // Une vraie section générée et une bulle permettent de tester les deux départs
-        // dans le même monde, sans ajouter artificiellement un danger sur la trajectoire.
         var beesSeen = false
-        // Cette graine comporte une abeille entre les fleurs fixes 34 et 35.
-        for (seed in listOf(10L)) {
+        for (seed in listOf(10L, 3L, 27L)) {
             val g = MochiGame(seed)
-            // Plusieurs sections sont nécessaires pour rencontrer une paire fixe
-            // avec un passage d'abeille après l'obtention du premier secours.
             repeat(40) {
                 val from = requireNotNull(g.attachedFlower)
                 val next = g.flowers.first { it.id == from.id + 1 }
                 beesSeen = beesSeen || g.hazards.any { it.kind == MochiGame.Danger.BEE }
-                if (g.shields == 1 && from.kind != MochiGame.FlowerKind.FRAGILE &&
-                    from.kind != MochiGame.FlowerKind.DRIFT && next.kind != MochiGame.FlowerKind.DRIFT) {
+                if (from.kind != MochiGame.FlowerKind.DRIFT && next.kind != MochiGame.FlowerKind.DRIFT) {
                     val shot = requireNotNull(MochiGarden.solveLaunch(from, next, g.walls, g.time, g.flowers, catchRadius = g.catchRadius))
                     val velocity = shot.velocity
                     fun contacts(startTime: Float, safetyMargin: Float) =
                         contacts(g, velocity, shot.duration, startTime, safetyMargin)
-                    val badDelay = (0..36).firstOrNull { delay ->
+                    val badDelay = (0..20).firstOrNull { delay ->
                         val hits = contacts(g.time + delay * .1f, -2f)
                         hits.isNotEmpty() && hits.all { it.kind == MochiGame.Danger.BEE }
                     }
-                    val hasWindow = (0..36).any { contacts(g.time + it * .1f, 2f).isEmpty() }
+                    val hasWindow = (0..20).any { contacts(g.time + it * .1f, 2f).isEmpty() }
                     if (badDelay != null && hasWindow) {
+                        g.gainBubble()
+                        val peachesBefore = g.peaches
                         repeat(badDelay) { g.update(.1f) }
                         val power = MochiGame.DRAG_POWER * g.launchPower
                         assertTrue(g.launch(-velocity.x / power, velocity.y / power))
                         var ticks = 0
                         while (g.phase == MochiGame.Phase.FLYING && ticks++ < 240) g.update(MochiGame.STEP)
-                        assertEquals("L'abeille doit réellement consommer le secours", 0, g.shields)
-                        assertEquals(from.id, g.attachedId)
-                        assertEquals(MochiGame.Phase.ATTACHED, g.phase)
-                        val safeDelay = (0..36).firstOrNull { contacts(g.time + it * .1f, 2f).isEmpty() }
-                        assertNotNull("La même trajectoire doit avoir une fenêtre sans collision", safeDelay)
-                        repeat(requireNotNull(safeDelay)) { g.update(.1f) }
-                        assertTrue(g.launch(-velocity.x / power, velocity.y / power))
-                        ticks = 0
-                        while (g.phase == MochiGame.Phase.FLYING && ticks++ < 240) g.update(MochiGame.STEP)
-                        assertEquals("Attendre doit permettre de réussir exactement le même saut", next.id, g.attachedId)
-                        assertTrue(g.phase == MochiGame.Phase.ATTACHED || g.phase == MochiGame.Phase.CHOOSING)
+                        // La bulle est consommée ; des pêches déjà mûres peuvent aussitôt en faire une autre.
+                        assertTrue("L'abeille doit réellement consommer la bulle",
+                            g.bubbles == 0 || (g.peaches == 0 && peachesBefore >= MochiGame.PEACHES_PER_BUBBLE))
+                        assertEquals("Mochi flotte dans sa bulle ou tient une fleur voisine", MochiGame.Phase.ATTACHED, g.phase)
+                        assertTrue(g.inBubble || g.attachedFlower != null)
                         return
                     }
                 }
-                advanceToNext(g, choose = false)
-                if (g.phase == MochiGame.Phase.CHOOSING) {
-                    assertTrue(g.chooseUpgrade(if (MochiGame.Upgrade.BUBBLE in g.offers)
-                        MochiGame.Upgrade.BUBBLE else g.offers.first()))
-                }
+                advanceToNext(g)
             }
         }
         assertTrue("Les sections échantillonnées doivent générer des abeilles", beesSeen)
@@ -156,10 +144,11 @@ class MochiGameTest {
                 assertTrue("Les murs anciens doivent être libérés", g.walls.size < 40)
             }
             assertEquals(36, g.caught)
-            assertTrue(kinds.containsAll(listOf(MochiGame.FlowerKind.DRIFT, MochiGame.FlowerKind.FRAGILE,
-                MochiGame.FlowerKind.SPRING, MochiGame.FlowerKind.SANCTUARY)))
+            assertTrue(kinds.containsAll(listOf(MochiGame.FlowerKind.DRIFT, MochiGame.FlowerKind.SPRING,
+                MochiGame.FlowerKind.SANCTUARY)))
             assertTrue("Les hauteurs de saut doivent poser différents problèmes", gaps.size >= 3)
             assertEquals(listOf(10, 22, 36), rests)
+            assertEquals("Chaque fleur d'or offre une bulle", 1, g.bubbles)
         }
     }
 
@@ -190,7 +179,7 @@ class MochiGameTest {
             g.walls.clear()
         }
         assertEquals(target.id, g.attachedId)
-        assertTrue(g.phase == MochiGame.Phase.ATTACHED || g.phase == MochiGame.Phase.CHOOSING)
+        assertEquals(MochiGame.Phase.ATTACHED, g.phase)
     }
 
     @Test fun flowersCatchOnTheWayUpAndCanActuallyBeMissed() {
@@ -246,32 +235,6 @@ class MochiGameTest {
         repeat(120) { g.update(MochiGame.STEP) }
         assertEquals("Rebondir sur une prise déjà obtenue ne rapporte rien", score, g.score)
         assertEquals(2, g.perfects)
-    }
-
-    @Test fun twoPassiveFamiliesAreAChoiceAndCannotAllBeMaxed() {
-        val g = MochiGame(120)
-        repeat(14) {
-            val target = isolatedTarget(g, dx = if (it % 2 == 0) 50f else -50f, kind = MochiGame.FlowerKind.SANCTUARY)
-            landOn(g, target)
-            assertEquals(MochiGame.Phase.CHOOSING, g.phase)
-            if (g.magnet > 0 && g.grip > 0) assertFalse(MochiGame.Upgrade.NECTAR in g.offers)
-            if (g.shields == 1) assertFalse(MochiGame.Upgrade.BUBBLE in g.offers)
-            val choice = listOf(MochiGame.Upgrade.MAGNET, MochiGame.Upgrade.GRIP,
-                MochiGame.Upgrade.BUBBLE, MochiGame.Upgrade.HARVEST).firstOrNull { option -> option in g.offers }
-            assertNotNull("Une halte doit toujours proposer un choix utile", choice)
-            assertTrue(g.chooseUpgrade(requireNotNull(choice)))
-            assertTrue(g.passiveSlotsUsed <= 2)
-            assertTrue(g.magnet <= 3 && g.grip <= 3 && g.nectar <= 3 && g.shields <= 1)
-        }
-        assertEquals(3, g.magnet)
-        assertEquals(3, g.grip)
-        assertEquals(0, g.nectar)
-        val target = isolatedTarget(g, dx = 0f, kind = MochiGame.FlowerKind.SANCTUARY)
-        landOn(g, target)
-        assertEquals(listOf(MochiGame.Upgrade.HARVEST), g.offers)
-        val before = g.score
-        assertTrue(g.chooseUpgrade(MochiGame.Upgrade.HARVEST))
-        assertEquals(before + MochiGame.HARVEST_POINTS, g.score)
     }
 
     @Test fun sameSeedAndInputsReproduceTheGarden() {
@@ -340,9 +303,25 @@ class MochiGameTest {
         assertEquals(MochiGame.START_Y, g.y, 0f)
         assertEquals(MochiGame.Phase.ATTACHED, g.phase)
         assertTrue(g.launch(0f, 140f))
-        repeat(5) { g.update(MochiGame.STEP) }
-        assertEquals(preview.first().x, g.x, .001f)
-        assertEquals(preview.first().y, g.y, .001f)
+        repeat(MochiGame.PREVIEW_EVERY) { g.update(MochiGame.STEP) }
+        assertEquals(preview.points.first().x, g.x, .001f)
+        assertEquals(preview.points.first().y, g.y, .001f)
+        assertEquals(MochiGame.Preview.EMPTY, g.preview(0f, 140f))
+    }
+
+    @Test fun thePreviewNamesTheFlowerThatWillCatchMochi() {
+        val g = MochiGame(5)
+        val target = g.flowers.first { it.id == 1 }
+        val shot = requireNotNull(MochiGarden.solveLaunch(g.flowers[0], target, g.walls, 0f, g.flowers))
+        val preview = g.preview(-shot.velocity.x / MochiGame.DRAG_POWER, shot.velocity.y / MochiGame.DRAG_POWER)
+        assertEquals(MochiGame.Outcome.LAND, preview.outcome)
+        assertEquals(1, preview.flowerId)
+        val last = preview.points.last()
+        assertTrue(hypot(last.x - target.x, last.y - target.y) <= g.catchRadiusFor(target) + .01f)
+        assertEquals(MochiGame.Outcome.FALL, g.preview(0f, -100f).outcome)
+        g.hazards.clear()
+        g.hazards += MochiGame.Hazard(g.x, g.y + 85f, MochiGame.Danger.THORN, 0f)
+        assertEquals(MochiGame.Outcome.DANGER, g.preview(0f, 110f).outcome)
     }
 
     @Test fun hazardContactsEndTheFlight() {
@@ -357,58 +336,117 @@ class MochiGameTest {
         }
     }
 
-    @Test fun normalGuideBecomesShortAfterThreeActualLaunches() {
-        val g = MochiGame(1)
-        val fullSize = g.preview(0f, 110f).size
-        repeat(3) {
-            assertTrue(g.showTrajectory)
-            assertTrue(g.preview(0f, 110f).isNotEmpty())
-            assertFalse(g.launch(0f, 0f))
-            assertEquals(it, g.shots)
-            assertTrue(g.launch(0f, 18f))
-            repeat(120) { g.update(MochiGame.STEP) }
-        }
+    @Test fun flowersWiltUnderMochiButTheStartAndGoldenOnesWait() {
+        val g = MochiGame(4)
+        wait(g, MochiGame.wiltTime(0) + 2f)
+        assertEquals("La fleur de départ attend le premier tir", MochiGame.Phase.ATTACHED, g.phase)
+        assertTrue(g.wiltFraction < 0f)
+
+        val target = isolatedTarget(g)
+        landOn(g, target)
+        assertEquals(1f, g.wiltFraction, .02f)
+        wait(g, MochiGame.wiltTime(target.row) / 2f)
+        assertEquals(.5f, g.wiltFraction, .03f)
+        wait(g, MochiGame.wiltTime(target.row))
+        assertFalse(target.alive)
+        assertEquals(MochiGame.Phase.OVER, g.phase)
+        assertEquals(MochiGame.End.FALL, g.end)
+        assertEquals(0, g.combo)
+
+        val rest = MochiGame(4)
+        landOn(rest, isolatedTarget(rest, kind = MochiGame.FlowerKind.SANCTUARY))
+        assertEquals(1, rest.bubbles)
+        wait(rest, 30f)
+        assertEquals(MochiGame.Phase.ATTACHED, rest.phase)
+        assertTrue(rest.wiltFraction < 0f)
+        assertTrue("La pression grandit avec l'altitude", MochiGame.wiltTime(40) < MochiGame.wiltTime(0))
+        assertEquals(MochiGame.wiltTime(500), MochiGame.wiltTime(1000), 0f)
+    }
+
+    @Test fun aBubbleCatchesTheFallAndMochiRelaunchesFromIt() {
+        val g = MochiGame(7)
+        g.gainBubble()
+        g.hazards.clear()
+        assertTrue(g.launch(0f, -100f))
+        repeat(120) { g.update(1f / 60f) }
         assertEquals(MochiGame.Phase.ATTACHED, g.phase)
-        assertFalse(g.showTrajectory)
-        val shortGuide = g.preview(0f, 110f)
-        assertTrue(shortGuide.isNotEmpty())
-        assertTrue("Le guide normal montre seulement l'impulsion", shortGuide.size < fullSize / 2)
+        assertTrue(g.inBubble)
+        assertEquals(0, g.bubbles)
+        assertTrue("La bulle se forme au bord bas de l'écran", g.y < MochiGame.START_Y)
+        assertTrue(g.y >= g.bottom)
+        val preview = g.preview(0f, 140f)
+        assertTrue(preview.points.isNotEmpty())
+        assertTrue(g.launch(0f, 140f))
+        assertEquals(MochiGame.Phase.FLYING, g.phase)
+        assertFalse(g.inBubble)
     }
 
-    @Test fun easyModeKeepsTheGuideAfterTheTutorial() {
-        val g = MochiGame(1, easyMode = true)
-        repeat(6) {
-            assertTrue(g.launch(0f, 18f))
-            repeat(120) { g.update(MochiGame.STEP) }
-        }
-        assertEquals(6, g.shots)
-        assertTrue(g.showTrajectory)
-        assertTrue(g.preview(0f, 110f).isNotEmpty())
+    @Test fun aBubblePopsAfterAWhileAndTheFallThenEndsTheRun() {
+        val g = MochiGame(7)
+        g.gainBubble()
+        g.hazards.clear()
+        assertTrue(g.launch(0f, -100f))
+        var ticks = 0
+        while (!g.inBubble && ticks++ < 120) g.update(1f / 60f)
+        assertTrue(g.inBubble)
+        assertEquals(1f, g.wiltFraction, .02f)
+        // La bulle dérive lentement vers le haut : sans fleur à portée, sa fin est une chute.
+        g.flowers.clear()
+        wait(g, MochiGame.BUBBLE_TIME + .5f)
+        repeat(120) { g.update(1f / 60f) }
+        assertEquals(MochiGame.Phase.OVER, g.phase)
+        assertEquals(MochiGame.End.FALL, g.end)
     }
 
-    private fun rest(seed: Long): MochiGame = MochiGame(seed).also { g ->
-        repeat(MochiGame.REST_EVERY) { advanceToNext(g, choose = false) }
-    }
-
-    @Test fun sanctuaryFreezesTheWorldAndAcceptsOnlyOneGift() {
-        val g = rest(5)
-        assertEquals(MochiGame.Phase.CHOOSING, g.phase)
-        assertEquals(3, g.offers.size)
-        assertEquals(3, g.offers.distinct().size)
-        val time = g.time
-        repeat(30) { g.update(.1f) }
-        assertEquals(time, g.time, 0f)
-        assertFalse(g.launch(0f, 100f))
-        val unavailable = MochiGame.Upgrade.entries.first { it !in g.offers }
-        assertFalse(g.chooseUpgrade(unavailable))
-        val gift = g.offers.first()
-        assertTrue(g.chooseUpgrade(gift))
+    @Test fun aThornSpendsTheBubbleAndTheBubbleFormsAwayFromIt() {
+        val g = MochiGame(2)
+        g.gainBubble()
+        assertEquals(1, g.bubbles)
+        g.hazards.clear()
+        // Assez haut pour que la bulle se forme hors de portée de la fleur de départ.
+        val thorn = MochiGame.Hazard(g.x, g.y + 120f, MochiGame.Danger.THORN, 0f)
+        g.hazards += thorn
+        g.launch(0f, 110f)
+        repeat(40) { g.update(MochiGame.STEP) }
         assertEquals(MochiGame.Phase.ATTACHED, g.phase)
-        assertFalse(g.chooseUpgrade(gift))
-        assertEquals(1, g.shields + g.magnet + g.grip + g.nectar)
+        assertTrue(g.inBubble)
+        assertEquals(0, g.bubbles)
+        // La bulle flotte lentement vers le haut après sa formation : quelques unités de marge.
+        assertTrue(hypot(g.x - thorn.x, g.y - thorn.y) >= thorn.radius + MochiGame.RADIUS + MochiGame.BUBBLE_CLEARANCE - 4f)
+        assertEquals(MochiGame.Outcome.LAND, g.preview(0f, -40f).outcome)
+        g.launch(0f, 110f)
+        repeat(40) { g.update(MochiGame.STEP) }
+        assertEquals(MochiGame.Phase.OVER, g.phase)
+        assertEquals(MochiGame.End.THORN, g.end)
     }
 
-    @Test fun movingAndFragilePerchesHaveDifferentConsequences() {
+    @Test fun peachesRipenABubbleAndAStarFruitGivesOneAtOnce() {
+        val g = MochiGame(99)
+        g.sweets.clear()
+        g.hazards.clear()
+        repeat(MochiGame.PEACHES_PER_BUBBLE) { g.sweets += MochiGame.Sweet(g.x, g.y + 30f + it * 8f) }
+        g.launch(0f, 100f)
+        repeat(24) { g.update(MochiGame.STEP) }
+        assertEquals(MochiGame.PEACHES_PER_BUBBLE, g.treats)
+        assertEquals(MochiGame.PEACHES_PER_BUBBLE * MochiGame.PEACH_POINTS, g.score)
+        assertEquals(1, g.bubbles)
+        assertEquals(0, g.peaches)
+
+        val gold = MochiGame(99)
+        gold.sweets.clear()
+        gold.hazards.clear()
+        val fruit = MochiGame.Sweet(gold.x, gold.y + 65f, golden = true)
+        gold.sweets += fruit
+        gold.launch(0f, 100f)
+        repeat(24) { gold.update(MochiGame.STEP) }
+        assertTrue(fruit.taken)
+        assertEquals(MochiGame.GOLD_POINTS, gold.score)
+        assertEquals(1, gold.bubbles)
+        repeat(120) { gold.update(MochiGame.STEP) }
+        assertEquals(1, gold.treats)
+    }
+
+    @Test fun movingPerchesCarryMochiAndTheSpringBoostIsPreviewed() {
         val drift = MochiGame(4)
         drift.flowers[0] = drift.flowers[0].copy(kind = MochiGame.FlowerKind.DRIFT)
         val oldX = drift.x
@@ -417,16 +455,6 @@ class MochiGameTest {
         assertEquals(drift.flowers[0].at(drift.time), drift.x, .001f)
         assertEquals(MochiGame.START_Y, drift.y, .001f)
 
-        val fragile = MochiGame(4)
-        fragile.flowers[0] = fragile.flowers[0].copy(kind = MochiGame.FlowerKind.FRAGILE, life = .05f)
-        fragile.update(.1f)
-        assertFalse(fragile.flowers[0].alive)
-        assertEquals(MochiGame.Phase.FLYING, fragile.phase)
-        assertEquals(0, fragile.shots)
-        assertTrue(fragile.y < MochiGame.START_Y)
-    }
-
-    @Test fun springBoostIsIncludedInThePreviewAndTheLaunch() {
         val g = MochiGame(2)
         val ordinary = g.velocityForDrag(0f, 100f)
         g.flowers[0] = g.flowers[0].copy(kind = MochiGame.FlowerKind.SPRING)
@@ -434,61 +462,7 @@ class MochiGameTest {
         assertEquals(ordinary.y * 1.2f, boosted.y, .001f)
         val preview = g.preview(0f, 100f)
         g.launch(0f, 100f)
-        repeat(5) { g.update(MochiGame.STEP) }
-        assertEquals(preview.first().y, g.y, .001f)
-    }
-
-    @Test fun bubbleRescuesOnceWithoutPayingAgainForThePerch() {
-        val g = (0L..10L).asSequence().map { seed ->
-            MochiGame(seed).also { landOn(it, isolatedTarget(it, kind = MochiGame.FlowerKind.SANCTUARY)) }
-        }.first { MochiGame.Upgrade.BUBBLE in it.offers }
-        assertTrue(g.chooseUpgrade(MochiGame.Upgrade.BUBBLE))
-        val perch = g.attachedId
-        val catches = g.caught
-        g.hazards.clear()
-        g.hazards += MochiGame.Hazard(g.x, g.y + 80f, MochiGame.Danger.THORN, 0f)
-        g.launch(0f, 100f)
-        repeat(30) { g.update(MochiGame.STEP) }
-        assertEquals(MochiGame.Phase.ATTACHED, g.phase)
-        assertEquals(perch, g.attachedId)
-        assertEquals(catches, g.caught)
-        assertEquals(0, g.shields)
-        assertTrue(g.offers.isEmpty())
-        g.launch(0f, 100f)
-        repeat(30) { g.update(MochiGame.STEP) }
-        assertEquals(MochiGame.Phase.OVER, g.phase)
-    }
-
-    @Test fun bubbleCannotTeleportToAnUnvisitedFlowerAfterAFragileDeparture() {
-        val g = MochiGame(1)
-        landOn(g, isolatedTarget(g, kind = MochiGame.FlowerKind.SANCTUARY))
-        assertTrue(g.chooseUpgrade(MochiGame.Upgrade.BUBBLE))
-        val current = g.flowers.indexOfFirst { it.id == g.attachedId }
-        g.flowers[current] = g.flowers[current].copy(kind = MochiGame.FlowerKind.FRAGILE)
-        // Proche du départ, mais hors du saut : une fleur touchée en montant serait désormais visitée.
-        val unexplored = MochiGame.Flower(99, g.x + 40f, g.y + 20f)
-        g.flowers += unexplored
-        g.hazards += MochiGame.Hazard(g.x, g.y + 75f, MochiGame.Danger.THORN, 0f)
-        g.launch(0f, 100f)
-        repeat(45) { g.update(MochiGame.STEP) }
-        assertEquals(MochiGame.Phase.ATTACHED, g.phase)
-        assertEquals(0, g.attachedId)
-        assertFalse(unexplored.visited)
-        assertEquals(0, g.shields)
-        assertEquals(0, g.combo)
-    }
-
-    @Test fun detoursAreOptionalAndGoldenFruitPaysOnlyOnce() {
-        val g = MochiGame(99)
-        g.sweets.clear()
-        val gold = MochiGame.Sweet(g.x, g.y + 65f, golden = true)
-        g.sweets += gold
-        g.launch(0f, 100f)
-        repeat(24) { g.update(MochiGame.STEP) }
-        assertTrue(gold.taken)
-        assertEquals(25, g.score)
-        assertEquals(1, g.treats)
-        repeat(120) { g.update(MochiGame.STEP) }
-        assertEquals(1, g.treats)
+        repeat(MochiGame.PREVIEW_EVERY) { g.update(MochiGame.STEP) }
+        assertEquals(preview.points.first().y, g.y, .001f)
     }
 }

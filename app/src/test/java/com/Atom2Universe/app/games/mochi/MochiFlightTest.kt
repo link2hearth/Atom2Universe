@@ -96,6 +96,21 @@ class MochiFlightTest {
         assertEquals(result, MochiFlight.step(initial, .04f, listOf(left, right), gravity = 0f))
     }
 
+    @Test fun aMinimumBounceKeepsSlowDropsOffAWallTopAndPushesThemAside() {
+        val wall = MochiWall(20, 100f, 100f, 200f, 120f)
+        val slowDrop = MochiFlight.State(140f, 140f, 0f, -20f)
+        val resting = MochiFlight.step(slowDrop, .3f, listOf(wall))
+        assertEquals("Sans rebond minimal, un contact lent finit par se poser", 137f, resting.state.y, .5f)
+        val bounced = MochiFlight.step(slowDrop, .1f, listOf(wall), minBounce = 220f)
+        assertEquals(1, bounced.hits.size)
+        assertTrue("Le rebond repart vraiment vers le haut", bounced.state.vy > 150f)
+        assertEquals("Un sommet plat pousse Mochi vers le bord le plus proche", -60f, bounced.state.vx, .001f)
+        assertTrue(bounced.state.y > 137f)
+        val fast = MochiFlight.step(MochiFlight.State(140f, 140f, 300f, -400f), .02f, listOf(wall), minBounce = 220f)
+        assertEquals("Un vrai impact garde sa restitution et sa vitesse tangente", 300f, fast.state.vx, .001f)
+        assertTrue(fast.state.vy > 220f)
+    }
+
     @Test fun aPassageMustFitTheWholeCircleRatherThanOnlyItsCentre() {
         val initial = MochiFlight.State(210f, 150f, 0f, 500f)
         val tooNarrow = listOf(MochiWall(14, 0f, 200f, 195f, 215f),

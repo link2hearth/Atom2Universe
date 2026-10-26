@@ -42,8 +42,12 @@ internal object MochiFlight {
         return dx * dx + dy * dy < radius * radius - .001f
     }
 
+    /**
+     * [minBounce] > 0 : tout obstacle renvoie Mochi avec au moins cette vitesse normale,
+     * et un sommet plat le pousse de côté. Il ne peut alors ni se poser ni rester coincé.
+     */
     fun step(state: State, seconds: Float, walls: List<MochiWall>, gravity: Float = 760f,
-        radius: Float = 17f, width: Float = 420f): Result {
+        radius: Float = 17f, width: Float = 420f, minBounce: Float = 0f): Result {
         if (seconds <= 0f || !seconds.isFinite() || !gravity.isFinite() ||
             !state.x.isFinite() || !state.y.isFinite() || !state.vx.isFinite() || !state.vy.isFinite()) {
             return Result(state, emptyList(), emptyList())
@@ -107,9 +111,19 @@ internal object MochiFlight {
                 vx -= (1.0 + contact.restitution) * normalSpeed * contact.nx
                 vy -= (1.0 + contact.restitution) * normalSpeed * contact.ny
             }
-            // Un repos infinitésimal ne déclenche pas une infinité de rebonds à t=0.
-            // Le jeu transforme normalement ce contact en prise sur corniche.
-            if (contact.ny > .999 && abs(vy) < 2.0 && acceleration > 0.0) {
+            if (minBounce > 0f && contact.id >= 0) {
+                val outgoing = vx * contact.nx + vy * contact.ny
+                if (outgoing < minBounce) {
+                    vx += (minBounce - outgoing) * contact.nx
+                    vy += (minBounce - outgoing) * contact.ny
+                }
+                if (contact.ny > .999 && abs(vx) < 40.0) {
+                    val wall = walls.firstOrNull { it.id == contact.id }
+                    val side = if (wall == null || x >= (wall.left + wall.right) * .5) 1.0 else -1.0
+                    vx = side * 60.0
+                }
+            } else if (contact.ny > .999 && abs(vy) < 2.0 && acceleration > 0.0) {
+                // Un repos infinitésimal ne déclenche pas une infinité de rebonds à t=0.
                 vy = 0.0
                 acceleration = 0.0
             }
