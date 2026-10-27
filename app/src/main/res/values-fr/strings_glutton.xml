@@ -366,6 +366,12 @@
     <string name="glutton_item_rocky_asteroid">Astéroïde rocheux</string>
     <string name="glutton_item_binary_asteroid">Astéroïde double</string>
     <string name="glutton_item_metal_asteroid">Astéroïde métallique</string>
+    <string name="glutton_item_meteor_swarm">Essaim de météores</string>
+    <string name="glutton_item_planetesimal">Planétésimal</string>
+    <string name="glutton_item_interstellar_rock">Roche interstellaire</string>
+    <string name="glutton_item_rogue_planet">Planète vagabonde</string>
+    <string name="glutton_item_debris_cloud">Nuage de débris</string>
+    <string name="glutton_item_comet_swarm">Essaim de comètes</string>
     <string name="glutton_item_vesta">Vesta</string>
     <string name="glutton_item_ceres">Cérès</string>
     <string name="glutton_item_charon">Charon</string>

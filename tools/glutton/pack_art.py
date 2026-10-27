@@ -19,7 +19,7 @@ import sys
 from PIL import Image, ImageFilter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from prompts import PER_IMAGE, themes  # noqa: E402
+from prompts import images, themes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 DESTINATION = ROOT / "app/src/main/assets/glutton"
@@ -135,22 +135,22 @@ def main():
     ids = themes().get(args.theme) or sys.exit(f"Unknown theme {args.theme}; see GluttonCatalog.kt")
     inner = int(args.cell * .86)
     objects = {}
-    for batch in range(-(-len(ids) // PER_IMAGE)):
-        path = args.source / f"{args.theme}_{batch:02d}.png"
+    # Each image holds its own subjects (see prompts.ADDED); every object goes to its slot in the catalogue.
+    for name, subjects in images().items():
+        if name.rsplit("_", 1)[0] != args.theme:
+            continue
+        path = args.source / f"{name}.png"
         if not path.exists():
             print(f"warning: {path.name} missing", file=sys.stderr)
             continue
         image = Image.open(path).convert("RGBA")
         zones = segment(image, args.threshold)
-        for slot, zone in enumerate(zones):
-            index = batch * PER_IMAGE + slot
-            if index >= len(ids):
-                break
+        for zone, subject in zip(zones, subjects):
             piece = cut(image, zone, args.threshold) if zone else None
             if piece is None:
-                print(f"warning: {path.name} zone {slot + 1} ({ids[index]}) is empty", file=sys.stderr)
+                print(f"warning: {path.name} has no {subject}", file=sys.stderr)
             else:
-                objects[index] = piece
+                objects[ids.index(subject)] = piece
     DESTINATION.mkdir(parents=True, exist_ok=True)
     for page in range(-(-len(ids) // PAGE)):
         atlas = Image.new("RGBA", (args.cell * COLUMNS, args.cell * ROWS))

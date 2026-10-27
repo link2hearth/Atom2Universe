@@ -75,14 +75,15 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         val (loose, fixed) = ring.placements.partition { it.prop.role in LOOSE }
         ring.placements.clear()
         for (p in fixed) { ring.placements += p; kept.add(p, p.x, p.y, p.radius) }
+        // The house is small and its crumbs are all there is to grow on: a little apart, never left out.
+        val spacing = if (ring.index == 0) HOUSE_SPACING else SPACING
         for (p in loose.sortedByDescending { it.radius }) {
-            // The house is small and its crumbs are all there is to grow on: spaced out, never left out.
             if (ring.index > 0 && chance(THIN)) continue
-            val reach = p.radius * (1 + SPACING)
+            val reach = p.radius * (1 + spacing)
             var free = true
             kept.query(p.x - reach, p.y - reach, p.x + reach, p.y + reach) { o ->
                 if (free) {
-                    val need = p.radius + o.radius + min(p.radius, o.radius) * SPACING
+                    val need = p.radius + o.radius + min(p.radius, o.radius) * spacing
                     if ((p.x - o.x).pow(2) + (p.y - o.y).pow(2) < need * need) free = false
                 }
             }
@@ -960,8 +961,9 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
             val prop = GluttonCatalog.byId.getValue(id)
             repeat(10) { val s = spaceSpot(); if (put(prop, s[0], s[1], prop.radius, .5) != null) return@repeat }
         }
-        // Asteroids and stray dwarf stars of every size; the named moons and dwarf planets exist once each.
-        spaceScatter(1.25) { (it.theme == Theme.PLANETS || it.theme == Theme.STARS) && (it.shape != Shape.PLANET || it.spread > 1.0) }
+        // Asteroids, then meteors and rocks adrift of every size: no star before the stars ring. The named moons and
+        // dwarf planets exist once each.
+        spaceScatter(1.25) { it.theme == Theme.PLANETS && (it.shape != Shape.PLANET || it.spread > 1.0) }
         repeat(8) {
             val s = spaceSpot(); val a = random.nextDouble() * 2 * PI; val l = max(abs(s[0]), abs(s[1])) * .6
             val lane = Lane(doubleArrayOf(s[0] - cos(a) * l, s[1] - sin(a) * l, s[0] + cos(a) * l, s[1] + sin(a) * l), false)
@@ -1034,6 +1036,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         private val LOOSE = setOf(Role.FOOD, Role.CLUTTER, Role.YARD, Role.STREET, Role.BODY)
         private const val THIN = .3
         private const val SPACING = 1.5
+        private const val HOUSE_SPACING = .7
         private val FOOD_ROLES = listOf(Role.FOOD, Role.CLUTTER)
         /** Placed by hand (the Sun, the Moon) or used as a cover (your house is also a house among others). */
         private val SPECIAL = setOf("earth", "milky_way", "sun", "moon", "hourglass")

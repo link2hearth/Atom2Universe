@@ -366,6 +366,12 @@
     <string name="glutton_item_rocky_asteroid">Rocky asteroid</string>
     <string name="glutton_item_binary_asteroid">Binary asteroid</string>
     <string name="glutton_item_metal_asteroid">Metal asteroid</string>
+    <string name="glutton_item_meteor_swarm">Meteor swarm</string>
+    <string name="glutton_item_planetesimal">Planetesimal</string>
+    <string name="glutton_item_interstellar_rock">Interstellar rock</string>
+    <string name="glutton_item_rogue_planet">Rogue planet</string>
+    <string name="glutton_item_debris_cloud">Debris cloud</string>
+    <string name="glutton_item_comet_swarm">Comet swarm</string>
     <string name="glutton_item_vesta">Vesta</string>
     <string name="glutton_item_ceres">Ceres</string>
     <string name="glutton_item_charon">Charon</string>

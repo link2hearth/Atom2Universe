@@ -383,6 +383,8 @@ object GluttonCatalog {
             p("charon", 1212e3, PLANET, BODY)
             p("eris", 2326e3, PLANET, BODY)
             p("pluto", 2377e3, PLANET, BODY)
+            // Rocks adrift (meteors, planetesimals, rogue worlds): what there is to eat past the asteroids, before any star.
+            p("meteor_swarm", 2.5e6, BLOB, BODY, spread = 2.5)
             p("triton", 2707e3, PLANET, BODY)
             p("europa", 3122e3, PLANET, BODY)
             p("moon", 3474e3, PLANET, BODY, ORBIT, 1.0)
@@ -392,12 +394,17 @@ object GluttonCatalog {
             p("titan", 5150e3, PLANET, BODY)
             p("ganymede", 5268e3, PLANET, BODY)
             p("mars", 6779e3, PLANET, BODY, ORBIT, 1.0)
+            p("planetesimal", 8e6, BLOB, BODY, spread = 2.5)
             p("venus", 12104e3, PLANET, BODY, ORBIT, 1.0)
             p("earth", 12742e3, PLANET, BODY)
+            p("interstellar_rock", 2e7, BLOB, BODY, spread = 2.5)
             p("neptune", 49244e3, PLANET, BODY, ORBIT, 1.0)
             p("uranus", 50724e3, PLANET, BODY, ORBIT, 1.0)
+            p("rogue_planet", 6e7, PLANET, BODY, spread = 2.0)
             p("jupiter", 139820e3, PLANET, BODY, ORBIT, 1.0)
+            p("debris_cloud", 1.5e8, CLUSTER, BODY, spread = 2.0)
             p("saturn", 200e6, PLANET, BODY, ORBIT, 1.0)
+            p("comet_swarm", 3e8, CLUSTER, BODY, spread = 2.0)
             p("sun", 1392e6, STAR, LANDMARK)
         }
         theme(Theme.STARS) {

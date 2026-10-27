@@ -362,6 +362,12 @@ DESCRIPTIONS = {
     "jupiter": "the planet Jupiter, cream and orange bands with the great red spot",
     "saturn": "the planet Saturn, golden with wide tilted rings",
     "sun": "the Sun, a blazing orange and yellow ball with flares and spots",
+    "meteor_swarm": "swarm of small glowing meteors flying together in one direction, little rocks with short fiery orange trails",
+    "planetesimal": "lumpy grey brown planetesimal, a big rubble pile of rocks stuck together",
+    "interstellar_rock": "long thin cigar-shaped reddish interstellar rock tumbling through space, like the visitor Oumuamua",
+    "rogue_planet": "dark rogue planet with a cold blue icy cracked surface, wandering alone without a star",
+    "debris_cloud": "loose cloud of tumbling grey and brown rock debris, many chunks of different sizes",
+    "comet_swarm": "round swarm of many small icy comets with short blue tails, like a cloud of snowballs",
     # Stars and nebulae
     "white_dwarf": "tiny bright white star with a pale blue glow",
     "brown_dwarf": "dim brown dwarf, a dark reddish brown banded ball",
@@ -472,13 +478,26 @@ def themes():
     return result
 
 
+# Images generated after their theme was laid out, holding things since slotted in among the others by size:
+# they keep their own subjects, and the rest of the theme fills the other images in catalogue order.
+ADDED = {
+    "planets_05": ["meteor_swarm", "planetesimal", "interstellar_rock", "rogue_planet", "debris_cloud", "comet_swarm"],
+}
+
+
 def images():
     """Returns {image_name: [ids]} with six ids per image."""
     result = {}
     for theme, ids in themes().items():
-        for batch in range(-(-len(ids) // PER_IMAGE)):
-            result[f"{theme}_{batch:02d}"] = ids[batch * PER_IMAGE:(batch + 1) * PER_IMAGE]
-    return result
+        added = {name: group for name, group in ADDED.items() if name.rsplit("_", 1)[0] == theme}
+        taken = {i for group in added.values() for i in group}
+        rest = [i for i in ids if i not in taken]
+        count = -(-len(rest) // PER_IMAGE) + len(added)
+        free = [f"{theme}_{batch:02d}" for batch in range(count) if f"{theme}_{batch:02d}" not in added]
+        for k, name in enumerate(free):
+            result[name] = rest[k * PER_IMAGE:(k + 1) * PER_IMAGE]
+        result.update(added)
+    return dict(sorted(result.items()))
 
 
 def prompt(name, ids):

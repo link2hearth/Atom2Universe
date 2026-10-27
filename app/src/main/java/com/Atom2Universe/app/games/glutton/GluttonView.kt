@@ -43,7 +43,9 @@ class GluttonView(context: Context) : View(context) {
     private val arc = RectF()
     private val oval = RectF()
     private val matrix = Matrix()
-    private val shaders = arrayOfNulls<BitmapShader>(Ground.entries.size)
+    /** One shader per ground texture and per version of it (see [GluttonAtlas]). */
+    private val shaders = Array(Ground.entries.size) { arrayOfNulls<BitmapShader>(8) }
+    private val flat = Paint()
     private val averages = IntArray(Ground.entries.size)
     private val random = Random(71)
     private class Particle {
@@ -512,6 +514,12 @@ class GluttonView(context: Context) : View(context) {
     /** Ground with its texture: world-anchored on land (so floors shrink as you grow), drifting behind you in space. */
     private fun groundRect(c: Canvas, ring: Ring, ground: Ground, x0: Double, y0: Double, x1: Double, y1: Double, round: Boolean) {
         val paint = groundPaint(ring, ground)
+        // The texture fades into its average colour as it gets too fine to see, rather than switching all at once.
+        if (paint.shader != null && paint.alpha < 255) shape(c, x0, y0, x1, y1, round, flat)
+        shape(c, x0, y0, x1, y1, round, paint)
+    }
+
+    private fun shape(c: Canvas, x0: Double, y0: Double, x1: Double, y1: Double, round: Boolean, paint: Paint) {
         if (round) {
             val l = sx(x0); val t = sy(y0); val r = sx(x1); val b = sy(y1)
             if (r - l < 4e5f) { oval.set(l, t, r, b); c.drawOval(oval, paint); return }
@@ -520,20 +528,24 @@ class GluttonView(context: Context) : View(context) {
     }
 
     private fun groundPaint(ring: Ring, ground: Ground): Paint {
-        val bitmap = atlas.ground(ground)
+        val versions = atlas.ground(ground)
         val space = ground == Ground.SPACE
         texture.colorFilter = if (space) TINTS[ring.theme.ordinal] else null
-        if (bitmap == null) { texture.shader = null; texture.color = FALLBACK[ground.ordinal]; return texture }
-        if (averages[ground.ordinal] == 0) averages[ground.ordinal] = Bitmap.createScaledBitmap(bitmap, 1, 1, true).getPixel(0, 0) or 0xFF000000.toInt()
+        if (versions == null) { texture.shader = null; texture.color = FALLBACK[ground.ordinal]; return texture }
+        if (averages[ground.ordinal] == 0) averages[ground.ordinal] = Bitmap.createScaledBitmap(versions.last(), 1, 1, true).getPixel(0, 0) or 0xFF000000.toInt()
         val tile = if (space) 360.0 * density else tileMetres(ring) * zoom
-        if (tile < 14) { texture.shader = null; texture.color = averages[ground.ordinal]; return texture }
-        val shader = shaders[ground.ordinal] ?: BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.MIRROR).also { shaders[ground.ordinal] = it }
+        if (tile < FADE_FROM) { texture.shader = null; texture.color = averages[ground.ordinal]; return texture }
+        flat.color = averages[ground.ordinal]; flat.colorFilter = texture.colorFilter
+        val level = atlas.groundLevel(versions, tile.toFloat())
+        val bitmap = versions[level]
+        val shader = shaders[ground.ordinal][level] ?: BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.MIRROR).also { shaders[ground.ordinal][level] = it }
         val ox = if (space) drift else -cameraX * zoom + width / 2.0
         val oy = if (space) driftY else -cameraY * zoom + centerY
         matrix.setScale((tile / bitmap.width).toFloat(), (tile / bitmap.height).toFloat())
         matrix.postTranslate(((ox % tile + tile) % tile).toFloat(), ((oy % tile + tile) % tile).toFloat())
         shader.setLocalMatrix(matrix)
         texture.shader = shader; texture.color = Color.WHITE
+        texture.alpha = (255 * ((tile - FADE_FROM) / (FADE_TO - FADE_FROM))).toInt().coerceIn(0, 255)
         return texture
     }
 
@@ -756,6 +768,9 @@ class GluttonView(context: Context) : View(context) {
         /** The screen's short side shows this many gobbler radii: you take a thirteenth of it. */
         const val VIEW_SPAN = 26.0
         const val MAP_DOTS = 160
+        /** Ground textures fade into their average colour between these tile sizes, in pixels. */
+        const val FADE_FROM = 12.0
+        const val FADE_TO = 40.0
         /** Big Bang timeline, in seconds after the last bite: implosion, then the blast and the new sky. */
         const val BANG_AT = .75f
         const val FIREBALL = 1.1f
