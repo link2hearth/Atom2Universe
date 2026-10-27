@@ -1,130 +1,130 @@
 package com.Atom2Universe.app.games.glutton
 
-import com.Atom2Universe.app.games.glutton.GluttonCatalog.Family
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Motion
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
-import com.Atom2Universe.app.games.glutton.GluttonCatalog.Scene
+import com.Atom2Universe.app.games.glutton.GluttonWorld.Cell
+import com.Atom2Universe.app.games.glutton.GluttonWorld.Kind
 import kotlin.math.*
 import kotlin.random.Random
 
 /**
- * Fixed-step rules. Size is continuous: anything smaller than you is swallowed and its area is added
- * to yours; swallowed things stay stuck on your body and bumps knock a few of them loose again.
- * Three scenes chain without a menu; each ends when its landmark is swallowed.
+ * Fixed-step rules in metres. Anything smaller than you is swallowed and its area joins yours; swallowed
+ * things stay stuck on your body and bumps knock a few loose. The clock is the only limit: three fixed
+ * minutes (CHRONO) or a short fuse that every bite and hourglass feeds (FRINGALE). Score = final size.
  */
-class GluttonGame(val seed: Long = Random.nextLong(), startScene: Int = 0) {
-    class Item(val id: Int, val prop: Prop, var x: Float, var y: Float, val angle: Float) {
+class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.CHRONO) {
+    enum class Mode(val budget: Float) { CHRONO(180f), FRINGALE(45f) }
+    class Item(val id: Int, val prop: Prop, var x: Float, var y: Float, val angle: Float, val radius: Float, val cell: Cell?) {
         var active = true
         var vx = 0f; var vy = 0f
-        var heading = 0f; var clock = 0f; var stunned = 0f; var dir = 1f
+        var heading = 0f; var clock = 0f; var stunned = 0f
         /** Seconds before a knocked-loose item can be swallowed again. */
         var cooldown = 0f
         /** Seconds a chaser keeps its distance after a bump, so it never pins you down. */
         var rest = 0f
         var alert = false
-        val radius get() = prop.radius
         val moves get() = prop.moves
     }
     class Stuck(val item: Item, val angle: Float, val gain: Float)
-    enum class Effect { EAT, KNOCK, BURST, FEVER, TREASURE, PREY, STREAK, MILESTONE, SCENE_CLEAR, FINISH }
-    class Event(val effect: Effect, val x: Float, val y: Float, val item: Item? = null, val value: Int = 0, val family: Family? = null)
+    enum class Effect { EAT, KNOCK, BURST, FEVER, BONUS, MILESTONE, RING, FINISH }
+    class Event(val effect: Effect, val x: Float, val y: Float, val item: Item? = null, val value: Int = 0)
 
-    val items = ArrayList<Item>(MAX_ITEMS)
+    val world = GluttonWorld(seed)
+    val items = ArrayList<Item>(2600)
     val stuck = ArrayDeque<Stuck>(MAX_STUCK + 1)
     val events = ArrayList<Event>(24)
-    val medals = IntArray(3)
-    val completionTimes = FloatArray(3)
-    var sceneIndex = startScene.coerceIn(0, 2); private set
-    val scene: Scene get() = Scene.entries[sceneIndex]
-    var x = 0f; private set
-    var y = 0f; private set
+    var x = world.startX; private set
+    var y = world.startY; private set
     var vx = 0f; private set
     var vy = 0f; private set
     var spin = 0f; private set
-    var area = 0f; private set
-    var sceneStartRadius = 1f; private set
+    var area = START_RADIUS * START_RADIUS; private set
     var elapsed = 0f; private set
-    var sceneElapsed = 0f; private set
-    var remaining = 0f; private set
-    var score = 0; private set
+    var remaining = mode.budget; private set
+    var bonusTime = 0f; private set
     var eaten = 0; private set
     var combo = 0; private set
     var bestCombo = 0; private set
-    var treasures = 0; private set
-    var totalTreasures = 0; private set
     var charge = 1f; private set
     var burst = 0f; private set
     var fever = 0f; private set
     var invulnerable = 0f; private set
     var finished = false; private set
-    var won = false; private set
-    var sceneCleared = false; private set
-    var streakFamily: Family? = null; private set
-    var streakCount = 0; private set
-    lateinit var goal: Item; private set
+    var ringReached = 0; private set
+    var cell: Cell = world.cellAt(x, y)!!; private set
+    /** Things still out there to swallow (your house included); when it hits zero the run is won early. */
+    var foodLeft = 0; private set
+    var cleared = false; private set
+    /** Your own house: hidden while you are inside, then just another thing to swallow once you are big enough. */
+    val house: Item
+    val houseEaten get() = ringReached > 0 && !house.active
     val radius get() = sqrt(area)
-    val diameterMetres get() = radius * 2f / scene.scale
-    /** Diameter needed before the landmark fits in your mouth. */
-    val targetMetres get() = goal.radius / EDIBLE * 2f / scene.scale
-    val targetRadius get() = goal.radius / EDIBLE
-    val progress get() = (ln(radius / sceneStartRadius) / ln(targetRadius / sceneStartRadius)).coerceIn(0f, 1f)
+    val diameterMetres get() = radius * 2f
     val multiplier get() = (1 + combo / 6).coerceAtMost(5)
-    val suctionRadius get() = radius + if (burst > 0f) radius * .9f + 40f else if (fever > 0f) radius * .45f + 16f else radius * .3f + 10f
-    /** About eight body radii per second when tiny, three when huge: rolling, not racing. */
-    val moveSpeed get() = (90f + radius * 2.6f) * (if (fever > 0f) 1.15f else 1f)
-    private var random = Random(seed)
+    val suctionRadius get() = radius * if (burst > 0f) 2.2f else if (fever > 0f) 1.75f else 1.35f
+    /** Brisk when tiny (the rooms are vast then), about four body radii per second once huge: rolling, not racing. */
+    val moveSpeed get() = (radius * 3.5f + .2f) * (if (fever > 0f) 1.15f else 1f)
+    private val random = Random(seed xor 0x6A09E667L)
     private var nextId = 0
     private var inputX = 0f; private var inputY = 0f
     private var accumulator = 0.0
-    private var comboTime = 0f; private var restockAt = 6f; private var feverAt = 20
+    private var comboTime = 0f; private var feverAt = 20
     private var nextMilestone = 0
     private var burstEvent = false
-    private var lanesX = FloatArray(2); private var lanesY = FloatArray(2)
-    init { populate() }
+    init {
+        for (p in world.placements) items += Item(nextId++, p.prop, p.x, p.y, random.nextFloat() * 360f - 180f, p.radius, p.cell)
+        for (p in world.movers) items += Item(nextId++, p.prop, p.x, p.y, 0f, p.radius, p.cell).also {
+            it.heading = if (p.prop.motion == Motion.PATROL) (if (random.nextBoolean()) 0f else PI.toFloat() / 2f) else random.nextFloat() * 2f * PI.toFloat()
+        }
+        if (mode == Mode.FRINGALE) for (p in world.hourglasses) items += Item(nextId++, p.prop, p.x, p.y, 0f, p.radius, p.cell)
+        val suburb = world.rings[1]
+        house = Item(nextId++, GluttonCatalog.house, world.startX, world.startY, 0f, world.rings[0].half * 1.05f,
+            suburb.cell(suburb.count / 2, suburb.count / 2)).also { it.active = false; items += it }
+        invulnerable = 1f
+        foodLeft = items.count { !it.prop.bonus }
+        nextMilestone = MILESTONES.indexOfFirst { it > diameterMetres }.let { if (it < 0) MILESTONES.size else it }
+    }
 
+    /** Test hook: jump straight to a size without eating. */
+    fun forceRadius(r: Float) { area = r * r }
+    /** Test hook: how much is left after a test has emptied the world by hand. */
+    fun forceFoodLeft(count: Int) { foodLeft = count }
     fun steer(dx: Float, dy: Float) {
         if (!dx.isFinite() || !dy.isFinite()) { inputX = 0f; inputY = 0f; return }
         val length = hypot(dx, dy).coerceAtLeast(1f); inputX = dx / length; inputY = dy / length
     }
-    fun canEat(item: Item) = item.active && item.cooldown <= 0f && item.radius <= radius * EDIBLE
+    fun canEat(item: Item) = item.active && item.cooldown <= 0f && (item.prop.bonus || item.radius <= radius * EDIBLE)
     /**
-     * Area gained. Anything from about 40 % of your radius upwards is a full bite worth [CAP] of your
-     * current area, so growth stays a steady climb instead of exploding; crumbs add a percent or two.
+     * Area gained: the item's own area, capped at [CAP] of yours so anything from about 40 % of your
+     * radius upwards is a full bite and growth stays a steady climb instead of exploding. Past the size
+     * that leaves the house every bite counts less ([DAMP]): a giant sweeps up hundreds of things at once,
+     * and without the brake the whole city is gone in two minutes.
      */
     fun growth(item: Item): Float {
+        if (item.prop.bonus) return 0f
         val ratio = item.radius / radius
-        val t = ((ratio - .15f) / .5f).coerceIn(0f, 1f)
-        return min(ratio * ratio * GROWTH * (.5f + 1.5f * t), CAP) * area
+        return min(ratio * ratio * GROWTH, CAP) * area * damping
     }
-    fun points(item: Item) = ((5f + 25f * (item.radius / sceneStartRadius).pow(1.2f)) * (sceneIndex + 1)).roundToInt()
-    fun isBigBite(item: Item) = item.radius >= radius * BIG_BITE
+    val damping get() = (world.rings[1].from / radius).coerceAtMost(1f).pow(DAMP)
+    fun isBigBite(item: Item) = !item.prop.bonus && item.radius >= radius * BIG_BITE
     fun activateBurst(): Boolean {
-        if (finished || sceneCleared || charge < .999f || burst > 0f) return false
+        if (finished || charge < .999f || burst > 0f) return false
         charge = 0f; burst = 1f; burstEvent = true; return true
-    }
-    /** Called once the clear animation has played; size in metres carries over into the larger scene. */
-    fun advanceScene(): Boolean {
-        if (!sceneCleared || sceneIndex == 2 || finished) return false
-        val metres = diameterMetres
-        val carry = min(20f, remaining * .5f)
-        sceneIndex++; sceneCleared = false; populate()
-        area = (metres / 2f * scene.scale).pow(2); sceneStartRadius = radius
-        remaining += carry; events.clear(); accumulator = 0.0
-        return true
     }
     fun update(seconds: Float) {
         events.clear()
-        if (finished || sceneCleared || !seconds.isFinite() || seconds <= 0f) return
+        if (finished || !seconds.isFinite() || seconds <= 0f) return
         accumulator += seconds.coerceAtMost(.1f).toDouble()
-        while (accumulator + 1e-9 >= STEP && !finished && !sceneCleared) { tick(STEP.toFloat()); accumulator -= STEP }
+        while (accumulator + 1e-9 >= STEP && !finished) { tick(STEP.toFloat()); accumulator -= STEP }
     }
     private fun tick(dt: Float) {
+        val r = radius
         if (burstEvent) {
             burstEvent = false; events += Event(Effect.BURST, x, y)
-            val reach = suctionRadius + 40f
+            val reach = suctionRadius + r
             for (item in items) if (item.active && item.moves && hypot(item.x - x, item.y - y) < reach) item.stunned = 1.8f
         }
-        elapsed += dt; sceneElapsed += dt; remaining = (remaining - dt).coerceAtLeast(0f)
+        elapsed += dt; remaining = (remaining - dt).coerceAtLeast(0f)
         burst = (burst - dt).coerceAtLeast(0f); fever = (fever - dt).coerceAtLeast(0f)
         invulnerable = (invulnerable - dt).coerceAtLeast(0f); comboTime -= dt
         if (comboTime <= 0f) { combo = 0; feverAt = 20 }
@@ -132,250 +132,226 @@ class GluttonGame(val seed: Long = Random.nextLong(), startScene: Int = 0) {
         val response = 1f - exp(-dt * if (inputX == 0f && inputY == 0f) 19f else 14f)
         vx += (inputX * moveSpeed - vx) * response; vy += (inputY * moveSpeed - vy) * response
         x += vx * dt; y += vy * dt
-        spin += (vx + vy) * dt / (radius * 1.4f)
-        constrain()
-        repeat(2) {
-            for (item in items) {
-                if (!item.active || canEat(item)) continue
-                val dx = x - item.x; val dy = y - item.y; val contact = radius * .8f + item.radius * .78f
-                val d2 = dx * dx + dy * dy
-                if (d2 >= contact * contact) continue
-                val d = sqrt(d2); val nx = if (d > .001f) dx / d else 1f; val ny = if (d > .001f) dy / d else 0f
-                x = item.x + nx * contact; y = item.y + ny * contact
-                val inward = vx * nx + vy * ny
-                if (inward < 0f) {
-                    vx -= inward * nx; vy -= inward * ny
-                    // Head-on pushes roll off to the side you were already leaning to, like a ball would.
-                    val tangential = -vx * ny + vy * nx
-                    if (abs(tangential) < moveSpeed * .25f && inputX * nx + inputY * ny < -.6f) {
-                        val side = if (tangential >= 0f) 1f else -1f
-                        vx += -ny * side * moveSpeed * .3f; vy += nx * side * moveSpeed * .3f
-                    }
-                }
+        spin += (vx + vy) * dt / (r * 1.4f)
+        repeat(2) { collideItems(); collideWalls() }
+        val now = world.cellAt(x, y)
+        if (now != null) {
+            cell = now
+            if (now.ring.index > ringReached) {
+                ringReached = now.ring.index; events += Event(Effect.RING, x, y, value = ringReached)
+                if (ringReached == 1) house.active = true
             }
         }
-        constrain()
         for (item in items) {
             if (!item.active) continue
             if (item.cooldown > 0f) {
                 item.cooldown = (item.cooldown - dt).coerceAtLeast(0f)
                 item.x += item.vx * dt; item.y += item.vy * dt
                 item.vx *= 1f - dt * 4f; item.vy *= 1f - dt * 4f
-                keepInside(item); continue
+                continue
             }
             if (item.moves) updateMover(item, dt)
             if (!canEat(item)) continue
             val dx = x - item.x; val dy = y - item.y; val reach = suctionRadius + item.radius * .25f
+            if (abs(dx) > reach || abs(dy) > reach) continue
             val d2 = dx * dx + dy * dy
             if (d2 > reach * reach) continue
-            val d = sqrt(d2); val mouth = radius * .7f + item.radius * .3f
-            val pull = (if (burst > 0f) 500f + radius * 2f else 120f + radius) * dt
-            if (d <= mouth + pull) {
-                consume(item); if (sceneCleared || finished) return
-            } else { item.x += dx / d * pull; item.y += dy / d * pull }
+            val d = sqrt(d2); val mouth = r * .7f + item.radius * .3f
+            val pull = (if (burst > 0f) 20f else 8f) * r * dt
+            if (d <= mouth + pull) consume(item)
+            else { item.x += dx / d * pull; item.y += dy / d * pull }
         }
-        constrain()
-        if (sceneElapsed >= restockAt) { restockAt += 6f; restock() }
-        if (remaining <= 0f) end(false)
+        if (remaining <= 0f) end()
+    }
+    private fun collideItems() {
+        val r = radius
+        for (item in items) {
+            // Your house never pushes: its rooms and walls do that job while you are inside, and its roof is just a hill.
+            if (!item.active || item.prop.bonus || item === house || canEat(item)) continue
+            val dx = x - item.x; val dy = y - item.y; val contact = r * .8f + item.radius * .78f
+            if (abs(dx) > contact || abs(dy) > contact) continue
+            val d2 = dx * dx + dy * dy
+            if (d2 >= contact * contact) continue
+            val d = sqrt(d2); val nx = if (d > 1e-6f) dx / d else 1f; val ny = if (d > 1e-6f) dy / d else 0f
+            x = item.x + nx * contact; y = item.y + ny * contact
+            val inward = vx * nx + vy * ny
+            if (inward < 0f) {
+                vx -= inward * nx; vy -= inward * ny
+                // Head-on pushes roll off to the side you were already leaning to, like a ball would.
+                val tangential = -vx * ny + vy * nx
+                if (abs(tangential) < moveSpeed * .25f && inputX * nx + inputY * ny < -.6f) {
+                    val side = if (tangential >= 0f) 1f else -1f
+                    vx += -ny * side * moveSpeed * .3f; vy += nx * side * moveSpeed * .3f
+                }
+            }
+        }
+    }
+    /** Cliffs and ring boundaries block until you are tall enough to roll over them; stairs and exits always let you through. */
+    private fun collideWalls() {
+        val here = world.cellAt(x, y)
+        if (here == null) {
+            val outer = world.rings.last()
+            val limit = outer.half - radius * .85f
+            x = x.coerceIn(-limit, limit); y = y.coerceIn(-limit, limit); return
+        }
+        val ring = here.ring; val r = radius; val t = ring.thickness
+        for (side in 0..3) {
+            val to = world.neighbour(here, side)
+            val edge = world.edge(here, side)
+            val horizontal = side == 0 || side == 2
+            val line = when (side) { 0 -> here.y0; 1 -> here.x1; 2 -> here.y1; else -> here.x0 }
+            val from = if (horizontal) here.x0 else here.y0
+            val until = if (horizontal) here.x1 else here.y1
+            if (to == null) {
+                // Boundary of the ring: the way up into the next ring, with two stairways.
+                if (r >= world.exitClimb(here)) continue
+                var gapFrom = 0f; var gapTo = 0f
+                for ((exitSide, offset) in ring.exits) if (exitSide == side) {
+                    val centre = -ring.half + offset * ring.side
+                    gapFrom = centre - ring.exitHalf; gapTo = centre + ring.exitHalf
+                }
+                blockEdge(horizontal, line, from, until, gapFrom, gapTo, t)
+                continue
+            }
+            val climb = world.climb(here, to, edge)
+            if (r >= climb || edge == null) continue
+            if (edge.kind == Kind.CLIFF) blockEdge(horizontal, line, from, until, 0f, 0f, t)
+            else {
+                val centre = from + edge.offset * ring.cell
+                blockEdge(horizontal, line, from, until, centre - edge.width / 2f, centre + edge.width / 2f, t)
+            }
+        }
+    }
+    private fun blockEdge(horizontal: Boolean, line: Float, from: Float, until: Float, gapFrom: Float, gapTo: Float, thickness: Float) {
+        // A gap narrower than your body is simply wall: no squeezing through dead centre.
+        if (gapTo > gapFrom && gapTo - gapFrom >= 2f * (radius * .85f + thickness)) {
+            if (gapFrom > from) blockSegment(horizontal, line, from, gapFrom, thickness)
+            if (gapTo < until) blockSegment(horizontal, line, gapTo, until, thickness)
+        } else blockSegment(horizontal, line, from, until, thickness)
+    }
+    private fun blockSegment(horizontal: Boolean, line: Float, from: Float, until: Float, thickness: Float) {
+        val along = (if (horizontal) x else y).coerceIn(from, until)
+        val px = if (horizontal) along else line; val py = if (horizontal) line else along
+        val dx = x - px; val dy = y - py; val contact = radius * .85f + thickness
+        val d2 = dx * dx + dy * dy
+        if (d2 >= contact * contact) return
+        val d = sqrt(d2)
+        val nx: Float; val ny: Float
+        if (d > 1e-6f) { nx = dx / d; ny = dy / d } else if (horizontal) { nx = 0f; ny = if (vy > 0f) -1f else 1f } else { nx = if (vx > 0f) -1f else 1f; ny = 0f }
+        x = px + nx * contact; y = py + ny * contact
+        val inward = vx * nx + vy * ny
+        if (inward < 0f) { vx -= inward * nx; vy -= inward * ny }
     }
     private fun updateMover(item: Item, dt: Float) {
-        val prop = item.prop
-        val dx = x - item.x; val dy = y - item.y; val distance = hypot(dx, dy).coerceAtLeast(.001f)
+        val prop = item.prop; val home = item.cell ?: return
+        val dx = x - item.x; val dy = y - item.y; val distance = hypot(dx, dy).coerceAtLeast(1e-6f)
         val edible = item.radius <= radius * EDIBLE
         item.clock -= dt; item.alert = false
         if (item.stunned > 0f) {
             item.stunned = (item.stunned - dt).coerceAtLeast(0f); item.vx = 0f; item.vy = 0f; return
         }
-        var speed = 0f; var hx = 0f; var hy = 0f
-        when (prop.motion) {
-            Motion.PATROL_H -> { hx = item.dir; speed = prop.speed }
-            Motion.PATROL_V -> { hy = item.dir; speed = prop.speed }
-            else -> {
-                val sight = radius * 7f + 160f
-                if (item.rest > 0f) {
-                    item.rest -= dt; item.heading = atan2(-dy, -dx); speed = prop.speed * .7f
-                } else if (prop.motion != Motion.WANDER && edible && distance < sight) {
-                    // Prey: run straight away from the mouth with a little zigzag.
-                    item.heading = atan2(-dy, -dx) + sin(elapsed * 5f + item.id) * .5f
-                    speed = min(prop.speed, moveSpeed * .72f); item.alert = true
-                } else if (prop.motion == Motion.CHASE && !edible && distance < radius * 5f + 150f) {
-                    // Hunters are a little slower than you, so moving away always works.
-                    item.heading = atan2(dy, dx); speed = min(prop.speed, moveSpeed * .85f); item.alert = true
-                } else {
-                    if (item.clock <= 0f) { item.heading = random.nextFloat() * 2f * PI.toFloat(); item.clock = .8f + random.nextFloat() * 1.8f }
-                    speed = prop.speed * .3f
-                }
-                hx = cos(item.heading); hy = sin(item.heading)
+        var speed: Float
+        if (prop.motion == Motion.PATROL) speed = prop.speed
+        else {
+            if (item.rest > 0f) {
+                item.rest -= dt; item.heading = atan2(-dy, -dx); speed = prop.speed * .7f
+            } else if (prop.motion == Motion.CHASE && !edible && distance < radius * 5f + item.radius * 5f) {
+                item.heading = atan2(dy, dx); speed = min(prop.speed, moveSpeed * .85f); item.alert = true
+            } else {
+                if (item.clock <= 0f) { item.heading = random.nextFloat() * 2f * PI.toFloat(); item.clock = .8f + random.nextFloat() * 1.8f }
+                speed = prop.speed * .3f
             }
         }
+        val hx = cos(item.heading); val hy = sin(item.heading)
         val ease = 1f - exp(-dt * 6f)
         item.vx += (hx * speed - item.vx) * ease; item.vy += (hy * speed - item.vy) * ease
         item.x += item.vx * dt; item.y += item.vy * dt
-        val margin = WALL + item.radius
-        if (prop.motion == Motion.PATROL_H && (item.x < margin || item.x > scene.width - margin)) item.dir = -item.dir
-        if (prop.motion == Motion.PATROL_V && (item.y < margin || item.y > scene.height - margin)) item.dir = -item.dir
-        if (prop.motion != Motion.PATROL_H && prop.motion != Motion.PATROL_V &&
-            (item.x < margin || item.x > scene.width - margin || item.y < margin || item.y > scene.height - margin)) {
-            item.heading += PI.toFloat() * .75f; item.clock = 1f
-        }
-        keepInside(item)
-        if (!edible && (prop.motion == Motion.CHASE || prop.motion == Motion.PATROL_H || prop.motion == Motion.PATROL_V) &&
+        // Movers keep to their own cell of the maze.
+        val margin = home.ring.thickness + item.radius
+        val x0 = home.x0 + margin; val x1 = home.x1 - margin; val y0 = home.y0 + margin; val y1 = home.y1 - margin
+        if (item.x < x0 || item.x > x1) { item.heading = PI.toFloat() - item.heading; item.vx = -item.vx; item.x = item.x.coerceIn(x0, x1); item.clock = 1f }
+        if (item.y < y0 || item.y > y1) { item.heading = -item.heading; item.vy = -item.vy; item.y = item.y.coerceIn(y0, y1); item.clock = 1f }
+        if (!edible && (prop.motion == Motion.CHASE || prop.motion == Motion.PATROL) &&
             invulnerable <= 0f && distance < radius * .8f + item.radius * .8f) knock(item)
     }
     /** A bump never costs time: it shakes a few swallowed things loose, and they can be eaten again. */
     private fun knock(by: Item) {
-        val dx = x - by.x; val dy = y - by.y; val d = hypot(dx, dy).coerceAtLeast(.001f)
+        val r = radius
+        val dx = x - by.x; val dy = y - by.y; val d = hypot(dx, dy).coerceAtLeast(1e-6f)
         val nx = dx / d; val ny = dy / d
-        vx = nx * 380f + by.vx * .5f; vy = ny * 380f + by.vy * .5f; x += nx * 12f; y += ny * 12f
-        combo = 0; comboTime = 0f; invulnerable = 1.4f; streakCount = 0
+        vx = nx * r * 12f + by.vx * .5f; vy = ny * r * 12f + by.vy * .5f; x += nx * r * .4f; y += ny * r * .4f
+        combo = 0; comboTime = 0f; invulnerable = 1.4f
         if (by.prop.motion == Motion.CHASE) by.rest = 6f
         repeat(min(KNOCK_LOSS, stuck.size)) {
             val lost = stuck.removeLast()
-            area = max(area - lost.gain, (sceneStartRadius * .8f).pow(2))
+            area = max(area - lost.gain, START_RADIUS * START_RADIUS)
             val item = lost.item; val a = random.nextFloat() * 2f * PI.toFloat()
-            item.active = true; item.cooldown = 1.1f
-            item.x = x + cos(a) * (radius + item.radius + 10f); item.y = y + sin(a) * (radius + item.radius + 10f)
-            item.vx = cos(a) * 260f; item.vy = sin(a) * 260f
-            keepInside(item)
+            item.active = true; item.cooldown = 1.1f; foodLeft++
+            item.x = x + cos(a) * (r + item.radius + r * .3f); item.y = y + sin(a) * (r + item.radius + r * .3f)
+            item.vx = cos(a) * r * 8f; item.vy = sin(a) * r * 8f
         }
         events += Event(Effect.KNOCK, x, y, by)
     }
     private fun consume(item: Item) {
-        val gain = growth(item); val big = isBigBite(item)
-        item.active = false; item.cooldown = 0f; area += gain
-        eaten++; combo++; comboTime = 2.35f; bestCombo = max(bestCombo, combo)
-        score += points(item) * multiplier * if (big) 2 else 1
-        charge = (charge + if (big) .05f else .02f).coerceAtMost(1f)
-        events += Event(Effect.EAT, item.x, item.y, item, points(item) * multiplier * if (big) 2 else 1)
-        if (item.prop.treasure) {
-            treasures++; totalTreasures++; charge = 1f; remaining += 3f
-            events += Event(Effect.TREASURE, item.x, item.y, item)
-        } else {
-            if (stuck.size >= MAX_STUCK) stuck.removeFirst()
-            stuck.addLast(Stuck(item, atan2(item.y - y, item.x - x) - spin, gain))
+        item.active = false; item.cooldown = 0f
+        if (item.prop.bonus) {
+            if (mode == Mode.FRINGALE) { remaining = min(remaining + HOURGLASS, FRINGALE_MAX); bonusTime += HOURGLASS }
+            charge = 1f; events += Event(Effect.BONUS, item.x, item.y, item); return
         }
-        if (item.moves) { remaining += 2f; events += Event(Effect.PREY, item.x, item.y, item) }
-        if (item.prop.family == streakFamily) streakCount++ else { streakFamily = item.prop.family; streakCount = 1 }
-        if (streakCount > 0 && streakCount % STREAK == 0) {
-            score += 40 * (sceneIndex + 1) * multiplier
-            events += Event(Effect.STREAK, x, y, family = item.prop.family, value = streakCount)
+        val gain = growth(item); val big = isBigBite(item)
+        area += gain
+        eaten++; foodLeft--; combo++; comboTime = 2.35f; bestCombo = max(bestCombo, combo)
+        charge = (charge + if (big) .05f else .02f).coerceAtMost(1f)
+        events += Event(Effect.EAT, item.x, item.y, item)
+        if (stuck.size >= MAX_STUCK) stuck.removeFirst()
+        stuck.addLast(Stuck(item, atan2(item.y - y, item.x - x) - spin, gain))
+        if (mode == Mode.FRINGALE) {
+            val bonus = if (big) BIG_BITE_TIME else BITE_TIME
+            remaining = min(remaining + bonus, FRINGALE_MAX); bonusTime += bonus
         }
         if (combo >= feverAt) { feverAt += 30; fever = 5f; events += Event(Effect.FEVER, x, y) }
         while (nextMilestone < MILESTONES.size && diameterMetres >= MILESTONES[nextMilestone]) {
             nextMilestone++; events += Event(Effect.MILESTONE, x, y, value = nextMilestone - 1)
         }
-        if (item.prop.goal) {
-            medals[sceneIndex] = 1 + (if (treasures == 3) 1 else 0) + (if (sceneElapsed <= scene.par) 1 else 0)
-            completionTimes[sceneIndex] = sceneElapsed
-            sceneCleared = true; steer(0f, 0f); vx = 0f; vy = 0f
-            events += Event(Effect.SCENE_CLEAR, x, y, value = medals[sceneIndex]); if (sceneIndex == 2) end(true)
-        }
+        if (foodLeft <= 0) { cleared = true; end() }
     }
-    private fun end(victory: Boolean) {
+    private fun end() {
         if (finished) return
-        finished = true; won = victory; steer(0f, 0f); events += Event(Effect.FINISH, x, y)
-    }
-    private fun constrain() {
-        val margin = radius * .8f + WALL
-        x = x.coerceIn(margin, scene.width - margin); y = y.coerceIn(margin, scene.height - margin)
-    }
-    private fun keepInside(item: Item) {
-        val margin = WALL + item.radius * .6f
-        item.x = item.x.coerceIn(margin, scene.width - margin); item.y = item.y.coerceIn(margin, scene.height - margin)
+        finished = true; steer(0f, 0f); events += Event(Effect.FINISH, x, y)
     }
     /** Hint target: the closest thing worth a bite, favouring pieces near your own size. */
     fun nearestFood(): Item? {
         var best: Item? = null; var cost = Float.MAX_VALUE
-        for (item in items) if (canEat(item) && !item.moves) {
+        val reach = radius * 40f
+        for (item in items) if (!item.moves && !item.prop.bonus && canEat(item)) {
             val ratio = item.radius / radius
             if (ratio < .12f) continue
-            val distance = hypot(item.x - x, item.y - y) / (ratio + .05f)
+            val dx = item.x - x; val dy = item.y - y
+            if (abs(dx) > reach || abs(dy) > reach) continue
+            val distance = hypot(dx, dy) / (ratio + .05f)
             if (distance < cost) { cost = distance; best = item }
         }
-        return best ?: goal.takeIf { canEat(it) }
-    }
-    private fun populate() {
-        random = Random(seed xor (sceneIndex.toLong() * 0x5DEECE66DL)); items.clear(); stuck.clear(); nextId = 0
-        x = scene.width * .2f; y = scene.height * .8f; vx = 0f; vy = 0f; spin = 0f
-        area = (scene.startMetres / 2f * scene.scale).pow(2); sceneStartRadius = radius
-        steer(0f, 0f); remaining = scene.budget; sceneElapsed = 0f; restockAt = 6f
-        treasures = 0; burst = 0f; fever = 0f; combo = 0; comboTime = 0f; feverAt = 20; charge = 1f
-        streakFamily = null; streakCount = 0
-        invulnerable = 1f; burstEvent = false
-        nextMilestone = MILESTONES.indexOfFirst { it > scene.startMetres }.let { if (it < 0) MILESTONES.size else it }
-        lanesX = floatArrayOf(scene.width * .33f, scene.width * .67f); lanesY = floatArrayOf(scene.height * .3f, scene.height * .7f)
-        val props = GluttonCatalog.forScene(scene).sortedWith(compareBy({ !it.goal }, { !it.treasure }, { -it.radius }))
-        for (prop in props) repeat(prop.count) { i -> place(prop, i) }
-        goal = items.first { it.prop.goal }
-        // A handful of snacks around the start so the very first second already feeds you.
-        val snacks = GluttonCatalog.forScene(scene).filter { !it.moves && it.radius in radius * .2f..radius * .6f }
-        repeat(12) { i ->
-            val a = i * .9f; val r = radius * 2.2f + i * 7f
-            items += Item(nextId++, snacks[i % snacks.size], x + cos(a) * r, y + sin(a) * r, i * 37f)
-        }
-    }
-    private fun place(prop: Prop, index: Int): Boolean {
-        if (prop.motion == Motion.PATROL_H || prop.motion == Motion.PATROL_V) {
-            val horizontal = prop.motion == Motion.PATROL_H
-            val lane = (if (horizontal) lanesY else lanesX)[index % 2]
-            val along = WALL + prop.radius + random.nextFloat() * ((if (horizontal) scene.width else scene.height) - 2 * (WALL + prop.radius))
-            val item = Item(nextId++, prop, if (horizontal) along else lane, if (horizontal) lane else along, 0f)
-            item.dir = if (random.nextBoolean()) 1f else -1f; items += item
-            return true
-        }
-        val margin = WALL + prop.radius + 12f
-        val cellW = scene.width / 3f; val cellH = scene.height / 3f
-        repeat(120) { attempt ->
-            val px: Float; val py: Float
-            if (prop.where == GluttonCatalog.ANY || attempt >= 45) {
-                px = margin + random.nextFloat() * (scene.width - 2 * margin); py = margin + random.nextFloat() * (scene.height - 2 * margin)
-            } else {
-                val cx = (prop.where % 3 + .5f) * cellW; val cy = (prop.where / 3 + .5f) * cellH
-                px = (cx + (random.nextFloat() - .5f) * cellW * 1.1f).coerceIn(margin, scene.width - margin)
-                py = (cy + (random.nextFloat() - .5f) * cellH * 1.1f).coerceIn(margin, scene.height - margin)
-            }
-            if (prop.radius > sceneStartRadius * 1.6f && hypot(px - scene.width * .2f, py - scene.height * .8f) < 260f + prop.radius) return@repeat
-            // Lanes stay open so patrols can drive and you always have an escape route.
-            if (prop.radius > 14f) {
-                val clearance = prop.radius + 60f
-                if (abs(px - lanesX[0]) < clearance || abs(px - lanesX[1]) < clearance ||
-                    abs(py - lanesY[0]) < clearance || abs(py - lanesY[1]) < clearance) return@repeat
-            }
-            var free = true
-            for (other in items) {
-                if (!other.active || other.moves) continue
-                val gap = prop.radius + other.radius + if (prop.radius < 10f) 2f else 8f
-                if ((px - other.x).pow(2) + (py - other.y).pow(2) < gap * gap) { free = false; break }
-            }
-            if (free) {
-                val angle = if (prop.radius > 40f) random.nextFloat() * 20f - 10f else random.nextFloat() * 180f - 90f
-                items += Item(nextId++, prop, px, py, angle); return true
-            }
-        }
-        return false
-    }
-    /** Keeps a stock of bites near your current size once the small stuff is gone. */
-    private fun restock() {
-        items.removeAll { candidate -> !candidate.active && stuck.none { it.item === candidate } }
-        var useful = 0
-        for (item in items) if (canEat(item) && !item.moves && item.radius >= radius * .3f) useful++
-        if (useful >= 16) return
-        val candidates = GluttonCatalog.forScene(scene).filter { !it.moves && !it.goal && !it.treasure && it.radius in radius * .35f..radius * .75f }
-        if (candidates.isEmpty()) return
-        repeat(min(12, MAX_ITEMS - items.size)) { i -> place(candidates[random.nextInt(candidates.size)], i) }
+        return best
     }
     companion object {
-        const val WALL = 30f
         const val STEP = 1.0 / 120.0
-        const val MAX_ITEMS = 560
         const val MAX_STUCK = 16
         const val KNOCK_LOSS = 3
-        const val STREAK = 5
+        /** Starting radius in metres (a 3 cm gobbler). */
+        const val START_RADIUS = .015f
         /** An item must be smaller than this share of your radius to fit in your mouth. */
         const val EDIBLE = .8f
         const val BIG_BITE = .55f
-        const val GROWTH = .3f
+        const val GROWTH = .45f
         const val CAP = .06f
-        val MILESTONES = floatArrayOf(.15f, .25f, .5f, 1f, 2f, 4f, 8f, 15f, 30f, 60f, 100f)
+        /** Growth brake past the house-leaving size: gain × (0.6 m / radius)^DAMP. */
+        const val DAMP = .3f
+        /** FRINGALE: the faster you eat and the bigger the bites, the more time you earn, so a good run snowballs. */
+        const val HOURGLASS = 8f
+        /** The hungry clock never banks more than this: the pressure stays on however big you get. */
+        const val FRINGALE_MAX = 120f
+        const val BITE_TIME = .35f
+        const val BIG_BITE_TIME = 1f
+        val MILESTONES = floatArrayOf(.05f, .1f, .25f, .5f, 1f, 2f, 5f, 10f, 20f, 50f, 100f, 200f)
     }
 }

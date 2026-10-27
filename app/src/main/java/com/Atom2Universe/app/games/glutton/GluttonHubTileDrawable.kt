@@ -15,7 +15,7 @@ class GluttonHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : C
         paint.color = 0xFFF8C9CD.toInt(); canvas.drawRoundRect(28f, 94f, 392f, 410f, 75f, 75f, paint)
         art.shape(canvas, Shape.SOFA, 328f, 118f, 59f, -12f)
         art.shape(canvas, Shape.DONUT, 80f, 130f, 34f, 15f)
-        art.shape(canvas, Shape.CAT, 338f, 262f, 34f, 15f)
+        art.shape(canvas, Shape.CAR, 338f, 262f, 34f, 15f)
         art.shape(canvas, Shape.COOKIE, 78f, 277f, 27f, -20f)
         art.star(canvas, 134f, 75f, 15f, GluttonArt.GOLD)
         art.star(canvas, 288f, 233f, 12f, GluttonArt.GOLD)

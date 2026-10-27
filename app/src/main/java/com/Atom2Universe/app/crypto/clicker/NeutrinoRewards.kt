@@ -18,8 +18,9 @@ object NeutrinoRewards {
     const val MOCHI_POINTS_PER_NEUTRINO = 100
     fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO
 
-    const val GLUTTON_POINTS_PER_NEUTRINO = 8000
-    fun glutton(score: Int) = score.coerceAtLeast(0) / GLUTTON_POINTS_PER_NEUTRINO
+    /** Pocket Gobbler pays by final size: 3 × √(diameter in metres), so 1 m → 3, 25 m → 15, 100 m → 30. */
+    const val GLUTTON_PER_ROOT_METRE = 3f
+    fun glutton(metres: Float) = kotlin.math.round(GLUTTON_PER_ROOT_METRE * kotlin.math.sqrt(metres.coerceAtLeast(0f))).toInt()
 
     const val BILLIARD_MEDAL = 3
     const val BILLIARD_LESSON = 3
@@ -299,7 +300,7 @@ object NeutrinoRewards {
             Entry(R.string.enamel_title, "1 / $ENAMEL_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.mochi_title, context.getString(R.string.mochi_reward_rate, MOCHI_POINTS_PER_NEUTRINO), R.string.neutrino_info_note_score),
-            Entry(R.string.glutton_title, context.getString(R.string.glutton_reward_rate, GLUTTON_POINTS_PER_NEUTRINO), R.string.neutrino_info_note_score),
+            Entry(R.string.glutton_title, context.getString(R.string.glutton_reward_rate), R.string.neutrino_info_note_score),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance),

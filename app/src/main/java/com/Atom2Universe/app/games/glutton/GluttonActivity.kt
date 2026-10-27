@@ -14,9 +14,10 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
-import com.Atom2Universe.app.games.glutton.GluttonCatalog.Family
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Shape
+import com.Atom2Universe.app.games.glutton.GluttonCatalog.Theme
+import com.Atom2Universe.app.games.glutton.GluttonGame.Mode
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -33,56 +34,43 @@ class GluttonActivity : ThemedActivity() {
     private lateinit var heading: TextView
     private lateinit var subtitle: TextView
     private lateinit var result: TextView
-    private lateinit var bestLabel: TextView
-    private lateinit var score: TextView
+    private lateinit var sizeLabel: TextView
     private lateinit var timer: TextView
     private lateinit var combo: TextView
     private lateinit var banner: TextView
-    private lateinit var growth: ProgressBar
+    private lateinit var modeLabel: TextView
     private lateinit var charge: ProgressBar
-    private lateinit var target: View
-    private lateinit var sizeLabel: TextView
-    private lateinit var objective: TextView
-    private lateinit var treasureLabel: TextView
-    private lateinit var chapters: LinearLayout
-    private val chapterButtons = ArrayList<MaterialButton>(3)
+    private lateinit var modes: LinearLayout
+    private val modeButtons = ArrayList<MaterialButton>(2)
     private lateinit var hero: View
     private lateinit var primary: MaterialButton
     private lateinit var secondary: MaterialButton
-    private lateinit var sameRoom: MaterialButton
+    private lateinit var sameMap: MaterialButton
     private lateinit var help: MaterialButton
     private lateinit var burst: MaterialButton
     private lateinit var preferences: LinearLayout
     private val prefs by lazy { getSharedPreferences("glutton_save", MODE_PRIVATE) }
     private val names = HashMap<String, String>()
-    private var best = 0
     private var hasRun = false
     private var rewardPaid = 0
     private var showingRules = false
-    private var displayedScore = -1
+    private var displayedSize = ""
     private var displayedSeconds = -1
     private var displayedMultiplier = -1
-    private var displayedScene = -1
-    private var displayedTreasures = -1
     private var burstReady: Boolean? = null
-    private var selectedZone = 0
+    private var selectedMode = Mode.CHRONO
     private val hideBanner = Runnable { if (::banner.isInitialized) banner.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        best = prefs.getInt("best", 0)
+        selectedMode = Mode.entries.getOrElse(prefs.getInt("mode", 0)) { Mode.CHRONO }
         buildUi(); enableImmersiveMode()
         scene.haptics = prefs.getBoolean("haptics", true)
         scene.sound = prefs.getBoolean("sound", true)
         scene.nameOf = { name(it) }
         scene.onHudChanged = { updateHud() }
         scene.onMilestone = { metres -> flash(getString(R.string.glutton_milestone, sizeText(metres))) }
-        scene.onStreak = { family -> STREAKS[family]?.let { flash(getString(it)) } }
-        scene.onSceneCleared = { stars ->
-            saveProgress()
-            flash(getString(R.string.glutton_scene_cleared, getString(ZONES[scene.game.sceneIndex]), "★".repeat(stars) + "☆".repeat(3 - stars)), 2400)
-        }
-        scene.onSceneChanged = { displayedScene = -1; displayedSeconds = -1; updateHud(); flash(getString(ZONES[scene.game.sceneIndex]), 1800) }
+        scene.onRing = { theme -> flash(getString(RINGS[theme.ordinal]), 2000) }
         scene.onFinished = { finishRun() }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -100,24 +88,29 @@ class GluttonActivity : ThemedActivity() {
         val id = resources.getIdentifier("glutton_item_${prop.id}", "string", packageName)
         if (id == 0) prop.id else getString(id)
     }
-    private fun sizeText(metres: Float) = if (metres < 1f) getString(R.string.glutton_size_cm, metres * 100f) else getString(R.string.glutton_size_m, metres)
+    private fun sizeText(metres: Float) = when {
+        metres < 1f -> getString(R.string.glutton_size_cm, metres * 100f)
+        metres < 100f -> getString(R.string.glutton_size_m, metres)
+        else -> getString(R.string.glutton_size_big_m, metres)
+    }
     private fun flash(text: CharSequence, duration: Long = 1600) {
         banner.text = text; banner.visibility = View.VISIBLE
         banner.removeCallbacks(hideBanner); banner.postDelayed(hideBanner, duration)
     }
+    private fun best(mode: Mode) = prefs.getFloat("best_${mode.name.lowercase()}", 0f)
 
     private fun buildUi() {
         val root = FrameLayout(this)
         scene = GluttonView(this)
         root.addView(scene, FrameLayout.LayoutParams(-1, -1))
         hud = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8))
+            orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(6))
             background = panel(0xF5FFF5E7.toInt(), 0x00FFFFFF, 0)
             elevation = dp(3).toFloat()
         }
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        score = label(R.string.glutton_title, 27f).apply { typeface = Typeface.DEFAULT_BOLD }
-        row.addView(score, LinearLayout.LayoutParams(0, dp(48), 1f))
+        sizeLabel = label(R.string.glutton_title, 27f).apply { typeface = Typeface.DEFAULT_BOLD }
+        row.addView(sizeLabel, LinearLayout.LayoutParams(0, dp(48), 1f))
         combo = label(R.string.glutton_title, 18f).apply { setTextColor(0xFF389B85.toInt()); gravity = Gravity.CENTER }
         row.addView(combo, LinearLayout.LayoutParams(dp(48), dp(48)))
         timer = label(R.string.glutton_title, 20f).apply { gravity = Gravity.CENTER; typeface = Typeface.DEFAULT_BOLD }
@@ -125,27 +118,8 @@ class GluttonActivity : ThemedActivity() {
         row.addView(button(R.string.glutton_pause) { showMenu(Screen.PAUSE) }.apply { textSize = 12f },
             LinearLayout.LayoutParams(dp(76), dp(48)))
         hud.addView(row)
-        val progressRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        sizeLabel = label(R.string.glutton_title, 14f).apply { typeface = Typeface.DEFAULT_BOLD }
-        progressRow.addView(sizeLabel, LinearLayout.LayoutParams(dp(83), dp(30)))
-        growth = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
-            max = 1000; progressTintList = ColorStateList.valueOf(GluttonArt.MINT)
-            progressBackgroundTintList = ColorStateList.valueOf(0xFFE2D8D0.toInt())
-        }
-        progressRow.addView(growth, LinearLayout.LayoutParams(0, dp(10), 1f))
-        target = object : View(this) {
-            override fun onDraw(canvas: Canvas) {
-                scene.art.item(canvas, scene.game.goal.prop, width / 2f, height / 2f, dp(13).toFloat(), -8f)
-            }
-        }
-        progressRow.addView(target, LinearLayout.LayoutParams(dp(38), dp(30)))
-        hud.addView(progressRow)
-        val missionRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        objective = label(R.string.glutton_title, 13f).apply { typeface = Typeface.DEFAULT_BOLD }
-        missionRow.addView(objective, LinearLayout.LayoutParams(0, dp(25), 1f))
-        treasureLabel = label(R.string.glutton_title, 13f).apply { gravity = Gravity.END; setTextColor(0xFFAC803D.toInt()) }
-        missionRow.addView(treasureLabel, LinearLayout.LayoutParams(dp(68), dp(25)))
-        hud.addView(missionRow)
+        modeLabel = label(R.string.glutton_title, 13f).apply { setTextColor(0xFF8C7483.toInt()) }
+        hud.addView(modeLabel, LinearLayout.LayoutParams(-1, dp(22)))
         root.addView(hud, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
         footer = FrameLayout(this).apply { setPadding(dp(18), dp(8), dp(18), dp(12)) }
         val power = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -166,7 +140,7 @@ class GluttonActivity : ThemedActivity() {
             background = panel(0xF5FFF5E7.toInt(), GluttonArt.GOLD, 20)
             setPadding(dp(18), dp(8), dp(18), dp(8)); visibility = View.GONE
         }
-        root.addView(banner, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(135) })
+        root.addView(banner, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(110) })
         overlay = ScrollView(this).apply { isFillViewport = true; setBackgroundColor(0xCDEADCD8.toInt()); isClickable = true }
         val center = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
@@ -188,7 +162,7 @@ class GluttonActivity : ThemedActivity() {
                 canvas.save(); canvas.translate(width / 2f, height / 2f); canvas.scale(scale, scale)
                 scene.art.shape(canvas, Shape.DONUT, -87f, 24f, 24f, -15f)
                 scene.art.shape(canvas, Shape.SOFA, 92f, 25f, 36f, 12f)
-                scene.art.shape(canvas, Shape.CAT, -95f, -32f, 18f, 10f)
+                scene.art.shape(canvas, Shape.CAR, -95f, -32f, 18f, 10f)
                 scene.art.shape(canvas, Shape.HOUSE, 96f, -36f, 20f, -6f)
                 scene.art.body(canvas, 0f, 1f, 57f, .6f, hungry = screen == Screen.END)
                 scene.art.shape(canvas, Shape.COOKIE, -34f, 36f, 13f, 20f)
@@ -205,24 +179,22 @@ class GluttonActivity : ThemedActivity() {
         card.addView(subtitle)
         result = label(R.string.glutton_title, 18f).apply { gravity = Gravity.CENTER; setPadding(0, dp(8), 0, dp(12)) }
         card.addView(result)
-        bestLabel = label(R.string.glutton_title, 13f).apply { setTextColor(0xFF8C7483.toInt()); setPadding(0, 0, 0, dp(8)) }
-        card.addView(bestLabel)
-        chapters = LinearLayout(this).apply { gravity = Gravity.CENTER }
-        for (zone in 0..2) {
-            val chapter = button(ZONES[zone]) { selectedZone = zone; updateChapters() }.apply {
-                textSize = 12f; setPadding(dp(4), 0, dp(4), 0)
+        modes = LinearLayout(this).apply { gravity = Gravity.CENTER }
+        for (mode in Mode.entries) {
+            val button = button(MODES[mode.ordinal]) { selectedMode = mode; prefs.edit().putInt("mode", mode.ordinal).apply(); updateModes() }.apply {
+                textSize = 13f; setPadding(dp(6), dp(6), dp(6), dp(6)); isSingleLine = false; maxLines = 3
             }
-            chapterButtons += chapter
-            chapters.addView(chapter, LinearLayout.LayoutParams(0, dp(48), 1f))
+            modeButtons += button
+            modes.addView(button, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(3); rightMargin = dp(3) })
         }
-        card.addView(chapters, LinearLayout.LayoutParams(-1, -2))
-        primary = button(R.string.glutton_play) { if (screen == Screen.PAUSE) resumeGame() else startGame(zone = selectedZone) }.apply {
+        card.addView(modes, LinearLayout.LayoutParams(-1, -2))
+        primary = button(R.string.glutton_play) { if (screen == Screen.PAUSE) resumeGame() else startGame(mode = selectedMode) }.apply {
             backgroundTintList = ColorStateList.valueOf(GluttonArt.MINT)
         }
         card.addView(primary, LinearLayout.LayoutParams(-1, dp(56)))
-        sameRoom = button(R.string.glutton_same) { startGame(scene.game.seed, scene.game.sceneIndex) }
-        card.addView(sameRoom, LinearLayout.LayoutParams(-1, dp(48)))
-        secondary = button(R.string.glutton_again) { startGame(zone = scene.game.sceneIndex) }
+        sameMap = button(R.string.glutton_same) { startGame(scene.game.seed, scene.game.mode) }
+        card.addView(sameMap, LinearLayout.LayoutParams(-1, dp(48)))
+        secondary = button(R.string.glutton_again) { startGame(mode = scene.game.mode) }
         card.addView(secondary, LinearLayout.LayoutParams(-1, dp(48)))
         help = button(R.string.glutton_help) {
             showingRules = !showingRules
@@ -256,12 +228,19 @@ class GluttonActivity : ThemedActivity() {
 
     private fun updateViewport() { scene.setViewportInsets(hud.height, footer.height) }
 
-    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), zone: Int = 0) {
+    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), mode: Mode = Mode.CHRONO) {
         settle(); hasRun = true; rewardPaid = 0
-        displayedScore = -1; displayedSeconds = -1; displayedScene = -1; displayedMultiplier = -1; displayedTreasures = -1; burstReady = null
+        displayedSize = ""; displayedSeconds = -1; displayedMultiplier = -1; burstReady = null
         banner.removeCallbacks(hideBanner); banner.visibility = View.GONE
         screen = Screen.PLAY; overlay.visibility = View.GONE; hud.visibility = View.VISIBLE; footer.visibility = View.VISIBLE
-        scene.start(seed, zone); keepAwake(true)
+        scene.start(seed, mode)
+        modeLabel.text = getString(R.string.glutton_hud_mode, getString(MODES[mode.ordinal]), recordText(mode))
+        keepAwake(true)
+    }
+
+    private fun recordText(mode: Mode): String {
+        val record = best(mode)
+        return if (record > 0f) getString(R.string.glutton_record, sizeText(record)) else ""
     }
 
     private fun resumeGame() {
@@ -272,6 +251,7 @@ class GluttonActivity : ThemedActivity() {
 
     private fun showMenu(next: Screen) {
         if (next == Screen.PAUSE && scene.game.finished) { finishRun(); return }
+        if (next == Screen.PAUSE) settle()
         screen = next; showingRules = false
         scene.setRunning(false); keepAwake(false)
         banner.removeCallbacks(hideBanner); banner.visibility = View.GONE
@@ -292,18 +272,17 @@ class GluttonActivity : ThemedActivity() {
             else -> R.string.glutton_play
         })
         secondary.visibility = if (next == Screen.PAUSE) View.VISIBLE else View.GONE
-        sameRoom.visibility = if (next == Screen.END) View.VISIBLE else View.GONE
+        sameMap.visibility = if (next == Screen.END) View.VISIBLE else View.GONE
         result.visibility = if (next == Screen.END) View.VISIBLE else View.GONE
         help.visibility = if (next == Screen.END) View.GONE else View.VISIBLE
-        chapters.visibility = if (next == Screen.HOME || next == Screen.END) View.VISIBLE else View.GONE
-        updateChapters()
+        modes.visibility = if (next == Screen.HOME || next == Screen.END) View.VISIBLE else View.GONE
+        updateModes()
     }
 
     private fun updateHud() {
         val game = scene.game
-        if (game.score != displayedScore) {
-            displayedScore = game.score; score.text = getString(R.string.glutton_score, game.score)
-        }
+        val size = sizeText(game.diameterMetres)
+        if (size != displayedSize) { displayedSize = size; sizeLabel.text = size }
         val seconds = ceil(game.remaining.toDouble()).toInt()
         if (seconds != displayedSeconds) {
             displayedSeconds = seconds; timer.text = getString(R.string.glutton_timer, seconds / 60, seconds % 60)
@@ -314,16 +293,6 @@ class GluttonActivity : ThemedActivity() {
             combo.text = getString(R.string.glutton_combo, game.multiplier)
             combo.visibility = if (game.multiplier > 1) View.VISIBLE else View.INVISIBLE
         }
-        growth.progress = (game.progress * 1000).toInt()
-        sizeLabel.text = sizeText(game.diameterMetres)
-        if (game.sceneIndex != displayedScene) {
-            displayedScene = game.sceneIndex; target.invalidate()
-            objective.text = getString(R.string.glutton_goal, name(game.goal.prop), sizeText(game.targetMetres))
-            growth.contentDescription = getString(R.string.glutton_growth_accessibility, name(game.goal.prop), sizeText(game.targetMetres))
-        }
-        if (game.treasures != displayedTreasures) {
-            displayedTreasures = game.treasures; treasureLabel.text = getString(R.string.glutton_treasure_counter, game.treasures)
-        }
         charge.progress = (game.charge * 1000).toInt()
         val ready = game.charge >= .999f && game.burst <= 0f
         if (ready != burstReady) {
@@ -333,44 +302,33 @@ class GluttonActivity : ThemedActivity() {
         }
     }
 
+    /** Pays the neutrinos earned so far and keeps the record; safe to call several times per run. */
     private fun settle(): Int {
         if (!hasRun) return 0
-        best = maxOf(best, scene.game.score); prefs.edit().putInt("best", best).apply()
-        val reward = NeutrinoRewards.glutton(scene.game.score)
+        val game = scene.game
+        val key = "best_${game.mode.name.lowercase()}"
+        if (game.diameterMetres > prefs.getFloat(key, 0f)) prefs.edit().putFloat(key, game.diameterMetres).apply()
+        val reward = NeutrinoRewards.glutton(game.diameterMetres)
         val difference = reward - rewardPaid
         if (difference > 0) { NeutrinoRepository(this).addBalance(difference); rewardPaid = reward }
         return reward
     }
 
     private fun finishRun() {
-        val reward = settle(); saveProgress(); selectedZone = scene.game.sceneIndex; showMenu(Screen.END)
-        heading.setText(if (scene.game.won) R.string.glutton_victory else R.string.glutton_time_up)
-        result.text = getString(R.string.glutton_expedition_result, scene.game.score, sizeText(scene.game.diameterMetres),
-            scene.game.eaten, scene.game.medals.sum(), reward)
+        val game = scene.game
+        val record = game.diameterMetres > best(game.mode)
+        val reward = settle(); selectedMode = game.mode; showMenu(Screen.END)
+        heading.setText(if (game.cleared) R.string.glutton_cleared else if (record) R.string.glutton_new_record else R.string.glutton_end)
+        result.text = getString(R.string.glutton_result, sizeText(game.diameterMetres), game.eaten, game.bestCombo, reward)
     }
 
-    private fun saveProgress() {
-        val editor = prefs.edit()
-        var unlocked = prefs.getInt("unlocked", 0)
-        for (zone in 0..2) if (scene.game.medals[zone] > 0) {
-            unlocked = maxOf(unlocked, (zone + 1).coerceAtMost(2))
-            editor.putInt("stars_$zone", maxOf(prefs.getInt("stars_$zone", 0), scene.game.medals[zone]))
-            editor.putFloat("time_$zone", minOf(prefs.getFloat("time_$zone", Float.MAX_VALUE), scene.game.completionTimes[zone]))
+    private fun updateModes() {
+        for ((index, button) in modeButtons.withIndex()) {
+            val mode = Mode.entries[index]
+            val record = recordText(mode)
+            button.text = if (record.isEmpty()) getString(MODES[index]) else getString(R.string.glutton_mode_with_record, getString(MODES[index]), record)
+            button.backgroundTintList = ColorStateList.valueOf(if (mode == selectedMode) GluttonArt.MINT else 0xFFE5E6D9.toInt())
         }
-        editor.putInt("unlocked", unlocked).apply()
-    }
-
-    private fun updateChapters() {
-        val unlocked = prefs.getInt("unlocked", 0).coerceIn(0, 2)
-        selectedZone = selectedZone.coerceIn(0, unlocked)
-        for ((zone, button) in chapterButtons.withIndex()) {
-            button.isEnabled = zone <= unlocked
-            button.text = if (zone <= unlocked) getString(ZONES[zone]) else getString(R.string.glutton_locked_chapter, getString(ZONES[zone]))
-            button.backgroundTintList = ColorStateList.valueOf(if (zone == selectedZone) GluttonArt.MINT else 0xFFE5E6D9.toInt())
-        }
-        bestLabel.text = getString(R.string.glutton_chapter_record, best, prefs.getInt("stars_$selectedZone", 0))
-        val time = prefs.getFloat("time_$selectedZone", Float.MAX_VALUE)
-        if (time < Float.MAX_VALUE) bestLabel.text = getString(R.string.glutton_best_time, bestLabel.text, time.toInt())
     }
 
     private fun leave() { settle(); finish() }
@@ -411,12 +369,8 @@ class GluttonActivity : ThemedActivity() {
     private fun dp(value: Int) = (resources.displayMetrics.density * value).toInt()
 
     companion object {
-        val ZONES = intArrayOf(R.string.glutton_zone_room, R.string.glutton_zone_garden, R.string.glutton_zone_city)
-        val STREAKS = mapOf(
-            Family.FOOD to R.string.glutton_streak_food, Family.TOY to R.string.glutton_streak_toy,
-            Family.HOME to R.string.glutton_streak_home, Family.PLANT to R.string.glutton_streak_plant,
-            Family.ANIMAL to R.string.glutton_streak_animal, Family.GARDEN to R.string.glutton_streak_garden,
-            Family.VEHICLE to R.string.glutton_streak_vehicle, Family.STREET to R.string.glutton_streak_street,
-            Family.BUILDING to R.string.glutton_streak_building)
+        val RINGS = intArrayOf(R.string.glutton_zone_room, R.string.glutton_zone_suburb, R.string.glutton_zone_city)
+        val MODES = intArrayOf(R.string.glutton_mode_chrono, R.string.glutton_mode_fringale)
+        @Suppress("unused") val THEMES = Theme.entries
     }
 }

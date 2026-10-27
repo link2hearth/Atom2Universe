@@ -13,9 +13,10 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.GamesCatalog
-import com.Atom2Universe.app.games.glutton.GluttonCatalog.Scene
+import com.Atom2Universe.app.games.glutton.GluttonGame.Mode
 import com.Atom2Universe.app.hub.HubTileArtworks
 import java.io.File
+import java.time.Duration
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +27,6 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadows.ShadowSystemClock
-import java.time.Duration
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [33], application = Application::class, qualifiers = "w412dp-h820dp-port")
@@ -43,34 +43,22 @@ class GluttonActivityTest {
     }
     private fun views(activity: GluttonActivity) = descendants(activity.findViewById(android.R.id.content))
     private fun click(activity: GluttonActivity, text: Int) {
-        assertTrue(views(activity).filterIsInstance<Button>().first { it.text == activity.getString(text) && it.visibility == View.VISIBLE }.performClick())
+        val wanted = activity.getString(text)
+        assertTrue(views(activity).filterIsInstance<Button>().first { it.text.startsWith(wanted) && it.visibility == View.VISIBLE }.performClick())
     }
     private fun touch(view: View, action: Int, x: Float, y: Float) {
         val event = MotionEvent.obtain(0, 0, action, x, y, 0)
         view.onTouchEvent(event); event.recycle()
     }
-    private fun grow(view: GluttonView, target: Float) {
-        val g = view.game
-        repeat(400) {
-            if (g.radius >= target) return
-            val prop = GluttonCatalog.forScene(g.scene).filter { !it.moves && !it.goal && !it.treasure && it.radius <= g.radius * GluttonGame.EDIBLE }.maxBy { it.radius }
-            g.items.removeAll { !it.moves }
-            repeat(6) { g.items += GluttonGame.Item(9000 + it, prop, g.x, g.y, 0f) }
-            g.update(1f / 60); view.onHudChanged?.invoke()
-        }
-        fail("Could not reach radius $target")
-    }
-    /** Grows to landmark size and parks the landmark in the mouth; the next frames swallow it, as in the app. */
-    private fun completeScene(view: GluttonView) {
-        grow(view, view.game.targetRadius)
-        view.game.items.clear(); view.game.items += view.game.goal
-        view.game.goal.x = view.game.x; view.game.goal.y = view.game.y
-    }
-    /** Drives the frame loop (with a ticking clock) through the swallow and the scene-change animation. */
-    private fun settleTransition(view: GluttonView) = frames(view, 150)
     private fun frames(view: GluttonView, count: Int) {
         val runnable = view.javaClass.getDeclaredField("frame").apply { isAccessible = true }.get(view) as Runnable
         repeat(count) { ShadowSystemClock.advanceBy(Duration.ofMillis(16)); runnable.run() }
+    }
+    private fun teleport(game: GluttonGame, x: Float, y: Float, radius: Float) {
+        game.forceRadius(radius)
+        game.javaClass.getDeclaredField("x").apply { isAccessible = true }.setFloat(game, x)
+        game.javaClass.getDeclaredField("y").apply { isAccessible = true }.setFloat(game, y)
+        game.update(1f / 120)
     }
 
     @Test fun cancelledInputAndBackgroundingStopMovementUntilExplicitResume() {
@@ -96,21 +84,21 @@ class GluttonActivityTest {
         } finally { controller.pause().stop().destroy() }
     }
 
-    @Test fun replayAndRepeatedPausesDoNotPayTheSamePointsTwice() {
+    @Test fun replayAndRepeatedPausesDoNotPayTheSameSizeTwice() {
         val controller = Robolectric.buildActivity(GluttonActivity::class.java).setup()
         try {
             val activity = controller.get(); click(activity, R.string.glutton_play)
             val view = views(activity).filterIsInstance<GluttonView>().single()
-            grow(view, 80f)
-            val expected = NeutrinoRewards.glutton(view.game.score)
-            assertTrue(expected > 0)
+            view.game.forceRadius(2f)
+            val expected = NeutrinoRewards.glutton(view.game.diameterMetres)
+            assertEquals(6, expected)
             controller.pause().resume(); click(activity, R.string.glutton_resume)
             controller.pause().resume()
             assertEquals(expected, context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0))
             click(activity, R.string.glutton_again)
             assertEquals(expected, context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0))
-            assertEquals(0, view.game.score)
-            assertTrue(context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE).getInt("best", 0) > 0)
+            assertEquals(GluttonGame.START_RADIUS, view.game.radius, 1e-6f)
+            assertEquals(4f, context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE).getFloat("best_chrono", 0f), .001f)
         } finally { controller.pause().stop().destroy() }
     }
 
@@ -123,7 +111,8 @@ class GluttonActivityTest {
             while (!view.game.finished && guard++ < 4000) view.game.update(.1f)
             assertTrue(view.game.finished)
             activity.onWindowFocusChanged(false)
-            assertTrue(views(activity).filterIsInstance<TextView>().any { it.text == activity.getString(R.string.glutton_time_up) })
+            val headings = views(activity).filterIsInstance<TextView>().map { it.text.toString() }.toList()
+            assertTrue(headings.any { it == activity.getString(R.string.glutton_end) || it == activity.getString(R.string.glutton_new_record) || it == activity.getString(R.string.glutton_cleared) })
             click(activity, R.string.glutton_again)
             assertFalse(view.game.finished); assertTrue(view.isRunning)
         } finally { controller.pause().stop().destroy() }
@@ -147,44 +136,25 @@ class GluttonActivityTest {
                     assertTrue("$language: missing glutton_item_${prop.id}", id != 0)
                     assertTrue(activity.name(prop).isNotBlank())
                 }
-                assertTrue(GluttonActivity.STREAKS.keys.containsAll(GluttonCatalog.props.map { it.family }.filter { it != GluttonCatalog.Family.TREASURE }))
             } finally { controller.pause().stop().destroy() }
         }
     }
 
-    @Test fun landmarksChainScenesWithoutAMenuAndUnlockThem() {
-        val controller = Robolectric.buildActivity(GluttonActivity::class.java).setup()
-        try {
-            val activity = controller.get(); click(activity, R.string.glutton_play)
-            val view = views(activity).filterIsInstance<GluttonView>().single()
-            view.layout(0, 0, 412, 820)
-            completeScene(view)
-            settleTransition(view)
-            val prefs = context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE)
-            assertEquals(1, prefs.getInt("unlocked", 0)); assertTrue(prefs.getInt("stars_0", 0) > 0)
-            assertTrue(view.isRunning); assertEquals(1, view.game.sceneIndex); assertFalse(view.inTransition)
-            completeScene(view); settleTransition(view)
-            assertEquals(2, prefs.getInt("unlocked", 0)); assertEquals(2, view.game.sceneIndex)
-            completeScene(view); settleTransition(view)
-            assertTrue(view.game.won)
-            assertTrue(views(activity).filterIsInstance<TextView>().any { it.text == activity.getString(R.string.glutton_victory) })
-            val balance = context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0)
-            assertTrue(balance > 0)
-            controller.pause().resume()
-            assertEquals(balance, context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0))
-        } finally { controller.pause().stop().destroy() }
-    }
-
-    @Test fun anUnlockedAreaCanBeSelectedDirectlyWithoutResettingEarnedStars() {
+    @Test fun theHungryClockModeIsRememberedAndKeepsItsOwnRecord() {
         val prefs = context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE)
-        prefs.edit().putInt("unlocked", 2).putInt("stars_0", 3).commit()
+        prefs.edit().putFloat("best_chrono", 12.5f).commit()
         val controller = Robolectric.buildActivity(GluttonActivity::class.java).setup()
         try {
-            val activity = controller.get(); click(activity, R.string.glutton_zone_city); click(activity, R.string.glutton_play)
+            val activity = controller.get()
+            assertTrue(views(activity).filterIsInstance<Button>().any { it.text.contains("12.5") || it.text.contains("12,5") })
+            click(activity, R.string.glutton_mode_fringale); click(activity, R.string.glutton_play)
             val view = views(activity).filterIsInstance<GluttonView>().single()
-            assertEquals(2, view.game.sceneIndex); assertEquals(Scene.CITY, view.game.scene)
-            assertEquals(Scene.CITY.startMetres, view.game.diameterMetres, .01f)
-            assertEquals(3, prefs.getInt("stars_0", 0))
+            assertEquals(Mode.FRINGALE, view.game.mode); assertEquals(1, prefs.getInt("mode", 0))
+            assertTrue(view.game.items.any { it.prop.bonus })
+            view.game.forceRadius(.5f)
+            activity.onWindowFocusChanged(false)
+            assertEquals(1f, prefs.getFloat("best_fringale", 0f), .001f)
+            assertEquals(12.5f, prefs.getFloat("best_chrono", 0f), .001f)
         } finally { controller.pause().stop().destroy() }
     }
 
@@ -214,12 +184,13 @@ class GluttonActivityTest {
             val view = views(activity).filterIsInstance<GluttonView>().single()
             root.layout(0, 0, 412, 820); frames(view, 30)
             render("start", 412, 820)
-            grow(view, 70f); frames(view, 90); render("grown", 412, 820)
-            grow(view, view.game.targetRadius * .95f); frames(view, 90); render("room_big", 412, 820)
-            completeScene(view); settleTransition(view); render("garden", 412, 820)
-            grow(view, 90f); frames(view, 90); render("garden_grown", 412, 820)
-            completeScene(view); settleTransition(view); render("city", 412, 820)
-            grow(view, view.game.targetRadius * .95f); frames(view, 90); render("city_giant", 412, 820)
+            teleport(view.game, 1.5f, -1.2f, .1f); frames(view, 90); render("house_grown", 412, 820)
+            teleport(view.game, 0f, -7f, .5f); frames(view, 90); render("house_exit", 412, 820)
+            teleport(view.game, 40f, 30f, 1f); frames(view, 90); render("suburb", 412, 820)
+            teleport(view.game, -50f, 45f, 4f); frames(view, 90); render("suburb_big", 412, 820)
+            teleport(view.game, 0f, 12f, 12f); frames(view, 90); render("house_eaten", 412, 820)
+            teleport(view.game, 500f, 400f, 15f); frames(view, 90); render("city", 412, 820)
+            teleport(view.game, -700f, 500f, 120f); frames(view, 90); render("city_giant", 412, 820)
             render("compact", 320, 568)
             render("landscape", 820, 412)
         } finally { controller.pause().stop().destroy() }

@@ -2,7 +2,6 @@ package com.Atom2Universe.app.games.glutton
 
 import android.graphics.*
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
-import com.Atom2Universe.app.games.glutton.GluttonCatalog.Scene
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Shape
 import kotlin.math.*
 
@@ -31,13 +30,6 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
         prop(canvas, shape)
         sprites[shape.ordinal] = it
     }
-    private val floors = arrayOfNulls<Bitmap>(Scene.entries.size)
-    fun floor(scene: Scene): Bitmap = floors[scene.ordinal] ?: Bitmap.createBitmap(700, (700f * scene.height / scene.width).roundToInt(), Bitmap.Config.RGB_565).also {
-        val c = Canvas(it); c.scale(700f / scene.width, 700f / scene.width)
-        when (scene) { Scene.ROOM -> room(c, scene); Scene.GARDEN -> garden(c, scene); Scene.CITY -> city(c, scene) }
-        floors[scene.ordinal] = it
-    }
-
     private fun fill(color: Int) { p.shader = null; p.color = color; p.style = Paint.Style.FILL }
     private fun oval(c: Canvas, l: Float, t: Float, r: Float, b: Float, color: Int) {
         fill(color); c.drawOval(l, t, r, b, p)
@@ -54,7 +46,8 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
         val extent = radius * 1.48f
         dst.set(-extent, -extent, extent, extent)
         fill(Color.WHITE); p.alpha = alpha
-        if (atlas?.draw(c, prop.sheet, prop.cell, dst, p) != true) c.drawBitmap(sprite(prop.shape), null, dst, p)
+        val theme = prop.theme
+        if (theme == null || atlas?.draw(c, theme, prop.page, prop.cell, dst, p) != true) c.drawBitmap(sprite(prop.shape), null, dst, p)
         p.alpha = 255; c.restore()
     }
     fun shape(c: Canvas, shape: Shape, x: Float, y: Float, radius: Float, angle: Float) {
@@ -133,110 +126,6 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
             if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
         }
         path.close(); fill(color); c.drawPath(path, p)
-    }
-
-    private fun lanes(c: Canvas, scene: Scene, color: Int, width: Float, dash: Int, edge: Int) {
-        val w = scene.width; val h = scene.height
-        for (lx in floatArrayOf(w * .33f, w * .67f)) {
-            if (edge != 0) line(c, lx, 0f, lx, h, edge, width + 26f)
-            line(c, lx, 0f, lx, h, color, width)
-            if (dash != 0) { var yy = 0f; while (yy < h) { line(c, lx, yy, lx, yy + 40f, dash, 4f); yy += 90f } }
-        }
-        for (ly in floatArrayOf(h * .3f, h * .7f)) {
-            if (edge != 0) line(c, 0f, ly, w, ly, edge, width + 26f)
-            line(c, 0f, ly, w, ly, color, width)
-            if (dash != 0) { var xx = 0f; while (xx < w) { line(c, xx, ly, xx + 40f, ly, dash, 4f); xx += 90f } }
-        }
-    }
-
-    private fun room(c: Canvas, scene: Scene) {
-        val w = scene.width; val h = scene.height
-        c.drawColor(0xFFB7A2C5.toInt())
-        round(c, 14f, 22f, w - 14f, h - 8f, 48f, 0xFF8C83A7.toInt())
-        round(c, 24f, 12f, w - 24f, h - 28f, 42f, 0xFFEFD9C8.toInt())
-        var row = 0
-        while (row * 94f < h) {
-            val yy = 30f + row * 94f
-            line(c, 34f, yy, w - 34f, yy, 0xFFDCC2B4.toInt(), 2f)
-            var col = 0
-            while (col * 295f < w) {
-                val xx = 30f + col * 295f + if (row % 2 == 0) 0f else 147f
-                if (xx < w - 40f) line(c, xx, yy, xx, yy + 92f, 0xFFDCC2B4.toInt(), 2f)
-                col++
-            }
-            row++
-        }
-        // Runner carpets double as the toy cars' tracks.
-        lanes(c, scene, 0xFFD9CFE3.toInt(), 46f, 0, 0)
-        round(c, w * .32f, h * .34f, w * .68f, h * .66f, 150f, 0x28A2709A)
-        round(c, w * .32f - 4f, h * .34f - 10f, w * .68f + 4f, h * .66f - 10f, 150f, 0xFFE8ADC1.toInt())
-        round(c, w * .33f, h * .35f, w * .67f, h * .65f - 10f, 137f, 0xFFF5C5CD.toInt())
-        for (i in 0..7) {
-            val a = i * PI.toFloat() / 4f
-            oval(c, w * .5f + cos(a) * 110f - 43f, h * .5f - 8f + sin(a) * 110f - 43f,
-                w * .5f + cos(a) * 110f + 43f, h * .5f - 8f + sin(a) * 110f + 43f, 0x55FFEEE1)
-        }
-        round(c, w * .05f, h * .06f, w * .28f, h * .24f, 80f, 0xFFACCFC6.toInt())
-        round(c, w * .06f, h * .07f, w * .27f, h * .23f, 70f, 0xFFCEE4CF.toInt())
-        round(c, w * .7f, h * .74f, w * .95f, h * .92f, 90f, 0xFFC3B2D9.toInt())
-        for (i in 0..5) star(c, w * .74f + i % 3 * w * .08f, h * .78f + i / 3 * h * .07f, 19f, 0x55F9F3FF)
-        round(c, w * .72f, h * .04f, w * .96f, h * .27f, 30f, 0xFFF3E7D5.toInt())
-        for (i in 0..5) for (j in 0..5) round(c, w * .73f + i * w * .04f, h * .05f + j * h * .037f,
-            w * .73f + i * w * .04f + w * .036f, h * .05f + j * h * .037f + h * .033f, 6f, 0xFFE4D3C1.toInt())
-        var x = 90f
-        while (x < w - 90f) {
-            round(c, x, 12f, x + 75f, 27f, 7f, 0xFFF9EADA.toInt()); round(c, x, h - 30f, x + 75f, h - 15f, 7f, 0xFFAA92B7.toInt()); x += 130f
-        }
-        var y = 90f
-        while (y < h - 90f) {
-            round(c, 12f, y, 27f, y + 75f, 7f, 0xFFF9EADA.toInt()); round(c, w - 30f, y, w - 15f, y + 75f, 7f, 0xFFAA92B7.toInt()); y += 130f
-        }
-    }
-
-    private fun garden(c: Canvas, scene: Scene) {
-        val w = scene.width; val h = scene.height
-        c.drawColor(0xFFB9D7A0.toInt())
-        var i = 0
-        while (i * 104f < w) {
-            var j = 0
-            while (j * 103f < h) {
-                oval(c, i * 104f + j % 2 * 30f, j * 103f, i * 104f + j % 2 * 30f + 45f, j * 103f + 25f, 0x1F6AAB85); j++
-            }
-            i++
-        }
-        round(c, w * .36f, h * .36f, w * .64f, h * .64f, 120f, 0xFFA5CF8E.toInt())
-        lanes(c, scene, 0xFFE3D4AD.toInt(), 70f, 0, 0xFFCDBE93.toInt())
-        round(c, w * .05f, h * .05f, w * .27f, h * .25f, 60f, 0xFF8BBFB4.toInt())
-        round(c, w * .06f, h * .06f, w * .26f, h * .24f, 50f, 0xFFB5E5D1.toInt())
-        for (k in 0..7) line(c, w * .08f + k * w * .022f, h * .12f, w * .09f + k * w * .022f, h * .12f, 0x88F4FFF0.toInt(), 4f)
-        round(c, w * .72f, h * .74f, w * .95f, h * .93f, 90f, 0xFFD9C2AE.toInt())
-        for (k in 0..8) star(c, w * .75f + k % 3 * w * .07f, h * .78f + k / 3 * h * .05f, 14f, 0x55FFF6DF)
-        round(c, w * .72f, h * .05f, w * .96f, h * .26f, 30f, 0xFFC9D9A3.toInt())
-        for (k in 0..4) line(c, w * .74f, h * .07f + k * h * .04f, w * .94f, h * .07f + k * h * .04f, 0xFFB0C78B.toInt(), 14f)
-        var y = 0f
-        while (y < h) {
-            round(c, 8f, y, 30f, y + 58f, 6f, 0xFF819D78.toInt()); round(c, w - 30f, y, w - 8f, y + 58f, 6f, 0xFF819D78.toInt()); y += 85f
-        }
-    }
-
-    private fun city(c: Canvas, scene: Scene) {
-        val w = scene.width; val h = scene.height
-        c.drawColor(0xFFD9DDD9.toInt())
-        for (i in 0..2) for (j in 0..2) {
-            val x0 = if (i == 0) 40f else if (i == 1) w * .33f + 95f else w * .67f + 95f
-            val x1 = if (i == 0) w * .33f - 95f else if (i == 1) w * .67f - 95f else w - 40f
-            val y0 = if (j == 0) 40f else if (j == 1) h * .3f + 95f else h * .7f + 95f
-            val y1 = if (j == 0) h * .3f - 95f else if (j == 1) h * .7f - 95f else h - 40f
-            val park = (i + j) % 2 == 1
-            round(c, x0, y0, x1, y1, 26f, if (park) 0xFFB9D6B1.toInt() else 0xFFE4DCD2.toInt())
-            round(c, x0 + 15f, y0 + 15f, x1 - 15f, y1 - 15f, 20f, if (park) 0xFFCDE0BE.toInt() else 0xFFEDE6DC.toInt())
-        }
-        lanes(c, scene, 0xFF98A4AE.toInt(), 110f, 0xFFE9E9D7.toInt(), 0xFFC8CCCB.toInt())
-        for (lx in floatArrayOf(w * .33f, w * .67f)) for (ly in floatArrayOf(h * .3f, h * .7f)) for (k in 0..4) {
-            line(c, lx - 80f, ly - 30f + k * 15f, lx - 56f, ly - 30f + k * 15f, 0xFFF5EEE1.toInt(), 6f)
-        }
-        round(c, w * .06f, h * .05f, w * .27f, h * .24f, 48f, 0xFFE6C6CB.toInt())
-        for (k in 0..4) star(c, w * .1f + k % 2 * w * .1f, h * .09f + k / 2 * h * .055f, 18f, 0x55FFF6EA)
     }
 
     /** Each stand-in is painted in a shared -50…50 space then baked into its sprite. */
@@ -505,27 +394,6 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
                 oval(c, -27f, -47f, 27f, -32f, 0xFFB7EEF2.toInt())
                 round(c, -20f, -10f, 20f, 14f, 4f, 0xFFFFF4D9.toInt())
             }
-            Shape.MOUSE -> {
-                oval(c, -34f, -10f, 30f, 36f, 0xFFB9B4C8.toInt())
-                oval(c, -32f, -16f, 24f, 28f, 0xFFD9D4E6.toInt())
-                oval(c, 10f, -30f, 38f, -4f, 0xFFD9D4E6.toInt())
-                oval(c, 16f, -42f, 34f, -24f, 0xFFF4B6C3.toInt())
-                oval(c, 20f, -38f, 30f, -28f, 0xFFF4B6C3.toInt())
-                oval(c, 32f, -14f, 38f, -8f, INK); oval(c, 38f, -16f, 45f, -9f, CORAL)
-                line(c, -34f, 12f, -50f, -8f, 0xFFB9B4C8.toInt(), 4f)
-            }
-            Shape.CAT -> {
-                oval(c, -40f, -6f, 36f, 38f, 0xFFF3A860.toInt())
-                oval(c, -8f, -42f, 38f, 4f, 0xFFF7B872.toInt())
-                path.rewind(); path.moveTo(-6f, -24f); path.lineTo(-2f, -50f); path.lineTo(10f, -34f); path.close()
-                fill(0xFFF3A860.toInt()); c.drawPath(path, p)
-                path.rewind(); path.moveTo(22f, -36f); path.lineTo(34f, -52f); path.lineTo(36f, -28f); path.close(); c.drawPath(path, p)
-                oval(c, 6f, -27f, 13f, -18f, 0xFF4B9A5C.toInt()); oval(c, 22f, -27f, 29f, -18f, 0xFF4B9A5C.toInt())
-                oval(c, 15f, -14f, 21f, -10f, CORAL)
-                for (i in -1..1) { line(c, 8f, -13f + i * 5f, -8f, -16f + i * 7f, 0xFF8A5B33.toInt(), 2f); line(c, 28f, -13f + i * 5f, 44f, -16f + i * 7f, 0xFF8A5B33.toInt(), 2f) }
-                line(c, -38f, 10f, -50f, -22f, 0xFFF3A860.toInt(), 8f)
-                for (i in 0..2) line(c, -24f + i * 14f, -2f, -22f + i * 14f, 14f, 0xFFD88A44.toInt(), 5f)
-            }
             Shape.VACUUM -> {
                 oval(c, -42f, -34f, 42f, 42f, 0xFF3C4455.toInt())
                 oval(c, -42f, -42f, 42f, 36f, 0xFF5B6478.toInt())
@@ -533,35 +401,6 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
                 oval(c, -10f, -12f, 10f, 6f, 0xFF53E0A6.toInt())
                 oval(c, -26f, -10f, -18f, -2f, CORAL)
                 line(c, -36f, 30f, 36f, 30f, 0xFF2D3340.toInt(), 6f)
-            }
-            Shape.DOG -> {
-                oval(c, -42f, -8f, 30f, 38f, 0xFFB07A4C.toInt())
-                oval(c, -40f, -14f, 10f, 26f, 0xFFD1976A.toInt())
-                oval(c, 2f, -40f, 42f, 2f, 0xFFB07A4C.toInt())
-                oval(c, 24f, -26f, 46f, -10f, 0xFF5E3C22.toInt())
-                oval(c, -4f, -44f, 14f, -16f, 0xFF8C5A30.toInt())
-                oval(c, 16f, -32f, 23f, -24f, INK); oval(c, 38f, -22f, 46f, -14f, INK)
-                line(c, -42f, 6f, -50f, -18f, 0xFFB07A4C.toInt(), 7f)
-                round(c, 8f, -4f, 36f, 3f, 3f, CORAL)
-            }
-            Shape.HEN -> {
-                oval(c, -38f, -14f, 28f, 36f, 0xFFF3E6D4.toInt())
-                oval(c, 0f, -44f, 34f, -10f, 0xFFF3E6D4.toInt())
-                for (i in 0..2) oval(c, 8f + i * 6f, -56f + i % 2 * 4f, 16f + i * 6f, -42f, CORAL)
-                round(c, 30f, -28f, 46f, -22f, 3f, GOLD)
-                oval(c, 20f, -34f, 26f, -28f, INK)
-                oval(c, 24f, -22f, 32f, -14f, CORAL)
-                line(c, -8f, 30f, -8f, 44f, GOLD, 4f); line(c, 6f, 30f, 6f, 44f, GOLD, 4f)
-                oval(c, -42f, -22f, -22f, 4f, 0xFFD8C9B8.toInt())
-            }
-            Shape.PIGEON -> {
-                oval(c, -34f, -10f, 26f, 30f, 0xFF8F93A8.toInt())
-                oval(c, -30f, -14f, 10f, 20f, 0xFFB1B5C7.toInt())
-                oval(c, 8f, -34f, 34f, -8f, 0xFF8F93A8.toInt())
-                oval(c, 10f, -18f, 30f, -4f, 0xFF6FBF9E.toInt())
-                round(c, 30f, -24f, 42f, -19f, 2f, GOLD)
-                oval(c, 22f, -28f, 27f, -23f, INK)
-                line(c, -34f, 8f, -48f, 2f, 0xFF6C7085.toInt(), 6f)
             }
             Shape.MOWER -> {
                 round(c, -40f, -10f, 34f, 30f, 8f, 0xFF4FA36A.toInt())
@@ -615,13 +454,16 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
                 line(c, -22f, 14f, -12f, 36f, INK, 2f); line(c, 22f, 14f, 12f, 36f, INK, 2f)
                 round(c, -16f, 34f, 16f, 46f, 3f, 0xFFA87B4F.toInt())
             }
-            Shape.GOLD -> {
-                oval(c, -42f, -36f, 42f, 42f, 0xFFC99A2E.toInt())
-                oval(c, -42f, -42f, 42f, 36f, GOLD)
-                oval(c, -28f, -32f, 28f, 22f, 0xFFFFE9A6.toInt())
-                star(c, 0f, -4f, 24f, 0xFFF2B53A.toInt())
-                star(c, 0f, -4f, 11f, 0xFFFFF6D6.toInt())
-                oval(c, -30f, -34f, -14f, -22f, 0xAAFFFFFF.toInt())
+            Shape.HOURGLASS -> {
+                oval(c, -34f, -14f, 34f, 46f, 0x33FFD46F)
+                round(c, -30f, -48f, 30f, -38f, 4f, 0xFFB47A3A.toInt()); round(c, -30f, 30f, 30f, 40f, 4f, 0xFFB47A3A.toInt())
+                path.rewind(); path.moveTo(-24f, -38f); path.lineTo(24f, -38f); path.lineTo(4f, -4f); path.lineTo(24f, 30f); path.lineTo(-24f, 30f); path.lineTo(-4f, -4f); path.close()
+                fill(0xFFCFEFF5.toInt()); c.drawPath(path, p)
+                path.rewind(); path.moveTo(-16f, -30f); path.lineTo(16f, -30f); path.lineTo(2f, -8f); path.lineTo(-2f, -8f); path.close()
+                fill(GOLD); c.drawPath(path, p)
+                path.rewind(); path.moveTo(-20f, 30f); path.lineTo(20f, 30f); path.lineTo(0f, 10f); path.close(); c.drawPath(path, p)
+                line(c, 0f, -8f, 0f, 14f, GOLD, 3f)
+                star(c, 30f, -40f, 7f, GOLD); star(c, -30f, 30f, 5f, GOLD)
             }
         }
     }
