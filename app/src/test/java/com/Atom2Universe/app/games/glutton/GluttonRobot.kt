@@ -141,6 +141,13 @@ object GluttonRobot {
      */
     private fun goal(g: GluttonGame, banned: Set<Int>): Triple<Double, Double, Double>? {
         var best: GluttonGame.Item? = null; var score = 0.0
+        // Cleaning up the universe: the closest crumb left on the map, however small.
+        if (g.finale) g.layers.last()?.let { last ->
+            val left = (last.statics.asSequence() + last.movers.asSequence()).filter { it.active }
+            val crumb = left.filter { it.id !in banned && g.canEat(it) }.minByOrNull { hypot(it.x - g.x, it.y - g.y) }
+                ?: left.minByOrNull { hypot(it.x - g.x, it.y - g.y) }
+            crumb?.let { return Triple(it.x, it.y, g.growth(it)) }
+        }
         for (layer in g.layers) {
             if (layer == null || abs(layer.ring.index - g.ring.index) > 1) continue
             // Inside the house only the house counts: the garden is behind its walls.

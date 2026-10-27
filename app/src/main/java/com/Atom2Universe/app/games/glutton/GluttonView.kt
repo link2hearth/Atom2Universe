@@ -52,9 +52,28 @@ class GluttonView(context: Context) : View(context) {
     }
     private class Gulp { var x = 0.0; var y = 0.0; var life = 0f; var prop: Prop? = null; var radius = 0.0; var angle = 0f; var flip = false }
     private class Label { var text = ""; var x = 0.0; var y = 0.0; var life = 0f; var scale = 1f }
+    /** A spark of the Big Bang, in screen pixels. */
+    private class Spark { var x = 0f; var y = 0f; var vx = 0f; var vy = 0f; var life = 0f; var total = 1f; var size = 1f; var color = 0 }
     private val particles = Array(128) { Particle() }
     private val gulps = Array(28) { Gulp() }
     private val labels = Array(4) { Label() }
+    private val sparks = Array(220) { Spark() }
+    /** Stars of the new universe: x, y (share of the screen), size (dp), twinkle phase. */
+    private val stars = FloatArray(STARS * 4)
+    private val bangPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val bangMatrix = Matrix()
+    private val fireball by lazy {
+        RadialGradient(0f, 0f, 1f, intArrayOf(NEW_SKY, NEW_SKY, 0xFF3B2A6E.toInt(), CORAL_HOT, GluttonArt.GOLD, Color.WHITE),
+            floatArrayOf(0f, .55f, .74f, .87f, .95f, 1f), Shader.TileMode.CLAMP)
+    }
+    private val glow by lazy { RadialGradient(0f, 0f, 1f, intArrayOf(Color.WHITE, 0xCCFFE9A8.toInt(), 0x00FFD46F), floatArrayOf(0f, .4f, 1f), Shader.TileMode.CLAMP) }
+    private val nebulae by lazy {
+        intArrayOf(0x5555C7AF, 0x55B07CE8, 0x55F18488, 0x456FA8FF).map { RadialGradient(0f, 0f, 1f, it, it and 0x00FFFFFF, Shader.TileMode.CLAMP) }
+    }
+    /** How white space has turned while the last ring is eaten clean (0 to 1). */
+    private var dawn = 0f
+    /** Seconds since the last crumb of the universe went down (-1 = not yet): implosion, flash, Big Bang. */
+    private var bang = -1f
     private val visible = ArrayList<GluttonGame.Item>(512)
     private var particleCursor = 0
     private var gulpCursor = 0
@@ -111,7 +130,8 @@ class GluttonView(context: Context) : View(context) {
 
     fun start(seed: Long = Random.nextLong(), mode: GluttonGame.Mode = GluttonGame.Mode.VOYAGE) {
         game = GluttonGame(seed, mode)
-        particles.forEach { it.life = 0f }; gulps.forEach { it.life = 0f }; labels.forEach { it.life = 0f }
+        particles.forEach { it.life = 0f }; gulps.forEach { it.life = 0f }; labels.forEach { it.life = 0f }; sparks.forEach { it.life = 0f }
+        dawn = 0f; bang = -1f
         cameraX = game.x; cameraY = game.y; zoom = 0.0
         pop = 0f; impact = 0f; visualTime = 0f
         hasSteered = false; nearest = null; nextHint = 0f; mapRing = -1; foodDots = 0; nextFoodMap = 0f
@@ -171,9 +191,15 @@ class GluttonView(context: Context) : View(context) {
             atlas.prepare(game.ring.theme)
             if (game.elapsed >= nextHint) { nearest = game.nearestFood(); nextHint = game.elapsed + .3f }
             if (game.elapsed - lastHud > .1f || game.finished) { lastHud = game.elapsed; onHudChanged?.invoke() }
+            val white = if (game.collapsing || game.cleared && game.mode == GluttonGame.Mode.VOYAGE) 1f else game.finaleProgress
+            dawn += (white - dawn) * (1f - exp(-dt * 2.5f))
             if (finishDelay >= 0f) {
                 finishDelay += dt
                 if (finishDelay >= .9f) { setRunning(false); onFinished?.invoke(); return }
+            }
+            if (bang >= 0f) {
+                updateBang(dt)
+                if (bang >= BANG_END) { setRunning(false); onFinished?.invoke(); return }
             }
             invalidate(); postOnAnimation(this)
         }
@@ -230,7 +256,16 @@ class GluttonView(context: Context) : View(context) {
                 if (sound) audio?.play(3)
             }
             GluttonGame.Effect.BONUS -> { emit(event.x, event.y, 24, GluttonArt.GOLD); if (sound) audio?.play(1, 1.3f) }
-            GluttonGame.Effect.FINISH -> { finishDelay = 0f; cancelInput(); haptic(HapticFeedbackConstants.LONG_PRESS); if (game.cleared) emit(game.x, game.y, 60, GluttonArt.GOLD) }
+            GluttonGame.Effect.COLLAPSE -> {
+                impact = .8f; pop = 1.5f; emit(game.x, game.y, 40, GluttonArt.GOLD)
+                haptic(HapticFeedbackConstants.LONG_PRESS)
+                if (sound) audio?.play(2, .6f)
+            }
+            GluttonGame.Effect.FINISH -> {
+                cancelInput()
+                if (game.cleared) { bang = 0f; if (sound) audio?.play(2, .5f) }
+                else { finishDelay = 0f; haptic(HapticFeedbackConstants.LONG_PRESS) }
+            }
             GluttonGame.Effect.BURST -> Unit
         }
     }
@@ -249,6 +284,94 @@ class GluttonView(context: Context) : View(context) {
 
     private fun haptic(type: Int) { if (haptics) performHapticFeedback(type) }
 
+    /** The gobbler shrinks to a point, ticking ever faster, then bursts into a new universe. */
+    private fun updateBang(dt: Float) {
+        val before = bang
+        bang += dt
+        if (bang < BANG_AT) {
+            val f = bang / BANG_AT
+            impact = max(impact, f * f * 1.2f)
+            // Haptic ticks closer and closer together as the universe crushes into one point.
+            val gap = .16f - f * .12f
+            if (floor(bang / gap) != floor(before / gap)) haptic(HapticFeedbackConstants.CLOCK_TICK)
+        } else if (before < BANG_AT) explode()
+        for (spark in sparks) if (spark.life > 0f) {
+            spark.life -= dt; spark.x += spark.vx * dt; spark.y += spark.vy * dt
+            val drag = 1f - dt * .9f; spark.vx *= drag; spark.vy *= drag
+        }
+    }
+
+    private fun explode() {
+        impact = 1.6f; haptic(HapticFeedbackConstants.LONG_PRESS)
+        if (sound) { audio?.play(3, .5f); audio?.play(1, .55f) }
+        val cx = width / 2f; val cy = centerY
+        for (spark in sparks) {
+            val angle = random.nextFloat() * 2f * PI.toFloat()
+            val speed = (220f + random.nextFloat().pow(2) * 1500f) * density
+            spark.x = cx; spark.y = cy; spark.vx = cos(angle) * speed; spark.vy = sin(angle) * speed
+            spark.total = 1.2f + random.nextFloat() * 1.6f; spark.life = spark.total
+            spark.size = (1.2f + random.nextFloat() * 3.4f) * density
+            spark.color = SPARKS[random.nextInt(SPARKS.size)]
+        }
+        for (i in 0 until STARS) {
+            stars[i * 4] = random.nextFloat(); stars[i * 4 + 1] = random.nextFloat()
+            stars[i * 4 + 2] = .6f + random.nextFloat().pow(3) * 1.8f; stars[i * 4 + 3] = random.nextFloat() * 6.3f
+        }
+    }
+
+    /** The new universe racing out from where you were: a hot front, cooling into a starry sky behind it. */
+    private fun drawBigBang(c: Canvas) {
+        val t = bang - BANG_AT
+        val cx = width / 2f; val cy = centerY
+        val far = hypot(max(cx, width - cx), max(cy, height - cy))
+        val grow = (t / FIREBALL).coerceIn(0f, 1f)
+        c.save()
+        if (impact > 0f) c.translate(sin(visualTime * 85f) * impact * 7f * density, cos(visualTime * 71f) * impact * 4f * density)
+        val front = far * (1.2f * (1f - (1f - grow).pow(3)) + max(0f, t - FIREBALL) * 1.4f)
+        if (front * .55f >= far) c.drawColor(NEW_SKY)
+        else if (front > 0f) {
+            bangMatrix.setScale(front, front); bangMatrix.postTranslate(cx, cy)
+            fireball.setLocalMatrix(bangMatrix); bangPaint.shader = fireball; bangPaint.alpha = 255
+            c.drawCircle(cx, cy, front, bangPaint)
+        }
+        // Clouds of new galaxies, fading in behind the front.
+        val clouds = ((t - .4f) / 1.4f).coerceIn(0f, 1f)
+        if (clouds > 0f) for ((i, shader) in nebulae.withIndex()) {
+            val a = i * 1.7f + .6f; val d = far * (.18f + i * .11f) * (.6f + .4f * clouds)
+            val radius = far * (.32f + (i % 2) * .14f) * (.7f + .3f * clouds)
+            val nx = cx + cos(a) * d; val ny = cy + sin(a) * d * .8f
+            bangMatrix.setScale(radius, radius); bangMatrix.postTranslate(nx, ny)
+            shader.setLocalMatrix(bangMatrix); bangPaint.shader = shader; bangPaint.alpha = (255 * clouds).toInt()
+            c.drawCircle(nx, ny, radius, bangPaint)
+        }
+        bangPaint.shader = null
+        val shine = ((t - .3f) / 1.1f).coerceIn(0f, 1f)
+        if (shine > 0f) for (i in 0 until STARS) {
+            val x = stars[i * 4] * width; val y = stars[i * 4 + 1] * height
+            if (hypot(x - cx, y - cy) > front * .8f) continue
+            val twinkle = .55f + .45f * sin(visualTime * 3f + stars[i * 4 + 3])
+            bangPaint.color = Color.WHITE; bangPaint.alpha = (255 * shine * twinkle).toInt()
+            c.drawCircle(x, y, stars[i * 4 + 2] * density, bangPaint)
+        }
+        // What is left of the blast at the centre.
+        val heat = (1f - t / 1.3f).coerceIn(0f, 1f)
+        if (heat > 0f) {
+            val radius = far * (.15f + .35f * grow)
+            bangMatrix.setScale(radius, radius); bangMatrix.postTranslate(cx, cy)
+            glow.setLocalMatrix(bangMatrix); bangPaint.shader = glow; bangPaint.alpha = (255 * heat).toInt()
+            c.drawCircle(cx, cy, radius, bangPaint); bangPaint.shader = null
+        }
+        for (spark in sparks) if (spark.life > 0f) {
+            bangPaint.color = spark.color; bangPaint.alpha = (255 * (spark.life / spark.total).coerceIn(0f, 1f)).toInt()
+            c.drawCircle(spark.x, spark.y, spark.size, bangPaint)
+        }
+        // The flash: everything blown out to white for an instant.
+        val flash = (1f - t / .4f).coerceIn(0f, 1f)
+        c.restore()
+        if (flash > 0f) { bangPaint.color = FLASH; bangPaint.alpha = (255 * flash * flash).toInt(); c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), bangPaint) }
+        bangPaint.alpha = 255
+    }
+
     override fun onDraw(c: Canvas) {
         super.onDraw(c)
         val space = game.ring.theme.ordinal >= Theme.PLANETS.ordinal
@@ -260,6 +383,11 @@ class GluttonView(context: Context) : View(context) {
         val halfW = width / (2 * zoom); val halfH = playHeight / (2 * zoom)
         val left = cameraX - halfW; val right = cameraX + halfW; val top = cameraY - halfH; val bottom = cameraY + halfH
         drawWorld(c, left, top, right, bottom)
+        if (dawn > .002f) {
+            p.color = DAWN; p.alpha = (255 * dawn).toInt().coerceIn(0, 255)
+            val pad = 12f * density
+            c.drawRect(-pad, topInset - pad, width + pad, height - bottomInset + pad, p); p.alpha = 255
+        }
         val r = game.radius
         val px = (r * zoom).toFloat()
         drawItems(c, left, top, right, bottom)
@@ -274,8 +402,18 @@ class GluttonView(context: Context) : View(context) {
             val f = (gulp.life / .24f).coerceIn(0f, 1f)
             art.item(c, it, sx(gulp.x), sy(gulp.y), (gulp.radius * zoom).toFloat() * f, gulp.angle + (1f - f) * 150f, flip = gulp.flip)
         }
-        art.body(c, gx, gy, px, visualTime, (game.vx / game.moveSpeed).toFloat(), (game.vy / game.moveSpeed).toFloat(),
+        if (bang < 0f) art.body(c, gx, gy, px, visualTime, (game.vx / game.moveSpeed).toFloat(), (game.vy / game.moveSpeed).toFloat(),
             pop, game.burst > 0f || pop > .2f, impact > .2f, false)
+        else if (bang < BANG_AT) {
+            // Crushing down to a single point, slowly and then all at once.
+            val f = bang / BANG_AT
+            val size = px * (1f - f * f * f)
+            if (size > 1f) art.body(c, gx, gy, size, visualTime, 0f, 0f, 1f, true, false, false)
+            val core = 3f * density * (1f + f * 1.5f)
+            p.color = GluttonArt.GOLD; p.alpha = (110 * f + 40 * sin(visualTime * 40f) * f).toInt().coerceIn(0, 255)
+            c.drawCircle(gx, gy, core * 3f, p)
+            p.color = SINGULARITY; p.alpha = (255 * min(1f, f * 2f)).toInt(); c.drawCircle(gx, gy, core, p); p.alpha = 255
+        }
         if (game.invulnerable > 0f && impact > 0f) {
             for (i in 0..2) art.star(c, gx + cos(visualTime * 5f + i * 2.1f) * px * 1.4f,
                 gy - px * 1.2f + sin(visualTime * 5f + i * 2.1f) * px * .3f, px * .18f, GluttonArt.GOLD)
@@ -296,7 +434,8 @@ class GluttonView(context: Context) : View(context) {
         }
         drawDirectionHint(c)
         c.restore()
-        drawMap(c)
+        if (bang >= BANG_AT) { drawBigBang(c); return }
+        if (bang < 0f) drawMap(c)
         if (!hasSteered && running && game.elapsed < 7f) {
             textPaint.textSize = 14f * density; textPaint.color = if (space) Color.WHITE else GluttonArt.INK
             c.drawText(hintText, width / 2f, centerY + px + 50f * density, textPaint)
@@ -426,7 +565,9 @@ class GluttonView(context: Context) : View(context) {
         val stamp = game.nextStamp()
         for (layer in game.layers) {
             if (layer == null || layer.ring.to * 3 < minimum) continue
-            layer.grid.query(left - margin, top - margin, right + margin, bottom + margin) { item ->
+            // Falling into you, the leftovers have left their grid buckets.
+            if (game.collapsing) { for (item in layer.statics) if (item.active && item.radius >= minimum) visible += item }
+            else layer.grid.query(left - margin, top - margin, right + margin, bottom + margin) { item ->
                 if (item.stamp != stamp && item.active && (item.radius >= minimum || item.prop.bonus)) { item.stamp = stamp; visible += item }
             }
             for (item in layer.movers) if (item.active && item.radius >= minimum) visible += item
@@ -516,11 +657,12 @@ class GluttonView(context: Context) : View(context) {
         val layer = game.layers[game.ring.index] ?: return
         val r = game.radius
         val list = layer.statics
-        val step = max(1, list.size / (MAP_DOTS * 4))
+        // Cleaning up the universe: every crumb left shows, however small.
+        val step = if (game.finale) 1 else max(1, list.size / (MAP_DOTS * 4))
         var i = (game.elapsed * 7).toInt() % step
         while (i < list.size && foodDots < MAP_DOTS) {
             val item = list[i]
-            if (item.active && !item.prop.bonus && game.canEat(item) && item.radius >= r * .25) {
+            if (item.active && !item.prop.bonus && (game.finale || game.canEat(item) && item.radius >= r * .25)) {
                 foodSpots[foodDots * 2] = item.x; foodSpots[foodDots * 2 + 1] = item.y; foodDots++
             }
             i += step
@@ -611,9 +753,20 @@ class GluttonView(context: Context) : View(context) {
     }
 
     companion object {
-        /** The screen's short side shows this many gobbler radii: you take a tenth of it. */
-        const val VIEW_SPAN = 20.0
+        /** The screen's short side shows this many gobbler radii: you take a thirteenth of it. */
+        const val VIEW_SPAN = 26.0
         const val MAP_DOTS = 160
+        /** Big Bang timeline, in seconds after the last bite: implosion, then the blast and the new sky. */
+        const val BANG_AT = .75f
+        const val FIREBALL = 1.1f
+        const val BANG_END = 4.2f
+        const val STARS = 120
+        const val DAWN = 0xFFFFFDF7.toInt()
+        const val FLASH = 0xFFFFF6DC.toInt()
+        const val SINGULARITY = 0xFF1B1530.toInt()
+        const val NEW_SKY = 0xFF0D1030.toInt()
+        const val CORAL_HOT = 0xFFFF7A5C.toInt()
+        private val SPARKS = intArrayOf(Color.WHITE, GluttonArt.GOLD, GluttonArt.GOLD, GluttonArt.CORAL, GluttonArt.MINT, 0xFFB07CE8.toInt(), 0xFF8FC2FF.toInt())
         const val LOT = 0xFFB9A98A.toInt()
         const val WALL = 0xFF8C7F99.toInt()
         /** Flat colours while a texture loads, and for the map. */

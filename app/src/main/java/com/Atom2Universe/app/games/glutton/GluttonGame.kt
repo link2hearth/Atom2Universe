@@ -12,8 +12,9 @@ import kotlin.random.Random
  * Fixed-step rules in metres (doubles). Anything smaller than you is swallowed: it vanishes into your
  * mouth and its area goes to your stomach, which you digest at a steady pace, so however much you gulp
  * at once you never balloon in a blink. The journey runs from a crumb in your kitchen to the whole
- * universe; VOYAGE has no clock (your time is the record), FRINGALE a fuse that growing feeds a little
- * less than it burns, so the run always ends and the score is how far you got.
+ * universe; VOYAGE has no clock (your time is the record) and ends only once the last ring is eaten
+ * clean, FRINGALE a fuse that growing feeds a little less than it burns, so the run always ends and the
+ * score is how far you got.
  */
 class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYAGE) {
     enum class Mode(val budget: Float) { VOYAGE(0f), FRINGALE(120f) }
@@ -37,7 +38,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     }
     /** What was swallowed last, so a bump can make you spit a little of it back out. */
     class Bite(val item: Item, val gain: Double)
-    enum class Effect { EAT, KNOCK, BURST, BONUS, MILESTONE, RING, FINISH }
+    enum class Effect { EAT, KNOCK, BURST, BONUS, MILESTONE, RING, COLLAPSE, FINISH }
     class Event(val effect: Effect, val x: Double, val y: Double, val item: Item? = null, val value: Int = 0)
     /** The live things of one ring: still ones in a grid, movers in a list. */
     class Layer(val ring: Ring) {
@@ -75,16 +76,26 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     var finished = false; private set
     /** The last ring is swallowed: the universe is gone and the journey is over. */
     var cleared = false; private set
+    /** VOYAGE: things the last ring held when it was laid out, and those still there. */
+    var finalTotal = 0; private set
+    var finalLeft = 0; private set
+    /** The leftovers of the universe are falling into you, and for how many seconds. */
+    var collapsing = false; private set
+    var collapse = 0f; private set
     var ringReached = 0; private set
     var ring: Ring = world.rings[0]; private set
     val radius get() = sqrt(area)
     val diameterMetres get() = radius * 2.0
     val suctionRadius get() = radius * if (burst > 0f) 2.2 else 1.35
-    /** Brisk when tiny (the rooms are vast then), about four body radii per second once huge. */
-    val moveSpeed get() = radius * 3.5 + .2 * min(1.0, 1.0 / (radius * 4))
+    /** Brisk when tiny (the rooms are vast then), five and a half body radii per second once huge. */
+    val moveSpeed get() = radius * 5.5 + .25 * min(1.0, 1.0 / (radius * 4))
     /** Your house, swallowed or not (null before its suburb is built: never). */
     val house: Item get() = covers.first { it.prop === GluttonCatalog.house }
     val houseEaten get() = covered[0] && !house.active
+    /** VOYAGE, in the last ring: the universe has to be eaten clean. */
+    val finale get() = mode == Mode.VOYAGE && ringReached == world.rings.lastIndex
+    /** Share of the last ring already eaten (0 before it). */
+    val finaleProgress: Float get() = if (!finale || finalTotal == 0) 0f else (1f - finalLeft.toFloat() / finalTotal).coerceIn(0f, 1f)
     private val random = Random(seed xor 0x6A09E667L)
     private var nextId = 0
     private var stamp = 0
@@ -116,6 +127,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         }
         for (it in layer.movers) it.orbit?.parent?.let { parent -> it.orbitParent = made[parent] }
         layers[ring.index] = layer
+        if (ring.index == world.rings.lastIndex) { finalTotal = layer.statics.size + layer.movers.size; finalLeft = finalTotal }
         ring.cover?.let { prop ->
             covers += Item(nextId++, prop, 0.0, 0.0, 0f, ring.coverRadius, ring).also { it.cover = true; it.active = false }
         }
@@ -147,7 +159,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         if (!dx.isFinite() || !dy.isFinite()) { inputX = 0.0; inputY = 0.0; return }
         val length = hypot(dx, dy).coerceAtLeast(1.0); inputX = dx / length; inputY = dy / length
     }
-    fun canEat(item: Item) = item.active && item.cooldown <= 0f && (item.prop.bonus || item.radius <= radius * EDIBLE)
+    fun canEat(item: Item) = item.active && item.cooldown <= 0f && (item.prop.bonus || collapsing || item.radius <= radius * EDIBLE)
     /** Area gained: the item's own area, capped at [CAP] of yours, so anything from about 40 % of your radius is a full bite. */
     fun growth(item: Item): Double {
         if (item.prop.bonus) return 0.0
@@ -219,11 +231,41 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         ring = now
         if (now.index > ringReached) reach(now.index)
         // A bump can spit a swallowed mover out of its list: walk the list by hand.
-        for (layer in layers) if (layer != null) { var i = 0; while (i < layer.movers.size) { val m = layer.movers[i++]; if (m.active) updateMover(m, dt) } }
+        if (!collapsing) for (layer in layers) if (layer != null) { var i = 0; while (i < layer.movers.size) { val m = layer.movers[i++]; if (m.active) updateMover(m, dt) } }
         updateLoose(dt)
         swallow(dt)
         if (mode == Mode.FRINGALE && remaining <= 0f) end()
-        if (radius >= world.rings.last().to) { cleared = true; end() }
+        if (mode == Mode.VOYAGE) { if (finale) cleanUp(dt) } else if (radius >= world.rings.last().to) { cleared = true; end() }
+    }
+
+    /** The journey ends only when the last ring is empty; past [COLLAPSE] of it eaten, what is left falls into you. */
+    private fun cleanUp(dt: Float) {
+        val last = layers[world.rings.lastIndex] ?: return
+        var left = 0
+        for (i in last.statics.indices) if (last.statics[i].active) left++
+        for (i in last.movers.indices) if (last.movers[i].active) left++
+        // Spat-out movers leave their list for a while (spat-out still things stay in theirs).
+        for (i in loose.indices) { val item = loose[i]; if (item.active && item.moves && item.ring === last.ring) left++ }
+        finalLeft = left
+        if (left == 0) { cleared = true; end(); return }
+        if (!collapsing && finaleProgress >= COLLAPSE) { collapsing = true; events += Event(Effect.COLLAPSE, x, y) }
+        if (collapsing) { collapse += dt; fallIn(dt) }
+    }
+
+    /** Everything still around rushes into your mouth, faster and faster: gone in under two seconds. */
+    private fun fallIn(dt: Float) {
+        val r = radius
+        val pull = r * (3.0 + 10.0 * collapse * collapse) * dt
+        fun fall(item: Item) {
+            if (!item.active) return
+            val dx = x - item.x; val dy = y - item.y; val d = hypot(dx, dy)
+            if (d <= r * .7 + pull) consume(item) else { item.x += dx / d * pull; item.y += dy / d * pull }
+        }
+        for (layer in layers) if (layer != null) {
+            for (i in layer.statics.indices) fall(layer.statics[i])
+            for (i in layer.movers.indices) fall(layer.movers[i])
+        }
+        for (i in loose.indices) fall(loose[i])
     }
 
     /** A new ring: build the next one, lay the covers over what is now behind you, forget what is far too small to matter. */
@@ -287,7 +329,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     /** The house walls stop you until you are round enough to roll over them; the universe has an edge. */
     private fun collideWalls() {
         val outer = world.rings.last()
-        val limit = outer.half - radius
+        val limit = (outer.half - radius).coerceAtLeast(0.0)
         x = x.coerceIn(-limit, limit); y = y.coerceIn(-limit, limit)
         val house = world.rings[0]
         if (covered[0] || radius >= GluttonLayout.WALL_HEIGHT || abs(x) > house.half + radius || abs(y) > house.half + radius) return
@@ -417,6 +459,16 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     /** Hint target: the closest thing worth a bite, favouring pieces near your own size. */
     fun nearestFood(): Item? {
         var best: Item? = null; var cost = Double.MAX_VALUE
+        // Cleaning up the universe: the closest crumb left, however small or far.
+        if (finale) layers[world.rings.lastIndex]?.let { last ->
+            for (list in arrayOf(last.statics, last.movers)) for (i in list.indices) {
+                val item = list[i]
+                if (!item.active) continue
+                val distance = hypot(item.x - x, item.y - y)
+                if (distance < cost) { cost = distance; best = item }
+            }
+            return best
+        }
         val reach = radius * 25
         near(x - reach, y - reach, x + reach, y + reach) { item ->
             if (item.moves || item.prop.bonus || !canEat(item)) return@near
@@ -453,5 +505,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         /** Milestones at every power of ten of your diameter, from 10 cm (10^-1 m) to 10^25 m. */
         const val MILESTONE_FIRST = -1
         const val MILESTONE_LAST = 25
+        /** VOYAGE: share of the last ring to eat by hand before the rest falls in by itself. */
+        const val COLLAPSE = .9f
     }
 }

@@ -196,7 +196,17 @@ class GluttonGameTest {
         assertFalse(g.finished)
         val last = g.world.rings.last()
         g.forceRadius(last.to * 1.01); g.teleport(last.inner * 2, 0.0)
-        assertTrue(g.finished); assertTrue(g.cleared)
+        // The journey only ends once the last ring is eaten clean; the last tenth then falls in by itself.
+        assertTrue(g.finale); assertFalse(g.finished); assertTrue(g.finalTotal > 100)
+        val things = g.layers.last()!!.let { it.statics + it.movers }.filter { it.active }
+        things.drop(things.size / 4).forEach { it.active = false }
+        advance(g, 2f)
+        assertFalse(g.finished); assertFalse(g.collapsing); assertTrue(g.finaleProgress in .7f..<.9f)
+        things.drop(things.size / 20).forEach { it.active = false }
+        var collapses = 0
+        repeat(5 * 60) { g.update(1f / 60); collapses += g.events.count { it.effect == GluttonGame.Effect.COLLAPSE } }
+        assertEquals(1, collapses)
+        assertTrue(g.finished); assertTrue(g.cleared); assertEquals(0, g.finalLeft)
     }
 
     @Test fun vehiclesKeepToTheirRoadsAndPlanetsToTheirOrbits() {

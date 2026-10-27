@@ -59,7 +59,35 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
             Theme.GALAXY -> galaxy()
             Theme.COSMOS -> cosmos()
         }
+        thin()
         hourglasses()
+    }
+
+    /**
+     * Loose things (crumbs, garden and street bits, bodies in space) never crowd: a share of them is left out and
+     * none stands closer to another than [SPACING] of its own radius, so food is something to go and look for.
+     * Furniture, buildings, trees and landmarks stay where the layout put them. Only on land: the Earth and space
+     * are sparse by design already.
+     */
+    private fun thin() {
+        if (ring.theme.ordinal >= Theme.EARTH.ordinal) return
+        val kept = GluttonGrid<Placement>(ring.half, 96)
+        val (loose, fixed) = ring.placements.partition { it.prop.role in LOOSE }
+        ring.placements.clear()
+        for (p in fixed) { ring.placements += p; kept.add(p, p.x, p.y, p.radius) }
+        for (p in loose.sortedByDescending { it.radius }) {
+            // The house is small and its crumbs are all there is to grow on: spaced out, never left out.
+            if (ring.index > 0 && chance(THIN)) continue
+            val reach = p.radius * (1 + SPACING)
+            var free = true
+            kept.query(p.x - reach, p.y - reach, p.x + reach, p.y + reach) { o ->
+                if (free) {
+                    val need = p.radius + o.radius + min(p.radius, o.radius) * SPACING
+                    if ((p.x - o.x).pow(2) + (p.y - o.y).pow(2) < need * need) free = false
+                }
+            }
+            if (free) { ring.placements += p; kept.add(p, p.x, p.y, p.radius) }
+        }
     }
 
     // ───────────────────────────── helpers ─────────────────────────────
@@ -1002,6 +1030,10 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         const val WALL = .07
         /** A gobbler this round rolls over the house walls (and the doorways stop fitting a little before). */
         const val WALL_HEIGHT = .7
+        /** Roles that [thin] spaces out, the share of them it leaves out, and the gap each keeps (in its own radii). */
+        private val LOOSE = setOf(Role.FOOD, Role.CLUTTER, Role.YARD, Role.STREET, Role.BODY)
+        private const val THIN = .3
+        private const val SPACING = 1.5
         private val FOOD_ROLES = listOf(Role.FOOD, Role.CLUTTER)
         /** Placed by hand (the Sun, the Moon) or used as a cover (your house is also a house among others). */
         private val SPECIAL = setOf("earth", "milky_way", "sun", "moon", "hourglass")

@@ -104,7 +104,9 @@ class GluttonActivityTest {
         try {
             val activity = controller.get(); click(activity, R.string.glutton_play)
             val view = views(activity).filterIsInstance<GluttonView>().single()
-            view.game.forceRadius(view.game.world.rings.last().to * 1.01)
+            val last = view.game.world.rings.last()
+            view.game.forceRadius(last.to * 1.01); view.game.teleport(last.inner * 2, 0.0)
+            view.game.layers.last()!!.let { it.statics + it.movers }.forEach { it.active = false }
             var guard = 0
             while (!view.game.finished && guard++ < 4000) view.game.update(.1f)
             assertTrue(view.game.finished)
