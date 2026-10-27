@@ -18,9 +18,12 @@ object NeutrinoRewards {
     const val MOCHI_POINTS_PER_NEUTRINO = 100
     fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO
 
-    /** Pocket Gobbler pays by final size: 3 × √(diameter in metres), so 1 m → 3, 25 m → 15, 100 m → 30. */
-    const val GLUTTON_PER_ROOT_METRE = 3f
-    fun glutton(metres: Float) = kotlin.math.round(GLUTTON_PER_ROOT_METRE * kotlin.math.sqrt(metres.coerceAtLeast(0f))).toInt()
+    /**
+     * Pocket Gobbler pays by final size, per power of ten grown from the 3 cm start: 6 × log10(diameter / 3 cm),
+     * so out of the house (1.2 m) → 10, a city block (600 m) → 26, the Earth → 52, the whole universe → 161.
+     */
+    const val GLUTTON_PER_DECADE = 6.0
+    fun glutton(metres: Double) = kotlin.math.round(GLUTTON_PER_DECADE * kotlin.math.log10(metres.coerceAtLeast(.03) / .03)).toInt()
 
     const val BILLIARD_MEDAL = 3
     const val BILLIARD_LESSON = 3

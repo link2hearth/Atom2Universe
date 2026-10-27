@@ -9,17 +9,22 @@ import android.view.View
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Theme
-import com.Atom2Universe.app.games.glutton.GluttonWorld.Kind
+import com.Atom2Universe.app.games.glutton.GluttonWorld.Ground
 import com.Atom2Universe.app.games.glutton.GluttonWorld.Ring
 import kotlin.math.*
 import kotlin.random.Random
 
-/** One hardware-accelerated View in metres: the camera zooms out as you grow, cells and walls are painted on the fly. */
+/**
+ * One hardware-accelerated View. The world is in metres (doubles) and spans the whole universe, so every
+ * position is turned into screen pixels here rather than through the canvas matrix: the camera zooms
+ * out as you grow and only what is a pixel or more across is drawn.
+ */
 class GluttonView(context: Context) : View(context) {
     var game = GluttonGame(); private set
     var onHudChanged: (() -> Unit)? = null
     var onFinished: (() -> Unit)? = null
-    var onMilestone: ((Float) -> Unit)? = null
+    /** Power of ten of the diameter just reached (−1 = 10 cm … 25). */
+    var onMilestone: ((Int) -> Unit)? = null
     var onRing: ((Theme) -> Unit)? = null
     /** Localised name of a swallowed thing, shown for big bites. */
     var nameOf: ((Prop) -> String)? = null
@@ -30,23 +35,29 @@ class GluttonView(context: Context) : View(context) {
     private val atlas = GluttonAtlas(context)
     internal val art = GluttonArt(atlas)
     private val p = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val texture = Paint(Paint.FILTER_BITMAP_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = GluttonArt.INK; textAlign = Paint.Align.CENTER
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
-    private val ring = RectF()
+    private val arc = RectF()
+    private val oval = RectF()
+    private val matrix = Matrix()
+    private val shaders = arrayOfNulls<BitmapShader>(Ground.entries.size)
+    private val averages = IntArray(Ground.entries.size)
     private val random = Random(71)
     private class Particle {
-        var x = 0f; var y = 0f; var vx = 0f; var vy = 0f
-        var life = 0f; var total = 1f; var radius = 2f; var color = 0
+        var x = 0.0; var y = 0.0; var vx = 0.0; var vy = 0.0
+        var life = 0f; var total = 1f; var radius = 0.0; var color = 0
     }
-    private class Bite { var x = 0f; var y = 0f; var life = 0f; var prop: Prop? = null; var radius = 0f; var angle = 0f }
-    private class Label { var text = ""; var x = 0f; var y = 0f; var life = 0f; var scale = 1f }
+    private class Gulp { var x = 0.0; var y = 0.0; var life = 0f; var prop: Prop? = null; var radius = 0.0; var angle = 0f; var flip = false }
+    private class Label { var text = ""; var x = 0.0; var y = 0.0; var life = 0f; var scale = 1f }
     private val particles = Array(128) { Particle() }
-    private val bites = Array(28) { Bite() }
+    private val gulps = Array(28) { Gulp() }
     private val labels = Array(4) { Label() }
+    private val visible = ArrayList<GluttonGame.Item>(512)
     private var particleCursor = 0
-    private var biteCursor = 0
+    private var gulpCursor = 0
     private var labelCursor = 0
     private var running = false
     private var lastFrame = 0L
@@ -63,20 +74,29 @@ class GluttonView(context: Context) : View(context) {
     private var bottomInset = 0f
     private var cameraX = game.x
     private var cameraY = game.y
-    private var zoom = 0f
+    /** Pixels per metre. */
+    private var zoom = 0.0
+    private var drift = 0.0
+    private var driftY = 0.0
     private var pop = 0f
     private var impact = 0f
     private var visualTime = 0f
     private var hasSteered = false
     private var nearest: GluttonGame.Item? = null
     private var nextHint = 0f
-    private val feverText = context.getString(R.string.glutton_fever)
+    private var map: Bitmap? = null
+    private val foodSpots = DoubleArray(MAP_DOTS * 2)
+    private var foodDots = 0
+    private var nextFoodMap = 0f
+    private var mapRing = -1
     private val hintText = context.getString(R.string.glutton_drag)
     val isRunning get() = running
     val hasInput get() = pointer != -1
     private val density get() = resources.displayMetrics.density
     private val playHeight get() = (height - topInset - bottomInset).coerceAtLeast(1f)
     private val centerY get() = topInset + playHeight / 2
+    private fun sx(x: Double) = ((x - cameraX) * zoom + width / 2.0).toFloat()
+    private fun sy(y: Double) = ((y - cameraY) * zoom + centerY).toFloat()
 
     init {
         isClickable = true
@@ -85,18 +105,18 @@ class GluttonView(context: Context) : View(context) {
 
     fun setViewportInsets(top: Int, bottom: Int) {
         if (topInset == top.toFloat() && bottomInset == bottom.toFloat()) return
-        topInset = top.toFloat(); bottomInset = bottom.toFloat(); cancelInput(); zoom = 0f
+        topInset = top.toFloat(); bottomInset = bottom.toFloat(); cancelInput(); zoom = 0.0
         cameraX = game.x; cameraY = game.y; invalidate()
     }
 
-    fun start(seed: Long = Random.nextLong(), mode: GluttonGame.Mode = GluttonGame.Mode.CHRONO) {
+    fun start(seed: Long = Random.nextLong(), mode: GluttonGame.Mode = GluttonGame.Mode.VOYAGE) {
         game = GluttonGame(seed, mode)
-        particles.forEach { it.life = 0f }; bites.forEach { it.life = 0f }; labels.forEach { it.life = 0f }
-        cameraX = game.x; cameraY = game.y; zoom = 0f
+        particles.forEach { it.life = 0f }; gulps.forEach { it.life = 0f }; labels.forEach { it.life = 0f }
+        cameraX = game.x; cameraY = game.y; zoom = 0.0
         pop = 0f; impact = 0f; visualTime = 0f
-        hasSteered = false; nearest = null; nextHint = 0f
+        hasSteered = false; nearest = null; nextHint = 0f; mapRing = -1; foodDots = 0; nextFoodMap = 0f
         finishDelay = -1f; shockwave = 0f; lastHud = -1f; lastHaptic = -1f; lastSound = -1f
-        atlas.prepare(game.cell.ring.theme)
+        atlas.prepare(game.ring.theme)
         setRunning(true)
         onHudChanged?.invoke()
     }
@@ -120,7 +140,7 @@ class GluttonView(context: Context) : View(context) {
         return true
     }
 
-    fun cancelInput() { pointer = -1; game.steer(0f, 0f) }
+    fun cancelInput() { pointer = -1; game.steer(0.0, 0.0) }
 
     private val frame = object : Runnable {
         override fun run() {
@@ -135,23 +155,25 @@ class GluttonView(context: Context) : View(context) {
             shockwave = (shockwave - dt * 2.2f).coerceAtLeast(0f)
             for (particle in particles) if (particle.life > 0f) {
                 particle.life -= dt; particle.x += particle.vx * dt; particle.y += particle.vy * dt
-                particle.vx *= (1f - dt * 2f); particle.vy *= (1f - dt * 2f)
+                particle.vx *= (1.0 - dt * 2.0); particle.vy *= (1.0 - dt * 2.0)
             }
-            for (bite in bites) if (bite.life > 0f) {
-                bite.life -= dt
-                val lerp = 1f - exp(-dt * 17f)
-                bite.x += (game.x - bite.x) * lerp; bite.y += (game.y - bite.y) * lerp
+            for (gulp in gulps) if (gulp.life > 0f) {
+                gulp.life -= dt
+                val lerp = 1.0 - exp(-dt * 17.0)
+                gulp.x += (game.x - gulp.x) * lerp; gulp.y += (game.y - gulp.y) * lerp
             }
-            for (label in labels) if (label.life > 0f) { label.life -= dt; label.y -= dt * game.radius * .8f }
-            val easing = 1f - exp(-dt * 7f)
-            cameraX += (game.x + game.vx * .12f - cameraX) * easing
-            cameraY += (game.y + game.vy * .12f - cameraY) * easing
+            for (label in labels) if (label.life > 0f) { label.life -= dt; label.y -= dt * game.radius * .8 }
+            val easing = 1.0 - exp(-dt * 7.0)
+            cameraX += (game.x + game.vx * .12 - cameraX) * easing
+            cameraY += (game.y + game.vy * .12 - cameraY) * easing
+            drift -= game.vx * zoom * dt * .25; driftY -= game.vy * zoom * dt * .25
             updateCamera(dt)
+            atlas.prepare(game.ring.theme)
             if (game.elapsed >= nextHint) { nearest = game.nearestFood(); nextHint = game.elapsed + .3f }
             if (game.elapsed - lastHud > .1f || game.finished) { lastHud = game.elapsed; onHudChanged?.invoke() }
             if (finishDelay >= 0f) {
                 finishDelay += dt
-                if (finishDelay >= .65f) { setRunning(false); onFinished?.invoke(); return }
+                if (finishDelay >= .9f) { setRunning(false); onFinished?.invoke(); return }
             }
             invalidate(); postOnAnimation(this)
         }
@@ -159,12 +181,8 @@ class GluttonView(context: Context) : View(context) {
 
     private fun updateCamera(dt: Float) {
         if (width <= 0 || height <= 0) return
-        val outer = game.world.rings.last()
-        val target = max(width / (game.radius * 14f), max(width / outer.side, playHeight / outer.side))
-        zoom = if (zoom <= 0f) target else zoom + (target - zoom) * (1f - exp(-dt * 2.4f))
-        val halfW = width / (2 * zoom); val halfH = playHeight / (2 * zoom)
-        cameraX = cameraX.coerceIn(-outer.half + halfW, max(-outer.half + halfW, outer.half - halfW))
-        cameraY = cameraY.coerceIn(-outer.half + halfH, max(-outer.half + halfH, outer.half - halfH))
+        val target = min(width.toFloat(), playHeight) / (game.radius * VIEW_SPAN)
+        zoom = if (zoom <= 0.0) target else exp(ln(zoom) + (ln(target) - ln(zoom)) * (1.0 - exp(-dt * 2.4)))
     }
 
     private fun react(event: GluttonGame.Event) {
@@ -173,17 +191,17 @@ class GluttonView(context: Context) : View(context) {
                 val item = event.item ?: return
                 val big = game.isBigBite(item)
                 pop = if (big) 1.1f else .6f
-                val bite = bites[biteCursor++ % bites.size]
-                bite.prop = item.prop; bite.x = event.x; bite.y = event.y; bite.life = .24f
-                bite.radius = item.radius; bite.angle = item.angle
-                emit(event.x, event.y, if (big) 12 else 3, if (game.fever > 0f) GluttonArt.GOLD else GluttonArt.MINT)
-                if (big) {
+                val gulp = gulps[gulpCursor++ % gulps.size]
+                gulp.prop = item.prop; gulp.x = event.x; gulp.y = event.y; gulp.life = .24f
+                gulp.radius = item.radius; gulp.angle = item.angle; gulp.flip = item.flip
+                emit(event.x, event.y, if (big) 12 else 3, GluttonArt.MINT)
+                if (big || item.cover) {
                     val label = labels[labelCursor++ % labels.size]
                     label.text = nameOf?.invoke(item.prop) ?: ""; label.x = event.x; label.y = event.y - item.radius
-                    label.life = 1.3f; label.scale = (item.radius / game.radius).coerceIn(.6f, 1.2f)
+                    label.life = 1.4f; label.scale = (item.radius / game.radius).toFloat().coerceIn(.7f, 1.3f)
                 }
                 if (sound && game.elapsed - lastSound > .07f) {
-                    lastSound = game.elapsed; audio?.play(0, (if (big) .7f else .9f) + game.multiplier * .08f)
+                    lastSound = game.elapsed; audio?.play(0, (if (big) .7f else .9f) + min(game.combo, 30) * .01f)
                 }
                 if (game.elapsed - lastHaptic > .085f) {
                     lastHaptic = game.elapsed
@@ -194,35 +212,38 @@ class GluttonView(context: Context) : View(context) {
                 pop = 1.5f; emit(game.x, game.y, 32, GluttonArt.GOLD)
                 haptic(HapticFeedbackConstants.LONG_PRESS)
                 if (sound) audio?.play(1)
-                onMilestone?.invoke(GluttonGame.MILESTONES[event.value])
+                onMilestone?.invoke(event.value)
             }
             GluttonGame.Effect.RING -> {
-                val theme = game.world.rings[event.value].theme
-                atlas.prepare(theme); emit(game.x, game.y, 30, GluttonArt.GOLD)
-                if (sound) audio?.play(1, .85f)
-                onRing?.invoke(theme)
+                val rings = game.world.rings
+                val theme = rings[event.value].theme
+                atlas.prepare(theme)
+                if (event.value == 0 || rings[event.value - 1].theme != theme) {
+                    emit(game.x, game.y, 30, GluttonArt.GOLD)
+                    if (sound) audio?.play(1, .85f)
+                    onRing?.invoke(theme)
+                }
             }
             GluttonGame.Effect.KNOCK -> {
                 impact = 1f; pop = -.6f; haptic(HapticFeedbackConstants.LONG_PRESS)
                 emit(game.x, game.y, 10, GluttonArt.CORAL)
                 if (sound) audio?.play(3)
             }
-            GluttonGame.Effect.FEVER -> { emit(game.x, game.y, 24, GluttonArt.GOLD); haptic(HapticFeedbackConstants.LONG_PRESS) }
             GluttonGame.Effect.BONUS -> { emit(event.x, event.y, 24, GluttonArt.GOLD); if (sound) audio?.play(1, 1.3f) }
-            GluttonGame.Effect.FINISH -> { finishDelay = 0f; cancelInput(); haptic(HapticFeedbackConstants.LONG_PRESS) }
+            GluttonGame.Effect.FINISH -> { finishDelay = 0f; cancelInput(); haptic(HapticFeedbackConstants.LONG_PRESS); if (game.cleared) emit(game.x, game.y, 60, GluttonArt.GOLD) }
             GluttonGame.Effect.BURST -> Unit
         }
     }
 
-    private fun emit(x: Float, y: Float, count: Int, color: Int) {
+    private fun emit(x: Double, y: Double, count: Int, color: Int) {
         val r = game.radius
         repeat(count) {
             val particle = particles[particleCursor++ % particles.size]
-            val angle = random.nextFloat() * 2f * PI.toFloat()
-            val speed = r * (3f + random.nextFloat() * 7f)
+            val angle = random.nextDouble() * 2 * PI
+            val speed = r * (3 + random.nextDouble() * 7)
             particle.x = x; particle.y = y; particle.vx = cos(angle) * speed; particle.vy = sin(angle) * speed
             particle.total = .3f + random.nextFloat() * .4f; particle.life = particle.total
-            particle.radius = r * (.1f + random.nextFloat() * .18f); particle.color = color
+            particle.radius = r * (.1 + random.nextDouble() * .18); particle.color = color
         }
     }
 
@@ -230,85 +251,55 @@ class GluttonView(context: Context) : View(context) {
 
     override fun onDraw(c: Canvas) {
         super.onDraw(c)
-        c.drawColor(0xFFEEDACE.toInt())
+        val space = game.ring.theme.ordinal >= Theme.PLANETS.ordinal
+        c.drawColor(if (space) 0xFF141A33.toInt() else 0xFFEEDACE.toInt())
         if (width == 0 || height == 0) return
-        if (zoom <= 0f) updateCamera(0f)
+        if (zoom <= 0.0) updateCamera(0f)
         c.save(); c.clipRect(0f, topInset, width.toFloat(), height - bottomInset)
-        val shakeX = if (impact > 0f) sin(visualTime * 85f) * impact * 5f * density else 0f
-        c.translate(width / 2f - cameraX * zoom + shakeX, centerY - cameraY * zoom)
-        c.scale(zoom, zoom)
-        val left = cameraX - width / (2 * zoom); val right = cameraX + width / (2 * zoom)
-        val top = cameraY - playHeight / (2 * zoom); val bottom = cameraY + playHeight / (2 * zoom)
+        if (impact > 0f) c.translate(sin(visualTime * 85f) * impact * 5f * density, 0f)
+        val halfW = width / (2 * zoom); val halfH = playHeight / (2 * zoom)
+        val left = cameraX - halfW; val right = cameraX + halfW; val top = cameraY - halfH; val bottom = cameraY + halfH
         drawWorld(c, left, top, right, bottom)
         val r = game.radius
-        val margin = r * 2f
-        val minimum = .6f / zoom
-        for (pass in 0..1) for (item in game.items) {
-            if (!item.active || item.moves != (pass == 1)) continue
-            if (item.radius < minimum && !item.prop.bonus) continue
-            if (item.x + item.radius < left - margin || item.x - item.radius > right + margin || item.y + item.radius < top - margin || item.y - item.radius > bottom + margin) continue
-            val edible = game.canEat(item)
-            if (item.prop.bonus) {
-                p.color = 0x55FFD46F; c.drawCircle(item.x, item.y, item.radius * 1.3f, p)
-                art.item(c, item.prop, item.x, item.y + sin(visualTime * 3f + item.id) * item.radius * .15f, item.radius, 0f)
-                continue
-            }
-            // Only the really rewarding bites get a halo; the rest stays clean.
-            if (edible && item.radius >= r * GluttonGame.BIG_BITE) {
-                p.color = 0x4450BA99; c.drawCircle(item.x, item.y, item.radius * 1.25f, p)
-                p.color = 0x997BE4AC.toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = item.radius * .08f
-                c.drawCircle(item.x, item.y, item.radius * 1.25f, p); p.style = Paint.Style.FILL
-            }
-            val alpha = if (item.cooldown > 0f) 150 + (sin(visualTime * 30f) * 60f).toInt() else 255
-            art.item(c, item.prop, item.x, item.y, item.radius, if (item.moves) facing(item) else item.angle, alpha)
-            if (item.moves) {
-                if (item.stunned > 0f) for (i in 0..2) {
-                    val a = visualTime * 3f + i * 2.1f
-                    art.star(c, item.x + cos(a) * item.radius, item.y - item.radius + sin(a) * item.radius * .3f, item.radius * .25f, GluttonArt.GOLD)
-                } else if (item.alert) art.alarm(c, item.x, item.y - item.radius * 1.1f, item.radius * .8f, !edible)
-            }
-        }
+        val px = (r * zoom).toFloat()
+        drawItems(c, left, top, right, bottom)
         drawSuction(c)
+        val gx = sx(game.x); val gy = sy(game.y)
         if (shockwave > 0f) {
-            p.color = GluttonArt.MINT; p.alpha = (shockwave * 220).toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = r * .12f
-            c.drawCircle(game.x, game.y, r + (1f - shockwave) * (game.suctionRadius + r), p)
+            p.color = GluttonArt.MINT; p.alpha = (shockwave * 220).toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = px * .12f
+            c.drawCircle(gx, gy, px + (1f - shockwave) * ((game.suctionRadius + r) * zoom).toFloat(), p)
             p.alpha = 255; p.style = Paint.Style.FILL
         }
-        for (bite in bites) if (bite.life > 0f) bite.prop?.let { art.item(c, it, bite.x, bite.y,
-            bite.radius * (bite.life / .24f).coerceIn(0f, 1f), bite.angle + (1f - bite.life / .24f) * 150f) }
-        drawStuck(c)
-        val speed = hypot(game.vx, game.vy)
-        art.body(c, game.x, game.y, r, visualTime,
-            game.vx / game.moveSpeed, game.vy / game.moveSpeed, pop, game.burst > 0f || pop > .2f,
-            impact > .2f, game.fever > 0f)
+        for (gulp in gulps) if (gulp.life > 0f) gulp.prop?.let {
+            val f = (gulp.life / .24f).coerceIn(0f, 1f)
+            art.item(c, it, sx(gulp.x), sy(gulp.y), (gulp.radius * zoom).toFloat() * f, gulp.angle + (1f - f) * 150f, flip = gulp.flip)
+        }
+        art.body(c, gx, gy, px, visualTime, (game.vx / game.moveSpeed).toFloat(), (game.vy / game.moveSpeed).toFloat(),
+            pop, game.burst > 0f || pop > .2f, impact > .2f, false)
         if (game.invulnerable > 0f && impact > 0f) {
-            for (i in 0..2) art.star(c, game.x + cos(visualTime * 5f + i * 2.1f) * (r * 1.4f),
-                game.y - r * 1.2f + sin(visualTime * 5f + i * 2.1f) * r * .3f, r * .18f, GluttonArt.GOLD)
+            for (i in 0..2) art.star(c, gx + cos(visualTime * 5f + i * 2.1f) * px * 1.4f,
+                gy - px * 1.2f + sin(visualTime * 5f + i * 2.1f) * px * .3f, px * .18f, GluttonArt.GOLD)
         }
         for (particle in particles) if (particle.life > 0f) {
             p.color = particle.color; p.alpha = (255 * particle.life / particle.total).toInt().coerceIn(0, 255)
-            c.drawCircle(particle.x, particle.y, particle.radius, p)
+            c.drawCircle(sx(particle.x), sy(particle.y), (particle.radius * zoom).toFloat(), p)
         }
         p.alpha = 255
         for (label in labels) if (label.life > 0f && label.text.isNotEmpty()) {
-            textPaint.textSize = 16f * density / zoom * label.scale
-            textPaint.color = Color.WHITE; textPaint.alpha = (255 * (label.life / 1.3f).coerceIn(0f, 1f)).toInt()
-            textPaint.style = Paint.Style.STROKE; textPaint.strokeWidth = 4f * density / zoom
-            c.drawText(label.text, label.x, label.y, textPaint)
-            textPaint.style = Paint.Style.FILL; textPaint.color = GluttonArt.INK
-            textPaint.alpha = (255 * (label.life / 1.3f).coerceIn(0f, 1f)).toInt()
-            c.drawText(label.text, label.x, label.y, textPaint); textPaint.alpha = 255
+            val alpha = (255 * (label.life / 1.4f).coerceIn(0f, 1f)).toInt()
+            textPaint.textSize = 17f * density * label.scale
+            textPaint.color = Color.WHITE; textPaint.alpha = alpha
+            textPaint.style = Paint.Style.STROKE; textPaint.strokeWidth = 4f * density
+            c.drawText(label.text, sx(label.x), sy(label.y), textPaint)
+            textPaint.style = Paint.Style.FILL; textPaint.color = GluttonArt.INK; textPaint.alpha = alpha
+            c.drawText(label.text, sx(label.x), sy(label.y), textPaint); textPaint.alpha = 255
         }
-        drawDirectionHint(c, speed)
+        drawDirectionHint(c)
         c.restore()
         drawMap(c)
-        if (game.fever > 0f) {
-            textPaint.textSize = 17f * density; textPaint.color = 0xFFB87A3B.toInt()
-            c.drawText(feverText, width / 2f, topInset + 26f * density, textPaint)
-        }
         if (!hasSteered && running && game.elapsed < 7f) {
-            textPaint.textSize = 14f * density; textPaint.color = GluttonArt.INK
-            c.drawText(hintText, width / 2f, centerY + r * zoom + 50f * density, textPaint)
+            textPaint.textSize = 14f * density; textPaint.color = if (space) Color.WHITE else GluttonArt.INK
+            c.drawText(hintText, width / 2f, centerY + px + 50f * density, textPaint)
         }
         if (pointer != -1) {
             p.color = 0x33405161; c.drawCircle(originX, originY, 42f * density, p)
@@ -318,183 +309,200 @@ class GluttonView(context: Context) : View(context) {
         }
     }
 
-    /** Terraced cells, walls with their gaps, stairs and cliff shadows, outer rings first so inner rings paint over their centre cell. */
-    private fun drawWorld(c: Canvas, left: Float, top: Float, right: Float, bottom: Float) {
+    /** Rings from the outside in, so each inner ring paints over the middle of the one around it. */
+    private fun drawWorld(c: Canvas, left: Double, top: Double, right: Double, bottom: Double) {
         val world = game.world
+        val house = world.rings[0]
         for (index in world.rings.indices.reversed()) {
             val ring = world.rings[index]
+            if (!ring.built) continue
             if (ring.half < left || -ring.half > right || ring.half < top || -ring.half > bottom) continue
-            if (index == 0 && game.houseEaten) {
-                // Only the bare plot is left where your house stood.
-                p.color = LOT; c.drawRect(-ring.half, -ring.half, ring.half, ring.half, p); continue
+            if (ring.half * zoom < 1.5) break
+            if (game.covered[index]) {
+                // Only the bare plot is left where your house stood (until the Earth itself goes).
+                if (index == 0 && game.houseEaten && !game.covered[5]) { p.color = LOT; rect(c, -house.half, -house.half, house.half, house.half, p) }
+                continue
             }
-            val pixels = ring.cell * zoom
-            val palette = PALETTES[ring.theme.ordinal]
-            if (pixels < 3f) {
-                p.color = palette[1]; c.drawRect(-ring.half, -ring.half, ring.half, ring.half, p); continue
+            groundRect(c, ring, ring.ground, -ring.half, -ring.half, ring.half, ring.half, false)
+            for (patch in ring.patches) {
+                if (patch.x1 < left || patch.x0 > right || patch.y1 < top || patch.y0 > bottom) continue
+                if ((patch.x1 - patch.x0) * zoom < 1.0 && (patch.y1 - patch.y0) * zoom < 1.0) continue
+                groundRect(c, ring, patch.ground, patch.x0, patch.y0, patch.x1, patch.y1, patch.round)
             }
-            val c0 = ((left + ring.half) / ring.cell).toInt().coerceIn(0, ring.count - 1)
-            val c1 = ((right + ring.half) / ring.cell).toInt().coerceIn(0, ring.count - 1)
-            val r0 = ((top + ring.half) / ring.cell).toInt().coerceIn(0, ring.count - 1)
-            val r1 = ((bottom + ring.half) / ring.cell).toInt().coerceIn(0, ring.count - 1)
-            for (row in r0..r1) for (col in c0..c1) {
-                val cell = ring.cell(col, row)
-                p.color = palette[cell.level.coerceAtMost(palette.size - 1)]
-                c.drawRect(cell.x0, cell.y0, cell.x1, cell.y1, p)
-                if (pixels > 40f) decorate(c, ring, cell)
+            for (m in ring.markings) {
+                val w = m.width * zoom
+                if (w < .7) continue
+                if (max(m.x0, m.x1) < left || min(m.x0, m.x1) > right || max(m.y0, m.y1) < top || min(m.y0, m.y1) > bottom) continue
+                dashes(c, m, left, top, right, bottom, w.toFloat())
             }
-            // Cliffs: a soft shadow at the foot of every higher neighbour, a dark lip along its brink, stairs in the gaps.
-            // Open ground between cells of one height draws nothing, so terraces read as broad shapes.
-            val cliffColor = CLIFFS[ring.theme.ordinal]
-            for (row in r0..r1) for (col in c0..c1) {
-                val cell = ring.cell(col, row)
-                for (side in 0..3) {
-                    val other = world.neighbour(cell, side) ?: continue
-                    if (other.height <= cell.height) continue
-                    val band = ring.cell * .06f
-                    p.color = 0x2E000000
-                    when (side) {
-                        0 -> c.drawRect(cell.x0, cell.y0, cell.x1, cell.y0 + band, p)
-                        1 -> c.drawRect(cell.x1 - band, cell.y0, cell.x1, cell.y1, p)
-                        2 -> c.drawRect(cell.x0, cell.y1 - band, cell.x1, cell.y1, p)
-                        else -> c.drawRect(cell.x0, cell.y0, cell.x0 + band, cell.y1, p)
-                    }
-                    drawCliff(c, ring, cell, side, cliffColor)
+            if (ring.circles.isNotEmpty()) {
+                p.style = Paint.Style.STROKE; p.strokeWidth = 1.2f * density; p.color = 0x55B9C8FF
+                for (circle in ring.circles) {
+                    val rad = circle[2] * zoom
+                    if (rad < 3 || rad > 2e5) continue
+                    c.drawCircle(sx(circle[0]), sy(circle[1]), rad.toFloat(), p)
                 }
-                if (col == 0) drawBoundary(c, ring, cell, 3)
-                if (row == 0) drawBoundary(c, ring, cell, 0)
-                if (col == ring.count - 1) drawBoundary(c, ring, cell, 1)
-                if (row == ring.count - 1) drawBoundary(c, ring, cell, 2)
+                p.style = Paint.Style.FILL
             }
-            // The inner ring sits lower: a shadow around its square.
+            if (index == 0 && !game.covered[0]) {
+                p.color = WALL
+                for (wall in ring.walls) {
+                    if (wall.horizontal) rect(c, wall.from, wall.line - wall.thickness, wall.until, wall.line + wall.thickness, p)
+                    else rect(c, wall.line - wall.thickness, wall.from, wall.line + wall.thickness, wall.until, p)
+                }
+            }
+            // The ring inside sits a little lower: a soft shadow around its square.
             world.rings.getOrNull(index - 1)?.let { inner ->
-                val band = ring.cell * .05f
-                p.color = 0x44000000
-                c.drawRect(-inner.half - band, -inner.half - band, inner.half + band, -inner.half, p)
-                c.drawRect(-inner.half - band, inner.half, inner.half + band, inner.half + band, p)
-                c.drawRect(-inner.half - band, -inner.half, -inner.half, inner.half, p)
-                c.drawRect(inner.half, -inner.half, inner.half + band, inner.half, p)
+                if (game.covered[inner.index] && !(inner.index == 0 && game.houseEaten)) return@let
+                val band = inner.half * .03
+                p.color = 0x33000000
+                rect(c, -inner.half - band, -inner.half - band, inner.half + band, -inner.half, p)
+                rect(c, -inner.half - band, inner.half, inner.half + band, inner.half + band, p)
+                rect(c, -inner.half - band, -inner.half, -inner.half, inner.half, p)
+                rect(c, inner.half, -inner.half, inner.half + band, inner.half, p)
             }
         }
     }
 
-    private fun decorate(c: Canvas, ring: Ring, cell: GluttonWorld.Cell) {
-        val seed = cell.col * 31 + cell.row * 17 + ring.index * 101
-        p.color = 0x16000000
-        for (i in 0..5) {
-            val fx = ((seed * (i + 3) * 2654435761L) % 1000) / 1000f; val fy = ((seed * (i + 7) * 40503L) % 1000) / 1000f
-            val s = ring.cell * (.04f + i % 3 * .02f)
-            if (ring.theme == Theme.ROOM) c.drawRect(cell.x0 + fx * ring.cell, cell.y0 + fy * ring.cell, cell.x0 + fx * ring.cell + s * 3, cell.y0 + fy * ring.cell + s * .4f, p)
-            else c.drawCircle(cell.x0 + fx * ring.cell, cell.y0 + fy * ring.cell, s, p)
+    /** A rectangle in metres, clipped to the screen before turning into pixels (they can be astronomically large). */
+    private fun rect(c: Canvas, x0: Double, y0: Double, x1: Double, y1: Double, paint: Paint) {
+        val l = max(sx(x0), -8f); val t = max(sy(y0), -8f); val r = min(sx(x1), width + 8f); val b = min(sy(y1), height + 8f)
+        if (r > l && b > t) c.drawRect(l, t, r, b, paint)
+    }
+
+    /** Ground with its texture: world-anchored on land (so floors shrink as you grow), drifting behind you in space. */
+    private fun groundRect(c: Canvas, ring: Ring, ground: Ground, x0: Double, y0: Double, x1: Double, y1: Double, round: Boolean) {
+        val paint = groundPaint(ring, ground)
+        if (round) {
+            val l = sx(x0); val t = sy(y0); val r = sx(x1); val b = sy(y1)
+            if (r - l < 4e5f) { oval.set(l, t, r, b); c.drawOval(oval, paint); return }
+        }
+        rect(c, x0, y0, x1, y1, paint)
+    }
+
+    private fun groundPaint(ring: Ring, ground: Ground): Paint {
+        val bitmap = atlas.ground(ground)
+        val space = ground == Ground.SPACE
+        texture.colorFilter = if (space) TINTS[ring.theme.ordinal] else null
+        if (bitmap == null) { texture.shader = null; texture.color = FALLBACK[ground.ordinal]; return texture }
+        if (averages[ground.ordinal] == 0) averages[ground.ordinal] = Bitmap.createScaledBitmap(bitmap, 1, 1, true).getPixel(0, 0) or 0xFF000000.toInt()
+        val tile = if (space) 360.0 * density else tileMetres(ring) * zoom
+        if (tile < 14) { texture.shader = null; texture.color = averages[ground.ordinal]; return texture }
+        val shader = shaders[ground.ordinal] ?: BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.MIRROR).also { shaders[ground.ordinal] = it }
+        val ox = if (space) drift else -cameraX * zoom + width / 2.0
+        val oy = if (space) driftY else -cameraY * zoom + centerY
+        matrix.setScale((tile / bitmap.width).toFloat(), (tile / bitmap.height).toFloat())
+        matrix.postTranslate(((ox % tile + tile) % tile).toFloat(), ((oy % tile + tile) % tile).toFloat())
+        shader.setLocalMatrix(matrix)
+        texture.shader = shader; texture.color = Color.WHITE
+        return texture
+    }
+
+    private fun tileMetres(ring: Ring) = if (ring.index == 0) 1.3 else ring.from * 8
+
+    private fun dashes(c: Canvas, m: GluttonWorld.Marking, left: Double, top: Double, right: Double, bottom: Double, w: Float) {
+        p.color = 0xCCFFF8E6.toInt(); p.strokeWidth = w; p.strokeCap = Paint.Cap.BUTT
+        val horizontal = abs(m.y1 - m.y0) < abs(m.x1 - m.x0)
+        val dash = m.width * 5
+        val from = if (horizontal) max(min(m.x0, m.x1), left) else max(min(m.y0, m.y1), top)
+        val until = if (horizontal) min(max(m.x0, m.x1), right) else min(max(m.y0, m.y1), bottom)
+        var s = floor(from / (dash * 2)) * dash * 2
+        var count = 0
+        while (s < until && count++ < 200) {
+            val a = max(s, from); val b = min(s + dash, until)
+            if (b > a) {
+                if (horizontal) c.drawLine(sx(a), sy(m.y0), sx(b), sy(m.y0), p) else c.drawLine(sx(m.x0), sy(a), sx(m.x0), sy(b), p)
+            }
+            s += dash * 2
         }
     }
 
-    /** The brink of a higher neighbour across [side] of [cell]: a dark lip, broken by its stairs. */
-    private fun drawCliff(c: Canvas, ring: Ring, cell: GluttonWorld.Cell, side: Int, color: Int) {
-        val edge = game.world.edge(cell, side) ?: return
-        val horizontal = side == 0 || side == 2
-        val line = when (side) { 0 -> cell.y0; 1 -> cell.x1; 2 -> cell.y1; else -> cell.x0 }
-        val from = if (horizontal) cell.x0 else cell.y0
-        val until = if (horizontal) cell.x1 else cell.y1
-        val t = ring.cell * .012f
-        if (edge.kind == Kind.CLIFF) { wall(c, horizontal, line, from, until, t, color); return }
-        val centre = from + edge.offset * ring.cell
-        wall(c, horizontal, line, from, centre - edge.width / 2f, t, color)
-        wall(c, horizontal, line, centre + edge.width / 2f, until, t, color)
-        stairs(c, horizontal, line, centre - edge.width / 2f, centre + edge.width / 2f, ring.cell * .16f)
-    }
-
-    /** The ring's boundary: the house has walls with its two doors, the suburb a brink up to the city, the city an end. */
-    private fun drawBoundary(c: Canvas, ring: Ring, cell: GluttonWorld.Cell, side: Int) {
-        val world = game.world
-        val horizontal = side == 0 || side == 2
-        val line = when (side) { 0 -> cell.y0; 1 -> cell.x1; 2 -> cell.y1; else -> cell.x0 }
-        val from = if (horizontal) cell.x0 else cell.y0
-        val until = if (horizontal) cell.x1 else cell.y1
-        val color = WALLS[ring.theme.ordinal]
-        val t = if (ring.index == 0) ring.thickness * 2f else ring.cell * .012f
-        if (ring.index == world.rings.size - 1) { wall(c, horizontal, line, from, until, ring.cell * .02f, color); return }
-        var gapFrom = 0f; var gapTo = 0f
-        for ((exitSide, offset) in ring.exits) if (exitSide == side) {
-            val centre = -ring.half + offset * ring.side; gapFrom = centre - ring.exitHalf; gapTo = centre + ring.exitHalf
-        }
-        if (gapTo > gapFrom && gapFrom < until && gapTo > from) {
-            wall(c, horizontal, line, from, gapFrom, t, color); wall(c, horizontal, line, gapTo, until, t, color)
-            stairs(c, horizontal, line, gapFrom, gapTo, ring.cell * .22f)
-        } else wall(c, horizontal, line, from, until, t, color)
-    }
-
-    private fun wall(c: Canvas, horizontal: Boolean, line: Float, from: Float, until: Float, thickness: Float, color: Int) {
-        if (until <= from) return
-        p.color = color
-        if (horizontal) c.drawRect(from, line - thickness, until, line + thickness, p) else c.drawRect(line - thickness, from, line + thickness, until, p)
-    }
-
-    private fun stairs(c: Canvas, horizontal: Boolean, line: Float, from: Float, until: Float, depth: Float) {
-        p.color = 0xFFF5E6CF.toInt()
-        if (horizontal) c.drawRect(from, line - depth / 2f, until, line + depth / 2f, p) else c.drawRect(line - depth / 2f, from, line + depth / 2f, until, p)
-        p.color = 0x55564A5A
-        for (i in 1..4) {
-            val at = line - depth / 2f + depth * i / 5f
-            if (horizontal) c.drawRect(from, at - depth * .03f, until, at + depth * .03f, p) else c.drawRect(at - depth * .03f, from, at + depth * .03f, until, p)
-        }
-    }
-
-    private fun facing(item: GluttonGame.Item): Float {
-        if (abs(item.vx) + abs(item.vy) < item.radius * .5f) return item.angle
-        return if (item.vx < 0f) -8f else 8f
-    }
-
-    /** Swallowed things ride on the body and roll with it, shrinking as the gobbler outgrows them. */
-    private fun drawStuck(c: Canvas) {
+    /** Everything a pixel or more across, covers first, then from the back to the front of the scene. */
+    private fun drawItems(c: Canvas, left: Double, top: Double, right: Double, bottom: Double) {
         val r = game.radius
-        for ((index, stuck) in game.stuck.withIndex()) {
-            val item = stuck.item
-            val drawn = min(item.radius * .62f, r * .42f)
-            if (drawn < r * .08f) continue
-            val a = stuck.angle + game.spin
-            val distance = r * .68f + index % 3 * r * .07f
-            art.item(c, item.prop, game.x + cos(a) * distance, game.y + sin(a) * distance, drawn, a * 180f / PI.toFloat() + 90f)
+        val margin = r * 2
+        visible.clear()
+        val minimum = .6 / zoom
+        val stamp = game.nextStamp()
+        for (layer in game.layers) {
+            if (layer == null || layer.ring.to * 3 < minimum) continue
+            layer.grid.query(left - margin, top - margin, right + margin, bottom + margin) { item ->
+                if (item.stamp != stamp && item.active && (item.radius >= minimum || item.prop.bonus)) { item.stamp = stamp; visible += item }
+            }
+            for (item in layer.movers) if (item.active && item.radius >= minimum) visible += item
+        }
+        for (item in game.loose) if (item.active) visible += item
+        for (cover in game.covers) if (cover.active) {
+            if (cover.x + cover.radius * 1.5 < left || cover.x - cover.radius * 1.5 > right || cover.y + cover.radius * 1.5 < top || cover.y - cover.radius * 1.5 > bottom) continue
+            drawItem(c, cover, r)
+        }
+        if (game.ring.theme.ordinal >= Theme.PLANETS.ordinal) visible.sortByDescending { it.radius } else visible.sortBy { it.y + it.radius * .5 }
+        for (item in visible) {
+            if (item.x + item.radius * 1.5 < left - margin || item.x - item.radius * 1.5 > right + margin || item.y + item.radius * 1.5 < top - margin || item.y - item.radius * 1.5 > bottom + margin) continue
+            drawItem(c, item, r)
+        }
+    }
+
+    private fun drawItem(c: Canvas, item: GluttonGame.Item, r: Double) {
+        val x = sx(item.x); val y = sy(item.y); val rad = (item.radius * zoom).toFloat()
+        if (item.prop.bonus) {
+            p.color = 0x55FFD46F; c.drawCircle(x, y, rad * 1.3f, p)
+            art.item(c, item.prop, x, y + sin(visualTime * 3f + item.id) * rad * .15f, rad, 0f)
+            return
+        }
+        val edible = game.canEat(item)
+        // Only the really rewarding bites get a halo; the rest stays clean.
+        if (edible && item.radius >= r * GluttonGame.BIG_BITE) {
+            p.color = 0x4450BA99; c.drawCircle(x, y, rad * 1.25f, p)
+            p.color = 0x997BE4AC.toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = rad * .08f
+            c.drawCircle(x, y, rad * 1.25f, p); p.style = Paint.Style.FILL
+        }
+        val alpha = if (item.cooldown > 0f) 150 + (sin(visualTime * 30f) * 60f).toInt() else 255
+        val flip = if (item.moves && abs(item.vx) > item.radius * .3) item.vx < 0 else item.flip
+        art.item(c, item.prop, x, y, rad, item.angle, alpha, flip)
+        if (item.moves && item.orbit == null) {
+            if (item.stunned > 0f) for (i in 0..2) {
+                val a = visualTime * 3f + i * 2.1f
+                art.star(c, x + cos(a) * rad, y - rad + sin(a) * rad * .3f, rad * .25f, GluttonArt.GOLD)
+            } else if (item.alert) art.alarm(c, x, y - rad * 1.1f, rad * .8f, !edible)
         }
     }
 
     private fun drawSuction(c: Canvas) {
         if (!running || game.finished) return
-        val strong = game.burst > 0f || game.fever > 0f
-        p.color = if (game.fever > 0f) GluttonArt.GOLD else GluttonArt.MINT
-        p.style = Paint.Style.STROKE; p.strokeWidth = game.radius * if (strong) .08f else .04f
+        val strong = game.burst > 0f
+        val gx = sx(game.x); val gy = sy(game.y); val px = (game.radius * zoom).toFloat()
+        val reach = (game.suctionRadius * zoom).toFloat()
+        p.color = GluttonArt.MINT
+        p.style = Paint.Style.STROKE; p.strokeWidth = px * if (strong) .08f else .04f
         for (i in 0 until if (strong) 3 else 1) {
             val phase = (visualTime * 1.6f + i / 3f) % 1f
-            val r = game.radius + (game.suctionRadius - game.radius) * (1f - phase)
+            val rr = px + (reach - px) * (1f - phase)
             p.alpha = ((if (strong) 150 else 65) * sin(phase * PI).toFloat()).toInt().coerceIn(0, 255)
-            ring.set(game.x - r, game.y - r, game.x + r, game.y + r)
-            c.drawArc(ring, visualTime * 100f + i * 120f, if (strong) 220f else 140f, false, p)
+            arc.set(gx - rr, gy - rr, gx + rr, gy + rr)
+            c.drawArc(arc, visualTime * 100f + i * 120f, if (strong) 220f else 140f, false, p)
         }
         p.alpha = 255; p.style = Paint.Style.FILL
     }
 
-    /** Map of the ring you are in: terraces, hourglasses and you. */
+    /** Map of the ring you are in, drawn once per ring, with you on it. */
     private fun drawMap(c: Canvas) {
         if (!running) return
         val size = 82f * density; val left = 15f * density; val top = height - size - 12f * density
+        val ring = game.ring
+        if (mapRing != ring.index || map == null) { map = renderMap(ring, size.toInt()); mapRing = ring.index }
         p.color = 0xDBFFF6E8.toInt(); c.drawRoundRect(left, top, left + size, top + size, 13f * density, 13f * density, p)
         val inset = 6f * density; val span = size - inset * 2
-        val mapX = left + inset; val mapY = top + inset
-        val ring = game.cell.ring
-        val palette = PALETTES[ring.theme.ordinal]
-        val cellPx = span / ring.count
-        for (cell in ring.cells) {
-            p.color = palette[cell.level.coerceAtMost(palette.size - 1)]
-            c.drawRect(mapX + cell.col * cellPx, mapY + cell.row * cellPx, mapX + (cell.col + 1) * cellPx - .5f * density, mapY + (cell.row + 1) * cellPx - .5f * density, p)
-        }
-        fun mx(x: Float) = mapX + (x + ring.half) / ring.side * span
-        fun my(y: Float) = mapY + (y + ring.half) / ring.side * span
-        for (item in game.items) if (item.active && item.prop.bonus && item.cell?.ring === ring) {
-            p.color = GluttonArt.GOLD; c.drawCircle(mx(item.x), my(item.y), 1.8f * density, p)
-        }
-        for (item in game.items) if (item.active && item.moves && item.cell?.ring === ring) {
-            p.color = if (game.canEat(item)) GluttonArt.MINT else GluttonArt.CORAL
-            c.drawCircle(mx(item.x), my(item.y), 1.4f * density, p)
+        map?.let { c.drawBitmap(it, null, RectF(left + inset, top + inset, left + inset + span, top + inset + span), p) }
+        fun mx(x: Double) = (left + inset + (x + ring.half) / (2 * ring.half) * span).toFloat()
+        fun my(y: Double) = (top + inset + (y + ring.half) / (2 * ring.half) * span).toFloat()
+        // Food your size, so the rich corners show up: that is where to head.
+        if (game.elapsed >= nextFoodMap) { foodMap(); nextFoodMap = game.elapsed + .5f }
+        p.color = GluttonArt.MINT
+        for (i in 0 until foodDots) c.drawCircle(mx(foodSpots[i * 2]), my(foodSpots[i * 2 + 1]), 1.1f * density, p)
+        game.layers[ring.index]?.let { layer ->
+            p.color = GluttonArt.GOLD
+            for (item in layer.statics) if (item.active && item.prop.bonus) c.drawCircle(mx(item.x), my(item.y), 1.8f * density, p)
         }
         p.color = GluttonArt.INK
         c.drawCircle(mx(game.x), my(game.y), 3.3f * density, p)
@@ -502,15 +510,55 @@ class GluttonView(context: Context) : View(context) {
         c.drawCircle(mx(game.x), my(game.y), 1.4f * density, p)
     }
 
-    private fun drawDirectionHint(c: Canvas, speed: Float) {
+    /** Up to [MAP_DOTS] things of the ring you are in that would be a worthwhile bite now. */
+    private fun foodMap() {
+        foodDots = 0
+        val layer = game.layers[game.ring.index] ?: return
+        val r = game.radius
+        val list = layer.statics
+        val step = max(1, list.size / (MAP_DOTS * 4))
+        var i = (game.elapsed * 7).toInt() % step
+        while (i < list.size && foodDots < MAP_DOTS) {
+            val item = list[i]
+            if (item.active && !item.prop.bonus && game.canEat(item) && item.radius >= r * .25) {
+                foodSpots[foodDots * 2] = item.x; foodSpots[foodDots * 2 + 1] = item.y; foodDots++
+            }
+            i += step
+        }
+    }
+
+    private fun renderMap(ring: Ring, size: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(size.coerceAtLeast(8), size.coerceAtLeast(8), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val scale = size / (2 * ring.half)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        fun box(g: Ground, x0: Double, y0: Double, x1: Double, y1: Double, round: Boolean) {
+            paint.color = averages[g.ordinal].takeIf { it != 0 } ?: FALLBACK[g.ordinal]
+            val r = RectF(((x0 + ring.half) * scale).toFloat(), ((y0 + ring.half) * scale).toFloat(), ((x1 + ring.half) * scale).toFloat(), ((y1 + ring.half) * scale).toFloat())
+            if (round) canvas.drawOval(r, paint) else canvas.drawRect(r, paint)
+        }
+        box(ring.ground, -ring.half, -ring.half, ring.half, ring.half, false)
+        for (patch in ring.patches) box(patch.ground, patch.x0, patch.y0, patch.x1, patch.y1, patch.round)
+        if (ring.index > 0) { paint.color = 0x66000000; val h = ring.inner; canvas.drawRect(((-h + ring.half) * scale).toFloat(), ((-h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat(), paint) }
+        paint.color = WALL
+        for (wall in ring.walls) {
+            if (wall.horizontal) canvas.drawRect(((wall.from + ring.half) * scale).toFloat(), ((wall.line + ring.half) * scale).toFloat() - .6f, ((wall.until + ring.half) * scale).toFloat(), ((wall.line + ring.half) * scale).toFloat() + .6f, paint)
+            else canvas.drawRect(((wall.line + ring.half) * scale).toFloat() - .6f, ((wall.from + ring.half) * scale).toFloat(), ((wall.line + ring.half) * scale).toFloat() + .6f, ((wall.until + ring.half) * scale).toFloat(), paint)
+        }
+        return bitmap
+    }
+
+    private fun drawDirectionHint(c: Canvas) {
         val food = nearest ?: return
-        if (!food.active || game.finished || speed > game.moveSpeed * .4f) return
+        val speed = hypot(game.vx, game.vy)
+        if (!food.active || game.finished || speed > game.moveSpeed * .4) return
         val dx = food.x - game.x; val dy = food.y - game.y
         val distance = hypot(dx, dy)
-        if (distance < game.radius * 6f) return
-        val reach = game.radius * 1.9f + sin(visualTime * 5f) * game.radius * .15f
-        c.save(); c.translate(game.x + dx / distance * reach, game.y + dy / distance * reach)
-        c.rotate(atan2(dy, dx) * 180f / PI.toFloat()); c.scale(game.radius / 16f, game.radius / 16f)
+        if (distance < game.radius * 6) return
+        val reach = game.radius * 1.9 + sin(visualTime * 5f) * game.radius * .15
+        val px = (game.radius * zoom).toFloat()
+        c.save(); c.translate(sx(game.x + dx / distance * reach), sy(game.y + dy / distance * reach))
+        c.rotate(atan2(dy, dx).toFloat() * 180f / PI.toFloat()); c.scale(px / 16f, px / 16f)
         p.color = 0xBB3A987E.toInt(); p.strokeWidth = 4f; p.strokeCap = Paint.Cap.ROUND
         c.drawLine(-7f, -6f, 1f, 0f, p); c.drawLine(1f, 0f, -7f, 6f, p); c.restore()
     }
@@ -539,8 +587,8 @@ class GluttonView(context: Context) : View(context) {
                 val length = hypot(nx, ny); val ratio = maxDrag / max(maxDrag, length)
                 fingerX = originX + nx * ratio; fingerY = originY + ny * ratio
                 if (length > 5f * density) {
-                    hasSteered = true; game.steer(nx / maxDrag, ny / maxDrag)
-                } else game.steer(0f, 0f)
+                    hasSteered = true; game.steer((nx / maxDrag).toDouble(), (ny / maxDrag).toDouble())
+                } else game.steer(0.0, 0.0)
             }
             MotionEvent.ACTION_POINTER_UP -> if (event.getPointerId(event.actionIndex) == pointer) cancelInput()
             MotionEvent.ACTION_UP -> { cancelInput(); performClick() }
@@ -551,11 +599,11 @@ class GluttonView(context: Context) : View(context) {
 
     override fun performClick(): Boolean { super.performClick(); return true }
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh); zoom = 0f; cameraX = game.x; cameraY = game.y; cancelInput()
+        super.onSizeChanged(w, h, oldw, oldh); zoom = 0.0; cameraX = game.x; cameraY = game.y; cancelInput(); mapRing = -1
     }
     override fun onAttachedToWindow() {
         super.onAttachedToWindow(); audio = GluttonAudio(context)
-        atlas.prepare(game.cell.ring.theme)
+        atlas.prepare(game.ring.theme)
         if (running) postOnAnimation(frame)
     }
     override fun onDetachedFromWindow() {
@@ -563,15 +611,18 @@ class GluttonView(context: Context) : View(context) {
     }
 
     companion object {
-        /** Floor colour per terrace level, lighter as you climb: parquet, lawn, pavement. */
-        val PALETTES = arrayOf(
-            intArrayOf(0xFFE3C9B4.toInt(), 0xFFEDD8C5.toInt(), 0xFFF5E6D6.toInt()),
-            intArrayOf(0xFFA9CC8E.toInt(), 0xFFB9D7A0.toInt(), 0xFFCBE3B4.toInt()),
-            intArrayOf(0xFFC9CCC7.toInt(), 0xFFD5D8D2.toInt(), 0xFFE0E3DC.toInt(), 0xFFE9EBE5.toInt(), 0xFFF2F3EE.toInt()))
-        /** House walls, the suburb's brink up to the city, the city's end. */
-        val WALLS = intArrayOf(0xFF8C83A7.toInt(), 0xFF6F9A66.toInt(), 0xFF7E858F.toInt())
-        /** Brink of a terrace, per theme: a darker tone of its floor. */
-        val CLIFFS = intArrayOf(0xFFB8927A.toInt(), 0xFF6C9A5E.toInt(), 0xFF8E938C.toInt())
+        /** The screen's short side shows this many gobbler radii: you take a tenth of it. */
+        const val VIEW_SPAN = 20.0
+        const val MAP_DOTS = 160
         const val LOT = 0xFFB9A98A.toInt()
+        const val WALL = 0xFF8C7F99.toInt()
+        /** Flat colours while a texture loads, and for the map. */
+        val FALLBACK = intArrayOf(0xFFD9A86C.toInt(), 0xFFE7C2A6.toInt(), 0xFF8FA9C9.toInt(), 0xFFD7ECEC.toInt(), 0xFF8CC063.toInt(),
+            0xFF5E5F63.toInt(), 0xFFC4C5C2.toInt(), 0xFFD8BE95.toInt(), 0xFFE0B65C.toInt(), 0xFF9CC46E.toInt(), 0xFF4F8A4C.toInt(),
+            0xFF6FB8E0.toInt(), 0xFFB4B6B8.toInt(), 0xFFE9C985.toInt(), 0xFF2E5C9A.toInt(), 0xFF1D2650.toInt())
+        /** Space shifts from navy (planets) to violet (the galaxy) to the deep black of the cosmic web. */
+        private val TINTS: Array<ColorFilter?> = arrayOf(null, null, null, null, null, null, null,
+            LightingColorFilter(0xFFE6DCFF.toInt(), 0x00080010), LightingColorFilter(0xFFF0C8F0.toInt(), 0x00140620),
+            LightingColorFilter(0xFF9C9CB4.toInt(), 0x00000004))
     }
 }

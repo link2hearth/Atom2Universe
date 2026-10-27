@@ -41,8 +41,8 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
         fill(color); p.strokeWidth = width; p.strokeCap = Paint.Cap.ROUND; c.drawLine(ax, ay, bx, by, p)
     }
 
-    fun item(c: Canvas, prop: Prop, x: Float, y: Float, radius: Float, angle: Float, alpha: Int = 255) {
-        c.save(); c.translate(x, y); c.rotate(angle)
+    fun item(c: Canvas, prop: Prop, x: Float, y: Float, radius: Float, angle: Float, alpha: Int = 255, flip: Boolean = false) {
+        c.save(); c.translate(x, y); c.rotate(angle); if (flip) c.scale(-1f, 1f)
         val extent = radius * 1.48f
         dst.set(-extent, -extent, extent, extent)
         fill(Color.WHITE); p.alpha = alpha
@@ -453,6 +453,26 @@ internal class GluttonArt(var atlas: GluttonAtlas? = null) {
                 oval(c, -24f, -42f, -4f, -22f, 0x66FFFFFF)
                 line(c, -22f, 14f, -12f, 36f, INK, 2f); line(c, 22f, 14f, 12f, 36f, INK, 2f)
                 round(c, -16f, 34f, 16f, 46f, 3f, 0xFFA87B4F.toInt())
+            }
+            Shape.PEAK -> {
+                path.rewind(); path.moveTo(-46f, 36f); path.lineTo(-6f, -44f); path.lineTo(46f, 36f); path.close()
+                fill(0xFF8E97A6.toInt()); c.drawPath(path, p)
+                path.rewind(); path.moveTo(-18f, -20f); path.lineTo(-6f, -44f); path.lineTo(8f, -18f); path.lineTo(-4f, -24f); path.close()
+                fill(Color.WHITE); c.drawPath(path, p)
+            }
+            Shape.BLOB -> { oval(c, -44f, -34f, 44f, 38f, 0xFF8FB77A.toInt()); oval(c, -30f, -28f, 24f, 20f, 0xFFB5D59A.toInt()) }
+            Shape.LAKE -> { oval(c, -46f, -30f, 46f, 38f, 0xFF8FB77A.toInt()); oval(c, -38f, -24f, 38f, 30f, 0xFF6FB6D9.toInt()) }
+            Shape.FOREST -> for (i in 0..6) { val a = i * .9f; oval(c, cos(a) * 24f - 18f, sin(a) * 20f - 18f, cos(a) * 24f + 18f, sin(a) * 20f + 18f, if (i % 2 == 0) 0xFF4F8F5E.toInt() else 0xFF6FAF6A.toInt()) }
+            Shape.CLOUD -> { oval(c, -44f, -10f, 0f, 30f, 0xFFF4F6FA.toInt()); oval(c, -22f, -32f, 26f, 22f, Color.WHITE); oval(c, 6f, -12f, 46f, 30f, 0xFFF4F6FA.toInt()) }
+            Shape.PLANET -> { oval(c, -42f, -42f, 42f, 42f, 0xFF9CB4D8.toInt()); oval(c, -30f, -34f, 10f, -6f, 0x66FFFFFF) }
+            Shape.STAR -> { star(c, 0f, 0f, 48f, 0xFFFFB347.toInt()); oval(c, -26f, -26f, 26f, 26f, GOLD) }
+            Shape.NEBULA -> { oval(c, -46f, -26f, 20f, 34f, 0xCCE58FC0.toInt()); oval(c, -16f, -40f, 46f, 22f, 0xCC9C8FE5.toInt()) }
+            Shape.CLUSTER -> for (i in 0..11) { val a = i * 2.4f; val r = 6f + i * 3.2f; star(c, cos(a) * r, sin(a) * r, 7f, if (i % 3 == 0) 0xFFBFD8FF.toInt() else GOLD) }
+            Shape.SPIRAL -> {
+                oval(c, -14f, -14f, 14f, 14f, GOLD)
+                fill(0xFF8FA8E5.toInt()); p.style = Paint.Style.STROKE; p.strokeWidth = 9f; p.strokeCap = Paint.Cap.ROUND
+                c.drawArc(-40f, -30f, 30f, 36f, 180f, 200f, false, p); c.drawArc(-30f, -36f, 40f, 30f, 0f, 200f, false, p)
+                p.style = Paint.Style.FILL
             }
             Shape.HOURGLASS -> {
                 oval(c, -34f, -14f, 34f, 46f, 0x33FFD46F)

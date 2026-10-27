@@ -54,11 +54,8 @@ class GluttonActivityTest {
         val runnable = view.javaClass.getDeclaredField("frame").apply { isAccessible = true }.get(view) as Runnable
         repeat(count) { ShadowSystemClock.advanceBy(Duration.ofMillis(16)); runnable.run() }
     }
-    private fun teleport(game: GluttonGame, x: Float, y: Float, radius: Float) {
-        game.forceRadius(radius)
-        game.javaClass.getDeclaredField("x").apply { isAccessible = true }.setFloat(game, x)
-        game.javaClass.getDeclaredField("y").apply { isAccessible = true }.setFloat(game, y)
-        game.update(1f / 120)
+    private fun teleport(game: GluttonGame, x: Double, y: Double, radius: Double) {
+        game.forceRadius(radius); game.teleport(x, y)
     }
 
     @Test fun cancelledInputAndBackgroundingStopMovementUntilExplicitResume() {
@@ -89,16 +86,16 @@ class GluttonActivityTest {
         try {
             val activity = controller.get(); click(activity, R.string.glutton_play)
             val view = views(activity).filterIsInstance<GluttonView>().single()
-            view.game.forceRadius(2f)
+            view.game.forceRadius(2.0)
             val expected = NeutrinoRewards.glutton(view.game.diameterMetres)
-            assertEquals(6, expected)
+            assertEquals(13, expected)
             controller.pause().resume(); click(activity, R.string.glutton_resume)
             controller.pause().resume()
             assertEquals(expected, context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0))
             click(activity, R.string.glutton_again)
             assertEquals(expected, context.getSharedPreferences("neutrino_prefs", Context.MODE_PRIVATE).getInt("balance", 0))
-            assertEquals(GluttonGame.START_RADIUS, view.game.radius, 1e-6f)
-            assertEquals(4f, context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE).getFloat("best_chrono", 0f), .001f)
+            assertEquals(GluttonGame.START_RADIUS, view.game.radius, 1e-9)
+            assertEquals(4f, context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE).getFloat("best_voyage", 0f), .001f)
         } finally { controller.pause().stop().destroy() }
     }
 
@@ -107,6 +104,7 @@ class GluttonActivityTest {
         try {
             val activity = controller.get(); click(activity, R.string.glutton_play)
             val view = views(activity).filterIsInstance<GluttonView>().single()
+            view.game.forceRadius(view.game.world.rings.last().to * 1.01)
             var guard = 0
             while (!view.game.finished && guard++ < 4000) view.game.update(.1f)
             assertTrue(view.game.finished)
@@ -142,7 +140,7 @@ class GluttonActivityTest {
 
     @Test fun theHungryClockModeIsRememberedAndKeepsItsOwnRecord() {
         val prefs = context.getSharedPreferences("glutton_save", Context.MODE_PRIVATE)
-        prefs.edit().putFloat("best_chrono", 12.5f).commit()
+        prefs.edit().putFloat("best_voyage", 12.5f).commit()
         val controller = Robolectric.buildActivity(GluttonActivity::class.java).setup()
         try {
             val activity = controller.get()
@@ -151,10 +149,10 @@ class GluttonActivityTest {
             val view = views(activity).filterIsInstance<GluttonView>().single()
             assertEquals(Mode.FRINGALE, view.game.mode); assertEquals(1, prefs.getInt("mode", 0))
             assertTrue(view.game.items.any { it.prop.bonus })
-            view.game.forceRadius(.5f)
+            view.game.forceRadius(.5)
             activity.onWindowFocusChanged(false)
             assertEquals(1f, prefs.getFloat("best_fringale", 0f), .001f)
-            assertEquals(12.5f, prefs.getFloat("best_chrono", 0f), .001f)
+            assertEquals(12.5f, prefs.getFloat("best_voyage", 0f), .001f)
         } finally { controller.pause().stop().destroy() }
     }
 
@@ -184,13 +182,24 @@ class GluttonActivityTest {
             val view = views(activity).filterIsInstance<GluttonView>().single()
             root.layout(0, 0, 412, 820); frames(view, 30)
             render("start", 412, 820)
-            teleport(view.game, 1.5f, -1.2f, .1f); frames(view, 90); render("house_grown", 412, 820)
-            teleport(view.game, 0f, -7f, .5f); frames(view, 90); render("house_exit", 412, 820)
-            teleport(view.game, 40f, 30f, 1f); frames(view, 90); render("suburb", 412, 820)
-            teleport(view.game, -50f, 45f, 4f); frames(view, 90); render("suburb_big", 412, 820)
-            teleport(view.game, 0f, 12f, 12f); frames(view, 90); render("house_eaten", 412, 820)
-            teleport(view.game, 500f, 400f, 15f); frames(view, 90); render("city", 412, 820)
-            teleport(view.game, -700f, 500f, 120f); frames(view, 90); render("city_giant", 412, 820)
+            // The pages and textures decode on their own thread.
+            Thread.sleep(2500)
+            frames(view, 30); render("start_textured", 412, 820)
+            teleport(view.game, 1.5, -1.2, .1); frames(view, 90); render("house_grown", 412, 820)
+            teleport(view.game, 0.0, -5.0, .4); frames(view, 90); render("house_big", 412, 820)
+            teleport(view.game, 30.0, 22.0, 1.0); frames(view, 90); render("suburb", 412, 820)
+            teleport(view.game, -45.0, 40.0, 4.0); frames(view, 90); render("suburb_big", 412, 820)
+            teleport(view.game, 300.0, 250.0, 15.0); frames(view, 90); Thread.sleep(1500); render("city", 412, 820)
+            teleport(view.game, -700.0, 500.0, 90.0); frames(view, 90); render("city_giant", 412, 820)
+            teleport(view.game, 4000.0, 2500.0, 300.0); frames(view, 90); Thread.sleep(1500); render("country", 412, 820)
+            teleport(view.game, 60e3, -40e3, 5000.0); frames(view, 90); Thread.sleep(1500); render("mountains", 412, 820)
+            teleport(view.game, 1.2e6, 8e5, 1.5e5); frames(view, 90); Thread.sleep(1500); render("earth", 412, 820)
+            teleport(view.game, 1.5e7, 0.0, 2e6); frames(view, 90); Thread.sleep(1500); render("planets", 412, 820)
+            teleport(view.game, -1.6e9, 4e8, 6e7); frames(view, 90); render("sun", 412, 820)
+            teleport(view.game, 5e10, 3e10, 2e9); frames(view, 90); Thread.sleep(1500); render("stars", 412, 820)
+            teleport(view.game, 3e14, 1e14, 1e13); frames(view, 90); render("nebulae", 412, 820)
+            teleport(view.game, 1e20, 4e19, 4e18); frames(view, 90); Thread.sleep(1500); render("galaxy", 412, 820)
+            teleport(view.game, 5e23, 2e23, 3e22); frames(view, 90); Thread.sleep(1500); render("cosmos", 412, 820)
             render("compact", 320, 568)
             render("landscape", 820, 412)
         } finally { controller.pause().stop().destroy() }

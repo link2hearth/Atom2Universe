@@ -22,6 +22,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlin.math.ceil
+import kotlin.math.pow
 
 class GluttonActivity : ThemedActivity() {
     private enum class Screen { HOME, PLAY, PAUSE, END }
@@ -36,7 +37,6 @@ class GluttonActivity : ThemedActivity() {
     private lateinit var result: TextView
     private lateinit var sizeLabel: TextView
     private lateinit var timer: TextView
-    private lateinit var combo: TextView
     private lateinit var banner: TextView
     private lateinit var modeLabel: TextView
     private lateinit var charge: ProgressBar
@@ -56,20 +56,19 @@ class GluttonActivity : ThemedActivity() {
     private var showingRules = false
     private var displayedSize = ""
     private var displayedSeconds = -1
-    private var displayedMultiplier = -1
     private var burstReady: Boolean? = null
-    private var selectedMode = Mode.CHRONO
+    private var selectedMode = Mode.VOYAGE
     private val hideBanner = Runnable { if (::banner.isInitialized) banner.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selectedMode = Mode.entries.getOrElse(prefs.getInt("mode", 0)) { Mode.CHRONO }
+        selectedMode = Mode.entries.getOrElse(prefs.getInt("mode", 0)) { Mode.VOYAGE }
         buildUi(); enableImmersiveMode()
         scene.haptics = prefs.getBoolean("haptics", true)
         scene.sound = prefs.getBoolean("sound", true)
         scene.nameOf = { name(it) }
         scene.onHudChanged = { updateHud() }
-        scene.onMilestone = { metres -> flash(getString(R.string.glutton_milestone, sizeText(metres))) }
+        scene.onMilestone = { power -> flash(getString(R.string.glutton_milestone, sizeText(10.0.pow(power)))) }
         scene.onRing = { theme -> flash(getString(RINGS[theme.ordinal]), 2000) }
         scene.onFinished = { finishRun() }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -88,16 +87,26 @@ class GluttonActivity : ThemedActivity() {
         val id = resources.getIdentifier("glutton_item_${prop.id}", "string", packageName)
         if (id == 0) prop.id else getString(id)
     }
-    private fun sizeText(metres: Float) = when {
-        metres < 1f -> getString(R.string.glutton_size_cm, metres * 100f)
-        metres < 100f -> getString(R.string.glutton_size_m, metres)
-        else -> getString(R.string.glutton_size_big_m, metres)
+    /** Centimetres for a crumb, kilometres for a mountain, astronomical units for a star, light-years beyond. */
+    fun sizeText(metres: Double): String = when {
+        metres < 1.0 -> getString(R.string.glutton_size_cm, metres * 100)
+        metres < 100.0 -> getString(R.string.glutton_size_m, metres)
+        metres < 1000.0 -> getString(R.string.glutton_size_big_m, metres)
+        metres < 1e5 -> getString(R.string.glutton_size_km, metres / 1000)
+        metres < 1e11 -> getString(R.string.glutton_size_big_km, metres / 1000)
+        metres < LIGHT_YEAR -> (metres / ASTRONOMICAL_UNIT).let { getString(if (it < 10) R.string.glutton_size_au else R.string.glutton_size_big_au, it) }
+        metres < LIGHT_YEAR * 1e6 -> (metres / LIGHT_YEAR).let { getString(if (it < 10) R.string.glutton_size_ly else R.string.glutton_size_big_ly, it) }
+        metres < LIGHT_YEAR * 1e9 -> (metres / LIGHT_YEAR / 1e6).let { resources.getQuantityString(R.plurals.glutton_size_mly, it.toInt(), it) }
+        else -> (metres / LIGHT_YEAR / 1e9).let { resources.getQuantityString(R.plurals.glutton_size_gly, it.toInt(), it) }
     }
+    private fun timeText(seconds: Float) = ceil(seconds.toDouble()).toInt().let { getString(R.string.glutton_timer, it / 60, it % 60) }
     private fun flash(text: CharSequence, duration: Long = 1600) {
         banner.text = text; banner.visibility = View.VISIBLE
         banner.removeCallbacks(hideBanner); banner.postDelayed(hideBanner, duration)
     }
     private fun best(mode: Mode) = prefs.getFloat("best_${mode.name.lowercase()}", 0f)
+    /** Fastest whole journey, in seconds (0 = never finished). */
+    private fun bestTime() = prefs.getFloat("best_voyage_time", 0f)
 
     private fun buildUi() {
         val root = FrameLayout(this)
@@ -111,8 +120,6 @@ class GluttonActivity : ThemedActivity() {
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         sizeLabel = label(R.string.glutton_title, 27f).apply { typeface = Typeface.DEFAULT_BOLD }
         row.addView(sizeLabel, LinearLayout.LayoutParams(0, dp(48), 1f))
-        combo = label(R.string.glutton_title, 18f).apply { setTextColor(0xFF389B85.toInt()); gravity = Gravity.CENTER }
-        row.addView(combo, LinearLayout.LayoutParams(dp(48), dp(48)))
         timer = label(R.string.glutton_title, 20f).apply { gravity = Gravity.CENTER; typeface = Typeface.DEFAULT_BOLD }
         row.addView(timer, LinearLayout.LayoutParams(dp(72), dp(48)))
         row.addView(button(R.string.glutton_pause) { showMenu(Screen.PAUSE) }.apply { textSize = 12f },
@@ -228,9 +235,9 @@ class GluttonActivity : ThemedActivity() {
 
     private fun updateViewport() { scene.setViewportInsets(hud.height, footer.height) }
 
-    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), mode: Mode = Mode.CHRONO) {
+    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), mode: Mode = Mode.VOYAGE) {
         settle(); hasRun = true; rewardPaid = 0
-        displayedSize = ""; displayedSeconds = -1; displayedMultiplier = -1; burstReady = null
+        displayedSize = ""; displayedSeconds = -1; burstReady = null
         banner.removeCallbacks(hideBanner); banner.visibility = View.GONE
         screen = Screen.PLAY; overlay.visibility = View.GONE; hud.visibility = View.VISIBLE; footer.visibility = View.VISIBLE
         scene.start(seed, mode)
@@ -239,8 +246,9 @@ class GluttonActivity : ThemedActivity() {
     }
 
     private fun recordText(mode: Mode): String {
+        if (mode == Mode.VOYAGE && bestTime() > 0f) return getString(R.string.glutton_record, timeText(bestTime()))
         val record = best(mode)
-        return if (record > 0f) getString(R.string.glutton_record, sizeText(record)) else ""
+        return if (record > 0f) getString(R.string.glutton_record, sizeText(record.toDouble())) else ""
     }
 
     private fun resumeGame() {
@@ -283,15 +291,11 @@ class GluttonActivity : ThemedActivity() {
         val game = scene.game
         val size = sizeText(game.diameterMetres)
         if (size != displayedSize) { displayedSize = size; sizeLabel.text = size }
-        val seconds = ceil(game.remaining.toDouble()).toInt()
+        val clock = if (game.mode == Mode.FRINGALE) game.remaining else game.elapsed
+        val seconds = ceil(clock.toDouble()).toInt()
         if (seconds != displayedSeconds) {
-            displayedSeconds = seconds; timer.text = getString(R.string.glutton_timer, seconds / 60, seconds % 60)
-            timer.setTextColor(if (seconds <= 10) 0xFFBD556C.toInt() else GluttonArt.INK)
-        }
-        if (game.multiplier != displayedMultiplier) {
-            displayedMultiplier = game.multiplier
-            combo.text = getString(R.string.glutton_combo, game.multiplier)
-            combo.visibility = if (game.multiplier > 1) View.VISIBLE else View.INVISIBLE
+            displayedSeconds = seconds; timer.text = timeText(clock)
+            timer.setTextColor(if (game.mode == Mode.FRINGALE && seconds <= 10) 0xFFBD556C.toInt() else GluttonArt.INK)
         }
         charge.progress = (game.charge * 1000).toInt()
         val ready = game.charge >= .999f && game.burst <= 0f
@@ -307,7 +311,8 @@ class GluttonActivity : ThemedActivity() {
         if (!hasRun) return 0
         val game = scene.game
         val key = "best_${game.mode.name.lowercase()}"
-        if (game.diameterMetres > prefs.getFloat(key, 0f)) prefs.edit().putFloat(key, game.diameterMetres).apply()
+        if (game.diameterMetres > prefs.getFloat(key, 0f)) prefs.edit().putFloat(key, game.diameterMetres.toFloat()).apply()
+        if (game.mode == Mode.VOYAGE && game.cleared && (bestTime() <= 0f || game.elapsed < bestTime())) prefs.edit().putFloat("best_voyage_time", game.elapsed).apply()
         val reward = NeutrinoRewards.glutton(game.diameterMetres)
         val difference = reward - rewardPaid
         if (difference > 0) { NeutrinoRepository(this).addBalance(difference); rewardPaid = reward }
@@ -316,10 +321,11 @@ class GluttonActivity : ThemedActivity() {
 
     private fun finishRun() {
         val game = scene.game
-        val record = game.diameterMetres > best(game.mode)
+        val record = if (game.mode == Mode.VOYAGE && game.cleared) bestTime() <= 0f || game.elapsed < bestTime() else game.diameterMetres > best(game.mode)
         val reward = settle(); selectedMode = game.mode; showMenu(Screen.END)
         heading.setText(if (game.cleared) R.string.glutton_cleared else if (record) R.string.glutton_new_record else R.string.glutton_end)
-        result.text = getString(R.string.glutton_result, sizeText(game.diameterMetres), game.eaten, game.bestCombo, reward)
+        result.text = getString(R.string.glutton_result, sizeText(game.diameterMetres), game.eaten, game.bestCombo, reward) +
+            "\n" + getString(R.string.glutton_time_line, timeText(game.elapsed))
     }
 
     private fun updateModes() {
@@ -369,8 +375,12 @@ class GluttonActivity : ThemedActivity() {
     private fun dp(value: Int) = (resources.displayMetrics.density * value).toInt()
 
     companion object {
-        val RINGS = intArrayOf(R.string.glutton_zone_room, R.string.glutton_zone_suburb, R.string.glutton_zone_city)
-        val MODES = intArrayOf(R.string.glutton_mode_chrono, R.string.glutton_mode_fringale)
+        val RINGS = intArrayOf(R.string.glutton_zone_room, R.string.glutton_zone_suburb, R.string.glutton_zone_city,
+            R.string.glutton_zone_country, R.string.glutton_zone_mountains, R.string.glutton_zone_earth, R.string.glutton_zone_planets,
+            R.string.glutton_zone_stars, R.string.glutton_zone_galaxy, R.string.glutton_zone_cosmos)
+        val MODES = intArrayOf(R.string.glutton_mode_voyage, R.string.glutton_mode_fringale)
+        const val ASTRONOMICAL_UNIT = 1.496e11
+        const val LIGHT_YEAR = 9.461e15
         @Suppress("unused") val THEMES = Theme.entries
     }
 }
