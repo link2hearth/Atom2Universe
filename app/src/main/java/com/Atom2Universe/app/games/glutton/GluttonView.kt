@@ -464,12 +464,14 @@ class GluttonView(context: Context) : View(context) {
                 if (index == 0 && game.houseEaten && !game.covered[5]) { p.color = LOT; rect(c, -house.half, -house.half, house.half, house.half, p) }
                 continue
             }
-            groundRect(c, ring, ring.ground, -ring.half, -ring.half, ring.half, ring.half, false)
+            if (ring.round) band(c, ring, ring.ground, ring.half / 2, ring.half, left, top, right, bottom)
+            else groundRect(c, ring, ring.ground, -ring.half, -ring.half, ring.half, ring.half, false)
             for (patch in ring.patches) {
                 if (patch.x1 < left || patch.x0 > right || patch.y1 < top || patch.y0 > bottom) continue
                 if ((patch.x1 - patch.x0) * zoom < 1.0 && (patch.y1 - patch.y0) * zoom < 1.0) continue
                 groundRect(c, ring, patch.ground, patch.x0, patch.y0, patch.x1, patch.y1, patch.round)
             }
+            for (annulus in ring.annuli) if (annulus.width * zoom >= .7) band(c, ring, annulus.ground, annulus.radius, annulus.width, left, top, right, bottom)
             for (m in ring.markings) {
                 val w = m.width * zoom
                 if (w < .7) continue
@@ -492,17 +494,41 @@ class GluttonView(context: Context) : View(context) {
                     else rect(c, wall.line - wall.thickness, wall.from, wall.line + wall.thickness, wall.until, p)
                 }
             }
-            // The ring inside sits a little lower: a soft shadow around its square.
+            // The ring inside sits a little lower: a soft shadow around its edge.
             world.rings.getOrNull(index - 1)?.let { inner ->
                 if (game.covered[inner.index] && !(inner.index == 0 && game.houseEaten)) return@let
                 val band = inner.half * .03
                 p.color = 0x33000000
+                if (inner.round) { circleBand(c, p, inner.half + band / 2, band, left, top, right, bottom); return@let }
                 rect(c, -inner.half - band, -inner.half - band, inner.half + band, -inner.half, p)
                 rect(c, -inner.half - band, inner.half, inner.half + band, inner.half + band, p)
                 rect(c, -inner.half - band, -inner.half, -inner.half, inner.half, p)
                 rect(c, inner.half, -inner.half, inner.half + band, inner.half, p)
             }
         }
+    }
+
+    /** A round band of ground around the centre (a whole round ring is the band from 0 to its edge), with its texture. */
+    private fun band(c: Canvas, ring: Ring, ground: Ground, radius: Double, width: Double, left: Double, top: Double, right: Double, bottom: Double) {
+        val paint = groundPaint(ring, ground)
+        if (paint.shader != null && paint.alpha < 255) circleBand(c, flat, radius, width, left, top, right, bottom)
+        circleBand(c, paint, radius, width, left, top, right, bottom)
+    }
+
+    /**
+     * The ring between radii [radius] ± [width] / 2 around the centre. Seen from close, such a circle is many
+     * screens wide: when the screen lies wholly inside the band it is simply filled, and when it misses it nothing is drawn.
+     */
+    private fun circleBand(c: Canvas, paint: Paint, radius: Double, width: Double, left: Double, top: Double, right: Double, bottom: Double) {
+        val outer = radius + width / 2; val inner = radius - width / 2
+        val near = hypot(max(0.0, max(left, -right)), max(0.0, max(top, -bottom)))
+        val far = hypot(max(abs(left), abs(right)), max(abs(top), abs(bottom)))
+        if (near > outer || far < inner) return
+        if (far <= outer && near >= inner) { rect(c, left, top, right, bottom, paint); return }
+        val style = paint.style; val stroke = paint.strokeWidth
+        if (inner <= 0.0) { paint.style = Paint.Style.FILL; c.drawCircle(sx(0.0), sy(0.0), (outer * zoom).toFloat(), paint) }
+        else { paint.style = Paint.Style.STROKE; paint.strokeWidth = (width * zoom).toFloat(); c.drawCircle(sx(0.0), sy(0.0), (radius * zoom).toFloat(), paint) }
+        paint.style = style; paint.strokeWidth = stroke
     }
 
     /** A rectangle in metres, clipped to the screen before turning into pixels (they can be astronomically large). */
@@ -691,9 +717,20 @@ class GluttonView(context: Context) : View(context) {
             val r = RectF(((x0 + ring.half) * scale).toFloat(), ((y0 + ring.half) * scale).toFloat(), ((x1 + ring.half) * scale).toFloat(), ((y1 + ring.half) * scale).toFloat())
             if (round) canvas.drawOval(r, paint) else canvas.drawRect(r, paint)
         }
-        box(ring.ground, -ring.half, -ring.half, ring.half, ring.half, false)
+        box(ring.ground, -ring.half, -ring.half, ring.half, ring.half, ring.round)
         for (patch in ring.patches) box(patch.ground, patch.x0, patch.y0, patch.x1, patch.y1, patch.round)
-        if (ring.index > 0) { paint.color = 0x66000000; val h = ring.inner; canvas.drawRect(((-h + ring.half) * scale).toFloat(), ((-h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat(), paint) }
+        paint.style = Paint.Style.STROKE
+        for (annulus in ring.annuli) {
+            paint.color = averages[annulus.ground.ordinal].takeIf { it != 0 } ?: FALLBACK[annulus.ground.ordinal]
+            paint.strokeWidth = max(1f, (annulus.width * scale).toFloat())
+            canvas.drawCircle(size / 2f, size / 2f, (annulus.radius * scale).toFloat(), paint)
+        }
+        paint.style = Paint.Style.FILL
+        if (ring.index > 0) {
+            paint.color = 0x66000000; val h = ring.inner
+            val hole = RectF(((-h + ring.half) * scale).toFloat(), ((-h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat(), ((h + ring.half) * scale).toFloat())
+            if (game.world.rings[ring.index - 1].round) canvas.drawOval(hole, paint) else canvas.drawRect(hole, paint)
+        }
         paint.color = WALL
         for (wall in ring.walls) {
             if (wall.horizontal) canvas.drawRect(((wall.from + ring.half) * scale).toFloat(), ((wall.line + ring.half) * scale).toFloat() - .6f, ((wall.until + ring.half) * scale).toFloat(), ((wall.line + ring.half) * scale).toFloat() + .6f, paint)

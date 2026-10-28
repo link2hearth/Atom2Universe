@@ -330,7 +330,8 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     private fun collideWalls() {
         val outer = world.rings.last()
         val limit = (outer.half - radius).coerceAtLeast(0.0)
-        x = x.coerceIn(-limit, limit); y = y.coerceIn(-limit, limit)
+        if (outer.round) { val d = hypot(x, y); if (d > limit) { x *= limit / d; y *= limit / d } }
+        else { x = x.coerceIn(-limit, limit); y = y.coerceIn(-limit, limit) }
         val house = world.rings[0]
         if (covered[0] || radius >= GluttonLayout.WALL_HEIGHT || abs(x) > house.half + radius || abs(y) > house.half + radius) return
         for (wall in house.walls) blockSegment(wall.horizontal, wall.line, wall.from, wall.until, wall.thickness)

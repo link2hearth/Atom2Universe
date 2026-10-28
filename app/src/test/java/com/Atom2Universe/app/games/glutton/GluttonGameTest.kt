@@ -43,7 +43,7 @@ class GluttonGameTest {
             assertTrue("ring ${ring.index} hourglasses", ring.hourglasses.size >= 3)
             for (p in ring.placements) {
                 assertTrue(ring.contains(p.x, p.y))
-                if (ring.index > 0) assertTrue("${p.prop.id} inside the inner ring", max(abs(p.x), abs(p.y)) >= ring.inner)
+                if (ring.index > 0) assertTrue("${p.prop.id} inside the inner ring", a.rings[ring.index - 1].reach(p.x, p.y) >= ring.inner)
             }
             // Food for the gobbler the ring is meant for, at every stage of it.
             val sizes = ring.placements.map { it.radius }

@@ -7,16 +7,19 @@ import kotlin.random.Random
 
 /**
  * One procedural world in metres (doubles: it spans a sesame seed to the great walls of galaxies), made
- * of square rings nested around the start: your house, its suburb, the town, the countryside, the
- * mountains, the Earth, the solar system, the stars, the Milky Way and the universe. Each ring is laid
- * out like the real thing (rooms, streets of houses, fields and woods, mountain ranges, orbits, spiral
- * arms, the cosmic web) and is only built when the gobbler gets near it.
+ * of rings nested around the start: your house, its suburb, the town, the countryside, the mountains,
+ * the Earth, the solar system, the stars, the Milky Way and the universe. The house, the suburb and the
+ * town are square, like streets are; from the countryside on the rings are round. Each ring is laid out
+ * like the real thing (rooms, streets of houses, fields and woods, mountain ranges, orbits, spiral arms,
+ * the cosmic web) and is only built when the gobbler gets near it.
  */
 class GluttonWorld(val seed: Long) {
     /** Floor and ground textures (assets/glutton/ground_<name>.webp); the view tints SPACE per era. */
     enum class Ground { WOOD, TILES, CARPET, BATH, GRASS, ASPHALT, PAVEMENT, COBBLES, WHEAT, MEADOW, FOREST, WATER, ROCK, SAND, OCEAN, SPACE }
     /** A piece of ground drawn under everything: a rectangle, or the disc inscribed in it when [round]. */
     class Patch(val ground: Ground, val x0: Double, val y0: Double, val x1: Double, val y1: Double, val round: Boolean = false)
+    /** A band of ground going right round the centre (a ring road, a mountain range): [radius] is its middle line. */
+    class Annulus(val ground: Ground, val radius: Double, val width: Double)
     /** A wall along x (horizontal) or y; it stops the gobbler until its radius reaches [height]. */
     class Wall(val horizontal: Boolean, val line: Double, val from: Double, val until: Double, val thickness: Double, val height: Double)
     /** Painted line on a road: dashes along a segment. */
@@ -61,10 +64,13 @@ class GluttonWorld(val seed: Long) {
      * them by distance from the centre. A ring with a [cover] hides the rings [coverFrom]..index - 1 behind
      * one big thing (your house, the Earth, the Milky Way) once the gobbler has reached it. [pace] scales
      * how fast the gobbler digests there, so that each era lasts about as long as its riches deserve.
+     * A [round] ring is the disc of radius [half]; the others are the square of half-side [half].
      */
     class Ring(val index: Int, val theme: Theme, val half: Double, val from: Double, val to: Double, val ground: Ground, val pace: Double = 1.0) {
+        val round = index >= ROUND_FROM
         var inner = 0.0
         val patches = ArrayList<Patch>()
+        val annuli = ArrayList<Annulus>()
         val walls = ArrayList<Wall>()
         val markings = ArrayList<Marking>()
         val lanes = ArrayList<Lane>()
@@ -81,11 +87,13 @@ class GluttonWorld(val seed: Long) {
         var coverRadius = 0.0
         var coverFrom = 0
         var built = false
-        fun contains(x: Double, y: Double) = abs(x) < half && abs(y) < half
+        /** How far out a spot is in this ring's own shape: the distance to the centre, or the half-side of its square. */
+        fun reach(x: Double, y: Double) = if (round) hypot(x, y) else max(abs(x), abs(y))
+        fun contains(x: Double, y: Double) = reach(x, y) < half
         /** Gobbler radius this spot's food is sized for: from the inner edge (from) to the outer edge (to). */
         fun tier(x: Double, y: Double): Double {
             val start = if (inner > 0.0) inner else .4
-            val d = max(abs(x), abs(y)).coerceIn(start, half)
+            val d = reach(x, y).coerceIn(start, half)
             val f = ln(d / start) / ln(half / start)
             return from * (to / from).pow(f)
         }
@@ -93,8 +101,8 @@ class GluttonWorld(val seed: Long) {
 
     val rings: List<Ring> = listOf(
         Ring(0, Theme.ROOM, 8.0, .015, .6, Ground.WOOD),
-        Ring(1, Theme.SUBURB, 70.0, .6, 6.0, Ground.GRASS),
-        Ring(2, Theme.CITY, 1050.0, 6.0, 120.0, Ground.PAVEMENT, .6),
+        Ring(1, Theme.SUBURB, 70.0, .6, 6.0, Ground.GRASS, .8),
+        Ring(2, Theme.CITY, 1050.0, 6.0, 120.0, Ground.PAVEMENT, .5),
         Ring(3, Theme.COUNTRY, 1.5e4, 120.0, 1500.0, Ground.MEADOW, .45),
         Ring(4, Theme.MOUNTAINS, 2.2e5, 1500.0, 2.2e4, Ground.MEADOW, .5),
         Ring(5, Theme.EARTH, 4.5e6, 2.2e4, 1.1e6, Ground.OCEAN),
@@ -120,6 +128,8 @@ class GluttonWorld(val seed: Long) {
     }
     val startX = 0.0
     val startY = 0.0
+    /** Whether the spot lies beyond the ring inside [ring] (always, for the house). */
+    fun outsideInner(ring: Ring, x: Double, y: Double, margin: Double = 0.0) = ring.index == 0 || rings[ring.index - 1].reach(x, y) >= ring.inner + margin
     /** The galactic centre the spiral arms of the Milky Way rings wind around. */
     val galaxyCentre = doubleArrayOf(-1.1e20, .5e20)
 
@@ -142,4 +152,9 @@ class GluttonWorld(val seed: Long) {
     }
     /** Every placement of the built rings (tests and the robot's maps). */
     val placements get() = rings.filter { it.built }.flatMap { it.placements }
+
+    companion object {
+        /** The countryside and everything beyond are round rings. */
+        const val ROUND_FROM = 3
+    }
 }

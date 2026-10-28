@@ -99,7 +99,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         if (spots.isEmpty()) return 1.0
         val angle = atan2(y, x)
         val start = max(ring.inner, 1e-9)
-        val depth = (ln(max(abs(x), abs(y)).coerceAtLeast(start) / start) / ln(ring.half / start)).coerceIn(0.0, 1.0)
+        val depth = (ln(ring.reach(x, y).coerceAtLeast(start) / start) / ln(ring.half / start)).coerceIn(0.0, 1.0)
         var sum = 0.0
         for (spot in spots) {
             var da = abs(angle - spot[0]) % (2 * PI); if (da > PI) da = 2 * PI - da
@@ -134,8 +134,8 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
     private fun fits(x: Double, y: Double, r: Double, gap: Double): Boolean {
         if (ring.index == 0) { if (abs(x) > ring.half - r * .6 || abs(y) > ring.half - r * .6) return false }
         else {
-            if (abs(x) > ring.half - r || abs(y) > ring.half - r) return false
-            if (max(abs(x), abs(y)) < ring.inner + r * .9) return false
+            if (ring.reach(x, y) > ring.half - r) return false
+            if (!world.outsideInner(ring, x, y, r * .9)) return false
             if (ring.cover != null && hypot(x, y) < ring.coverRadius * 1.08 + r) return false
         }
         var free = true
@@ -256,6 +256,36 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         }
     }
 
+    /**
+     * The round band between radii [a] and [b], cut into blocks about [length] long around it with gaps of
+     * [street] between them; [fill] lays out each block (a square standing in the band, at a slight angle to it).
+     */
+    private fun roundBand(a: Double, b: Double, length: () -> Double, street: Double, fill: (R) -> Unit) {
+        val mid = (a + b) / 2; val depth = b - a
+        val around = 2 * PI * mid
+        val start = random.nextDouble() * 2 * PI
+        var p = 0.0
+        while (p < around - depth * .5) {
+            val l = min(length(), around - p)
+            val angle = start + (p + l / 2) / mid
+            // The largest square whose corners stay in the band whatever its angle to the radius.
+            val side = min(depth * .7, l * .9)
+            val cx = cos(angle) * mid; val cy = sin(angle) * mid
+            fill(R(cx - side / 2, cy - side / 2, cx + side / 2, cy + side / 2))
+            p += l + street
+        }
+    }
+
+    /** A road going right round the centre at [radius], [width] wide, with a few vehicles on its loop. */
+    private fun roundRoad(radius: Double, width: Double, vehicles: Int = 2) {
+        ring.annuli += Annulus(Ground.ASPHALT, radius, width)
+        val n = 96
+        val points = DoubleArray(n * 2) { i -> val a = 2 * PI * (i / 2) / n; if (i % 2 == 0) cos(a) * radius else sin(a) * radius }
+        val lane = Lane(points, true)
+        ring.lanes += lane
+        repeat(vehicles) { patrol(lane, width, ring.tier(radius, 0.0) * .8) }
+    }
+
     /** Street furniture and parked cars along the edges of a block, just inside the pavement. */
     private fun kerb(r: R, inset: Double, spacing: Double, t: Double, cars: Boolean = true) {
         val edges = listOf(
@@ -279,6 +309,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
     /** A spot in this ring's band of space, at a distance spread evenly on a log scale (as many things per decade). */
     private fun spaceSpot(): DoubleArray {
         val d = ring.inner * (ring.half / ring.inner).pow(random.nextDouble())
+        if (ring.round) { val a = random.nextDouble() * 2 * PI; return doubleArrayOf(cos(a) * d, sin(a) * d) }
         val along = rand(-d, d)
         return when (random.nextInt(4)) {
             0 -> doubleArrayOf(along, -d); 1 -> doubleArrayOf(along, d); 2 -> doubleArrayOf(-d, along); else -> doubleArrayOf(d, along)
@@ -295,7 +326,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
             val t = ring.tier(x, y)
             // Spots are spread for a ring whose tier is about a thirteenth of the distance; where it is smaller
             // (the wide solar system), several things share the spot so the food stays as dense for you.
-            val d = max(abs(x), abs(y))
+            val d = ring.reach(x, y)
             val share = (d / (13 * t)).pow(2).coerceIn(1.0, 12.0)
             repeat(share.toInt() + if (chance(share % 1.0)) 1 else 0) { k ->
                 val target = if (chance(.1)) t * rand(1.1, 1.9) else t * rand(.2, 1.0)
@@ -734,9 +765,9 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
             var b = min(a + w, ring.half)
             if (ring.half - b < w * .45) b = ring.half
             val lane = max(12.0, w * .03)
-            band(a, b, { w * rand(1.0, 2.0) }, lane) { countryBlock(it) }
+            roundBand(a, b, { w * rand(1.0, 2.0) }, w * rand(.05, .2)) { countryBlock(it) }
             if (b >= ring.half - 1 || b + lane >= ring.half) break
-            ringRoad(b, lane, 2)
+            roundRoad(b + lane / 2, lane, 2)
             a = b + lane
         }
     }
@@ -821,7 +852,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
             val w = 5.0 * t
             var b = min(a + w, ring.half)
             if (ring.half - b < w * .45) b = ring.half
-            if (range) ranges(a, b) else band(a, b, { w * rand(1.0, 2.0) }, 0.0) { valley(it) }
+            if (range) ranges(a, b) else roundBand(a, b, { w * rand(1.0, 2.0) }, w * rand(.0, .15)) { valley(it) }
             range = !range
             a = b
         }
@@ -838,31 +869,27 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         roamer(box, t * .7, motion)
     }
 
+    /** A mountain range going right round between radii [a] and [b]: peaks in a winding row, smaller summits on the flanks. */
     private fun ranges(a: Double, b: Double) {
-        val sides = listOf(R(-b, -b, b, -a), R(-b, a, b, b), R(-b, -a, -a, a), R(a, -a, b, a))
-        for (side in sides) {
-            patch(Ground.ROCK, side)
-            val alongX = side.w >= side.h
-            val start = if (alongX) side.x0 else side.y0
-            val end = if (alongX) side.x1 else side.y1
-            val mid = if (alongX) side.cy else side.cx
-            val depth = if (alongX) side.h else side.w
-            var p = start
-            while (p < end) {
-                val t = ring.tier(if (alongX) p else mid, if (alongX) mid else p)
-                val target = min(t * rand(.6, 1.5), depth * .3)
-                val off = gauss() * depth * .12
-                val placed = if (alongX) place(listOf(Role.BODY), target, p, mid + off, .02) { it.shape == Shape.PEAK }
-                    else place(listOf(Role.BODY), target, mid + off, p, .02) { it.shape == Shape.PEAK }
-                // Smaller summits and glaciers on the flanks.
-                if (chance(.6)) {
-                    val side2 = if (random.nextBoolean()) 1 else -1
-                    val o = depth * rand(.25, .4) * side2
-                    if (alongX) place(listOf(Role.BODY), target * rand(.3, .6), p + rand(-1.0, 1.0) * target, mid + o, .05)
-                    else place(listOf(Role.BODY), target * rand(.3, .6), mid + o, p + rand(-1.0, 1.0) * target, .05)
-                }
-                p += (placed?.radius ?: target * .6) * rand(1.5, 2.0)
+        val mid = (a + b) / 2; val depth = b - a
+        ring.annuli += Annulus(Ground.ROCK, mid, depth)
+        val around = 2 * PI * mid
+        val start = random.nextDouble() * 2 * PI
+        var p = 0.0
+        while (p < around) {
+            val angle = start + p / mid
+            val ux = cos(angle); val uy = sin(angle)
+            val t = ring.tier(ux * mid, uy * mid)
+            val target = min(t * rand(.6, 1.5), depth * .3)
+            val off = mid + gauss() * depth * .12
+            val placed = place(listOf(Role.BODY), target, ux * off, uy * off, .02) { it.shape == Shape.PEAK }
+            // Smaller summits and glaciers on the flanks.
+            if (chance(.6)) {
+                val o = mid + depth * rand(.25, .4) * (if (random.nextBoolean()) 1 else -1)
+                val along = rand(-1.0, 1.0) * target
+                place(listOf(Role.BODY), target * rand(.3, .6), ux * o - uy * along, uy * o + ux * along, .05)
             }
+            p += (placed?.radius ?: target * .6) * rand(1.5, 2.0)
         }
     }
 
@@ -897,7 +924,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         blob(0.0, 0.0, home * 1.4, 7)
         repeat(11) {
             val s = spaceSpot()
-            val d = max(abs(s[0]), abs(s[1]))
+            val d = ring.reach(s[0], s[1])
             if (d < ring.inner * 3) return@repeat
             blob(s[0], s[1], d * rand(.15, .4), 6 + random.nextInt(6))
         }
@@ -965,7 +992,7 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
         // dwarf planets exist once each.
         spaceScatter(1.25) { it.theme == Theme.PLANETS && (it.shape != Shape.PLANET || it.spread > 1.0) }
         repeat(8) {
-            val s = spaceSpot(); val a = random.nextDouble() * 2 * PI; val l = max(abs(s[0]), abs(s[1])) * .6
+            val s = spaceSpot(); val a = random.nextDouble() * 2 * PI; val l = ring.reach(s[0], s[1]) * .6
             val lane = Lane(doubleArrayOf(s[0] - cos(a) * l, s[1] - sin(a) * l, s[0] + cos(a) * l, s[1] + sin(a) * l), false)
             val prop = movers.filter { it.motion == Motion.PATROL && it.theme == Theme.PLANETS }.randomOrNull(random) ?: return@repeat
             val at = random.nextDouble() * lane.length; val out = DoubleArray(4); lane.at(at, out)
@@ -995,12 +1022,12 @@ internal class GluttonLayout(private val world: GluttonWorld, private val ring: 
                 val rho = 1e17 * (3e20 / 1e17).pow(random.nextDouble())
                 val theta = start + ln(rho / 1e17) / pitch
                 val x = gx + cos(theta) * rho; val y = gy + sin(theta) * rho
-                if (max(abs(x), abs(y)) !in ring.inner..ring.half) return@repeat
+                if (!ring.contains(x, y) || !world.outsideInner(ring, x, y)) return@repeat
                 val t = ring.tier(x, y)
                 place(listOf(Role.BODY), t * rand(.2, 1.2), x + gauss() * t * 3, y + gauss() * t * 3, .4)
             }
         }
-        if (max(abs(gx), abs(gy)) in ring.inner..ring.half) {
+        if (ring.contains(gx, gy) && world.outsideInner(ring, gx, gy)) {
             for (id in listOf("sagittarius_a", "galactic_bulge")) { val prop = GluttonCatalog.byId.getValue(id); put(prop, gx + rand(-1.0, 1.0) * prop.radius * 2, gy, prop.radius, .1) }
         }
         spaceScatter(1.7)
