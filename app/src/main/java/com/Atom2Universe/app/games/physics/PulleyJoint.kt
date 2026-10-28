@@ -159,7 +159,7 @@ class PulleyJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         posImpulse = 0f
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         slack = false
         posImpulse = 0f
@@ -221,7 +221,9 @@ class PulleyJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         posScale = POSITION_RATE * invDt
 
         // Réapplication de l'impulsion mémorisée : c'est ce qui donne à la liaison sa
-        // raideur sans avoir à multiplier les itérations.
+        // raideur sans avoir à multiplier les itérations. Elle est remise à l'échelle
+        // de ce pas-ci : voir [Joint.preStep].
+        impulse *= dtRatio
         appliquer(impulse, position = false)
         solvable = true
     }

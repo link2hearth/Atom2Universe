@@ -135,8 +135,8 @@ internal class PrototypeTrack(
         jumpEndDistance = crossingRanges.firstOrNull()?.endDistance ?: 0f
     }
 
-    fun sampleAt(distance: Float): Sample {
-        val wrapped = wrapDistance(distance)
+    /** Échantillon juste avant cette distance déjà ramenée dans un tour. */
+    private fun sampleIndexBefore(wrapped: Float): Int {
         // Les échantillons sont assez denses pour que la recherche linéaire locale
         // par fraction de longueur soit plus stable que de supposer un pas constant.
         var low = 0
@@ -145,13 +145,22 @@ internal class PrototypeTrack(
             val middle = (low + high) ushr 1
             if (samples[middle].distance <= wrapped) low = middle + 1 else high = middle - 1
         }
-        val firstIndex = high.coerceAtLeast(0)
+        return high.coerceAtLeast(0)
+    }
+
+    private fun alphaBetween(first: Sample, second: Sample, secondIndex: Int, wrapped: Float): Float {
+        val secondDistance = if (secondIndex == 0) length else second.distance
+        val span = (secondDistance - first.distance).coerceAtLeast(0.0001f)
+        return ((wrapped - first.distance) / span).coerceIn(0f, 1f)
+    }
+
+    fun sampleAt(distance: Float): Sample {
+        val wrapped = wrapDistance(distance)
+        val firstIndex = sampleIndexBefore(wrapped)
         val secondIndex = (firstIndex + 1) % samples.size
         val first = samples[firstIndex]
         val second = samples[secondIndex]
-        val secondDistance = if (secondIndex == 0) length else second.distance
-        val span = (secondDistance - first.distance).coerceAtLeast(0.0001f)
-        val alpha = ((wrapped - first.distance) / span).coerceIn(0f, 1f)
+        val alpha = alphaBetween(first, second, secondIndex, wrapped)
         return Sample(
             position = lerp(first.position, second.position, alpha),
             tangent = lerp(first.tangent, second.tangent, alpha).normalized(),
@@ -160,6 +169,37 @@ internal class PrototypeTrack(
             fraction = first.fraction + ((if (secondIndex == 0) 1f else second.fraction) - first.fraction) * alpha,
             roadWidth = first.roadWidth + (second.roadWidth - first.roadWidth) * alpha
         )
+    }
+
+    /**
+     * Même valeur que `headingRadians(sampleAt(distance))`, calculée dans le même
+     * ordre mais sans rien allouer : les rivaux la demandent des dizaines de fois par pas.
+     */
+    fun headingAt(distance: Float): Float {
+        val wrapped = wrapDistance(distance)
+        val firstIndex = sampleIndexBefore(wrapped)
+        val secondIndex = (firstIndex + 1) % samples.size
+        val first = samples[firstIndex]
+        val second = samples[secondIndex]
+        val alpha = alphaBetween(first, second, secondIndex, wrapped)
+        val a = first.tangent
+        val b = second.tangent
+        val x = a.x + (b.x - a.x) * alpha
+        val y = a.y + (b.y - a.y) * alpha
+        val z = a.z + (b.z - a.z) * alpha
+        val norm = sqrt(x * x + y * y + z * z).coerceAtLeast(0.0001f)
+        return atan2(x / norm, z / norm)
+    }
+
+    /** Même valeur que `sampleAt(distance).roadWidth`, sans allocation. */
+    fun roadWidthAt(distance: Float): Float {
+        val wrapped = wrapDistance(distance)
+        val firstIndex = sampleIndexBefore(wrapped)
+        val secondIndex = (firstIndex + 1) % samples.size
+        val first = samples[firstIndex]
+        val second = samples[secondIndex]
+        val alpha = alphaBetween(first, second, secondIndex, wrapped)
+        return first.roadWidth + (second.roadWidth - first.roadWidth) * alpha
     }
 
     fun allSamples(): List<Sample> = samples
@@ -178,11 +218,14 @@ internal class PrototypeTrack(
     fun project(worldX: Float, worldY: Float, worldZ: Float, hintDistance: Float): Projection {
         var nearest = samples.first()
         var nearestScore = Float.MAX_VALUE
-        for (sample in samples) {
+        // Même valeur à chaque tour de boucle : calculée une seule fois.
+        val hint = wrapDistance(hintDistance)
+        for (index in samples.indices) {
+            val sample = samples[index]
             val dx = worldX - sample.position.x
             val dy = worldY - (sample.position.y + ROAD_SURFACE_LIFT + CAR_CLEARANCE)
             val dz = worldZ - sample.position.z
-            val directProgress = kotlin.math.abs(sample.distance - wrapDistance(hintDistance))
+            val directProgress = kotlin.math.abs(sample.distance - hint)
             val progressDifference = minOf(directProgress, length - directProgress)
             // L'altitude distingue les deux routes au croisement. La pénalité de
             // progression empêche un changement de branche pendant le saut.
@@ -221,12 +264,74 @@ internal class PrototypeTrack(
         }
     }
 
+    /**
+     * Grille des segments de dalle : une case ne liste que les segments dont la
+     * boîte (élargie de [DECK_GRID_MARGIN]) la touche, dans l'ordre de la piste.
+     * [decksAt] refait ensuite exactement le même test sur ces seuls segments.
+     */
+    private class DeckGrid(val minX: Float, val minZ: Float, val cell: Float, val columns: Int, val rows: Int) {
+        var cells: Array<IntArray> = emptyArray()
+        fun column(x: Float) = kotlin.math.floor((x - minX) / cell).toInt()
+        fun row(z: Float) = kotlin.math.floor((z - minZ) / cell).toInt()
+        fun at(x: Float, z: Float): IntArray {
+            val column = column(x)
+            val row = row(z)
+            return if (column in 0 until columns && row in 0 until rows) cells[row * columns + column] else EMPTY_CELL
+        }
+    }
+
+    private val deckGrid by lazy {
+        val segments = deckSegments
+        val count = segments.size
+        val boxMinX = FloatArray(count)
+        val boxMaxX = FloatArray(count)
+        val boxMinZ = FloatArray(count)
+        val boxMaxZ = FloatArray(count)
+        var minX = Float.POSITIVE_INFINITY
+        var maxX = Float.NEGATIVE_INFINITY
+        var minZ = Float.POSITIVE_INFINITY
+        var maxZ = Float.NEGATIVE_INFINITY
+        for (k in 0 until count) {
+            val (a, b, _) = segments[k]
+            val extent = maxOf(a.roadWidth, b.roadWidth) * .5f + CURB_WIDTH + DECK_GRID_MARGIN
+            boxMinX[k] = minOf(a.position.x, b.position.x) - extent
+            boxMaxX[k] = maxOf(a.position.x, b.position.x) + extent
+            boxMinZ[k] = minOf(a.position.z, b.position.z) - extent
+            boxMaxZ[k] = maxOf(a.position.z, b.position.z) + extent
+            minX = minOf(minX, boxMinX[k]); maxX = maxOf(maxX, boxMaxX[k])
+            minZ = minOf(minZ, boxMinZ[k]); maxZ = maxOf(maxZ, boxMaxZ[k])
+        }
+        if (count == 0 || !minX.isFinite() || !maxX.isFinite() || !minZ.isFinite() || !maxZ.isFinite()) {
+            return@lazy null
+        }
+        val cell = maxOf(DECK_GRID_CELL, maxOf(maxX - minX, maxZ - minZ) / 256f)
+        val probe = DeckGrid(minX, minZ, cell, 1, 1)
+        val grid = DeckGrid(minX, minZ, cell, probe.column(maxX) + 1, probe.row(maxZ) + 1)
+        val lists = Array(grid.columns * grid.rows) { ArrayList<Int>() }
+        for (k in 0 until count) {
+            for (row in grid.row(boxMinZ[k])..grid.row(boxMaxZ[k])) {
+                for (column in grid.column(boxMinX[k])..grid.column(boxMaxX[k])) {
+                    lists[row * grid.columns + column].add(k)
+                }
+            }
+        }
+        grid.cells = Array(lists.size) { lists[it].toIntArray() }
+        grid
+    }
+
     /** Toutes les couches sous cette empreinte, sans biais de progression.
      * Les deux triangles sont ceux du maillage rendu : ni prolongement infini
      * d'une tangente, ni trous entre segments dans l'extérieur d'un virage.
      */
     fun decksAt(x: Float, z: Float, margin: Float = 0f): List<Projection> = buildList {
-        for ((a, b, end) in deckSegments) {
+        val segments = deckSegments
+        val grid = deckGrid
+        // La grille ne sert que si elle est sûre de contenir tous les segments
+        // acceptés ; sinon on parcourt toute la piste comme avant.
+        val cell = if (grid != null && margin <= DECK_GRID_MARGIN && x.isFinite() && z.isFinite()) grid.at(x, z) else null
+        val candidates = cell?.size ?: segments.size
+        for (n in 0 until candidates) {
+            val (a, b, end) = segments[if (cell != null) cell[n] else n]
             val extent = maxOf(a.roadWidth, b.roadWidth) * .5f + CURB_WIDTH + margin
             if (x < minOf(a.position.x, b.position.x) - extent ||
                 x > maxOf(a.position.x, b.position.x) + extent ||
@@ -257,17 +362,18 @@ internal class PrototypeTrack(
         if (u < -.00001f || v < -.00001f || w < -.00001f) return null
         return (u*ta + v*tb + w*tc).coerceIn(0f, 1f)
     }
-    fun isJumpGap(distance: Float): Boolean {
-        if (crossingRanges.isEmpty()) return false
-        val wrapped = wrapDistance(distance)
-        return crossingRanges.any { wrapped in it.startDistance..it.endDistance }
-    }
+    fun isJumpGap(distance: Float): Boolean = crossingAt(distance) != null
 
     /** Zone de croisement contenant cette distance, ou null. Généralise l'ancien
      * couple jumpStartDistance/jumpEndDistance pour un circuit à plusieurs croisements. */
     fun crossingAt(distance: Float): CrossingRange? {
+        if (crossingRanges.isEmpty()) return null
         val wrapped = wrapDistance(distance)
-        return crossingRanges.firstOrNull { wrapped in it.startDistance..it.endDistance }
+        for (index in crossingRanges.indices) {
+            val range = crossingRanges[index]
+            if (wrapped in range.startDistance..range.endDistance) return range
+        }
+        return null
     }
 
     fun wrapDistance(distance: Float): Float {
@@ -359,6 +465,10 @@ internal class PrototypeTrack(
         const val ROAD_SURFACE_LIFT = 0.035f
         const val ROAD_THICKNESS = 0.85f
         const val CURB_WIDTH = 0.22f
+        /** Plus grande marge que la grille des dalles couvre (roue 0,21, caisse 0,58). */
+        private const val DECK_GRID_MARGIN = 1f
+        private const val DECK_GRID_CELL = 8f
+        private val EMPTY_CELL = IntArray(0)
         private const val TRACK_HALF_WIDTH = 105f
         private const val TRACK_HALF_DEPTH = 62f
         const val ROOM_HALF_WIDTH = 118f

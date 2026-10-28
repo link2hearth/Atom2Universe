@@ -249,8 +249,15 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         val keep = if(archer) { if(e.def.id=="spider") 4.5 else 9.0 } else keepDist(e)
         // La vue ne sert qu'à repérer (detectRange) ou à tirer (17 blocs) : au-delà, inutile de lancer
         // le rayon, qui coûte 10 lectures de bloc par bloc de distance et par monstre, à chaque image.
-        val sight= !explorationCombat || dist3d<maxOf(e.def.detectRange,18.0) &&
-            clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
+        // Le rayon n'est relancé que 10 fois par seconde : entre deux, le monstre garde ce qu'il a vu.
+        e.sightTimer-=dt
+        val sight= !explorationCombat || dist3d<maxOf(e.def.detectRange,18.0) && run {
+            if(e.sightTimer<=0f) {
+                e.sightTimer=SIGHT_INTERVAL
+                e.sightClear=clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
+            }
+            e.sightClear
+        }
         val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f || e.attackRecovery>0f || e.attack?.busy==true)
 
         val prevState = e.state
@@ -636,6 +643,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         const val SEP_STRENGTH    = 0.9    // intensité de la force de séparation
         const val MOB_KNOCKBACK   = 5.0    // vitesse initiale du recul d'un mob touché
         const val KNOCK_DAMP      = 8.0    // amortissement du recul (par seconde)
+        const val SIGHT_INTERVAL  = 0.1f   // secondes entre deux tests de vue d'un même monstre
     }
 
     // RNG local pour l'IA de wandering (indépendant du spawn)

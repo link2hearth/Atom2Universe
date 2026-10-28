@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MIDI playback service, notification and library scan -->
+    <string name="midi_engine_unknown_title">Unknown title</string>
+    <string name="midi_engine_unknown_artist">Unknown artist</string>
+    <string name="midi_engine_unknown_album">Unknown album</string>
+    <string name="midi_engine_action_play">Play</string>
+    <string name="midi_engine_action_pause">Pause</string>
+    <string name="midi_engine_action_stop">Stop</string>
+    <string name="midi_engine_channel_name">MIDI playback</string>
+    <string name="midi_engine_channel_description">MIDI player playback controls</string>
+    <string name="midi_engine_scan_invalid_folder">Invalid folder or access denied</string>
+</resources>

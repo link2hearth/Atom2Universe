@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Durées et nombres affichés par les écrans du lecteur MIDI -->
+    <string name="midi_ui_time_ms">%1$d:%2$02d</string>
+    <string name="midi_ui_time_hms">%1$d:%2$02d:%3$02d</string>
+    <string name="midi_ui_time_unknown">--:--</string>
+    <string name="midi_ui_percent">%1$d %%</string>
+    <string name="midi_ui_db_zero">0 dB</string>
+    <string name="midi_ui_db_positive">+%1$.1f</string>
+    <string name="midi_ui_db_negative">%1$.1f</string>
+    <string name="midi_ui_count_of">%1$d/%2$d</string>
+    <string name="midi_ui_signed_positive">+%1$d</string>
+    <string name="midi_ui_number">%1$d</string>
+    <string-array name="midi_ui_eq_band_labels">
+        <item>32</item>
+        <item>64</item>
+        <item>125</item>
+        <item>250</item>
+        <item>500</item>
+        <item>1k</item>
+        <item>2k</item>
+        <item>4k</item>
+        <item>8k</item>
+        <item>16k</item>
+    </string-array>
+
+    <!-- Libellés composés -->
+    <string name="midi_ui_unknown_title">Inconnu</string>
+    <string name="midi_ui_unknown_midi">MIDI inconnu</string>
+    <string name="midi_ui_soundfont_fallback">SoundFont</string>
+    <string name="midi_ui_two_hands_name">%1$s + %2$s</string>
+    <string name="midi_ui_playing_track">▶ %1$s</string>
+    <string name="midi_ui_label_with_count">%1$s (%2$d)</string>
+    <string name="midi_ui_label_pair">%1$s - %2$s</string>
+
+    <!-- Infos d'un fichier MIDI (liste des titres) -->
+    <string name="midi_ui_info_separator">" • "</string>
+    <string name="midi_ui_info_bpm">%1$d BPM</string>
+    <string name="midi_ui_info_midi_type">Type %1$d</string>
+    <string name="midi_ui_info_ppq">%1$d PPQ</string>
+    <string name="midi_ui_info_tempo">Tempo : %1$d BPM</string>
+    <string name="midi_ui_info_time_signature">Mesure : %1$s</string>
+    <string name="midi_ui_info_copyright">© %1$s</string>
+    <plurals name="midi_ui_info_notes">
+        <item quantity="one">%1$d note</item>
+        <item quantity="many">%1$d notes</item>
+        <item quantity="other">%1$d notes</item>
+    </plurals>
+    <plurals name="midi_ui_info_channels">
+        <item quantity="one">%1$d canal</item>
+        <item quantity="many">%1$d canaux</item>
+        <item quantity="other">%1$d canaux</item>
+    </plurals>
+    <plurals name="midi_ui_info_tracks">
+        <item quantity="one">%1$d piste</item>
+        <item quantity="many">%1$d pistes</item>
+        <item quantity="other">%1$d pistes</item>
+    </plurals>
+    <plurals name="midi_ui_info_tempo_changes">
+        <item quantity="one">" (%1$d changement)"</item>
+        <item quantity="many">" (%1$d changements)"</item>
+        <item quantity="other">" (%1$d changements)"</item>
+    </plurals>
+
+    <!-- Mode hybride : résumé de la sélection -->
+    <plurals name="midi_ui_hybrid_summary">
+        <item quantity="one">%1$d instrument utilise SF2</item>
+        <item quantity="many">%1$d instruments utilisent SF2</item>
+        <item quantity="other">%1$d instruments utilisent SF2</item>
+    </plurals>
+    <plurals name="midi_ui_hybrid_summary_drums">
+        <item quantity="one">%1$d instrument et la batterie utilisent SF2</item>
+        <item quantity="many">%1$d instruments et la batterie utilisent SF2</item>
+        <item quantity="other">%1$d instruments et la batterie utilisent SF2</item>
+    </plurals>
+
+    <!-- Rapport de vérification d'une SoundFont, en mots simples -->
+    <string name="midi_ui_sf2_report_contents">Cette SoundFont contient %1$s, faits à partir de %2$s.</string>
+    <plurals name="midi_ui_sf2_report_presets">
+        <item quantity="one">%1$d instrument</item>
+        <item quantity="many">%1$d instruments</item>
+        <item quantity="other">%1$d instruments</item>
+    </plurals>
+    <plurals name="midi_ui_sf2_report_samples">
+        <item quantity="one">%1$d son enregistré</item>
+        <item quantity="many">%1$d sons enregistrés</item>
+        <item quantity="other">%1$d sons enregistrés</item>
+    </plurals>
+    <string name="midi_ui_sf2_report_fine">Aucun problème trouvé : cette SoundFont semble en bon état.</string>
+    <string name="midi_ui_sf2_issue_no_presets">Elle ne contient aucun instrument : rien ne pourra être joué.</string>
+    <string name="midi_ui_sf2_issue_no_samples">Elle ne contient aucun son enregistré : elle restera muette.</string>
+    <string name="midi_ui_sf2_issue_no_instruments">Ses instruments sont absents : elle restera muette.</string>
+    <plurals name="midi_ui_sf2_issue_stretched">
+        <item quantity="one">%1$d note est jouée trop loin de la hauteur où elle a été enregistrée : certains instruments peuvent sonner faux.</item>
+        <item quantity="many">%1$d notes sont jouées trop loin de la hauteur où elles ont été enregistrées : certains instruments peuvent sonner faux.</item>
+        <item quantity="other">%1$d notes sont jouées trop loin de la hauteur où elles ont été enregistrées : certains instruments peuvent sonner faux.</item>
+    </plurals>
+    <plurals name="midi_ui_sf2_issue_suspicious">
+        <item quantity="one">%1$d instrument semble mal construit : il peut ne pas sonner comme prévu.</item>
+        <item quantity="many">%1$d instruments semblent mal construits : ils peuvent ne pas sonner comme prévu.</item>
+        <item quantity="other">%1$d instruments semblent mal construits : ils peuvent ne pas sonner comme prévu.</item>
+    </plurals>
+    <plurals name="midi_ui_sf2_issue_invalid_samples">
+        <item quantity="one">%1$d son enregistré a des réglages faux et peut mal sonner :</item>
+        <item quantity="many">%1$d sons enregistrés ont des réglages faux et peuvent mal sonner :</item>
+        <item quantity="other">%1$d sons enregistrés ont des réglages faux et peuvent mal sonner :</item>
+    </plurals>
+    <string name="midi_ui_sf2_report_item">• %1$s</string>
+    <plurals name="midi_ui_sf2_report_more">
+        <item quantity="one">…et %1$d autre</item>
+        <item quantity="many">…et %1$d autres</item>
+        <item quantity="other">…et %1$d autres</item>
+    </plurals>
+    <string name="midi_ui_sf2_report_details_title">Instruments à vérifier :</string>
+    <plurals name="midi_ui_sf2_warning_stretched">
+        <item quantity="one">« %1$s » : %2$d note trop loin de son enregistrement</item>
+        <item quantity="many">« %1$s » : %2$d notes trop loin de leur enregistrement</item>
+        <item quantity="other">« %1$s » : %2$d notes trop loin de leur enregistrement</item>
+    </plurals>
+    <string name="midi_ui_sf2_warning_mismatch">« %1$s » utilise le son « %2$s », qui ne correspond peut-être pas</string>
+</resources>

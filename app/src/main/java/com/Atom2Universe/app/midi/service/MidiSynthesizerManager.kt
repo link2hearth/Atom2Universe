@@ -44,6 +44,8 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     // Hybrid mode configuration
     private var hybridSf2Programs: Set<Int> = emptySet()
     private var hybridUseSf2ForDrums: Boolean = false
+    // Moteur à SoundFont de l'hybride : FluidSynth si choisi (et disponible), sinon le moteur SF2 maison
+    private var hybridUseFluidSynth: Boolean = false
 
     // Store callbacks to re-apply them when engine changes
     private var storedStateChangeListener: ((MidiEngine.State) -> Unit)? = null
@@ -152,13 +154,13 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
                 com.Atom2Universe.app.midi.sf2.Sf2Voice.velocityCurve = curve
                 android.util.Log.d("MidiSynthesizerManager", "Restored velocity curve: $curve")
 
-                // 4. Restaurer l'EQ (enabled + 10 bandes)
+                // 4. Restaurer l'EQ (10 bandes, puis enabled : FluidSynth bascule alors en rendu manuel)
                 val eqEnabled = settingsRepository.getMidiEqEnabled()
-                (activeEngine as? Sf2Engine)?.setEqEnabled(eqEnabled)
                 for (band in 0 until com.Atom2Universe.app.midi.sf2.MidiEqualizerEngine.BAND_COUNT) {
                     val mb = settingsRepository.getMidiEqBandLevel(band)
-                    (activeEngine as? Sf2Engine)?.setEqBandLevel(band, mb)
+                    setEqualizerBandLevel(band, mb)
                 }
+                setEqualizerEnabled(eqEnabled)
                 android.util.Log.d("MidiSynthesizerManager", "Restored EQ: enabled=$eqEnabled")
             }
         } catch (e: Exception) {
@@ -267,13 +269,22 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
             hybridEngine = null
             sf2Engine?.release()
             sf2Engine = null
+            fluidSynthEngine?.release()
+            fluidSynthEngine = null
 
-            // Create fresh SF2 engine for hybrid use
-            val newSf2Engine = Sf2Engine(context)
-            sf2Engine = newSf2Engine
+            // Create a fresh SoundFont engine for hybrid use (the base chosen in the settings)
+            val soundFontSide: HybridSoundFontSide = if (hybridUseFluidSynth && FluidSynthEngine.isSupported()) {
+                val newFluidSynthEngine = FluidSynthEngine(context)
+                fluidSynthEngine = newFluidSynthEngine
+                FluidSynthHybridSide(newFluidSynthEngine)
+            } else {
+                val newSf2Engine = Sf2Engine(context)
+                sf2Engine = newSf2Engine
+                Sf2HybridSide(newSf2Engine)
+            }
 
             // Create hybrid engine
-            val newHybridEngine = HybridMidiEngine(context, newSf2Engine, sonivoxEngine)
+            val newHybridEngine = HybridMidiEngine(context, soundFontSide, sonivoxEngine)
             hybridEngine = newHybridEngine
 
             // Configure hybrid routing BEFORE initialization (so SF2 engine is created with right config)
@@ -298,15 +309,18 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
      * @param mode The operating mode (SONIVOX_ONLY, SF2_ONLY, or HYBRID)
      * @param sf2Programs For HYBRID mode: programs (0-127) that use SF2 synthesis
      * @param useSf2ForDrums For HYBRID mode: whether channel 9 uses SF2
+     * @param useFluidSynthBase For HYBRID mode: FluidSynth plays the SoundFont part instead of Sf2Engine
      */
     fun setOperatingMode(
         mode: OperatingMode,
         sf2Programs: Set<Int> = emptySet(),
-        useSf2ForDrums: Boolean = false
+        useSf2ForDrums: Boolean = false,
+        useFluidSynthBase: Boolean = false
     ) {
         operatingMode = mode
         hybridSf2Programs = sf2Programs
         hybridUseSf2ForDrums = useSf2ForDrums
+        hybridUseFluidSynth = useFluidSynthBase
 
         // NOTE: We don't auto-reconfigure here anymore.
         // The caller (handleReloadSoundFont) will call reloadSoundFont() explicitly.
@@ -463,6 +477,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     fun stopForTrackTransition() {
         when (val engine = activeEngine) {
             is HybridMidiEngine -> engine.stopForTransition(stopAudioEngines = false)
+            is FluidSynthEngine -> engine.stopForTransition()
             else -> engine?.stop()
         }
     }
@@ -527,15 +542,30 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     }
 
     fun setEqualizerEnabled(enabled: Boolean) {
-        (activeEngine as? Sf2Engine)?.setEqEnabled(enabled)
+        when (val engine = activeEngine) {
+            is Sf2Engine -> engine.setEqEnabled(enabled)
+            is FluidSynthEngine -> engine.setEqEnabled(enabled)
+            is HybridMidiEngine -> engine.setEqEnabled(enabled)
+            is SonivoxEngine -> engine.setEqEnabled(enabled)
+        }
     }
 
     fun setEqualizerBandLevel(band: Int, millibels: Int) {
-        (activeEngine as? Sf2Engine)?.setEqBandLevel(band, millibels)
+        when (val engine = activeEngine) {
+            is Sf2Engine -> engine.setEqBandLevel(band, millibels)
+            is FluidSynthEngine -> engine.setEqBandLevel(band, millibels)
+            is HybridMidiEngine -> engine.setEqBandLevel(band, millibels)
+            is SonivoxEngine -> engine.setEqBandLevel(band, millibels)
+        }
     }
 
-    fun getEqualizerBandLevel(band: Int): Int =
-        (activeEngine as? Sf2Engine)?.getEqBandLevel(band) ?: 0
+    fun getEqualizerBandLevel(band: Int): Int = when (val engine = activeEngine) {
+        is Sf2Engine -> engine.getEqBandLevel(band)
+        is FluidSynthEngine -> engine.getEqBandLevel(band)
+        is HybridMidiEngine -> engine.getEqBandLevel(band)
+        is SonivoxEngine -> engine.getEqBandLevel(band)
+        else -> 0
+    }
 
     override fun getCurrentPosition(): Long {
         return activeEngine?.getCurrentPosition() ?: 0L
@@ -581,10 +611,6 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
         return switchSoundFont(soundFontPath)
     }
 
-    override fun forceDriverRestart() {
-        activeEngine?.forceDriverRestart()
-    }
-
     override fun getDriverStats(): String {
         val engineName = getActiveEngineName()
         val engineStats = activeEngine?.getDriverStats() ?: "N/A"
@@ -604,12 +630,8 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
         val result = when (val engine = activeEngine) {
             is Sf2Engine -> engine.forceOutputToSpeaker()
             is FluidSynthEngine -> engine.forceOutputToSpeaker("MidiSynthesizerManager")
-            is HybridMidiEngine -> {
-                // Hybrid uses both engines, route both
-                val sf2Result = sf2Engine?.forceOutputToSpeaker() == true
-                val sonivoxResult = sonivoxEngine.forceOutputToSpeaker()
-                sf2Result || sonivoxResult
-            }
+            // Hybrid uses both engines, route both
+            is HybridMidiEngine -> engine.forceOutputToSpeaker()
             else -> sonivoxEngine.forceOutputToSpeaker()
         }
         android.util.Log.d("MidiSynthesizerManager", "forceOutputToSpeaker: activeEngine=${getActiveEngineName()} result=$result")
@@ -626,11 +648,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
         return when (val engine = activeEngine) {
             is Sf2Engine -> engine.resetOutputDevice()
             is FluidSynthEngine -> engine.resetPreferredOutput("MidiSynthesizerManager")
-            is HybridMidiEngine -> {
-                val sf2Result = sf2Engine?.resetOutputDevice() == true
-                val sonivoxResult = sonivoxEngine.resetOutputDevice()
-                sf2Result || sonivoxResult
-            }
+            is HybridMidiEngine -> engine.resetOutputDevice()
             else -> sonivoxEngine.resetOutputDevice()
         }
     }

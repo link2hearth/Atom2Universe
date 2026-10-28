@@ -79,6 +79,9 @@ internal object DungeonScenery {
         }
         // A connected rail route follows actual mine floors, including turns.
         val mine=ordered.filter { level.themeAt(it.x,it.y) in listOf(DungeonTheme.MINE,DungeonTheme.MINE_DEPOT) && level.tiles[it.y][it.x]==TileType.FLOOR && it !in protected }
+        // Grid lookup: membership in the list itself was quadratic on a large mine.
+        val isMine=BooleanArray(level.w*level.h).also { grid -> for(p in mine)grid[p.y*level.w+p.x]=true }
+        fun inMine(q:Pos)=q.x in 0 until level.w && q.y in 0 until level.h && isMine[q.y*level.w+q.x]
         var track=emptyList<Pos>()
         for(start in mine.take(32)) {
             val parent=linkedMapOf<Pos,Pos?>();parent[start]=null
@@ -88,7 +91,7 @@ internal object DungeonScenery {
                 val p=queue.removeFirst();end=p
                 for(d in directions) {
                     val q=Pos(p.x+d.x,p.y+d.y)
-                    if(q !in parent && q in mine) {parent[q]=p;queue.add(q)}
+                    if(inMine(q) && q !in parent) {parent[q]=p;queue.add(q)}
                 }
             }
             val path=mutableListOf<Pos>();var p:Pos?=end

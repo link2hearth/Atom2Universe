@@ -32,10 +32,29 @@ class CosmicScaleGLView(context: Context) : GLSurfaceView(context) {
         }
     )
 
+    private val pacer = com.Atom2Universe.app.science.GLFramePacer(this)
+
     init {
         setEGLContextClientVersion(2)
+        preserveEGLContextOnPause = true
         setRenderer(renderer)
-        renderMode = RENDERMODE_CONTINUOUSLY
+        // Le renderer réclame lui-même ses images : 60 Hz pour une planète qui tourne,
+        // 30 Hz pour une étoile seule, rien pour un trou noir.
+        renderMode = RENDERMODE_WHEN_DIRTY
+        renderer.pacer = pacer
+    }
+
+    /** Fil UI : les astres ont changé, redessiner. */
+    fun requestFrame() = pacer.requestFrame()
+
+    override fun onResume() {
+        super.onResume()
+        pacer.resume()
+    }
+
+    override fun onPause() {
+        pacer.pause()
+        super.onPause()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

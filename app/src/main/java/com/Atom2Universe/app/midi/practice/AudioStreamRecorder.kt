@@ -4,11 +4,16 @@ import android.util.Log
 import com.Atom2Universe.app.midi.sf2.AudioRenderer
 import java.io.File
 import java.io.RandomAccessFile
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.locks.LockSupport
 
 /**
  * Enregistre le flux audio en temps reel dans un fichier WAV.
- * Thread-safe : peut etre appele depuis le thread audio.
+ *
+ * Le fil audio ne fait que convertir les echantillons dans un tampon circulaire en memoire ;
+ * un fil d'ecriture dedie les vide sur le disque. Ainsi le fil audio n'attend jamais le disque.
  */
 class AudioStreamRecorder(
     private val sampleRate: Int = 44100
@@ -17,19 +22,27 @@ class AudioStreamRecorder(
         private const val TAG = "AudioStreamRecorder"
         private const val CHANNELS = 2
         private const val BITS_PER_SAMPLE = 16
+        // ~6 s de stereo 16 bits a 44,1 kHz : large marge si le disque traine
+        private const val RING_SIZE = 1 shl 20
+        private const val RING_MASK = RING_SIZE - 1L
+        private val WRITER_POLL_NANOS = TimeUnit.MILLISECONDS.toNanos(40)
     }
 
     private var raf: RandomAccessFile? = null
     private var outputFile: File? = null
+    // Ecrit seulement par le fil d'ecriture, lu par stop() apres l'avoir attendu
     private var dataSize = 0
     private val isRecording = AtomicBoolean(false)
 
-    // Reusable byte buffer to avoid allocations on audio thread
-    private var pcmBuffer: ByteArray? = null
+    // Tampon circulaire : un seul producteur (fil audio), un seul consommateur (fil d'ecriture)
+    private val ring = ByteArray(RING_SIZE)
+    private val writePos = AtomicLong(0L)
+    private val readPos = AtomicLong(0L)
+    private var writerThread: Thread? = null
 
     val tapCallback = AudioRenderer.AudioTapCallback { interleavedBuffer, numFrames ->
         if (isRecording.get()) {
-            writeFrames(interleavedBuffer, numFrames)
+            pushFrames(interleavedBuffer, numFrames)
         }
     }
 
@@ -49,7 +62,10 @@ class AudioStreamRecorder(
             raf = randomAccess
             outputFile = file
             dataSize = 0
+            writePos.set(0L)
+            readPos.set(0L)
             isRecording.set(true)
+            writerThread = Thread({ writerLoop(randomAccess) }, "PracticeRecorder-Writer").apply { start() }
 
             Log.d(TAG, "Recording started: ${file.absolutePath}")
             return true
@@ -65,6 +81,18 @@ class AudioStreamRecorder(
      */
     fun stop(): File? {
         isRecording.set(false)
+
+        // Le fil d'ecriture vide ce qui reste puis s'arrete : plus personne n'ecrit ensuite
+        val writer = writerThread
+        writerThread = null
+        if (writer != null) {
+            LockSupport.unpark(writer)
+            try {
+                writer.join()
+            } catch (_: InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+        }
 
         val randomAccess = raf ?: return null
         val file = outputFile
@@ -88,36 +116,49 @@ class AudioStreamRecorder(
     fun isRecording(): Boolean = isRecording.get()
 
     /**
-     * Ecrit des frames audio interleaved float dans le fichier WAV.
-     * Appele depuis le thread audio - doit etre rapide.
+     * Convertit des frames audio interleaved float en PCM 16 bits dans le tampon circulaire.
+     * Appele depuis le thread audio : aucune entree/sortie, aucune allocation.
      */
-    private fun writeFrames(interleavedBuffer: FloatArray, numFrames: Int) {
-        val randomAccess = raf ?: return
+    private fun pushFrames(interleavedBuffer: FloatArray, numFrames: Int) {
         val bytesNeeded = numFrames * CHANNELS * (BITS_PER_SAMPLE / 8)
-
-        // Reutiliser le buffer si possible
-        var buf = pcmBuffer
-        if (buf == null || buf.size < bytesNeeded) {
-            buf = ByteArray(bytesNeeded)
-            pcmBuffer = buf
-        }
+        val write = writePos.get()
+        val free = RING_SIZE - (write - readPos.get())
+        if (bytesNeeded > free) return  // Disque trop lent : on perd ce bloc plutot que bloquer le son
 
         // Convertir float interleaved [-1,1] -> PCM 16-bit signed LE
         val totalSamples = numFrames * CHANNELS
+        var pos = write
         for (i in 0 until totalSamples) {
-            val sample = (interleavedBuffer[i].coerceIn(-1f, 1f) * 32767f).toInt().toShort()
-            val offset = i * 2
-            buf[offset] = (sample.toInt() and 0xFF).toByte()
-            buf[offset + 1] = (sample.toInt() shr 8 and 0xFF).toByte()
+            val sample = (interleavedBuffer[i].coerceIn(-1f, 1f) * 32767f).toInt()
+            ring[(pos and RING_MASK).toInt()] = (sample and 0xFF).toByte()
+            ring[((pos + 1) and RING_MASK).toInt()] = (sample shr 8 and 0xFF).toByte()
+            pos += 2
         }
+        writePos.set(pos)
+    }
 
+    private fun writerLoop(randomAccess: RandomAccessFile) {
         try {
-            synchronized(this) {
-                randomAccess.write(buf, 0, bytesNeeded)
-                dataSize += bytesNeeded
+            while (true) {
+                val recording = isRecording.get()
+                val read = readPos.get()
+                val available = writePos.get() - read
+                if (available > 0) {
+                    // Au plus deux morceaux : jusqu'a la fin du tampon, puis depuis le debut
+                    val start = (read and RING_MASK).toInt()
+                    val first = minOf(available, (RING_SIZE - start).toLong()).toInt()
+                    randomAccess.write(ring, start, first)
+                    val second = (available - first).toInt()
+                    if (second > 0) randomAccess.write(ring, 0, second)
+                    dataSize += available.toInt()
+                    readPos.set(read + available)
+                } else if (!recording) {
+                    break
+                } else {
+                    LockSupport.parkNanos(WRITER_POLL_NANOS)
+                }
             }
         } catch (e: Exception) {
-            // Don't crash the audio thread - just log and stop
             Log.e(TAG, "Write error, stopping recording", e)
             isRecording.set(false)
         }

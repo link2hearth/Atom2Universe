@@ -96,6 +96,13 @@ class FallingNotesView @JvmOverloads constructor(
         private val FIRE_EMBER_HOT_COLOR = "#FFD778".toColorInt()
         private val FIRE_FLAME_CORE_COLOR = "#FFF1A8".toColorInt()
         private val FIRE_FLAME_EDGE_COLOR = "#FF7A1A".toColorInt()
+        private val HIT_ERROR_COLOR = 0xFFFF5252.toInt()
+        private val CLASSIC_OUTLINE_COLOR = 0x40000000
+
+        // Notes noires dans une octave : C#, D#, F#, G#, A#
+        private val BLACK_PITCH_CLASSES = booleanArrayOf(
+            false, true, false, true, false, false, true, false, true, false, true, false
+        )
 
         // PERFORMANCE: Lookup table pour sin (évite calculs trigonométriques)
         private const val SIN_TABLE_SIZE = 64
@@ -208,8 +215,10 @@ class FallingNotesView @JvmOverloads constructor(
     private var animatedBackgroundEnabled: Boolean = false
     private var customNoteShapeEnabled: Boolean = false
 
-    // Notes à afficher
+    // Notes à afficher (triées par début)
     private var scheduledNotes: List<ScheduledNote> = emptyList()
+    // Borne la recherche des notes encore visibles ou encore dans la zone (dichotomie)
+    private var scheduledMaxDurationMs = 0L
 
     // Mode rising notes (free practice)
     private var noteDirection: NoteDirection = NoteDirection.FALLING
@@ -245,18 +254,35 @@ class FallingNotesView @JvmOverloads constructor(
     // Mapping note -> position X
     private val notePositions = mutableMapOf<Int, Float>()
 
-    // Notes dans la hit zone (pour callback)
-    private val notesInHitZone = mutableSetOf<Int>()
+    // Notes dans la hit zone, suivies par INDICE : deux notes rapprochées de même hauteur
+    // restent deux notes distinctes (mode attente, score)
+    private var inZone = BooleanArray(0)
+    private var zoneStamp = IntArray(0)
+    private var zoneFrameStamp = 0
+    private var zoneIndices = IntArray(16)
+    private var nextZoneIndices = IntArray(16)
+    private var zoneCount = 0
+    private var zonePitchCount = IntArray(128)
+    private var nextZonePitchCount = IntArray(128)
 
-    // Callback quand une note entre dans la hit zone (note, timeMs)
-    var onNoteReachHitZone: ((note: Int, timeMs: Long) -> Unit)? = null
+    // Notes avant cet indice : fenêtre de jugement refermée (déjà signalées à onNotePassed)
+    private var passedIndex = 0
+    private var passedTrackedUntilMs = 0L
+
+    // Une note (par indice) entre dans la hit zone
+    var onNoteReachHitZone: ((note: ScheduledNote) -> Unit)? = null
+    // Plus aucune note de cette hauteur dans la hit zone
     var onNoteLeaveHitZone: ((note: Int) -> Unit)? = null
+    // La fenêtre de jugement d'une note vient de se refermer pendant la lecture (une fois par note)
+    var onNotePassed: ((note: ScheduledNote) -> Unit)? = null
 
     // Horloge partagée pour synchronisation avec le thread audio
     private var sharedClock: PlaybackClock? = null
 
     // Animation avec Choreographer pour synchronisation vsync
     private var isAnimating = false
+    // Boucle des notes réellement programmée (en mode libre elle s'endort quand rien ne bouge)
+    private var frameLoopPosted = false
     private var animationStartTimeNs: Long = 0L
     private var animationStartPositionMs: Long = 0L
     private var playbackSpeed: Float = 1.0f
@@ -293,8 +319,8 @@ class FallingNotesView @JvmOverloads constructor(
             // Mettre à jour l'animation du thème (fond animé)
             currentTheme?.updateBackgroundAnimation(deltaMs)
 
-            // Redraw seulement si on n'est pas déjà en animation de notes
-            if (!isAnimating || isPaused) {
+            // Redraw seulement si la boucle des notes ne le fait pas déjà
+            if (!frameLoopPosted) {
                 invalidate()
             }
 
@@ -306,6 +332,7 @@ class FallingNotesView @JvmOverloads constructor(
 
     private val frameCallback = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
+            frameLoopPosted = false
             if (!isAnimating || isPaused) return
 
             val currentTimeMs = System.currentTimeMillis()
@@ -347,15 +374,46 @@ class FallingNotesView @JvmOverloads constructor(
 
             // Ne pas vérifier les notes hit zone en mode rising (pas de validation)
             if (noteDirection == NoteDirection.FALLING) {
+                advancePassedNotes()
                 checkHitZoneNotes()
             }
             invalidate()
 
-            if (isAnimating && !isPaused) {
-                choreographer.postFrameCallback(this)
+            // Mode libre : la boucle s'endort quand plus rien ne bouge (réveillée par wakeRisingLoop)
+            if (isAnimating && !isPaused && (noteDirection == NoteDirection.FALLING || risingNeedsFrames())) {
+                postFrameLoop()
             }
         }
     }
+
+    private fun postFrameLoop() {
+        if (frameLoopPosted) return
+        frameLoopPosted = true
+        choreographer.postFrameCallback(frameCallback)
+    }
+
+    private fun removeFrameLoop() {
+        frameLoopPosted = false
+        choreographer.removeFrameCallback(frameCallback)
+    }
+
+    /** Mode libre : y a-t-il encore quelque chose qui bouge à l'écran ? */
+    private fun risingNeedsFrames(): Boolean =
+        risingNotes.isNotEmpty() || activeRisingNotes.isNotEmpty() ||
+            particles.isNotEmpty() || hitFeedback.isNotEmpty() ||
+            // La zone de frappe pulse avec la lueur, les braises du feu vivent en continu
+            glowEnabled || isFireThemeActive()
+
+    /** Mode libre : relance la boucle endormie (note jouée, effet, thème changé). */
+    private fun wakeRisingLoop() {
+        if (noteDirection != NoteDirection.RISING || !isAnimating || isPaused || frameLoopPosted) return
+        lastFrameTimeMs = System.currentTimeMillis()
+        postFrameLoop()
+    }
+
+    // Cache des dégradés de la lueur du clavier (thème feu), un par niveau d'opacité
+    private val fireGlowShaders = arrayOfNulls<LinearGradient>(256)
+    private var fireGlowShadersY = Float.NaN
 
     // Paints pour le rendu
     private val notePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -470,6 +528,7 @@ class FallingNotesView @JvmOverloads constructor(
         noteRangeMax = maxNote.coerceIn(12, 127)
         calculateDimensions()
         invalidate()
+        wakeRisingLoop()
     }
 
     /**
@@ -579,12 +638,14 @@ class FallingNotesView @JvmOverloads constructor(
 
         // Démarrer/arrêter l'animation du background selon le thème
         if (animatedBackgroundEnabled) {
-            startBackgroundAnimation()
+            // Fenêtre cachée : onWindowVisibilityChanged la relancera au retour
+            if (windowVisibility == VISIBLE) startBackgroundAnimation()
         } else {
             stopBackgroundAnimation()
         }
 
         invalidate()
+        wakeRisingLoop()
     }
 
     /**
@@ -608,6 +669,7 @@ class FallingNotesView @JvmOverloads constructor(
         lastBackgroundStyle = null
         resetFireEffects()
         invalidate()
+        wakeRisingLoop()
     }
 
     private fun resetFireEffects() {
@@ -621,8 +683,17 @@ class FallingNotesView @JvmOverloads constructor(
      * Définit les notes programmées
      */
     fun setNotes(notes: List<ScheduledNote>) {
-        scheduledNotes = notes
+        assignNotes(notes)
         invalidate()
+    }
+
+    private fun assignNotes(notes: List<ScheduledNote>) {
+        clearHitZone()
+        scheduledNotes = notes
+        scheduledMaxDurationMs = notes.maxDurationMs()
+        inZone = BooleanArray(notes.size)
+        zoneStamp = IntArray(notes.size)
+        resyncPassedNotes(currentPositionMs)
     }
 
     /**
@@ -664,12 +735,13 @@ class FallingNotesView @JvmOverloads constructor(
                 startTimeMs = System.currentTimeMillis(),
                 x = centerX,
                 y = centerY,
-                color = "#FF5252".toColorInt(),
+                color = HIT_ERROR_COLOR,
                 isSuccess = false
             )
         }
 
         invalidate()
+        wakeRisingLoop()
     }
 
     /**
@@ -677,11 +749,17 @@ class FallingNotesView @JvmOverloads constructor(
      */
     fun updatePosition(positionMs: Long) {
         currentPositionMs = positionMs
-        if (isAnimating) {
-            animationStartTimeNs = System.nanoTime()
-            animationStartPositionMs = positionMs
-        } else {
+        // En pause (mode attente), la reprise repartira d'ici
+        pausedPositionMs = positionMs
+        animationStartTimeNs = System.nanoTime()
+        animationStartPositionMs = positionMs
+        // Saut : les notes enjambées ne sont ni « atteintes » ni « manquées »
+        clearHitZone()
+        resyncPassedNotes(positionMs)
+        if (!isAnimating) {
             checkHitZoneNotes()
+            invalidate()
+        } else if (isPaused) {
             invalidate()
         }
     }
@@ -696,8 +774,10 @@ class FallingNotesView @JvmOverloads constructor(
             animationStartPositionMs = fromPositionMs
             playbackSpeed = speed
             currentPositionMs = fromPositionMs
+            // Retour en arrière (morceau relancé depuis le début) : rien n'a encore été joué
+            if (fromPositionMs < passedTrackedUntilMs) resyncPassedNotes(fromPositionMs)
             lastFrameTimeMs = System.currentTimeMillis()
-            choreographer.postFrameCallback(frameCallback)
+            postFrameLoop()
         }
     }
 
@@ -707,7 +787,7 @@ class FallingNotesView @JvmOverloads constructor(
     fun stopAnimation() {
         isAnimating = false
         isPaused = false
-        choreographer.removeFrameCallback(frameCallback)
+        removeFrameLoop()
     }
 
     /**
@@ -737,7 +817,7 @@ class FallingNotesView @JvmOverloads constructor(
         if (isAnimating && !isPaused) {
             isPaused = true
             pausedPositionMs = currentPositionMs
-            choreographer.removeFrameCallback(frameCallback)
+            removeFrameLoop()
         }
     }
 
@@ -751,7 +831,7 @@ class FallingNotesView @JvmOverloads constructor(
             animationStartPositionMs = pausedPositionMs
             isAnimating = true
             lastFrameTimeMs = System.currentTimeMillis()
-            choreographer.postFrameCallback(frameCallback)
+            postFrameLoop()
         }
     }
 
@@ -819,7 +899,7 @@ class FallingNotesView @JvmOverloads constructor(
     fun setNoteDirection(direction: NoteDirection) {
         noteDirection = direction
         if (direction == NoteDirection.RISING) {
-            scheduledNotes = emptyList()
+            assignNotes(emptyList())
             risingModeStartTimeMs = System.currentTimeMillis()
         } else {
             clearRisingNotes()
@@ -864,6 +944,7 @@ class FallingNotesView @JvmOverloads constructor(
         )
         risingNotes.add(scheduledNote)
         activeRisingNotes[note] = ActiveRisingNote(relativeTimeMs, risingNotes.lastIndex)
+        wakeRisingLoop()
     }
 
     /**
@@ -874,6 +955,7 @@ class FallingNotesView @JvmOverloads constructor(
         val now = System.currentTimeMillis()
         val relativeTimeMs = now - risingModeStartTimeMs
         finalizeRisingNote(note, relativeTimeMs)
+        wakeRisingLoop()
     }
 
     /**
@@ -894,7 +976,7 @@ class FallingNotesView @JvmOverloads constructor(
         isAnimating = true
         risingModeStartTimeMs = System.currentTimeMillis()
         lastFrameTimeMs = System.currentTimeMillis()
-        choreographer.postFrameCallback(frameCallback)
+        postFrameLoop()
     }
 
     /**
@@ -956,7 +1038,7 @@ class FallingNotesView @JvmOverloads constructor(
     }
 
     private fun isBlackKey(note: Int): Boolean {
-        return (note % 12) in setOf(1, 3, 6, 8, 10)
+        return BLACK_PITCH_CLASSES[note % 12]
     }
 
     private fun countWhiteKeys(): Int {
@@ -1015,13 +1097,8 @@ class FallingNotesView @JvmOverloads constructor(
         super.onSizeChanged(w, h, oldw, oldh)
         calculateDimensions()
 
-        // Créer le gradient de fond (plus sombre et élégant)
-        backgroundPaint.shader = LinearGradient(
-            0f, 0f, 0f, h.toFloat(),
-            "#0D0D1A".toColorInt(),
-            "#1A1A2E".toColorInt(),
-            Shader.TileMode.CLAMP
-        )
+        // Dégradé de fond du thème recréé à la nouvelle hauteur au prochain dessin
+        lastBackgroundStyle = null
 
         fireSeed = (w * 73856093) xor (h * 19349663)
         resetFireEffects()
@@ -1110,12 +1187,18 @@ class FallingNotesView @JvmOverloads constructor(
             NoteDirection.RISING -> System.currentTimeMillis() - risingModeStartTimeMs
         }
 
-        for (note in notesToDraw) {
+        // Mode MIDI : notes triées, on saute directement à la première encore visible
+        val firstIndex = if (noteDirection == NoteDirection.FALLING) {
+            notesToDraw.firstIndexStartingAtOrAfter(referenceTimeMs - scheduledMaxDurationMs)
+        } else 0
+
+        for (index in firstIndex until notesToDraw.size) {
+            val note = notesToDraw[index]
             // Filtrage de visibilité selon la direction
             when (noteDirection) {
                 NoteDirection.FALLING -> {
                     if (note.endTimeMs < referenceTimeMs) continue
-                    if (note.startTimeMs > referenceTimeMs + lookaheadMs) continue
+                    if (note.startTimeMs > referenceTimeMs + lookaheadMs) break
                 }
                 NoteDirection.RISING -> {
                     val ageMs = referenceTimeMs - note.startTimeMs
@@ -1137,34 +1220,32 @@ class FallingNotesView @JvmOverloads constructor(
             // Ajouter la marge pour centrer visuellement la note dans la touche
             val noteX = noteBaseX + noteMargin
 
-            // Calcul des coordonnées Y selon la direction
-            val (bottomY, topY) = when (noteDirection) {
-                NoteDirection.FALLING -> {
-                    val startRelativeMs = note.startTimeMs - referenceTimeMs
-                    val endRelativeMs = note.endTimeMs - referenceTimeMs
-                    Pair(
-                        hitZoneY - (startRelativeMs * pixelsPerMs),
-                        hitZoneY - (endRelativeMs * pixelsPerMs)
-                    )
-                }
-                NoteDirection.RISING -> {
-                    // En mode rising : les notes montent du bas (hitZoneY) vers le haut (0)
-                    // ageMs = temps écoulé depuis le début de la note (quand la touche a été appuyée)
-                    val ageMs = referenceTimeMs - note.startTimeMs
-                    // ageOfEndMs = temps écoulé depuis la fin de la note (quand la touche a été relâchée)
-                    // Si la note est encore maintenue, endTimeMs = startTimeMs + durationMs qui est mis à jour
-                    val ageOfEndMs = referenceTimeMs - note.endTimeMs
+            // Calcul des coordonnées Y selon la direction (sans Pair : rien d'alloué par note)
+            val bottomY: Float
+            val topY: Float
+            if (noteDirection == NoteDirection.FALLING) {
+                val startRelativeMs = note.startTimeMs - referenceTimeMs
+                val endRelativeMs = note.endTimeMs - referenceTimeMs
+                bottomY = hitZoneY - (startRelativeMs * pixelsPerMs)
+                topY = hitZoneY - (endRelativeMs * pixelsPerMs)
+            } else {
+                // En mode rising : les notes montent du bas (hitZoneY) vers le haut (0)
+                // ageMs = temps écoulé depuis le début de la note (quand la touche a été appuyée)
+                val ageMs = referenceTimeMs - note.startTimeMs
+                // ageOfEndMs = temps écoulé depuis la fin de la note (quand la touche a été relâchée)
+                // Si la note est encore maintenue, endTimeMs = startTimeMs + durationMs qui est mis à jour
+                val ageOfEndMs = referenceTimeMs - note.endTimeMs
 
-                    // Le haut de la note (partie la plus ancienne) = position du startTime
-                    // Plus ageMs est grand, plus le haut est proche de Y=0
-                    val noteTop = hitZoneY - (ageMs * pixelsPerMs)
+                // Le haut de la note (partie la plus ancienne) = position du startTime
+                // Plus ageMs est grand, plus le haut est proche de Y=0
+                val noteTop = hitZoneY - (ageMs * pixelsPerMs)
 
-                    // Le bas de la note (partie la plus récente) = position du endTime
-                    // Si la note est maintenue, ageOfEndMs ≈ 0, donc noteBottom ≈ hitZoneY
-                    val noteBottom = hitZoneY - (ageOfEndMs * pixelsPerMs)
+                // Le bas de la note (partie la plus récente) = position du endTime
+                // Si la note est maintenue, ageOfEndMs ≈ 0, donc noteBottom ≈ hitZoneY
+                val noteBottom = hitZoneY - (ageOfEndMs * pixelsPerMs)
 
-                    Pair(noteBottom, noteTop)
-                }
+                bottomY = noteBottom
+                topY = noteTop
             }
 
             // Pour glow intensity calculation
@@ -1295,7 +1376,7 @@ class FallingNotesView @JvmOverloads constructor(
                 canvas.drawRoundRect(noteRect, noteCornerRadius, noteCornerRadius, notePaint)
 
                 // Contour subtil
-                noteOutlinePaint.color = "#40000000".toColorInt()
+                noteOutlinePaint.color = CLASSIC_OUTLINE_COLOR
                 noteOutlinePaint.alpha = 255
                 canvas.drawRoundRect(noteRect, noteCornerRadius, noteCornerRadius, noteOutlinePaint)
             }
@@ -1388,7 +1469,12 @@ class FallingNotesView @JvmOverloads constructor(
         val warmColor = adjustAlpha(FIRE_FLAME_EDGE_COLOR, baseAlpha / 255f)
         val hotColor = adjustAlpha(FIRE_FLAME_CORE_COLOR, (baseAlpha + 40).coerceAtMost(180) / 255f)
 
-        flameGlowPaint.shader = LinearGradient(
+        // Le dégradé ne dépend que de baseAlpha (entier) et de la géométrie : un par valeur
+        if (fireGlowShadersY != hitZoneY) {
+            java.util.Arrays.fill(fireGlowShaders, null)
+            fireGlowShadersY = hitZoneY
+        }
+        flameGlowPaint.shader = fireGlowShaders[baseAlpha] ?: LinearGradient(
             0f,
             hitZoneY + hitZoneHeight + glowHeight * 0.2f,
             0f,
@@ -1396,7 +1482,7 @@ class FallingNotesView @JvmOverloads constructor(
             intArrayOf(warmColor, hotColor, Color.TRANSPARENT),
             floatArrayOf(0f, 0.45f, 1f),
             Shader.TileMode.CLAMP
-        )
+        ).also { fireGlowShaders[baseAlpha] = it }
 
         canvas.drawRect(
             0f,
@@ -1870,11 +1956,11 @@ class FallingNotesView @JvmOverloads constructor(
 
         // Ancien système de styles
         return when (visualStyle) {
-            VisualStyle.CLASSIC -> "#4CAF50".toColorInt()  // Vert classique
-            VisualStyle.RAINBOW -> "#00E5CC".toColorInt()  // Turquoise
-            VisualStyle.NEON -> "#00FFFF".toColorInt()     // Cyan néon
-            VisualStyle.OCEAN -> "#00D4AA".toColorInt()    // Turquoise océan
-            VisualStyle.FIRE -> "#FF6600".toColorInt()     // Orange feu
+            VisualStyle.CLASSIC -> 0xFF4CAF50.toInt()  // Vert classique
+            VisualStyle.RAINBOW -> 0xFF00E5CC.toInt()  // Turquoise
+            VisualStyle.NEON -> 0xFF00FFFF.toInt()     // Cyan néon
+            VisualStyle.OCEAN -> 0xFF00D4AA.toInt()    // Turquoise océan
+            VisualStyle.FIRE -> 0xFFFF6600.toInt()     // Orange feu
         }
     }
 
@@ -1964,78 +2050,168 @@ class FallingNotesView @JvmOverloads constructor(
         return Color.argb(a, r, g, b)
     }
 
+    /** Main suivie en mode deux mains (filtrage visuel et validation) */
+    private fun isPracticedHand(note: ScheduledNote): Boolean {
+        if (!isTwoHandsMode) return true
+        return when (handPracticeMode) {
+            HandPracticeMode.LEFT_HAND_ONLY -> note.isLeftHand
+            HandPracticeMode.RIGHT_HAND_ONLY -> !note.isLeftHand
+            HandPracticeMode.BOTH_HANDS -> true
+        }
+    }
+
     /**
-     * Vérifie quelles notes sont dans la hit zone et déclenche les callbacks
-     * Filtre par main si en mode deux mains avec un mode de pratique spécifique
+     * Vérifie quelles notes sont dans la hit zone et déclenche les callbacks.
+     * Chaque note est suivie par son indice ; seules les notes proches de la position sont lues.
      */
     private fun checkHitZoneNotes() {
+        val notes = scheduledNotes
         val hitZoneStart = currentPositionMs - hitZoneToleranceMs
         val hitZoneEnd = currentPositionMs + hitZoneToleranceMs
+        val stamp = ++zoneFrameStamp
+        val fireActive = isFireThemeActive()
 
-        val currentHitZoneNotes = mutableSetOf<Int>()
-
-        for (note in scheduledNotes) {
-            // Filtrage par main en mode deux mains
-            if (isTwoHandsMode) {
-                when (handPracticeMode) {
-                    HandPracticeMode.LEFT_HAND_ONLY -> if (!note.isLeftHand) continue
-                    HandPracticeMode.RIGHT_HAND_ONLY -> if (note.isLeftHand) continue
-                    HandPracticeMode.BOTH_HANDS -> { /* Toutes les notes */ }
-                }
-            }
-
-            // Une note est dans la hit zone si :
-            // - Son début est dans la zone (note qui arrive)
-            // - OU elle chevauche la zone (note longue en cours)
-            // La note reste attendue tant que son endTimeMs n'a pas dépassé le début de la zone
-            val noteOverlapsHitZone = note.startTimeMs <= hitZoneEnd && note.endTimeMs >= hitZoneStart
-            if (noteOverlapsHitZone) {
-                currentHitZoneNotes.add(note.note)
-
-                if (note.note !in notesInHitZone) {
-                    onNoteReachHitZone?.invoke(note.note, note.startTimeMs)
-
-                    if (isFireThemeActive()) {
+        var nextCount = 0
+        var i = notes.firstIndexStartingAtOrAfter(hitZoneStart - scheduledMaxDurationMs)
+        while (i < notes.size) {
+            val note = notes[i]
+            if (note.startTimeMs > hitZoneEnd) break
+            // Une note est dans la hit zone si elle chevauche la zone : elle reste attendue
+            // tant que son endTimeMs n'a pas dépassé le début de la zone
+            if (note.endTimeMs >= hitZoneStart && isPracticedHand(note)) {
+                if (nextCount == nextZoneIndices.size) nextZoneIndices = nextZoneIndices.copyOf(nextCount * 2)
+                nextZoneIndices[nextCount++] = i
+                nextZonePitchCount[note.note]++
+                zoneStamp[i] = stamp
+                if (!inZone[i]) {
+                    inZone[i] = true
+                    onNoteReachHitZone?.invoke(note)
+                    if (fireActive) {
                         val velocityBoost = (note.velocity / 127f) * 0.35f
                         spawnFlameBurst(note.note, 0.8f + velocityBoost)
                     }
                 }
             }
+            i++
         }
 
-        for (oldNote in notesInHitZone) {
-            if (oldNote !in currentHitZoneNotes) {
-                onNoteLeaveHitZone?.invoke(oldNote)
+        // Sorties : par indice pour l'état, par hauteur pour le callback (plus aucune note de
+        // cette hauteur dans la zone)
+        for (k in 0 until zoneCount) {
+            val old = zoneIndices[k]
+            if (old < inZone.size && zoneStamp[old] != stamp) inZone[old] = false
+            val pitch = notes.getOrNull(old)?.note ?: continue
+            if (zonePitchCount[pitch] > 0) {
+                if (nextZonePitchCount[pitch] == 0) onNoteLeaveHitZone?.invoke(pitch)
+                zonePitchCount[pitch] = 0
             }
         }
 
-        notesInHitZone.clear()
-        notesInHitZone.addAll(currentHitZoneNotes)
+        // Le nouvel état devient l'état courant (les tableaux « suivants » repartent de zéro)
+        val swapIndices = zoneIndices
+        zoneIndices = nextZoneIndices
+        nextZoneIndices = swapIndices
+        zoneCount = nextCount
+        val swapPitches = zonePitchCount
+        zonePitchCount = nextZonePitchCount
+        nextZonePitchCount = swapPitches
+    }
+
+    /** Vide la hit zone (saut de position, nouvelles notes) en signalant les hauteurs sorties. */
+    private fun clearHitZone() {
+        val notes = scheduledNotes
+        for (k in 0 until zoneCount) {
+            val index = zoneIndices[k]
+            if (index < inZone.size) inZone[index] = false
+            val pitch = notes.getOrNull(index)?.note ?: continue
+            if (zonePitchCount[pitch] > 0) {
+                zonePitchCount[pitch] = 0
+                onNoteLeaveHitZone?.invoke(pitch)
+            }
+        }
+        zoneCount = 0
+        java.util.Arrays.fill(zonePitchCount, 0)
     }
 
     /**
-     * Retourne les notes actuellement dans la hit zone
+     * Signale chaque note dont la fenêtre de jugement (début ± tolérance) vient de se refermer.
+     * Appelé seulement pendant la lecture : une note n'est signalée qu'une fois.
+     */
+    private fun advancePassedNotes() {
+        val notes = scheduledNotes
+        val closedBefore = currentPositionMs - hitZoneToleranceMs
+        while (passedIndex < notes.size && notes[passedIndex].startTimeMs < closedBefore) {
+            val note = notes[passedIndex++]
+            if (isPracticedHand(note)) onNotePassed?.invoke(note)
+        }
+        passedTrackedUntilMs = currentPositionMs
+    }
+
+    /** Repart de [positionMs] sans rien signaler (seek, retour au début). */
+    private fun resyncPassedNotes(positionMs: Long) {
+        passedIndex = scheduledNotes.firstIndexStartingAtOrAfter(positionMs - hitZoneToleranceMs)
+        passedTrackedUntilMs = positionMs
+    }
+
+    /**
+     * Fin du morceau : les dernières notes dont la fenêtre n'avait pas encore eu le temps de
+     * se refermer sont signalées aussi.
+     */
+    fun reportRemainingNotesPassed() {
+        val notes = scheduledNotes
+        while (passedIndex < notes.size) {
+            val note = notes[passedIndex++]
+            if (isPracticedHand(note)) onNotePassed?.invoke(note)
+        }
+    }
+
+    /**
+     * Retourne les hauteurs actuellement dans la hit zone
      */
     @Suppress("unused")
-    fun getNotesInHitZone(): Set<Int> = notesInHitZone.toSet()
+    fun getNotesInHitZone(): Set<Int> = (0 until 128).filterTo(HashSet()) { zonePitchCount[it] > 0 }
 
     /**
      * Retourne les notes attendues dans la fenêtre temporelle actuelle
      * Filtre par main si en mode deux mains avec un mode de pratique spécifique
      */
     fun getExpectedNotesWindow(): List<ScheduledNote> {
+        val notes = scheduledNotes
         val hitZoneStart = currentPositionMs - hitZoneToleranceMs
         val hitZoneEnd = currentPositionMs + hitZoneToleranceMs
-        return scheduledNotes.filter { note ->
-            // Filtre temporel
-            note.startTimeMs in hitZoneStart..hitZoneEnd &&
-            // Filtre par main en mode deux mains
-            (!isTwoHandsMode || when (handPracticeMode) {
-                HandPracticeMode.LEFT_HAND_ONLY -> note.isLeftHand
-                HandPracticeMode.RIGHT_HAND_ONLY -> !note.isLeftHand
-                HandPracticeMode.BOTH_HANDS -> true
-            })
+        val result = ArrayList<ScheduledNote>()
+        var i = notes.firstIndexStartingAtOrAfter(hitZoneStart)
+        while (i < notes.size) {
+            val note = notes[i]
+            if (note.startTimeMs > hitZoneEnd) break
+            if (isPracticedHand(note)) result.add(note)
+            i++
         }
+        return result
+    }
+
+    /**
+     * Mêmes notes que [getExpectedNotesWindow], en masque de hauteurs et sans allocation :
+     * out[0] = notes 0 à 63, out[1] = notes 64 à 127.
+     */
+    fun getExpectedNotesMask(out: LongArray) {
+        val notes = scheduledNotes
+        val hitZoneStart = currentPositionMs - hitZoneToleranceMs
+        val hitZoneEnd = currentPositionMs + hitZoneToleranceMs
+        var lo = 0L
+        var hi = 0L
+        var i = notes.firstIndexStartingAtOrAfter(hitZoneStart)
+        while (i < notes.size) {
+            val note = notes[i]
+            if (note.startTimeMs > hitZoneEnd) break
+            if (isPracticedHand(note)) {
+                val pitch = note.note
+                if (pitch < 64) lo = lo or (1L shl pitch) else hi = hi or (1L shl (pitch - 64))
+            }
+            i++
+        }
+        out[0] = lo
+        out[1] = hi
     }
 
     /**
@@ -2046,7 +2222,8 @@ class FallingNotesView @JvmOverloads constructor(
         isPaused = false
         pausedPositionMs = 0L
         currentPositionMs = 0L
-        notesInHitZone.clear()
+        clearHitZone()
+        resyncPassedNotes(0L)
         particles.clear()
         hitFeedback.clear()
         resetFireEffects()
@@ -2061,6 +2238,16 @@ class FallingNotesView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         stopAnimation()
         stopBackgroundAnimation()
+    }
+
+    // Application en arrière-plan : le fond animé ne tourne plus pour rien
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == VISIBLE) {
+            if (animatedBackgroundEnabled) startBackgroundAnimation()
+        } else {
+            stopBackgroundAnimation()
+        }
     }
 
     /**

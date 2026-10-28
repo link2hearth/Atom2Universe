@@ -127,6 +127,7 @@ class SignpostState(
             }
             fun extend(k: Int): Boolean {
                 if (k == n) return true
+                checkPuzzleWork()
                 if (++nodes > 20_000) return false
                 // Heuristique de Warnsdorff : d'abord les cases qui ont le moins d'issues.
                 val options = moves(path[k - 1]).shuffled(random).sortedBy { o -> used[o] = true; val m = moves(o).size; used[o] = false; m }
@@ -152,6 +153,7 @@ class SignpostState(
             var found = 0; var nodes = 0
             val rays = Array(n) { rayOf(w, h, dirs, it) }
             fun go(c: Int, k: Int) {
+                checkPuzzleWork()
                 if (found >= 2 || ++nodes > budget) return
                 if (k == n) { found++; return }
                 val want = posOf[k + 1]

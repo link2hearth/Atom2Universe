@@ -24,6 +24,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.media.session.MediaButtonReceiver
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
@@ -32,6 +33,9 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.Atom2Universe.app.AudioFocusManager
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.RadioRecordingService
+import com.Atom2Universe.app.Recorder
+import com.Atom2Universe.app.TrackMetadata
 import com.Atom2Universe.app.stats.StatsTracker
 import com.Atom2Universe.app.widget.MusicWidgetController
 import java.util.concurrent.CopyOnWriteArrayList
@@ -64,6 +68,10 @@ object RadioPlaybackHolder {
     private var lastStation: RadioStation? = null  // Mémorise la dernière station même après stop
     @Volatile
     private var isRecording = false
+    // L'enregistrement vit ici et non dans l'écran : il survit à sa fermeture et répond à la notification.
+    private var recorder: Recorder? = null
+    /** Numéro de l'enregistrement en cours : la fin tardive d'un ancien enregistrement ne touche pas au nouveau. */
+    private var recordingSession = 0
     private val listeners = CopyOnWriteArrayList<PlayerListener>()
 
     // Flag pour éviter les démarrages multiples du service foreground (Bug 4.6)
@@ -100,7 +108,7 @@ object RadioPlaybackHolder {
     private val audioFocusListener = object : AudioFocusManager.AudioFocusListener {
         override fun onAudioFocusPause() {
             val ctx = appContext ?: return
-            val wasPlaying = isPlaying()
+            val wasPlaying = isPlaybackWanted()
             wasPlayingBeforeAudioFocusLoss.set(wasPlaying)
             if (wasPlaying) {
                 pause(ctx)
@@ -146,6 +154,12 @@ object RadioPlaybackHolder {
         fun onMetadataChanged(artist: String?, title: String?)
         fun onError(error: PlaybackException)
         fun onRecordingStateChanged(recording: Boolean)
+
+        /** L'enregistrement s'est arrêté tout seul (stockage plein, flux coupé). */
+        fun onRecordingFailed(failure: Recorder.Failure) {}
+
+        /** La lecture a été arrêtée (bouton, notification, minuteur, autre source). */
+        fun onStopped() {}
 
         /**
          * Callback avec information sur le type d'erreur pour permettre une UI adaptée
@@ -288,6 +302,8 @@ object RadioPlaybackHolder {
             Log.d(TAG, "Creating new ExoPlayer instance")
             player = ExoPlayer.Builder(context.applicationContext).build().apply {
                 addListener(playerListener)
+                // Garde le Wi-Fi et le processeur éveillés écran éteint, sinon le flux cale puis s'arrête.
+                setWakeMode(C.WAKE_MODE_NETWORK)
             }
         }
         return player ?: throw IllegalStateException("Failed to create ExoPlayer instance")
@@ -298,6 +314,20 @@ object RadioPlaybackHolder {
         // isPlaying est true seulement quand le player joue activement
         // playWhenReady indique l'intention de jouer (même si buffering)
         return p.isPlaying || (p.playWhenReady && p.playbackState == Player.STATE_READY)
+    }
+
+    /**
+     * La lecture est voulue : en train de jouer, de remplir son tampon ou d'attendre une reconnexion.
+     * Le service reste au premier plan tout ce temps (un rechargement du tampon n'est pas une pause).
+     */
+    fun isPlaybackWanted(): Boolean {
+        val p = player ?: return false
+        if (!p.playWhenReady || currentStation == null) return false
+        return when (p.playbackState) {
+            Player.STATE_READY, Player.STATE_BUFFERING -> true
+            Player.STATE_IDLE -> reconnectRunnable != null
+            else -> false
+        }
     }
 
     fun isPaused(): Boolean {
@@ -519,25 +549,68 @@ object RadioPlaybackHolder {
         StatsTracker.endRadioSession()
 
         // Abandonner l'audio focus
-        AudioFocusManager.abandonFocus()
+        AudioFocusManager.abandonFocus(audioFocusListener)
 
         if (isRecording) {
-            setRecordingState(context, false)
+            stopRecording(context)
         }
         if (stopService) {
             stopForegroundService(context)
+        } else {
+            // Arrêt par la notification : le service s'arrête lui-même, mais la prochaine lecture doit le relancer.
+            isForegroundServiceStarted.set(false)
         }
 
+        listeners.forEach { it.onStopped() }
         // Notifier le widget
         MusicWidgetController.notifyStateChanged(context)
     }
 
     /**
-     * Change l'état d'enregistrement
+     * Enregistre la station en cours (ou la dernière écoutée), de l'écran comme de la notification.
+     * @return false si rien à enregistrer ou si un enregistrement tourne déjà
      */
-    fun setRecordingState(context: Context, recording: Boolean) {
-        isRecording = recording
-        listeners.forEach { it.onRecordingStateChanged(recording) }
+    fun startRecording(context: Context): Boolean {
+        if (isRecording) return false
+        val station = currentStation ?: lastStation ?: return false
+        val app = context.applicationContext
+        val rec = recorder ?: Recorder(app).also { recorder = it }
+        val session = ++recordingSession
+        val metadata = TrackMetadata(currentMetadata.artist, currentMetadata.title, station.name)
+        val started = rec.startRecording(station.url, metadata) { failure ->
+            notificationHandler.post { onRecordingEnded(app, session, failure) }
+        }
+        if (!started) return false
+        isRecording = true
+        try {
+            RadioRecordingService.start(app, station.name)
+        } catch (e: IllegalStateException) {
+            // Démarrage refusé en arrière-plan : le service de lecture, resté au premier plan, garde l'appli en vie.
+            Log.w(TAG, "Cannot start recording service", e)
+        }
+        listeners.forEach { it.onRecordingStateChanged(true) }
+        updateServiceNotification(app)
+        return true
+    }
+
+    /** Arrête l'enregistrement en gardant ce qui a été enregistré. */
+    fun stopRecording(context: Context) {
+        if (!isRecording) return
+        recordingSession++
+        recorder?.stopRecording()
+        markRecordingStopped(context.applicationContext)
+    }
+
+    private fun onRecordingEnded(context: Context, session: Int, failure: Recorder.Failure?) {
+        if (session != recordingSession || !isRecording) return
+        markRecordingStopped(context)
+        if (failure != null) listeners.forEach { it.onRecordingFailed(failure) }
+    }
+
+    private fun markRecordingStopped(context: Context) {
+        isRecording = false
+        RadioRecordingService.stop(context)
+        listeners.forEach { it.onRecordingStateChanged(false) }
         updateServiceNotification(context)
     }
 
@@ -558,7 +631,11 @@ object RadioPlaybackHolder {
         teardownConnectivityMonitoring()
 
         // Abandonner l'audio focus
-        AudioFocusManager.abandonFocus()
+        AudioFocusManager.abandonFocus(audioFocusListener)
+
+        if (isRecording) stopRecording(context)
+        recorder?.release()
+        recorder = null
 
         stopForegroundService(context)
         player?.removeListener(playerListener)
@@ -661,6 +738,10 @@ object RadioPlaybackHolder {
             val title = mediaMetadata.title?.toString()
             currentMetadata = StreamMetadata(artist, title)
             Log.d(TAG, "onMediaMetadataChanged: artist=$artist, title=$title")
+            // Un nouveau morceau ouvre un nouveau fichier d'enregistrement, nommé d'après lui.
+            if (isRecording) {
+                recorder?.updateMetadata(TrackMetadata(artist, title, (currentStation ?: lastStation)?.name))
+            }
             // Notifie les listeners (UI) immédiatement
             listeners.forEach { it.onMetadataChanged(artist, title) }
             // Met à jour la notification avec DEBOUNCE pour éviter d'affecter l'audio
@@ -896,12 +977,10 @@ class RadioForegroundService : Service() {
                 RadioPlaybackHolder.pause(this)
             }
             ACTION_RECORD -> {
-                RadioPlaybackHolder.setRecordingState(this, true)
-                // Note: L'enregistrement réel est géré dans RadioActivity via Recorder
-                // Ici on met juste à jour l'état et la notification
+                RadioPlaybackHolder.startRecording(this)
             }
             ACTION_STOP_RECORD -> {
-                RadioPlaybackHolder.setRecordingState(this, false)
+                RadioPlaybackHolder.stopRecording(this)
             }
         }
         return START_NOT_STICKY
@@ -969,14 +1048,14 @@ class RadioForegroundService : Service() {
             // Durée indéfinie pour les streams live (-1 indique un stream live)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, -1L)
             // Marquer comme stream live
-            .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Live Radio")
+            .putString(MediaMetadataCompat.METADATA_KEY_GENRE, getString(R.string.radio_genre_live))
             .build()
 
         mediaSession?.setMetadata(metadata)
     }
 
     private fun updateMediaSessionPlaybackState() {
-        val isPlaying = RadioPlaybackHolder.isPlaying()
+        val isPlaying = RadioPlaybackHolder.isPlaybackWanted()
         val state = if (isPlaying) {
             PlaybackStateCompat.STATE_PLAYING
         } else {
@@ -1012,11 +1091,19 @@ class RadioForegroundService : Service() {
         updateMediaSessionPlaybackState()
         val notification = buildMediaNotification()
 
-        val isActive = RadioPlaybackHolder.isPlaying() || RadioPlaybackHolder.isCurrentlyRecording()
+        val isActive = RadioPlaybackHolder.isPlaybackWanted() || RadioPlaybackHolder.isCurrentlyRecording()
 
         if (isActive) {
-            // Cas 1: Lecture/enregistrement actif -> maintenir en foreground
-            startForeground(NOTIFICATION_ID, notification)
+            // Cas 1: Lecture voulue (tampon compris) ou enregistrement -> maintenir en foreground
+            try {
+                startForeground(NOTIFICATION_ID, notification)
+            } catch (e: IllegalStateException) {
+                // Android 12+ : retour au premier plan refusé depuis l'arrière-plan ; la notification reste à jour.
+                Log.w(TAG, "Cannot go back to foreground", e)
+                if (hasNotificationPermission()) {
+                    getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, notification)
+                }
+            }
         } else {
             // Cas 2: Pause -> détacher du foreground mais garder la notification
             // STOP_FOREGROUND_DETACH: le service peut être tué mais la notification reste
@@ -1068,7 +1155,7 @@ class RadioForegroundService : Service() {
     private fun captureStateSnapshot(): NotificationStateSnapshot {
         return NotificationStateSnapshot(
             station = RadioPlaybackHolder.getCurrentStation(),
-            isPlaying = RadioPlaybackHolder.isPlaying(),
+            isPlaying = RadioPlaybackHolder.isPlaybackWanted(),
             isRecording = RadioPlaybackHolder.isCurrentlyRecording(),
             artist = RadioPlaybackHolder.getCurrentArtist(),
             title = RadioPlaybackHolder.getCurrentTitle()

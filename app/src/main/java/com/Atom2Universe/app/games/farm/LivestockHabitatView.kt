@@ -58,19 +58,22 @@ class LivestockHabitatView(context: Context, sprites: FarmSprites, state: Livest
         val dt = if (lastFrame == 0L) 0.0 else ((now - lastFrame) / 1000.0).coerceIn(0.0, .06)
         lastFrame = now
         canvas.drawColor(Color.rgb(161, 202, 139))
+        // Only a page with animals on it moves; an empty pen is drawn once and left alone.
+        var moving = false
         if (width > 0 && height > 0) {
             val scale = min(width / 320f, height / 330f)
             val logicalHeight = (height / scale).toInt().coerceIn(330, 800)
             fun page(kind: LivestockKind, offset: Float) {
                 canvas.save(); canvas.clipRect(offset, 0f, offset + width, height.toFloat())
                 canvas.translate(offset + (width - 320 * scale) / 2, (height - logicalHeight * scale) / 2)
-                canvas.scale(scale, scale); scene.drawPage(canvas, kind, logicalHeight, dt); canvas.restore()
+                canvas.scale(scale, scale); moving = scene.drawPage(canvas, kind, logicalHeight, dt) || moving; canvas.restore()
             }
             page(selected, shift)
             if (shift < 0) LivestockKind.entries.getOrNull(selected.ordinal + 1)?.let { page(it, shift + width) }
             if (shift > 0) LivestockKind.entries.getOrNull(selected.ordinal - 1)?.let { page(it, shift - width) }
         }
-        if (isShown && windowVisibility == VISIBLE) postInvalidateOnAnimation()
+        if (moving && isShown && windowVisibility == VISIBLE) postInvalidateOnAnimation()
+        else lastFrame = 0
     }
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility); lastFrame = 0

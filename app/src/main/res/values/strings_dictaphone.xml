@@ -15,4 +15,12 @@
     <string name="dictaphone_delete_confirm">Delete</string>
     <string name="audio_hub_dictaphone_title">Dictaphone</string>
     <string name="audio_hub_dictaphone_desc">Voice recorder saved to Music</string>
+    <string name="dictaphone_error_start">Unable to start recording</string>
+    <string name="dictaphone_error_save">Unable to save the recording</string>
+    <string name="dictaphone_error_storage">Recording stopped: storage is full</string>
+    <string name="dictaphone_error_playback">Unable to play this recording</string>
+    <string name="dictaphone_timer_format">%1$02d:%2$02d</string>
+    <string name="dictaphone_duration_format">%1$d:%2$02d</string>
+    <string name="dictaphone_duration_unknown">--:--</string>
+    <string name="dictaphone_item_meta">%1$s · %2$s</string>
 </resources>

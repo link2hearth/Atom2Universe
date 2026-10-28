@@ -129,6 +129,8 @@ private class HarvestGauge(val cell: Int, val startTime: Long, val downX: Float,
 }
 
 private const val HARVEST_FLY_DURATION = 900L
+/** The three coins peeking out from under the treasure bush, as x, y offsets from the pile's centre. */
+private val COIN_PILE = floatArrayOf(-9f, 0f, 8f, -4f, 1f, 5f)
 /** Width, in world units, of each tappable arrow at either end of a parcel's banner. */
 private const val ARROW_ZONE = 34f
 /** Grass tiles baked beyond the world bounds, for the regions whose map does not fill the screen. */
@@ -151,6 +153,15 @@ private const val PARCEL_FLIGHT_MS = 420L
 private const val WATERING_IDLE_MS = 8000L
 /** A watering gauge nobody has tapped at yet gives up this long after it opened. */
 private const val WATERING_UNTOUCHED_MS = 5000L
+/**
+ * The scenery's own pace - wind, gates, smoke - about 30 frames a second. The wind moves in
+ * seconds, not in frames, so it travels exactly as fast; it only stops being repainted 120 times
+ * a second on a screen where nothing else moves. The mini-games keep their own full-rate clocks.
+ */
+private const val DECOR_FRAME_MS = 33L
+/** Once nobody has touched the screen for [DECOR_IDLE_AFTER_MS], the scenery slows to ten frames a second. */
+private const val DECOR_IDLE_FRAME_MS = 100L
+private const val DECOR_IDLE_AFTER_MS = 10_000L
 
 /** Coordinates stay in world units; drawing and hit testing use the same transform. */
 class FarmWorldView(context: Context, private val state: FarmState,
@@ -214,12 +225,24 @@ class FarmWorldView(context: Context, private val state: FarmState,
             else -> true
         }
     }
-    /** The shared wind clock and each parcel's gate never stop animating while the map is drawn. */
+    /**
+     * The shared wind clock and each parcel's gate keep animating while the map is drawn - at the
+     * scenery's pace, see [DECOR_FRAME_MS]. Hidden behind a panel the map is not drawn at all, so
+     * the clock simply stops there and starts again when it shows.
+     */
     private var lastDecorFrameNanos = 0L
     private var windTime = 0f
     private var decorTicking = false
+    private var lastTouchAt = android.os.SystemClock.uptimeMillis()
     private val decorTick = Runnable { decorTicking = false; invalidate() }
-    private fun ensureDecorTicking() { if (!decorTicking) { decorTicking = true; postOnAnimation(decorTick) } }
+    private fun ensureDecorTicking() {
+        if (decorTicking) return
+        decorTicking = true
+        val idle = android.os.SystemClock.uptimeMillis() - lastTouchAt > DECOR_IDLE_AFTER_MS
+        postDelayed(decorTick, if (idle) DECOR_IDLE_FRAME_MS else DECOR_FRAME_MS)
+    }
+    /** Someone touched the screen: the scenery goes back to its normal pace. */
+    fun noteTouch() { lastTouchAt = android.os.SystemClock.uptimeMillis() }
     // NaN means "never drawn yet": the gate then snaps straight to its real state instead of
     // swinging open from closed the first time a parcel scrolls into view.
     private val gateOpening = FloatArray(FarmLayout.lands.size) { Float.NaN }
@@ -439,9 +462,27 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val projectAreas = FarmProject.entries.associateWith {
         FarmProjectsLayout.project(it).let { a -> RectF(a.left, a.top, a.right, a.bottom) }
     }
+    /** Each site's drawing, above its caption: fixed, so worked out once rather than every frame. */
+    private val projectArtAreas = FarmProject.entries.map { project ->
+        projectAreas.getValue(project).let { RectF(it.left, it.top, it.right, it.bottom - 26) }
+    }
     private val giftAreas = FarmProject.entries.associateWith {
         FarmProjectsLayout.decoration(it).let { a -> RectF(a.left, a.top, a.right, a.bottom) }
     }
+    // The texts written on the map only change with the numbers they show, so each is kept and
+    // rebuilt only when its key moves - asking for a resource string per sign per frame is not free.
+    private val projectTitles = FarmProject.entries.map { context.getString(it.label) }
+    private val projectCaptionKeys = IntArray(FarmProject.entries.size) { Int.MIN_VALUE }
+    private val projectCaptions = arrayOfNulls<String>(FarmProject.entries.size)
+    private val workshopTitle = context.getString(R.string.farm_workshop_title)
+    private var workshopCaptionKey = Int.MIN_VALUE
+    private var workshopCaption = ""
+    private val workshopSmoke = FarmLayout.yard.let { RectF(it.left, it.top - 90, it.right, it.bottom) }
+    private val workshopSign = FarmLayout.yard.let { RectF(it.left, it.bottom + 4, it.left + 210, it.bottom + 38) }
+    private val visitorArea = FarmVisitorLayout.area.let { RectF(it.left, it.top, it.right, it.bottom) }
+    /** Scratch rectangles for the gauges and the flying harvest, drawn on top of everything else. */
+    private val gaugeRect = RectF()
+    private val visible = RectF()
     // The meadow is baked once per region into a single bitmap laid out in world coordinates (see
     // FarmSprites.bakeMeadow) and stamped back with one drawBitmap. Nothing here is ever repainted:
     // the ground is static, so following the camera with a screen-sized cache - which is what this
@@ -760,24 +801,37 @@ class FarmWorldView(context: Context, private val state: FarmState,
         cameraY = height / 2f - (area.top + area.bottom) / 2 * zoom
         constrain(); invalidate()
     }
+    /** What a site's caption says, rebuilt only when its progress or its status changes. */
+    private fun projectCaption(project: FarmProject): String {
+        val progress = state.projects.progress(project)
+        val key = when {
+            state.projects.complete(project) -> -1
+            state.projects.active == project -> progress * 2 + 1
+            else -> progress * 2
+        }
+        val index = project.ordinal
+        if (key != projectCaptionKeys[index] || projectCaptions[index] == null) {
+            projectCaptionKeys[index] = key
+            projectCaptions[index] = when {
+                key == -1 -> context.getString(R.string.farm_project_complete)
+                key % 2 == 1 -> context.getString(R.string.farm_project_map_active, progress, project.helpNeeded)
+                else -> context.getString(R.string.farm_project_progress, progress, project.helpNeeded)
+            }
+        }
+        return projectCaptions[index]!!
+    }
     private fun drawProjects(canvas: Canvas, visible: RectF) {
         for (project in FarmProject.entries) {
             val area = projectAreas.getValue(project)
             if (RectF.intersects(area, visible)) {
                 projectArt.project(canvas, project, project.stage(state.projects.progress(project)),
-                    RectF(area.left, area.top, area.right, area.bottom - 26))
+                    projectArtAreas[project.ordinal])
                 projectLabelPaint.color = Color.rgb(255, 248, 225)
                 canvas.drawRoundRect(area.left, area.bottom - 29, area.right, area.bottom + 2, 5f, 5f, projectLabelPaint)
                 projectLabelPaint.color = Color.rgb(76, 73, 48); projectLabelPaint.textSize = 13f
-                canvas.drawText(context.getString(project.label), area.centerX(), area.bottom - 15, projectLabelPaint)
+                canvas.drawText(projectTitles[project.ordinal], area.centerX(), area.bottom - 15, projectLabelPaint)
                 projectLabelPaint.textSize = 10f
-                val caption = when {
-                    state.projects.complete(project) -> context.getString(R.string.farm_project_complete)
-                    state.projects.active == project -> context.getString(R.string.farm_project_map_active,
-                        state.projects.progress(project), project.helpNeeded)
-                    else -> context.getString(R.string.farm_project_progress, state.projects.progress(project), project.helpNeeded)
-                }
-                canvas.drawText(caption, area.centerX(), area.bottom - 3, projectLabelPaint)
+                canvas.drawText(projectCaption(project), area.centerX(), area.bottom - 3, projectLabelPaint)
             }
             val slot = giftAreas.getValue(project)
             if (RectF.intersects(slot, visible)) {
@@ -795,7 +849,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     private fun drawWorkshopSign(canvas: Canvas, visible: RectF) {
         val yard = FarmLayout.yard
-        if (state.workshop.jobs.isNotEmpty() && RectF.intersects(RectF(yard.left, yard.top - 90, yard.right, yard.bottom), visible)) {
+        if (state.workshop.jobs.isNotEmpty() && RectF.intersects(workshopSmoke, visible)) {
             val time = if (ValueAnimator.areAnimatorsEnabled()) windTime else 0f
             for (i in 0..2) {
                 val phase = (time * .35f + i / 3f) % 1f
@@ -805,17 +859,23 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     yard.top - phase * 65 + 8, projectLabelPaint)
             }
         }
-        val sign = RectF(yard.left, yard.bottom + 4, yard.left + 210, yard.bottom + 38)
+        val sign = workshopSign
         if (!RectF.intersects(sign, visible)) return
         projectLabelPaint.color = Color.rgb(255, 248, 225)
         canvas.drawRoundRect(sign, 5f, 5f, projectLabelPaint)
         projectLabelPaint.color = Color.rgb(76, 73, 48); projectLabelPaint.textSize = 13f
-        canvas.drawText(context.getString(R.string.farm_workshop_title), sign.centerX(), sign.top + 14, projectLabelPaint)
+        canvas.drawText(workshopTitle, sign.centerX(), sign.top + 14, projectLabelPaint)
         projectLabelPaint.textSize = 10f
         val ready = state.workshop.readyCount(System.currentTimeMillis())
-        val caption = if (ready > 0) context.getString(R.string.farm_workshop_collect, ready)
-            else context.getString(R.string.farm_workshop_free, FarmWorkshopState.SLOTS - state.workshop.jobs.size)
-        canvas.drawText(caption, sign.centerX(), sign.bottom - 4, projectLabelPaint)
+        val free = FarmWorkshopState.SLOTS - state.workshop.jobs.size
+        // Positive while something is ready to collect, otherwise minus the free slots.
+        val key = if (ready > 0) ready else -1 - free
+        if (key != workshopCaptionKey) {
+            workshopCaptionKey = key
+            workshopCaption = if (ready > 0) context.getString(R.string.farm_workshop_collect, ready)
+                else context.getString(R.string.farm_workshop_free, free)
+        }
+        canvas.drawText(workshopCaption, sign.centerX(), sign.bottom - 4, projectLabelPaint)
     }
     private var cameraAnimator: ValueAnimator? = null
     /**
@@ -847,6 +907,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     override fun onDetachedFromWindow() {
         cameraAnimator?.cancel(); dropPendingTap()
+        removeCallbacks(decorTick); decorTicking = false
         super.onDetachedFromWindow()
     }
 
@@ -996,7 +1057,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val visible = RectF(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
+        visible.set(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
         // The wind field animates in every region the grass is drawn in, not only on the home map.
         val frameNanos = System.nanoTime()
         val dt = if (lastDecorFrameNanos == 0L) 0f else ((frameNanos - lastDecorFrameNanos) / 1_000_000_000f).coerceIn(0f, .1f)
@@ -1019,8 +1080,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         drawProjects(canvas, visible)
         drawWorkshopSign(canvas, visible)
         state.encounters.pending?.let { meeting ->
-            val site = FarmVisitorLayout.area
-            val target = RectF(site.left, site.top, site.right, site.bottom)
+            val target = visitorArea
             if (RectF.intersects(target, visible)) {
                 visitorArt.draw(canvas, meeting.visitor, target, windTime)
                 projectLabelPaint.color = Color.rgb(255, 248, 225)
@@ -1031,9 +1091,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
         }
 
         val now = System.currentTimeMillis()
-        lands.forEachIndexed { index, land ->
+        for (index in lands.indices) {
+            val land = lands[index]
             if (land.right + 20 < visible.left || land.left - 20 > visible.right ||
-                land.bottom + 20 < visible.top || land.top - 20 > visible.bottom) return@forEachIndexed
+                land.bottom + 20 < visible.top || land.top - 20 > visible.bottom) continue
             val unlocked = state.parcels[index].unlocked
             val spec = FarmLayout.lands[index]
             paint.color = Color.argb(24, 83, 102, 40)
@@ -1071,7 +1132,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         canvas.restore()
                         // A ripe plant says so through its bar's shimmer, not a word written over its leaves.
                         FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical, windTime)
-                        waterBursts.firstOrNull { it.cell == i }?.let { drawWaterBurst(canvas, cell, it, now) }
+                        if (waterBursts.isNotEmpty()) waterBursts.firstOrNull { it.cell == i }?.let { drawWaterBurst(canvas, cell, it, now) }
                     }
                     wateringGame?.takeIf { it.cell == i }?.let { drawWateringGauge(canvas, cell, it, now) }
                     harvestGame?.takeIf { it.cell == i }?.let { drawHarvestGauge(canvas, cell, it, now) }
@@ -1085,8 +1146,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
             scenery.fenceFront(canvas, land, spec.columns, opening)
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)
-                val price = priceFormat.format(state.unlockCost(index).toLong())
-                label(canvas, context.getString(R.string.farm_locked_price, price), land.centerX(), land.centerY(), 20f)
+                val price = lockedLabels[index] ?: context.getString(R.string.farm_locked_price,
+                    priceFormat.format(state.unlockCost(index).toLong())).also { lockedLabels[index] = it }
+                label(canvas, price, land.centerX(), land.centerY(), 20f)
             }
             drawBanner(canvas, index, land)
         }
@@ -1097,6 +1159,11 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val bannerRect = RectF()
     private val cropCounts = IntArray(FarmCrop.entries.size)
     private val cropLabels = FarmCrop.entries.map { context.getString(it.label) }
+    /** The banner of each parcel, kept with the crop it names (-1 for none) until that crop changes. */
+    private val bannerTexts = arrayOfNulls<String>(FarmLayout.lands.size)
+    private val bannerCrops = IntArray(FarmLayout.lands.size) { Int.MIN_VALUE }
+    /** A parcel's price never changes, nor does the label written over it while it is for sale. */
+    private val lockedLabels = arrayOfNulls<String>(FarmLayout.lands.size)
     /** The crop standing in most of a parcel's cells, or null while nothing grows there. */
     private fun mainCrop(parcel: Int): FarmCrop? {
         cropCounts.fill(0)
@@ -1127,8 +1194,13 @@ class FarmWorldView(context: Context, private val state: FarmState,
         arrowButton(canvas, right - ARROW_ZONE / 2, centerY, 1, index < lands.size - 1)
 
         val crop = if (state.parcels[index].unlocked) mainCrop(index) else null
-        val text = if (crop != null) context.getString(R.string.farm_parcel_banner, index + 1, cropLabels[crop.ordinal])
-            else context.getString(R.string.farm_parcel_label, index + 1)
+        val cropKey = crop?.ordinal ?: -1
+        if (bannerCrops[index] != cropKey || bannerTexts[index] == null) {
+            bannerCrops[index] = cropKey
+            bannerTexts[index] = if (crop != null) context.getString(R.string.farm_parcel_banner, index + 1, cropLabels[crop.ordinal])
+                else context.getString(R.string.farm_parcel_label, index + 1)
+        }
+        val text = bannerTexts[index]!!
         paint.typeface = Typeface.DEFAULT_BOLD; paint.textAlign = Paint.Align.CENTER; paint.textSize = 15f
         // The narrowest parcel leaves little room between its buttons: a long name shrinks to fit
         // rather than running under them.
@@ -1163,9 +1235,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
             paint.color = Color.rgb(196, 137, 44)
             canvas.drawOval(cx - 20, cy - 5, cx + 20, cy + 11, paint)
             paint.color = Color.rgb(241, 196, 90)
-            for ((dx, dy) in listOf(-9f to 0f, 8f to -4f, 1f to 5f)) canvas.drawCircle(cx + dx, cy + dy, 8f, paint)
+            for (k in 0 until 3) canvas.drawCircle(cx + COIN_PILE[2 * k], cy + COIN_PILE[2 * k + 1], 8f, paint)
             paint.color = Color.rgb(255, 226, 150); paint.strokeWidth = 2f
-            for ((dx, dy) in listOf(-9f to 0f, 8f to -4f, 1f to 5f)) canvas.drawCircle(cx + dx - 2, cy + dy - 2, 3f, paint)
+            for (k in 0 until 3) canvas.drawCircle(cx + COIN_PILE[2 * k] - 2, cy + COIN_PILE[2 * k + 1] - 2, 3f, paint)
         }
         scenery.bush(canvas, treasureBush, windTime)
         if (state.bushBonusReady()) {
@@ -1195,8 +1267,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
             if (!game.done) {
                 paint.style = Paint.Style.STROKE; paint.strokeWidth = 5f; paint.color = Color.rgb(255, 210, 90)
                 val r = cell.width() * .58f
-                canvas.drawArc(RectF(pivot.x - r, pivot.y - r, pivot.x + r, pivot.y + r),
-                    -90f, 360f * game.progress(), false, paint)
+                gaugeRect.set(pivot.x - r, pivot.y - r, pivot.x + r, pivot.y + r)
+                canvas.drawArc(gaugeRect, -90f, 360f * game.progress(), false, paint)
                 paint.style = Paint.Style.FILL
             } else {
                 val t = ((now - game.doneAt) / 480f).coerceIn(0f, 1f)
@@ -1244,8 +1316,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private fun drawLeafBurst(canvas: Canvas, game: DebrisGame, now: Long) {
         val t = (now - game.burstAt) / 400f
         paint.color = Color.rgb(126, 168, 88)
-        game.angles.take(4).forEach { a ->
-            val rad = a * kotlin.math.PI / 180
+        for (k in 0 until 4) {
+            val rad = game.angles[k] * kotlin.math.PI / 180
             val dx = (kotlin.math.cos(rad) * t * 30).toFloat(); val dy = (kotlin.math.sin(rad) * t * 30 - t * 20).toFloat()
             paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
             canvas.drawCircle(game.burstX + dx, game.burstY + dy, (3f * (1f - t)).coerceAtLeast(0f), paint)
@@ -1257,7 +1329,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val cx = cell.centerX(); val cy = cell.top + 26f
         val r = cell.width() * .42f
         val sweepStart = 200f; val sweepTotal = 140f
-        val bounds = RectF(cx - r, cy - r, cx + r, cy + r)
+        val bounds = gaugeRect.apply { set(cx - r, cy - r, cx + r, cy + r) }
         paint.style = Paint.Style.STROKE; paint.strokeWidth = 6f; paint.strokeCap = Paint.Cap.ROUND
         paint.color = Color.argb((170 * fade).toInt().coerceIn(0, 170), 35, 70, 100)
         canvas.drawArc(bounds, sweepStart, sweepTotal, false, paint)
@@ -1330,7 +1402,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 .coerceIn(0, 255)
             game.cropAtStart?.let { crop ->
                 paint.alpha = alpha
-                val rect = RectF(centerX - w / 2f, centerY - h / 2f, centerX + w / 2f, centerY + h / 2f)
+                val rect = gaugeRect.apply { set(centerX - w / 2f, centerY - h / 2f, centerX + w / 2f, centerY + h / 2f) }
                 if (crop.tree) {
                     // Fruit travels to the basket; a permanent tree never flies out of the ground.
                     paint.color = when (crop) {
@@ -1338,8 +1410,11 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         FarmCrop.PEAR -> Color.rgb(184, 190, 83)
                         else -> Color.rgb(161, 51, 72)
                     }
-                    for (offset in listOf(-.2f, .2f)) canvas.drawOval(rect.centerX() + offset * w - w * .15f,
-                        rect.centerY() - h * .12f, rect.centerX() + offset * w + w * .15f, rect.centerY() + h * .15f, paint)
+                    for (side in 0..1) {
+                        val offset = if (side == 0) -.2f else .2f
+                        canvas.drawOval(rect.centerX() + offset * w - w * .15f, rect.centerY() - h * .12f,
+                            rect.centerX() + offset * w + w * .15f, rect.centerY() + h * .15f, paint)
+                    }
                 } else sprites.crop(canvas, crop, game.variant, 4, rect)
                 paint.alpha = 255
             }
@@ -1358,13 +1433,13 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val barLeft = cell.right + 4f; val barRight = cell.right + 11f
         val barTop = cell.top - 2f; val barBottom = cell.bottom - 12f
         paint.color = Color.argb(170, 35, 70, 100)
-        canvas.drawRoundRect(RectF(barLeft, barTop, barRight, barBottom), 3f, 3f, paint)
+        canvas.drawRoundRect(barLeft, barTop, barRight, barBottom, 3f, 3f, paint)
         paint.color = if (game.critical) Color.argb(235, 255, 140, 60) else Color.argb(230, 255, 214, 110)
         val zoneHeight = (barBottom - barTop) * (1f - game.zoneStart)
-        canvas.drawRoundRect(RectF(barLeft, barTop, barRight, barTop + zoneHeight), 3f, 3f, paint)
+        canvas.drawRoundRect(barLeft, barTop, barRight, barTop + zoneHeight, 3f, 3f, paint)
         if (now - game.failedAt < 160) {
             paint.color = Color.argb((150 * (1 - (now - game.failedAt) / 160f)).toInt().coerceIn(0, 150), 220, 70, 60)
-            canvas.drawRoundRect(RectF(barLeft, barTop, barRight, barBottom), 3f, 3f, paint)
+            canvas.drawRoundRect(barLeft, barTop, barRight, barBottom, 3f, 3f, paint)
         }
         val my = barBottom - game.phase(now) * (barBottom - barTop)
         paint.color = Color.rgb(240, 250, 255); canvas.drawCircle((barLeft + barRight) / 2, my, 5f, paint)

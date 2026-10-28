@@ -52,9 +52,22 @@ object MusicPlayCountManager {
     // Mutex pour protéger l'initialisation
     private val initMutex = Mutex()
 
-    // Cache en mémoire thread-safe pour accès rapide (lecture seule, mis à jour après chaque écriture)
-    private val memoryCache = ConcurrentHashMap<String, Long>()
+    // Cache en mémoire thread-safe pour accès rapide (lecture seule, mis à jour après chaque écriture).
+    // Rechargé en remplaçant la table entière : jamais vide entre deux états.
+    @Volatile
+    private var memoryCache = ConcurrentHashMap<String, Long>()
     private val cacheMutex = Mutex()
+
+    /** Augmente à chaque changement d'un compteur : les écrans savent s'il faut redessiner. */
+    @Volatile
+    var cacheVersion = 0L
+        private set
+
+    // Toujours appelé sous cacheMutex
+    private fun putCount(key: String, count: Long) {
+        memoryCache[key] = count
+        cacheVersion++
+    }
 
     /**
      * Initialise le manager avec le contexte de l'application.
@@ -149,7 +162,7 @@ object MusicPlayCountManager {
                         lastPlayed = now,
                         updatedAt = now
                     ))
-                    memoryCache[key] = count
+                    putCount(key, count)
                     Log.d(TAG, "Incremented play count for '${track.title}': $count")
                     count
                 } else {
@@ -164,7 +177,7 @@ object MusicPlayCountManager {
                         createdAt = now,
                         updatedAt = now
                     ))
-                    memoryCache[key] = 1
+                    putCount(key, 1)
                     Log.d(TAG, "Created play count for '${track.title}': 1")
                     1L
                 }
@@ -243,7 +256,7 @@ object MusicPlayCountManager {
                             playCount = popmPlayCount,
                             updatedAt = now
                         ))
-                        memoryCache[key] = popmPlayCount
+                        putCount(key, popmPlayCount)
                         Log.d(TAG, "Synced from POPM for '${track.title}': ${existing.playCount} -> $popmPlayCount")
                         true
                     } else {
@@ -263,7 +276,7 @@ object MusicPlayCountManager {
                         createdAt = now,
                         updatedAt = now
                     ))
-                    memoryCache[key] = popmPlayCount
+                    putCount(key, popmPlayCount)
                     Log.d(TAG, "Created from POPM for '${track.title}': $popmPlayCount (earned: 0)")
                     true
                 }
@@ -291,7 +304,7 @@ object MusicPlayCountManager {
                     Log.i(TAG, "Reset corrupted play count for '${track.title}'")
                 }
                 // Bug 5.16: Ensure cache is invalidated inside the mutex lock
-                memoryCache[key] = 0L
+                putCount(key, 0L)
             }
         }
     }
@@ -315,7 +328,7 @@ object MusicPlayCountManager {
                     Log.i(TAG, "Reset corrupted play count for key: $metadataKey")
                 }
                 // Bug 5.16: Ensure cache is invalidated inside the mutex lock
-                memoryCache[metadataKey] = 0L
+                putCount(metadataKey, 0L)
             }
         }
     }
@@ -352,7 +365,7 @@ object MusicPlayCountManager {
                             playCount = popmPlayCount,
                             updatedAt = now
                         ))
-                        memoryCache[metadataKey] = popmPlayCount
+                        putCount(metadataKey, popmPlayCount)
                         Log.d(TAG, "Synced from POPM for key '$metadataKey': ${existing.playCount} -> $popmPlayCount")
                         true
                     } else {
@@ -385,7 +398,7 @@ object MusicPlayCountManager {
                         createdAt = now,
                         updatedAt = now
                     ))
-                    memoryCache[metadataKey] = popmPlayCount
+                    putCount(metadataKey, popmPlayCount)
                     Log.d(TAG, "Created from POPM for key '$metadataKey': $popmPlayCount")
                     true
                 }
@@ -452,14 +465,18 @@ object MusicPlayCountManager {
      */
     private suspend fun preloadCache() = withContext(Dispatchers.IO) {
         try {
-            val entries = dao.getAllWithPlayCount()
-            cacheMutex.withLock {
-                memoryCache.clear()
+            val count = cacheMutex.withLock {
+                // Lecture sous le verrou : aucune écriture ne peut se glisser entre lecture et remplacement
+                val entries = dao.getAllWithPlayCount()
+                val fresh = ConcurrentHashMap<String, Long>(entries.size * 2)
                 entries.forEach { entry ->
-                    memoryCache[entry.metadataKey] = entry.playCount
+                    fresh[entry.metadataKey] = entry.playCount
                 }
+                memoryCache = fresh
+                cacheVersion++
+                entries.size
             }
-            Log.i(TAG, "Preloaded ${entries.size} play counts into memory cache")
+            Log.i(TAG, "Preloaded $count play counts into memory cache")
         } catch (e: Exception) {
             Log.e(TAG, "Error preloading cache", e)
         }
@@ -508,7 +525,7 @@ object MusicPlayCountManager {
                         playCount = newPlayCount,
                         updatedAt = System.currentTimeMillis()
                     ))
-                    memoryCache[metadataKey] = newPlayCount
+                    putCount(metadataKey, newPlayCount)
                     Log.d(TAG, "Updated play count from cloud sync: $metadataKey -> $newPlayCount")
                     true
                 } else {

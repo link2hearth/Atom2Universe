@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 /**
  * Singleton manager for the music equalizer.
@@ -167,6 +168,7 @@ object MusicEqualizerManager {
 
     /**
      * Ensure settings are loaded (blocking for synchronous access).
+     * Only for getGlobalPresetId(), whose callers run on a background thread.
      */
     private fun ensureSettingsLoaded() {
         if (cachedSettings == null) {
@@ -196,21 +198,32 @@ object MusicEqualizerManager {
             return
         }
 
-        // First, ensure settings are loaded BEFORE initializing DSP engine
-        // This guarantees we have the preset ready to apply
-        ensureSettingsLoaded()
-
-        // Load preset synchronously if not yet loaded
-        if (_currentPreset.value == null) {
-            loadPresetSync()
-        }
-
-        // Now initialize DSP engine - it will apply default (zero) values initially
+        // Initialize DSP engine - it will apply default (zero) values initially
         dspEngine.initialize(processor)
         isDspAttached = true
 
-        // Always apply the current preset to DSP engine
-        // This ensures the correct EQ is applied even if dspEngine.initialize() reset values
+        if (cachedSettings != null && _currentPreset.value != null) {
+            applyCurrentPresetToDsp()
+        } else {
+            // Réglages et préréglage lus dans Room hors du fil UI (création du lecteur),
+            // appliqués dès qu'ils arrivent, avant que le son ne démarre en pratique
+            scope.launch {
+                withContext(Dispatchers.IO) {
+                    if (cachedSettings == null) loadSettings()
+                    if (_currentPreset.value == null) loadGlobalPreset()
+                }
+                if (isDspAttached) applyCurrentPresetToDsp()
+            }
+        }
+
+        Log.d(TAG, "Attached to DSP Equalizer Processor")
+    }
+
+    /**
+     * Always apply the current preset to DSP engine.
+     * This ensures the correct EQ is applied even if dspEngine.initialize() reset values.
+     */
+    private fun applyCurrentPresetToDsp() {
         val resolved = _currentPreset.value
         if (resolved != null) {
             dspEngine.applyPreset(resolved.preset, _isEnabled.value)
@@ -223,8 +236,8 @@ object MusicEqualizerManager {
             Log.d(TAG, "Applied preset '${resolved.preset.name}' to DSP (enabled=${_isEnabled.value})")
         } else {
             // Fallback: create and apply a default flat preset in memory
-            // This should never happen after loadPresetSync() fix, but safety first
-            Log.w(TAG, "No preset available after loadPresetSync, creating emergency flat preset")
+            // This should never happen after loadGlobalPreset(), but safety first
+            Log.w(TAG, "No preset available after loadGlobalPreset, creating emergency flat preset")
             val emergencyFlatPreset = EqPreset(
                 id = 0,
                 name = "Flat",
@@ -233,63 +246,33 @@ object MusicEqualizerManager {
             _currentPreset.value = ResolvedPreset(emergencyFlatPreset, OverrideSource.GLOBAL)
             dspEngine.applyPreset(emergencyFlatPreset, _isEnabled.value)
         }
-
-        Log.d(TAG, "Attached to DSP Equalizer Processor")
     }
 
     /**
-     * Load the global preset synchronously.
-     * Used when we need the preset immediately (e.g., when attaching processor).
-     * ALWAYS sets _currentPreset.value to a valid preset (creates in-memory fallback if needed).
+     * Load the global preset (call from a background thread).
+     * Used when attaching the processor. Sets _currentPreset.value to a valid preset
+     * (in-memory Flat fallback if needed), unless a track preset was resolved meanwhile.
      */
-    private fun loadPresetSync() {
-        try {
+    private suspend fun loadGlobalPreset() {
+        val resolved = try {
             val presetId = cachedSettings?.globalPresetId ?: 1L
-            val preset = runBlocking(Dispatchers.IO) {
-                database?.eqPresetDao()?.getPresetById(presetId)
-            }
-            if (preset != null) {
-                _currentPreset.value = ResolvedPreset(preset, OverrideSource.GLOBAL)
-                // Also update in-memory band levels to match the preset
-                preset.getBandLevels().forEachIndexed { index, level ->
-                    if (index < 10) currentBandLevels[index] = level
-                }
-                currentBassBoost = preset.bassBoostStrength
-                currentVirtualizer = preset.virtualizerStrength
-                Log.d(TAG, "Loaded preset synchronously: ${preset.name}")
-            } else {
+            val preset = database?.eqPresetDao()?.getPresetById(presetId)
                 // Fallback to Flat preset (id=1)
-                val flatPreset = runBlocking(Dispatchers.IO) {
-                    database?.eqPresetDao()?.getPresetById(1L)
-                }
-                if (flatPreset != null) {
-                    _currentPreset.value = ResolvedPreset(flatPreset, OverrideSource.GLOBAL)
-                    Log.d(TAG, "Loaded fallback Flat preset")
-                } else {
-                    // Last resort: create an in-memory Flat preset
-                    // This ensures _currentPreset is NEVER null after loadPresetSync()
-                    Log.w(TAG, "No presets found in database, creating in-memory Flat preset")
-                    val memoryFlatPreset = EqPreset(
-                        id = 0,
-                        name = "Flat",
-                        isSystemPreset = true
-                    )
-                    _currentPreset.value = ResolvedPreset(memoryFlatPreset, OverrideSource.GLOBAL)
-                }
+                ?: database?.eqPresetDao()?.getPresetById(1L)
+            if (preset != null) {
+                Log.d(TAG, "Loaded global preset: ${preset.name}")
+                ResolvedPreset(preset, OverrideSource.GLOBAL)
+            } else {
+                // Last resort: create an in-memory Flat preset
+                Log.w(TAG, "No presets found in database, creating in-memory Flat preset")
+                ResolvedPreset(EqPreset(id = 0, name = "Flat", isSystemPreset = true), OverrideSource.GLOBAL)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error loading preset sync: ${e.message}")
-            // Even on exception, ensure we have a valid preset
-            if (_currentPreset.value == null) {
-                val memoryFlatPreset = EqPreset(
-                    id = 0,
-                    name = "Flat",
-                    isSystemPreset = true
-                )
-                _currentPreset.value = ResolvedPreset(memoryFlatPreset, OverrideSource.GLOBAL)
-                Log.d(TAG, "Created fallback in-memory Flat preset after exception")
-            }
+            Log.e(TAG, "Error loading global preset: ${e.message}")
+            ResolvedPreset(EqPreset(id = 0, name = "Flat", isSystemPreset = true), OverrideSource.GLOBAL)
         }
+        // onTrackChanged() a pu résoudre le préréglage du morceau pendant la lecture
+        _currentPreset.compareAndSet(null, resolved)
     }
 
     /**
@@ -736,7 +719,8 @@ object MusicEqualizerManager {
                 band8kHz = bandLevels.getOrElse(8) { 0 },
                 band16kHz = bandLevels.getOrElse(9) { 0 },
                 bassBoostStrength = bassBoost,
-                virtualizerStrength = virtualizer
+                virtualizerStrength = virtualizer,
+                updatedAt = System.currentTimeMillis()
             )
             db.eqPresetDao().updatePreset(customPreset)
             Log.d(TAG, "createOrUpdateCustomPreset: Updated preset '$presetName' id=${customPreset.id}")
@@ -791,7 +775,8 @@ object MusicEqualizerManager {
                         band8kHz = currentBandLevels[8],
                         band16kHz = currentBandLevels[9],
                         bassBoostStrength = currentBassBoost,
-                        virtualizerStrength = currentVirtualizer
+                        virtualizerStrength = currentVirtualizer,
+                        updatedAt = System.currentTimeMillis()
                     )
                     db.eqPresetDao().updatePreset(customPreset)
                     Log.d(TAG, "Updated Custom preset")
@@ -887,7 +872,7 @@ object MusicEqualizerManager {
     @Suppress("unused")
     suspend fun updatePreset(preset: EqPreset) {
         if (!preset.isSystemPreset) {
-            database?.eqPresetDao()?.updatePreset(preset)
+            database?.eqPresetDao()?.updatePreset(preset.copy(updatedAt = System.currentTimeMillis()))
             CloudSyncManager.triggerDebouncedSync()
         }
     }

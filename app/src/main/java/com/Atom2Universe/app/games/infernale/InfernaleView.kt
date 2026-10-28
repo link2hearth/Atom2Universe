@@ -50,6 +50,9 @@ class InfernaleView @JvmOverloads constructor(
     interface Listener {
         /** Le montage a change (pose, deplacement, retrait, reglage) : a sauvegarder. */
         fun surChangement()
+
+        /** [ecranLibre] vient de changer : l'ecran peut s'eteindre, ou doit rester allume. */
+        fun surVeille() {}
     }
 
     var listener: Listener? = null
@@ -71,6 +74,7 @@ class InfernaleView @JvmOverloads constructor(
                 selection = -1
                 modeLien = false
             }
+            reveiller()
         }
 
     /**
@@ -99,6 +103,7 @@ class InfernaleView @JvmOverloads constructor(
             modeLien = false
             viser(null)
         }
+        reveiller()
     }
 
     /** Retourne le type [type], et la piece designee si c'en est une du meme type. */
@@ -129,6 +134,7 @@ class InfernaleView @JvmOverloads constructor(
             val pose = p.placees().getOrNull(index) ?: return@synchronized
             if (pose.type == type) p.deplacer(index, changer(pose))
         }
+        reveiller()
     }
 
     /**
@@ -145,6 +151,7 @@ class InfernaleView @JvmOverloads constructor(
             val type = partie?.placees()?.getOrNull(selection)?.type
             modeLien = !modeLien && type != null && Liens.liable(type)
         }
+        reveiller()
     }
 
     // Le lien en cours de trace : d'ou il part, ou est le doigt, et ce qu'il vise.
@@ -189,6 +196,22 @@ class InfernaleView @JvmOverloads constructor(
 
     /** Horloge d'animation, en secondes. Elle tourne meme machine a l'arret. */
     private var horloge = 0f
+
+    /** Temps simule de la machine lancee, 0 en montage : c'est lui qui fait defiler les tapis. */
+    private var horlogeMachine = 0f
+
+    /** Depuis combien de temps (s, temps reel) la machine lancee ne bouge plus. Fil de rendu. */
+    private var reposLance = 0f
+
+    /**
+     * Vrai quand la machine lancee ne bouge plus depuis [ECRAN_REPOS] : rien ne justifie plus
+     * de garder l'ecran allume. L'activite le lit quand [Listener.surVeille] l'appelle.
+     */
+    @Volatile var ecranLibre = false
+        private set
+
+    /** Les tolerances du doigt sont en dp : en pixels, un telephone dense les rendait minuscules. */
+    private val densite = resources.displayMetrics.density
 
     // ── Peintures ────────────────────────────────────────────────────────────
 
@@ -247,9 +270,11 @@ class InfernaleView @JvmOverloads constructor(
     private val billeP = Paint().apply { color = 0xFFD8DEEC.toInt(); isAntiAlias = true }
     private val billeReflet = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
 
+    // Des bouts plats : des bouts ronds translucides se recouvraient a chaque point et
+    // doublaient le trait, pour un millier de petits disques de plus par image.
     private val traceP = Paint().apply {
         color = 0x5588C8FF.toInt(); strokeWidth = 3f; isAntiAlias = true
-        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.BUTT
     }
     private val vent = Paint().apply {
         color = 0x55BFE4FF.toInt(); strokeWidth = 2.5f; isAntiAlias = true
@@ -257,7 +282,12 @@ class InfernaleView @JvmOverloads constructor(
     }
     private val or = Paint().apply { color = 0xFFFFC65A.toInt(); isAntiAlias = true }
     private val torcheP = Paint().apply { color = 0xFFFFB33C.toInt(); isAntiAlias = true }
-    private val halo = Paint().apply { color = 0x22FF9A2E; isAntiAlias = true }
+    // Le degrade du halo est cuit a un rayon fixe, et c'est le canevas qu'on met a l'echelle :
+    // cuit au zoom du cadrage, il ne suivait pas le zoom et se coupait net au dezoom.
+    private val halo = Paint().apply {
+        color = 0x22FF9A2E; isAntiAlias = true
+        shader = RadialGradient(0f, 0f, HALO_RAYON, 0x66FF9A2E, 0x00FF9A2E, Shader.TileMode.CLAMP)
+    }
     private val apercuOk = Paint().apply { color = 0x9955E08A.toInt(); isAntiAlias = true }
     private val apercuNon = Paint().apply { color = 0x99E05555.toInt(); isAntiAlias = true }
     private val priseFond = Paint().apply { color = 0xCC0B1020.toInt(); isAntiAlias = true }
@@ -337,19 +367,28 @@ class InfernaleView @JvmOverloads constructor(
         // la partie peut arriver apres que la surface a pris ses mesures, et sans ce rappel
         // le cadrage garde son echelle par defaut jusqu'a ce que l'ecran tourne.
         if (largeurVue > 0 && hauteurVue > 0) cadrer(largeurVue, hauteurVue)
+        reveiller()
     }
 
     fun partieCourante(): Partie? = synchronized(verrou) { partie }
 
-    /** Execute [action] sur la partie sans risquer que le fil de rendu la lise entre-temps. */
-    fun <T> surPartie(action: (Partie) -> T): T? = synchronized(verrou) {
-        partie?.let(action)
+    /**
+     * Execute [action] sur la partie sans risquer que le fil de rendu la lise entre-temps.
+     * C'est par la que l'activite lance, arrete ou vide : le fil se reveille ensuite.
+     */
+    fun <T> surPartie(action: (Partie) -> T): T? {
+        val r = synchronized(verrou) { partie?.let(action) }
+        reveiller()
+        return r
     }
 
     /** Efface les traces des billes : le bouton « effacer les traces », ou un nouveau lancement. */
-    fun effacerTraces() = synchronized(verrou) {
-        traces.clear()
-        pasEchantillon = 0
+    fun effacerTraces() {
+        synchronized(verrou) {
+            traces.clear()
+            pasEchantillon = 0
+        }
+        reveiller()
     }
 
     /** Y a-t-il des traces a effacer ? Le bouton ne s'affiche que s'il y en a. */
@@ -366,6 +405,7 @@ class InfernaleView @JvmOverloads constructor(
         hauteurVue = ht
         if (avantL <= 0 || avantH <= 0) {
             cadrer(w, ht)
+            reveiller()
             return
         }
         // **Un simple changement de taille ne recadre pas.** La vue change de hauteur a chaque
@@ -378,6 +418,7 @@ class InfernaleView @JvmOverloads constructor(
             decorPret = false
             borner()
         }
+        reveiller()
     }
 
     fun reprendre() {
@@ -390,8 +431,78 @@ class InfernaleView @JvmOverloads constructor(
 
     fun suspendre() {
         tourne = false
+        reveiller()
         fil?.join(500)
         fil = null
+    }
+
+    // ── Veille ───────────────────────────────────────────────────────────────
+    //
+    // Un montage a l'arret ne bouge pas : le redessiner cent vingt fois par seconde ne
+    // montrait rien et chauffait. Le fil dort donc ici des que l'image n'a plus rien a
+    // animer, et tout ce qui la change le reveille — un doigt, un bouton de l'activite, une
+    // surface neuve.
+
+    private val veille = Object()
+    private var reveil = false
+
+    private fun reveiller() {
+        synchronized(veille) {
+            reveil = true
+            veille.notifyAll()
+        }
+    }
+
+    /** Attend un reveil, ou au plus [nanos] (0 : sans limite). */
+    private fun attendre(nanos: Long) {
+        synchronized(veille) {
+            if (nanos <= 0L) {
+                while (tourne && !reveil) veille.wait()
+            } else if (tourne && !reveil) {
+                veille.wait(nanos / 1_000_000L, (nanos % 1_000_000L).toInt())
+            }
+            reveil = false
+        }
+    }
+
+    /**
+     * Combien de temps entre deux images, en nanosecondes, ou 0 s'il n'y a plus rien a
+     * animer.
+     *
+     * Une machine qui roule, un ballon qui eclate ou le mode lien qui pulse veulent leurs
+     * soixante images. Une helice, le champ d'un aimant ou un tapis en marche ne font que
+     * tourner en rond : trente suffisent. Des torches seules ne font que respirer, d'un
+     * dixieme de leur flamme en six secondes : dix images par seconde n'y changent rien a
+     * l'oeil. Le reste est fige.
+     *
+     * Une machine lancee qui ne bouge plus depuis [REPOS_LANCE] revient a la cadence du
+     * montage. La physique avance par pas fixes a toute cadence ; elle ne s'arrete qu'a 0,
+     * et seulement quand tout dort, ce qui ne change rien a la suite.
+     */
+    private fun cadence(p: Partie?): Long {
+        if (p == null) return 0L
+        if (modeLien) return IMAGE_NANOS
+        if (p.lancee && reposLance < REPOS_LANCE) return IMAGE_NANOS
+        var periode = if (apercuPiece?.souffle != null) IMAGE_ANIMEE_NANOS else 0L
+        for (piece in p.plateau.pieces) {
+            if (p.lancee && piece.eclatAge in 0f..EXPLOSION_DUREE) return IMAGE_NANOS
+            val anime = (piece.souffle != null && !piece.eteint) || piece.attraction != null ||
+                (p.lancee && piece.type == TypePiece.TAPIS)
+            if (anime) periode = IMAGE_ANIMEE_NANOS
+            else if (piece.type == TypePiece.TORCHE && periode == 0L) periode = IMAGE_LENTE_NANOS
+        }
+        // Au repos ne veut pas encore dire endormi : ce qui finit de rouler a quelques
+        // millimetres par seconde continue d'avancer, sans cent images par seconde pour ca.
+        if (periode == 0L && p.lancee && !p.plateau.endormi()) periode = IMAGE_LENTE_NANOS
+        return periode
+    }
+
+    /** Previent l'activite quand l'ecran peut s'eteindre, ou ne le peut plus. */
+    private fun majEcran() {
+        val libre = reposLance >= ECRAN_REPOS
+        if (libre == ecranLibre) return
+        ecranLibre = libre
+        post { listener?.surVeille() }
     }
 
     override fun run() {
@@ -413,10 +524,13 @@ class InfernaleView @JvmOverloads constructor(
                         reste -= PAS
                         noterTrainee(p)
                     }
+                    if (p.plateau.immobile()) reposLance += ecoule else reposLance = 0f
                 } else {
                     reste = 0f
+                    reposLance = 0f
                 }
             }
+            majEcran()
 
             val canevas = verrouillerCanevas()
             if (canevas == null) {
@@ -428,7 +542,34 @@ class InfernaleView @JvmOverloads constructor(
             } finally {
                 holder.unlockCanvasAndPost(canevas)
             }
-            Thread.sleep(2)
+            // L'echeance de l'image, comptee depuis son debut, comme le trebuchet : le
+            // `sleep(2)` d'avant laissait la boucle suivre la file d'affichage, soit cent
+            // vingt fois par seconde sur la tablette. La physique avance par pas fixes dans
+            // [reste], elle fait le meme travail a toute cadence. Elle vaut aussi avant de
+            // dormir : un doigt qui glisse reveille le fil a chaque mouvement, et ne doit pas
+            // le faire dessiner plus souvent.
+            val minimum = IMAGE_NANOS - (System.nanoTime() - maintenant)
+            if (minimum >= 1_000_000L) Thread.sleep(minimum / 1_000_000L)
+            val periode = synchronized(verrou) { cadence(partie) }
+            if (periode == 0L) {
+                val avant = System.nanoTime()
+                // Une machine lancee qui dort compte encore son repos : le fil se reveille de
+                // lui-meme a l'heure ou l'ecran peut s'eteindre, meme si personne n'y touche.
+                val restant = if (reposLance > 0f && reposLance < ECRAN_REPOS) {
+                    ((ECRAN_REPOS - reposLance) * 1e9f).toLong().coerceAtLeast(1_000_000L)
+                } else {
+                    0L
+                }
+                attendre(restant)
+                // Le temps passe a dormir ne compte pas pour la physique : rien ne bougeait.
+                dernier = System.nanoTime()
+                if (reposLance > 0f) reposLance += (dernier - avant) / 1_000_000_000f
+            } else if (periode > IMAGE_NANOS) {
+                // A dix images par seconde, un doigt ne doit pas attendre la fin du dixieme :
+                // cette attente-la se laisse couper par un reveil.
+                val attente = periode - (System.nanoTime() - maintenant)
+                if (attente >= 1_000_000L) attendre(attente)
+            }
         }
     }
 
@@ -493,6 +634,7 @@ class InfernaleView @JvmOverloads constructor(
         synchronized(verrou) {
             if (largeurVue > 0 && hauteurVue > 0) cadrer(largeurVue, hauteurVue)
         }
+        reveiller()
     }
 
     /**
@@ -568,10 +710,6 @@ class InfernaleView @JvmOverloads constructor(
             rocherY[i] = -0.05f - suivant() * 0.35f
             rocherR[i] = 0.04f + suivant() * 0.09f
         }
-        halo.shader = RadialGradient(
-            0f, 0f, echelle * 1.6f,
-            0x66FF9A2E, 0x00FF9A2E, Shader.TileMode.CLAMP
-        )
         fond.shader = LinearGradient(
             0f, 0f, 0f, hauteurVue.toFloat().coerceAtLeast(1f),
             0xFF080B16.toInt(), 0xFF1B1526.toInt(), Shader.TileMode.CLAMP
@@ -585,6 +723,7 @@ class InfernaleView @JvmOverloads constructor(
         c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), fond)
         val p = partie ?: return
         if (!decorPret) preparerDecor(p.graine)
+        horlogeMachine = if (p.lancee) p.chrono else 0f
 
         peindreSol(c)
         // Les traces passent derriere les pieces : elles montrent un chemin, elles ne cachent rien.
@@ -633,7 +772,7 @@ class InfernaleView @JvmOverloads constructor(
 
     private fun peindrePiece(c: Canvas, piece: Piece) {
         // La corde d'abord : elle passe derriere le godet et le contrepoids.
-        piece.poulie?.let { poulie ->
+        piece.poulie?.takeIf { it.a.inWorld && it.b.inWorld }?.let { poulie ->
             poulie.anchorAWorld(ancre)
             c.drawLine(ex(poulie.groundAX), ey(poulie.groundAY), ex(ancre[0]), ey(ancre[1]), corde)
             poulie.anchorBWorld(ancre)
@@ -985,7 +1124,9 @@ class InfernaleView @JvmOverloads constructor(
 
         c.save()
         c.translate(x, haut)
-        c.drawCircle(0f, 0f, echelle * 1.6f, halo)
+        val k = echelle * 1.6f / HALO_RAYON
+        c.scale(k, k)
+        c.drawCircle(0f, 0f, HALO_RAYON, halo)
         c.restore()
 
         c.drawRect(x - echelle * 0.035f, haut, x + echelle * 0.035f, bas, fer)
@@ -1019,8 +1160,10 @@ class InfernaleView @JvmOverloads constructor(
             c.drawRect(-hw, -hh, hw, -hh + hh * 0.5f, ferClair)
             // Les chevrons defilent dans le sens de la bande. Le repere local a le y vers
             // le bas, mais le x vers la droite comme le monde : le sens s'y lit tel quel.
+            // Ils suivent le temps de la machine : immobiles en montage, ou la bande est a
+            // l'arret, et fluides une fois lancee.
             val pas = hh * 3f
-            val defile = ((horloge * 1.6f * sens) % 1f) * pas
+            val defile = ((horlogeMachine * 1.6f * sens) % 1f) * pas
             var n = 0
             var x = -hw + defile - pas
             while (x < hw && n + 8 <= segments.size) {
@@ -1131,20 +1274,39 @@ class InfernaleView @JvmOverloads constructor(
         val base = if (enCours) 70 else 38
         val pas = if (enCours) 45 else 28
         traceP.strokeWidth = if (enCours) 3f else 2.5f
+        // Seuls les segments a l'ecran partent a la carte graphique, et un point a moins de
+        // deux pixels du dernier garde ne se voit pas : au dezoom, des centaines de points
+        // tombent dans le meme pixel.
+        val marge = traceP.strokeWidth
+        val droite = width + marge
+        val bas = height + marge
         for (t in traces.values) {
             if (t.n < 4) continue
             val parTroncon = t.n / 3
             var debut = 0
             for (troncon in 0 until 3) {
-                val fin = if (troncon == 2) t.n else debut + parTroncon + 1
+                val fin = minOf(if (troncon == 2) t.n else debut + parTroncon + 1, t.n)
                 var n = 0
-                for (k in debut until minOf(fin, t.n) - 1) {
-                    if (n + 4 > traceSegs.size) break
-                    traceSegs[n] = ex(t.xs[k])
-                    traceSegs[n + 1] = ey(t.ys[k])
-                    traceSegs[n + 2] = ex(t.xs[k + 1])
-                    traceSegs[n + 3] = ey(t.ys[k + 1])
-                    n += 4
+                var px = ex(t.xs[debut])
+                var py = ey(t.ys[debut])
+                for (k in debut + 1 until fin) {
+                    val x = ex(t.xs[k])
+                    val y = ey(t.ys[k])
+                    val dx = x - px
+                    val dy = y - py
+                    // Le dernier point du troncon est toujours garde : il le raccorde au suivant.
+                    if (dx * dx + dy * dy < DECIMATION_PX * DECIMATION_PX && k != fin - 1) continue
+                    if (maxOf(px, x) >= -marge && minOf(px, x) <= droite &&
+                        maxOf(py, y) >= -marge && minOf(py, y) <= bas && n + 4 <= traceSegs.size
+                    ) {
+                        traceSegs[n] = px
+                        traceSegs[n + 1] = py
+                        traceSegs[n + 2] = x
+                        traceSegs[n + 3] = y
+                        n += 4
+                    }
+                    px = x
+                    py = y
                 }
                 traceP.alpha = base + troncon * pas
                 if (n > 0) c.drawLines(traceSegs, 0, n, traceP)
@@ -1192,7 +1354,7 @@ class InfernaleView @JvmOverloads constructor(
      *
      * Deux cercles concentriques et rien de plus : elles doivent se voir sur du bois comme
      * sur de la pierre, et ne rien cacher de la piece qu'on regle. Leur taille est en
-     * **pixels** et non en metres — une poignee est faite pour un doigt, dont la largeur ne
+     * **dp** et non en metres — une poignee est faite pour un doigt, dont la largeur ne
      * depend pas du zoom.
      */
     private fun peindrePoignees(c: Canvas, pose: Pose) {
@@ -1205,14 +1367,14 @@ class InfernaleView @JvmOverloads constructor(
         for (poignee in poignees) {
             val x = ex(poignee.x)
             val y = ey(poignee.y)
-            c.drawCircle(x, y, RAYON_POIGNEE, priseFond)
-            c.drawCircle(x, y, RAYON_POIGNEE, marqueur)
+            c.drawCircle(x, y, RAYON_POIGNEE * densite, priseFond)
+            c.drawCircle(x, y, RAYON_POIGNEE * densite, marqueur)
             c.drawCircle(x, y, 5f, if (poignee.prise == Prise.PUISSANCE) or else priseCoeur)
         }
     }
 
     /** L'ecart entre une piece et ses poignees, en metres : constant a l'ecran, pas dans le monde. */
-    private fun ecartPrise(): Float = ECART_POIGNEE / echelle
+    private fun ecartPrise(): Float = ECART_POIGNEE * densite / echelle
 
     private fun dessinerCoins(c: Canvas, pts: FloatArray, peinture: Paint) {
         trace.rewind()
@@ -1267,6 +1429,14 @@ class InfernaleView @JvmOverloads constructor(
     private var pinceY = 0f
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val pris = toucher(event)
+        // Apres le geste et pas avant : reveille trop tot, le fil pourrait se rendormir sur
+        // l'image d'avant.
+        reveiller()
+        return pris
+    }
+
+    private fun toucher(event: MotionEvent): Boolean {
         if (event.pointerCount >= 2 || pince) return piloterPince(event)
 
         val mx = (event.x - origineX) / echelle
@@ -1286,7 +1456,7 @@ class InfernaleView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (hypot(event.x - doigtDepartX, event.y - doigtDepartY) > SEUIL_GLISSE) {
+                if (hypot(event.x - doigtDepartX, event.y - doigtDepartY) > SEUIL_GLISSE * densite) {
                     aBouge = true
                 }
                 synchronized(verrou) { continuer(event, mx, my) }
@@ -1365,7 +1535,7 @@ class InfernaleView @JvmOverloads constructor(
                 val prise = priseActive ?: return
                 val pose = p.placees().getOrNull(selection) ?: return
                 val vise = Poignees.tirer(pose, prise, accrocher(mx), accrocher(my), ecartPrise())
-                p.deplacer(selection, vise)
+                if (vise != pose) p.deplacer(selection, vise)
             }
 
             // La piece suit le doigt pour de bon : elle bouge dans le monde a chaque cran de la
@@ -1382,14 +1552,12 @@ class InfernaleView @JvmOverloads constructor(
                 val vise = deplacee(pose, mx + decalageX, my + decalageY)
                 if (vise == pose) {
                     viser(null)
-                } else {
-                    val verdict = p.verifier(vise, sauf = doigtIndex)
-                    if (verdict == Refus.OK) {
-                        p.deplacer(doigtIndex, vise)
-                        viser(null)
-                    } else {
-                        viser(vise, verdict)
-                    }
+                } else if (vise != apercu) {
+                    // Un fantome rouge deja juge au meme cran n'a pas a l'etre de nouveau :
+                    // rien n'a change autour pendant le geste. Deplacer verifie lui-meme, et
+                    // ne touche a rien s'il refuse.
+                    val verdict = p.deplacer(doigtIndex, vise)
+                    if (verdict == Refus.OK) viser(null) else viser(vise, verdict)
                 }
             }
 
@@ -1504,6 +1672,9 @@ class InfernaleView @JvmOverloads constructor(
     private fun majApercu(p: Partie, mx: Float, my: Float) {
         val type = typeChoisi ?: return
         val pose = poseA(type, mx, my)
+        // Le doigt bouge bien plus souvent que la piece ne change de cran : verifier
+        // fabrique une piece d'essai, autant ne le faire qu'au changement.
+        if (pose == apercu) return
         viser(pose, p.verifier(pose))
     }
 
@@ -1526,7 +1697,7 @@ class InfernaleView @JvmOverloads constructor(
     /** La poignee de la piece designee qui se trouve sous le doigt, ou `null`. */
     private fun priseSous(p: Partie, x: Float, y: Float): Prise? {
         val pose = p.placees().getOrNull(selection) ?: return null
-        val portee = RAYON_PRISE / echelle
+        val portee = RAYON_PRISE * densite / echelle
         var meilleure: Prise? = null
         var plusProche = portee
         for (poignee in Poignees.pour(pose, ecartPrise())) {
@@ -1548,7 +1719,7 @@ class InfernaleView @JvmOverloads constructor(
      * est dedans), la derniere posee, qui est celle qu'on voit par-dessus.
      */
     private fun pieceSous(p: Partie, x: Float, y: Float): Int {
-        val portee = TOLERANCE_PIECE / echelle
+        val portee = TOLERANCE_PIECE * densite / echelle
         var meilleur = -1
         var plusProche = portee
         for (i in p.placees().indices) {
@@ -1579,6 +1750,21 @@ class InfernaleView @JvmOverloads constructor(
         /** Pas de simulation, fixe : c'est ce qui rend une partie reproductible. */
         const val PAS = 1f / 120f
 
+        /** Une image toutes les 16,7 ms, soit soixante par seconde. */
+        const val IMAGE_NANOS = 1_000_000_000L / 60L
+
+        /** Trente images par seconde : une helice, un champ d'aimant, un tapis qui defile. */
+        const val IMAGE_ANIMEE_NANOS = 1_000_000_000L / 30L
+
+        /** Dix images par seconde : des torches qui respirent, une machine qui finit de s'endormir. */
+        const val IMAGE_LENTE_NANOS = 1_000_000_000L / 10L
+
+        /** Repos (s) apres lequel une machine lancee revient a la cadence du montage. */
+        const val REPOS_LANCE = 2f
+
+        /** Repos (s) apres lequel une machine lancee laisse l'ecran s'eteindre. */
+        const val ECRAN_REPOS = 30f
+
         /** Nombre maximal de points gardes par bille : environ une minute et demie d'essai. */
         const val MAX_TRACE = 2400
 
@@ -1594,19 +1780,29 @@ class InfernaleView @JvmOverloads constructor(
         /** Pas de la grille d'accrochage, en metres. */
         const val GRILLE = 0.05f
 
-        /** Tolerance de designation au doigt, en pixels. */
-        const val TOLERANCE_PIECE = 18f
+        // Les tailles faites pour un doigt sont en dp, multipliees par la densite de l'ecran :
+        // en pixels, elles fondaient a sept dp sur un telephone dense. Les valeurs gardent a peu
+        // pres, sur la tablette de test, les tailles reglees a l'oeil.
 
-        /** Distance entre une piece et ses poignees, en pixels. */
-        const val ECART_POIGNEE = 32f
+        /** Tolerance de designation au doigt, en dp. */
+        const val TOLERANCE_PIECE = 12f
 
-        /** Rayon dessine d'une poignee, en pixels. */
-        const val RAYON_POIGNEE = 15f
+        /** Distance entre une piece et ses poignees, en dp. */
+        const val ECART_POIGNEE = 24f
 
-        /** Deplacement au-dela duquel un appui devient un glissement, en pixels. */
-        const val SEUIL_GLISSE = 18f
+        /** Rayon dessine d'une poignee, en dp. */
+        const val RAYON_POIGNEE = 9f
 
-        /** Rayon de saisie d'une poignee, en pixels. Plus petit que l'ecart a la piece : on ne la confond pas avec elle. */
-        const val RAYON_PRISE = 24f
+        /** Deplacement au-dela duquel un appui devient un glissement, en dp. */
+        const val SEUIL_GLISSE = 9f
+
+        /** Rayon de saisie d'une poignee, en dp. Plus petit que l'ecart a la piece : on ne la confond pas avec elle. */
+        const val RAYON_PRISE = 18f
+
+        /** Rayon du degrade du halo des torches, en pixels : le canevas le met a l'echelle. */
+        const val HALO_RAYON = 100f
+
+        /** Ecart sous lequel deux points d'une trace se confondent a l'ecran, en pixels. */
+        const val DECIMATION_PX = 2f
     }
 }

@@ -318,6 +318,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var lastTurboLevel = 0
     private var lastTurboReleaseSerial = 0
     private var lastFinishSerial = 0
+    private var hudTurboTintLevel = -1
     private var suppressEditorUndo = false
     private lateinit var raceProgress: ToyboxRaceProgress
     private var vibrationEnabled = true
@@ -428,6 +429,10 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     override fun onPause() {
+        // Le geste en cours (déplacer, tourner…) devient une modification écrite :
+        // Android peut tuer l'appli dès qu'elle passe en arrière-plan.
+        commitEditorEdit()
+        worldStore.flush()
         pauseGame()
         glView.onPause()
         super.onPause()
@@ -463,9 +468,7 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     /** Derrière un menu, le décor est figé : on cesse de le redessiner en continu. */
     private fun setSceneLive(live: Boolean) {
-        glView.renderMode = if (live) android.opengl.GLSurfaceView.RENDERMODE_CONTINUOUSLY
-        else android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY
-        if (!live) glView.requestRender()
+        renderer.setSceneLive(live)
     }
 
     /** Bascule d'un monde à l'autre : toujours une copie en mémoire, jamais
@@ -1316,6 +1319,8 @@ class ToyboxRacersActivity : ThemedActivity() {
             }
         }
         root.addView(editorTouchLayer, FrameLayout.LayoutParams(-1, -1))
+        // Les poignées suivent la caméra : redessinées après chaque image de l'éditeur, jamais en boucle.
+        renderer.onEditorFrame = { editorTouchLayer.postInvalidateOnAnimation() }
 
         fun makeBubble() = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -3215,32 +3220,35 @@ class ToyboxRacersActivity : ThemedActivity() {
         if (state.turboReleaseSerial != lastTurboReleaseSerial) vibrate(42L, 105)
         lastTurboLevel = state.turboLevel
         lastTurboReleaseSerial = state.turboReleaseSerial
-        hud.text = if (state.mode == PlayMode.EXPLORATION) getString(R.string.toybox_free_hud, state.speedKmh, formatTime(state.elapsedSeconds))
-        else getString(R.string.toybox_race_hud, state.speedKmh, state.position, state.lap, RaceSession.TOTAL_LAPS, formatTime(state.elapsedSeconds))
+        hud.setTextIfChanged(if (state.mode == PlayMode.EXPLORATION) getString(R.string.toybox_free_hud, state.speedKmh, formatTime(state.elapsedSeconds))
+        else getString(R.string.toybox_race_hud, state.speedKmh, state.position, state.lap, RaceSession.TOTAL_LAPS, formatTime(state.elapsedSeconds)))
         val racing = state.mode == PlayMode.RACE
         turboMeter.visibility = if (state.drifting) View.VISIBLE else View.GONE
         turboMeter.progress = (state.turboCharge * 100f).toInt().coerceIn(0, 100)
-        turboMeter.progressTintList = android.content.res.ColorStateList.valueOf(when (state.turboLevel) {
-            3 -> 0xFFF5A3E0.toInt()
-            2 -> 0xFFFFC75C.toInt()
-            else -> 0xFF85DDF5.toInt()
-        })
+        if (state.turboLevel != hudTurboTintLevel) {
+            hudTurboTintLevel = state.turboLevel
+            turboMeter.progressTintList = android.content.res.ColorStateList.valueOf(when (state.turboLevel) {
+                3 -> 0xFFF5A3E0.toInt()
+                2 -> 0xFFFFC75C.toInt()
+                else -> 0xFF85DDF5.toInt()
+            })
+        }
         lapTiming.visibility = if (racing && state.racePhase != RacePhase.COUNTDOWN) View.VISIBLE else View.GONE
-        lapTiming.text = if (state.bestLapSeconds > 0f) {
+        lapTiming.setTextIfChanged(if (state.bestLapSeconds > 0f) {
             getString(R.string.toybox_lap_timing_best, formatTime(state.lapElapsedSeconds), formatTime(state.bestLapSeconds))
-        } else getString(R.string.toybox_lap_timing, formatTime(state.lapElapsedSeconds))
+        } else getString(R.string.toybox_lap_timing, formatTime(state.lapElapsedSeconds)))
         difficultyButton.isEnabled = !racing || state.racePhase == RacePhase.FINISHED
         difficultyButton.alpha = if (difficultyButton.isEnabled) 0.82f else 0.4f
         countdown.visibility = if (racing && state.racePhase == RacePhase.COUNTDOWN) View.VISIBLE else View.GONE
         if (racing && state.racePhase == RacePhase.COUNTDOWN) {
-            countdown.text = getString(R.string.toybox_countdown_number,
-                kotlin.math.ceil(state.countdownSeconds.coerceAtMost(3f)).toInt().coerceAtLeast(1))
+            countdown.setTextIfChanged(getString(R.string.toybox_countdown_number,
+                kotlin.math.ceil(state.countdownSeconds.coerceAtMost(3f)).toInt().coerceAtLeast(1)))
         }
         if (racing && state.finishSerial != lastFinishSerial && state.racePhase == RacePhase.FINISHED) {
             lastFinishSerial = state.finishSerial
             showResult(state)
         }
-        status.text = when {
+        status.setTextIfChanged(when {
             racing && state.racePhase == RacePhase.COUNTDOWN -> getString(R.string.toybox_status_countdown)
             racing && state.racePhase == RacePhase.FINISHED -> getString(R.string.toybox_status_finished)
             state.rescuing -> getString(R.string.toybox_status_rescue)
@@ -3257,7 +3265,12 @@ class ToyboxRacersActivity : ThemedActivity() {
             state.offRoad -> getString(if (racing) R.string.toybox_return_track else R.string.toybox_explore_hint)
             state.scene.circuit == CircuitKind.SLALOM -> getString(R.string.toybox_slalom_hint)
             else -> getString(R.string.toybox_status_default)
-        }
+        })
+    }
+
+    /** Le HUD arrive dix fois par seconde : réécrire un texte identique relancerait sa mise en page pour rien. */
+    private fun TextView.setTextIfChanged(value: CharSequence) {
+        if (!android.text.TextUtils.equals(text, value)) text = value
     }
 
     private fun showResult(state: ToyboxRacersRenderer.HudState) {

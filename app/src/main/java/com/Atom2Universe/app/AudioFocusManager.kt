@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * Utilisation:
  * - Appeler requestFocus() avant de démarrer la lecture
- * - Appeler abandonFocus() quand la lecture s'arrête
+ * - Appeler abandonFocus(listener) quand la lecture s'arrête (sans effet si une autre source a pris la main)
  * - Implémenter AudioFocusListener pour réagir aux interruptions
  */
 object AudioFocusManager {
@@ -133,6 +133,12 @@ object AudioFocusManager {
             return false
         }
 
+        // Toutes les sources partagent la même demande auprès d'Android : le système ne prévient donc pas
+        // l'ancienne source quand une autre prend la main. On le fait ici, avant de la remplacer.
+        val previous = currentListener
+        if (previous != null && previous !== listener) {
+            previous.onAudioFocusPause()
+        }
         currentListener = listener
 
         val audioAttributes = AudioAttributes.Builder()
@@ -169,10 +175,16 @@ object AudioFocusManager {
     }
 
     /**
-     * Abandonne l'audio focus.
-     * Doit être appelé quand la lecture s'arrête.
+     * Abandonne l'audio focus si [listener] le détient encore.
+     * Une source qui s'arrête après qu'une autre a pris la main ne retire rien à celle qui joue.
      */
-    fun abandonFocus() {
+    fun abandonFocus(listener: AudioFocusListener) {
+        if (currentListener !== listener) return
+        abandonFocus()
+    }
+
+    /** Abandonne l'audio focus, quel que soit son détenteur : seulement via [abandonFocus] avec l'écouteur. */
+    private fun abandonFocus() {
         val manager = audioManager ?: return
         val request = audioFocusRequest ?: return
 

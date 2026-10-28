@@ -130,7 +130,7 @@ class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
             val chip = MaterialButton(
                 this, null, android.R.attr.borderlessButtonStyle
             ).apply {
-                text = diff.label
+                text = getString(R.string.pipetap_grid_size, diff.gridSize)
                 textSize = 12f
                 cornerRadius = (12 * resources.displayMetrics.density).toInt()
                 strokeWidth = resources.displayMetrics.density.toInt().coerceAtLeast(1)

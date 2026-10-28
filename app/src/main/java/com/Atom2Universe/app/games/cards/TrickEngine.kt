@@ -136,7 +136,9 @@ abstract class TrickEngine(protected val seed: Long, final override val seats: I
     /**
      * Rebat les cartes cachées : celles qui ne sont ni dans la main de [seat], ni tombées, ni connues,
      * réparties au hasard entre les autres sièges, sans donner à quelqu'un une couleur qu'il a déjà
-     * montré ne plus avoir (sauf si le tirage n'aboutit pas, au dernier essai).
+     * montré ne plus avoir (sauf si le tirage n'aboutit pas, au dernier essai). Quand il y a plus de
+     * cartes cachées que de places (le talon de l'euchre, la pioche d'Oh Hell), une carte que personne
+     * ne peut recevoir reste au talon.
      */
     final override fun determinize(seat: Int, random: Random) {
         frozen = true
@@ -151,12 +153,16 @@ abstract class TrickEngine(protected val seed: Long, final override val seats: I
             val left = need.copyOf()
             val dealt = Array(seats) { ArrayList<PlayingCard>() }
             var ok = true
+            var spare = pool.size - left.sum()
             for (card in pool) {
                 if (left.all { it == 0 }) break
                 val eligible = (0 until seats).filter { s ->
                     s != seat && left[s] > 0 && (attempt >= 6 || !void[s][suitOf(card).ordinal])
                 }
-                if (eligible.isEmpty()) { ok = false; break }
+                if (eligible.isEmpty()) {
+                    if (spare > 0) { spare--; continue }
+                    ok = false; break
+                }
                 val to = eligible[random.nextInt(eligible.size)]
                 dealt[to].add(card)
                 left[to]--

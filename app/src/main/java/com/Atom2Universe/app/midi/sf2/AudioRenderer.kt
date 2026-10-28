@@ -8,6 +8,7 @@ import android.media.AudioTrack
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.LockSupport
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.max
 
@@ -88,7 +89,7 @@ class AudioRenderer(
 
     private var audioTrack: AudioTrack? = null
 
-    private var renderThread: Thread? = null
+    @Volatile private var renderThread: Thread? = null
     private val isRunning = AtomicBoolean(false)
     private val isPaused = AtomicBoolean(false)
     private val isReleased = AtomicBoolean(false)
@@ -249,10 +250,16 @@ class AudioRenderer(
 
     fun resume() {
         if (isReleased.get()) return
-        isPaused.set(false)
         try {
             audioTrack?.play()
         } catch (_: Exception) { }
+        unpause()
+    }
+
+    /** Lève la pause et réveille le fil de rendu endormi dans renderLoop. */
+    private fun unpause() {
+        isPaused.set(false)
+        renderThread?.let { LockSupport.unpark(it) }
     }
 
     /**
@@ -277,8 +284,11 @@ class AudioRenderer(
 
             // Resume if we weren't paused before
             if (!wasPaused) {
-                isPaused.set(false)
-                track.play()
+                try {
+                    track.play()
+                } finally {
+                    unpause()
+                }
             }
         } catch (_: Exception) { }
     }
@@ -585,12 +595,8 @@ class AudioRenderer(
         try {
             while (isRunning.get() && !Thread.currentThread().isInterrupted) {
                 if (isPaused.get()) {
-                    try {
-                        Thread.sleep(10)
-                    } catch (_: InterruptedException) {
-                        Thread.currentThread().interrupt()
-                        break
-                    }
+                    // Endormi jusqu'à resume() (unpark) ou stop() (interrupt, qui réveille aussi)
+                    LockSupport.park(this)
                     continue
                 }
 

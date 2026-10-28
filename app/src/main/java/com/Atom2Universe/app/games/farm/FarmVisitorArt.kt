@@ -78,12 +78,16 @@ class FarmVisitorArt {
 
 class FarmVisitorPreview(context: Context, private val visitor: FarmVisitor) : View(context) {
     private val art = FarmVisitorArt()
+    private val target = RectF()
     init { importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val side = minOf(width, height).toFloat()
-        art.draw(canvas, visitor, RectF((width - side) / 2, (height - side) / 2, (width + side) / 2, (height + side) / 2),
-            (android.os.SystemClock.uptimeMillis() % 120_000) / 1000f)
-        if (isAttachedToWindow && ValueAnimator.areAnimatorsEnabled()) postInvalidateOnAnimation()
+        target.set((width - side) / 2, (height - side) / 2, (width + side) / 2, (height + side) / 2)
+        art.draw(canvas, visitor, target, (android.os.SystemClock.uptimeMillis() % 120_000) / 1000f)
+        // A gentle hop and a flap, timed in seconds: thirty frames a second show it just as well as
+        // the screen's hundred and twenty, and several of these can sit in one card.
+        if (isAttachedToWindow && ValueAnimator.areAnimatorsEnabled()) postInvalidateDelayed(PREVIEW_FRAME_MS)
     }
+    private companion object { const val PREVIEW_FRAME_MS = 33L }
 }

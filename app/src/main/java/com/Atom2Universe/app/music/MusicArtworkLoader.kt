@@ -31,6 +31,7 @@ import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.TimeUnit
 
@@ -46,14 +47,19 @@ internal object MusicArtworkLoader {
         override fun sizeOf(key: String, value: Bitmap) = maxOf(1, value.byteCount / 1024)
     }
     @Volatile private var diskDirectory: File? = null
+    // "identité_taille" -> empreinte des fichiers déjà vérifiée pendant cette session.
+    // Tant qu'elle est connue, une image en mémoire s'affiche sans aucun accès disque.
+    private val verifiedSignatures = ConcurrentHashMap<String, String>()
 
     private data class Source(val uris: List<Uri>, val tracks: List<MusicTrack>, val albumName: String) {
         // Track identity keeps unrelated albums (including duplicate titles) out of each other's cache.
-        val identity: String get() = digest(buildString {
-            append(albumName).append('\n')
-            tracks.map { it.filePath ?: it.uri.toString() }.sorted().forEach { append(it).append('\n') }
-            uris.map(Uri::toString).sorted().forEach { append(it).append('\n') }
-        })
+        val identity: String by lazy {
+            digest(buildString {
+                append(albumName).append('\n')
+                tracks.map { it.filePath ?: it.uri.toString() }.sorted().forEach { append(it).append('\n') }
+                uris.map(Uri::toString).sorted().forEach { append(it).append('\n') }
+            })
+        }
     }
 
     private class Binding { var job: Job? = null }
@@ -141,27 +147,37 @@ internal object MusicArtworkLoader {
 
     private suspend fun load(context: Context, source: Source, size: Int): Bitmap? {
         val epoch = generation.get()
-        val folders = source.tracks.mapNotNull { localFile(it)?.parentFile }
-            .flatMap { listOfNotNull(it, discParent(it)) }.distinctBy { it.path }
-        val pictures = folders.flatMap { folderPictures(context, it) }.distinctBy { it.uri }
-        // Changes made by a tag editor or a newly copied folder cover must invalidate thumbnails.
-        val signature = buildString {
-            source.tracks.forEach { track -> localFile(track)?.let { append(fileStamp(it)) } }
-            source.uris.filter { it.scheme == "file" }.forEach { it.path?.let { path -> append(fileStamp(File(path))) } }
-            pictures.sortedBy { it.uri.toString() }.forEach { append(it.stamp).append('\n') }
-        }
-        val key = "${source.identity}_${size}_${digest(signature)}"
-        return locks[(key.hashCode() and Int.MAX_VALUE) % locks.size].withLock {
-            memory.get(key)?.let { return@withLock it }
+        val baseKey = "${source.identity}_${size}"
+        return locks[(baseKey.hashCode() and Int.MAX_VALUE) % locks.size].withLock {
+            // Mémoire d'abord : l'empreinte disque n'est vérifiée qu'une fois par session
+            if (verifiedSignatures.containsKey(baseKey)) memory.get(baseKey)?.let { return@withLock it }
             currentCoroutineContext().ensureActive()
+
+            val folders = source.tracks.mapNotNull { localFile(it)?.parentFile }
+                .flatMap { listOfNotNull(it, discParent(it)) }.distinctBy { it.path }
+            val pictures = folders.flatMap { folderPictures(context, it) }.distinctBy { it.uri }
+            // Changes made by a tag editor or a newly copied folder cover must invalidate thumbnails.
+            val signature = digest(buildString {
+                source.tracks.forEach { track -> localFile(track)?.let { append(fileStamp(it)) } }
+                source.uris.filter { it.scheme == "file" }.forEach { it.path?.let { path -> append(fileStamp(File(path))) } }
+                pictures.sortedBy { it.uri.toString() }.forEach { append(it.stamp).append('\n') }
+            })
+            if (verifiedSignatures[baseKey] == signature) memory.get(baseKey)?.let { return@withLock it }
+
+            val key = "${baseKey}_$signature"
             val cacheFile = File(diskDirectory, "$key.png")
             val cached = if (cacheFile.isFile) readSafely { BitmapFactory.decodeFile(cacheFile.path) } else null
             val bitmap = cached ?: resolve(context, source, pictures, size)
             currentCoroutineContext().ensureActive()
             if (bitmap != null && epoch == generation.get()) {
-                memory.put(key, bitmap)
+                memory.put(baseKey, bitmap)
+                verifiedSignatures[baseKey] = signature
                 if (cached == null) readSafely {
                     cacheFile.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    // Les vignettes des anciennes versions de ces fichiers ne serviront plus
+                    diskDirectory?.listFiles()?.forEach { old ->
+                        if (old.name.startsWith("${baseKey}_") && old.name != cacheFile.name) old.delete()
+                    }
                 }
             }
             bitmap
@@ -320,14 +336,19 @@ internal object MusicArtworkLoader {
     fun invalidateAlbum(album: Album) {
         generation.incrementAndGet()
         val prefix = sourceForAlbum(album).identity + "_"
+        verifiedSignatures.keys.removeAll { it.startsWith(prefix) }
         memory.snapshot().keys.filter { it.startsWith(prefix) }.forEach(memory::remove)
         diskDirectory?.listFiles()?.filter { it.name.startsWith(prefix) }?.forEach { it.delete() }
     }
 
-    fun clearMemory() { memory.evictAll() }
+    fun clearMemory() {
+        verifiedSignatures.clear()
+        memory.evictAll()
+    }
 
     fun clearAll() {
         generation.incrementAndGet()
+        verifiedSignatures.clear()
         memory.evictAll()
         diskDirectory?.listFiles()?.forEach { it.delete() }
     }

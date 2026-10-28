@@ -53,8 +53,8 @@ interface EqPresetDao {
     @Update
     suspend fun updatePreset(preset: EqPreset)
 
-    @Query("UPDATE eq_presets SET name = :name WHERE id = :id AND isSystemPreset = 0")
-    suspend fun renamePreset(id: Long, name: String)
+    @Query("UPDATE eq_presets SET name = :name, updatedAt = :updatedAt WHERE id = :id AND isSystemPreset = 0")
+    suspend fun renamePreset(id: Long, name: String, updatedAt: Long = System.currentTimeMillis())
 
     // ========== Deletes ==========
 

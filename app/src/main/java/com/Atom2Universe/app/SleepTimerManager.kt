@@ -75,7 +75,7 @@ object SleepTimerManager {
                 countDownTimer = null
 
                 // Stop all audio playback
-                AudioPlaybackManager.stopAll()
+                AudioPlaybackManager.stopAll(A2UApplication.appContext)
 
                 notifyFinished()
             }

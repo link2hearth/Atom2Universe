@@ -182,13 +182,31 @@ class StarfieldView @JvmOverloads constructor(
         postInvalidateOnAnimation()
     }
 
+    private val spawnGate = VisibleWindowGate(this) { active ->
+        handler.removeCallbacks(spawnRunnable)
+        if (active) {
+            lastFrameMs = 0L
+            handler.postDelayed(spawnRunnable, 3_000L)
+        }
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        lastFrameMs = 0L
-        handler.postDelayed(spawnRunnable, 3_000L)
+        spawnGate.update()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) spawnGate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) spawnGate.update()
     }
 
     override fun onDetachedFromWindow() {
+        spawnGate.detach()
         super.onDetachedFromWindow()
         handler.removeCallbacks(spawnRunnable)
         shootingStars.clear()

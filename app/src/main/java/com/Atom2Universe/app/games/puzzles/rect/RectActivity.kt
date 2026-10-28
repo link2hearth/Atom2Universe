@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.PuzzleView
 import kotlin.random.Random
 
@@ -43,6 +44,8 @@ class RectView(context: Context) : PuzzleView<RectState>(context) {
     private val r = RectF()
     private var from = -1
     private var to = -1
+    /** Les rectangles justes, vérifiés une fois par état et non à chaque image du glissé. */
+    private val validity = PuzzleStateCache<RectState, BooleanArray> { s -> BooleanArray(s.rects.size) { s.valid(s.rects[it]) } }
 
     private fun dragRect(state: RectState): IntArray? {
         if (from < 0 || to < 0) return null
@@ -60,12 +63,15 @@ class RectView(context: Context) : PuzzleView<RectState>(context) {
         stroke.strokeWidth = cell * 0.02f
         for (k in 0..state.w) canvas.drawLine(grid.x(k), grid.top, grid.x(k), grid.bottom, stroke)
         for (k in 0..state.h) canvas.drawLine(grid.left, grid.y(k), grid.right, grid.y(k), stroke)
-        val all = state.rects + listOfNotNull(dragRect(state))
-        all.forEachIndexed { i, rc ->
+        val valid = validity[state]
+        val draft = dragRect(state)
+        val count = state.rects.size + if (draft != null) 1 else 0
+        for (i in 0 until count) {
+            val drafting = i == state.rects.size
+            val rc = if (drafting) draft ?: break else state.rects[i]
             r.set(grid.x(rc[0]) + cell * 0.07f, grid.y(rc[1]) + cell * 0.07f,
                 grid.x(rc[0] + rc[2]) - cell * 0.07f, grid.y(rc[1] + rc[3]) - cell * 0.07f)
-            val drafting = i == state.rects.size
-            val ok = state.valid(rc)
+            val ok = !drafting && valid[i]
             val colour = palette.piece(i * 3)
             fill.color = when {
                 drafting -> palette.withAlpha(palette.accent, 0.25f)
@@ -102,13 +108,16 @@ class RectView(context: Context) : PuzzleView<RectState>(context) {
 
     override fun onDragStart(x: Float, y: Float) {
         from = grid.cellAt(x, y); to = from
+        invalidate()
     }
 
     override fun onDragMove(x: Float, y: Float) {
         val s = state ?: return
         val c = grid.colAt(x.coerceIn(grid.left, grid.right - 1f))
         val rr = grid.rowAt(y.coerceIn(grid.top, grid.bottom - 1f))
-        to = rr * s.w + c
+        val cellTo = rr * s.w + c
+        if (cellTo == to) return
+        to = cellTo
         invalidate()
     }
 

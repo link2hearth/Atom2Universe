@@ -13,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.R
 
@@ -33,7 +34,27 @@ class ScoreDisplayView @JvmOverloads constructor(
 
     companion object {
         private const val TAG = "ScoreDisplayView"
+        private val GOLD = 0xFFFFD700.toInt()
+        private val ORANGE = 0xFFFF9800.toInt()
+        private val LIGHT_GREEN = 0xFF8BC34A.toInt()
+        private val AMBER = 0xFFFFC107.toInt()
     }
+
+    private fun accuracyText(accuracy: Float) = context.getString(R.string.practice_accuracy_value, accuracy)
+
+    private fun comboText(multiplier: Int) = context.getString(R.string.practice_combo_value, multiplier)
+
+    // The letter stays the database key; only the displayed text comes from resources
+    private fun gradeText(grade: String) = context.getString(
+        when (grade) {
+            "S" -> R.string.practice_grade_s
+            "A" -> R.string.practice_grade_a
+            "B" -> R.string.practice_grade_b
+            "C" -> R.string.practice_grade_c
+            "D" -> R.string.practice_grade_d
+            else -> R.string.practice_grade_f
+        }
+    )
 
     // Config
     private var config = ScoringConfig()
@@ -120,7 +141,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Score
         if (config.showScore) {
-            addMetricRow("Score", "0", textSize, valueSizeLarge, true).also {
+            addMetricRow(R.string.practice_score_label, "0", textSize, valueSizeLarge, true).also {
                 scoreLabel = it.first
                 scoreValue = it.second
             }
@@ -128,7 +149,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Combo (show prominently when active)
         if (config.showCombo) {
-            addMetricRow("Combo", "1x", textSize, valueSizeLarge, true).also {
+            addMetricRow(R.string.practice_combo_label, comboText(1), textSize, valueSizeLarge, true).also {
                 comboLabel = it.first
                 comboValue = it.second
             }
@@ -136,7 +157,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Accuracy
         if (config.showAccuracy) {
-            addMetricRow("Accuracy", "0%", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_accuracy_label, accuracyText(0f), textSize, textSize, false).also {
                 accuracyLabel = it.first
                 accuracyValue = it.second
             }
@@ -144,7 +165,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Current Streak
         if (config.showCurrentStreak) {
-            addMetricRow("Streak", "0", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_streak_label, "0", textSize, textSize, false).also {
                 streakLabel = it.first
                 streakValue = it.second
             }
@@ -152,7 +173,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Best Streak
         if (config.showBestStreak) {
-            addMetricRow("Best", "0", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_best_label, "0", textSize, textSize, false).also {
                 bestStreakLabel = it.first
                 bestStreakValue = it.second
             }
@@ -160,7 +181,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Good Notes
         if (config.showGoodNotes) {
-            addMetricRow("Good", "0", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_good_label, "0", textSize, textSize, false).also {
                 goodNotesLabel = it.first
                 goodNotesValue = it.second
             }
@@ -168,7 +189,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Perfect Notes
         if (config.showPerfectNotes) {
-            addMetricRow("Perfect", "0", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_perfect_label, "0", textSize, textSize, false).also {
                 perfectNotesLabel = it.first
                 perfectNotesValue = it.second
             }
@@ -176,7 +197,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Missed Notes
         if (config.showMissedNotes) {
-            addMetricRow("Missed", "0", textSize, textSize, false).also {
+            addMetricRow(R.string.practice_missed_label, "0", textSize, textSize, false).also {
                 missedNotesLabel = it.first
                 missedNotesValue = it.second
             }
@@ -194,7 +215,7 @@ class ScoreDisplayView @JvmOverloads constructor(
     }
 
     private fun addMetricRow(
-        label: String,
+        @StringRes label: Int,
         initialValue: String,
         labelSize: Float,
         valueSize: Float,
@@ -209,7 +230,7 @@ class ScoreDisplayView @JvmOverloads constructor(
         }
 
         val labelView = TextView(context).apply {
-            text = "$label: "
+            text = context.getString(label)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, labelSize)
             setTextColor(textSecondaryColor)
         }
@@ -232,7 +253,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
     private fun addGradeView(textSize: Float) {
         gradeValue = TextView(context).apply {
-            text = "F"
+            text = gradeText("F")
             setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize * 1.5f)
             setTextColor(textSecondaryColor)
             typeface = android.graphics.Typeface.DEFAULT_BOLD
@@ -294,7 +315,7 @@ class ScoreDisplayView @JvmOverloads constructor(
         }
 
         // Accuracy
-        accuracyValue?.text = String.format("%.1f%%", metrics.accuracy)
+        accuracyValue?.text = accuracyText(metrics.accuracy)
 
         // Streaks
         streakValue?.text = metrics.currentStreak.toString()
@@ -310,7 +331,7 @@ class ScoreDisplayView @JvmOverloads constructor(
 
         // Grade with color
         gradeValue?.let {
-            it.text = metrics.grade
+            it.text = gradeText(metrics.grade)
             it.setTextColor(getGradeColor(metrics.grade))
         }
 
@@ -350,11 +371,11 @@ class ScoreDisplayView @JvmOverloads constructor(
     }
 
     private fun updateComboDisplay(multiplier: Int) {
-        comboValue?.text = "${multiplier}x"
+        comboValue?.text = comboText(multiplier)
         comboValue?.setTextColor(
             when (multiplier) {
-                4 -> Color.parseColor("#FFD700") // Gold
-                3 -> Color.parseColor("#FF9800") // Orange
+                4 -> GOLD
+                3 -> ORANGE
                 2 -> successColor
                 else -> textPrimaryColor
             }
@@ -424,11 +445,11 @@ class ScoreDisplayView @JvmOverloads constructor(
 
     private fun getGradeColor(grade: String): Int {
         return when (grade) {
-            "S" -> Color.parseColor("#FFD700") // Gold
+            "S" -> GOLD
             "A" -> successColor
-            "B" -> Color.parseColor("#8BC34A") // Light green
-            "C" -> Color.parseColor("#FFC107") // Amber
-            "D" -> Color.parseColor("#FF9800") // Orange
+            "B" -> LIGHT_GREEN
+            "C" -> AMBER
+            "D" -> ORANGE
             else -> errorColor
         }
     }
@@ -441,14 +462,14 @@ class ScoreDisplayView @JvmOverloads constructor(
         scoreAnimator?.cancel()
 
         scoreValue?.text = "0"
-        accuracyValue?.text = "0%"
+        accuracyValue?.text = accuracyText(0f)
         streakValue?.text = "0"
         bestStreakValue?.text = "0"
         goodNotesValue?.text = "0"
         perfectNotesValue?.text = "0"
         missedNotesValue?.text = "0"
-        comboValue?.text = "1x"
-        gradeValue?.text = "F"
+        comboValue?.text = comboText(1)
+        gradeValue?.text = gradeText("F")
 
         streakValue?.setTextColor(textPrimaryColor)
         missedNotesValue?.setTextColor(textPrimaryColor)

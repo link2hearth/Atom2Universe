@@ -495,36 +495,17 @@ object MusicPopmSyncManager {
         }
     }
 
-    // Lock pour protéger les modifications de currentlyPlayingFilePath dans forceProcessAll
-    private val forceProcessLock = Any()
-
     /**
      * Force le traitement de toutes les modifications en attente.
      * Utile quand l'app se met en pause ou se ferme.
-     * Bug fix: Utilisation d'un lock pour éviter les race conditions sur currentlyPlayingFilePath.
+     * Le fichier en cours de lecture reste exclu : ExoPlayer le lit encore.
      */
     fun forceProcessAll() {
         // Vérifier isInitialized avant d'accéder au dao
         if (!isInitialized) return
 
         scope.launch {
-            synchronized(forceProcessLock) {
-                // Temporairement ignorer le fichier en cours de lecture
-                val savedPath = currentlyPlayingFilePath
-                currentlyPlayingFilePath = null
-
-                // processPendingUpdates est suspendu, on doit l'appeler hors du synchronized
-                // pour éviter de bloquer trop longtemps
-                kotlinx.coroutines.runBlocking {
-                    processPendingUpdates()
-                }
-
-                // Restaurer seulement si aucun autre thread n'a changé la valeur entre temps
-                // On vérifie que c'est toujours null (pas modifié par setCurrentlyPlayingFile)
-                if (currentlyPlayingFilePath == null) {
-                    currentlyPlayingFilePath = savedPath
-                }
-            }
+            processPendingUpdates()
         }
     }
 

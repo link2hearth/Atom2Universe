@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Service de lecture MIDI, notification et scan de la bibliothèque -->
+    <string name="midi_engine_unknown_title">Titre inconnu</string>
+    <string name="midi_engine_unknown_artist">Artiste inconnu</string>
+    <string name="midi_engine_unknown_album">Album inconnu</string>
+    <string name="midi_engine_action_play">Lecture</string>
+    <string name="midi_engine_action_pause">Pause</string>
+    <string name="midi_engine_action_stop">Arrêt</string>
+    <string name="midi_engine_channel_name">Lecture MIDI</string>
+    <string name="midi_engine_channel_description">Commandes de lecture du lecteur MIDI</string>
+    <string name="midi_engine_scan_invalid_folder">Dossier invalide ou accès refusé</string>
+</resources>

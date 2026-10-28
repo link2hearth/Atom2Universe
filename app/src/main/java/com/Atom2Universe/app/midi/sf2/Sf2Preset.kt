@@ -26,6 +26,24 @@ data class Sf2Preset(
     }
 
     /**
+     * Adds the matching regions to [out] (no list or iterator created: called for each note
+     * from the audio thread). Returns true if at least one region was added.
+     */
+    fun collectMatchingRegions(key: Int, velocity: Int, out: MutableList<Sf2Region>): Boolean {
+        val normalizedKey = key.coerceIn(0, 127)
+        val normalizedVel = velocity.coerceIn(0, 127)
+        var found = false
+        for (i in regions.indices) {
+            val region = regions[i]
+            if (region.matches(normalizedKey, normalizedVel)) {
+                out.add(region)
+                found = true
+            }
+        }
+        return found
+    }
+
+    /**
      * Returns true if this is a percussion preset (bank 128)
      */
     fun isPercussion(): Boolean = bank == 128

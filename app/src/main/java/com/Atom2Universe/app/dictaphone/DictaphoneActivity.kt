@@ -4,12 +4,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.Manifest
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.Atom2Universe.app.audio.AudioFeedback as Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +43,11 @@ class DictaphoneActivity : AudioThemedActivity() {
     private lateinit var tvStatus: TextView
     private lateinit var tvEmpty: TextView
     private lateinit var rvRecordings: RecyclerView
+
+    // Refus : rien ne se passe, le bouton reste là pour redemander.
+    private val micPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) viewModel.startRecording()
+    }
 
     private val micStopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -75,6 +83,16 @@ class DictaphoneActivity : AudioThemedActivity() {
         super.onDestroy()
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.setUiVisible(true)
+    }
+
+    override fun onStop() {
+        viewModel.setUiVisible(false)
+        super.onStop()
+    }
+
     private fun bindViews() {
         btnRecord = findViewById(R.id.dictaphone_btn_record)
         btnStop = findViewById(R.id.dictaphone_btn_stop)
@@ -98,9 +116,17 @@ class DictaphoneActivity : AudioThemedActivity() {
     }
 
     private fun setupListeners() {
-        btnRecord.setOnClickListener { viewModel.startRecording() }
+        btnRecord.setOnClickListener { startRecordingWithPermission() }
         btnStop.setOnClickListener { viewModel.stopRecording() }
         btnQuality.setOnClickListener { viewModel.toggleQuality() }
+    }
+
+    private fun startRecordingWithPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            viewModel.startRecording()
+        } else {
+            micPermission.launch(Manifest.permission.RECORD_AUDIO)
+        }
     }
 
     private fun observeViewModel() {
@@ -129,6 +155,7 @@ class DictaphoneActivity : AudioThemedActivity() {
         viewModel.errorMessage.observe(this) { msg ->
             msg?.let {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                viewModel.consumeError()
             }
         }
     }
@@ -141,7 +168,7 @@ class DictaphoneActivity : AudioThemedActivity() {
         pbAmplitude.visibility = if (recording) View.VISIBLE else View.INVISIBLE
         tvStatus.visibility = View.GONE
         if (!recording) {
-            tvTimer.text = "00:00"
+            tvTimer.text = formatDuration(0L)
             pbAmplitude.progress = 0
         }
     }
@@ -190,6 +217,6 @@ class DictaphoneActivity : AudioThemedActivity() {
     private fun formatDuration(ms: Long): String {
         val min = TimeUnit.MILLISECONDS.toMinutes(ms)
         val sec = TimeUnit.MILLISECONDS.toSeconds(ms) % 60
-        return "%02d:%02d".format(min, sec)
+        return getString(R.string.dictaphone_timer_format, min, sec)
     }
 }

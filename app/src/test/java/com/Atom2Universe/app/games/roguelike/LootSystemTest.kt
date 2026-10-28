@@ -10,15 +10,6 @@ import kotlin.random.Random
 /** Règles du butin décidées dans DONJON.md, vérifiées sur beaucoup de tirages. */
 class LootSystemTest {
 
-    /** Les sauvegardes d'avant le renommage gardent leur rang : l'ancien « Rare » est l'Épique. */
-    @Test
-    fun lesAnciennesRaretesGardentLeurRang() {
-        assertEquals(Rarity.COMMON, Rarity.fromLegacy("NORMAL"))
-        assertEquals(Rarity.RARE, Rarity.fromLegacy("MAGIC"))
-        assertEquals(Rarity.EPIC, Rarity.fromLegacy("RARE"))
-        for (r in Rarity.entries) assertEquals(r, Rarity.fromLegacy(Rarity.legacyName(r)))
-    }
-
     @Test
     fun chaqueArmeEtMainGaucheAUneClasse() {
         for (b in ItemBase.entries.filter { it.slot == EquipSlot.WEAPON || it.slot == EquipSlot.OFFHAND })

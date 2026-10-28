@@ -17,6 +17,8 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.VisibleWindowGate
+import kotlin.math.floor
 
 class ClickerBannerView @JvmOverloads constructor(
     context: Context,
@@ -92,10 +94,17 @@ class ClickerBannerView @JvmOverloads constructor(
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
             interpolator = LinearInterpolator()
+            // Redessiné seulement quand le dégradé a avancé d'un pixel (quelques dizaines
+            // de fois par seconde au plus), pas à chaque rafraîchissement de l'écran.
+            var lastShift = Float.NaN
             addUpdateListener { anim ->
-                rainbowMatrix.setTranslate(anim.animatedValue as Float, 0f)
-                shader.setLocalMatrix(rainbowMatrix)
-                atomsText.invalidate()
+                val shift = floor(anim.animatedValue as Float)
+                if (shift != lastShift) {
+                    lastShift = shift
+                    rainbowMatrix.setTranslate(shift, 0f)
+                    shader.setLocalMatrix(rainbowMatrix)
+                    atomsText.invalidate()
+                }
             }
             start()
         }
@@ -140,10 +149,15 @@ class ClickerBannerView @JvmOverloads constructor(
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
             interpolator = LinearInterpolator()
+            var lastShift = Float.NaN
             addUpdateListener { anim ->
-                apcGlowMatrix.setTranslate(anim.animatedValue as Float, 0f)
-                shader.setLocalMatrix(apcGlowMatrix)
-                apcText.invalidate()
+                val shift = floor(anim.animatedValue as Float)
+                if (shift != lastShift) {
+                    lastShift = shift
+                    apcGlowMatrix.setTranslate(shift, 0f)
+                    shader.setLocalMatrix(apcGlowMatrix)
+                    apcText.invalidate()
+                }
             }
             start()
         }
@@ -188,10 +202,15 @@ class ClickerBannerView @JvmOverloads constructor(
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
             interpolator = LinearInterpolator()
+            var lastShift = Float.NaN
             addUpdateListener { anim ->
-                apsGlowMatrix.setTranslate(anim.animatedValue as Float, 0f)
-                shader.setLocalMatrix(apsGlowMatrix)
-                apsText.invalidate()
+                val shift = floor(anim.animatedValue as Float)
+                if (shift != lastShift) {
+                    lastShift = shift
+                    apsGlowMatrix.setTranslate(shift, 0f)
+                    shader.setLocalMatrix(apsGlowMatrix)
+                    apsText.invalidate()
+                }
             }
             start()
         }
@@ -223,7 +242,7 @@ class ClickerBannerView @JvmOverloads constructor(
         shopAffordable = affordable
         shopButton.text = if (affordable) "$+" else "$"
         if (affordable) {
-            handler.post(shakeRunnable)
+            if (animationGate.isActive) handler.post(shakeRunnable)
         } else {
             handler.removeCallbacks(shakeRunnable)
             shopButton.translationX = 0f
@@ -497,14 +516,49 @@ class ClickerBannerView @JvmOverloads constructor(
             .start()
     }
 
+    // ── Pause quand le bandeau est caché ou l'écran en arrière-plan ──────────
+    private val animationGate = VisibleWindowGate(this) { active ->
+        if (active) resumeAnimations() else pauseAnimations()
+    }
+
+    private fun resumeAnimations() {
+        if (rainbowAnimator == null) {
+            startRainbow()
+            startApcGlow()
+            startApsGlow()
+        } else {
+            rainbowAnimator?.resume()
+            apcGlowAnimator?.resume()
+            apsGlowAnimator?.resume()
+        }
+        handler.removeCallbacks(shakeRunnable)
+        if (shopAffordable) handler.post(shakeRunnable)
+    }
+
+    private fun pauseAnimations() {
+        rainbowAnimator?.pause()
+        apcGlowAnimator?.pause()
+        apsGlowAnimator?.pause()
+        handler.removeCallbacks(shakeRunnable)
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        startRainbow()
-        startApcGlow()
-        startApsGlow()
+        animationGate.update()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) animationGate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) animationGate.update()
     }
 
     override fun onDetachedFromWindow() {
+        animationGate.detach()
         super.onDetachedFromWindow()
         handler.removeCallbacks(refreshTick)
         handler.removeCallbacks(shakeRunnable)

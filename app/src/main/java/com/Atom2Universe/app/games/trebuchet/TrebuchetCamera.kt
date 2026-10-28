@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.trebuchet
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.SystemClock
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
@@ -320,22 +321,42 @@ class TimeScrub {
      * Sans ça le geste serait un secret : rien à l'écran ne dirait qu'on a quitté le
      * cadrage pour le temps, et un ciel qui se met à défiler passerait pour un bug.
      */
-    fun draw(canvas: Canvas, paint: Paint, clock: SkyClock, w: Float, h: Float, dp: Float) {
+    fun draw(
+        canvas: Canvas, paint: Paint, clock: SkyClock, w: Float, h: Float, dp: Float,
+        format: String, locale: Locale
+    ) {
         if (!active) return
-        val minutes = ((clock.instant % 86_400_000L) + 86_400_000L) % 86_400_000L / 60_000L
-        val heure = minutes / 60
-        val minute = minutes % 60
+        val jour = ((clock.instant % 86_400_000L) + 86_400_000L) % 86_400_000L
+        val minutes = (jour / 60_000L).toInt()
         val sens = when {
-            rate > 0.02f -> "▶"
-            rate < -0.02f -> "◀"
-            else -> "■"
+            rate > 0.02f -> 1
+            rate < -0.02f -> -1
+            else -> 0
+        }
+        // Le texte ne se refait que quand l'un de ses chiffres change : la minute, le
+        // sens, ou la vitesse au dixième près.
+        val dixiemes = Math.round(abs(rate) * 10f)
+        if (minutes != shownMinutes || sens != shownSens || dixiemes != shownTenths) {
+            shownMinutes = minutes
+            shownSens = sens
+            shownTenths = dixiemes
+            val fleche = when (sens) {
+                1 -> "▶"
+                -1 -> "◀"
+                else -> "■"
+            }
+            shownText = String.format(
+                locale, format, minutes / 60, minutes % 60, fleche, dixiemes / 10f
+            )
         }
         paint.textSize = 20f * dp
-        canvas.drawText(
-            "%02d:%02d  %s %.1f h/s".format(heure, minute, sens, abs(rate)),
-            w / 2f, h * 0.18f, paint
-        )
+        canvas.drawText(shownText, w / 2f, h * 0.18f, paint)
     }
+
+    private var shownMinutes = -1
+    private var shownSens = 2
+    private var shownTenths = -1
+    private var shownText = ""
 
     companion object {
         /** Durée de l'appui avant que le doigt ne prenne l'heure. */

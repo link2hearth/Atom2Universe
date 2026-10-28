@@ -180,6 +180,18 @@ class FarmState(private val prefs: SharedPreferences) {
     var encounters = FarmEncountersState()
         private set
     private var encountersNeedSave = false
+    /**
+     * Set by the farm screen: [save] then only notes that something changed, and the screen writes
+     * the whole farm with [flush] every few seconds and when it leaves. Everywhere else - the hub
+     * peeking at the save, the tests - every [save] still writes on the spot.
+     */
+    var deferSaves = false
+    private var dirty = false
+    /** Set once the cloud farm is about to replace this one on disk: from then on nothing is written. */
+    var held = false
+        private set
+    /** Local time zone, read once: the daily bush is asked about on every frame of the map. */
+    private val zone = java.util.TimeZone.getDefault()
 
     init {
         // Parse into temporary objects: invalid saves must never partially overwrite the farm.
@@ -377,13 +389,19 @@ class FarmState(private val prefs: SharedPreferences) {
     fun bushBonusAmount(): Long = maxOf(5L,
         (FarmCrop.ladder.filter { cropUnlocked(it) }.maxOfOrNull { it.sale } ?: FarmCrop.RADISH.sale) / 2L)
 
-    /** One free pile of coins a day, tucked behind the bush above parcel 1. */
-    fun bushBonusReady(now: Long = System.currentTimeMillis()) = bushBonusDay != now / 86_400_000L
+    /** The calendar day of [now] on this device, so the pile comes back at the player's own midnight. */
+    private fun localDay(now: Long) = Math.floorDiv(now + zone.getOffset(now), 86_400_000L)
+    /**
+     * One free pile of coins a day, tucked behind the bush above parcel 1. Only a LATER day refills
+     * it: a clock wound back must not hand out a fresh pile each time it changes date.
+     */
+    fun bushBonusReady(now: Long = System.currentTimeMillis()) = localDay(now) > bushBonusDay
     /** Returns what the pile was worth, zero when today's pile is already taken. */
     fun claimBushBonus(): Long {
-        if (!bushBonusReady()) return 0
+        val now = System.currentTimeMillis()
+        if (!bushBonusReady(now)) return 0
         val gained = bushBonusAmount()
-        coins += gained; bushBonusDay = System.currentTimeMillis() / 86_400_000L; save(); return gained
+        coins += gained; bushBonusDay = localDay(now); save(); return gained
     }
 
     /** Each pen asks for harvests and for a working herd of the previous animal, not just coins. */
@@ -858,9 +876,15 @@ class FarmState(private val prefs: SharedPreferences) {
     }
     fun clear(index: Int) {
         if (!parcels[FarmLayout.parcelOf(index)].unlocked) return
-        // Only a mistake is refunded: once watered, the seed is spent.
-        if (!plots[index].watered) coins += plots[index].crop?.cost ?: 0
-        if (!plots[index].watered && plots[index].welcome) welcomePlantings = (welcomePlantings + 1).coerceAtMost(WELCOME_SEEDS)
+        // Only a mistake is undone: once watered, the seed is spent. Before that, the seed goes back
+        // in the bag and the manure back in the pit - never coins, which a free seed was never worth.
+        val p = plots[index]
+        val sown = p.crop
+        if (sown != null && !p.watered) {
+            seeds[sown.ordinal] = (seeds[sown.ordinal] + 1).coerceAtMost(9999)
+            if (p.rich) livestock.refundManure(sown.manureCost)
+        }
+        if (!p.watered && p.welcome) welcomePlantings = (welcomePlantings + 1).coerceAtMost(WELCOME_SEEDS)
         plots[index].apply { crop = null; planted = 0; watered = false; established = false; critical = false; rich = false; welcome = false }
         save()
     }
@@ -918,6 +942,31 @@ class FarmState(private val prefs: SharedPreferences) {
     fun cheatWaterAll() { waterMany(plots.indices.toList(), System.currentTimeMillis()) }
     fun save() {
         encountersNeedSave = false
+        if (held) return
+        if (deferSaves) { dirty = true; return }
+        write()
+    }
+    /** Writes what [save] has been holding back, if anything. True when something was written. */
+    fun flush(): Boolean {
+        if (!dirty || held) return false
+        write(); return true
+    }
+    /** Writes the whole farm now, changed or not - the screen leaving, or about to read the save back. */
+    fun saveNow() { if (!held) write() }
+    /**
+     * Stops every write, ahead of the cloud farm landing on disk - but only while the save on disk
+     * is still [expected], the farm the cloud question was asked about. Pending changes are written
+     * first, so a farm played on in the meantime shows up as different and is never silently lost.
+     */
+    fun holdIfUnchanged(expected: String?): Boolean {
+        flush()
+        if (prefs.getString(KEY_STATE, null) != expected) return false
+        held = true; return true
+    }
+    /** The player chose the cloud farm: whatever this one still holds must never reach the disk. */
+    fun hold() { held = true }
+    private fun write() {
+        dirty = false
         val array = JSONArray()
         plots.forEach { p -> array.put(JSONObject().put("crop", p.crop?.name ?: "").put("planted", p.planted)
             .put("watered", p.watered).put("variant", p.variant).put("established", p.established).put("debris", p.debris)
@@ -970,14 +1019,22 @@ class FarmState(private val prefs: SharedPreferences) {
          * format from a later build must be refused before it reaches the parser above, which
          * would reject it and hand the player a brand new farm instead of their own.
          */
-        const val MAX_SAVE_VERSION = 17
+        const val MAX_SAVE_VERSION = 18
         /**
          * Reads the save and counts the ready harvests without opening the game. It goes through
          * [FarmState] on purpose: a second, lighter reader of the same JSON would have to know about
          * every save version, and would drift the day the format moves again.
          */
-        fun readyToHarvest(context: Context): Int =
-            FarmState(context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)).readyToHarvest()
+        fun readyToHarvest(context: Context): Int {
+            val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            val raw = prefs.getString(KEY_STATE, null) ?: return FarmState(prefs).readyToHarvest()
+            // Light cache: the hub asks on every return, while the save only changes after a visit.
+            val state = synchronized(this) { peekState.takeIf { raw == peekRaw } }
+                ?: FarmState(prefs).also { synchronized(this) { peekRaw = raw; peekState = it } }
+            return state.readyToHarvest()
+        }
+        private var peekRaw: String? = null
+        private var peekState: FarmState? = null
 
         /** Milestones. The fields and the pens are earned by playing, not found in a menu. */
         const val FIELDS_HARVESTS = 100

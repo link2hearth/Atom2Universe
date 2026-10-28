@@ -145,9 +145,10 @@ interface MidiEngine {
     fun getAudioSessionId(): Int
 
     /**
-     * Forces a driver restart (for maintenance/recovery)
+     * Forces a driver restart (for maintenance/recovery).
+     * Never called: kept only while Sf2Engine still overrides it.
      */
-    fun forceDriverRestart()
+    fun forceDriverRestart() { }
 
     /**
      * Gets driver statistics for debugging

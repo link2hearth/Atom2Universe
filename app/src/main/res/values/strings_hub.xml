@@ -4,8 +4,6 @@
     <string name="hub_toggle_view">Toggle view</string>
     <string name="hub_edit_mode">Edit mode</string>
     <string name="hub_confirm_edit">Done editing</string>
-    <string name="notification_channel_audio_name">Audio playback</string>
-    <string name="notification_channel_audio_description">Keeps audio playback running in background.</string>
     <string name="hub_edit_tile">Edit tile</string>
     <string name="hub_change_language">Change language</string>
     <string name="hub_select_language">Select language</string>

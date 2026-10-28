@@ -155,7 +155,7 @@ class OceanDeepTheme : BasePracticeTheme() {
         "#005F73".toColorInt()   // Bleu-vert profond
     )
 
-    override fun getHitZoneColor() = "#00F5D4".toColorInt()  // Turquoise lumineux
+    override fun getHitZoneColor() = 0xFF00F5D4.toInt()  // Turquoise lumineux
 
     override fun getGridLineColor() = "#1500F5D4".toColorInt()
 

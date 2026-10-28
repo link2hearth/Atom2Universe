@@ -7,8 +7,7 @@ import com.leff.midi.event.NoteOn
 import com.leff.midi.event.ProgramChange
 import com.leff.midi.event.Controller
 import com.leff.midi.event.meta.Tempo
-import java.io.File
-import java.io.FileInputStream
+import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.roundToLong
@@ -17,7 +16,7 @@ import kotlin.math.roundToLong
  * Controleur de lecture pour le mode pratique piano
  *
  * Caracteristiques:
- * - Controle de vitesse (tempo) de 0.25x a 2.0x
+ * - Controle de vitesse (tempo) de 0.1x a 2.0x
  * - Filtrage par canal cible
  * - Callbacks pour visualisation (notes tombantes)
  * - Independant du MidiPlaybackService principal
@@ -29,8 +28,9 @@ class PracticePlaybackController {
         private const val DEFAULT_TEMPO_BPM = 120
         private const val MICROSECONDS_PER_MINUTE = 60_000_000L
 
-        // Limites de vitesse
-        const val MIN_SPEED = 0.25f
+        // Limites de vitesse (l'horloge partagée et le fil de lecture gèrent 10 % sans souci :
+        // l'attente est convertie en temps réel puis découpée en tranches de 100 ms)
+        const val MIN_SPEED = 0.1f
         const val MAX_SPEED = 2.0f
         const val DEFAULT_SPEED = 1.0f
     }
@@ -45,7 +45,7 @@ class PracticePlaybackController {
     }
 
     // Evenement MIDI avec timestamp
-    private data class TimedEvent(
+    internal data class TimedEvent(
         val timestampMs: Long,
         val event: MidiEvent,
         val channel: Int,
@@ -98,7 +98,8 @@ class PracticePlaybackController {
     // Etat
     private var state = State.IDLE
 
-    // Synthesizer pour le son (Sonivox ou SF2)
+    // Synthesizer pour le son (Sonivox ou SF2), lu aussi par le fil de lecture
+    @Volatile
     private var synthesizer: PracticeSynthesizer? = null
 
     // Options
@@ -173,121 +174,94 @@ class PracticePlaybackController {
     }
 
     /**
-     * Charge un fichier MIDI depuis un File et filtre pour le canal cible
+     * Débranche le synthé (rechargement en cours) : plus rien ne lui est envoyé.
      */
-    fun loadFile(file: File, channel: Int): Boolean {
-        if (!file.exists()) {
-            onError?.invoke("File not found")
-            return false
-        }
-
-        return try {
-            FileInputStream(file).use { inputStream ->
-                loadFromInputStream(inputStream, channel)
-            }
-        } catch (e: Exception) {
-            onError?.invoke("Failed to load: ${e.message}")
-            state = State.IDLE
-            false
-        }
+    fun detachSynthesizer() {
+        synthesizer = null
     }
 
     /**
-     * Charge un fichier MIDI depuis un InputStream (pour les Content URIs)
+     * Renvoie au synthé les instruments du morceau valables à la position courante
+     * (synthé rechargé ou rebranché après coup).
      */
-    fun loadFromInputStream(inputStream: java.io.InputStream, channel: Int): Boolean {
-        try {
-            stop()
-            targetChannel = channel
-            isTwoHandsMode = false
-            secondTargetChannel = -1
-
-            val midiFile = MidiFile(inputStream)
-
-            // Convertir tous les evenements
-            allEvents = convertToTimedEvents(midiFile)
-            durationMs = if (allEvents.isNotEmpty()) allEvents.last().timestampMs else 0L
-
-            // Extraire les notes du canal cible pour le falling notes
-            targetChannelNotes = extractTargetChannelNotes()
-
-            currentPositionMs.set(0)
-            currentEventIndex = 0
-            state = State.LOADED
-
-            return true
-        } catch (e: Exception) {
-            onError?.invoke("Failed to load: ${e.message}")
-            state = State.IDLE
-            return false
-        }
+    fun resendProgramChanges() {
+        sendProgramChangesUpToPosition(getCurrentPositionMs())
     }
 
     /**
-     * Charge un fichier MIDI pour le mode deux mains (deux canaux cibles)
+     * Fichier MIDI lu et converti, prêt à être branché par [load].
      */
-    fun loadFromInputStreamTwoHands(
-        inputStream: java.io.InputStream,
-        leftChannel: Int,
-        rightChannel: Int
-    ): Boolean {
-        try {
-            stop()
-            isTwoHandsMode = true
-            leftHandChannel = leftChannel
-            rightHandChannel = rightChannel
-            targetChannel = rightChannel  // Canal principal pour compatibilité
-            secondTargetChannel = leftChannel
+    class PreparedMidi internal constructor(
+        internal val events: List<TimedEvent>,
+        internal val notes: List<ScheduledNote>,
+        internal val durationMs: Long,
+        internal val isTwoHands: Boolean,
+        internal val targetChannel: Int,
+        internal val leftChannel: Int,
+        internal val rightChannel: Int
+    )
 
-            val midiFile = MidiFile(inputStream)
-
-            // Convertir tous les evenements
-            allEvents = convertToTimedEvents(midiFile)
-            durationMs = if (allEvents.isNotEmpty()) allEvents.last().timestampMs else 0L
-
-            // Extraire les notes des deux canaux pour le falling notes
-            targetChannelNotes = extractTwoHandsNotes()
-
-            currentPositionMs.set(0)
-            currentEventIndex = 0
-            state = State.LOADED
-
-            return true
-        } catch (e: Exception) {
-            onError?.invoke("Failed to load: ${e.message}")
-            state = State.IDLE
-            return false
-        }
+    /**
+     * Lit et convertit le fichier pour un canal cible. Ne touche pas à l'état du lecteur :
+     * à appeler hors du fil UI. Lève une exception si le fichier est illisible.
+     */
+    fun prepare(inputStream: InputStream, channel: Int): PreparedMidi {
+        val events = convertToTimedEvents(MidiFile(inputStream))
+        return PreparedMidi(
+            events = events,
+            notes = extractTargetChannelNotes(events, channel),
+            durationMs = events.lastOrNull()?.timestampMs ?: 0L,
+            isTwoHands = false,
+            targetChannel = channel,
+            leftChannel = -1,
+            rightChannel = -1
+        )
     }
 
     /**
-     * Charge un fichier MIDI pour le mode deux mains depuis un File
+     * Comme [prepare], pour le mode deux mains (deux canaux cibles).
      */
-    fun loadFileTwoHands(file: File, leftChannel: Int, rightChannel: Int): Boolean {
-        if (!file.exists()) {
-            onError?.invoke("File not found")
-            return false
-        }
+    fun prepareTwoHands(inputStream: InputStream, leftChannel: Int, rightChannel: Int): PreparedMidi {
+        val events = convertToTimedEvents(MidiFile(inputStream))
+        return PreparedMidi(
+            events = events,
+            notes = extractTwoHandsNotes(events, leftChannel, rightChannel),
+            durationMs = events.lastOrNull()?.timestampMs ?: 0L,
+            isTwoHands = true,
+            targetChannel = rightChannel,  // Canal principal pour compatibilité
+            leftChannel = leftChannel,
+            rightChannel = rightChannel
+        )
+    }
 
-        return try {
-            FileInputStream(file).use { inputStream ->
-                loadFromInputStreamTwoHands(inputStream, leftChannel, rightChannel)
-            }
-        } catch (e: Exception) {
-            onError?.invoke("Failed to load: ${e.message}")
-            state = State.IDLE
-            false
-        }
+    /**
+     * Branche un fichier préparé par [prepare] ou [prepareTwoHands] (fil UI).
+     */
+    fun load(prepared: PreparedMidi) {
+        stop()
+        isTwoHandsMode = prepared.isTwoHands
+        targetChannel = prepared.targetChannel
+        secondTargetChannel = if (prepared.isTwoHands) prepared.leftChannel else -1
+        leftHandChannel = prepared.leftChannel
+        rightHandChannel = prepared.rightChannel
+
+        allEvents = prepared.events
+        durationMs = prepared.durationMs
+        targetChannelNotes = prepared.notes
+
+        currentPositionMs.set(0)
+        currentEventIndex = 0
+        state = State.LOADED
     }
 
     /**
      * Extrait les notes du canal cible sous forme de ScheduledNote
      */
-    private fun extractTargetChannelNotes(): List<ScheduledNote> {
+    private fun extractTargetChannelNotes(events: List<TimedEvent>, targetChannel: Int): List<ScheduledNote> {
         val notes = mutableListOf<ScheduledNote>()
         val activeNotes = mutableMapOf<Int, Pair<Long, Int>>() // note -> (startTime, velocity)
 
-        for (event in allEvents) {
+        for (event in events) {
             if (event.channel != targetChannel) continue
 
             when (val midiEvent = event.event) {
@@ -329,12 +303,16 @@ class PracticePlaybackController {
     /**
      * Extrait les notes des deux canaux (main gauche + main droite)
      */
-    private fun extractTwoHandsNotes(): List<ScheduledNote> {
+    private fun extractTwoHandsNotes(
+        events: List<TimedEvent>,
+        leftHandChannel: Int,
+        rightHandChannel: Int
+    ): List<ScheduledNote> {
         val notes = mutableListOf<ScheduledNote>()
         // Map: (channel, note) -> (startTime, velocity)
         val activeNotes = mutableMapOf<Pair<Int, Int>, Pair<Long, Int>>()
 
-        for (event in allEvents) {
+        for (event in events) {
             val isLeftHand = event.channel == leftHandChannel
             val isRightHand = event.channel == rightHandChannel
             if (!isLeftHand && !isRightHand) continue
@@ -538,6 +516,12 @@ class PracticePlaybackController {
             return
         }
 
+        // Morceau fini : « Lecture » repart du début au lieu de ne rien faire
+        if (allEvents.isNotEmpty() && currentEventIndex >= allEvents.size) {
+            currentEventIndex = 0
+            currentPositionMs.set(0)
+        }
+
         isPlaying.set(true)
         isPaused.set(false)
         state = State.PLAYING
@@ -579,6 +563,10 @@ class PracticePlaybackController {
             }
         }
         playbackThread = null
+
+        // Le fil ne met la position à jour que toutes les ~100 ms : on garde celle, exacte,
+        // de l'horloge, sinon la reprise reculerait
+        currentPositionMs.set(sharedClock.getCurrentPositionMs())
 
         // Eteindre toutes les notes (audio + callback pour UI/LEDs)
         sendAllNotesOff()
@@ -638,6 +626,8 @@ class PracticePlaybackController {
      * Seek a une position
      */
     fun seekTo(positionMs: Long) {
+        // Fichier pas encore chargé (lecture en arrière-plan) : rien à déplacer
+        if (allEvents.isEmpty()) return
         val targetMs = positionMs.coerceIn(0, durationMs)
 
         val wasPlaying = isPlaying.get()
@@ -840,7 +830,9 @@ class PracticePlaybackController {
     }
 
     // Getters
-    fun getCurrentPositionMs(): Long = currentPositionMs.get()
+    // Pendant la lecture, l'horloge partagée (précise à la milliseconde) ; sinon la position figée
+    fun getCurrentPositionMs(): Long =
+        if (isPlaying.get()) sharedClock.getCurrentPositionMs() else currentPositionMs.get()
     fun getDurationMs(): Long = durationMs
     fun isPlaying(): Boolean = isPlaying.get()
     fun isPaused(): Boolean = isPaused.get()
@@ -853,7 +845,7 @@ class PracticePlaybackController {
      */
     @Suppress("unused")
     fun getAdjustedPositionMs(): Long {
-        return currentPositionMs.get()
+        return getCurrentPositionMs()
     }
 
     /**
@@ -980,6 +972,7 @@ class PracticePlaybackController {
 
                 // Fin de lecture
                 if (isPlaying.get() && currentEventIndex >= allEvents.size) {
+                    sharedClock.pause()
                     currentPositionMs.set(durationMs)
                     isPlaying.set(false)
                     state = State.STOPPED

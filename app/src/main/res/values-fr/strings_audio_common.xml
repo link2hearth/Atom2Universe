@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="audio_notification_title">Lecture en cours</string>
-    <string name="audio_notification_unknown_artist">Artiste inconnu</string>
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_play">Lecture</string>
     <string name="audio_action_stop">Arrêter</string>
@@ -26,4 +24,6 @@
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
     <string name="audio_hub_stats_title">Mélomane</string>
     <string name="audio_hub_stats_desc">Vos récapitulatifs d\'écoute</string>
+    <string name="ae_spectrum_empty">Pas de spectre</string>
+    <string name="ae_spectrum_khz">%1$dk</string>
 </resources>

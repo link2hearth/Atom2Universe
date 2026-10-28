@@ -309,4 +309,22 @@
     <string name="sf2_rec_err_generic">Error: %1$s</string>
     <string name="sf2_rec_err_save">Save error: %1$s</string>
     <string name="sf2_rec_err_capture">Capture error: %1$s</string>
+    <!-- Audit lot 4 -->
+    <string name="sf2_no_audio_loaded">No audio loaded</string>
+    <string name="sf2_envelope_none">None</string>
+    <string name="sf2_envelope_piano">Piano</string>
+    <string name="sf2_envelope_organ">Organ</string>
+    <string name="sf2_envelope_pad">Pad</string>
+    <string name="sf2_envelope_pluck">Pluck</string>
+    <string name="sf2_envelope_strings">Strings</string>
+    <string name="sf2_envelope_custom">Custom</string>
+    <string name="sf2_sustain_playing">…</string>
+    <string name="sf2_unknown_instrument">Unknown</string>
+    <string name="sf2_program_sheet_title">%1$s\nProgram %2$d · Bank %3$d · %4$d instruments</string>
+    <string name="sf2_instrument_sheet_title">%1$s\nProgram %2$d · %3$d samples</string>
+    <string name="sf2_bank_number">Bank %1$d</string>
+    <string name="sf2_bank_program_code">%1$03d:%2$03d</string>
+    <string name="sf2_note_range">%1$s - %2$s</string>
+    <string name="sf2_duration_seconds">%1$.2fs</string>
+    <string name="sf2_sample_rate_hz">%1$d Hz</string>
 </resources>

@@ -49,16 +49,44 @@ class ForgePanel(
     private val list = RecyclerView(ctx)
     val isOpen get() = root.visibility == View.VISIBLE
 
-    private class Holder(v: View) : RecyclerView.ViewHolder(v)
+    /** Une ligne de la forge, construite une fois : le recyclage ne fait que changer ses valeurs. */
+    private inner class Holder(box: LinearLayout) : RecyclerView.ViewHolder(box) {
+        val tile = column()
+        val line = row().apply {
+            setPadding(dp(10), dp(10), dp(10), dp(10))
+            minimumHeight = dp(76)
+        }
+        val icon = ImageView(ctx).apply {
+            scaleType = ImageView.ScaleType.FIT_XY
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        val name = text("", 15f, ink, true)
+        val tags = text("", 12f, muted)
+        val score = text("", 12f, muted)
+        val previous = text("", 12f, muted)
+        /** La police normale du score, qui passe en gras après un passage à la forge. */
+        val scoreFace: Typeface? = score.typeface
+        /** Le détail et le bouton « Reforger », seulement sous l'objet ouvert. */
+        var detail: View? = null
+
+        init {
+            line.addView(icon, LinearLayout.LayoutParams(dp(44), dp(52)))
+            val words = column()
+            words.addView(name)
+            words.addView(tags)
+            words.addView(score)
+            words.addView(previous)
+            line.addView(words, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
+            tile.addView(line)
+            box.addView(tile, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        }
+    }
+
     private val adapter = object : RecyclerView.Adapter<Holder>() {
         override fun getItemCount() = items.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             Holder(column().apply { layoutParams = RecyclerView.LayoutParams(-1, -2) })
-        override fun onBindViewHolder(holder: Holder, position: Int) {
-            val box = holder.itemView as LinearLayout
-            box.removeAllViews()
-            box.addView(card(items[position]), LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
-        }
+        override fun onBindViewHolder(holder: Holder, position: Int) = bind(holder, items[position])
     }
 
     init {
@@ -142,42 +170,36 @@ class ForgePanel(
         }
     }
 
-    private fun card(item: Equipment): View {
+    private fun bind(holder: Holder, item: Equipment) {
         val g = requireNotNull(game)
         val hero = g.hero
         val isOpen = expanded === item
-        val tile = column().apply { background = frame(if (isOpen) accent else item.inventoryColor) }
-        val line = row().apply {
-            setPadding(dp(10), dp(10), dp(10), dp(10))
-            minimumHeight = dp(76)
-        }
-        line.addView(ImageView(ctx).apply {
-            setImageDrawable(PixelArtIcon(EquipmentArt.icon(item)))
-            scaleType = ImageView.ScaleType.FIT_XY
-            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        }, LinearLayout.LayoutParams(dp(44), dp(52)))
-        val words = column()
-        words.addView(text(LootSystem.displayName(ctx, item), 15f, item.inventoryColor, true))
+        holder.tile.background = frame(if (isOpen) accent else item.inventoryColor)
+        holder.icon.setImageDrawable(PixelArtIcon(EquipmentArt.icon(item)))
+        holder.name.text = LootSystem.displayName(ctx, item)
+        holder.name.setTextColor(readable(item.inventoryColor))
         val tags = listOfNotNull(
             ctx.getString(item.slot.labelRes),
             item.weight?.let { ctx.getString(it.labelRes) },
             ctx.getString(if (item.isotopeZ != null) R.string.inv_legendary else item.rarity.labelRes),
             ctx.getString(R.string.roguelike_forge_worn).takeIf { hero.equipped[item.slot] === item },
         )
-        words.addView(text(tags.joinToString(ctx.getString(R.string.inv_separator)), 12f, muted))
+        holder.tags.text = tags.joinToString(ctx.getString(R.string.inv_separator))
         val score = LootSystem.rating(item, hero.archetype)
         val before = previousScore[item]
-        words.addView(text(ctx.getString(R.string.inv_rating, number.format(score)), 12f,
-            if (before == null) muted else if (score > before) green else if (score < before) red else muted, before != null))
-        if (before != null) words.addView(text(ctx.getString(R.string.roguelike_forge_previous, number.format(before)), 12f, muted))
-        line.addView(words, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
-        line.setOnClickListener {
+        holder.score.text = ctx.getString(R.string.inv_rating, number.format(score))
+        holder.score.setTextColor(readable(if (before == null) muted else if (score > before) green else if (score < before) red else muted))
+        if (before != null) holder.score.setTypeface(holder.scoreFace, Typeface.BOLD) else holder.score.setTypeface(holder.scoreFace, Typeface.NORMAL)
+        holder.previous.visibility = if (before != null) View.VISIBLE else View.GONE
+        if (before != null) holder.previous.text = ctx.getString(R.string.roguelike_forge_previous, number.format(before))
+        holder.line.setOnClickListener {
             val previous = expanded
             expanded = if (isOpen) null else item
             previous?.let { p -> items.indexOf(p).takeIf { it >= 0 }?.let(adapter::notifyItemChanged) }
             items.indexOf(item).takeIf { it >= 0 }?.let(adapter::notifyItemChanged)
         }
-        tile.addView(line)
+        holder.detail?.let { holder.tile.removeView(it) }
+        holder.detail = null
         if (isOpen) {
             val detail = column().apply { setPadding(dp(10), 0, dp(10), dp(10)) }
             detail.addView(text(LootSystem.describe(ctx, item, linked = false, archetype = hero.archetype).joinToString("\n"), 14f, ink))
@@ -185,9 +207,9 @@ class ForgePanel(
                 reforge(item)
             }.apply { isEnabled = hero.gold >= g.forgePrice; alpha = if (isEnabled) 1f else .45f },
                 LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(6) })
-            tile.addView(detail)
+            holder.tile.addView(detail)
+            holder.detail = detail
         }
-        return tile
     }
 
     /** Le nouvel objet prend la place de l'ancien dans la liste et reste ouvert. */
@@ -208,8 +230,9 @@ class ForgePanel(
     private fun dp(n: Int) = (n * density).toInt()
     private fun column() = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
     private fun row() = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+    private fun readable(color: Int) = com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5)
     private fun text(value: String, size: Float, color: Int, bold: Boolean = false) = TextView(ctx).apply {
-        text = value; textSize = size; setTextColor(com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5))
+        text = value; textSize = size; setTextColor(readable(color))
         if (bold) setTypeface(typeface, Typeface.BOLD)
         setPadding(0, dp(3), 0, dp(3))
     }

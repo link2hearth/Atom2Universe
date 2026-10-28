@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.C
@@ -130,13 +131,18 @@ object MusicPlaybackHolder {
         fun onError(error: PlaybackException)
         fun onPlaylistChanged(playlist: List<MusicTrack>)
         fun onPlayCountIncremented(track: MusicTrack, newCount: Long)
+
+        /** Vrai si l'écouteur affiche la progression à l'écran : la cadence passe à 500 ms. */
+        val wantsFrequentProgress: Boolean get() = false
     }
 
     @OptIn(UnstableApi::class)
     fun getOrCreatePlayer(context: Context): ExoPlayer {
+        // Ce lecteur vit aussi longtemps que le processus : ne jamais y garder une activité
+        val appCtx = context.applicationContext
         // Stocker le contexte pour la persistance
         if (appContext == null) {
-            appContext = context.applicationContext
+            appContext = appCtx
         }
 
         if (player == null) {
@@ -149,7 +155,7 @@ object MusicPlaybackHolder {
             val dspProcessor = _equalizerProcessor!!
 
             // Create custom RenderersFactory with DSP audio processing
-            val renderersFactory = DspRenderersFactory(context.applicationContext, dspProcessor)
+            val renderersFactory = DspRenderersFactory(appCtx, dspProcessor)
 
             // Custom LoadControl with reduced audio buffer for faster EQ response
             // Default max buffer is 50s, we reduce to 10s
@@ -168,7 +174,7 @@ object MusicPlaybackHolder {
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     when (playbackState) {
                         Player.STATE_ENDED -> {
-                            handleTrackEnded(context)
+                            handleTrackEnded(appCtx)
                         }
                         Player.STATE_READY -> {
                             notifyPlaybackStateChanged(player?.isPlaying == true)
@@ -183,13 +189,13 @@ object MusicPlaybackHolder {
                     notifyPlaybackStateChanged(isPlaying)
                     if (isPlaying) {
                         startProgressUpdates()
-                        startForegroundService(context)
+                        startForegroundService(appCtx)
                         StatsTracker.resumeMusicSession()
                     } else {
                         stopProgressUpdates()
                         StatsTracker.pauseMusicSession()
                     }
-                    updateForegroundService(context)
+                    updateForegroundService(appCtx)
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
@@ -209,7 +215,7 @@ object MusicPlaybackHolder {
                 }
             }
 
-            player = ExoPlayer.Builder(context.applicationContext, renderersFactory)
+            player = ExoPlayer.Builder(appCtx, renderersFactory)
                 .setLoadControl(loadControl)
                 .setWakeMode(C.WAKE_MODE_LOCAL)  // Maintient le CPU actif pendant la lecture (écran éteint)
                 .build().apply {
@@ -230,7 +236,7 @@ object MusicPlaybackHolder {
             Log.d(TAG, "ExoPlayer created with DSP Equalizer Processor")
 
             // Initialize and attach equalizer immediately so it works without opening the EQ UI
-            MusicEqualizerManager.initialize(context.applicationContext)
+            MusicEqualizerManager.initialize(appCtx)
             MusicEqualizerManager.attachToProcessor(dspProcessor)
             Log.d(TAG, "Equalizer attached to DSP processor")
 
@@ -637,7 +643,7 @@ object MusicPlaybackHolder {
             StatsTracker.endMusicSession()
 
             // Abandonner l'audio focus
-            AudioFocusManager.abandonFocus()
+            AudioFocusManager.abandonFocus(audioFocusListener)
 
             // Désenregistre la source MUSIC pour permettre à d'autres sources de jouer
             AudioPlaybackManager.unregisterPlayback(AudioPlaybackManager.AudioSource.MUSIC)
@@ -745,6 +751,18 @@ object MusicPlaybackHolder {
         player?.seekTo(position)
         // Reset DSP filter states on seek to avoid audio artifacts
         _equalizerProcessor?.resetFilters()
+
+        // La notification et l'écran verrouillé affichent la nouvelle position
+        if (player?.currentMediaItem != null) {
+            appContext?.let { updateForegroundService(it) }
+        }
+        // Le prochain point de contrôle (50 %, sauvegarde) se recalcule depuis la nouvelle position
+        if (progressRunnable != null) {
+            refreshProgressCadence()
+        } else {
+            // En pause, pas de minuteur : les écrans reçoivent quand même la nouvelle position
+            player?.let { p -> listeners.forEach { it.onProgressChanged(p.currentPosition, p.duration) } }
+        }
 
         // Si on revient au début du morceau (< 10% ou < 5 secondes),
         // réinitialiser le tracking pour permettre un nouveau comptage à 50%
@@ -895,7 +913,27 @@ object MusicPlaybackHolder {
     fun addListener(listener: PlayerListener) {
         if (!listeners.contains(listener)) {
             listeners.add(listener)
+            if (listener.wantsFrequentProgress) refreshProgressCadence()
         }
+    }
+
+    /**
+     * Retire tous les écouteurs. release() ne le fait pas : les écouteurs permanents
+     * (préchargement des paroles, hub, widget) doivent survivre à un redémarrage du lecteur.
+     */
+    @Suppress("unused")
+    fun clearListeners() {
+        listeners.clear()
+    }
+
+    /**
+     * Relance tout de suite le minuteur de progression pour appliquer la cadence voulue
+     * (un écouteur vient de demander ou de ne plus demander la progression rapide).
+     */
+    fun refreshProgressCadence() {
+        val runnable = progressRunnable ?: return
+        handler.removeCallbacks(runnable)
+        handler.post(runnable)
     }
 
     fun removeListener(listener: PlayerListener) {
@@ -950,13 +988,19 @@ object MusicPlaybackHolder {
     }
 
     private var progressRunnable: Runnable? = null
-    private var positionSaveCounter = 0
+    private var lastPositionSaveAt = 0L
+
+    private const val PROGRESS_FAST_MS = 500L
+    // Sans écran qui affiche la progression : assez fin pour le préchargement des paroles (20 s)
+    private const val PROGRESS_SLOW_MS = 5_000L
+    private const val POSITION_SAVE_INTERVAL_MS = 30_000L
 
     private fun startProgressUpdates() {
         stopProgressUpdates()
-        positionSaveCounter = 0
+        lastPositionSaveAt = SystemClock.elapsedRealtime()
         progressRunnable = object : Runnable {
             override fun run() {
+                var delay = PROGRESS_SLOW_MS
                 player?.let {
                     val position = it.currentPosition
                     val duration = it.duration
@@ -968,14 +1012,29 @@ object MusicPlaybackHolder {
                     // Check if we've reached 50% and should increment play count
                     checkAndIncrementPlayCount(position, duration)
 
-                    // Sauvegarde la position toutes les 30 secondes (60 * 500ms)
-                    positionSaveCounter++
-                    if (positionSaveCounter >= 60) {
-                        positionSaveCounter = 0
+                    // Sauvegarde la position toutes les 30 secondes
+                    val now = SystemClock.elapsedRealtime()
+                    if (now - lastPositionSaveAt >= POSITION_SAVE_INTERVAL_MS) {
+                        lastPositionSaveAt = now
                         appContext?.let { ctx -> MusicQueuePersistence.updatePosition(ctx, position) }
                     }
+
+                    if (listeners.any { listener -> listener.wantsFrequentProgress }) {
+                        delay = PROGRESS_FAST_MS
+                    } else {
+                        delay = minOf(delay, POSITION_SAVE_INTERVAL_MS - (now - lastPositionSaveAt))
+                        // Se réveiller juste après la moitié du morceau pour le compteur d'écoutes
+                        if (!playCountIncrementedForCurrentTrack.get() && duration > 0) {
+                            val untilHalf = duration / 2 - position
+                            if (untilHalf > 0) {
+                                val speed = it.playbackParameters.speed.coerceAtLeast(0.1f)
+                                delay = minOf(delay, (untilHalf / speed).toLong() + 50L)
+                            }
+                        }
+                        delay = delay.coerceIn(PROGRESS_FAST_MS, PROGRESS_SLOW_MS)
+                    }
                 }
-                handler.postDelayed(this, 500)
+                handler.postDelayed(this, delay)
             }
         }
         handler.post(progressRunnable!!)
@@ -1096,7 +1155,6 @@ object MusicPlaybackHolder {
 
         player?.release()
         player = null
-        listeners.clear()
         playlist = emptyList()
         currentIndex = -1
 
@@ -1129,17 +1187,9 @@ object MusicPlaybackHolder {
             return false
         }
 
-        // Bug fix: Initialiser MusicPlayCountManager de manière synchrone pour éviter
-        // les race conditions si un track court atteint 50% avant la fin de l'init.
-        // L'init est rapide car elle utilise un double-checked locking.
-        kotlinx.coroutines.runBlocking {
-            try {
-                MusicPlayCountManager.init(context.applicationContext)
-                Log.d(TAG, "MusicPlayCountManager initialized for widget restore")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to init MusicPlayCountManager", e)
-            }
-        }
+        // Compteurs d'écoute (Room) chargés hors du fil UI ; le comptage à 50 %
+        // attend lui-même la fin de cette init (checkAndIncrementPlayCount)
+        initPlayCountsAsync(context)
 
         // Restaurer la playlist
         playlist = tracks
@@ -1171,6 +1221,27 @@ object MusicPlaybackHolder {
 
         Log.i(TAG, "Queue restored and playback started: ${tracks.size} tracks, index=$currentIndex")
         return true
+    }
+
+    /**
+     * Initialise MusicPlayCountManager (Room + cache) sur un fil de fond, puis rafraîchit
+     * le compteur affiché du morceau courant, lu avant la fin du chargement.
+     */
+    private fun initPlayCountsAsync(context: Context) {
+        if (MusicPlayCountManager.isLoaded()) return
+        val ctx = context.applicationContext
+        coroutineScope.launch {
+            try {
+                withContext(Dispatchers.IO) { MusicPlayCountManager.init(ctx) }
+                Log.d(TAG, "MusicPlayCountManager initialized for queue restore")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to init MusicPlayCountManager", e)
+                return@launch
+            }
+            val track = getCurrentTrack() ?: return@launch
+            val count = MusicStatsManager.getPlayCount(track)
+            listeners.forEach { it.onPlayCountIncremented(track, count) }
+        }
     }
 
     /**
@@ -1208,15 +1279,8 @@ object MusicPlaybackHolder {
             return false
         }
 
-        // Bug fix: Initialiser MusicPlayCountManager de manière synchrone
-        kotlinx.coroutines.runBlocking {
-            try {
-                MusicPlayCountManager.init(context.applicationContext)
-                Log.d(TAG, "MusicPlayCountManager initialized for queue restore")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to init MusicPlayCountManager", e)
-            }
-        }
+        // Compteurs d'écoute (Room) chargés hors du fil UI
+        initPlayCountsAsync(context)
 
         // Restaurer la playlist
         playlist = tracks

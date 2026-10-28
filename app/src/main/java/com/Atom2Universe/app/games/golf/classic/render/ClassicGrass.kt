@@ -126,10 +126,26 @@ internal class ClassicGrass(private val hole:ClassicHole) {
         growLoc=GL.glGetUniformLocation(program,"uGrow")
     }
 
+    /** The tiles in view, kept while the camera does not move. */
+    private val wanted=ArrayList<Pair<Int,Int>>(49)
+    private val wantedFor=FloatArray(18)
+
     fun draw(vp:FloatArray,eyeX:Float,eyeY:Float,eyeZ:Float,ballX:Float,ballZ:Float,time:Float) {
         if(eyeY-hole.heightAt(eyeX,eyeZ)>24f)return
         val tx=floor(eyeX/GrassGeometry.TILE).toInt();val tz=floor(eyeZ/GrassGeometry.TILE).toInt()
-        val wanted=ArrayList<Pair<Int,Int>>(49)
+        if(!sameView(vp,eyeX,eyeZ)) chooseTiles(vp,eyeX,eyeZ,tx,tz)
+        drawTiles(vp,eyeX,eyeY,eyeZ,ballX,ballZ,time)
+    }
+
+    private fun sameView(vp:FloatArray,eyeX:Float,eyeZ:Float):Boolean {
+        var same=wantedFor[16]==eyeX&&wantedFor[17]==eyeZ
+        for(i in 0..15) if(wantedFor[i]!=vp[i]) same=false
+        if(!same) { vp.copyInto(wantedFor); wantedFor[16]=eyeX; wantedFor[17]=eyeZ }
+        return same
+    }
+
+    private fun chooseTiles(vp:FloatArray,eyeX:Float,eyeZ:Float,tx:Int,tz:Int) {
+        wanted.clear()
         for(z in tz-3..tz+3)for(x in tx-3..tx+3) {
             val cx=(x+.5f)*GrassGeometry.TILE;val cz=(z+.5f)*GrassGeometry.TILE
             if(hypot(cx-eyeX,cz-eyeZ)>GrassGeometry.RANGE+5.7f)continue
@@ -144,6 +160,9 @@ internal class ClassicGrass(private val hole:ClassicHole) {
             if(visible)wanted+=x to z
         }
         wanted.sortBy{(it.first+.5f-tx).pow(2)+(it.second+.5f-tz).pow(2)}
+    }
+
+    private fun drawTiles(vp:FloatArray,eyeX:Float,eyeY:Float,eyeZ:Float,ballX:Float,ballZ:Float,time:Float) {
         var uploads=0
         while(uploads<4) {
             val ready=built.poll()?:break

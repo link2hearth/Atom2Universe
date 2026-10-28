@@ -75,6 +75,10 @@ class BiggerView @JvmOverloads constructor(
     private var thread: Thread? = null
     @Volatile private var running = false
     private var lastNanos = 0L
+    private var accumulator = 0f
+
+    /** Ce que la vue a demandé à l'écran la dernière fois : rester allumé ou non. */
+    private var ecranGarde = false
 
     private val dp = resources.displayMetrics.density
 
@@ -238,15 +242,29 @@ class BiggerView @JvmOverloads constructor(
             val now = System.nanoTime()
             val dt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.05f)
             lastNanos = now
-            synchronized(game) {
+            val enJeu = synchronized(game) {
                 if (pendingDrop && game.canDrop) {
                     pendingDrop = false
                     game.drop(holdX)
                 }
-                game.step(dt)
+                // La physique avance par pas fixes de 1/120 s, ce qu'elle faisait déjà sur
+                // l'écran à 120 Hz de la tablette quand elle suivait l'image : passer le dessin
+                // à soixante ne change donc rien au bocal. Le plafond reste celui que
+                // [BiggerGame.step] imposait à une image en retard.
+                accumulator += dt.coerceAtMost(MAX_FRAME_SIM)
+                while (accumulator >= FIXED_DT) {
+                    game.step(FIXED_DT)
+                    accumulator -= FIXED_DT
+                }
                 handleEvents()
                 updateEffects(dt)
                 publishHud()
+                !game.over
+            }
+            // L'écran reste allumé pendant une partie, pas sur l'écran de fin.
+            if (enJeu != ecranGarde) {
+                ecranGarde = enJeu
+                post { keepScreenOn = enJeu }
             }
             // Une toile nulle veut dire que la surface n'est pas prête : on attend quand même.
             val canvas = lockFrame()
@@ -254,8 +272,23 @@ class BiggerView @JvmOverloads constructor(
                 try { synchronized(game) { drawFrame(canvas) } }
                 finally { holder.unlockCanvasAndPost(canvas) }
             }
-            Thread.sleep(4)
+            // L'échéance de l'image, comptée depuis son début : soixante par seconde, comme le
+            // trébuchet. Le `sleep(4)` d'avant laissait la boucle suivre la file d'affichage,
+            // soit cent vingt fois par seconde sur la tablette.
+            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
         }
+    }
+
+    private companion object {
+        /** Pas de la physique, fixe : celui que la tablette lui donnait à 120 Hz. */
+        const val FIXED_DT = 1f / 120f
+
+        /** Temps simulé au plus par image, comme le plafond de [BiggerGame.step]. */
+        const val MAX_FRAME_SIM = 1f / 30f
+
+        /** Une image toutes les 16,7 ms, soit soixante par seconde. */
+        const val FRAME_NANOS = 1_000_000_000L / 60L
     }
 
     // ── Entrées ──────────────────────────────────────────────────────────────

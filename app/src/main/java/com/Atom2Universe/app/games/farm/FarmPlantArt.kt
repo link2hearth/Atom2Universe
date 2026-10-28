@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.util.LruCache
 import kotlin.math.*
 
 /** Native pixel crops: validated HTML studies and matching art for the remaining farm species. */
@@ -37,22 +36,51 @@ object FarmPlantArt {
     private val supported = FarmCrop.entries.toSet()
     fun supports(crop: FarmCrop) = crop in supported
     private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
-    private data class Key(val crop: FarmCrop, val variant: Int, val growth: Int, val established: Boolean)
-    // Bound the cache by bytes: planting times differ, so growth snapshots cannot grow forever.
-    private val cache = object : LruCache<Key, Bitmap>(12 * 1024 * 1024) {
-        override fun sizeOf(key: Key, value: Bitmap) = value.allocationByteCount
+    /**
+     * How many growth snapshots a plant has. A plant grows over hours and its art moves by whole
+     * pixels, so 32 steps show the same plant to the eye as 256 did - with an eighth of the
+     * snapshots, a cache that holds a whole planted farm instead of thrashing halfway through it.
+     */
+    private const val GROWTH_STEPS = 32
+    /** The snapshot a growth fraction lands on; anything cached against plant art reads it from here. */
+    fun growthStep(growth: Float): Int = (growth.coerceIn(0f, 1f) * GROWTH_STEPS).roundToInt()
+    // One slot per crop, design, snapshot and tree state: the key is a plain index, not an object
+    // built on every draw of every plant. Bound by bytes, the least recently drawn going first.
+    private const val CACHE_BYTES = 24 * 1024 * 1024
+    private val slots = arrayOfNulls<Bitmap>(FarmCrop.entries.size * 4 * (GROWTH_STEPS + 1) * 2)
+    private val lastUse = LongArray(slots.size)
+    private var useClock = 0L
+    private var cachedBytes = 0
+    private val drawRect = RectF()
+    private fun slotOf(crop: FarmCrop, variant: Int, step: Int, established: Boolean) =
+        ((crop.ordinal * 4 + variant) * (GROWTH_STEPS + 1) + step) * 2 + if (established) 1 else 0
+    private fun store(slot: Int, bitmap: Bitmap) {
+        cachedBytes += bitmap.allocationByteCount
+        slots[slot] = bitmap
+        while (cachedBytes > CACHE_BYTES) {
+            var oldest = -1
+            for (i in slots.indices) if (i != slot && slots[i] != null && (oldest < 0 || lastUse[i] < lastUse[oldest])) oldest = i
+            if (oldest < 0) break
+            cachedBytes -= slots[oldest]!!.allocationByteCount; slots[oldest] = null
+        }
     }
+    /** Forgets every snapshot - the farm is closed, and they are painted again when next needed. */
+    fun trim() { slots.fill(null); cachedBytes = 0 }
     fun draw(canvas: Canvas, crop: FarmCrop, variant: Int, growth: Float, target: RectF,
              windTime: Float? = null, established: Boolean = false) {
         if (target.width() <= 0f || target.height() <= 0f) return
-        val key = Key(crop, Math.floorMod(variant, 4), (growth.coerceIn(0f, 1f) * 256).roundToInt(), established && crop.tree)
-        val bitmap = cache[key] ?: run {
+        val design = Math.floorMod(variant, 4)
+        val step = growthStep(growth)
+        val tree = established && crop.tree
+        val index = slotOf(crop, design, step, tree)
+        lastUse[index] = ++useClock
+        val bitmap = slots[index] ?: run {
             // Lettuce leaves extend below the root line; retain that transparent padding.
             val small = Bitmap.createBitmap(80, 88, Bitmap.Config.ARGB_8888)
-            PlantPainter(Canvas(small), key.variant, key.growth / 256.0, key.established).draw(crop)
+            PlantPainter(Canvas(small), design, step / GROWTH_STEPS.toDouble(), tree).draw(crop)
             val enlarged = Bitmap.createScaledBitmap(small, 240, 264, false)
             small.recycle()
-            cache.put(key, enlarged)
+            store(index, enlarged)
             enlarged
         }
         val artHeight = when (crop) {
@@ -86,7 +114,8 @@ object FarmPlantArt {
         }
         // Art pixels remain large; only the transform samples the 3x image for gentle movement.
         paint.isFilterBitmap = windTime != null
-        canvas.drawBitmap(bitmap, null, RectF(-40f * scale, -72f * scale, 40f * scale, 16f * scale), paint)
+        drawRect.set(-40f * scale, -72f * scale, 40f * scale, 16f * scale)
+        canvas.drawBitmap(bitmap, null, drawRect, paint)
         canvas.restore()
     }
 }

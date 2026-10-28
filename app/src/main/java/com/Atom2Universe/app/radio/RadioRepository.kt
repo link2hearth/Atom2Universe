@@ -3,6 +3,7 @@ package com.Atom2Universe.app.radio
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.radio.data.RadioDatabase
 import com.Atom2Universe.app.radio.data.RadioFilterDao
 import com.Atom2Universe.app.radio.data.RadioFilterEntity
@@ -337,7 +338,8 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
 
     private fun normalizeStation(raw: JSONObject): RadioStation? {
         val id = raw.optString("stationuuid").trim().ifEmpty { raw.optString("id").trim() }
-        val url = raw.optString("url").trim().ifEmpty { raw.optString("url_resolved").trim() }
+        // L'adresse résolue d'abord : « url » est souvent une playlist (.pls, .m3u) que le lecteur ne sait pas lire.
+        val url = raw.optString("url_resolved").trim().ifEmpty { raw.optString("url").trim() }
         if (id.isEmpty() || url.isEmpty()) {
             return null
         }
@@ -346,7 +348,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
             Log.w(TAG, "Station $id has invalid URL protocol: $url")
             return null
         }
-        val name = raw.optString("name").trim().ifEmpty { "Station" }
+        val name = raw.optString("name").trim().ifEmpty { appContext.getString(R.string.radio_station_default_name) }
         val country = raw.optString("country").trim()
         val language = raw.optString("language").trim()
         val favicon = raw.optString("favicon").trim()

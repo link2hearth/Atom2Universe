@@ -23,7 +23,10 @@ class MusicForegroundService : Service() {
 
         const val ACTION_START = "com.Atom2Universe.app.music.START"
         const val ACTION_UPDATE = "com.Atom2Universe.app.music.UPDATE"
+        // Retire seulement le service du premier plan (envoyé par MusicPlaybackHolder.stop)
         const val ACTION_STOP = "com.Atom2Universe.app.music.STOP"
+        // Bouton « Arrêter » de la notification : arrête vraiment la lecture
+        const val ACTION_STOP_PLAYBACK = "com.Atom2Universe.app.music.STOP_PLAYBACK"
         const val ACTION_PLAY_PAUSE = "com.Atom2Universe.app.music.PLAY_PAUSE"
         const val ACTION_NEXT = "com.Atom2Universe.app.music.NEXT"
         const val ACTION_PREV = "com.Atom2Universe.app.music.PREV"
@@ -56,9 +59,10 @@ class MusicForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Null check sur intent pour éviter les NPE
+        // Intent nul = relance par le système après la mort du processus : rien à jouer
         if (intent == null) {
-            return START_STICKY
+            stopSelf()
+            return START_NOT_STICKY
         }
 
         when (intent.action) {
@@ -80,9 +84,15 @@ class MusicForegroundService : Service() {
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
+            ACTION_STOP_PLAYBACK -> {
+                // stop() renvoie ACTION_STOP (après ses mises à jour), qui retire
+                // la notification et arrête le service
+                MusicPlaybackHolder.stop(this)
+            }
             ACTION_DISMISS -> {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
+                // « Fermer » libère aussi la lecture (focus audio, récepteurs) ; comme pour
+                // « Arrêter », stop() renvoie ACTION_STOP qui retire la notification
+                MusicPlaybackHolder.stop(this)
             }
             ACTION_PLAY_PAUSE -> {
                 MusicPlaybackHolder.togglePlayPause(this)
@@ -94,7 +104,7 @@ class MusicForegroundService : Service() {
                 MusicPlaybackHolder.skipToPrevious(this)
             }
         }
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -212,7 +222,7 @@ class MusicForegroundService : Service() {
         val stopIntent = PendingIntent.getService(
             this,
             4,
-            Intent(this, MusicForegroundService::class.java).apply { action = ACTION_STOP },
+            Intent(this, MusicForegroundService::class.java).apply { action = ACTION_STOP_PLAYBACK },
             PendingIntent.FLAG_IMMUTABLE
         )
 

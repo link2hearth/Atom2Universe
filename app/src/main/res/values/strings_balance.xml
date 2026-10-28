@@ -37,4 +37,8 @@
     <string name="mobile_difficulty_expert">Expert</string>
     <string name="mobile_btn_restart">Start over</string>
     <string name="mobile_gain">+%1$d ✦</string>
+    <!-- Textes peints par la vue du levier : somme d'une colonne, inclinaison, couples. -->
+    <string name="balance_sum">Σ %1$d</string>
+    <string name="balance_lean_deg">%1$.1f°</string>
+    <string name="balance_torque">%1$.1f</string>
 </resources>

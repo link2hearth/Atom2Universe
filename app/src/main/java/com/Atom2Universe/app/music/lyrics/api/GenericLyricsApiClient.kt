@@ -17,9 +17,13 @@ class GenericLyricsApiClient(
 
     companion object {
         private const val TAG = "GenericLyricsApiClient"
+
+        /** Un seul pool de connexions et de fils pour toutes les recherches de paroles. */
+        private val sharedClient = OkHttpClient()
     }
 
-    private val client = OkHttpClient.Builder()
+    // newBuilder() garde le pool et les fils du client partagé : seuls les délais changent.
+    private val client = sharedClient.newBuilder()
         .callTimeout(timeoutMs, TimeUnit.MILLISECONDS)
         .connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
         .readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
@@ -40,13 +44,13 @@ class GenericLyricsApiClient(
                 .applyHeaders()
                 .build()
 
-            val response = client.newCall(request).execute()
-
-            when {
-                response.isSuccessful -> ApiTestResult.Success
-                response.code == 404 -> ApiTestResult.Success
-                response.code == 429 -> ApiTestResult.RateLimited
-                else -> ApiTestResult.HttpError(response.code)
+            client.newCall(request).execute().use { response ->
+                when {
+                    response.isSuccessful -> ApiTestResult.Success
+                    response.code == 404 -> ApiTestResult.Success
+                    response.code == 429 -> ApiTestResult.RateLimited
+                    else -> ApiTestResult.HttpError(response.code)
+                }
             }
         } catch (e: java.net.UnknownHostException) {
             ApiTestResult.UnknownHost
@@ -77,17 +81,17 @@ class GenericLyricsApiClient(
                 .applyHeaders()
                 .build()
 
-            val response = client.newCall(request).execute()
-
-            if (!response.isSuccessful) {
-                return@withContext when (response.code) {
-                    404 -> LyricsResult.NotFound
-                    429 -> LyricsResult.RateLimited
-                    else -> LyricsResult.Error("HTTP ${response.code}", config.sourceLabel)
+            // use : la réponse est fermée sur tous les chemins, erreurs HTTP comprises
+            val body = client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    return@withContext when (response.code) {
+                        404 -> LyricsResult.NotFound
+                        429 -> LyricsResult.RateLimited
+                        else -> LyricsResult.Error("HTTP ${response.code}", config.sourceLabel)
+                    }
                 }
+                response.body?.string().orEmpty()
             }
-
-            val body = response.body?.string().orEmpty()
             if (body.isBlank()) {
                 return@withContext LyricsResult.NotFound
             }

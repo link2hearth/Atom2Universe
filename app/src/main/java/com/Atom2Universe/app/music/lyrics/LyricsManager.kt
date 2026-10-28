@@ -13,8 +13,14 @@ import com.Atom2Universe.app.music.lyrics.data.LyricsEntity
 import com.Atom2Universe.app.music.model.MusicTrack
 import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Gestionnaire principal pour les opérations de paroles.
@@ -31,6 +37,16 @@ object LyricsManager {
     private const val TAG = "LyricsManager"
     private lateinit var appContext: Context
     private var isInitialized = false
+
+    /** Délai des recherches automatiques après une panne ou un refus (429) des API. */
+    private const val ONLINE_BACKOFF_MS = 5 * 60 * 1000L
+
+    @Volatile
+    private var onlineBackoffUntil = 0L
+
+    // Recherches en cours, par clé de morceau : un second demandeur attend la première.
+    private val inFlight = ConcurrentHashMap<String, Deferred<LyricsResult>>()
+    private val searchScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /**
      * Crée un repository avec les URLs configurées par l'utilisateur.
@@ -198,11 +214,37 @@ object LyricsManager {
             Log.d(TAG, "forceRefresh=true, bypass du marqueur noLyricsFound: ${track.title}")
         }
 
+        // Les API viennent d'échouer : les recherches automatiques attendent un peu au lieu de
+        // relancer leurs requêtes à chaque titre. La recherche manuelle passe toujours.
+        if (!forceRefresh && System.currentTimeMillis() < onlineBackoffUntil) {
+            Log.d(TAG, "APIs en échec récent, recherche reportée: ${track.title}")
+            return@withContext LyricsResult.Error("Lyrics APIs recently failed", "backoff")
+        }
+
+        // Une recherche déjà en cours pour ce titre (préchargement, lecteur, auto-fetch) est
+        // partagée au lieu d'être refaite.
+        val search = inFlight.computeIfAbsent(key) { k ->
+            searchScope.async(start = CoroutineStart.LAZY) { searchAndCache(track, k) }
+                .also { d -> d.invokeOnCompletion { inFlight.remove(k, d) } }
+        }
+        search.await()
+    }
+
+    /** Recherche en ligne puis met en cache le résultat (ou le marqueur « pas de paroles »). */
+    private suspend fun searchAndCache(track: MusicTrack, key: String): LyricsResult {
+        val dao = MusicDatabase.getInstance(appContext).lyricsDao()
+
         Log.d(TAG, "Fetching lyrics online for: ${track.title}")
 
         // Créer le repository avec les URLs actuelles
         val repository = createRepository()
         val result = repository.fetchLyrics(track)
+
+        onlineBackoffUntil = if (result is LyricsResult.Error || result is LyricsResult.RateLimited) {
+            System.currentTimeMillis() + ONLINE_BACKOFF_MS
+        } else {
+            0L
+        }
 
         when {
             result is LyricsResult.Success -> {
@@ -254,7 +296,7 @@ object LyricsManager {
             // RateLimited et Error sont temporaires → pas de marqueur, on réessaiera
         }
 
-        result
+        return result
     }
 
     /**

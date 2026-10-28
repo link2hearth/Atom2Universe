@@ -49,6 +49,27 @@ data class ScheduledNote(
 }
 
 /**
+ * Premier indice dont la note commence à [timeMs] ou après, dans une liste triée par début
+ * (dichotomie) : les vues ne parcourent ainsi que les notes proches de la position.
+ */
+internal fun List<ScheduledNote>.firstIndexStartingAtOrAfter(timeMs: Long): Int {
+    var low = 0
+    var high = size
+    while (low < high) {
+        val mid = (low + high) ushr 1
+        if (this[mid].startTimeMs < timeMs) low = mid + 1 else high = mid
+    }
+    return low
+}
+
+/** Durée de la plus longue note : borne la recherche des notes encore visibles. */
+internal fun List<ScheduledNote>.maxDurationMs(): Long {
+    var max = 0L
+    for (note in this) if (note.durationMs > max) max = note.durationMs
+    return max
+}
+
+/**
  * État de la session de pratique
  */
 class PracticeSession(

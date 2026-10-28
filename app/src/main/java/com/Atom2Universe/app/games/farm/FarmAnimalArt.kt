@@ -10,8 +10,9 @@ import kotlin.math.*
 
 /** Articulated native pixel art for all four livestock families and their young. */
 object FarmAnimalArt {
-    data class Pose(val time: Double = 0.0, val walk: Double = 0.0, val eat: Double = 0.0,
-                    val phase: Double = 0.0, val direction: Int = 1)
+    /** Mutable so a pen can hand the same pose to every animal it draws, frame after frame. */
+    data class Pose(var time: Double = 0.0, var walk: Double = 0.0, var eat: Double = 0.0,
+                    var phase: Double = 0.0, var direction: Int = 1)
     private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
     private val cache = mutableMapOf<Int, List<Bitmap>>()
     private val tau = PI * 2
@@ -21,23 +22,38 @@ object FarmAnimalArt {
     private val cowBases = intArrayOf(0xFFF2E7D4.toInt(), 0xFFEAC39C.toInt(), 0xFFEBD9B9.toInt(), 0xFFEEE8E3.toInt())
     private fun ease(v: Double): Double = v.coerceIn(0.0, 1.0).let { it * it * (3 - 2 * it) }
     private fun mix(a: Double, b: Double, t: Double) = a + (b - a) * t
-    fun supports(id: String) = id.substringBeforeLast('_') in supported
-
-    fun draw(canvas: Canvas, id: String, target: RectF, pose: Pose = Pose()) {
-        if (target.width() <= 0 || target.height() <= 0) return
+    // A pen asks these about every animal on every frame: each sprite name is read apart only once.
+    private val supportedIds = HashMap<String, Boolean>()
+    fun supports(id: String) = supportedIds.getOrPut(id) { id.substringBeforeLast('_') in supported }
+    private val youngNames = setOf("chick", "calf", "lamb", "piglet")
+    private val maleNames = setOf("rooster", "bull", "ram", "boar")
+    private class Model(val bird: Boolean, val sheep: Boolean, val pig: Boolean, val young: Boolean,
+                        val male: Boolean, val variant: Int, val index: Int)
+    private val models = HashMap<String, Model>()
+    private fun model(id: String) = models.getOrPut(id) {
         val name = id.substringBeforeLast('_')
         val bird = name == "hen" || name == "rooster" || name == "chick"
         val sheep = name == "ewe" || name == "ram" || name == "lamb"
         val pig = name == "sow" || name == "boar" || name == "piglet"
-        val young = name in setOf("chick", "calf", "lamb", "piglet")
-        val male = name in setOf("rooster", "bull", "ram", "boar")
+        val young = name in youngNames
+        val male = name in maleNames
         val variant = ((id.substringAfterLast('_').toIntOrNull() ?: 1) - 1).coerceIn(0, 3)
-        val model = (when {
+        Model(bird, sheep, pig, young, male, variant, (when {
             sheep -> 24 + if (young) 8 else if (male) 4 else 0
             pig -> 36 + if (young) 8 else if (male) 4 else 0
             young -> if (bird) 16 else 20
             else -> (if (bird) 0 else 8) + (if (male) 4 else 0)
-        }) + variant
+        }) + variant)
+    }
+    /** Reused by every body part of every animal: the pens draw dozens of parts per frame. */
+    private val partRect = RectF()
+
+    fun draw(canvas: Canvas, id: String, target: RectF, pose: Pose = Pose()) {
+        if (target.width() <= 0 || target.height() <= 0) return
+        val spec = model(id)
+        val bird = spec.bird; val sheep = spec.sheep; val pig = spec.pig
+        val young = spec.young; val male = spec.male; val variant = spec.variant
+        val model = spec.index
         val parts = cache.getOrPut(model) {
             FarmAnimalPixels.models[model].map { recipe ->
                 val bitmap = Bitmap.createBitmap(recipe.width * 3, recipe.height * 3, Bitmap.Config.ARGB_8888)
@@ -58,7 +74,7 @@ object FarmAnimalArt {
         canvas.translate(target.centerX(), target.bottom - 4 * scale)
         canvas.scale(scale, scale)
         paint.color = Color.argb(45, 55, 95, 61)
-        canvas.drawOval(if (bird) RectF(-25f, -1f, 25f, 5f) else RectF(-48f, -1f, 48f, 7f), paint)
+        if (bird) canvas.drawOval(-25f, -1f, 25f, 5f, paint) else canvas.drawOval(-48f, -1f, 48f, 7f, paint)
         canvas.scale(pose.direction.toFloat(), 1f)
         val draw = Painter(canvas, parts)
         if (bird) draw.bird(pose, male, young) else draw.quadruped(pose, male, variant, young, sheep, pig)
@@ -72,7 +88,8 @@ object FarmAnimalArt {
             c.save(); c.translate(x.toFloat(), y.toFloat()); c.rotate(Math.toDegrees(angle).toFloat())
             paint.color = Color.WHITE
             paint.alpha = opacity
-            c.drawBitmap(b, null, RectF(-ox.toFloat(), -oy.toFloat(), b.width / 3f - ox.toFloat(), b.height / 3f - oy.toFloat()), paint)
+            partRect.set(-ox.toFloat(), -oy.toFloat(), b.width / 3f - ox.toFloat(), b.height / 3f - oy.toFloat())
+            c.drawBitmap(b, null, partRect, paint)
             c.restore()
         }
         fun rect(x: Double, y: Double, w: Double, h: Double, color: Int) {

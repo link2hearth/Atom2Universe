@@ -74,6 +74,9 @@ class RecordSampleFragment : Fragment() {
     private var countdownDelaySeconds: Int = 3
     private var maxDurationSeconds: Int = 5
     private var countdownJob: Job? = null
+    // Take already processed by the player for "Play"
+    private var playerSamples: ShortArray? = null
+    private var playerLoadJob: Job? = null
 
     // Listeners
     var onSampleRecorded: ((File, ShortArray, PitchResult) -> Unit)? = null
@@ -104,6 +107,8 @@ class RecordSampleFragment : Fragment() {
         recorder = SampleRecorder(requireContext())
         pitchDetector = PitchDetector()
         samplePlayer = SamplePlayer()
+        // Takes left behind by earlier sessions (added or abandoned)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) { recorder.cleanupOldSamples() }
 
         // Find views
         getReadyButton = view.findViewById(R.id.get_ready_button)
@@ -206,10 +211,10 @@ class RecordSampleFragment : Fragment() {
         }
 
         playButton.setOnClickListener {
-            recordedSamples?.let { samples ->
-                samplePlayer.loadSample(samples)
-                samplePlayer.setRootNote(detectedPitch.midiNote)
-                samplePlayer.play()
+            val samples = recordedSamples ?: return@setOnClickListener
+            viewLifecycleOwner.lifecycleScope.launch {
+                playerLoadJob?.join()
+                if (playerSamples === samples) samplePlayer.play()
             }
         }
 
@@ -255,6 +260,7 @@ class RecordSampleFragment : Fragment() {
                     is SampleRecorder.RecordingState.Completed -> {
                         recordedFile = state.file
                         recordedSamples = state.samples
+                        loadPlayer(state.samples)
                         detectPitch(state.samples)
                         updateUI(State.COMPLETED)
                         if (state.noiseReductionApplied) {
@@ -369,6 +375,16 @@ class RecordSampleFragment : Fragment() {
                 // Default to C4 if uncertain
                 detectedPitch = PitchResult.fromFrequency(261.63f, 0.5f)
             }
+        }
+    }
+
+    /** Processes the take for "Play" once, off the UI thread. */
+    private fun loadPlayer(samples: ShortArray) {
+        if (playerSamples === samples) return
+        playerLoadJob?.cancel()
+        playerLoadJob = viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Default) { samplePlayer.loadSample(samples) }
+            playerSamples = samples
         }
     }
 
@@ -526,10 +542,21 @@ class RecordSampleFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        samplePlayer.stop()
+        // The microphone does not stay open in the background; a finished take is kept
+        if (recorder.recordingState.value !is SampleRecorder.RecordingState.Completed) {
+            cancelCountdown()
+            recorder.cancel()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         cancelCountdown()
         recorder.cancel()
+        playerLoadJob?.cancel()
         samplePlayer.release()
     }
 

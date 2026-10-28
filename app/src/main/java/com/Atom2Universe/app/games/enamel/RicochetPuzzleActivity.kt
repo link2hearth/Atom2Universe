@@ -40,7 +40,6 @@ class RicochetPuzzleActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val model = RicochetPuzzleGame(Random.nextInt(RicochetPuzzleRules.MAX_SEED + 1))
         store.restore(model)
         reported = model.complete
@@ -98,9 +97,23 @@ class RicochetPuzzleActivity : ThemedActivity() {
         seedButton.text = getString(R.string.puzzle_seed_mode, game.seed, mode(game.hard))
     }
 
+    /** La planche tourne : ni règles, ni fenêtre ouverte, ni activité en pause. */
+    private var playing = false
+
+    private fun pauseBoard() { board.pause(); playing = false; updateScreen() }
+
+    private fun resumeBoard() { board.resume(); playing = true; updateScreen() }
+
+    /** L'écran reste allumé pendant une grille en cours, pas sur une grille finie ni derrière une fenêtre. */
+    private fun updateScreen() {
+        if (playing && !game.complete) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
     private fun changed() {
         val record = store.save(game)
         updateHud()
+        updateScreen()
         if (game.complete && !reported) {
             reported = true
             show(ImmersiveAlertDialogBuilder(this).setTitle(if (record) R.string.puzzle_new_record else R.string.puzzle_complete)
@@ -112,7 +125,7 @@ class RicochetPuzzleActivity : ThemedActivity() {
     }
 
     private fun start(seed: Int, hard: Boolean) {
-        game.reset(seed, hard); reported = false; board.refresh()
+        game.reset(seed, hard); reported = false; board.refresh(); updateScreen()
     }
 
     private fun replace(action: () -> Unit) {
@@ -123,11 +136,11 @@ class RicochetPuzzleActivity : ThemedActivity() {
     }
 
     private fun show(next: AlertDialog) {
-        board.pause(); dialog = next
+        pauseBoard(); dialog = next
         next.setOnDismissListener {
             if (dialog === next) {
                 dialog = null
-                if (!readingRules && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) board.resume()
+                if (!readingRules && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) resumeBoard()
             }
         }
         next.show()
@@ -176,20 +189,20 @@ class RicochetPuzzleActivity : ThemedActivity() {
 
     private fun rules() {
         readingRules = true
-        board.pause()
+        pauseBoard()
         showGameRules(R.string.puzzle_title, R.string.puzzle_rules) {
             readingRules = false
-            if (dialog == null && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) board.resume()
+            if (dialog == null && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) resumeBoard()
         }
     }
 
     override fun onResume() {
         super.onResume(); sound.start()
-        if (dialog == null && !readingRules) board.resume()
+        if (dialog == null && !readingRules) resumeBoard()
     }
 
     override fun onPause() {
-        board.pause(); store.save(game); sound.stop()
+        pauseBoard(); store.save(game); sound.stop()
         super.onPause()
     }
 }

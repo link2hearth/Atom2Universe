@@ -53,6 +53,11 @@ class RoguelikeView @JvmOverloads constructor(
     var onRestartAfterDeath: (() -> Unit)? = null
     /** Un appui sur le héros quand il est sur le feu de camp : le menu du camp. */
     var onCampfireTapped: (() -> Unit)? = null
+    /**
+     * Vrai quand un panneau opaque (inventaire, lexique…) recouvre la carte : elle garde sa
+     * dernière image et ne se redessine plus, jusqu'à ce que la fonction redevienne fausse.
+     */
+    var isCovered: () -> Boolean = { false }
 
     private val mapArt = DungeonMapArt()
     private val actors = DungeonCombatArt()
@@ -115,6 +120,62 @@ class RoguelikeView @JvmOverloads constructor(
     private val pLootCardBg  = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF1C2A38.toInt() }
     private val pEquipBtn    = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF1565C0.toInt() }
     private val pIgnoreBtn   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF424242.toInt() }
+    private val pDivider     = Paint().apply { color = 0xFF333344.toInt(); strokeWidth = 1f }
+    private val swipeArrow   = Path()
+    /** Rectangle de travail des acteurs et objets : Canvas en recopie les valeurs. */
+    private val actorRect    = RectF()
+    private val chaseMark by lazy { context.getString(R.string.roguelike_chase_mark) }
+
+    // ── Calque des cases ──────────────────────────────────────────────────────
+    /**
+     * Les cases à l'écran, enregistrées une fois puis rejouées à chaque image : refaites
+     * seulement quand la caméra, le zoom ou le brouillard changent.
+     */
+    private var tileLayer: Picture? = null
+    /**
+     * Carte très dézoomée : un Picture garderait chaque case en mémoire (~90 Mo sur 99×99), on peint
+     * donc le calque dans une image de la taille de la vue et les caches restent bornés.
+     */
+    private var tileBitmap: Bitmap? = null
+    private var layerCamX = 0f
+    private var layerCamY = 0f
+    private var layerTile = 0f
+    private var layerWidth = 0
+    private var layerHeight = 0
+    /** Le brouillard enregistré, par case (y × w + x) : explorée (1), visible (2). */
+    private var layerFog = ByteArray(0)
+    private val cellRect = RectF()
+
+    // Ce qui ne bouge pas de l'étage, par case : plus de Pos ni de recherche à chaque case.
+    private var cellLevel: DungeonLevel? = null
+    private var cellPassages: Map<Pos, MapPassage>? = null
+    private var cellWaterways: Map<Pos, MapWaterway>? = null
+    private var cellSceneries: Map<Pos, MapScenery>? = null
+    private var cellMausoleums: List<Pos>? = null
+    private var cellPassage = arrayOfNulls<MapPassage>(0)
+    private var cellWaterway = arrayOfNulls<MapWaterway>(0)
+    private var cellScenery = arrayOfNulls<MapScenery>(0)
+    /** L'index du mausolée qui couvre la case, -1 sinon. */
+    private var cellMonument = IntArray(0)
+    private var cellNeighbours = IntArray(0)
+
+    // Les trois dernières lignes du journal, traduites une seule fois
+    private val hudEntries = arrayOfNulls<LogEntry>(3)
+    private val hudLines = arrayOfNulls<String>(3)
+
+    private var coverPollPending = false
+    private val coverPoll = Runnable {
+        coverPollPending = false
+        if (!isAttachedToWindow) return@Runnable
+        if (isCovered()) watchCover() else invalidate()
+    }
+
+    /** Sous un panneau, un simple coup d'œil tous les quarts de seconde. */
+    private fun watchCover() {
+        if (coverPollPending) return
+        coverPollPending = true
+        postDelayed(coverPoll, 250L)
+    }
 
     // ── Swipe ───────────────────────────────────────────────────────────────────
     private val swipeMinPx get() = 16f * context.resources.displayMetrics.density
@@ -138,8 +199,13 @@ class RoguelikeView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stopHold()
+        removeCallbacks(coverPoll)
+        coverPollPending = false
         actors.clearMapPacks()
         mapArt.clearTiles()
+        tileLayer = null
+        tileBitmap = null
+        cellLevel = null
     }
 
     private val sd get() = context.resources.displayMetrics.density * context.resources.configuration.fontScale
@@ -171,7 +237,9 @@ class RoguelikeView @JvmOverloads constructor(
         if (g.pendingEquipDrop != null) drawLootPopup(canvas, g)
         if (g.deathReport != null)      drawDeathPanel(canvas, g)
         if (!overlay) drawSwipeZone(canvas)
-        if (g.isExploring && isShown) postInvalidateDelayed(80L)
+        if (g.isExploring && isShown) {
+            if (isCovered()) watchCover() else postInvalidateDelayed(80L)
+        }
     }
 
     // ── Caméra ──────────────────────────────────────────────────────────────────
@@ -208,50 +276,58 @@ class RoguelikeView @JvmOverloads constructor(
     private fun drawMap(canvas: Canvas, g: RoguelikeGame) {
         canvas.drawColor(0xFF101820.toInt())
         val lv = g.level
+        prepareCells(lv)
         val minX = maxOf(0, (camX / tileSize).toInt())
         val minY = maxOf(0, (camY / tileSize).toInt())
         val maxX = minOf(lv.w - 1, ((camX + width) / tileSize).toInt())
         val maxY = minOf(lv.h - 1, ((camY + height) / tileSize).toInt())
+        if (layerStale(lv, minX, minY, maxX, maxY)) recordLayer(lv, minX, minY, maxX, maxY)
+        tileLayer?.let { canvas.drawPicture(it) } ?: tileBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+    }
+
+    private fun fogBits(explored: Boolean, visible: Boolean): Byte =
+        ((if (explored) 1 else 0) or (if (visible) 2 else 0)).toByte()
+
+    /** Le calque est à refaire si la caméra a bougé ou si le brouillard a changé sous elle. */
+    private fun layerStale(lv: DungeonLevel, minX: Int, minY: Int, maxX: Int, maxY: Int): Boolean {
+        if ((tileLayer == null && tileBitmap == null) || camX != layerCamX || camY != layerCamY || tileSize != layerTile ||
+            width != layerWidth || height != layerHeight) return true
+        for (ty in minY..maxY) {
+            val explored = lv.explored[ty]; val visible = lv.visible[ty]; val row = ty * lv.w
+            for (tx in minX..maxX) if (layerFog[row + tx] != fogBits(explored[tx], visible[tx])) return true
+        }
+        return false
+    }
+
+    private fun recordLayer(lv: DungeonLevel, minX: Int, minY: Int, maxX: Int, maxY: Int) {
+        var cells = 0
+        for (ty in minY..maxY) for (tx in minX..maxX) if (lv.explored[ty][tx]) cells++
+        mapArt.reserve(minOf(cells, MAX_PICTURE_CELLS))
+        val w = width.coerceAtLeast(1); val h = height.coerceAtLeast(1)
+        var picture: Picture? = null
+        val canvas = if (cells > MAX_PICTURE_CELLS) {
+            // Pas de recycle() : l'image précédente peut encore servir à l'affichage en cours.
+            val bitmap = tileBitmap?.takeIf { it.width == w && it.height == h }
+                ?: Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also { tileBitmap = it }
+            bitmap.eraseColor(0)
+            Canvas(bitmap)
+        } else Picture().also { picture = it }.beginRecording(w, h)
         for (ty in minY..maxY) for (tx in minX..maxX) {
+            val i = ty * lv.w + tx
+            layerFog[i] = fogBits(lv.explored[ty][tx], lv.visible[ty][tx])
             if (!lv.explored[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
-            val rect = RectF(l, t, l + tileSize, t + tileSize)
+            val rect = cellRect.apply { set(l, t, l + tileSize, t + tileSize) }
             val theme = lv.themeAt(tx, ty)
-            val passage = lv.passages[Pos(tx, ty)]
-            val waterway = lv.waterways[Pos(tx, ty)]
-            val scenery = lv.scenery[Pos(tx, ty)]
-            var neighbours = 0
-            if (theme == DungeonTheme.CAMP || theme == DungeonTheme.VILLAGE || theme == DungeonTheme.BATTLEFIELD || theme == DungeonTheme.FIELDS) {
-                fun wallAt(x: Int, y: Int) = lv.inBounds(x, y) && !lv.walkable(x, y) &&
-                    lv.themeAt(x, y) == theme && lv.scenery[Pos(x, y)] == null
-                if (wallAt(tx, ty - 1)) neighbours = neighbours or 1
-                if (wallAt(tx + 1, ty)) neighbours = neighbours or 2
-                if (wallAt(tx, ty + 1)) neighbours = neighbours or 4
-                if (wallAt(tx - 1, ty)) neighbours = neighbours or 8
+            val passage = cellPassage[i]
+            val waterway = cellWaterway[i]
+            val scenery = cellScenery[i]
+            val monument = cellMonument[i]
+            if (monument >= 0) {
+                val m = lv.mausoleums[monument]
+                mapArt.mausoleumCell(canvas, rect, tx - m.x, ty - m.y)
             }
-            if (theme == DungeonTheme.CEMETERY || theme == DungeonTheme.DUNGEON || theme == DungeonTheme.FOREST || theme == DungeonTheme.SPACESHIP || theme == DungeonTheme.MINE || theme == DungeonTheme.MINE_DEPOT || theme == DungeonTheme.CRYPT) {
-                if (!lv.walkable(tx, ty - 1)) neighbours = neighbours or 1
-                if (!lv.walkable(tx + 1, ty)) neighbours = neighbours or 2
-                if (!lv.walkable(tx, ty + 1)) neighbours = neighbours or 4
-                if (!lv.walkable(tx - 1, ty)) neighbours = neighbours or 8
-            }
-            if (theme == DungeonTheme.PIRATE_CABIN) {
-                if (!lv.walkable(tx, ty - 1) || lv.themeAt(tx, ty - 1) != theme) neighbours = neighbours or 1
-                if (!lv.walkable(tx + 1, ty) || lv.themeAt(tx + 1, ty) != theme) neighbours = neighbours or 2
-                if (!lv.walkable(tx, ty + 1) || lv.themeAt(tx, ty + 1) != theme) neighbours = neighbours or 4
-                if (!lv.walkable(tx - 1, ty) || lv.themeAt(tx - 1, ty) != theme) neighbours = neighbours or 8
-            }
-            if (theme == DungeonTheme.PIRATE) {
-                if (ty == 0) neighbours = neighbours or 16
-                if (tx == lv.w - 1) neighbours = neighbours or 32
-                if (ty == lv.h - 1) neighbours = neighbours or 64
-                if (tx == 0) neighbours = neighbours or 128
-            }
-            val monument = lv.mausoleums.firstOrNull {
-                tx in it.x until it.x + CemeteryMonuments.SIZE && ty in it.y until it.y + CemeteryMonuments.SIZE
-            }
-            if (monument != null) mapArt.mausoleumCell(canvas, rect, tx - monument.x, ty - monument.y)
-            else mapArt.tile(canvas, rect, theme, if (scenery != null || waterway != null || passage?.kind == PassageKind.FENCE) TileType.FLOOR else lv.tiles[ty][tx], tx, ty, neighbours)
+            else mapArt.tile(canvas, rect, theme, if (scenery != null || waterway != null || passage?.kind == PassageKind.FENCE) TileType.FLOOR else lv.tiles[ty][tx], tx, ty, cellNeighbours[i])
             if (passage != null) mapArt.passage(canvas, rect, passage)
             if (waterway != null) mapArt.waterway(canvas, rect, waterway)
             if (scenery != null) mapArt.scenery(canvas, rect, scenery)
@@ -260,6 +336,69 @@ class RoguelikeView @JvmOverloads constructor(
                 canvas.drawRect(rect, pFog)
             }
         }
+        picture?.endRecording()
+        tileLayer = picture
+        if (picture != null) tileBitmap = null
+        layerCamX = camX; layerCamY = camY; layerTile = tileSize
+        layerWidth = width; layerHeight = height
+    }
+
+    /** Range par case ce qui ne bouge pas de l'étage (décor, mausolées, murs voisins). */
+    private fun prepareCells(lv: DungeonLevel) {
+        if (cellLevel === lv && cellPassages === lv.passages && cellWaterways === lv.waterways &&
+            cellSceneries === lv.scenery && cellMausoleums === lv.mausoleums) return
+        cellLevel = lv
+        cellPassages = lv.passages; cellWaterways = lv.waterways
+        cellSceneries = lv.scenery; cellMausoleums = lv.mausoleums
+        val n = lv.w * lv.h
+        cellPassage = arrayOfNulls(n)
+        for ((p, v) in lv.passages) if (lv.inBounds(p.x, p.y)) cellPassage[p.y * lv.w + p.x] = v
+        cellWaterway = arrayOfNulls(n)
+        for ((p, v) in lv.waterways) if (lv.inBounds(p.x, p.y)) cellWaterway[p.y * lv.w + p.x] = v
+        cellScenery = arrayOfNulls(n)
+        for ((p, v) in lv.scenery) if (lv.inBounds(p.x, p.y)) cellScenery[p.y * lv.w + p.x] = v
+        // Le premier mausolée de la liste l'emporte, comme avant
+        cellMonument = IntArray(n) { -1 }
+        lv.mausoleums.forEachIndexed { index, m ->
+            for (y in m.y until m.y + CemeteryMonuments.SIZE) for (x in m.x until m.x + CemeteryMonuments.SIZE)
+                if (lv.inBounds(x, y) && cellMonument[y * lv.w + x] < 0) cellMonument[y * lv.w + x] = index
+        }
+        cellNeighbours = IntArray(n) { neighboursAt(lv, it % lv.w, it / lv.w) }
+        layerFog = ByteArray(n)
+        tileLayer = null
+        tileBitmap = null
+    }
+
+    private fun neighboursAt(lv: DungeonLevel, tx: Int, ty: Int): Int {
+        val theme = lv.themeAt(tx, ty)
+        var neighbours = 0
+        if (theme == DungeonTheme.CAMP || theme == DungeonTheme.VILLAGE || theme == DungeonTheme.BATTLEFIELD || theme == DungeonTheme.FIELDS) {
+            fun wallAt(x: Int, y: Int) = lv.inBounds(x, y) && !lv.walkable(x, y) &&
+                lv.themeAt(x, y) == theme && cellScenery[y * lv.w + x] == null
+            if (wallAt(tx, ty - 1)) neighbours = neighbours or 1
+            if (wallAt(tx + 1, ty)) neighbours = neighbours or 2
+            if (wallAt(tx, ty + 1)) neighbours = neighbours or 4
+            if (wallAt(tx - 1, ty)) neighbours = neighbours or 8
+        }
+        if (theme == DungeonTheme.CEMETERY || theme == DungeonTheme.DUNGEON || theme == DungeonTheme.FOREST || theme == DungeonTheme.SPACESHIP || theme == DungeonTheme.MINE || theme == DungeonTheme.MINE_DEPOT || theme == DungeonTheme.CRYPT) {
+            if (!lv.walkable(tx, ty - 1)) neighbours = neighbours or 1
+            if (!lv.walkable(tx + 1, ty)) neighbours = neighbours or 2
+            if (!lv.walkable(tx, ty + 1)) neighbours = neighbours or 4
+            if (!lv.walkable(tx - 1, ty)) neighbours = neighbours or 8
+        }
+        if (theme == DungeonTheme.PIRATE_CABIN) {
+            if (!lv.walkable(tx, ty - 1) || lv.themeAt(tx, ty - 1) != theme) neighbours = neighbours or 1
+            if (!lv.walkable(tx + 1, ty) || lv.themeAt(tx + 1, ty) != theme) neighbours = neighbours or 2
+            if (!lv.walkable(tx, ty + 1) || lv.themeAt(tx, ty + 1) != theme) neighbours = neighbours or 4
+            if (!lv.walkable(tx - 1, ty) || lv.themeAt(tx - 1, ty) != theme) neighbours = neighbours or 8
+        }
+        if (theme == DungeonTheme.PIRATE) {
+            if (ty == 0) neighbours = neighbours or 16
+            if (tx == lv.w - 1) neighbours = neighbours or 32
+            if (ty == lv.h - 1) neighbours = neighbours or 64
+            if (tx == 0) neighbours = neighbours or 128
+        }
+        return neighbours
     }
     // ── Objets au sol ────────────────────────────────────────────────────────────
 
@@ -268,7 +407,8 @@ class RoguelikeView @JvmOverloads constructor(
         g.level.forge?.let { f ->
             if (isOnScreen(f.x, f.y) && g.level.explored[f.y][f.x]) {
                 val l = tileLeft(f.x); val t = tileTop(f.y)
-                mapArt.forge(canvas, RectF(l, t, l + tileSize, t + tileSize))
+                actorRect.set(l, t, l + tileSize, t + tileSize)
+                mapArt.forge(canvas, actorRect)
             }
         }
         for (item in g.level.items) {
@@ -276,7 +416,8 @@ class RoguelikeView @JvmOverloads constructor(
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val pad = tileSize * 0.15f
-            mapArt.pickup(canvas, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad), item.type == ItemType.GOLD, item.relic?.ordinal ?: 0)
+            actorRect.set(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad)
+            mapArt.pickup(canvas, actorRect, item.type == ItemType.GOLD, item.relic?.ordinal ?: 0)
         }
     }
 
@@ -289,7 +430,7 @@ class RoguelikeView @JvmOverloads constructor(
             val tx = pack.pos.x; val ty = pack.pos.y
             if (!isOnScreen(tx, ty) || !lv.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
-            val rect = RectF(l, t, l + tileSize, t + tileSize)
+            val rect = actorRect.apply { set(l, t, l + tileSize, t + tileSize) }
             actors.prepareMapPack(pack)
             actors.drawShadow(canvas, rect)
             actors.drawMonster(canvas, rect, pack.types.first(), actorIndex = packIndex)
@@ -305,7 +446,7 @@ class RoguelikeView @JvmOverloads constructor(
                 val r = tileSize * 0.16f
                 canvas.drawCircle(rect.centerX(), rect.top + r * 0.2f, r, pChase)
                 pText.color = 0xFFFFFFFF.toInt(); pText.textSize = r * 1.6f
-                canvas.drawText("!", rect.centerX(), rect.top + r * 0.75f, pText)
+                canvas.drawText(chaseMark, rect.centerX(), rect.top + r * 0.75f, pText)
             }
         }
     }
@@ -314,7 +455,7 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun drawPlayer(canvas: Canvas, g: RoguelikeGame) {
         val l = tileLeft(g.playerPos.x); val t = tileTop(g.playerPos.y)
-        val rect = RectF(l, t, l + tileSize, t + tileSize)
+        val rect = actorRect.apply { set(l, t, l + tileSize, t + tileSize) }
         canvas.save()
         if (facingLeft) canvas.scale(-1f, 1f, rect.centerX(), rect.centerY())
         actors.drawShadow(canvas, rect, hero = true)
@@ -327,14 +468,17 @@ class RoguelikeView @JvmOverloads constructor(
     private fun drawHud(canvas: Canvas, g: RoguelikeGame) {
         val logSize  = sd * 17f; val hintSize = sd * 15f
         val lineH    = logSize * 1.4f
-        val lines    = g.log.takeLast(3)
-        val hudH     = lines.size * lineH + 16f
+        val count    = minOf(3, g.log.size)
+        val hudH     = count * lineH + 16f
         val hudY     = height - hudH
 
-        canvas.drawRect(RectF(0f, hudY, width.toFloat(), height.toFloat()), pOverlay)
+        canvas.drawRect(0f, hudY, width.toFloat(), height.toFloat(), pOverlay)
         pText.textSize = logSize; pText.textAlign = Paint.Align.LEFT; pText.color = 0xFFDDDDDD.toInt()
-        for ((i, entry) in lines.withIndex())
-            canvas.drawText(entry.resolve(context), 10f, hudY + 10f + (i + 1) * lineH - 4f, pText)
+        for (i in 0 until count) {
+            val entry = g.log[g.log.size - count + i]
+            if (hudEntries[i] !== entry) { hudEntries[i] = entry; hudLines[i] = entry.resolve(context) }
+            canvas.drawText(hudLines[i] ?: "", 10f, hudY + 10f + (i + 1) * lineH - 4f, pText)
+        }
         pText.textAlign = Paint.Align.CENTER
 
         val hint = when {
@@ -442,8 +586,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         val sepX    = panel.centerX()
         val btnTop  = lootEquipBtnRect(panel).top - gap
-        val dividerPaint = Paint().apply { color = 0xFF333344.toInt(); strokeWidth = 1f }
-        canvas.drawLine(sepX, titleBottom, sepX, btnTop, dividerPaint)
+        canvas.drawLine(sepX, titleBottom, sepX, btnTop, pDivider)
 
         // Colonnes : NOUVEAU (gauche) | ÉQUIPÉ (droite)
         val colL = RectF(panel.left,  titleBottom, sepX - gap * 0.5f, btnTop)
@@ -530,13 +673,14 @@ class RoguelikeView @JvmOverloads constructor(
             val (sx, sy) = sectorDir(dx, dy)
             val angle = atan2(sy.toFloat(), sx.toFloat())
             val tipX = touchDownX + cos(angle) * (dist + 16f); val tipY = touchDownY + sin(angle) * (dist + 16f)
-            val path = Path().apply {
+            swipeArrow.apply {
+                reset()
                 moveTo(tipX, tipY)
                 lineTo(tipX + cos(angle + 2.4f) * 20f, tipY + sin(angle + 2.4f) * 20f)
                 lineTo(tipX + cos(angle - 2.4f) * 20f, tipY + sin(angle - 2.4f) * 20f)
                 close()
             }
-            canvas.drawPath(path, pSwipeDot)
+            canvas.drawPath(swipeArrow, pSwipeDot)
         }
     }
 
@@ -634,6 +778,8 @@ class RoguelikeView @JvmOverloads constructor(
     private companion object {
         const val FIRST_REPEAT_MS = 220L
         const val REPEAT_MS       = 140L
+        /** Au-delà, le calque des cases passe d'un Picture à une image (mémoire bornée). */
+        const val MAX_PICTURE_CELLS = 1024
         /** Les 8 directions, dans l'ordre des secteurs de 45° (0 = droite, y vers le bas). */
         val DIRS8 = listOf(1 to 0, 1 to 1, 0 to 1, -1 to 1, -1 to 0, -1 to -1, 0 to -1, 1 to -1)
     }

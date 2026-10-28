@@ -1693,19 +1693,8 @@ class Sf2ProjectRepository(private val context: Context) {
             )
         }
 
-    private fun readSourceAudio(file: File, offset: Long, size: Long): ShortArray? = try {
-        java.io.RandomAccessFile(file, "r").use { raf ->
-            val bytes = ByteArray(size.toInt())
-            raf.seek(offset)
-            raf.readFully(bytes)
-            ShortArray(bytes.size / 2) { i ->
-                ((bytes[2 * i].toInt() and 0xFF) or (bytes[2 * i + 1].toInt() shl 8)).toShort()
-            }
-        }
-    } catch (e: Exception) {
-        Log.e(TAG, "Cannot read sample audio from ${file.absolutePath}", e)
-        null
-    }
+    private fun readSourceAudio(file: File, offset: Long, size: Long): ShortArray? =
+        Sf2Reader.readPcm16(file, offset, size)
 
     // ==================== Audio File Utilities ====================
 

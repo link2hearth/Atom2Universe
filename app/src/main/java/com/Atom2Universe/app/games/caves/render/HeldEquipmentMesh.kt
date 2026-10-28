@@ -53,30 +53,27 @@ internal class HeldEquipmentMesh {
         }
     }
 
-    fun box(x: Float, y: Float, z: Float, w: Float, h: Float, d: Float, color: Int) {
-        val points = arrayOf(floatArrayOf(x-w,y-h,z-d),floatArrayOf(x+w,y-h,z-d),
-            floatArrayOf(x+w,y+h,z-d),floatArrayOf(x-w,y+h,z-d),
-            floatArrayOf(x-w,y-h,z+d),floatArrayOf(x+w,y-h,z+d),
-            floatArrayOf(x+w,y+h,z+d),floatArrayOf(x-w,y+h,z+d))
-        val faces = arrayOf(intArrayOf(0,3,2,1),intArrayOf(4,5,6,7),intArrayOf(0,4,7,3),
-            intArrayOf(1,2,6,5),intArrayOf(3,7,6,2),intArrayOf(0,1,5,4))
-        val shades = floatArrayOf(.72f,.88f,.68f,.82f,1f,.5f)
-        for (i in faces.indices) for (j in intArrayOf(0,1,2,0,2,3)) {
-            val p = points[faces[i][j]]; vertex(p[0],p[1],p[2],color,shades[i])
-        }
-    }
+    fun box(x: Float, y: Float, z: Float, w: Float, h: Float, d: Float, color: Int) =
+        taperedBox(x, y-h, y+h, z, w, d, w, d, color, BOX_SHADES)
 
     /** Tronc de pyramide le long de Y : base w0×d0 en y0, sommet w1×d1 en y1 (demi-largeurs). */
-    fun taper(x: Float, y0: Float, y1: Float, z: Float, w0: Float, d0: Float, w1: Float, d1: Float, color: Int) {
-        val points = arrayOf(floatArrayOf(x-w0,y0,z-d0),floatArrayOf(x+w0,y0,z-d0),
-            floatArrayOf(x+w1,y1,z-d1),floatArrayOf(x-w1,y1,z-d1),
-            floatArrayOf(x-w0,y0,z+d0),floatArrayOf(x+w0,y0,z+d0),
-            floatArrayOf(x+w1,y1,z+d1),floatArrayOf(x-w1,y1,z+d1))
-        val faces = arrayOf(intArrayOf(0,3,2,1),intArrayOf(4,5,6,7),intArrayOf(0,4,7,3),
-            intArrayOf(1,2,6,5),intArrayOf(3,7,6,2),intArrayOf(0,1,5,4))
-        val shades = floatArrayOf(.72f,.95f,.68f,.84f,1f,.5f)
-        for (i in faces.indices) for (j in intArrayOf(0,1,2,0,2,3)) {
-            val p = points[faces[i][j]]; vertex(p[0],p[1],p[2],color,shades[i])
+    fun taper(x: Float, y0: Float, y1: Float, z: Float, w0: Float, d0: Float, w1: Float, d1: Float, color: Int) =
+        taperedBox(x, y0, y1, z, w0, d0, w1, d1, color, TAPER_SHADES)
+
+    // Huit coins réutilisés : une boîte en allouait une vingtaine de tableaux, et le bras, l'arme
+    // et le corps en dessinent des dizaines à chaque image.
+    private val corners = FloatArray(24)
+
+    /** Base 2w0×2d0 en y0, sommet 2w1×2d1 en y1 ; mêmes coins, faces et ordre qu'avant. */
+    private fun taperedBox(x: Float, y0: Float, y1: Float, z: Float, w0: Float, d0: Float, w1: Float, d1: Float,
+                           color: Int, shades: FloatArray) {
+        val c = corners
+        c[0]=x-w0; c[1]=y0; c[2]=z-d0;   c[3]=x+w0; c[4]=y0; c[5]=z-d0
+        c[6]=x+w1; c[7]=y1; c[8]=z-d1;   c[9]=x-w1; c[10]=y1; c[11]=z-d1
+        c[12]=x-w0; c[13]=y0; c[14]=z+d0; c[15]=x+w0; c[16]=y0; c[17]=z+d0
+        c[18]=x+w1; c[19]=y1; c[20]=z+d1; c[21]=x-w1; c[22]=y1; c[23]=z+d1
+        for (i in 0 until 6) for (j in QUAD) {
+            val p = FACES[i * 4 + j] * 3; vertex(c[p], c[p+1], c[p+2], color, shades[i])
         }
     }
 
@@ -113,7 +110,7 @@ internal class HeldEquipmentMesh {
         val m = this
         if(type=="dual_pistols") {
             val spacing = if(fps) .30f else .26f
-            for(side in listOf(-1f,1f)) {
+            for(side in SIDES) {
                 rod(side*(if(fps) .38f else .27f),if(fps) -.24f else -.03f,if(fps) .10f else .43f,side*spacing,-.06f,.02f,.06f,0x435B78,.038f)
                 hand(side*spacing,-.025f,.02f)
             }
@@ -186,14 +183,14 @@ internal class HeldEquipmentMesh {
             }
             "sling" -> {
                 rod(0f,-.12f,0f,0f,.09f,0f,.031f,wood,.043f)
-                for (side in listOf(-1f,1f)) {
+                for (side in SIDES) {
                     rod(0f,.07f,0f,side*.11f,.21f,-.018f,.039f,wood,.030f)
                     rod(side*.11f,.21f,-.018f,side*.14f,.34f,-.035f,.030f,wood,.023f)
                     rod(side*.14f,.305f,-.035f,side*.14f,.343f,-.035f,.028f,accent)
                 }
                 for (i in 0..5) rod(0f,-.11f+i*.026f,0f,0f,-.095f+i*.026f,0f,.033f,leather)
                 val pull = pullBack(type,charge,release)
-                for (side in listOf(-1f,1f)) {
+                for (side in SIDES) {
                     // Deux bandes épaisses restent attachées aux bouts de la fourche.
                     for (offset in listOf(-.009f,.009f)) rod(side*.14f,.327f+offset,-.025f,
                         side*.027f,.29f+offset,pull,.007f,0xD6AA51,.005f)
@@ -204,7 +201,7 @@ internal class HeldEquipmentMesh {
             }
             "bow" -> {
                 rod(0f,-.10f,0f,0f,.10f,0f,.029f,leather)
-                for (side in listOf(-1f,1f)) {
+                for (side in SIDES) {
                     var y = side*.10f; var z = 0f
                     for (i in 1..7) {
                         val t = i/7f; val yy = side*(.10f+t*.48f)
@@ -224,7 +221,7 @@ internal class HeldEquipmentMesh {
                 rod(0f,-.13f,.075f,0f,.01f,.025f,.032f,leather)
                 box(0f,.018f,.13f,.058f,.055f,.065f,wood)
                 box(0f,.082f,-.13f,.015f,.008f,.265f,metal)
-                for (side in listOf(-1f,1f)) {
+                for (side in SIDES) {
                     rod(0f,.055f,-.34f,side*.19f,.055f,-.30f,.026f,metal,.019f)
                     rod(side*.19f,.055f,-.30f,side*.31f,.055f,-.22f+charge*.035f,.019f,0x465C6A,.011f)
                     rod(side*.31f,.055f,-.22f+charge*.035f,0f,.068f,
@@ -245,7 +242,7 @@ internal class HeldEquipmentMesh {
                 rod(0f,.049f,-.20f,0f,.049f,-.30f,.027f,0x647883)
                 rod(0f,.049f,-.301f,0f,.049f,-.304f,.018f,0x101820)
                 box(0f,.12f,-.205f,.008f,.012f,.013f,accent)
-                for (side in listOf(-1f,1f)) box(side*.027f,.12f,.035f+kick,.008f,.01f,.015f,0x26343E)
+                for (side in SIDES) box(side*.027f,.12f,.035f+kick,.008f,.01f,.015f,0x26343E)
                 for (i in 0..4) box(.048f,.05f,.025f-i*.018f+kick,.003f,.027f,.004f,0x15232C)
                 rod(0f,-.014f,-.13f,0f,-.064f,-.10f,.009f,metal)
                 rod(0f,-.064f,-.10f,0f,-.064f,.008f,.009f,metal)
@@ -280,7 +277,7 @@ internal class HeldEquipmentMesh {
         rod(0f,-.13f,.055f,0f,.027f,0f,.034f,0x352C27)
         box(0f,.045f,.13f,.05f,.07f,.10f,if(type=="smg") 0x25333D else wood)
         box(0f,.025f,.235f,.055f,.08f,.016f,0x1C252B)
-        for(side in listOf(-1f,1f)) {
+        for(side in SIDES) {
             box(side*.034f,.120f,-.025f,.008f,.012f,.015f,0x202C34)
             rod(side*.046f,.064f,-.12f,side*.047f,.064f,-.045f+if(type=="lever_rifle") pump*.035f else 0f,.009f,accent)
         }
@@ -328,7 +325,7 @@ internal class HeldEquipmentMesh {
                 val sideLen=sqrt(nx*nx+nz*nz)
                 val sx=if(sideLen>.001f) -nz/sideLen else 1f
                 val sz=if(sideLen>.001f) nx/sideLen else 0f
-                for(side in listOf(-1f,1f)) rod(bx,by,bz,bx+nx*.075f+side*sx*.035f,by+ny*.075f,bz+nz*.075f+side*sz*.035f,.012f,if(kind==ProjectileKind.ARROW) 0xD6EAD2 else 0x67BFD0,.003f)
+                for(side in SIDES) rod(bx,by,bz,bx+nx*.075f+side*sx*.035f,by+ny*.075f,bz+nz*.075f+side*sz*.035f,.012f,if(kind==ProjectileKind.ARROW) 0xD6EAD2 else 0x67BFD0,.003f)
             }
             ProjectileKind.BULLET,ProjectileKind.PELLET -> {
                 val length=if(kind==ProjectileKind.BULLET) .20f else .075f
@@ -343,5 +340,15 @@ internal class HeldEquipmentMesh {
         rod(x,y,rear-.59f,x,y,rear-.65f,.019f,0xC7D5DB,0f)
         box(x,y,rear-.045f,.026f,.002f,.038f,0xD6E4DB)
         box(x,y,rear-.045f,.002f,.026f,.038f,0xD6E4DB)
+    }
+
+    private companion object {
+        /** Les six faces (quatre coins chacune) d'une boîte, et ses deux triangles par face. */
+        val FACES = intArrayOf(0,3,2,1, 4,5,6,7, 0,4,7,3, 1,2,6,5, 3,7,6,2, 0,1,5,4)
+        val QUAD = intArrayOf(0,1,2,0,2,3)
+        val BOX_SHADES = floatArrayOf(.72f,.88f,.68f,.82f,1f,.5f)
+        val TAPER_SHADES = floatArrayOf(.72f,.95f,.68f,.84f,1f,.5f)
+        /** Les deux côtés d'une pièce symétrique. */
+        val SIDES = floatArrayOf(-1f, 1f)
     }
 }

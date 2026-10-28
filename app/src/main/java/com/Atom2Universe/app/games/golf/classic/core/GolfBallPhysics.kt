@@ -226,6 +226,9 @@ internal object GolfCalibration {
         tables[club.ordinal] ?: build(club).also { tables[club.ordinal] = it }
     }
 
+    /** Builds every club's table now, off the UI thread, rather than at the first shot or guide. */
+    fun warmUp() = GolfClub.entries.forEach { table(it) }
+
     private fun build(club: GolfClub): Table {
         var lo = 5f; var hi = 140f
         repeat(36) {

@@ -2,9 +2,7 @@ package com.Atom2Universe.app.science.pendulum
 
 import com.Atom2Universe.app.science.SciencePalette
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
+import android.view.Choreographer
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -40,22 +38,22 @@ class DoublePendulumActivity : ThemedActivity() {
     private lateinit var pendulumView: DoublePendulumView
     private lateinit var playPauseBtn: ImageButton
 
-    private val handler = Handler(Looper.getMainLooper())
     private var isRunning = false
     // Pause voulue par l'utilisateur : onResume ne doit pas relancer une simulation mise en pause.
     private var pausedByUser = false
-    private var lastFrameMs = 0L
-    private val frameMs = 16L // ~60 fps
+    private var lastFrameNanos = 0L
 
-    private val stepRunnable = object : Runnable {
-        override fun run() {
+    // Calé sur l'affichage, 60 images/s au plus : postDelayed(16) dérivait par rapport à
+    // l'écran (images sautées), et l'écran 120 Hz n'a pas besoin de deux fois plus de traînées.
+    private val frameCallback = object : Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
             if (!isRunning) return
-            // Horloge monotone : currentTimeMillis saute quand l'heure système change.
-            val now = SystemClock.uptimeMillis()
-            val dt = if (lastFrameMs == 0L) 0.016 else (now - lastFrameMs) / 1000.0
-            lastFrameMs = now
-            pendulumView.step(dt.coerceAtMost(0.05))
-            handler.postDelayed(this, frameMs)
+            if (lastFrameNanos == 0L || frameTimeNanos - lastFrameNanos >= MIN_FRAME_NANOS) {
+                val dt = if (lastFrameNanos == 0L) 0.016 else (frameTimeNanos - lastFrameNanos) / 1e9
+                lastFrameNanos = frameTimeNanos
+                pendulumView.step(dt.coerceAtMost(0.05))
+            }
+            Choreographer.getInstance().postFrameCallback(this)
         }
     }
 
@@ -370,22 +368,27 @@ class DoublePendulumActivity : ThemedActivity() {
     }
 
     private fun startSim() {
-        handler.removeCallbacks(stepRunnable)
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
         isRunning = true
-        lastFrameMs = 0L
+        lastFrameNanos = 0L
         playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
         playPauseBtn.contentDescription = getString(R.string.gol_pause)
-        handler.post(stepRunnable)
+        Choreographer.getInstance().postFrameCallback(frameCallback)
     }
 
     private fun stopSim() {
         isRunning = false
         playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
         playPauseBtn.contentDescription = getString(R.string.gol_play)
-        handler.removeCallbacks(stepRunnable)
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
     }
 
     override fun onPause() { super.onPause(); stopSim() }
     override fun onResume() { super.onResume(); if (!pausedByUser) startSim() }
-    override fun onDestroy() { super.onDestroy(); handler.removeCallbacks(stepRunnable) }
+    override fun onDestroy() { super.onDestroy(); Choreographer.getInstance().removeFrameCallback(frameCallback) }
+
+    private companion object {
+        /** 60 Hz moins une marge : à 120 Hz une image sur deux, à 60 Hz chacune. */
+        const val MIN_FRAME_NANOS = 16_666_667L - 6_000_000L
+    }
 }

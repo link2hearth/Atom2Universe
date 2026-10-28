@@ -62,4 +62,13 @@
     <string name="radio_recording_notif_text_generic">Recording in progress…</string>
     <string name="radio_recording_action_stop_notif">Stop recording</string>
     <string name="radio_recording_error_storage">Recording stopped: not enough storage space.</string>
+    <string name="radio_recording_error_network">Recording stopped: the stream was cut off.</string>
+    <string name="radio_recording_unknown_artist">Unknown artist</string>
+    <string name="radio_recording_unknown_title">Unknown title</string>
+    <string name="radio_recording_unknown_station">Unknown station</string>
+    <string name="radio_recording_sidecar">Recorded at: %1$s\nArtist: %2$s\nTitle: %3$s\nStation: %4$s\n</string>
+    <string name="radio_meta_separator">" · "</string>
+    <string name="radio_now_playing_separator">" — "</string>
+    <string name="radio_genre_live">Live radio</string>
+    <string name="radio_station_default_name">Station</string>
 </resources>

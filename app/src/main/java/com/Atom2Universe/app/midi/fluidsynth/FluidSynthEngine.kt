@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.locks.ReentrantLock
 
 /**
  * FluidSynth Engine - High-quality SF2 synthesis via FluidSynth native library.
@@ -66,8 +65,6 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     private var state: MidiEngine.State = MidiEngine.State.UNINITIALIZED
     private val stateLock = Any()
 
-    // Operation lock to prevent concurrent operations
-    private val operationLock = ReentrantLock()
     private val isReleased = AtomicBoolean(false)
 
     // FluidSynth handles (native pointers stored as Long)
@@ -82,6 +79,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     private var durationMs: Long = 0
     private var totalTicks: Long = 0
     private var currentPositionMs = AtomicLong(0)
+    private val completionScheduled = AtomicBoolean(false)
 
     // Executor for position updates
     private var executor: ScheduledExecutorService? = null
@@ -107,6 +105,8 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     private var renderThread: Thread? = null
     private val isRendering = AtomicBoolean(false)
     private var useManualRendering = false
+    // Sortie audio ouverte (pilote Oboe ou fil de rendu manuel)
+    private var audioOutputOpen = false
 
     // EQ 10 bandes (nécessite rendu manuel pour accéder au PCM)
     private val eq = MidiEqualizerEngine(SAMPLE_RATE)
@@ -185,15 +185,9 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
                 return false
             }
 
-            // Create audio driver (starts audio output)
-            audioDriverHandle = FluidSynthNative.newAudioDriver(settingsHandle, synthHandle)
-            if (audioDriverHandle == 0L) {
-                Log.w(TAG, "Failed to create audio driver - will use manual rendering")
-                useManualRendering = true
-                initializeAudioTrack()
-            } else {
-                useManualRendering = false
-            }
+            // La sortie audio n'est ouverte qu'à la lecture (ensureAudioOutput) : un pilote
+            // ouvert calcule du silence sans fin tant que rien ne joue
+            useManualRendering = false
 
             currentSoundFontPath = soundFontPath
 
@@ -299,11 +293,9 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
                 notifyError("Failed to start playback")
                 return false
             }
+            completionScheduled.set(false)
 
-            // Start audio rendering (for manual mode)
-            if (useManualRendering) {
-                startAudioRendering()
-            }
+            ensureAudioOutput()
 
             // Start position updates
             startPositionUpdates()
@@ -327,15 +319,12 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
             FluidSynthNative.playerStop(playerHandle)
             stopPositionUpdates()
 
-            // Stop audio rendering (for manual mode)
-            if (useManualRendering) {
-                stopAudioRendering()
+            // Couper net : sans sortie audio, une fin de note resterait en suspens jusqu'à la reprise
+            for (channel in 0..15) {
+                FluidSynthNative.allSoundOff(synthHandle, channel)
             }
 
-            // Turn off all notes
-            for (channel in 0..15) {
-                FluidSynthNative.allNotesOff(synthHandle, channel)
-            }
+            suspendAudioOutput()
 
             MidiEventDispatcher.dispatchAllNotesOff()
 
@@ -357,10 +346,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
             FluidSynthNative.playerSeek(playerHandle, currentTicks)
             FluidSynthNative.playerPlay(playerHandle)
 
-            // Start audio rendering (for manual mode)
-            if (useManualRendering) {
-                startAudioRendering()
-            }
+            ensureAudioOutput()
 
             startPositionUpdates()
 
@@ -373,15 +359,21 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     }
 
     override fun stop() {
+        stopPlayback(keepAudioOutput = false)
+    }
+
+    /**
+     * Arrêt entre deux morceaux : la sortie audio reste ouverte pour le suivant, qui démarre aussitôt.
+     */
+    fun stopForTransition() {
+        stopPlayback(keepAudioOutput = true)
+    }
+
+    private fun stopPlayback(keepAudioOutput: Boolean) {
         if (isReleased.get()) return
 
         try {
             stopPositionUpdates()
-
-            // Stop audio rendering (for manual mode)
-            if (useManualRendering) {
-                stopAudioRendering()
-            }
 
             if (playerHandle != 0L) {
                 FluidSynthNative.playerStop(playerHandle)
@@ -390,6 +382,10 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
             // Stop all sounds
             for (channel in 0..15) {
                 FluidSynthNative.allSoundOff(synthHandle, channel)
+            }
+
+            if (!keepAudioOutput) {
+                suspendAudioOutput()
             }
 
             MidiEventDispatcher.dispatchAllNotesOff()
@@ -599,21 +595,6 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
         FluidSynthNative.setChorusOn(synthHandle, preset >= 0)
     }
 
-    override fun forceDriverRestart() {
-        if (synthHandle == 0L || settingsHandle == 0L) return
-
-        try {
-            // Delete and recreate audio driver
-            if (audioDriverHandle != 0L) {
-                FluidSynthNative.deleteAudioDriver(audioDriverHandle)
-            }
-            audioDriverHandle = FluidSynthNative.newAudioDriver(settingsHandle, synthHandle)
-            Log.d(TAG, "Audio driver restarted")
-        } catch (e: Exception) {
-            Log.e(TAG, "Driver restart failed", e)
-        }
-    }
-
     override fun getDriverStats(): String {
         return if (synthHandle != 0L) {
             val voices = FluidSynthNative.getActiveVoiceCount(synthHandle)
@@ -696,15 +677,11 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     /**
      * Start the audio renderer for direct MIDI mode (not file playback).
      * Call this after initialize() when using sendNoteOn/sendNoteOff directly.
-     * For Oboe mode, audio starts automatically. For manual rendering mode, this starts the render thread.
+     * Opens the audio output (Oboe driver, or the render thread in manual mode).
      */
     fun startAudioRenderer(): Boolean {
         if (synthHandle == 0L) return false
-
-        if (useManualRendering) {
-            startAudioRendering()
-        }
-        // Oboe driver starts automatically in initialize()
+        ensureAudioOutput()
         return true
     }
 
@@ -712,11 +689,20 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
      * Stop the audio renderer for direct MIDI mode.
      */
     fun stopAudioRenderer() {
-        if (useManualRendering) {
-            stopAudioRendering()
-        }
         // Stop all sounds
         sendAllSoundOff()
+        suspendAudioOutput()
+    }
+
+    /** Pause of the direct MIDI mode: closes the audio output, the synth stays loaded. */
+    fun pauseAudioRenderer() {
+        sendAllSoundOff()
+        suspendAudioOutput()
+    }
+
+    /** Resume of the direct MIDI mode. */
+    fun resumeAudioRenderer() {
+        if (synthHandle != 0L) ensureAudioOutput()
     }
 
     fun sendNoteOn(channel: Int, note: Int, velocity: Int) {
@@ -1132,11 +1118,16 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     }
 
     private fun onPlaybackComplete() {
+        // Appelé à chaque tour tant que le lecteur est fini : une seule fin par morceau,
+        // sinon une fin en retard arrêterait le morceau suivant
+        if (!completionScheduled.compareAndSet(false, true)) return
+
         MidiEventDispatcher.dispatchAllNotesOff()
 
         executor?.schedule({
             if (state == MidiEngine.State.PLAYING) {
-                stop()
+                // La sortie audio reste ouverte pour le morceau suivant
+                stopForTransition()
                 onCompletionListener?.invoke()
             }
         }, 200, TimeUnit.MILLISECONDS)
@@ -1155,6 +1146,45 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     private fun notifyError(message: String) {
         Log.e(TAG, message)
         onErrorListener?.invoke(message)
+    }
+
+    // ==================== Audio Output ====================
+
+    /**
+     * Ouvre la sortie audio si elle est fermée : pilote Oboe de FluidSynth, ou rendu manuel
+     * (AudioTrack) si le pilote échoue ou si l'égaliseur est actif.
+     */
+    private fun ensureAudioOutput() {
+        if (synthHandle == 0L || settingsHandle == 0L) return
+
+        if (!useManualRendering && audioDriverHandle == 0L) {
+            audioDriverHandle = FluidSynthNative.newAudioDriver(settingsHandle, synthHandle)
+            if (audioDriverHandle == 0L) {
+                Log.w(TAG, "Failed to create audio driver - will use manual rendering")
+                useManualRendering = true
+            }
+        }
+
+        if (useManualRendering) {
+            if (audioTrack == null) initializeAudioTrack()
+            startAudioRendering()
+        }
+        audioOutputOpen = true
+    }
+
+    /**
+     * Ferme la sortie audio : en pause ou à l'arrêt, le pilote Oboe calculerait du silence
+     * sans fin. Le synthé et le SoundFont restent chargés.
+     */
+    private fun suspendAudioOutput() {
+        if (useManualRendering) {
+            stopAudioRendering()
+        }
+        if (audioDriverHandle != 0L) {
+            FluidSynthNative.deleteAudioDriver(audioDriverHandle)
+            audioDriverHandle = 0
+        }
+        audioOutputOpen = false
     }
 
     // ==================== Manual Audio Rendering ====================
@@ -1284,18 +1314,13 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
      * Requis pour pouvoir appliquer l'EQ sur le PCM rendu par FluidSynth.
      */
     private fun switchToManualRendering() {
-        val wasPlaying = state == MidiEngine.State.PLAYING
+        val wasOpen = audioOutputOpen
 
-        if (audioDriverHandle != 0L) {
-            FluidSynthNative.deleteAudioDriver(audioDriverHandle)
-            audioDriverHandle = 0
-        }
-
+        suspendAudioOutput()
         useManualRendering = true
-        initializeAudioTrack()
 
-        if (wasPlaying) {
-            startAudioRendering()
+        if (wasOpen) {
+            ensureAudioOutput()
         }
 
         Log.d(TAG, "Switched to manual rendering for EQ support")

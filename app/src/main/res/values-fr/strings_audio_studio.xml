@@ -112,4 +112,7 @@
     <string name="ae_color_auto">Auto</string>
     <string name="ae_move_up">Monter</string>
     <string name="ae_move_down">Descendre</string>
+    <string name="ae_rec_orphan_title">Enregistrement non rangé</string>
+    <string name="ae_rec_orphan_keep">Ajouter au projet</string>
+    <string name="ae_rec_orphan_discard">Jeter</string>
 </resources>

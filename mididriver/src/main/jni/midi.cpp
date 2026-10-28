@@ -24,6 +24,7 @@
 #include <assert.h>
 #include <pthread.h>
 #include <cmath>
+#include <cstring>
 
 #include <android/log.h>
 
@@ -125,6 +126,11 @@ static void computeEqCoeffs(int bandIdx, float gainDb)
     float sampleRate = (pLibConfig != NULL) ? (float)pLibConfig->sampleRate : 22050.0f;
     float freqHz     = EQ_FREQ_HZ[bandIdx];
     int   type       = EQ_TYPE[bandIdx];
+
+    // EAS renders at 22050 Hz: the 16 kHz band is above Nyquist and would give an
+    // unstable filter. Keep every centre frequency safely below it.
+    if (freqHz > 0.4f * sampleRate)
+        freqHz = 0.4f * sampleRate;
 
     float A     = powf(10.0f, gainDb / 40.0f);
     float w0    = 2.0f * (float)M_PI * freqHz / sampleRate;
@@ -228,38 +234,56 @@ public:
     oboe::DataCallbackResult onAudioReady(oboe::AudioStream *audioStream,
                                           void *audioData, int32_t numFrames)
     {
-        EAS_RESULT result;
-        EAS_I32 numGenerated;
-        EAS_I32 count = 0;
-
         // We requested AudioFormat::I16. So if the stream opens
         // we know we got the I16 format.
         auto *outputData = static_cast<int16_t *>(audioData);
+        int32_t numChannels = audioStream->getChannelCount();
+        int32_t total = numFrames * numChannels;
+        int32_t count = 0;
 
-        while (count < bufferSize)
+        while (count < total)
         {
+            EAS_RESULT result = EAS_FAILURE;
+            EAS_I32 numGenerated = 0;
+
             // lock
             pthread_mutex_lock(&mutex);
 
-            result = EAS_Render(pEASData, outputData + count,
-                                pLibConfig->mixBufferSize, &numGenerated);
+            // The driver may have been shut down meanwhile (pEASData and
+            // pLibConfig are then NULL): never render into a freed synth
+            bool ready = pEASData != NULL && pLibConfig != NULL &&
+                count + pLibConfig->mixBufferSize * numChannels <= total;
+            if (ready)
+                result = EAS_Render(pEASData, outputData + count,
+                                    pLibConfig->mixBufferSize, &numGenerated);
             // unlock
             pthread_mutex_unlock(&mutex);
 
-            assert(result == EAS_SUCCESS);
+            if (!ready || result != EAS_SUCCESS || numGenerated <= 0)
+                break;
 
-            count += numGenerated * pLibConfig->numChannels;
+            count += numGenerated * numChannels;
         }
 
-        // Apply 10-band EQ post-render
-        applyEq(outputData, bufferSize / pLibConfig->numChannels, pLibConfig->numChannels);
+        // Whatever could not be rendered is silence
+        if (count < total)
+            memset(outputData + count, 0, (size_t) (total - count) * sizeof(int16_t));
+
+        // Apply 10-band EQ post-render (coefficients change under the same lock)
+        if (count > 0)
+        {
+            pthread_mutex_lock(&mutex);
+            applyEq(outputData, count / numChannels, numChannels);
+            pthread_mutex_unlock(&mutex);
+        }
 
         return oboe::DataCallbackResult::Continue;
     }
 
     void onErrorAfterClose(oboe::AudioStream *audioStream, oboe::Result error)
     {
-        if (error ==  oboe::Result::ErrorDisconnected)
+        // Reopen only if the driver is still started
+        if (error ==  oboe::Result::ErrorDisconnected && pEASData != NULL)
             initOboe();
     }
 };
@@ -270,15 +294,21 @@ OboeCallback oboeCallback;
 // build oboe
 oboe::Result buildOboe()
 {
+    // pLibConfig points to static EAS data: a local copy stays valid even if
+    // the driver is shut down meanwhile
+    const S_EAS_LIB_CONFIG *config = pLibConfig;
+    if (config == NULL)
+        return oboe::Result::ErrorNull;
+
     oboe::AudioStreamBuilder builder;
 
     builder.setDirection(oboe::Direction::Output);
     builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
     builder.setSharingMode(oboe::SharingMode::Exclusive);
     builder.setFormat(oboe::AudioFormat::I16);
-    builder.setFramesPerCallback(bufferSize / pLibConfig->numChannels);
-    builder.setChannelCount(pLibConfig->numChannels);
-    builder.setSampleRate(pLibConfig->sampleRate);
+    builder.setFramesPerCallback(bufferSize / config->numChannels);
+    builder.setChannelCount(config->numChannels);
+    builder.setSampleRate(config->sampleRate);
     builder.setDataCallback(&oboeCallback);
 
     // Set preferred output device if specified
@@ -322,7 +352,10 @@ oboe::Result closeOboe()
     if (oboeStream != NULL)
     {
         oboeStream->requestStop();
-        return oboeStream->close();
+        oboe::Result result = oboeStream->close();
+        // A closed stream is forgotten: oboeStream != NULL means "stream open"
+        oboeStream.reset();
+        return result;
     }
 
     return oboe::Result::ErrorNull;
@@ -361,14 +394,15 @@ EAS_RESULT initEAS()
 }
 
 // shutdown EAS midi
+// Takes the lock: never call it while holding the mutex
 void shutdownEAS()
 {
+    // lock
+    pthread_mutex_lock(&mutex);
 
-    if (midiHandle != NULL)
-    {
+    if (midiHandle != NULL && pEASData != NULL)
         EAS_CloseMIDIStream(pEASData, midiHandle);
-        midiHandle = NULL;
-    }
+    midiHandle = NULL;
 
     if (pEASData != NULL)
     {
@@ -376,7 +410,12 @@ void shutdownEAS()
         pEASData = NULL;
     }
 
+    // config() returns null again: callers use it to know the driver is stopped
+    pLibConfig = NULL;
     isDLSLoaded = 0;
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
 }
 
 // init mididriver
@@ -385,7 +424,27 @@ jboolean midi_init()
     EAS_RESULT result;
     oboe::Result oboeResult;
 
-    if ((result = initEAS()) != EAS_SUCCESS)
+    // A second start() without stop() used to create another EAS instance and
+    // another oboe stream on top of the running ones: start again from scratch
+    if (pEASData != NULL || oboeStream != NULL)
+    {
+        closeOboe();
+        shutdownEAS();
+    }
+
+    // lock
+    pthread_mutex_lock(&mutex);
+
+    result = initEAS();
+
+    // Reset EQ filter states (sample rate may have changed after EAS init)
+    if (result == EAS_SUCCESS)
+        initEqCoeffs();
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
+    if (result != EAS_SUCCESS)
     {
         shutdownEAS();
 
@@ -402,9 +461,6 @@ jboolean midi_init()
 
         return JNI_FALSE;
     }
-
-    // Reset EQ filter states (sample rate may have changed after EAS init)
-    initEqCoeffs();
 
     return JNI_TRUE;
 }
@@ -423,21 +479,41 @@ Java_org_billthefarmer_mididriver_MidiDriver_config(JNIEnv *env,
 {
     jboolean isCopy;
 
-    if (pLibConfig == NULL)
+    // NULL while the driver is stopped (reset by shutdownEAS)
+    const S_EAS_LIB_CONFIG *libConfig = pLibConfig;
+    if (libConfig == NULL)
         return NULL;
 
     jintArray configArray = env->NewIntArray(4);
 
     jint *config = env->GetIntArrayElements(configArray, &isCopy);
 
-    config[0] = pLibConfig->maxVoices;
-    config[1] = pLibConfig->numChannels;
-    config[2] = pLibConfig->sampleRate;
-    config[3] = pLibConfig->mixBufferSize;
+    config[0] = libConfig->maxVoices;
+    config[1] = libConfig->numChannels;
+    config[2] = libConfig->sampleRate;
+    config[3] = libConfig->mixBufferSize;
 
     env->ReleaseIntArrayElements(configArray, config, 0);
 
     return configArray;
+}
+
+// true between a successful start() and stop()
+jboolean
+Java_org_billthefarmer_mididriver_MidiDriver_isStarted(JNIEnv *env,
+                                                       jobject obj)
+{
+    jboolean started;
+
+    // lock
+    pthread_mutex_lock(&mutex);
+
+    started = (pEASData != NULL && midiHandle != NULL) ? JNI_TRUE : JNI_FALSE;
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
+    return started;
 }
 
 // midi write
@@ -445,11 +521,15 @@ jboolean midi_write(EAS_U8 *bytes, jint length)
 {
     EAS_RESULT result;
 
-    if (pEASData == NULL || midiHandle == NULL)
-        return JNI_FALSE;
-
     // lock
     pthread_mutex_lock(&mutex);
+
+    // Tested under the lock: shutdownEAS() may run on another thread
+    if (pEASData == NULL || midiHandle == NULL)
+    {
+        pthread_mutex_unlock(&mutex);
+        return JNI_FALSE;
+    }
 
     result = EAS_WriteMIDIStream(pEASData, midiHandle, bytes, length);
 
@@ -487,10 +567,19 @@ jboolean midi_setVolume(jint volume)
 {
     EAS_RESULT result;
 
+    // lock
+    pthread_mutex_lock(&mutex);
+
     if (pEASData == NULL || midiHandle == NULL)
+    {
+        pthread_mutex_unlock(&mutex);
         return JNI_FALSE;
+    }
 
     result = EAS_SetVolume(pEASData, NULL, (EAS_I32) volume);
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
 
     if (result != EAS_SUCCESS)
         return JNI_FALSE;
@@ -506,8 +595,8 @@ Java_org_billthefarmer_mididriver_MidiDriver_setVolume(JNIEnv *env,
     return midi_setVolume(volume);
 }
 
-// Set EAS reverb
-jboolean midi_setReverb(jint preset)
+// Set EAS reverb (caller holds the lock and has checked pEASData)
+static jboolean setReverbLocked(jint preset)
 {
     EAS_RESULT result;
 
@@ -542,6 +631,23 @@ jboolean midi_setReverb(jint preset)
     }
 
     return JNI_TRUE;
+}
+
+// Set EAS reverb
+jboolean midi_setReverb(jint preset)
+{
+    jboolean result = JNI_FALSE;
+
+    // lock
+    pthread_mutex_lock(&mutex);
+
+    if (pEASData != NULL)
+        result = setReverbLocked(preset);
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
+    return result;
 }
 
 jboolean
@@ -659,12 +765,23 @@ jboolean midi_loadDLS(const EAS_U8 *dlsData, jint length)
     file.readAt = memDLS_readAt;
     file.size = memDLS_size;
 
-    result = EAS_LoadDLSCollection(pEASData, midiHandle, &file);
-    if (result != EAS_SUCCESS)
-        return JNI_FALSE;
+    // lock (the audio callback waits during the load, before playback starts)
+    pthread_mutex_lock(&mutex);
 
-    isDLSLoaded = 1;
-    return JNI_TRUE;
+    if (pEASData == NULL || midiHandle == NULL || isDLSLoaded != 0)
+    {
+        pthread_mutex_unlock(&mutex);
+        return JNI_FALSE;
+    }
+
+    result = EAS_LoadDLSCollection(pEASData, midiHandle, &file);
+    if (result == EAS_SUCCESS)
+        isDLSLoaded = 1;
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
+    return (result == EAS_SUCCESS) ? JNI_TRUE : JNI_FALSE;
 }
 
 jboolean
@@ -676,9 +793,6 @@ Java_org_billthefarmer_mididriver_MidiDriver_loadDLS(JNIEnv *env,
     EAS_U8 *bytes;
     jboolean isCopy;
     jboolean result;
-
-    if (isDLSLoaded != 0)
-        return JNI_FALSE;
 
     bytes = (EAS_U8 *) env->GetByteArrayElements(byteArray, &isCopy);
     length = env->GetArrayLength(byteArray);
@@ -696,6 +810,9 @@ Java_org_billthefarmer_mididriver_MidiDriver_setEqEnabled(JNIEnv *env,
                                                           jobject obj,
                                                           jboolean enabled)
 {
+    // lock (the audio callback applies the EQ under the same lock)
+    pthread_mutex_lock(&mutex);
+
     eqEnabled = (enabled == JNI_TRUE);
     if (eqEnabled)
     {
@@ -706,6 +823,10 @@ Java_org_billthefarmer_mididriver_MidiDriver_setEqEnabled(JNIEnv *env,
             eqStateR[i] = {0.0f, 0.0f, 0.0f, 0.0f};
         }
     }
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
     return JNI_TRUE;
 }
 
@@ -716,6 +837,13 @@ Java_org_billthefarmer_mididriver_MidiDriver_setEqBandGain(JNIEnv *env,
                                                            jint  band,
                                                            jfloat gainDb)
 {
+    // lock
+    pthread_mutex_lock(&mutex);
+
     computeEqCoeffs((int)band, (float)gainDb);
+
+    // unlock
+    pthread_mutex_unlock(&mutex);
+
     return JNI_TRUE;
 }

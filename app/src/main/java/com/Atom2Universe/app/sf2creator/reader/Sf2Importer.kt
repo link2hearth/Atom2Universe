@@ -95,11 +95,8 @@ class Sf2Importer(private val context: Context) {
             return@withContext 0
         }
 
-        // Parse the file again with this reader: it reads the audio of the samples
-        if (reader.parse(sf2File) == null) {
-            Log.e(TAG, "Failed to parse SF2 file: ${parseResult.filePath}")
-            return@withContext 0
-        }
+        // This reader reads the audio of the samples from the parse already made
+        reader.useParsed(parseResult)
 
         // The first SF2 imported into a project is kept: its samples are read from that
         // copy (no WAV extraction) and exports reuse its audio and INFO. A project that

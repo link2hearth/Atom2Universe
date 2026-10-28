@@ -32,3 +32,18 @@ internal data class CaveViewDistances(val detail: Int, val view: Int, val simula
         }
     }
 }
+
+/** Pause menu 3D resolution, in percent of the screen's size on each side (fewer pixels to fill). */
+internal object CaveRenderScale {
+    val CHOICES = intArrayOf(100, 85, 70)
+    private const val PREFERENCES = "cave_view_distances"
+    private const val KEY = "render_scale"
+
+    fun load(context: Context): Int =
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getInt(KEY, 100).takeIf { it in CHOICES } ?: 100
+
+    fun save(context: Context, percent: Int) {
+        if (percent !in CHOICES) return
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().putInt(KEY, percent).apply()
+    }
+}

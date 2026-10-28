@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.media3.common.PlaybackException
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.VisibleWindowGate
 import com.Atom2Universe.app.music.lyrics.LrcParser
 import com.Atom2Universe.app.music.lyrics.LyricsManager
 import com.Atom2Universe.app.music.model.MusicTrack
@@ -223,6 +224,16 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         alpha = opacityPercent.coerceIn(0, 100) / 100f
     }
 
+    // Le Visualizer capte l'audio en continu : seulement quand le widget est à l'écran.
+    private val visualizerGate = VisibleWindowGate(this) { active ->
+        if (active) trySetupVisualizer() else releaseVisualizer()
+        MusicPlaybackHolder.refreshProgressCadence()
+    }
+
+    // Progression rapide seulement pour faire défiler des paroles synchronisées à l'écran
+    override val wantsFrequentProgress: Boolean
+        get() = lyricsVisible && isSyncedLyrics && visualizerGate.isActive
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         MusicPlaybackHolder.addListener(this)
@@ -232,14 +243,24 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         val track = MusicPlaybackHolder.getCurrentTrack()
         updateTrackUi(track)
         updatePlayPauseButton(MusicPlaybackHolder.isPlaying())
-        trySetupVisualizer()
+        visualizerGate.update()
         resetHideTimer()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) visualizerGate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) visualizerGate.update()
     }
 
     override fun onDetachedFromWindow() {
         handler.removeCallbacks(hideRunnable)
         MusicPlaybackHolder.removeListener(this)
-        releaseVisualizer()
+        visualizerGate.detach()
         scope.cancel()
         super.onDetachedFromWindow()
     }
@@ -247,6 +268,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     // ── Visualizer ────────────────────────────────────────────────────────────
 
     private fun trySetupVisualizer() {
+        if (!visualizerGate.isActive) return
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED) {
             showVisualizerFallback(false); return
@@ -350,6 +372,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                 lyricsScrollView.visibility = GONE
                 // Afficher la ligne courante immédiatement
                 updateSyncedLyrics(MusicPlaybackHolder.getPosition())
+                MusicPlaybackHolder.refreshProgressCadence()
             } else {
                 isSyncedLyrics = false
                 lyricsLines = null

@@ -69,6 +69,15 @@ class SampleRecorder(private val context: Context) {
     private var recordStartPosition: Int = 0 // Position in buffer when Record was pressed
     private var recordStartTimeMs: Long = 0L
 
+    // Buffer position when Stop was pressed (-1 = not stopped): the capture thread then saves the take
+    @Volatile
+    private var stopEndPosition: Int = -1
+
+    // Bumped by each start and cancel: a capture thread of an older session publishes nothing
+    @Volatile
+    private var session = 0
+
+    @Volatile
     private var outputFile: File? = null
 
     // Noise reduction: captures ambient noise during countdown, applies before saving
@@ -194,6 +203,8 @@ class SampleRecorder(private val context: Context) {
 
             isCapturing = true
             isRecording = false
+            stopEndPosition = -1
+            val captureSession = ++session
 
             audioRecord?.startRecording()
             _recordingState.value = RecordingState.Preparing
@@ -201,7 +212,7 @@ class SampleRecorder(private val context: Context) {
             // Start capture thread
             val prepareStartTime = System.currentTimeMillis()
             captureThread = Thread {
-                captureAudioLoop(bufferSize, prepareStartTime)
+                captureAudioLoop(bufferSize, prepareStartTime, captureSession)
             }.apply {
                 priority = Thread.MAX_PRIORITY
                 name = "SF2-AudioCapture"
@@ -252,7 +263,8 @@ class SampleRecorder(private val context: Context) {
     }
 
     /**
-     * Phase 3: Stop recording and extract samples.
+     * Phase 3: Stop recording. The capture thread then extracts the samples, reduces the
+     * noise and saves the WAV file, off the UI thread; the state becomes Completed.
      * Call this when user clicks "Stop".
      */
     fun stopRecording() {
@@ -263,40 +275,22 @@ class SampleRecorder(private val context: Context) {
 
         Log.d(TAG, "Stopping recording")
 
-        val endPosition = circularBuffer.getCurrentPosition()
+        stopEndPosition = circularBuffer.getCurrentPosition()
         isRecording = false
         isCapturing = false
+    }
 
-        // Wait for capture thread to finish
-        val thread = captureThread
-        captureThread = null
-        try {
-            thread?.join(1000)
-            // If thread is still alive after timeout, interrupt it
-            if (thread?.isAlive == true) {
-                Log.w(TAG, "Capture thread did not stop in time, interrupting")
-                thread.interrupt()
-                thread.join(500) // Give it a bit more time after interrupt
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error waiting for capture thread", e)
-        }
-
-        // Stop AudioRecord (safe now that capture thread is stopped)
-        try {
-            audioRecord?.stop()
-            audioRecord?.release()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping AudioRecord", e)
-        }
-        audioRecord = null
-
+    /**
+     * Extract the take from the buffer, reduce its noise and save it to a WAV file.
+     * Runs on the capture thread once the microphone is stopped.
+     */
+    private fun finishRecording(endPosition: Int, maxDurationReached: Boolean, captureSession: Int) {
         // Extract samples from buffer with pre-roll
         var samples = circularBuffer.extract(recordStartPosition, endPosition, PREROLL_SAMPLES)
 
         if (samples == null || samples.isEmpty()) {
             Log.e(TAG, "Failed to extract samples from buffer")
-            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_no_data))
+            publish(captureSession, RecordingState.Error(context.getString(R.string.sf2_rec_err_no_data)))
             return
         }
 
@@ -325,19 +319,32 @@ class SampleRecorder(private val context: Context) {
         try {
             val cacheDir = File(context.cacheDir, "sf2_samples")
             cacheDir.mkdirs()
-            outputFile = File(cacheDir, "sample_${System.currentTimeMillis()}.wav")
+            val file = File(cacheDir, "sample_${System.currentTimeMillis()}.wav")
 
-            saveWavFile(outputFile!!, samples)
-            Log.d(TAG, "WAV file created: ${outputFile!!.absolutePath}")
+            saveWavFile(file, samples)
+            if (session != captureSession) {
+                file.delete()
+                return
+            }
+            outputFile = file
+            Log.d(TAG, "WAV file created: ${file.absolutePath}")
 
-            _recordingState.value = RecordingState.Completed(outputFile!!, samples, noiseLevelDb, noiseReductionApplied)
+            if (maxDurationReached) {
+                publish(captureSession, RecordingState.MaxDurationReached)
+                Thread.sleep(100)
+            }
+            publish(captureSession, RecordingState.Completed(file, samples, noiseLevelDb, noiseReductionApplied))
 
         } catch (e: Exception) {
             Log.e(TAG, "Error saving WAV file", e)
-            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_save, e.message))
+            publish(captureSession, RecordingState.Error(context.getString(R.string.sf2_rec_err_save, e.message)))
         }
 
         _amplitude.value = 0f
+    }
+
+    private fun publish(captureSession: Int, state: RecordingState) {
+        if (session == captureSession) _recordingState.value = state
     }
 
     /**
@@ -363,8 +370,10 @@ class SampleRecorder(private val context: Context) {
      */
     fun cancel() {
         Log.d(TAG, "Cancelling")
+        session++
         isRecording = false
         isCapturing = false
+        stopEndPosition = -1
 
         try {
             captureThread?.join(1000)
@@ -403,7 +412,7 @@ class SampleRecorder(private val context: Context) {
      * Main capture loop - runs in background thread.
      * Continuously reads from mic and writes to circular buffer.
      */
-    private fun captureAudioLoop(bufferSize: Int, prepareStartTime: Long) {
+    private fun captureAudioLoop(bufferSize: Int, prepareStartTime: Long, captureSession: Int) {
         val buffer = ShortArray(bufferSize / 2)
         var maxDurationReached = false
 
@@ -452,64 +461,32 @@ class SampleRecorder(private val context: Context) {
                 }
             }
 
-            // Handle max duration reached
-            if (maxDurationReached && isRecording) {
-                val endPosition = circularBuffer.getCurrentPosition()
+            // Stopped by the user or by the max duration: save the take
+            val endPosition = when {
+                maxDurationReached && isRecording -> circularBuffer.getCurrentPosition()
+                stopEndPosition >= 0 -> stopEndPosition
+                else -> -1
+            }
+            if (endPosition >= 0 && session == captureSession) {
                 isRecording = false
                 isCapturing = false
 
                 // Stop AudioRecord
+                val record = audioRecord
+                audioRecord = null
                 try {
-                    audioRecord?.stop()
-                    audioRecord?.release()
+                    record?.stop()
+                    record?.release()
                 } catch (e: Exception) {
                     Log.e(TAG, "Error stopping AudioRecord", e)
                 }
-                audioRecord = null
 
-                // Extract samples
-                var samples = circularBuffer.extract(recordStartPosition, endPosition, PREROLL_SAMPLES)
-
-                if (samples != null && samples.isNotEmpty()) {
-                    // Apply noise reduction using pre-recording countdown audio
-                    var noiseLevelDb = Float.NEGATIVE_INFINITY
-                    var noiseReductionApplied = false
-                    val noiseProfileSamples = extractNoiseProfile()
-                    if (noiseProfileSamples != null) {
-                        noiseProfiler.captureNoiseProfile(noiseProfileSamples)
-                        noiseLevelDb = noiseProfiler.getMeasuredNoiseDb()
-                        if (noiseProfiler.hasSignificantNoise()) {
-                            samples = noiseProfiler.apply(samples)
-                            noiseReductionApplied = true
-                            Log.d(TAG, "Noise reduction applied (max-dur) floor: ${"%.1f".format(noiseLevelDb)} dBFS")
-                        }
-                    }
-
-                    try {
-                        val cacheDir = File(context.cacheDir, "sf2_samples")
-                        cacheDir.mkdirs()
-                        outputFile = File(cacheDir, "sample_${System.currentTimeMillis()}.wav")
-
-                        saveWavFile(outputFile!!, samples)
-
-                        _recordingState.value = RecordingState.MaxDurationReached
-                        Thread.sleep(100)
-                        _recordingState.value = RecordingState.Completed(outputFile!!, samples, noiseLevelDb, noiseReductionApplied)
-
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error saving WAV file", e)
-                        _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_save, e.message))
-                    }
-                } else {
-                    _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_no_data))
-                }
-
-                _amplitude.value = 0f
+                finishRecording(endPosition, maxDurationReached, captureSession)
             }
 
         } catch (e: Exception) {
             Log.e(TAG, "Error in capture loop", e)
-            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_capture, e.message))
+            publish(captureSession, RecordingState.Error(context.getString(R.string.sf2_rec_err_capture, e.message)))
         }
     }
 
@@ -585,7 +562,6 @@ class SampleRecorder(private val context: Context) {
     /**
      * Clean up old sample recordings from cache.
      */
-    @Suppress("unused")
     fun cleanupOldSamples(maxAgeMs: Long = 24 * 60 * 60 * 1000) {
         val cacheDir = File(context.cacheDir, "sf2_samples")
         if (cacheDir.exists()) {

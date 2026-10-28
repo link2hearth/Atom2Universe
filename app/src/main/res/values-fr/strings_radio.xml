@@ -62,4 +62,13 @@
     <string name="radio_recording_notif_text_generic">Enregistrement en cours…</string>
     <string name="radio_recording_action_stop_notif">Arrêter l\'enregistrement</string>
     <string name="radio_recording_error_storage">Enregistrement interrompu : espace de stockage insuffisant.</string>
+    <string name="radio_recording_error_network">Enregistrement interrompu : le flux a été coupé.</string>
+    <string name="radio_recording_unknown_artist">Artiste inconnu</string>
+    <string name="radio_recording_unknown_title">Titre inconnu</string>
+    <string name="radio_recording_unknown_station">Station inconnue</string>
+    <string name="radio_recording_sidecar">Enregistré le : %1$s\nArtiste : %2$s\nTitre : %3$s\nStation : %4$s\n</string>
+    <string name="radio_meta_separator">" · "</string>
+    <string name="radio_now_playing_separator">" — "</string>
+    <string name="radio_genre_live">Radio en direct</string>
+    <string name="radio_station_default_name">Station</string>
 </resources>

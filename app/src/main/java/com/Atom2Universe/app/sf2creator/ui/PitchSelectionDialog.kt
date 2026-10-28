@@ -13,7 +13,6 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.midi.sf2.Sf2Engine
 import com.Atom2Universe.app.sf2creator.data.PitchResult
 import com.Atom2Universe.app.sf2creator.data.SampleData
 import com.Atom2Universe.app.sf2creator.writer.Sf2Writer
@@ -32,6 +31,7 @@ class PitchSelectionDialog(
     context: Context,
     private val detectedPitch: PitchResult,
     private val samples: ShortArray,
+    private val sampleRate: Int,
     private val onPitchSelected: (Int) -> Unit
 ) : AudioDialog(context) {
 
@@ -49,7 +49,7 @@ class PitchSelectionDialog(
     private var selectedNote = detectedPitch.midiNote
     private val scope = CoroutineScope(Dispatchers.Main)
     private val sf2Writer = Sf2Writer()
-    private var sf2Engine: Sf2Engine? = null
+    private var previewEngine: PreviewEngine? = null
     private var tempSf2File: File? = null
     private var engineReady: Boolean = false
     private var sf2Job: Job? = null
@@ -95,44 +95,49 @@ class PitchSelectionDialog(
      * Generate a temporary SF2 file from the current sample and initialize Sf2Engine.
      */
     private fun generatePreviewSf2() {
-        sf2Job?.cancel()
         loadingIndicator?.visibility = View.VISIBLE
         engineReady = false
 
+        // Release previous engine
+        previewEngine?.release()
+        previewEngine = null
+
+        val inMemorySample = Sf2Writer.InMemorySample(
+            name = "Preview",
+            samples = samples,
+            sampleRate = sampleRate,
+            rootNote = selectedNote,
+            keyRangeStart = 0,
+            keyRangeEnd = 127
+        )
+
+        val previous = sf2Job
+        previous?.cancel()
         sf2Job = scope.launch {
-            // Release previous engine
-            sf2Engine?.stopAudioRenderer()
-            sf2Engine?.release()
-            sf2Engine = null
+            // A cancelled preview may still be writing the same file
+            PreviewEngine.awaitCancelled(previous)
 
-            val sf2File = withContext(Dispatchers.IO) {
-                val tempDir = context.cacheDir
-                val tempFile = File(tempDir, "pitch_preview.sf2")
-
-                val inMemorySample = Sf2Writer.InMemorySample(
-                    name = "Preview",
-                    samples = samples,
-                    sampleRate = 44100,
-                    rootNote = selectedNote,
-                    keyRangeStart = 0,
-                    keyRangeEnd = 127
-                )
-
-                val success = sf2Writer.writeSf2FromMemory(tempFile, "Preview", inMemorySample)
-                if (success) tempFile else null
-            }
-
-            if (sf2File != null) {
-                tempSf2File = sf2File
-
-                val engine = Sf2Engine(context)
-                val initialized = engine.initialize(sf2File.absolutePath)
-
-                if (initialized) {
-                    engine.startAudioRenderer()
-                    sf2Engine = engine
-                    engineReady = true
+            var loaded: PreviewEngine? = null
+            try {
+                val sf2File = withContext(Dispatchers.IO) {
+                    val tempFile = File(context.cacheDir, "pitch_preview.sf2")
+                    val success = sf2Writer.writeSf2FromMemory(tempFile, "Preview", inMemorySample)
+                    if (success) tempFile else null
                 }
+
+                if (sf2File != null) {
+                    tempSf2File = sf2File
+                    // Reading the SoundFont takes time: off the main thread
+                    withContext(Dispatchers.IO) {
+                        loaded = PreviewEngine.load(context, sf2File.absolutePath, useFluidSynth = false)
+                    }
+                    previewEngine = loaded
+                    engineReady = loaded != null
+                    loaded = null
+                }
+            } finally {
+                // Cancelled while loading: nobody else holds this engine
+                loaded?.release()
             }
 
             loadingIndicator?.visibility = View.GONE
@@ -180,14 +185,10 @@ class PitchSelectionDialog(
 
         // Connect keyboard callbacks to Sf2Engine
         keyboardPreview.onNoteOn = { note, velocity ->
-            if (engineReady) {
-                sf2Engine?.sendNoteOn(0, note, velocity)
-            }
+            if (engineReady) previewEngine?.noteOn(note, velocity)
         }
         keyboardPreview.onNoteOff = { note ->
-            if (engineReady) {
-                sf2Engine?.sendNoteOff(0, note)
-            }
+            if (engineReady) previewEngine?.noteOff(note)
         }
 
         // Octave navigation buttons
@@ -269,9 +270,8 @@ class PitchSelectionDialog(
 
     override fun dismiss() {
         sf2Job?.cancel()
-        sf2Engine?.stopAudioRenderer()
-        sf2Engine?.release()
-        sf2Engine = null
+        previewEngine?.release()
+        previewEngine = null
         engineReady = false
         tempSf2File?.delete()
         tempSf2File = null

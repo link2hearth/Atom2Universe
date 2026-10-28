@@ -43,6 +43,9 @@ class PianoKeyboardView @JvmOverloads constructor(
         val WHITE_KEY_SHADE = Color.rgb(0xC9, 0xCC, 0xD6)
         val BLACK_KEY = Color.rgb(0x16, 0x18, 0x1F)
         val LABEL = Color.rgb(0x8A, 0x8F, 0x9E)
+
+        // Noms des do (C-1 à C9), précalculés pour ne rien allouer en dessinant
+        val OCTAVE_LABELS = Array(11) { "C${it - 1}" }
     }
 
     // Canal affiché et plage de notes
@@ -102,6 +105,7 @@ class PianoKeyboardView @JvmOverloads constructor(
 
         if (geometryChanged || whiteNotes.isEmpty()) computeGeometry()
         invalidate()
+        MidiFrameClock.requestFrame()
     }
 
     override fun onAttachedToWindow() {
@@ -116,12 +120,34 @@ class PianoKeyboardView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    override fun onFrame(frameTimeNanos: Long) {
+    // Application en arrière-plan : l'horloge s'arrête si plus personne n'est visible
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == VISIBLE && isAttachedToWindow) {
+            needsSync = true
+            lastFrameNanos = 0L
+            MidiFrameClock.register(this)
+        } else {
+            MidiFrameClock.unregister(this)
+        }
+    }
+
+    // Clavier replié puis déplié : l'horloge peut dormir, on lui redemande une image
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (isVisible) {
+            needsSync = true
+            lastFrameNanos = 0L
+            MidiFrameClock.requestFrame()
+        }
+    }
+
+    override fun onFrame(frameTimeNanos: Long): Boolean {
         if (!isShown) {
             // Caché : on ne calcule rien, mais on se resynchronise dès qu'on redevient visible
             needsSync = true
             lastFrameNanos = 0L
-            return
+            return false
         }
 
         val dtMs = if (lastFrameNanos == 0L) 16f
@@ -162,6 +188,7 @@ class PianoKeyboardView @JvmOverloads constructor(
         }
 
         if (changed) invalidate()
+        return fading
     }
 
     private fun isBlack(note: Int) = BLACK_PITCH_CLASSES[note % 12]
@@ -234,7 +261,7 @@ class PianoKeyboardView @JvmOverloads constructor(
             canvas.drawRect(rect.left + radius, h - 2f * density, rect.right - radius, h - radius, fillPaint)
 
             if (note % 12 == 0) {
-                val label = "C${note / 12 - 1}"
+                val label = OCTAVE_LABELS[note / 12]
                 labelPaint.color = if (lit > 0.5f) BLACK_KEY else LABEL
                 canvas.drawText(label, rect.centerX(), h - 5f * density, labelPaint)
             }

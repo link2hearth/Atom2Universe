@@ -2,15 +2,18 @@ package com.Atom2Universe.app.music.view
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
 import android.util.AttributeSet
+import android.view.Choreographer
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.R
@@ -111,6 +114,15 @@ class AudioVisualizerView @JvmOverloads constructor(
 
         // Constantes pour les visualisations
         private const val BAR_COUNT = 32
+        // Après une pause, temps laissé au spectre pour retomber avant de figer l'image
+        private const val PAUSE_SETTLE_NANOS = 1_500_000_000L
+        // Plafond ~60 images/s : entre deux images, au moins ce temps de vsync à vsync.
+        // 120 Hz → une vsync sur deux (60 i/s) ; 60 Hz → toutes ; 90 Hz → une sur deux (45 i/s).
+        private const val MIN_FRAME_INTERVAL_NANOS = 15_000_000L
+        // Voronoï : la carte de pixels n'est recalculée (et renvoyée au GPU) qu'à 30 Hz
+        private const val VORONOI_RENDER_INTERVAL_NANOS = 33_333_333L
+        // Largeur de la rampe d'alpha des traînées de particules
+        private const val TRAIL_RAMP_SIZE = 256
         private const val MIRROR_BAR_COUNT = 96  // Plus de barres pour un look pro
         private const val CIRCLE_POINTS = 48
         private const val PARTICLE_COUNT = 120  // Augmenté pour l'effet starfield
@@ -365,8 +377,9 @@ class AudioVisualizerView @JvmOverloads constructor(
     private val meshFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
-    private var meshFrameSkip = 0
-    private val MESH_RETRI_INTERVAL = 4
+    // Re-triangulation toutes les 4 images à 60 i/s, comptée en temps (deltaTime) et non en images
+    private var meshRetriClock = 0f
+    private val MESH_RETRI_INTERVAL = 4f
 
     // === FOUDRE pour DELAUNAY_MESH ===
     private data class LightningSegment(
@@ -381,7 +394,7 @@ class AudioVisualizerView @JvmOverloads constructor(
     private val lightningCorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
     }
-    private var lightningCooldown = 0
+    private var lightningCooldown = 0f   // en images à 60 i/s, décompté avec deltaTime
     private var prevBassAmpMesh = 0f
 
     // Bass detection for beat-reactive effects
@@ -409,6 +422,8 @@ class AudioVisualizerView @JvmOverloads constructor(
     private var voronoiPixels: IntArray? = null
     private var voronoiHueOffset = 0f
     private var voronoiLastTimeNs = 0L
+    private var voronoiLastRenderNs = 0L
+    private val voronoiDst = RectF()
     private val voronoiPaint = Paint().apply { isAntiAlias = false }
     private val voronoiRng = java.util.Random()
     // Tableaux plats pré-alloués pour la boucle pixel (pas d'allocation par frame, cache-friendly)
@@ -479,9 +494,37 @@ class AudioVisualizerView @JvmOverloads constructor(
     // Shaders pour fond et effets tunnel
     private var tunnelShader: RadialGradient? = null
 
-    // Pool de shaders pour particules (réutilisés en rotation)
-    private val particleTrailShaders = arrayOfNulls<LinearGradient>(8)
-    private var particleShaderIndex = 0
+    // Traînées des particules : une seule rampe d'alpha (transparent → opaque), teintée par la
+    // couleur du pinceau et posée sur chaque traînée par une matrice. Remplace un LinearGradient
+    // neuf par particule et par image ; même rendu, Android interpolant ses dégradés en
+    // prémultiplié (transparent → C donne la couleur C dont seul l'alpha monte).
+    private val trailRampShader: BitmapShader = run {
+        val ramp = Bitmap.createBitmap(TRAIL_RAMP_SIZE, 1, Bitmap.Config.ALPHA_8)
+        val alphas = ByteArray(TRAIL_RAMP_SIZE) { i -> (i * 255 / (TRAIL_RAMP_SIZE - 1)).toByte() }
+        ramp.copyPixelsFromBuffer(java.nio.ByteBuffer.wrap(alphas))
+        BitmapShader(ramp, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+    }
+    private val trailMatrix = Matrix()
+    private val trailPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        shader = trailRampShader
+    }
+
+    // Boucle d'animation plafonnée (voir MIN_FRAME_INTERVAL_NANOS), cadencée sur les vsync
+    private var lastDrawVsyncNanos = 0L
+    private var frameCallbackPending = false
+    private val frameCallback = object : Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
+            if (frameTimeNanos - lastDrawVsyncNanos < MIN_FRAME_INTERVAL_NANOS) {
+                Choreographer.getInstance().postFrameCallback(this)
+            } else {
+                frameCallbackPending = false
+                lastDrawVsyncNanos = frameTimeNanos
+                invalidate()
+            }
+        }
+    }
 
     // Shaders pour spectrum et radial
     private var spectrumShader: LinearGradient? = null
@@ -536,7 +579,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         }
 
         smoothedWaveform.fill(0.5f, size)
-        invalidate()
+        if (isAnimationLive(System.nanoTime())) invalidateIfIdle()
     }
 
     fun updateFft(data: ByteArray) {
@@ -579,7 +622,8 @@ class AudioVisualizerView @JvmOverloads constructor(
         if (onset) beatCooldown = 4
         beatDetected = beatDetected || onset
 
-        invalidate()
+        // En pause, le Visualizer envoie encore du silence : ne pas relancer l'image figée
+        if (isAnimationLive(lastAudioNanos)) invalidateIfIdle()
     }
 
     fun clear() {
@@ -625,6 +669,17 @@ class AudioVisualizerView @JvmOverloads constructor(
             invalidate()
         }
 
+    // Lecture en pause : l'image retombe puis se fige, plus aucune image par seconde
+    var isPlaybackActive: Boolean = true
+        set(value) {
+            if (field == value) return
+            field = value
+            if (!value) playbackStoppedAtNanos = System.nanoTime()
+            lastFrameTimeNanos = 0L
+            invalidate()
+        }
+    private var playbackStoppedAtNanos = 0L
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         // PERFORMANCE: Initialiser les shaders uniquement quand les dimensions changent
@@ -637,6 +692,8 @@ class AudioVisualizerView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         lastFrameTimeNanos = 0L
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
+        frameCallbackPending = false
         scenes.release()
     }
 
@@ -663,17 +720,6 @@ class AudioVisualizerView @JvmOverloads constructor(
             Shader.TileMode.CLAMP
         )
 
-
-        // Pool de shaders pour traînées de particules (réutilisés en rotation)
-        // Les coordonnées seront mises à jour dynamiquement mais le shader reste alloué
-        for (i in particleTrailShaders.indices) {
-            particleTrailShaders[i] = LinearGradient(
-                0f, 0f, 100f, 100f,  // Coordonnées temporaires
-                Color.TRANSPARENT,
-                Color.WHITE,
-                Shader.TileMode.CLAMP
-            )
-        }
 
         // Réinitialiser le mesh Delaunay si le mode est actif (dimensions changées)
         if (mode == VisualizationMode.DELAUNAY_MESH) initDelaunayMesh()
@@ -751,8 +797,27 @@ class AudioVisualizerView @JvmOverloads constructor(
         colorPhase = (colorPhase + colorSpeed * deltaTime) % 360f
 
         beatDetected = false // Consume each audio onset once, even between capture callbacks.
-        if (isShown) postInvalidateOnAnimation()
+        if (isShown && isAnimationLive(now)) scheduleNextFrame()
     }
+
+    /** Demande l'image suivante, au plus ~60 fois par seconde (voir [frameCallback]). */
+    private fun scheduleNextFrame() {
+        val choreographer = Choreographer.getInstance()
+        choreographer.removeFrameCallback(frameCallback)
+        choreographer.postFrameCallback(frameCallback)
+        frameCallbackPending = true
+    }
+
+    /**
+     * Redessine à l'arrivée de nouvelles données audio, sauf si la boucle d'animation tourne
+     * déjà : elle les prendra à sa prochaine image, sans dépasser son plafond.
+     */
+    private fun invalidateIfIdle() {
+        if (!frameCallbackPending) invalidate()
+    }
+
+    private fun isAnimationLive(now: Long): Boolean =
+        isPlaybackActive || now - playbackStoppedAtNanos < PAUSE_SETTLE_NANOS
 
     private val hsvBar = floatArrayOf(0f, 0.8f, 1f)
 
@@ -1126,18 +1191,21 @@ class AudioVisualizerView @JvmOverloads constructor(
             val trailStartX = p.x - dirX * trailLength
             val trailStartY = p.y - dirY * trailLength
 
-            if (perspectiveSize > 4f) {
-                // Grosse particule visible = traînée avec gradient (belle qualité)
-                radialPaint.shader = LinearGradient(
-                    trailStartX, trailStartY, p.x, p.y,
-                    Color.TRANSPARENT,
-                    palette.hsv(alpha, hsvTemp),
-                    Shader.TileMode.CLAMP
-                )
+            if (perspectiveSize > 4f && abs(trailLength) > 0.01f) {
+                // Grosse particule visible = traînée en dégradé (rampe d'alpha orientée, sans allocation)
+                trailMatrix.setScale(trailLength / TRAIL_RAMP_SIZE, 1f)
+                trailMatrix.postRotate(Math.toDegrees(Math.atan2(dirY.toDouble(), dirX.toDouble())).toFloat())
+                trailMatrix.postTranslate(trailStartX, trailStartY)
+                trailRampShader.setLocalMatrix(trailMatrix)
+                trailPaint.color = palette.hsv(alpha, hsvTemp)
+                trailPaint.strokeWidth = perspectiveSize * 0.7f
+                canvas.drawLine(trailStartX, trailStartY, p.x, p.y, trailPaint)
+            } else if (perspectiveSize > 4f) {
+                // Traînée de longueur nulle : seul le bout opaque du dégradé se voit
+                radialPaint.color = palette.hsv(alpha, hsvTemp)
                 radialPaint.strokeWidth = perspectiveSize * 0.7f
                 radialPaint.strokeCap = Paint.Cap.ROUND
                 canvas.drawLine(trailStartX, trailStartY, p.x, p.y, radialPaint)
-                radialPaint.shader = null
             } else {
                 // Petite particule = traînée simple (zero allocation)
                 radialPaint.color = palette.hsv(alpha / 2, hsvTemp)
@@ -1613,7 +1681,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         meshPoints.clear()
         meshTriangles.clear()
         meshEdges.clear()
-        meshFrameSkip = 0
+        meshRetriClock = 0f
         if (cachedWidth == 0 || cachedHeight == 0) return
 
         val w = cachedWidth.toFloat()
@@ -1860,8 +1928,8 @@ class AudioVisualizerView @JvmOverloads constructor(
         }
 
         // === Déclenchement de la foudre — marche sur les arêtes Delaunay ===
-        if (lightningCooldown > 0) lightningCooldown--
-        if (lightningCooldown == 0 && beatDetected && meshEdges.isNotEmpty()) {
+        if (lightningCooldown > 0f) lightningCooldown -= deltaTime
+        if (lightningCooldown <= 0f && beatDetected && meshEdges.isNotEmpty()) {
             val rng = java.util.Random()
             val n = meshPoints.size
             if (n > 0) {
@@ -1942,7 +2010,7 @@ class AudioVisualizerView @JvmOverloads constructor(
                     lightningBolts.add(LightningBolt(allSegs, boltHue, 1.0f))
                 }
             }
-            lightningCooldown = 240 + rng.nextInt(200) // ~4–7 s @ 60 fps
+            lightningCooldown = 240f + rng.nextInt(200) // ~4–7 s (images à 60 i/s, décomptées en temps)
         }
 
         // Fond transparent — laisse le thème sombre de l'app apparaître
@@ -2051,9 +2119,9 @@ class AudioVisualizerView @JvmOverloads constructor(
         }
 
         // Re-triangulation périodique
-        meshFrameSkip++
-        if (meshFrameSkip >= MESH_RETRI_INTERVAL) {
-            meshFrameSkip = 0
+        meshRetriClock += deltaTime
+        if (meshRetriClock >= MESH_RETRI_INTERVAL) {
+            meshRetriClock = 0f
             meshTriangles.clear()
             meshTriangles.addAll(bowyerWatson(meshPoints, w, h))
             buildMeshEdges()
@@ -2250,6 +2318,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         voronoiBitmap = Bitmap.createBitmap(bmpW, bmpH, Bitmap.Config.ARGB_8888)
         voronoiPixels = IntArray(bmpW * bmpH)
         voronoiLastTimeNs = System.nanoTime()
+        voronoiLastRenderNs = 0L
     }
 
     private fun drawVoronoi(canvas: Canvas, grayscale: Boolean = false) {
@@ -2352,6 +2421,15 @@ class AudioVisualizerView @JvmOverloads constructor(
         // Rotation lente des teintes
         voronoiHueOffset = (voronoiHueOffset + 0.16f * dt) % 360f
 
+        voronoiDst.set(0f, 0f, w.toFloat(), h.toFloat())
+        // Les graines bougent à chaque image ; la carte de pixels (calcul + envoi au GPU) n'est
+        // refaite qu'à 30 Hz. Entre deux, la dernière carte est redessinée telle quelle.
+        if (nowNs - voronoiLastRenderNs < VORONOI_RENDER_INTERVAL_NANOS) {
+            canvas.drawBitmap(curBmp, null, voronoiDst, voronoiPaint)
+            return
+        }
+        voronoiLastRenderNs = nowNs
+
         // Seuil de bordure : ≈ 3-4 pixels d'espace transparent entre les cellules
         val borderThresh = sqrt(w.toFloat() * h / n) * 4.8f
         val scaleF = scale.toFloat()
@@ -2400,7 +2478,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         }
 
         curBmp.setPixels(curPixels, 0, bmpW, 0, 0, bmpW, bmpH)
-        canvas.drawBitmap(curBmp, null, RectF(0f, 0f, w.toFloat(), h.toFloat()), voronoiPaint)
+        canvas.drawBitmap(curBmp, null, voronoiDst, voronoiPaint)
     }
 
     // ===================================================================

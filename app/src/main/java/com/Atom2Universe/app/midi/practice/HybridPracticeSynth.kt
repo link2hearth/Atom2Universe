@@ -67,6 +67,16 @@ class HybridPracticeSynth(
         sonivoxSynth.release()
     }
 
+    override fun pause() {
+        soundFontSynth.pause()
+        sonivoxSynth.pause()
+    }
+
+    override fun resume() {
+        soundFontSynth.resume()
+        sonivoxSynth.resume()
+    }
+
     private fun updateChannelRouting(channel: Int, program: Int) {
         channelRouting[channel] = when {
             channel == PERCUSSION_CHANNEL -> if (useSf2ForDrums) SynthTarget.SOUNDFONT else SynthTarget.SONIVOX

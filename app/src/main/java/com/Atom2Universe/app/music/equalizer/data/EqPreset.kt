@@ -36,7 +36,10 @@ data class EqPreset(
     /** Virtualizer/surround strength (0-1000) */
     val virtualizerStrength: Int = 0,
 
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+
+    /** Dernière modification : c'est elle que la synchro cloud compare. */
+    val updatedAt: Long = createdAt
 ) {
     companion object {
         const val MIN_BAND_LEVEL = -1200

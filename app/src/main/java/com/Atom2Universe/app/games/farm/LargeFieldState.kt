@@ -4,6 +4,7 @@ import android.graphics.PointF
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Base64
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.random.Random
@@ -49,6 +50,9 @@ class LargeField(val index: Int) {
     var obstacles: List<Obstacle> = emptyList()
     var pos = startPoint()
     var distanceUsed = 0f
+    /** Counts every fine cell the tractor paints, so the screen knows when its layers are stale. */
+    var strokes = 0
+        private set
     init { obstacles = randomObstacles() }
 
     private val eligibleArea get() = eligible.count { it } / (SUB * SUB).toFloat()
@@ -83,7 +87,8 @@ class LargeField(val index: Int) {
         val y0 = ((y - BRUSH) * SUB).toInt().coerceIn(0, maskRows - 1); val y1 = ((y + BRUSH) * SUB).toInt().coerceIn(0, maskRows - 1)
         for (my in y0..y1) for (mx in x0..x1) {
             val cx = (mx + .5f) / SUB; val cy = (my + .5f) / SUB
-            if (hypot((cx - x).toDouble(), (cy - y).toDouble()) <= BRUSH && eligible[my * maskCols + mx]) painted[my * maskCols + mx] = true
+            val i = my * maskCols + mx
+            if (!painted[i] && eligible[i] && hypot((cx - x).toDouble(), (cy - y).toDouble()) <= BRUSH) { painted[i] = true; strokes++ }
         }
     }
     private fun tryStep(dx: Float, dy: Float): Float {
@@ -151,8 +156,19 @@ class LargeField(val index: Int) {
         eligible = BooleanArray(maskCols * maskRows) { true }
         beginCycle()
     }
+    /** A mask as bits in Base64: eight cells a byte, rather than one character each. */
+    private fun encodeMask(m: BooleanArray): String {
+        val bytes = ByteArray((m.size + 7) / 8)
+        for (i in m.indices) if (m[i]) bytes[i shr 3] = (bytes[i shr 3].toInt() or (1 shl (i and 7))).toByte()
+        return Base64.getEncoder().encodeToString(bytes)
+    }
+    private fun decodeMask(text: String): BooleanArray {
+        val size = maskCols * maskRows
+        val bytes = Base64.getDecoder().decode(text)
+        require(bytes.size == (size + 7) / 8)
+        return BooleanArray(size) { (bytes[it shr 3].toInt() shr (it and 7)) and 1 != 0 }
+    }
     fun json(): JSONObject {
-        fun mask(m: BooleanArray) = String(CharArray(m.size) { if (m[it]) '1' else '0' })
         val obs = JSONArray(obstacles.map {
             JSONObject().apply {
                 when (it) {
@@ -162,16 +178,13 @@ class LargeField(val index: Int) {
             }
         })
         return JSONObject().put("phase", phase).put("readyAt", readyAt).put("paid", paid).put("started", started)
-            .put("eligible", mask(eligible)).put("painted", mask(painted))
+            .put("eligible", encodeMask(eligible)).put("painted", encodeMask(painted))
             .put("posX", pos.x).put("posY", pos.y).put("distanceUsed", distanceUsed).put("obstacles", obs)
     }
     fun restore(j: JSONObject) {
         val p = j.getInt("phase"); require(p in 0..3)
-        fun mask(key: String): BooleanArray {
-            val s = j.getString(key); require(s.length == maskCols * maskRows)
-            return BooleanArray(s.length) { s[it] == '1' }
-        }
-        val e = mask("eligible"); val pt = mask("painted")
+        // A mask that does not read only costs the cycle under way, never the field itself.
+        val masks = runCatching { decodeMask(j.getString("eligible")) to decodeMask(j.getString("painted")) }.getOrNull()
         val px = j.getDouble("posX").toFloat(); val py = j.getDouble("posY").toFloat()
         require(px in 0f..columns.toFloat() && py in 0f..rows.toFloat())
         val arr = j.getJSONArray("obstacles")
@@ -184,8 +197,10 @@ class LargeField(val index: Int) {
             }
         }
         phase = p; readyAt = j.getLong("readyAt").coerceAtLeast(0); paid = j.getBoolean("paid"); started = j.optBoolean("started")
-        eligible = e; painted = pt; pos = PointF(px, py); distanceUsed = j.getDouble("distanceUsed").toFloat().coerceAtLeast(0f)
+        pos = PointF(px, py); distanceUsed = j.getDouble("distanceUsed").toFloat().coerceAtLeast(0f)
         obstacles = obs
+        if (masks != null) { eligible = masks.first; painted = masks.second }
+        else { phase = 0; readyAt = 0; paid = false; eligible = BooleanArray(maskCols * maskRows) { true }; beginPass() }
     }
     companion object {
         const val GROWTH_MILLIS = 6 * 3600_000L

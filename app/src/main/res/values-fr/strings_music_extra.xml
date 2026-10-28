@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Durées des morceaux et des albums -->
+    <string name="music_duration_minutes_seconds">%1$d:%2$02d</string>
+    <string name="music_duration_hours_minutes">%1$d h %2$02d min</string>
+    <string name="music_duration_minutes">%1$d min</string>
+
+    <!-- Égaliseur : valeurs des effets -->
+    <string name="music_eq_percent">%1$d %%</string>
+
+    <!-- Égaliseur : noms des préréglages (la clé en base reste en anglais) -->
+    <string name="music_eq_preset_flat">Neutre</string>
+    <string name="music_eq_preset_rock">Rock</string>
+    <string name="music_eq_preset_pop">Pop</string>
+    <string name="music_eq_preset_jazz">Jazz</string>
+    <string name="music_eq_preset_classical">Classique</string>
+    <string name="music_eq_preset_electronic">Électro</string>
+    <string name="music_eq_preset_bass_boost">Basses renforcées</string>
+    <string name="music_eq_preset_treble_boost">Aigus renforcés</string>
+    <string name="music_eq_preset_vocal">Voix</string>
+    <string name="music_eq_preset_late_night">Nuit calme</string>
+    <string name="music_eq_preset_custom">Personnalisé</string>
+    <string name="music_eq_preset_custom_track">Personnalisé (morceau)</string>
+    <string name="music_eq_preset_custom_album">Personnalisé (album)</string>
+    <string name="music_eq_preset_custom_artist">Personnalisé (artiste)</string>
+</resources>

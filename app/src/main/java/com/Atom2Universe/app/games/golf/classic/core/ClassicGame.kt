@@ -172,6 +172,17 @@ class ClassicGame(val hole: ClassicHole, val easy: Boolean = false) {
         return previewValue
     }
 
+    /**
+     * The guide of another game's shot on the same hole, set up as given: a copy of the game can work it
+     * out on another thread while the original plays on. The simulation is deterministic, so it is
+     * the guide the original would draw.
+     */
+    fun previewFor(ball: GolfPoint, club: GolfClub, aimAngle: Float, spinX: Float, spinY: Float, power: Float, simulatePutt: Boolean): ShotPreview {
+        this.ball = ball; this.club = club; this.aimAngle = aimAngle; setSpin(spinX, spinY)
+        stop(GolfState.READY)
+        return preview(power, simulatePutt)
+    }
+
     /** With the slope grid on, the putt is a plain line of the right length: the player reads the slopes. */
     private fun puttLine(power: Float): ShotPreview {
         val range = power * hole.puttRange

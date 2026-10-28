@@ -47,7 +47,7 @@ class EuchreActivity : CardGameActivity() {
         if (seat == g.sitting) return null
         val tricks = g.tricksWon[seat]
         if (seat != g.maker) return tricks.toString()
-        return "${g.trump!!.symbol}${if (g.alone) "★" else ""} $tricks"
+        return getString(if (g.alone) R.string.euchre_maker_alone_caption else R.string.euchre_maker_caption, g.trump!!.symbol, tricks)
     }
 
     override fun buildScene(): TableScene {

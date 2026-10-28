@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="audio_notification_title">Now playing</string>
-    <string name="audio_notification_unknown_artist">Unknown artist</string>
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_play">Play</string>
     <string name="audio_action_stop">Stop</string>
@@ -26,4 +24,6 @@
     <string name="audio_hub_editor_desc">Trim your audio files</string>
     <string name="audio_hub_stats_title">Music Lover</string>
     <string name="audio_hub_stats_desc">Your listening recaps</string>
+    <string name="ae_spectrum_empty">No spectrum</string>
+    <string name="ae_spectrum_khz">%1$dk</string>
 </resources>

@@ -29,9 +29,12 @@ open class RoguelikeActivity : ThemedActivity() {
     private lateinit var lexicon:      LexiconPanel
     private lateinit var forge:        ForgePanel
 
-    private var game = RoguelikeGame()
+    private lateinit var game: RoguelikeGame
     private val saveHandler = Handler(Looper.getMainLooper())
     private val deferredSave = Runnable { SaveManager.saveState(this, game) }
+    /** Une sauvegarde complète est déjà demandée pour la fin de ce geste. */
+    private var savePosted = false
+    private val postedSave = Runnable { writeSave() }
 
     // Accès testeur caché : appui long de 3s sur le bouton retour ouvre le mode test.
     // Le joueur lambda n'a aucune raison de maintenir ce bouton.
@@ -67,6 +70,7 @@ open class RoguelikeActivity : ThemedActivity() {
                 music.start()
             } else {
                 music.stop()
+                syncMusic()
             }
             updateMusicButton()
         }
@@ -78,15 +82,10 @@ open class RoguelikeActivity : ThemedActivity() {
         forge        = ForgePanel(findViewById(R.id.roguelike_forge), lexicon,
             onChanged = { saveNow(); refresh() },
             onLeave = { game.closeForge(); saveNow(); refresh() })
+        // Sous un panneau opaque, la carte ne se redessine plus
+        gameView.isCovered = { inventory.isOpen || lexicon.isOpen || forge.isOpen }
 
-        btnBack.setOnClickListener {
-            when {
-                lexicon.isOpen -> lexicon.back()
-                inventory.isOpen -> inventory.back()
-                forge.isOpen -> forge.back()
-                else -> finish()
-            }
-        }
+        btnBack.setOnClickListener { goBack() }
         if (!testMode) {
             btnBack.setOnTouchListener { _, event ->
                 when (event.action) {
@@ -109,17 +108,10 @@ open class RoguelikeActivity : ThemedActivity() {
         }
         // Retour : ferme d'abord le lexique, puis l'inventaire, s'ils sont ouverts
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                when {
-                    lexicon.isOpen   -> lexicon.back()
-                    inventory.isOpen -> inventory.back()
-                    forge.isOpen     -> forge.back()
-                    else             -> finish()
-                }
-            }
+            override fun handleOnBackPressed() = goBack()
         })
 
-        // sfx et music démarrés dans onResume uniquement (évite le double init EAS)
+        // sfx et music démarrés dans onResume ; le moteur de sons refuse lui-même un double init EAS
         if (testMode) {
             attachGame(RoguelikeGame().also { DungeonTestPanel.unlock(it.hero) })
             testButton = Button(this).apply {
@@ -145,7 +137,7 @@ open class RoguelikeActivity : ThemedActivity() {
         music.stop()
         sfx.stop()
         // La mort ne remet pas à zéro : on sauvegarde toujours (équipement, or, étage)
-        saveNow()
+        writeSave()
     }
 
     override fun onResume() {
@@ -159,6 +151,7 @@ open class RoguelikeActivity : ThemedActivity() {
     override fun onDestroy() {
         super.onDestroy()
         saveHandler.removeCallbacks(deferredSave)
+        saveHandler.removeCallbacks(postedSave)
         secretTestHandler.removeCallbacks(openSecretTestMode)
         music.stop()
         sfx.stop()
@@ -182,7 +175,13 @@ open class RoguelikeActivity : ThemedActivity() {
         g.onFloorChanged = { floor -> saveBestFloorIfBetter(floor); saveNow() }
         g.onCombatStart  = { saveNow(); showCombat() }
 
-        gameView.onMove          = { dx, dy -> g.tryMove(dx, dy); scheduleStateSave(); refresh() }
+        gameView.onMove          = { dx, dy ->
+            val gold = g.hero.gold; val relics = g.hero.relics.size; val hp = g.hero.hp
+            g.tryMove(dx, dy)
+            // Or ou relique ramassés, repos au feu : le héros change, la sauvegarde de marche ne suffit pas
+            if (g.hero.gold != gold || g.hero.relics.size != relics || g.hero.hp != hp) saveNow() else scheduleStateSave()
+            refresh()
+        }
         gameView.onCloseStairs   = { g.closeStairs(); scheduleStateSave(); refresh() }
         gameView.onDescend       = { sfx.onDescend(); g.descend(); saveNow(); refresh() }
         gameView.onEquipItem     = { g.equipPendingDrop(); saveNow(); refresh() }
@@ -259,9 +258,33 @@ open class RoguelikeActivity : ThemedActivity() {
         saveHandler.postDelayed(deferredSave, 1_000L)
     }
 
+    /** Plusieurs demandes dans le même geste (fin de combat puis combat enchaîné…) : une seule écriture. */
     private fun saveNow() {
         saveHandler.removeCallbacks(deferredSave)
-        if (!testMode) SaveManager.saveImmediate(this, game)
+        if (testMode || savePosted) return
+        savePosted = true
+        saveHandler.post(postedSave)
+    }
+
+    private fun writeSave() {
+        saveHandler.removeCallbacks(deferredSave)
+        saveHandler.removeCallbacks(postedSave)
+        savePosted = false
+        if (testMode) return
+        // Quitter sur l'écran de victoire : l'or et le butin sont versés avant d'écrire
+        game.settleVictory()
+        SaveManager.save(this, game)
+    }
+
+    private fun goBack() {
+        when {
+            lexicon.isOpen   -> lexicon.back()
+            inventory.isOpen -> inventory.back()
+            forge.isOpen     -> forge.back()
+            // Un combat et son écran de fin ne se quittent pas par Retour
+            game.combat != null -> {}
+            else             -> finish()
+        }
     }
 
     private fun showCombat() {
@@ -280,6 +303,8 @@ open class RoguelikeActivity : ThemedActivity() {
 
     private fun syncMusic() {
         val c = game.combat
+        // Musique coupée : le moteur de sons ne tourne que le temps d'un combat
+        sfx.setNeeded(musicEnabled || c != null)
         val mode = when {
             c != null && combatView.isOutcomeShown && c.phase == CombatPhase.VICTORY -> DungeonProceduralMusic.Mode.VICTORY
             c != null && combatView.isOutcomeShown && c.phase == CombatPhase.DEFEAT -> DungeonProceduralMusic.Mode.DEFEAT

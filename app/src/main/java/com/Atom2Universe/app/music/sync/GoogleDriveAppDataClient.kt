@@ -15,11 +15,14 @@ import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Client for Google Drive App Data folder operations.
@@ -37,6 +40,17 @@ class GoogleDriveAppDataClient(
     companion object {
         private const val TAG = "GoogleDriveAppDataClient"
         private const val APP_DATA_FOLDER = "appDataFolder"
+
+        /** The newest copy first, should two files ever share a name. */
+        private const val NEWEST_FIRST = "modifiedTime desc"
+
+        /**
+         * One lock per file name, shared by every client of the process. Drive has no unique
+         * names: "look up, then create" run twice at once makes two files with the same name.
+         */
+        private val writeLocks = ConcurrentHashMap<String, Mutex>()
+
+        private fun writeLock(filename: String): Mutex = writeLocks.getOrPut(filename) { Mutex() }
     }
 
     private val driveService: Drive by lazy {
@@ -67,6 +81,7 @@ class GoogleDriveAppDataClient(
             val files = driveService.files().list()
                 .setSpaces(APP_DATA_FOLDER)
                 .setQ("name = '$filename'")
+                .setOrderBy(NEWEST_FIRST)
                 .setFields("files(id, name)")
                 .execute()
 
@@ -108,6 +123,7 @@ class GoogleDriveAppDataClient(
             val file = driveService.files().list()
                 .setSpaces(APP_DATA_FOLDER)
                 .setQ("name = '$filename'")
+                .setOrderBy(NEWEST_FIRST)
                 .setFields("files(id, name)")
                 .execute()
                 .files.firstOrNull()
@@ -124,6 +140,51 @@ class GoogleDriveAppDataClient(
     }
 
     /**
+     * Reads a JSON file already found by [listFileDetailsChecked]: one request instead of two.
+     *
+     * @param name only for the log
+     * @return the contents, or null on error
+     */
+    suspend fun readJsonFileById(fileId: String, name: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val outputStream = ByteArrayOutputStream()
+            driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream)
+            outputStream.toString("UTF-8")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading $name", e)
+            null
+        }
+    }
+
+    /**
+     * The Drive ids of every file named [filename], newest first. A second one only exists if
+     * two writers created it at the same moment (on two devices, say): [writeJsonFile] then
+     * updates the newest and deletes the others.
+     */
+    private fun findIdsByName(filename: String): List<String> =
+        driveService.files().list()
+            .setSpaces(APP_DATA_FOLDER)
+            .setQ("name = '$filename'")
+            .setOrderBy(NEWEST_FIRST)
+            .setFields("files(id)")
+            .execute()
+            .files.map { it.id }
+
+    /** Deletes the older copies of a file, keeping the one just written. Best effort. */
+    private fun deleteDuplicates(filename: String, extraIds: List<String>) {
+        for (id in extraIds) {
+            try {
+                driveService.files().delete(id).execute()
+                Log.w(TAG, "Deleted duplicate of $filename")
+            } catch (e: Exception) {
+                Log.e(TAG, "Could not delete duplicate of $filename", e)
+            }
+        }
+    }
+
+    /**
      * Writes a JSON file to the App Data folder.
      * Creates the file if it doesn't exist, updates if it does.
      *
@@ -133,36 +194,37 @@ class GoogleDriveAppDataClient(
      */
     suspend fun writeJsonFile(filename: String, content: String): Boolean =
         withContext(Dispatchers.IO) {
-            try {
-                val existingFiles = driveService.files().list()
-                    .setSpaces(APP_DATA_FOLDER)
-                    .setQ("name = '$filename'")
-                    .setFields("files(id)")
-                    .execute()
+            writeLock(filename).withLock {
+                try {
+                    val existingIds = findIdsByName(filename)
 
-                val mediaContent = ByteArrayContent.fromString("application/json", content)
+                    val mediaContent = ByteArrayContent.fromString("application/json", content)
 
-                if (existingFiles.files.isNotEmpty()) {
-                    // Update existing file
-                    driveService.files().update(
-                        existingFiles.files[0].id,
-                        null,
-                        mediaContent
-                    ).execute()
-                } else {
-                    // Create new file
-                    val fileMetadata = File().apply {
-                        name = filename
-                        parents = listOf(APP_DATA_FOLDER)
+                    if (existingIds.isNotEmpty()) {
+                        // Update existing file
+                        driveService.files().update(
+                            existingIds[0],
+                            null,
+                            mediaContent
+                        ).execute()
+                        deleteDuplicates(filename, existingIds.drop(1))
+                    } else {
+                        // Create new file
+                        val fileMetadata = File().apply {
+                            name = filename
+                            parents = listOf(APP_DATA_FOLDER)
+                        }
+                        driveService.files().create(fileMetadata, mediaContent)
+                            .setFields("id")
+                            .execute()
                     }
-                    driveService.files().create(fileMetadata, mediaContent)
-                        .setFields("id")
-                        .execute()
+                    true
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error writing $filename", e)
+                    false
                 }
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Error writing $filename", e)
-                false
             }
         }
 
@@ -327,6 +389,7 @@ class GoogleDriveAppDataClient(
             val files = driveService.files().list()
                 .setSpaces(APP_DATA_FOLDER)
                 .setQ("name = '$filename'")
+                .setOrderBy(NEWEST_FIRST)
                 .setFields("files(id, name)")
                 .execute()
 
@@ -363,37 +426,38 @@ class GoogleDriveAppDataClient(
         content: ByteArray,
         mimeType: String = "image/jpeg"
     ): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val existingFiles = driveService.files().list()
-                .setSpaces(APP_DATA_FOLDER)
-                .setQ("name = '$filename'")
-                .setFields("files(id)")
-                .execute()
+        writeLock(filename).withLock {
+            try {
+                val existingIds = findIdsByName(filename)
 
-            val mediaContent = ByteArrayContent(mimeType, content)
+                val mediaContent = ByteArrayContent(mimeType, content)
 
-            if (existingFiles.files.isNotEmpty()) {
-                // Update existing file
-                driveService.files().update(
-                    existingFiles.files[0].id,
-                    null,
-                    mediaContent
-                ).execute()
-            } else {
-                // Create new file
-                val fileMetadata = File().apply {
-                    name = filename
-                    parents = listOf(APP_DATA_FOLDER)
+                if (existingIds.isNotEmpty()) {
+                    // Update existing file
+                    driveService.files().update(
+                        existingIds[0],
+                        null,
+                        mediaContent
+                    ).execute()
+                    deleteDuplicates(filename, existingIds.drop(1))
+                } else {
+                    // Create new file
+                    val fileMetadata = File().apply {
+                        name = filename
+                        parents = listOf(APP_DATA_FOLDER)
+                    }
+                    driveService.files().create(fileMetadata, mediaContent)
+                        .setFields("id")
+                        .execute()
                 }
-                driveService.files().create(fileMetadata, mediaContent)
-                    .setFields("id")
-                    .execute()
+                Log.d(TAG, "Wrote binary file: $filename (${content.size} bytes)")
+                true
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG, "Error writing binary file: $filename", e)
+                false
             }
-            Log.d(TAG, "Wrote binary file: $filename (${content.size} bytes)")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Error writing binary file: $filename", e)
-            false
         }
     }
 

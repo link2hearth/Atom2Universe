@@ -88,22 +88,28 @@ class NoiseGate(private val sampleRate: Int = 44100) {
 
     /**
      * Calculate the signal envelope with optional look-ahead.
+     * Sliding maximum over [i, i + lookAhead] kept in a monotonic queue.
      */
     private fun calculateEnvelope(samples: ShortArray, lookAhead: Int): FloatArray {
-        val envelope = FloatArray(samples.size)
+        val size = samples.size
+        val envelope = FloatArray(size)
         val windowSize = (sampleRate / 1000).coerceAtLeast(1) // 1ms window
+        if (lookAhead < 0) return smoothEnvelope(envelope, windowSize)
 
+        val queue = IntArray(size)
+        var head = 0
+        var tail = 0
+        var next = 0
         for (i in samples.indices) {
             // Look ahead to catch transients early
-            val searchEnd = (i + lookAhead).coerceAtMost(samples.size - 1)
-            var maxLevel = 0f
-
-            for (j in i..searchEnd) {
-                val level = abs(samples[j].toFloat()) / Short.MAX_VALUE
-                if (level > maxLevel) maxLevel = level
+            val searchEnd = (i + lookAhead).coerceAtMost(size - 1)
+            while (next <= searchEnd) {
+                val level = abs(samples[next].toInt())
+                while (tail > head && abs(samples[queue[tail - 1]].toInt()) <= level) tail--
+                queue[tail++] = next++
             }
-
-            envelope[i] = maxLevel
+            while (queue[head] < i) head++
+            envelope[i] = abs(samples[queue[head]].toFloat()) / Short.MAX_VALUE
         }
 
         // Smooth the envelope slightly
@@ -111,29 +117,28 @@ class NoiseGate(private val sampleRate: Int = 44100) {
     }
 
     /**
-     * Smooth the envelope to prevent rapid fluctuations.
+     * Smooth the envelope to prevent rapid fluctuations: maximum over a window centered
+     * on each sample (peak detection), kept in a monotonic queue.
      */
     private fun smoothEnvelope(envelope: FloatArray, windowSize: Int): FloatArray {
         if (windowSize <= 1) return envelope
 
         val smoothed = FloatArray(envelope.size)
-        var sum = 0f
-
-        // Initialize window
-        for (i in 0 until windowSize.coerceAtMost(envelope.size)) {
-            sum += envelope[i]
-        }
-
+        val half = windowSize / 2
+        val queue = IntArray(envelope.size)
+        var head = 0
+        var tail = 0
+        var next = 0
         for (i in envelope.indices) {
-            val windowStart = (i - windowSize / 2).coerceAtLeast(0)
-            val windowEnd = (i + windowSize / 2).coerceAtMost(envelope.lastIndex)
-
-            // Use max in window for gate (peak detection)
-            var maxInWindow = 0f
-            for (j in windowStart..windowEnd) {
-                if (envelope[j] > maxInWindow) maxInWindow = envelope[j]
+            val windowStart = (i - half).coerceAtLeast(0)
+            val windowEnd = (i + half).coerceAtMost(envelope.lastIndex)
+            while (next <= windowEnd) {
+                val level = envelope[next]
+                while (tail > head && envelope[queue[tail - 1]] <= level) tail--
+                queue[tail++] = next++
             }
-            smoothed[i] = maxInWindow
+            while (queue[head] < windowStart) head++
+            smoothed[i] = maxOf(0f, envelope[queue[head]])
         }
 
         return smoothed
@@ -167,11 +172,15 @@ class NoiseGate(private val sampleRate: Int = 44100) {
     fun analyzeAndSuggestSettings(samples: ShortArray): Settings {
         if (samples.isEmpty()) return Settings()
 
-        // Find noise floor (lowest 10% of samples)
-        val levels = samples.map { abs(it.toFloat()) / Short.MAX_VALUE }.sorted()
-        val noiseFloorIndex = (levels.size * 0.1).toInt()
-        val noiseFloor = if (noiseFloorIndex < levels.size) {
-            levels[noiseFloorIndex]
+        // Find noise floor (lowest 10% of samples), read from a histogram of the levels
+        val noiseFloorIndex = (samples.size * 0.1).toInt()
+        val noiseFloor = if (noiseFloorIndex < samples.size) {
+            val histogram = IntArray(-Short.MIN_VALUE.toInt() + 1)
+            for (sample in samples) histogram[abs(sample.toInt())]++
+            var level = 0
+            var below = histogram[0]
+            while (below <= noiseFloorIndex) below += histogram[++level]
+            level.toFloat() / Short.MAX_VALUE
         } else {
             0.001f
         }

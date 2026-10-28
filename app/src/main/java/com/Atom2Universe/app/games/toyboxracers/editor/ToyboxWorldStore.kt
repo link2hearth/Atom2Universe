@@ -21,14 +21,45 @@ internal class ToyboxWorldStore(private val context: Context) {
     private val creationsDir: File = File(worldDir, "creations")
 
     fun load(): ToyboxWorld {
+        synchronized(worldWrites) { pendingWorld }?.let { return it }
         return runCatching {
             ToyboxWorld.fromJson(JSONObject(readAtomically(worldFile)))
         }.getOrElse { ToyboxWorld() }
     }
 
+    /** Différée hors du fil UI : chaque action de l'éditeur l'appelle, seule la dernière s'écrit. */
     fun save(world: ToyboxWorld): File {
-        writeAtomically(worldFile, world.toJson().toString(2))
+        synchronized(worldWrites) {
+            pendingWorld = world
+            worldWrite?.cancel(false)
+            worldWrite = undoWriter.schedule(Runnable { writePendingWorld() }, 300, TimeUnit.MILLISECONDS)
+        }
         return worldFile
+    }
+
+    /** Écrit tout de suite le monde en attente (onPause : Android peut tuer l'appli juste après). */
+    fun flush() {
+        synchronized(worldWrites) { worldWrite?.cancel(false) }
+        writePendingWorld()
+    }
+
+    // Un seul écrivain à la fois : celui qui lit le monde en attente le plus tard écrit aussi le dernier.
+    private fun writePendingWorld() {
+        synchronized(worldFileLock) {
+            val world = synchronized(worldWrites) { pendingWorld } ?: return
+            try {
+                // Sans indentation : le fichier est relu par la machine, jamais par une personne.
+                writeAtomically(worldFile, world.toJson().toString())
+                synchronized(worldWrites) {
+                    if (pendingWorld === world) {
+                        pendingWorld = null
+                        worldWrite = null
+                    }
+                }
+            } catch (error: Exception) {
+                android.util.Log.e("ToyboxWorldStore", "Unable to save world", error)
+            }
+        }
     }
 
     fun loadUndoHistory(file: File?): JSONArray? {
@@ -72,7 +103,7 @@ internal class ToyboxWorldStore(private val context: Context) {
             .ifBlank { "creation" }
         // L'horodatage à la seconde et le titre ne constituent pas un identifiant.
         val file = File(creationsDir, "${stamp}_${safeName}_${UUID.randomUUID()}.json")
-        writeAtomically(file, world.toJson().toString(2))
+        writeAtomically(file, world.toJson().toString())
         save(world)
         return file
     }
@@ -103,7 +134,7 @@ internal class ToyboxWorldStore(private val context: Context) {
     fun overwriteCreation(world: ToyboxWorld, file: File): Boolean {
         val canonicalFile = canonicalCreation(file) ?: return false
         if (!canonicalFile.exists() && !File(canonicalFile.path + ".bak").exists()) return false
-        writeAtomically(canonicalFile, world.toJson().toString(2))
+        writeAtomically(canonicalFile, world.toJson().toString())
         save(world)
         return true
     }
@@ -213,6 +244,11 @@ internal class ToyboxWorldStore(private val context: Context) {
         // AtomicFile garantit le remplacement, pas la concurrence lecture/écriture.
         private val storageLock = Any()
         private val undoWriter = ScheduledThreadPoolExecutor(1).apply { removeOnCancelPolicy = true }
+        // Le monde courant en attente d'écriture ; partagé entre recréations de l'activité.
+        private val worldWrites = Any()
+        private val worldFileLock = Any()
+        private var pendingWorld: ToyboxWorld? = null
+        private var worldWrite: ScheduledFuture<*>? = null
         const val FILE_NAME = "toybox_tablet_house.json"
     }
 }

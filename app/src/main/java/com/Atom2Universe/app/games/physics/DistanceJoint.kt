@@ -118,7 +118,7 @@ class DistanceJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
 
     private var posImpulse = 0f
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         slack = false
         posImpulse = 0f
@@ -160,7 +160,8 @@ class DistanceJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         if (k <= 1e-9f) return
         effectiveMass = 1f / k
 
-        // Réapplication de l'impulsion de l'image précédente
+        // Réapplication de l'impulsion de l'image précédente, à l'échelle de ce pas-ci
+        impulse *= dtRatio
         val px = impulse * nx
         val py = impulse * ny
         a.vx -= a.invMass * px

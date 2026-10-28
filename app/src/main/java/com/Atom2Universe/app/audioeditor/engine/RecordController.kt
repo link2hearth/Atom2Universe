@@ -3,6 +3,7 @@ package com.Atom2Universe.app.audioeditor.engine
 import android.content.Context
 import com.Atom2Universe.app.audioeditor.MicRecordingService
 import java.io.File
+import java.util.Collections
 
 /**
  * Pilote un enregistrement : service de premier plan (obligatoire depuis Android 14 pour garder le micro),
@@ -53,6 +54,7 @@ class RecordController(private val context: Context, private val engine: Playbac
             throw e
         }
         capture = c
+        busy += file
         startFrame = from.coerceAtLeast(0)
         if (overdub) engine.play(startFrame)
     }
@@ -66,7 +68,11 @@ class RecordController(private val context: Context, private val engine: Playbac
         capture = null
         engine.stop()
         try {
+            // Le fichier rendu reste réservé jusqu'à son rangement dans le projet ([release]).
             return c.stop()
+        } catch (e: RecordException) {
+            busy -= c.file
+            throw e
         } finally {
             MicRecordingService.stop(context)
         }
@@ -78,12 +84,34 @@ class RecordController(private val context: Context, private val engine: Playbac
         capture = null
         engine.stop()
         c.cancel()
+        busy -= c.file
         MicRecordingService.stop(context)
     }
 
-    /** Anciens enregistrements du cache (plantage en route, import jamais fait) : à effacer au lancement. */
-    fun cleanupOldRecordings(maxAgeMs: Long = 24L * 60 * 60 * 1000) {
-        val now = System.currentTimeMillis()
-        File(context.cacheDir, "audio_recordings").listFiles()?.forEach { if (now - it.lastModified() > maxAgeMs) it.delete() }
+    /**
+     * Les enregistrements restés dans le cache (appli tuée en route, rangement interrompu), du plus ancien au plus
+     * récent : l'écran propose de les récupérer plutôt que de les effacer. Les fichiers sans son sont effacés ; ceux
+     * qu'un enregistrement ou un rangement utilise encore sont laissés de côté.
+     */
+    fun orphanRecordings(): List<File> {
+        val out = ArrayList<File>()
+        File(context.cacheDir, "audio_recordings").listFiles()?.forEach { f ->
+            if (!f.isFile || f in busy) return@forEach
+            if (f.length() <= MIN_ORPHAN_BYTES) f.delete() else out += f
+        }
+        return out.sortedBy { it.lastModified() }
+    }
+
+    companion object {
+        /** En-tête WAV plus une fraction de seconde : en dessous, il n'y a rien à récupérer. */
+        private const val MIN_ORPHAN_BYTES = 4096L
+
+        /** Les WAV en cours d'enregistrement ou de rangement, pour toute l'appli (un écran fermé peut ranger le sien). */
+        private val busy: MutableSet<File> = Collections.synchronizedSet(HashSet())
+
+        /** Le WAV rendu par [stop] est rangé (ou abandonné) : il redevient un fichier ordinaire du cache. */
+        fun release(file: File) {
+            busy -= file
+        }
     }
 }

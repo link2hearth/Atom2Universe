@@ -32,7 +32,6 @@ class EnamelActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val dp = resources.displayMetrics.density
         fun px(n: Int) = (n * dp).toInt()
         val root = LinearLayout(this).apply {
@@ -59,10 +58,10 @@ class EnamelActivity : ThemedActivity() {
         bar.addView(button(android.R.drawable.ic_menu_rotate, R.string.enamel_restart) { askRestart() }, LinearLayout.LayoutParams(px(48), px(48)))
         bar.addView(button(R.drawable.ic_info, R.string.kit_rules) {
             readingRules = true
-            board.pause()
+            pauseBoard()
             showGameRules(R.string.enamel_title, getString(R.string.enamel_rules, NeutrinoRewards.ENAMEL_POINTS_PER_NEUTRINO)) {
                 readingRules = false
-                if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) board.resume()
+                if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) resumeBoard()
             }
         }, LinearLayout.LayoutParams(px(48), px(48)))
         root.addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
@@ -72,7 +71,7 @@ class EnamelActivity : ThemedActivity() {
             discoveredTier = prefs.getInt("discovered_tier", -1)
             prefs.getString("run_state", null)?.let { game.restoreState(it) }
             onStateChanged = { checkpoint() }
-            onGameOver = { finishRun(); updateHud() }
+            onGameOver = { finishRun(); updateHud(); updateScreen() }
         }
         root.addView(board, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
         setContentView(root)
@@ -84,6 +83,19 @@ class EnamelActivity : ThemedActivity() {
         score.text = getString(R.string.enamel_hud, board.game.score, board.bestScore)
     }
 
+    /** La planche tourne : ni règles, ni fenêtre ouverte, ni activité en pause. */
+    private var playing = false
+
+    private fun pauseBoard() { board.pause(); playing = false; updateScreen() }
+
+    private fun resumeBoard() { board.resume(); playing = true; updateScreen() }
+
+    /** L'écran reste allumé pendant une partie, pas sur l'écran de fin ni derrière une fenêtre. */
+    private fun updateScreen() {
+        if (playing && !board.game.over) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
     private fun checkpoint() {
         val state = board.game.saveState()
         prefs.edit().apply {
@@ -92,6 +104,8 @@ class EnamelActivity : ThemedActivity() {
             putInt("discovered_tier", maxOf(prefs.getInt("discovered_tier", -1), board.discoveredTier))
         }.apply()
         updateHud()
+        // Une partie relancée depuis l'écran de fin passe aussi par ici.
+        updateScreen()
     }
 
     private fun finishRun() {
@@ -105,7 +119,7 @@ class EnamelActivity : ThemedActivity() {
 
     private fun askRestart() {
         if (board.game.shots == 0 || board.game.over) { board.reset(); return }
-        board.pause()
+        pauseBoard()
         restartDialog = ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.enamel_restart)
             .setMessage(R.string.enamel_restart_confirm)
@@ -114,7 +128,7 @@ class EnamelActivity : ThemedActivity() {
             .create().also { dialog ->
                 dialog.setOnDismissListener {
                     restartDialog = null
-                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) board.resume()
+                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) resumeBoard()
                 }
                 dialog.show()
             }
@@ -122,11 +136,11 @@ class EnamelActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume(); sound.start()
-        if (restartDialog?.isShowing != true && !readingRules) board.resume()
+        if (restartDialog?.isShowing != true && !readingRules) resumeBoard()
     }
 
     override fun onPause() {
-        board.pause(); checkpoint(); sound.stop()
+        pauseBoard(); checkpoint(); sound.stop()
         super.onPause()
     }
 }

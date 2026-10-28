@@ -25,7 +25,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.fluidsynth.FluidSynthEngine
-import com.Atom2Universe.app.midi.sf2.Sf2Engine
 import com.Atom2Universe.app.midi.sf2.Sf2FileCache
 import com.Atom2Universe.app.pixelart.ui.SheetItem
 import com.Atom2Universe.app.pixelart.ui.actionSheet
@@ -38,11 +37,13 @@ import com.Atom2Universe.app.sf2creator.util.WavUtils
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2PresetEntity
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2ProgramEntity
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SampleEntity
+import com.Atom2Universe.app.sf2creator.reader.Sf2Reader
 import com.Atom2Universe.app.sf2creator.writer.Sf2Writer
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -107,19 +108,20 @@ class ProjectDetailFragment : Fragment() {
     private var programInstrumentCounts: Map<Long, Int> = emptyMap()
     private var presetSampleCounts: Map<Long, Int> = emptyMap()
 
-    // Engines for keyboard preview
-    private var sf2Engine: Sf2Engine? = null
-    private var fluidSynthEngine: FluidSynthEngine? = null
+    // Engine for keyboard preview
+    private var previewEngine: PreviewEngine? = null
     private var tempSf2File: File? = null
     private var engineReady: Boolean = false
     private var useFluidSynth: Boolean = false
     private var previewGenerationJob: Job? = null
+    // The preview was stopped in the background and comes back in onStart
+    private var previewStopped = false
+    private var started = false
     private var currentSamplesList: List<Sf2SampleEntity> = emptyList()
 
-    // Debounce and synchronization for preview generation
+    // Debounce for preview generation
     private var lastPreviewRequestTime: Long = 0
     private val previewDebounceMs = 300L
-    private val engineLock = Any()
 
     // Jobs for flow collection (to cancel when needed)
     private var presetsCollectionJob: Job? = null
@@ -281,10 +283,9 @@ class ProjectDetailFragment : Fragment() {
             sample = sample,
             onSave = { updatedSample ->
                 viewLifecycleOwner.lifecycleScope.launch {
+                    // The samples list follows the database and rebuilds the preview
                     repository.updateSample(updatedSample)
                     Toast.makeText(requireContext(), R.string.sf2_sample_updated, Toast.LENGTH_SHORT).show()
-                    // Regenerate preview to reflect changes
-                    generateProjectPreviewSf2()
                 }
             }
         ).show()
@@ -414,32 +415,12 @@ class ProjectDetailFragment : Fragment() {
     }
 
     private fun setupKeyboard() {
-        // Connect keyboard callbacks to active engine with thread-safe access
+        // Connect keyboard callbacks to the active engine (engine set and released on the main thread)
         keyboardPreview.onNoteOn = { note, velocity ->
-            synchronized(engineLock) {
-                Log.d(TAG, "Keyboard NoteOn: note=$note, velocity=$velocity, engineReady=$engineReady, useFluidSynth=$useFluidSynth")
-                if (engineReady) {
-                    if (useFluidSynth) {
-                        fluidSynthEngine?.sendNoteOn(0, note, velocity)
-                    } else {
-                        sf2Engine?.sendNoteOn(0, note, velocity)
-                    }
-                } else {
-                    Log.w(TAG, "Engine not ready, ignoring note on")
-                }
-            }
+            if (engineReady) previewEngine?.noteOn(note, velocity)
         }
         keyboardPreview.onNoteOff = { note ->
-            synchronized(engineLock) {
-                Log.d(TAG, "Keyboard NoteOff: note=$note, engineReady=$engineReady")
-                if (engineReady) {
-                    if (useFluidSynth) {
-                        fluidSynthEngine?.sendNoteOff(0, note)
-                    } else {
-                        sf2Engine?.sendNoteOff(0, note)
-                    }
-                }
-            }
+            if (engineReady) previewEngine?.noteOff(note)
         }
 
         // Octave navigation buttons
@@ -568,7 +549,7 @@ class ProjectDetailFragment : Fragment() {
         val instrumentName = if (programNumber in instruments.indices) {
             instruments[programNumber]
         } else {
-            "Unknown"
+            getString(R.string.sf2_unknown_instrument)
         }
         programText.text = getString(R.string.sf2_program_current, programNumber, instrumentName)
     }
@@ -821,7 +802,7 @@ class ProjectDetailFragment : Fragment() {
 
     private fun showProgramOptionsDialog(program: Sf2ProgramEntity) {
         val instrumentCount = programInstrumentCounts[program.id] ?: 0
-        val title = "${program.name}\nProgram ${program.programNumber} · Bank ${program.bankNumber} · $instrumentCount instruments"
+        val title = getString(R.string.sf2_program_sheet_title, program.name, program.programNumber, program.bankNumber, instrumentCount)
         requireContext().actionSheet(title, listOf(
             SheetItem(R.drawable.ic_px_rename, getString(R.string.sf2_edit_program)) { showEditProgramDialog(program) },
             SheetItem(R.drawable.ic_px_tune, getString(R.string.sf2_edit_program_global_params)) { showEditProgramGlobalParamsDialog(program) },
@@ -855,7 +836,7 @@ class ProjectDetailFragment : Fragment() {
         programSpinner.setSelection(program.programNumber.coerceIn(0, 127))
 
         // Setup bank spinner (0-127)
-        val banks = (0..127).map { "Bank $it" }
+        val banks = (0..127).map { getString(R.string.sf2_bank_number, it) }
         bankSpinner.adapter = ArrayAdapter(
             requireContext(),
             com.Atom2Universe.app.R.layout.item_spinner_dropdown,
@@ -951,7 +932,7 @@ class ProjectDetailFragment : Fragment() {
             )
 
             // Setup bank spinner (0-127)
-            val banks = (0..127).map { "Bank $it" }
+            val banks = (0..127).map { getString(R.string.sf2_bank_number, it) }
             bankSpinner.adapter = ArrayAdapter(
                 requireContext(),
                 com.Atom2Universe.app.R.layout.item_spinner_dropdown,
@@ -993,7 +974,7 @@ class ProjectDetailFragment : Fragment() {
 
     private fun showPresetOptionsDialog(preset: Sf2PresetEntity) {
         val sampleCount = presetSampleCounts[preset.id] ?: 0
-        val title = "${preset.name}\nProgram ${preset.programNumber} · $sampleCount samples"
+        val title = getString(R.string.sf2_instrument_sheet_title, preset.name, preset.programNumber, sampleCount)
         requireContext().actionSheet(title, listOf(
             SheetItem(R.drawable.ic_px_rename, getString(R.string.sf2_edit_instrument)) { showEditInstrumentDialog(preset) },
             SheetItem(R.drawable.ic_px_tune, getString(R.string.sf2_edit_global_params)) { showEditGlobalParamsDialog(preset) },
@@ -1032,7 +1013,7 @@ class ProjectDetailFragment : Fragment() {
         programSpinner.setSelection(preset.programNumber.coerceIn(0, 127))
 
         // Setup bank spinner (0-127)
-        val banks = (0..127).map { "Bank $it" }
+        val banks = (0..127).map { getString(R.string.sf2_bank_number, it) }
         bankSpinner.adapter = ArrayAdapter(
             requireContext(),
             com.Atom2Universe.app.R.layout.item_spinner_dropdown,
@@ -1200,6 +1181,8 @@ class ProjectDetailFragment : Fragment() {
             if (presetZone == null) return@launch
 
             repository.getSamplesForInstrumentFlow(presetZone.instrumentId).collect { samples ->
+                // Room emits again on every write to the table, even when this list is the same
+                val changed = samples != currentSamplesList
                 currentSamplesList = samples
                 adapter.submitList(samples)
                 updateSamplesCount(samples.size)
@@ -1207,11 +1190,11 @@ class ProjectDetailFragment : Fragment() {
                 updateExportButtonState()
                 updateKeyboardState(samples)
 
-                // Regenerate preview SF2 when samples change
-                if (samples.isNotEmpty()) {
-                    generateProjectPreviewSf2()
-                } else {
+                // Regenerate preview SF2 when samples change (or when the last one failed)
+                if (samples.isEmpty()) {
                     releaseEngine()
+                } else if (changed || (previewEngine == null && previewGenerationJob?.isActive != true)) {
+                    generateProjectPreviewSf2()
                 }
             }
         }
@@ -1269,24 +1252,26 @@ class ProjectDetailFragment : Fragment() {
      * Includes debouncing to prevent crashes from rapid changes.
      */
     private fun generateProjectPreviewSf2() {
-        // Debounce rapid calls
-        val now = System.currentTimeMillis()
-        if (now - lastPreviewRequestTime < previewDebounceMs) {
-            // Schedule a delayed generation instead
-            previewGenerationJob?.cancel()
-            previewGenerationJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(previewDebounceMs)
-                if (isAdded && view != null) {
-                    doGeneratePreviewSf2()
-                }
-            }
+        if (!started) {
+            // Not on screen yet, or in the background: made in onStart
+            previewStopped = true
             return
         }
-        lastPreviewRequestTime = now
+        // Debounce rapid calls
+        val now = System.currentTimeMillis()
+        val debounce = now - lastPreviewRequestTime < previewDebounceMs
+        if (!debounce) lastPreviewRequestTime = now
 
-        previewGenerationJob?.cancel()
+        val previous = previewGenerationJob
+        previous?.cancel()
         previewGenerationJob = viewLifecycleOwner.lifecycleScope.launch {
-            doGeneratePreviewSf2()
+            // Schedule a delayed generation instead
+            if (debounce) delay(previewDebounceMs)
+            // A cancelled preview may still be writing the same file
+            PreviewEngine.awaitCancelled(previous)
+            if (isAdded && view != null) {
+                doGeneratePreviewSf2()
+            }
         }
     }
 
@@ -1297,7 +1282,6 @@ class ProjectDetailFragment : Fragment() {
         if (!isAdded || view == null) return
 
         keyboardLoading.visibility = View.VISIBLE
-        engineReady = false
 
         // Release previous engines safely
         releaseEngineSafe()
@@ -1305,72 +1289,43 @@ class ProjectDetailFragment : Fragment() {
         // Clear SF2 file cache to force re-parsing (same path reused)
         Sf2FileCache.clear()
 
-        val sf2File = withContext(Dispatchers.IO) {
-            generatePreviewSf2File()
-        }
-
-        // Check if fragment is still valid after IO operation
-        if (!isAdded || view == null) {
-            sf2File?.delete()
-            return
-        }
-
-        if (sf2File != null) {
-            Log.d(TAG, "Generated preview SF2: ${sf2File.absolutePath}, size: ${sf2File.length()} bytes")
-            tempSf2File = sf2File
-
-            try {
-                if (useFluidSynth && FluidSynthEngine.isSupported()) {
-                    // Use FluidSynth engine
-                    Log.d(TAG, "Initializing FluidSynth engine...")
-                    val engine = FluidSynthEngine(requireContext())
-                    val initialized = engine.initialize(sf2File.absolutePath)
-
-                    Log.d(TAG, "FluidSynth initialized: $initialized")
-                    if (initialized && isAdded) {
-                        engine.startAudioRenderer()
-                        synchronized(engineLock) {
-                            fluidSynthEngine = engine
-                            engineReady = true
-                        }
-                        Log.d(TAG, "FluidSynth engine ready")
-                    } else {
-                        Log.e(TAG, "FluidSynth initialization failed")
-                        engine.release()
-                    }
-                } else {
-                    // Use SF2 Engine (default)
-                    Log.d(TAG, "Initializing SF2 Engine...")
-                    val engine = Sf2Engine(requireContext())
-                    val initialized = engine.initialize(sf2File.absolutePath)
-
-                    Log.d(TAG, "SF2 Engine initialized: $initialized")
-                    if (initialized && isAdded) {
-                        engine.startAudioRenderer()
-                        synchronized(engineLock) {
-                            sf2Engine = engine
-                            engineReady = true
-                        }
-                        Log.d(TAG, "SF2 Engine ready")
-                    } else {
-                        Log.e(TAG, "SF2 Engine initialization failed")
-                        engine.release()
-                    }
-
-                    // If FluidSynth was requested but not available, update display
-                    if (useFluidSynth) {
-                        useFluidSynth = false
-                        withContext(Dispatchers.Main) {
-                            updateEngineDisplay()
-                        }
-                    }
+        val context = requireContext()
+        val wantFluidSynth = useFluidSynth
+        var loaded: PreviewEngine? = null
+        try {
+            val sf2File = withContext(Dispatchers.IO) {
+                try {
+                    generatePreviewSf2File()
+                } catch (e: OutOfMemoryError) {
+                    Log.e(TAG, "Instrument too large for the preview", e)
+                    null
                 }
-            } catch (e: Exception) {
-                // Handle initialization failure gracefully
-                Log.e(TAG, "Failed to initialize engine", e)
             }
-        } else {
-            Log.e(TAG, "Failed to generate preview SF2 file")
+
+            if (sf2File != null) {
+                Log.d(TAG, "Generated preview SF2: ${sf2File.absolutePath}, size: ${sf2File.length()} bytes")
+                tempSf2File = sf2File
+
+                // Reading the SoundFont takes time: off the main thread
+                withContext(Dispatchers.IO) {
+                    loaded = PreviewEngine.load(context, sf2File.absolutePath, wantFluidSynth)
+                }
+                previewEngine = loaded
+                engineReady = loaded != null
+                if (loaded == null) Log.e(TAG, "Preview engine initialization failed")
+                loaded = null
+
+                // If FluidSynth was requested but not available, update display
+                if (useFluidSynth && !FluidSynthEngine.isSupported()) {
+                    useFluidSynth = false
+                    updateEngineDisplay()
+                }
+            } else {
+                Log.e(TAG, "Failed to generate preview SF2 file")
+            }
+        } finally {
+            // Cancelled while loading: nobody else holds this engine
+            loaded?.release()
         }
 
         if (isAdded && view != null) {
@@ -1555,87 +1510,26 @@ class ProjectDetailFragment : Fragment() {
      * Load audio samples directly from SF2 source file at a specific offset.
      * Used for patch-based samples that haven't been extracted to WAV files.
      */
-    private fun loadAudioFromSf2Source(sourceFile: File, offset: Long, size: Long): ShortArray? {
-        if (!sourceFile.exists() || size <= 0) return null
-
-        return try {
-            java.io.RandomAccessFile(sourceFile, "r").use { raf ->
-                raf.seek(offset)
-                val numSamples = (size / 2).toInt()
-                val samples = ShortArray(numSamples)
-                val buffer = ByteArray(size.toInt())
-                val bytesRead = raf.read(buffer)
-
-                if (bytesRead < size) return null
-
-                // Convert bytes to shorts (little-endian, SF2 format)
-                for (i in 0 until numSamples) {
-                    val lo = buffer[i * 2].toInt() and 0xFF
-                    val hi = buffer[i * 2 + 1].toInt()
-                    samples[i] = ((hi shl 8) or lo).toShort()
-                }
-                samples
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to load audio from SF2 source", e)
-            null
-        }
-    }
+    private fun loadAudioFromSf2Source(sourceFile: File, offset: Long, size: Long): ShortArray? =
+        Sf2Reader.readPcm16(sourceFile, offset, size)
 
     /**
-     * Release the engines synchronously (for use in onDestroyView).
+     * Release the engine synchronously (for use in onDestroyView).
      */
     private fun releaseEngine() {
-        synchronized(engineLock) {
-            engineReady = false
-            sf2Engine?.let { engine ->
-                try {
-                    engine.stopAudioRenderer()
-                    engine.release()
-                } catch (e: Exception) {
-                    Log.e("ProjectDetailFragment", "Error releasing SF2 engine", e)
-                }
-            }
-            sf2Engine = null
-
-            fluidSynthEngine?.let { engine ->
-                try {
-                    engine.stopAudioRenderer()
-                    engine.release()
-                } catch (e: Exception) {
-                    Log.e("ProjectDetailFragment", "Error releasing FluidSynth engine", e)
-                }
-            }
-            fluidSynthEngine = null
-        }
+        engineReady = false
+        previewEngine?.release()
+        previewEngine = null
     }
 
     /**
-     * Release the engines safely on IO dispatcher (for use during regeneration).
+     * Release the engine on IO dispatcher (for use during regeneration).
      */
-    private suspend fun releaseEngineSafe() = withContext(Dispatchers.IO) {
-        synchronized(engineLock) {
-            engineReady = false
-            sf2Engine?.let { engine ->
-                try {
-                    engine.stopAudioRenderer()
-                    engine.release()
-                } catch (e: Exception) {
-                    Log.e("ProjectDetailFragment", "Error releasing SF2 engine", e)
-                }
-            }
-            sf2Engine = null
-
-            fluidSynthEngine?.let { engine ->
-                try {
-                    engine.stopAudioRenderer()
-                    engine.release()
-                } catch (e: Exception) {
-                    Log.e("ProjectDetailFragment", "Error releasing FluidSynth engine", e)
-                }
-            }
-            fluidSynthEngine = null
-        }
+    private suspend fun releaseEngineSafe() {
+        engineReady = false
+        val engine = previewEngine ?: return
+        previewEngine = null
+        withContext(NonCancellable + Dispatchers.IO) { engine.release() }
     }
 
     private fun showDeleteSampleConfirmation(sample: Sf2SampleEntity) {
@@ -1716,12 +1610,34 @@ class ProjectDetailFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        started = true
+        if (previewStopped) {
+            previewStopped = false
+            if (currentSamplesList.isNotEmpty() && view != null) generateProjectPreviewSf2()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        started = false
+        // No audio thread in the background
+        if (previewEngine != null || previewGenerationJob?.isActive == true) {
+            previewGenerationJob?.cancel()
+            releaseEngine()
+            previewStopped = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         presetsCollectionJob?.cancel()
         samplesCollectionJob?.cancel()
         previewGenerationJob?.cancel()
         releaseEngine()
+        previewStopped = false
+        currentSamplesList = emptyList()
         tempSf2File?.delete()
         tempSf2File = null
     }

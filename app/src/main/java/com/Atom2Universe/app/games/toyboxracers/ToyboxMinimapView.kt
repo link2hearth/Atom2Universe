@@ -16,14 +16,15 @@ import kotlin.math.sin
 
 /** Carte fixe : le triangle blanc montre le joueur et son cap, les points les IA. */
 internal class ToyboxMinimapView(context: Context) : View(context) {
-    private var track = PrototypeTrack()
+    // Celle du rendu, reçue avec le HUD : la construire ici bloquerait le fil UI.
+    private var track: PrototypeTrack? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val route = Path()
     private val levelRoutes = Array(3) { Path() }
     private val arrow = Path()
     private val routeArrows = Path()
     private var checkpoints: List<PrototypeTrack.Vec3> = emptyList()
-    private var startPosition = track.sampleAt(track.length * RaceSession.START_FRACTION).position
+    private var startPosition = PrototypeTrack.Vec3(0f, 0f, 0f)
     private val density = resources.displayMetrics.density
     private var scale = 1f
     private var state: ToyboxRacersRenderer.HudState? = null
@@ -36,8 +37,8 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
     }
 
     fun update(state: ToyboxRacersRenderer.HudState) {
-        if (state.scene != track.scene) {
-            track = PrototypeTrack(scene = state.scene)
+        if (state.track !== track) {
+            track = state.track
             rebuildRoute(width, height)
         }
         this.state = state
@@ -52,6 +53,7 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
     }
 
     private fun rebuildRoute(w: Int, h: Int) {
+        val track = track ?: return
         // La pièce entière reste visible, y compris lorsque le joueur explore.
         // En mode Maison, la carte couvre les quatre pièces et le couloir.
         scale = if (track.scene.circuit.usesHouseLayout) {
@@ -118,6 +120,7 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
         paint.strokeWidth = 3f * density
         paint.strokeJoin = Paint.Join.ROUND
         paint.color = 0xBBD7DCF0.toInt()
+        val track = track ?: return
         canvas.drawPath(route, paint)
         if (track.scene.circuit.usesHouseLayout) {
             val level = (((state?.playerY ?: 0f) + HouseGeometry.LEVEL_HEIGHT * .5f) /

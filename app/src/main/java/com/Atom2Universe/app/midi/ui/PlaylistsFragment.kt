@@ -286,7 +286,7 @@ class PlaylistsFragment : Fragment() {
         val startIndex = currentTracks.indexOfFirst { it.id == track.id }.coerceAtLeast(0)
         (activity as? MidiPlayerActivity)?.playTracks(currentTracks, startIndex)
 
-        Toast.makeText(context, "▶ ${track.title}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.midi_ui_playing_track, track.title), Toast.LENGTH_SHORT).show()
     }
 
     private fun handleFavoriteClick(track: MidiTrack) {
@@ -342,7 +342,7 @@ class PlaylistsFragment : Fragment() {
 
         Toast.makeText(
             context,
-            getString(R.string.midi_shuffle_play) + " (${shuffled.size})",
+            getString(R.string.midi_ui_label_with_count, getString(R.string.midi_shuffle_play), shuffled.size),
             Toast.LENGTH_SHORT
         ).show()
     }

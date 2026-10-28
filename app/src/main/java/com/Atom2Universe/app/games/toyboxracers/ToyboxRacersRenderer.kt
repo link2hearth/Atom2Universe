@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.toyboxracers
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import com.Atom2Universe.app.BuildConfig
 import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.driving.VehicleContacts
 import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
@@ -31,6 +32,7 @@ import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
 import com.Atom2Universe.app.games.toyboxracers.track.RoomThemes
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
+import java.util.concurrent.atomic.AtomicReference
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.PI
@@ -77,7 +79,9 @@ internal class ToyboxRacersRenderer(
         val lapElapsedSeconds: Float,
         val lastLapSeconds: Float,
         val bestLapSeconds: Float,
-        val lapSerial: Int
+        val lapSerial: Int,
+        /** Piste déjà construite par le rendu : la mini-carte la relit au lieu d'en refaire une. */
+        val track: PrototypeTrack
     )
 
     private var track = PrototypeTrack(scene = initialScene)
@@ -133,10 +137,38 @@ internal class ToyboxRacersRenderer(
     @Volatile private var previewVisible = false
     @Volatile private var trackPreview: ToyboxTrackSection? = null
     @Volatile private var decorPreview: ToyboxDecor? = null
+    @Volatile private var sceneLive = true
+
+    /** Réveille le fil GL : la vue ne dessine que sur demande, ou tant que [wantsNextFrame] le veut. */
+    @Volatile var renderRequester: (() -> Unit)? = null
+    /** Appelé sur le fil GL après chaque image de l'éditeur, une fois la caméra publiée. */
+    @Volatile var onEditorFrame: (() -> Unit)? = null
+    private var frameScheduled = false
+    private var frameEditing = false
+    private var finishedSeconds = 0f
+
+    // L'interface note, le fil GL applique : la caméra de l'éditeur n'est
+    // écrite que par le fil GL, qui en publie une copie pour l'interface.
+    private class EditorCameraPose(val position: Vec3, val yaw: Float, val pitch: Float)
+    private val requestedEditorCamera = AtomicReference<EditorCameraPose?>(null)
+    private val editorRequestLock = Any()
+    private var pendingEditorHeight = 0f
+    @Volatile private var publishedEditorCamera = EditorCameraPose(Vec3(0f, 16f, -38f), 0f, -0.22f)
+    private val cameraLock = Any()
+    private val publishedViewProjection = FloatArray(16)
+    private var publishedWidth = 1
+    private var publishedHeight = 1
+    // Copies propres au fil UI (sélection, poignées, plan de glissement).
+    private val uiViewProjection = FloatArray(16)
+    private var uiWidth = 1
+    private var uiHeight = 1
+    private val uiPoint = FloatArray(4)
+    private val uiProjected = FloatArray(4)
 
     private lateinit var shader: ToyboxShader
-    private lateinit var trackMesh: ColoredMesh
-    private lateinit var environmentMesh: ColoredMesh
+    // Seul le monde affiché a son maillage : l'autre se construit quand on y passe.
+    private var trackMesh: ColoredMesh? = null
+    private var environmentMesh: ColoredMesh? = null
     private lateinit var carMesh: ColoredMesh
     private lateinit var wheelMesh: ColoredMesh
     private lateinit var shadowMesh: ColoredMesh
@@ -176,6 +208,7 @@ internal class ToyboxRacersRenderer(
     private val wheelModel = FloatArray(16)
     private val shadowModel = FloatArray(16)
     private val rivalModels = Array(5) { FloatArray(16) }
+    /** Fil UI seulement (sélection et plan de glissement). */
     private val inverseViewProjection = FloatArray(16)
 
     private var lastFrameNanos = 0L
@@ -204,9 +237,10 @@ internal class ToyboxRacersRenderer(
     private var editorCameraPosition = Vec3(0f, 16f, -38f)
     private var editorCameraYaw = 0f
     private var editorCameraPitch = -0.22f
-    private var previewAnchorReady = false
-    private var previewAnchorX = 0f
-    private var previewAnchorZ = 0f
+    // Point de pose : écrit par le fil UI seulement, lu par le fil GL.
+    @Volatile private var previewAnchorReady = false
+    @Volatile private var previewAnchorX = 0f
+    @Volatile private var previewAnchorZ = 0f
     private var surfaceWidth = 1
     private var surfaceHeight = 1
     // État de rendu interpolé entre deux pas de simulation. L'écran affiche
@@ -216,8 +250,9 @@ internal class ToyboxRacersRenderer(
     // l'œil perçoit comme une vibration de l'image.
     private var previousCarPosition = Vec3(0f, 0f, 0f)
     private var previousCarYaw = 0f
-    private var renderCarPosition = Vec3(0f, 0f, 0f)
-    private var renderCarYaw = 0f
+    // Lus aussi par le fil UI pour placer la caméra de l'éditeur à son ouverture.
+    @Volatile private var renderCarPosition = Vec3(0f, 0f, 0f)
+    @Volatile private var renderCarYaw = 0f
     private val previousRivalPositions = Array(5) { Vec3(0f, 0f, 0f) }
     private val previousRivalYaws = FloatArray(5)
     private val renderRivalPositions = Array(5) { Vec3(0f, 0f, 0f) }
@@ -251,29 +286,37 @@ internal class ToyboxRacersRenderer(
 
     fun requestReset() {
         resetRequested = true
+        wake()
     }
 
-    fun requestRescue() { rescueRequested = true }
+    fun requestRescue() {
+        rescueRequested = true
+        wake()
+    }
 
     fun setCameraComfort(wideView: Boolean, reducedMotion: Boolean) {
         wideCamera = wideView
         reducedCameraMotion = reducedMotion
+        wake()
     }
 
     fun setScene(scene: SceneChoice) {
         requestedScene = scene
         resetRequested = true
+        wake()
     }
 
     fun setMode(value: PlayMode) {
         requestedMode = value
         resetRequested = true
+        wake()
     }
 
     /** Un seul monde est jamais dessiné/simulé à la fois : bascule entre le
      * circuit classique (ruban procédural) et le monde bâti dans l'éditeur. */
     fun setActiveWorldKind(kind: ActiveWorldKind) {
         requestedWorldKind = kind
+        wake()
     }
 
     fun setPaused(value: Boolean) {
@@ -287,11 +330,19 @@ internal class ToyboxRacersRenderer(
         }
         discardFrameTime = true
         paused = value
+        wake()
+    }
+
+    /** Derrière un menu, le décor est figé : une image sur demande, plus de rendu continu. */
+    fun setSceneLive(value: Boolean) {
+        sceneLive = value
+        wake()
     }
 
     fun setDifficulty(value: RaceDifficulty) {
         requestedDifficulty = value
         resetRequested = true
+        wake()
     }
 
     fun setEditorActive(value: Boolean) {
@@ -304,18 +355,20 @@ internal class ToyboxRacersRenderer(
             hopInput = false
             throttleInput = 0f
             brakeAmountInput = 0f
-            editorCameraPosition = Vec3(renderCarPosition.x, maxOf(7f, renderCarPosition.y + 8f), renderCarPosition.z - 28f)
-            editorCameraYaw = renderCarYaw
-            editorCameraPitch = -0.22f
+            val carPosition = renderCarPosition
+            requestedEditorCamera.set(EditorCameraPose(
+                Vec3(carPosition.x, maxOf(7f, carPosition.y + 8f), carPosition.z - 28f),
+                renderCarYaw,
+                -0.22f
+            ))
             resetEditorPreviewAnchor()
-            cameraReady = false
         } else {
             editorForwardInput = 0f
             editorStrafeInput = 0f
             editorYawInput = 0f
             editorPitchInput = 0f
-            cameraReady = false
         }
+        wake()
     }
 
     fun setEditorInput(strafe: Float, forward: Float, yaw: Float, pitch: Float) {
@@ -323,38 +376,47 @@ internal class ToyboxRacersRenderer(
         editorForwardInput = forward.coerceIn(-1f, 1f)
         editorYawInput = yaw.coerceIn(-1f, 1f)
         editorPitchInput = pitch.coerceIn(-1f, 1f)
+        wake()
     }
 
     fun setEditorWorld(world: ToyboxWorld) {
         requestedWorld = world
+        wake()
     }
 
     fun setEditorSelection(volume: ToyboxVolume?) {
         selectedPreview = volume
         previewMeshDirty = true
+        wake()
     }
 
     fun setEditorPreviewVisible(value: Boolean) {
         previewVisible = value
         previewMeshDirty = true
+        wake()
     }
 
     fun setEditorDecorPreview(decor: ToyboxDecor?) {
         decorPreview = decor
         decorPreviewMeshDirty = true
+        wake()
     }
 
     fun setEditorTrackPreview(section: ToyboxTrackSection?) {
         trackPreview = section
         trackPreviewMeshDirty = true
+        wake()
     }
 
+    /** Fil UI : la caméra lue est la dernière demandée, sinon la dernière publiée par le fil GL. */
     fun resetEditorPreviewAnchor() {
-        val forward = horizontalEditorForward()
-        previewAnchorX = snap(editorCameraPosition.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
-        previewAnchorZ = snap(editorCameraPosition.z + forward.z * 18f, previewGrid.coerceAtLeast(0.01f))
+        val camera = editorCameraForUi()
+        val forward = horizontalForward(camera.yaw)
+        previewAnchorX = snap(camera.position.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
+        previewAnchorZ = snap(camera.position.z + forward.z * 18f, previewGrid.coerceAtLeast(0.01f))
         previewAnchorReady = true
         previewMeshDirty = true
+        wake()
     }
 
     fun setEditorPreview(
@@ -386,6 +448,7 @@ internal class ToyboxRacersRenderer(
         previewRollDegrees = rollDegrees
         previewRotationAxis = rotationAxis
         previewMeshDirty = true
+        wake()
     }
 
     fun moveEditorPreview(dx: Float, dz: Float) {
@@ -394,25 +457,29 @@ internal class ToyboxRacersRenderer(
         previewAnchorX = snap(previewAnchorX + dx, grid)
         previewAnchorZ = snap(previewAnchorZ + dz, grid)
         previewMeshDirty = true
+        wake()
     }
 
     fun editorNudgeDelta(strafe: Float, forward: Float, grid: Float): Vec3 {
-        val horizontalForward = horizontalEditorForward()
+        val horizontalForward = horizontalForward(editorCameraForUi().yaw)
         val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
         return right * (strafe * grid) + horizontalForward * (forward * grid)
     }
 
+    /** Noté ici, appliqué par le fil GL à sa prochaine image. */
     fun moveEditorCameraHeight(delta: Float) {
-        editorCameraPosition = Vec3(
-            editorCameraPosition.x,
-            (editorCameraPosition.y + delta).coerceIn(2.2f, 65f),
-            editorCameraPosition.z
-        )
+        synchronized(editorRequestLock) { pendingEditorHeight += delta }
+        wake()
     }
 
+    /** Fil UI seulement : il possède le point de pose. */
     fun makePreviewVolume(id: Long): ToyboxVolume {
-        val grid = previewGrid.coerceAtLeast(0.01f)
         ensurePreviewAnchor()
+        return previewVolumeAt(id)
+    }
+
+    private fun previewVolumeAt(id: Long): ToyboxVolume {
+        val grid = previewGrid.coerceAtLeast(0.01f)
         val rawX = previewAnchorX
         val rawZ = previewAnchorZ
         val width = snap(previewWidth, grid).coerceAtLeast(grid)
@@ -442,8 +509,33 @@ internal class ToyboxRacersRenderer(
         if (!previewAnchorReady) resetEditorPreviewAnchor()
     }
 
+    private fun wake() {
+        renderRequester?.invoke()
+    }
+
+    private fun editorCameraForUi(): EditorCameraPose = requestedEditorCamera.get() ?: publishedEditorCamera
+
+    /** Fil GL : rend la caméra de l'image lisible par le fil UI. */
+    private fun publishCamera() {
+        synchronized(cameraLock) {
+            System.arraycopy(viewProjection, 0, publishedViewProjection, 0, 16)
+            publishedWidth = surfaceWidth
+            publishedHeight = surfaceHeight
+        }
+    }
+
+    /** Fil UI : copie la dernière caméra publiée ; faux si elle ne s'inverse pas. */
+    private fun loadUiCamera(invert: Boolean): Boolean {
+        synchronized(cameraLock) {
+            System.arraycopy(publishedViewProjection, 0, uiViewProjection, 0, 16)
+            uiWidth = publishedWidth
+            uiHeight = publishedHeight
+        }
+        return !invert || Matrix.invertM(inverseViewProjection, 0, uiViewProjection, 0)
+    }
+
     fun pickVolume(screenX: Float, screenY: Float, volumes: List<ToyboxVolume>): Long? {
-        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        if (!editorActive || !loadUiCamera(invert = true)) return null
         val near = unproject(screenX, screenY, -1f) ?: return null
         val far = unproject(screenX, screenY, 1f) ?: return null
         val direction = (far - near).normalized()
@@ -458,7 +550,7 @@ internal class ToyboxRacersRenderer(
 
     /** Pick visible parts independently of their collision flag, in camera depth order. */
     fun pickEditorObject(screenX: Float, screenY: Float, world: ToyboxWorld): EditorPick? {
-        if (!editorActive || !Matrix.invertM(inverseViewProjection,0,viewProjection,0)) return null
+        if (!editorActive || !loadUiCamera(invert = true)) return null
         val near = unproject(screenX,screenY,-1f) ?: return null
         val far = unproject(screenX,screenY,1f) ?: return null
         val direction = (far-near).normalized()
@@ -486,7 +578,7 @@ internal class ToyboxRacersRenderer(
     }
 
     fun pickDecor(screenX: Float, screenY: Float, decorations: List<ToyboxDecor>): Long? {
-        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        if (!editorActive || !loadUiCamera(invert = true)) return null
         val near = unproject(screenX, screenY, -1f) ?: return null
         val far = unproject(screenX, screenY, 1f) ?: return null
         val direction = (far - near).normalized()
@@ -503,7 +595,7 @@ internal class ToyboxRacersRenderer(
     }
 
     fun pickTrackSection(screenX: Float, screenY: Float, sections: List<ToyboxTrackSection>): Long? {
-        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        if (!editorActive || !loadUiCamera(invert = true)) return null
         val near = unproject(screenX, screenY, -1f) ?: return null
         val far = unproject(screenX, screenY, 1f) ?: return null
         val direction = (far - near).normalized()
@@ -514,15 +606,19 @@ internal class ToyboxRacersRenderer(
     }
 
     fun projectEditorPoint(x: Float, y: Float, z: Float): Pair<Float, Float>? {
-        val output = FloatArray(4)
-        Matrix.multiplyMV(output, 0, viewProjection, 0, floatArrayOf(x, y, z, 1f), 0)
-        if (output[3] <= 0f) return null
-        return (output[0] / output[3] + 1f) * surfaceWidth * 0.5f to
-            (1f - output[1] / output[3]) * surfaceHeight * 0.5f
+        loadUiCamera(invert = false)
+        uiPoint[0] = x
+        uiPoint[1] = y
+        uiPoint[2] = z
+        uiPoint[3] = 1f
+        Matrix.multiplyMV(uiProjected, 0, uiViewProjection, 0, uiPoint, 0)
+        if (uiProjected[3] <= 0f) return null
+        return (uiProjected[0] / uiProjected[3] + 1f) * uiWidth * 0.5f to
+            (1f - uiProjected[1] / uiProjected[3]) * uiHeight * 0.5f
     }
 
     fun editorPointOnPlane(screenX: Float, screenY: Float, height: Float): Vec3? {
-        if (!Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        if (!loadUiCamera(invert = true)) return null
         val near = unproject(screenX, screenY, -1f) ?: return null
         val far = unproject(screenX, screenY, 1f) ?: return null
         val direction = far - near
@@ -536,6 +632,8 @@ internal class ToyboxRacersRenderer(
         // Le contexte précédent n'existe plus. Ses identifiants peuvent déjà désigner
         // de nouveaux objets : les oublier, surtout ne pas appeler glDelete dessus.
         worldMesh = null
+        trackMesh = null
+        environmentMesh = null
         previewMesh = null
         trackPreviewMesh = null
         decorPreviewMesh = null
@@ -550,8 +648,6 @@ internal class ToyboxRacersRenderer(
         GLES30.glEnable(GLES30.GL_CULL_FACE)
         GLES30.glCullFace(GLES30.GL_BACK)
         shader = ToyboxShader()
-        trackMesh = PrototypeMeshFactory.track(track).also { it.upload() }
-        environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload() }
         carMesh = PrototypeMeshFactory.carBody(floatArrayOf(1f, .25f, .39f, 1f)).also { it.upload() }
         wheelMesh = PrototypeMeshFactory.carWheel().also { it.upload() }
         val rivalColors = arrayOf(
@@ -577,7 +673,6 @@ internal class ToyboxRacersRenderer(
         currentWorld = requestedWorld
         car.setEditorWorld(currentWorld)
         car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
-        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
         turboEffects.upload()
         turboEffects.reset(car.turboReleaseSerial)
         Matrix.setIdentityM(identity, 0)
@@ -600,19 +695,45 @@ internal class ToyboxRacersRenderer(
     }
 
     override fun onDrawFrame(gl: GL10?) {
+        drawFrame()
+        // La vue est en rendu à la demande : l'image suivante n'est réclamée que
+        // si quelque chose bouge encore (conduite, joystick de l'éditeur, fin de
+        // course qui se pose). Sinon le fil GL dort jusqu'au prochain réveil.
+        frameScheduled = wantsNextFrame()
+        if (frameScheduled) renderRequester?.invoke()
+    }
+
+    private fun wantsNextFrame(): Boolean = when {
+        paused || !sceneLive -> false
+        frameEditing -> editorForwardInput != 0f || editorStrafeInput != 0f ||
+            editorYawInput != 0f || editorPitchInput != 0f
+        mode == PlayMode.RACE && raceSession.phase == RacePhase.FINISHED -> finishedSeconds < RESULT_SETTLE_SECONDS
+        else -> true
+    }
+
+    private fun drawFrame() {
         val now = System.nanoTime()
         if (lastFrameNanos == 0L) lastFrameNanos = now
-        val skipTime = paused || discardFrameTime
+        // Après un repos, l'écart depuis la dernière image n'est pas du temps de jeu.
+        val skipTime = paused || discardFrameTime || !frameScheduled
         discardFrameTime = false
         val frameSeconds = if (skipTime) 0f else
             ((now - lastFrameNanos) / 1_000_000_000f).coerceIn(0f, 0.10f)
         lastFrameNanos = now
         // Physics state belongs exclusively to the GL/simulation thread.
+        val editing = editorActive
+        if (editing != frameEditing) {
+            frameEditing = editing
+            cameraReady = false
+        }
         val frameWorld = requestedWorld
-        if (!editorActive || resetRequested) car.setEditorWorld(frameWorld)
+        if (!editing || resetRequested) car.setEditorWorld(frameWorld)
         car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
 
         if (resetRequested) {
+            // Effacée avant d'être traitée : une demande arrivée pendant ce bloc
+            // sera servie à l'image suivante au lieu d'être perdue.
+            resetRequested = false
             val scene = requestedScene
             if (scene != track.scene) {
                 track = PrototypeTrack(scene = scene)
@@ -621,17 +742,16 @@ internal class ToyboxRacersRenderer(
                 car.setEditorWorld(frameWorld)
                 raceSession = RaceSession(track)
                 rivals = List(5) { RivalCar(track, it) }
-                trackMesh.destroy()
-                environmentMesh.destroy()
-                trackMesh = PrototypeMeshFactory.track(track).also { it.upload() }
-                environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload() }
+                trackMesh?.destroy()
+                environmentMesh?.destroy()
+                trackMesh = null
+                environmentMesh = null
                 discardFrameTime = true
             }
             difficulty = requestedDifficulty
             mode = requestedMode
             car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
             resetRace()
-            resetRequested = false
         }
 
         activeWorldKind = requestedWorldKind
@@ -644,10 +764,12 @@ internal class ToyboxRacersRenderer(
         car.courseRescueEnabled = mode == PlayMode.RACE
 
         rebuildWorldMeshesIfNeeded(frameWorld)
+        ensureSceneMeshes(editing)
 
-        if (editorActive) {
+        if (editing) {
             updateEditorCamera(frameSeconds)
             renderScene(frameSeconds)
+            onEditorFrame?.invoke()
             return
         }
 
@@ -701,6 +823,9 @@ internal class ToyboxRacersRenderer(
             hudAccumulator += FIXED_STEP
         }
         interpolateSimulationState()
+        // L'écran de résultats est figé : on laisse la caméra et l'assiette se
+        // poser, puis le rendu s'arrête jusqu'au prochain réveil.
+        if (mode == PlayMode.RACE && raceSession.phase == RacePhase.FINISHED) finishedSeconds += frameSeconds
 
         updateCamera(frameSeconds)
         renderScene(frameSeconds)
@@ -740,7 +865,8 @@ internal class ToyboxRacersRenderer(
                     lapElapsedSeconds = raceSession.lapElapsedSeconds,
                     lastLapSeconds = raceSession.lastLapSeconds,
                     bestLapSeconds = raceSession.bestLapSeconds,
-                    lapSerial = raceSession.lapSerial
+                    lapSerial = raceSession.lapSerial,
+                    track = track
                 )
             )
         }
@@ -844,14 +970,31 @@ internal class ToyboxRacersRenderer(
             -right.x * visualDriftLean * 0.10f, 1f, -right.z * visualDriftLean * 0.10f
         )
         Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
+        publishCamera()
     }
 
     private fun updateEditorCamera(frameSeconds: Float) {
+        // Demandes du fil UI : appliquées ici, par le seul fil qui écrit la caméra.
+        requestedEditorCamera.get()?.let { pose ->
+            editorCameraPosition = pose.position
+            editorCameraYaw = pose.yaw
+            editorCameraPitch = pose.pitch
+            publishedEditorCamera = pose
+            requestedEditorCamera.compareAndSet(pose, null)
+        }
+        val heightDelta = synchronized(editorRequestLock) { pendingEditorHeight.also { pendingEditorHeight = 0f } }
+        if (heightDelta != 0f) {
+            editorCameraPosition = Vec3(
+                editorCameraPosition.x,
+                (editorCameraPosition.y + heightDelta).coerceIn(2.2f, 65f),
+                editorCameraPosition.z
+            )
+        }
         Matrix.perspectiveM(projection, 0, 58f, surfaceWidth.toFloat() / surfaceHeight, .1f, 420f)
         val seconds = frameSeconds.coerceAtMost(0.05f)
         editorCameraYaw += editorYawInput * seconds * 2.4f
         editorCameraPitch = (editorCameraPitch + editorPitchInput * seconds * 1.45f).coerceIn(-1.05f, 0.55f)
-        val horizontalForward = horizontalEditorForward()
+        val horizontalForward = horizontalForward(editorCameraYaw)
         val forward = editorForward()
         val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
         val speed = 35f
@@ -872,12 +1015,21 @@ internal class ToyboxRacersRenderer(
             0f, 1f, 0f
         )
         Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
+        publishCamera()
+        val published = publishedEditorCamera
+        if (published.position != editorCameraPosition || published.yaw != editorCameraYaw ||
+            published.pitch != editorCameraPitch) {
+            publishedEditorCamera = EditorCameraPose(editorCameraPosition, editorCameraYaw, editorCameraPitch)
+        }
         val preview = when {
             selectedPreview != null -> selectedPreview
-            previewVisible -> makePreviewVolume(PREVIEW_ID)
+            previewVisible -> previewVolumeAt(PREVIEW_ID)
             else -> null
         }
+        // Chaque drapeau est effacé avant la reconstruction : une demande du fil UI
+        // arrivée pendant celle-ci n'est pas perdue, elle relance l'image suivante.
         if (previewMeshDirty || preview != lastPreviewVolume) {
+            previewMeshDirty = false
             previewMesh?.destroy()
             previewMesh = preview?.let {
                 PrototypeMeshFactory.world(
@@ -887,19 +1039,19 @@ internal class ToyboxRacersRenderer(
                 ).also { mesh -> mesh.upload() }
             }
             lastPreviewVolume = preview
-            previewMeshDirty = false
         }
         val trackSection = trackPreview
         if (trackPreviewMeshDirty || trackSection != lastPreviewTrack) {
+            trackPreviewMeshDirty = false
             trackPreviewMesh?.destroy()
             trackPreviewMesh = trackSection?.let {
                 PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList(), trackSections = listOf(it))).also { mesh -> mesh.upload() }
             }
             lastPreviewTrack = trackSection
-            trackPreviewMeshDirty = false
         }
         val decor = decorPreview
         if (decorPreviewMeshDirty || decor != lastPreviewDecor) {
+            decorPreviewMeshDirty = false
             decorPreviewMesh?.destroy()
             decorPreviewMesh = decor?.let {
                 PrototypeMeshFactory.world(
@@ -910,7 +1062,6 @@ internal class ToyboxRacersRenderer(
                 ).also { mesh -> mesh.upload() }
             }
             lastPreviewDecor = decor
-            decorPreviewMeshDirty = false
         }
     }
 
@@ -922,9 +1073,9 @@ internal class ToyboxRacersRenderer(
         GLES30.glUseProgram(shader.program)
         shader.material()
         shader.atmosphere(theme)
-        val eye = if(editorActive) editorCameraPosition else cameraPosition
+        val eye = if(frameEditing) editorCameraPosition else cameraPosition
         shader.eye(eye.x, eye.y, eye.z)
-        if (editorActive) {
+        if (frameEditing) {
             worldMesh?.draw(shader, viewProjection, identity)
             GLES30.glEnable(GLES30.GL_BLEND)
             GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
@@ -939,8 +1090,8 @@ internal class ToyboxRacersRenderer(
             return
         }
         if (activeWorldKind == ActiveWorldKind.LEGACY) {
-            environmentMesh.draw(shader, viewProjection, identity)
-            trackMesh.draw(shader, viewProjection, identity)
+            environmentMesh?.draw(shader, viewProjection, identity)
+            trackMesh?.draw(shader, viewProjection, identity)
         } else {
             worldMesh?.draw(shader, viewProjection, identity)
         }
@@ -950,11 +1101,7 @@ internal class ToyboxRacersRenderer(
         if (shouldDrawShadow) {
             val maximumShadowY = renderCarPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f
             val groundY = if (activeWorldKind == ActiveWorldKind.CUSTOM) {
-                currentWorld.volumes
-                    .filter { it.solid }
-                    .mapNotNull { it.topSurfaceYForShadow(renderCarPosition.x, renderCarPosition.z) }
-                    .filter { it <= maximumShadowY }
-                    .maxOrNull() ?: 0f
+                customShadowGroundY(maximumShadowY)
             } else {
                 maxOf(
                     track.groundHeightAt(renderCarPosition.x, renderCarPosition.z),
@@ -1176,6 +1323,7 @@ internal class ToyboxRacersRenderer(
         car.reset()
         rivalWheelSpins.fill(0f)
         effectSeconds = 0f
+        finishedSeconds = 0f
         rivals.forEach { it.reset(difficulty) }
         raceSession.reset(car.distance)
         lastRescueAnchorSerial = car.rescueAnchorSerial
@@ -1223,10 +1371,10 @@ internal class ToyboxRacersRenderer(
 
     private fun rebuildWorldMeshesIfNeeded(world: ToyboxWorld) {
         if (!worldDirty && currentWorld === world) return
-        discardFrameTime = true
         currentWorld = world
+        // Reconstruit par ensureSceneMeshes, seulement si ce monde est affiché.
         worldMesh?.destroy()
-        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
+        worldMesh = null
         previewMesh?.destroy()
         previewMesh = null
         lastPreviewVolume = null
@@ -1242,7 +1390,30 @@ internal class ToyboxRacersRenderer(
         worldDirty = false
     }
 
-    private fun horizontalEditorForward() = Vec3(sin(editorCameraYaw), 0f, cos(editorCameraYaw)).normalized()
+    private fun ensureSceneMeshes(editing: Boolean) {
+        if (activeWorldKind == ActiveWorldKind.LEGACY && !editing) {
+            if (trackMesh == null) {
+                trackMesh = PrototypeMeshFactory.track(track).also { it.upload(); logMesh("track", it) }
+                discardFrameTime = true
+            }
+            if (environmentMesh == null) {
+                environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload(); logMesh("environment", it) }
+                discardFrameTime = true
+            }
+        } else if (worldMesh == null) {
+            worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload(); logMesh("world", it) }
+            discardFrameTime = true
+        }
+    }
+
+    /** Mesure du décor envoyé au GPU à chaque image (adb logcat -s ToyboxPerf). */
+    private fun logMesh(name: String, mesh: ColoredMesh) {
+        if (BuildConfig.DEBUG) {
+            android.util.Log.d("ToyboxPerf", "$name: ${mesh.vertexCount} vertices, ${mesh.vertexCount * 40 / 1024} KiB")
+        }
+    }
+
+    private fun horizontalForward(yaw: Float) = Vec3(sin(yaw), 0f, cos(yaw)).normalized()
 
     private fun editorForward(): Vec3 {
         val flat = cos(editorCameraPitch)
@@ -1256,15 +1427,16 @@ internal class ToyboxRacersRenderer(
     private fun snap(value: Float, grid: Float): Float =
         kotlin.math.round(value / grid) * grid
 
+    /** Fil UI, après [loadUiCamera] avec inversion. */
     private fun unproject(screenX: Float, screenY: Float, ndcZ: Float): Vec3? {
-        val ndcX = screenX / surfaceWidth.toFloat() * 2f - 1f
-        val ndcY = 1f - screenY / surfaceHeight.toFloat() * 2f
-        val input = floatArrayOf(ndcX, ndcY, ndcZ, 1f)
-        val output = FloatArray(4)
-        Matrix.multiplyMV(output, 0, inverseViewProjection, 0, input, 0)
-        val w = output[3]
+        uiPoint[0] = screenX / uiWidth.toFloat() * 2f - 1f
+        uiPoint[1] = 1f - screenY / uiHeight.toFloat() * 2f
+        uiPoint[2] = ndcZ
+        uiPoint[3] = 1f
+        Matrix.multiplyMV(uiProjected, 0, inverseViewProjection, 0, uiPoint, 0)
+        val w = uiProjected[3]
         if (kotlin.math.abs(w) < 0.0001f) return null
-        return Vec3(output[0] / w, output[1] / w, output[2] / w)
+        return Vec3(uiProjected[0] / w, uiProjected[1] / w, uiProjected[2] / w)
     }
 
     private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: ToyboxVolume): Float? {
@@ -1282,6 +1454,23 @@ internal class ToyboxRacersRenderer(
             -box.depth * 0.5f,
             box.depth * 0.5f
         )
+    }
+
+    /** Plus haut dessus plein sous la voiture, sans listes intermédiaires : l'ombre se calcule à chaque image. */
+    private fun customShadowGroundY(maximumY: Float): Float {
+        val x = renderCarPosition.x
+        val z = renderCarPosition.z
+        var found = false
+        var best = 0f
+        for (volume in currentWorld.volumes) {
+            if (!volume.solid) continue
+            val top = volume.topSurfaceYForShadow(x, z) ?: continue
+            if (top <= maximumY && (!found || top > best)) {
+                best = top
+                found = true
+            }
+        }
+        return best
     }
 
     private fun ToyboxVolume.topSurfaceYForShadow(x: Float, z: Float): Float? {
@@ -1411,5 +1600,6 @@ internal class ToyboxRacersRenderer(
         private const val HOP_VISUAL_LIFT = 0.05f
         private const val TRIGGER_ENGAGE = 0.12f
         private const val PREVIEW_ID = -1L
+        private const val RESULT_SETTLE_SECONDS = 2.5f
     }
 }

@@ -180,6 +180,32 @@ public class MidiDriver
      */
     public native boolean loadDLS(byte[] a);
 
+    /**
+     * Whether the native synthesizer is running (between start() and stop()).
+     * Unlike config(), it does not allocate an array.
+     *
+     * @return true if started
+     */
+    public native boolean isStarted();
+
+    /**
+     * Enable or disable the 10-band equalizer applied after rendering
+     *
+     * @param enabled true to enable
+     * @return true for success
+     */
+    public native boolean setEqEnabled(boolean enabled);
+
+    /**
+     * Set the gain of one equalizer band (32 Hz ... 16 kHz).
+     * Band gains are reset to flat by every start().
+     *
+     * @param band band index (0-9)
+     * @param gainDb gain in dB (about -12 to +12)
+     * @return true for success
+     */
+    public native boolean setEqBandGain(int band, float gainDb);
+
     // Load midi library
     static
     {

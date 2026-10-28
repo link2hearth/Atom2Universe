@@ -2,138 +2,60 @@ package com.Atom2Universe.app.midi.sf2
 
 import android.content.Context
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer
 import java.io.File
+import java.io.RandomAccessFile
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Singleton cache for SF2 file instances with streaming support.
+ * Singleton cache for SF2 file instances.
  *
- * SF2 files can be very large (100MB+), so this cache provides:
- * 1. Standard full loading for small files (<100MB)
- * 2. Streaming/selective loading for large files (100MB+)
+ * Every SoundFont, whatever its size, is memory-mapped: its samples stay in the file and the
+ * system pages them in on demand, nothing is copied into the Java heap (the old full copy of
+ * files under 150 MB froze the main thread and could run out of memory). Only the metadata
+ * (presets, instruments, sample headers) is parsed, once per file.
  *
- * For streaming loading:
- * - Metadata is parsed first (presets, instruments, sample headers)
- * - Sample data is loaded only for instruments used in the MIDI file
- * - Memory savings of 80-95% for typical MIDI files
+ * Right after mapping, a background thread reads the samples once so that the system keeps
+ * them in its file cache: the first notes then don't wait for the storage.
+ *
+ * Thread-safety: every method can be called from any thread (one lock for the whole cache).
+ * A file rewritten at the same path (preview SoundFonts of the SF2 creator) is detected by its
+ * size and modification date and mapped again.
  */
 object Sf2FileCache {
 
-    // Threshold for streaming loading (100MB)
-    private const val STREAMING_THRESHOLD_BYTES = 100L * 1024 * 1024
+    // Préchargement : au-delà, le fichier ne tiendrait pas utilement dans le cache du système
+    private const val PRELOAD_MAX_BYTES = 512L * 1024 * 1024
+    private const val PRELOAD_CHUNK_BYTES = 1024 * 1024
 
-    // Cache for full-loaded SF2 files
+    /** Size + modification date: a file rewritten at the same path is not the same file. */
+    private data class FileStamp(val length: Long, val lastModified: Long)
+
+    private fun stampOf(file: File) = FileStamp(file.length(), file.lastModified())
+
+    // Cache for the mapped SF2 file
     private var cachedPath: String? = null
+    private var cachedStamp: FileStamp? = null
     private var cachedFile: Sf2File? = null
 
-    // Cache for streaming metadata
+    // Cache for metadata
     private var cachedMetadataPath: String? = null
+    private var cachedMetadataStamp: FileStamp? = null
     private var cachedMetadata: Sf2Metadata? = null
-
-    // Track what instruments are loaded in streaming mode
-    private var loadedPresetsKey: String? = null
 
     // Cached validation result
     private var cachedValidationPath: String? = null
+    private var cachedValidationStamp: FileStamp? = null
     private var cachedValidationResult: Sf2Validator.ValidationResult? = null
-    private var cachedValidationDone: Boolean = false
+
+    // Génération du préchargement en cours : un nouveau fichier (ou clear) arrête l'ancien
+    private val preloadGeneration = AtomicInteger(0)
 
     private val lock = Any()
 
     /**
-     * Get or parse an Sf2File (full loading).
+     * Get or load an Sf2File. Same as [getMemoryMapped]: every SoundFont is memory-mapped.
      */
-    fun get(path: String): Sf2File? {
-        synchronized(lock) {
-            // Ne pas rendre une version partielle (streaming : seuls les instruments d'un MIDI
-            // sont chargés) à qui demande le fichier complet
-            val isComplete = loadedPresetsKey == null || loadedPresetsKey == "mmap:$path"
-            if (cachedPath == path && cachedFile != null && isComplete) {
-                return cachedFile
-            }
-
-            val file = File(path)
-            if (!file.exists()) {
-                return null
-            }
-
-            // Fermer l'ancien SF2 AVANT de tenter le parse pour éviter fuite mémoire
-            // en cas d'exception pendant le parsing
-            val oldFile = cachedFile
-            cachedFile = null
-            cachedPath = null
-            oldFile?.close()
-
-            return try {
-                val parser = Sf2Parser()
-                val sf2File = parser.parse(file)
-
-                cachedPath = path
-                cachedFile = sf2File
-                loadedPresetsKey = null
-
-                sf2File
-            } catch (e: Exception) {
-                android.util.Log.e("Sf2FileCache", "Failed to parse SF2: ${file.absolutePath}", e)
-                null
-            }
-        }
-    }
-
-    /**
-     * Get SF2 file with streaming/selective loading based on MIDI requirements.
-     */
-    fun getStreaming(
-        sf2Path: String,
-        requiredInstruments: MidiFileAnalyzer.RequiredInstruments
-    ): Sf2File? {
-        synchronized(lock) {
-            val file = File(sf2Path)
-            if (!file.exists()) {
-                return null
-            }
-
-            val sizeBytes = file.length()
-
-            if (sizeBytes < STREAMING_THRESHOLD_BYTES) {
-                return get(sf2Path)
-            }
-
-            try {
-                val parser = Sf2StreamingParser()
-
-                val metadata = getOrParseMetadata(sf2Path, parser) ?: return null
-
-                val presetsKey = buildPresetsKey(sf2Path, requiredInstruments)
-
-                if (cachedPath == sf2Path && cachedFile != null && loadedPresetsKey == presetsKey) {
-                    return cachedFile
-                }
-
-                // Fermer l'ancien SF2 AVANT le parse pour éviter fuite mémoire en cas d'exception
-                val oldFile = cachedFile
-                cachedFile = null
-                cachedPath = null
-                loadedPresetsKey = null
-                oldFile?.close()
-
-                val sf2File = parser.loadSamplesForPresets(metadata, requiredInstruments.presets)
-
-                cachedPath = sf2Path
-                cachedFile = sf2File
-                loadedPresetsKey = presetsKey
-
-                return sf2File
-
-            } catch (e: Sf2ParseException) {
-                android.util.Log.e("Sf2FileCache", "Failed to parse SF2 (streaming): $sf2Path", e)
-                return null
-            } catch (e: Exception) {
-                android.util.Log.e("Sf2FileCache", "Failed to parse SF2 (streaming): $sf2Path", e)
-                return null
-            }
-        }
-    }
+    fun get(path: String): Sf2File? = getMemoryMapped(path)
 
     /**
      * Get or parse SF2 metadata (without loading sample data).
@@ -141,12 +63,15 @@ object Sf2FileCache {
     @Suppress("unused")
     fun getMetadata(sf2Path: String): Sf2Metadata? {
         synchronized(lock) {
-            return getOrParseMetadata(sf2Path, Sf2StreamingParser())
+            val file = File(sf2Path)
+            if (!file.exists()) return null
+            return getOrParseMetadata(sf2Path, stampOf(file))
         }
     }
 
     /**
-     * Get SF2 file using full memory-mapping (zero RAM for sample data).
+     * Get SF2 file using memory-mapping (no heap memory for sample data).
+     * Returns null when the file is missing, unreadable or memory runs out.
      */
     fun getMemoryMapped(sf2Path: String): Sf2File? {
         synchronized(lock) {
@@ -154,53 +79,76 @@ object Sf2FileCache {
             if (!file.exists()) {
                 return null
             }
+            val stamp = stampOf(file)
 
             // Même fichier déjà projeté : le partager (le lecteur et le mode pratique peuvent
-            // l'utiliser en même temps) au lieu d'en recréer un et de fermer l'ancien
-            val mmapKey = "mmap:$sf2Path"
-            if (cachedPath == sf2Path && loadedPresetsKey == mmapKey) {
+            // l'utiliser en même temps)
+            if (cachedPath == sf2Path && cachedStamp == stamp) {
                 cachedFile?.let { return it }
             }
 
-            try {
-                val parser = Sf2StreamingParser()
+            return try {
+                val metadata = getOrParseMetadata(sf2Path, stamp) ?: return null
 
-                val metadata = getOrParseMetadata(sf2Path, parser) ?: return null
-
-                // Fermer l'ancien SF2 AVANT le parse pour éviter fuite mémoire en cas d'exception
+                // L'ancien fichier reste valable pour qui le tient encore (projection)
                 val oldFile = cachedFile
                 cachedFile = null
                 cachedPath = null
-                loadedPresetsKey = null
+                cachedStamp = null
                 oldFile?.close()
 
-                val sf2File = parser.loadWithMemoryMapping(metadata)
+                val sf2File = Sf2StreamingParser().loadWithMemoryMapping(metadata)
 
                 cachedPath = sf2Path
+                cachedStamp = stamp
                 cachedFile = sf2File
-                loadedPresetsKey = mmapKey
+                startPreload(sf2Path, metadata.smplByteOffset, metadata.smplByteSize)
 
-                return sf2File
-
-            } catch (e: Sf2ParseException) {
-                android.util.Log.e("Sf2FileCache", "Failed to parse SF2 (mmap): $sf2Path", e)
-                return null
+                sf2File
             } catch (e: Exception) {
                 android.util.Log.e("Sf2FileCache", "Failed to parse SF2 (mmap): $sf2Path", e)
-                return null
+                null
+            } catch (e: OutOfMemoryError) {
+                android.util.Log.e("Sf2FileCache", "Out of memory while parsing SF2: $sf2Path", e)
+                null
             }
         }
     }
 
-    private const val MMAP_RECOMMENDED_THRESHOLD_BYTES = 150L * 1024 * 1024
+    /**
+     * Reads the samples once in the background so that the system keeps them in its file
+     * cache. Reading through a separate file handle never touches the mapping itself.
+     */
+    private fun startPreload(path: String, offset: Long, size: Long) {
+        val generation = preloadGeneration.incrementAndGet()
+        if (size <= 0 || size > PRELOAD_MAX_BYTES) return
+
+        Thread({
+            try {
+                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
+            } catch (_: Exception) { }
+            try {
+                RandomAccessFile(path, "r").use { raf ->
+                    val buffer = ByteArray(PRELOAD_CHUNK_BYTES)
+                    raf.seek(offset)
+                    var remaining = size
+                    while (remaining > 0 && preloadGeneration.get() == generation) {
+                        val read = raf.read(buffer, 0, minOf(remaining, buffer.size.toLong()).toInt())
+                        if (read <= 0) break
+                        remaining -= read
+                    }
+                }
+            } catch (_: Exception) { }
+        }, "Sf2Preload").apply {
+            isDaemon = true
+            start()
+        }
+    }
 
     /**
-     * Check if memory-mapping should be used for a file.
+     * Whether memory-mapping should be used for a file: always, as soon as the file exists.
      */
-    fun shouldUseMmap(path: String): Boolean {
-        val file = File(path)
-        return file.exists() && file.length() > MMAP_RECOMMENDED_THRESHOLD_BYTES
-    }
+    fun shouldUseMmap(path: String): Boolean = File(path).exists()
 
     /**
      * Validate an SF2 file and return a user-friendly warning message if issues are found.
@@ -220,17 +168,20 @@ object Sf2FileCache {
 
     /** Validates (once per file) and keeps the result; null when the file cannot be parsed. */
     private fun validate(sf2Path: String): Sf2Validator.ValidationResult? {
-        if (cachedValidationPath == sf2Path && cachedValidationDone) return cachedValidationResult
-        val metadata = getOrParseMetadata(sf2Path, Sf2StreamingParser()) ?: return null
+        val file = File(sf2Path)
+        if (!file.exists()) return null
+        val stamp = stampOf(file)
+        if (cachedValidationPath == sf2Path && cachedValidationStamp == stamp) return cachedValidationResult
+        val metadata = getOrParseMetadata(sf2Path, stamp) ?: return null
         val result = Sf2Validator.validate(metadata)
         cachedValidationPath = sf2Path
+        cachedValidationStamp = stamp
         cachedValidationResult = result
-        cachedValidationDone = true
         return result
     }
 
     /**
-     * Get the full validation result for an SF2 file.
+     * Get the full validation result for an SF2 file (reads the file: call it off the main thread).
      */
     fun getValidationResult(sf2Path: String): Sf2Validator.ValidationResult? {
         synchronized(lock) {
@@ -238,29 +189,22 @@ object Sf2FileCache {
         }
     }
 
-    private fun getOrParseMetadata(sf2Path: String, parser: Sf2StreamingParser): Sf2Metadata? {
-        if (cachedMetadataPath == sf2Path && cachedMetadata != null) {
-            return cachedMetadata
+    private fun getOrParseMetadata(sf2Path: String, stamp: FileStamp): Sf2Metadata? {
+        if (cachedMetadataPath == sf2Path && cachedMetadataStamp == stamp) {
+            cachedMetadata?.let { return it }
         }
 
         return try {
-            val metadata = parser.parseMetadata(sf2Path)
+            val metadata = Sf2StreamingParser().parseMetadata(sf2Path)
             cachedMetadataPath = sf2Path
+            cachedMetadataStamp = stamp
             cachedMetadata = metadata
             metadata
         } catch (_: Exception) {
             null
+        } catch (_: OutOfMemoryError) {
+            null
         }
-    }
-
-    private fun buildPresetsKey(
-        sf2Path: String,
-        instruments: MidiFileAnalyzer.RequiredInstruments
-    ): String {
-        val presetKeys = instruments.presets
-            .sortedWith(compareBy({ it.bank }, { it.program }))
-            .joinToString(",") { "${it.bank}:${it.program}" }
-        return "$sf2Path|$presetKeys"
     }
 
     @Suppress("unused")
@@ -277,29 +221,19 @@ object Sf2FileCache {
         }
     }
 
-    @Suppress("unused")
-    fun getEstimatedMemoryMB(path: String): Long {
-        val file = File(path)
-        if (!file.exists()) return 0
-        return file.length() * 2 / 1024 / 1024
-    }
-
-    fun shouldUseStreaming(path: String): Boolean {
-        val file = File(path)
-        return file.exists() && file.length() > STREAMING_THRESHOLD_BYTES
-    }
-
     fun clear() {
         synchronized(lock) {
+            preloadGeneration.incrementAndGet()
             cachedFile?.close()
             cachedPath = null
+            cachedStamp = null
             cachedFile = null
             cachedMetadataPath = null
+            cachedMetadataStamp = null
             cachedMetadata = null
-            loadedPresetsKey = null
             cachedValidationPath = null
+            cachedValidationStamp = null
             cachedValidationResult = null
-            cachedValidationDone = false
         }
     }
 
@@ -307,6 +241,7 @@ object Sf2FileCache {
     fun clearMetadataCache() {
         synchronized(lock) {
             cachedMetadataPath = null
+            cachedMetadataStamp = null
             cachedMetadata = null
         }
     }
@@ -318,11 +253,12 @@ object Sf2FileCache {
         }
     }
 
+    @Suppress("unused")
     fun getStats(): CacheStats {
         synchronized(lock) {
             val sf2SampleCount = cachedFile?.sampleCount ?: 0
             val sf2PresetCount = cachedFile?.presetCount ?: 0
-            val sf2MemoryMB = sf2SampleCount.toLong() * 2 / 1024 / 1024
+            val sf2MemoryMB = (cachedFile?.memoryUsageBytes ?: 0L) / 1024 / 1024
 
             val metadataMemoryKB = cachedMetadata?.estimatedMemoryUsage?.div(1024) ?: 0
 
@@ -334,8 +270,7 @@ object Sf2FileCache {
                 sf2MemoryMB = sf2MemoryMB,
                 hasMetadataCache = cachedMetadata != null,
                 metadataPath = cachedMetadataPath,
-                metadataMemoryKB = metadataMemoryKB,
-                isStreamingLoaded = loadedPresetsKey != null
+                metadataMemoryKB = metadataMemoryKB
             )
         }
     }
@@ -348,18 +283,14 @@ object Sf2FileCache {
         val sf2MemoryMB: Long,
         val hasMetadataCache: Boolean,
         val metadataPath: String?,
-        val metadataMemoryKB: Long,
-        val isStreamingLoaded: Boolean
+        val metadataMemoryKB: Long
     ) {
         override fun toString(): String {
             return buildString {
                 append("Sf2FileCache Stats:\n")
                 if (hasCachedFile) {
                     append("  SF2: $cachedPath\n")
-                    append("       $sf2PresetCount presets, $sf2SampleCount samples, ~${sf2MemoryMB}MB\n")
-                    if (isStreamingLoaded) {
-                        append("       (streaming loaded)\n")
-                    }
+                    append("       $sf2PresetCount presets, $sf2SampleCount samples, ~${sf2MemoryMB}MB heap\n")
                 } else {
                     append("  SF2: (none)\n")
                 }

@@ -67,6 +67,8 @@ class BilliardActivity : ThemedActivity() {
     private var modalCount=0
     private var ticking=false
     private var lastFrame=0L
+    private var pictureShownAt=0L
+    private var statusShownAt=0L
     private var session: BilliardSession?=null
     private var config=BilliardConfig()
     private var shot=Shot(0.0)
@@ -146,13 +148,16 @@ class BilliardActivity : ThemedActivity() {
                 }
                 if(run?.stage?.let { it==JourneyStage.PLAYING }!=false) {
                     if(s.mode==PlayMode.COMPUTER && s.match.player==1 && s.match.decision!=ShotDecision.NONE && !s.world.moving) s.decide(true)
-                    if(s.mode==PlayMode.COMPUTER && s.match.player==1 && s.ready && !thinking) requestComputer()
+                    if(s.mode==PlayMode.COMPUTER && s.match.player==1 && s.ready && !thinking && computerRefusedAt!=computerPosition(s)) requestComputer()
                 }
                 if(thinking) advanceComputer(delta)
             }
             updateJourneyClock(s)
-            publish()
-            refreshStatus()
+            // The physics and the sounds follow every frame of the 120 Hz screen. While balls
+            // roll or the robot thinks, the picture needs 60 images/s and the texts ten a second.
+            val busy=modalCount==0 && (s.world.moving || thinking)
+            if(!busy || time-pictureShownAt>=15_000_000L) { publish(scores=false); pictureShownAt=time }
+            if(!busy || time-statusShownAt>=100_000_000L) { refreshScores(s); refreshStatus(); statusShownAt=time }
             if(run!=null && s.match.winner>=0 && run?.stage==JourneyStage.PLAYING) {
                 run?.finishRack(s.match.winner); save()
             }
@@ -163,7 +168,18 @@ class BilliardActivity : ThemedActivity() {
                     .setMessage(getString(R.string.billiard_score,s.match.winner+1,s.match.score0,s.match.score1))
                     .setPositiveButton(R.string.billiard_close,null).create())
             }
-            if(s.world.moving || thinking || cameraRecovery || run?.let { it.mode==BilliardActivityMode.TIMED && it.stage==JourneyStage.PLAYING && clockArmed && modalCount==0 && impactPanel?.visibility!=View.VISIBLE }==true) startTick() else handler.postDelayed(idleTick,200)
+            val clockRunning=run?.let { it.mode==BilliardActivityMode.TIMED && it.stage==JourneyStage.PLAYING && clockArmed && modalCount==0 && impactPanel?.visibility!=View.VISIBLE }==true
+            // A single pending idle tick: a second one would start a second loop.
+            handler.removeCallbacks(idleTick)
+            when {
+                modalCount>0 -> handler.postDelayed(idleTick,200)
+                s.world.moving || cameraRecovery -> startTick()
+                // About 30 images/s for the robot's practice strokes, timed in seconds.
+                thinking -> handler.postDelayed(idleTick,24)
+                // The countdown shows seconds: a still table needs no frame-rate loop.
+                clockRunning -> handler.postDelayed(idleTick,100)
+                else -> handler.postDelayed(idleTick,200)
+            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -317,6 +333,7 @@ class BilliardActivity : ThemedActivity() {
         if(session==null) { showMenu(); return }
         // A pending choice belongs to the old level. Cancel it before the next tick replans.
         if(thinking) { generation++; computerAim=null; syncControls(); updateControlText() }
+        computerRefusedAt=null
         updateInteraction(); publish(); refreshStatus(); save(); startTick()
     }
     private fun chooseDifficulty() = choose(R.string.billiard_difficulty,difficultyLevels.map(::getString),config.difficulty,::setDifficulty)
@@ -1249,12 +1266,16 @@ class BilliardActivity : ThemedActivity() {
         syncControls(); updateControlText(); schedulePrediction()
         updateInteraction(); publish(); save()
     }
-    private fun publish() {
+    private fun refreshScores(s: BilliardSession) {
+        scoreboard?.playerNames=run?.takeUnless { it.solo }?.let { listOf(playerName(0),playerName(it.displayedOpponent)) }
+        scoreboard?.update(s,thinking,computerAim?.selected?.ball)
+    }
+    private var sceneryShownAt=0L
+    private fun publish(scores: Boolean=true) {
         val s=session ?: return
         val aim=computerAim
         val chosen=aim?.selected
-        scoreboard?.playerNames=run?.takeUnless { it.solo }?.let { listOf(playerName(0),playerName(it.displayedOpponent)) }
-        scoreboard?.update(s,thinking,chosen?.ball)
+        if(scores) refreshScores(s)
         // The cue cannot lie in the rail: draw and show the elevation it will really take.
         val aimed=aim?.visualShot ?: shot
         val cueBall=s.cue?.takeIf { !s.world.moving }
@@ -1266,10 +1287,13 @@ class BilliardActivity : ThemedActivity() {
         val renderer=scene
         val hud=renderer?.let { listOf(it.hudTop,it.hudBottom,it.hudLeft,it.hudRight) }
         // The idle tick publishes five times a second: an identical picture is not drawn again.
+        // The garden water still ripples at rest, slowly enough for two images a second.
+        val now=android.os.SystemClock.uptimeMillis()
+        val sceneryDue=renderer?.animatedScenery==true && now-sceneryShownAt>=500
         val unchanged=renderer!=null && renderer.frame?.looksLike(next)==true && renderer.trace===publishedTrace &&
-            hud==publishedHud && !renderer.visualAnimating && !renderer.animatedScenery
+            hud==publishedHud && !renderer.visualAnimating && !sceneryDue
         renderer?.frame=next; publishedTrace=renderer?.trace; publishedHud=hud
-        if(!unchanged) surface?.requestRender()
+        if(!unchanged) { surface?.requestRender(); sceneryShownAt=now }
         if(renderer?.camera?.settling==true) surface?.wakeCamera()
     }
     // Setting a text, even the same one, makes Android lay the whole screen out again. The
@@ -1405,7 +1429,8 @@ class BilliardActivity : ThemedActivity() {
     private fun scheduleArcadePreparation() {
         invalidateArcadePreparation()
         val s=session ?: return
-        if(canPrepareArcade(s)) handler.postDelayed(arcadePreparation,90)
+        // About 45 trial shots: only once the aim has rested; pressing the shot starts them at once.
+        if(canPrepareArcade(s)) handler.postDelayed(arcadePreparation,400)
     }
     private fun requestArcadePreparation() {
         val s=session ?: return
@@ -1456,7 +1481,10 @@ class BilliardActivity : ThemedActivity() {
         val difficulty=config.difficulty; val cue=config.cue
         val copy=BilliardSession(s.discipline,s.mode,s.clothSpeed,s.table.size).apply { restore(s.snapshot()) }
         worker.execute {
-            // The player waits on this search: it leaves the slow background cores while it runs.
+            // The player waits on this search: it leaves the slow background cores while it runs,
+            // then gives the guide's thread back the priority it had.
+            val tid=android.os.Process.myTid()
+            val previous=android.os.Process.getThreadPriority(tid)
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_DEFAULT)
             val choice=try {
                 BilliardPlanner.choose(copy,difficulty,cue.mass,cue.endMass,onCandidate={ candidate ->
@@ -1464,7 +1492,7 @@ class BilliardActivity : ThemedActivity() {
                         if(generation==ticket && session===s && resumed) computerAim?.consider(candidate)
                     }
                 }) { generation!=ticket || Thread.currentThread().isInterrupted }
-            } finally { android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND) }
+            } finally { android.os.Process.setThreadPriority(previous) }
             handler.post {
                 if(generation!=ticket || session!==s || !resumed) return@post
                 val fallback=s.legalTargets().firstOrNull()
@@ -1491,16 +1519,40 @@ class BilliardActivity : ThemedActivity() {
         // Only the settled, final choice enters the match. Pauses and dialogs gate this method.
         shot=selected.shot
         s.nominated=selected.ball; s.calledPocket=selected.pocket; s.bankRails=selected.rails
-        val ball=s.cue?.copyDeep(); val rackBreak=s.match.breaking && s.world.balls.size>6
+        var ball=s.cue?.copyDeep(); val rackBreak=s.match.breaking && s.world.balls.size>6
         computerAim=null
-        if(s.shoot(shot)) {
+        var struck=s.shoot(shot)
+        if(!struck) { ball=computerFallback(s); struck=ball!=null }
+        if(struck) {
             returnCamera=scene?.camera?.state()
             placing=false
             if(ball!=null) scene?.animateStrike(ball,s.lastShot ?: shot)
             watchShot(); audio.strike(shot.speed,rackBreak); save()
-        }
+        } else computerRefusedAt=computerPosition(s)
         syncControls(); updateControlText()
     }
+    /** The robot's choice was refused: a plain stroke at the first legal ball. Returns the cue ball before it. */
+    private fun computerFallback(s: BilliardSession): Ball? {
+        s.pushOut=false
+        if(!s.cuePlacementValid) {
+            // Ball in hand on a spot the rules refuse: the first legal place on a coarse grid.
+            placement@ for(x in 1..40) for(y in 1..20)
+                if(s.moveBall(s.cueId,V3(s.table.length*x/41,s.table.width*y/21)) && s.cuePlacementValid) break@placement
+        }
+        val cue=s.cue ?: return null
+        val target=s.legalTargets().firstOrNull()
+        if(s.needsCall) {
+            s.nominated=target?.id ?: -1
+            s.calledPocket=target?.let { b -> s.table.pockets.indices.minByOrNull { (s.table.pockets[it].center-b.p).planar().length() } } ?: -1
+            s.bankRails=if(s.discipline==Discipline.BANK) listOf(0) else emptyList()
+        }
+        val before=cue.copyDeep()
+        shot=Shot(target?.let { atan2(it.p.y-cue.p.y,it.p.x-cue.p.x) } ?: 0.0,1.0,cueMass=config.cue.mass,endMass=config.cue.endMass)
+        return before.takeIf { s.shoot(shot) }
+    }
+    // A position where even the plain stroke was refused: the robot is not asked again for it.
+    private var computerRefusedAt: Triple<BilliardSession,SessionSnapshot?,Double>?=null
+    private fun computerPosition(s: BilliardSession)=Triple(s,s.before,s.world.time)
     private fun nominate() {
         invalidateArcadePreparation()
         cancelPowerShot()
@@ -1695,7 +1747,8 @@ class BilliardActivity : ThemedActivity() {
         modalCount++; decisionClock.pause(); audio.pause()
         dialog.setOnDismissListener {
             modalCount=(modalCount-1).coerceAtLeast(0); lastFrame=0
-            if(modalCount==0 && resumed) { audio.resume(); schedulePrediction(liveEdit=true) }
+            // A dialog slows the loop down: resume the frame-rate loop at once.
+            if(modalCount==0 && resumed) { audio.resume(); schedulePrediction(liveEdit=true); startTick() }
         }
         dialog.followImmersiveMode(); dialog.show()
         // All billiards dialogs share the same glass treatment, including rules and results.

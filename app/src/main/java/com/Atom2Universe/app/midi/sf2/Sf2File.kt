@@ -1,16 +1,17 @@
 package com.Atom2Universe.app.midi.sf2
 
 import java.io.Closeable
+import java.nio.ShortBuffer
+import java.util.Arrays
 import java.util.Locale
 
 /**
  * Represents a fully parsed SF2 (SoundFont 2) file.
  * Contains sample data, presets, and all metadata needed for synthesis.
  *
- * Supports multiple sample storage modes:
- * - In-memory ShortArray (default, fast)
- * - Memory-mapped file (for very large SF2 files)
- * - Hybrid (loaded samples in RAM, fallback to mmap)
+ * Supports two sample storage modes:
+ * - Memory-mapped file (every SoundFont loaded through Sf2FileCache)
+ * - In-memory ShortArray (Sf2Parser, tests)
  */
 class Sf2File(
     val name: String,                           // SoundFont name from INFO chunk
@@ -36,10 +37,27 @@ class Sf2File(
         sampleProvider = sampleProvider
     )
 
-    // Use provider if available, otherwise fall back to array
-    private val effectiveProvider: SampleDataProvider by lazy {
-        sampleProvider ?: ArraySampleProvider(sampleData)
+    // Échantillons lus 4 fois par échantillon et par voix dans le fil audio : accès direct au
+    // tableau en mémoire ou à la vue 16 bits de la projection du fichier (ni lazy, ni interface)
+    private val arraySamples: ShortArray? = if (sampleProvider == null) sampleData else null
+    private val mappedSamples: ShortBuffer? = (sampleProvider as? MemoryMappedSampleProvider)?.shortView()
+    private val directSampleCount: Long = mappedSamples?.capacity()?.toLong()
+        ?: arraySamples?.size?.toLong() ?: 0L
+    private val otherProvider: SampleDataProvider? =
+        if (mappedSamples == null && arraySamples == null) sampleProvider else null
+
+    // Presets triés par (banque, programme) : recherche par dichotomie, sans clé texte par note
+    private val presetKeys: LongArray
+    private val presetsByKey: Array<Sf2Preset>
+
+    init {
+        val sorted = presetMap.values.sortedBy { presetKey(it.bank, it.program) }
+        presetKeys = LongArray(sorted.size) { presetKey(sorted[it].bank, sorted[it].program) }
+        presetsByKey = sorted.toTypedArray()
     }
+
+    private fun presetKey(bank: Int, program: Int): Long =
+        (bank.toLong() shl 32) or (program.toLong() and 0xFFFFFFFFL)
 
     /**
      * Whether this SF2 file uses memory-mapped sample access
@@ -51,8 +69,17 @@ class Sf2File(
      * Returns null if not found.
      */
     fun getPreset(bank: Int, program: Int): Sf2Preset? {
-        val key = "$bank:$program"
-        return presetMap[key]
+        val index = Arrays.binarySearch(presetKeys, presetKey(bank, program))
+        return if (index >= 0) presetsByKey[index] else null
+    }
+
+    /**
+     * Adds to [out] the regions matching bank, program, key and velocity, without creating
+     * any list (fil audio). Returns true if at least one region was added.
+     */
+    fun collectRegions(bank: Int, program: Int, key: Int, velocity: Int, out: MutableList<Sf2Region>): Boolean {
+        val preset = getPreset(bank.coerceIn(0, 16383), program.coerceIn(0, 127)) ?: return false
+        return preset.collectMatchingRegions(key, velocity, out)
     }
 
     /**
@@ -120,10 +147,7 @@ class Sf2File(
         offset: Long = 0,
         length: Int = outputBuffer.size
     ): Int {
-        // Capture provider snapshot for thread-safe access
-        // This ensures sampleCount is consistent throughout the read operation
-        val provider = effectiveProvider
-        val totalSamples = provider.sampleCount
+        val totalSamples = sampleCount.toLong()
 
         val startIndex = (region.sampleStart + offset)
         val maxSamples = minOf(
@@ -138,8 +162,7 @@ class Sf2File(
         for (i in 0 until maxSamples) {
             val sampleIndex = startIndex + i
             if (sampleIndex >= 0 && sampleIndex < totalSamples) {
-                // Use provider's getSample for consistent access (works for both mmap and array)
-                outputBuffer[i] = provider.getSample(sampleIndex)
+                outputBuffer[i] = getSample(sampleIndex)
             } else {
                 outputBuffer[i] = 0f
             }
@@ -153,7 +176,15 @@ class Sf2File(
      * Uses the sample provider for memory-mapped or hybrid access.
      */
     fun getSample(index: Long): Float {
-        return effectiveProvider.getSample(index)
+        val mapped = mappedSamples
+        if (mapped != null) {
+            return if (index >= 0 && index < directSampleCount) mapped.get(index.toInt()) / 32768f else 0f
+        }
+        val array = arraySamples
+        if (array != null) {
+            return if (index >= 0 && index < directSampleCount) array[index.toInt()] / 32768f else 0f
+        }
+        return otherProvider?.getSample(index) ?: 0f
     }
 
     /**
@@ -197,7 +228,7 @@ class Sf2File(
      * Memory used by sample data in bytes
      */
     val memoryUsageBytes: Long
-        get() = effectiveProvider.memoryUsageBytes
+        get() = sampleProvider?.memoryUsageBytes ?: (sampleData.size.toLong() * 2)
 
     /**
      * Close any resources (memory-mapped files, etc.)

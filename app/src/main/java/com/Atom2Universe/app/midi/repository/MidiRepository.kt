@@ -1,8 +1,6 @@
 package com.Atom2Universe.app.midi.repository
 
 import android.content.Context
-import android.net.Uri
-import androidx.documentfile.provider.DocumentFile
 import com.Atom2Universe.app.midi.data.MidiDatabase
 import com.Atom2Universe.app.midi.data.MidiTrack
 import kotlinx.coroutines.Dispatchers
@@ -205,81 +203,5 @@ class MidiRepository(private val context: Context) {
         return withContext(Dispatchers.IO) {
             midiTrackDao.getTrackCount()
         }
-    }
-
-    /**
-     * Scanne un dossier MIDI et ajoute tous les fichiers trouvés
-     * @param folderUri URI du dossier à scanner
-     * @return Nombre de fichiers MIDI trouvés et ajoutés
-     */
-    suspend fun scanMidiFolder(folderUri: Uri): Int {
-        return withContext(Dispatchers.IO) {
-            val documentFile = DocumentFile.fromTreeUri(context, folderUri)
-                ?: return@withContext 0
-
-            val midiFiles = mutableListOf<MidiTrack>()
-            scanRecursive(documentFile, midiFiles)
-
-            if (midiFiles.isNotEmpty()) {
-                midiTrackDao.insertTracks(midiFiles)
-            }
-
-            midiFiles.size
-        }
-    }
-
-    /**
-     * Scan récursif d'un dossier pour trouver tous les fichiers MIDI
-     */
-    private fun scanRecursive(folder: DocumentFile, results: MutableList<MidiTrack>) {
-        folder.listFiles().forEach { file ->
-            when {
-                file.isDirectory -> scanRecursive(file, results)
-                file.isFile && isMidiFile(file.name) -> {
-                    parseMidiFile(file)?.let { results.add(it) }
-                }
-            }
-        }
-    }
-
-    /**
-     * Vérifie si un fichier est un fichier MIDI (.mid ou .midi)
-     */
-    private fun isMidiFile(name: String?): Boolean {
-        if (name == null) return false
-        val lower = name.lowercase()
-        return lower.endsWith(".mid") || lower.endsWith(".midi")
-    }
-
-    /**
-     * Parse un fichier MIDI et crée un MidiTrack
-     * Format attendu du nom: "Artist - Album - Title.mid"
-     */
-    private fun parseMidiFile(file: DocumentFile): MidiTrack? {
-        val uri = file.uri
-        val displayName = file.name ?: return null
-        val size = file.length()
-
-        // Retire l'extension (insensible à la casse)
-        val nameWithoutExt = displayName.replace(Regex("\\.midi?$", RegexOption.IGNORE_CASE), "")
-
-        // Parse le nom selon les patterns supportés
-        val parts = nameWithoutExt.split(" - ").map { it.trim() }.filter { it.isNotEmpty() }
-        val (artist, album, title) = when (parts.size) {
-            3 -> Triple(parts[0], parts[1], parts[2])
-            2 -> Triple(parts[0], parts[0], parts[1])
-            1 -> Triple("Unknown Artist", "Unknown Album", parts[0])
-            else -> Triple("Unknown Artist", "Unknown Album", nameWithoutExt)
-        }
-
-        return MidiTrack(
-            title = title,
-            artist = artist,
-            album = album,
-            filePath = uri.toString(),
-            duration = 0L, // TODO: Parse MIDI file pour obtenir durée réelle
-            dateAdded = System.currentTimeMillis(),
-            fileSize = size
-        )
     }
 }

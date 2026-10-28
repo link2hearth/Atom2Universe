@@ -28,15 +28,34 @@ class EarthMoonGLView(context: Context) : GLSurfaceView(context) {
     // Seuils de toucher en dp : en pixels bruts, ils rétrécissaient sur les écrans denses.
     private val density = resources.displayMetrics.density
 
+    private val pacer = com.Atom2Universe.app.science.GLFramePacer(this)
+
     init {
         setEGLContextClientVersion(2)
+        preserveEGLContextOnPause = true
         setRenderer(renderer)
-        renderMode = RENDERMODE_CONTINUOUSLY
+        renderMode = RENDERMODE_WHEN_DIRTY
+        renderer.pacer = pacer
+    }
+
+    /** Fil UI : un réglage a changé, redessiner (la lecture continue d'elle-même). */
+    fun requestFrame() = pacer.requestFrame()
+
+    override fun onResume() {
+        renderer.resetClock()
+        super.onResume()
+        pacer.resume()
+    }
+
+    override fun onPause() {
+        pacer.pause()
+        super.onPause()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(event)
         longPressDetector.onTouchEvent(event)
+        pacer.requestFrame()
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 prevX = event.x; prevY = event.y
@@ -80,13 +99,13 @@ class EarthMoonGLView(context: Context) : GLSurfaceView(context) {
         renderer.focusBody = idx
         renderer.cameraDistance = renderer.recommendedDistance(idx)
         renderer.onBodyTapped?.invoke(idx)
+        pacer.requestFrame()
     }
 
     // 0=Terre, 1=Lune
     private fun nearestBody(x: Float, y: Float, threshold: Float): Int {
-        val earthScreen = renderer.projectToScreen(0f, 0f, 0f)
-        val moonScreen  = renderer.projectToScreen(
-            renderer.moonWorldPos[0], renderer.moonWorldPos[1], renderer.moonWorldPos[2])
+        val earthScreen = renderer.projectBody(0)
+        val moonScreen  = renderer.projectBody(1)
         val dE = dist(x, y, earthScreen[0], earthScreen[1])
         val dM = dist(x, y, moonScreen[0],  moonScreen[1])
         return when {

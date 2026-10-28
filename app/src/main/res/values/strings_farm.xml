@@ -53,7 +53,7 @@
     <string name="farm_plot_description">Plot %1$d, %2$s. %3$s</string>
     <string name="farm_ready">Ready</string>
     <string name="farm_clear">Clear plot</string>
-    <string name="farm_clear_confirm">Remove this plant? The seed is only refunded if it has never been watered.</string>
+    <string name="farm_clear_confirm">Remove this plant? The seed only goes back to your bag if it has never been watered.</string>
     <string name="farm_use_crops">Vegetable garden</string>
     <string name="farm_use_orchard">Orchard</string>
     <string name="farm_welcome_new">Clear your first parcel. Buy seeds, plant, then water. Drag to explore; pinch to zoom.</string>
@@ -615,4 +615,13 @@
     <string name="farm_cookbook_show_favorites">Show bookmarked recipes</string>
     <string name="farm_cookbook_show_all">Show all recipes</string>
     <string name="farm_cookbook_no_favorites">No bookmarked recipe in this category. Add bookmarks from your cookbook or show all recipes.</string>
+    <string name="farm_produce_total">×%1$d</string>
+    <string name="farm_text_join">%1$s · %2$s</string>
+    <string name="farm_region_ready">%1$s 🚜</string>
+    <string name="farm_region_locked_line">🔒 %1$s</string>
+    <string name="farm_coins_per_hour_value">%1$.1f</string>
+    <string name="farm_step_less">−</string>
+    <string name="farm_step_more">+</string>
+    <string name="farm_quality_star">★</string>
+    <string name="farm_alert_mark">i</string>
 </resources>

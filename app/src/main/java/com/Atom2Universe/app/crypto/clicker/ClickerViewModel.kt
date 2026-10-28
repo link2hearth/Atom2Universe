@@ -99,8 +99,9 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private var autoSaveJob: Job? = null
-    private var heartbeatJob: Job? = null
     private var ticketCheckJob: Job? = null
+    /** Dernier tick de la boucle APS, en mémoire : sert à repérer un gel (Doze) sans relire le disque. */
+    private var lastLiveTickMs = 0L
 
     init {
         getApplication<Application>().getSharedPreferences("pending_reset_flags", android.content.Context.MODE_PRIVATE)
@@ -109,8 +110,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             .registerOnSharedPreferenceChangeListener(devOpsListener)
 
         viewModelScope.launch {
-            // Capturer lastOnline avant tout appel suspendu : le heartbeatJob démarre en
-            // parallèle et écraserait last_online_ms après son premier tick (1s).
+            // Capturer lastOnline avant tout appel suspendu : la boucle de jeu démarre en
+            // parallèle et écraserait last_online_ms à sa première sauvegarde.
             val lastOnline = offlineRepo.load()
             val loaded = repository.load().copy(factoryCounts = factoryRepo.getAllCounts())
 
@@ -190,19 +191,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             offlineRepo.save(System.currentTimeMillis())
         }
 
-        // Heartbeat toutes les 1s pour un timestamp hors-ligne précis
-        heartbeatJob = viewModelScope.launch {
-            while (isActive) {
-                delay(1_000L)
-                offlineRepo.save(System.currentTimeMillis())
-            }
-        }
-
+        lastLiveTickMs = System.currentTimeMillis()
         apsJob = viewModelScope.launch {
             var lastTickMs = System.currentTimeMillis()
             while (isActive) {
                 delay(100L)
                 val nowMs   = System.currentTimeMillis()
+                lastLiveTickMs = nowMs
                 // Plafonné à 2s pour éviter de créditer des heures d'un coup après un
                 // gel Doze — les gains hors-ligne longs passent par resumeOfflineGains().
                 val deltaMs = (nowMs - lastTickMs).coerceIn(0L, 2_000L)
@@ -252,6 +247,9 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                 delay(5_000L)
                 repository.save(_state.value)
                 persistStats()
+                // Horodatage hors-ligne écrit avec la partie (au lieu de chaque seconde) : après
+                // un arrêt brutal, le gain hors-ligne repart de l'état réellement sauvegardé.
+                offlineRepo.save(System.currentTimeMillis())
             }
         }
 
@@ -341,7 +339,6 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun stopGameLoop() {
         apsJob?.cancel();           apsJob           = null
         autoSaveJob?.cancel();      autoSaveJob      = null
-        heartbeatJob?.cancel();     heartbeatJob     = null
         ticketCheckJob?.cancel();   ticketCheckJob   = null
 
         offlineRepo.save(System.currentTimeMillis())
@@ -357,14 +354,15 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // Appelé depuis onResume() pour couvrir le cas écran-off → écran-on sans onStop().
-    // Si les coroutines étaient gelées (Doze), le heartbeat n'a pas mis à jour
-    // last_online_ms ; on détecte le gap et on crédite les APS hors-ligne ici.
-    // Si startGameLoop() a déjà tourné (via onStart()), il a sauvé un nouveau
-    // timestamp → elapsedMs ≈ 0 → on ne fait rien.
+    // Si les coroutines étaient gelées (Doze), la boucle APS n'a pas tourné ; on détecte
+    // le trou et on crédite les APS hors-ligne ici. Boucle lancée : le trou se mesure depuis
+    // son dernier tick en mémoire (le fichier n'est réécrit que toutes les 5 s). Si
+    // startGameLoop() vient de tourner (via onStart()), elapsedMs ≈ 0 → on ne fait rien.
     fun resumeOfflineGains() {
         if (!initCompleted) return
         val now        = System.currentTimeMillis()
-        val lastOnline = offlineRepo.load()
+        val loopRunning = apsJob?.isActive == true
+        val lastOnline = if (loopRunning) lastLiveTickMs else offlineRepo.load()
         val elapsedMs  = if (lastOnline > 0L) now - lastOnline else 0L
         if (elapsedMs <= 5_000L) return
         val s       = _state.value
@@ -377,6 +375,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             )
             stats = stats.copy(lifetimeApsAtoms = stats.lifetimeApsAtoms.add(gained))
         }
+        if (loopRunning) lastLiveTickMs = now
         offlineRepo.save(now)
     }
 

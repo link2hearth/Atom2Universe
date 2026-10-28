@@ -39,11 +39,23 @@ class GearPanelFormatTest {
         "trebuchet_gear_panel_ratio_value",
         "trebuchet_gear_panel_ms",
         "trebuchet_gear_panel_count",
-        "trebuchet_gear_panel_litres"
+        "trebuchet_gear_panel_litres",
+        // Ceux du trébuchet, nourris par `ValueText.of(Float)` ou en direct.
+        "trebuchet_specs_kg",
+        "trebuchet_value_m1",
+        "trebuchet_value_m2",
+        "trebuchet_value_ratio"
     )
 
     /** Les compteurs, qui sont de vrais entiers : ceux-là veulent bien `%d`. */
-    private val intFormats = listOf("trebuchet_gear_panel_wheels")
+    private val intFormats = listOf(
+        "trebuchet_gear_panel_wheels",
+        "trebuchet_specs_kj",
+        "trebuchet_value_kg",
+        "trebuchet_value_deg",
+        "trebuchet_wind_speed",
+        "trebuchet_distance_mark"
+    )
 
     private fun stringsFile(locale: String): File {
         val name = if (locale.isEmpty()) "values" else "values-$locale"
@@ -102,6 +114,14 @@ class GearPanelFormatTest {
             String.format(Locale.ROOT, span!!, "Moulin", 5f)
         } catch (e: Exception) {
             fail("« trebuchet_gear_panel_span » refuse un nom et un Float : $e")
+        }
+        // L'heure tenue au doigt : deux entiers, une flèche, un Float — voir TimeScrub.draw.
+        val scrub = value(xml, "trebuchet_time_scrub")
+        assertNotNull("« trebuchet_time_scrub » manque", scrub)
+        try {
+            String.format(Locale.ROOT, scrub!!, 7, 5, "▶", 1.5f)
+        } catch (e: Exception) {
+            fail("« trebuchet_time_scrub » refuse deux Int, un texte et un Float : $e")
         }
     }
 

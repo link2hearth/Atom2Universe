@@ -141,15 +141,19 @@ internal class ToyboxShader {
 internal data class MeshLayer(val firstVertex: Int, var vertexCount: Int, val priority: Int)
 
 internal class ColoredMesh private constructor(
-    private val vertexBuffer: java.nio.FloatBuffer,
-    private val vertexCount: Int,
+    // Copie processeur relâchée dès le téléversement : le GPU garde la sienne.
+    private var vertexBuffer: java.nio.FloatBuffer?,
+    val vertexCount: Int,
     private val layers: List<MeshLayer>
 ) {
     private var vao = 0
     private var vbo = 0
     private val mvp = FloatArray(16)
+    // La plupart des maillages n'ont qu'une couche sans décalage : rien à régler à chaque dessin.
+    private val needsPolygonOffset = layers.any { it.priority > 0 }
 
     fun upload() {
+        val vertexBuffer = vertexBuffer ?: return
         val handles = IntArray(1)
         GLES30.glGenVertexArrays(1, handles, 0)
         vao = handles[0]
@@ -171,6 +175,7 @@ internal class ColoredMesh private constructor(
         GLES30.glEnableVertexAttribArray(2)
         GLES30.glVertexAttribPointer(2, 4, GLES30.GL_FLOAT, false, stride, 6 * Float.SIZE_BYTES)
         GLES30.glBindVertexArray(0)
+        this.vertexBuffer = null
     }
 
     fun draw(shader: ToyboxShader, viewProjection: FloatArray, model: FloatArray) {
@@ -183,6 +188,10 @@ internal class ColoredMesh private constructor(
         GLES30.glUniformMatrix4fv(mvpLocation, 1, false, mvp, 0)
         GLES30.glUniformMatrix4fv(modelLocation, 1, false, model, 0)
         GLES30.glBindVertexArray(vao)
+        if (!needsPolygonOffset) {
+            for (layer in layers) GLES30.glDrawArrays(GLES30.GL_TRIANGLES, layer.firstVertex, layer.vertexCount)
+            return
+        }
         try {
             for (layer in layers) {
                 if (layer.priority > 0) {
@@ -220,7 +229,9 @@ internal class ColoredMesh private constructor(
 }
 
 internal class MeshBuilder(surfacePriorityStart: Int = 1) {
-    private val values = ArrayList<Float>()
+    // Tableau primitif qui grandit : une ArrayList<Float> mettait chaque nombre en boîte.
+    private var values = FloatArray(INITIAL_FLOATS)
+    private var size = 0
     private var placement: DecorPlacement? = null
     private var priority = 0
     private var nextSurfacePriority = surfacePriorityStart.coerceAtLeast(1)
@@ -248,7 +259,7 @@ internal class MeshBuilder(surfacePriorityStart: Int = 1) {
         if (previous != null && previous.priority == priority) {
             previous.vertexCount += 3
         } else {
-            layerRuns += MeshLayer(values.size / 10, 3, priority)
+            layerRuns += MeshLayer(size / 10, 3, priority)
         }
         val normal = cross(b - a, c - a).normalized()
         vertex(a, normal, colorA)
@@ -382,14 +393,15 @@ internal class MeshBuilder(surfacePriorityStart: Int = 1) {
 
     fun build(): ColoredMesh {
         // Batch by layer without changing the vertex format used by every existing mesh.
-        val sorted = FloatArray(values.size)
+        val sorted = FloatArray(size)
         val layers = ArrayList<MeshLayer>()
         var offset = 0
         for ((priority, runs) in layerRuns.groupBy { it.priority }.toSortedMap()) {
             val start = offset
             for (run in runs) {
-                for (i in run.firstVertex * 10 until (run.firstVertex + run.vertexCount) * 10)
-                    sorted[offset++] = values[i]
+                val count = run.vertexCount * 10
+                System.arraycopy(values, run.firstVertex * 10, sorted, offset, count)
+                offset += count
             }
             layers += MeshLayer(start / 10, (offset - start) / 10, priority)
         }
@@ -397,19 +409,23 @@ internal class MeshBuilder(surfacePriorityStart: Int = 1) {
     }
 
     private fun vertex(position: Vec3, normal: Vec3, color: FloatArray) {
+        if (size + 10 > values.size) values = values.copyOf(values.size * 2)
+        val v = values
+        var i = size
         val p = placement
         if (p == null) {
-            values += position.x; values += position.y; values += position.z
-            values += normal.x; values += normal.y; values += normal.z
+            v[i++] = position.x; v[i++] = position.y; v[i++] = position.z
+            v[i++] = normal.x; v[i++] = normal.y; v[i++] = normal.z
         } else {
-            values += p.x + p.rotatedX(position.x, position.z) * p.scale
-            values += p.y + position.y * p.scale
-            values += p.z + p.rotatedZ(position.x, position.z) * p.scale
-            values += p.rotatedX(normal.x, normal.z)
-            values += normal.y
-            values += p.rotatedZ(normal.x, normal.z)
+            v[i++] = p.x + p.rotatedX(position.x, position.z) * p.scale
+            v[i++] = p.y + position.y * p.scale
+            v[i++] = p.z + p.rotatedZ(position.x, position.z) * p.scale
+            v[i++] = p.rotatedX(normal.x, normal.z)
+            v[i++] = normal.y
+            v[i++] = p.rotatedZ(normal.x, normal.z)
         }
-        values += color[0]; values += color[1]; values += color[2]; values += color.getOrElse(3) { 1f }
+        v[i++] = color[0]; v[i++] = color[1]; v[i++] = color[2]; v[i++] = color.getOrElse(3) { 1f }
+        size = i
     }
 
     private fun cross(a: Vec3, b: Vec3) = Vec3(
@@ -417,6 +433,10 @@ internal class MeshBuilder(surfacePriorityStart: Int = 1) {
         a.z * b.x - a.x * b.z,
         a.x * b.y - a.y * b.x
     )
+
+    private companion object {
+        const val INITIAL_FLOATS = 4096
+    }
 }
 
 internal object PrototypeMeshFactory {

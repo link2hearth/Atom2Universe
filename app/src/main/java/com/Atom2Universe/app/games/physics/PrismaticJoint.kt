@@ -104,7 +104,7 @@ class PrismaticJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         motorForce = 0f
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         motorForce = 0f
         posTransverseImpulse = 0f
@@ -155,6 +155,10 @@ class PrismaticJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         posScale = 0.35f * invDt
         lastInvDt = invDt
 
+        transverseImpulse *= dtRatio
+        angleImpulse *= dtRatio
+        motorImpulse *= dtRatio
+        limitImpulse *= dtRatio
         applyRealPerp(transverseImpulse)
         a.omega -= a.invI * angleImpulse
         b.omega += b.invI * angleImpulse

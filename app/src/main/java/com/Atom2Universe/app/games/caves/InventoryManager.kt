@@ -51,6 +51,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         hud.setInventoryOpen(true)
         activity.invOverlay.visibility = View.VISIBLE
         ui.animateOpen()
+        // Jeu en pause derrière le panneau : la scène n'a plus à être redessinée 30 fois par seconde.
+        activity.setSceneFrozen(true)
     }
 
     internal fun showStoragePage(content: View,onClose: () -> Unit): List<CaveItemTile> {
@@ -582,6 +584,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         hud.setInventoryOpen(false)
         hud.updateHotbarUI(renderer.hotbar, renderer.selectedSlot)
         renderer.gamePaused = false
+        activity.setSceneFrozen(false)
     }
 
     fun refreshPagedAdapter() {

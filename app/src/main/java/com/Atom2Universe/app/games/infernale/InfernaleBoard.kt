@@ -52,6 +52,9 @@ class Plateau(
         /** Delai minimal entre deux basculements d'un interrupteur, en secondes. */
         const val REBOND = 0.6f
 
+        /** Altitude sous laquelle un corps est tombe du bord du sol, en metres. */
+        const val CHUTE = -10f
+
         /** Categorie de tout ce qui bouge : billes, dominos, planches de bascule. */
         const val MOBILE = 2
 
@@ -129,12 +132,9 @@ class Plateau(
             }
         }
         souffles.clear()
-        // Un ventilateur commande par une plaque ne souffle que si l'une de ses plaques est
-        // allumee (interrupteur en marche, ou bouton enfonce).
-        for ((rang, p) in pieces.withIndex()) {
+        majEteints()
+        for (p in pieces) {
             val jet = p.souffle ?: continue
-            p.eteint = liens.any { it.cible == rang } &&
-                liens.none { it.cible == rang && pieces.getOrNull(it.plaque)?.actif == true }
             if (!p.eteint) souffles.add(jet)
         }
         if (souffles.isEmpty()) return
@@ -146,13 +146,45 @@ class Plateau(
         }
     }
 
+    /**
+     * Un ventilateur commande par une plaque ne souffle que si l'une de ses plaques est
+     * allumee (interrupteur en marche, ou bouton enfonce). Refait a chaque image, et par la
+     * partie des que les liens changent : en montage aussi, l'helice doit dire qu'elle attend.
+     */
+    fun majEteints() {
+        for ((rang, p) in pieces.withIndex()) {
+            if (p.souffle == null) continue
+            p.eteint = liens.any { it.cible == rang } &&
+                liens.none { it.cible == rang && pieces.getOrNull(it.plaque)?.actif == true }
+        }
+    }
+
     /** Une image de simulation. */
     fun avancer(dt: Float) {
         temps += dt
         souffler()
         monde.stepFrame(dt)
         crever()
+        tomber()
         for (p in pieces) if (p.eclatAge >= 0f) p.eclatAge += dt
+    }
+
+    /**
+     * Ce qui est tombe du bord du sol quitte le monde. Sans ca, une bille partie au-dela du
+     * sol tombait sans fin, le monde ne s'arretait jamais et la machine tournait a pleine
+     * cadence pour rien. Arreter remonte tout depuis les poses : le montage n'y perd rien.
+     */
+    private fun tomber() {
+        val corps = monde.bodies
+        var i = corps.size - 1
+        while (i >= 0) {
+            val c = corps[i]
+            if (c.inWorld && !c.immovable && c.y < CHUTE) {
+                monde.remove(c)
+                c.inWorld = false
+            }
+            i--
+        }
     }
 
     /**
@@ -236,6 +268,15 @@ class Plateau(
 
     /** Vrai quand plus rien ne bouge assez pour que la suite change quoi que ce soit. */
     fun immobile(): Boolean = monde.isAtRest()
+
+    /**
+     * Vrai quand tout ce qui bouge dort. Plus strict que [immobile] : un dormeur n'avance
+     * plus du tout, donc cesser de simuler ne change rien a la suite.
+     */
+    fun endormi(): Boolean {
+        for (c in monde.bodies) if (c.inWorld && !c.immovable && !c.sleeping) return false
+        return true
+    }
 
     /**
      * Fait tourner la machine pendant [duree] secondes, ou jusqu'à ce que [jusqua] soit

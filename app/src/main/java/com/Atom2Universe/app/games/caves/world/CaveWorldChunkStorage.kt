@@ -15,9 +15,19 @@ class CaveWorldChunkStorage(private val worldDir: File) {
     private val dirty=hashMapOf<String,Long>()
     private var revision=0L
     private fun key(cx: Int,cy: Int,cz: Int) = "${cx}_${cy}_${cz}"
-    private fun load(key: String): MutableEdit = cache.getOrPut(key) {
+    /**
+     * Le disque (SQLite, anciens fichiers) se lit hors du verrou : un fil de génération qui charge
+     * un chunk ne bloque plus le fil GL qui casse un bloc. Deux lectures du même chunk au même
+     * moment donnent la même chose ; la première rangée dans le cache gagne.
+     */
+    private fun load(key: String): MutableEdit {
+        synchronized(this) { cache[key]?.let { return it } }
+        val fromDisk=read(key)
+        synchronized(this) { return cache.getOrPut(key) { fromDisk } }
+    }
+    private fun read(key: String): MutableEdit {
         val saved=reader.chunk(key)
-        if(saved!=null) MutableEdit(saved.blocks.toMutableMap(),saved.meta.toMutableMap()) else {
+        return if(saved!=null) MutableEdit(saved.blocks.toMutableMap(),saved.meta.toMutableMap()) else {
             val blocks=mutableMapOf<Int,Short>(); val meta=mutableMapOf<Int,Byte>()
             for(extension in listOf("diff","meta")) {
                 val file=File(worldDir,"chunks/$key.$extension")
@@ -32,13 +42,23 @@ class CaveWorldChunkStorage(private val worldDir: File) {
             MutableEdit(blocks,meta)
         }
     }
-    @Synchronized fun applyDiff(chunk: Chunk) { load(key(chunk.cx,chunk.cy,chunk.cz)).blocks.forEach { (i,v)->chunk.blocks[i]=v } }
-    @Synchronized fun applyMetaDiff(chunk: Chunk) { load(key(chunk.cx,chunk.cy,chunk.cz)).meta.forEach { (i,v)->chunk.meta[i]=v } }
-    @Synchronized fun recordChange(cx: Int,cy: Int,cz: Int,localIndex: Int,type: Short) {
-        val k=key(cx,cy,cz);load(k).blocks[localIndex]=type;dirty[k]=++revision
+    fun applyDiff(chunk: Chunk) {
+        val edit=load(key(chunk.cx,chunk.cy,chunk.cz))
+        synchronized(this) { edit.blocks.forEach { (i,v)->chunk.blocks[i]=v } }
     }
-    @Synchronized fun recordMetaChange(cx: Int,cy: Int,cz: Int,localIndex: Int,value: Byte) {
-        val k=key(cx,cy,cz);load(k).meta[localIndex]=value;dirty[k]=++revision
+    fun applyMetaDiff(chunk: Chunk) {
+        val edit=load(key(chunk.cx,chunk.cy,chunk.cz))
+        synchronized(this) { edit.meta.forEach { (i,v)->chunk.meta[i]=v } }
+    }
+    // Sous le verrou, l'entrée est reprise du cache (ou y revient si elle en est sortie entre-temps) :
+    // une modification ne doit jamais tomber dans une copie que snapshot() ne verrait pas.
+    fun recordChange(cx: Int,cy: Int,cz: Int,localIndex: Int,type: Short) {
+        val k=key(cx,cy,cz);val loaded=load(k)
+        synchronized(this) { cache.getOrPut(k) { loaded }.blocks[localIndex]=type;dirty[k]=++revision }
+    }
+    fun recordMetaChange(cx: Int,cy: Int,cz: Int,localIndex: Int,value: Byte) {
+        val k=key(cx,cy,cz);val loaded=load(k)
+        synchronized(this) { cache.getOrPut(k) { loaded }.meta[localIndex]=value;dirty[k]=++revision }
     }
     // Keep changes until a committed snapshot acknowledges this precise revision.
     @Synchronized internal fun snapshot(): Map<String,CaveCheckpoint.Edit> = dirty.mapValues { (k,v) ->

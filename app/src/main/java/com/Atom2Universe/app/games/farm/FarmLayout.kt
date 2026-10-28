@@ -123,7 +123,9 @@ object FarmLayout {
     /** The gate stands in the second fence segment of the front side, where FarmScenery draws it. */
     fun gateX(parcel: Int): Float = lands[parcel].let { it.x + it.width / it.columns * 1.5f }
     fun gateY(parcel: Int): Float = lands[parcel].let { it.y + it.height + 14f }
-    fun cells(parcel: Int): IntRange = offsets[parcel] until offsets[parcel + 1]
+    /** Built once: the map asks for every visible parcel's cells on every frame. */
+    private val cellRanges = List(lands.size) { offsets[it] until offsets[it + 1] }
+    fun cells(parcel: Int): IntRange = cellRanges[parcel]
     fun parcelOf(cell: Int): Int {
         require(cell in 0 until cellCount)
         return lands.indices.first { cell < offsets[it + 1] }

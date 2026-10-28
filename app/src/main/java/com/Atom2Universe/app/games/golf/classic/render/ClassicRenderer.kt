@@ -10,24 +10,57 @@ import com.Atom2Universe.app.games.golf.classic.core.GolfLie
 import com.Atom2Universe.app.games.golf.classic.core.ShotPreview
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.*
 
+/**
+ * With [meshInBackground], [startBuilding] meshes the scene on a worker thread (seconds for a hole) and
+ * the drawing thread only uploads it; otherwise [onSurfaceCreated] meshes it itself (menu snapshots).
+ */
 internal class ClassicRenderer(private val hole: ClassicHole, private val assets: android.content.res.AssetManager,
-    private val terrainTextures: Boolean = true) : GLSurfaceView.Renderer {
+    private val terrainTextures: Boolean = true, private val meshInBackground: Boolean = false) : GLSurfaceView.Renderer {
     var onReady: (() -> Unit)? = null
+    /** The context was lost with the scene: it is being meshed again. */
+    var onLoading: (() -> Unit)? = null
+    /** Called on the worker thread once the scene is meshed, ready to upload. */
+    var onBuilt: (() -> Unit)? = null
     @Volatile var frame = ClassicFrame(hole.tee, 0f, false, ShotPreview.NONE)
     private val landscape=ClassicLandscape(hole)
-    private val terrain by lazy { landscape.terrain() }
+    /** What takes seconds to mesh. Built on the worker thread, its processor copies let go once uploaded. */
+    private class Scene(val terrain:GroundMesh,val scenery:List<ClassicMesh>,val festive:ClassicFestiveDecor,
+        val blades:ClassicMesh,val miniScene:MiniScene?,val archipelago:ArchipelagoScenery?) {
+        val meshes=(scenery+festive.scenery+festive.animatedMeshes+blades+listOfNotNull(archipelago?.launch)+
+            (miniScene?.meshes?:emptyList())).distinct()
+        init { terrain.prepare() }
+    }
+    @Volatile private var built:Scene?=null
+    private val building=java.util.concurrent.atomic.AtomicBoolean(false)
+    /** The scene on the GPU (drawing thread only). */
+    private var scene:Scene?=null
     private val groundShader=GroundShader(hole.highlands,hole.snowy,hole.islands.isNotEmpty())
     private val grass=ClassicGrass(hole)
     private val lightShader=BoardLightShader()
     private var boardLights=FloatArray(0)
     private var lightsKey:List<Any>?=null
-    private val scenery by lazy { landscape.scenery() }
-    private val festive by lazy { ClassicFestiveDecor(hole) }
-    private val blades by lazy { landscape.blades() }
+    // The slope board reads 81 heights: rebuilt only when the ball, the guide or the aerial camera moves.
+    private var board:SlopeBoard?=null
+    private var boardPutt=false
+    private var boardBall:GolfPoint?=null; private var boardEnd:GolfPoint?=null
+    private var boardX=0f; private var boardZ=0f; private var boardDistance=0f; private var boardBase=0f
+    // The guide's lines are laid out once per guide, in a buffer of their own.
+    private var previewBuffer=0
+    private var previewShot:ShotPreview?=null
+    private var previewAiming=false; private var previewPutting=false
+    private val previewParts=IntArray(4)
+    private val previewData=ByteBuffer.allocateDirect((2048*3+64)*6*4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+    private val ornament=ClassicFestiveDecor.Ornament { mesh,x,y,z,yaw,scale ->
+        identity(); Matrix.translateM(model,0,x,y,z)
+        Matrix.rotateM(model,0,yaw*180f/PI.toFloat(),0f,1f,0f)
+        Matrix.scaleM(model,0,scale,scale,scale)
+        draw(mesh,0f)
+    }
     private val ball by lazy { MeshBuilder().apply { sphere(0f,0f,0f,1f,
         if(hole.snowy)C(1f,.36f,.06f) else C(1f,.99f,.92f),14,8) }.build() }
     private val shadow by lazy { MeshBuilder().apply { disc(0f,0f,0f,1f,1f,C(.22f,.39f,.18f)) }.build() }
@@ -67,11 +100,8 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
             quad(a,b,c,d,colour); quad(d,c,b,a,colour)
         }.build()
     } }
-    /** Mini-golf: the obstacles that move are drawn from the game's clock. */
-    private val miniScene by lazy { if(hole.mini!=null) MiniScene(hole) else null }
-    private val meshes get() = scenery+festive.scenery+festive.animatedMeshes+
-        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves+
-        listOfNotNull(landscape.archipelago?.launch)+(miniScene?.meshes?:emptyList())
+    /** Small models, quick to make on the drawing thread; they keep their copies for a lost context. */
+    private val props get() = listOf(ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves
     // A few leaves carried by the wind a couple of metres above the turf; each waits a while before the next one.
     private val leafX=FloatArray(LEAVES); private val leafY=FloatArray(LEAVES); private val leafZ=FloatArray(LEAVES)
     private val leafWait=FloatArray(LEAVES) { 1f+it*2.5f }
@@ -107,8 +137,31 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
     private var wasTargetView=false; private var wasSliding=false
     private var previousTime=0L
     private var time=0f
-    private var released=false
+    @Volatile private var released=false
     private companion object { const val LEAVES=3 }
+
+    /** Meshes the scene on a worker thread; [onBuilt] says when it is ready. Does nothing if it is under way. */
+    fun startBuilding() {
+        if(!building.compareAndSet(false,true)) return
+        Thread({
+            if(!released) {
+                built=meshScene()
+                building.set(false)
+                onBuilt?.invoke()
+            }
+        },"classic-scene").apply { isDaemon=true }.start()
+    }
+
+    private fun meshScene()=Scene(landscape.terrain(),landscape.scenery(),ClassicFestiveDecor(hole),landscape.blades(),
+        if(hole.mini!=null) MiniScene(hole) else null,landscape.archipelago)
+
+    private fun upload(s:Scene) {
+        s.meshes.forEach { it.upload(keep=false) }
+        s.terrain.upload(keep=false)
+        GL.glClearColor(.64f,.85f,.93f,1f)
+        scene=s
+        onReady?.invoke()
+    }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         released=false
@@ -123,19 +176,22 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
         skyRayLoc=GL.glGetUniformLocation(program,"uSkyRays")
         highlandsLoc=GL.glGetUniformLocation(program,"uHighlands")
         snowLoc=GL.glGetUniformLocation(program,"uSnow")
-        meshes.forEach { it.upload() }
-        terrain.upload(); groundShader.create(if (terrainTextures && hole.mini == null) assets else null); lightShader.create()
+        props.forEach { it.upload() }
+        groundShader.create(if (terrainTextures && hole.mini == null) assets else null); lightShader.create()
         grass.create()
         golfer.create()
-        val ids=IntArray(1)
-        GL.glGenBuffers(1,ids,0); dynamicBuffer=ids[0]
+        val ids=IntArray(2)
+        GL.glGenBuffers(2,ids,0); dynamicBuffer=ids[0]; previewBuffer=ids[1]; previewShot=null
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER,dynamicBuffer)
         GL.glBufferData(GL.GL_ARRAY_BUFFER,2048*6*4,null,GL.GL_DYNAMIC_DRAW)
         GL.glEnable(GL.GL_DEPTH_TEST)
         GL.glDisable(GL.GL_DITHER)
-        GL.glClearColor(.64f,.85f,.93f,1f)
+        GL.glClearColor(0f,0f,0f,1f)
         previousTime=0L
-        onReady?.invoke()
+        // A new context after a loss: the scene's GPU copy went with the old one and its processor copy is gone.
+        if(scene!=null) { scene=null; built=null; onLoading?.invoke(); startBuilding() }
+        else if(!meshInBackground && built==null) built=meshScene()
+        built?.let { upload(it) }
     }
 
     override fun onSurfaceChanged(gl: GL10?, width:Int,height:Int) {
@@ -148,8 +204,14 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
 
     override fun onDrawFrame(gl: GL10?) {
         if(released) return
+        val s=scene ?: built?.also { upload(it) } ?: run {
+            if(!building.get()) startBuilding()
+            GL.glClear(GL.GL_COLOR_BUFFER_BIT or GL.GL_DEPTH_BUFFER_BIT)
+            return
+        }
         val now=System.nanoTime()
-        val dt=if(previousTime==0L) 1f/60 else ((now-previousTime)*1e-9f).coerceIn(.001f,.05f)
+        // Up to an eighth of a second: the idle pace draws a dozen images a second and the scenery keeps its speed.
+        val dt=if(previousTime==0L) 1f/60 else ((now-previousTime)*1e-9f).coerceIn(.001f,.125f)
         previousTime=now; time+=dt
         val f=frame
         f.replayTime?.let { time=it }
@@ -174,9 +236,9 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
         // from above, around what the camera looks at, for any shot; otherwise from the ball to the hole for a putt.
         val putting=f.club==GolfClub.PUTTER
         val shownBoard=if(f.flying||f.preview==ShotPreview.NONE||!f.grid) null else when {
-            f.overview!=null -> SlopeBoard.around(hole,lookX,lookZ,sqrt((lookX-eyeX).pow(2)+(lookY-eyeY).pow(2)+(lookZ-eyeZ).pow(2)),
-                if(putting) hole.heightAt(f.ball.x,f.ball.z) else null)
-            putting -> SlopeBoard.forPutt(hole,f.ball,f.preview.landing)
+            f.overview!=null -> aroundBoard(lookX,lookZ,sqrt((lookX-eyeX).pow(2)+(lookY-eyeY).pow(2)+(lookZ-eyeZ).pow(2)),
+                if(putting) hole.heightAt(f.ball.x,f.ball.z) else Float.NaN)
+            putting -> puttBoard(f.ball,f.preview.landing)
             else -> null
         }
         // Its squares follow the zoom: sized from the distance to the middle of the window.
@@ -184,11 +246,11 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
             val mx=shownBoard.middleX; val mz=shownBoard.middleZ
             SlopeBoard.cell(sqrt((mx-eyeX).pow(2)+(hole.heightAt(mx,mz)-eyeY).pow(2)+(mz-eyeZ).pow(2)),shownBoard)
         } else 1f to 1f
-        groundShader.draw(terrain,viewProjection,eyeX,eyeY,eyeZ,time,f.overview!=null,shownBoard,cell,fineWeight,
+        groundShader.draw(s.terrain,viewProjection,eyeX,eyeY,eyeZ,time,f.overview!=null,shownBoard,cell,fineWeight,
             hole.cup.x,hole.cup.z,2f*tan(Math.toRadians(25.0).toFloat())/screenHeight,screenHeight/900f)
         GL.glUseProgram(program)
-        identity(); scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
-        landscape.archipelago?.let { coast ->
+        identity(); s.scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
+        s.archipelago?.let { coast ->
             val berth=coast.mooringFor(if(f.flying) golferAddress else playerFrame.ball)
             identity()
             Matrix.translateM(model,0,berth.boat.x,berth.boat.y+.06f*sin(time*1.7f),berth.boat.z)
@@ -197,20 +259,15 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
             draw(coast.launch,.04f)
         }
         identity()
-        festive.scenery.forEach { if(it.visible(viewProjection)) draw(it,.04f) }
-        festive.animate(time,P(eyeX,eyeY,eyeZ)) { mesh,position,yaw,scale ->
-            identity(); Matrix.translateM(model,0,position.x,position.y,position.z)
-            Matrix.rotateM(model,0,yaw*180f/PI.toFloat(),0f,1f,0f)
-            Matrix.scaleM(model,0,scale,scale,scale)
-            draw(mesh,0f)
-        }
+        s.festive.scenery.forEach { if(it.visible(viewProjection)) draw(it,.04f) }
+        s.festive.animate(time,eyeX,eyeZ,viewProjection,ornament)
         identity()
         if(!hole.highlands && hole.islands.isEmpty() && hole.mini==null) {
             Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-3.0f)
             Matrix.rotateM(model,0,time*12f,0f,0f,1f)
-            draw(blades,.05f)
+            draw(s.blades,.05f)
         }
-        miniScene?.let { drawObstacles(it,f.clock) }
+        s.miniScene?.let { drawObstacles(it,f.clock) }
         if(hole.mini==null) wildlife()
         if(f.overview==null && hole.highlands && !hole.snowy && f.replayTime==null) drawLeaves(f,dt)
         if(hole.mini==null) grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
@@ -497,11 +554,11 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
         previousFlying=f.flying
     }
 
-    private fun putPoint(x:Float,y:Float,z:Float,r:Float,g:Float,b:Float) {
-        dynamic.put(x).put(y).put(z).put(r).put(g).put(b)
+    private fun putPoint(x:Float,y:Float,z:Float,r:Float,g:Float,b:Float,into:FloatBuffer=dynamic) {
+        into.put(x).put(y).put(z).put(r).put(g).put(b)
     }
     /** Dashed polyline; [lift] raises points that lie on the turf above the terrain mesh. */
-    private fun dashes(points:List<GolfPoint>,dash:Float,lift:Float,r:Float,g:Float,b:Float):Int {
+    private fun dashes(points:List<GolfPoint>,dash:Float,lift:Float,r:Float,g:Float,b:Float,into:FloatBuffer):Int {
         var travelled=0f
         var count=0
         for(i in 1 until points.size) {
@@ -514,8 +571,8 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
                 val part=min(length-along,(boundary-travelled).coerceAtLeast(.001f))
                 if((floor((travelled+.0001f)/dash).toInt() and 1)==0) {
                     val a=along/length; val c=(along+part)/length
-                    putPoint(p.x+(q.x-p.x)*a,p.y+(q.y-p.y)*a+lift,p.z+(q.z-p.z)*a,r,g,b)
-                    putPoint(p.x+(q.x-p.x)*c,p.y+(q.y-p.y)*c+lift,p.z+(q.z-p.z)*c,r,g,b)
+                    putPoint(p.x+(q.x-p.x)*a,p.y+(q.y-p.y)*a+lift,p.z+(q.z-p.z)*a,r,g,b,into)
+                    putPoint(p.x+(q.x-p.x)*c,p.y+(q.y-p.y)*c+lift,p.z+(q.z-p.z)*c,r,g,b,into)
                     count+=2
                 }
                 travelled+=part; along+=part
@@ -523,30 +580,48 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
         }
         return count
     }
-    private fun drawPreview(f:ClassicFrame) {
-        val shot=f.preview
-        val end=shot.landing ?: return
-        val putting=f.club==GolfClub.PUTTER
-        val bright=if(f.aiming) 1f else .82f
-        dynamic.clear()
-        drawDynamic(dashes(shot.flight,if(putting) (if(hole.mini!=null) .16f else .25f) else if(shot.carry<40f) .9f else 2.5f,.03f,bright,.95f*bright,.67f*bright),GL.GL_LINES)
+    /** The guide's arc, its ground track, the run and the landing ring, in that order, into [previewBuffer]. */
+    private fun layOutPreview(shot:ShotPreview,end:GolfPoint,putting:Boolean,aiming:Boolean) {
+        previewShot=shot; previewPutting=putting; previewAiming=aiming
+        val bright=if(aiming) 1f else .82f
+        val data=previewData
+        data.clear()
+        previewParts[0]=dashes(shot.flight,if(putting) (if(hole.mini!=null) .16f else .25f) else if(shot.carry<40f) .9f else 2.5f,.03f,bright,.95f*bright,.67f*bright,data)
         // Ground track of the arc: the line the shot follows on the turf, readable from any view.
         val track=shot.flight.map { GolfPoint(it.x,hole.heightAt(it.x,it.z),it.z) }
-        dynamic.clear()
-        drawDynamic(dashes(track,if(putting) (if(hole.mini!=null) .16f else .25f) else 1.2f,.05f,1f*bright,1f*bright,1f*bright),GL.GL_LINES)
-        if(shot.roll.size>1) {
-            dynamic.clear()
-            drawDynamic(dashes(shot.roll,.45f,.04f,.80f,.92f,.98f),GL.GL_LINES)
-        }
+        previewParts[1]=dashes(track,if(putting) (if(hole.mini!=null) .16f else .25f) else 1.2f,.05f,1f*bright,1f*bright,1f*bright,data)
+        previewParts[2]=if(shot.roll.size>1) dashes(shot.roll,.45f,.04f,.80f,.92f,.98f,data) else 0
         val r=if(putting) (if(hole.mini!=null) .1f else .22f) else (shot.carry*.02f).coerceIn(.8f,4.5f)
-        dynamic.clear()
         val red=shot.hazard
         for(i in 0..48) {
             val a=i*2f*PI.toFloat()/48f
             val x=end.x+cos(a)*r; val z=end.z+sin(a)*r
-            putPoint(x,hole.heightAt(x,z)+.05f,z,1f,if(red) .42f else .93f,if(red) .36f else .55f)
+            putPoint(x,hole.heightAt(x,z)+.05f,z,1f,if(red) .42f else .93f,if(red) .36f else .55f,data)
         }
-        drawDynamic(49,GL.GL_LINE_STRIP)
+        previewParts[3]=49
+        data.flip()
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER,previewBuffer)
+        GL.glBufferData(GL.GL_ARRAY_BUFFER,data.limit()*4,data,GL.GL_DYNAMIC_DRAW)
+    }
+
+    private fun drawPreview(f:ClassicFrame) {
+        val shot=f.preview
+        val end=shot.landing ?: return
+        val putting=f.club==GolfClub.PUTTER
+        if(shot!==previewShot||putting!=previewPutting||f.aiming!=previewAiming) layOutPreview(shot,end,putting,f.aiming)
+        identity(); uniforms(0f)
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER,previewBuffer)
+        GL.glEnableVertexAttribArray(0); GL.glEnableVertexAttribArray(1)
+        GL.glVertexAttribPointer(0,3,GL.GL_FLOAT,false,24,0)
+        GL.glVertexAttribPointer(1,3,GL.GL_FLOAT,false,24,12)
+        GL.glLineWidth(2f)
+        var first=0
+        for(part in 0..3) {
+            val count=previewParts[part]
+            if(count>0) GL.glDrawArrays(if(part==3) GL.GL_LINE_STRIP else GL.GL_LINES,first,count)
+            first+=count
+        }
+        val red=shot.hazard
         if(!putting) {
             val scale=max(1f,sqrt((end.x-eyeX).pow(2)+(end.y-eyeY).pow(2)+(end.z-eyeZ).pow(2))*.016f)
             identity(); Matrix.translateM(model,0,end.x,hole.heightAt(end.x,end.z)+.04f,end.z)
@@ -585,14 +660,32 @@ internal class ClassicRenderer(private val hole: ClassicHole, private val assets
     }
     private fun draw(mesh:ClassicMesh,detail:Float) { uniforms(detail); mesh.draw() }
 
+    /** [SlopeBoard.around] for the aerial camera, the same board while the camera holds still. */
+    private fun aroundBoard(x:Float,z:Float,distance:Float,base:Float):SlopeBoard {
+        board?.let { if(!boardPutt&&boardX==x&&boardZ==z&&boardDistance==distance&&boardBase.toRawBits()==base.toRawBits()) return it }
+        return SlopeBoard.around(hole,x,z,distance,base.takeUnless { it.isNaN() }).also {
+            board=it; boardPutt=false; boardX=x; boardZ=z; boardDistance=distance; boardBase=base
+        }
+    }
+
+    /** [SlopeBoard.forPutt], the same board while neither the ball nor the guide moves. */
+    private fun puttBoard(ball:GolfPoint,end:GolfPoint?):SlopeBoard {
+        board?.let { if(boardPutt&&boardBall==ball&&boardEnd==end) return it }
+        return SlopeBoard.forPutt(hole,ball,end).also { board=it; boardPutt=true; boardBall=ball; boardEnd=end }
+    }
+
     fun release() {
         if(released) return
         released=true
-        meshes.forEach { it.delete() }
-        terrain.delete(); groundShader.release(); lightShader.release()
+        // Left before the surface ever appeared: nothing was made on the GPU.
+        if(program==0) return
+        props.forEach { it.delete() }
+        scene?.let { s -> s.meshes.forEach { it.delete() }; s.terrain.delete() }
+        scene=null
+        groundShader.release(); lightShader.release()
         grass.release()
         golfer.release()
-        GL.glDeleteBuffers(1,intArrayOf(dynamicBuffer),0)
+        GL.glDeleteBuffers(2,intArrayOf(dynamicBuffer,previewBuffer),0)
         GL.glDeleteProgram(program)
     }
 

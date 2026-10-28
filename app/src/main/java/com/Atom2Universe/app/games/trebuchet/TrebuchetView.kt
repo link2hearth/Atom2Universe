@@ -23,6 +23,7 @@ import androidx.core.graphics.toColorInt
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.Shape
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -57,8 +58,17 @@ class TrebuchetView @JvmOverloads constructor(
 ) : SurfaceView(ctx, attrs), SurfaceHolder.Callback, Runnable {
 
     interface Listener {
-        /** Le tir est terminé : l'activité affiche la portée. */
+        /**
+         * Le tir est terminé, de quelque façon que ce soit — tout seul, au bouton, ou
+         * parce qu'on a repris une pièce en plein vol : l'activité affiche la portée.
+         */
         fun onShotFinished()
+
+        /**
+         * Le site [level] vient d'être rasé **par le trébuchet**, et [hits] tirs l'ont
+         * touché. Une fois par site posé : voir [watchClear]. Appelé depuis le thread UI.
+         */
+        fun onSiteCleared(level: TargetLevel, hits: Int)
 
         /**
          * Un réglage a bougé au doigt, ou le joueur a pris une autre pièce en main :
@@ -92,14 +102,55 @@ class TrebuchetView @JvmOverloads constructor(
     var selected = Part.NONE
         private set
 
-    private var thread: Thread? = null
+    /**
+     * Le fil de rendu **courant**. Chaque fil vérifie à chaque image qu'il l'est encore :
+     * si [pause] n'a pas pu attendre la fin du précédent (un gros effondrement dépasse
+     * le délai), celui-ci s'arrête de lui-même au lieu de tourner à côté du nouveau.
+     */
+    @Volatile private var thread: Thread? = null
     @Volatile private var running = false
 
     /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
     private var hardwareCanvas = true
     private var lastNanos = 0L
     private var accumulator = 0f
-    private var lastPhase = TrebuchetGame.Phase.BUILD
+
+    /**
+     * Le compteur de tirs à l'image d'avant. Un tir fini se lit à ce qu'il **monte**, et
+     * non plus au passage de phase : l'activité changeait la phase elle-même (bouton
+     * Arrêter, pièce reprise en vol) et masquait le passage, si bien que rien ne suivait.
+     */
+    private var lastShotCount = 0
+
+    /**
+     * La victoire guettée : le site regardé, et s'il était déjà rasé à l'image d'avant.
+     * Voir [watchClear].
+     */
+    private var clearWatched: TargetLevel? = null
+    private var clearSeen = false
+    private var clearPending: TargetLevel? = null
+    private var clearHits = 0
+
+    /**
+     * Repartir des compteurs tels qu'ils sont, sans y voir d'événement : posé à chaque
+     * reprise. Pendant que le trébuchet dormait, l'atelier a pu tirer sur le même site,
+     * voire le raser — cela ne regarde pas le trébuchet, et l'atelier ne paie pas.
+     */
+    @Volatile private var rebase = true
+
+    /** Le dernier toucher de l'écran, en temps système : voir [atRest]. */
+    @Volatile private var lastTouchAt = 0L
+
+    /**
+     * Le dernier point du doigt qui règle une pièce, en attente de l'image suivante.
+     *
+     * Chaque `ACTION_MOVE` — cent vingt à deux cent quarante par seconde — remontait la
+     * machine entière et son sol. On ne garde que le dernier point, et la boucle le pose
+     * une fois par image : c'est le seul qu'on voit.
+     */
+    private var gripPending = false
+    private var pendingGripX = 0f
+    private var pendingGripY = 0f
 
     private val dp = resources.displayMetrics.density
 
@@ -218,6 +269,17 @@ class TrebuchetView @JvmOverloads constructor(
          * cadence d'affichage. C'est le dessin seul qui est divisé par deux.
          */
         const val FRAME_NANOS = 1_000_000_000L / 60L
+
+        /**
+         * Trente images par seconde quand rien ne bouge : ni le monde, ni la caméra, ni
+         * une particule, et personne n'a touché l'écran depuis [IDLE_AFTER_MS]. La
+         * physique garde son pas fixe : elle fait quatre pas par image au lieu de deux.
+         */
+        const val IDLE_FRAME_NANOS = 1_000_000_000L / 30L
+        const val IDLE_AFTER_MS = 3_000L
+
+        /** Sous cette vitesse, en m/s, un corps compte pour immobile. */
+        const val REST_SPEED = 0.05f
 
         /**
          * De combien une polyligne a le droit de s'écarter de son tracé exact, en
@@ -598,6 +660,22 @@ class TrebuchetView @JvmOverloads constructor(
     private val labelSpecsRange = resources.getString(R.string.trebuchet_specs_previous)
     private val labelSpecsStored = resources.getString(R.string.trebuchet_specs_stored)
     private val labelSpecsWeight = resources.getString(R.string.trebuchet_dial_weight)
+    private val fmtSpecsRange = resources.getString(R.string.trebuchet_gear_panel_m)
+    private val fmtSpecsEnergy = resources.getString(R.string.trebuchet_specs_kj)
+    private val fmtSpecsWeight = resources.getString(R.string.trebuchet_specs_kg)
+    private val labelDash = resources.getString(R.string.trebuchet_gear_panel_dash)
+    private val labelRecenter = resources.getString(R.string.trebuchet_recenter)
+    private val fmtTimeScrub = resources.getString(R.string.trebuchet_time_scrub)
+
+    /** Les chiffres posés sur la pièce tenue, et celui du vent : refaits quand ils changent. */
+    private val txtBeam = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_m1))
+    private val txtLever = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_ratio))
+    private val txtPost = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_m1))
+    private val txtHang = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_m1))
+    private val txtMass = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_kg))
+    private val txtPin = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_deg))
+    private val txtSling = ValueText(fmtLocale, resources.getString(R.string.trebuchet_value_m2))
+    private val txtWind = ValueText(fmtLocale, resources.getString(R.string.trebuchet_wind_speed))
 
     /** Les trois lignes du panneau, dans des tableaux déjà alloués. */
     private val specsRowLabel = arrayOf("", "", "")
@@ -732,8 +810,11 @@ class TrebuchetView @JvmOverloads constructor(
 
     fun pause() {
         running = false
-        thread?.join(1500)
+        val fil = thread
+        // Le fil n'est plus le fil courant : s'il n'a pas fini dans le délai, il
+        // s'arrêtera de lui-même à la fin de son image — voir [run].
         thread = null
+        fil?.join(1500)
         sfx.stop()
         // Vingt mégaoctets n'ont rien à faire en mémoire pendant qu'on est ailleurs. Le
         // fil de dessin est arrêté au-dessus, donc plus personne n'y touche.
@@ -759,17 +840,40 @@ class TrebuchetView @JvmOverloads constructor(
         game.onExplosion = { _, _, _ -> sfx.explosion() }
         game.effects.onRocketLaunch = { _, _ -> sfx.fireworkLaunch() }
         game.effects.onBurst = { _, _ -> sfx.fireworkBurst() }
-        thread = Thread(this, "TrebuchetPhysics").also { it.start() }
+        rebase = true
+        lastTouchAt = SystemClock.uptimeMillis()
+        // Le fil est désigné **avant** de partir : il vérifie dès sa première image
+        // qu'il est bien le fil courant.
+        val fil = Thread(this, "TrebuchetPhysics")
+        thread = fil
+        fil.start()
+    }
+
+    /** Un doigt s'est posé quelque part sur l'écran du jeu : la cadence pleine revient. */
+    fun noteTouch() {
+        lastTouchAt = SystemClock.uptimeMillis()
     }
 
     override fun run() {
-        while (running) {
+        val moi = Thread.currentThread()
+        while (running && thread === moi) {
             val now = System.nanoTime()
             val frameDt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.1f)
             lastNanos = now
 
             var finished = false
+            var gripMoved = false
+            var cleared: TargetLevel? = null
+            var hits = 0
+            var calme = false
             synchronized(game) {
+                if (rebase) {
+                    rebase = false
+                    lastShotCount = game.shotCount
+                    clearWatched = game.level
+                    clearSeen = game.level != null && game.targets.cleared
+                }
+                gripMoved = applyPendingGrip()
                 accumulator += frameDt
                 while (accumulator >= FIXED_DT) {
                     game.step(FIXED_DT)
@@ -779,10 +883,12 @@ class TrebuchetView @JvmOverloads constructor(
                 // non au pas fixe : ils ne décident de rien, personne ne rejoue un
                 // bouquet, et les figer entre deux pas de physique se verrait.
                 game.stepEffects(frameDt)
-                if (game.phase != lastPhase) {
-                    if (game.phase == TrebuchetGame.Phase.RESULT) finished = true
-                    lastPhase = game.phase
-                }
+                // Un tir de plus au compteur, d'où qu'il ait fini. Un changement de site
+                // remet le compteur à zéro : ce n'est pas un tir.
+                if (game.shotCount > lastShotCount) finished = true
+                lastShotCount = game.shotCount
+                cleared = watchClear()
+                hits = clearHits
                 updateCamera(frameDt)
                 // Ce que l'écran montre du ciel : le feu d'artifice s'y règle.
                 // Le ciel se mesure **au-dessus du sol qu'on voit**, pas au-dessus de
@@ -803,8 +909,15 @@ class TrebuchetView @JvmOverloads constructor(
                     frameDt, game.level, game.terrain, game.targets, game.ball.x
                 ) { sfx.villagerCry() }
                 updatePreview()
+                calme = atRest()
             }
             if (finished) post { listener?.onShotFinished() }
+            if (gripMoved) post { listener?.onMachineChanged() }
+            val rase = cleared
+            if (rase != null) {
+                val touches = hits
+                post { listener?.onSiteCleared(rase, touches) }
+            }
 
             val canvas = lockFrame()
             if (canvas == null) {
@@ -821,9 +934,65 @@ class TrebuchetView @JvmOverloads constructor(
             // aussitôt et ne s'arrête que lorsque la file d'affichage refuse une image
             // de plus — soit cent vingt fois par seconde sur cet écran. Voir
             // [FRAME_NANOS]. Une image qui a débordé ne rattrape rien : on repart.
-            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            val cadence = if (calme) IDLE_FRAME_NANOS else FRAME_NANOS
+            val reste = cadence - (System.nanoTime() - now)
             if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
         }
+    }
+
+    /**
+     * Guette le passage du site de « debout » à « rasé », **quel que soit le chemin**.
+     *
+     * La paie attendait que la boucle voie le tir finir tout seul ; un tir arrêté au
+     * bouton, une pièce reprise en vol, une tour qui achève de tomber après le tir ne
+     * payaient rien, et le site rasé ne payait plus jamais si l'on en changeait. On lit
+     * donc l'état du site à chaque image, et c'est son basculement qui compte.
+     *
+     * Rasé **pendant** un vol, on attend la fin du tir pour le dire : c'est elle qui compte
+     * le coup qui porte, et le record se note en coups qui portent. Rend le site à payer,
+     * une seule fois — l'activité tient en plus son propre verrou par site.
+     */
+    private fun watchClear(): TargetLevel? {
+        val lvl = game.level
+        val rase = lvl != null && game.targets.cleared
+        if (lvl !== clearWatched) {
+            // Un autre site est posé : il part de son propre état, sans événement.
+            clearWatched = lvl
+            clearSeen = rase
+        } else if (rase && !clearSeen) {
+            clearSeen = true
+            clearPending = lvl
+        }
+        val enAttente = clearPending ?: return null
+        if (game.level === enAttente && game.phase == TrebuchetGame.Phase.FLIGHT) return null
+        clearPending = null
+        // Le site a changé avant la fin du tir : il paie quand même, sans record.
+        clearHits = if (game.level === enAttente) game.hitCount else 0
+        return enAttente
+    }
+
+    /**
+     * Rien ne bouge à l'écran, ni ne va bouger sans qu'on y touche : la boucle peut
+     * passer à trente images par seconde. Le ciel et la verdure continuent de vivre,
+     * simplement moins souvent ; à cette lenteur-là, ça ne se voit pas.
+     */
+    private fun atRest(): Boolean =
+        game.phase != TrebuchetGame.Phase.FLIGHT &&
+            SystemClock.uptimeMillis() - lastTouchAt >= IDLE_AFTER_MS &&
+            grip == Grip.NONE && !timeScrub.active && !cam.moving &&
+            previewSteps < 0 && !game.effects.busy && land.calm &&
+            game.world.fastestSpeed() < REST_SPEED
+
+    /**
+     * Pose le dernier point du doigt qui règle une pièce, s'il y en a un en attente.
+     * Rend vrai si la machine a changé. Sous le verrou du jeu.
+     */
+    private fun applyPendingGrip(): Boolean {
+        if (!gripPending) return false
+        gripPending = false
+        if (grip == Grip.NONE) return false
+        applyGrip(pendingGripX, pendingGripY)
+        return true
     }
 
     /**
@@ -887,19 +1056,13 @@ class TrebuchetView @JvmOverloads constructor(
             if (part != Part.NONE && game.phase != TrebuchetGame.Phase.BUILD) {
                 game.stopShot()
                 game.rebuild()
-                // La phase change, mais ni la vue ni la caméra ne doivent y voir un
-                // événement : sans ces deux lignes, le cadrage reprendrait la main et
-                // sauterait sur la machine, ce que ce menu existe précisément pour éviter.
-                lastPhase = game.phase
+                // La phase change, mais la caméra ne doit pas y voir un événement : sans
+                // cette ligne, le cadrage reprendrait la main et sauterait sur la machine,
+                // ce que ce menu existe précisément pour éviter.
                 camPhase = game.phase
             }
             selected = part
         }
-    }
-
-    /** Remet le suivi de phase à zéro après un changement piloté par l'activité. */
-    fun syncPhase() {
-        synchronized(game) { lastPhase = game.phase }
     }
 
     // ── Caméra ───────────────────────────────────────────────────────────────
@@ -1140,6 +1303,7 @@ class TrebuchetView @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         var notify = false
+        noteTouch()
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
                 val now = SystemClock.uptimeMillis()
@@ -1153,6 +1317,7 @@ class TrebuchetView @JvmOverloads constructor(
                     return true
                 }
                 grip = Grip.NONE
+                gripPending = false
                 tappedVoid = false
                 dragTravel = 0f
                 gestureLocked = false
@@ -1188,6 +1353,7 @@ class TrebuchetView @JvmOverloads constructor(
             }
             // Un deuxième doigt, c'est toujours la caméra : on lâche le réglage en cours.
             MotionEvent.ACTION_POINTER_DOWN -> synchronized(game) {
+                applyPendingGrip()
                 if (grip != Grip.NONE) {
                     grip = Grip.NONE
                     notify = true
@@ -1205,8 +1371,11 @@ class TrebuchetView @JvmOverloads constructor(
                 if (timeScrub.move(event.x, DRAG_SLOP_DP * dp)) {
                     // rien d'autre
                 } else if (grip != Grip.NONE) {
-                    applyGrip(worldX(event.x), worldY(event.y))
-                    notify = true
+                    // Noté, pas posé : la boucle le pose à l'image suivante et prévient
+                    // l'activité — voir [gripPending].
+                    pendingGripX = worldX(event.x)
+                    pendingGripY = worldY(event.y)
+                    gripPending = true
                 } else {
                     dragCamera(event)
                 }
@@ -1222,7 +1391,11 @@ class TrebuchetView @JvmOverloads constructor(
                     notify = true
                 }
                 if (grip != Grip.NONE) notify = true
-                grip = Grip.NONE
+                // Le dernier point du doigt se pose avant qu'il ne lâche la pièce.
+                synchronized(game) {
+                    applyPendingGrip()
+                    grip = Grip.NONE
+                }
                 tappedVoid = false
                 gestureCount = 0
                 // Lâcher le doigt sort du contrôle de l'heure : c'est un geste maintenu,
@@ -1276,7 +1449,6 @@ class TrebuchetView @JvmOverloads constructor(
             // joueur venait de regarder.
             game.stopShot()
             game.rebuild()
-            lastPhase = game.phase
             camPhase = game.phase
             // Le joueur revient à sa machine : le plan choisi au double-appui n'a plus
             // lieu d'être, la caméra reprend son cadrage de réglage.
@@ -1748,7 +1920,7 @@ class TrebuchetView @JvmOverloads constructor(
     private fun stopTimeControl() = timeScrub.stop()
 
     private fun drawTimeControl(canvas: Canvas, w: Float) =
-        timeScrub.draw(canvas, pHint, skyClock, w, height.toFloat(), dp)
+        timeScrub.draw(canvas, pHint, skyClock, w, height.toFloat(), dp, fmtTimeScrub, fmtLocale)
 
     /**
      * Le bâti : un A sous le pivot, purement décoratif mais il donne l'échelle.
@@ -1876,19 +2048,19 @@ class TrebuchetView @JvmOverloads constructor(
         if (game.shotDistance != specsShotDistance) {
             specsShotDistance = game.shotDistance
             specsRangeText = if (specsShotDistance > 0f) {
-                String.format(fmtLocale, "%.0f m", specsShotDistance)
+                String.format(fmtLocale, fmtSpecsRange, specsShotDistance)
             } else {
-                resources.getString(R.string.trebuchet_gear_panel_dash)
+                labelDash
             }
         }
         val energy = (cfg.storedEnergy / 1000f).toInt()
         if (energy != specsEnergy) {
             specsEnergy = energy
-            specsEnergyText = "$energy kJ"
+            specsEnergyText = String.format(fmtLocale, fmtSpecsEnergy, energy)
         }
         if (cfg.shotMass != specsWeight) {
             specsWeight = cfg.shotMass
-            specsWeightText = String.format(fmtLocale, "%.0f kg", cfg.shotMass)
+            specsWeightText = String.format(fmtLocale, fmtSpecsWeight, cfg.shotMass)
         }
 
         specsRowLabel[0] = labelSpecsRange; specsRowValue[0] = specsRangeText
@@ -1977,7 +2149,7 @@ class TrebuchetView @JvmOverloads constructor(
         canvas.drawLine(hx, hy, hx + bx + by * 0.6f, hy + by - bx * 0.6f, pGaugeArrow)
 
         canvas.drawText(
-            "%d m/s".format(wind.speed.roundToInt()),
+            txtWind.of(wind.speed.roundToInt()),
             left + boxW - 8f * dp, cy + pGaugeText.textSize * 0.36f, pGaugeText
         )
     }
@@ -2111,7 +2283,9 @@ class TrebuchetView @JvmOverloads constructor(
         val vide = game.ghosts.isEmpty() &&
             (game.phase != TrebuchetGame.Phase.BUILD || previewPath.size < 8)
         if (vide) {
-            releaseTraceLayer()
+            // Le calque reste alloué : le jeter ici le faisait réallouer, vingt
+            // mégaoctets, à chaque tir sans fantôme. [pause] le libère.
+            traceReady = false
             return
         }
         if (width <= 0 || height <= 0) return
@@ -2303,9 +2477,9 @@ class TrebuchetView @JvmOverloads constructor(
                 drawOutline(canvas, game.beam)
                 game.tipWorld(tip)
                 drawGrip(canvas, tip[0], tip[1])
-                drawValue(canvas, tip[0], tip[1], "%.1f m".format(cfg.beamLength))
+                drawValue(canvas, tip[0], tip[1], txtBeam.of(cfg.beamLength))
                 drawGrip(canvas, game.pivotX, game.pivotY)
-                drawValue(canvas, game.pivotX, game.pivotY, "%.1f:1".format(cfg.leverRatio))
+                drawValue(canvas, game.pivotX, game.pivotY, txtLever.of(cfg.leverRatio))
             }
             Part.POST -> {
                 // Le montant, du sol à l'axe : c'est lui qu'on étire.
@@ -2317,7 +2491,7 @@ class TrebuchetView @JvmOverloads constructor(
                 // pour dire « monte l'axe jusque-là ».
                 drawGrip(canvas, game.pivotX, game.pivotY * POST_GRIP_HEIGHT)
                 drawGrip(canvas, game.pivotX, game.pivotY)
-                drawValue(canvas, game.pivotX, game.pivotY, "%.1f m".format(cfg.pivotHeight))
+                drawValue(canvas, game.pivotX, game.pivotY, txtPost.of(cfg.pivotHeight))
             }
             Part.WEIGHT -> {
                 drawOutline(canvas, game.counterweight)
@@ -2327,18 +2501,18 @@ class TrebuchetView @JvmOverloads constructor(
                 drawGrip(canvas, cw.x, cw.y)
                 drawValue(
                     canvas, (butt[0] + cw.x) / 2f, (butt[1] + cw.y) / 2f,
-                    "%.1f m".format(cfg.hangLength)
+                    txtHang.of(cfg.hangLength)
                 )
                 val h = cfg.counterweightHalf
                 drawGrip(canvas, cw.x + h, cw.y - h)
                 drawValue(
-                    canvas, cw.x + h, cw.y - h, "%d kg".format(cfg.counterweightMass.toInt())
+                    canvas, cw.x + h, cw.y - h, txtMass.of(cfg.counterweightMass.toInt())
                 )
             }
             Part.PIN -> {
                 game.pinWorld(pin)
                 drawGrip(canvas, pin[0], pin[1])
-                drawValue(canvas, pin[0], pin[1], "%d°".format(cfg.pinAngleDeg.toInt()))
+                drawValue(canvas, pin[0], pin[1], txtPin.of(cfg.pinAngleDeg.toInt()))
             }
             Part.SLING -> {
                 drawOutline(canvas, game.ball)
@@ -2346,7 +2520,7 @@ class TrebuchetView @JvmOverloads constructor(
                 game.tipWorld(tip)
                 drawValue(
                     canvas, (tip[0] + game.ball.x) / 2f, game.ball.y,
-                    "%.2f m".format(cfg.slingLength)
+                    txtSling.of(cfg.slingLength)
                 )
             }
             Part.NONE -> {}
@@ -2446,8 +2620,37 @@ class TrebuchetView @JvmOverloads constructor(
         val px = sx(game.pivotX)
         if (px > 0f && px < width) return
         pHint.textSize = 12f * dp
-        canvas.drawText(
-            context.getString(R.string.trebuchet_recenter), width / 2f, 24f * dp, pHint
-        )
+        canvas.drawText(labelRecenter, width / 2f, 24f * dp, pHint)
+    }
+}
+
+/**
+ * Un nombre mis en forme qui ne se refait que quand il change.
+ *
+ * `String.format` relit son format et fabrique une chaîne neuve à chaque appel : posé
+ * dans le dessin, c'était soixante chaînes par seconde et par chiffre affiché, pour le
+ * même texte. Le format vient des ressources, avec la locale des ressources.
+ */
+internal class ValueText(private val locale: Locale, private val format: String) {
+    private var shownFloat = Float.NaN
+    private var shownInt = Int.MIN_VALUE
+    private var text = ""
+
+    fun of(value: Float): String {
+        if (value != shownFloat) {
+            shownFloat = value
+            shownInt = Int.MIN_VALUE
+            text = String.format(locale, format, value)
+        }
+        return text
+    }
+
+    fun of(value: Int): String {
+        if (value != shownInt) {
+            shownInt = value
+            shownFloat = Float.NaN
+            text = String.format(locale, format, value)
+        }
+        return text
     }
 }

@@ -2,25 +2,55 @@ package com.Atom2Universe.app.games.roguelike
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.billthefarmer.mididriver.MidiDriver
 
 /**
  * Sons de combat pour le Donjon via Sonivox EAS (channel 9 = percussions GM).
- * Possède le cycle de vie du MidiDriver (start/stop).
+ * Possède le cycle de vie du MidiDriver (start/stop). Musique coupée, le moteur (Oboe + EAS)
+ * ne tourne que le temps d'un combat, ou d'un bruitage isolé, puis s'éteint après un silence.
  */
 internal class RoguelikeSoundEngine(private val scope: CoroutineScope) {
 
     private var driver: MidiDriver? = null
     private var ready = false
+    /** L'écran est au premier plan (entre start et stop). */
+    private var foreground = false
+    /** La musique joue ou un combat est affiché : le moteur reste allumé. */
+    private var needed = false
+    private var idleStop: Job? = null
 
     companion object {
         private const val TAG  = "RoguelikeSFX"
         private const val CH9: Byte = 0x99.toByte()
+        /** Silence après lequel un moteur dont personne n'a besoin s'éteint. */
+        private const val IDLE_STOP_MS = 3_000L
     }
 
     fun start() {
+        foreground = true
+        if (needed) boot()
+    }
+
+    fun stop() {
+        foreground = false
+        shutdown()
+    }
+
+    /** Musique active ou combat affiché : le moteur doit être prêt sans délai. */
+    fun setNeeded(value: Boolean) {
+        needed = value
+        if (!foreground) return
+        if (value) boot() else scheduleIdleStop()
+    }
+
+    private fun boot() {
+        idleStop?.cancel()
+        idleStop = null
+        // Jamais deux init EAS de suite : le pilote est un singleton natif
+        if (driver != null) return
         val d = MidiDriver.getInstance {
             ready = true
             Log.d(TAG, "EAS prêt")
@@ -30,11 +60,23 @@ internal class RoguelikeSoundEngine(private val scope: CoroutineScope) {
         Log.d(TAG, "start()")
     }
 
-    fun stop() {
+    private fun shutdown() {
+        idleStop?.cancel()
+        idleStop = null
+        if (driver == null) return
         Log.d(TAG, "stop()")
         ready = false
         driver?.stop()
         driver = null
+    }
+
+    private fun scheduleIdleStop() {
+        if (driver == null || needed || idleStop != null) return
+        idleStop = scope.launch {
+            delay(IDLE_STOP_MS)
+            idleStop = null
+            shutdown()
+        }
     }
 
     // ── Sons de combat ───────────────────────────────────────────────────────
@@ -75,7 +117,13 @@ internal class RoguelikeSoundEngine(private val scope: CoroutineScope) {
     // ── Bas niveau ───────────────────────────────────────────────────────────
 
     private fun note(pitch: Int, velocity: Int) {
+        // Un bruitage hors combat, musique coupée (la descente) : on rallume le temps du son
+        if (driver == null && foreground) boot()
         if (!ready) { Log.w(TAG, "note() ignoré — pas prêt"); return }
         driver?.queueEvent(byteArrayOf(CH9, pitch.toByte(), velocity.toByte()))
+        // Le silence se compte depuis le dernier son
+        idleStop?.cancel()
+        idleStop = null
+        scheduleIdleStop()
     }
 }

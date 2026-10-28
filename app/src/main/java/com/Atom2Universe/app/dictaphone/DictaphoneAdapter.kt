@@ -65,14 +65,15 @@ class DictaphoneAdapter(
         private fun buildMeta(r: DictaphoneRecording): String {
             val dur = formatDuration(r.durationMs)
             val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(r.dateAddedSec * 1000))
-            return "$dur · $date"
+            return itemView.context.getString(R.string.dictaphone_item_meta, dur, date)
         }
 
         private fun formatDuration(ms: Long): String {
-            if (ms <= 0) return "--:--"
+            val ctx = itemView.context
+            if (ms <= 0) return ctx.getString(R.string.dictaphone_duration_unknown)
             val min = TimeUnit.MILLISECONDS.toMinutes(ms)
             val sec = TimeUnit.MILLISECONDS.toSeconds(ms) % 60
-            return "%d:%02d".format(min, sec)
+            return ctx.getString(R.string.dictaphone_duration_format, min, sec)
         }
     }
 

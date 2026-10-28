@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.VisibleWindowGate
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +80,12 @@ class NewsWidgetView @JvmOverloads constructor(
     fun setToggleEnabled(enabled: Boolean) {
         toggleEnabled = enabled
         updateSelfVisibility()
-        if (enabled) startPeriodicFetch() else stopPeriodicFetch()
+        if (enabled) {
+            startPeriodicFetch()
+        } else {
+            stopPeriodicFetch()
+            stopRotation()
+        }
     }
 
     // ── Zoom (pinch, 2 doigts) ────────────────────────────────────────────────
@@ -140,6 +147,21 @@ class NewsWidgetView @JvmOverloads constructor(
 
     private var fetchIntervalMs = NewsFetchInterval.DEFAULT.intervalMs
     private var fetchScheduled = false
+    /** Dernier fetch lancé (horloge qui compte aussi le sommeil) ; 0 = jamais. */
+    private var lastFetchAtMs = 0L
+
+    // Ni RSS ni rotation quand l'écran du clicker est en arrière-plan. La porte ne regarde que
+    // la fenêtre : le widget se cache lui-même quand il n'a rien à montrer, et doit pourtant
+    // continuer à chercher de nouveaux articles.
+    private val gate = VisibleWindowGate(this, requireShown = false) { active ->
+        if (active) {
+            if (toggleEnabled) startPeriodicFetch()
+            startRotation()
+        } else {
+            stopPeriodicFetch()
+            stopRotation()
+        }
+    }
 
     private val fetchRunnable = object : Runnable {
         override fun run() {
@@ -152,12 +174,15 @@ class NewsWidgetView @JvmOverloads constructor(
     /**
      * Arme le prochain fetch. Ne réarme pas le compte à rebours s'il tourne déjà :
      * sans ce garde-fou, chaque onResume de l'activité repoussait l'échéance et le
-     * re-fetch automatique ne tombait jamais.
+     * re-fetch automatique ne tombait jamais. L'échéance part du dernier fetch : au retour
+     * d'arrière-plan, un fetch en retard part tout de suite.
      */
     private fun startPeriodicFetch() {
-        if (fetchScheduled) return
+        if (fetchScheduled || !gate.isActive) return
         fetchScheduled = true
-        handler.postDelayed(fetchRunnable, fetchIntervalMs)
+        val sinceLast = SystemClock.elapsedRealtime() - lastFetchAtMs
+        val delayMs = if (lastFetchAtMs == 0L) fetchIntervalMs else (fetchIntervalMs - sinceLast).coerceAtLeast(0L)
+        handler.postDelayed(fetchRunnable, delayMs)
     }
 
     private fun stopPeriodicFetch() {
@@ -207,6 +232,7 @@ class NewsWidgetView @JvmOverloads constructor(
     // ── Public ────────────────────────────────────────────────────────────────
 
     fun refresh() {
+        lastFetchAtMs = SystemClock.elapsedRealtime()
         fetchJob?.cancel()
         hiddenStack.clear()
         cancelUnhideButtonHide()
@@ -250,20 +276,24 @@ class NewsWidgetView @JvmOverloads constructor(
 
     fun startRotation() {
         handler.removeCallbacks(rotateRunnable)
-        if (visibleArticles.size > 1) {
+        if (gate.isActive && toggleEnabled && visibleArticles.size > 1) {
             handler.postDelayed(rotateRunnable, ROTATE_INTERVAL_MS)
         }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        refresh()
-        if (toggleEnabled) startPeriodicFetch()
+        if (toggleEnabled) refresh()
+        gate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) gate.update()
     }
 
     override fun onDetachedFromWindow() {
-        stopRotation()
-        stopPeriodicFetch()
+        gate.detach()
         fetchJob?.cancel()
         super.onDetachedFromWindow()
     }
@@ -375,10 +405,10 @@ class NewsWidgetView @JvmOverloads constructor(
     private fun relativeTime(epochMs: Long): String {
         val diff = System.currentTimeMillis() - epochMs
         return when {
-            diff < 60_000L     -> "à l'instant"
-            diff < 3_600_000L  -> "il y a ${diff / 60_000} min"
-            diff < 86_400_000L -> "il y a ${diff / 3_600_000} h"
-            else               -> "il y a ${diff / 86_400_000} j"
+            diff < 60_000L     -> context.getString(R.string.crypto_news_age_now)
+            diff < 3_600_000L  -> context.getString(R.string.crypto_news_age_minutes, (diff / 60_000).toInt())
+            diff < 86_400_000L -> context.getString(R.string.crypto_news_age_hours, (diff / 3_600_000).toInt())
+            else               -> context.getString(R.string.crypto_news_age_days, (diff / 86_400_000).toInt())
         }
     }
 

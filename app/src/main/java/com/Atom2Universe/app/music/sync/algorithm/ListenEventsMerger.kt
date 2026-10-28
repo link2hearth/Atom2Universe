@@ -7,6 +7,7 @@ import com.Atom2Universe.app.music.data.ListenEvent
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.data.PlayCountEntry
 import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -125,74 +126,90 @@ object ListenEventsMerger {
             val metadataByKey = HashMap<String, ListenEvent>()
             var insertedCount = 0
 
-            // 1. Écoutes détaillées : déduplication par UUID.
-            //    getExistingUuids fait un IN (...) : on découpe pour rester sous
-            //    la limite de variables liées de SQLite (999).
-            if (payload.events.isNotEmpty()) {
-                val known = HashSet<String>()
-                payload.events.map { it.uuid }.chunked(500).forEach { batch ->
-                    known.addAll(listenEventDao.getExistingUuids(batch))
+            // Une seule transaction : sans elle, chaque requête de la boucle en ouvre une.
+            db.withTransaction {
+
+                // 1. Écoutes détaillées : déduplication par UUID.
+                //    getExistingUuids fait un IN (...) : on découpe pour rester sous
+                //    la limite de variables liées de SQLite (999).
+                if (payload.events.isNotEmpty()) {
+                    val known = HashSet<String>()
+                    payload.events.map { it.uuid }.chunked(500).forEach { batch ->
+                        known.addAll(listenEventDao.getExistingUuids(batch))
+                    }
+                    val newEvents = payload.events.filter { it.uuid !in known }
+                    if (newEvents.isNotEmpty()) {
+                        listenEventDao.insertAll(newEvents)
+                        insertedCount += newEvents.size
+                        newEvents.forEach { affectedKeys.add(it.trackKey) }
+                    }
+                    payload.events.forEach { metadataByKey.putIfAbsent(it.trackKey, it) }
                 }
-                val newEvents = payload.events.filter { it.uuid !in known }
-                if (newEvents.isNotEmpty()) {
-                    listenEventDao.insertAll(newEvents)
-                    insertedCount += newEvents.size
-                    newEvents.forEach { affectedKeys.add(it.trackKey) }
+
+                // 2. Résumé de l'avant-fenêtre : réconciliation par total.
+                if (payload.archive.isNotEmpty()) {
+                    val detailedPerTrack = payload.events.groupingBy { it.trackKey }.eachCount()
+                    val metaByKey = payload.tracks.associateBy { it.key }
+
+                    // Ce qu'on détient déjà, compté par lots plutôt qu'une requête par morceau
+                    // (après l'étape 1, dont les insertions comptent).
+                    val heldByKey = HashMap<String, Long>()
+                    payload.archive.map { it.trackKey }.distinct().chunked(500).forEach { batch ->
+                        for (row in listenEventDao.countForDeviceAndTracks(payload.deviceId, batch)) {
+                            heldByKey[row.trackKey] = row.eventCount
+                        }
+                    }
+
+                    for (entry in payload.archive) {
+                        val target = entry.count + (detailedPerTrack[entry.trackKey] ?: 0)
+                        val held = heldByKey[entry.trackKey] ?: 0L
+                        if (held >= target) continue
+
+                        val meta = metaByKey[entry.trackKey]
+                        val padding = synthesize(payload.deviceId, entry, meta, from = held, to = target)
+                        listenEventDao.insertAll(padding)
+                        heldByKey[entry.trackKey] = target
+                        insertedCount += padding.size
+                        affectedKeys.add(entry.trackKey)
+                        padding.firstOrNull()?.let { metadataByKey.putIfAbsent(entry.trackKey, it) }
+                    }
                 }
-                payload.events.forEach { metadataByKey.putIfAbsent(it.trackKey, it) }
-            }
 
-            // 2. Résumé de l'avant-fenêtre : réconciliation par total.
-            if (payload.archive.isNotEmpty()) {
-                val detailedPerTrack = payload.events.groupingBy { it.trackKey }.eachCount()
-                val metaByKey = payload.tracks.associateBy { it.key }
+                if (affectedKeys.isEmpty()) return@withTransaction
 
-                for (entry in payload.archive) {
-                    val target = entry.count + (detailedPerTrack[entry.trackKey] ?: 0)
-                    val held = listenEventDao.countForDeviceAndTrack(payload.deviceId, entry.trackKey)
-                    if (held >= target) continue
+                // 3. Recalculer playCount = nombre d'écoutes au journal, pour les seuls
+                //    morceaux touchés. earnedPlayCount n'est PAS modifié : ce sont des
+                //    écoutes distantes, pas des écoutes de cet appareil.
+                val now = System.currentTimeMillis()
+                for (key in affectedKeys) {
+                    val count = listenEventDao.getPlayCount(key)
+                    if (count <= 0) continue
 
-                    val meta = metaByKey[entry.trackKey]
-                    val padding = synthesize(payload.deviceId, entry, meta, from = held, to = target)
-                    listenEventDao.insertAll(padding)
-                    insertedCount += padding.size
-                    affectedKeys.add(entry.trackKey)
-                    padding.firstOrNull()?.let { metadataByKey.putIfAbsent(entry.trackKey, it) }
+                    val current = playCountDao.getByKey(key)
+                    if (current == null) {
+                        // Morceau jamais écouté sur cet appareil : on crée la ligne.
+                        val meta = metadataByKey[key] ?: continue
+                        playCountDao.insert(
+                            PlayCountEntry(
+                                metadataKey = key,
+                                title = meta.title,
+                                artist = meta.artist,
+                                album = meta.album,
+                                playCount = count,
+                                earnedPlayCount = 0,
+                                lastPlayed = meta.listenedAt,
+                                createdAt = now,
+                                updatedAt = now
+                            )
+                        )
+                    } else if (count > current.playCount) {
+                        // Règle MAX : un compteur ne redescend jamais.
+                        playCountDao.updatePlayCountMax(key, count, now)
+                    }
                 }
             }
 
             if (affectedKeys.isEmpty()) return@withContext 0
-
-            // 3. Recalculer playCount = nombre d'écoutes au journal, pour les seuls
-            //    morceaux touchés. earnedPlayCount n'est PAS modifié : ce sont des
-            //    écoutes distantes, pas des écoutes de cet appareil.
-            val now = System.currentTimeMillis()
-            for (key in affectedKeys) {
-                val count = listenEventDao.getPlayCount(key)
-                if (count <= 0) continue
-
-                val current = playCountDao.getByKey(key)
-                if (current == null) {
-                    // Morceau jamais écouté sur cet appareil : on crée la ligne.
-                    val meta = metadataByKey[key] ?: continue
-                    playCountDao.insert(
-                        PlayCountEntry(
-                            metadataKey = key,
-                            title = meta.title,
-                            artist = meta.artist,
-                            album = meta.album,
-                            playCount = count,
-                            earnedPlayCount = 0,
-                            lastPlayed = meta.listenedAt,
-                            createdAt = now,
-                            updatedAt = now
-                        )
-                    )
-                } else if (count > current.playCount) {
-                    // Règle MAX : un compteur ne redescend jamais.
-                    playCountDao.updatePlayCountMax(key, count, now)
-                }
-            }
 
             // Rafraîchir le cache mémoire si le lecteur tourne déjà.
             MusicPlayCountManager.refreshCache()

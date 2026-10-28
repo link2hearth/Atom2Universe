@@ -1,8 +1,9 @@
 package com.Atom2Universe.app.music.model
 
 import android.net.Uri
+import com.Atom2Universe.app.A2UApplication
+import com.Atom2Universe.app.R
 import java.io.File
-import java.util.Locale
 
 data class MusicTrack(
     val id: Long,
@@ -18,12 +19,13 @@ data class MusicTrack(
     val year: Int? = null,         // Année de sortie
     val albumArtist: String? = null // Artiste de l'album (différent de l'artiste de la piste)
 ) {
+    // Format en ressource (EN + FR) ; le contexte de l'appli suit la langue choisie
     val durationFormatted: String
         get() {
             val totalSeconds = duration / 1000
             val minutes = totalSeconds / 60
             val seconds = totalSeconds % 60
-            return String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
+            return A2UApplication.appContext.getString(R.string.music_duration_minutes_seconds, minutes, seconds)
         }
 
     /**

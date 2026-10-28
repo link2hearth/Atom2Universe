@@ -11,6 +11,8 @@ import java.nio.ByteOrder
 class Sf2ChunkWriter(private val raf: RandomAccessFile) {
 
     companion object {
+        private const val PCM_BLOCK_FRAMES = 16384
+
         // SF2 Version 2.01
         const val SF2_VERSION_MAJOR = 2
         const val SF2_VERSION_MINOR = 1
@@ -160,17 +162,24 @@ class Sf2ChunkWriter(private val raf: RandomAccessFile) {
         raf.write(data)
     }
 
+    // Bytes of one block of PCM: the audio is never copied whole
+    private val pcmBlock = ByteArray(PCM_BLOCK_FRAMES * 2)
+
     /**
-     * Write PCM samples (16-bit little-endian).
+     * Write PCM samples (16-bit little-endian), block by block.
      */
     fun writeSamples(samples: ShortArray) {
-        val bytes = ByteArray(samples.size * 2)
-        for (i in samples.indices) {
-            val s = samples[i].toInt()
-            bytes[i * 2] = (s and 0xFF).toByte()
-            bytes[i * 2 + 1] = ((s shr 8) and 0xFF).toByte()
+        var start = 0
+        while (start < samples.size) {
+            val count = minOf(PCM_BLOCK_FRAMES, samples.size - start)
+            for (i in 0 until count) {
+                val s = samples[start + i].toInt()
+                pcmBlock[i * 2] = (s and 0xFF).toByte()
+                pcmBlock[i * 2 + 1] = ((s shr 8) and 0xFF).toByte()
+            }
+            raf.write(pcmBlock, 0, count * 2)
+            start += count
         }
-        raf.write(bytes)
     }
 
     /**

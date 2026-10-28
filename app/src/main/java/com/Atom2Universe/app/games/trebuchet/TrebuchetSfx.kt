@@ -70,12 +70,26 @@ class TrebuchetSfx(private val context: Context) {
         ROPE_TIE(arrayOf("rope_tie"), 900L)
     }
 
-    /** Coupe tous les bruitages, vent compris, sans arrêter les moteurs — le réglage du menu. */
+    /**
+     * Coupe tous les bruitages, vent compris — le réglage du menu.
+     *
+     * Son coupé, les moteurs ne s'ouvrent plus du tout : le synthé, les enregistrements et
+     * le vent en boucle tournaient pour rien. Coupé en cours de partie, on se contente de
+     * se taire jusqu'au prochain arrêt, parce que le fil de rendu peut être en train de
+     * jouer un son à cet instant précis ; rétabli, on les ouvre sur-le-champ.
+     */
     var enabled = true
         set(value) {
             field = value
+            if (value && started) openEngines()
             updateAmbience()
         }
+
+    /** La vue tourne : entre [start] et [stop]. */
+    private var started = false
+
+    /** Le synthé, les enregistrements et le vent sont ouverts. */
+    private var open = false
 
     private var driver: MidiDriver? = null
     private var ready = false
@@ -93,7 +107,22 @@ class TrebuchetSfx(private val context: Context) {
     private val lastPlayed = ConcurrentHashMap<String, Long>()
     private var ambience: MediaPlayer? = null
 
+    /** Le vent en boucle est prêt à jouer : voir [startAmbience]. */
+    private var ambienceReady = false
+
     fun start() {
+        started = true
+        if (enabled) openEngines()
+    }
+
+    fun stop() {
+        started = false
+        closeEngines()
+    }
+
+    private fun openEngines() {
+        if (open) return
+        open = true
         scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         val d = MidiDriver.getInstance {
             ready = true
@@ -106,7 +135,9 @@ class TrebuchetSfx(private val context: Context) {
         startAmbience()
     }
 
-    fun stop() {
+    private fun closeEngines() {
+        if (!open) return
+        open = false
         ready = false
         scope?.cancel()
         scope = null
@@ -119,6 +150,7 @@ class TrebuchetSfx(private val context: Context) {
         lastPlayed.clear()
         ambience?.release()
         ambience = null
+        ambienceReady = false
     }
 
     private fun loadSamples() {
@@ -143,10 +175,18 @@ class TrebuchetSfx(private val context: Context) {
         }
     }
 
-    /** Le vent et les oiseaux, en boucle : un enregistrement fait pour se répéter sans couture. */
+    /**
+     * Le vent et les oiseaux, en boucle : un enregistrement fait pour se répéter sans couture.
+     *
+     * Préparé **en fond** : `prepare()` décodait le début du fichier sur le fil de
+     * l'interface, à chaque changement de machine. Le vent part quand il est prêt.
+     */
     private fun startAmbience() {
+        ambienceReady = false
         try {
-            ambience = MediaPlayer().apply {
+            val player = MediaPlayer()
+            ambience = player
+            player.apply {
                 context.assets.openFd("$AUDIO_DIR/$AMBIENCE.ogg").use {
                     setDataSource(it.fileDescriptor, it.startOffset, it.length)
                 }
@@ -156,18 +196,24 @@ class TrebuchetSfx(private val context: Context) {
                 )
                 isLooping = true
                 setVolume(AMBIENCE_VOLUME, AMBIENCE_VOLUME)
-                prepare()
+                setOnPreparedListener { mp ->
+                    // Un arrêt a pu passer pendant la préparation : ce lecteur-là est mort.
+                    if (mp !== ambience) return@setOnPreparedListener
+                    ambienceReady = true
+                    updateAmbience()
+                }
+                prepareAsync()
             }
         } catch (e: Exception) {
             Log.w("TrebuchetSfx", "Cannot start ambience", e)
             ambience?.release()
             ambience = null
         }
-        updateAmbience()
     }
 
     private fun updateAmbience() {
         val player = ambience ?: return
+        if (!ambienceReady) return
         if (enabled && !player.isPlaying) player.start()
         else if (!enabled && player.isPlaying) player.pause()
     }

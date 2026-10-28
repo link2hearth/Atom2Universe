@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.radio
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +70,7 @@ class RadioStationAdapter(
 
         fun bind(station: RadioStation) {
             title.text = station.name
-            meta.text = formatRadioMeta(station)
+            meta.text = formatRadioMeta(itemView.context, station)
 
             // Update favorite icon based on status
             val isFavorite = isFavoriteProvider?.invoke(station) ?: false
@@ -82,16 +83,16 @@ class RadioStationAdapter(
         }
     }
 
-    private fun formatRadioMeta(station: RadioStation): String {
+    private fun formatRadioMeta(context: Context, station: RadioStation): String {
         val parts = mutableListOf<String>()
         if (station.country.isNotBlank() && station.language.isNotBlank()) {
-            parts.add("${station.country} · ${station.language}")
+            parts.add(context.getString(R.string.radio_meta_country_language, station.country, station.language))
         } else if (station.country.isNotBlank()) {
             parts.add(station.country)
         } else if (station.language.isNotBlank()) {
             parts.add(station.language)
         }
-        station.bitrate?.let { parts.add("${it} kbps") }
-        return parts.joinToString(" · ")
+        station.bitrate?.let { parts.add(context.getString(R.string.radio_meta_bitrate, it)) }
+        return parts.joinToString(context.getString(R.string.radio_meta_separator))
     }
 }

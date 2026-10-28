@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.fluidsynth.FluidSynthEngine
-import com.Atom2Universe.app.midi.sf2.Sf2Engine
 import com.Atom2Universe.app.midi.sf2.Sf2FileCache
 import com.Atom2Universe.app.sf2creator.data.SampleData
 import com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
@@ -33,6 +32,7 @@ import com.Atom2Universe.app.sf2creator.util.Sf2Constants
 import com.Atom2Universe.app.sf2creator.util.Sf2UnitConverter
 import com.Atom2Universe.app.sf2creator.writer.Sf2Writer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -103,8 +103,12 @@ class ExportFragment : Fragment() {
     private var exportedFile: File? = null
     private var pendingSetup = false
 
-    private var sf2Engine: Sf2Engine? = null
-    private var fluidSynthEngine: FluidSynthEngine? = null
+    private var sampleRate: Int = 44100
+    private var previewEngine: PreviewEngine? = null
+    private var previewJob: Job? = null
+    // The preview was stopped in the background and comes back in onStart
+    private var previewStopped = false
+    private var started = false
     private var tempSf2File: File? = null
     private var engineReady: Boolean = false
     private var useFluidSynth: Boolean = false
@@ -854,22 +858,10 @@ class ExportFragment : Fragment() {
         keyboardPreview.setRootNote(rootNote)
 
         keyboardPreview.onNoteOn = { note, velocity ->
-            if (engineReady) {
-                if (useFluidSynth) {
-                    fluidSynthEngine?.sendNoteOn(0, note, velocity)
-                } else {
-                    sf2Engine?.sendNoteOn(0, note, velocity)
-                }
-            }
+            if (engineReady) previewEngine?.noteOn(note, velocity)
         }
         keyboardPreview.onNoteOff = { note ->
-            if (engineReady) {
-                if (useFluidSynth) {
-                    fluidSynthEngine?.sendNoteOff(0, note)
-                } else {
-                    sf2Engine?.sendNoteOff(0, note)
-                }
-            }
+            if (engineReady) previewEngine?.noteOff(note)
         }
 
         octaveDownButton?.setOnClickListener {
@@ -937,89 +929,95 @@ class ExportFragment : Fragment() {
 
     private fun generatePreviewSf2() {
         val samples = sampleAudio ?: return
+        if (!started) {
+            // Not on screen yet, or in the background: made in onStart
+            previewStopped = true
+            return
+        }
 
         keyboardLoadingIndicator?.visibility = View.VISIBLE
         engineReady = false
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            // Release previous engines
-            sf2Engine?.stopAudioRenderer()
-            sf2Engine?.release()
-            sf2Engine = null
+        // Release the previous engine now: notes stop at once
+        previewEngine?.release()
+        previewEngine = null
 
-            fluidSynthEngine?.release()
-            fluidSynthEngine = null
+        // Settings snapshot, so later changes start a new preview instead of mixing in
+        // Convert UI values (ms, %, Hz) to SF2 native units (timecents, centibels, cents)
+        val inMemorySample = Sf2Writer.InMemorySample(
+            name = "Preview",
+            samples = samples,
+            sampleRate = sampleRate,
+            rootNote = rootNote,
+            keyRangeStart = 0,
+            keyRangeEnd = 127,
+            loopStart = loopStart,
+            loopEnd = loopEnd,
+            hasLoop = hasLoop,
+            attenuation = attenuation,
+            fineTuneCents = fineTuneCents,
+            // Volume Envelope - convert ms to timecents, % to centibels
+            volEnvAttack = Sf2UnitConverter.msToTimecents(attackMs),
+            volEnvDecay = Sf2UnitConverter.msToTimecents(decayMs),
+            volEnvSustain = Sf2UnitConverter.sustainPercentToCentibels(sustainPercent),
+            volEnvRelease = Sf2UnitConverter.msToTimecents(releaseMs),
+            // Filter - convert Hz to cents
+            filterFc = Sf2UnitConverter.hzToFilterCents(filterCutoffHz),
+            filterQ = filterResonanceCb,
+            chorusSend = chorusSend,
+            reverbSend = reverbSend,
+            pan = pan
+        )
+        val context = requireContext()
+        val wantFluidSynth = useFluidSynth
+
+        val previous = previewJob
+        previous?.cancel()
+        previewJob = viewLifecycleOwner.lifecycleScope.launch {
+            // A cancelled preview may still be writing the same file
+            PreviewEngine.awaitCancelled(previous)
 
             Sf2FileCache.clear()
 
-            val sf2File = withContext(Dispatchers.IO) {
-                val tempDir = requireContext().cacheDir
-                val tempFile = File(tempDir, "preview_keyboard.sf2")
+            var loaded: PreviewEngine? = null
+            try {
+                val sf2File = withContext(Dispatchers.IO) {
+                    val tempFile = File(context.cacheDir, "preview_keyboard.sf2")
+                    val success = sf2Writer.writeSf2FromMemory(tempFile, "Preview", inMemorySample)
+                    if (success) tempFile else null
+                }
 
-                // Convert UI values (ms, %, Hz) to SF2 native units (timecents, centibels, cents)
-                val inMemorySample = Sf2Writer.InMemorySample(
-                    name = "Preview",
-                    samples = samples,
-                    sampleRate = 44100,
-                    rootNote = rootNote,
-                    keyRangeStart = 0,
-                    keyRangeEnd = 127,
-                    loopStart = loopStart,
-                    loopEnd = loopEnd,
-                    hasLoop = hasLoop,
-                    attenuation = attenuation,
-                    fineTuneCents = fineTuneCents,
-                    // Volume Envelope - convert ms to timecents, % to centibels
-                    volEnvAttack = Sf2UnitConverter.msToTimecents(attackMs),
-                    volEnvDecay = Sf2UnitConverter.msToTimecents(decayMs),
-                    volEnvSustain = Sf2UnitConverter.sustainPercentToCentibels(sustainPercent),
-                    volEnvRelease = Sf2UnitConverter.msToTimecents(releaseMs),
-                    // Filter - convert Hz to cents
-                    filterFc = Sf2UnitConverter.hzToFilterCents(filterCutoffHz),
-                    filterQ = filterResonanceCb,
-                    chorusSend = chorusSend,
-                    reverbSend = reverbSend,
-                    pan = pan
-                )
-
-                val success = sf2Writer.writeSf2FromMemory(tempFile, "Preview", inMemorySample)
-                if (success) tempFile else null
-            }
-
-            if (sf2File != null) {
-                tempSf2File = sf2File
-
-                if (useFluidSynth && FluidSynthEngine.isSupported()) {
-                    // Use FluidSynth engine
-                    val engine = FluidSynthEngine(requireContext())
-                    val initialized = engine.initialize(sf2File.absolutePath)
-
-                    if (initialized) {
-                        engine.startAudioRenderer()
-                        fluidSynthEngine = engine
-                        engineReady = true
+                if (sf2File != null) {
+                    tempSf2File = sf2File
+                    withContext(Dispatchers.IO) {
+                        loaded = PreviewEngine.load(context, sf2File.absolutePath, wantFluidSynth)
                     }
-                } else {
-                    // Use SF2 Engine (default)
-                    val engine = Sf2Engine(requireContext())
-                    val initialized = engine.initialize(sf2File.absolutePath)
-
-                    if (initialized) {
-                        engine.startAudioRenderer()
-                        sf2Engine = engine
-                        engineReady = true
-                    }
+                    previewEngine = loaded
+                    engineReady = loaded != null
+                    loaded = null
 
                     // If FluidSynth was requested but not available, update display
-                    if (useFluidSynth) {
+                    if (useFluidSynth && !FluidSynthEngine.isSupported()) {
                         useFluidSynth = false
                         updateEngineDisplay()
                     }
                 }
+            } finally {
+                // Cancelled while loading: nobody else holds this engine
+                loaded?.release()
             }
 
             keyboardLoadingIndicator?.visibility = View.GONE
         }
+    }
+
+    /** Stops the preview engine (and a preview being prepared). */
+    private fun stopPreview() {
+        previewJob?.cancel()
+        previewJob = null
+        previewEngine?.release()
+        previewEngine = null
+        engineReady = false
     }
 
     // ==================== Buttons ====================
@@ -1085,10 +1083,11 @@ class ExportFragment : Fragment() {
     }
 
     // ==================== Public API ====================
-    fun setSampleData(file: File?, samples: ShortArray, note: Int) {
+    fun setSampleData(file: File?, samples: ShortArray, note: Int, sampleRate: Int) {
         sampleFile = file
         sampleAudio = samples
         rootNote = note
+        this.sampleRate = sampleRate
         pendingSetup = true
 
         if (view != null) {
@@ -1261,7 +1260,7 @@ class ExportFragment : Fragment() {
         return SampleParams(
             name = name,
             samples = samples,
-            sampleRate = 44100,
+            sampleRate = sampleRate,
             rootNote = rootNote,
             keyRangeStart = finalKeyStart,
             keyRangeEnd = finalKeyEnd,
@@ -1486,7 +1485,7 @@ class ExportFragment : Fragment() {
                     val inMemorySample = Sf2Writer.InMemorySample(
                         name = name,
                         samples = samples,
-                        sampleRate = 44100,
+                        sampleRate = sampleRate,
                         rootNote = rootNote,
                         keyRangeStart = 0,
                         keyRangeEnd = 127,
@@ -1580,15 +1579,29 @@ class ExportFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        started = true
+        if (previewStopped) {
+            previewStopped = false
+            if (sampleAudio != null && view != null) generatePreviewSf2()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        started = false
+        // No audio thread in the background
+        if (previewEngine != null || previewJob?.isActive == true) {
+            stopPreview()
+            previewStopped = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        sf2Engine?.stopAudioRenderer()
-        sf2Engine?.release()
-        sf2Engine = null
-        fluidSynthEngine?.stopAudioRenderer()
-        fluidSynthEngine?.release()
-        fluidSynthEngine = null
-        engineReady = false
+        stopPreview()
+        previewStopped = false
         tempSf2File?.delete()
         tempSf2File = null
     }

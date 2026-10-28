@@ -61,7 +61,7 @@ class FloodActivity : PuzzleActivity<FloodState>() {
             swatches.clear()
             for (c in 0 until state.colours) {
                 val v = View(this).apply {
-                    setOnClickListener { current?.flood(c)?.let { next -> board.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK); play(next) } }
+                    setOnClickListener { if (!demoRunning) current?.flood(c)?.let { next -> board.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK); play(next) } }
                 }
                 swatches.add(v)
                 row.addView(v, LinearLayout.LayoutParams((40 * dp).toInt(), (40 * dp).toInt()).apply {

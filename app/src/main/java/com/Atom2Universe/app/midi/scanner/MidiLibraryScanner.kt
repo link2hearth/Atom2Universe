@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.data.MidiTrack
 import com.Atom2Universe.app.midi.repository.MidiRepository
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +64,12 @@ class MidiLibraryScanner(
         val albumPath: List<String>
     )
 
+    /** Fichier MIDI trouvé pendant le parcours, avec le dossier qui le contient */
+    private data class FoundMidiFile(
+        val info: DocumentInfo,
+        val folderContext: FolderContext?
+    )
+
     /**
      * Lance le scan d'un dossier MIDI
      *
@@ -82,7 +89,7 @@ class MidiLibraryScanner(
             if (folder == null || !folder.exists() || !folder.isDirectory) {
                 _scanProgress.value = _scanProgress.value.copy(
                     isScanning = false,
-                    errors = listOf("Invalid folder or access denied")
+                    errors = listOf(context.getString(R.string.midi_engine_scan_invalid_folder))
                 )
                 return@withContext 0
             }
@@ -93,22 +100,30 @@ class MidiLibraryScanner(
             // Charger les chemins déjà en base pour comparaison incrémentale
             val existingPaths: Set<String> = repository.getAllFilePaths()
 
-            // Pré-compter les fichiers MIDI pour la barre de progression
-            val totalFiles = countMidiFilesFast(treeUri, rootDocId)
-            _scanProgress.value = _scanProgress.value.copy(totalFiles = totalFiles)
-
-            // Scan rapide via ContentResolver direct
-            val allFoundPaths = mutableSetOf<String>()
-            val newTracks = mutableListOf<MidiTrack>()
-
+            // Un seul parcours de l'arborescence (le plus coûteux : une requête par dossier)
+            val foundFiles = mutableListOf<FoundMidiFile>()
             collectMidiFilesFast(
                 treeUri = treeUri,
                 parentDocId = rootDocId,
                 folderContext = null,
-                existingPaths = existingPaths,
-                allFoundPaths = allFoundPaths,
-                newTracks = newTracks
+                foundFiles = foundFiles
             )
+            _scanProgress.value = _scanProgress.value.copy(totalFiles = foundFiles.size)
+
+            // Comparaison avec la base, sans nouvelle requête
+            val allFoundPaths = mutableSetOf<String>()
+            val newTracks = mutableListOf<MidiTrack>()
+            for (found in foundFiles) {
+                val fileUri = DocumentsContract.buildDocumentUriUsingTree(
+                    treeUri, found.info.documentId
+                ).toString()
+                allFoundPaths.add(fileUri)
+
+                // Skip si déjà en base
+                if (fileUri in existingPaths) continue
+
+                newTracks.add(createTrack(found, fileUri))
+            }
 
             // Insérer uniquement les nouveaux tracks
             if (newTracks.isNotEmpty()) {
@@ -133,7 +148,7 @@ class MidiLibraryScanner(
         } catch (e: Exception) {
             _scanProgress.value = _scanProgress.value.copy(
                 isScanning = false,
-                errors = listOf(e.message ?: "Unknown error")
+                errors = listOf(e.message ?: context.getString(R.string.midi_sf2_err_unknown))
             )
             return@withContext 0
         }
@@ -181,41 +196,18 @@ class MidiLibraryScanner(
     }
 
     /**
-     * Compte le nombre total de fichiers MIDI via ContentResolver (rapide)
-     */
-    private fun countMidiFilesFast(treeUri: Uri, parentDocId: String): Int {
-        var count = 0
-        val children = listChildDocuments(treeUri, parentDocId)
-
-        for (child in children) {
-            if (child.isDirectory) {
-                count += countMidiFilesFast(treeUri, child.documentId)
-            } else if (child.isMidiFile) {
-                count++
-            }
-        }
-
-        return count
-    }
-
-    /**
-     * Collecte récursive rapide des fichiers MIDI via ContentResolver.
+     * Collecte récursive rapide des fichiers MIDI via ContentResolver (une requête par dossier).
      *
      * Hiérarchie de dossiers:
-     * - Racine → dossiers = Artistes, fichiers = "Unknown Artist"
+     * - Racine → dossiers = Artistes, fichiers = artiste inconnu (vide en base)
      * - Dossier artiste → dossiers = Albums, fichiers = album = nom artiste
      * - Sous-dossiers → chemin album joint par " / "
-     *
-     * Les fichiers déjà en base (existingPaths) sont ignorés pour l'insertion
-     * mais comptés dans allFoundPaths pour la détection des suppressions.
      */
     private fun collectMidiFilesFast(
         treeUri: Uri,
         parentDocId: String,
         folderContext: FolderContext?,
-        existingPaths: Set<String>,
-        allFoundPaths: MutableSet<String>,
-        newTracks: MutableList<MidiTrack>
+        foundFiles: MutableList<FoundMidiFile>
     ) {
         val children = listChildDocuments(treeUri, parentDocId)
 
@@ -233,62 +225,56 @@ class MidiLibraryScanner(
                     )
                 }
 
-                collectMidiFilesFast(
-                    treeUri, child.documentId, childContext,
-                    existingPaths, allFoundPaths, newTracks
-                )
+                collectMidiFilesFast(treeUri, child.documentId, childContext, foundFiles)
             } else if (child.isMidiFile) {
-                val fileUri = DocumentsContract.buildDocumentUriUsingTree(
-                    treeUri, child.documentId
-                ).toString()
+                foundFiles.add(FoundMidiFile(child, folderContext))
 
-                allFoundPaths.add(fileUri)
-
-                // Mettre à jour la progression
+                // Mettre à jour la progression (le total n'est connu qu'à la fin du parcours)
                 _scanProgress.value = _scanProgress.value.copy(
-                    scannedFiles = allFoundPaths.size,
+                    scannedFiles = foundFiles.size,
                     currentFile = child.displayName
-                )
-
-                // Skip si déjà en base
-                if (fileUri in existingPaths) continue
-
-                // Nouveau fichier: déterminer artiste/album depuis la hiérarchie
-                val artist: String
-                val album: String
-
-                if (folderContext == null) {
-                    // Fichier à la racine
-                    artist = "Unknown Artist"
-                    album = "Unknown Album"
-                } else {
-                    artist = folderContext.artistName ?: "Unknown Artist"
-                    album = if (folderContext.albumPath.isNotEmpty()) {
-                        folderContext.albumPath.joinToString(" / ")
-                    } else {
-                        // Directement dans le dossier artiste (pas de sous-dossier album)
-                        artist
-                    }
-                }
-
-                val title = child.displayName.replace(
-                    Regex("\\.midi?$", RegexOption.IGNORE_CASE), ""
-                )
-
-                newTracks.add(
-                    MidiTrack(
-                        id = 0,
-                        title = title,
-                        artist = artist,
-                        album = album,
-                        filePath = fileUri,
-                        duration = 0L,
-                        dateAdded = System.currentTimeMillis(),
-                        fileSize = child.size
-                    )
                 )
             }
         }
+    }
+
+    /**
+     * Crée la piste d'un nouveau fichier : artiste et album d'après la hiérarchie des dossiers.
+     * Artiste ou album inconnu = chaîne vide en base ; l'écran affiche le texte traduit.
+     */
+    private fun createTrack(found: FoundMidiFile, fileUri: String): MidiTrack {
+        val folderContext = found.folderContext
+        val artist: String
+        val album: String
+
+        if (folderContext == null) {
+            // Fichier à la racine
+            artist = ""
+            album = ""
+        } else {
+            artist = folderContext.artistName ?: ""
+            album = if (folderContext.albumPath.isNotEmpty()) {
+                folderContext.albumPath.joinToString(" / ")
+            } else {
+                // Directement dans le dossier artiste (pas de sous-dossier album)
+                artist
+            }
+        }
+
+        val title = found.info.displayName.replace(
+            Regex("\\.midi?$", RegexOption.IGNORE_CASE), ""
+        )
+
+        return MidiTrack(
+            id = 0,
+            title = title,
+            artist = artist,
+            album = album,
+            filePath = fileUri,
+            duration = 0L,
+            dateAdded = System.currentTimeMillis(),
+            fileSize = found.info.size
+        )
     }
 
     /**

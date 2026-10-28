@@ -80,7 +80,8 @@ class CardPainter(
     /** Un nouveau dos au hasard, pour une nouvelle partie. */
     fun newBack() {
         backBitmap?.recycle()
-        backBitmap = CardBacks.loadRandom(context)
+        // L'image (~640 px) est dessinée bien plus petite : la carte graphique prend alors une version réduite toute prête.
+        backBitmap = CardBacks.loadRandom(context)?.also { it.setHasMipMap(true) }
         backShader = backBitmap?.let { BitmapShader(it, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP) }
     }
 

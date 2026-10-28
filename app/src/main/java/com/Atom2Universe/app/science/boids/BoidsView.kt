@@ -11,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -33,7 +34,7 @@ import kotlin.random.Random
  * rayon de perception d'un boid, ses voisins et les trois forces qui le guident.
  *
  * La simulation tourne sur le thread UI via [postOnAnimation] : avec au plus
- * [MAX_BOIDS] agents le pas O(n²) reste sous la milliseconde.
+ * [MAX_BOIDS] agents et une grille de voisinage, le pas reste sous la milliseconde.
  */
 class BoidsView @JvmOverloads constructor(
     context: Context,
@@ -71,6 +72,10 @@ class BoidsView @JvmOverloads constructor(
         private const val MAX_PREDATORS = 3
         private const val MAX_VISION_NEIGHBORS = 48
 
+        /** Traînées à demi-résolution, agrandies avec filtrage : quatre fois moins de pixels
+         * à estomper par le processeur et à renvoyer au GPU à chaque image. */
+        private const val TRAIL_SCALE = 0.5f
+
         /** Vitesse de croisière en dp/s pour un facteur de vitesse de 1. */
         private const val BASE_SPEED_DP = 100f
     }
@@ -100,7 +105,8 @@ class BoidsView @JvmOverloads constructor(
     var trailsEnabled = false
         set(value) {
             field = value
-            if (!value) trailBitmap?.eraseColor(Color.TRANSPARENT)
+            // Le calque n'existe que quand il sert ; coupé, il libère sa mémoire.
+            if (!value) releaseTrails()
         }
 
     // ── État du troupeau ─────────────────────────────────────────────────────
@@ -157,6 +163,8 @@ class BoidsView @JvmOverloads constructor(
     private val bgPaint = Paint()
     private var trailBitmap: Bitmap? = null
     private var trailCanvas: Canvas? = null
+    private val trailDst = RectF()
+    private val trailPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val trailFadePaint = Paint().apply {
         color = Color.argb(22, 0, 0, 0)
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
@@ -267,10 +275,33 @@ class BoidsView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w <= 0 || h <= 0) return
-        initAgents()
-        trailBitmap = createBitmap(w, h)
-        trailCanvas = Canvas(trailBitmap!!)
+        // Ouvrir ou fermer le panneau redimensionne la vue : la nuée suit la nouvelle taille
+        // au lieu d'être tirée à nouveau.
+        if (oldw <= 0 || oldh <= 0) initAgents() else rescaleAgents(w / oldw.toFloat(), h / oldh.toFloat())
+        releaseTrails()
         bgPaint.color = palette.background
+    }
+
+    private fun rescaleAgents(sx: Float, sy: Float) {
+        for (i in 0 until MAX_BOIDS) { x[i] *= sx; y[i] *= sy }
+        for (p in 0 until MAX_PREDATORS) { px[p] *= sx; py[p] *= sy }
+        for (k in 0 until obstacleCount) { obstacles[k * 3] *= sx; obstacles[k * 3 + 1] *= sy }
+    }
+
+    private fun releaseTrails() {
+        // Pas de recycle() : la dernière image dessinée peut encore le référencer.
+        trailBitmap = null
+        trailCanvas = null
+    }
+
+    private fun ensureTrails() {
+        if (trailBitmap != null || width <= 0 || height <= 0) return
+        val tw = kotlin.math.ceil(width * TRAIL_SCALE).toInt().coerceAtLeast(1)
+        val th = kotlin.math.ceil(height * TRAIL_SCALE).toInt().coerceAtLeast(1)
+        val bitmap = createBitmap(tw, th)
+        trailBitmap = bitmap
+        trailCanvas = Canvas(bitmap).apply { scale(TRAIL_SCALE, TRAIL_SCALE) }
+        trailDst.set(0f, 0f, tw / TRAIL_SCALE, th / TRAIL_SCALE)
     }
 
     private fun initAgents() {
@@ -291,6 +322,57 @@ class BoidsView @JvmOverloads constructor(
             pvx[i] = cos(a) * speed
             pvy[i] = sin(a) * speed
         }
+    }
+
+    // ── Grille de voisinage ──────────────────────────────────────────────────
+    // Cases d'au moins un rayon de perception : un voisin à portée est forcément dans l'une
+    // des 3 × 3 cases autour (reliées par les bords en mode tore). Comparer toutes les paires
+    // coûtait 160 000 distances par pas à 400 boids.
+    private var gridCols = 1
+    private var gridRows = 1
+    private var cellStart = IntArray(2)
+    private var cellCursor = IntArray(1)
+    private val cellItems = IntArray(MAX_BOIDS)
+    private val cellOf = IntArray(MAX_BOIDS)
+    private val spanCols = IntArray(3)
+    private val spanRows = IntArray(3)
+
+    private fun buildNeighbourGrid(w: Float, h: Float, per: Float) {
+        val cols = (w / per).toInt().coerceAtLeast(1)
+        val rows = (h / per).toInt().coerceAtLeast(1)
+        val cells = cols * rows
+        if (cellStart.size < cells + 1) { cellStart = IntArray(cells + 1); cellCursor = IntArray(cells) }
+        gridCols = cols; gridRows = rows
+        val cellW = w / cols; val cellH = h / rows
+        java.util.Arrays.fill(cellStart, 0, cells + 1, 0)
+        for (i in 0 until count) {
+            val cx = (x[i] / cellW).toInt().coerceIn(0, cols - 1)
+            val cy = (y[i] / cellH).toInt().coerceIn(0, rows - 1)
+            val c = cy * cols + cx
+            cellOf[i] = c
+            cellStart[c + 1]++
+        }
+        for (c in 0 until cells) cellStart[c + 1] += cellStart[c]
+        System.arraycopy(cellStart, 0, cellCursor, 0, cells)
+        for (i in 0 until count) cellItems[cellCursor[cellOf[i]]++] = i
+    }
+
+    /** Indices des cases voisines de [c] sur un axe de [n] cases ; renvoie leur nombre. */
+    private fun neighbourSpan(c: Int, n: Int, wrap: Boolean, out: IntArray): Int {
+        if (n == 1) { out[0] = 0; return 1 }
+        if (wrap) {
+            // Deux cases seulement : chacune est voisine de l'autre des deux côtés, une seule fois.
+            if (n == 2) { out[0] = 0; out[1] = 1; return 2 }
+            out[0] = if (c == 0) n - 1 else c - 1
+            out[1] = c
+            out[2] = if (c == n - 1) 0 else c + 1
+            return 3
+        }
+        var k = 0
+        if (c > 0) out[k++] = c - 1
+        out[k++] = c
+        if (c < n - 1) out[k++] = c + 1
+        return k
     }
 
     // ── Pilotage (steering de Reynolds) ──────────────────────────────────────
@@ -341,6 +423,7 @@ class BoidsView @JvmOverloads constructor(
         val captureVision = visionEnabled
         if (captureVision) visionNeighborCount = 0
 
+        buildNeighbourGrid(w, h, per)
         for (i in 0 until count) {
             val xi = x[i]
             val yi = y[i]
@@ -355,48 +438,55 @@ class BoidsView @JvmOverloads constructor(
             var nSep = 0
             var nCore = 0
 
-            for (j in 0 until count) {
-                if (j == i) continue
-                var dx = x[j] - xi
-                var dy = y[j] - yi
-                if (!walls) {
-                    // Bords reliés : on mesure par le plus court chemin sur le tore. Sans ça,
-                    // deux voisins de part et d'autre d'un bord s'ignoraient et la cohésion
-                    // d'une nuée à cheval sur le bord visait le milieu de l'écran.
-                    if (dx > halfW) dx -= w else if (dx < -halfW) dx += w
-                    if (dy > halfH) dy -= h else if (dy < -halfH) dy += h
-                }
-                val d2 = dx * dx + dy * dy
-                if (d2 >= per2 || d2 < 1e-6f) continue
-                if (d2 < coreR2) {
-                    val d = sqrt(d2).coerceAtLeast(0.3f * density)
-                    val push = 1f - d / coreR
-                    coreX -= dx / d * push
-                    coreY -= dy / d * push
-                    nCore++
-                }
-                if (sc == 1 || j % sc == si) {
-                    n++
-                    aliX += vx[j]; aliY += vy[j]
-                    // Décalages relatifs (et non positions absolues) : juste aussi sur le tore.
-                    cohX += dx; cohY += dy
-                    if (d2 < sepR2) {
-                        val inv = 1f / d2
+            // Seules les cases voisines peuvent contenir un boid à portée de perception.
+            val nc = neighbourSpan(cellOf[i] % gridCols, gridCols, !walls, spanCols)
+            val nr = neighbourSpan(cellOf[i] / gridCols, gridRows, !walls, spanRows)
+            for (ri in 0 until nr) for (ci in 0 until nc) {
+                val cell = spanRows[ri] * gridCols + spanCols[ci]
+                for (k in cellStart[cell] until cellStart[cell + 1]) {
+                    val j = cellItems[k]
+                    if (j == i) continue
+                    var dx = x[j] - xi
+                    var dy = y[j] - yi
+                    if (!walls) {
+                        // Bords reliés : on mesure par le plus court chemin sur le tore. Sans ça,
+                        // deux voisins de part et d'autre d'un bord s'ignoraient et la cohésion
+                        // d'une nuée à cheval sur le bord visait le milieu de l'écran.
+                        if (dx > halfW) dx -= w else if (dx < -halfW) dx += w
+                        if (dy > halfH) dy -= h else if (dy < -halfH) dy += h
+                    }
+                    val d2 = dx * dx + dy * dy
+                    if (d2 >= per2 || d2 < 1e-6f) continue
+                    if (d2 < coreR2) {
+                        val d = sqrt(d2).coerceAtLeast(0.3f * density)
+                        val push = 1f - d / coreR
+                        coreX -= dx / d * push
+                        coreY -= dy / d * push
+                        nCore++
+                    }
+                    if (sc == 1 || j % sc == si) {
+                        n++
+                        aliX += vx[j]; aliY += vy[j]
+                        // Décalages relatifs (et non positions absolues) : juste aussi sur le tore.
+                        cohX += dx; cohY += dy
+                        if (d2 < sepR2) {
+                            val inv = 1f / d2
+                            sepX -= dx * inv
+                            sepY -= dy * inv
+                            nSep++
+                        }
+                    } else if (d2 < sepOtherR2) {
+                        // Les autres espèces repoussent plus fort et de plus loin
+                        val inv = 2f / d2
                         sepX -= dx * inv
                         sepY -= dy * inv
                         nSep++
                     }
-                } else if (d2 < sepOtherR2) {
-                    // Les autres espèces repoussent plus fort et de plus loin
-                    val inv = 2f / d2
-                    sepX -= dx * inv
-                    sepY -= dy * inv
-                    nSep++
-                }
-                if (captureVision && i == 0 && visionNeighborCount < MAX_VISION_NEIGHBORS) {
-                    visionNeighbors[visionNeighborCount * 2] = xi + dx
-                    visionNeighbors[visionNeighborCount * 2 + 1] = yi + dy
-                    visionNeighborCount++
+                    if (captureVision && i == 0 && visionNeighborCount < MAX_VISION_NEIGHBORS) {
+                        visionNeighbors[visionNeighborCount * 2] = xi + dx
+                        visionNeighbors[visionNeighborCount * 2 + 1] = yi + dy
+                        visionNeighborCount++
+                    }
                 }
             }
 
@@ -603,6 +693,7 @@ class BoidsView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), bgPaint)
 
         if (trailsEnabled) {
+            ensureTrails()
             val tc = trailCanvas
             val tb = trailBitmap
             if (tc != null && tb != null) {
@@ -610,7 +701,7 @@ class BoidsView @JvmOverloads constructor(
                     tc.drawPaint(trailFadePaint)
                     stampTrails(tc)
                 }
-                canvas.drawBitmap(tb, 0f, 0f, null)
+                canvas.drawBitmap(tb, null, trailDst, trailPaint)
             }
         }
         stepped = false

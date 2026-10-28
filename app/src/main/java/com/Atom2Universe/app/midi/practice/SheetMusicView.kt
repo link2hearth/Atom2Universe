@@ -111,6 +111,8 @@ class SheetMusicView @JvmOverloads constructor(
 
     // Notes programmées
     private var scheduledNotes: List<ScheduledNote> = emptyList()
+    // Notes du morceau triées par début : on ne parcourt que celles proches de l'écran
+    private var scheduledMaxDurationMs = 0L
     private var recordedNotes: List<ScheduledNote> = emptyList()
     private var currentPositionMs: Long = 0L
     private var targetChannel: Int = 0
@@ -363,6 +365,7 @@ class SheetMusicView @JvmOverloads constructor(
      */
     fun setNotes(notes: List<ScheduledNote>) {
         scheduledNotes = notes
+        scheduledMaxDurationMs = notes.maxDurationMs()
         markDirtyAndInvalidate()
     }
 
@@ -772,7 +775,9 @@ class SheetMusicView @JvmOverloads constructor(
             canvas = canvas,
             notes = scheduledNotes,
             leftTimeMs = leftTimeMs,
-            rightTimeMs = rightTimeMs
+            rightTimeMs = rightTimeMs,
+            fromIndex = scheduledNotes.firstIndexStartingAtOrAfter(leftTimeMs - scheduledMaxDurationMs),
+            sortedByStart = true
         ) { velocity ->
             applyVelocityToColor(scheduledBaseColor, velocity, scheduledAlpha)
         }
@@ -787,17 +792,23 @@ class SheetMusicView @JvmOverloads constructor(
         }
     }
 
-    private fun drawNoteCollection(
+    private inline fun drawNoteCollection(
         canvas: Canvas,
         notes: List<ScheduledNote>,
         leftTimeMs: Long,
         rightTimeMs: Long,
+        fromIndex: Int = 0,
+        sortedByStart: Boolean = false,
         colorForVelocity: (Int) -> Int
     ) {
-        for (note in notes) {
+        for (i in fromIndex until notes.size) {
+            val note = notes[i]
             // Vérifier si la note est visible
             if (note.endTimeMs < leftTimeMs) continue
-            if (note.startTimeMs > rightTimeMs) continue
+            if (note.startTimeMs > rightTimeMs) {
+                if (sortedByStart) break
+                continue
+            }
 
             // Calculer la position X
             val x = timeToX(note.startTimeMs)

@@ -352,7 +352,7 @@ class Sf2ImportFragment : Fragment() {
             holder.presetName.text = preset.name.ifEmpty { getString(R.string.sf2_unnamed_preset, position) }
 
             // Show bank:program and instrument/sample count
-            val bankProgram = String.format("%03d:%03d", preset.bankNumber, preset.programNumber)
+            val bankProgram = getString(R.string.sf2_bank_program_code, preset.bankNumber, preset.programNumber)
             val instrumentCount = preset.getInstrumentCount()
             val sampleCount = preset.getSampleCount()
             val instrumentInfo = if (instrumentCount == 1) {
@@ -432,13 +432,14 @@ class Sf2ImportFragment : Fragment() {
                     zoneIcon.setImageResource(R.drawable.ic_music_note)
                     zoneTitle.text = sample.name.ifEmpty { getString(R.string.sf2_unnamed_sample) }
 
-                    val keyRange = "${noteToName(zone.keyRangeLow)} - ${noteToName(zone.keyRangeHigh)}"
+                    val keyRange = getString(R.string.sf2_note_range, noteToName(zone.keyRangeLow), noteToName(zone.keyRangeHigh))
                     val rootNote = noteToName(zone.getRootKey() ?: sample.originalPitch)
-                    val duration = String.format("%.2fs", sample.getDurationSeconds())
+                    val duration = getString(R.string.sf2_duration_seconds, sample.getDurationSeconds())
                     zoneInfo.text = getString(R.string.sf2_zone_detail, keyRange, rootNote, duration)
 
                     // Indent zone view
-                    (zoneView.layoutParams as? ViewGroup.MarginLayoutParams)?.marginStart = 32
+                    (zoneView.layoutParams as? ViewGroup.MarginLayoutParams)?.marginStart =
+                        (16 * resources.displayMetrics.density).toInt()
 
                     container.addView(zoneView)
                 }
@@ -515,9 +516,9 @@ class Sf2ImportFragment : Fragment() {
                 zoneIcon.setImageResource(R.drawable.ic_music_note)
                 zoneTitle.text = sample.name.ifEmpty { getString(R.string.sf2_unnamed_sample) }
 
-                val keyRange = "${noteToName(zone.keyRangeLow)} - ${noteToName(zone.keyRangeHigh)}"
+                val keyRange = getString(R.string.sf2_note_range, noteToName(zone.keyRangeLow), noteToName(zone.keyRangeHigh))
                 val rootNote = noteToName(zone.getRootKey() ?: sample.originalPitch)
-                val duration = String.format("%.2fs", sample.getDurationSeconds())
+                val duration = getString(R.string.sf2_duration_seconds, sample.getDurationSeconds())
                 zoneInfo.text = getString(R.string.sf2_zone_detail, keyRange, rootNote, duration)
 
                 container.addView(zoneView)
@@ -553,8 +554,8 @@ class Sf2ImportFragment : Fragment() {
 
             // Show sample details
             val rootNote = noteToName(sample.originalPitch)
-            val duration = String.format("%.2fs", sample.getDurationSeconds())
-            val sampleRate = "${sample.sampleRate} Hz"
+            val duration = getString(R.string.sf2_duration_seconds, sample.getDurationSeconds())
+            val sampleRate = getString(R.string.sf2_sample_rate_hz, sample.sampleRate)
             val loopInfo = if (sample.hasLoop()) getString(R.string.sf2_has_loop) else ""
             holder.info.text = getString(R.string.sf2_sample_detail, rootNote, duration, sampleRate, loopInfo)
 

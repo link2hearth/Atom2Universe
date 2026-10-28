@@ -133,8 +133,8 @@ class MidiKeyboardSettingsDialog : DialogFragment() {
 
         fun updateOctaveDisplay() {
             val displayText = when {
-                octaveOffset > 0 -> "+$octaveOffset"
-                else -> octaveOffset.toString()
+                octaveOffset > 0 -> getString(R.string.midi_ui_signed_positive, octaveOffset)
+                else -> getString(R.string.midi_ui_number, octaveOffset)
             }
             txtOctaveOffset.text = displayText
             // Disable buttons at limits

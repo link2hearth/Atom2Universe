@@ -45,9 +45,13 @@ class MosaicState(
         }
     }
 
-    /** La solution étant unique, des noires qui satisfont tous les nombres sont la solution. */
-    val isSolved: Boolean
-        get() = clues.indices.all { clues[it] < 0 || block(it).count { j -> cells[j] == 1 } == clues[it] }
+    /**
+     * La solution étant unique, des noires qui satisfont tous les nombres sont la solution.
+     * Calculé une fois par état (immuable) : la vue le relit pour chaque case.
+     */
+    val isSolved: Boolean by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        clues.indices.all { clues[it] < 0 || block(it).count { j -> cells[j] == 1 } == clues[it] }
+    }
 
     fun encode() = "$w,$h:" + clues.joinToString(",") + ":" + cells.joinToString("") + ":" + picture + ":" +
         solution.joinToString("")
@@ -56,8 +60,30 @@ class MosaicState(
         fun decode(text: String): MosaicState {
             val p = text.split(':')
             val (w, h) = p[0].split(',').map { it.toInt() }
-            return MosaicState(w, h, p[1].split(',').map { it.toInt() }.toIntArray(), p[2].map { it - '0' }.toIntArray(), p[3].toInt(),
+            val state = MosaicState(w, h, p[1].split(',').map { it.toInt() }.toIntArray(), p[2].map { it - '0' }.toIntArray(), p[3].toInt(),
                 p[4].map { it - '0' }.toIntArray())
+            // Une sauvegarde qui ne colle plus (image retirée ou redessinée à une autre taille) est refusée.
+            require(w > 0 && h > 0 && state.clues.size == w * h && state.cells.size == w * h)
+            require(state.solution.isEmpty() || state.solution.size == w * h)
+            require(state.picture < 0 || fitsPicture(w, h, state.picture))
+            return state
+        }
+
+        /** Vrai si une grille de [w] × [h] est celle de l'image [index], avec ou sans sa marge. */
+        fun fitsPicture(w: Int, h: Int, index: Int): Boolean {
+            val p = com.Atom2Universe.app.games.puzzles.pattern.PatternPictures.all.getOrNull(index) ?: return false
+            val margin = (w - p.w) / 2
+            return margin in 0..1 && w == p.w + 2 * margin && h == p.h + 2 * margin
+        }
+
+        /** Vrai si [state] est bien la grille vierge de son image : même taille, même dessin. */
+        fun matchesPicture(state: MosaicState): Boolean {
+            if (!fitsPicture(state.w, state.h, state.picture) || state.solution.size != state.w * state.h) return false
+            val p = com.Atom2Universe.app.games.puzzles.pattern.PatternPictures.all[state.picture]
+            return state.solution.indices.all { i ->
+                val c = pictureCell(state, i)
+                state.solution[i] == if (c >= 0 && p.filled(c)) 1 else 0
+            }
         }
 
         fun blockOf(w: Int, h: Int, i: Int): List<Int> {

@@ -329,8 +329,8 @@ class MatrixTheme : BasePracticeTheme() {
                 }
 
                 // Utilise les symboles uniques de chaque colonne
-                val symbol = column.symbols[index % symbolCount]
-                canvas.drawText(symbol.toString(), column.x, baseY, symbolPaint)
+                // Dessiné directement depuis le tableau : pas de String par symbole et par image
+                canvas.drawText(column.symbols, index % symbolCount, 1, column.x, baseY, symbolPaint)
             }
         }
     }

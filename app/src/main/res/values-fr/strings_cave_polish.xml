@@ -57,4 +57,8 @@
     <string name="cave_pause_render_distance">Distance de rendu : %1$d chunks</string>
     <string name="cave_pause_simulation_distance">Distance de simulation : %1$d chunks</string>
     <string name="cave_pause_view_distance">Distance d’affichage (LOD) : %1$d chunks</string>
+    <string name="cave_pause_resolution">Résolution 3D</string>
+    <string name="cave_pause_resolution_choice">%1$d%%</string>
+    <string name="cave_fps">%1$d IPS</string>
+    <string name="cave_coordinates">"%1$.1f  %2$.1f  %3$.1f"</string>
 </resources>

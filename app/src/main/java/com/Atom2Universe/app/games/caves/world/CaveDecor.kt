@@ -63,18 +63,33 @@ internal class CaveDecorScene(objects: List<CaveDecor>) {
             bx > x0 && ax < x1 && by > y0 && ay < y1 && bz > z0 && az < z1
 
         fun hits(x: Double, y: Double, z: Double, dx: Double, dy: Double, dz: Double): Boolean {
+            // Same slab test per axis as before, written inline: a local function sharing lo/hi
+            // allocated two boxed doubles on every call (lines of sight test thousands of voxels).
             var lo = 0.0; var hi = 1.0
-            fun axis(p: Double, d: Double, a: Double, b: Double): Boolean {
-                if (kotlin.math.abs(d) < 1e-10) return p >= a && p <= b
-                val t0 = (a - p) / d; val t1 = (b - p) / d
+            if (kotlin.math.abs(dx) < 1e-10) { if (!(x >= x0 && x <= x1)) return false }
+            else {
+                val t0 = (x0 - x) / dx; val t1 = (x1 - x) / dx
                 lo = maxOf(lo, minOf(t0, t1)); hi = minOf(hi, maxOf(t0, t1))
-                return lo <= hi
+                if (!(lo <= hi)) return false
             }
-            return axis(x, dx, x0, x1) && axis(y, dy, y0, y1) && axis(z, dz, z0, z1)
+            if (kotlin.math.abs(dy) < 1e-10) { if (!(y >= y0 && y <= y1)) return false }
+            else {
+                val t0 = (y0 - y) / dy; val t1 = (y1 - y) / dy
+                lo = maxOf(lo, minOf(t0, t1)); hi = minOf(hi, maxOf(t0, t1))
+                if (!(lo <= hi)) return false
+            }
+            if (kotlin.math.abs(dz) < 1e-10) return z >= z0 && z <= z1
+            val t0 = (z0 - z) / dz; val t1 = (z1 - z) / dz
+            lo = maxOf(lo, minOf(t0, t1)); hi = minOf(hi, maxOf(t0, t1))
+            return lo <= hi
         }
     }
-    private val cells = HashMap<MapPoint, MutableList<Box>>()
+    // Occupied voxels, sorted by packed key: a lookup is a binary search, with no MapPoint
+    // allocated per tested voxel (sight lines, collisions and the NavGrid test thousands).
+    private val cellKeys: LongArray
+    private val cellBoxes: Array<Array<Box>>
     init {
+        val cells = HashMap<Long, MutableList<Box>>()
         for (p in placements) for (s in p.solids) {
             val b = Box((s.x - s.width / 2).toDouble(), (s.y - s.height / 2).toDouble(),
                 (s.z - s.depth / 2).toDouble(), (s.x + s.width / 2).toDouble(),
@@ -82,18 +97,24 @@ internal class CaveDecorScene(objects: List<CaveDecor>) {
             for (x in cell(b.x0)..cell(b.x1 - 1e-6))
                 for (y in cell(b.y0)..cell(b.y1 - 1e-6))
                     for (z in cell(b.z0)..cell(b.z1 - 1e-6))
-                        cells.getOrPut(MapPoint(x, y, z)) { ArrayList() }.add(b)
+                        key(x, y, z).takeIf { it >= 0 }?.let { cells.getOrPut(it) { ArrayList() }.add(b) }
         }
+        cellKeys = cells.keys.toLongArray().also { it.sort() }
+        cellBoxes = Array(cellKeys.size) { cells.getValue(cellKeys[it]).toTypedArray() }
     }
-    fun occupied(x: Int, y: Int, z: Int) = cells.containsKey(MapPoint(x, y, z))
+    private fun boxesAt(x: Int, y: Int, z: Int): Array<Box>? {
+        val index = cellKeys.binarySearch(key(x, y, z))
+        return if (index >= 0) cellBoxes[index] else null
+    }
+    fun occupied(x: Int, y: Int, z: Int) = cellKeys.binarySearch(key(x, y, z)) >= 0
     fun blocksSight(cx: Int, cy: Int, cz: Int, x: Double, y: Double, z: Double,
-        dx: Double, dy: Double, dz: Double) = cells[MapPoint(cx, cy, cz)]?.any { it.hits(x,y,z,dx,dy,dz) } == true
+        dx: Double, dy: Double, dz: Double) = boxesAt(cx, cy, cz)?.any { it.hits(x,y,z,dx,dy,dz) } == true
 
     fun collides(x: Double, feet: Double, z: Double, height: Double, radius: Double): Boolean {
-        if (cells.isEmpty()) return false
+        if (cellKeys.isEmpty()) return false
         for (cx in cell(x-radius)..cell(x+radius)) for (cy in cell(feet)..cell(feet+height))
             for (cz in cell(z-radius)..cell(z+radius)) {
-                if (cells[MapPoint(cx,cy,cz)]?.any {
+                if (boxesAt(cx,cy,cz)?.any {
                     it.overlaps(x-radius,feet,z-radius,x+radius,feet+height,z+radius)
                 } == true) return true
             }
@@ -102,7 +123,7 @@ internal class CaveDecorScene(objects: List<CaveDecor>) {
 
     /** Used on the existing short projectile steps, so thin tabletops cannot be skipped. */
     fun hitsSegment(x: Double, y: Double, z: Double, endX: Double, endY: Double, endZ: Double): Boolean {
-        if (cells.isEmpty()) return false
+        if (cellKeys.isEmpty()) return false
         for (cx in cell(minOf(x,endX))..cell(maxOf(x,endX)))
             for (cy in cell(minOf(y,endY))..cell(maxOf(y,endY)))
                 for (cz in cell(minOf(z,endZ))..cell(maxOf(z,endZ)))
@@ -110,4 +131,10 @@ internal class CaveDecorScene(objects: List<CaveDecor>) {
         return false
     }
     private fun cell(v: Double) = floor(v).toInt()
+    /** Voxel packed on 3 × 21 bits; -1 (never stored) outside the representable range. */
+    private fun key(x: Int, y: Int, z: Int): Long {
+        if (x < -KEY_HALF || x >= KEY_HALF || y < -KEY_HALF || y >= KEY_HALF || z < -KEY_HALF || z >= KEY_HALF) return -1L
+        return ((x + KEY_HALF).toLong() shl 42) or ((y + KEY_HALF).toLong() shl 21) or (z + KEY_HALF).toLong()
+    }
+    private companion object { const val KEY_HALF = 1 shl 20 }
 }

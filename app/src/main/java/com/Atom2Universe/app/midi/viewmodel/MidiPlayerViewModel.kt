@@ -42,9 +42,6 @@ class MidiPlayerViewModel(
     private val _isPlaying = MutableLiveData(false)
     val isPlaying: LiveData<Boolean> = _isPlaying
 
-    private val _playbackPosition = MutableLiveData(0L)
-    val playbackPosition: LiveData<Long> = _playbackPosition
-
     // === Library State (Flow depuis Room) ===
 
     val allTracks: Flow<List<MidiTrack>> = midiRepository.allTracks
@@ -81,10 +78,6 @@ class MidiPlayerViewModel(
             if (lastTrackId != null && lastTrackId > 0) {
                 _currentTrack.value = midiRepository.getTrackById(lastTrackId)
             }
-
-            // Charge la position de lecture
-            val position = settingsRepository.getPlaybackPosition()
-            _playbackPosition.value = position ?: 0L
         }
     }
 
@@ -111,21 +104,6 @@ class MidiPlayerViewModel(
 
     fun setPlaying(playing: Boolean) {
         _isPlaying.value = playing
-    }
-
-    fun setPlaybackPosition(position: Long) {
-        _playbackPosition.value = position
-    }
-
-    /**
-     * Sauvegarde la position de lecture (pour persist state)
-     */
-    fun savePlaybackPosition() {
-        viewModelScope.launch {
-            _playbackPosition.value?.let { position ->
-                settingsRepository.savePlaybackPosition(position)
-            }
-        }
     }
 
     // === Library Methods ===
@@ -241,13 +219,5 @@ class MidiPlayerViewModel(
      */
     suspend fun getPlaylistTrackCount(playlistId: Long): Int {
         return playlistRepository.getPlaylistTrackCount(playlistId)
-    }
-
-    // === Cleanup ===
-
-    override fun onCleared() {
-        super.onCleared()
-        // Sauvegarde l'état avant destruction
-        savePlaybackPosition()
     }
 }

@@ -4,8 +4,10 @@ import android.opengl.GLES30
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
+/** [key] : clé du chunk (eau) ou de la colonne (LOD), lue par les boucles de dessin. */
+internal class ChunkMesh(private val floatsPerVertex: Int = 6, val key: Long = 0L) {
     private var vboId = 0
+    private var vaoId = 0
     private var vertexCount = 0
     private var ready = false
 
@@ -57,6 +59,12 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
                 ByteBuffer.allocateDirect(byteSize).order(ByteOrder.nativeOrder()).also { sharedBuf = it }
             }
         }
+
+        /** Revient au VAO par défaut après les [drawColored] : les autres dessins s'en servent. */
+        fun endVaoDraws() {
+            GLES30.glBindVertexArray(0)
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        }
     }
 
     /** [aBlock] : lumière des torches par sommet, 12e flottant du maillage des chunks. */
@@ -96,7 +104,34 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
+    /**
+     * Tuile de LOD : position et couleur (3 + 3 flottants) enregistrées une fois dans un VAO,
+     * puis deux appels par tuile au lieu d'une dizaine. Laisse son VAO lié : appeler
+     * [endVaoDraws] après la dernière tuile.
+     */
+    fun drawColored(aPos: Int, aColor: Int) {
+        if (!ready || vertexCount == 0 || vboId == 0) return
+        if (vaoId == 0) {
+            val ids = IntArray(1)
+            GLES30.glGenVertexArrays(1, ids, 0)
+            vaoId = ids[0]
+            GLES30.glBindVertexArray(vaoId)
+            // Le VAO retient le tampon nommé : un nouvel envoi (glBufferData) le garde valable.
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
+            val stride = floatsPerVertex * 4
+            GLES30.glEnableVertexAttribArray(aPos)
+            GLES30.glVertexAttribPointer(aPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+            GLES30.glEnableVertexAttribArray(aColor)
+            GLES30.glVertexAttribPointer(aColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        } else GLES30.glBindVertexArray(vaoId)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+    }
+
     fun destroy() {
+        if (vaoId != 0) {
+            GLES30.glDeleteVertexArrays(1, intArrayOf(vaoId), 0)
+            vaoId = 0
+        }
         if (vboId != 0) {
             GLES30.glDeleteBuffers(1, intArrayOf(vboId), 0)
             vboId = 0

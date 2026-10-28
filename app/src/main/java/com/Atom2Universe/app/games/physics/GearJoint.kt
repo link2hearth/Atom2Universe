@@ -64,7 +64,7 @@ class GearJoint(a: PhysBody, b: PhysBody, ratio: Float) : Joint(a, b) {
         slipping = false
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         posImpulse = 0f
         reactionTorqueOnB = 0f
@@ -86,7 +86,7 @@ class GearJoint(a: PhysBody, b: PhysBody, ratio: Float) : Joint(a, b) {
         }
         posScale = 0.35f * invDt
 
-        impulse = impulse.coerceIn(-maxImpulse, maxImpulse)
+        impulse = (impulse * dtRatio).coerceIn(-maxImpulse, maxImpulse)
         a.omega += a.invI * ratio * impulse
         b.omega += b.invI * impulse
         solvable = true

@@ -77,6 +77,9 @@ class MarkerSeekBarView @JvmOverloads constructor(
     var onProgressChanged: ((progress: Float, fromUser: Boolean) -> Unit)? = null
     var onMarkerClicked: ((positionMs: Long) -> Unit)? = null
     var onMarkersChanged: ((markers: List<Long>) -> Unit)? = null
+    // Glissement du curseur : début, puis position finale au lâcher (le seek se fait là)
+    var onSeekStarted: (() -> Unit)? = null
+    var onSeekFinished: ((progress: Float) -> Unit)? = null
 
     // État du drag
     private var isDragging = false
@@ -122,6 +125,11 @@ class MarkerSeekBarView @JvmOverloads constructor(
     private val markerDotGlowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
+
+    // Rectangles réutilisés à chaque dessin
+    private val trackRect = RectF()
+    private val progressRect = RectF()
+    private val markerLineRect = RectF()
 
     private val markerLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#30FFFFFF")
@@ -192,11 +200,11 @@ class MarkerSeekBarView @JvmOverloads constructor(
         // === Ligne 1: Seekbar ===
 
         // Track background
-        val trackRect = RectF(trackStartX, line1Y - trackHeight / 2, trackEndX, line1Y + trackHeight / 2)
+        trackRect.set(trackStartX, line1Y - trackHeight / 2, trackEndX, line1Y + trackHeight / 2)
         canvas.drawRoundRect(trackRect, trackHeight / 2, trackHeight / 2, trackBackgroundPaint)
 
         // Track progress
-        val progressRect = RectF(trackStartX, line1Y - trackHeight / 2, thumbX, line1Y + trackHeight / 2)
+        progressRect.set(trackStartX, line1Y - trackHeight / 2, thumbX, line1Y + trackHeight / 2)
         canvas.drawRoundRect(progressRect, trackHeight / 2, trackHeight / 2, trackProgressPaint)
 
         // Thumb glow
@@ -210,7 +218,7 @@ class MarkerSeekBarView @JvmOverloads constructor(
         // === Ligne 2: Marqueurs placés + bouton "+" ===
 
         // Ligne de fond pour les marqueurs
-        val markerLineRect = RectF(trackStartX, line2Y - 2, trackEndX, line2Y + 2)
+        markerLineRect.set(trackStartX, line2Y - 2, trackEndX, line2Y + 2)
         canvas.drawRoundRect(markerLineRect, 2f, 2f, markerLinePaint)
 
         // Dessiner chaque marqueur
@@ -266,6 +274,7 @@ class MarkerSeekBarView @JvmOverloads constructor(
                 // Vérifier si on touche la seekbar (ligne 1)
                 if (isInSeekBarArea(x, y)) {
                     isDragging = true
+                    onSeekStarted?.invoke()
                     updateProgressFromTouch(x)
                     parent?.requestDisallowInterceptTouchEvent(true)
                     return true
@@ -288,7 +297,10 @@ class MarkerSeekBarView @JvmOverloads constructor(
                     }
                 }
 
-                isDragging = false
+                if (isDragging) {
+                    isDragging = false
+                    onSeekFinished?.invoke(progress)
+                }
                 isHoveringMarkerButton = false
                 parent?.requestDisallowInterceptTouchEvent(false)
                 invalidate()
@@ -378,8 +390,10 @@ class MarkerSeekBarView @JvmOverloads constructor(
     fun setProgress(value: Float, fromUser: Boolean = false) {
         val newProgress = value.coerceIn(0f, 1f)
         if (newProgress != progress) {
+            // Redessin (calque logiciel) seulement si le curseur bouge d'au moins un quart de pixel
+            val moved = (trackWidth * newProgress * 4f).toInt() != (trackWidth * progress * 4f).toInt()
             progress = newProgress
-            if (!fromUser) {
+            if (!fromUser && moved) {
                 invalidate()
             }
         }

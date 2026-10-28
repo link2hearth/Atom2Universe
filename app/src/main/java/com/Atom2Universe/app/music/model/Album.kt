@@ -1,7 +1,8 @@
 package com.Atom2Universe.app.music.model
 
 import android.net.Uri
-import java.util.Locale
+import com.Atom2Universe.app.A2UApplication
+import com.Atom2Universe.app.R
 
 data class Album(
     val id: Long,
@@ -18,15 +19,17 @@ data class Album(
     val totalDuration: Long
         get() = tracks.sumOf { it.duration }
 
+    // Formats en ressource (EN + FR) ; le contexte de l'appli suit la langue choisie
     val totalDurationFormatted: String
         get() {
             val totalSeconds = totalDuration / 1000
             val hours = totalSeconds / 3600
             val minutes = (totalSeconds % 3600) / 60
+            val context = A2UApplication.appContext
             return if (hours > 0) {
-                String.format(Locale.ROOT, "%d h %02d min", hours, minutes)
+                context.getString(R.string.music_duration_hours_minutes, hours, minutes)
             } else {
-                String.format(Locale.ROOT, "%d min", minutes)
+                context.getString(R.string.music_duration_minutes, minutes)
             }
         }
 }

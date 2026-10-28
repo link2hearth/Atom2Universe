@@ -1,9 +1,7 @@
 package com.Atom2Universe.app.radio
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -29,16 +27,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.AudioPlaybackManager
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.RadioRecordingService
 import com.Atom2Universe.app.Recorder
 import com.Atom2Universe.app.SaveCore
 import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.TrackMetadata
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.cancel
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.AudioHubActivity
 
@@ -52,8 +45,6 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
     private lateinit var repository: RadioRepository
     private lateinit var favoritesStore: RadioFavoritesStore
     private lateinit var player: ExoPlayer  // Référence au player du holder
-    private lateinit var recorder: Recorder
-    private val recorderScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private lateinit var statusText: TextView
     private lateinit var playerStatusText: TextView
@@ -92,14 +83,6 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
     @Volatile  // Bug 4.16: Thread-safety pour latestMetadata
     private var latestMetadata: TrackMetadata? = null
 
-    private val recordingStopReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == RadioRecordingService.ACTION_STOP_FROM_NOTIFICATION) {
-                stopRecording(showStatus = true)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
@@ -111,7 +94,6 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
         // Utilise le holder singleton pour persister la lecture en background
         player = RadioPlaybackHolder.getOrCreatePlayer(this)
         RadioPlaybackHolder.addListener(this)
-        recorder = Recorder(applicationContext, recorderScope)
 
         // Restaure l'état si une station était en cours de lecture
         RadioPlaybackHolder.getCurrentStation()?.let { station ->
@@ -133,36 +115,12 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
         applyConfigState()
         loadFilters()
         updatePlayerUi()
-
-        val filter = IntentFilter(RadioRecordingService.ACTION_STOP_FROM_NOTIFICATION)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(recordingStopReceiver, filter, RECEIVER_NOT_EXPORTED)
-        } else {
-            @Suppress("UnspecifiedRegisterReceiverFlag")
-            registerReceiver(recordingStopReceiver, filter)
-        }
     }
 
     override fun onDestroy() {
-        // Bug 4.8: Utiliser try-finally pour garantir le nettoyage des listeners même en cas de crash
-        // Bug 4.11: S'assurer que recorderScope est cancelled
-        try {
-            unregisterReceiver(recordingStopReceiver)
-        } catch (_: Exception) {}
-        try {
-            // Ne release PAS le player - il est géré par RadioPlaybackHolder
-            // On retire juste le listener pour éviter les fuites mémoire
-            RadioPlaybackHolder.removeListener(this)
-        } finally {
-            try {
-                recorder.release()
-            } finally {
-                recorderScope.cancel()
-            }
-        }
-        if (isRecording) {
-            RadioRecordingService.stop(applicationContext)
-        }
+        // Ne release PAS le player ni l'enregistrement : ils vivent dans RadioPlaybackHolder.
+        // On retire juste le listener pour éviter les fuites mémoire
+        RadioPlaybackHolder.removeListener(this)
         super.onDestroy()
     }
 
@@ -182,7 +140,8 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val savedStationId = savedInstanceState.getString("selectedStationId")
-        val savedIsRecording = savedInstanceState.getBoolean("isRecording", false)
+        // L'enregistrement vit dans le holder : il a pu s'arrêter pendant la recréation de l'écran.
+        val savedIsRecording = RadioPlaybackHolder.isCurrentlyRecording()
 
         // Restaurer la station sélectionnée
         if (savedStationId != null) {
@@ -295,36 +254,30 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
 
     override fun onRecordingStateChanged(recording: Boolean) {
         runOnUiThread {
-            // Sync l'état d'enregistrement avec l'UI
+            // L'enregistrement vit dans le holder (écran, notification) : l'écran ne fait que le montrer.
             if (recording != isRecording) {
-                if (recording) {
-                    // Démarré depuis la notification - lancer l'enregistrement réel
-                    val station = selectedStation ?: RadioPlaybackHolder.getCurrentStation()
-                    if (station != null) {
-                        val started = recorder.startRecording(station.url, latestMetadata) { hadError ->
-                            runOnUiThread {
-                                setRecordingState(false)
-                                RadioPlaybackHolder.setRecordingState(this, false)
-                                RadioRecordingService.stop(applicationContext)
-                                if (hadError) {
-                                    Toast.makeText(this, getString(R.string.radio_recording_error_storage), Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        }
-                        if (started) {
-                            setRecordingState(true)
-                            updatePlayerStatus(getString(R.string.radio_player_status_recording))
-                            RadioRecordingService.start(applicationContext, station.name)
-                        }
-                    }
-                } else {
-                    // Arrêté depuis la notification
-                    recorder.stopRecording()
-                    RadioRecordingService.stop(applicationContext)
-                    setRecordingState(false)
-                    updatePlayerStatus(getString(R.string.radio_player_status_recording_stopped))
-                }
+                setRecordingState(recording)
+                updatePlayerStatus(getString(
+                    if (recording) R.string.radio_player_status_recording else R.string.radio_player_status_recording_stopped
+                ))
             }
+        }
+    }
+
+    override fun onRecordingFailed(failure: Recorder.Failure) {
+        runOnUiThread {
+            val message = when (failure) {
+                Recorder.Failure.STORAGE -> R.string.radio_recording_error_storage
+                Recorder.Failure.NETWORK -> R.string.radio_recording_error_network
+            }
+            Toast.makeText(this, getString(message), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onStopped() {
+        runOnUiThread {
+            updatePlayerStatus(getString(R.string.radio_player_status_stopped))
+            setNowPlaying(null)
         }
     }
 
@@ -599,11 +552,12 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
      * Démarre effectivement la lecture Radio (après vérification des conflits)
      */
     private fun startRadioPlayback(station: RadioStation, forceReload: Boolean) {
-        // Enregistre cette source comme active avec callback pour l'arrêter
+        // Enregistre cette source comme active avec callback pour l'arrêter. Le contexte de l'appli,
+        // pas l'écran : le gestionnaire garde ce rappel bien après la fermeture de l'écran.
+        val app = applicationContext
         AudioPlaybackManager.registerPlayback(AudioPlaybackManager.AudioSource.RADIO) {
-            // Callback pour arrêter la lecture Radio si une autre source prend le relais
-            RadioPlaybackHolder.stop(this)
-            updatePlayerStatus(getString(R.string.radio_player_status_stopped))
+            // Callback pour arrêter la lecture Radio si une autre source prend le relais (l'écran suit par onStopped)
+            RadioPlaybackHolder.stop(app)
         }
 
         // Utilise le holder pour gérer la lecture (persiste en background)
@@ -633,31 +587,20 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
             updatePlayerStatus(getString(R.string.radio_player_status_idle))
             return
         }
-        val started = recorder.startRecording(station.url, latestMetadata) { hadError ->
-            runOnUiThread {
-                setRecordingState(false)
-                RadioPlaybackHolder.setRecordingState(this, false)
-                RadioRecordingService.stop(applicationContext)
-                if (hadError) {
-                    Toast.makeText(this, getString(R.string.radio_recording_error_storage), Toast.LENGTH_LONG).show()
-                }
+        // Le holder enregistre la station qu'il joue : on lance donc d'abord la lecture de celle choisie.
+        if (RadioPlaybackHolder.getCurrentStation()?.id != station.id) {
+            AudioPlaybackManager.requestPlayback(AudioPlaybackManager.AudioSource.RADIO, this) {
+                startRadioPlayback(station, forceReload = false)
+                RadioPlaybackHolder.startRecording(this)
             }
-        }
-        if (!started) {
             return
         }
-        setRecordingState(true)
-        RadioPlaybackHolder.setRecordingState(this, true)
-        updatePlayerStatus(getString(R.string.radio_player_status_recording))
-        RadioRecordingService.start(applicationContext, station.name)
+        RadioPlaybackHolder.startRecording(this)
         playSelectedStation(forceReload = false)
     }
 
     private fun stopRecording(showStatus: Boolean) {
-        recorder.stopRecording()
-        RadioRecordingService.stop(applicationContext)
-        setRecordingState(false)
-        RadioPlaybackHolder.setRecordingState(this, false)
+        RadioPlaybackHolder.stopRecording(this)
         if (showStatus) {
             updatePlayerStatus(getString(R.string.radio_player_status_recording_stopped))
         }
@@ -748,13 +691,13 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
             parts.add(station.language)
         }
         station.bitrate?.let { parts.add(getString(R.string.radio_meta_bitrate, it)) }
-        return parts.joinToString(" · ")
+        return parts.joinToString(getString(R.string.radio_meta_separator))
     }
 
     private fun setNowPlaying(metadata: TrackMetadata?) {
         val text = listOfNotNull(metadata?.artist, metadata?.title)
             .filter { it.isNotBlank() }
-            .joinToString(" — ")
+            .joinToString(getString(R.string.radio_now_playing_separator))
         if (text.isBlank()) {
             nowPlayingText.isVisible = false
             nowPlayingText.text = ""

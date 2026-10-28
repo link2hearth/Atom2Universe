@@ -3,6 +3,7 @@
 import android.util.Log
 import com.Atom2Universe.app.music.model.MusicTrack
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.jaudiotagger.audio.AudioFileIO
 import kotlinx.coroutines.withTimeout
@@ -52,6 +53,10 @@ object MusicStatsManager {
     // Bug fix: Utilisation de ConcurrentHashMap.newKeySet() pour thread-safety
     private val pendingWrites = java.util.concurrent.ConcurrentHashMap.newKeySet<Long>()
 
+    // Chemin -> date de modification lors de la dernière lecture POPM : un fichier inchangé
+    // n'est pas relu à chaque ouverture d'album (les écritures POPM changent cette date)
+    private val popmCheckedFiles = java.util.concurrent.ConcurrentHashMap<String, Long>()
+
     data class TrackStats(
         var playCount: Long = 0,
         var rating: Long = 0,  // 0-255, 255 = favori
@@ -68,7 +73,10 @@ object MusicStatsManager {
      *
      * Si un POPM contient une valeur supérieure au JSON, le JSON est mis à jour.
      */
-    suspend fun loadStatsForTracks(tracks: List<MusicTrack>) = withContext(Dispatchers.IO) {
+    suspend fun loadStatsForTracks(
+        tracks: List<MusicTrack>,
+        skipUnchangedFiles: Boolean = false
+    ) = withContext(Dispatchers.IO) {
         // Désactive les logs verbeux de jaudiotagger
         Logger.getLogger("org.jaudiotagger").level = Level.OFF
 
@@ -76,6 +84,11 @@ object MusicStatsManager {
         if (!MusicPlayCountManager.isLoaded()) {
             MusicPlayCountManager.loadPlayCounts()
         }
+
+        // Ratings POPM déjà lus : remis en place pour les fichiers inchangés qu'on ne relit pas
+        val previousRatings = if (skipUnchangedFiles) {
+            tracks.mapNotNull { track -> statsCache[track.id]?.rating?.takeIf { it > 0 }?.let { track.id to it } }.toMap()
+        } else emptyMap()
 
         // Étape 2: Pré-remplir le cache avec les données de Room
         var jsonLoadedCount = 0
@@ -110,6 +123,8 @@ object MusicStatsManager {
         var favoriteCount = 0
 
         for (track in tracks) {
+            // Hors du try : une annulation (navigation rapide entre albums) arrête vraiment le balayage
+            ensureActive()
             try {
                 val filePath = track.filePath ?: continue
                 val file = File(filePath)
@@ -117,6 +132,15 @@ object MusicStatsManager {
 
                 // Ne lit que les MP3
                 if (!filePath.lowercase().endsWith(".mp3")) continue
+
+                val lastModified = file.lastModified()
+                if (skipUnchangedFiles && popmCheckedFiles[filePath] == lastModified) {
+                    previousRatings[track.id]?.let { rating ->
+                        statsCache[track.id] = (statsCache[track.id] ?: TrackStats()).copy(rating = rating)
+                    }
+                    continue
+                }
+                popmCheckedFiles[filePath] = lastModified
 
                 // Bug 5.14: Add timeout to prevent hanging on slow/corrupted files
                 val audioFile = withTimeout(5000L) {

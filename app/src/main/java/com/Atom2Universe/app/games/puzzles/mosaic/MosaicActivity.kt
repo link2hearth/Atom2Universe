@@ -11,6 +11,7 @@ import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.puzzles.pattern.PatternPictures
 import com.Atom2Universe.app.games.puzzles.pattern.PictureModeActivity
 import com.Atom2Universe.app.games.kit.ShadeView
+import java.io.File
 import kotlin.random.Random
 
 class MosaicActivity : PictureModeActivity<MosaicState>() {
@@ -28,7 +29,26 @@ class MosaicActivity : PictureModeActivity<MosaicState>() {
 
     override fun createBoard() = MosaicView(this)
     override fun pictureOf(state: MosaicState) = state.picture
-    override fun fromPicture(index: Int) = MosaicState.fromPicture(index)
+    /**
+     * La grille d'une image ne dépend que de l'image : calculée une fois (plusieurs secondes pour
+     * les grandes), elle est gardée sous son numéro et sa taille, puis relue aux parties suivantes.
+     */
+    override fun fromPicture(index: Int): MosaicState {
+        val p = PatternPictures.all[index]
+        val file = File(File(filesDir, GRIDS_DIR), "${index}_${p.w}x${p.h}.txt")
+        val kept = runCatching { MosaicState.decode(file.readText()) }.getOrNull()
+        if (kept != null && kept.picture == index && MosaicState.matchesPicture(kept)) {
+            return MosaicState(kept.w, kept.h, kept.clues, IntArray(kept.w * kept.h), index, kept.solution)
+        }
+        return MosaicState.fromPicture(index).also { fresh ->
+            runCatching {
+                file.parentFile?.mkdirs()
+                val tmp = File(file.path + ".tmp")
+                tmp.writeText(fresh.encode())
+                if (!tmp.renameTo(file)) tmp.delete()
+            }
+        }
+    }
     override fun generateRandom(preset: Int, random: Random): MosaicState {
         val size = listOf(6, 10, 13)[preset]
         return MosaicState.generate(size, size, random)
@@ -43,6 +63,10 @@ class MosaicActivity : PictureModeActivity<MosaicState>() {
     override fun createControls(): View = LinearLayout(this).apply {
         gravity = Gravity.CENTER
         addView(makeGalleryChip())
+    }
+
+    private companion object {
+        const val GRIDS_DIR = "mosaic_grids"
     }
 }
 

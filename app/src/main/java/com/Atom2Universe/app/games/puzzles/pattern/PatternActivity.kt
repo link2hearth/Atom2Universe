@@ -196,6 +196,11 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
     private var dragStart = -1
     private var dragEnd = -1
     private var dragValue = 0
+    /** Le geste en cours, refait seulement quand le doigt change de case. */
+    private var dragPreview: Map<Int, Int> = emptyMap()
+    /** Les textes des indices, préparés une fois par valeur dans la langue du moment. */
+    private val clueTexts = ArrayList<String>()
+    private var clueLocale: java.util.Locale? = null
 
     private fun marginsFor(state: PatternState): Pair<Float, Float> {
         val left = (state.rows.maxOf { it.size }.coerceAtLeast(1)) * 0.55f + 0.2f
@@ -216,7 +221,9 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         val (ml, mt) = marginsFor(state)
         grid.fit(area, state.w, state.h, ml, mt, 0.1f, 0.1f)
         val cell = grid.cell
-        val shown = preview(state)
+        val shown = dragPreview
+        val locale = resources.configuration.locales[0]
+        if (locale != clueLocale) { clueTexts.clear(); clueLocale = locale }
         val doneClues = clues[state]
         val doneBlocks = if (help) blocks[state] else null
         // Révélée, l'image se peint entière : aussi les cases colorées qu'on ne noircissait pas.
@@ -273,12 +280,17 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
     /** Un indice : estompé quand sa ligne est complète, barré par l'aide quand son bloc est bien placé. */
     private fun clueNumber(canvas: Canvas, v: Int, x: Float, y: Float, size: Float, lineDone: Boolean, struck: Boolean) {
         val faded = lineDone || struck
-        canvas.centeredText(context.getString(R.string.pattern_clue, v), x, y, size, if (faded) palette.tertiary else palette.text, bold = !faded)
+        canvas.centeredText(clueText(v), x, y, size, if (faded) palette.tertiary else palette.text, bold = !faded)
         if (struck) {
             stroke.color = palette.tertiary
             stroke.strokeWidth = size * 0.1f
             canvas.drawLine(x - size * 0.4f, y + size * 0.35f, x + size * 0.4f, y - size * 0.35f, stroke)
         }
+    }
+
+    private fun clueText(v: Int): String {
+        while (clueTexts.size <= v) clueTexts.add(context.getString(R.string.pattern_clue, clueTexts.size))
+        return clueTexts[v]
     }
 
     private fun valueFor(current: Int, primary: Boolean): Int {
@@ -307,13 +319,18 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         dragStart = grid.cellAt(x, y)
         dragEnd = dragStart
         dragValue = valueFor(s.cells[dragStart], true)
+        dragPreview = preview(s)
+        invalidate()
     }
 
     override fun onDragMove(x: Float, y: Float) {
         val c = grid.colAt(x.coerceIn(grid.left, grid.right - 1f))
         val rr = grid.rowAt(y.coerceIn(grid.top, grid.bottom - 1f))
         val s = state ?: return
-        dragEnd = rr * s.w + c
+        val end = rr * s.w + c
+        if (end == dragEnd) return
+        dragEnd = end
+        dragPreview = preview(s)
         invalidate()
     }
 
@@ -321,11 +338,13 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         val s = state
         val changes = if (s != null) preview(s) else emptyMap()
         dragStart = -1; dragEnd = -1
+        dragPreview = emptyMap()
         if (s != null && changes.isNotEmpty()) { tick(); move(s.with(changes)) } else invalidate()
     }
 
     override fun onDragCancel() {
         dragStart = -1; dragEnd = -1
+        dragPreview = emptyMap()
         invalidate()
     }
 }

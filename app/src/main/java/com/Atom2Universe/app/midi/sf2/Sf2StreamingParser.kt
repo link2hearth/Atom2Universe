@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.midi.sf2
 
-import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer.RequiredInstruments
 import java.io.File
 import java.io.RandomAccessFile
 import java.nio.ByteBuffer
@@ -9,13 +8,11 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * SF2 Streaming Parser - Optimized for large SoundFont files
+ * SF2 Streaming Parser - reads a SoundFont without copying its samples into memory
  *
  * This parser works in two phases:
  * 1. parseMetadata() - Parse all metadata (INFO, PDTA) without loading sample data
- * 2. loadSamplesForPresets() - Load only the samples needed for specific presets
- *
- * This approach reduces memory usage by 80-95% for typical MIDI files.
+ * 2. loadWithMemoryMapping() - Build the presets; samples are read from the mapped file
  */
 class Sf2StreamingParser {
 
@@ -44,9 +41,6 @@ class Sf2StreamingParser {
         private const val IBAG = "ibag"
         private const val IGEN = "igen"
         private const val SHDR = "shdr"
-
-        // Zéros insérés autour de chaque échantillon dans la copie compacte (voir loadSamplesForPresets)
-        private const val GUARD_SAMPLES = 8
     }
 
     /**
@@ -160,133 +154,14 @@ class Sf2StreamingParser {
     }
 
     /**
-     * Phase 2: Load only the samples needed for specific presets.
-     *
-     * Creates a COMPACT sample array containing only the required samples,
-     * with remapped sample headers pointing to the new positions.
-     *
-     * @param metadata Metadata from parseMetadata()
-     * @param requiredPresets Set of (bank, program) pairs to load
-     * @return Sf2File with only the required samples loaded
-     */
-    fun loadSamplesForPresets(
-        metadata: Sf2Metadata,
-        requiredPresets: Set<RequiredInstruments.Sf2PresetKey>
-    ): Sf2File {
-        // Find all sample IDs needed by the required presets
-        val requiredSampleIds = findRequiredSampleIds(metadata, requiredPresets)
-
-        if (requiredSampleIds.isEmpty()) {
-            return Sf2File(
-                name = metadata.name,
-                sampleData = ShortArray(0),
-                presetMap = emptyMap(),
-                sampleHeaders = emptyList()
-            )
-        }
-
-        // Calculate total samples needed and create remapping.
-        // Chaque échantillon est entouré de GUARD_SAMPLES zéros : l'interpolation cubique lit
-        // index-1 et index+2, elle ne doit pas déborder sur l'échantillon voisin (le fichier SF2
-        // d'origine prévoit 46 zéros après chaque échantillon, la copie compacte les supprimait).
-        val sampleRemapping = mutableMapOf<Int, SampleRemapInfo>()
-        var compactOffset = GUARD_SAMPLES.toLong()
-
-        for (sampleId in requiredSampleIds.sorted()) {
-            val header = metadata.sampleHeaders.getOrNull(sampleId) ?: continue
-            val sampleLengthLong = header.end - header.start
-            // Safety check: individual sample cannot exceed Int.MAX_VALUE (2GB+)
-            if (sampleLengthLong <= 0 || sampleLengthLong > Int.MAX_VALUE) continue
-            val sampleLength = sampleLengthLong.toInt()
-
-            // Store remapping: original position -> compact position
-            sampleRemapping[sampleId] = SampleRemapInfo(
-                compactStart = compactOffset,
-                loopStartOffset = header.startLoop - header.start,
-                loopEndOffset = header.endLoop - header.start
-            )
-            compactOffset += sampleLength + GUARD_SAMPLES
-        }
-
-        // Safety check: total samples cannot exceed Int.MAX_VALUE (array limit)
-        if (compactOffset > Int.MAX_VALUE) {
-            throw Sf2ParseException("Sample data too large: $compactOffset samples exceeds array limit")
-        }
-        val totalSamples = compactOffset.toInt()
-
-        // Load samples into compact array
-        val compactSampleData = ShortArray(totalSamples)
-        RandomAccessFile(File(metadata.filePath), "r").use { raf ->
-            val smplSampleCount = metadata.smplByteSize / 2
-            for ((sampleId, remap) in sampleRemapping) {
-                val header = metadata.sampleHeaders[sampleId]
-                // Ne jamais lire au-delà du chunk smpl (en-têtes corrompus)
-                val available = (smplSampleCount - header.start).coerceAtLeast(0)
-                val sampleCount = minOf(header.end - header.start, available).toInt()
-                if (sampleCount <= 0) continue
-
-                raf.seek(metadata.smplByteOffset + (header.start * 2))
-                val bytes = ByteArray(sampleCount * 2)
-                raf.readFully(bytes)
-                ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer()
-                    .get(compactSampleData, remap.compactStart.toInt(), sampleCount)
-            }
-        }
-
-        // Create remapped sample headers
-        val remappedHeaders = metadata.sampleHeaders.mapIndexed { index, header ->
-            val remap = sampleRemapping[index]
-            if (remap != null) {
-                // Remap to compact positions
-                Sf2SampleHeader(
-                    name = header.name,
-                    start = remap.compactStart,
-                    end = remap.compactStart + (header.end - header.start),
-                    startLoop = remap.compactStart + remap.loopStartOffset,
-                    endLoop = remap.compactStart + remap.loopEndOffset,
-                    sampleRate = header.sampleRate,
-                    originalPitch = header.originalPitch,
-                    pitchCorrection = header.pitchCorrection,
-                    sampleLink = header.sampleLink,
-                    sampleType = header.sampleType
-                )
-            } else {
-                // Keep original (won't be used but needed for indexing)
-                header
-            }
-        }
-
-        // Build presets using remapped headers
-        val presetMap = buildPresetsCompact(metadata, requiredPresets, compactSampleData, remappedHeaders)
-
-        return Sf2File(
-            name = metadata.name,
-            sampleData = compactSampleData,
-            presetMap = presetMap,
-            sampleHeaders = remappedHeaders
-        )
-    }
-
-    /**
-     * Info for remapping a sample from original to compact position
-     */
-    private data class SampleRemapInfo(
-        val compactStart: Long,
-        val loopStartOffset: Long,
-        val loopEndOffset: Long
-    )
-
-    /**
-     * Load SF2 using full memory-mapping (zero RAM for sample data).
-     *
-     * This mode is ideal for very large SF2 files (500MB-1GB+):
+     * Load SF2 using full memory-mapping (zero RAM for sample data), used for every SoundFont:
      * - No sample data is loaded into heap memory
      * - Samples are read on-demand via memory-mapped file
      * - OS handles caching and paging automatically
      * - Can play SF2 files larger than available RAM
      *
-     * Trade-off: Slightly higher latency for initial note attacks
-     * as samples are read from disk on first access.
+     * Sf2FileCache reads the samples once in the background so that the first notes don't
+     * wait for the storage.
      */
     fun loadWithMemoryMapping(metadata: Sf2Metadata): Sf2File {
         // Create memory-mapped provider for sample access
@@ -315,63 +190,6 @@ class Sf2StreamingParser {
         return buildPresets(metadata, metadata.sampleHeaders, presetFilter = null) { zone ->
             Sf2Region.fromZoneDataMmap(zone, metadata.sampleHeaders)
         }
-    }
-
-    // ==================== Sample ID Finding ====================
-
-    private fun findRequiredSampleIds(
-        metadata: Sf2Metadata,
-        requiredPresets: Set<RequiredInstruments.Sf2PresetKey>
-    ): Set<Int> {
-        val sampleIds = mutableSetOf<Int>()
-
-        // Build instrument zones first
-        val instrumentZones = buildInstrumentZones(metadata)
-
-        // For each required preset, find its sample IDs
-        for (presetKey in requiredPresets) {
-            // Find the preset header
-            val presetIndex = metadata.presetHeaders.indexOfFirst {
-                it.bank == presetKey.bank && it.preset == presetKey.program
-            }
-            if (presetIndex < 0 || presetIndex >= metadata.presetHeaders.size - 1) continue
-
-            val preset = metadata.presetHeaders[presetIndex]
-            val nextPreset = metadata.presetHeaders.getOrNull(presetIndex + 1)
-            val zoneStart = preset.bagIndex
-            val zoneEnd = nextPreset?.bagIndex ?: metadata.presetBags.size
-
-            // Process preset zones
-            for (zoneIndex in zoneStart until zoneEnd) {
-                val bag = metadata.presetBags.getOrNull(zoneIndex) ?: continue
-                val nextBag = metadata.presetBags.getOrNull(zoneIndex + 1)
-                val genStart = bag.generatorIndex
-                val genEnd = nextBag?.generatorIndex ?: metadata.presetGenerators.size
-
-                // Find instrument reference in generators
-                for (genIndex in genStart until genEnd) {
-                    val gen = metadata.presetGenerators.getOrNull(genIndex) ?: continue
-                    if (gen.operator == Sf2Generator.INSTRUMENT.id) {
-                        val instrumentIndex = gen.amount and 0xFFFF  // Unsigned word
-                        // Get sample IDs from this instrument
-                        val zones = instrumentZones.getOrNull(instrumentIndex) ?: continue
-                        for (zone in zones) {
-                            zone.sampleId?.let { sampleIds.add(it) }
-
-                            // Also add linked samples (for stereo)
-                            zone.sampleId?.let { sampleId ->
-                                val header = metadata.sampleHeaders.getOrNull(sampleId)
-                                if (header != null && header.sampleLink > 0 && header.sampleLink < metadata.sampleHeaders.size) {
-                                    sampleIds.add(header.sampleLink)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return sampleIds
     }
 
     // ==================== Preset Building ====================
@@ -434,24 +252,6 @@ class Sf2StreamingParser {
         }
 
         return presetMap
-    }
-
-    /**
-     * Build presets using compact sample data and remapped headers
-     */
-    private fun buildPresetsCompact(
-        metadata: Sf2Metadata,
-        requiredPresets: Set<RequiredInstruments.Sf2PresetKey>,
-        sampleData: ShortArray,
-        remappedHeaders: List<Sf2SampleHeader>
-    ): Map<String, Sf2Preset> {
-        return buildPresets(
-            metadata,
-            remappedHeaders,
-            presetFilter = { requiredPresets.contains(RequiredInstruments.Sf2PresetKey(it.bank, it.preset)) }
-        ) { zone ->
-            Sf2Region.fromZoneData(zone, sampleData, remappedHeaders)
-        }
     }
 
     // ==================== Parsing Helpers ====================

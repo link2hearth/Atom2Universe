@@ -6,6 +6,7 @@ import java.io.File
 import java.io.RandomAccessFile
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
+import java.nio.ShortBuffer
 import java.nio.channels.FileChannel
 
 /**
@@ -92,13 +93,21 @@ class MemoryMappedSampleProvider(
 
     private val mappedBuffer: MappedByteBuffer? = try {
         RandomAccessFile(File(filePath), "r").use { file ->
-            file.channel.map(FileChannel.MapMode.READ_ONLY, smplByteOffset, smplByteSize)
+            // Bornée à ce que le fichier contient vraiment (en-tête smpl d'un fichier abîmé)
+            // et à la limite d'une projection (2 Go)
+            val size = minOf(smplByteSize, file.length() - smplByteOffset, Int.MAX_VALUE.toLong())
+                .coerceAtLeast(0L)
+            file.channel.map(FileChannel.MapMode.READ_ONLY, smplByteOffset, size)
                 .also { it.order(ByteOrder.LITTLE_ENDIAN) }
         }
     } catch (e: Exception) {
         Log.e(TAG, "Failed to memory-map SF2 file: $filePath", e)
         null
     }
+
+    /** Vue 16 bits de la projection, lue directement par Sf2File ; null si la projection a échoué. */
+    internal fun shortView(): ShortBuffer? =
+        mappedBuffer?.duplicate()?.order(ByteOrder.LITTLE_ENDIAN)?.asShortBuffer()
 
     companion object {
         private const val TAG = "MemoryMappedSampleProvider"

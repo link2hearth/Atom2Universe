@@ -79,6 +79,9 @@ class Sf2Synthesizer(
             return normalized * normalized
         }
 
+        // Kits de batterie essayés dans l'ordre (banque 128) quand le kit demandé n'existe pas
+        private val PERCUSSION_FALLBACK_KITS = intArrayOf(0, 1, 8, 16, 24, 25, 32, 40)
+
         private val DEFAULT_VOLUME_GAIN = controllerToGain(DEFAULT_CC_VOLUME)
         private const val DEFAULT_REVERB_SEND = DEFAULT_CC_REVERB / 127f
     }
@@ -334,156 +337,98 @@ class Sf2Synthesizer(
             return
         }
 
-        val bank: Int
-        val program: Int
-        val effectiveVelocity: Int
         synchronized(voiceLock) {
-            bank = channelBank[channel]
-            program = channelProgram[channel]
+            val bank = channelBank[channel]
+            val program = channelProgram[channel]
             heldKeys[channel].add(safeNote)
             // Soft pedal attenuates velocity of new notes (key-down only, not retroactive)
-            effectiveVelocity = if (channelSoftPedal[channel])
+            val effectiveVelocity = if (channelSoftPedal[channel])
                 (safeVelocity * SOFT_PEDAL_ATTENUATION).toInt().coerceAtLeast(1)
             else safeVelocity
+
+            // Régions de la note dans une liste réutilisée (sous voiceLock) : rien n'est créé par note
+            val regions = regionScratch
+            regions.clear()
+            if (!sf2File.collectRegions(bank, program, safeNote, effectiveVelocity, regions)) {
+                collectFallbackRegions(channel, bank, program, safeNote, effectiveVelocity, regions)
+            }
+            // Notes without any region are silently ignored
+            if (regions.isNotEmpty()) {
+                triggerRegionsLocked(channel, safeNote, effectiveVelocity, regions, frameOffset)
+            }
         }
+    }
 
-        // Find matching regions for this note (outside lock - read-only on sf2File)
-        val regions = sf2File.getRegions(bank, program, safeNote, effectiveVelocity)
+    // Réutilisée par noteOn sous voiceLock
+    private val regionScratch = ArrayList<Sf2Region>(16)
 
-        if (regions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, effectiveVelocity, regions, frameOffset)
+    /**
+     * Fills [out] with fallback regions when the primary lookup fails.
+     * Implements multiple fallback strategies especially for percussion.
+     */
+    private fun collectFallbackRegions(
+        channel: Int, bank: Int, program: Int, note: Int, velocity: Int, out: MutableList<Sf2Region>
+    ) {
+        // For percussion channel, try multiple fallback strategies
+        if (channel == PERCUSSION_CHANNEL) {
+            // Standard, Room, Room alternate, Power, Electronic, TR-808, Jazz and Brush kits,
+            // then bank 0 program 0 (some SF2s put drums there)
+            for (kit in PERCUSSION_FALLBACK_KITS) {
+                if (sf2File.collectRegions(128, kit, note, velocity, out)) return
+            }
+            sf2File.collectRegions(0, 0, note, velocity, out)
             return
         }
 
-        // Fallback logic for when no regions found
-        val fallbackRegions = findFallbackRegions(channel, bank, program, safeNote, effectiveVelocity)
-        if (fallbackRegions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, effectiveVelocity, fallbackRegions, frameOffset)
-        }
-        // Note: We silently ignore notes with no regions to reduce log spam
-    }
-
-    /**
-     * Finds fallback regions when the primary lookup fails.
-     * Implements multiple fallback strategies especially for percussion.
-     */
-    private fun findFallbackRegions(channel: Int, bank: Int, program: Int, note: Int, velocity: Int): List<Sf2Region> {
-        // For percussion channel, try multiple fallback strategies
-        if (channel == PERCUSSION_CHANNEL) {
-            // Strategy 1: Try bank 128, program 0 (Standard Kit) - most common location
-            var regions = sf2File.getRegions(128, 0, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 2: Try bank 128, program 1 (Room Kit)
-            regions = sf2File.getRegions(128, 1, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 3: Try bank 128, program 8 (Room Kit alternate)
-            regions = sf2File.getRegions(128, 8, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 4: Try bank 128, program 16 (Power Kit)
-            regions = sf2File.getRegions(128, 16, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 5: Try bank 128, program 24 (Electronic Kit)
-            regions = sf2File.getRegions(128, 24, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 6: Try bank 128, program 25 (TR-808 Kit)
-            regions = sf2File.getRegions(128, 25, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 7: Try bank 128, program 32 (Jazz Kit)
-            regions = sf2File.getRegions(128, 32, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 8: Try bank 128, program 40 (Brush Kit)
-            regions = sf2File.getRegions(128, 40, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // Strategy 9: Try bank 0, program 0 (some SF2s put drums here)
-            regions = sf2File.getRegions(0, 0, note, velocity)
-            if (regions.isNotEmpty()) return regions
-
-            // No percussion found
-            if (!loggedMissingPercussion.contains(note)) {
-                loggedMissingPercussion.add(note)
-            }
-            return emptyList()
-        }
-
         // For melodic channels, try bank 0 with same program
-        if (bank != 0) {
-            val regions = sf2File.getRegions(0, program, note, velocity)
-            if (regions.isNotEmpty()) {
-                // Log once that we're using fallback bank
-                if (!loggedBankFallback.contains("$channel:$bank:$program")) {
-                    loggedBankFallback.add("$channel:$bank:$program")
-                }
-                return regions
-            }
-        }
+        if (bank != 0 && sf2File.collectRegions(0, program, note, velocity, out)) return
 
         // Try bank 0, program 0 (piano) as last resort
-        val regions = sf2File.getRegions(0, 0, note, velocity)
-        if (regions.isNotEmpty()) {
-            if (!loggedPianoFallback.contains("$channel:$bank:$program")) {
-                loggedPianoFallback.add("$channel:$bank:$program")
-            }
-            return regions
-        }
-
-        // Log missing melodic instrument - THIS IS LIKELY THE PROBLEM
-        if (!loggedMissingInstruments.contains("$bank:$program")) {
-            loggedMissingInstruments.add("$bank:$program")
-        }
-        missingNoteCount++
-        return emptyList()
+        sf2File.collectRegions(0, 0, note, velocity, out)
     }
-
-    // Track logged warnings to reduce spam
-    private val loggedMissingPercussion = mutableSetOf<Int>()
-    private val loggedMissingInstruments = mutableSetOf<String>()
-    private val loggedBankFallback = mutableSetOf<String>()
-    private val loggedPianoFallback = mutableSetOf<String>()
-    private var missingNoteCount = 0
 
     // Maximum layers per note - prevents CPU overload from heavily layered soundfonts
     // Raised from 4 to 8: high-quality SF2 files use multiple velocity/key layers for realism
     private val maxLayersPerNote = 8
 
-    private fun triggerRegions(channel: Int, note: Int, velocity: Int, regions: List<Sf2Region>, frameOffset: Int) {
+    // Must be called with voiceLock held; [regions] may be reordered
+    private fun triggerRegionsLocked(channel: Int, note: Int, velocity: Int, regions: ArrayList<Sf2Region>, frameOffset: Int) {
         if (isResetting.get()) return
 
-        // Limit regions to prevent CPU overload from heavily layered soundfonts
-        val limitedRegions = if (regions.size > maxLayersPerNote) {
-            regions.sortedBy { it.attenuation }.take(maxLayersPerNote)
+        // Limit regions to prevent CPU overload from heavily layered soundfonts: keep the
+        // loudest ones (stable insertion sort by attenuation, in place)
+        val count = if (regions.size > maxLayersPerNote) {
+            for (i in 1 until regions.size) {
+                val current = regions[i]
+                var j = i - 1
+                while (j >= 0 && regions[j].attenuation > current.attenuation) {
+                    regions[j + 1] = regions[j]
+                    j--
+                }
+                regions[j + 1] = current
+            }
+            maxLayersPerNote
         } else {
-            regions
+            regions.size
         }
 
-        synchronized(voiceLock) {
-            // Exclusive class (hi-hat ouvert / fermé...) : couper les voix déjà en cours AVANT
-            // de déclencher les nouvelles. Auparavant la coupure se faisait région par région,
-            // si bien qu'un échantillon stéréo (2 régions de même classe) coupait sa propre
-            // moitié gauche en déclenchant la droite.
-            for (region in limitedRegions) {
-                if (region.exclusiveClass != 0) {
-                    voicePool.killExclusiveClass(region.exclusiveClass, channel)
-                }
+        // Exclusive class (hi-hat ouvert / fermé...) : couper les voix déjà en cours AVANT
+        // de déclencher les nouvelles. Auparavant la coupure se faisait région par région,
+        // si bien qu'un échantillon stéréo (2 régions de même classe) coupait sa propre
+        // moitié gauche en déclenchant la droite.
+        for (i in 0 until count) {
+            val region = regions[i]
+            if (region.exclusiveClass != 0) {
+                voicePool.killExclusiveClass(region.exclusiveClass, channel)
             }
+        }
 
-            for (region in limitedRegions) {
-                // Allocate a voice
-                val voice = voicePool.allocateVoice(channel)
-                if (voice == null) {
-                    return
-                }
+        for (i in 0 until count) {
+            // Allocate a voice
+            val voice = voicePool.allocateVoice(channel) ?: return
 
-                // Trigger the voice
-                voice.trigger(channel, note, velocity, region, frameOffset)
-            }
+            // Trigger the voice
+            voice.trigger(channel, note, velocity, regions[i], frameOffset)
         }
     }
 
@@ -1101,12 +1046,6 @@ class Sf2Synthesizer(
 
             reverbAutoAllowed = reverb.enabled
             chorusAutoAllowed = chorus.enabled
-
-            // Clear logged warnings
-            loggedMissingPercussion.clear()
-            loggedMissingInstruments.clear()
-            loggedBankFallback.clear()
-            loggedPianoFallback.clear()
         } finally {
             isResetting.set(false)
         }

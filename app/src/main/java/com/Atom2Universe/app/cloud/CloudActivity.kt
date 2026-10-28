@@ -248,7 +248,8 @@ class CloudActivity : ThemedActivity() {
             lastSyncText.setText(R.string.cloud_syncing)
             // Une sync complète prend facilement une demi-minute : sans l'étape en cours,
             // l'écran semble figé et l'on croit à un plantage.
-            val result = CloudSyncManager.syncNow { step ->
+            // force : le bouton marche dès que le compte est lié, même interrupteur coupé.
+            val result = CloudSyncManager.syncNow(force = true) { step ->
                 runOnUiThread { lastSyncText.setText(stepLabel(step)) }
             }
             setBusy(false, null)
@@ -257,6 +258,7 @@ class CloudActivity : ThemedActivity() {
                 is SyncResult.Success -> toast(getString(R.string.cloud_sync_success))
                 is SyncResult.Error -> toast(getString(R.string.cloud_sync_failed, result.message))
                 is SyncResult.NotSignedIn -> toast(getString(R.string.cloud_sync_not_signed_in))
+                is SyncResult.AlreadyInProgress -> toast(getString(R.string.cloud_sync_already_running))
                 // NotInitialized / NotEnabled : rien d'actionnable à raconter,
                 // le nom de classe anglais ne servirait personne.
                 else -> toast(getString(R.string.cloud_sync_unavailable))

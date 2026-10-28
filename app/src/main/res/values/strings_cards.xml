@@ -37,12 +37,18 @@
     <string name="spades_nil">Nil</string>
     <string name="spades_nil_mark">∅</string>
     <string name="cards_team_score">We %1$d · They %2$d</string>
+    <string name="cards_bid_less">−</string>
+    <string name="cards_bid_more">+</string>
+    <!-- Plis faits / annonce -->
+    <string name="spades_caption">%1$d/%2$s</string>
 
     <string name="ohhell_title">Oh Hell</string>
     <string name="ohhell_description">Win exactly the tricks you bid</string>
     <string name="ohhell_rules">Win exactly the number of tricks you bid. Everyone plays for themselves.\n\nEach hand deals fewer cards than the last (7, then 6, down to 1). One card is turned up: its suit is trump.\n\nEveryone bids in turn how many tricks they will win. The last player to bid can\'t pick the number that would make all the bids add up to the number of tricks: somebody has to be wrong.\n\nThen play the tricks. Follow the suit led if you can; otherwise play anything, and a trump beats any other suit. The highest card of the suit led, or the highest trump, takes the trick and leads the next one.\n\nWinning exactly your bid scores 10 plus the bid; otherwise nothing. The highest total after the last hand wins.\n\nUse − and + to choose your bid. Drag a card onto the table to play it, or tap it once to lift it and once more to play it.</string>
     <string name="ohhell_bid">Bid %1$d</string>
     <string name="ohhell_hand">Hand %1$d/%2$d</string>
+    <!-- Total · plis faits/annonce -->
+    <string name="ohhell_caption">%1$d · %2$d/%3$d</string>
 
     <string name="euchre_title">Euchre</string>
     <string name="euchre_description">Choose trump, take three tricks</string>
@@ -51,6 +57,9 @@
     <string name="euchre_order">Order up</string>
     <string name="euchre_alone">Alone</string>
     <string name="euchre_dealer">Dealer</string>
+    <!-- Celui qui a fait l'atout : sa couleur (★ s'il joue seul) et ses plis -->
+    <string name="euchre_maker_caption">%1$s %2$d</string>
+    <string name="euchre_maker_alone_caption">%1$s★ %2$d</string>
 
     <string name="gofish_title">Go Fish</string>
     <string name="gofish_description">Ask for cards, collect sets of four</string>
@@ -84,4 +93,6 @@
         <item quantity="other">%1$d books</item>
     </plurals>
     <string name="gofish_last">%1$s → %2$s: %3$s %4$s</string>
+    <string name="gofish_hit">✓%1$d</string>
+    <string name="gofish_miss">✗</string>
 </resources>

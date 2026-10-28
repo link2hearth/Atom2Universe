@@ -41,6 +41,7 @@ class FluidSynthPracticeSynth(
     private val isRendering = AtomicBoolean(false)
 
     private var isInitialized = false
+    private var isPaused = false
 
     override fun initialize(): Boolean {
         Log.d(TAG, "initialize: starting with soundFontPath=$soundFontPath")
@@ -132,8 +133,43 @@ class FluidSynthPracticeSynth(
         releaseAudioTrack()
         cleanup()
         isInitialized = false
+        isPaused = false
 
         Log.d(TAG, "release: complete")
+    }
+
+    override fun pause() {
+        if (!isInitialized || isPaused) return
+        allSoundOff()
+        try {
+            if (useManualRendering) {
+                stopAudioRendering()
+            } else if (audioDriverHandle != 0L) {
+                // Le pilote Oboe tourne tant qu'il existe : on le détruit, le synthé reste chargé
+                FluidSynthNative.deleteAudioDriver(audioDriverHandle)
+                audioDriverHandle = 0
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "pause: error", e)
+        }
+        isPaused = true
+    }
+
+    override fun resume() {
+        if (!isInitialized || !isPaused) return
+        isPaused = false
+        try {
+            if (!useManualRendering) {
+                audioDriverHandle = FluidSynthNative.newAudioDriver(settingsHandle, synthHandle)
+                if (audioDriverHandle != 0L) return
+                Log.w(TAG, "resume: Oboe audio driver failed, using AudioTrack fallback")
+                useManualRendering = true
+                if (audioTrack == null && !initializeAudioTrack()) return
+            }
+            startAudioRendering()
+        } catch (e: Exception) {
+            Log.w(TAG, "resume: error", e)
+        }
     }
 
     private fun cleanup() {

@@ -21,15 +21,17 @@ import kotlin.math.PI
  * - https://developer.android.com/reference/android/media/AudioTrack
  * - Uses MODE_STATIC for low-latency short sample playback
  */
-class SimpleSamplePlayer {
+class SimpleSamplePlayer(
+    /** Rate of the samples played; a fresh track is made for each playback, so it can change. */
+    var sampleRate: Int = 44100
+) {
+
+    // Maximum buffer size (10 seconds mono 16-bit)
+    private val maxBufferSamples get() = sampleRate * 10
+    private val maxBufferBytes get() = maxBufferSamples * 2
 
     companion object {
         private const val TAG = "SimpleSamplePlayer"
-        private const val SAMPLE_RATE = 44100
-
-        // Maximum buffer size (10 seconds at 44.1kHz mono 16-bit)
-        private const val MAX_BUFFER_SAMPLES = SAMPLE_RATE * 10
-        private const val MAX_BUFFER_BYTES = MAX_BUFFER_SAMPLES * 2
 
         // Fade parameters for click prevention (minimum 10ms recommended)
         private const val FADE_IN_MS = 10
@@ -73,7 +75,7 @@ class SimpleSamplePlayer {
 
         // Get minimum buffer size
         val minBufferSize = AudioTrack.getMinBufferSize(
-            SAMPLE_RATE,
+            sampleRate,
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT
         )
@@ -85,7 +87,7 @@ class SimpleSamplePlayer {
 
         // Buffer size: exactly the required size (to avoid old data in buffer)
         // Must be at least minBufferSize for Android requirements
-        val bufferSize = maxOf(requiredBytes, minBufferSize).coerceAtMost(MAX_BUFFER_BYTES)
+        val bufferSize = maxOf(requiredBytes, minBufferSize).coerceAtMost(maxBufferBytes)
 
         return try {
             audioTrack = AudioTrack.Builder()
@@ -98,7 +100,7 @@ class SimpleSamplePlayer {
                 .setAudioFormat(
                     AudioFormat.Builder()
                         .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(SAMPLE_RATE)
+                        .setSampleRate(sampleRate)
                         .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                         .build()
                 )
@@ -137,9 +139,9 @@ class SimpleSamplePlayer {
         }
 
         // Limit to max buffer size
-        val samplesToPlay = if (samples.size > MAX_BUFFER_SAMPLES) {
-            Log.w(TAG, "Sample too long (${samples.size}), truncating to $MAX_BUFFER_SAMPLES")
-            samples.copyOfRange(0, MAX_BUFFER_SAMPLES)
+        val samplesToPlay = if (samples.size > maxBufferSamples) {
+            Log.w(TAG, "Sample too long (${samples.size}), truncating to $maxBufferSamples")
+            samples.copyOfRange(0, maxBufferSamples)
         } else {
             samples
         }
@@ -157,8 +159,8 @@ class SimpleSamplePlayer {
     fun playRaw(samples: ShortArray) {
         if (samples.isEmpty()) return
 
-        val samplesToPlay = if (samples.size > MAX_BUFFER_SAMPLES) {
-            samples.copyOfRange(0, MAX_BUFFER_SAMPLES)
+        val samplesToPlay = if (samples.size > maxBufferSamples) {
+            samples.copyOfRange(0, maxBufferSamples)
         } else {
             samples
         }
@@ -210,7 +212,7 @@ class SimpleSamplePlayer {
                 isPlaying = true
                 loadedSamples = samples
 
-                Log.d(TAG, "Playing ${samples.size} samples (${samples.size * 1000 / SAMPLE_RATE}ms)")
+                Log.d(TAG, "Playing ${samples.size} samples (${samples.size * 1000 / sampleRate}ms)")
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error during playback: ${e.message}", e)
@@ -288,7 +290,7 @@ class SimpleSamplePlayer {
         val output = samples.copyOf()
 
         // 1. Find a good starting point (zero crossing going positive)
-        val searchWindow = (SAMPLE_RATE * 0.005).toInt() // 5ms search window
+        val searchWindow = (sampleRate * 0.005).toInt() // 5ms search window
         val startOffset = findZeroCrossingPositive(output, 0, searchWindow)
 
         // 2. Find a good ending point (zero crossing going negative)
@@ -299,7 +301,7 @@ class SimpleSamplePlayer {
         val trimmedEnd = if (endOffset > trimmedStart + 100) endOffset else output.size
 
         // 3. Apply smooth fade in (S-curve) - longer for better click prevention
-        val fadeInSamples = (FADE_IN_MS * SAMPLE_RATE / 1000).coerceAtMost(output.size / 6)
+        val fadeInSamples = (FADE_IN_MS * sampleRate / 1000).coerceAtMost(output.size / 6)
         for (i in 0 until fadeInSamples) {
             val t = i.toFloat() / fadeInSamples
             // S-curve: smoother than linear, starts and ends with zero slope
@@ -312,7 +314,7 @@ class SimpleSamplePlayer {
         }
 
         // 4. Apply smooth fade out (S-curve)
-        val fadeOutSamples = (FADE_OUT_MS * SAMPLE_RATE / 1000).coerceAtMost(output.size / 6)
+        val fadeOutSamples = (FADE_OUT_MS * sampleRate / 1000).coerceAtMost(output.size / 6)
         val fadeOutStart = (trimmedEnd - fadeOutSamples).coerceAtLeast(trimmedStart + fadeInSamples)
         for (i in 0 until fadeOutSamples) {
             val t = i.toFloat() / fadeOutSamples
@@ -402,14 +404,14 @@ class SimpleSamplePlayer {
         }
 
         // Calculate crossfade duration based on loop length
-        val loopMs = loopPortion.size * 1000 / SAMPLE_RATE
+        val loopMs = loopPortion.size * 1000 / sampleRate
         val crossfadeMs = when {
             loopMs < 30 -> 2
             loopMs < 80 -> 5
             loopMs < 200 -> 10
             else -> CROSSFADE_MS
         }
-        val crossfadeSamples = (crossfadeMs * SAMPLE_RATE / 1000)
+        val crossfadeSamples = (crossfadeMs * sampleRate / 1000)
             .coerceIn(8, loopPortion.size / 4)
 
         // Build result with overlapping crossfades between loop copies
@@ -419,8 +421,8 @@ class SimpleSamplePlayer {
         val attackLoopOverlap = if (attackPortion.size >= crossfadeSamples) crossfadeSamples else 0
         val totalLength = attackPortion.size - attackLoopOverlap + loopPortion.size + effectiveLoopLength * (loopCount - 1)
 
-        if (totalLength > MAX_BUFFER_SAMPLES) {
-            val maxLoops = (MAX_BUFFER_SAMPLES - attackPortion.size - crossfadeSamples) / effectiveLoopLength
+        if (totalLength > maxBufferSamples) {
+            val maxLoops = (maxBufferSamples - attackPortion.size - crossfadeSamples) / effectiveLoopLength
             return prepareLoopedSample(samples, loopStart, loopEnd, maxLoops.coerceAtLeast(1))
         }
 
@@ -544,9 +546,4 @@ class SimpleSamplePlayer {
         return result
     }
 
-    /**
-     * Get the sample rate used by this player.
-     */
-    @Suppress("unused")
-    fun getSampleRate(): Int = SAMPLE_RATE
 }

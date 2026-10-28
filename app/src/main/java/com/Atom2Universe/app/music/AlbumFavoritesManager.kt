@@ -35,6 +35,11 @@ object AlbumFavoritesManager {
 
     private var isLoaded = false
 
+    // Lecture du fichier ratée (JSON tronqué…) : ne plus rien écrire, sinon la liste
+    // vide en mémoire écraserait les données encore présentes dans le fichier
+    @Volatile
+    private var loadFailed = false
+
     data class AlbumFavorite(
         val artistName: String,
         val albumName: String,
@@ -81,6 +86,7 @@ object AlbumFavoritesManager {
             val json = JSONObject(jsonString)
             val version = json.optInt("version", 1)
             val favoritesArray = json.optJSONArray("favorites") ?: JSONArray()
+            loadFailed = false
 
             favoritesCache.clear()
             deletedFavoritesCache.clear()
@@ -147,7 +153,10 @@ object AlbumFavoritesManager {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur chargement favoris albums", e)
-            isLoaded = true
+            // Rien de partiel en mémoire, aucune sauvegarde ; nouvel essai au prochain chargement
+            favoritesCache.clear()
+            deletedFavoritesCache.clear()
+            loadFailed = true
         }
     }
 
@@ -160,6 +169,10 @@ object AlbumFavoritesManager {
     }
 
     private fun saveFavoritesInternal(file: File) {
+        if (loadFailed) {
+            Log.w(TAG, "Album favorites file could not be read, not overwriting it")
+            return
+        }
         try {
             val json = JSONObject().apply {
                 put("version", JSON_VERSION)
@@ -185,8 +198,7 @@ object AlbumFavoritesManager {
                 })
             }
 
-            file.parentFile?.mkdirs()
-            file.writeText(json.toString(2))
+            MusicFileWriter.writeTextAtomically(file, json.toString(2))
             Log.d(TAG, "Saved ${favoritesCache.size} album favorites, ${deletedFavoritesCache.size} deleted")
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sauvegarde favoris albums", e)

@@ -221,10 +221,18 @@ class GeologyActivity:ThemedActivity() {
             setTextColor(if(evolving) palette.onAccent else palette.text)
         }
     }
+    // L'évolution appelle la légende à chaque image : on ne la réécrit que quand elle change.
+    private var captionView:TextView?=null
+    private var captionKey=-1
     private fun updateStageCaption() {
         if(scene.lesson.steps==0) return
+        val caption=stageCaption ?: return
+        val step=(stage*3).toInt().coerceAtMost(2);val percent=(stage*100).toInt()
+        val key=step*1000+percent
+        if(caption===captionView && key==captionKey) return
+        captionView=caption;captionKey=key
         val steps=resources.getStringArray(scene.lesson.steps)
-        stageCaption?.text=getString(R.string.geo_stage_caption,steps[(stage*3).toInt().coerceAtMost(2)],(stage*100).toInt())
+        caption.text=getString(R.string.geo_stage_caption,steps[step],percent)
     }
     private fun sceneAtlas() {
         val body=column()

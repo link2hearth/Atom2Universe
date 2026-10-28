@@ -448,6 +448,11 @@ class DspEqualizerProcessor : AudioProcessor {
         resetFilters()
     }
 
+    /**
+     * Appelé par ExoPlayer à l'arrêt : oublie le format et l'état des filtres, jamais les
+     * réglages. Les gains restent ceux de l'égaliseur et seront recalculés par [configure]
+     * au prochain format ; sans cela le son repartait à plat jusqu'au morceau suivant.
+     */
     override fun reset() {
         @Suppress("DEPRECATION")
         flush()
@@ -455,16 +460,5 @@ class DspEqualizerProcessor : AudioProcessor {
         outputFormat = AudioProcessor.AudioFormat.NOT_SET
         sampleRate = 44100
         channelCount = 2
-
-        lock.withLock {
-            bandGains.fill(0.0)
-            for (i in 0 until BAND_COUNT) {
-                bandFilters[i].configure(sampleRate, BAND_FREQUENCIES[i], 0.0, BAND_Q)
-            }
-            bassBoostStrength = 0
-            virtualizerStrength = 0
-            preGain = 1.0
-            activeFiltersCache = emptyList()
-        }
     }
 }

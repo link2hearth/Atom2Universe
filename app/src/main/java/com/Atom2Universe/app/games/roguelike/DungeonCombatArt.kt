@@ -3,7 +3,9 @@ package com.Atom2Universe.app.games.roguelike
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
+import android.util.SparseArray
 import com.Atom2Universe.app.games.roguelike.demo.DemoGear
 import com.Atom2Universe.app.games.roguelike.demo.DungeonDemoSprites
 
@@ -14,19 +16,59 @@ import com.Atom2Universe.app.games.roguelike.demo.DungeonDemoSprites
  * par [CombatView].
  */
 internal class DungeonCombatArt {
-    private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
-    private var heroKey = ""
+    companion object {
+        private const val HERO = 0
+        private const val HERO_PORTRAIT = 1
+        private const val MIRROR_BASE = 16
+        private const val MONSTER_BASE = 1 shl 20
+        private const val IMPACT_BASE = 1 shl 24
+        /** Le tampon d'un double du mage (Image miroir). */
+        fun mirrorKey(index: Int) = MIRROR_BASE + index
+        /** L'attente du héros bouge sans cesse (arme qui se balance, hochement) : une image par pas. */
+        private const val IDLE_STEP_MS = 33f
+        /** Même chose pour l'ambiance du décor, qui mêle des pas de 120 à 220 ms et des mouvements continus. */
+        private const val ATMOSPHERE_STEP_MS = 33f
+    }
 
+    private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
+    private val dst = RectF()
+    private val heroPortraitSrc = Rect(20, 12, 48, 40)
+    private val monsterPortraitSrc = Rect(6, 10, 54, 54)
+
+    // L'équipement dessiné : refait seulement quand une pièce portée ou l'archétype change.
+    private var heroReady = false
+    private var heroArchetype: Archetype? = null
+    private val heroPieces = arrayOfNulls<Equipment>(DungeonDemoSprites.slots.size)
+    private var equipmentVersion = 0
     private var equipment = emptyMap<EquipSlot, DemoGear>()
     private var images = emptyMap<EquipSlot, Bitmap>()
-    // Un tampon par acteur : le Canvas matériel peut consommer les bitmaps après onDraw.
-    private val actorFrames = mutableMapOf<String, Pair<Bitmap, Canvas>>()
-    private fun actorBuffer(key: String): Pair<Bitmap, Canvas> = actorFrames.getOrPut(key) {
-        val bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
-        bitmap to Canvas(bitmap)
-    }.also { it.first.eraseColor(android.graphics.Color.TRANSPARENT) }
+
+    /**
+     * Un tampon par acteur : le Canvas matériel peut consommer les bitmaps après onDraw.
+     * Il retient ce qu'il montre ([a] à [d]) pour n'être redessiné, et renvoyé à la carte
+     * graphique, que quand la pose ou l'état change.
+     */
+    private class ActorFrame {
+        val bitmap: Bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        var valid = false
+        var a = 0; var b = 0; var c = 0; var d = 0
+        fun shows(a: Int, b: Int, c: Int, d: Int) = valid && this.a == a && this.b == b && this.c == c && this.d == d
+        /** Vide le tampon avant un nouveau dessin, qui montrera ([a], [b], [c], [d]). */
+        fun redraw(a: Int, b: Int, c: Int, d: Int) {
+            valid = true; this.a = a; this.b = b; this.c = c; this.d = d
+            bitmap.eraseColor(android.graphics.Color.TRANSPARENT)
+        }
+    }
+    private val actorFrames = SparseArray<ActorFrame>()
+    private fun actorFrame(key: Int): ActorFrame = actorFrames.get(key) ?: ActorFrame().also { actorFrames.put(key, it) }
+
     private var atmosphereFrame: Bitmap? = null
+    private var atmosphereCanvas: Canvas? = null
+    /** Le pas d'horloge de l'ambiance déjà dessinée ; MIN_VALUE : à refaire. */
+    private var atmosphereStep = Int.MIN_VALUE
     private var effectsFrame: Bitmap? = null
+    private var effectsCanvas: Canvas? = null
     private val clockOrigin = android.os.SystemClock.uptimeMillis()
     private var clock = 0f
 
@@ -80,12 +122,15 @@ internal class DungeonCombatArt {
         }
     }
 
-    private val mapStyles = mutableMapOf<Pair<List<MonsterType>, Int>, List<DungeonDemoSprites.MonsterStyle>>()
+    /** Par graine de groupe : ses types et les apparences tirées pour eux. */
+    private val mapStyles = SparseArray<Pair<List<MonsterType>, List<DungeonDemoSprites.MonsterStyle>>>()
 
     fun prepareMapPack(pack: MonsterPack) {
         val seed = pack.home.x * 73856093 xor pack.home.y * 19349663
         appearanceSeed = seed
-        monsterStyles = mapStyles.getOrPut(pack.types to seed) { styles(pack.types, seed) }
+        val known = mapStyles.get(seed)
+        monsterStyles = if (known != null && known.first == pack.types) known.second
+            else styles(pack.types, seed).also { mapStyles.put(seed, pack.types to it) }
     }
 
     fun clearMapPacks() { mapStyles.clear() }
@@ -107,6 +152,7 @@ internal class DungeonCombatArt {
                 backdropArt.drawBackground(Canvas(it), backdrop, floorY, worldHeight.toFloat())
             }
             cachedBackdrop = backdrop
+            atmosphereStep = Int.MIN_VALUE
         }
         canvas.save()
         canvas.clipRect(bounds)
@@ -114,41 +160,62 @@ internal class DungeonCombatArt {
         canvas.scale(-scale, scale)
         if (atmosphereFrame?.height != worldHeight) {
             atmosphereFrame?.recycle()
-            atmosphereFrame = Bitmap.createBitmap(240, worldHeight, Bitmap.Config.ARGB_8888)
+            atmosphereFrame = Bitmap.createBitmap(240, worldHeight, Bitmap.Config.ARGB_8888).also {
+                atmosphereCanvas = Canvas(it)
+            }
+            atmosphereStep = Int.MIN_VALUE
         }
-        val pixels = Canvas(requireNotNull(atmosphereFrame))
-        pixels.drawBitmap(requireNotNull(background), 0f, 0f, paint)
-        backdropArt.drawAtmosphere(pixels, backdrop, floorY, this.clock)
+        // L'ambiance n'est refaite (et renvoyée à la carte graphique) qu'à chaque pas d'horloge
+        val step = (clock / ATMOSPHERE_STEP_MS).toInt()
+        if (step != atmosphereStep) {
+            atmosphereStep = step
+            val pixels = requireNotNull(atmosphereCanvas)
+            pixels.drawBitmap(requireNotNull(background), 0f, 0f, paint)
+            backdropArt.drawAtmosphere(pixels, backdrop, floorY, this.clock)
+        }
         canvas.drawBitmap(requireNotNull(atmosphereFrame), 0f, 0f, paint)
         canvas.restore()
     }
+
+    /** [alpha] : l'opacité du héros entier (les doubles du mage sont translucides). */
     fun drawHero(canvas: Canvas, bounds: RectF, hero: Hero, windup: Boolean = false,
         swing: Boolean = false, casting: Boolean = false, blocking: Boolean = false,
         portrait: Boolean = false, invocation: Boolean = false, castProgress: Float = 0f,
-        actorKey: String? = null) {
-        paint.alpha = 255
+        actorKey: Int? = null, alpha: Int = 255) {
         updateEquipment(hero)
-        val (actorFrame, actorCanvas) = actorBuffer(actorKey ?: if (portrait) "heroPortrait" else "hero")
-        actorCanvas.save()
-        actorCanvas.translate(50f, 12f)
-        actorCanvas.scale(-1f, 1f)
-        val nodPhase = clock % 7000f
-        val nod = when {
-            nodPhase < 220f -> nodPhase / 220f
-            nodPhase < 600f -> (600f - nodPhase) / 380f
-            else -> 0f
+        val frame = actorFrame(actorKey ?: if (portrait) HERO_PORTRAIT else HERO)
+        val idle = !portrait && !windup && !swing && !casting && !blocking
+        val pose = (if (windup) 1 else 0) or (if (swing) 2 else 0) or (if (casting) 4 else 0) or
+            (if (blocking) 8 else 0) or (if (portrait) 16 else 0)
+        val step = if (idle) (clock / IDLE_STEP_MS).toInt() else 0
+        // L'invocation (Météore) lève le bras en continu : toujours redessinée
+        if (invocation || !frame.shows(equipmentVersion, pose, step, 0)) {
+            frame.redraw(equipmentVersion, pose, step, 0)
+            if (invocation) frame.valid = false
+            val actorCanvas = frame.canvas
+            actorCanvas.save()
+            actorCanvas.translate(50f, 12f)
+            actorCanvas.scale(-1f, 1f)
+            val nodPhase = clock % 7000f
+            val nod = when {
+                nodPhase < 220f -> nodPhase / 220f
+                nodPhase < 600f -> (600f - nodPhase) / 380f
+                else -> 0f
+            }
+            sceneArt.drawPaperDoll(actorCanvas, equipment, images, windup, swing, casting, blocking,
+                idle, clock, nod,
+                if (invocation) -25f - 70f * castProgress.coerceIn(0f, 1f) else -25f)
+            actorCanvas.restore()
         }
-        sceneArt.drawPaperDoll(actorCanvas, equipment, images, windup, swing, casting, blocking,
-            !portrait && !windup && !swing && !casting && !blocking, clock, nod,
-            if (invocation) -25f - 70f * castProgress.coerceIn(0f, 1f) else -25f)
-        actorCanvas.restore()
+        paint.alpha = alpha
         if (portrait) {
-            canvas.drawBitmap(actorFrame, android.graphics.Rect(20, 12, 48, 40), bounds, paint)
+            canvas.drawBitmap(frame.bitmap, heroPortraitSrc, bounds, paint)
         } else {
             val unit = bounds.width() / 36f
-            canvas.drawBitmap(actorFrame, null, RectF(bounds.left - 14 * unit, bounds.top - 12 * unit,
-                bounds.left + 50 * unit, bounds.top + 52 * unit), paint)
+            dst.set(bounds.left - 14 * unit, bounds.top - 12 * unit, bounds.left + 50 * unit, bounds.top + 52 * unit)
+            canvas.drawBitmap(frame.bitmap, null, dst, paint)
         }
+        paint.alpha = 255
     }
 
     fun drawShadow(canvas: Canvas, bounds: RectF, hero: Boolean = false) {
@@ -163,33 +230,42 @@ internal class DungeonCombatArt {
 
     fun drawMonster(canvas: Canvas, bounds: RectF, type: MonsterType, alpha: Int = 255,
         icy: Boolean = false, hurt: Boolean = false, index: Int = 0, portrait: Boolean = false, actorIndex: Int = index) {
-        val (actorFrame, actorCanvas) = actorBuffer("monster:$actorIndex:$portrait")
-        sceneArt.drawMonster(actorCanvas, 10f, 30f, icy, hurt, actorIndex,
-            monsterStyles.getOrElse(index) { style(type) }, clock, appearanceSeed + index)
-        if (icy) sceneArt.drawIce(actorCanvas, 22f, 39f)
+        val frame = actorFrame(MONSTER_BASE + actorIndex * 2 + if (portrait) 1 else 0)
+        val style = monsterStyles.getOrElse(index) { style(type) }
+        val seed = appearanceSeed + index
+        val pose = sceneArt.monsterFrame(10f, icy, actorIndex, style, clock)
+        val state = style.ordinal or (if (icy) 1 shl 16 else 0) or (if (hurt) 1 shl 17 else 0)
+        if (!frame.shows(state, seed, pose, actorIndex)) {
+            frame.redraw(state, seed, pose, actorIndex)
+            sceneArt.drawMonster(frame.canvas, 10f, 30f, icy, hurt, actorIndex, style, clock, seed)
+            if (icy) sceneArt.drawIce(frame.canvas, 22f, 39f)
+        }
         paint.alpha = alpha
         canvas.save()
         canvas.scale(-1f, 1f, bounds.centerX(), bounds.centerY())
         if (portrait) {
-            canvas.drawBitmap(actorFrame, android.graphics.Rect(6, 10, 54, 54), bounds, paint)
+            canvas.drawBitmap(frame.bitmap, monsterPortraitSrc, bounds, paint)
         } else {
             val unit = bounds.width() / 46f
-            canvas.drawBitmap(actorFrame, null, RectF(bounds.left - 10 * unit, bounds.top - 12 * unit,
-                bounds.left + 54 * unit, bounds.top + 52 * unit), paint)
+            dst.set(bounds.left - 10 * unit, bounds.top - 12 * unit, bounds.left + 54 * unit, bounds.top + 52 * unit)
+            canvas.drawBitmap(frame.bitmap, null, dst, paint)
         }
         canvas.restore()
         paint.alpha = 255
     }
 
     fun drawImpact(canvas: Canvas, bounds: RectF, progress: Float, ice: Boolean, slash: Boolean, index: Int) {
-        val (actorFrame, actorCanvas) = actorBuffer("impact:$index")
-        if (slash && progress < .6f) sceneArt.drawSlash(actorCanvas, progress / .6f, 30f, 30f)
-        sceneArt.fragments(actorCanvas, 30f, 30f, progress, ice)
+        // Les éclats bougent à chaque image : pas de tampon gardé
+        val frame = actorFrame(IMPACT_BASE + index)
+        frame.redraw(0, 0, 0, 0)
+        frame.valid = false
+        if (slash && progress < .6f) sceneArt.drawSlash(frame.canvas, progress / .6f, 30f, 30f)
+        sceneArt.fragments(frame.canvas, 30f, 30f, progress, ice)
         val unit = bounds.width() / 46f
         canvas.save()
         canvas.scale(-1f, 1f, bounds.centerX(), bounds.centerY())
-        canvas.drawBitmap(actorFrame, null, RectF(bounds.left - 16 * unit, bounds.top - 3 * unit,
-            bounds.left + 48 * unit, bounds.top + 61 * unit), paint)
+        dst.set(bounds.left - 16 * unit, bounds.top - 3 * unit, bounds.left + 48 * unit, bounds.top + 61 * unit)
+        canvas.drawBitmap(frame.bitmap, null, dst, paint)
         canvas.restore()
     }
     fun drawProjectile(canvas: Canvas, scene: RectF, hero: RectF, target: RectF, progress: Float, color: Int) {
@@ -197,11 +273,11 @@ internal class DungeonCombatArt {
         val h = kotlin.math.ceil(scene.height() / unit).toInt()
         if (effectsFrame?.height != h) {
             effectsFrame?.recycle()
-            effectsFrame = Bitmap.createBitmap(240, h, Bitmap.Config.ARGB_8888)
+            effectsFrame = Bitmap.createBitmap(240, h, Bitmap.Config.ARGB_8888).also { effectsCanvas = Canvas(it) }
         }
         val frame = requireNotNull(effectsFrame)
         frame.eraseColor(android.graphics.Color.TRANSPARENT)
-        sceneArt.drawProjectile(Canvas(frame), progress,
+        sceneArt.drawProjectile(requireNotNull(effectsCanvas), progress,
             (scene.right - hero.right) / unit, (hero.top - scene.top) / unit,
             (scene.right - target.right) / unit + 14f, (target.top - scene.top) / unit + 27f,
             color, color)
@@ -213,12 +289,13 @@ internal class DungeonCombatArt {
     }
 
     private fun updateEquipment(hero: Hero) {
-        val pieces = DungeonDemoSprites.slots.associateWith { slot -> hero.equipped[slot] }
-        val key = hero.archetype.toString() + "|" + pieces.entries.joinToString("|") { (slot, item) ->
-            "$slot:${item?.base}:${item?.power}:${item?.weight}:${item?.isotopeZ}:${item?.rarity}"
-        }
-        if (key == heroKey) return
-        heroKey = key
+        val slots = DungeonDemoSprites.slots
+        if (heroReady && hero.archetype == heroArchetype && wearsSamePieces(hero)) return
+        heroReady = true
+        heroArchetype = hero.archetype
+        for (i in slots.indices) heroPieces[i] = hero.equipped[slots[i]]
+        equipmentVersion++
+        val pieces = slots.associateWith { slot -> hero.equipped[slot] }
         val fallback = hero.archetype ?: Archetype.WARRIOR
         equipment = pieces.mapValues { (slot, item) ->
             EquipmentArt.gear(slot, item, fallback)
@@ -228,6 +305,12 @@ internal class DungeonCombatArt {
             pieces[slot]?.let { EquipmentArt.icon(it).copy(Bitmap.Config.ARGB_8888, false) }
                 ?: DungeonDemoSprites.equipment(gear)
         }
+    }
+
+    private fun wearsSamePieces(hero: Hero): Boolean {
+        val slots = DungeonDemoSprites.slots
+        for (i in slots.indices) if (hero.equipped[slots[i]] !== heroPieces[i]) return false
+        return true
     }
 
     private fun style(type: MonsterType): DungeonDemoSprites.MonsterStyle = when (type) {

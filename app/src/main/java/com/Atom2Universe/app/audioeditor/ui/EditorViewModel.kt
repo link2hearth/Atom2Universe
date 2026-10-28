@@ -8,6 +8,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.provider.DocumentsContract
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.documentfile.provider.DocumentFile
@@ -139,7 +140,10 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         private set
     lateinit var engine: PlaybackEngine
         private set
+    /** Lit pour le moteur de lecture (fil audio) : rien d'autre ne passe par lui, pour ne jamais le faire attendre. */
     private lateinit var provider: FileSampleProvider
+    /** Lit pour tout le reste (gros plans, spectrogramme, rendus, analyse, export) : ses grandes lectures ne bloquent pas le son. */
+    private lateinit var bulk: FileSampleProvider
     private lateinit var recorder: RecordController
     private lateinit var meta: ProjectMeta
     var projectId: String? = null
@@ -173,12 +177,13 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             meta = loaded.meta
             session = EditSession(loaded.project)
             provider = FileSampleProvider(store.dir(id))
+            bulk = FileSampleProvider(store.dir(id))
             engine = PlaybackEngine(provider, { rate -> AndroidAudioSink(rate) }, { AndroidAudioSink.raiseThreadPriority() })
             engine.setProject(loaded.project)
             engine.onEnded = { end -> main.post { onPlaybackEnded(end) } }
             recorder = RecordController(getApplication(), engine).also { r ->
                 r.onError = { e -> main.post { onRecordError(e) } }
-                withContext(Dispatchers.IO) { r.cleanupOldRecordings() }
+                orphanFiles = withContext(Dispatchers.IO) { r.orphanRecordings() }
             }
             engine.onError = { main.post { stopPlaybackState(); messages.tryEmit(R.string.ae_error_playback) } }
             savedRevision = session.revision
@@ -195,6 +200,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             ui.selectedTracks.clear()
             ui.selectedTracks.addAll(if (v.activeTrack in ids) listOf(v.activeTrack) else ids)
             state.value = State.READY
+            orphanRecordings.value = orphanFiles.size
             touch()
         }
     }
@@ -203,19 +209,36 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         if (state.value != State.READY) return
         saveJob?.cancel()
         previewPlayer.stop()
-        if (isRecording) recorder.cancel()
+        // Écran fermé en plein enregistrement (tâche balayée, système) : on l'arrête et on le range dans le
+        // projet plutôt que de le perdre.
+        val take = if (isRecording) stopRecordingForClose() else null
         engine.release()
         abandonFocus()
         provider.close()
+        bulk.close()
         // Fermeture : oublie les sources sans clip, enregistre, ramasse les fichiers et refait la vignette.
         val id = projectId ?: return
         val p = session.project
         val m = currentMeta()
-        val touched = session.revision != savedRevision
+        val touched = session.revision != savedRevision || take != null
+        val app = getApplication<Application>()
+        val trackName = app.getString(R.string.ae_track_n, p.tracks.size + 1)
+        val clipName = app.getString(R.string.ae_recording)
         AudioEditorStorage.writesInFlight.value++
         AudioEditorStorage.ioScope.launch {
             try {
-                AudioEditorStorage.saveMutex.withLock { store.finish(id, p, m, touch = touched) }
+                var finalProject = p
+                if (take != null) {
+                    try {
+                        finalProject = RecordingPlacement.place(p, store.dir(id), take.wav, take.track, trackName, clipName, take.at, RunContext(p.sampleRate)).project
+                    } catch (e: Exception) {
+                        // Le WAV reste dans le cache : il sera proposé à la prochaine ouverture.
+                        Log.w("AudioEditor", "Fermeture : enregistrement non rangé", e)
+                    } finally {
+                        RecordController.release(take.wav)
+                    }
+                }
+                AudioEditorStorage.saveMutex.withLock { store.finish(id, finalProject, m, touch = touched) }
             } catch (e: Exception) {
                 // Disque plein : le manifeste d'avant reste intact (écriture atomique), mieux vaut perdre
                 // cette sauvegarde que l'application.
@@ -278,7 +301,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             viewModelScope.launch {
                 val dir = store.dir(id)
                 val d = withContext(Dispatchers.IO) {
-                    runCatching { PeakFiles.loadOrBuild(File(dir, src.file), src.peaksFile(dir)) }.getOrNull()
+                    runCatching { PeakFiles.loadOrBuild(File(dir, src.file), src.peaksFile(dir)).also { it.prepareLevels() } }.getOrNull()
                 }
                 if (d != null) peaks[src.id] = d
                 peaksLoading.remove(src.id)
@@ -316,7 +339,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             val count = (minOf(b + margin, src.frames) - first).toInt()
             viewModelScope.launch {
                 val data = withContext(Dispatchers.IO) {
-                    runCatching { Array(src.channels.coerceAtLeast(1)) { FloatArray(count) }.also { provider.read(src, first, count, it, 0) } }.getOrNull()
+                    runCatching { Array(src.channels.coerceAtLeast(1)) { FloatArray(count) }.also { bulk.read(src, first, count, it, 0) } }.getOrNull()
                 }
                 if (data != null) rawCache[src.id] = RawWindow(first, data)
                 rawLoading.remove(src.id)
@@ -822,7 +845,73 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                     ui.selEnd = at
                 }
             } catch (e: CancellationException) {
-                // Annulé : le WAV reste dans le cache, ramassé au prochain lancement.
+                // Annulé : le WAV reste dans le cache, proposé à la prochaine ouverture.
+            } catch (e: Throwable) {
+                messages.tryEmit(R.string.ae_effect_failed)
+            } finally {
+                RecordController.release(wav)
+                work.value = null
+                workJob = null
+                touch()
+            }
+        }
+    }
+
+    /** Ce qu'il faut pour ranger un enregistrement arrêté à la fermeture de l'écran. */
+    private class Take(val wav: File, val at: Long, val track: Int?)
+
+    /** Arrête l'enregistrement sans toucher à la session (l'écran se ferme) ; `null` s'il n'y avait rien. */
+    private fun stopRecordingForClose(): Take? {
+        val at = recorder.startFrame
+        val approx = (recorder.seconds * project.sampleRate).toLong()
+        val onto = recordingTrack()?.let { project.track(it) }
+            ?.takeIf { t -> t.clips.none { it.end > at && it.start < at + approx } }?.id
+        return try {
+            Take(recorder.stop(), at, onto)
+        } catch (e: RecordException) {
+            null
+        }
+    }
+
+    // ---- Enregistrements interrompus -------------------------------------------------------------------
+
+    /** Enregistrements restés dans le cache (appli tuée en route) : leur nombre ; l'écran propose de les récupérer. */
+    val orphanRecordings = MutableStateFlow(0)
+    private var orphanFiles: List<File> = emptyList()
+
+    /** Pose chaque enregistrement interrompu sur une nouvelle piste, au début du projet (un seul pas d'annulation). */
+    fun recoverOrphanRecordings() {
+        if (state.value != State.READY || isRecording || work.value != null) return
+        val files = orphanFiles
+        orphanFiles = emptyList()
+        orphanRecordings.value = 0
+        val id = projectId ?: return
+        if (files.isEmpty()) return
+        val before = session.project
+        val app = getApplication<Application>()
+        val clipName = app.getString(R.string.ae_recording)
+        work.value = Work(R.string.ae_record_progress_title, "", -1f)
+        workJob = viewModelScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    var p = before
+                    for (wav in files) {
+                        val trackName = app.getString(R.string.ae_track_n, p.tracks.size + 1)
+                        try {
+                            p = RecordingPlacement.place(p, store.dir(id), wav, null, trackName, clipName, 0L, workContext(p.sampleRate, R.string.ae_record_progress_title, "")).project
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            // Fichier illisible : rien à en tirer, on ne le reproposera pas.
+                            Log.w("AudioEditor", "Enregistrement interrompu illisible : ${wav.name}", e)
+                            wav.delete()
+                        }
+                    }
+                    p
+                }
+                if (result !== before && session.project === before) edit("record") { result }
+            } catch (e: CancellationException) {
+                // Annulé : les fichiers pas encore rangés restent dans le cache.
             } catch (e: Throwable) {
                 messages.tryEmit(R.string.ae_effect_failed)
             } finally {
@@ -831,6 +920,13 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 touch()
             }
         }
+    }
+
+    fun discardOrphanRecordings() {
+        val files = orphanFiles
+        orphanFiles = emptyList()
+        orphanRecordings.value = 0
+        AudioEditorStorage.ioScope.launch { files.forEach { it.delete() } }
     }
 
     // ---- Effets, aperçu, génération ------------------------------------------------------------------
@@ -868,7 +964,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         workJob = viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.Default) {
-                    RenderRange.apply(before, store.dir(id), provider, tracks, from, to, effect, workContext(before.sampleRate, R.string.ae_effect_progress_title, label))
+                    RenderRange.apply(before, store.dir(id), bulk, tracks, from, to, effect, workContext(before.sampleRate, R.string.ae_effect_progress_title, label))
                 }
                 // Si le projet a bougé pendant le rendu, on abandonne : les sources en trop seront ramassées à la fermeture.
                 if (result.newSources.isNotEmpty() && session.project === before) edit("effect:${def.id}") { result.project }
@@ -910,7 +1006,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             val buffer = try {
                 withContext(Dispatchers.Default) {
                     val job = coroutineContext[Job]!!
-                    EffectPreview.render(p, provider, tracks, from, to, effect, RunContext(p.sampleRate, isCancelled = { !job.isActive }))
+                    EffectPreview.render(p, bulk, tracks, from, to, effect, RunContext(p.sampleRate, isCancelled = { !job.isActive }))
                 }
             } catch (e: CancellationException) {
                 return@launch
@@ -956,7 +1052,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         val to = ui.selEnd
         viewModelScope.launch {
             val profile = withContext(Dispatchers.Default) {
-                runCatching { NoiseProfile.fromReader(TrackRangeReader(p, track, from, to, provider)) }.getOrNull()
+                runCatching { NoiseProfile.fromReader(TrackRangeReader(p, track, from, to, bulk)) }.getOrNull()
             }
             noiseProfile = profile ?: noiseProfile
             onDone(profile != null)
@@ -1052,7 +1148,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                         val first = index.toLong() * Spectrogram.TILE_FRAMES - Spectrogram.FFT_SIZE / 2
                         val count = Spectrogram.TILE_FRAMES + Spectrogram.FFT_SIZE
                         val ch = Array(src.channels.coerceAtLeast(1)) { FloatArray(count) }
-                        provider.read(src, first, count, ch, 0)
+                        bulk.read(src, first, count, ch, 0)
                         val mono = FloatArray(count) { i -> var s = 0f; for (c in ch.indices) s += ch[c][i]; s / ch.size }
                         val pixels = Spectrogram.toPixels(Spectrogram.bake(mono, Spectrogram.Layout(rate)))
                         // Créé modifiable puis rempli : un bitmap tiré d'un tableau d'entiers serait immuable.
@@ -1083,7 +1179,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         workJob = viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.Default) {
-                    MixDown.apply(before, store.dir(id), provider, tracks, name, workContext(before.sampleRate, R.string.ae_mixdown_progress_title, name))
+                    MixDown.apply(before, store.dir(id), bulk, tracks, name, workContext(before.sampleRate, R.string.ae_mixdown_progress_title, name))
                 }
                 if (result.newSources.isNotEmpty() && session.project === before) {
                     edit("mixdown") { result.project }
@@ -1119,8 +1215,8 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.Default) {
                     val job = coroutineContext[Job]!!
                     val ctx = RunContext(p.sampleRate, isCancelled = { !job.isActive })
-                    val stats = Analysis.stats(MixReader(p, provider, from, to), ctx)
-                    val spectrum = Analysis.spectrum(MixReader(p, provider, from, to), ctx)
+                    val stats = Analysis.stats(MixReader(p, bulk, from, to), ctx)
+                    val spectrum = Analysis.spectrum(MixReader(p, bulk, from, to), ctx)
                     AnalysisResult(from, to, p.sampleRate, whole, stats, spectrum)
                 }
             } catch (e: CancellationException) {
@@ -1198,27 +1294,34 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 withContext(Dispatchers.IO) {
                     val ctx = workContext(p.sampleRate, R.string.ae_export_progress_title, label)
-                    val exporter = AudioExporter(provider, FfmpegTranscoder)
+                    val exporter = AudioExporter(bulk, FfmpegTranscoder)
                     val mime = req.options.format.mime
                     val ext = req.options.format.extension
                     if (req.perTrack) {
-                        val results = exporter.exportTracks(p, req.options, temp, temp, ctx)
                         val tree = DocumentFile.fromTreeUri(app, dest) ?: throw IOException("Dossier de destination illisible")
-                        for (r in results) {
+                        // Chaque piste est copiée dès qu'elle est rendue, puis effacée du cache : on n'y garde jamais qu'un fichier.
+                        exporter.exportTracks(p, req.options, temp, temp, ctx) { r ->
                             ctx.checkCancelled()
                             val doc = tree.createFile(mime, r.file.name) ?: throw IOException("Création impossible : ${r.file.name}")
-                            copyTo(app, r.file, doc.uri)
+                            copyOrDelete(app, r.file, doc.uri)
+                            r.file.delete()
                             if (r.clipped) clipped = true
                         }
                     } else {
-                        val r = exporter.export(p, req.options, File(temp, "export.$ext"), temp, ctx)
-                        copyTo(app, r.file, dest)
+                        val r = try {
+                            exporter.export(p, req.options, File(temp, "export.$ext"), temp, ctx)
+                        } catch (e: Throwable) {
+                            // Le fichier choisi a déjà été créé (vide) par le sélecteur : on ne le laisse pas traîner.
+                            deleteDocument(app, dest)
+                            throw e
+                        }
+                        copyOrDelete(app, r.file, dest)
                         clipped = r.clipped
                     }
                 }
                 done = true
             } catch (e: CancellationException) {
-                // Annulé : ce qui était déjà copié reste, le reste n'existe pas.
+                // Annulé : les fichiers déjà copiés en entier restent, celui en cours est effacé.
             } catch (e: Throwable) {
                 messages.tryEmit(R.string.ae_export_failed)
             } finally {
@@ -1230,9 +1333,19 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun copyTo(app: Application, file: File, dest: Uri) {
-        val out = app.contentResolver.openOutputStream(dest, "wt") ?: throw IOException("Destination illisible")
-        out.use { o -> file.inputStream().use { it.copyTo(o) } }
+    /** Copie [file] vers [dest] ; un échec (disque plein, annulation) efface la destination plutôt que d'y laisser un fichier tronqué. */
+    private fun copyOrDelete(app: Application, file: File, dest: Uri) {
+        try {
+            val out = app.contentResolver.openOutputStream(dest, "wt") ?: throw IOException("Destination illisible")
+            out.use { o -> file.inputStream().use { it.copyTo(o) } }
+        } catch (e: Throwable) {
+            deleteDocument(app, dest)
+            throw e
+        }
+    }
+
+    private fun deleteDocument(app: Application, uri: Uri) {
+        runCatching { DocumentsContract.deleteDocument(app.contentResolver, uri) }
     }
 
     // ---- Focus audio ---------------------------------------------------------------------------------

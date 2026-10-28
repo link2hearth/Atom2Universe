@@ -2,13 +2,11 @@ package com.Atom2Universe.app.science.cosmicscale
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils
 import android.opengl.Matrix
-import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -38,6 +36,8 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         const val PLANET_TILT_DEG = 18f
         /** Rayon extérieur des anneaux, en rayons planétaires (géométrie de buildRingStrip). */
         const val RINGS_OUTER_FACTOR = 2.35f
+        const val RINGS_ASSET = "textures/planets/saturn_ring.jpg"
+        const val MAX_PREFETCHED = 4
         val PLANET_VERT = """
             attribute vec4 aPos; attribute vec2 aUV; attribute vec3 aNorm;
             uniform mat4 uMVP; uniform mat4 uRot;
@@ -162,8 +162,13 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
     private var startMs = -1L
 
     // ── État pilotable depuis l'UI ──────────────────────────────────
-    @Volatile var leftBody: CosmicBody = CosmicScaleData.byId("sun")
-    @Volatile var rightBody: CosmicBody = CosmicScaleData.byId("earth")
+    // Les deux astres changent ensemble : deux champs séparés laissaient le fil GL dessiner
+    // une image avec le nouvel astre de gauche et l'ancien de droite.
+    @Volatile var bodies: Pair<CosmicBody, CosmicBody> = CosmicScaleData.byId("sun") to CosmicScaleData.byId("earth")
+
+    /** Rendu à la demande : le fil GL dit après chaque image à quelle cadence il en faut une autre. */
+    internal var pacer: com.Atom2Universe.app.science.GLFramePacer? = null
+    private var frameHz = 0
 
     // ─────────────────────────────────────────────────────────────────
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -171,7 +176,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
         GLES20.glEnable(GLES20.GL_BLEND)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-        texCache.clear()
+        texCache.clear(); uploaded.clear()
         compilePrograms()
         buildGeometry()
     }
@@ -193,12 +198,17 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         renderDivider()
 
         val halfW = surfaceW / 2
+        val (leftBody, rightBody) = bodies
         // Même échelle pour les deux moitiés, calée sur l'encombrement réel : les anneaux de
         // Saturne (2,35 rayons) débordaient sur l'autre moitié et y étaient coupés quand elle
         // était le plus grand des deux astres.
         val maxKm = max(fitKm(leftBody), fitKm(rightBody))
+        frameHz = 0
         drawHalf(0, halfW, surfaceH, leftBody, maxKm, spin, tSec)
         drawHalf(halfW, surfaceW - halfW, surfaceH, rightBody, maxKm, spin, tSec)
+        // Planète : rotation visible (8°/s), 60 Hz. Étoile : rotation lente et bruit de
+        // surface seuls, 30 Hz. Trou noir ou point : rien ne bouge.
+        pacer?.frameDone(frameHz)
     }
 
     private fun fitKm(body: CosmicBody): Double =
@@ -225,9 +235,15 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         }
 
         when (body.kind) {
-            BodyKind.STAR -> drawStar(body, rWorld, spin, tSec)
+            BodyKind.STAR -> {
+                drawStar(body, rWorld, spin, tSec)
+                frameHz = max(frameHz, com.Atom2Universe.app.science.GLFramePacer.SLOW_HZ)
+            }
             BodyKind.BLACK_HOLE -> drawBlackHole(rWorld)
-            else -> drawPlanet(body, rWorld, spin)
+            else -> {
+                drawPlanet(body, rWorld, spin)
+                frameHz = max(frameHz, com.Atom2Universe.app.science.GLFramePacer.INTERACTIVE_HZ)
+            }
         }
     }
 
@@ -315,7 +331,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glDepthMask(false)
         GLES20.glUseProgram(ringsProg)
         GLES20.glUniformMatrix4fv(rMVP, 1, false, mvp, 0)
-        bindTex(rTex, "textures/planets/saturn_ring.jpg", 0x88C8B08C.toInt())
+        bindTex(rTex, RINGS_ASSET, 0x88C8B08C.toInt())
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, ringsVBO)
         val stride = 5 * 4
         GLES20.glEnableVertexAttribArray(rPos)
@@ -419,10 +435,24 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
     // ── Textures ─────────────────────────────────────────────────────
     private var fallbackTexId = 0
     private val assetLoaded = HashMap<String, Boolean>()  // asset → texture réelle bien chargée ?
+    // Décodage en arrière-plan des astres affichés et de leurs voisins dans l'échelle :
+    // un JPEG lu sur le fil GL au moment du glissement faisait sauter une image.
+    private val prefetched = java.util.concurrent.ConcurrentHashMap<String, java.util.concurrent.Future<Bitmap?>>()
+    private val uploaded: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+
+    /** Fil UI : prépare les textures de ces astres, si elles ne sont pas déjà sur le GPU. */
+    fun prefetch(bodies: List<CosmicBody>) {
+        val wanted = bodies.flatMap { b -> listOfNotNull(b.textureAsset, if (b.hasRings) RINGS_ASSET else null) }
+            .filter { it !in uploaded && !prefetched.containsKey(it) }
+        // Borne : quelques images en attente au plus, le reste se décode à l'usage.
+        if (wanted.isEmpty() || prefetched.size >= MAX_PREFETCHED) return
+        com.Atom2Universe.app.science.GLTextures.prefetch(context, wanted.take(MAX_PREFETCHED - prefetched.size), prefetched)
+    }
 
     private fun resolveTex(asset: String?, fallbackArgb: Int): Int {
         if (asset == null) return fallbackTexId
         texCache[asset]?.let { return it }
+        uploaded.add(asset)
         val id = loadTex(asset, fallbackArgb)
         texCache[asset] = id
         return id
@@ -436,17 +466,14 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-        try {
-            context.assets.open(asset).use { stream ->
-                val opts = BitmapFactory.Options().apply { inScaled = false }
-                val bmp = BitmapFactory.decodeStream(stream, null, opts)
-                    ?: throw IOException("image illisible : $asset")
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
-                GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
-                bmp.recycle()
-            }
+        val decoded = com.Atom2Universe.app.science.GLTextures.take(context, prefetched, asset)
+        if (decoded != null) {
+            val bmp = com.Atom2Universe.app.science.GLTextures.uploadable(decoded)
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
+            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
+            bmp.recycle()
             assetLoaded[asset] = true
-        } catch (_: IOException) {
+        } else {
             val bmp = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             bmp.setPixel(0, 0, fallbackArgb)
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)

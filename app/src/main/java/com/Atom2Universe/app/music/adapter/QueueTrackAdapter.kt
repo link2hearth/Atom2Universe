@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.MusicStatsManager
@@ -27,16 +28,51 @@ class QueueTrackAdapter(
     private var showPlayCount: Boolean = true
 
     /**
-     * Met à jour la liste de tracks avec DiffUtil pour des animations optimisées.
+     * Met à jour la liste de tracks, avec les animations de DiffUtil quand le changement est petit.
+     *
+     * Le calcul reste synchrone : l'écran du lecteur lit itemCount et les positions juste après
+     * l'appel. Ce qui coûtait (un DiffUtil avec déplacements sur toute une grande file mélangée)
+     * est borné : la tête et la queue communes sont écartées en temps linéaire, et DiffUtil ne
+     * travaille que sur un milieu court. Un milieu plus long (file mélangée, nouvelle file) est
+     * annoncé par plages, ce que RecyclerView traite sans calcul.
      */
     fun setTracks(newTracks: List<MusicTrack>) {
-        val diffCallback = QueueDiffCallback(tracks, newTracks)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
+        val oldTracks = ArrayList(tracks)
         tracks.clear()
         tracks.addAll(newTracks)
 
-        diffResult.dispatchUpdatesTo(this)
+        val minSize = minOf(oldTracks.size, newTracks.size)
+        var head = 0
+        while (head < minSize && oldTracks[head] == newTracks[head]) head++
+        var tail = 0
+        while (tail < minSize - head &&
+            oldTracks[oldTracks.size - 1 - tail] == newTracks[newTracks.size - 1 - tail]
+        ) tail++
+
+        val oldMiddle = oldTracks.size - head - tail
+        val newMiddle = newTracks.size - head - tail
+        if (oldMiddle == 0 && newMiddle == 0) return
+
+        if (oldMiddle + newMiddle <= MAX_DIFF_ITEMS) {
+            val diffCallback = QueueDiffCallback(
+                oldTracks.subList(head, head + oldMiddle),
+                newTracks.subList(head, head + newMiddle)
+            )
+            DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(OffsetUpdateCallback(head))
+        } else {
+            val common = minOf(oldMiddle, newMiddle)
+            if (common > 0) notifyItemRangeChanged(head, common)
+            if (oldMiddle > common) notifyItemRangeRemoved(head + common, oldMiddle - common)
+            if (newMiddle > common) notifyItemRangeInserted(head + common, newMiddle - common)
+        }
+    }
+
+    /** Relaie les mises à jour de DiffUtil, calculées sur le milieu de la liste, à leur vraie place. */
+    private inner class OffsetUpdateCallback(private val offset: Int) : ListUpdateCallback {
+        override fun onInserted(position: Int, count: Int) = notifyItemRangeInserted(position + offset, count)
+        override fun onRemoved(position: Int, count: Int) = notifyItemRangeRemoved(position + offset, count)
+        override fun onMoved(fromPosition: Int, toPosition: Int) = notifyItemMoved(fromPosition + offset, toPosition + offset)
+        override fun onChanged(position: Int, count: Int, payload: Any?) = notifyItemRangeChanged(position + offset, count, payload)
     }
 
     fun getTracks(): List<MusicTrack> = tracks.toList()
@@ -209,6 +245,11 @@ class QueueTrackAdapter(
                 itemView.setBackgroundResource(R.drawable.audio_row_background)
             }
         }
+    }
+
+    private companion object {
+        /** Au-delà, DiffUtil (avec déplacements) coûterait trop cher sur le fil de l'interface. */
+        const val MAX_DIFF_ITEMS = 400
     }
 
     /**

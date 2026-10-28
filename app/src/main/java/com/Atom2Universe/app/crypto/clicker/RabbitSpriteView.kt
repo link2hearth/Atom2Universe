@@ -8,6 +8,7 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
+import com.Atom2Universe.app.crypto.VisibleWindowGate
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.sin
@@ -75,6 +76,7 @@ class RabbitSpriteView @JvmOverloads constructor(
     private var lastFrameAt = 0L
 
     private val choreographer = Choreographer.getInstance()
+    private var ticking = false
     private val tick = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
             // Même horloge que registerClick() pour que les comparaisons soient cohérentes
@@ -82,9 +84,29 @@ class RabbitSpriteView @JvmOverloads constructor(
             updateFrame(now)
             updateEffects(now)
             invalidate()
-            choreographer.postFrameCallback(this)
+            // Au repos l'image ne bouge plus : la boucle s'arrête jusqu'au prochain clic.
+            if (isIdle(now)) ticking = false else choreographer.postFrameCallback(this)
         }
     }
+
+    private val gate = VisibleWindowGate(this) { active -> if (active) startTicking() else stopTicking() }
+
+    private fun startTicking() {
+        if (ticking || !gate.isActive) return
+        ticking = true
+        lastEffectsAt = 0L
+        choreographer.postFrameCallback(tick)
+    }
+
+    private fun stopTicking() {
+        ticking = false
+        choreographer.removeFrameCallback(tick)
+    }
+
+    private fun isIdle(now: Long): Boolean =
+        clickHistory.isEmpty() && frameIndex == 0 && bounce == 0f && bounceVelocity == 0f &&
+            currentProgress == 0f && !isReturning &&
+            dust.none { now - it.bornAt < DUST_LIFETIME_MS }
 
     /** Appelé à chaque clic enregistré depuis l'activité. */
     fun registerClick() {
@@ -93,6 +115,7 @@ class RabbitSpriteView @JvmOverloads constructor(
         purgeOldClicks(now)
         bounceVelocity = (bounceVelocity + 5f).coerceAtMost(9f)
         emitDust(now)
+        startTicking()
     }
 
     private fun emitDust(now: Long) {
@@ -240,12 +263,21 @@ class RabbitSpriteView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        lastEffectsAt = 0L
-        choreographer.postFrameCallback(tick)
+        gate.update()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) gate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) gate.update()
     }
 
     override fun onDetachedFromWindow() {
-        choreographer.removeFrameCallback(tick)
+        gate.detach()
         bounce = 0f
         bounceVelocity = 0f
         dust.forEach { it.bornAt = -DUST_LIFETIME_MS }

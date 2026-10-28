@@ -82,13 +82,19 @@ class FarmActivity : ThemedActivity() {
     private val sage get() = palette.raised
     private val border get() = palette.outline
     private val tick = object : Runnable {
-        override fun run() { refresh(); handler.postDelayed(this, 1000) }
+        override fun run() { refresh(); flushSave(); handler.postDelayed(this, 1000) }
+    }
+    /** When the farm was last written: changes are grouped and reach the disk every few seconds. */
+    private var lastWrite = 0L
+    private fun flushSave() {
+        val now = android.os.SystemClock.uptimeMillis()
+        if (now - lastWrite >= SAVE_INTERVAL_MS && state.flush()) lastWrite = now
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        state = FarmState(getSharedPreferences(FarmState.PREFS, MODE_PRIVATE))
+        state = FarmState(getSharedPreferences(FarmState.PREFS, MODE_PRIVATE)).apply { deferSaves = true }
         sprites = FarmSprites(this)
         root = FrameLayout(this)
         world = FarmWorldView(this, state, ::interact, ::parcelMenu, ::removePlant, ::debrisCleared, ::watered, ::harvested)
@@ -116,6 +122,7 @@ class FarmActivity : ThemedActivity() {
             leftMargin = dp(16); rightMargin = dp(16); bottomMargin = dp(6)
         })
         fieldView = FieldArcadeView(this, state) { refresh() }
+        fieldView.onProgress = { refreshField() }
         fieldView.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
         fieldPanel.addView(fieldView, LinearLayout.LayoutParams(-1, 0, 1f))
         fieldPanel.addView(text(getString(R.string.farm_field_steer), 12).apply { gravity = Gravity.CENTER; setPadding(dp(10), dp(4), dp(10), dp(4)) })
@@ -245,10 +252,12 @@ class FarmActivity : ThemedActivity() {
      * while the answer was travelling.
      */
     private fun syncOnOpen() {
+        // Whatever the opening itself changed goes to disk first, so it counts as the farm we opened.
+        state.flush()
         val openedWith = getSharedPreferences(FarmState.PREFS, MODE_PRIVATE)
             .getString(FarmState.KEY_STATE, null)
         lifecycleScope.launch {
-            when (val result = FarmSyncManager.onFarmOpened(this@FarmActivity, openedWith)) {
+            when (val result = FarmSyncManager.onFarmOpened(this@FarmActivity, openedWith, ::holdForCloud)) {
                 FarmSyncManager.OpenResult.Idle -> Unit
                 // The farm on disk is no longer the one the views were built from: rebuild rather
                 // than patch, since the world, the fields and the pens all hold the old state.
@@ -275,6 +284,9 @@ class FarmActivity : ThemedActivity() {
             val other = conflict.remote.deviceName.ifBlank { getString(R.string.farm_sync_other_device) }
             body.addView(farmCard(other, conflict.remote) {
                 closeBubble()
+                // Silenced before the cloud farm is written, never after: see [holdForCloud].
+                handler.removeCallbacks(tick); fieldView.stop()
+                state.flush(); state.hold(); farmSuperseded = true
                 lifecycleScope.launch {
                     FarmSyncManager.keepRemote(this@FarmActivity, conflict.remote)
                     rebuildOnCloudFarm()
@@ -283,6 +295,20 @@ class FarmActivity : ThemedActivity() {
         }
     }
 
+    /**
+     * Called on this thread just before the cloud farm is written. The timer stops first; then the
+     * farm in memory stops writing for good - unless it has moved on since the cloud was asked, in
+     * which case the timer resumes and the player will be asked which farm to keep.
+     */
+    private fun holdForCloud(expected: String?): Boolean {
+        handler.removeCallbacks(tick)
+        if (!state.holdIfUnchanged(expected)) {
+            if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) handler.post(tick)
+            return false
+        }
+        farmSuperseded = true; fieldView.stop()
+        return true
+    }
     /**
      * The cloud farm is on disk: rebuild the screen on top of it.
      *
@@ -340,9 +366,10 @@ class FarmActivity : ThemedActivity() {
                     setOnClickListener { goToRegion(region) }
                 }
                 val ready = region == FarmRegion.FIELDS && state.fieldsNeedAttention()
-                row.addView(text(getString(region.label) + if (ready) " 🚜" else "", 17, true))
+                row.addView(text(if (ready) getString(R.string.farm_region_ready, getString(region.label))
+                    else getString(region.label), 17, true))
                 row.addView(text(getString(region.description), 13))
-                if (locked != null) row.addView(text("🔒 " + locked, 13, true))
+                if (locked != null) row.addView(text(getString(R.string.farm_region_locked_line, locked), 13, true))
                 body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
         }
@@ -2047,7 +2074,7 @@ class FarmActivity : ThemedActivity() {
                     maxLines = 1
                     ellipsize = android.text.TextUtils.TruncateAt.END
                 }, LinearLayout.LayoutParams(dp(58), -2))
-                cropBadge.addView(text("×${state.cropProduceTotal(crop)}", 12, true).apply {
+                cropBadge.addView(text(getString(R.string.farm_produce_total, state.cropProduceTotal(crop)), 12, true).apply {
                     gravity = Gravity.CENTER
                     setTextColor(palette.secondary)
                 }, LinearLayout.LayoutParams(dp(58), -2))
@@ -2119,13 +2146,13 @@ class FarmActivity : ThemedActivity() {
             sellButton.text = getString(R.string.farm_sell_selected_produce,
                 money(selected.toLong() * crop.sale * quality.multiplier))
         }
-        addView(stepButton("−") { update(-1) }, LinearLayout.LayoutParams(dp(36), dp(36)).apply { leftMargin = dp(4) })
+        addView(stepButton(getString(R.string.farm_step_less)) { update(-1) }, LinearLayout.LayoutParams(dp(36), dp(36)).apply { leftMargin = dp(4) })
         addView(selectedText, LinearLayout.LayoutParams(dp(32), dp(36)))
         sellButton = button(getString(R.string.farm_sell_selected_produce, money(selected.toLong() * crop.sale * quality.multiplier))) {
             confirmProduceSale(crop, quality, selected)
         }
         addView(sellButton, LinearLayout.LayoutParams(dp(98), dp(40)).apply { leftMargin = dp(5); rightMargin = dp(5) })
-        addView(stepButton("+") { update(1) }, LinearLayout.LayoutParams(dp(36), dp(36)))
+        addView(stepButton(getString(R.string.farm_step_more)) { update(1) }, LinearLayout.LayoutParams(dp(36), dp(36)))
         contentDescription = getString(R.string.farm_quality_count, getString(quality.label), count)
     }
     private fun confirmProduceSale(crop: FarmCrop, quality: FarmCropQuality, quantity: Int) {
@@ -2234,7 +2261,7 @@ class FarmActivity : ThemedActivity() {
     }
     private fun qualityChip(quality: FarmCropQuality, count: Int) = LinearLayout(this).apply {
         gravity = Gravity.CENTER
-        addView(text("★", 22, true).apply {
+        addView(text(getString(R.string.farm_quality_star), 22, true).apply {
             gravity = Gravity.CENTER
             setTextColor(qualityColor(quality))
         }, LinearLayout.LayoutParams(dp(30), dp(30)))
@@ -2414,19 +2441,15 @@ class FarmActivity : ThemedActivity() {
         state.advanceEncounters()
         fieldPanel.visibility = if (world.region == FarmRegion.FIELDS) View.VISIBLE else View.GONE
         livestockPanel.visibility = if (world.region == FarmRegion.LIVESTOCK) View.VISIBLE else View.GONE
-        world.visibility = if (world.region == FarmRegion.LIVESTOCK) View.INVISIBLE else View.VISIBLE
+        // Both regions are opaque panels over the map: drawing it underneath is pure waste.
+        world.visibility = if (world.region == FarmRegion.LIVESTOCK || world.region == FarmRegion.FIELDS)
+            View.INVISIBLE else View.VISIBLE
         refreshHabitat()
-        if (world.region != FarmRegion.FIELDS) fieldView.stop()
-        val f = state.largeFields.fields[state.largeFields.selected]
-        val phaseLabel = listOf(R.string.farm_field_plough, R.string.farm_field_seed, R.string.farm_field_grow, R.string.farm_field_harvest)[f.phase]
-        fieldInfo.text = getString(R.string.farm_field_status, f.index + 1, getString(phaseLabel), f.coverage) + when {
-            f.phase == 2 -> " · " + duration(((f.readyAt - System.currentTimeMillis()).coerceAtLeast(0) / 1000).toInt())
-            !f.paid -> " · " + getString(R.string.farm_field_start, f.seedCost)
-            else -> ""
-        }
-        fuelTrack.visibility = if (f.phase == 2) View.GONE else View.VISIBLE
-        fuelFill.scaleX = f.fuel.coerceIn(0f, 1f)
-        fuelDrawable.setColor(when { f.fuel > .5f -> Color.rgb(126, 187, 90); f.fuel > .2f -> Color.rgb(224, 167, 63); else -> Color.rgb(196, 64, 58) })
+        // An empty pen stops animating; this is what shows an animal bought or sold in it.
+        if (world.region == FarmRegion.LIVESTOCK) habitat.invalidate()
+        // Away from the fields, their tractor stops and their layers go back to the system.
+        if (world.region != FarmRegion.FIELDS) { fieldView.stop(); fieldView.release() }
+        refreshField()
         fieldView.invalidate()
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
         produceIcon.visibility = seedGroup.visibility
@@ -2485,6 +2508,28 @@ class FarmActivity : ThemedActivity() {
         stockLabels.forEach { (label, crop) -> label.text = getString(R.string.farm_stock_count, state.seeds[crop.ordinal]) }
         world.invalidate()
     }
+    /**
+     * The field panel alone, without the rest of [refresh]. The tractor asks for it many times a
+     * second while it drives; the whole screen only needs the slower pace of the timer.
+     */
+    private fun refreshField() {
+        val f = state.largeFields.fields[state.largeFields.selected]
+        val status = getString(R.string.farm_field_status, f.index + 1, getString(FIELD_PHASES[f.phase]), f.coverage)
+        fieldInfo.text = when {
+            f.phase == 2 -> getString(R.string.farm_text_join, status,
+                duration(((f.readyAt - System.currentTimeMillis()).coerceAtLeast(0) / 1000).toInt()))
+            !f.paid -> getString(R.string.farm_text_join, status, getString(R.string.farm_field_start, f.seedCost))
+            else -> status
+        }
+        fuelTrack.visibility = if (f.phase == 2) View.GONE else View.VISIBLE
+        fuelFill.scaleX = f.fuel.coerceIn(0f, 1f)
+        fuelDrawable.setColor(when { f.fuel > .5f -> Color.rgb(126, 187, 90); f.fuel > .2f -> Color.rgb(224, 167, 63); else -> Color.rgb(196, 64, 58) })
+    }
+    /** Any touch on the screen counts as someone playing: the map's wind keeps its full pace. */
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN && ::world.isInitialized) world.noteTouch()
+        return super.dispatchTouchEvent(ev)
+    }
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) enableImmersiveMode()
@@ -2493,7 +2538,7 @@ class FarmActivity : ThemedActivity() {
     override fun onPause() {
         handler.removeCallbacks(tick); handler.removeCallbacks(hideStatus)
         fieldView.stop(); closeBubble()
-        if (!farmSuperseded) state.save()
+        if (!farmSuperseded) { state.saveNow(); lastWrite = android.os.SystemClock.uptimeMillis() }
         super.onPause()
     }
     /** The session is over: onPause has already saved, so what is on disk is what goes up. */
@@ -2501,13 +2546,22 @@ class FarmActivity : ThemedActivity() {
         if (!farmSuperseded) FarmSyncManager.onFarmClosed(this)
         super.onStop()
     }
+    override fun onDestroy() {
+        // The plant art is shared by the whole app, but only the farm fills it this much.
+        if (isFinishing) FarmPlantArt.trim()
+        super.onDestroy()
+    }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
     /** Six-digit prices are unreadable run together; the grouping follows the app language. */
     private fun money(value: Long): String = java.text.NumberFormat.getIntegerInstance().format(value)
     private fun money(value: Int): String = money(value.toLong())
-    private fun perHour(crop: FarmCrop): String = String.format("%.1f", crop.coinsPerHour)
+    private fun perHour(crop: FarmCrop): String = getString(R.string.farm_coins_per_hour_value, crop.coinsPerHour)
 
     companion object {
+        /** At most this long between two writes of the farm while it is being played. */
+        private const val SAVE_INTERVAL_MS = 3_000L
+        private val FIELD_PHASES = intArrayOf(R.string.farm_field_plough, R.string.farm_field_seed,
+            R.string.farm_field_grow, R.string.farm_field_harvest)
         /** Survives the [recreate] that installing a cloud farm forces, so the notice is not lost. */
         private var pendingRestoreNotice = false
     }

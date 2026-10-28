@@ -1,14 +1,15 @@
 package com.Atom2Universe.app.games.golf.classic.render
 
 import android.content.res.AssetManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.opengl.GLUtils
 import android.opengl.GLES20 as GL
 import com.Atom2Universe.app.games.golf.classic.core.ClassicHole
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /** What grows at a terrain vertex; rough is whatever the four weights leave. */
@@ -64,11 +65,23 @@ internal class GroundBuilder(capacity: Int = 1 shl 16) {
     companion object { const val STRIDE = 15 }
 }
 
-internal class GroundMesh(private val vertices: FloatArray) {
+internal class GroundMesh(private var vertices: FloatArray) {
     private var buffer = 0
-    val count get() = vertices.size / GroundBuilder.STRIDE
+    val count = vertices.size / GroundBuilder.STRIDE
+    private var runs: FloatArray? = null
 
-    fun upload() {
+    /**
+     * Bounds of each run of [RUN] vertices. The terrain is meshed row after row, so a run covers a
+     * narrow strip and those wholly off screen are skipped: the same image, with fewer vertices.
+     */
+    fun prepare(): FloatArray = runs ?: FloatArray((count + RUN - 1) / RUN * 6).also { boxes ->
+        for (k in 0 until boxes.size / 6) boundsOf(vertices, GroundBuilder.STRIDE, k * RUN * GroundBuilder.STRIDE,
+            min(count, (k + 1) * RUN) * GroundBuilder.STRIDE, boxes, k * 6)
+        runs = boxes
+    }
+
+    /** Without [keep], the processor's copy is let go once on the GPU (see [ClassicMesh.upload]). */
+    fun upload(keep: Boolean = true) {
         val ids = IntArray(1)
         GL.glGenBuffers(1, ids, 0)
         buffer = ids[0]
@@ -76,9 +89,10 @@ internal class GroundMesh(private val vertices: FloatArray) {
         bytes.put(vertices).position(0)
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer)
         GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.size * 4, bytes, GL.GL_STATIC_DRAW)
+        if (!keep) { prepare(); vertices = FloatArray(0) }
     }
 
-    fun draw() {
+    fun draw(viewProjection: FloatArray) {
         val stride = GroundBuilder.STRIDE * 4
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer)
         GL.glEnableVertexAttribArray(0); GL.glEnableVertexAttribArray(1); GL.glEnableVertexAttribArray(2)
@@ -89,7 +103,17 @@ internal class GroundMesh(private val vertices: FloatArray) {
         GL.glVertexAttribPointer(2, 4, GL.GL_FLOAT, false, stride, 24)
         GL.glVertexAttribPointer(3, 4, GL.GL_FLOAT, false, stride, 40)
         GL.glVertexAttribPointer(4, 1, GL.GL_FLOAT, false, stride, 56)
-        GL.glDrawArrays(GL.GL_TRIANGLES, 0, count)
+        // Neighbouring visible runs go in one call, in their original order.
+        val boxes = prepare()
+        var first = -1
+        for (k in 0..boxes.size / 6) {
+            val shown = k < boxes.size / 6 && boxVisible(viewProjection, boxes, k * 6)
+            if (shown && first < 0) first = k
+            if (!shown && first >= 0) {
+                GL.glDrawArrays(GL.GL_TRIANGLES, first * RUN, min(count, k * RUN) - first * RUN)
+                first = -1
+            }
+        }
         // The scene's other program only reads two attributes.
         GL.glDisableVertexAttribArray(2)
         GL.glDisableVertexAttribArray(3)
@@ -100,6 +124,9 @@ internal class GroundMesh(private val vertices: FloatArray) {
         if (buffer != 0) GL.glDeleteBuffers(1, intArrayOf(buffer), 0)
         buffer = 0
     }
+
+    /** Whole triangles: a multiple of three. */
+    private companion object { const val RUN = 3 * 1024 }
 }
 
 /**
@@ -156,8 +183,23 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
             val bitmap = assets.open("golf/textures/$name.webp").use {
                 checkNotNull(BitmapFactory.decodeStream(it))
             }
-            try { GLUtils.texImage2D(GL.GL_TEXTURE_2D, 0, bitmap, 0) }
-            finally { bitmap.recycle() }
+            // The shader reads only the red channel: one byte per texel instead of four, same values.
+            val width = bitmap.width; val height = bitmap.height
+            val red = try {
+                val pixels = bitmap.takeIf { it.config == Bitmap.Config.ARGB_8888 } ?: bitmap.copy(Bitmap.Config.ARGB_8888, false)
+                val row = pixels.rowBytes
+                val rgba = ByteBuffer.allocateDirect(row * height)
+                pixels.copyPixelsToBuffer(rgba)
+                if (pixels !== bitmap) pixels.recycle()
+                ByteBuffer.allocateDirect(width * height).also { out ->
+                    for (y in 0 until height) for (x in 0 until width) out.put(rgba.get(y * row + x * 4))
+                    out.position(0)
+                }
+            } finally { bitmap.recycle() }
+            GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
+            GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_LUMINANCE, width, height, 0,
+                GL.GL_LUMINANCE, GL.GL_UNSIGNED_BYTE, red)
+            GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 4)
             GL.glGenerateMipmap(GL.GL_TEXTURE_2D)
         }
         GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
@@ -194,7 +236,7 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
         GL.glUniform1f(pixelLoc, pixel)
         GL.glUniform1f(lineScaleLoc, lineScale)
         GL.glUniform2f(cutWidthsLoc, ClassicHole.SEMI_ROUGH_WIDTH, ClassicHole.FRINGE_WIDTH)
-        mesh.draw()
+        mesh.draw(viewProjection)
     }
 
     fun release() {

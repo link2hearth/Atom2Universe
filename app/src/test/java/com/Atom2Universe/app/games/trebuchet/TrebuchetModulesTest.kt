@@ -688,46 +688,62 @@ class TrebuchetModulesTest {
      * ce qu'il casse ; dans le jeu, la traversée d'arcade ([TargetStyle.pierce]) lui rend
      * son élan et il enfile plusieurs étages d'un seul tir. On ne vérifie donc pas ici
      * qu'une tour tombe en un coup — elle ne le doit pas — mais qu'elle tombe **droit**.
+     *
+     * **Sur vingt-quatre tours, pas sur une.** Un effondrement est chaotique : le
+     * moindre changement du solveur fait verser telle graine et tenir telle autre.
+     * Mesuré le 28/10/2026 sur trente-six graines, en changeant seulement le découpage
+     * des sous-pas ou le nombre de passes, entre 3 et 11 tours sur 36 versaient — avec
+     * un déplacement **médian** de l'axe qui bougeait à peine (4 à 7 m). Une seule
+     * graine jugeait donc la chance, pas le module ; la médiane juge le module.
      */
     @Test
     fun `une tour d immeuble descend sur place au lieu de verser`() {
         TargetRules.style = TargetStyle.JEU
-        val s = Structure(
-            TargetModules.towerBlock(Random(66), 20f, TargetRules.site(10f), TargetRules.site(30f)),
-            "tour"
-        )
-        val (w, f) = stand(s)
-        val creteAvant = f.ruinHeight()
-        val axeAvant = f.pieces.map { it.body.x }.average().toFloat()
+        val deplacements = ArrayList<Float>()
+        val baisses = ArrayList<Float>()
+        for (graine in 60..83) {
+            val s = Structure(
+                TargetModules.towerBlock(Random(graine), 20f, TargetRules.site(10f), TargetRules.site(30f)),
+                "tour"
+            )
+            val (w, f) = stand(s)
+            val creteAvant = f.ruinHeight()
+            val axeAvant = f.pieces.map { it.body.x }.average().toFloat()
 
-        // Six boulets dans le rez-de-chaussée et le premier étage, là où on abat une
-        // tour pour de vrai. Le boulet précédent est retiré avant le suivant, sinon les
-        // tirs finissent par se frapper entre eux.
-        for (k in 0 until 6) {
-            val b = w.fireBall(2f, TargetRules.site(1.2f) + k * TargetRules.site(1.3f), 150f)
-            run(w, f, 4f)
-            w.remove(b)
+            // Six boulets dans le rez-de-chaussée et le premier étage, là où on abat une
+            // tour pour de vrai. Le boulet précédent est retiré avant le suivant, sinon les
+            // tirs finissent par se frapper entre eux.
+            for (k in 0 until 6) {
+                val b = w.fireBall(2f, TargetRules.site(1.2f) + k * TargetRules.site(1.3f), 150f)
+                run(w, f, 4f)
+                w.remove(b)
+            }
+            run(w, f, 6f)
+
+            val creteApres = f.ruinHeight()
+            val axeApres = f.pieces.map { it.body.x }.average().toFloat()
+            println(
+                "TOUR $graine crête ${"%.1f".format(creteAvant)} -> ${"%.1f".format(creteApres)} m, " +
+                    "axe ${"%.1f".format(axeAvant)} -> ${"%.1f".format(axeApres)} m, " +
+                    "cassé ${"%.0f".format(f.brokenRatio * 100)}%"
+            )
+            assertTrue("la tour $graine n'a rien senti", f.brokenRatio > 0.2f)
+            deplacements += kotlin.math.abs(axeApres - axeAvant)
+            // La crête aussi se juge en médiane : une pierre du toit restée perchée
+            // laisse une tour à moitié rasée à sa hauteur d'origine.
+            baisses += creteAvant - creteApres
         }
-        run(w, f, 6f)
-
-        val creteApres = f.ruinHeight()
-        val axeApres = f.pieces.map { it.body.x }.average().toFloat()
-        println(
-            "TOUR crête ${"%.1f".format(creteAvant)} -> ${"%.1f".format(creteApres)} m, " +
-                "axe ${"%.1f".format(axeAvant)} -> ${"%.1f".format(axeApres)} m, " +
-                "cassé ${"%.0f".format(f.brokenRatio * 100)}%"
-        )
-        assertTrue("la tour n'a rien senti", f.brokenRatio > 0.2f)
+        fun mediane(v: ArrayList<Float>): Float {
+            v.sort()
+            return (v[v.size / 2 - 1] + v[v.size / 2]) / 2f
+        }
+        val axe = mediane(deplacements)
         assertTrue(
-            "la tour a versé au lieu de descendre : l'axe a bougé de " +
-                "${"%.1f".format(kotlin.math.abs(axeApres - axeAvant))} m",
-            kotlin.math.abs(axeApres - axeAvant) < TargetRules.site(6f)
+            "les tours versent au lieu de descendre : l'axe bouge de " +
+                "${"%.1f".format(axe)} m en médiane",
+            axe < TargetRules.site(6f)
         )
-        assertTrue(
-            "la tour est restée intacte : ${"%.1f".format(creteAvant)} -> " +
-                "${"%.1f".format(creteApres)}",
-            creteApres < creteAvant
-        )
+        assertTrue("les tours restent intactes", mediane(baisses) > 0f)
     }
 
     /**

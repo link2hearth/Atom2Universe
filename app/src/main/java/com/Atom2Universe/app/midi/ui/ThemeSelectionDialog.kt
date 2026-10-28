@@ -257,7 +257,11 @@ class ThemeSelectionDialog(
 
         val descText = TextView(context).apply {
             text = if (hasImage) {
-                "${context.getString(theme.descriptionRes)} - ${context.getString(R.string.custom_theme_image_set)}"
+                context.getString(
+                    R.string.midi_ui_label_pair,
+                    context.getString(theme.descriptionRes),
+                    context.getString(R.string.custom_theme_image_set)
+                )
             } else {
                 context.getString(theme.descriptionRes)
             }

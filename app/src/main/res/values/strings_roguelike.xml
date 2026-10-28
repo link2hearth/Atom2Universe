@@ -296,6 +296,7 @@
     <string name="roguelike_log_spotted">%1$s has spotted you!</string>
     <string name="roguelike_log_lost_track">%1$s lost your trail.</string>
     <string name="roguelike_pack_size">×%1$d</string>
+    <string name="roguelike_chase_mark">!</string>
     <string name="roguelike_hint_chased">Chased!</string>
     <string name="roguelike_death_summary">Fell on floor %1$d, lost %2$s gold</string>
     <string name="roguelike_death_checkpoint">Back to floor %1$d with all your gear</string>

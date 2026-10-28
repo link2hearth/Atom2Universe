@@ -81,7 +81,7 @@ class GoFishActivity : CardGameActivity() {
     override fun statusText(): String? {
         val g = game
         if (g.lastAsker < 0) return null
-        val outcome = if (g.lastGiven > 0) "✓${g.lastGiven}" else "✗"
+        val outcome = if (g.lastGiven > 0) getString(R.string.gofish_hit, g.lastGiven) else getString(R.string.gofish_miss)
         return getString(R.string.gofish_last, seatName(g.lastAsker, 3), seatName(g.lastTarget, 3), rankLabel(g.lastRank), outcome)
     }
 

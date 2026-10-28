@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.puzzles.inertia
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.Path
 import android.graphics.RadialGradient
 import android.graphics.RectF
@@ -53,6 +54,10 @@ class InertiaView(context: Context) : PuzzleView<InertiaState>(context) {
     private val grid = GridGeometry()
     private val r = RectF()
     private val path = Path()
+    /** Le reflet de la bille, à l'échelle 1, refait seulement quand sa couleur change. */
+    private var ballShader: RadialGradient? = null
+    private var ballShaderColour = 0
+    private val shaderMatrix = Matrix()
     private var startX = 0f
     private var startY = 0f
 
@@ -93,8 +98,13 @@ class InertiaView(context: Context) : PuzzleView<InertiaState>(context) {
         }
         val bx = grid.cx(state.ball % state.w); val by = grid.cy(state.ball / state.w)
         val colour = if (state.dead) palette.error else palette.accent
-        fill.shader = RadialGradient(bx - cell * 0.1f, by - cell * 0.1f, cell * 0.4f,
-            palette.blend(colour, 0xFFFFFFFF.toInt(), 0.5f), colour, Shader.TileMode.CLAMP)
+        val shader = ballShader?.takeIf { ballShaderColour == colour }
+            ?: RadialGradient(-0.25f, -0.25f, 1f, palette.blend(colour, 0xFFFFFFFF.toInt(), 0.5f), colour, Shader.TileMode.CLAMP)
+                .also { ballShader = it; ballShaderColour = colour }
+        shaderMatrix.setScale(cell * 0.4f, cell * 0.4f)
+        shaderMatrix.postTranslate(bx, by)
+        shader.setLocalMatrix(shaderMatrix)
+        fill.shader = shader
         canvas.drawCircle(bx, by, cell * 0.33f, fill)
         fill.shader = null
     }

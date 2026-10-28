@@ -146,8 +146,7 @@ class AudioSettingsDialog : DialogFragment() {
         seekBarGain.max = 100
         seekBarGain.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val gainPercent = progress
-                textGainValue.text = "$gainPercent%"
+                textGainValue.text = getString(R.string.midi_ui_percent, progress)
 
                 // Appliquer immédiatement pour preview
                 if (fromUser) {
@@ -265,7 +264,7 @@ class AudioSettingsDialog : DialogFragment() {
     }
 
     private fun buildEqBandRows() {
-        val freqLabels = listOf("32", "64", "125", "250", "500", "1k", "2k", "4k", "8k", "16k")
+        val freqLabels = resources.getStringArray(R.array.midi_ui_eq_band_labels)
 
         for (band in 0 until MidiEqualizerEngine.BAND_COUNT) {
             val row = LinearLayout(requireContext()).apply {
@@ -292,7 +291,7 @@ class AudioSettingsDialog : DialogFragment() {
 
             // Label valeur dB (variable, 48dp)
             val tvDb = TextView(requireContext()).apply {
-                text = "0 dB"
+                text = getString(R.string.midi_ui_db_zero)
                 textSize = 11f
                 layoutParams = LinearLayout.LayoutParams(48.dp, LinearLayout.LayoutParams.WRAP_CONTENT)
             }
@@ -306,9 +305,9 @@ class AudioSettingsDialog : DialogFragment() {
                     val millibels = (progress - SEEKBAR_CENTER) * 10
                     val db = millibels / 100f
                     tvDb.text = when {
-                        db == 0f  -> "0 dB"
-                        db > 0f   -> "+${String.format("%.1f", db)}"
-                        else      -> String.format("%.1f", db)
+                        db == 0f  -> getString(R.string.midi_ui_db_zero)
+                        db > 0f   -> getString(R.string.midi_ui_db_positive, db)
+                        else      -> getString(R.string.midi_ui_db_negative, db)
                     }
                     if (fromUser) {
                         onEqBandChanged?.invoke(bandIndex, millibels)
@@ -354,7 +353,7 @@ class AudioSettingsDialog : DialogFragment() {
             // Charger le gain
             val gain = settingsRepository.getMasterGain()
             seekBarGain.progress = (gain * 100).toInt()
-            textGainValue.text = "${(gain * 100).toInt()}%"
+            textGainValue.text = getString(R.string.midi_ui_percent, (gain * 100).toInt())
 
             // Charger le reverb
             val reverbPreset = settingsRepository.getReverbPreset()

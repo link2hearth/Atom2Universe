@@ -64,16 +64,22 @@ abstract class CardEngine {
 
     /** Les cartes qui ont voyagé depuis le dernier [drainEvents]. */
     private val pending = ArrayList<CardEvent>()
-    protected fun emit(event: CardEvent) { pending.add(event) }
+    protected fun emit(event: CardEvent) { if (!simulating) pending.add(event) }
+
+    /** Une partie imaginée par l'IA : personne ne regarde ses cartes voyager, ses événements sont jetés. */
+    private var simulating = false
 
     fun drainEvents(): List<CardEvent> = pending.toList().also { pending.clear() }
 
     /** Joue [move] pour le siège courant. Un coup défendu est une erreur de programmation, pas un cas de jeu. */
     fun play(move: Int) {
         require(!isOver) { "la partie est finie" }
-        require(legalMoves().contains(move)) { "coup défendu : $move" }
+        require(isLegal(move)) { "coup défendu : $move" }
         apply(move)
     }
+
+    /** [move] est-il permis ? Un jeu dont la liste des coups coûte cher peut répondre sans la calculer. */
+    open fun isLegal(move: Int): Boolean = legalMoves().contains(move)
 
     /** Un coup du siège courant pour ce [level] (voir [CardLevel]). */
     abstract fun aiMove(level: Int, random: Random): Int
@@ -123,9 +129,10 @@ abstract class CardEngine {
         val totals = DoubleArray(moves.size)
         // Les mêmes mondes imaginés pour tous les coups : la comparaison est plus juste.
         repeat(samples) {
-            val world = copy().also { it.determinize(seat, random) }
+            val world = copy().also { it.simulating = true; it.determinize(seat, random) }
             for (i in moves.indices) {
                 val sim = world.copy()
+                sim.simulating = true
                 sim.apply(moves[i])
                 var guard = simulationLimit
                 while (!sim.simulationDone() && guard-- > 0) sim.apply(sim.rolloutMove(random))

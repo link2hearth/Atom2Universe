@@ -4,7 +4,7 @@ import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.view.animation.LinearInterpolator
+import android.os.SystemClock
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.PI
 import kotlin.math.cos
@@ -20,25 +20,42 @@ class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDe
         0xFFEABD85.toInt(), 0xFF74D7BE.toInt(), 0xFFDD8FAB.toInt())
     private var active = false
     private var phase = 0f
-    private val animator = ValueAnimator.ofFloat(0f, (2 * PI).toFloat()).apply {
-        duration = 24000L
-        repeatCount = ValueAnimator.INFINITE
-        interpolator = LinearInterpolator()
-        addUpdateListener {
-            phase = it.animatedValue as Float
+
+    // Le décor bouge lentement (un tour en 24 s) : 30 images/s suffisent, au lieu de
+    // redessiner toute la liste à la cadence de l'écran (120 Hz sur la tablette).
+    private var running = false
+    private var startUptimeMs = 0L
+    private val tick = object : Runnable {
+        override fun run() {
+            if (!running) return
+            val elapsed = (SystemClock.uptimeMillis() - startUptimeMs) % PERIOD_MS
+            phase = (elapsed / PERIOD_MS.toFloat()) * (2 * PI).toFloat()
             recycler.invalidate()
+            recycler.postDelayed(this, FRAME_MS)
         }
+    }
+
+    private fun startAnimation() {
+        if (running) return
+        running = true
+        // Reprend là où le décor s'était arrêté
+        startUptimeMs = SystemClock.uptimeMillis() - (phase / (2 * PI).toFloat() * PERIOD_MS).toLong()
+        recycler.postDelayed(tick, FRAME_MS)
+    }
+
+    private fun stopAnimation() {
+        running = false
+        recycler.removeCallbacks(tick)
     }
 
     fun setActive(value: Boolean) {
         active = value
-        if (!value) animator.cancel()
+        if (!value) stopAnimation()
         recycler.invalidate()
     }
 
     fun dispose() {
-        animator.cancel()
-        animator.removeAllUpdateListeners()
+        stopAnimation()
         recycler.removeItemDecoration(this)
     }
 
@@ -47,7 +64,7 @@ class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDe
         val count = parent.adapter?.itemCount ?: 0
         val last = parent.findViewHolderForAdapterPosition(count - 1)?.itemView
         if (count == 0 || last == null || parent.canScrollVertically(1) || parent.canScrollVertically(-1)) {
-            animator.cancel()
+            stopAnimation()
             return
         }
         var bottom = 0f
@@ -58,13 +75,13 @@ class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDe
         val top = bottom + 24f * density
         val available = parent.height - parent.paddingBottom - top
         if (available < 140f * density) {
-            animator.cancel()
+            stopAnimation()
             return
         }
         if (active && ValueAnimator.areAnimatorsEnabled()) {
-            if (!animator.isStarted) animator.start()
+            startAnimation()
         } else {
-            animator.cancel()
+            stopAnimation()
         }
 
         canvas.save()
@@ -116,6 +133,11 @@ class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDe
         }
         paint.alpha = 255
         canvas.restore()
+    }
+
+    private companion object {
+        const val PERIOD_MS = 24000L
+        const val FRAME_MS = 33L
     }
 
     private fun staffY(x: Float, h: Float, band: Int): Float =

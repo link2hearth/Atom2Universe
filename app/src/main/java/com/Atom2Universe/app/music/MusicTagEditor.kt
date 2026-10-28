@@ -432,33 +432,36 @@ object MusicTagEditor {
                 return@withContext false
             }
 
-            val audioFile = AudioFileIO.read(file)
-            val tag = audioFile.tagOrCreateAndSetDefault
+            // MUTEX GLOBAL: Protège contre les écritures concurrentes (POPM, paroles, pochettes)
+            fileWriteMutex.withLock {
+                val audioFile = AudioFileIO.read(file)
+                val tag = audioFile.tagOrCreateAndSetDefault
 
-            // Mise à jour des champs
-            if (tagInfo.title.isNotEmpty()) {
-                tag.setField(FieldKey.TITLE, tagInfo.title)
-            }
-            if (tagInfo.artist.isNotEmpty()) {
-                tag.setField(FieldKey.ARTIST, tagInfo.artist)
-            }
-            if (tagInfo.albumArtist.isNotEmpty()) {
-                tag.setField(FieldKey.ALBUM_ARTIST, tagInfo.albumArtist)
-            }
-            if (tagInfo.album.isNotEmpty()) {
-                tag.setField(FieldKey.ALBUM, tagInfo.album)
-            }
-            if (tagInfo.year.isNotEmpty()) {
-                tag.setField(FieldKey.YEAR, tagInfo.year)
-            }
-            if (tagInfo.trackNumber.isNotEmpty()) {
-                tag.setField(FieldKey.TRACK, tagInfo.trackNumber)
-            }
-            if (tagInfo.discNumber.isNotEmpty()) {
-                tag.setField(FieldKey.DISC_NO, tagInfo.discNumber)
-            }
+                // Mise à jour des champs
+                if (tagInfo.title.isNotEmpty()) {
+                    tag.setField(FieldKey.TITLE, tagInfo.title)
+                }
+                if (tagInfo.artist.isNotEmpty()) {
+                    tag.setField(FieldKey.ARTIST, tagInfo.artist)
+                }
+                if (tagInfo.albumArtist.isNotEmpty()) {
+                    tag.setField(FieldKey.ALBUM_ARTIST, tagInfo.albumArtist)
+                }
+                if (tagInfo.album.isNotEmpty()) {
+                    tag.setField(FieldKey.ALBUM, tagInfo.album)
+                }
+                if (tagInfo.year.isNotEmpty()) {
+                    tag.setField(FieldKey.YEAR, tagInfo.year)
+                }
+                if (tagInfo.trackNumber.isNotEmpty()) {
+                    tag.setField(FieldKey.TRACK, tagInfo.trackNumber)
+                }
+                if (tagInfo.discNumber.isNotEmpty()) {
+                    tag.setField(FieldKey.DISC_NO, tagInfo.discNumber)
+                }
 
-            audioFile.commit()
+                audioFile.commit()
+            }
             Log.d(TAG, "Successfully wrote tags for: ${track.title}")
 
             // Notify MediaStore of the change
@@ -556,18 +559,26 @@ object MusicTagEditor {
         var scannedCount = 0
         val totalCount = filePaths.size
 
-        suspendCancellableCoroutine { continuation ->
-            MediaScannerConnection.scanFile(
-                context,
-                filePaths.toTypedArray(),
-                filePaths.map { "audio/mpeg" }.toTypedArray()
-            ) { path, uri ->
-                Log.d(TAG, "MediaScanner scanned: $path -> $uri")
-                scannedCount++
-                if (scannedCount >= totalCount && continuation.isActive) {
-                    continuation.resume(Unit)
+        // Un fichier que le MediaScanner ne rapporte jamais ne doit pas bloquer l'appelant
+        val timeoutMs = (10_000L + 500L * totalCount).coerceAtMost(60_000L)
+        val result = withTimeoutOrNull(timeoutMs) {
+            suspendCancellableCoroutine { continuation ->
+                MediaScannerConnection.scanFile(
+                    context,
+                    filePaths.toTypedArray(),
+                    filePaths.map { "audio/mpeg" }.toTypedArray()
+                ) { path, uri ->
+                    Log.d(TAG, "MediaScanner scanned: $path -> $uri")
+                    scannedCount++
+                    if (scannedCount >= totalCount && continuation.isActive) {
+                        continuation.resume(Unit)
+                    }
                 }
             }
+        }
+
+        if (result == null) {
+            Log.w(TAG, "MediaScanner timeout after $scannedCount/$totalCount files")
         }
     }
 
@@ -594,27 +605,30 @@ object MusicTagEditor {
                 val file = File(filePath)
                 if (!file.exists() || !file.canWrite()) continue
 
-                val audioFile = AudioFileIO.read(file)
-                val tag = audioFile.tagOrCreateAndSetDefault
+                // Verrou pris fichier par fichier pour ne pas bloquer les autres écritures
+                fileWriteMutex.withLock {
+                    val audioFile = AudioFileIO.read(file)
+                    val tag = audioFile.tagOrCreateAndSetDefault
 
-                // Mise à jour des champs communs à l'album (pas titre ni numéro de piste)
-                if (tagInfo.artist.isNotEmpty()) {
-                    tag.setField(FieldKey.ARTIST, tagInfo.artist)
-                }
-                if (tagInfo.albumArtist.isNotEmpty()) {
-                    tag.setField(FieldKey.ALBUM_ARTIST, tagInfo.albumArtist)
-                }
-                if (tagInfo.album.isNotEmpty()) {
-                    tag.setField(FieldKey.ALBUM, tagInfo.album)
-                }
-                if (tagInfo.year.isNotEmpty()) {
-                    tag.setField(FieldKey.YEAR, tagInfo.year)
-                }
-                if (tagInfo.discNumber.isNotEmpty()) {
-                    tag.setField(FieldKey.DISC_NO, tagInfo.discNumber)
-                }
+                    // Mise à jour des champs communs à l'album (pas titre ni numéro de piste)
+                    if (tagInfo.artist.isNotEmpty()) {
+                        tag.setField(FieldKey.ARTIST, tagInfo.artist)
+                    }
+                    if (tagInfo.albumArtist.isNotEmpty()) {
+                        tag.setField(FieldKey.ALBUM_ARTIST, tagInfo.albumArtist)
+                    }
+                    if (tagInfo.album.isNotEmpty()) {
+                        tag.setField(FieldKey.ALBUM, tagInfo.album)
+                    }
+                    if (tagInfo.year.isNotEmpty()) {
+                        tag.setField(FieldKey.YEAR, tagInfo.year)
+                    }
+                    if (tagInfo.discNumber.isNotEmpty()) {
+                        tag.setField(FieldKey.DISC_NO, tagInfo.discNumber)
+                    }
 
-                audioFile.commit()
+                    audioFile.commit()
+                }
                 modifiedPaths.add(filePath)
                 successCount++
             } catch (e: Exception) {
@@ -676,16 +690,19 @@ object MusicTagEditor {
                 // Only MP3 files supported for now
                 if (!filePath.lowercase().endsWith(".mp3")) continue
 
-                val audioFile = AudioFileIO.read(file)
-                val tag = audioFile.tagOrCreateAndSetDefault
+                // Verrou pris fichier par fichier pour ne pas bloquer les autres écritures
+                fileWriteMutex.withLock {
+                    val audioFile = AudioFileIO.read(file)
+                    val tag = audioFile.tagOrCreateAndSetDefault
 
-                // Remove existing artwork
-                tag.deleteArtworkField()
+                    // Remove existing artwork
+                    tag.deleteArtworkField()
 
-                // Set new artwork
-                tag.setField(artwork)
+                    // Set new artwork
+                    tag.setField(artwork)
 
-                audioFile.commit()
+                    audioFile.commit()
+                }
                 modifiedPaths.add(filePath)
                 successCount++
                 Log.d(TAG, "Added artwork to: ${track.title}")

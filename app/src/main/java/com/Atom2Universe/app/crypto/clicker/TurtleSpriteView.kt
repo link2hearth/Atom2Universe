@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.Choreographer
 import android.view.View
+import com.Atom2Universe.app.crypto.VisibleWindowGate
 
 class TurtleSpriteView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -21,29 +21,38 @@ class TurtleSpriteView @JvmOverloads constructor(
     private val paint = Paint().apply { isAntiAlias = false }
 
     private var frameIndex = 0
-    private var lastFrameAt = 0L
 
-    private val choreographer = Choreographer.getInstance()
-    private val tick = object : Choreographer.FrameCallback {
-        override fun doFrame(frameTimeNanos: Long) {
-            val now = System.currentTimeMillis()
-            if (lastFrameAt == 0L) lastFrameAt = now
-            while (now - lastFrameAt >= FRAME_DURATION_MS) {
-                frameIndex = (frameIndex + 1) % FRAME_COUNT
-                lastFrameAt += FRAME_DURATION_MS
-            }
+    // Un redessin par image du sprite, pas à chaque rafraîchissement d'écran.
+    private val advance = object : Runnable {
+        override fun run() {
+            frameIndex = (frameIndex + 1) % FRAME_COUNT
             invalidate()
-            choreographer.postFrameCallback(this)
+            postDelayed(this, FRAME_DURATION_MS)
         }
+    }
+
+    private val gate = VisibleWindowGate(this) { active ->
+        removeCallbacks(advance)
+        if (active) postDelayed(advance, FRAME_DURATION_MS)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        choreographer.postFrameCallback(tick)
+        gate.update()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) gate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) gate.update()
     }
 
     override fun onDetachedFromWindow() {
-        choreographer.removeFrameCallback(tick)
+        gate.detach()
         super.onDetachedFromWindow()
     }
 

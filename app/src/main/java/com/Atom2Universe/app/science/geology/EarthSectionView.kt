@@ -132,6 +132,62 @@ class EarthSectionView(context: Context, val scene: EarthScene, private val onTo
         accessibility.invalidateRoot()
     }
 
+    // The fixed rock (thousands of Canvas calls per frame) is baked into a bitmap on a background
+    // thread; the drifting sky goes under it and the motion over it, every frame. While the
+    // stage keeps changing (slider, evolution) the scene is drawn whole, as before.
+    private data class BakeKey(val width: Int, val stage: Float, val trueScale: Boolean)
+    private val bakeArt = EarthArt()
+    private val rockFollowsStage = scene in listOf(EarthScene.COLLISION, EarthScene.FOLDS, EarthScene.TRANSFORM,
+        EarthScene.FAULTS, EarthScene.LANDSCAPE, EarthScene.STRATA)
+    private var baked: Bitmap? = null
+    private var bakedKey: BakeKey? = null
+    private var pendingKey: BakeKey? = null
+    private var bakeGeneration = 0
+    private val bakedDst = RectF()
+    private val bakedPaint = Paint(Paint.FILTER_BITMAP_FLAG)
+    private val startBake = Runnable { bake() }
+
+    private fun currentKey() = BakeKey(width, if (rockFollowsStage) stage else 0f, scene == EarthScene.GLOBE && trueScale)
+
+    private fun scheduleBake(key: BakeKey) {
+        if (key == pendingKey) return
+        pendingKey = key
+        removeCallbacks(startBake)
+        postDelayed(startBake, BAKE_DELAY_MS)
+    }
+
+    private fun bake() {
+        val key = pendingKey ?: return
+        if (key != currentKey() || width <= 0 || scale <= 0f) { pendingKey = null; invalidate(); return }
+        val generation = ++bakeGeneration
+        val s = scale
+        val w = width
+        val h = kotlin.math.ceil(700f * s).toInt().coerceAtLeast(1)
+        val target = scene
+        BAKER.execute {
+            val bitmap = try { Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888) } catch (_: OutOfMemoryError) { null }
+                ?: return@execute
+            val c = Canvas(bitmap)
+            c.scale(s, s); c.clipRect(0f, 0f, 1000f, 700f)
+            if (target == EarthScene.GLOBE) c.translate(200f, 0f)
+            bakeArt.render(c, target, key.stage, 0f, key.trueScale, ArtLayer.BASE)
+            post {
+                if (generation != bakeGeneration || !isAttachedToWindow) return@post
+                baked = bitmap; bakedKey = key; pendingKey = null
+                bakedDst.set(0f, 0f, w / s, h / s)
+                invalidate()
+            }
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(startBake)
+        bakeGeneration++
+        // No recycle(): the last frame handed to the render thread may still use it.
+        baked = null; bakedKey = null; pendingKey = null
+        super.onDetachedFromWindow()
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (scale <= 0f) return
@@ -140,8 +196,20 @@ class EarthSectionView(context: Context, val scene: EarthScene, private val onTo
         canvas.drawRoundRect(0f, 0f, 1000f, height / scale, 32f, 32f, paint)
         canvas.save()
         canvas.clipRect(0f,0f,1000f,700f)
-        if(scene==EarthScene.GLOBE) canvas.translate(200f,0f)
-        art.render(canvas, scene, stage, phase, trueScale)
+        val shift = if(scene==EarthScene.GLOBE) 200f else 0f
+        canvas.translate(shift,0f)
+        val key = currentKey()
+        val rock = baked?.takeIf { bakedKey == key }
+        if (rock == null) {
+            art.render(canvas, scene, stage, phase, trueScale)
+            scheduleBake(key)
+        } else {
+            art.render(canvas, scene, stage, phase, trueScale, ArtLayer.UNDER)
+            canvas.translate(-shift, 0f)
+            canvas.drawBitmap(rock, null, bakedDst, bakedPaint)
+            canvas.translate(shift, 0f)
+            art.render(canvas, scene, stage, phase, trueScale, ArtLayer.TOP)
+        }
         canvas.restore()
         bubblePoints.forEachIndexed { index, p ->
             if (labels) {
@@ -202,4 +270,11 @@ class EarthSectionView(context: Context, val scene: EarthScene, private val onTo
     }
     override fun performClick(): Boolean { super.performClick(); return true }
 
+    private companion object {
+        /** The stage must rest this long before the rock is baked again. */
+        const val BAKE_DELAY_MS = 250L
+        val BAKER: java.util.concurrent.ExecutorService = java.util.concurrent.Executors.newSingleThreadExecutor { task ->
+            Thread(task, "GeologyBake").apply { isDaemon = true }
+        }
+    }
 }

@@ -557,6 +557,9 @@ class Arbiter(
     var restitution = 0f
     var stamp = 0
 
+    /** Clé du contact dans le monde (voir `PhysWorld.pairKey`). */
+    internal var key = 0L
+
     /**
      * Vrai quand les deux corps se sont vraiment percutés à ce pas, par opposition
      * à un contact qui ne fait que porter un poids. C'est ce qui distingue un boulet
@@ -726,8 +729,13 @@ class Arbiter(
      * Prépare la résolution : rend aux corps les impulsions de l'image précédente.
      *
      * À n'appeler qu'après que [measure] a été passé sur **tous** les contacts du monde.
+     *
+     * [dtRatio] est le rapport entre ce pas et le précédent. Une impulsion vaut une
+     * force fois une durée : celle qui portait la pile pendant un sous-pas de huit
+     * millisecondes, rendue telle quelle dans un sous-pas de deux microsecondes,
+     * pousserait quatre mille fois trop fort. On la remet donc à l'échelle, comme Box2D.
      */
-    fun preStep(invDt: Float) {
+    fun preStep(invDt: Float, dtRatio: Float) {
         posInvDt = invDt
         val nx = normalX
         val ny = normalY
@@ -736,6 +744,8 @@ class Arbiter(
         for (i in 0 until count) {
             val c = contacts[i]
             c.posImpulse = 0f
+            c.normalImpulse *= dtRatio
+            c.tangentImpulse *= dtRatio
             val px = c.normalImpulse * nx + c.tangentImpulse * tx
             val py = c.normalImpulse * ny + c.tangentImpulse * ty
             a.vx -= a.invMass * px; a.vy -= a.invMass * py

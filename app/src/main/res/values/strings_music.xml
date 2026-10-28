@@ -40,6 +40,7 @@
     <string name="music_add_folder">Add folder</string>
     <string name="music_settings">Settings</string>
     <string name="music_scanning">Scanning…</string>
+    <string name="music_scanning_progress">Scanning… (%1$d/%2$d)</string>
     <string name="music_loading_stats">Loading statistics…</string>
     <string name="music_add_to_favorites">Add to favorites</string>
     <string name="music_added_to_favorites">Added to favorites</string>
@@ -349,4 +350,8 @@
     <string name="music_viz_terrain">Wireframe terrain</string>
     <string name="music_viz_mosaic">Crystal mosaic</string>
     <string name="music_viz_number">%1$02d</string>
+    <string name="music_api_test_line_ok">✓ %1$s: %2$s</string>
+    <string name="music_api_test_line_warning">⚠ %1$s: %2$s</string>
+    <string name="music_api_test_line_error">✗ %1$s: %2$s</string>
+    <string name="music_api_test_http_error">HTTP %1$d</string>
 </resources>

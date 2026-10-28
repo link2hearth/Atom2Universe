@@ -110,6 +110,8 @@ class RoguelikeGame(
      * farmer n'importe quelle tranche de 25 étages déjà terminée (voir DONJON.md).
      */
     private val deathRetreat: Int = 0,
+    /** Une forge sur l'étage de départ : seulement pour reprendre une sauvegarde ([fromSave]). */
+    forgeOnFloor: Boolean = false,
 ) {
     var onCombatStart:  (() -> Unit)?             = null
     var onFloorChanged: ((floor: Int) -> Unit)?   = null
@@ -147,67 +149,79 @@ class RoguelikeGame(
          */
         const val GUARANTEED_GEAR_FLOORS = 5
 
-        fun inventoryFromJson(j: JSONObject): RoguelikeGame {
-            val hero = Hero().apply {
-                gold    = j.getInt("gold")
-                deepestFloor = j.optInt("deepestFloor", j.getInt("floor"))
-                val eq  = j.getJSONObject("equipped")
-                for (slotName in eq.keys())
-                    equipped[EquipSlot.valueOf(slotName)] = SaveManager.equipFromJson(eq.getJSONObject(slotName))
-                val bagJson = j.getJSONArray("bag")
-                for (i in 0 until bagJson.length()) bag += SaveManager.equipFromJson(bagJson.getJSONObject(i))
-                nextLootId = j.getLong("nextLootId")
-                floor = j.getInt("floor")
-                hp = HitPointBalance.restore(j.getInt("hp"), j.optDouble("hpMultiplier", 1.0), floor).coerceIn(1, maxHp)
-                specialCooldown = j.optInt("specialCooldown", 0)
-                val relicsJson = j.optJSONArray("relics")
-                if (relicsJson == null) {
-                    // Sauvegarde d'avant les reliques : on y avait toujours la Boule de feu
-                    addRelic(Relic.FIREBALL)
-                } else {
-                    for (i in 0 until relicsJson.length())
-                        Relic.fromSavedName(relicsJson.getString(i))?.let { relics += it }
-                    j.optJSONObject("relicCooldowns")?.let { cds ->
-                        for (name in cds.keys()) relics.firstOrNull { it.name == name }?.let { relicCooldowns[it] = cds.getInt(name) }
-                    }
-                    val slotsJson = j.optJSONArray("relicSlots")
-                    for (i in 0 until minOf(slotsJson?.length() ?: 0, Hero.RELIC_SLOTS)) {
-                        val name = slotsJson!!.optString(i, "")
-                        relicSlots[i] = relics.firstOrNull { it.name == name }
-                    }
-                    j.optJSONArray("resonances")?.let { arr ->
-                        for (i in 0 until arr.length())
-                            runCatching { Resonance.valueOf(arr.getString(i)) }.getOrNull()?.let { knownResonances += it }
-                    }
-                    j.optJSONArray("reactions")?.let { arr ->
-                        for (i in 0 until arr.length())
-                            runCatching { Reaction.valueOf(arr.getString(i)) }.getOrNull()?.let { knownReactions += it }
-                    }
-                    j.optJSONArray("affinities")?.let { arr -> for (i in 0 until arr.length()) knownAffinities += arr.getString(i) }
-                    j.optJSONArray("sets")?.let { arr -> for (i in 0 until arr.length()) knownSets += arr.getInt(i) }
-                    // Une paire portée avant que les résonances existent : on la connaît déjà
-                    discoverResonances()
-                }
+        /** Le héros de la sauvegarde, sans ses PV (ils se bornent une fois l'étage connu). */
+        private fun heroFromJson(j: JSONObject): Hero = Hero().apply {
+            gold    = j.getInt("gold")
+            deepestFloor = j.getInt("deepestFloor")
+            floor = j.getInt("floor")
+            val eq  = j.getJSONObject("equipped")
+            for (slotName in eq.keys()) {
+                val slot = runCatching { EquipSlot.valueOf(slotName) }.getOrNull() ?: continue
+                SaveManager.equipOrNull(eq.optJSONObject(slotName))?.let { equipped[slot] = it }
             }
-            return RoguelikeGame(hero, j.getInt("floor"), levelSeed = j.optLong("levelSeed", Random.nextLong())).apply {
-                heroSpritePath = j.getString("heroSprite")
-                checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
-                val pendingDeath = j.optJSONObject("deathReport")
-                if (pendingDeath != null) {
-                    val deathFloor = pendingDeath.getInt("floor").coerceAtLeast(CHECKPOINT)
-                    deathReport = DeathReport(deathFloor, pendingDeath.getInt("goldLost"),
-                        pendingDeath.optInt("checkpointFloor", checkpointFloor(deathFloor)).coerceIn(CHECKPOINT, deathFloor))
-                } else if (j.getInt("hp") <= 0) {
-                    // A defeat saved before dismissing the combat screen still requires a choice.
-                    die()
+            val bagJson = j.getJSONArray("bag")
+            for (i in 0 until bagJson.length()) SaveManager.equipOrNull(bagJson.optJSONObject(i))?.let { bag += it }
+            nextLootId = j.getLong("nextLootId")
+            specialCooldown = j.optInt("specialCooldown", 0)
+            val relicsJson = j.getJSONArray("relics")
+            for (i in 0 until relicsJson.length())
+                Relic.fromSavedName(relicsJson.getString(i))?.let { relics += it }
+            j.optJSONObject("relicCooldowns")?.let { cds ->
+                for (name in cds.keys()) relics.firstOrNull { it.name == name }?.let { relicCooldowns[it] = cds.getInt(name) }
+            }
+            val slotsJson = j.optJSONArray("relicSlots")
+            for (i in 0 until minOf(slotsJson?.length() ?: 0, Hero.RELIC_SLOTS)) {
+                val name = slotsJson!!.optString(i, "")
+                relicSlots[i] = relics.firstOrNull { it.name == name }
+            }
+            j.optJSONArray("resonances")?.let { arr ->
+                for (i in 0 until arr.length())
+                    runCatching { Resonance.valueOf(arr.getString(i)) }.getOrNull()?.let { knownResonances += it }
+            }
+            j.optJSONArray("reactions")?.let { arr ->
+                for (i in 0 until arr.length())
+                    runCatching { Reaction.valueOf(arr.getString(i)) }.getOrNull()?.let { knownReactions += it }
+            }
+            j.optJSONArray("affinities")?.let { arr -> for (i in 0 until arr.length()) knownAffinities += arr.getString(i) }
+            j.optJSONArray("sets")?.let { arr -> for (i in 0 until arr.length()) knownSets += arr.getInt(i) }
+        }
+
+        private fun deathReportFromJson(j: JSONObject): DeathReport {
+            val deathFloor = j.getInt("floor").coerceAtLeast(CHECKPOINT)
+            return DeathReport(deathFloor, j.getInt("goldLost"), j.getInt("checkpointFloor").coerceIn(CHECKPOINT, deathFloor))
+        }
+
+        /**
+         * Reprend une partie : le héros, puis l'étage généré **une seule fois** depuis sa graine et
+         * remis dans l'état sauvé. Sans [state] (illisible), le héros repart d'un étage neuf.
+         */
+        fun fromSave(inventory: JSONObject, state: JSONObject?): RoguelikeGame {
+            val hero = heroFromJson(inventory)
+            val startFloor = state?.getInt("floor") ?: inventory.getInt("floor")
+            return RoguelikeGame(hero, startFloor,
+                levelSeed = state?.getLong("levelSeed") ?: Random.nextLong(),
+                forgeOnFloor = state?.getBoolean("forge") ?: false).apply {
+                heroSpritePath = inventory.getString("heroSprite")
+                checkpoint = inventory.getInt("checkpoint").coerceIn(CHECKPOINT, floor)
+                // Les PV après les reliques : une résonance de CON relève les PV max
+                hero.hp = inventory.getInt("hp").coerceIn(1, hero.maxHp)
+                inventory.optJSONArray("pendingLoot")?.let { arr ->
+                    for (i in 0 until arr.length()) SaveManager.equipOrNull(arr.optJSONObject(i))?.let { pendingLoot += it }
+                }
+                state?.let { restoreMapState(it) }
+                // Une mort déjà posée par l'étage n'est jamais effacée ni rejouée
+                if (deathReport == null) {
+                    val pendingDeath = inventory.optJSONObject("deathReport")
+                    if (pendingDeath != null) {
+                        deathReport = deathReportFromJson(pendingDeath)
+                    } else if (inventory.getInt("hp") <= 0) {
+                        // Une défaite quittée avant de toucher son écran : la mort reste à valider.
+                        die()
+                    }
                 }
                 log.clear()
                 addLog(R.string.roguelike_log_resume, floor)
             }
-        }
-
-        fun fromJson(j: JSONObject): RoguelikeGame = inventoryFromJson(j).apply {
-            restoreMapState(j)
         }
     }
 
@@ -223,7 +237,7 @@ class RoguelikeGame(
     var checkpoint = checkpointFloor(startFloor, checkpointEvery)
         private set
     /** Une forge sur cet étage : tirée à l'arrivée ([DungeonForge.rollPresence]), gardée si on régénère l'étage. */
-    var forgeOnFloor = false
+    var forgeOnFloor = forgeOnFloor
         private set
     var level: DungeonLevel = generateLevel(floor, levelSeed)
         private set
@@ -237,6 +251,8 @@ class RoguelikeGame(
     var combat: Combat? = null
         private set
     private var combatPack: MonsterPack? = null
+    /** La victoire du combat en cours est déjà versée ([settleVictory]). */
+    private var victorySettled = false
 
     /** Équipements gagnés au dernier combat, proposés un par un. */
     val pendingLoot = ArrayDeque<Equipment>()
@@ -477,37 +493,47 @@ class RoguelikeGame(
 
     private fun startCombat(pack: MonsterPack, ambush: Boolean, encounterPos: Pos = playerPos) {
         combatPack = pack
+        victorySettled = false
         combat = Combat(hero, floor, Encounters.build(pack.types, floor), ambush, rng, visualSeed = pack.home.x * 73856093 xor pack.home.y * 19349663, backdrop = level.backdropAt(encounterPos))
         onCombatStart?.invoke()
+    }
+
+    /**
+     * Verse la victoire affichée (groupe vaincu, or, butin) sans fermer l'écran de combat : quitter
+     * sur l'écran de victoire ne la perd plus. Une seule fois par combat ; sans effet hors victoire.
+     */
+    fun settleVictory() {
+        val c = combat ?: return
+        if (c.phase != CombatPhase.VICTORY || victorySettled) return
+        victorySettled = true
+        combatPack?.alive = false
+        // Reliques et Spécial sont prêts pour le combat suivant, pour tout le monde.
+        hero.relicCooldowns.clear()
+        hero.specialCooldown = 0
+        val r = c.rewards!!
+        hero.gold += r.gold
+        pendingLoot.addAll(r.equipment)
+        if (floor <= GUARANTEED_GEAR_FLOORS && !gearDroppedThisFloor && r.equipment.isEmpty())
+            pendingLoot += LootSystem.generateNormal(floor, hero.nextLootId++, rng)
+        if (pendingLoot.isNotEmpty()) gearDroppedThisFloor = true
+        r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
+        addLog(R.string.roguelike_log_victory, r.gold)
     }
 
     /** Appelé par l'écran de combat une fois la victoire ou la défaite affichée. */
     fun finishCombat() {
         val c = combat ?: return
+        settleVictory()
         // On range l'état du combat qui s'achève AVANT de regarder s'il en démarre un autre :
         // sinon, l'enchaînement pose le nouveau groupe dans combatPack et la remise à zéro
         // qui suivait l'effaçait aussitôt. Le groupe enchaîné n'était alors jamais marqué
         // mort en fin de combat — il restait sur la carte, collé au joueur et toujours en
         // chasse, donc il réenchaînait sans fin.
-        val beaten = combatPack
         combat = null
         combatPack = null
+        victorySettled = false
         when (c.phase) {
-            CombatPhase.VICTORY -> {
-                beaten?.alive = false
-                // Reliques et Spécial sont prêts pour le combat suivant, pour tout le monde.
-                hero.relicCooldowns.clear()
-                hero.specialCooldown = 0
-                val r = c.rewards!!
-                hero.gold += r.gold
-                pendingLoot.addAll(r.equipment)
-                if (floor <= GUARANTEED_GEAR_FLOORS && !gearDroppedThisFloor && r.equipment.isEmpty())
-                    pendingLoot += LootSystem.generateNormal(floor, hero.nextLootId++, rng)
-                if (pendingLoot.isNotEmpty()) gearDroppedThisFloor = true
-                r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
-                addLog(R.string.roguelike_log_victory, r.gold)
-                if (pendingLoot.isEmpty()) chainIfChased()
-            }
+            CombatPhase.VICTORY -> if (pendingLoot.isEmpty()) chainIfChased()
             CombatPhase.DEFEAT -> die()
             else -> {}
         }
@@ -591,26 +617,50 @@ class RoguelikeGame(
             n.chebyshev(pack.home) <= 4 && DungeonBestiary.canWander(pack.types, level.themeAt(n.x, n.y), level.backdropAt(n)))
             pack.pos = n
     }
+    // Parcours des monstres : tableaux réutilisés d'un appel à l'autre, une case = y * w + x.
+    // Une case est vue au parcours en cours quand bfsSeen vaut bfsStamp.
+    private var bfsParent = IntArray(0)
+    private var bfsSeen = IntArray(0)
+    private var bfsQueue = IntArray(0)
+    private var bfsStamp = 0
+
     /** Premier pas du plus court chemin (8 directions), limité pour rester léger. */
     private fun bfsFirstStep(from: Pos, to: Pos, avoidQuiet: Boolean = false,
         roamingTypes: List<MonsterType>? = null): Pos? {
-        val prev = HashMap<Pos, Pos>()
-        val queue = ArrayDeque<Pos>()
-        queue.add(from); prev[from] = from
-        while (queue.isNotEmpty() && prev.size < 600) {
-            val c = queue.removeFirst()
-            if (c == to) {
+        val lv = level
+        val w = lv.w
+        val cells = w * lv.h
+        if (bfsSeen.size != cells) {
+            bfsParent = IntArray(cells); bfsSeen = IntArray(cells); bfsQueue = IntArray(cells); bfsStamp = 0
+        }
+        if (++bfsStamp == Int.MAX_VALUE) { bfsSeen.fill(0); bfsStamp = 1 }
+        val stamp = bfsStamp
+        val start = from.y * w + from.x
+        val goal = to.y * w + to.x
+        var head = 0; var tail = 0; var seen = 1
+        bfsQueue[tail++] = start; bfsSeen[start] = stamp; bfsParent[start] = start
+        while (head < tail && seen < 600) {
+            val c = bfsQueue[head++]
+            if (c == goal) {
                 var n = c
-                while (prev[n] != from) n = prev[n]!!
-                return n
+                while (bfsParent[n] != start) n = bfsParent[n]
+                return Pos(n % w, n / w)
             }
+            val cx = c % w; val cy = c / w
             for (dy in -1..1) for (dx in -1..1) {
                 if (dx == 0 && dy == 0) continue
-                val n = Pos(c.x + dx, c.y + dy)
-                if (n in prev || !level.canStep(c, dx, dy)) continue
-                if (roamingTypes != null && !DungeonBestiary.canWander(roamingTypes, level.themeAt(n.x, n.y), level.backdropAt(n))) continue
-                if (avoidQuiet && (n in level.quietCells || level.campDistances[n.y][n.x] in 0..7)) continue
-                prev[n] = c; queue.add(n)
+                val nx = cx + dx; val ny = cy + dy
+                // Même règle que DungeonLevel.canStep : pas de faufilement entre deux coins de mur
+                if (!lv.walkable(nx, ny)) continue
+                val n = ny * w + nx
+                if (bfsSeen[n] == stamp) continue
+                if (dx != 0 && dy != 0 && !lv.walkable(nx, cy) && !lv.walkable(cx, ny)) continue
+                if (roamingTypes != null || avoidQuiet) {
+                    val p = Pos(nx, ny)
+                    if (roamingTypes != null && !DungeonBestiary.canWander(roamingTypes, lv.themeAt(nx, ny), lv.backdropAt(p))) continue
+                    if (avoidQuiet && (p in lv.quietCells || lv.campDistances[ny][nx] in 0..7)) continue
+                }
+                bfsSeen[n] = stamp; bfsParent[n] = c; bfsQueue[tail++] = n; seen++
             }
         }
         return null
@@ -741,34 +791,35 @@ class RoguelikeGame(
 
     // ── Sauvegarde ──────────────────────────────────────────────────────────────
 
+    private fun deathReportToJson(report: DeathReport) = JSONObject().apply {
+        put("floor", report.floor)
+        put("goldLost", report.goldLost)
+        put("checkpointFloor", report.checkpointFloor)
+    }
+
     fun inventoryToJson(): JSONObject = JSONObject().apply {
         put("floor",      floor)
         put("checkpoint", checkpoint)
-        deathReport?.let { report ->
-            put("deathReport", JSONObject().apply {
-                put("floor", report.floor)
-                put("goldLost", report.goldLost)
-                put("checkpointFloor", report.checkpointFloor)
-            })
-        }
+        deathReport?.let { put("deathReport", deathReportToJson(it)) }
         put("hp",         hero.hp)
-        put("hpMultiplier", HitPointBalance.playerMultiplier(hero.floor))
         put("gold",       hero.gold)
         put("deepestFloor", hero.deepestFloor)
         put("heroSprite", heroSpritePath)
         put("equipped", JSONObject().also { eq ->
             for ((slot, equip) in hero.equipped) eq.put(slot.name, SaveManager.equipToJson(equip))
         })
-        put("bag", org.json.JSONArray().also { arr -> hero.bag.forEach { arr.put(SaveManager.equipToJson(it)) } })
+        put("bag", JSONArray().also { arr -> hero.bag.forEach { arr.put(SaveManager.equipToJson(it)) } })
+        // Le butin pas encore rangé : Retour ou une appli tuée sur « Équiper / Au sac » ne le perd plus
+        put("pendingLoot", JSONArray().also { arr -> pendingLoot.forEach { arr.put(SaveManager.equipToJson(it)) } })
         put("nextLootId", hero.nextLootId)
         put("specialCooldown", hero.specialCooldown)
-        put("relics", org.json.JSONArray().also { arr -> hero.relics.forEach { arr.put(it.name) } })
-        put("relicSlots", org.json.JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
+        put("relics", JSONArray().also { arr -> hero.relics.forEach { arr.put(it.name) } })
+        put("relicSlots", JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
         put("relicCooldowns", JSONObject().also { o -> hero.relicCooldowns.forEach { (r, cd) -> o.put(r.name, cd) } })
-        put("resonances", org.json.JSONArray().also { arr -> hero.knownResonances.forEach { arr.put(it.name) } })
-        put("reactions", org.json.JSONArray().also { arr -> hero.knownReactions.forEach { arr.put(it.name) } })
-        put("affinities", org.json.JSONArray().also { arr -> hero.knownAffinities.forEach { arr.put(it) } })
-        put("sets", org.json.JSONArray().also { arr -> hero.knownSets.forEach { arr.put(it) } })
+        put("resonances", JSONArray().also { arr -> hero.knownResonances.forEach { arr.put(it.name) } })
+        put("reactions", JSONArray().also { arr -> hero.knownReactions.forEach { arr.put(it.name) } })
+        put("affinities", JSONArray().also { arr -> hero.knownAffinities.forEach { arr.put(it) } })
+        put("sets", JSONArray().also { arr -> hero.knownSets.forEach { arr.put(it) } })
     }
 
     fun mapStateToJson(): JSONObject = JSONObject().apply {
@@ -780,12 +831,10 @@ class RoguelikeGame(
         put("stairsArrivalPending", stairsArrivalPending)
         put("gearDroppedThisFloor", gearDroppedThisFloor)
         put("forge", forgeOnFloor)
+        // La place de la forge dépend aussi des reliques déjà trouvées : on la garde telle quelle
+        level.forge?.let { put("forgePos", posToJson(it)) }
         put("forgeOpen", forgeOpen)
-        put("deathReport", deathReport?.let { report -> JSONObject().apply {
-            put("floor", report.floor)
-            put("goldLost", report.goldLost)
-            put("checkpointFloor", report.checkpointFloor)
-        } })
+        deathReport?.let { put("deathReport", deathReportToJson(it)) }
         put("explored", JSONArray().also { rows ->
             for (y in 0 until level.h) rows.put(String(CharArray(level.w) { x -> if (level.explored[y][x]) '1' else '0' }))
         })
@@ -811,25 +860,11 @@ class RoguelikeGame(
                 })
             }
         })
-        val stairs = findStairs()
-        if (stairs != null) put("stairs", posToJson(stairs))
     }
 
-    fun toJson(): JSONObject = inventoryToJson().apply {
-        val state = mapStateToJson()
-        for (key in state.keys()) put(key, state.get(key))
-    }
-
-    fun restoreFromSavedState(j: JSONObject) = restoreMapState(j)
-
+    /** Remet l'étage, déjà généré depuis la même graine ([fromSave]), dans l'état sauvé. */
     private fun restoreMapState(j: JSONObject) {
-        floor = j.optInt("floor", floor)
-        hero.floor = floor
-        checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
-        levelSeed = j.optLong("levelSeed", levelSeed)
         regenerationCount = j.optInt("regenerationCount", 0).coerceAtLeast(0)
-        forgeOnFloor = j.optBoolean("forge", false)
-        level = generateLevel(floor, levelSeed)
         j.optJSONArray("explored")?.let { rows ->
             for (y in 0 until minOf(rows.length(), level.h)) {
                 val row = rows.optString(y, "")
@@ -865,25 +900,16 @@ class RoguelikeGame(
                 level.items += Item(type, posFromJson(item.getJSONObject("pos")), relic)
             }
         }
+        if (forgeOnFloor) j.optJSONObject("forgePos")?.let(::posFromJson)
+            ?.takeIf { level.inBounds(it.x, it.y) && level.tiles[it.y][it.x] == TileType.FLOOR }
+            ?.let { level.forge = it }
         playerPos = j.optJSONObject("player")?.let(::posFromJson)?.takeIf { level.walkable(it.x, it.y) } ?: level.start
         stairsOpen = j.optBoolean("stairsOpen", false)
         stairsArrivalPending = j.optBoolean("stairsArrivalPending", false)
         gearDroppedThisFloor = j.optBoolean("gearDroppedThisFloor", false)
         forgeOpen = j.optBoolean("forgeOpen", false) && playerPos == level.forge
-        deathReport = j.optJSONObject("deathReport")?.let { report ->
-            DeathReport(report.getInt("floor"), report.getInt("goldLost"),
-                report.optInt("checkpointFloor", checkpointFloor(report.getInt("floor"))))
-        }
-        combat = null
-        combatPack = null
+        deathReport = j.optJSONObject("deathReport")?.let { deathReportFromJson(it) }
         computeFov()
-    }
-
-    private fun findStairs(): Pos? {
-        for (y in 0 until level.h) for (x in 0 until level.w) {
-            if (level.tiles[y][x] == TileType.STAIRS_DOWN) return Pos(x, y)
-        }
-        return null
     }
 
     private fun posToJson(pos: Pos) = JSONObject().apply {

@@ -102,6 +102,9 @@ class AudioEditorActivity : ThemedActivity() {
 
     private val editButtons = ArrayList<EditButton>()
     private var ticking = false
+    /** Instant de l'image précédente et du dernier affichage du temps (nanosecondes ; 0 = à reprendre). */
+    private var lastTickNanos = 0L
+    private var lastClockNanos = 0L
 
     /** Crée un fichier audio : le sélecteur reçoit le bon type MIME (qui change avec le format) et un nom proposé. */
     private class CreateAudioFile : ActivityResultContract<Pair<String, String>, Uri?>() {
@@ -134,11 +137,21 @@ class AudioEditorActivity : ThemedActivity() {
         if (granted) vm.startRecording() else Toast.makeText(this, R.string.ae_rec_no_permission, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Pendant la lecture : vumètre à chaque image, temps à 30 Hz (des centièmes qui défilent plus vite ne se
+     * lisent pas). La chronologie se redessine d'elle-même.
+     */
     private val tick = object : Runnable {
         override fun run() {
             if (!vm.isPlaying && !vm.isRecording) { ticking = false; refresh(); return }
-            updateTime()
-            updateLevel()
+            val now = System.nanoTime()
+            val dt = if (lastTickNanos == 0L) 0f else ((now - lastTickNanos) / 1e9f).coerceAtMost(0.25f)
+            lastTickNanos = now
+            if (now - lastClockNanos >= CLOCK_PERIOD_NANOS) {
+                lastClockNanos = now
+                updateTime()
+            }
+            updateLevel(dt)
             timeline.postOnAnimation(this)
         }
     }
@@ -208,12 +221,14 @@ class AudioEditorActivity : ThemedActivity() {
                 launch { vm.state.collect { refresh() } }
                 launch { vm.work.collect { showWork(it) } }
                 launch { vm.messages.collect { Toast.makeText(this@AudioEditorActivity, it, Toast.LENGTH_SHORT).show() } }
+                launch { vm.orphanRecordings.collect { if (it > 0) showOrphanRecordings() } }
             }
         }
     }
 
     override fun onDestroy() {
         if (micStopRegistered) unregisterReceiver(micStop)
+        orphanSheet?.dismiss()
         super.onDestroy()
     }
 
@@ -284,10 +299,24 @@ class AudioEditorActivity : ThemedActivity() {
         }
     }
 
-    /** Le vumètre monte d'un coup et redescend doucement : une crête brève reste lisible. */
-    private fun updateLevel() {
+    private var orphanSheet: android.app.Dialog? = null
+
+    /** Des enregistrements interrompus attendent dans le cache : les poser dans le projet, ou les jeter. Fermer la feuille ne tranche pas. */
+    private fun showOrphanRecordings() {
+        if (orphanSheet?.isShowing == true) return
+        orphanSheet = actionSheet(getString(R.string.ae_rec_orphan_title), listOf(
+            SheetItem(R.drawable.ic_ae_record, getString(R.string.ae_rec_orphan_keep)) { vm.recoverOrphanRecordings() },
+            SheetItem(R.drawable.ic_px_delete, getString(R.string.ae_rec_orphan_discard), destructive = true) { vm.discardOrphanRecordings() },
+        )).also { it.show() }
+    }
+
+    /**
+     * Le vumètre monte d'un coup et redescend doucement : une crête brève reste lisible. La descente se compte
+     * en secondes ([dt]) : même vitesse à 60 et à 120 Hz (×0,85 par soixantième de seconde).
+     */
+    private fun updateLevel(dt: Float) {
         val l = vm.recordLevel
-        levelShown = if (l > levelShown) l else levelShown * 0.85f
+        levelShown = if (l > levelShown) l else levelShown * LEVEL_DECAY_PER_60TH.pow(dt * 60f)
         level.progress = (levelShown.coerceIn(0f, 1f) * level.max).toInt()
     }
 
@@ -336,6 +365,8 @@ class AudioEditorActivity : ThemedActivity() {
                 if (pendingRecord) { pendingRecord = false; toggleRecord() }
                 if ((playing || rec) && !ticking) {
                     ticking = true
+                    lastTickNanos = 0L
+                    lastClockNanos = 0L
                     timeline.postOnAnimation(tick)
                 }
             }
@@ -562,6 +593,8 @@ class AudioEditorActivity : ThemedActivity() {
 
     companion object {
         private const val EXTRA_PROJECT_ID = "project_id"
+        private const val CLOCK_PERIOD_NANOS = 1_000_000_000L / 30
+        private const val LEVEL_DECAY_PER_60TH = 0.85f
 
         private const val EXTRA_RECORD = "start_recording"
 

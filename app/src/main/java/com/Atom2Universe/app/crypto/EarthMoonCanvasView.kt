@@ -99,7 +99,7 @@ class EarthMoonCanvasView @JvmOverloads constructor(
 
     // ── Mode Terre seule ─────────────────────────────────────────────────────
     var showMoon: Boolean = true
-        set(value) { field = value; triggerRender() }
+        set(value) { field = value; triggerRender(); updateOrbitAnimation() }
 
     // ── Mode sans nuages ─────────────────────────────────────────────────────
     var showClouds: Boolean = true
@@ -135,8 +135,9 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     }
 
     // ── Executors ────────────────────────────────────────────────────────────
-    private val renderExecutor  = Executors.newSingleThreadExecutor()
-    private val networkExecutor = Executors.newSingleThreadExecutor() // EPIC uniquement
+    // Recréés au rattachement : une vue détachée puis rattachée doit encore rendre.
+    private var renderExecutor  = Executors.newSingleThreadExecutor()
+    private var networkExecutor = Executors.newSingleThreadExecutor() // EPIC uniquement
     private var pendingRender:  Future<*>? = null
     private var pendingNetwork: Future<*>? = null
 
@@ -161,6 +162,16 @@ class EarthMoonCanvasView @JvmOverloads constructor(
             orbitPulseAlpha = (30 + 140 * (0.5f + 0.5f * sin(PI * 2 * t)).toFloat()).toInt()
             orbitDashPhase  = t * 24f
             if (showMoon) invalidate()
+        }
+    }
+    // L'orbite n'anime que si elle est dessinée et que la vue est à l'écran.
+    private val orbitGate = VisibleWindowGate(this) { updateOrbitAnimation() }
+
+    private fun updateOrbitAnimation() {
+        if (orbitGate.isActive && showMoon) {
+            if (!orbitAnimator.isStarted) orbitAnimator.start() else orbitAnimator.resume()
+        } else if (orbitAnimator.isStarted) {
+            orbitAnimator.pause()
         }
     }
     private val epicClipPath = Path()
@@ -216,7 +227,7 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     private fun triggerRender() {
         val view = cameraView
         val w = width; val h = height
-        if (w <= 0 || h <= 0) return
+        if (w <= 0 || h <= 0 || renderExecutor.isShutdown) return
 
         pendingRender?.cancel(false)
 
@@ -341,7 +352,23 @@ class EarthMoonCanvasView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        orbitAnimator.start()
+        if (renderExecutor.isShutdown) {
+            renderExecutor = Executors.newSingleThreadExecutor()
+            networkExecutor = Executors.newSingleThreadExecutor()
+            epicIsLoading = false
+            triggerRender()
+        }
+        orbitGate.update()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) orbitGate.update()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) orbitGate.update()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -350,6 +377,7 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        orbitGate.detach()
         super.onDetachedFromWindow()
         orbitAnimator.cancel()
         pendingRender?.cancel(true)

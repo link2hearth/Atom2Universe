@@ -20,6 +20,18 @@ interface PracticeSynthesizer {
     fun release()
 
     /**
+     * Coupe le flux audio quand l'écran de pratique n'est plus visible
+     * (plus de silence écrit en continu, le téléphone peut dormir).
+     * Sans effet si déjà en pause.
+     */
+    fun pause()
+
+    /**
+     * Rouvre le flux audio après [pause]. Sans effet si pas en pause.
+     */
+    fun resume()
+
+    /**
      * Joue une note.
      * @param channel Canal MIDI (0-15)
      * @param note Numéro de note MIDI (0-127)

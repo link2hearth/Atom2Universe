@@ -26,6 +26,7 @@
     <string name="cloud_sync_success">Sync complete</string>
     <string name="cloud_sync_failed">Sync failed: %1$s</string>
     <string name="cloud_sync_unavailable">Sync unavailable</string>
+    <string name="cloud_sync_already_running">Sync already in progress</string>
     <string name="cloud_sync_not_signed_in">Sign in first</string>
     <string name="cloud_last_sync">Last sync: %1$s</string>
     <string name="cloud_last_sync_never">Never synced</string>

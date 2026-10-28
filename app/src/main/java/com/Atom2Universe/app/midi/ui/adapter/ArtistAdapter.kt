@@ -38,10 +38,11 @@ class ArtistAdapter(
 
         fun bind(artist: ArtistItem) {
             // Initiale de l'artiste
-            artistInitial.text = artist.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+            val name = artist.name.ifEmpty { itemView.context.getString(R.string.midi_engine_unknown_artist) }
+            artistInitial.text = name.first().uppercaseChar().toString()
 
             // Nom de l'artiste
-            artistName.text = artist.name
+            artistName.text = name
 
             // Statistiques
             val res = itemView.resources

@@ -29,7 +29,6 @@ import com.Atom2Universe.app.midi.visualizer.MidiChannelAdapter
 import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
 import com.Atom2Universe.app.midi.visualizer.MidiNoteTracker
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 /**
  * Fragment pour afficher le lecteur en cours avec visualisation MIDI
@@ -86,6 +85,15 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
     private var currentDurationMs: Long = 0L
     private var isUserSeeking: Boolean = false
 
+    // Ce que l'écran affiche déjà : l'état arrive 10 fois par seconde, on ne touche une vue que
+    // si sa valeur change (icônes, teintes ; textes à chaque nouvelle seconde)
+    private var shownPlaying: Boolean? = null
+    private var shownShuffle: Boolean? = null
+    private var shownRepeat: PlaybackQueueManager.RepeatMode? = null
+    private var shownPositionSec = -1L
+    private var shownDurationSec = -1L
+    private var shownProgress = -1
+
     // Repository pour charger les tracks par scope
     private lateinit var repository: MidiRepository
 
@@ -117,7 +125,8 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
      * et synchronise le ViewModel si le track a changé (important pour le mode practice)
      */
     private fun updateTrackInfo(metadata: MediaMetadataCompat) {
-        val title = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE) ?: "Unknown"
+        val title = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+            ?: getString(R.string.midi_ui_unknown_title)
         val artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST) ?: ""
 
         titleText.text = title
@@ -208,6 +217,9 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
 
         // S'enregistrer pour les mises à jour du MediaController
         getMediaController()?.registerCallback(mediaControllerCallback)
+
+        // Pendant notre absence les vues ont pu changer d'état : tout réafficher
+        resetShownState()
 
         // Mettre à jour l'UI avec l'état actuel du playback
         val controller = getMediaController()
@@ -363,7 +375,8 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
                 if (fromUser && currentDurationMs > 0) {
                     // Mettre à jour le label du temps pendant le drag
                     val positionMs = (progress.toLong() * currentDurationMs) / 1000
-                    timeCurrent.text = formatTime(positionMs)
+                    timeCurrent.text = formatMidiTime(requireContext(), positionMs)
+                    shownPositionSec = -1L
                 }
             }
 
@@ -373,6 +386,7 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 isUserSeeking = false
+                shownProgress = -1
                 seekBar?.progress?.let { progress ->
                     if (currentDurationMs > 0) {
                         val positionMs = (progress.toLong() * currentDurationMs) / 1000
@@ -400,12 +414,13 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
      * Met à jour l'UI en fonction de l'état du playback
      */
     private fun updatePlaybackUI(state: PlaybackStateCompat) {
-        // Mettre à jour le bouton play/pause
+        // Mettre à jour le bouton play/pause (et le ViewModel, pour les autres fragments)
         val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
-        btnPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
-
-        // Mettre à jour le ViewModel pour synchroniser avec d'autres fragments
-        viewModel.setPlaying(isPlaying)
+        if (shownPlaying != isPlaying) {
+            shownPlaying = isPlaying
+            btnPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+            viewModel.setPlaying(isPlaying)
+        }
 
         // Extraire l'état shuffle/repeat et position/durée des extras
         state.extras?.let { extras ->
@@ -415,8 +430,14 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
                 PlaybackQueueManager.RepeatMode.NONE
             }
 
-            updateShuffleButton()
-            updateRepeatButton()
+            if (shownShuffle != isShuffleEnabled) {
+                shownShuffle = isShuffleEnabled
+                updateShuffleButton()
+            }
+            if (shownRepeat != repeatMode) {
+                shownRepeat = repeatMode
+                updateRepeatButton()
+            }
 
             // Position et durée
             val positionMs = extras.getLong(MidiPlaybackService.EXTRA_POSITION_MS, 0L)
@@ -432,33 +453,37 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
     private fun updateSeekBar(positionMs: Long, durationMs: Long) {
         currentDurationMs = durationMs
 
-        // Mettre à jour les labels de temps
-        timeCurrent.text = formatTime(positionMs)
-        timeTotal.text = formatTime(durationMs)
+        // Mettre à jour les labels de temps (seulement à chaque nouvelle seconde)
+        if (positionMs / 1000 != shownPositionSec) {
+            shownPositionSec = positionMs / 1000
+            timeCurrent.text = formatMidiTime(requireContext(), positionMs)
+        }
+        if (durationMs / 1000 != shownDurationSec) {
+            shownDurationSec = durationMs / 1000
+            timeTotal.text = formatMidiTime(requireContext(), durationMs)
+        }
 
         // Mettre à jour la position du SeekBar (max=1000 pour précision)
-        if (durationMs > 0 && !isUserSeeking) {
-            val progress = ((positionMs * 1000) / durationMs).toInt().coerceIn(0, 1000)
-            seekBar.progress = progress
-        } else if (!isUserSeeking) {
-            seekBar.progress = 0
+        if (!isUserSeeking) {
+            val progress = if (durationMs > 0) {
+                ((positionMs * 1000) / durationMs).toInt().coerceIn(0, 1000)
+            } else {
+                0
+            }
+            if (progress != shownProgress) {
+                shownProgress = progress
+                seekBar.progress = progress
+            }
         }
     }
 
-    /**
-     * Formate un temps en millisecondes en "m:ss" ou "h:mm:ss"
-     */
-    private fun formatTime(ms: Long): String {
-        val totalSeconds = ms / 1000
-        val hours = totalSeconds / 3600
-        val minutes = (totalSeconds % 3600) / 60
-        val seconds = totalSeconds % 60
-
-        return if (hours > 0) {
-            String.format(Locale.ROOT, "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
-        }
+    private fun resetShownState() {
+        shownPlaying = null
+        shownShuffle = null
+        shownRepeat = null
+        shownPositionSec = -1L
+        shownDurationSec = -1L
+        shownProgress = -1
     }
 
     /**
@@ -639,7 +664,7 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
         viewModel.currentTrack.observe(viewLifecycleOwner) { track ->
             if (track != null) {
                 titleText.text = track.title
-                artistText.text = track.artist
+                artistText.text = track.artist.ifEmpty { getString(R.string.midi_engine_unknown_artist) }
                 artistText.visibility = View.VISIBLE
 
                 // Mettre à jour l'état favori

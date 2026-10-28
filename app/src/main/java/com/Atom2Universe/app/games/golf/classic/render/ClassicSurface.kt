@@ -76,7 +76,13 @@ data class ClassicFrame(
 @SuppressLint("ViewConstructor")
 class ClassicSurface(context: Context, hole: ClassicHole) : GLSurfaceView(context) {
     var onReady: (() -> Unit)? = null
-    private val golfRenderer = ClassicRenderer(hole, context.assets).apply { onReady = { post { this@ClassicSurface.onReady?.invoke() } } }
+    /** The GL context was lost and the scene is meshed again: [onReady] follows once it is back. */
+    var onLoading: (() -> Unit)? = null
+    private val golfRenderer = ClassicRenderer(hole, context.assets, meshInBackground = true).apply {
+        onReady = { post { this@ClassicSurface.onReady?.invoke() } }
+        onLoading = { post { this@ClassicSurface.onLoading?.invoke() } }
+        onBuilt = { post { visibility = VISIBLE }; requestRender() }
+    }
     private val renderScale = (1.65f / resources.displayMetrics.density).coerceIn(.55f, 1f)
     private var lastRenderRequest = 0L
 
@@ -86,18 +92,23 @@ class ClassicSurface(context: Context, hole: ClassicHole) : GLSurfaceView(contex
         setRenderer(golfRenderer)
         preserveEGLContextOnPause = true
         renderMode = RENDERMODE_WHEN_DIRTY
+        // Hidden while the hole is meshed on a worker thread: no surface, so the drawing thread never waits on it.
+        visibility = INVISIBLE
+        golfRenderer.startBuilding()
     }
 
     /**
      * At most 60 images a second; 30 when [calm] (nothing has changed for a while): the grass,
      * water, clouds and board lights move slowly enough not to show it, and the GPU works half as much.
+     * About 12 when [idle] as well (nobody has touched the screen for a while); the scenery keeps
+     * its speed, only drawn less often.
      */
-    fun submit(frame: ClassicFrame, calm: Boolean, vsyncNanos: Long) {
+    fun submit(frame: ClassicFrame, calm: Boolean, vsyncNanos: Long, idle: Boolean = false) {
         golfRenderer.frame = frame
         // Paced on the display's own ticks, with wide margins: one image per 60 Hz tick (every
         // other one at 120 Hz), every second tick when calm. A clock read at submit time jitters,
         // and a threshold as tight as the tick itself skipped one now and then.
-        if(vsyncNanos-lastRenderRequest>=if(calm) 28_000_000L else 12_000_000L) {
+        if(vsyncNanos-lastRenderRequest>=if(idle) 78_000_000L else if(calm) 28_000_000L else 12_000_000L) {
             lastRenderRequest=vsyncNanos
             requestRender()
         }

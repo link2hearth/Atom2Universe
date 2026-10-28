@@ -36,6 +36,10 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     private val buffer = ByteBuffer.allocateDirect(maxOf(196 * 3 * maxOf(3, snowShapes.maxOf { it.size }) * 6,
         AmbientWildlife.MAX_CREATURES * AmbientAnimalModels.maxParts * 36,
         81 * CloudShapes.maxRects * 6) * 7 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+    // Les sommets s'écrivent d'abord ici, puis partent en un seul put : un put par flottant
+    // coûtait des centaines de milliers d'appels par image quand il neige.
+    private val staging = FloatArray(buffer.capacity())
+    private var staged = 0
     private var shader: ShaderProgram? = null
     private var vbo = 0
     private var vao = 0
@@ -79,9 +83,11 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
         var g = (color shr 8 and 255) / 255f
         var b = (color and 255) / 255f
         if (grayscale) { val gray = r * .2126f + g * .7152f + b * .0722f; r = gray; g = gray; b = gray }
-        buffer.put(originX + x * turnCos + z * turnSin).put(originY + y)
-            .put(originZ - x * turnSin + z * turnCos)
-            .put(r * light * faceShade).put(g * light * faceShade).put(b * light * faceShade).put(alpha)
+        val v = staging; var i = staged
+        v[i++] = originX + x * turnCos + z * turnSin; v[i++] = originY + y
+        v[i++] = originZ - x * turnSin + z * turnCos
+        v[i++] = r * light * faceShade; v[i++] = g * light * faceShade; v[i++] = b * light * faceShade; v[i++] = alpha
+        staged = i
     }
 
     private fun tri(ax: Float, ay: Float, az: Float, bx: Float, by: Float, bz: Float,
@@ -125,7 +131,7 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     }
 
     fun wildlife(camera: Camera, wildlife: AmbientWildlife, ambient: Float) {
-        buffer.clear()
+        staged = 0
         val blend = wildlife.renderFraction
         for (a in wildlife.creatures) {
             val opacity = a.previousAlpha + (a.alpha-a.previousAlpha)*blend
@@ -165,7 +171,7 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     }
     fun clouds(camera: Camera, weather: AmbientWeather, seconds: Double, daylight: Float, cave: Float) {
         if (weather.cloud < .01f || cave > .99f) return
-        buffer.clear(); light = daylight.coerceAtLeast(.12f); turnSin = 0f; turnCos = 1f
+        staged = 0; light = daylight.coerceAtLeast(.12f); turnSin = 0f; turnCos = 1f
         val drift = seconds * 1.4
         val storm = weather.cloud * weather.cloud * .6f
         for (i in 0 until CloudShapes.TONES) {
@@ -197,7 +203,7 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
 
     fun precipitation(camera: Camera, weather: AmbientWeather, seconds: Double, ambient: Float, underwater: Boolean) {
         if (weather.precipitation < .015f || underwater) return
-        buffer.clear(); light = ambient.coerceAtLeast(.16f); turnSin = 0f; turnCos = 1f
+        staged = 0; light = ambient.coerceAtLeast(.16f); turnSin = 0f; turnCos = 1f
         val cx=floor(camera.x/2).toInt(); val cz=floor(camera.z/2).toInt()
         val snow=weather.snow
         val snowing = snow > .5f
@@ -272,9 +278,10 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     }
 
     private fun flush(camera: Camera, depthWrite: Boolean) {
-        if (buffer.position()==0) return
+        if (staged==0) return
         val s=shader ?: return
-        val floats=buffer.position(); buffer.flip()
+        val floats=staged
+        buffer.clear(); buffer.put(staging,0,floats); buffer.flip()
         s.use(); GLES30.glUniformMatrix4fv(mvp,1,false,camera.vpMatrix,0)
         GLES30.glBindVertexArray(vao); GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,vbo)
         GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER,0,floats*4,buffer)

@@ -29,6 +29,7 @@ import com.Atom2Universe.app.midi.ui.adapter.ArtistAdapter
 import com.Atom2Universe.app.midi.ui.adapter.MidiTrackAdapter
 import com.Atom2Universe.app.midi.viewmodel.MidiPlayerViewModel
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -69,6 +70,9 @@ class MidiLibraryFragment : Fragment() {
     private var favoriteIds: Set<Long> = emptySet()
     private var favoritesJob: Job? = null
     private var scanProgressJob: Job? = null
+    // Chargement du niveau affiché (artistes, albums ou titres) : annulé à chaque changement de
+    // niveau, sinon un ancien album pouvait s'afficher sous le titre du nouveau
+    private var levelJob: Job? = null
     private var nowPlayingTrackId: Long? = null
     private var isPlaying: Boolean = false
 
@@ -325,7 +329,8 @@ class MidiLibraryFragment : Fragment() {
         updateBreadcrumbs()
         recyclerView.adapter = artistAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        levelJob?.cancel()
+        levelJob = viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val artists = repository.getArtistsWithStats()
                 if (artists.isEmpty()) {
@@ -334,6 +339,8 @@ class MidiLibraryFragment : Fragment() {
                     hideEmptyState()
                     artistAdapter.submitList(artists)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 showEmptyState()
             }
@@ -350,7 +357,8 @@ class MidiLibraryFragment : Fragment() {
         updateBreadcrumbs()
         recyclerView.adapter = albumAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        levelJob?.cancel()
+        levelJob = viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val albums = repository.getAlbumsWithStats(artist)
                 hideEmptyState()
@@ -371,7 +379,8 @@ class MidiLibraryFragment : Fragment() {
         updateBreadcrumbs()
         recyclerView.adapter = trackAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        levelJob?.cancel()
+        levelJob = viewLifecycleOwner.lifecycleScope.launch {
             repository.getTracksByAlbum(artist, album).collect { tracks ->
                 hideEmptyState()
                 trackAdapter.submitList(tracks)
@@ -433,7 +442,7 @@ class MidiLibraryFragment : Fragment() {
 
         Toast.makeText(
             context,
-            "▶ ${track.title}",
+            getString(R.string.midi_ui_playing_track, track.title),
             Toast.LENGTH_SHORT
         ).show()
     }

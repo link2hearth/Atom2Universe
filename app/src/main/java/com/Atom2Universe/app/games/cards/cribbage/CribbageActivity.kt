@@ -33,7 +33,7 @@ class CribbageActivity : CardGameActivity() {
     private fun caption(seat: Int): String {
         val g = game
         val base = if (g.gained[seat] > 0) getString(R.string.cards_score_gain, g.totals[seat], g.gained[seat]) else g.totals[seat].toString()
-        return if (seat == g.dealer) "$base · ${getString(R.string.cribbage_crib)}" else base
+        return if (seat == g.dealer) base + getString(R.string.kit_separator) + getString(R.string.cribbage_crib) else base
     }
 
     override fun buildScene(): TableScene {

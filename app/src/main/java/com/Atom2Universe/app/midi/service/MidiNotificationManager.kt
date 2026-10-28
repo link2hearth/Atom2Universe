@@ -54,9 +54,14 @@ class MidiNotificationManager(
             .setShowActionsInCompactView(0, 1, 2) // Affiche 3 boutons en mode compact
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle(track?.title ?: context.getString(R.string.app_name))
-            .setContentText(track?.artist ?: "Unknown Artist")
-            .setSubText(track?.album)
+            // Titre ou artiste vide = inconnu (la base ne garde pas de texte traduit)
+            .setContentTitle(track?.title?.takeIf { it.isNotBlank() } ?: context.getString(
+                if (track == null) R.string.app_name else R.string.midi_engine_unknown_title
+            ))
+            .setContentText(
+                track?.artist?.takeIf { it.isNotBlank() } ?: context.getString(R.string.midi_engine_unknown_artist)
+            )
+            .setSubText(track?.album?.takeIf { it.isNotBlank() })
             .setSmallIcon(android.R.drawable.ic_media_play) // TODO: Créer icône custom ic_notification
             .setStyle(mediaStyle)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -69,7 +74,7 @@ class MidiNotificationManager(
         builder.addAction(
             createAction(
                 android.R.drawable.ic_media_previous,
-                "Previous",
+                context.getString(R.string.midi_action_previous),
                 MidiPlaybackService.ACTION_SKIP_PREVIOUS
             )
         )
@@ -79,7 +84,7 @@ class MidiNotificationManager(
             builder.addAction(
                 createAction(
                     android.R.drawable.ic_media_pause,
-                    "Pause",
+                    context.getString(R.string.midi_engine_action_pause),
                     MidiPlaybackService.ACTION_PAUSE
                 )
             )
@@ -87,7 +92,7 @@ class MidiNotificationManager(
             builder.addAction(
                 createAction(
                     android.R.drawable.ic_media_play,
-                    "Play",
+                    context.getString(R.string.midi_engine_action_play),
                     MidiPlaybackService.ACTION_PLAY
                 )
             )
@@ -97,7 +102,7 @@ class MidiNotificationManager(
         builder.addAction(
             createAction(
                 android.R.drawable.ic_media_next,
-                "Next",
+                context.getString(R.string.midi_action_next),
                 MidiPlaybackService.ACTION_SKIP_NEXT
             )
         )
@@ -106,7 +111,7 @@ class MidiNotificationManager(
         builder.addAction(
             createAction(
                 android.R.drawable.ic_delete,
-                "Stop",
+                context.getString(R.string.midi_engine_action_stop),
                 MidiPlaybackService.ACTION_STOP
             )
         )
@@ -127,10 +132,10 @@ class MidiNotificationManager(
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "MIDI Playback",
+            context.getString(R.string.midi_engine_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "MIDI player playback controls"
+            description = context.getString(R.string.midi_engine_channel_description)
             setShowBadge(false)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }

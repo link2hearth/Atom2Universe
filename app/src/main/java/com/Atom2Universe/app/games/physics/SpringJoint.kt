@@ -218,7 +218,7 @@ class SpringJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         impulse = 0f
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         saturated = false
         lastInvDt = invDt
@@ -264,7 +264,8 @@ class SpringJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         effectiveMass = 1f / (k + gamma)
         maxImpulse = if (maxForce.isFinite()) maxForce * h else Float.POSITIVE_INFINITY
 
-        // Réapplication de l'impulsion du pas précédent.
+        // Réapplication de l'impulsion du pas précédent, à l'échelle de ce pas-ci.
+        impulse *= dtRatio
         val px = impulse * nx
         val py = impulse * ny
         a.vx -= a.invMass * px

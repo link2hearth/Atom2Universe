@@ -62,6 +62,8 @@ class CaveActivity : ThemedActivity() {
     companion object {
         /** Pose au réticule : un doigt immobile sur la vue aussi longtemps commence la pose continue. */
         private const val HOLD_PLACE_MS = 350L
+        /** Délai maximal entre un changement d'inventaire et sa sauvegarde. */
+        private const val INVENTORY_SAVE_DELAY_MS = 4_000L
         const val EXTRA_WORLD_ID = "cave_world_id"
         /** Chemin d'une carte Assaut (voir A2MapStorage) : lance le mode Assaut au lieu d'un monde. */
         const val EXTRA_MAP_PATH = "cave_map_path"
@@ -322,8 +324,24 @@ class CaveActivity : ThemedActivity() {
             // distantes de plusieurs blocs : les faces internes sombres percent le relief.
             // Exiger 24 bits, soit 256 fois plus de niveaux de profondeur.
             setEGLConfigChooser(8, 8, 8, 0, 24, 0)
+            // Garder le contexte en arrière-plan : sinon le retour recrée shaders, textures et
+            // maillages (le renderer sait quand même le refaire si Android le reprend).
+            preserveEGLContextOnPause = true
             setRenderer(renderer)
             renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+            holder.addCallback(object : android.view.SurfaceHolder.Callback {
+                override fun surfaceCreated(holder: android.view.SurfaceHolder) {
+                    // Le rendu est plafonné à 30 images/s : l'écran peut descendre à cette cadence.
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) runCatching {
+                        holder.surface.setFrameRate(30f, android.view.Surface.FRAME_RATE_COMPATIBILITY_DEFAULT)
+                    }
+                }
+                override fun surfaceChanged(holder: android.view.SurfaceHolder, format: Int, width: Int, height: Int) = Unit
+                override fun surfaceDestroyed(holder: android.view.SurfaceHolder) = Unit
+            })
+            addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
+                applyRenderScale(right - left, bottom - top)
+            }
         }
         root.addView(glView, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 
@@ -399,8 +417,12 @@ class CaveActivity : ThemedActivity() {
             renderer.pendingMode = if (renderer.playerMode == PlayerMode.WALK) PlayerMode.SPECTATOR else PlayerMode.WALK
         }
         btnDayNight.setOnClickListener {
-            renderer.cycleTimeOfDay()
-            hud.controlIcon(btnDayNight, "sun", renderer.timeOfDayLabel)
+            // L'heure appartient à la simulation : elle change sur le fil GL, entre deux images.
+            glView.queueEvent {
+                renderer.cycleTimeOfDay()
+                val label = renderer.timeOfDayLabel
+                uiHandler.post { hud.controlIcon(btnDayNight, "sun", label) }
+            }
         }
         btnCamera.setOnClickListener {
             glView.queueEvent { renderer.camera.thirdPerson = !renderer.camera.thirdPerson }
@@ -426,11 +448,13 @@ class CaveActivity : ThemedActivity() {
             if (mapView.visibility == View.GONE) {
                 mapView.visibility = View.VISIBLE
                 tvCoords.visibility = View.VISIBLE
+                renderer.coordinatesShown = true
                 btnMap.alpha = 1.0f
                 startMinimapLoop()
             } else {
                 mapView.visibility = View.GONE
                 tvCoords.visibility = View.GONE
+                renderer.coordinatesShown = false
                 btnMap.alpha = 0.5f
                 minimapJob?.cancel()
                 minimapJob = null
@@ -451,7 +475,7 @@ class CaveActivity : ThemedActivity() {
                 wailaHealth.max=mob.maxHp;wailaHealth.progress=mob.hp
             } else tvWaila.text=if(block!=null) getString(R.string.cave_waila_block,blockName(block,meta)) else ""
         } }
-        renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = "$fps FPS" } }
+        renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = getString(R.string.cave_fps, fps) } }
         renderer.miningCallback  = { progress, blockType, meta ->
             uiHandler.post {
                 if (blockType != null && progress > 0f) {
@@ -461,8 +485,12 @@ class CaveActivity : ThemedActivity() {
                 } else { miningPanel.visibility = View.GONE; miningBar.progress = 0 }
             }
         }
-        renderer.inventoryCallback = { inv -> uiHandler.post { invManager.onInventoryChanged(inv); saveWorldAsync() } }
+        renderer.inventoryCallback = { inv -> uiHandler.post {
+            invManager.onInventoryChanged(inv); scheduleInventorySave(); glView.requestRender()
+        } }
         renderer.hotbarCallback    = { slots, selected -> uiHandler.post {
+            // Derrière un panneau, la scène ne se redessine qu'à la demande : l'objet en main change.
+            glView.requestRender()
             hud.updateHotbarUI(slots, selected)
             applyBuildModeUi(slots.getOrNull(selected)?.let(renderer::itemMode) ?: HotbarMode.BUILD,btnPlace)
             if(::invOverlay.isInitialized && invOverlay.visibility==View.VISIBLE) hud.updateActiveBarOverlay()
@@ -823,6 +851,8 @@ class CaveActivity : ThemedActivity() {
         if (renderer.mode !is AssaultMode) music.resume()
         forceImmersiveMode()
         vGameArea?.let { applyButtonPositions(it) }
+        // La pause a arrêté la mini-carte : elle repart si elle est restée ouverte.
+        if (minimapView?.visibility == View.VISIBLE) startMinimapLoop()
     }
     override fun onPause()   {
         super.onPause()
@@ -830,9 +860,12 @@ class CaveActivity : ThemedActivity() {
         releaseGameInputs()
         glView.onPause()
         glSuspended = true
-        music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel()
+        // La sauvegarde de pause remplace celle qui attendait.
+        cancelInventorySave()
+        music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel(); minimapJob = null
     }
     override fun onDestroy() {
+        cancelInventorySave()
         assaultWeaponDialog?.dismiss()
         assaultWeaponDialog = null
         super.onDestroy()
@@ -888,6 +921,23 @@ class CaveActivity : ThemedActivity() {
         )
     }
 
+    // Un changement d'inventaire (une feuille ramassée…) ne sauvegarde pas tout de suite : une
+    // seule sauvegarde au plus toutes les quelques secondes, en plus de la pause et de la sortie.
+    private var inventorySavePending = false
+    private val inventorySave = Runnable {
+        inventorySavePending = false
+        if (!glSuspended && !isFinishing) saveWorldAsync()
+    }
+    private fun scheduleInventorySave() {
+        if (inventorySavePending || worldId == null) return
+        inventorySavePending = true
+        uiHandler.postDelayed(inventorySave, INVENTORY_SAVE_DELAY_MS)
+    }
+    private fun cancelInventorySave() {
+        uiHandler.removeCallbacks(inventorySave)
+        inventorySavePending = false
+    }
+
     fun saveWorldAsync(flushChunks: Boolean = false) {
         if (worldId == null) return
         val capture = {
@@ -919,6 +969,40 @@ class CaveActivity : ThemedActivity() {
     }
 
     private fun saveWorld() = saveWorldAsync(flushChunks = true)
+
+    // ── Résolution 3D et menus ────────────────────────────────────────────────
+
+    // Dernière résolution appliquée au tampon du GLSurfaceView (100 % = celle de l'écran).
+    private var renderScaleWidth = 0; private var renderScaleHeight = 0; private var renderScalePercent = 100
+
+    /**
+     * Dessine la 3D en [CaveRenderScale] % de la taille de la vue : la carte graphique remplit
+     * moins de pixels, l'image est agrandie à l'écran. Les gestes gardent la taille de la vue.
+     */
+    internal fun applyRenderScale(width: Int = glView.width, height: Int = glView.height) {
+        if (width <= 0 || height <= 0) return
+        val percent = CaveRenderScale.load(this)
+        if (percent >= 100 && renderScalePercent >= 100) { renderScaleWidth = width; renderScaleHeight = height; return }
+        if (width == renderScaleWidth && height == renderScaleHeight && percent == renderScalePercent) return
+        renderScaleWidth = width; renderScaleHeight = height; renderScalePercent = percent
+        // Hors de la passe de mise en page : changer la taille du tampon en demande une autre.
+        glView.post {
+            if (percent >= 100) glView.holder.setSizeFromLayout()
+            else glView.holder.setFixedSize(max(1, width * percent / 100), max(1, height * percent / 100))
+        }
+    }
+
+    /**
+     * Inventaire, coffre, commerce ou pause : l'image du monde ne change pas derrière le panneau,
+     * elle n'est redessinée qu'à la demande. Le rendu continu reprend à la fermeture.
+     */
+    internal fun setSceneFrozen(frozen: Boolean) {
+        if (!::glView.isInitialized) return
+        val wanted = if (frozen) GLSurfaceView.RENDERMODE_WHEN_DIRTY else GLSurfaceView.RENDERMODE_CONTINUOUSLY
+        if (glView.renderMode == wanted) return
+        if (!frozen) glView.queueEvent { renderer.resetFrameClock() }
+        glView.renderMode = wanted
+    }
 
     // ── Pause et distances ────────────────────────────────────────────────────
 

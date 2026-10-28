@@ -20,8 +20,9 @@ object MidiEventDispatcher {
     // Nombre d'écrans qui affichent les claviers (0 = inutile de suivre les notes)
     private val visualizerWatchers = java.util.concurrent.atomic.AtomicInteger(0)
 
-    // Canaux mutés (pas de son mais visualisation OK)
-    private val mutedChannels = mutableSetOf<Int>()
+    // Canaux mutés (pas de son mais visualisation OK) : un bit par canal, lu sans verrou
+    // par les fils audio des moteurs pendant que l'interface le modifie
+    private val mutedChannels = java.util.concurrent.atomic.AtomicInteger(0)
 
     // Handler pour dispatcher sur le main thread
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -235,7 +236,7 @@ object MidiEventDispatcher {
         cachedAnalysisResult = null
 
         // Réinitialiser les canaux mutés et les volumes (nouveau fichier = réglages neufs)
-        mutedChannels.clear()
+        mutedChannels.set(0)
         for (channel in 0 until MidiLiveState.CHANNELS) {
             com.Atom2Universe.app.midi.service.MidiAudioMixer.setChannelVolume(channel, 1.0f)
         }
@@ -418,10 +419,14 @@ object MidiEventDispatcher {
      * Mute ou unmute un canal
      */
     fun setChannelMuted(channel: Int, muted: Boolean) {
-        val wasChanged = if (muted) {
-            mutedChannels.add(channel)
-        } else {
-            mutedChannels.remove(channel)
+        if (channel !in 0 until MidiLiveState.CHANNELS) return
+        val bit = 1 shl channel
+        var wasChanged = false
+        while (true) {
+            val current = mutedChannels.get()
+            val next = if (muted) current or bit else current and bit.inv()
+            wasChanged = next != current
+            if (!wasChanged || mutedChannels.compareAndSet(current, next)) break
         }
 
         if (wasChanged) {
@@ -437,7 +442,8 @@ object MidiEventDispatcher {
     /**
      * Vérifie si un canal est muté
      */
-    fun isChannelMuted(channel: Int): Boolean = mutedChannels.contains(channel)
+    fun isChannelMuted(channel: Int): Boolean =
+        channel in 0 until MidiLiveState.CHANNELS && (mutedChannels.get() and (1 shl channel)) != 0
 
     /**
      * Notifie les listeners d'un changement de volume sur un canal
@@ -455,12 +461,15 @@ object MidiEventDispatcher {
     /**
      * Récupère la liste des canaux mutés
      */
-    fun getMutedChannels(): Set<Int> = mutedChannels.toSet()
+    fun getMutedChannels(): Set<Int> {
+        val mask = mutedChannels.get()
+        return (0 until MidiLiveState.CHANNELS).filterTo(HashSet()) { (mask and (1 shl it)) != 0 }
+    }
 
     /**
      * Réinitialise tous les mutes
      */
     fun clearMutes() {
-        mutedChannels.clear()
+        mutedChannels.set(0)
     }
 }

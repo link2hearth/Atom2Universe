@@ -17,6 +17,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.MusicPlaybackHolder
+import com.Atom2Universe.app.music.equalizer.EqPresetNames
 import com.Atom2Universe.app.music.equalizer.MusicEqualizerManager
 import com.Atom2Universe.app.music.equalizer.data.EqAlbumOverride
 import com.Atom2Universe.app.music.equalizer.data.EqArtistOverride
@@ -199,13 +200,13 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
         val seekBarBass = bassView.findViewById<SeekBar>(R.id.seekBarEffect)
 
         txtBassName.text = getString(R.string.eq_bass_short)
-        txtBassValue.text = "0%"
+        txtBassValue.text = formatPercent(0)
 
         seekBarBass.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isUpdatingUI) {
                     MusicEqualizerManager.setBassBoostWithoutSave(progress)
-                    txtBassValue.text = "${progress / 10}%"
+                    txtBassValue.text = formatPercent(progress)
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -226,13 +227,13 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
         val seekBarVirt = virtualizerViewLayout.findViewById<SeekBar>(R.id.seekBarEffect)
 
         txtVirtName.text = getString(R.string.eq_virtual_short)
-        txtVirtValue.text = "0%"
+        txtVirtValue.text = formatPercent(0)
 
         seekBarVirt.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isUpdatingUI) {
                     MusicEqualizerManager.setVirtualizerWithoutSave(progress)
-                    txtVirtValue.text = "${progress / 10}%"
+                    txtVirtValue.text = formatPercent(progress)
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -340,7 +341,9 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
 
         quickPresetNames.forEach { name ->
             val chip = Chip(requireContext()).apply {
-                text = name
+                // Le nom traduit s'affiche, la clé en base reste dans le tag
+                text = EqPresetNames.displayName(requireContext(), name, isSystemPreset = true)
+                tag = name
                 isCheckable = true
             }
             chipGroupQuickPresets.addView(chip)
@@ -352,7 +355,7 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
             android.util.Log.d(TAG, "chipGroupQuickPresets: checkedIds=$checkedIds, isUpdatingUI=$isUpdatingUI, isInitialized=$isInitialized, presetsSize=${presets.size}")
             if (!isUpdatingUI && isInitialized && checkedIds.isNotEmpty()) {
                 val selectedChip = group.findViewById<Chip>(checkedIds.first())
-                val presetName = selectedChip?.text?.toString() ?: return@setOnCheckedStateChangeListener
+                val presetName = selectedChip?.tag as? String ?: return@setOnCheckedStateChangeListener
                 android.util.Log.d(TAG, "Quick preset chip selected: '$presetName'")
 
                 viewLifecycleOwner.lifecycleScope.launch {
@@ -404,7 +407,7 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
 
                 // Update spinner
                 presetAdapter?.clear()
-                presetAdapter?.addAll(loadedPresets.map { it.name })
+                presetAdapter?.addAll(loadedPresets.map { EqPresetNames.displayName(requireContext(), it) })
                 presetAdapter?.notifyDataSetChanged()
 
                 // Select current preset in spinner
@@ -441,13 +444,13 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
         // Update bass boost
         bassBoostView?.let { holder ->
             holder.seekBar.progress = bassBoost
-            holder.txtValue.text = "${bassBoost / 10}%"
+            holder.txtValue.text = formatPercent(bassBoost)
         }
 
         // Update virtualizer
         virtualizerView?.let { holder ->
             holder.seekBar.progress = virtualizer
-            holder.txtValue.text = "${virtualizer / 10}%"
+            holder.txtValue.text = formatPercent(virtualizer)
         }
     }
 
@@ -607,13 +610,13 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
         // Update bass boost
         bassBoostView?.let { holder ->
             holder.seekBar.progress = preset.bassBoostStrength
-            holder.txtValue.text = "${preset.bassBoostStrength / 10}%"
+            holder.txtValue.text = formatPercent(preset.bassBoostStrength)
         }
 
         // Update virtualizer
         virtualizerView?.let { holder ->
             holder.seekBar.progress = preset.virtualizerStrength
-            holder.txtValue.text = "${preset.virtualizerStrength / 10}%"
+            holder.txtValue.text = formatPercent(preset.virtualizerStrength)
         }
     }
 
@@ -654,11 +657,12 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
     }
 
     private fun updateOverrideInfo(resolved: ResolvedPreset) {
+        val presetName = EqPresetNames.displayName(requireContext(), resolved.preset)
         val sourceText = when (resolved.source) {
-            OverrideSource.TRACK -> getString(R.string.eq_override_track, resolved.preset.name)
-            OverrideSource.ALBUM -> getString(R.string.eq_override_album, resolved.preset.name)
-            OverrideSource.ARTIST -> getString(R.string.eq_override_artist, resolved.preset.name)
-            OverrideSource.GLOBAL -> getString(R.string.eq_override_global, resolved.preset.name)
+            OverrideSource.TRACK -> getString(R.string.eq_override_track, presetName)
+            OverrideSource.ALBUM -> getString(R.string.eq_override_album, presetName)
+            OverrideSource.ARTIST -> getString(R.string.eq_override_artist, presetName)
+            OverrideSource.GLOBAL -> getString(R.string.eq_override_global, presetName)
         }
 
         txtOverrideInfo.text = sourceText
@@ -677,7 +681,7 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
 
         for (i in 0 until chipGroupQuickPresets.childCount) {
             val chip = chipGroupQuickPresets.getChildAt(i) as? Chip
-            chip?.isChecked = chip?.text == currentPresetName
+            chip?.isChecked = chip?.tag == currentPresetName
         }
     }
 
@@ -762,7 +766,7 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
     private fun showDeletePresetDialog(preset: EqPreset) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.eq_delete_preset)
-            .setMessage(getString(R.string.eq_delete_confirm, preset.name))
+            .setMessage(getString(R.string.eq_delete_confirm, EqPresetNames.displayName(requireContext(), preset)))
             .setPositiveButton(R.string.delete) { _, _ ->
                 deletePreset(preset)
             }
@@ -782,6 +786,10 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
             }
         }
     }
+
+    /** Force d'un effet (0-1000) en pourcentage. */
+    private fun formatPercent(strength: Int): String =
+        getString(R.string.music_eq_percent, strength / 10)
 
     private fun formatDb(millibels: Int): String {
         val db = millibels / 100f

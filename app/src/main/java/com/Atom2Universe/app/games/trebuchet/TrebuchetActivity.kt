@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.trebuchet
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
@@ -140,6 +141,13 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // Les entrées du menu des réglages.
         const val ID_GHOSTS = 3
         const val ID_SOUND = 4
+
+        /**
+         * Combien de temps l'écran reste allumé sans qu'on le touche. Un tir dure
+         * quelques secondes : au-delà de cinq minutes sans un doigt, personne ne
+         * regarde, et c'est au système de l'éteindre comme ailleurs.
+         */
+        const val SCREEN_AWAKE_MS = 5 * 60_000L
     }
 
     private lateinit var gameView: TrebuchetView
@@ -179,14 +187,21 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private var loading = false
 
     /**
-     * Vrai quand le site actuellement posé a déjà payé sa récompense.
+     * Le site posé qui a déjà payé sa récompense — **ce site-là**, l'objet, et pas sa
+     * graine.
      *
      * Il ne s'écrit pas dans les préférences, et c'est tout son sens : ce qu'on empêche
      * n'est pas de rejouer un site — recommencer d'un site intact est le même travail et
      * mérite le même salaire — mais de continuer à tirer sur des ruines déjà rasées pour
-     * encaisser deux fois.
+     * encaisser deux fois. Chaque fabrication rend un objet neuf : changer de site, par
+     * l'une ou l'autre machine, rouvre donc la paie sans qu'on ait à y penser.
      */
-    private var sitePaye = false
+    private var sitePaye: TargetLevel? = null
+
+    /** Rallume l'écran gardé à chaque toucher, et le rend au système après [SCREEN_AWAKE_MS]. */
+    private val releaseScreen = Runnable {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
 
     /** Le numéro de la dernière fabrication demandée : voir [loadLevel]. */
     private var loadToken = 0
@@ -208,7 +223,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trebuchet)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         best = prefs.getFloat(KEY_BEST, 0f)
@@ -313,6 +327,24 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     override fun onResume() {
         super.onResume()
         if (machineMode == MachineMode.TREBUCHET) gameView.resume() else gearView.resume()
+        keepScreenAwake()
+    }
+
+    /**
+     * Chaque toucher, où qu'il tombe — la scène, les roulettes, les boutons — garde
+     * l'écran allumé et rend sa pleine cadence au trébuchet.
+     */
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) keepScreenAwake()
+        gameView.noteTouch()
+        return super.dispatchTouchEvent(ev)
+    }
+
+    /** L'écran reste allumé [SCREEN_AWAKE_MS] après le dernier toucher, pas indéfiniment. */
+    private fun keepScreenAwake() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.decorView.removeCallbacks(releaseScreen)
+        window.decorView.postDelayed(releaseScreen, SCREEN_AWAKE_MS)
     }
 
     /**
@@ -343,6 +375,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
     override fun onPause() {
         super.onPause()
+        window.decorView.removeCallbacks(releaseScreen)
         gameView.pause()
         gearView.pause()
         saveWorkshop()
@@ -377,10 +410,19 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      */
     private fun loadLevel(seed: Long) {
         retenirGraine(seed)
-        sitePaye = false
         gameView.clearSelection()
-        // Le jeton écarte les sites périmés : un joueur qui enchaîne les appuis longs
-        // lance plusieurs fabrications, et seule la dernière demandée doit se poser.
+        buildSite(seed) { level -> gameView.game.applyLevel(level) }
+    }
+
+    /**
+     * Fabrique le site de [seed] en fond, puis le pose avec [pose], sous le verrou du
+     * trébuchet. Les deux machines passent par ici : voir [loadLevel].
+     *
+     * Le jeton écarte les sites périmés : un joueur qui enchaîne les appuis longs lance
+     * plusieurs fabrications, et seule la dernière demandée doit se poser — quelle que
+     * soit la machine qui l'a demandée.
+     */
+    private fun buildSite(seed: Long, pose: (TargetLevel) -> Unit) {
         val token = ++loadToken
         loading = true
         updateUi()
@@ -388,8 +430,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             val level = withContext(Dispatchers.Default) { TargetGenerator.generate(seed) }
             if (token != loadToken) return@launch
             loading = false
-            synchronized(gameView.game) { gameView.game.applyLevel(level) }
-            gameView.syncPhase()
+            synchronized(gameView.game) { pose(level) }
             updateUi()
         }
     }
@@ -420,11 +461,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // qu'il a une progression, l'atelier tire au hasard parce qu'il n'en a pas — mais
         // les deux posent le même village.
         retenirGraine(seed)
-        // Sous le même verrou que partout : poser un site remonte la machine active, donc
-        // change la liste des corps du monde que les deux machines se partagent.
-        synchronized(gameView.game) { gearView.loadSite(seed) }
         gearEditor.closeTime()
-        updateUi()
+        // En fond, comme au trébuchet : la fabrication figeait l'écran. La pose se fait
+        // sous le même verrou que partout, parce qu'elle remonte la machine active, donc
+        // change la liste des corps du monde que les deux machines se partagent.
+        buildSite(seed) { level -> gearView.applySite(level) }
         toast(getString(R.string.trebuchet_gear_site_new, seed))
     }
 
@@ -755,7 +796,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun loadMachine(cfg: MachineConfig, name: String) {
         gameView.clearSelection()
         synchronized(gameView.game) { gameView.game.loadConfig(cfg) }
-        gameView.syncPhase()
         updateUi()
         toast(getString(R.string.trebuchet_machine_loaded, name))
     }
@@ -908,19 +948,18 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             TrebuchetGame.Phase.BUILD -> {
                 synchronized(game) { game.release() }
                 gameView.playLaunch()
-                gameView.syncPhase()
             }
             TrebuchetGame.Phase.FLIGHT -> {
+                // Le tir arrêté est un tir fini : la vue le voit au compteur de tirs et le
+                // signale comme les autres — portée, record, et paie si le site est rasé.
                 synchronized(game) { game.stopShot() }
                 // La caméra se fige avant que la vue n'ait vu le changement de phase :
                 // sans ça, elle reculerait d'elle-même pour montrer l'arc du tir qu'on
                 // vient justement d'interrompre.
                 gameView.freezeCamera()
-                gameView.syncPhase()
             }
             TrebuchetGame.Phase.RESULT -> {
                 synchronized(game) { game.rebuild() }
-                gameView.syncPhase()
             }
         }
         updateUi()
@@ -934,7 +973,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             best = game.shotDistance
             prefs.edit { putFloat(KEY_BEST, best) }
         }
-        payerLeSite(game)
+        updateUi()
+    }
+
+    override fun onSiteCleared(level: TargetLevel, hits: Int) {
+        payerLeSite(level, hits)
         updateUi()
     }
 
@@ -944,23 +987,25 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      * **Une fois par site posé, et non une fois par graine.** Ce qui se paie est le
      * travail : partir d'un site intact et le mettre à terre. Y revenir plus tard et
      * recommencer le paie donc de nouveau — c'est le même travail — alors que continuer
-     * de tirer sur des ruines déjà rasées ne paie rien. Le verrou est [sitePaye], remis
-     * à zéro quand un site se charge.
+     * de tirer sur des ruines déjà rasées ne paie rien. Le verrou est [sitePaye].
+     *
+     * **Seul le trébuchet paie.** La vue ne signale que les sites rasés pendant qu'elle
+     * tournait : un site abattu à l'atelier, qui ne paie pas, ne se fait pas payer en
+     * revenant au trébuchet. Voir [TrebuchetView.Listener.onSiteCleared].
      *
      * Le montant ne dépend pas du nombre de tirs : il dépend de ce que le site oppose,
      * et le calcul vit dans [NeutrinoRewards.trebuchet] avec tous les autres barèmes du
-     * hub. Le **record**, lui, se compte en tirs qui portent — voir
-     * [TrebuchetGame.hitCount].
+     * hub. Le **record**, lui, se compte en tirs qui portent ([hits], voir
+     * [TrebuchetGame.hitCount]) ; zéro quand le site a changé avant la fin du tir.
      */
-    private fun payerLeSite(game: TrebuchetGame) {
-        val lvl = game.level ?: return
-        if (!game.targets.cleared || sitePaye) return
-        sitePaye = true
+    private fun payerLeSite(lvl: TargetLevel, hits: Int) {
+        if (sitePaye === lvl) return
+        sitePaye = lvl
 
         val cle = KEY_HITS_PREFIX + lvl.seed
         val ancien = prefs.getInt(cle, 0)
-        if (ancien == 0 || game.hitCount < ancien) {
-            prefs.edit { putInt(cle, game.hitCount) }
+        if (hits > 0 && (ancien == 0 || hits < ancien)) {
+            prefs.edit { putInt(cle, hits) }
         }
         prefs.edit { putInt(KEY_SITES_DESTROYED, prefs.getInt(KEY_SITES_DESTROYED, 0) + 1) }
 
@@ -1131,8 +1176,10 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                     else R.string.trebuchet_gear_stop
             }
         )
-        fireButton.isEnabled = true
-        fireButton.alpha = 1f
+        // Le site se bâtit en fond : on ne tire pas sur celui qui va disparaître. Même
+        // règle qu'au trébuchet.
+        fireButton.isEnabled = !loading
+        fireButton.alpha = if (loading) 0.45f else 1f
         statusText.visibility = if (selected == null) View.VISIBLE else View.GONE
         // La victoire passe devant tout le reste, et elle dit quoi faire ensuite : rien
         // ne se declenche tout seul, et un joueur qui ne sait pas comment continuer est

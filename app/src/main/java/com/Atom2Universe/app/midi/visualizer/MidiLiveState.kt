@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.midi.visualizer
 
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.AtomicIntegerArray
 
 /**
@@ -27,20 +28,30 @@ object MidiLiveState {
     private val notesVersion = AtomicInteger(0)
     private val programsVersion = AtomicInteger(0)
 
+    // Réveil de l'horloge d'images endormie (voir MidiFrameClock) : consommé au premier changement
+    private val wakeListener = AtomicReference<Runnable?>(null)
+
     fun noteOn(channel: Int, note: Int, velocity: Int) {
         if (!valid(channel, note)) return
         velocities.set(channel * NOTES + note, velocity.coerceIn(1, 127))
         notesVersion.incrementAndGet()
+        wake()
     }
 
     fun noteOff(channel: Int, note: Int) {
         if (!valid(channel, note)) return
-        if (velocities.getAndSet(channel * NOTES + note, 0) != 0) notesVersion.incrementAndGet()
+        if (velocities.getAndSet(channel * NOTES + note, 0) != 0) {
+            notesVersion.incrementAndGet()
+            wake()
+        }
     }
 
     fun setProgram(channel: Int, program: Int) {
         if (channel !in 0 until CHANNELS) return
-        if (programs.getAndSet(channel, program) != program) programsVersion.incrementAndGet()
+        if (programs.getAndSet(channel, program) != program) {
+            programsVersion.incrementAndGet()
+            wake()
+        }
     }
 
     /** Éteint toutes les notes ; les instruments restent (on est toujours dans le même fichier). */
@@ -49,7 +60,10 @@ object MidiLiveState {
         for (i in 0 until velocities.length()) {
             if (velocities.getAndSet(i, 0) != 0) changed = true
         }
-        if (changed) notesVersion.incrementAndGet()
+        if (changed) {
+            notesVersion.incrementAndGet()
+            wake()
+        }
     }
 
     /** Nouveau fichier : notes ET instruments repartent de zéro. */
@@ -57,6 +71,7 @@ object MidiLiveState {
         clearNotes()
         for (i in 0 until CHANNELS) programs.set(i, -1)
         programsVersion.incrementAndGet()
+        wake()
     }
 
     fun velocity(channel: Int, note: Int): Int =
@@ -69,6 +84,19 @@ object MidiLiveState {
     fun notesVersion(): Int = notesVersion.get()
 
     fun programsVersion(): Int = programsVersion.get()
+
+    /** Change dès que des notes ou des instruments changent. */
+    fun changeVersion(): Int = notesVersion.get() + programsVersion.get()
+
+    /** [listener] sera appelé une fois, au prochain changement, depuis le fil qui l'écrit. */
+    fun setWakeListener(listener: Runnable) = wakeListener.set(listener)
+
+    /** @return true si [listener] n'avait pas encore été consommé */
+    fun clearWakeListener(listener: Runnable): Boolean = wakeListener.compareAndSet(listener, null)
+
+    private fun wake() {
+        if (wakeListener.get() != null) wakeListener.getAndSet(null)?.run()
+    }
 
     /** Notes qui sonnent sur le canal, pour réémettre l'état vers un écouteur. */
     fun activeNotes(channel: Int): List<Int> {

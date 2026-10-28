@@ -112,4 +112,7 @@
     <string name="ae_color_auto">Auto</string>
     <string name="ae_move_up">Move up</string>
     <string name="ae_move_down">Move down</string>
+    <string name="ae_rec_orphan_title">Unsaved recording</string>
+    <string name="ae_rec_orphan_keep">Add to the project</string>
+    <string name="ae_rec_orphan_discard">Discard</string>
 </resources>

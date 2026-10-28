@@ -50,12 +50,15 @@ class SolarSystemActivity : ThemedActivity() {
     private val J2000: LocalDate = LocalDate.of(2000, 1, 1)
     private val dateHandler = Handler(Looper.getMainLooper())
     private val dateFmt: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    // Tourne seulement pendant la lecture : en pause la date ne bouge pas.
     private val dateUpdater = object : Runnable {
         override fun run() {
             updateDateLabel()
             dateHandler.postDelayed(this, 500)
         }
     }
+    private var shownDate: LocalDate? = null
+    private var resumed = false
 
     private var selectedPlanetIdx = -2  // -2=rien, -1=Soleil, 0..7=planète
 
@@ -66,7 +69,8 @@ class SolarSystemActivity : ThemedActivity() {
     ) { result ->
         val days = result.data?.getDoubleExtra(EarthMoonActivity.EXTRA_ELAPSED_DAYS, Double.NaN) ?: Double.NaN
         if (!days.isNaN()) {
-            glView.renderer.elapsedSimDays = days
+            glView.renderer.setSimDays(days)
+            glView.requestFrame()
             updateDateLabel()
         }
     }
@@ -86,7 +90,7 @@ class SolarSystemActivity : ThemedActivity() {
         /** Libellé traduit d'un cran de [SPEED_STEPS] (« +1 j/s », « −1 mois/s »…). */
         fun stepLabel(context: android.content.Context, step: Int): String {
             val speed = SPEED_STEPS[step]
-            if (speed == 0.0) return "⏸"
+            if (speed == 0.0) return context.getString(R.string.solar_step_pause)
             val sign = if (speed > 0) "+" else "−"
             val days = kotlin.math.abs(speed)
             return when {
@@ -298,7 +302,7 @@ class SolarSystemActivity : ThemedActivity() {
         root.addView(bottomPanel, bottomParams)
 
         setContentView(root)
-        glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, LocalDate.now()).toDouble()
+        glView.renderer.setSimDays(ChronoUnit.DAYS.between(J2000, LocalDate.now()).toDouble())
         glView.renderer.speedDaysPerSec = SPEED_STEPS[DEFAULT_STEP]
         updateSpeedLabel(DEFAULT_STEP)
         updateModeButtons()
@@ -341,6 +345,7 @@ class SolarSystemActivity : ThemedActivity() {
         glView.renderer.focusPlanetIdx = idx
         glView.renderer.panX = 0f; glView.renderer.panY = 0f
         glView.renderer.cameraDistance = glView.renderer.recommendedDistance(idx)
+        glView.requestFrame()
         updateBodySelectorLabel(idx)
     }
 
@@ -376,6 +381,7 @@ class SolarSystemActivity : ThemedActivity() {
             ProportionMode.REALISTIC   -> 220f
         }
         glView.renderer.cameraDistance = targetDist
+        glView.requestFrame()
         updateModeButtons()
     }
 
@@ -387,9 +393,9 @@ class SolarSystemActivity : ThemedActivity() {
             // (25,4 j correspond à la latitude 16°).
             tvPlanetName.text = getString(R.string.solar_sun_name)
             tvPlanetRadius.text = getString(R.string.solar_info_km, SolarSystemData.SUN_RADIUS_KM * 2.0)
-            tvPlanetOrbit.text = "—"
+            tvPlanetOrbit.text = getString(R.string.solar_info_none)
             tvPlanetPeriod.text = getString(R.string.solar_sun_rotation, 25.05)
-            tvPlanetMoons.text = "—"
+            tvPlanetMoons.text = getString(R.string.solar_info_none)
             tvPlanetTilt.text = getString(R.string.solar_info_degrees, 7.25)
         } else if (idx in 0..7) {
             val p = SolarSystemData.planets[idx]
@@ -412,14 +418,18 @@ class SolarSystemActivity : ThemedActivity() {
     private fun currentSimDate(): LocalDate = simDate(J2000, glView.renderer.elapsedSimDays)
 
     private fun updateDateLabel() {
-        tvDate.text = "📅  ${currentSimDate().format(dateFmt)}"
+        val date = currentSimDate()
+        if (date == shownDate) return
+        shownDate = date
+        tvDate.text = getString(R.string.solar_date_label, date.format(dateFmt))
     }
 
     private fun showDatePicker() {
         val d = currentSimDate()
         DatePickerDialog(this, { _, year, month, day ->
             val picked = LocalDate.of(year, month + 1, day)
-            glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, picked).toDouble()
+            glView.renderer.setSimDays(ChronoUnit.DAYS.between(J2000, picked).toDouble())
+            glView.requestFrame()
             updateDateLabel()
         }, d.year, d.monthValue - 1, d.dayOfMonth).show()
     }
@@ -428,8 +438,16 @@ class SolarSystemActivity : ThemedActivity() {
         val speed = SPEED_STEPS[p]
         glView.renderer.speedDaysPerSec = speed
         glView.renderer.paused = (speed == 0.0)
+        glView.requestFrame()
         btnPlayPause.setImageResource(if (speed == 0.0) R.drawable.ic_play else R.drawable.ic_pause)
         updateSpeedLabel(p)
+        syncDateUpdater()
+    }
+
+    private fun syncDateUpdater() {
+        dateHandler.removeCallbacks(dateUpdater)
+        updateDateLabel()
+        if (resumed && !glView.renderer.paused) dateHandler.postDelayed(dateUpdater, 500)
     }
 
     private fun updateSpeedLabel(p: Int) {
@@ -484,12 +502,14 @@ class SolarSystemActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         glView.onResume()
-        dateHandler.post(dateUpdater)
+        resumed = true
+        syncDateUpdater()
     }
 
     override fun onPause() {
         super.onPause()
         glView.onPause()
+        resumed = false
         dateHandler.removeCallbacks(dateUpdater)
     }
 }

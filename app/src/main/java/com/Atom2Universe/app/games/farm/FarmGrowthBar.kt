@@ -21,6 +21,8 @@ internal object FarmGrowthBar {
     private val cream = Color.rgb(255, 242, 199)
     private val normal = Color.rgb(95, 201, 222)
     private val ripeOutline = Color.rgb(118, 66, 176)
+    /** Reused for the two symbols: this is drawn for every growing cell on every frame. */
+    private val iconRect = RectF()
 
     /**
      * The ripe shimmer: a violet glint sliding along the bar, over the colour it grew in. One
@@ -100,7 +102,7 @@ internal object FarmGrowthBar {
             }
         }
         // Symbols sit on the ends of the bar, below the foliage, and do not rotate or pulse.
-        if (rich) canvas.drawBitmap(leaf, null, RectF(left - 3f, top - 2f, left + 5f, top + 7f), paint)
-        if (critical) canvas.drawBitmap(star, null, RectF(right - 7f, top - 3f, right + 4f, top + 8f), paint)
+        if (rich) { iconRect.set(left - 3f, top - 2f, left + 5f, top + 7f); canvas.drawBitmap(leaf, null, iconRect, paint) }
+        if (critical) { iconRect.set(right - 7f, top - 3f, right + 4f, top + 8f); canvas.drawBitmap(star, null, iconRect, paint) }
     }
 }

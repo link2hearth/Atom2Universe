@@ -38,25 +38,38 @@ class PhysWorld {
      * niveau doit être reproductible à partir de sa graine. Une table à ordre d'insertion
      * range les contacts dans l'ordre où la détection les a trouvés, qui ne dépend que
      * de l'ordre des corps dans le monde.
+     *
+     * C'est une liste rangée dans l'ordre d'insertion, doublée d'une table de clés qui
+     * ne range que des indices : le comportement d'une `LinkedHashMap` (un contact
+     * retrouvé garde sa place, un nouveau va au bout, un retrait ne dérange pas les
+     * autres), sans la clé emballée dans un objet à chaque consultation ni l'itérateur
+     * à chaque parcours. Le solveur la parcourt par indice, vingt-deux fois par pas.
      */
-    private val arbiters = LinkedHashMap<Long, Arbiter>()
+    private val arbiters = ArrayList<Arbiter>()
+    private val arbiterIndex = LongIndexTable()
     private val fresh = Array(2) { Contact() }
-    private val doomed = ArrayList<Long>()
 
     /**
-     * Les contacts à résoudre, remis à plat dans l'ordre de la table.
-     *
-     * Le solveur parcourt la liste des contacts vingt-deux fois par pas — seize
-     * passes de vitesses, six de positions, plus les mesures. Le faire sur la table
-     * elle-même fabriquait vingt-deux itérateurs par pas, donc sept cents par image
-     * de vol : rien de dramatique, mais c'est du travail pour le ramasse-miettes au
-     * pire moment. Un tableau parcouru par indice n'alloue rien, et l'ordre reste
-     * exactement celui de la table.
+     * Les couples de corps qu'une liaison empêche de se toucher, refaits à chaque pas.
+     * Les chercher dans la liste des liaisons pour chaque paire proche coûtait paires ×
+     * liaisons ; ici c'est une consultation.
      */
-    private val active = ArrayList<Arbiter>()
+    private val jointPairs = LongIndexTable()
+
+    /**
+     * Durée du sous-pas précédent, en secondes, 0 avant le premier.
+     *
+     * Une impulsion mémorisée vaut une force multipliée par **la durée du pas où elle a
+     * été trouvée**. La rendre telle quelle dans un pas cent fois plus court revient à
+     * appliquer cent fois la force : c'est le `dtRatio` de Box2D, voir [stepInternal].
+     */
+    private var lastDt = 0f
 
     /** Les liaisons à résoudre : celles dont au moins un corps est éveillé. */
     private val activeJoints = ArrayList<Joint>()
+
+    /** Les liaisons décrochées, ou dont un corps a quitté la simulation : voir [selectJoints]. */
+    private val idleJoints = ArrayList<Joint>()
 
     /**
      * Les couples de corps qui se touchent, suivis d'un pas à l'autre.
@@ -72,11 +85,11 @@ class PhysWorld {
      * L'ordre d'insertion est gardé pour la même raison que celui des contacts : les
      * événements doivent tomber dans le même ordre à chaque relecture d'une graine.
      */
-    private val touches = LinkedHashMap<Long, Touch>()
-    private val doomedTouches = ArrayList<Long>()
+    private val touches = ArrayList<Touch>()
+    private val touchIndex = LongIndexTable()
 
     /** Un couple de corps qui se touchent, et la date de la dernière fois qu'on l'a vu. */
-    private class Touch(val a: PhysBody, val b: PhysBody, val sensor: Boolean) {
+    private class Touch(val key: Long, val a: PhysBody, val b: PhysBody, val sensor: Boolean) {
         var stamp = 0
     }
 
@@ -275,9 +288,33 @@ class PhysWorld {
      * normalement au pas suivant, puisqu'elle aura bien lieu.
      */
     private fun forgetTouches(body: PhysBody) {
-        doomedTouches.clear()
-        for ((k, t) in touches) if (t.a === body || t.b === body) doomedTouches.add(k)
-        for (k in doomedTouches) touches.remove(k)
+        dropTouches { it.a === body || it.b === body }
+    }
+
+    /** Retire les contacts désignés par [drop], sans déranger l'ordre des autres. */
+    private inline fun dropArbiters(drop: (Arbiter) -> Boolean) {
+        var w = 0
+        for (r in arbiters.indices) {
+            val arb = arbiters[r]
+            if (!drop(arb)) arbiters[w++] = arb
+        }
+        if (w == arbiters.size) return
+        while (arbiters.size > w) arbiters.removeAt(arbiters.size - 1)
+        arbiterIndex.clear()
+        for (i in arbiters.indices) arbiterIndex.put(arbiters[i].key, i)
+    }
+
+    /** Même chose pour les couples suivis, dans leur ordre. */
+    private inline fun dropTouches(drop: (Touch) -> Boolean) {
+        var w = 0
+        for (r in touches.indices) {
+            val t = touches[r]
+            if (!drop(t)) touches[w++] = t
+        }
+        if (w == touches.size) return
+        while (touches.size > w) touches.removeAt(touches.size - 1)
+        touchIndex.clear()
+        for (i in touches.indices) touchIndex.put(touches[i].key, i)
     }
 
     /**
@@ -296,12 +333,14 @@ class PhysWorld {
      * lorsqu'il casse.
      */
     private fun wakeNeighbours(body: PhysBody) {
-        for (arb in arbiters.values) {
+        for (i in arbiters.indices) {
+            val arb = arbiters[i]
             if (arb.a === body) arb.b.wake() else if (arb.b === body) arb.a.wake()
         }
         body.updateAabb()
         val marge = 0.05f
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.sleeping) continue
             if (bd.aabbMinX > body.aabbMaxX + marge || bd.aabbMaxX < body.aabbMinX - marge) continue
             if (bd.aabbMinY > body.aabbMaxY + marge || bd.aabbMaxY < body.aabbMinY - marge) continue
@@ -311,7 +350,7 @@ class PhysWorld {
 
     /** Réveille tout le monde : à faire quand le jeu rebâtit sa scène. */
     fun wakeAll() {
-        for (bd in bodies) bd.wake()
+        for (i in bodies.indices) bodies[i].wake()
     }
 
     fun addJoint(joint: Joint) {
@@ -326,13 +365,14 @@ class PhysWorld {
         bodies.clear()
         joints.clear()
         arbiters.clear()
-        active.clear()
+        arbiterIndex.clear()
         activeJoints.clear()
         // Les couples et les événements parlent de corps qui viennent de disparaître.
         // La réserve, elle, survit au vidage : on lui retire donc ses références à la
         // main, sinon un niveau abandonné resterait accroché par ses derniers contacts
         // jusqu'à ce que le niveau suivant réemploie les objets un par un.
         touches.clear()
+        touchIndex.clear()
         events.clear()
         for (e in eventPool) e.set(null, null)
     }
@@ -363,30 +403,19 @@ class PhysWorld {
         }
         // Les contacts mémorisés d'un corps parti n'ont plus de sens, et les listes de
         // travail se refont à chaque image de toute façon.
-        doomed.clear()
-        for ((k, arb) in arbiters) {
-            if (arb.a.owner === owner || arb.b.owner === owner) doomed.add(k)
-        }
-        for (k in doomed) arbiters.remove(k)
-        doomedTouches.clear()
-        for ((k, t) in touches) {
-            if (t.a.owner === owner || t.b.owner === owner) doomedTouches.add(k)
-        }
-        for (k in doomedTouches) touches.remove(k)
-        active.clear()
+        dropArbiters { it.a.owner === owner || it.b.owner === owner }
+        dropTouches { it.a.owner === owner || it.b.owner === owner }
         activeJoints.clear()
     }
 
     /** Oublie les contacts mémorisés d'un corps (à faire quand on le téléporte). */
     fun forgetContacts(body: PhysBody) {
-        doomed.clear()
-        for ((k, arb) in arbiters) if (arb.a === body || arb.b === body) doomed.add(k)
-        for (k in doomed) arbiters.remove(k)
+        dropArbiters { it.a === body || it.b === body }
     }
 
     /** Remet à zéro les chocs encaissés par tous les corps. */
     fun clearImpacts() {
-        for (bd in bodies) bd.impactAccum = 0f
+        for (i in bodies.indices) bodies[i].impactAccum = 0f
     }
 
     /**
@@ -414,17 +443,32 @@ class PhysWorld {
         // Les événements du pas précédent ont été lus, ou ne le seront jamais. Ceux de
         // cette image s'accumulent sur **tous** les sous-pas : c'est tout l'intérêt,
         // puisque c'est dans un sous-pas que passe la boule trop rapide pour l'image.
+        //
+        // Et ce qui reste de l'image se partage en **tranches égales**, jamais en
+        // « tranches pleines plus un reste » : à 3,0005 tranches par image, le reste
+        // durait deux microsecondes. Les impulsions mémorisées ont beau être remises à
+        // l'échelle du pas (voir [stepInternal]), un pas mille fois plus court que son
+        // voisin ne résout plus rien d'honnête, et le suivant en hérite mille fois
+        // agrandi.
         events.clear()
         var remaining = dt
         var guard = 0
-        while (remaining > 1e-6f && guard < 4 * maxSubSteps) {
-            val h = minOf(remaining, safeStep(dt))
+        while (remaining > 0f && guard < 4 * maxSubSteps) {
+            val n = slices(remaining, safeStep(dt))
+            val h = if (n == 1) remaining else remaining / n
             stepInternal(h, clearForces = false)
-            remaining -= h
+            remaining = if (n == 1) 0f else remaining - h
             guard++
         }
         clearForces()
     }
+
+    /**
+     * Nombre de tranches égales pour couvrir [span] sans dépasser [safe]. La petite
+     * tolérance évite qu'un arrondi ne fasse découper 3,000001 en quatre.
+     */
+    private fun slices(span: Float, safe: Float): Int =
+        ceil(span / safe - 1e-4f).toInt().coerceIn(1, maxSubSteps)
 
     /**
      * Marge de sécurité, en mètres, ajoutée à la portée d'un corps quand on cherche ce
@@ -572,8 +616,7 @@ class PhysWorld {
     }
 
     /** Nombre de sous-pas que [stepFrame] emploierait pour une image de [dt]. */
-    fun subStepsFor(dt: Float): Int =
-        ceil(dt / safeStep(dt)).toInt().coerceIn(1, maxSubSteps)
+    fun subStepsFor(dt: Float): Int = slices(dt, safeStep(dt))
 
     /** Simule un pas unique et consomme les forces extérieures accumulées. */
     fun step(dt: Float) {
@@ -595,7 +638,8 @@ class PhysWorld {
         selectJoints()
 
         // 1. Intégration des forces
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld) continue
             // Un couple posé de l'extérieur — le ressort d'une planche — est un ordre
             // de bouger : il réveille son corps, sans quoi il serait avalé sans effet.
@@ -636,11 +680,28 @@ class PhysWorld {
         // impulsions de l'image précédente bouscule les vitesses le temps d'un pas, et
         // un contact mesuré après elle croirait à un choc violent là où rien ne bouge.
         // Voir [Arbiter.measure].
-        for (i in active.indices) active[i].measure(impactSpeedThreshold)
-        for (i in active.indices) active[i].preStep(invDt)
-        for (i in activeJoints.indices) activeJoints[i].preStep(invDt)
+        //
+        // Les impulsions mémorisées sont remises à l'échelle du pas : celles des contacts
+        // viennent toujours du sous-pas précédent (un contact qu'on n'a pas revu est
+        // oublié), celles des liaisons du dernier pas où elles ont travaillé.
+        //
+        // Dans les deux sens, et c'est mesuré. Ne réduire que vers le bas laissait une
+        // pile de six caisses s'affaisser à 11 cm/s au pas qui suit un pas minuscule :
+        // l'impulsion rendue ne portait plus qu'une fraction du poids.
+        val dtRatio = if (lastDt > 0f) dt / lastDt else 1f
+        lastDt = dt
+        for (i in arbiters.indices) arbiters[i].measure(impactSpeedThreshold)
+        for (i in arbiters.indices) arbiters[i].preStep(invDt, dtRatio)
+        for (i in activeJoints.indices) {
+            val j = activeJoints[i]
+            val ratio = if (j.impulseDt > 0f) dt / j.impulseDt else 1f
+            j.impulseDt = dt
+            j.preStep(invDt, ratio)
+        }
+        // Rien à rendre ni à mettre à l'échelle : elles ne font que se remettre à zéro.
+        for (i in idleJoints.indices) idleJoints[i].preStep(invDt, 1f)
         repeat(iterations) {
-            for (i in active.indices) active[i].applyImpulse()
+            for (i in arbiters.indices) arbiters[i].applyImpulse()
             // Les liaisons sont résolues deux fois par passe : une chaîne de corps
             // reliés fait circuler l'effort de proche en proche, et c'est le maillon
             // le plus lent qui décide de la stabilité de l'ensemble.
@@ -649,8 +710,8 @@ class PhysWorld {
         }
 
         // 2 bis. Comptabilisation des chocs, pour les cibles qui doivent casser.
-        for (i in active.indices) {
-            val arb = active[i]
+        for (i in arbiters.indices) {
+            val arb = arbiters[i]
             if (!arb.impacting) continue
             // L'énergie du **choc seul**, sans le poids que le contact porte par
             // ailleurs : voir [Arbiter.impactEnergy].
@@ -661,17 +722,19 @@ class PhysWorld {
 
         // 2 ter. Positions : on rattrape ce qui est déjà enfoncé ou décroché, sur
         // les vitesses fantômes, qui ne donnent d'élan à personne.
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (bd.frozen) continue
             bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
         }
         repeat(positionIterations) {
-            for (i in active.indices) active[i].applyPositionImpulse(allowedPenetration)
+            for (i in arbiters.indices) arbiters[i].applyPositionImpulse(allowedPenetration)
             for (i in activeJoints.indices) activeJoints[i].applyPositionImpulse()
         }
 
         // 3. Intégration des positions + amortissement léger (aide la mise au repos)
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld || bd.sleeping) continue
             // La vitesse fantôme s'ajoute au déplacement, jamais à la vitesse.
             if (bd.invMass > 0f) {
@@ -699,7 +762,7 @@ class PhysWorld {
     }
 
     private fun clearForces() {
-        for (bd in bodies) bd.clearForces()
+        for (i in bodies.indices) bodies[i].clearForces()
     }
 
     /**
@@ -714,11 +777,21 @@ class PhysWorld {
      *
      * D'où la règle : une liaison dont les deux corps dorment ne se résout pas du
      * tout, et une liaison qui travaille réveille ses deux corps.
+     *
+     * Une liaison décrochée — la fronde qui a lâché son boulet — ou dont un corps a
+     * quitté la simulation ne tient plus rien : elle ne réveille personne. Elle passe
+     * quand même par son `preStep`, qui la remet à zéro sans toucher aux vitesses, pour
+     * que ce qu'elle affiche (tension, couple, embrayage) ne reste pas figé.
      */
     private fun selectJoints() {
         activeJoints.clear()
+        idleJoints.clear()
         for (i in joints.indices) {
             val j = joints[i]
+            if (!j.enabled || !j.a.inWorld || !j.b.inWorld) {
+                idleJoints.add(j)
+                continue
+            }
             if (j.a.frozen && j.b.frozen) continue
             if (j.a.sleeping) j.a.wake()
             if (j.b.sleeping) j.b.wake()
@@ -745,7 +818,8 @@ class PhysWorld {
      * en pas.
      */
     private fun settleToSleep(dt: Float) {
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld || bd.sleeping || bd.immovable) continue
             if (!bd.allowSleep) { bd.restTime = 0f; continue }
             if (bd.speedSq < sleepLinearTol * sleepLinearTol && abs(bd.omega) < sleepAngularTol) {
@@ -769,10 +843,16 @@ class PhysWorld {
         // bout de quelques pas, tout ce qui se touche partage la même horloge, franchit
         // le délai au même pas, et s'endort d'un bloc. Un réveil, où qu'il arrive dans
         // l'îlot, ramène tout le monde à zéro par le même chemin.
-        for (i in active.indices) shareRest(active[i].a, active[i].b)
-        for (i in joints.indices) shareRest(joints[i].a, joints[i].b)
+        for (i in arbiters.indices) shareRest(arbiters[i].a, arbiters[i].b)
+        // Une liaison qui ne tient plus rien ne lie plus les horloges : un boulet lâché
+        // par sa fronde n'a pas à attendre que la machine s'endorme.
+        for (i in joints.indices) {
+            val j = joints[i]
+            if (j.enabled && j.a.inWorld && j.b.inWorld) shareRest(j.a, j.b)
+        }
 
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld || bd.sleeping || bd.immovable) continue
             if (bd.restTime >= sleepDelay) bd.sleep()
         }
@@ -783,7 +863,8 @@ class PhysWorld {
      * tir que le coup est terminé : le boulet s'est arrêté, les débris aussi.
      */
     fun isAtRest(linearTol: Float = 0.05f, angularTol: Float = 0.08f): Boolean {
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld) continue
             if (!bd.atRest(linearTol, angularTol)) return false
         }
@@ -793,7 +874,8 @@ class PhysWorld {
     /** Vitesse du corps le plus rapide, en m/s (0 si tout dort). */
     fun fastestSpeed(): Float {
         var best = 0f
-        for (bd in bodies) {
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld || bd.invMass == 0f) continue
             val s = bd.speedSq
             if (s > best) best = s
@@ -890,6 +972,7 @@ class PhysWorld {
         // tous », qui ne dépend que de l'ordre des corps dans le monde.
         java.util.Arrays.sort(pairBuf, 0, np)
 
+        collectJointPairs()
         for (k in 0 until np) {
             val key = pairBuf[k]
             val a = bodies[(key ushr 32).toInt()]
@@ -898,23 +981,17 @@ class PhysWorld {
             narrowPhase(a, b)
         }
 
-        // Nettoyage des contacts qui n'ont pas été revus (corps écartés ou retirés)
-        doomed.clear()
-        for ((k, arb) in arbiters) if (arb.stamp != stamp) doomed.add(k)
-        for (k in doomed) arbiters.remove(k)
+        // Nettoyage des contacts qui n'ont pas été revus (corps écartés ou retirés).
+        // Le solveur travaillera sur ce qui reste, dans l'ordre de la liste.
+        dropArbiters { it.stamp != stamp }
 
         // Même chose pour les couples suivis, mais eux le disent en partant : un couple
         // qu'on ne revoit pas est un contact qui s'est défait.
-        doomedTouches.clear()
-        for ((k, t) in touches) if (t.stamp != stamp) doomedTouches.add(k)
-        for (k in doomedTouches) {
-            val t = touches.remove(k) ?: continue
-            pushEvent(t.a, t.b, begin = false, sensor = t.sensor)
+        dropTouches { t ->
+            val gone = t.stamp != stamp
+            if (gone) pushEvent(t.a, t.b, begin = false, sensor = t.sensor)
+            gone
         }
-
-        // Le solveur travaillera sur cette liste, dans l'ordre de la table.
-        active.clear()
-        for (arb in arbiters.values) active.add(arb)
     }
 
     /** Contacts entre deux corps proches, forme par forme. */
@@ -943,7 +1020,15 @@ class PhysWorld {
                 val n = Collider.collide(a, pa, b, pb, fresh)
                 if (n <= 0) continue
                 touching = true
-                val arb = arbiters.getOrPut(pairKey(a, pa, b, pb)) { Arbiter(a, b, pa, pb) }
+                val key = pairKey(a, pa, b, pb)
+                val idx = arbiterIndex.get(key)
+                val arb = if (idx >= 0) arbiters[idx] else {
+                    Arbiter(a, b, pa, pb).also {
+                        it.key = key
+                        arbiterIndex.put(key, arbiters.size)
+                        arbiters.add(it)
+                    }
+                }
                 arb.update(fresh, n, Collider.normalX, Collider.normalY)
                 arb.stamp = stamp
                 // Un contact avéré avec un corps éveillé réveille le dormeur : c'est
@@ -968,12 +1053,13 @@ class PhysWorld {
      */
     private fun markTouching(a: PhysBody, b: PhysBody, sensor: Boolean) {
         val key = touchKey(a, b)
-        val known = touches[key]
-        if (known != null) {
-            known.stamp = stamp
+        val idx = touchIndex.get(key)
+        if (idx >= 0) {
+            touches[idx].stamp = stamp
             return
         }
-        touches[key] = Touch(a, b, sensor).also { it.stamp = stamp }
+        touchIndex.put(key, touches.size)
+        touches.add(Touch(key, a, b, sensor).also { it.stamp = stamp })
         pushEvent(a, b, begin = true, sensor = sensor)
     }
 
@@ -1014,17 +1100,22 @@ class PhysWorld {
         return k.toLong() and 0xFFFFFFFFL
     }
 
-    /** Vrai si une liaison relie déjà ces deux corps et interdit leur collision. */
-    private fun connectedByJoint(a: PhysBody, b: PhysBody): Boolean {
-        for (j in joints) {
+    /** Range les couples que les liaisons empêchent de se toucher, pour ce pas-ci. */
+    private fun collectJointPairs() {
+        jointPairs.clear()
+        for (i in joints.indices) {
+            val j = joints[i]
             // Une liaison décrochée n'existe plus physiquement : elle ne doit pas
             // rendre ses anciennes pièces fantômes l'une pour l'autre.
             if (!j.enabled) continue
             if (j.collideConnected) continue
-            if ((j.a === a && j.b === b) || (j.a === b && j.b === a)) return true
+            jointPairs.put(touchKey(j.a, j.b), 0)
         }
-        return false
     }
+
+    /** Vrai si une liaison relie déjà ces deux corps et interdit leur collision. */
+    private fun connectedByJoint(a: PhysBody, b: PhysBody): Boolean =
+        jointPairs.size > 0 && jointPairs.get(touchKey(a, b)) >= 0
 
     /**
      * Clé d'un contact : le couple de corps **et** le couple de formes touchées.

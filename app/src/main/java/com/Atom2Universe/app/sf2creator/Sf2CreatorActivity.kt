@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioThemedActivity
+import com.Atom2Universe.app.sf2creator.audio.SampleRecorder
 import com.Atom2Universe.app.sf2creator.data.PitchResult
 import com.Atom2Universe.app.sf2creator.data.Sf2ProjectRepository
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SampleEntity
@@ -201,7 +202,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             ) ?: ExportFragment.SampleParams(
                 name = "Sample",
                 samples = editedSamples,
-                sampleRate = 44100,
+                sampleRate = SampleRecorder.SAMPLE_RATE,
                 rootNote = selectedPitch,
                 keyRangeStart = selectedPitch,
                 keyRangeEnd = selectedPitch,
@@ -248,7 +249,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         }
 
         // Set sample data after fragment is attached (this triggers processAndDisplay)
-        fragment.setSampleData(samples, selectedPitch)
+        fragment.setSampleData(samples, selectedPitch, SampleRecorder.SAMPLE_RATE, cleanUp = true)
     }
 
     private fun showExportStep() {
@@ -263,7 +264,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         }
 
         val fragment = ExportFragment.newInstance()
-        fragment.setSampleData(file, samples, selectedPitch)
+        fragment.setSampleData(file, samples, selectedPitch, SampleRecorder.SAMPLE_RATE)
 
         // Restore ALL saved parameters if available (coming back from Edit page)
         savedExportParams?.let { params ->
@@ -281,7 +282,8 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                         com.Atom2Universe.app.sf2creator.data.SampleData.midiNoteToFrequency(selectedPitch),
                         1.0f
                     ),
-                    samples = s
+                    samples = s,
+                    sampleRate = SampleRecorder.SAMPLE_RATE
                 ) { selectedNote ->
                     selectedPitch = selectedNote
                     exportFragment?.updateRootNote(selectedNote)
@@ -329,6 +331,10 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             )
             Toast.makeText(this@Sf2CreatorActivity, R.string.sf2_sample_added, Toast.LENGTH_SHORT).show()
             savedExportParams = null
+            // The project keeps its own copy: the take in the cache is no longer needed
+            recordedFile?.let { file -> withContext(Dispatchers.IO) { file.delete() } }
+            recordedFile = null
+            recordedSamples = null
             backToProject()
         }
     }
@@ -650,8 +656,8 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         replaceFragment(fragment)
         updateUI()
 
-        // Set sample data after fragment is attached
-        fragment.setSampleData(audioData, sample.rootNote)
+        // Set sample data after fragment is attached: an existing sample is edited as it is
+        fragment.setSampleData(audioData, sample.rootNote, sample.sampleRate, cleanUp = false)
 
         // Restore loop points and ADSR preset from sample
         // Convert SF2 native units (timecents, centibels) to UI units (ms, %)
@@ -675,7 +681,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         val fragment = ExportFragment.newInstance()
 
         // Set sample data (audio + root note)
-        fragment.setSampleData(null, editedAudio, sample.rootNote)
+        fragment.setSampleData(null, editedAudio, sample.rootNote, sample.sampleRate)
         fragment.setLoopPoints(sample.loopStart, sample.loopEnd, sample.hasLoop)
 
         fragment.onChangeNote = {
@@ -686,7 +692,8 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                     com.Atom2Universe.app.sf2creator.data.SampleData.midiNoteToFrequency(sample.rootNote),
                     1.0f
                 ),
-                samples = editedAudio
+                samples = editedAudio,
+                sampleRate = sample.sampleRate
             ) { selectedNote ->
                 // Update root note (but key range stays the same unless user changes it)
                 editingSampleEntity = editingSampleEntity?.copy(rootNote = selectedNote)

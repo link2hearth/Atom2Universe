@@ -46,6 +46,9 @@ object RandomGolfGenerator {
 
     fun holes(spec: RandomGolfSpec): List<ClassicHole> = (1..spec.holeCount).map { hole(spec, it) }
 
+    /** Par of the whole course, from the seed alone: no hole is built. */
+    fun parOf(spec: RandomGolfSpec): Int = (1..spec.holeCount).sumOf { parOf(spec, it) }
+
     fun parOf(spec: RandomGolfSpec, number: Int): Int {
         val roll = rng(spec, number, 0).nextInt(100)
         return if (roll < 22) 3 else if (roll < 76) 4 else 5
@@ -57,7 +60,8 @@ object RandomGolfGenerator {
     private fun rng(spec: RandomGolfSpec, number: Int, salt: Int) =
         Random(spec.seed * 1_000_003L + number * 7_919L + salt * 104_729L + 17L)
 
-    private fun hole(spec: RandomGolfSpec, number: Int): ClassicHole {
+    /** Hole [number] (from 1) of the course: the same as in [holes], built on its own. */
+    fun hole(spec: RandomGolfSpec, number: Int): ClassicHole {
         val par = parOf(spec, number)
         val theme = themeOf(spec, number)
         var last: ClassicHole? = null

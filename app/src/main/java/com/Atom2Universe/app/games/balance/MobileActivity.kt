@@ -2,6 +2,9 @@ package com.Atom2Universe.app.games.balance
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
@@ -28,6 +31,9 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         const val KEY_DIFFICULTY = "difficulty"
         const val KEY_BEST_LEVEL = "best_level_"
         const val KEY_LEVEL = "level_"
+
+        /** Combien de temps l'écran reste allumé après le dernier geste, en ms. */
+        const val ECRAN_ALLUME_MS = 120_000L
     }
 
     /** Le niveau où reprendre une difficulté. */
@@ -46,7 +52,6 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mobile)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -84,12 +89,43 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         super.onResume()
         sfx.start()
         gameView.resume()
+        majEcran()
     }
 
     override fun onPause() {
         super.onPause()
+        main.removeCallbacks(relacherEcran)
         gameView.pause()
         sfx.release()
+    }
+
+    // ── Écran allumé ──────────────────────────────────────────────────────────
+
+    private val main = Handler(Looper.getMainLooper())
+    private val relacherEcran = Runnable {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val pris = super.dispatchTouchEvent(ev)
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN || ev.actionMasked == MotionEvent.ACTION_UP) majEcran()
+        return pris
+    }
+
+    /**
+     * L'écran reste allumé pendant qu'on cherche, mais seulement [ECRAN_ALLUME_MS] après le
+     * dernier geste, et jamais devant un mobile achevé : un niveau laissé en plan ne doit pas le
+     * garder allumé jusqu'à ce que la batterie lâche. Chaque geste relance le délai.
+     */
+    private fun majEcran() {
+        main.removeCallbacks(relacherEcran)
+        val allume = (window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0
+        if (gameView.game.gagne) {
+            if (allume) window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            return
+        }
+        if (!allume) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        main.postDelayed(relacherEcran, ECRAN_ALLUME_MS)
     }
 
     private fun setupSpinner(selected: Int) {
@@ -160,5 +196,6 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         } else {
             getString(R.string.balance_btn_new)
         }
+        majEcran()
     }
 }

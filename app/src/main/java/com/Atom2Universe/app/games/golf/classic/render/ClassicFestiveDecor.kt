@@ -97,34 +97,43 @@ internal class ClassicFestiveDecor(private val hole:ClassicHole) {
         else -> listOf(light)
     }
 
-    /** Local ornaments transformed with the same pose as their static village. */
-    fun animate(time:Float,eye:P,draw:(ClassicMesh,P,Float,Float)->Unit) {
-        for((index,site) in sites.withIndex()) {
-            if(hypot(site.origin.x-eye.x,site.origin.z-eye.z)>180f) continue
-            fun show(mesh:ClassicMesh,p:P,angle:Float=0f,scale:Float=1f) {
-                val cs=cos(site.yaw); val sn=sin(site.yaw)
-                val x=site.origin.x+p.x*cs+p.z*sn; val z=site.origin.z-p.x*sn+p.z*cs
-                draw(mesh,P(x,hole.heightAt(x,z)+p.y,z),site.yaw+angle,scale)
-            }
+    /** Receives each ornament's mesh, ground position, heading and scale; plain floats, nothing allocated per frame. */
+    fun interface Ornament { fun draw(mesh:ClassicMesh,x:Float,y:Float,z:Float,yaw:Float,scale:Float) }
+
+    /** Local ornaments transformed with the same pose as their static village; none for a village off screen. */
+    fun animate(time:Float,eyeX:Float,eyeZ:Float,viewProjection:FloatArray,draw:Ornament) {
+        val villages=scenery
+        for(index in sites.indices) {
+            val site=sites[index]
+            if(hypot(site.origin.x-eyeX,site.origin.z-eyeZ)>180f) continue
+            // The ornaments stay within a couple of metres of their village's own bounds.
+            if(!villages[index].visible(viewProjection,2f)) continue
             val t=time+index*2.1f
             when(hole.decorTheme) {
                 GolfDecorTheme.FAIRY -> {
                     val x=-2.6f+sin(t*.65f)*.7f; val y=1.4f+sin(t*1.3f)*.18f
-                    show(spirit,P(x,y,1.6f),PI.toFloat()+sin(t*.4f)*.3f)
-                    for(s in intArrayOf(-1,1)) show(if(s==1)wing else leftWing,P(x,y+.56f,1.53f),PI.toFloat()+s*(1.1f+sin(t*12f)*.6f))
-                    repeat(6) { i -> show(light,P(sin(t*.4f+i*2f)*3.4f,1.2f+sin(t+i)*.5f,cos(t*.5f+i)*2.5f),scale=.5f+.25f*sin(t*2f+i)) }
+                    show(draw,site,spirit,x,y,1.6f,PI.toFloat()+sin(t*.4f)*.3f)
+                    repeat(2) { k -> val s=k*2-1
+                        show(draw,site,if(s==1)wing else leftWing,x,y+.56f,1.53f,PI.toFloat()+s*(1.1f+sin(t*12f)*.6f)) }
+                    repeat(6) { i -> show(draw,site,light,sin(t*.4f+i*2f)*3.4f,1.2f+sin(t+i)*.5f,cos(t*.5f+i)*2.5f,scale=.5f+.25f*sin(t*2f+i)) }
                 }
                 GolfDecorTheme.HALLOWEEN -> {
-                    show(spirit,P(-3.2f+sin(t*.3f)*.5f,1.4f+sin(t*1.4f)*.25f,1.4f),PI.toFloat()+sin(t*.5f)*.25f)
-                    for(i in 0..2) show(light,P(2.8f+i*.85f,.65f,1.65f),scale=1.1f+.18f*sin(t*7f+i*2f))
+                    show(draw,site,spirit,-3.2f+sin(t*.3f)*.5f,1.4f+sin(t*1.4f)*.25f,1.4f,PI.toFloat()+sin(t*.5f)*.25f)
+                    repeat(3) { i -> show(draw,site,light,2.8f+i*.85f,.65f,1.65f,scale=1.1f+.18f*sin(t*7f+i*2f)) }
                 }
                 GolfDecorTheme.CHRISTMAS -> repeat(14) { i ->
                     val a=i*2.4f; val h=.8f+i*.23f; val r=(4.3f-h)*.43f
-                    show(light,P(-2.3f+cos(a)*r,h,sin(a)*r),scale=.65f+.25f*sin(t*2f+i))
+                    show(draw,site,light,-2.3f+cos(a)*r,h,sin(a)*r,scale=.65f+.25f*sin(t*2f+i))
                 }
                 else -> Unit
             }
         }
+    }
+
+    private fun show(draw:Ornament,site:Site,mesh:ClassicMesh,px:Float,py:Float,pz:Float,angle:Float=0f,scale:Float=1f) {
+        val cs=cos(site.yaw); val sn=sin(site.yaw)
+        val x=site.origin.x+px*cs+pz*sn; val z=site.origin.z-px*sn+pz*cs
+        draw.draw(mesh,x,hole.heightAt(x,z)+py,z,site.yaw+angle,scale)
     }
 
     private fun fairyVillage(b:MeshBuilder) = with(b) {

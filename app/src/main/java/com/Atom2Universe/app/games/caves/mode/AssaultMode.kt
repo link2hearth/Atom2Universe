@@ -199,7 +199,12 @@ internal class AssaultMode(
 
     override fun spawnPoint(): FloatArray = source.spawnPoint()
 
+    /** Grille, file de trajets et état-major ne se construisent qu'une fois : les soldats les gardent. */
+    private var wired = false
+
     override fun onSurfaceCreated(savedState: CaveRenderer.SavedState?) {
+        if (wired) return
+        wired = true
         r.physics.dynamicCollision = { x, feetY, z, height ->
             crowd.overlaps(x - source.originX, feetY - source.originY, z - source.originZ, height = height)
         }

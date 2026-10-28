@@ -93,6 +93,8 @@ class CombatView @JvmOverloads constructor(
         private const val HERO_MARK    = 0xFFE0E0E0.toInt()
         private const val CURRENT_MARK = 0xFFFFD54F.toInt()
         private const val FROZEN_VEIL  = 0x6681D4FA
+        /** Les valeurs d'un ennemi que montrent ses effets (voir drawStatuses). */
+        private const val STATUS_FIELDS = 18
     }
 
     private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_APPROACH, PLAYER_HIT, HERO_STATUS, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
@@ -101,6 +103,12 @@ class CombatView @JvmOverloads constructor(
     private var stage = Stage.INTRO
     val isOutcomeShown: Boolean get() = stage == Stage.END_PANEL
     private var stageStart = 0L
+    /** Heure de la mise en pause (appel, Accueil, volet des notifications) ; 0 : le combat s'écoule. */
+    private var pausedAt = 0L
+    /** L'horloge du combat : elle s'arrête pendant la pause, élan ennemi et barre de frappe compris. */
+    private fun now() = if (pausedAt != 0L) pausedAt else SystemClock.uptimeMillis()
+    /** Change à chaque étape : ce qui se calcule d'après l'état du combat (barre d'ordre) est refait. */
+    private var stateVersion = 0
     private var target = 0
     private var pendingAction: Action? = null
     private var visualAction: Action? = null
@@ -197,6 +205,61 @@ class CombatView @JvmOverloads constructor(
     private var heroHurtImpact = false
     private var puppetHpBeforeImpact = emptyList<Int>()
 
+    // Rectangles de travail du dessin : Canvas recopie leurs valeurs, aucun n'est gardé
+    private val actorRect = RectF()
+    private val companionRect = RectF()
+    private val destinationRect = RectF()
+    private val layerRect = RectF()
+    private val barRect = RectF()
+    private val innerRect = RectF()
+    private val orderRect = RectF()
+    private val orderInner = RectF()
+    private val heroBar = RectF()
+
+    /**
+     * Des textes refaits seulement quand les valeurs qu'ils montrent changent ([update] avec
+     * leur signature), avec leur couleur et leur largeur au corps courant.
+     */
+    private inner class TextLines(fields: Int) {
+        private val shown = IntArray(fields)
+        var valid = false
+        var texts = emptyList<String>(); private set
+        var colors = IntArray(0); private set
+        var widths = FloatArray(0); private set
+        /** Vrai si [signature] diffère de ce qui est affiché : il faut alors appeler [set]. */
+        fun update(signature: IntArray): Boolean {
+            var same = valid
+            if (same) for (k in shown.indices) if (shown[k] != signature[k]) { same = false; break }
+            if (same) return false
+            signature.copyInto(shown, 0, 0, shown.size)
+            valid = true
+            return true
+        }
+        fun set(parts: List<Pair<String, Int>>) {
+            texts = parts.map { it.first }
+            colors = IntArray(parts.size) { parts[it].second }
+            widths = FloatArray(parts.size) { pText.measureText(parts[it].first) }
+        }
+    }
+    private val signature = IntArray(STATUS_FIELDS)
+    private var enemyStatuses = emptyArray<TextLines>()
+    private val heroLines = TextLines(15)
+    private val buttonLines = TextLines(12)
+    private var enemyHpText = arrayOfNulls<String>(0)
+    private var enemyHpShown = LongArray(0)
+    private var hintRes = 0
+    private var hintLines = emptyList<String>()
+
+    /** « PV : 12/40 » d'un ennemi, refait quand ses PV changent. */
+    private fun enemyHp(i: Int, e: Enemy): String {
+        val key = (e.hp.toLong() shl 32) or (e.maxHp.toLong() and 0xFFFFFFFFL)
+        val cached = enemyHpText.getOrNull(i)
+        if (cached != null && enemyHpShown[i] == key) return cached
+        val text = context.getString(R.string.roguelike_combat_hp, num(e.hp), num(e.maxHp))
+        if (i < enemyHpText.size) { enemyHpText[i] = text; enemyHpShown[i] = key }
+        return text
+    }
+
     // ── Démarrage ───────────────────────────────────────────────────────────────
 
     fun start(c: Combat, heroSprite: String) {
@@ -216,6 +279,11 @@ class CombatView @JvmOverloads constructor(
         attackers.clear(); attacker = -1; parry = null; pendingAction = null; chainFirst = null; hitTargets = emptySet(); previewCost = null
         relicGesture = null; boltCount = 0
         floaters.clear(); banner = null
+        enemyHpText = arrayOfNulls(c.enemies.size)
+        enemyHpShown = LongArray(c.enemies.size)
+        enemyStatuses = Array(c.enemies.size) { TextLines(STATUS_FIELDS) }
+        heroLines.valid = false
+        buttonLines.valid = false
         layoutRects()
         enter(Stage.INTRO)
     }
@@ -223,7 +291,8 @@ class CombatView @JvmOverloads constructor(
     private fun enter(s: Stage) {
         val newOutcome = s == Stage.END_PANEL && stage != Stage.END_PANEL
         stage = s
-        stageStart = SystemClock.uptimeMillis()
+        stageStart = now()
+        stateVersion++
         if (newOutcome) onOutcomeShown?.invoke()
         if (s == Stage.STRIKE_TIMING) {
             swipeDirection = SwipeDirection.entries.random()
@@ -233,10 +302,36 @@ class CombatView @JvmOverloads constructor(
         postInvalidateOnAnimation()
     }
 
-    private fun elapsed() = SystemClock.uptimeMillis() - stageStart
+    private fun elapsed() = now() - stageStart
 
     private fun showBanner(text: String, color: Int) {
-        banner = text; bannerColor = color; bannerStart = SystemClock.uptimeMillis()
+        banner = text; bannerColor = color; bannerStart = now()
+    }
+
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+        updatePause(hasWindowFocus, windowVisibility == VISIBLE)
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        updatePause(hasWindowFocus(), visibility == VISIBLE)
+    }
+
+    /** Fenêtre cachée ou sans la main : le combat s'arrête, puis reprend là où il en était. */
+    private fun updatePause(focused: Boolean, visible: Boolean) {
+        if (!focused || !visible) {
+            if (pausedAt == 0L) pausedAt = SystemClock.uptimeMillis()
+            return
+        }
+        if (pausedAt == 0L) return
+        val pause = SystemClock.uptimeMillis() - pausedAt
+        pausedAt = 0L
+        // Tout ce qui est daté glisse de la durée de la pause
+        stageStart += pause
+        bannerStart += pause
+        for (i in floaters.indices) floaters[i] = floaters[i].let { it.copy(start = it.start + pause) }
+        postInvalidateOnAnimation()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -807,14 +902,14 @@ class CombatView @JvmOverloads constructor(
     }
 
     private fun floatText(text: String, x: Float, y: Float, color: Int, big: Boolean) {
-        floaters += Floater(text, x, y, color, big, SystemClock.uptimeMillis())
+        floaters += Floater(text, x, y, color, big, now())
     }
 
     // ── Dessin ──────────────────────────────────────────────────────────────────
 
     override fun onDraw(canvas: Canvas) {
         val c = combat ?: return
-        tick()
+        if (pausedAt == 0L) tick()
         if (combat == null) return
         canvas.drawColor(0xFF161F30.toInt())
         dungeonArt.drawBackdrop(canvas, sceneRect)
@@ -849,14 +944,18 @@ class CombatView @JvmOverloads constructor(
         if (stage == Stage.INTRO) drawIntro(canvas)
         if (stage == Stage.END_PANEL) drawEndPanel(canvas, c)
 
-        if (isShown && windowVisibility == VISIBLE) {
-            if (stage != Stage.CHOOSE && stage != Stage.END_PANEL || floaters.isNotEmpty() || banner != null || previewCost != null)
-                postInvalidateOnAnimation()
-            else postInvalidateDelayed(100L)
+        if (isShown && windowVisibility == VISIBLE && pausedAt == 0L) {
+            val fading = floaters.isNotEmpty() || banner != null
+            when {
+                // Le panneau de fin attend un toucher : plus rien ne bouge une fois les textes éteints
+                stage == Stage.END_PANEL -> if (fading) postInvalidateOnAnimation()
+                stage != Stage.CHOOSE || fading || previewCost != null -> postInvalidateOnAnimation()
+                else -> postInvalidateDelayed(100L)
+            }
         }
     }
 
-    private fun companionBounds(index: Int): RectF {
+    private fun companionBounds(index: Int, out: RectF = RectF()): RectF {
         val unit = sceneUnit
         val size = 32f * unit
         val top = heroRect.top
@@ -871,27 +970,34 @@ class CombatView @JvmOverloads constructor(
             cx = if (index == 0 || index == 2) heroRect.centerX() - 53f * unit else heroRect.centerX()
             y = when (index) { 0 -> top; 3 -> top - 43f * unit; else -> top + 57f * unit }
         }
-        return RectF(cx - size / 2f, y, cx + size / 2f, y + 36f * unit)
+        out.set(cx - size / 2f, y, cx + size / 2f, y + 36f * unit)
+        return out
     }
 
     private fun drawMirrorImages(canvas: Canvas, c: Combat) {
         val breaking = stage == Stage.ENEMY_IMPACT && brokenMirror >= 0
         val count = c.mirrorImages + if (breaking) 1 else 0
         for (i in 0 until count) {
-            val bounds = companionBounds(i)
+            val bounds = companionBounds(i, companionRect)
             val shatter = if (breaking && i == brokenMirror)
                 ((elapsed() / IMPACT_MS.toFloat() - .25f) / .75f).coerceIn(0f, 1f) else 0f
             val unit = sceneUnit
-            bounds.offset(sin(SystemClock.uptimeMillis() / 520.0 + i * 1.7).toFloat() * unit, -shatter * 8f * unit)
+            bounds.offset(sin(now() / 520.0 + i * 1.7).toFloat() * unit, -shatter * 8f * unit)
             val alpha = (145 * (1f - shatter)).toInt()
-            canvas.saveLayerAlpha(sceneRect, alpha)
-            dungeonArt.drawHero(canvas, bounds, c.hero, actorKey = "mirror:$i",
+            // Le double et son anneau ne se chevauchent pas : l'opacité passe par la peinture,
+            // sans calque hors écran ; le découpage reste celui de la scène.
+            canvas.save()
+            canvas.clipRect(sceneRect)
+            dungeonArt.drawHero(canvas, bounds, c.hero, actorKey = DungeonCombatArt.mirrorKey(i),
                 casting = stage == Stage.PLAYER_APPROACH && visualAction is Action.Cast,
-                swing = stage == Stage.PLAYER_HIT && visualAction == Action.Attack && elapsed() < 220L)
+                swing = stage == Stage.PLAYER_HIT && visualAction == Action.Attack && elapsed() < 220L,
+                alpha = alpha)
             pStroke.color = 0xFFB39DDB.toInt()
+            pStroke.alpha = alpha
             pStroke.strokeWidth = unit
             canvas.drawOval(bounds.left + 6f * unit, bounds.bottom,
                 bounds.right - 6f * unit, bounds.bottom + 3f * unit, pStroke)
+            pStroke.alpha = 255
             canvas.restore()
             if (shatter > 0f) dungeonArt.drawImpact(canvas, bounds, shatter, true, false, 100 + i)
         }
@@ -902,7 +1008,7 @@ class CombatView @JvmOverloads constructor(
         for ((i, hp) in c.puppetHp.withIndex()) {
             val hurt = stage == Stage.ENEMY_IMPACT && hp < puppetHpBeforeImpact.getOrElse(i) { hp }
             if (hp <= 0 && !hurt) continue
-            val bounds = companionBounds(i)
+            val bounds = companionBounds(i, companionRect)
             val attacking = commandedPuppetAttack &&
                 (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)
             if (attacking) {
@@ -915,11 +1021,17 @@ class CombatView @JvmOverloads constructor(
             }
             if (hurt) bounds.offset(sin(elapsed() / 25.0).toFloat() * 2f * unit, 0f)
             val fade = if (hp <= 0) (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f) else 1f
-            canvas.saveLayerAlpha(sceneRect, (255 * fade).toInt())
+            // Un calque seulement pour le pantin qui s'efface, et grand comme lui (éclats compris)
+            val saved = if (fade < 1f) {
+                layerRect.set(bounds.left - bounds.width() * .5f, bounds.top - bounds.height() * .25f,
+                    bounds.right + bounds.width() * .5f, bounds.bottom + bounds.height() * .5f)
+                if (!layerRect.intersect(sceneRect)) layerRect.setEmpty()
+                canvas.saveLayerAlpha(layerRect, (255 * fade).toInt())
+            } else canvas.save().also { canvas.clipRect(sceneRect) }
             puppetArt.draw(canvas, bounds,
-                SystemClock.uptimeMillis(), i, hp.toFloat() / c.puppetMaxHp)
+                now(), i, hp.toFloat() / c.puppetMaxHp)
             if (hurt) dungeonArt.drawImpact(canvas, bounds, elapsed() / IMPACT_MS.toFloat(), false, false, 200 + i)
-            canvas.restore()
+            canvas.restoreToCount(saved)
             if (stage == Stage.PLAYER_HIT && puppetAttackTargets.isNotEmpty()) {
                 val destination = enemyRects.getOrNull(puppetAttackTargets[i % puppetAttackTargets.size])
                 if (destination != null) puppetArt.drawBolt(canvas, bounds, destination,
@@ -932,7 +1044,7 @@ class CombatView @JvmOverloads constructor(
         for ((i, e) in c.enemies.withIndex()) {
             val base = enemyRects.getOrNull(i) ?: continue
             if (!e.alive && !((stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets)) continue
-            val r = RectF(base)
+            val r = actorRect.apply { set(base) }
 
             // L'attaquant s'avance pendant son élan
             if (attacker == i && (stage == Stage.ENEMY_WINDUP || stage == Stage.ENEMY_IMPACT)) {
@@ -942,10 +1054,11 @@ class CombatView @JvmOverloads constructor(
                     (1f - (elapsed() / IMPACT_MS.toFloat() - .3f) / .7f).coerceIn(0f, 1f)
                 else (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f)
                 val unit = sceneUnit
-                val destination = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else RectF(heroRect)
+                val destination = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget, destinationRect)
+                    else destinationRect.apply { set(heroRect) }
                 if (stage == Stage.ENEMY_IMPACT && brokenMirror >= 0) {
                     // Le résultat du jet est connu à l'impact : le dernier mouvement révèle le double frappé.
-                    val mirror = companionBounds(brokenMirror)
+                    val mirror = companionBounds(brokenMirror, companionRect)
                     val redirect = (elapsed() / (IMPACT_MS * .25f)).coerceIn(0f, 1f)
                     destination.offset((mirror.left - destination.left) * redirect, (mirror.top - destination.top) * redirect)
                 }
@@ -965,10 +1078,10 @@ class CombatView @JvmOverloads constructor(
             val barTop = base.bottom + 4f * density
             // Même barre pixel-art que la démo : le cadre clair désigne la cible.
             val unit = sceneUnit
-            val bar = RectF(base.centerX() - 26f * unit, barTop, base.centerX() + 26f * unit, barTop + 6f * unit)
+            val bar = barRect.apply { set(base.centerX() - 26f * unit, barTop, base.centerX() + 26f * unit, barTop + 6f * unit) }
             pFill.color = if (target == i && e.alive) 0xFF91A9B5.toInt() else 0xFF111729.toInt()
             canvas.drawRect(bar, pFill)
-            val inner = RectF(bar).apply { inset(unit, unit) }
+            val inner = innerRect.apply { set(bar); inset(unit, unit) }
             pFill.color = 0xFF111729.toInt(); canvas.drawRect(inner, pFill)
             val filledRight = inner.left + inner.width() * (e.hp.toFloat() / e.maxHp).coerceIn(0f, 1f)
             pFill.color = 0xFFAA505D.toInt()
@@ -976,7 +1089,7 @@ class CombatView @JvmOverloads constructor(
             pFill.color = 0xFFDD897D.toInt()
             canvas.drawRect(inner.left, inner.top, filledRight, inner.top + unit, pFill)
             pText.textSize = 12f * sp
-            val hp = context.getString(R.string.roguelike_combat_hp, num(e.hp), num(e.maxHp))
+            val hp = enemyHp(i, e)
             val textRoom = inner.width() - 2f * unit
             val measured = pText.measureText(hp)
             if (measured > textRoom) pText.textSize *= textRoom / measured
@@ -989,7 +1102,7 @@ class CombatView @JvmOverloads constructor(
             canvas.drawText(hp, base.centerX(), textY, pText)
 
             if (e.alive) {
-                drawStatuses(canvas, e, base.centerX(), textY + pText.descent() + 14f * sp)
+                drawStatuses(canvas, e, enemyStatuses[i], base.centerX(), textY + pText.descent() + 14f * sp)
             }
         }
     }
@@ -1013,30 +1126,51 @@ class CombatView @JvmOverloads constructor(
         val afterCurrent = 8f * density
         val count = ((b.width() - afterCurrent + gap) / (cell + gap)).toInt()
         if (count < 2) return
-        val slots = listOf(TurnSlot(current, frozen = current >= 0 && c.enemies[current].frozen)) +
-            c.forecast(count - 1, previewCost ?: c.attackCost())
+        val upcoming = forecast(c, count - 1, previewCost ?: c.attackCost())
         val preview = previewCost != null
         var previewDone = false
         var x = b.left
-        for ((k, slot) in slots.withIndex()) {
-            val r = RectF(x, b.top, x + cell, b.bottom)
-            val lit = preview && k > 0 && slot.actor == Combat.HERO && !previewDone
+        for (k in 0..upcoming.size) {
+            val actor = if (k == 0) current else upcoming[k - 1].actor
+            val frozen = if (k == 0) current >= 0 && c.enemies[current].frozen else upcoming[k - 1].frozen
+            val r = orderRect.apply { set(x, b.top, x + cell, b.bottom) }
+            val lit = preview && k > 0 && actor == Combat.HERO && !previewDone
             if (lit) {
                 previewDone = true
                 // Le prochain tour du héros, si l'action visée part : il pulse
-                r.offset(0f, -2f * density * (1f + sin(SystemClock.uptimeMillis() / 120.0).toFloat()))
+                r.offset(0f, -2f * density * (1f + sin(now() / 120.0).toFloat()))
             }
-            drawOrderCell(canvas, c, slot, r, current = k == 0, lit = lit)
+            drawOrderCell(canvas, c, actor, frozen, r, current = k == 0, lit = lit)
             x += cell + gap + if (k == 0) afterCurrent else 0f
         }
     }
 
-    private fun drawOrderCell(canvas: Canvas, c: Combat, slot: TurnSlot, r: RectF, current: Boolean, lit: Boolean) {
+    // La prévision de la jauge (une dizaine de tours simulés) : refaite à chaque étape, pas à chaque image
+    private var forecastSlots = emptyList<TurnSlot>()
+    private var forecastCombat: Combat? = null
+    private var forecastVersion = -1
+    private var forecastCount = -1
+    private var forecastCost = 0.0
+    private var forecastPhase: CombatPhase? = null
+    private var forecastActing = 0
+    private var forecastGauge = 0.0
+
+    private fun forecast(c: Combat, count: Int, cost: Double): List<TurnSlot> {
+        if (forecastCombat !== c || forecastVersion != stateVersion || forecastCount != count || forecastCost != cost ||
+            forecastPhase != c.phase || forecastActing != c.actingEnemy || forecastGauge != c.heroGauge) {
+            forecastSlots = c.forecast(count, cost)
+            forecastCombat = c; forecastVersion = stateVersion; forecastCount = count; forecastCost = cost
+            forecastPhase = c.phase; forecastActing = c.actingEnemy; forecastGauge = c.heroGauge
+        }
+        return forecastSlots
+    }
+
+    private fun drawOrderCell(canvas: Canvas, c: Combat, actor: Int, frozen: Boolean, r: RectF, current: Boolean, lit: Boolean) {
         val corner = 6f * density
         pFill.color = 0xFF263238.toInt()
         canvas.drawRoundRect(r, corner, corner, pFill)
-        val inner = RectF(r).apply { inset(3f * density, 3f * density) }
-        val mark = when (slot.actor) {
+        val inner = orderInner.apply { set(r); inset(3f * density, 3f * density) }
+        val mark = when (actor) {
             Combat.METEOR -> {
                 // Le Météore : une boule de feu, pas un portrait
                 pFill.color = Relic.METEOR.color
@@ -1050,19 +1184,50 @@ class CombatView @JvmOverloads constructor(
                 HERO_MARK
             }
             else -> {
-                dungeonArt.drawMonster(canvas, inner, c.enemies[slot.actor].type, index = slot.actor, portrait = true)
+                dungeonArt.drawMonster(canvas, inner, c.enemies[actor].type, index = actor, portrait = true)
                 0xFF42566B.toInt()
             }
         }
-        if (slot.frozen) { pFill.color = FROZEN_VEIL; canvas.drawRoundRect(r, corner, corner, pFill) }
+        if (frozen) { pFill.color = FROZEN_VEIL; canvas.drawRoundRect(r, corner, corner, pFill) }
         pStroke.color = if (current || lit) CURRENT_MARK else mark
         pStroke.strokeWidth = (if (current || lit) 3f else 2f) * density
         canvas.drawRoundRect(r, corner, corner, pStroke)
     }
 
     /** Les effets en cours sous la barre de vie, chacun à sa couleur. */
-    private fun drawStatuses(canvas: Canvas, e: Enemy, cx: Float, y: Float) {
-        val parts = buildList<Pair<String, Int>> {
+    private fun drawStatuses(canvas: Canvas, e: Enemy, lines: TextLines, cx: Float, y: Float) {
+        pText.textSize = 11f * sp
+        val s = signature
+        s[0] = e.burnTurns; s[1] = e.poisonTurns; s[2] = if (e.frozen) 1 else 0; s[3] = e.paralyzedTurns
+        s[4] = e.breachedTurns; s[5] = e.fracturedTurns; s[6] = e.weakenedTurns; s[7] = e.blindedTurns
+        s[8] = if (e.marked) 1 else 0; s[9] = e.bleedTurns; s[10] = if (e.charmed) 1 else 0
+        s[11] = if (e.enraged) 1 else 0; s[12] = e.rageTurns; s[13] = if (e.frightened) 1 else 0
+        s[14] = if (e.fragile) 1 else 0; s[15] = e.elementMark?.ordinal ?: -1
+        s[16] = if (e.slowed) 1 else 0; s[17] = kotlin.math.ceil(e.slowTime).toInt()
+        if (lines.update(s)) lines.set(statusParts(e))
+        pText.textAlign = Paint.Align.LEFT
+        // Deux effets par ligne au plus : trois ennemis côte à côte laissent peu de place
+        val gap = 8f * density
+        var start = 0
+        var line = 0
+        while (start < lines.texts.size) {
+            val end = minOf(start + 2, lines.texts.size)
+            var sum = 0f
+            for (k in start until end) sum += lines.widths[k]
+            var x = cx - (sum + gap * (end - start - 1)) / 2f
+            for (k in start until end) {
+                pText.color = lines.colors[k]
+                canvas.drawText(lines.texts[k], x, y + line * 13f * sp, pText)
+                x += lines.widths[k] + gap
+            }
+            start = end
+            line++
+        }
+        pText.textAlign = Paint.Align.CENTER
+    }
+
+    private fun statusParts(e: Enemy): List<Pair<String, Int>> {
+        return buildList<Pair<String, Int>> {
             if (e.burnTurns > 0) add(context.getString(R.string.roguelike_combat_burning, e.burnTurns) to elementColor(Element.FIRE))
             if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonTurns) to elementColor(Element.POISON))
             if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
@@ -1085,24 +1250,10 @@ class CombatView @JvmOverloads constructor(
             }
             if (e.slowed) add(context.getString(R.string.roguelike_combat_slowed, kotlin.math.ceil(e.slowTime).toInt()) to SLOWED_COLOR)
         }
-        pText.textSize = 11f * sp
-        pText.textAlign = Paint.Align.LEFT
-        // Deux effets par ligne au plus : trois ennemis côte à côte laissent peu de place
-        val gap = 8f * density
-        parts.chunked(2).forEachIndexed { line, pair ->
-            val widths = pair.map { pText.measureText(it.first) }
-            var x = cx - (widths.sum() + gap * (pair.size - 1)) / 2f
-            for ((i, part) in pair.withIndex()) {
-                pText.color = part.second
-                canvas.drawText(part.first, x, y + line * 13f * sp, pText)
-                x += widths[i] + gap
-            }
-        }
-        pText.textAlign = Paint.Align.CENTER
     }
 
     private fun drawHero(canvas: Canvas, c: Combat) {
-        val r = RectF(heroRect)
+        val r = actorRect.apply { set(heroRect) }
         val melee = (visualAction == Action.Attack && !commandedPuppetAttack) || visualAction == Action.Deadly
         if (melee && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) {
             val destination = enemyRects.getOrNull(target)
@@ -1136,43 +1287,43 @@ class CombatView @JvmOverloads constructor(
         val left = statsRect.left
         val right = statsRect.right
         val top = statsRect.top
+        var alivePuppets = 0
+        for (hp in c.puppetHp) if (hp > 0) alivePuppets++
+        val s = signature
+        s[0] = hero.hp; s[1] = hero.maxHp; s[2] = c.guardTurns; s[3] = c.mirrorImages; s[4] = if (c.rollReady) 1 else 0
+        s[5] = alivePuppets; s[6] = c.puppetHp.size; s[7] = c.empoweredAttacks; s[8] = c.poisonedBlades
+        s[9] = if (c.ambushReady) 1 else 0; s[10] = c.barrier; s[11] = c.stoneskinTurns; s[12] = c.hasteTurns
+        s[13] = c.hourglassStrikes; s[14] = c.meteorTurns
+        if (heroLines.update(s)) heroLines.set(heroStatLines(c, alivePuppets))
         pText.textAlign = Paint.Align.LEFT
         pText.textSize = 15f * sp; pText.color = Color.WHITE
-        canvas.drawText(context.getString(R.string.roguelike_combat_hp, num(hero.hp), num(hero.maxHp)), left, top + 18f * density, pText)
-        val bar = RectF(left, top + 24f * density, right, top + 30f * density)
+        canvas.drawText(heroLines.texts[0], left, top + 18f * density, pText)
+        val bar = heroBar.apply { set(left, top + 24f * density, right, top + 30f * density) }
         pFill.color = 0xFF333333.toInt(); canvas.drawRect(bar, pFill)
-        val ratio = hero.hp.toFloat() / hero.maxHp
+        val ratio = (hero.hp.toFloat() / hero.maxHp).coerceIn(0f, 1f)
         pFill.color = when { ratio > 0.5f -> 0xFF43A047.toInt(); ratio > 0.25f -> 0xFFFB8C00.toInt(); else -> 0xFFE53935.toInt() }
         canvas.drawRect(bar.left, bar.top, bar.left + bar.width() * ratio, bar.bottom, pFill)
-        // Garde et doubles sous la barre de vie
+        // Garde, doubles, puis les autres effets sous la barre de vie
         pText.textSize = 12f * sp
         var y = bar.bottom + 16f * sp
-        if (c.guardTurns > 0) {
-            pText.color = 0xFFBCAAA4.toInt()
-            canvas.drawText(context.getString(R.string.roguelike_combat_guarding, c.guardTurns), left, y, pText)
+        for (k in 1 until heroLines.texts.size) {
+            pText.color = heroLines.colors[k]
+            canvas.drawText(heroLines.texts[k], left, y, pText)
             y += 15f * sp
         }
-        if (c.mirrorImages > 0) {
-            pText.color = 0xFFB39DDB.toInt()
-            canvas.drawText(context.getString(R.string.roguelike_combat_images, c.mirrorImages), left, y, pText)
-            y += 15f * sp
-        }
-        if (c.rollReady) {
-            pText.color = ROLL_COLOR
-            canvas.drawText(context.getString(R.string.roguelike_combat_roll_ready), left, y, pText)
-            y += 15f * sp
-        }
-        if (c.puppetHp.isNotEmpty()) {
-            pText.color = PUPPET_COLOR
-            canvas.drawText(context.getString(R.string.roguelike_combat_puppets_line, c.puppetHp.count { it > 0 }, c.puppetHp.size), left, y, pText)
-            y += 15f * sp
-        }
-        if (c.empoweredAttacks > 0) {
-            pText.color = EMPOWERED_COLOR
-            canvas.drawText(context.getString(R.string.roguelike_combat_empowered, c.empoweredAttacks), left, y, pText)
-            y += 15f * sp
-        }
-        val buffs = buildList<Pair<String, Int>> {
+        pText.textAlign = Paint.Align.CENTER
+    }
+
+    /** La ligne des PV, puis chaque effet du héros avec sa couleur, dans l'ordre d'affichage. */
+    private fun heroStatLines(c: Combat, alivePuppets: Int): List<Pair<String, Int>> {
+        val hero = c.hero
+        return buildList<Pair<String, Int>> {
+            add(context.getString(R.string.roguelike_combat_hp, num(hero.hp), num(hero.maxHp)) to Color.WHITE)
+            if (c.guardTurns > 0) add(context.getString(R.string.roguelike_combat_guarding, c.guardTurns) to 0xFFBCAAA4.toInt())
+            if (c.mirrorImages > 0) add(context.getString(R.string.roguelike_combat_images, c.mirrorImages) to 0xFFB39DDB.toInt())
+            if (c.rollReady) add(context.getString(R.string.roguelike_combat_roll_ready) to ROLL_COLOR)
+            if (c.puppetHp.isNotEmpty()) add(context.getString(R.string.roguelike_combat_puppets_line, alivePuppets, c.puppetHp.size) to PUPPET_COLOR)
+            if (c.empoweredAttacks > 0) add(context.getString(R.string.roguelike_combat_empowered, c.empoweredAttacks) to EMPOWERED_COLOR)
             if (c.poisonedBlades > 0) add(context.getString(R.string.roguelike_combat_poisoned_blades, c.poisonedBlades) to elementColor(Element.POISON))
             if (c.ambushReady) add(context.getString(R.string.roguelike_combat_ambush_ready) to MARKED_COLOR)
             if (c.barrier > 0) add(context.getString(R.string.roguelike_combat_barrier, num(c.barrier)) to BARRIER_COLOR)
@@ -1181,48 +1332,78 @@ class CombatView @JvmOverloads constructor(
             if (c.hourglassStrikes > 0) add(context.getString(R.string.roguelike_combat_hourglass, c.hourglassStrikes) to HOURGLASS_COLOR)
             if (c.meteorTurns > 0) add(context.getString(R.string.roguelike_combat_meteor_incoming, c.meteorTurns) to elementColor(Element.FIRE))
         }
-        for ((text, color) in buffs) {
-            pText.color = color
-            canvas.drawText(text, left, y, pText)
-            y += 15f * sp
-        }
-        pText.textAlign = Paint.Align.CENTER
     }
 
     private fun drawButtons(canvas: Canvas, c: Combat) {
         val active = stage == Stage.CHOOSE
-        drawButton(canvas, attackBtn, context.getString(R.string.roguelike_combat_attack), null, active, 0xFF8D2B2B.toInt())
+        val hero = c.hero
+        val unlocked = hero.unlockedRelicSlots
+        val archetype = hero.archetype
+        val s = signature
+        for (i in relicBtns.indices) {
+            val relic = hero.relicSlots[i]
+            s[i * 2] = relic?.ordinal ?: -1
+            s[i * 2 + 1] = relic?.let { c.relicCooldowns[it] } ?: 0
+        }
+        s[8] = unlocked; s[9] = archetype?.ordinal ?: -1; s[10] = hero.specialCooldown
+        s[11] = if (archetype == Archetype.NECROMANCER) c.puppetRecallHpCost else 0
+        if (buttonLines.update(s)) buttonLines.set(buttonTexts(c))
+        // Les textes : l'attaque, puis chaque relique (nom, sous-titre), puis le Spécial
+        val texts = buttonLines.texts
+        drawButton(canvas, attackBtn, texts[0], null, active, 0xFF8D2B2B.toInt())
         for ((i, r) in relicBtns.withIndex()) {
-            val relic = c.hero.relicSlots[i]
-            if (i >= c.hero.unlockedRelicSlots) {
-                // Pas encore ouvert : l'étage qui l'ouvrira
-                drawButton(canvas, r, context.getString(R.string.roguelike_combat_relic_locked),
-                    context.getString(R.string.roguelike_combat_relic_unlock_floor, Hero.RELIC_SLOT_FLOORS[i - 1]), false, 0)
+            val label = texts[1 + i * 2]
+            val sub = texts[2 + i * 2].ifEmpty { null }
+            val relic = hero.relicSlots[i]
+            if (i >= unlocked || relic == null) {
+                drawButton(canvas, r, label, sub, false, 0)
                 continue
             }
-            if (relic == null) {
-                drawButton(canvas, r, context.getString(R.string.roguelike_combat_relic_empty), null, false, 0)
-                continue
-            }
-            val cd = c.relicCooldowns[relic] ?: 0
             val castable = active && c.canCast(relic)
-            drawButton(canvas, r, context.getString(relic.labelRes),
-                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else null,
-                castable, relic.color, RelicArt.icon(relic))
+            drawButton(canvas, r, label, sub, castable, relic.color, RelicArt.icon(relic))
             gestureArt.drawGlyph(canvas, RelicGesture.of(relic), r, castable, density)
         }
-        val archetype = c.hero.archetype
-        if (archetype == null) {
-            drawButton(canvas, specialBtn, context.getString(R.string.roguelike_combat_special),
-                context.getString(R.string.roguelike_combat_special_locked), false, 0)
-        } else {
-            val cd = c.hero.specialCooldown
-            drawButton(canvas, specialBtn, context.getString(archetype.specialRes),
-                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd)
-                else if (archetype == Archetype.NECROMANCER)
-                    context.getString(R.string.roguelike_combat_puppet_hp_cost, num(c.puppetRecallHpCost))
-                else context.getString(archetype.labelRes),
-                active && c.canUseSpecial(), archetype.color)
+        val special = 1 + relicBtns.size * 2
+        drawButton(canvas, specialBtn, texts[special], texts[special + 1],
+            archetype != null && active && c.canUseSpecial(), archetype?.color ?: 0)
+    }
+
+    /** Les libellés des boutons ; un sous-titre vide veut dire « pas de sous-titre ». */
+    private fun buttonTexts(c: Combat): List<Pair<String, Int>> {
+        val hero = c.hero
+        return buildList<Pair<String, Int>> {
+            add(context.getString(R.string.roguelike_combat_attack) to 0)
+            for (i in relicBtns.indices) {
+                val relic = hero.relicSlots[i]
+                when {
+                    // Pas encore ouvert : l'étage qui l'ouvrira
+                    i >= hero.unlockedRelicSlots -> {
+                        add(context.getString(R.string.roguelike_combat_relic_locked) to 0)
+                        add(context.getString(R.string.roguelike_combat_relic_unlock_floor, Hero.RELIC_SLOT_FLOORS[i - 1]) to 0)
+                    }
+                    relic == null -> {
+                        add(context.getString(R.string.roguelike_combat_relic_empty) to 0)
+                        add("" to 0)
+                    }
+                    else -> {
+                        val cd = c.relicCooldowns[relic] ?: 0
+                        add(context.getString(relic.labelRes) to 0)
+                        add((if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else "") to 0)
+                    }
+                }
+            }
+            val archetype = hero.archetype
+            if (archetype == null) {
+                add(context.getString(R.string.roguelike_combat_special) to 0)
+                add(context.getString(R.string.roguelike_combat_special_locked) to 0)
+            } else {
+                val cd = hero.specialCooldown
+                add(context.getString(archetype.specialRes) to 0)
+                add((if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd)
+                    else if (archetype == Archetype.NECROMANCER)
+                        context.getString(R.string.roguelike_combat_puppet_hp_cost, num(c.puppetRecallHpCost))
+                    else context.getString(archetype.labelRes)) to 0)
+            }
         }
     }
 
@@ -1263,7 +1444,8 @@ class CombatView @JvmOverloads constructor(
             Stage.ENEMY_WINDUP  -> R.string.roguelike_combat_hint_parry
             else -> return
         }
-        val lines = context.getString(res).split('\n')
+        if (res != hintRes) { hintRes = res; hintLines = context.getString(res).split('\n') }
+        val lines = hintLines
         pText.color = 0xFFB0BEC5.toInt()
         lines.forEachIndexed { index, text ->
             pText.textSize = 14f * sp
@@ -1276,12 +1458,12 @@ class CombatView @JvmOverloads constructor(
 
     private fun drawStrikeBar(canvas: Canvas) {
         val horizontal = swipeDirection.dy != 0
-        val b = if (horizontal) strikeBar else RectF(
+        val b = if (horizontal) strikeBar else actorRect.apply { set(
             strikeBar.centerX() - strikeBar.height() / 2f,
             strikeBar.centerY() - strikeBar.width() / 2f,
             strikeBar.centerX() + strikeBar.height() / 2f,
             strikeBar.centerY() + strikeBar.width() / 2f,
-        )
+        ) }
         val cr = min(b.width(), b.height()) / 2f
         DungeonTimingShadow.draw(canvas, b.left, b.top, b.right, b.bottom, cr, density)
         pFill.color = 0xFF263238.toInt(); canvas.drawRoundRect(b, cr, cr, pFill)
@@ -1359,7 +1541,7 @@ class CombatView @JvmOverloads constructor(
     }
 
     private fun drawFloaters(canvas: Canvas) {
-        val now = SystemClock.uptimeMillis()
+        val now = now()
         floaters.removeAll { now - it.start > FLOAT_MS }
         for (f in floaters) {
             val p = (now - f.start).toFloat() / FLOAT_MS
@@ -1373,7 +1555,7 @@ class CombatView @JvmOverloads constructor(
 
     private fun drawBanner(canvas: Canvas) {
         val text = banner ?: return
-        val age = SystemClock.uptimeMillis() - bannerStart
+        val age = now() - bannerStart
         if (age > FLOAT_MS) { banner = null; return }
         pText.textSize = 26f * sp; pText.color = bannerColor
         pText.alpha = ((1f - age.toFloat() / FLOAT_MS) * 255).toInt().coerceIn(0, 255)

@@ -61,6 +61,11 @@ class SyncWorker(
                 Log.d(TAG, "Cloud sync disabled, skipping")
                 Result.success()
             }
+            is SyncResult.AlreadyInProgress -> {
+                // La synchro en cours fait déjà le travail : pas d'erreur, pas de nouvel essai
+                Log.d(TAG, "Cloud sync already in progress, skipping")
+                Result.success()
+            }
             is SyncResult.Error -> {
                 Log.e(TAG, "Cloud sync failed: ${result.message}")
                 if (runAttemptCount < 3) Result.retry() else Result.failure()

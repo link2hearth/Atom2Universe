@@ -84,6 +84,7 @@ class DominosaState(
                 if (c >= w) c - w else null, if (c < w * h - w) c + w else null
             ).filter { mate[it] < 0 && !used[key(c, it)] }
             fun search() {
+                checkPuzzleWork()
                 if (found >= limit || ++nodes > 300_000) return
                 var best = -1; var bestOpts: List<Int> = emptyList()
                 for (c in mate.indices) {

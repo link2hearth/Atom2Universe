@@ -27,15 +27,20 @@ import java.io.FileOutputStream
  */
 class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatcher.ChannelControlListener {
 
-    private var currentState = MidiEngine.State.UNINITIALIZED
+    @Volatile private var currentState = MidiEngine.State.UNINITIALIZED
     private var currentMidiFile: File? = null
     private var currentTempFile: File? = null
     private var midiDriver: MidiDriver? = null
     private var midiPlayer: MidiFilePlayer? = null
     private var audioSessionId: Int = 0
     private var isMidiDriverStarted = false
-    private var pendingSoundFontPath: String? = null
+    // Banque DLS à charger à chaque démarrage du pilote (un pilote neuf l'a perdue)
+    private var dlsPath: String? = null
     private var pendingReverbPreset: Int? = null
+    // Réglages renvoyés à chaque démarrage du pilote (il repart des valeurs d'usine)
+    private var lastVolumePercent: Int? = null
+    private var eqEnabled = false
+    private val eqBandMillibels = IntArray(EQ_BAND_COUNT)
 
     // Mécanisme de restart périodique pour éviter la perte de son
     private var tracksPlayedSinceRestart = 0
@@ -50,6 +55,9 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
         // Seuils pour le restart périodique du driver
         private const val MAX_TRACKS_BEFORE_RESTART = 10
         private const val MAX_TIME_BEFORE_RESTART_MS = 10 * 60 * 1000L
+
+        // Égaliseur natif du pilote : 10 bandes, 32 Hz … 16 kHz
+        private const val EQ_BAND_COUNT = 10
 
         @Suppress("unused")
         fun isSupported(): Boolean {
@@ -83,12 +91,8 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
             tracksPlayedSinceRestart = 0
             lastDriverRestartTime = System.currentTimeMillis()
 
-            // Store SoundFont path for loading on first start()
-            if (soundFontPath.isNotBlank()) {
-                pendingSoundFontPath = soundFontPath
-            } else {
-                pendingSoundFontPath = null
-            }
+            // DLS chargée à chaque démarrage du pilote
+            dlsPath = soundFontPath.ifBlank { null }
 
             // Register for channel control events (volume/mute)
             MidiEventDispatcher.addChannelControlListener(this)
@@ -194,45 +198,17 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
         try {
             onTrackStarting()
 
-            // Vérifier si le driver est réellement démarré (peut avoir été stoppé par practice mode)
-            // config() retourne null si le driver n'est pas démarré
-            val driverActuallyRunning = try {
-                midiDriver?.config() != null
-            } catch (_: Exception) {
-                false
-            }
-
-            val needsDriverInit = !isMidiDriverStarted || !driverActuallyRunning
+            // Le pilote peut avoir été arrêté par la pratique, un jeu ou notre pause
+            val needsDriverInit = !isDriverRunning()
             if (needsDriverInit) {
-                // S'assurer que le driver est stoppé avant de le redémarrer
-                if (!driverActuallyRunning) {
-                    try {
-                        midiDriver?.stop()
-                    } catch (_: Exception) { }
-                }
-
-                midiDriver?.start()
-                isMidiDriverStarted = true
-
-                // Apply pending reverb now that driver is started
-                pendingReverbPreset?.let { preset ->
-                    try {
-                        midiDriver?.setReverb(preset)
-                    } catch (_: Exception) { }
-                }
-
-                pendingSoundFontPath?.let { sfPath ->
-                    Thread.sleep(300)
-                    val loaded = loadSoundFont(sfPath)
-                    if (loaded) {
-                        pendingSoundFontPath = null
-                    }
-                }
+                startDriverAndRestoreSettings()
             }
 
             val delayMs = if (needsDriverInit) 200L else 50L
 
             Handler(Looper.getMainLooper()).postDelayed({
+                // Une pause ou un arrêt arrivé pendant l'attente l'emporte
+                if (currentState != MidiEngine.State.PLAYING) return@postDelayed
                 try {
                     midiPlayer?.play()
                 } catch (e: Exception) {
@@ -259,6 +235,13 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
             midiPlayer?.pause()
             sendAllNotesOff()
             MidiEventDispatcher.dispatchAllNotesOff()
+            // Le flux Oboe (mode exclusif) calculerait du silence pendant toute la pause.
+            // Le pilote est partagé avec la pratique et les jeux : on ne l'arrête que si
+            // c'est nous qui l'avons démarré. resume() le relance.
+            if (isMidiDriverStarted) {
+                midiDriver?.stop()
+                isMidiDriverStarted = false
+            }
             setState(MidiEngine.State.PAUSED)
         } catch (_: Exception) { }
     }
@@ -269,9 +252,10 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
         }
 
         try {
-            if (!isMidiDriverStarted) {
-                midiDriver?.start()
-                isMidiDriverStarted = true
+            if (!isDriverRunning()) {
+                startDriverAndRestoreSettings()
+                // Pilote neuf : instruments et contrôleurs du morceau sont à renvoyer
+                midiPlayer?.let { it.sendChannelStateUpToPosition(it.getCurrentPositionMs()) }
             }
 
             midiPlayer?.resume()
@@ -304,10 +288,13 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
 
         try {
             if (midiDriver != null && isMidiDriverStarted) {
+                // Égaliseur global au pilote : ne pas le laisser à un autre module
+                if (eqEnabled) midiDriver?.setEqEnabled(false)
                 midiDriver?.stop()
                 isMidiDriverStarted = false
             }
-        } catch (_: Exception) { }
+        } catch (_: Exception) {
+        } catch (_: UnsatisfiedLinkError) { }
 
         // Unregister from channel control events
         try {
@@ -337,7 +324,8 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
             sendAllNotesOff()
             MidiEventDispatcher.dispatchAllNotesOff()
             midiPlayer?.seekTo(positionMs)
-            midiPlayer?.sendProgramChangesUpToPosition(positionMs)
+            // Les contrôleurs viennent d'être remis à zéro : on renvoie l'état à cette position
+            midiPlayer?.sendChannelStateUpToPosition(positionMs)
         } catch (_: Exception) { }
     }
 
@@ -345,8 +333,39 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
         val clampedVolume = volume.coerceIn(0f, 1f)
         try {
             val volumeInt = (clampedVolume * 100).toInt()
+            lastVolumePercent = volumeInt
             midiDriver?.setVolume(volumeInt)
         } catch (_: Exception) { }
+    }
+
+    // ==================== Égaliseur (natif, appliqué par le pilote) ====================
+
+    fun setEqEnabled(enabled: Boolean) {
+        eqEnabled = enabled
+        if (isDriverRunning()) applyEqToDriver()
+    }
+
+    fun setEqBandLevel(band: Int, millibels: Int) {
+        if (band !in eqBandMillibels.indices) return
+        eqBandMillibels[band] = millibels
+        if (!isDriverRunning()) return
+        try {
+            midiDriver?.setEqBandGain(band, millibels / 100f)
+        } catch (_: Exception) {
+        } catch (_: UnsatisfiedLinkError) { }
+    }
+
+    fun getEqBandLevel(band: Int): Int = eqBandMillibels.getOrElse(band) { 0 }
+
+    private fun applyEqToDriver() {
+        val driver = midiDriver ?: return
+        try {
+            for (band in eqBandMillibels.indices) {
+                driver.setEqBandGain(band, eqBandMillibels[band] / 100f)
+            }
+            driver.setEqEnabled(eqEnabled)
+        } catch (_: Exception) {
+        } catch (_: UnsatisfiedLinkError) { }
     }
 
     override fun setReverb(preset: Int) {
@@ -417,8 +436,6 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
                 isMidiDriverStarted = false
             }
 
-            Thread.sleep(100)
-
             val initSuccess = initialize(soundFontPath)
 
             if (initSuccess) {
@@ -433,10 +450,6 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
         } catch (_: Exception) {
             return false
         }
-    }
-
-    override fun forceDriverRestart() {
-        restartMidiDriver()
     }
 
     override fun getDriverStats(): String {
@@ -563,18 +576,9 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
             if (isMidiDriverStarted) {
                 midiDriver?.stop()
                 isMidiDriverStarted = false
-                Thread.sleep(100)
             }
 
-            midiDriver?.start()
-            isMidiDriverStarted = true
-
-            // Re-apply reverb after restart
-            pendingReverbPreset?.let { preset ->
-                try {
-                    midiDriver?.setReverb(preset)
-                } catch (_: Exception) { }
-            }
+            startDriverAndRestoreSettings()
 
             tracksPlayedSinceRestart = 0
             lastDriverRestartTime = System.currentTimeMillis()
@@ -599,26 +603,15 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
      * Used by HybridMidiEngine to enable Sonivox synthesis in hybrid mode.
      * @return true if driver started successfully
      */
-    private var sonivoxNoteLogCount = 0
-
     fun startDriver(): Boolean {
         try {
-            if (!isMidiDriverStarted) {
+            if (!isDriverRunning()) {
                 if (midiDriver == null) {
                     return false
                 }
-                midiDriver?.start()
-                isMidiDriverStarted = true
-                sonivoxNoteLogCount = 0
-
-                // Apply pending reverb
-                pendingReverbPreset?.let { preset ->
-                    try {
-                        midiDriver?.setReverb(preset)
-                    } catch (_: Exception) { }
-                }
+                startDriverAndRestoreSettings()
             }
-            return true
+            return isMidiDriverStarted
         } catch (_: Exception) {
             return false
         }
@@ -769,7 +762,56 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
      * Checks if the Sonivox driver is started and ready for direct MIDI.
      */
     fun isReadyForDirectMidi(): Boolean {
-        return isMidiDriverStarted && midiDriver != null
+        return isDriverRunning()
+    }
+
+    /**
+     * Le pilote est un singleton : la pratique piano l'arrête quand son écran passe en
+     * arrière-plan, donc le drapeau seul ne suffit pas : on demande au pilote natif.
+     */
+    private fun isDriverRunning(): Boolean {
+        val driver = midiDriver ?: return false
+        if (!isMidiDriverStarted) return false
+        return driverIsStarted(driver)
+    }
+
+    private fun driverIsStarted(driver: MidiDriver): Boolean {
+        return try {
+            driver.isStarted()
+        } catch (_: UnsatisfiedLinkError) {
+            // Bibliothèque native pas encore recompilée : config() vaut null si le pilote est arrêté
+            try {
+                driver.config() != null
+            } catch (_: Exception) {
+                false
+            }
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Démarre le pilote et lui renvoie nos réglages : un pilote neuf repart des valeurs
+     * d'usine (réverbération, volume, égaliseur) et sans la banque DLS.
+     */
+    private fun startDriverAndRestoreSettings() {
+        val driver = midiDriver ?: return
+        driver.start()
+        isMidiDriverStarted = driverIsStarted(driver)
+        if (!isMidiDriverStarted) return
+
+        pendingReverbPreset?.let { preset ->
+            try {
+                driver.setReverb(preset)
+            } catch (_: Exception) { }
+        }
+        lastVolumePercent?.let { volume ->
+            try {
+                driver.setVolume(volume)
+            } catch (_: Exception) { }
+        }
+        applyEqToDriver()
+        dlsPath?.let { loadSoundFont(it) }
     }
 
     // ==================== Audio Device Routing ====================
@@ -875,15 +917,15 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
                 return false
             }
 
-            val soundFontBytes = soundFontFile.readBytes()
-
-            val config = midiDriver?.config()
-            if (config == null) {
-                android.util.Log.w(TAG, "loadSoundFont: midiDriver not configured")
+            val driver = midiDriver
+            if (driver == null || !driverIsStarted(driver)) {
+                android.util.Log.w(TAG, "loadSoundFont: midiDriver not started")
                 return false
             }
 
-            val loaded = midiDriver?.loadDLS(soundFontBytes) ?: false
+            val soundFontBytes = soundFontFile.readBytes()
+
+            val loaded = driver.loadDLS(soundFontBytes)
             if (!loaded) {
                 android.util.Log.w(TAG, "loadSoundFont: loadDLS returned false (not a valid DLS file?)")
             }

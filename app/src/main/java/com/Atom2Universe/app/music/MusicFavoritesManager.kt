@@ -52,6 +52,11 @@ object MusicFavoritesManager {
 
     private var isLoaded = false
 
+    // Lecture du fichier ratée (JSON tronqué…) : ne plus rien écrire, sinon la liste
+    // vide en mémoire écraserait les données encore présentes dans le fichier
+    @Volatile
+    private var loadFailed = false
+
     // Scope pour les opérations en arrière-plan (écriture des tags)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -120,6 +125,7 @@ object MusicFavoritesManager {
             val json = JSONObject(jsonString)
             val version = json.optInt("version", 1)
             val favoritesArray = json.optJSONArray("favorites") ?: JSONArray()
+            loadFailed = false
 
             favoritesCache.clear()
             deletedFavoritesCache.clear()
@@ -194,7 +200,10 @@ object MusicFavoritesManager {
             Log.d(TAG, "Loaded ${favoritesCache.size} favorites, ${deletedFavoritesCache.size} deleted (pending sync)")
         } catch (e: Exception) {
             Log.e(TAG, "Erreur chargement favoris", e)
-            isLoaded = true
+            // Rien de partiel en mémoire, aucune sauvegarde ; nouvel essai au prochain chargement
+            favoritesCache.clear()
+            deletedFavoritesCache.clear()
+            loadFailed = true
         }
     }
 
@@ -212,6 +221,10 @@ object MusicFavoritesManager {
      * Sauvegarde les favoris actifs ET les favoris supprimés (soft-delete).
      */
     private fun saveFavoritesInternal(file: File) {
+        if (loadFailed) {
+            Log.w(TAG, "Favorites file could not be read, not overwriting it")
+            return
+        }
         try {
             val json = JSONObject().apply {
                 put("version", JSON_VERSION)
@@ -240,9 +253,7 @@ object MusicFavoritesManager {
                 })
             }
 
-            // Crée le dossier parent si nécessaire
-            file.parentFile?.mkdirs()
-            file.writeText(json.toString(2))
+            MusicFileWriter.writeTextAtomically(file, json.toString(2))
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sauvegarde favoris", e)
         }

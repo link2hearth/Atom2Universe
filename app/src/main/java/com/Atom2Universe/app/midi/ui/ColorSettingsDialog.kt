@@ -210,12 +210,12 @@ class ColorSettingsDialog : DialogFragment() {
 
         // Update channel count
         val customChannelCount = ColorSettingsManager.getCustomChannelColorCount()
-        textChannelsCount.text = if (customChannelCount > 0) "$customChannelCount/16" else ""
+        textChannelsCount.text = if (customChannelCount > 0) getString(R.string.midi_ui_count_of, customChannelCount, 16) else ""
         textChannelsCount.visibility = if (customChannelCount > 0) View.VISIBLE else View.GONE
 
         // Update instrument count
         val customInstrumentCount = ColorSettingsManager.getCustomInstrumentColorCount()
-        textInstrumentsCount.text = if (customInstrumentCount > 0) "$customInstrumentCount/128" else ""
+        textInstrumentsCount.text = if (customInstrumentCount > 0) getString(R.string.midi_ui_count_of, customInstrumentCount, 128) else ""
         textInstrumentsCount.visibility = if (customInstrumentCount > 0) View.VISIBLE else View.GONE
 
         // Update instruments adapter
@@ -314,7 +314,7 @@ class ColorSettingsDialog : DialogFragment() {
 
             // Count of custom colors in this family
             val customCount = family.range.count { ColorSettingsManager.hasCustomInstrumentColor(it) }
-            holder.textSelectedCount.text = if (customCount > 0) "$customCount/8" else ""
+            holder.textSelectedCount.text = if (customCount > 0) getString(R.string.midi_ui_count_of, customCount, family.range.count()) else ""
             holder.textSelectedCount.visibility = if (customCount > 0) View.VISIBLE else View.GONE
 
             // Expand/collapse state

@@ -1,7 +1,9 @@
 package com.Atom2Universe.app.music.navidrome
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.Atom2Universe.app.A2UApplication
 import com.Atom2Universe.app.music.model.MusicTrack
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.security.MessageDigest
+import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 
 class SubsonicApiClient(
@@ -21,7 +24,28 @@ class SubsonicApiClient(
         private const val TAG = "SubsonicApiClient"
         private const val API_VERSION = "1.16.1"
         private const val CLIENT_NAME = "A2U"
-        private const val SALT = "A2USalt42"
+
+        private const val PREFS_NAME = "a2u_navidrome_auth"
+        private const val KEY_MEDIA_SECRET = "media_salt_secret"
+
+        private val random = SecureRandom()
+
+        private fun randomHex(bytes: Int): String {
+            val buffer = ByteArray(bytes)
+            random.nextBytes(buffer)
+            return buffer.joinToString("") { "%02x".format(it) }
+        }
+
+        /**
+         * Secret tiré une fois par installation, qui sert à dériver le sel des adresses de
+         * lecture et de pochette (voir [mediaSalt]).
+         */
+        private val mediaSecret: String by lazy {
+            val prefs = A2UApplication.appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            prefs.getString(KEY_MEDIA_SECRET, null) ?: randomHex(16).also {
+                prefs.edit().putString(KEY_MEDIA_SECRET, it).apply()
+            }
+        }
     }
 
     private val client = OkHttpClient.Builder()
@@ -30,9 +54,9 @@ class SubsonicApiClient(
         .readTimeout(15, TimeUnit.SECONDS)
         .build()
 
-    private val token: String by lazy {
-        md5(password + SALT)
-    }
+    /** Vrai si ce client a été créé pour ces réglages-là (adresse ET identifiants). */
+    fun isSameAccount(url: String, user: String, pass: String): Boolean =
+        serverUrl == url && username == user && password == pass
 
     private fun md5(input: String): String {
         val digest = MessageDigest.getInstance("MD5")
@@ -40,53 +64,72 @@ class SubsonicApiClient(
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
-    private fun authParams(): String =
-        "u=$username&t=$token&s=$SALT&v=$API_VERSION&c=$CLIENT_NAME&f=json"
+    /**
+     * Authentification Subsonic par jeton : t = md5(mot de passe + sel), le sel envoyé avec la
+     * requête. Un sel fixe faisait du jeton l'équivalent du mot de passe.
+     */
+    private fun authParams(salt: String): String =
+        "u=$username&t=${md5(password + salt)}&s=$salt&v=$API_VERSION&c=$CLIENT_NAME&f=json"
+
+    /**
+     * Sel des adresses de lecture et de pochette : propre à chaque ressource, mais stable.
+     * Ces adresses servent de clé au cache des pochettes et sont gardées dans la file de
+     * lecture ; un sel tiré à chaque fois les rendrait toutes différentes. Le serveur accepte
+     * n'importe quel sel tant que le jeton correspond.
+     */
+    private fun mediaSalt(endpoint: String, id: String): String =
+        md5("$mediaSecret|$endpoint|$id").take(16)
 
     private fun normalizedServerUrl(): String {
         val url = serverUrl.trimEnd('/')
         return if (url.startsWith("http://") || url.startsWith("https://")) url
-        else "http://$url"
+        else "https://$url"
     }
 
-    private fun buildEndpointUrl(endpoint: String, extraParams: String = ""): String {
+    /** Requête d'API : un sel neuf à chaque appel, comme le veut la norme Subsonic. */
+    private fun buildEndpointUrl(endpoint: String, extraParams: String = ""): String =
+        buildUrl(endpoint, randomHex(8), extraParams)
+
+    private fun buildUrl(endpoint: String, salt: String, extraParams: String): String {
         val base = normalizedServerUrl()
         val params = if (extraParams.isNotBlank()) "&$extraParams" else ""
-        return "$base/rest/$endpoint?${authParams()}$params"
+        return "$base/rest/$endpoint?${authParams(salt)}$params"
     }
 
     fun buildStreamUrl(trackId: String): String =
-        buildEndpointUrl("stream", "id=$trackId")
+        buildUrl("stream", mediaSalt("stream", trackId), "id=$trackId")
 
     fun buildCoverArtUrl(coverArtId: String): String =
-        buildEndpointUrl("getCoverArt", "id=$coverArtId")
+        buildUrl("getCoverArt", mediaSalt("getCoverArt", coverArtId), "id=$coverArtId")
 
     suspend fun testConnection(): Boolean = withContext(Dispatchers.IO) {
         try {
-            val url = buildEndpointUrl("ping")
-            Log.d(TAG, "testConnection URL: $url")
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-            val body = response.body?.string() ?: ""
-            Log.d(TAG, "testConnection HTTP ${response.code}: $body")
-            if (!response.isSuccessful) return@withContext false
-            val json = JSONObject(body)
-            val status = json.getJSONObject("subsonic-response").getString("status")
-            Log.d(TAG, "testConnection status: $status")
-            status == "ok"
+            // Pas d'adresse dans le journal : elle porte le jeton d'authentification.
+            val request = Request.Builder().url(buildEndpointUrl("ping")).build()
+            client.newCall(request).execute().use { response ->
+                Log.d(TAG, "testConnection HTTP ${response.code}")
+                if (!response.isSuccessful) return@withContext false
+                val body = response.body?.string() ?: ""
+                val json = JSONObject(body)
+                val status = json.getJSONObject("subsonic-response").getString("status")
+                Log.d(TAG, "testConnection status: $status")
+                status == "ok"
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "testConnection exception: ${e.javaClass.simpleName}: ${e.message}")
+            Log.e(TAG, "testConnection exception: ${e.javaClass.simpleName}")
             false
         }
     }
 
+    /** Corps de la réponse, ou null si la requête a échoué. La réponse est toujours fermée. */
+    private fun fetchBody(url: String): String? =
+        client.newCall(Request.Builder().url(url).build()).execute().use { response ->
+            if (response.isSuccessful) response.body?.string() else null
+        }
+
     suspend fun fetchArtists(): List<NavidromeArtist> = withContext(Dispatchers.IO) {
         try {
-            val url = buildEndpointUrl("getArtists")
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) return@withContext emptyList()
-            val body = response.body?.string() ?: return@withContext emptyList()
+            val body = fetchBody(buildEndpointUrl("getArtists")) ?: return@withContext emptyList()
             parseArtists(body)
         } catch (_: Exception) {
             emptyList()
@@ -95,11 +138,7 @@ class SubsonicApiClient(
 
     suspend fun fetchAlbums(artistId: String): List<NavidromeAlbum> = withContext(Dispatchers.IO) {
         try {
-            val url = buildEndpointUrl("getArtist", "id=$artistId")
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) return@withContext emptyList()
-            val body = response.body?.string() ?: return@withContext emptyList()
+            val body = fetchBody(buildEndpointUrl("getArtist", "id=$artistId")) ?: return@withContext emptyList()
             parseAlbums(body)
         } catch (_: Exception) {
             emptyList()
@@ -108,11 +147,7 @@ class SubsonicApiClient(
 
     suspend fun fetchTracks(albumId: String): List<MusicTrack> = withContext(Dispatchers.IO) {
         try {
-            val url = buildEndpointUrl("getAlbum", "id=$albumId")
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) return@withContext emptyList()
-            val body = response.body?.string() ?: return@withContext emptyList()
+            val body = fetchBody(buildEndpointUrl("getAlbum", "id=$albumId")) ?: return@withContext emptyList()
             parseTracks(body)
         } catch (_: Exception) {
             emptyList()

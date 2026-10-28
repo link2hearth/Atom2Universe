@@ -73,6 +73,12 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     /** Vrai si la partie est perdue (plus rien à jouer) : elle s'arrête sans récompense. */
     protected open fun isLost(state: S): Boolean = false
 
+    /**
+     * Vrai si une défaite montre la solution (Boîte noire, Mastermind) : la partie compte alors
+     * comme aidée, pour qu'annuler puis recopier la solution ne rapporte rien.
+     */
+    protected open val revealsOnLoss: Boolean = false
+
     /** Ce qui s'affiche à côté du chrono (mines restantes, coups…), ou null. */
     protected open fun statusText(state: S): String? = null
 
@@ -222,8 +228,16 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         }
     }
 
+    /** Vrai pendant qu'une démonstration se joue : les commandes du jeu n'y touchent pas. */
+    protected val demoRunning: Boolean get() = demoSteps != null
+
     /** Joue un coup : l'état suivant remplace tout ce qui avait été annulé. */
     protected fun play(next: S) {
+        if (demoSteps != null) return
+        push(next)
+    }
+
+    private fun push(next: S) {
         if (solved || lost || cursor < 0 || generation?.isActive == true) return
         cancelHint()
         while (history.size > cursor + 1) history.removeAt(history.size - 1)
@@ -271,7 +285,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             val steps = demoSteps ?: return
             if (demoIndex >= steps.size || solved || lost) { stopDemo(); return }
             onDemoStep(demoIndex)
-            play(steps[demoIndex++])
+            push(steps[demoIndex++])
             if (demoSteps != null) handler.postDelayed(this, demoStepMs)
         }
     }
@@ -409,6 +423,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             }
             isLost(state) -> {
                 lost = true
+                if (revealsOnLoss) assisted = true
                 stopClock()
                 board.inputEnabled = false
                 save()
@@ -487,6 +502,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         val currentText = prefs.getString(KEY_CURRENT, null) ?: return false
         val first = runCatching { decode(initialText) }.getOrNull() ?: return false
         val state = runCatching { decode(currentText) }.getOrNull() ?: return false
+        // Lisible mais qui ne colle plus au jeu (image retirée…) : on repart d'une partie neuve.
+        if (runCatching { isSolved(first); isSolved(state); statusText(state) }.isFailure) return false
         preset = prefs.getInt(KEY_PRESET, defaultPreset).coerceIn(0, presets.size - 1)
         history.clear()
         history.add(first)
@@ -498,7 +515,14 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         rewarded = prefs.getBoolean(KEY_REWARDED, false)
         assisted = prefs.getBoolean(KEY_ASSISTED, false)
         updateChips()
-        show(state)
+        if (runCatching { show(state) }.isFailure) {
+            board.state = null
+            history.clear()
+            cursor = -1
+            solved = false
+            lost = false
+            return false
+        }
         if (solved) board.inputEnabled = false
         return true
     }

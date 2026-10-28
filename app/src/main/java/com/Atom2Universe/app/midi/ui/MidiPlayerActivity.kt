@@ -48,7 +48,6 @@ import com.Atom2Universe.app.midi.service.PlaybackQueueManager
 import kotlinx.coroutines.launch
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.AudioHubActivity
-import java.util.Locale
 
 /**
  * Activity principale du lecteur MIDI
@@ -94,6 +93,18 @@ class MidiPlayerActivity : AudioThemedActivity() {
     private var playbackBarRepeatMode = PlaybackQueueManager.RepeatMode.NONE
     private var colorActive = 0
     private var colorInactive = 0
+
+    // Ce que la barre affiche déjà : l'état arrive 10 fois par seconde, on ne touche une vue
+    // que si sa valeur change (et rien tant que la barre est cachée)
+    private var barShownPlaying: Boolean? = null
+    private var barShownShuffle: Boolean? = null
+    private var barShownRepeat: PlaybackQueueManager.RepeatMode? = null
+    private var barShownPositionSec = -1L
+    private var barShownDurationSec = -1L
+    private var barShownProgress = -1
+    private var playbackBarPositionMs = 0L
+    private var playbackBarIsPlaying = false
+    private var lastSentPlaying: Boolean? = null
 
     // MediaBrowser pour connexion au service
     private lateinit var mediaBrowser: MediaBrowserCompat
@@ -213,7 +224,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
     private suspend fun createMidiTrackFromUri(uri: Uri): com.Atom2Universe.app.midi.data.MidiTrack? =
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
             try {
-                val fileName = getFileNameFromUri(uri) ?: "Unknown MIDI"
+                val fileName = getFileNameFromUri(uri) ?: getString(R.string.midi_ui_unknown_midi)
 
                 com.Atom2Universe.app.midi.data.MidiTrack(
                     id = uri.hashCode().toLong(),
@@ -362,7 +373,10 @@ class MidiPlayerActivity : AudioThemedActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && playbackBarDurationMs > 0) {
                     val positionMs = (progress.toLong() * playbackBarDurationMs) / 1000
-                    playbackBarTimeCurrent.text = formatTime(positionMs)
+                    playbackBarTimeCurrent.text = formatMidiTime(this@MidiPlayerActivity, positionMs)
+                    // Le doigt a changé le texte et la barre : les réafficher à la prochaine mise à jour
+                    barShownPositionSec = -1L
+                    barShownProgress = -1
                 }
             }
 
@@ -393,20 +407,27 @@ class MidiPlayerActivity : AudioThemedActivity() {
         // Show playback bar on Library and Playlists tabs if there's playback
         // Hide on Now Playing tab (controls are already there)
         // Hide when practice mode is active (not useful there)
-        playbackBarContainer.visibility = if (isPlaying && currentTab != 2 && !isPracticeVisible) {
-            View.VISIBLE
-        } else {
-            View.GONE
+        val visible = isPlaying && currentTab != 2 && !isPracticeVisible
+        val wasVisible = playbackBarContainer.visibility == View.VISIBLE
+        playbackBarContainer.visibility = if (visible) View.VISIBLE else View.GONE
+
+        // Barre de nouveau visible : tout réafficher depuis le dernier état reçu
+        if (visible && !wasVisible) {
+            barShownPlaying = null
+            barShownShuffle = null
+            barShownRepeat = null
+            barShownPositionSec = -1L
+            barShownDurationSec = -1L
+            barShownProgress = -1
+            renderPlaybackBar()
         }
     }
 
     /**
-     * Met à jour l'UI de la barre de lecture avec l'état du playback
+     * Mémorise l'état du playback, puis met à jour la barre si elle est visible
      */
     private fun updatePlaybackBarUI(state: PlaybackStateCompat) {
-        // Update play/pause button
-        val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
-        playbackBarPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+        playbackBarIsPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
 
         // Extract shuffle/repeat and position/duration from extras
         state.extras?.let { extras ->
@@ -415,24 +436,52 @@ class MidiPlayerActivity : AudioThemedActivity() {
             playbackBarRepeatMode = PlaybackQueueManager.RepeatMode.entries.getOrElse(repeatModeOrdinal) {
                 PlaybackQueueManager.RepeatMode.NONE
             }
+            playbackBarPositionMs = extras.getLong(MidiPlaybackService.EXTRA_POSITION_MS, 0L)
+            playbackBarDurationMs = extras.getLong(MidiPlaybackService.EXTRA_DURATION_MS, 0L)
+        }
 
+        renderPlaybackBar()
+    }
+
+    /**
+     * Affiche l'état mémorisé dans la barre : icônes et teintes seulement quand elles changent,
+     * textes seulement quand la seconde change.
+     */
+    private fun renderPlaybackBar() {
+        if (playbackBarContainer.visibility != View.VISIBLE) return
+
+        if (barShownPlaying != playbackBarIsPlaying) {
+            barShownPlaying = playbackBarIsPlaying
+            playbackBarPlayPause.setImageResource(if (playbackBarIsPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+        }
+        if (barShownShuffle != playbackBarShuffleEnabled) {
+            barShownShuffle = playbackBarShuffleEnabled
             updatePlaybackBarShuffleButton()
+        }
+        if (barShownRepeat != playbackBarRepeatMode) {
+            barShownRepeat = playbackBarRepeatMode
             updatePlaybackBarRepeatButton()
+        }
 
-            // Position and duration
-            val positionMs = extras.getLong(MidiPlaybackService.EXTRA_POSITION_MS, 0L)
-            val durationMs = extras.getLong(MidiPlaybackService.EXTRA_DURATION_MS, 0L)
-            playbackBarDurationMs = durationMs
-
-            // Update seek bar and time labels
-            playbackBarTimeCurrent.text = formatTime(positionMs)
-            playbackBarTimeTotal.text = formatTime(durationMs)
-            if (durationMs > 0) {
-                val progress = ((positionMs * 1000) / durationMs).toInt().coerceIn(0, 1000)
-                playbackBarSeek.progress = progress
-            } else {
-                playbackBarSeek.progress = 0
-            }
+        // Update seek bar and time labels
+        val positionMs = playbackBarPositionMs
+        val durationMs = playbackBarDurationMs
+        if (positionMs / 1000 != barShownPositionSec) {
+            barShownPositionSec = positionMs / 1000
+            playbackBarTimeCurrent.text = formatMidiTime(this, positionMs)
+        }
+        if (durationMs / 1000 != barShownDurationSec) {
+            barShownDurationSec = durationMs / 1000
+            playbackBarTimeTotal.text = formatMidiTime(this, durationMs)
+        }
+        val progress = if (durationMs > 0) {
+            ((positionMs * 1000) / durationMs).toInt().coerceIn(0, 1000)
+        } else {
+            0
+        }
+        if (progress != barShownProgress) {
+            barShownProgress = progress
+            playbackBarSeek.progress = progress
         }
     }
 
@@ -466,22 +515,6 @@ class MidiPlayerActivity : AudioThemedActivity() {
         playbackBarRepeat.imageTintList = ColorStateList.valueOf(
             if (playbackBarRepeatMode == PlaybackQueueManager.RepeatMode.NONE) colorInactive else colorActive
         )
-    }
-
-    /**
-     * Formate un temps en millisecondes en "m:ss" ou "h:mm:ss"
-     */
-    private fun formatTime(ms: Long): String {
-        val totalSeconds = ms / 1000
-        val hours = totalSeconds / 3600
-        val minutes = (totalSeconds % 3600) / 60
-        val seconds = totalSeconds % 60
-
-        return if (hours > 0) {
-            String.format(Locale.ROOT, "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
-        }
     }
 
     fun selectTab(position: Int) {
@@ -588,8 +621,12 @@ class MidiPlayerActivity : AudioThemedActivity() {
             updatePlaybackState(state)
             // Update playback bar UI
             state?.let { updatePlaybackBarUI(it) }
+            // Seulement au changement (l'état arrive 10 fois par seconde avec la position)
             val isPlaying = state?.state == PlaybackStateCompat.STATE_PLAYING
-            viewModel.setPlaying(isPlaying)
+            if (isPlaying != lastSentPlaying) {
+                lastSentPlaying = isPlaying
+                viewModel.setPlaying(isPlaying)
+            }
         }
 
         override fun onMetadataChanged(metadata: android.support.v4.media.MediaMetadataCompat?) {
@@ -821,16 +858,14 @@ class MidiPlayerActivity : AudioThemedActivity() {
             practiceBackStackListener = null
         }
 
-        // Ne déconnecte que si la musique ne joue pas
-        // Si elle joue, le service continue en foreground indépendamment
-        val isPlaying = mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING ||
-                        mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PAUSED
-
-        if (!isPlaying && mediaBrowser.isConnected) {
-            mediaBrowser.disconnect()
+        // Toujours se déconnecter en quittant l'écran (sinon la connexion au service fuit) :
+        // le service continue de jouer grâce à startService() + startForeground()
+        cancelConnectionTimeout()
+        if (isControllerCallbackRegistered) {
+            mediaController?.unregisterCallback(controllerCallback)
+            isControllerCallbackRegistered = false
         }
-        // Note: Si isPlaying, on laisse le MediaBrowser se déconnecter naturellement
-        // Le service reste en vie grâce à startService() + startForeground()
+        mediaBrowser.disconnect()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -1248,7 +1283,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
         // Callback: SF2 sélectionné (déjà importé)
         dialog.onSf2Selected = { sf2Path ->
             lifecycleScope.launch {
-                val sf2Label = settingsRepository.getSoundFontLabel() ?: "SoundFont"
+                val sf2Label = settingsRepository.getSoundFontLabel() ?: getString(R.string.midi_ui_soundfont_fallback)
                 Toast.makeText(
                     this@MidiPlayerActivity,
                     getString(R.string.midi_synth_switched_sf2, sf2Label),
@@ -1318,7 +1353,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
         // Callback: FluidSynth sélectionné
         dialog.onFluidSynthSelected = { sf2Path ->
             lifecycleScope.launch {
-                val sf2Label = settingsRepository.getSoundFontLabel() ?: "SoundFont"
+                val sf2Label = settingsRepository.getSoundFontLabel() ?: getString(R.string.midi_ui_soundfont_fallback)
                 Toast.makeText(
                     this@MidiPlayerActivity,
                     getString(R.string.midi_synth_switched_fluidsynth, sf2Label),
@@ -1459,7 +1494,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
             channelNumber = rightHandChannel,  // Default to right hand for single-channel operations
             noteRangeMin = noteRangeMin,
             noteRangeMax = noteRangeMax,
-            instrumentName = "$leftHandName + $rightHandName",
+            instrumentName = getString(R.string.midi_ui_two_hands_name, leftHandName, rightHandName),
             trackTitle = trackTitle,
             trackIndex = 0,
             programNumber = 0,
@@ -1535,7 +1570,12 @@ class MidiPlayerActivity : AudioThemedActivity() {
                 lifecycleScope.launch {
                     val path = soundFontManager.getCurrentSoundFontPath()
                     if (path != null) {
-                        val report = com.Atom2Universe.app.midi.sf2.Sf2FileCache.getValidationResult(path)?.getDetailedReport()
+                        // Lecture du fichier (et attente du verrou du cache) hors du fil principal
+                        val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                            com.Atom2Universe.app.midi.sf2.Sf2FileCache.getValidationResult(path)
+                        }
+                        if (isFinishing || isDestroyed) return@launch
+                        val report = result?.getDetailedReport(this@MidiPlayerActivity)
                             ?: getString(R.string.midi_sf2_val_unavailable)
                         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this@MidiPlayerActivity)
                             .setTitle(R.string.midi_sf2_report_title)

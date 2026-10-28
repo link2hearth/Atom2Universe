@@ -107,6 +107,7 @@ class RectState(
                 for (y in r[1] until r[1] + r[3]) for (x in r[0] until r[0] + r[2]) covered[y * w + x] = v
             }
             fun search(left: List<Int>) {
+                checkPuzzleWork()
                 if (found >= limit || ++nodes > 200_000) return
                 if (left.isEmpty()) { if (covered.all { it }) found++; return }
                 var best = -1; var bestList: List<IntArray> = emptyList()

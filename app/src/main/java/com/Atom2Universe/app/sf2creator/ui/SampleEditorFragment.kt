@@ -20,6 +20,7 @@ import com.Atom2Universe.app.sf2creator.audio.DeClicker
 import com.Atom2Universe.app.sf2creator.audio.EnvelopeGenerator
 import com.Atom2Universe.app.sf2creator.audio.Normalizer
 import com.Atom2Universe.app.sf2creator.audio.SamplePlayer
+import com.Atom2Universe.app.sf2creator.audio.SampleRecorder
 import com.Atom2Universe.app.sf2creator.audio.SimpleSamplePlayer
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -45,10 +46,7 @@ class SampleEditorFragment : Fragment() {
     private lateinit var spectrumView: SpectrumView
     private lateinit var samplePlayer: SamplePlayer
     private lateinit var simplePlayer: SimpleSamplePlayer  // Clean player for sustain/loop tests
-    private lateinit var audioProcessor: AudioProcessor
     private lateinit var normalizer: Normalizer
-    private lateinit var deClicker: DeClicker
-    private lateinit var envelopeGenerator: EnvelopeGenerator
 
     // UI elements
     private lateinit var infoText: TextView
@@ -80,6 +78,9 @@ class SampleEditorFragment : Fragment() {
     private var processedSamples: ShortArray? = null
     private var processingResult: AudioProcessor.ProcessedResult? = null
     private var rootNote: Int = 60
+    private var sampleRate: Int = SampleRecorder.SAMPLE_RATE
+    // A new recording is cleaned on load; an existing sample is shown and returned as it is
+    private var cleanUpOnLoad: Boolean = true
 
     // Processing options
     private var selectedAdsrPreset: EnvelopeGenerator.ADSRSettings = EnvelopeGenerator.Presets.NONE
@@ -109,11 +110,8 @@ class SampleEditorFragment : Fragment() {
 
         // Initialize processors
         samplePlayer = SamplePlayer()
-        simplePlayer = SimpleSamplePlayer()  // Clean player for loop/sustain tests
-        audioProcessor = AudioProcessor()
+        simplePlayer = SimpleSamplePlayer(sampleRate)  // Clean player for loop/sustain tests
         normalizer = Normalizer()
-        deClicker = DeClicker()
-        envelopeGenerator = EnvelopeGenerator(44100)
 
         // Find views
         waveformView = view.findViewById(R.id.waveformView)
@@ -275,24 +273,26 @@ class SampleEditorFragment : Fragment() {
     private fun setupAdsrPresets() {
         // Add radio buttons for each ADSR preset
         val presets = listOf(
-            "None" to EnvelopeGenerator.Presets.NONE,
-            "Piano" to EnvelopeGenerator.Presets.PIANO,
-            "Organ" to EnvelopeGenerator.Presets.ORGAN,
-            "Pad" to EnvelopeGenerator.Presets.PAD,
-            "Pluck" to EnvelopeGenerator.Presets.PLUCK,
-            "Strings" to EnvelopeGenerator.Presets.STRINGS
+            R.string.sf2_envelope_none to EnvelopeGenerator.Presets.NONE,
+            R.string.sf2_envelope_piano to EnvelopeGenerator.Presets.PIANO,
+            R.string.sf2_envelope_organ to EnvelopeGenerator.Presets.ORGAN,
+            R.string.sf2_envelope_pad to EnvelopeGenerator.Presets.PAD,
+            R.string.sf2_envelope_pluck to EnvelopeGenerator.Presets.PLUCK,
+            R.string.sf2_envelope_strings to EnvelopeGenerator.Presets.STRINGS
         )
 
         // Determine which preset should be selected (restored or default)
         val presetToSelect = pendingAdsrPreset ?: selectedAdsrPreset
+        val density = resources.displayMetrics.density
+        fun dp(value: Int) = (value * density).toInt()
 
         for ((name, preset) in presets) {
             val radioButton = RadioButton(requireContext()).apply {
                 id = View.generateViewId()
-                text = name
+                text = getString(name)
                 tag = preset
                 setTextColor(resources.getColor(R.color.startup_text_primary, requireContext().theme))
-                setPadding(16, 8, 24, 8)
+                setPadding(dp(8), dp(4), dp(12), dp(4))
                 // Check if this preset matches the one to restore
                 isChecked = (preset == presetToSelect)
             }
@@ -325,10 +325,13 @@ class SampleEditorFragment : Fragment() {
      * Set the sample data to edit.
      * Can be called before onViewCreated - data will be applied once the view is ready.
      */
-    fun setSampleData(samples: ShortArray, rootNote: Int) {
+    fun setSampleData(samples: ShortArray, rootNote: Int, sampleRate: Int, cleanUp: Boolean) {
         this.rawSamples = samples
         this.rootNote = rootNote
+        this.sampleRate = sampleRate
+        this.cleanUpOnLoad = cleanUp
         this.pendingSetup = true
+        if (::simplePlayer.isInitialized) simplePlayer.sampleRate = sampleRate
 
         // Only process if view is already created
         if (view != null && ::waveformView.isInitialized) {
@@ -391,9 +394,11 @@ class SampleEditorFragment : Fragment() {
     }
 
     private suspend fun processAndDisplay(samples: ShortArray) {
-        // Apply basic processing to avoid saturation and clicks
-        // This makes the preview sound cleaner without requiring manual "Process" click
-        val cleanedSamples = withContext(Dispatchers.Default) {
+        // A new recording gets basic processing to avoid saturation and clicks (cleaner
+        // preview without a manual "Process" click); an existing sample stays untouched
+        val rate = sampleRate
+        val cleanedSamples = if (!cleanUpOnLoad) samples else withContext(Dispatchers.Default) {
+            val deClicker = DeClicker(rate)
             var processed = samples.copyOf()
 
             // 1. Remove DC offset (prevents clicks at start/end)
@@ -428,7 +433,7 @@ class SampleEditorFragment : Fragment() {
         updateSpectrum(cleanedSamples)
 
         // Show basic info about the cleaned sample
-        val durationMs = cleanedSamples.size * 1000 / 44100
+        val durationMs = cleanedSamples.size * 1000 / sampleRate
         val peakDb = normalizer.measurePeakDb(cleanedSamples)
         val rmsDb = normalizer.measureRMSDb(cleanedSamples)
 
@@ -457,7 +462,7 @@ class SampleEditorFragment : Fragment() {
         val floatSamples = FloatArray(samples.size) { i ->
             samples[i].toFloat() / Short.MAX_VALUE
         }
-        spectrumView.generateFromSamples(floatSamples, 44100)
+        spectrumView.generateFromSamples(floatSamples, sampleRate)
     }
 
     private fun updateInfo(result: AudioProcessor.ProcessedResult) {
@@ -473,13 +478,12 @@ class SampleEditorFragment : Fragment() {
     }
 
     private fun updateTrimInfo() {
-        val durationMs = waveformView.getTrimmedDurationMs()
+        val durationMs = waveformView.getTrimmedDurationMs(sampleRate)
         trimInfoText.text = getString(R.string.sf2_duration_value_ms, durationMs)
     }
 
     private fun updateLoopInfo(loopStart: Int, loopEnd: Int) {
         if (processedSamples == null) return
-        val sampleRate = 44100
 
         val loopLength = loopEnd - loopStart
         val loopMs = loopLength * 1000 / sampleRate
@@ -512,7 +516,7 @@ class SampleEditorFragment : Fragment() {
         // Play directly with SimpleSamplePlayer (no need to restore anything)
         simplePlayer.play(trimmedSamples)
 
-        val trimDurationMs = trimmedSamples.size * 1000 / 44100
+        val trimDurationMs = trimmedSamples.size * 1000 / sampleRate
         Toast.makeText(
             requireContext(),
             getString(R.string.sf2_preview_duration_ms, trimDurationMs),
@@ -527,7 +531,7 @@ class SampleEditorFragment : Fragment() {
             return
         }
 
-        val trimDurationMs = trimmedSamples.size * 1000 / 44100
+        val trimDurationMs = trimmedSamples.size * 1000 / sampleRate
 
         // Replace the current samples with trimmed version
         processedSamples = trimmedSamples
@@ -563,7 +567,7 @@ class SampleEditorFragment : Fragment() {
         android.util.Log.d("SampleEditor", "playPreview: $presetName - A=${selectedAdsrPreset.attackMs}ms D=${selectedAdsrPreset.decayMs}ms S=${selectedAdsrPreset.sustainLevel} R=${selectedAdsrPreset.releaseMs}ms")
 
         // Apply envelope using EnvelopeGenerator
-        val withEnvelope = envelopeGenerator.applyEnvelope(samples, selectedAdsrPreset)
+        val withEnvelope = EnvelopeGenerator(sampleRate).applyEnvelope(samples, selectedAdsrPreset)
 
         // Play using SimpleSamplePlayer for clean, click-free playback
         simplePlayer.play(withEnvelope)
@@ -576,19 +580,20 @@ class SampleEditorFragment : Fragment() {
     }
 
     private fun getPresetName(preset: EnvelopeGenerator.ADSRSettings): String {
-        return when {
+        val name = when {
             preset.attackMs == 0f && preset.decayMs == 0f &&
-            preset.sustainLevel == 1.0f && preset.releaseMs == 0f -> "None"
+            preset.sustainLevel == 1.0f && preset.releaseMs == 0f -> R.string.sf2_envelope_none
             preset.attackMs == EnvelopeGenerator.Presets.PIANO.attackMs &&
-            preset.decayMs == EnvelopeGenerator.Presets.PIANO.decayMs -> "Piano"
+            preset.decayMs == EnvelopeGenerator.Presets.PIANO.decayMs -> R.string.sf2_envelope_piano
             preset.sustainLevel == EnvelopeGenerator.Presets.ORGAN.sustainLevel &&
-            preset.attackMs == EnvelopeGenerator.Presets.ORGAN.attackMs -> "Organ"
-            preset.attackMs == EnvelopeGenerator.Presets.PAD.attackMs -> "Pad"
+            preset.attackMs == EnvelopeGenerator.Presets.ORGAN.attackMs -> R.string.sf2_envelope_organ
+            preset.attackMs == EnvelopeGenerator.Presets.PAD.attackMs -> R.string.sf2_envelope_pad
             preset.decayMs == EnvelopeGenerator.Presets.PLUCK.decayMs &&
-            preset.sustainLevel == EnvelopeGenerator.Presets.PLUCK.sustainLevel -> "Pluck"
-            preset.attackMs == EnvelopeGenerator.Presets.STRINGS.attackMs -> "Strings"
-            else -> "Custom"
+            preset.sustainLevel == EnvelopeGenerator.Presets.PLUCK.sustainLevel -> R.string.sf2_envelope_pluck
+            preset.attackMs == EnvelopeGenerator.Presets.STRINGS.attackMs -> R.string.sf2_envelope_strings
+            else -> R.string.sf2_envelope_custom
         }
+        return getString(name)
     }
 
     /**
@@ -629,10 +634,10 @@ class SampleEditorFragment : Fragment() {
         }
 
         isSustainPlaying = true
-        sustainTestButton.text = "..."
+        sustainTestButton.text = getString(R.string.sf2_sustain_playing)
 
         // Calculate loop count for ~10 seconds of playback
-        val loopDurationMs = (loopEnd - loopStart) * 1000 / 44100
+        val loopDurationMs = ((loopEnd - loopStart) * 1000 / sampleRate).coerceAtLeast(1)
         val loopCount = maxOf(1, (10000 / loopDurationMs))
 
         // Use SimpleSamplePlayer's built-in looped sample preparation
@@ -660,6 +665,7 @@ class SampleEditorFragment : Fragment() {
 
     private fun applyProcessing() {
         val samples = rawSamples ?: return
+        val rate = sampleRate
 
         viewLifecycleOwner.lifecycleScope.launch {
             val result = withContext(Dispatchers.Default) {
@@ -674,7 +680,7 @@ class SampleEditorFragment : Fragment() {
                     fadeOutMs = 15,
                     detectLoop = true
                 )
-                audioProcessor.process(samples, options)
+                AudioProcessor(rate).process(samples, options)
             }
 
             processingResult = result
@@ -712,6 +718,14 @@ class SampleEditorFragment : Fragment() {
             hasLoop = loopEnd > loopStart && (loopEnd - loopStart) > 100,
             adsrPreset = selectedAdsrPreset
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Nothing keeps playing in the background
+        stopSustainTest()
+        simplePlayer.stop()
+        samplePlayer.stop()
     }
 
     override fun onDestroyView() {

@@ -66,6 +66,10 @@
     <string name="crypto_news_widget_refresh_label">Intervalle de rafraîchissement</string>
     <string name="crypto_news_refresh_minutes">%1$d min</string>
     <string name="crypto_news_refresh_hours">%1$d h</string>
+    <string name="crypto_news_age_now">à l\'instant</string>
+    <string name="crypto_news_age_minutes">il y a %1$d min</string>
+    <string name="crypto_news_age_hours">il y a %1$d h</string>
+    <string name="crypto_news_age_days">il y a %1$d j</string>
     <string name="crypto_background_missing_folder_toast">Choisissez d\'abord un dossier d\'images.</string>
     <string name="crypto_background_no_images_toast">Aucune image trouvée dans ce dossier.</string>
     <string name="crypto_background_load_error_toast">Impossible de charger cette image.</string>

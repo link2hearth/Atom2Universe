@@ -33,13 +33,19 @@ class BilliardPocketLabels(context: Context,private val scene: BilliardRenderer,
     private var drawnFrame=-1L
     private val follow=object: Runnable {
         override fun run() {
-            if(!isAttachedToWindow) return
+            // In the background the window is hidden: the loop stops and restarts with it.
+            if(!isAttachedToWindow || windowVisibility!=VISIBLE) return
             if(scene.renderedFrames!=drawnFrame) invalidate()
             if(scene.camera.settling) postOnAnimation(this) else postDelayed(this,100)
         }
     }
     override fun onAttachedToWindow() { super.onAttachedToWindow(); removeCallbacks(follow); post(follow) }
     override fun onDetachedFromWindow() { removeCallbacks(follow); super.onDetachedFromWindow() }
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        removeCallbacks(follow)
+        if(visibility==VISIBLE && isAttachedToWindow) post(follow)
+    }
     private fun ballRadius(ball: Ball,center: Pair<Float,Float>): Float {
         val edges=listOfNotNull(scene.screenPoint(ball.p+V3(ball.radius),ball.radius),
             scene.screenPoint(ball.p+V3(0.0,ball.radius),ball.radius),scene.screenPoint(ball.p,ball.radius*2))

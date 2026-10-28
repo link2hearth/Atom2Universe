@@ -20,6 +20,16 @@
     <string name="trebuchet_status_backwards">It went backwards! The hook holds the sling too long — stand it up, or shorten the sling</string>
     <string name="trebuchet_specs_previous">Previous</string>
     <string name="trebuchet_specs_stored">Stored</string>
+    <string name="trebuchet_specs_kj">%1$d kJ</string>
+    <string name="trebuchet_specs_kg">%1$.0f kg</string>
+    <string name="trebuchet_value_m1">%1$.1f m</string>
+    <string name="trebuchet_value_m2">%1$.2f m</string>
+    <string name="trebuchet_value_ratio">%1$.1f:1</string>
+    <string name="trebuchet_value_kg">%1$d kg</string>
+    <string name="trebuchet_value_deg">%1$d°</string>
+    <string name="trebuchet_wind_speed">%1$d m/s</string>
+    <string name="trebuchet_distance_mark">%1$d m</string>
+    <string name="trebuchet_time_scrub">%1$02d:%2$02d  %3$s %4$.1f h/s</string>
     <string name="trebuchet_sel_beam">Beam — %1$s m · lever %2$s:1</string>
     <string name="trebuchet_sel_post">Post — %1$s m</string>
     <string name="trebuchet_sel_weight">Counterweight — %1$d kg · strap %2$s m</string>

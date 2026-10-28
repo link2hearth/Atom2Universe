@@ -8,7 +8,8 @@ import android.view.View
 class BilliardIconView(context: Context,val icon: Icon): View(context) {
     enum class Icon { MENU, CUE, ORBIT, TOP, SPIN, PLACE, BACK }
     private val p=Paint(Paint.ANTI_ALIAS_FLAG)
-    var active=false; set(value) { field=value; invalidate() }
+    // Set at every status refresh: only a real change redraws the window.
+    var active=false; set(value) { if(field!=value) { field=value; invalidate() } }
     override fun onDraw(canvas: Canvas) {
         val scale=minOf(width,height)/48f
         canvas.save(); canvas.scale(scale,scale)

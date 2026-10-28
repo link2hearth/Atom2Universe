@@ -245,6 +245,13 @@ class BalanceGame(
     var testAttempts = 0
         private set
 
+    /**
+     * Compte les briques revenues seules au plateau pendant la pose (tombées de la planche).
+     * Personne n'a touché à rien : c'est ce compteur qui dit à l'écran de se rafraîchir.
+     */
+    var trayReturns = 0
+        private set
+
     val world = PhysWorld()
     lateinit var plank: PhysBody
         private set
@@ -773,7 +780,10 @@ class BalanceGame(
                 }
                 // La pièce réintègre tout de suite le cycle : sans ce recalcul,
                 // son ancienne place vide ne se réapparaissait qu'après un swipe.
-                if (returnedToTray) layoutTray()
+                if (returnedToTray) {
+                    layoutTray()
+                    trayReturns++
+                }
             }
             Phase.TESTING -> {
                 applyLeverTorque()

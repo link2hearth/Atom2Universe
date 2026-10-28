@@ -214,59 +214,19 @@ internal class DungeonSceneArt {
             else DungeonSkeletonSprites.create(style, it % 8, it / 8)
         } else arrayOf(DungeonDemoSprites.rat(style)), seed).also { monsterVisuals[index] = style to it }
     }
-    fun drawMonster(c: Canvas, x: Float, y: Float, icy: Boolean, hurt: Boolean,
-        index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float, appearanceSeed: Int? = null) {
-
-        val visual = visualFor(style, index, appearanceSeed)
-        if (style.creature != null) {
-            val pose = if (icy) 0 else ((clock + index * 317) / 150).toInt() % 8
-            val bitmap = visual.poses[pose]
-            sprite(c, bitmap, x - 6, y + 19 - bitmap.height, 1f)
-            if (hurt) {
-                line(c, x + 12, y - 6, x + 16, y - 2, white)
-                line(c, x + 16, y - 6, x + 12, y - 2, white)
-            }
-            return
-        }
-        if (style.isSpider) {
-            val pose = if (icy) 0 else ((clock + index * 317) / 120).toInt() % 8
-            val bitmap = visual.poses[pose]
-            sprite(c, bitmap, x - 5, y + 19 - bitmap.height, 1f)
-            if (hurt) {
-                line(c, x + 13, y + 2, x + 17, y + 6, white)
-                line(c, x + 17, y + 2, x + 13, y + 6, white)
-            }
-            return
-        }
-        if (style.isPirate) {
-            val pose = if (icy) 0 else ((clock + index * 317) / 180).toInt() % 8
-            val bitmap = visual.poses[pose]
-            sprite(c, bitmap, x - 4, y + 19 - bitmap.height, 1f)
-            if (hurt) {
-                line(c, x + 11, y - 10, x + 15, y - 6, white)
-                line(c, x + 15, y - 10, x + 11, y - 6, white)
-            }
-            return
-        }
-        if (style.isAlien) {
-            val pose = if (icy) 0 else ((clock + index * 317) / 160).toInt() % 8
-            sprite(c, visual.poses[pose], x - 4, y - 17, 1f)
-            if (hurt) {
-                line(c, x + 12, y - 6, x + 16, y - 2, white)
-                line(c, x + 16, y - 6, x + 12, y - 2, white)
-            }
-            return
-        }
+    /**
+     * L'image d'animation que [drawMonster] dessinerait à [clock] : la pose (et la mâchoire), ou
+     * pour le rat le frémissement de la queue et le clignement. Deux horloges qui donnent le même
+     * numéro donnent exactement le même dessin, ce qui permet de garder le tampon d'un acteur.
+     */
+    fun monsterFrame(x: Float, icy: Boolean, index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float): Int {
+        if (style.creature != null) return if (icy) 0 else ((clock + index * 317) / 150).toInt() % 8
+        if (style.isSpider) return if (icy) 0 else ((clock + index * 317) / 120).toInt() % 8
+        if (style.isPirate) return if (icy) 0 else ((clock + index * 317) / 180).toInt() % 8
+        if (style.isAlien) return if (icy) 0 else ((clock + index * 317) / 160).toInt() % 8
         if (style.isVampire) {
             val phase = clock + index * 317
-            val pose = if (icy) 0 else (phase / if (style.isBat) 95 else 180).toInt() % 8
-            sprite(c, visual.poses[pose], x - 4, y - 17, 1f)
-            if (hurt) {
-                val hitY = y + if (style.isBat) -2 else -11
-                line(c, x + 11, hitY, x + 13, hitY + 2, white)
-                line(c, x + 13, hitY, x + 11, hitY + 2, white)
-            }
-            return
+            return if (icy) 0 else (phase / if (style.isBat) 95 else 180).toInt() % 8
         }
         if (style.isHumanoid) {
             val phase = clock + style.ordinal * 317 + x * 3
@@ -277,7 +237,65 @@ internal class DungeonSceneArt {
                 in 3800..4399 -> 2
                 else -> 0
             }
-            val bitmap = visual.poses[jaw * 8 + pose]
+            return jaw * 8 + pose
+        }
+        // Le rat : la queue (0, 1, 2 ; 1 = immobile) et le clignement (+3)
+        val tail = if (icy) 1 else (clock / 260).toInt() % 3
+        val blink = style != DungeonDemoSprites.MonsterStyle.BOSS && !icy && (clock.toInt() % 3200) < 150
+        return tail + if (blink) 3 else 0
+    }
+
+    fun drawMonster(c: Canvas, x: Float, y: Float, icy: Boolean, hurt: Boolean,
+        index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float, appearanceSeed: Int? = null) {
+
+        val visual = visualFor(style, index, appearanceSeed)
+        val frame = monsterFrame(x, icy, index, style, clock)
+        if (style.creature != null) {
+            val bitmap = visual.poses[frame]
+            sprite(c, bitmap, x - 6, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 12, y - 6, x + 16, y - 2, white)
+                line(c, x + 16, y - 6, x + 12, y - 2, white)
+            }
+            return
+        }
+        if (style.isSpider) {
+            val bitmap = visual.poses[frame]
+            sprite(c, bitmap, x - 5, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 13, y + 2, x + 17, y + 6, white)
+                line(c, x + 17, y + 2, x + 13, y + 6, white)
+            }
+            return
+        }
+        if (style.isPirate) {
+            val bitmap = visual.poses[frame]
+            sprite(c, bitmap, x - 4, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 11, y - 10, x + 15, y - 6, white)
+                line(c, x + 15, y - 10, x + 11, y - 6, white)
+            }
+            return
+        }
+        if (style.isAlien) {
+            sprite(c, visual.poses[frame], x - 4, y - 17, 1f)
+            if (hurt) {
+                line(c, x + 12, y - 6, x + 16, y - 2, white)
+                line(c, x + 16, y - 6, x + 12, y - 2, white)
+            }
+            return
+        }
+        if (style.isVampire) {
+            sprite(c, visual.poses[frame], x - 4, y - 17, 1f)
+            if (hurt) {
+                val hitY = y + if (style.isBat) -2 else -11
+                line(c, x + 11, hitY, x + 13, hitY + 2, white)
+                line(c, x + 13, hitY, x + 11, hitY + 2, white)
+            }
+            return
+        }
+        if (style.isHumanoid) {
+            val bitmap = visual.poses[frame]
             val top = y + 19 - bitmap.height
             sprite(c, bitmap, x - 4, top, 1f)
             if (hurt) {
@@ -293,7 +311,7 @@ internal class DungeonSceneArt {
             c.translate(-4f, -5f)
             c.scale(1.25f, 1.25f)
         }
-        val twitch = if (icy) 0f else ((clock / 260).toInt() % 3 - 1).toFloat()
+        val twitch = (frame % 3 - 1).toFloat()
         // Racine sous la croupe (26,11), puis courbe au ras du sol, sur la grille du corps.
         path.reset()
         path.moveTo(26f, 11f)
@@ -339,7 +357,7 @@ internal class DungeonSceneArt {
         if (hurt) {
             line(c, 8f, 8f, 10f, 10f, white)
             line(c, 8f, 10f, 10f, 8f, white)
-        } else if (style != DungeonDemoSprites.MonsterStyle.BOSS && !icy && (clock.toInt() % 3200) < 150) {
+        } else if (frame >= 3) {
             box(c, 8f, 8f, 3f, 3f, style.fur.toInt())
             box(c, 8f, 9f, 3f, 1f, ink)
         }

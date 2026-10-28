@@ -2,14 +2,12 @@ package com.Atom2Universe.app.science.solarsystem
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils
 import android.opengl.Matrix
 import com.Atom2Universe.app.graphics.SunAnimationState
 import com.Atom2Universe.app.graphics.SunPlasmaShader
-import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -84,6 +82,27 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         // Distance du repère solaire en unités de scène (non physique, juste pour visibilité)
         const val SUN_INDICATOR_DIST = 80f
         const val SUN_INDICATOR_RADIUS = 3.5f
+        const val SUN_HALF_SIZE = SUN_INDICATOR_RADIUS / (2f * 0.309f)
+        /** Au plus 30 rafraîchissements par seconde du plasma (phase = temps / 3 s). */
+        const val SUN_REFRESH_MS = 33L
+        const val EARTH_ASSET = "textures/earth.jpg"
+        const val MOON_ASSET = "textures/moon.jpg"
+
+        // Le repère solaire déjà rendu : la texture garde le RGB prémultiplié du plasma.
+        val SUN_QUAD_VERT = """
+            attribute vec4 aPos; uniform mat4 uMVP;
+            varying vec2 vTex;
+            void main(){ gl_Position = uMVP * aPos; vTex = aPos.xy * 0.5 + 0.5; }""".trimIndent()
+
+        // highp : en mediump (16 bits), la coordonnée tombait à un texel près sur 2048.
+        val SUN_QUAD_FRAG = """
+            #ifdef GL_FRAGMENT_PRECISION_HIGH
+            precision highp float;
+            #else
+            precision mediump float;
+            #endif
+            uniform sampler2D uTex; varying vec2 vTex;
+            void main(){ gl_FragColor = texture2D(uTex, vTex); }""".trimIndent()
     }
 
     // Programs
@@ -126,18 +145,37 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     // Simulation
     @Volatile var paused = false
     @Volatile var speedDaysPerSec = 1.0
+    // Écrite par l'interface (date choisie) et avancée par le fil GL : même verrou pour les deux.
+    private val simLock = Any()
     @Volatile var elapsedSimDays = 0.0
+        private set
+    fun setSimDays(days: Double) { synchronized(simLock) { elapsedSimDays = days } }
     @Volatile var targetBlend = 0f   // 0=RAPPROCHÉ, 1=SEMI-RÉALISTE
     @Volatile var currentBlend = 0f
-    private var lastFrameMs = -1L
+    @Volatile private var lastFrameMs = -1L
+    private var idle = true
+
+    /** Rendu à la demande ; le fil GL lui dit après chaque image s'il en faut une autre. */
+    internal var pacer: com.Atom2Universe.app.science.GLFramePacer? = null
+    fun resetClock() { lastFrameMs = -1L }
 
     // Focus
     @Volatile var focusBody = 0  // 0=Terre, 1=Lune
     private val focusPos = FloatArray(3)
 
-    // Positions monde (lues par la GLView pour le picking)
-    val moonWorldPos = FloatArray(3)
-    var screenW = 1f; var screenH = 1f
+    // Copie pour la sélection au doigt (fil UI) : pv et la Lune changent pendant l'image.
+    private val pickLock = Any()
+    private val pickPv = FloatArray(16)
+    private val pickMoon = FloatArray(3)
+    @Volatile var screenW = 1f; @Volatile var screenH = 1f
+
+    // Repère solaire rendu dans une texture, rafraîchie à 30 Hz au plus : son plasma
+    // (~27 bruits par pixel) évolue sur plusieurs secondes, la Terre et la Lune restent à 60 Hz.
+    private var sunFbo = 0; private var sunTex = 0; private var sunTexSize = 0
+    private var sunTexDirty = true
+    private var sunTexPhase = Float.NaN
+    private var sunTexAt = 0L
+    private var sunQuadProg = 0; private var sqMVP = 0; private var sqTex = 0; private var sqPos = 0
 
     var onBodyTapped: ((Int) -> Unit)? = null  // 0=Terre, 1=Lune
 
@@ -164,6 +202,8 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         compilePrograms()
         buildGeometry()
         loadTextures()
+        // Contexte neuf : l'ancienne texture du Soleil n'existe plus.
+        sunFbo = 0; sunTex = 0; sunTexSize = 0; sunTexDirty = true
     }
 
     override fun onSurfaceChanged(gl: GL10?, w: Int, h: Int) {
@@ -174,12 +214,13 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     override fun onDrawFrame(gl: GL10?) {
         val nowMs = android.os.SystemClock.uptimeMillis()
-        if (lastFrameMs < 0) lastFrameMs = nowMs
+        if (lastFrameMs < 0 || idle) lastFrameMs = nowMs
         val dtRealMs = (nowMs - lastFrameMs).coerceIn(0L, 100L)
         lastFrameMs = nowMs
 
-        if (!paused) {
-            elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
+        val isPaused = paused
+        if (!isPaused) {
+            synchronized(simLock) { elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec }
             sunAnimation.advance(dtRealMs)
         }
 
@@ -191,7 +232,6 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val moonXyz  = LunarCalculator.position3D(lunarPos, KM_PER_UNIT)
         val oScale = moonOrbitScale(currentBlend)
         moonXyz[0] *= oScale; moonXyz[1] *= oScale; moonXyz[2] *= oScale
-        moonWorldPos[0] = moonXyz[0]; moonWorldPos[1] = moonXyz[1]; moonWorldPos[2] = moonXyz[2]
 
         // Direction du Soleil (Terre héliocentrique → Soleil = direction opposée)
         val earthLong = OrbitalCalculator.orbitAngleDeg(SolarSystemData.planets[2], elapsedSimDays)
@@ -207,8 +247,11 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         focusPos[0] += (targetFX - focusPos[0]) * lt
         focusPos[1] += (targetFY - focusPos[1]) * lt
         focusPos[2] += (targetFZ - focusPos[2]) * lt
-
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+        // Lissage asymptotique : sous un dix-millième de la distance (moins d'un pixel), on
+        // rejoint la cible pour que la scène immobile cesse de redessiner.
+        val gap = abs(targetFX - focusPos[0]) + abs(targetFY - focusPos[1]) + abs(targetFZ - focusPos[2])
+        val focusSettled = gap < cameraDistance * 1e-4f
+        if (focusSettled) { focusPos[0] = targetFX; focusPos[1] = targetFY; focusPos[2] = targetFZ }
 
         val near = (cameraDistance * 0.005f).coerceAtLeast(0.000001f)
         val far  = (near * 200000f).coerceIn(50f, 5000f)
@@ -216,11 +259,23 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         buildViewMatrix()
         Matrix.multiplyMM(pv, 0, proj, 0, view, 0)
 
+        // Avant d'effacer l'écran : changer de cible de rendu au milieu de l'image coûte cher.
+        val sunTextured = updateSunTexture(sunPos, nowMs)
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+
         renderStars()
         renderMoonOrbit(lunarPos)
-        renderSunIndicator(sunPos)
+        renderSunIndicator(sunTextured)
         renderEarth(sunPos)
         renderMoon(moonXyz, lunarPos.longitude, sunPos)
+
+        synchronized(pickLock) {
+            System.arraycopy(pv, 0, pickPv, 0, 16)
+            System.arraycopy(moonXyz, 0, pickMoon, 0, 3)
+        }
+        val moving = !isPaused || currentBlend != targetBlend || !focusSettled
+        idle = !moving
+        pacer?.frameDone(if (moving) com.Atom2Universe.app.science.GLFramePacer.INTERACTIVE_HZ else 0)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -275,19 +330,78 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         drawSphere()
     }
 
-    private fun renderSunIndicator(sunPos: FloatArray) {
+    /**
+     * Place le repère solaire et, s'il le faut, redessine son plasma dans la texture, à la
+     * taille où il paraît à l'écran (le motif ne dépend que de `size`, fixé à 512 comme avant).
+     * Renvoie false si la texture n'est pas utilisable : le repère est alors dessiné en direct.
+     */
+    private fun updateSunTexture(sunPos: FloatArray, nowMs: Long): Boolean {
         // Repère tourné vers la caméra : même diamètre du disque, marge pour les éjections.
         sunCenter[0] = sunPos[0] / 1000f * SUN_INDICATOR_DIST
         sunCenter[1] = sunPos[1] / 1000f * SUN_INDICATOR_DIST
         sunCenter[2] = sunPos[2] / 1000f * SUN_INDICATOR_DIST
         sunCenter[3] = 1f
         Matrix.multiplyMV(sunViewCenter, 0, view, 0, sunCenter, 0)
-        Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, sunViewCenter[0], sunViewCenter[1], sunViewCenter[2])
-        val halfSize = SUN_INDICATOR_RADIUS / (2f * 0.309f)
-        Matrix.scaleM(model, 0, halfSize, halfSize, 1f)
-        Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
+        if (sunFbo < 0) return false
+        val depth = -sunViewCenter[2]
+        if (depth > 1e-3f) {
+            val pixels = proj[5] * SUN_HALF_SIZE / depth * screenH
+            val size = (kotlin.math.ceil(pixels / 128f).toInt() * 128).coerceIn(128, 2048)
+            if (size != sunTexSize && !allocateSunTexture(size)) return false
+        }
+        if (sunTex == 0) return false
+        val phase = sunAnimation.phase
+        if (!sunTexDirty && (phase == sunTexPhase || nowMs - sunTexAt < SUN_REFRESH_MS)) return true
+        sunTexDirty = false; sunTexPhase = phase; sunTexAt = nowMs
 
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, sunFbo)
+        GLES20.glViewport(0, 0, sunTexSize, sunTexSize)
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST)
+        GLES20.glDisable(GLES20.GL_BLEND)
+        GLES20.glClearColor(0f, 0f, 0f, 0f)
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+        Matrix.setIdentityM(mvp, 0)
+        drawSunPlasma()
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
+        GLES20.glViewport(0, 0, screenW.toInt(), screenH.toInt())
+        GLES20.glClearColor(0f, 0f, 0f, 1f)
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+        GLES20.glEnable(GLES20.GL_BLEND)
+        return true
+    }
+
+    private fun allocateSunTexture(size: Int): Boolean {
+        if (sunTex == 0) {
+            val ids = IntArray(1)
+            GLES20.glGenTextures(1, ids, 0); sunTex = ids[0]
+            GLES20.glGenFramebuffers(1, ids, 0); sunFbo = ids[0]
+        }
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sunTex)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, size, size, 0,
+            GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, sunFbo)
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+            GLES20.GL_TEXTURE_2D, sunTex, 0)
+        val complete = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER) == GLES20.GL_FRAMEBUFFER_COMPLETE
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+        if (!complete) {
+            // Pilote qui refuse la cible : on garde le dessin direct, comme avant.
+            GLES20.glDeleteFramebuffers(1, intArrayOf(sunFbo), 0)
+            GLES20.glDeleteTextures(1, intArrayOf(sunTex), 0)
+            sunFbo = -1; sunTex = 0; sunTexSize = 0
+            return false
+        }
+        sunTexSize = size; sunTexDirty = true
+        return true
+    }
+
+    /** Le shader de plasma sur le quad du repère, avec la matrice déjà posée dans [mvp]. */
+    private fun drawSunPlasma() {
         GLES20.glUseProgram(sunProg)
         GLES20.glUniformMatrix4fv(sMVP, 1, false, mvp, 0)
         GLES20.glUniform2f(sSize, 512f, 512f)
@@ -295,9 +409,6 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glUniform1f(sAge, sunAnimation.eruptionAge)
         GLES20.glUniform4fv(sShape, 1, sunAnimation.shape, 0)
         GLES20.glUniform4fv(sDetail, 1, sunAnimation.detail, 0)
-        // Le shader commun produit du RGB prémultiplié, y compris pour la couronne.
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-        GLES20.glDepthMask(false)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, sunVBO)
         GLES20.glEnableVertexAttribArray(sPos)
         GLES20.glVertexAttribPointer(sPos, 3, GLES20.GL_FLOAT, false, 20, 0)
@@ -305,6 +416,32 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(sUV, 2, GLES20.GL_FLOAT, false, 20, 12)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+    }
+
+    private fun renderSunIndicator(textured: Boolean) {
+        Matrix.setIdentityM(model, 0)
+        Matrix.translateM(model, 0, sunViewCenter[0], sunViewCenter[1], sunViewCenter[2])
+        Matrix.scaleM(model, 0, SUN_HALF_SIZE, SUN_HALF_SIZE, 1f)
+        Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
+
+        // Le shader commun produit du RGB prémultiplié, y compris pour la couronne ; la
+        // texture le garde tel quel.
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        GLES20.glDepthMask(false)
+        if (textured) {
+            GLES20.glUseProgram(sunQuadProg)
+            GLES20.glUniformMatrix4fv(sqMVP, 1, false, mvp, 0)
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sunTex)
+            GLES20.glUniform1i(sqTex, 0)
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, sunVBO)
+            GLES20.glEnableVertexAttribArray(sqPos)
+            GLES20.glVertexAttribPointer(sqPos, 3, GLES20.GL_FLOAT, false, 20, 0)
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        } else {
+            drawSunPlasma()
+        }
         GLES20.glDepthMask(true)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
     }
@@ -375,9 +512,14 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         Matrix.setLookAtM(view, 0, eyeX, eyeY, eyeZ, cx, cy, cz, 0f, 1f, 0f)
     }
 
-    fun projectToScreen(wx: Float, wy: Float, wz: Float): FloatArray {
+    /** Fil UI : position écran d'un astre (0 = Terre, 1 = Lune) d'après la dernière image. */
+    fun projectBody(body: Int): FloatArray {
         val clip = FloatArray(4)
-        Matrix.multiplyMV(clip, 0, pv, 0, floatArrayOf(wx, wy, wz, 1f), 0)
+        synchronized(pickLock) {
+            val world = if (body == 1) floatArrayOf(pickMoon[0], pickMoon[1], pickMoon[2], 1f)
+                else floatArrayOf(0f, 0f, 0f, 1f)
+            Matrix.multiplyMV(clip, 0, pickPv, 0, world, 0)
+        }
         // Point derrière la caméra (w ≤ 0) : sa projection serait inversée et pourrait tomber
         // sous le doigt ; (-1, -1) restait aussi à un pixel de l'écran.
         if (clip[3] <= 1e-6f) return floatArrayOf(-1e6f, -1e6f)
@@ -402,6 +544,9 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         sAge = ul(sunProg, "eruptionAge"); sShape = ul(sunProg, "eruptionShape")
         sDetail = ul(sunProg, "eruptionDetail")
         sPos = al(sunProg, "aPos"); sUV = al(sunProg, "aUV")
+
+        sunQuadProg = link(SUN_QUAD_VERT, SUN_QUAD_FRAG)
+        sqMVP = ul(sunQuadProg, "uMVP"); sqTex = ul(sunQuadProg, "uTex"); sqPos = al(sunQuadProg, "aPos")
 
         lineProg = link(LINE_VERT, LINE_FRAG)
         lMVP = ul(lineProg, "uMVP"); lColor = ul(lineProg, "uColor"); lPos = al(lineProg, "aPos")
@@ -513,9 +658,13 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
             .also { it.put(v); it.position(0) }
     }
 
+    // Décodées dès la création de l'activité, pendant que la surface GL se prépare.
+    private val prefetched = com.Atom2Universe.app.science.GLTextures.prefetch(context,
+        listOf(EARTH_ASSET, MOON_ASSET))
+
     private fun loadTextures() {
-        earthTexId = loadTex("textures/earth.jpg",         0xFF2244AA.toInt())
-        moonTexId  = loadTex("textures/moon.jpg",          0xFFCCCCCC.toInt())
+        earthTexId = loadTex(EARTH_ASSET, 0xFF2244AA.toInt())
+        moonTexId  = loadTex(MOON_ASSET,  0xFFCCCCCC.toInt())
     }
 
     private fun loadTex(asset: String, fallback: Int): Int {
@@ -525,16 +674,14 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-        try {
-            context.assets.open(asset).use { s ->
-                // Une image illisible retombe sur la couleur de repli au lieu de planter (NPE).
-                val bmp = BitmapFactory.decodeStream(s, null, BitmapFactory.Options().apply { inScaled = false })
-                    ?: throw IOException("image illisible : $asset")
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
-                GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
-                bmp.recycle()
-            }
-        } catch (_: IOException) {
+        // Une image illisible retombe sur la couleur de repli au lieu de planter (NPE).
+        val decoded = com.Atom2Universe.app.science.GLTextures.take(context, prefetched, asset)
+        if (decoded != null) {
+            val bmp = com.Atom2Universe.app.science.GLTextures.uploadable(decoded)
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
+            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
+            bmp.recycle()
+        } else {
             val bmp = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888).also { it.setPixel(0, 0, fallback) }
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
             bmp.recycle()

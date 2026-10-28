@@ -31,15 +31,35 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
     // Seuils de toucher en dp : en pixels bruts, ils rétrécissaient sur les écrans denses.
     private val density = resources.displayMetrics.density
 
+    private val pacer = com.Atom2Universe.app.science.GLFramePacer(this)
+
     init {
         setEGLContextClientVersion(2)
+        // Retour de la vue Terre-Lune : sans ça, shaders et textures étaient tous refaits.
+        preserveEGLContextOnPause = true
         setRenderer(renderer)
-        renderMode = RENDERMODE_CONTINUOUSLY
+        renderMode = RENDERMODE_WHEN_DIRTY
+        renderer.pacer = pacer
+    }
+
+    /** Fil UI : un réglage a changé, redessiner (la lecture continue d'elle-même). */
+    fun requestFrame() = pacer.requestFrame()
+
+    override fun onResume() {
+        renderer.resetClock()
+        super.onResume()
+        pacer.resume()
+    }
+
+    override fun onPause() {
+        pacer.pause()
+        super.onPause()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(event)
         longPressDetector.onTouchEvent(event)
+        pacer.requestFrame()
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -103,19 +123,19 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
         renderer.panX = 0f; renderer.panY = 0f
         renderer.cameraDistance = renderer.recommendedDistance(target)
         renderer.onPlanetLongPressed?.invoke(target)
+        pacer.requestFrame()
     }
 
     private fun nearestBody(x: Float, y: Float, threshold: Float): Int {
         var bestDist = Float.MAX_VALUE
         var bestIdx = -2
 
-        val sunScreen = renderer.projectToScreen(0f, 0f, 0f)
+        val sunScreen = renderer.projectBody(-1)
         val dSun = dist(x, y, sunScreen[0], sunScreen[1])
         if (dSun < threshold && dSun < bestDist) { bestDist = dSun; bestIdx = -1 }
 
         SolarSystemData.planets.forEach { planet ->
-            val wp = renderer.planetWorldPos[planet.id]
-            val screen = renderer.projectToScreen(wp[0], wp[1], wp[2])
+            val screen = renderer.projectBody(planet.id)
             val d = dist(x, y, screen[0], screen[1])
             if (d < threshold && d < bestDist) { bestDist = d; bestIdx = planet.id }
         }

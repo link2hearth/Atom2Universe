@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.roguelike
 
 import android.content.Context
 import com.Atom2Universe.app.R
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.abs
@@ -66,22 +67,57 @@ object DungeonNumbers {
     /** Version pure : [suffixes] dans l'ordre k, M, B… ; le séparateur décimal suit [locale]. */
     fun format(value: Long, locale: Locale, suffixes: List<String>): String {
         val s = split(value)
-        if (s.suffixIndex < 0) return String.format(locale, "%d", value)
-        val nf = NumberFormat.getNumberInstance(locale).apply {
-            isGroupingUsed = false
-            minimumFractionDigits = 0          // « 1,2M » plutôt que « 1,20M »
-            maximumFractionDigits = s.decimals
-        }
-        return nf.format(s.mantissa) + suffixes[s.suffixIndex.coerceAtMost(suffixes.lastIndex)]
+        if (s.suffixIndex < 0) return whole(value, locale)
+        return mantissa(s.mantissa, locale, s.decimals) + suffixes[s.suffixIndex.coerceAtMost(suffixes.lastIndex)]
     }
 
     /** Abrège [value] selon la langue de l'appli, suffixes tirés de `roguelike_number_suffixes`. */
     fun format(context: Context, value: Long): String {
         val res = context.resources
-        // Chemin court (appelé à chaque image pour les PV) : pas de ressources à lire sous le seuil
-        if (abs(value) < ABBREVIATE_FROM) return String.format(res.configuration.locales[0] ?: Locale.getDefault(), "%d", value)
         val locale = res.configuration.locales[0] ?: Locale.getDefault()
-        return format(value, locale, res.getStringArray(R.array.roguelike_number_suffixes).toList())
+        // Chemin court (appelé à chaque image pour les PV) : pas de ressources à lire sous le seuil
+        if (abs(value) < ABBREVIATE_FROM) return whole(value, locale)
+        return format(value, locale, suffixes(context, locale))
+    }
+
+    // Formateurs et suffixes gardés pour la dernière langue vue : refaits si elle change.
+    private var cachedLocale: Locale? = null
+    private var asciiDigits = true
+    private val decimalFormats = arrayOfNulls<NumberFormat>(3)
+    private var cachedSuffixes: List<String>? = null
+
+    @Synchronized
+    private fun useLocale(locale: Locale) {
+        if (locale == cachedLocale) return
+        cachedLocale = locale
+        asciiDigits = DecimalFormatSymbols.getInstance(locale).zeroDigit == '0'
+        decimalFormats.fill(null)
+        cachedSuffixes = null
+    }
+
+    /** Comme `String.format(locale, "%d", value)`, sans le reformater quand les chiffres sont 0-9. */
+    @Synchronized
+    private fun whole(value: Long, locale: Locale): String {
+        useLocale(locale)
+        return if (asciiDigits) value.toString() else String.format(locale, "%d", value)
+    }
+
+    @Synchronized
+    private fun mantissa(m: Double, locale: Locale, decimals: Int): String {
+        useLocale(locale)
+        val nf = decimalFormats[decimals] ?: NumberFormat.getNumberInstance(locale).apply {
+            isGroupingUsed = false
+            minimumFractionDigits = 0          // « 1,2M » plutôt que « 1,20M »
+            maximumFractionDigits = decimals
+        }.also { decimalFormats[decimals] = it }
+        return nf.format(m)
+    }
+
+    @Synchronized
+    private fun suffixes(context: Context, locale: Locale): List<String> {
+        useLocale(locale)
+        return cachedSuffixes ?: context.resources.getStringArray(R.array.roguelike_number_suffixes).toList()
+            .also { cachedSuffixes = it }
     }
 
     fun format(context: Context, value: Int): String = format(context, value.toLong())

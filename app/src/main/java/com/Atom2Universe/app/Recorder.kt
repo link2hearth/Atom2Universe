@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -33,8 +34,26 @@ class Recorder(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
 
+    /** Pourquoi un enregistrement s'est arrêté de lui-même. */
+    enum class Failure { STORAGE, NETWORK }
+
+    /** Le type du flux, lu dans la réponse du serveur : il donne l'extension et le type du fichier. */
+    private class StreamFormat(val extension: String, val mimeType: String) {
+        companion object {
+            fun of(contentType: String?): StreamFormat {
+                val type = contentType?.substringBefore(';')?.trim()?.lowercase(Locale.ROOT).orEmpty()
+                return when (type) {
+                    "audio/aac", "audio/aacp", "audio/x-aac", "audio/aac-adts" -> StreamFormat("aac", "audio/aac")
+                    "audio/ogg", "application/ogg", "audio/vorbis", "audio/opus" -> StreamFormat("ogg", "audio/ogg")
+                    "audio/flac", "audio/x-flac" -> StreamFormat("flac", "audio/flac")
+                    else -> StreamFormat("mp3", "audio/mpeg")
+                }
+            }
+        }
+    }
+
+    @Volatile
     private var recordJob: Job? = null
-    private var onRecordingFinished: ((hadError: Boolean) -> Unit)? = null
     @Volatile
     private var latestMetadata: TrackMetadata? = null
 
@@ -45,7 +64,8 @@ class Recorder(
     private var keepRecording = false
     private val musicFolderName = "A2U_Radio"
 
-    fun startRecording(streamUrl: String, metadata: TrackMetadata?, onFinished: ((hadError: Boolean) -> Unit)? = null): Boolean {
+    /** [onFinished] reçoit la raison de l'arrêt, ou `null` pour un arrêt demandé ; appelé sur un fil d'arrière-plan. */
+    fun startRecording(streamUrl: String, metadata: TrackMetadata?, onFinished: ((failure: Failure?) -> Unit)? = null): Boolean {
         if (recordJob?.isActive == true) {
             Log.d(TAG, "Recording already in progress, ignoring start request")
             return false
@@ -53,16 +73,18 @@ class Recorder(
 
         keepRecording = true
         latestMetadata = normalizeMetadata(metadata)
-        onRecordingFinished = onFinished
 
-        recordJob = scope.launch {
-            val hadError = recordStream(streamUrl)
+        // Le rappel reste attaché à cet enregistrement, même si un autre démarre pendant qu'il se termine.
+        lateinit var job: Job
+        job = scope.launch(start = CoroutineStart.LAZY) {
+            val failure = recordStream(streamUrl)
             withContext(NonCancellable) {
-                onRecordingFinished?.invoke(hadError)
-                onRecordingFinished = null
+                onFinished?.invoke(failure)
             }
-            recordJob = null
+            if (recordJob === job) recordJob = null
         }
+        recordJob = job
+        job.start()
         return true
     }
 
@@ -88,79 +110,101 @@ class Recorder(
         scope.cancel()
     }
 
-    private suspend fun recordStream(streamUrl: String): Boolean {
+    private suspend fun recordStream(streamUrl: String): Failure? {
         val request = Request.Builder()
             .get()
             .url(streamUrl)
             .build()
 
-        var segmentMetadataVersion = metadataVersion
-        var metadataSnapshot = latestMetadata
-        var segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
-            keepRecording = false
-            return true // impossible de créer le segment (stockage plein ?)
-        }
-        var hadError = false
+        var failure: Failure? = null
+        var segment: RecordingSegment? = null
 
         try {
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
                     Log.w(TAG, "Recording HTTP error: ${response.code}")
+                    failure = Failure.NETWORK
                     return@use
                 }
 
-                val body = response.body ?: return@use
+                val body = response.body ?: run {
+                    failure = Failure.NETWORK
+                    return@use
+                }
+                val format = StreamFormat.of(response.header("Content-Type"))
+                var segmentMetadataVersion = metadataVersion
+                var current = createNewSegment(segmentMetadataVersion, latestMetadata, format) ?: run {
+                    failure = Failure.STORAGE
+                    return@use
+                }
+                segment = current
                 val input = body.byteStream()
                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
 
                 while (currentCoroutineContext().isActive && keepRecording) {
                     if (metadataVersion != segmentMetadataVersion) {
-                        finalizeSegment(segment, wasSuccessful = true)
+                        current.wasSuccessful = true
+                        finalizeSegment(current)
+                        segment = null
                         segmentMetadataVersion = metadataVersion
-                        metadataSnapshot = latestMetadata
-                        segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
-                            keepRecording = false
-                            hadError = true
+                        current = createNewSegment(segmentMetadataVersion, latestMetadata, format) ?: run {
+                            failure = Failure.STORAGE
                             return@use
                         }
+                        segment = current
                     }
 
                     val read = input.read(buffer)
-                    if (read <= 0) break
-                    segment.outputStream.write(buffer, 0, read)
-                    segment.bytesWritten += read
+                    if (read <= 0) {
+                        // Le serveur a coupé le flux alors qu'on enregistrait encore.
+                        if (keepRecording) failure = Failure.NETWORK
+                        break
+                    }
+                    try {
+                        current.outputStream.write(buffer, 0, read)
+                    } catch (e: IOException) {
+                        Log.w(TAG, "Recording storage issue", e)
+                        failure = Failure.STORAGE
+                        break
+                    }
+                    current.bytesWritten += read
                 }
 
-                segment.wasSuccessful = true
+                current.wasSuccessful = true
             }
         } catch (cancel: CancellationException) {
-            segment.wasSuccessful = segment.bytesWritten > 0
+            segment?.let { it.wasSuccessful = it.bytesWritten > 0 }
         } catch (error: Exception) {
-            hadError = true
-            segment.wasSuccessful = false
+            // Ce qui est déjà écrit est gardé : seule la suite manque.
+            if (failure == null) failure = Failure.NETWORK
+            segment?.let { it.wasSuccessful = it.bytesWritten > 0 }
             if (error !is IOException) {
                 Log.w(TAG, "Recording failed", error)
             } else {
                 Log.w(TAG, "Recording IO issue", error)
             }
         } finally {
-            finalizeSegment(segment, wasSuccessful = segment.wasSuccessful)
+            segment?.let { finalizeSegment(it) }
         }
-        return hadError
+        return failure
     }
 
-    private fun createNewSegment(versionSnapshot: Long, metadataSnapshot: TrackMetadata?): RecordingSegment? {
+    private fun createNewSegment(versionSnapshot: Long, metadataSnapshot: TrackMetadata?, format: StreamFormat): RecordingSegment? {
         val resolver = context.contentResolver
         val timestampMs = System.currentTimeMillis()
-        val displayName = buildDisplayName(metadataSnapshot, timestampMs)
-        val (contentValues, legacyMusicDir) = buildContentValues(displayName)
-        val targetUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
+        val displayName = buildDisplayName(metadataSnapshot, format.extension, timestampMs)
+        val (contentValues, legacyMusicDir) = buildContentValues(displayName, format.mimeType)
+        val targetUri = try {
+            resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
+        } catch (_: Exception) {
+            null
+        }
         if (targetUri == null) {
             Log.w(TAG, "Unable to create MediaStore entry for recording")
             return null
         }
 
-        val outputStream = resolver.openOutputStream(targetUri)
+        val outputStream = try { resolver.openOutputStream(targetUri) } catch (_: Exception) { null }
         if (outputStream == null) {
             Log.w(TAG, "Unable to open output stream for recording")
             try {
@@ -185,16 +229,16 @@ class Recorder(
             sidecarDisplayName = sidecarDisplayName,
             usesLegacyStorage = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q,
             legacyMusicDir = legacyMusicDir,
+            extension = format.extension,
             bytesWritten = 0,
             wasSuccessful = false
         )
     }
 
-    private fun finalizeSegment(segment: RecordingSegment?, wasSuccessful: Boolean) {
-        if (segment == null) return
+    private fun finalizeSegment(segment: RecordingSegment) {
         val resolver = context.contentResolver
         val durationMs = System.currentTimeMillis() - segment.startTimeMs
-        val keepEntry = wasSuccessful && segment.bytesWritten > 0 && durationMs >= MIN_DURATION_MS
+        val keepEntry = segment.wasSuccessful && segment.bytesWritten > 0 && durationMs >= MIN_DURATION_MS
 
         try {
             segment.outputStream.flush()
@@ -206,7 +250,10 @@ class Recorder(
             val doneValues = ContentValues().apply {
                 put(MediaStore.Audio.Media.IS_PENDING, 0)
             }
-            resolver.update(segment.targetUri, doneValues, null, null)
+            try {
+                resolver.update(segment.targetUri, doneValues, null, null)
+            } catch (_: Exception) {
+            }
         }
 
         if (!keepEntry) {
@@ -220,7 +267,7 @@ class Recorder(
         }
 
         val desiredMetadata = normalizeMetadata(latestMetadata) ?: segment.metadataSnapshot
-        val desiredDisplayName = buildDisplayName(desiredMetadata, segment.startTimeMs)
+        val desiredDisplayName = buildDisplayName(desiredMetadata, segment.extension, segment.startTimeMs)
         val desiredSidecarName = buildSidecarName(desiredDisplayName)
         updateSidecarContent(segment, desiredMetadata)
         if (desiredDisplayName != segment.initialDisplayName) {
@@ -299,11 +346,11 @@ class Recorder(
         }
     }
 
-    private fun buildDisplayName(metadata: TrackMetadata?, timestampMs: Long = System.currentTimeMillis()): String {
+    private fun buildDisplayName(metadata: TrackMetadata?, extension: String, timestampMs: Long): String {
         val base = buildBaseName(metadata, timestampMs)
         val safeBase = base.replace(ILLEGAL_FILENAME_CHARS.toRegex(), "_").trim('_').ifEmpty { "radio_record" }
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
-        return "${safeBase}_$timestamp.mp3"
+        return "${safeBase}_$timestamp.$extension"
     }
 
     private fun buildSidecarName(displayName: String): String {
@@ -313,11 +360,11 @@ class Recorder(
 
     private fun buildMetadataText(metadata: TrackMetadata?, timestampMs: Long): String {
         val normalized = normalizeMetadata(metadata)
-        val artist = normalized?.artist ?: "Unknown artist"
-        val title = normalized?.title ?: "Unknown title"
-        val station = normalized?.station ?: "Unknown station"
+        val artist = normalized?.artist ?: context.getString(R.string.radio_recording_unknown_artist)
+        val title = normalized?.title ?: context.getString(R.string.radio_recording_unknown_title)
+        val station = normalized?.station ?: context.getString(R.string.radio_recording_unknown_station)
         val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(timestampMs))
-        return "Recorded at: $timestamp\nArtist: $artist\nTitle: $title\nStation: $station\n"
+        return context.getString(R.string.radio_recording_sidecar, timestamp, artist, title, station)
     }
 
     private fun createOrUpdateSidecar(
@@ -440,10 +487,10 @@ class Recorder(
         return TrackMetadata(artist, title, station)
     }
 
-    private fun buildContentValues(displayName: String): Pair<ContentValues, File?> {
+    private fun buildContentValues(displayName: String, mimeType: String): Pair<ContentValues, File?> {
         val values = ContentValues().apply {
             put(MediaStore.Audio.Media.DISPLAY_NAME, displayName)
-            put(MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg")
+            put(MediaStore.Audio.Media.MIME_TYPE, mimeType)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             values.put(MediaStore.Audio.Media.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/$musicFolderName")
@@ -480,6 +527,7 @@ class Recorder(
         val sidecarDisplayName: String,
         val usesLegacyStorage: Boolean,
         val legacyMusicDir: File?,
+        val extension: String,
         var bytesWritten: Long,
         var wasSuccessful: Boolean
     )

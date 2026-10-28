@@ -82,8 +82,7 @@ class CosmicScaleActivity : ThemedActivity() {
         glView = CosmicScaleGLView(this)
         root.addView(glView, FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-        glView.renderer.leftBody = left
-        glView.renderer.rightBody = right
+        glView.renderer.bodies = left to right
         glView.onSwipe = { dir -> advance(dir) }
 
         // ── Barre haute : retour, sélecteurs, swap ──────────────────
@@ -264,8 +263,12 @@ class CosmicScaleActivity : ThemedActivity() {
 
     private fun applyState() {
         val l = left; val r = right
-        glView.renderer.leftBody = l
-        glView.renderer.rightBody = r
+        glView.renderer.bodies = l to r
+        glView.requestFrame()
+        // Les voisins dans l'échelle se décodent d'avance pour le prochain glissement.
+        glView.renderer.prefetch(if (scrollMode)
+            listOfNotNull(l, r, sorted.getOrNull(scrollIndex - 1), sorted.getOrNull(scrollIndex + 2))
+            else listOf(l, r))
 
         val arrow = if (scrollMode) "" else " ▾"
         btnLeft.text = "${getString(l.nameRes)}$arrow"

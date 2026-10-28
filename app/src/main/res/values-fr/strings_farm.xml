@@ -53,7 +53,7 @@
     <string name="farm_plot_description">Parcelle %1$d, %2$s. %3$s</string>
     <string name="farm_ready">Mûr</string>
     <string name="farm_clear">Libérer la parcelle</string>
-    <string name="farm_clear_confirm">Retirer ce plant ? La graine n’est remboursée que si elle n’a jamais été arrosée.</string>
+    <string name="farm_clear_confirm">Retirer ce plant ? La graine ne revient dans ton sac que si elle n’a jamais été arrosée.</string>
     <string name="farm_use_crops">Potager</string>
     <string name="farm_use_orchard">Verger</string>
     <string name="farm_welcome_new">Nettoyez votre première parcelle. Achetez, plantez, puis arrosez. Glissez pour explorer, pincez pour zoomer.</string>
@@ -615,4 +615,13 @@
     <string name="farm_cookbook_show_favorites">Voir les recettes marquées</string>
     <string name="farm_cookbook_show_all">Voir toutes les recettes</string>
     <string name="farm_cookbook_no_favorites">Aucune recette marquée dans cette catégorie. Ajoute des marque-pages depuis le livre ou affiche toutes les recettes.</string>
+    <string name="farm_produce_total">×%1$d</string>
+    <string name="farm_text_join">%1$s · %2$s</string>
+    <string name="farm_region_ready">%1$s 🚜</string>
+    <string name="farm_region_locked_line">🔒 %1$s</string>
+    <string name="farm_coins_per_hour_value">%1$.1f</string>
+    <string name="farm_step_less">−</string>
+    <string name="farm_step_more">+</string>
+    <string name="farm_quality_star">★</string>
+    <string name="farm_alert_mark">i</string>
 </resources>

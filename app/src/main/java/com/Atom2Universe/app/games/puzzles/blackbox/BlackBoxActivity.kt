@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.puzzles.blackbox
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.Path
 import android.graphics.RadialGradient
 import android.graphics.RectF
@@ -43,6 +44,7 @@ class BlackBoxActivity : PuzzleActivity<BlackBoxState>() {
     override val hasHints = true
     override fun hint(state: BlackBoxState) = state.hint()
     override fun isLost(state: BlackBoxState) = state.isLost
+    override val revealsOnLoss = true
     override fun statusText(state: BlackBoxState) = getString(R.string.blackbox_status, state.guesses.count { it }, state.ballCount)
 
     override fun createControls(): View = LinearLayout(this).apply {
@@ -75,6 +77,9 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
     private val grid = GridGeometry()
     private val r = RectF()
     private val path = Path()
+    /** Le reflet d'un nucléon, à l'échelle 1 et par couple de couleurs : placé ensuite par [shaderMatrix]. */
+    private val nucleonShaders = HashMap<Long, RadialGradient>()
+    private val shaderMatrix = Matrix()
 
     /** Les détecteurs qui viennent de s'allumer, et quand. */
     private val flashes = HashMap<Int, Long>()
@@ -210,9 +215,15 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
         for ((k, pos) in NUCLEONS.withIndex()) {
             val px = cx + pos.first * n; val py = cy + pos.second * n
             val base = if (k % 2 == 0) GOLD else AMBER
-            fill.shader = RadialGradient(px - n * 0.35f, py - n * 0.35f, n * 1.2f,
-                palette.withAlpha(palette.blend(base, 0xFFFFFFFF.toInt(), 0.55f), alpha), palette.withAlpha(base, alpha),
-                Shader.TileMode.CLAMP)
+            val light = palette.withAlpha(palette.blend(base, 0xFFFFFFFF.toInt(), 0.55f), alpha)
+            val dark = palette.withAlpha(base, alpha)
+            val shader = nucleonShaders.getOrPut((light.toLong() shl 32) or (dark.toLong() and 0xFFFFFFFFL)) {
+                RadialGradient(-0.35f, -0.35f, 1.2f, light, dark, Shader.TileMode.CLAMP)
+            }
+            shaderMatrix.setScale(n, n)
+            shaderMatrix.postTranslate(px, py)
+            shader.setLocalMatrix(shaderMatrix)
+            fill.shader = shader
             canvas.drawCircle(px, py, n, fill)
             fill.shader = null
         }

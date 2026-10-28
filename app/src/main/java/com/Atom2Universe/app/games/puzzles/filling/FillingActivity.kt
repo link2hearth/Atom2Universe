@@ -69,7 +69,9 @@ class FillingActivity : PuzzleActivity<FillingState>() {
  * chiffre sur les cases traversées. Un bloc complet prend la couleur de son chiffre.
  */
 class FillingView(context: Context) : PuzzleView<FillingState>(context) {
-    private val analysis = PuzzleStateCache<FillingState, Set<Int>> { it.errors() }
+    private val analysis = PuzzleStateCache<FillingState, Pair<Set<Int>, BooleanArray>> { s ->
+        s.errors() to BooleanArray(s.values.size) { s.complete(it) }
+    }
 
     private val grid = GridGeometry()
     private val r = RectF()
@@ -86,13 +88,13 @@ class FillingView(context: Context) : PuzzleView<FillingState>(context) {
     override fun drawBoard(canvas: Canvas, state: FillingState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val errors = analysis[state]
+        val (errors, complete) = analysis[state]
         for (i in state.values.indices) {
             grid.rect(i % state.w, i / state.w, r)
             val v = if (i in trail) trailValue else state.values[i]
             fill.color = when {
                 i == selected -> palette.cellHighlight
-                v != 0 && state.complete(i) -> palette.blend(palette.cell, palette.piece(v), if (palette.isLight) 0.3f else 0.35f)
+                v != 0 && complete[i] -> palette.blend(palette.cell, palette.piece(v), if (palette.isLight) 0.3f else 0.35f)
                 state.givens[i] != 0 -> palette.cellFixed
                 else -> palette.cell
             }
@@ -142,7 +144,7 @@ class FillingView(context: Context) : PuzzleView<FillingState>(context) {
     override fun onDragMove(x: Float, y: Float) {
         val i = grid.cellAt(x, y)
         val s = state ?: return
-        if (i >= 0 && s.givens[i] == 0) { trail.add(i); invalidate() }
+        if (i >= 0 && s.givens[i] == 0 && trail.add(i)) invalidate()
     }
 
     override fun onDragEnd(x: Float, y: Float) {

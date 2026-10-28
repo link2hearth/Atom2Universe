@@ -101,6 +101,17 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
     /** Resting content, redrawn only when it changes: a moving piece is drawn above it in [dispatchDraw]. */
     private val scene = object : View(context) {
         override fun onDraw(canvas: Canvas) = drawScene(canvas)
+    }
+
+    /**
+     * The carousel, in its own layer above the scene: scrolling it never redraws the table. The strip
+     * is as tall as the tallest tray and draws in the parent's coordinates; above the tray it stays empty.
+     */
+    private val trayStrip = object : View(context) {
+        override fun onDraw(canvas: Canvas) {
+            canvas.translate(0f, -top.toFloat())
+            drawTrayStrip(canvas)
+        }
         override fun computeScroll() {
             if (trayFling.computeScrollOffset()) {
                 trayScroll = trayFling.currX.toFloat()
@@ -118,9 +129,16 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         scene.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         scene.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         addView(scene, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        trayStrip.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        trayStrip.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        if (game.layout != JigsawLayout.TRAY) trayStrip.visibility = View.GONE
+        // A couple of spare pixels so the strip always covers the tray's fractional top edge.
+        addView(trayStrip, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+            kotlin.math.ceil(126f * density).toInt() + 2, android.view.Gravity.BOTTOM))
     }
 
-    private fun redrawScene() { scene.invalidate(); invalidate() }
+    private fun redrawScene() { scene.invalidate(); trayStrip.invalidate(); invalidate() }
+    private fun redrawTray() { trayStrip.invalidate() }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         cancelGesture()
@@ -291,12 +309,17 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             }
         }
         canvas.restore()
-        if (game.layout == JigsawLayout.TRAY && tray > 0f) {
-            if (isCelebrating) {
-                paint.shader = null; paint.style = Paint.Style.FILL; paint.color = palette.raised
-                canvas.drawRect(0f, top, width.toFloat(), height.toFloat(), paint)
-            } else drawTray(canvas, top, tray)
+        // The live carousel is drawn by [trayStrip]; during the victory it shrinks as a plain band.
+        if (game.layout == JigsawLayout.TRAY && tray > 0f && isCelebrating) {
+            paint.shader = null; paint.style = Paint.Style.FILL; paint.color = palette.raised
+            canvas.drawRect(0f, top, width.toFloat(), height.toFloat(), paint)
         }
+    }
+
+    private fun drawTrayStrip(canvas: Canvas) {
+        if (isCelebrating || game.layout != JigsawLayout.TRAY) return
+        val tray = trayHeightFor(game.solved)
+        if (tray > 0f) drawTray(canvas, height - tray, tray)
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -488,6 +511,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         }
         if (mode == Mode.CAMERA || event.pointerCount > 1) return moveCamera(event)
         val modeBefore = mode
+        val cameraXBefore = cameraX; val cameraYBefore = cameraY
         if (event.actionMasked == MotionEvent.ACTION_DOWN) {
             trayFling.abortAnimation()
             velocity?.recycle()
@@ -570,10 +594,20 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             }
             MotionEvent.ACTION_CANCEL -> cancelGesture()
         }
-        // Moving a held piece only redraws that piece; anything else also refreshes the cached scene.
-        val heldOnly = event.actionMasked == MotionEvent.ACTION_MOVE && mode == modeBefore &&
-            (mode == Mode.DRAG || mode == Mode.TRAY_LIFT || mode == Mode.TRAY || (mode == Mode.PAN && !moved))
-        if (heldOnly) invalidate() else redrawScene()
+        // Moving a held piece only redraws that piece, scrolling the carousel only the carousel;
+        // anything else also refreshes the cached scene.
+        val action = event.actionMasked
+        val cameraStill = cameraX == cameraXBefore && cameraY == cameraYBefore
+        val heldOnly = action == MotionEvent.ACTION_MOVE && mode == modeBefore &&
+            (mode == Mode.DRAG || mode == Mode.TRAY_LIFT || mode == Mode.TRAY || (mode == Mode.PAN && (!moved || cameraStill)))
+        val trayOnly = (action == MotionEvent.ACTION_MOVE && mode == Mode.TRAY_SCROLL &&
+            (modeBefore == Mode.TRAY || modeBefore == Mode.TRAY_SCROLL)) ||
+            (action == MotionEvent.ACTION_UP && modeBefore == Mode.TRAY_SCROLL)
+        when {
+            heldOnly -> invalidate()
+            trayOnly -> redrawTray()
+            else -> redrawScene()
+        }
         return true
     }
 
@@ -588,6 +622,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
 
     private fun moveCamera(event: MotionEvent): Boolean {
         mode = Mode.CAMERA
+        val fromX = cameraX; val fromY = cameraY; val fromScale = scale
         when (event.actionMasked) {
             MotionEvent.ACTION_MOVE -> {
                 val first = event.findPointerIndex(cameraFirstId)
@@ -604,7 +639,8 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             MotionEvent.ACTION_POINTER_UP -> beginCameraGesture(event, event.actionIndex)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> cancelGesture()
         }
-        redrawScene()
+        // A finger that rests or lifts leaves the camera where it was: nothing to redraw.
+        if (cameraX != fromX || cameraY != fromY || scale != fromScale) redrawScene()
         return true
     }
 

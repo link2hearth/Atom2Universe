@@ -26,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
@@ -200,18 +199,11 @@ class ComicsReaderActivity : ThemedActivity() {
     override fun onPause() {
         super.onPause()
         StatsTracker.endReadingSession()
-        if (fromBooks) { saveBookPdfProgress(); return }
-        // Synchrone : garantit l'écriture avant que onResume de la bibliothèque ne lise la DB
-        val id = comicId ?: return
-        val page = currentPage
-        val title = titleText.text?.toString()
-        runBlocking(Dispatchers.IO) {
-            ComicsDatabase.getInstance(applicationContext).comicsDao()
-                .updateProgress(id, page, System.currentTimeMillis())
-            if (totalPages > 0 && !title.isNullOrBlank()) {
-                readingProgressRepository.updateProgress(StatsRepository.MODULE_COMIC, title, page.toFloat() / totalPages)
-            }
-        }
+        // Hors du fil de l'écran : saveScope n'est jamais annulé, l'écriture va au bout même si
+        // l'activité est détruite. La page est déjà écrite à chaque changement (voir
+        // initNavigation), donc la bibliothèque qui se rouvre lit la bonne page même si cette
+        // écriture-ci, qui rafraîchit surtout la date de lecture, finit après elle.
+        saveProgress()
     }
 
     override fun onDestroy() {
@@ -344,6 +336,7 @@ class ComicsReaderActivity : ThemedActivity() {
 
     private suspend fun initNavigation() {
         // Reprise synchronisée : si un autre appareil a lu ce titre plus récemment, on saute à sa page
+        val startPage = currentPage
         val id = comicId
         val title = titleText.text?.toString()
         if (id != null && totalPages > 0 && !title.isNullOrBlank()) {
@@ -357,6 +350,7 @@ class ComicsReaderActivity : ThemedActivity() {
         }
 
         if (currentPage >= totalPages) currentPage = 0
+        if (currentPage != startPage) saveProgress()
         seekBar.max = maxOf(0, totalPages - 1)
         seekBar.progress = currentPage
         updatePageText()

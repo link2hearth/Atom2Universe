@@ -14,6 +14,12 @@ import kotlin.random.Random
 internal class PassiveAnimals(private val world: World, private val seed: Long) {
     val visible = ArrayList<Enemy>()
     private val residents = linkedMapOf<String, MutableList<Enemy>>()
+    // Sauvegarde par cellule : seules celles dont un animal a pu changer sont réécrites.
+    private val cellOf = java.util.IdentityHashMap<Enemy, String>()
+    private val cellJson = HashMap<String, String>()
+    private val dirtyCells = HashSet<String>()
+    /** Cache de chunks d'une mise à jour (fil GL : aucun chunk n'est déchargé pendant update). */
+    private val lookup = World.ChunkLookupCache()
     private val random = Random(seed xor 71623L)
     private var timer = 0f
     @Volatile var snapshot: String = "[]"
@@ -21,6 +27,7 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
 
     fun restore(json: String) {
         residents.clear(); visible.clear(); timer=0f
+        cellOf.clear(); cellJson.clear(); dirtyCells.clear()
         runCatching { JSONArray(json) }.getOrNull()?.let { cells ->
             for (i in 0 until cells.length()) {
                 val cell = cells.optJSONObject(i) ?: continue
@@ -55,6 +62,8 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                     }
                 }
                 residents[key] = animals
+                for (a in animals) cellOf[a] = key
+                dirtyCells += key
             }
         }
         snapshot = json
@@ -64,10 +73,12 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
     var simulationRadius = 64.0
 
     fun update(dt: Float, px: Double, py: Double, pz: Double, held: Short?) {
+        lookup.clear()
         timer -= dt
         val refresh=timer<=0f
         if (refresh) {
             timer = 2f
+            markVisibleCells()
             val cx = floor(px / 32).toInt(); val cz = floor(pz / 32).toInt()
             val cells = kotlin.math.ceil(simulationRadius / 32).toInt()
             for (z in cz - cells..cz + cells) for (x in cx - cells..cx + cells) populate(x, z, py)
@@ -147,7 +158,14 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                 val speed = a.def.speed * dt.coerceAtMost(.05f) * if (shy) 1.8 else 1.0
                 val nx = a.x+a.wanderDirX*speed; val nz = a.z+a.wanderDirZ*speed
                 val ground = floorAt(nx, nz, a.y, radius(a))
-                val crowded = visible.any { it !== a && abs(it.y-a.y)<2 && hypot(it.x-nx, it.z-nz) < radius(a)+radius(it) }
+                // Distances au carré : même test qu'un hypot, sans racine pour chaque paire.
+                val ra = radius(a)
+                var crowded = false
+                for (other in visible) {
+                    if (other === a || abs(other.y-a.y) >= 2) continue
+                    val ox = other.x-nx; val oz = other.z-nz; val reach = ra+radius(other)
+                    if (ox*ox+oz*oz < reach*reach) { crowded = true; break }
+                }
                 if (ground != null && !crowded) { a.x=nx; a.z=nz; a.y=ground }
                 else { a.wanderTimer=0f; a.resting=true }
             }
@@ -155,16 +173,36 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         if(refresh) breed()
     }
 
+    /** Les animaux suivis bougent sans cesse : leurs cellules sont à réécrire. */
+    private fun markVisibleCells() { for (a in visible) cellOf[a]?.let { dirtyCells += it } }
+
+    /**
+     * Même texte qu'un JSONArray de toutes les cellules, mais seules les cellules touchées depuis
+     * la dernière sauvegarde sont réécrites : les zones quittées depuis longtemps ne bougent plus.
+     */
     fun snapshotNow(): String {
-        snapshot=JSONArray().also { cells ->
-            residents.forEach { (key, group) -> cells.put(JSONObject().put("cell", key).put("animals", JSONArray().also { list ->
+        markVisibleCells()
+        for (key in dirtyCells) {
+            val group = residents[key] ?: continue
+            cellJson[key] = JSONObject().put("cell", key).put("animals", JSONArray().also { list ->
                 group.forEach { a -> list.put(JSONObject().put("species", a.def.id).put("x", a.x).put("y", a.y).put("z", a.z)
                     .put("young", a.young).put("coat", a.coat).put("domestic",a.domestic).put("hp",a.hp)
                     .put("growth",a.growth.toDouble()).put("affection",a.affection.toDouble())
                     .put("breedRest",a.breedRest.toDouble()).put("mealRest",a.mealRest.toDouble()).put("productTime",a.productTime.toDouble())
                     .put("yaw", a.yaw.toDouble()).put("resting", a.resting).put("timer", a.wanderTimer.toDouble())) }
-            })) }
-        }.toString()
+            }).toString()
+        }
+        dirtyCells.clear()
+        snapshot = buildString {
+            append('[')
+            var first = true
+            for (key in residents.keys) {
+                val cell = cellJson[key] ?: continue
+                if (!first) append(',')
+                append(cell); first = false
+            }
+            append(']')
+        }
         return snapshot
     }
 
@@ -184,6 +222,7 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         if(a.hp>0) return emptyList()
         visible.remove(a)
         residents.values.forEach { it.remove(a) }
+        cellOf.remove(a)?.let { dirtyCells += it }
         if(a.young) return emptyList()
         return when(a.def.id) {
             "cow" -> listOf(K.BEEF to 3)
@@ -240,7 +279,8 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
             if((visible+newborns).count { abs(it.y-a.y)<3 && hypot(it.x-a.x,it.z-a.z)<12 }>=24) continue
             val mate=visible.firstOrNull { it!==a && it.def.id==a.def.id && !it.young && it.affection>0 &&
                 it.breedRest==0f && abs(it.y-a.y)<1.1 && hypot(it.x-a.x,it.z-a.z)<4 && clearBetween(a,it) } ?: continue
-            val group=residents.values.firstOrNull { a in it } ?: continue
+            val groupKey=cellOf[a] ?: continue
+            val group=residents[groupKey] ?: continue
             if(group.size>=24) continue
             val baby=Enemy(group.size,a.def,a.x,a.y,a.z).apply {
                 young=true;domestic=true;coat=if(random.nextBoolean()) a.coat else mate.coat;resting=true;wanderTimer=1f
@@ -253,6 +293,7 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                 if(y!=null && clearBetween(a,baby) && (visible+newborns).none { abs(it.y-y)<2 && hypot(it.x-x,it.z-z)<radius(it)+radius(baby) }) Triple(x,y,z) else null
             } ?: continue
             baby.x=spot.first;baby.y=spot.second;baby.z=spot.third;group.add(baby)
+            cellOf[baby]=groupKey;dirtyCells+=groupKey
             newborns.add(baby)
             a.affection=0f;mate.affection=0f;a.breedRest=300f;mate.breedRest=300f
         }
@@ -334,14 +375,20 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
     /** Volume entier libre et appui sec sous toute l'empreinte ; aucune marche dans le vide. */
     private fun radius(a: Enemy): Double = a.def.radius.toDouble() * if(a.young) .72 else 1.0
 
+    /** Comme [loaded] pour une case entière, à travers le cache de la mise à jour. */
+    private fun loadedCell(bx: Int, by: Int, bz: Int): Boolean {
+        val cx = Math.floorDiv(bx, 16); val cy = Math.floorDiv(by, 16); val cz = Math.floorDiv(bz, 16)
+        return lookup.getOrPut(world.chunkKey(cx, cy, cz)) { world.getChunk(cx, cy, cz) }?.generated == true
+    }
+
     private fun floorAt(x: Double, z: Double, y: Double, radius: Double): Double? {
         for (floor in floor(y).toInt() downTo floor(y).toInt()-2) {
             var safe = true
             for (bx in floor(x-radius).toInt()..floor(x+radius).toInt())
                 for (bz in floor(z-radius).toInt()..floor(z+radius).toInt()) {
                 for (by in floor..floor+2) {
-                    if (!loaded(bx.toDouble(), by.toDouble(), bz.toDouble())) { safe=false; break }
-                    val b = world.blockAt(bx, by, bz)
+                    if (!loadedCell(bx, by, bz)) { safe=false; break }
+                    val b = world.blockAt(bx, by, bz, lookup)
                     if (by == floor) {
                         if (b == AIR || isWater(b) || isDecoration(b)) safe=false
                     } else if (b != AIR && !isDecoration(b)) safe=false
@@ -380,6 +427,8 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
             }
         }
         residents[key]=group
+        for (a in group) cellOf[a] = key
+        dirtyCells += key
     }
 
     data class Display(val def: MobDef, val young: Boolean, val coat: Int)

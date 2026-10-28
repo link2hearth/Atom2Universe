@@ -2,13 +2,11 @@ package com.Atom2Universe.app.science.solarsystem
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils
 import android.opengl.Matrix
 import com.Atom2Universe.app.science.solarsystem.OrbitalCalculator.lerp
-import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -28,6 +26,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     private companion object {
         const val STACKS = 32; const val SLICES = 48
         const val ORBIT_SEGS = 128; const val RING_SEGS = 96; const val STAR_COUNT = 1800
+        const val RING_ASSET = "textures/planets/saturn_ring.jpg"
 
         val PLANET_VERT = """
             attribute vec4 aPos; attribute vec2 aUV; attribute vec3 aNorm;
@@ -126,17 +125,33 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     @Volatile var speedDaysPerSec = 1.0
     @Volatile var targetModeBlend = 0f  // 0=CLOSE,1=COMPRESSED,2=REALISTIC
     @Volatile var currentModeBlend = 0f
+    // Écrite par l'interface (date choisie) et avancée par le fil GL : sans verrou, le
+    // « += » du fil GL écrasait parfois la date que l'on venait de choisir.
+    private val simLock = Any()
     @Volatile var elapsedSimDays = 0.0
-    private var lastFrameMs = -1L
+        private set
+    fun setSimDays(days: Double) { synchronized(simLock) { elapsedSimDays = days } }
+    @Volatile private var lastFrameMs = -1L
+    // Image précédente immobile : la suivante repart d'un pas nul au lieu de rattraper l'attente.
+    private var idle = true
+
+    /** Rendu à la demande ; le fil GL lui dit après chaque image s'il en faut une autre. */
+    internal var pacer: com.Atom2Universe.app.science.GLFramePacer? = null
+    fun resetClock() { lastFrameMs = -1L }
+
+    // Copie pour la sélection au doigt (fil UI) : pv et les positions changent pendant l'image.
+    private val pickLock = Any()
+    private val pickPv = FloatArray(16)
+    private val pickPos = Array(8) { FloatArray(3) }
 
     // ── Focus caméra ──────────────────────────────────────────────
     // -1 = Soleil/origine, 0..7 = planète
     @Volatile var focusPlanetIdx = -1
     private val orbitCenter = FloatArray(3)  // position lissée du point d'orbite
 
-    // ── Planet world positions (set during draw, read by GLView for picking) ──
-    val planetWorldPos = Array(8) { FloatArray(3) }
-    var screenW = 1f; var screenH = 1f
+    // ── Planet world positions (set during draw ; picking reads [pickPos]) ──
+    private val planetWorldPos = Array(8) { FloatArray(3) }
+    @Volatile var screenW = 1f; @Volatile var screenH = 1f
 
     var onPlanetTapped: ((Int) -> Unit)? = null       // -1 = Sun
     var onPlanetLongPressed: ((Int) -> Unit)? = null  // -1 = Sun
@@ -181,14 +196,15 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     override fun onDrawFrame(gl: GL10?) {
         // Horloge monotone : currentTimeMillis saute quand l'heure système change.
         val nowMs = android.os.SystemClock.uptimeMillis()
-        if (lastFrameMs < 0) lastFrameMs = nowMs
+        if (lastFrameMs < 0 || idle) lastFrameMs = nowMs
         val dtRealMs = (nowMs - lastFrameMs).coerceIn(0L, 100L)
         lastFrameMs = nowMs
 
-        if (!paused) elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
+        val isPaused = paused
+        if (!isPaused) synchronized(simLock) { elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec }
 
         val dtSec = dtRealMs / 1000f
-        if (!paused) sunVisualSeconds += dtSec
+        if (!isPaused) sunVisualSeconds += dtSec
 
         // Smooth mode blend
         val blendSpeed = 3f
@@ -209,6 +225,11 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         orbitCenter[0] += (targetCX - orbitCenter[0]) * lerpT
         orbitCenter[1] += (targetCY - orbitCenter[1]) * lerpT
         orbitCenter[2] += (targetCZ - orbitCenter[2]) * lerpT
+        // Le lissage n'atteint jamais sa cible : sous un dix-millième de la distance (moins
+        // d'un pixel), on la rejoint pour que la scène puisse s'arrêter de redessiner.
+        val gap = abs(targetCX - orbitCenter[0]) + abs(targetCY - orbitCenter[1]) + abs(targetCZ - orbitCenter[2])
+        val centerSettled = gap < cameraDistance * 1e-4f
+        if (centerSettled) { orbitCenter[0] = targetCX; orbitCenter[1] = targetCY; orbitCenter[2] = targetCZ }
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
 
@@ -225,6 +246,15 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         renderOrbits()
         renderSun()
         renderPlanets()
+
+        synchronized(pickLock) {
+            System.arraycopy(pv, 0, pickPv, 0, 16)
+            for (i in 0 until 8) System.arraycopy(planetWorldPos[i], 0, pickPos[i], 0, 3)
+        }
+        // En pause, le Soleil et les planètes sont figés : seules les transitions redessinent.
+        val moving = !isPaused || currentModeBlend != targetModeBlend || !centerSettled
+        idle = !moving
+        pacer?.frameDone(if (moving) com.Atom2Universe.app.science.GLFramePacer.INTERACTIVE_HZ else 0)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -398,11 +428,15 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         Matrix.setLookAtM(view, 0, eyeX, eyeY, eyeZ, cx, cy, cz, 0f, 1f, 0f)
     }
 
-    // ── Projection de position monde → écran ─────────────────────
-    fun projectToScreen(wx: Float, wy: Float, wz: Float): FloatArray {
+    // ── Projection de position monde → écran (fil UI, d'après la dernière image) ──
+    /** Position écran d'un astre : -1 = Soleil, 0..7 = planète. */
+    fun projectBody(body: Int): FloatArray {
         val clip = FloatArray(4)
-        val world = floatArrayOf(wx, wy, wz, 1f)
-        Matrix.multiplyMV(clip, 0, pv, 0, world, 0)
+        synchronized(pickLock) {
+            val world = if (body in 0..7) floatArrayOf(pickPos[body][0], pickPos[body][1], pickPos[body][2], 1f)
+                else floatArrayOf(0f, 0f, 0f, 1f)
+            Matrix.multiplyMV(clip, 0, pickPv, 0, world, 0)
+        }
         // Point derrière la caméra (w ≤ 0) : sa projection serait inversée et pourrait tomber
         // sous le doigt ; (-1, -1) restait aussi à un pixel de l'écran.
         if (clip[3] <= 1e-6f) return floatArrayOf(-1e6f, -1e6f)
@@ -556,12 +590,16 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Chargement des textures
+    // Chargement des textures : décodées dès la création de l'activité, pendant que la
+    // surface GL se prépare, au lieu de neuf JPEG lus d'affilée sur le fil GL.
+    private val prefetched = com.Atom2Universe.app.science.GLTextures.prefetch(context,
+        SolarSystemData.planets.map { it.textureAsset } + RING_ASSET)
+
     private fun loadTextures() {
         SolarSystemData.planets.forEach { p ->
             planetTexIds[p.id] = loadTex(p.textureAsset, p.fallbackColor)
         }
-        ringsTexId = loadTex("textures/planets/saturn_ring.jpg", 0x88C8B08C.toInt())
+        ringsTexId = loadTex(RING_ASSET, 0x88C8B08C.toInt())
     }
 
     private fun loadTex(asset: String, fallbackArgb: Int): Int {
@@ -572,16 +610,13 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-        try {
-            context.assets.open(asset).use { stream ->
-                val opts = BitmapFactory.Options().apply { inScaled = false }
-                val bmp = BitmapFactory.decodeStream(stream, null, opts)
-                    ?: throw IOException("image illisible : $asset")
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
-                GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
-                bmp.recycle()
-            }
-        } catch (_: IOException) {
+        val decoded = com.Atom2Universe.app.science.GLTextures.take(context, prefetched, asset)
+        if (decoded != null) {
+            val bmp = com.Atom2Universe.app.science.GLTextures.uploadable(decoded)
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
+            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
+            bmp.recycle()
+        } else {
             val bmp = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             bmp.setPixel(0, 0, fallbackArgb)
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupWindow
@@ -43,7 +42,7 @@ class BiggerActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bigger)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran allumé, c'est la vue qui le tient, et seulement pendant une partie.
 
         gameView = findViewById(R.id.bigger_view)
         gameView.sound = sfx

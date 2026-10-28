@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.kit
 import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.LinearGradient
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
@@ -28,6 +29,11 @@ class Celebration(private val view: View) {
                            val colour: Int, val size: Float)
     private val confetti = ArrayList<Confetto>()
     private val shimmer = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var sweepGradient: LinearGradient? = null
+    private var sweepPalette: KitPalette? = null
+    private var sweepTop = 0f
+    private var sweepBottom = 0f
+    private val sweepMatrix = Matrix()
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -83,11 +89,21 @@ class Celebration(private val view: View) {
             val span = area.width() + area.height()
             val pos = area.left - area.height() + sweep * (span + area.height())
             val band = area.height() * 0.9f
-            val colours = IntArray(7) { palette.withAlpha(palette.piece(it), 0.38f * (1f - sweep * 0.5f)) }
-            shimmer.shader = LinearGradient(pos - band, area.top, pos + band, area.bottom,
-                intArrayOf(0) + colours + intArrayOf(0), null, Shader.TileMode.CLAMP)
+            // Le dégradé est fait une fois par plateau ; il glisse par sa matrice et s'efface par l'alpha.
+            val gradient = sweepGradient?.takeIf {
+                sweepPalette === palette && sweepTop == area.top && sweepBottom == area.bottom
+            } ?: LinearGradient(-band, area.top, band, area.bottom,
+                IntArray(9) { if (it == 0 || it == 8) 0 else palette.withAlpha(palette.piece(it - 1), 0.38f) },
+                null, Shader.TileMode.CLAMP).also {
+                sweepGradient = it; sweepPalette = palette; sweepTop = area.top; sweepBottom = area.bottom
+            }
+            sweepMatrix.setTranslate(pos, 0f)
+            gradient.setLocalMatrix(sweepMatrix)
+            shimmer.shader = gradient
+            shimmer.alpha = ((1f - sweep * 0.5f) * 255).toInt()
             canvas.drawRoundRect(area, 12f * density, 12f * density, shimmer)
             shimmer.shader = null
+            shimmer.alpha = 255
         }
         // Le halo de la couleur du thème.
         val halo = (t * DURATION_MS / 1400f).coerceAtMost(1f)

@@ -85,6 +85,21 @@ class GinRummyEngine private constructor(
     var shown: List<PlayingCard> = emptyList()
         private set
 
+    // ── Ce que l'écran redemande à chaque toucher, gardé tant que la main ne change pas ──────
+    // (une copie part sans : chaque instance ne sert qu'à un seul fil)
+
+    private var legalMask = -1L
+    private var legalTurn = -1
+    private var legalJustTaken: PlayingCard? = null
+    private var legalCache = IntArray(0)
+
+    /** Les derniers meilleurs arrangements calculés, par main (masque de cartes). */
+    private val layouts = object : LinkedHashMap<Long, GinMelds.Layout>(32, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, GinMelds.Layout>?) = size > LAYOUT_CACHE
+    }
+
+    private fun layout(mask: Long): GinMelds.Layout = layouts.getOrPut(mask) { GinMelds.best(mask) }
+
     val dealer: Int get() = (handNo + 1) % 2
 
     init { if (dealNow) dealHand() }
@@ -120,15 +135,33 @@ class GinRummyEngine private constructor(
         DRAW -> if (stockOnly) intArrayOf(DRAW_STOCK) else intArrayOf(DRAW_STOCK, DRAW_DISCARD)
         SHOWDOWN -> intArrayOf(CONTINUE)
         else -> {
-            val out = ArrayList<Int>()
             val mask = GinMelds.maskOf(hands[turn])
-            for (card in hands[turn]) {
-                if (card == justTaken) continue
-                out.add(card.id)
-                if (GinMelds.deadwood(mask and GinMelds.bit(card).inv()) <= KNOCK_LIMIT) out.add(KNOCK_BASE + card.id)
+            if (mask != legalMask || turn != legalTurn || justTaken != legalJustTaken) {
+                val out = ArrayList<Int>()
+                for (card in hands[turn]) {
+                    if (card == justTaken) continue
+                    out.add(card.id)
+                    if (layout(mask and GinMelds.bit(card).inv()).deadwood <= KNOCK_LIMIT) out.add(KNOCK_BASE + card.id)
+                }
+                legalCache = out.toIntArray()
+                legalMask = mask
+                legalTurn = turn
+                legalJustTaken = justTaken
             }
-            out.toIntArray()
+            legalCache.copyOf()
         }
+    }
+
+    /** Pour écarter, sans calculer toute la liste : seul un « frapper » demande un arrangement. */
+    override fun isLegal(move: Int): Boolean {
+        if (isOver) return false
+        if (phase != DISCARD) return legalMoves().contains(move)
+        val knock = move >= KNOCK_BASE
+        val id = if (knock) move - KNOCK_BASE else move
+        if (id !in 0..51) return false
+        val card = PlayingCard(id)
+        if (card !in hands[turn] || card == justTaken) return false
+        return !knock || layout(GinMelds.maskOf(hands[turn]) and GinMelds.bit(card).inv()).deadwood <= KNOCK_LIMIT
     }
 
     override fun apply(move: Int) {
@@ -207,7 +240,7 @@ class GinRummyEngine private constructor(
 
     /** Une main rangée : les combinaisons d'abord, le bois mort ensuite. */
     fun arranged(hand: List<PlayingCard>): List<PlayingCard> {
-        val layout = GinMelds.best(GinMelds.maskOf(hand))
+        val layout = layout(GinMelds.maskOf(hand))
         val out = ArrayList<PlayingCard>()
         for (meld in layout.melds.sortedBy { java.lang.Long.numberOfTrailingZeros(it) }) out.addAll(GinMelds.cardsOf(meld))
         out.addAll(GinMelds.cardsOf(layout.deadwoodMask).sortedBy { it.rank })
@@ -216,14 +249,15 @@ class GinRummyEngine private constructor(
 
     /** Les cartes de [hand] qui ne font partie d'aucune combinaison (le bois mort), pour les montrer. */
     fun deadwoodCards(hand: List<PlayingCard>): List<PlayingCard> =
-        GinMelds.cardsOf(GinMelds.best(GinMelds.maskOf(hand)).deadwoodMask)
+        GinMelds.cardsOf(layout(GinMelds.maskOf(hand)).deadwoodMask)
 
-    fun deadwoodOf(hand: List<PlayingCard>): Int = GinMelds.deadwood(GinMelds.maskOf(hand))
+    fun deadwoodOf(hand: List<PlayingCard>): Int = layout(GinMelds.maskOf(hand)).deadwood
 
     /** Le bois mort de [seat] : avec une carte de trop en main, celui qu'il aurait en écartant la meilleure. */
     fun deadwoodNow(seat: Int): Int {
         val mask = maskOf(seat)
-        return if (hands[seat].size > 10) bestAfterDiscard(mask, 0L) else GinMelds.deadwood(mask)
+        if (hands[seat].size <= 10) return layout(mask).deadwood
+        return GinMelds.cardsOf(mask).minOf { layout(mask and GinMelds.bit(it).inv()).deadwood }
     }
 
     private fun next() {
@@ -370,6 +404,7 @@ class GinRummyEngine private constructor(
         const val UNDERCUT_BONUS = 10
         private const val STOCK_FLOOR = 2
         private const val MAX_HANDS = 30
+        private const val LAYOUT_CACHE = 40
 
         const val FIRST = 0
         const val DRAW = 1

@@ -34,8 +34,13 @@ class InteractivePianoView @JvmOverloads constructor(
         private const val DEFAULT_BLACK_KEY_WIDTH_RATIO = 0.6f
         private const val DEFAULT_BLACK_KEY_HEIGHT_RATIO = 0.60f
 
-        // Notes noires dans une octave
-        private val BLACK_KEY_INDICES = setOf(1, 3, 6, 8, 10) // C#, D#, F#, G#, A#
+        // Notes noires dans une octave : C#, D#, F#, G#, A#
+        private val BLACK_PITCH_CLASSES = booleanArrayOf(
+            false, true, false, true, false, false, true, false, true, false, true, false
+        )
+
+        // Noms des do (C-1 à C9), précalculés pour ne rien allouer en dessinant
+        private val OCTAVE_LABELS = Array(11) { "C${it - 1}" }
 
         // Noms des notes
         private val NOTE_NAMES = arrayOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
@@ -68,8 +73,12 @@ class InteractivePianoView @JvmOverloads constructor(
     // BUG FIX 3.28: Utiliser une structure thread-safe pour éviter les race conditions
     private val pressedNotes = java.util.concurrent.ConcurrentHashMap<Int, Int>() // pointerId -> note
 
-    // Notes attendues (a jouer - highlight)
-    private val expectedNotes = mutableSetOf<Int>()
+    // Notes attendues (a jouer - highlight) : un bit par note MIDI (0-63, puis 64-127)
+    private var expectedLo = 0L
+    private var expectedHi = 0L
+
+    private fun isNoteExpected(note: Int): Boolean =
+        if (note < 64) (expectedLo ushr note) and 1L != 0L else (expectedHi ushr (note - 64)) and 1L != 0L
 
     private data class TimingFeedback(val timing: PracticeSession.TimingJudgement, val timestampMs: Long)
 
@@ -303,11 +312,13 @@ class InteractivePianoView @JvmOverloads constructor(
     }
 
     /**
-     * Definit les notes attendues (a jouer)
+     * Definit les notes attendues (a jouer), en masque de bits (voir [isNoteExpected]).
+     * Ne redessine que si l'ensemble change.
      */
-    fun setExpectedNotes(notes: Set<Int>) {
-        expectedNotes.clear()
-        expectedNotes.addAll(notes)
+    fun setExpectedNotes(lo: Long, hi: Long) {
+        if (lo == expectedLo && hi == expectedHi) return
+        expectedLo = lo
+        expectedHi = hi
         invalidate()
     }
 
@@ -315,8 +326,8 @@ class InteractivePianoView @JvmOverloads constructor(
      * Ajoute une note attendue
      */
     fun addExpectedNote(note: Int) {
-        if (note in noteRangeMin..noteRangeMax) {
-            expectedNotes.add(note)
+        if (note in noteRangeMin..noteRangeMax && !isNoteExpected(note)) {
+            if (note < 64) expectedLo = expectedLo or (1L shl note) else expectedHi = expectedHi or (1L shl (note - 64))
             invalidate()
         }
     }
@@ -325,7 +336,8 @@ class InteractivePianoView @JvmOverloads constructor(
      * Retire une note attendue
      */
     fun removeExpectedNote(note: Int) {
-        if (expectedNotes.remove(note)) {
+        if (note in 0..127 && isNoteExpected(note)) {
+            if (note < 64) expectedLo = expectedLo and (1L shl note).inv() else expectedHi = expectedHi and (1L shl (note - 64)).inv()
             invalidate()
         }
     }
@@ -334,8 +346,9 @@ class InteractivePianoView @JvmOverloads constructor(
      * Efface toutes les notes attendues
      */
     fun clearExpectedNotes() {
-        if (expectedNotes.isNotEmpty()) {
-            expectedNotes.clear()
+        if (expectedLo != 0L || expectedHi != 0L) {
+            expectedLo = 0L
+            expectedHi = 0L
             invalidate()
         }
     }
@@ -351,7 +364,7 @@ class InteractivePianoView @JvmOverloads constructor(
     }
 
     private fun isBlackKey(note: Int): Boolean {
-        return (note % 12) in BLACK_KEY_INDICES
+        return BLACK_PITCH_CLASSES[note % 12]
     }
 
     private fun countWhiteKeys(): Int {
@@ -439,16 +452,15 @@ class InteractivePianoView @JvmOverloads constructor(
         super.onDraw(canvas)
         if (whiteKeyCount == 0) return
 
-        // BUG FIX 3.28: Créer une copie snapshot thread-safe des notes pressées
-        val userPressedNotes = pressedNotes.values.toSet()
         val nowMs = System.currentTimeMillis()
 
         // 1. Dessiner les touches blanches
         for ((note, rect) in whiteKeyRects) {
-            val isUserPressed = note in userPressedNotes
+            // ConcurrentHashMap : lecture sûre sans copie (au plus quelques doigts)
+            val isUserPressed = pressedNotes.containsValue(note)
             val activeData = activeNotes[note]
             val externalData = externalNotes[note]
-            val isExpected = note in expectedNotes
+            val isExpected = isNoteExpected(note)
             val timing = getTimingFeedback(note, nowMs)
 
             when {
@@ -492,7 +504,7 @@ class InteractivePianoView @JvmOverloads constructor(
             // Octave label pour les C
             if (note % 12 == 0) {
                 val octave = (note / 12) - 1
-                val label = "C$octave"
+                val label = OCTAVE_LABELS[(octave + 1).coerceIn(0, OCTAVE_LABELS.size - 1)]
                 val yPos = if (showNoteNames) rect.bottom - 12f else rect.bottom - 8f
                 canvas.drawText(label, rect.centerX(), yPos, octaveLabelPaint)
             }
@@ -500,10 +512,10 @@ class InteractivePianoView @JvmOverloads constructor(
 
         // 2. Dessiner les touches noires
         for ((note, rect) in blackKeyRects) {
-            val isUserPressed = note in userPressedNotes
+            val isUserPressed = pressedNotes.containsValue(note)
             val activeData = activeNotes[note]
             val externalData = externalNotes[note]
-            val isExpected = note in expectedNotes
+            val isExpected = isNoteExpected(note)
             val timing = getTimingFeedback(note, nowMs)
 
             when {
@@ -546,7 +558,7 @@ class InteractivePianoView @JvmOverloads constructor(
         // Pour les notes tenues : garder le feedback GOOD tant que la note est
         // encore jouée (externalNotes) ET encore attendue (expectedNotes)
         val isStillHeld = note in externalNotes
-        val isStillExpected = note in expectedNotes
+        val isStillExpected = isNoteExpected(note)
 
         // Si la note est tenue correctement ET toujours attendue, garder le feedback
         if (feedback.timing == PracticeSession.TimingJudgement.GOOD && isStillHeld && isStillExpected) {

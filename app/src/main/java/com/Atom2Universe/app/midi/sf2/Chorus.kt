@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.sf2
 
+import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
 
@@ -30,6 +31,9 @@ class Chorus(private val sampleRate: Int = 44100) {
         private const val CENTER_DELAY_MS = 10f
 
         private const val TWO_PI = 2.0 * Math.PI
+
+        // Échantillons entre deux calculs exacts du sinus des LFO
+        private const val LFO_BLOCK = 64
     }
 
     // Enable/disable chorus (when disabled, processing is completely bypassed)
@@ -57,6 +61,10 @@ class Chorus(private val sampleRate: Int = 44100) {
         i.toDouble() / NUM_VOICES * TWO_PI
     }
 
+    // Sinus et cosinus courants de chaque LFO (avancés par rotation dans process)
+    private val lfoSin = DoubleArray(NUM_VOICES)
+    private val lfoCos = DoubleArray(NUM_VOICES)
+
     /**
      * Processes the chorus send buffers in-place.
      *
@@ -80,7 +88,19 @@ class Chorus(private val sampleRate: Int = 44100) {
         // partie la plus ancienne du tampon circulaire, d'où des craquements).
         val centerDelay = maxOf(CENTER_DELAY_MS, depth * 0.5f + 1f) * sampleRate / 1000f
 
+        // Le sinus de chaque LFO n'est calculé exactement qu'en début de bloc ; entre deux, il
+        // avance par rotation (sin/cos de l'incrément), ce qui donne les mêmes valeurs.
+        val rotCos = cos(phaseInc)
+        val rotSin = sin(phaseInc)
+
         for (i in 0 until numSamples) {
+            if (i % LFO_BLOCK == 0) {
+                for (v in 0 until NUM_VOICES) {
+                    lfoSin[v] = sin(lfoPhases[v])
+                    lfoCos[v] = cos(lfoPhases[v])
+                }
+            }
+
             // Write current input to delay buffer
             delayBufferL[writePos] = left[i]
             delayBufferR[writePos] = right[i]
@@ -90,7 +110,11 @@ class Chorus(private val sampleRate: Int = 44100) {
 
             for (v in 0 until NUM_VOICES) {
                 // Sine LFO modulates the delay time for this voice
-                val lfoVal = sin(lfoPhases[v]).toFloat()
+                val s = lfoSin[v]
+                val c = lfoCos[v]
+                val lfoVal = s.toFloat()
+                lfoSin[v] = s * rotCos + c * rotSin
+                lfoCos[v] = c * rotCos - s * rotSin
 
                 // Modulated delay in samples (center ± depth)
                 val delaySamp = centerDelay + lfoVal * depthSamp

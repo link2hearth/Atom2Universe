@@ -144,7 +144,7 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
     private var posImpulseX = 0f
     private var posImpulseY = 0f
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         solvable = false
         posImpulseX = 0f
         posImpulseY = 0f
@@ -184,7 +184,9 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         // rabat une partie : tout corriger d'un coup fait sursauter l'assemblage.
         posScale = POSITION_RATE * invDt
 
-        // Réapplication de l'impulsion de l'image précédente
+        // Réapplication de l'impulsion de l'image précédente, à l'échelle de ce pas-ci
+        impulseX *= dtRatio
+        impulseY *= dtRatio
         a.vx -= a.invMass * impulseX
         a.vy -= a.invMass * impulseY
         a.omega -= a.invI * (rax * impulseY - ray * impulseX)
@@ -201,7 +203,7 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         if (!motorEnabled || motorMass == 0f || maxMotorImpulse == 0f) {
             motorImpulse = 0f
         } else {
-            motorImpulse = motorImpulse.coerceIn(-maxMotorImpulse, maxMotorImpulse)
+            motorImpulse = (motorImpulse * dtRatio).coerceIn(-maxMotorImpulse, maxMotorImpulse)
             a.omega -= a.invI * motorImpulse
             b.omega += b.invI * motorImpulse
         }

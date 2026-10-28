@@ -339,11 +339,6 @@ class BilliardRenderer(private val config: BilliardConfig,private val table: Bil
         inkEye[0]=eyeX; inkEye[1]=eyeY; inkEye[2]=eyeZ; inkSpan=halfHeight?.let { it*2 }
         shader.begin(eyeX,eyeY,eyeZ,config.room==BilliardRoom.NEON,f,outdoor,rotationStripes,cartoon)
         Matrix.setIdentityM(model,0)
-        sky?.let {
-            Matrix.translateM(model,0,eyeX,eyeY,eyeZ)
-            GL.glDepthMask(false); draw(it,14); GL.glDepthMask(true)
-            Matrix.setIdentityM(model,0)
-        }
         // The table and its balls first: the floor, rug and furniture hidden beneath them then
         // fail the depth test before their pixels are shaded.
         draw(base,2); draw(felt,1); draw(cushions,1); draw(pocketLinings,11); draw(metalwork,7); draw(markings,5)
@@ -364,6 +359,15 @@ class BilliardRenderer(private val config: BilliardConfig,private val table: Bil
         draw(floor,4); draw(rug,9)
         draw(walls,if(config.room==BilliardRoom.LOFT) 10 else 0,cutaway=true)
         draw(room,0,cutaway=true); draw(furniture,0,cutaway=true)
+        // The sky fills only what the opaque scene left empty: pinned to the far plane, its two
+        // cloud noises and the sun run on those pixels alone. Translucent things still blend over it.
+        sky?.let {
+            Matrix.setIdentityM(model,0); Matrix.translateM(model,0,eyeX,eyeY,eyeZ)
+            GL.glDepthMask(false); GL.glDepthFunc(GL.GL_LEQUAL); GL.glDepthRangef(1f,1f)
+            draw(it,14)
+            GL.glDepthRangef(0f,1f); GL.glDepthFunc(GL.GL_LESS); GL.glDepthMask(true)
+            Matrix.setIdentityM(model,0)
+        }
         if(targetZone!=builtZone) {
             zoneMesh?.let { it.destroy(); meshes.remove(it) }; zoneMesh=null; builtZone=targetZone
             targetZone?.let { (center,radius) -> zoneMesh=mesh {

@@ -156,24 +156,6 @@ class SettingsRepository(private val context: Context) {
     }
 
     /**
-     * Récupère la position de lecture (millisecondes)
-     */
-    suspend fun getPlaybackPosition(): Long {
-        return withContext(Dispatchers.IO) {
-            settingsDao.getSetting(KEY_PLAYBACK_POSITION)?.toLongOrNull() ?: 0L
-        }
-    }
-
-    /**
-     * Sauvegarde la position de lecture
-     */
-    suspend fun savePlaybackPosition(position: Long) {
-        withContext(Dispatchers.IO) {
-            settingsDao.saveSetting(AppSettings(KEY_PLAYBACK_POSITION, position.toString()))
-        }
-    }
-
-    /**
      * Récupère le mode repeat (0=none, 1=one, 2=all)
      */
     suspend fun getRepeatMode(): Int {

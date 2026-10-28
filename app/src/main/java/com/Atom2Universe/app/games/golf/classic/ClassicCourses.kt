@@ -25,7 +25,8 @@ data class ClassicCourseDefinition(
     /** Set for a generated course: its title, hole names and saves come from the seed, not from resources. */
     val random: RandomGolfSpec? = null
 ) {
-    val par: Int get() = holes.sumOf { it.par }
+    /** A generated course reads it from its seed, without building its holes. */
+    val par: Int get() = random?.let { RandomGolfGenerator.parOf(it) } ?: holes.sumOf { it.par }
     val length: Int get() = holes.sumOf { it.displayLength.toInt() }
     /** Mini-golf: one putter, lanes with rails, no clubs, caddie or wind. */
     val mini: Boolean get() = holes.first().mini != null
@@ -59,15 +60,24 @@ object ClassicCourses {
             "classic_golf_v2_minigolf_crazy", MiniGolfCrazyCourse.holes)
     )
 
-    private val generated = object : LinkedHashMap<String, ClassicCourseDefinition>(8, .75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, ClassicCourseDefinition>) = size > 4
+    // Room for every course the menu keeps (RandomCourseStore holds 24): showing the menu again builds nothing.
+    private val generated = object : LinkedHashMap<String, ClassicCourseDefinition>(32, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, ClassicCourseDefinition>) = size > 28
     }
 
-    /** A generated course, built on demand: the same spec always gives the same holes. */
+    /** A generated course; each hole is built the first time it is needed. The same spec always gives the same holes. */
     @Synchronized
     fun random(spec: RandomGolfSpec): ClassicCourseDefinition = generated.getOrPut(spec.id) {
         ClassicCourseDefinition(spec.id, R.string.golf_random_title, R.string.golf_random_description,
-            0, 0, spec.progressName, RandomGolfGenerator.holes(spec), spec)
+            0, 0, spec.progressName, GeneratedHoles(spec), spec)
+    }
+
+    /** The menu's poster only needs the first hole and the par: the others wait until they are played. */
+    private class GeneratedHoles(private val spec: RandomGolfSpec) : AbstractList<ClassicHole>() {
+        private val holes = arrayOfNulls<ClassicHole>(spec.holeCount)
+        override val size: Int get() = holes.size
+        @Synchronized override fun get(index: Int): ClassicHole =
+            holes[index] ?: RandomGolfGenerator.hole(spec, index + 1).also { holes[index] = it }
     }
 
     /** The fixed courses and the generated ones (by their id), or null. */

@@ -20,6 +20,11 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     var onHandleEnd: ((Boolean) -> Unit)? = null
     var handles: (() -> List<Pair<Float, Float>>)? = null
     var selectedHandle = -1
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
     private var handleDragging = false
     private var moved = false
 
@@ -62,18 +67,20 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         }
     }
 
-    // Lus une fois : onDraw tourne à chaque image.
+    // Lus une fois : onDraw tourne à chaque geste et après chaque image de l'éditeur.
     private val moveLabel = context.getString(R.string.toybox_editor_joystick_move)
     private val lookLabel = context.getString(R.string.toybox_editor_joystick_look)
+    private val density = resources.displayMetrics.density
 
+    // Jamais de redessin en boucle : un geste invalide la vue, et le rendu 3D
+    // la relance après chaque image de l'éditeur pour que les poignées suivent la caméra.
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         handles?.invoke()?.forEachIndexed { index, point ->
             knobPaint.color = if (index == selectedHandle) 0xFFFFC857.toInt() else Color.WHITE
-            canvas.drawCircle(point.first, point.second, resources.displayMetrics.density * 12f, basePaint)
-            canvas.drawCircle(point.first, point.second, resources.displayMetrics.density * 8f, knobPaint)
+            canvas.drawCircle(point.first, point.second, density * 12f, basePaint)
+            canvas.drawCircle(point.first, point.second, density * 8f, knobPaint)
         }
-        if (visibility == VISIBLE) postInvalidateOnAnimation()
         if (movePointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, moveBaseX, moveBaseY, moveX, moveY, moveLabel)
         if (lookPointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, lookBaseX, lookBaseY, lookX, lookY, lookLabel)
     }
@@ -262,7 +269,7 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         if (visibility != VISIBLE) resetAll()
     }
 
-    private val touchSlop get() = resources.displayMetrics.density * 12f
+    private val touchSlop get() = density * 12f
 
     companion object {
         private const val LONG_PRESS_MS = 420L

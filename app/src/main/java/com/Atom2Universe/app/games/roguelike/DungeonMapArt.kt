@@ -9,10 +9,16 @@ import android.graphics.RectF
 
 /** Small, deterministic pixel compositions. Coordinates are a 32-pixel tile. */
 internal class DungeonMapArt {
+    private companion object {
+        /** Taille minimale de chaque cache de cases ; [reserve] l'agrandit en dézoomant. */
+        const val TILE_CACHE = 384
+        val LIBRARY_BOOKS = intArrayOf(0xFF8D5353.toInt(), 0xFF668173.toInt(), 0xFFB09658.toInt())
+    }
     private val p = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
+    private val section = Rect()
     private val cemeteryArt = CemeteryTileArt()
     private val mineArt = MineTileArt()
-    private val mineTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val mineTiles = LruCache<CemeteryKey, Bitmap>(TILE_CACHE)
     private val sceneryArt = SceneryTileArt()
     private data class SceneryKey(val kind: SceneryKind, val variant: Int, val connections: Int)
     private val sceneryTiles = LruCache<SceneryKey, Bitmap>(96)
@@ -24,20 +30,36 @@ internal class DungeonMapArt {
         ).also { sceneryTiles.put(key, it) }
         val x = scenery.column * SceneryTileArt.SIZE
         val y = scenery.row * SceneryTileArt.SIZE
-        c.drawBitmap(bitmap, Rect(x, y, x + SceneryTileArt.SIZE, y + SceneryTileArt.SIZE), bounds, p)
+        section.set(x, y, x + SceneryTileArt.SIZE, y + SceneryTileArt.SIZE)
+        c.drawBitmap(bitmap, section, bounds, p)
     }
     private val spaceshipArt = SpaceshipTileArt()
-    private val spaceshipTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val spaceshipTiles = LruCache<CemeteryKey, Bitmap>(TILE_CACHE)
     private val pirateArt = PirateTileArt()
     private data class PirateKey(val x: Int, val y: Int, val tile: TileType, val neighbours: Int, val cabin: Boolean)
-    private val pirateTiles = LruCache<PirateKey, Bitmap>(384)
+    private val pirateTiles = LruCache<PirateKey, Bitmap>(TILE_CACHE)
     private val forestArt = ForestTileArt()
-    private val forestTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val forestTiles = LruCache<CemeteryKey, Bitmap>(TILE_CACHE)
     private val interiorArt = DungeonInteriorTileArt()
-    private val interiorTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val interiorTiles = LruCache<CemeteryKey, Bitmap>(TILE_CACHE)
     private data class CemeteryKey(val x: Int, val y: Int, val tile: TileType, val neighbours: Int)
     // Bounded raster cache: no per-frame generation or texture files.
-    private val cemeteryTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val cemeteryTiles = LruCache<CemeteryKey, Bitmap>(TILE_CACHE)
+    // Le dessin de ces cases dépend de leur position (aléa par case) : elles ne se partagent pas.
+    private val positionCaches = listOf(mineTiles, spaceshipTiles, pirateTiles, forestTiles, interiorTiles, cemeteryTiles)
+    private var tileCacheSize = TILE_CACHE
+
+    /**
+     * Assure de la place pour [cells] cases dans chaque cache par position : en dézoomant sur
+     * une grande carte, un cache plus petit que l'écran s'évinçait lui-même et redessinait des
+     * centaines de cases à chaque passage. Il revient à sa taille minimale quand on rezoome.
+     */
+    fun reserve(cells: Int) {
+        val size = maxOf(TILE_CACHE, cells)
+        if (size == tileCacheSize) return
+        tileCacheSize = size
+        for (cache in positionCaches) cache.resize(size)
+    }
     private val passageArt=PassageTileArt()
     private val waterwayArt=WaterwayTileArt()
     private val waterwayTiles=LruCache<MapWaterway,Bitmap>(64)
@@ -61,8 +83,9 @@ internal class DungeonMapArt {
     fun mausoleumCell(c: Canvas, bounds: RectF, column: Int, row: Int) {
         val bitmap = mausoleum ?: Bitmap.createBitmap(cemeteryArt.renderMausoleum(),
             CemeteryTileArt.SIZE * 4, CemeteryTileArt.SIZE * 4, Bitmap.Config.ARGB_8888).also { mausoleum = it }
-        val section = bitmap.width / CemeteryMonuments.SIZE
-        c.drawBitmap(bitmap, Rect(column * section, row * section, (column + 1) * section, (row + 1) * section), bounds, p)
+        val side = bitmap.width / CemeteryMonuments.SIZE
+        section.set(column * side, row * side, (column + 1) * side, (row + 1) * side)
+        c.drawBitmap(bitmap, section, bounds, p)
     }
     private fun box(c: Canvas, x: Int, y: Int, w: Int, h: Int, color: Int) {
         p.color = color
@@ -168,7 +191,7 @@ internal class DungeonMapArt {
                     box(c, 2, 4, 28, 25, shade(stone, -25))
                     for (row in 0..1) {
                         for (i in 0..5) box(c, 5 + i * 4, 7 + row * 11, 3, 8,
-                            intArrayOf(0xFF8D5353.toInt(), 0xFF668173.toInt(), 0xFFB09658.toInt())[(i + seed % 3) % 3])
+                            LIBRARY_BOOKS[(i + seed % 3) % 3])
                         box(c, 3, 15 + row * 11, 26, 2, stone)
                     }
                 }

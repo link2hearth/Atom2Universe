@@ -61,6 +61,7 @@ class MapState(val w: Int, val h: Int, val region: IntArray, val colours: IntArr
             val c = start.copyOf()
             var found = 0; var nodes = 0
             fun search() {
+                checkPuzzleWork()
                 if (found >= limit || ++nodes > 200_000) return
                 var best = -1; var bestOpts = 5
                 for (r in c.indices) {

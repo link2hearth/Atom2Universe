@@ -41,7 +41,8 @@ class SpadesActivity : CardGameActivity() {
                 hand = if (s == 0) Cards.sortedForHand(g.hands[0]) else null,
                 lifted = if (s == 0) lifted.toSet() else emptySet(),
                 playable = if (s == 0 && !g.bidding) playableCards() else null,
-                caption = if (g.bids[s] == SpadesEngine.NO_BID) null else "${g.tricksWon[s]}/${bidText(g.bids[s])}",
+                caption = if (g.bids[s] == SpadesEngine.NO_BID) null
+                    else getString(R.string.spades_caption, g.tricksWon[s], bidText(g.bids[s])),
                 active = g.current == s,
             )
         }
@@ -65,9 +66,9 @@ class SpadesActivity : CardGameActivity() {
         if (!game.bidding) return emptyList()
         val label = if (bidChoice == 0) getString(R.string.spades_nil) else getString(R.string.spades_bid, bidChoice)
         return listOf(
-            Control("−", enabled = bidChoice > 0) { bidChoice--; refresh() },
+            Control(getString(R.string.cards_bid_less), enabled = bidChoice > 0) { bidChoice--; refresh() },
             Control(label, primary = true) { submit(SpadesEngine.BID_BASE + bidChoice) },
-            Control("+", enabled = bidChoice < 13) { bidChoice++; refresh() },
+            Control(getString(R.string.cards_bid_more), enabled = bidChoice < 13) { bidChoice++; refresh() },
         )
     }
 

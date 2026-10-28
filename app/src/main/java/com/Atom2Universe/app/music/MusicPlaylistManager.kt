@@ -45,6 +45,11 @@ object MusicPlaylistManager {
 
     private var isLoaded = false
 
+    // Lecture du fichier ratée (JSON tronqué…) : ne plus rien écrire, sinon la liste
+    // vide en mémoire écraserait les données encore présentes dans le fichier
+    @Volatile
+    private var loadFailed = false
+
     data class PlaylistSyncMetadata(
         val createdAt: Long,
         var modifiedAt: Long
@@ -118,6 +123,7 @@ object MusicPlaylistManager {
             val json = JSONObject(jsonString)
             val version = json.optInt("version", 1)
             val playlistsArray = json.optJSONArray("playlists") ?: JSONArray()
+            loadFailed = false
 
             playlistsCache.clear()
             playlistMetadata.clear()
@@ -225,7 +231,11 @@ object MusicPlaylistManager {
             isLoaded = true
         } catch (e: Exception) {
             Log.e(TAG, "Erreur chargement playlists", e)
-            isLoaded = true
+            // Rien de partiel en mémoire, aucune sauvegarde ; nouvel essai au prochain chargement
+            playlistsCache.clear()
+            playlistMetadata.clear()
+            deletedPlaylistsCache.clear()
+            loadFailed = true
         }
     }
 
@@ -241,6 +251,10 @@ object MusicPlaylistManager {
      * Méthode interne de sauvegarde (utilisée aussi pour la migration)
      */
     private fun savePlaylistsInternal(file: File) {
+        if (loadFailed) {
+            Log.w(TAG, "Playlists file could not be read, not overwriting it")
+            return
+        }
         try {
             val json = JSONObject().apply {
                 put("version", JSON_VERSION)
@@ -278,9 +292,7 @@ object MusicPlaylistManager {
                 })
             }
 
-            // Crée le dossier parent si nécessaire
-            file.parentFile?.mkdirs()
-            file.writeText(json.toString(2))
+            MusicFileWriter.writeTextAtomically(file, json.toString(2))
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sauvegarde playlists", e)
         }

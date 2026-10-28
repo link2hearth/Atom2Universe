@@ -246,6 +246,9 @@ class TrebuchetEffects(seed: Long = 1L) {
     var aliveCount = 0
         private set
 
+    /** Une particule est née depuis le dernier [update] : voir sa sortie anticipée. */
+    private var spawned = false
+
     // ── Les bouquets programmés ───────────────────────────────────────────────
 
     private val pendingAt = FloatArray(64)
@@ -261,6 +264,7 @@ class TrebuchetEffects(seed: Long = 1L) {
     fun clear() {
         for (p in pool) p.reset()
         aliveCount = 0
+        spawned = false
         pendingCount = 0
         showClock = 0f
     }
@@ -757,6 +761,11 @@ class TrebuchetEffects(seed: Long = 1L) {
      */
     fun update(dt: Float) {
         if (dt <= 0f) return
+        // Ciel vide : rien à parcourir. [aliveCount] ne compte pas ce qui est né depuis
+        // la dernière image, d'où [spawned] ; et sans fusée en attente, [tickShow] ne
+        // ferait rien non plus. Le bassin entier se parcourait sinon pour zéro particule.
+        if (aliveCount == 0 && pendingCount == 0 && !spawned) return
+        spawned = false
         tickShow(dt)
 
         var alive = 0
@@ -841,6 +850,7 @@ class TrebuchetEffects(seed: Long = 1L) {
             }
         }
         val s = chosen ?: return null
+        spawned = true
         s.kind = kind
         s.x = x
         s.y = y

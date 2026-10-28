@@ -107,9 +107,9 @@ class Sf2VoicePool(
         val tempChorusLeft = FloatArray(MAX_BUFFER_SIZE)
         val tempChorusRight = FloatArray(MAX_BUFFER_SIZE)
 
-        // Work parameters (set by main thread before unpark)
+        // Work parameters (set by main thread before unpark): voices startVoice, startVoice + stride…
         var startVoice = 0
-        var endVoice = 0
+        var stride = 1
         var numSamples = 0
         var sf2FileRef: Sf2File? = null
         var channelVolumes: FloatArray? = null
@@ -141,8 +141,8 @@ class Sf2VoicePool(
                     if (renderComplete) continue
                     try {
                         doRender()
-                    } catch (_: Exception) {
-                        // Audio thread must never crash
+                    } catch (_: Throwable) {
+                        // Audio thread must never crash (a dead worker would never finish its share)
                     } finally {
                         renderComplete = true
                         mainRenderThread?.let { LockSupport.unpark(it) }
@@ -169,7 +169,7 @@ class Sf2VoicePool(
             }
 
             activeCountResult = renderVoiceRange(
-                startVoice, endVoice, file, tempLeft, tempRight, samples,
+                startVoice, stride, file, tempLeft, tempRight, samples,
                 channelVolumes, channelPitchBends, channelPans, channelExpressions,
                 channelModulations, channelReverbSends, tempReverbLeft, tempReverbRight,
                 channelChorusSends, tempChorusLeft, tempChorusRight, combinedGain
@@ -481,7 +481,7 @@ class Sf2VoicePool(
             )
         } else {
             renderVoiceRange(
-                0, voices.size, sf2File, outputLeft, outputRight, numSamples,
+                0, 1, sf2File, outputLeft, outputRight, numSamples,
                 channelVolumes, channelPitchBends, channelPans, channelExpressions,
                 channelModulations, channelReverbSends, reverbSendLeft, reverbSendRight,
                 channelChorusSends, chorusSendLeft, chorusSendRight, combinedGain
@@ -497,13 +497,14 @@ class Sf2VoicePool(
     // ==================== Parallel Rendering ====================
 
     /**
-     * Renders a range of voices into the given output buffers.
-     * Thread-safe: each voice has independent state, sf2File.getSample() is read-only.
+     * Renders voices startIndex, startIndex + step, startIndex + 2·step… into the given buffers.
+     * Thread-safe as long as no other thread renders the same voices: each voice has
+     * independent state, sf2File.getSample() is read-only.
      * @return Number of voices still active after rendering
      */
     private fun renderVoiceRange(
         startIndex: Int,
-        endIndex: Int,
+        step: Int,
         sf2File: Sf2File,
         outputLeft: FloatArray,
         outputRight: FloatArray,
@@ -522,8 +523,10 @@ class Sf2VoicePool(
         combinedGain: Float
     ): Int {
         var activeCount = 0
-        for (v in startIndex until endIndex) {
+        var v = startIndex
+        while (v < voices.size) {
             val voice = voices[v]
+            v += step
             if (voice.isActive) {
                 val expression = channelExpressions?.getOrElse(voice.channel) { 1f } ?: 1f
                 val channelVolume = (channelVolumes?.getOrElse(voice.channel) { 1f } ?: 1f) * expression * combinedGain
@@ -545,8 +548,14 @@ class Sf2VoicePool(
 
     /**
      * Renders voices in parallel across worker threads + main thread.
-     * Voice indices are distributed evenly: workers render into temp buffers,
-     * main thread renders directly into output, then accumulates worker results.
+     * Voices are dealt out in turn (thread t renders voices t, t + n, t + 2n…): the active
+     * voices sit at the start of the pool, contiguous slices left the main thread with an
+     * empty one. Workers render into temp buffers, main thread renders directly into output,
+     * then accumulates worker results.
+     *
+     * A worker's voices are never rendered by two threads: the main thread always waits for
+     * every worker it started before returning, and only takes over the share of a worker
+     * whose thread has died.
      * @return Number of voices still active after rendering
      */
     private fun renderVoicesParallel(
@@ -570,39 +579,24 @@ class Sf2VoicePool(
         val activeWorkers = ensureWorkers()
         val actualWorkerCount = activeWorkers.size
         val totalThreads = actualWorkerCount + 1 // workers + main thread
-        val chunkSize = voices.size / totalThreads
 
         mainRenderThread = Thread.currentThread()
 
-        // Configure and start workers
-        // Track which workers are healthy (completed previous cycle in time)
+        // Configure and start workers. A worker is always idle here (the previous cycle waited
+        // for it); one whose thread has died is "unhealthy" and its share goes to the main thread.
         // Utilise le tableau pré-alloué pour éviter une allocation par cycle de rendu.
         val workerHealthy = workerHealthyBuffer
         workerHealthy.fill(true, 0, actualWorkerCount)
 
         for (w in 0 until actualWorkerCount) {
             val worker = activeWorkers[w]
-            // CRITICAL: Wait for previous cycle to complete before overwriting parameters.
-            // Without this, we corrupt worker state if the previous cycle was slow
-            // (e.g., worker still rendering from a timed-out cycle N while we assign cycle N+1).
-            // Timeout: 5ms max wait. If worker is still busy, mark it unhealthy and skip.
-            val waitStart = System.nanoTime()
-            val maxWaitNs = 5_000_000L // 5ms - half a typical audio buffer period
-            while (!worker.renderComplete) {
-                if (System.nanoTime() - waitStart > maxWaitNs) {
-                    // Worker is stuck from previous cycle - mark unhealthy, don't assign new work
-                    workerHealthy[w] = false
-                    android.util.Log.w("Sf2VoicePool", "Worker $w stuck from previous cycle, skipping")
-                    break
-                }
-                LockSupport.parkNanos(50_000) // 50us
+            if (!worker.thread.isAlive) {
+                workerHealthy[w] = false
+                continue
             }
 
-            // Only assign work to healthy workers
-            if (!workerHealthy[w]) continue
-
-            worker.startVoice = w * chunkSize
-            worker.endVoice = (w + 1) * chunkSize
+            worker.startVoice = w
+            worker.stride = totalThreads
             worker.numSamples = numSamples
             worker.sf2FileRef = sf2File
             worker.channelVolumes = channelVolumes
@@ -617,24 +611,19 @@ class Sf2VoicePool(
             LockSupport.unpark(worker.thread)
         }
 
-        // Main thread renders its chunk directly into output buffers
-        // PLUS: render voice ranges from unhealthy workers (fallback to sequential)
-        val mainStart = actualWorkerCount * chunkSize
+        // Main thread renders its share directly into output buffers
+        // PLUS: the share of dead workers (fallback to sequential)
         var mainActiveCount = renderVoiceRange(
-            mainStart, voices.size, sf2File, outputLeft, outputRight, numSamples,
+            actualWorkerCount, totalThreads, sf2File, outputLeft, outputRight, numSamples,
             channelVolumes, channelPitchBends, channelPans, channelExpressions,
             channelModulations, channelReverbSends, reverbSendLeft, reverbSendRight,
             channelChorusSends, chorusSendLeft, chorusSendRight, combinedGain
         )
 
-        // Render voice ranges from unhealthy workers on main thread (fallback)
-        // This ensures no voices are dropped even if workers are stuck
         for (w in 0 until actualWorkerCount) {
             if (!workerHealthy[w]) {
-                val fallbackStart = w * chunkSize
-                val fallbackEnd = (w + 1) * chunkSize
                 mainActiveCount += renderVoiceRange(
-                    fallbackStart, fallbackEnd, sf2File, outputLeft, outputRight, numSamples,
+                    w, totalThreads, sf2File, outputLeft, outputRight, numSamples,
                     channelVolumes, channelPitchBends, channelPans, channelExpressions,
                     channelModulations, channelReverbSends, reverbSendLeft, reverbSendRight,
                     channelChorusSends, chorusSendLeft, chorusSendRight, combinedGain
@@ -642,24 +631,24 @@ class Sf2VoicePool(
             }
         }
 
-        // Wait for healthy workers to complete — never drop worker audio.
-        // Dropping results from timed-out workers was the primary cause of crackling:
-        // entire voice ranges would silently disappear for one buffer (~10ms gap).
-        // Workers call LockSupport.unpark(mainRenderThread) on completion,
-        // so we are woken promptly. Safety timeout (50ms) only prevents infinite hang
-        // if a worker thread dies unexpectedly.
-        val deadline = System.nanoTime() + 50_000_000L // 50ms safety net
-        while (System.nanoTime() < deadline) {
+        // Wait for every started worker — never drop worker audio, and never return while a
+        // worker still renders its voices (the caller then releases the voice lock and the
+        // next cycle could hand the same voices to another thread). Workers unpark us on
+        // completion; parkNanos as fallback for missed unparks. A worker whose thread died
+        // is no longer waited for.
+        while (true) {
             var allDone = true
             for (w in 0 until actualWorkerCount) {
-                // Only wait for healthy workers that were assigned work
-                if (workerHealthy[w] && !activeWorkers[w].renderComplete) {
-                    allDone = false
-                    break
+                val worker = activeWorkers[w]
+                if (workerHealthy[w] && !worker.renderComplete) {
+                    if (worker.thread.isAlive) {
+                        allDone = false
+                        break
+                    }
+                    workerHealthy[w] = false
                 }
             }
             if (allDone) break
-            // Workers unpark us on completion; parkNanos as fallback for missed unparks
             LockSupport.parkNanos(100_000) // 100us
         }
 
@@ -674,16 +663,10 @@ class Sf2VoicePool(
         var totalActiveCount = mainActiveCount
 
         for (w in 0 until actualWorkerCount) {
-            // Skip unhealthy workers (their range was rendered by main thread)
+            // Skip dead workers (their share was rendered by main thread)
             if (!workerHealthy[w]) continue
 
             val worker = activeWorkers[w]
-            if (!worker.renderComplete) {
-                // Worker timed out during this cycle - log but don't crash
-                // Their voice range will be silent for this buffer (unavoidable)
-                android.util.Log.w("Sf2VoicePool", "Worker $w timed out during render, voices ${w * chunkSize}-${(w+1) * chunkSize} silent")
-                continue
-            }
             totalActiveCount += worker.activeCountResult
 
             for (i in 0 until numSamples) {

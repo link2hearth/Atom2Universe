@@ -53,7 +53,12 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
     var onReshuffled: (() -> Unit)? = null
     var onInputFeedback: ((Int) -> Unit)? = null
 
-    init { isFocusable = true; keepScreenOn = true; contentDescription = context.getString(R.string.forge_board_description) }
+    init { isFocusable = true; contentDescription = context.getString(R.string.forge_board_description) }
+
+    // The screen stays on during a level only: not in a demo, a menu, a pause or once it ends.
+    private fun updateKeepScreenOn() {
+        keepScreenOn = running && !demo && !game.won && game.moves > 0
+    }
 
     fun elapsedTimeMs(): Long = game.elapsedMs + if (activeSince > 0L) SystemClock.uptimeMillis() - activeSince else 0L
 
@@ -63,7 +68,7 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
         if (!busy) sensedGravity?.let { game.gravity = it }
         if (running && activeSince == 0L && !game.won && game.moves > 0) activeSince = SystemClock.uptimeMillis()
         if (width > 0 && height > 0) onSizeChanged(width, height, width, height)
-        stable = game.save(); selected = -1; invalidate(); onChanged?.invoke()
+        stable = game.save(); selected = -1; invalidate(); updateKeepScreenOn(); onChanged?.invoke()
     }
 
     fun setGravity(direction: Int) {
@@ -83,6 +88,7 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
             running = true; sound.start()
             if (!game.won && game.moves > 0) activeSince = SystemClock.uptimeMillis()
         }
+        updateKeepScreenOn()
     }
 
     fun pause() {
@@ -96,6 +102,7 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
         selected = -1
         touchCell = -1; pointerId = -1; pendingSwap = null
         if (running) { sound.stop(); running = false }
+        updateKeepScreenOn()
         invalidate(); onChanged?.invoke()
     }
 

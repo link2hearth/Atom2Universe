@@ -105,6 +105,9 @@ internal class Enemy(
     var fireTickTimer: Float = 0f
 
     var alertPlayed: Boolean = false
+    /** Ligne de vue vers sa cible au dernier test, et temps avant le suivant (EnemyManager). */
+    var sightClear: Boolean = false
+    var sightTimer: Float = 0f
 
     // Harcèlement (voir Harassment) : dégâts pris à distance depuis le dernier coup au corps à
     // corps, puis repli en cocon ou derrière un bouclier qui les regagne.

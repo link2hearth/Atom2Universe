@@ -51,7 +51,6 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_escape_labyrinth)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         bindViews()
         setupListeners()
@@ -269,5 +268,12 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         btnEasy.isEnabled = !isGenerating
         btnMedium.isEnabled = !isGenerating
         btnHard.isEnabled = !isGenerating
+        // Keep the screen on only during a game in progress, not on an end screen.
+        val play = currentPlay
+        if (!isGenerating && play != null && !play.completed && !play.caught) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 }

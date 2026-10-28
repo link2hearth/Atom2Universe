@@ -163,7 +163,7 @@ object Sf2DocumentWriter {
                     is Sf2Document.Audio.Pcm -> {
                         val loaded = audio.load()
                         val frames = audio.frames
-                        for (i in 0 until frames) out.u16(if (i < loaded.data.size) loaded.data[i].toInt() else 0)
+                        out.pcm(loaded.data, frames, buffer)
                         loaded.loopStart?.let { loops[index][0] = it }
                         loaded.loopEnd?.let { loops[index][1] = it }
                     }
@@ -326,6 +326,22 @@ object Sf2DocumentWriter {
             u16(((value shr 16) and 0xFFFF).toInt())
         }
         fun bytes(data: ByteArray, length: Int = data.size) = out.write(data, 0, length)
+        /** [frames] 16-bit frames of [data] (silence past its end), converted through [buffer]. */
+        fun pcm(data: ShortArray, frames: Int, buffer: ByteArray) {
+            val available = minOf(frames, data.size)
+            var start = 0
+            while (start < available) {
+                val count = minOf(available - start, buffer.size / 2)
+                for (i in 0 until count) {
+                    val value = data[start + i].toInt()
+                    buffer[i * 2] = value.toByte()
+                    buffer[i * 2 + 1] = (value shr 8).toByte()
+                }
+                out.write(buffer, 0, count * 2)
+                start += count
+            }
+            if (frames > available) zeros((frames - available) * 2L)
+        }
         fun zeros(count: Long) {
             var remaining = count
             while (remaining > 0) {

@@ -48,6 +48,7 @@ class EarthMoonActivity : ThemedActivity() {
     private val J2000 = LocalDate.of(2000, 1, 1)
     private val dateHandler = Handler(Looper.getMainLooper())
     private val dateFmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    // Tourne seulement pendant la lecture : en pause, date et carte ne bougent pas.
     private val dateUpdater = object : Runnable {
         override fun run() {
             updateDateLabel()
@@ -57,6 +58,8 @@ class EarthMoonActivity : ThemedActivity() {
             dateHandler.postDelayed(this, 500)
         }
     }
+    private var shownDate: LocalDate? = null
+    private var resumed = false
 
     private var selectedBody = 0  // 0=Terre, 1=Lune
     private var lastActiveStep = SolarSystemActivity.DEFAULT_STEP
@@ -69,15 +72,21 @@ class EarthMoonActivity : ThemedActivity() {
 
         val days = intent.getDoubleExtra(EXTRA_ELAPSED_DAYS,
             ChronoUnit.DAYS.between(J2000, LocalDate.now()).toDouble())
-        glView.renderer.elapsedSimDays = days
+        glView.renderer.setSimDays(days)
     }
 
     override fun onResume() {
-        super.onResume(); glView.onResume(); dateHandler.post(dateUpdater)
+        super.onResume(); glView.onResume(); resumed = true; syncDateUpdater()
     }
 
     override fun onPause() {
-        super.onPause(); glView.onPause(); dateHandler.removeCallbacks(dateUpdater)
+        super.onPause(); glView.onPause(); resumed = false; dateHandler.removeCallbacks(dateUpdater)
+    }
+
+    private fun syncDateUpdater() {
+        dateHandler.removeCallbacks(dateUpdater)
+        updateDateLabel()
+        if (resumed && !glView.renderer.paused) dateHandler.postDelayed(dateUpdater, 500)
     }
 
     /** Rend la date courante au système solaire, quel que soit le chemin de sortie. */
@@ -250,8 +259,8 @@ class EarthMoonActivity : ThemedActivity() {
             if (p != SolarSystemActivity.PAUSE_STEP) lastActiveStep = p
             applyStep(p)
         }
-        btnModeClose.setOnClickListener { glView.renderer.targetBlend = 0f; updateModeButtons() }
-        btnModeReal.setOnClickListener  { glView.renderer.targetBlend = 1f; updateModeButtons() }
+        btnModeClose.setOnClickListener { glView.renderer.targetBlend = 0f; glView.requestFrame(); updateModeButtons() }
+        btnModeReal.setOnClickListener  { glView.renderer.targetBlend = 1f; glView.requestFrame(); updateModeButtons() }
 
         glView.renderer.onBodyTapped = { idx -> runOnUiThread { showBodyCard(idx) } }
     }
@@ -267,6 +276,8 @@ class EarthMoonActivity : ThemedActivity() {
 
     private fun updateDateLabel() {
         val date = SolarSystemActivity.simDate(J2000, glView.renderer.elapsedSimDays)
+        if (date == shownDate) return
+        shownDate = date
         tvDate.text = date.format(dateFmt)
     }
 
@@ -278,16 +289,22 @@ class EarthMoonActivity : ThemedActivity() {
         val speed = SolarSystemActivity.SPEED_STEPS[p]
         glView.renderer.speedDaysPerSec = speed
         glView.renderer.paused = (speed == 0.0)
+        glView.requestFrame()
         btnPlayPause.setImageResource(
             if (speed == 0.0) android.R.drawable.ic_media_play
             else android.R.drawable.ic_media_pause)
         tvSpeed.text = SolarSystemActivity.stepLabel(this, p)
+        syncDateUpdater()
     }
 
     private fun showDatePicker() {
         val cur = SolarSystemActivity.simDate(J2000, glView.renderer.elapsedSimDays)
         DatePickerDialog(this, { _, y, m, d ->
-            glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, LocalDate.of(y, m + 1, d)).toDouble()
+            glView.renderer.setSimDays(ChronoUnit.DAYS.between(J2000, LocalDate.of(y, m + 1, d)).toDouble())
+            glView.requestFrame()
+            // En pause, la carte de la Lune suit la nouvelle date.
+            updateDateLabel()
+            if (cardInfo.visibility == View.VISIBLE && selectedBody == 1) showBodyCard(1)
         }, cur.year, cur.monthValue - 1, cur.dayOfMonth).show()
     }
 
@@ -303,6 +320,7 @@ class EarthMoonActivity : ThemedActivity() {
         selectedBody = idx
         glView.renderer.focusBody = idx
         glView.renderer.cameraDistance = glView.renderer.recommendedDistance(idx)
+        glView.requestFrame()
         updateBodySelector()
         showBodyCard(idx)
     }

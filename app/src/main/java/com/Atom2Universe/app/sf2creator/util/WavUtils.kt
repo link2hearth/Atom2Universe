@@ -61,6 +61,8 @@ object WavUtils {
             }
         } catch (e: Exception) {
             null
+        } catch (e: OutOfMemoryError) {
+            null
         }
     }
 
@@ -78,6 +80,8 @@ object WavUtils {
                 readWavWithMetadataFromStream(fis)
             }
         } catch (e: Exception) {
+            null
+        } catch (e: OutOfMemoryError) {
             null
         }
     }
@@ -209,12 +213,14 @@ object WavUtils {
         channels: Int = 1,
         bitsPerSample: Int = 16
     ): Boolean {
+        // Written next to the target then renamed: an interrupted write never leaves a broken WAV
+        val tmp = File(file.parentFile, "${file.name}.tmp")
         return try {
             val byteRate = sampleRate * channels * bitsPerSample / 8
             val blockAlign = channels * bitsPerSample / 8
             val dataSize = samples.size * 2
 
-            FileOutputStream(file).use { fos ->
+            FileOutputStream(tmp).use { fos ->
                 // RIFF header
                 fos.write("RIFF".toByteArray())
                 fos.write(intToLittleEndian(36 + dataSize))
@@ -238,9 +244,18 @@ object WavUtils {
                 val buffer = ByteBuffer.allocate(samples.size * 2).order(ByteOrder.LITTLE_ENDIAN)
                 samples.forEach { buffer.putShort(it) }
                 fos.write(buffer.array())
+                fos.fd.sync()
+            }
+            if (!tmp.renameTo(file)) {
+                tmp.delete()
+                return false
             }
             true
         } catch (e: Exception) {
+            tmp.delete()
+            false
+        } catch (e: OutOfMemoryError) {
+            tmp.delete()
             false
         }
     }

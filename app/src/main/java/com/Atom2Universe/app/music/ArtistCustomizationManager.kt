@@ -33,6 +33,11 @@ object ArtistCustomizationManager {
 
     private var isLoaded = false
 
+    // Lecture du fichier ratée (JSON tronqué…) : ne plus rien écrire, sinon la liste
+    // vide en mémoire écraserait les données encore présentes dans le fichier
+    @Volatile
+    private var loadFailed = false
+
     data class ArtistCustomization(
         val artistName: String,
         var iconPath: String? = null,
@@ -80,6 +85,7 @@ object ArtistCustomizationManager {
             val json = JSONObject(jsonString)
             val version = json.optInt("version", 1)
             val customizationsArray = json.optJSONArray("customizations") ?: JSONArray()
+            loadFailed = false
 
             customizationsCache.clear()
             deletedFavoritesCache.clear()
@@ -144,7 +150,10 @@ object ArtistCustomizationManager {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur chargement personnalisations", e)
-            isLoaded = true
+            // Rien de partiel en mémoire, aucune sauvegarde ; nouvel essai au prochain chargement
+            customizationsCache.clear()
+            deletedFavoritesCache.clear()
+            loadFailed = true
         }
     }
 
@@ -157,6 +166,10 @@ object ArtistCustomizationManager {
     }
 
     private fun saveCustomizationsInternal(file: File) {
+        if (loadFailed) {
+            Log.w(TAG, "Artist customizations file could not be read, not overwriting it")
+            return
+        }
         try {
             val json = JSONObject().apply {
                 put("version", JSON_VERSION)
@@ -188,8 +201,7 @@ object ArtistCustomizationManager {
                 })
             }
 
-            file.parentFile?.mkdirs()
-            file.writeText(json.toString(2))
+            MusicFileWriter.writeTextAtomically(file, json.toString(2))
             Log.d(TAG, "Saved ${customizationsCache.size} artist customizations, ${deletedFavoritesCache.size} deleted favorites")
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sauvegarde personnalisations", e)

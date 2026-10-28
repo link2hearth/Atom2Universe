@@ -16,12 +16,16 @@ internal enum class ClassicRoundLength(val startIndex: Int, private val fixedCou
     fun lastIndex(course: ClassicCourseDefinition) = startIndex + count(course) - 1
     fun holes(course: ClassicCourseDefinition) = course.holes.subList(startIndex, startIndex + count(course))
     fun nextIndex(completedHoles: Int) = startIndex + completedHoles
-    fun progressName(course: ClassicCourseDefinition) = when (this) {
-        FULL -> course.progressName
-        NINE -> "${course.progressName}_9"
-        BACK_NINE -> "${course.progressName}_back9"
-        WHOLE -> "${course.progressName}_all"
+    fun progressName(course: ClassicCourseDefinition) = progressName(course.progressName)
+    /** From the course's own preference name alone, without its holes. */
+    fun progressName(base: String) = when (this) {
+        FULL -> base
+        NINE -> "${base}_9"
+        BACK_NINE -> "${base}_back9"
+        WHOLE -> "${base}_all"
     }
+    /** Par of the section; for a generated course read from its seed. */
+    fun par(course: ClassicCourseDefinition) = if (this == WHOLE) course.par else holes(course).sumOf { it.par }
     fun finished(scores: List<Int>, course: ClassicCourseDefinition) = scores.size >= count(course)
 
     companion object {

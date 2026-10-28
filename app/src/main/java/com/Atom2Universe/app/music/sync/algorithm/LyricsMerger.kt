@@ -39,9 +39,11 @@ object LyricsMerger {
      */
     const val CLOUD_RETENTION_MS = 90L * 24 * 60 * 60 * 1000
 
-    // Cache des paroles supprimées (en attente de sync)
+    // Cache des paroles supprimées (en attente de sync). Écrit par l'interface, lu et vidé
+    // par la synchro sur un autre fil : tout accès passe par cacheLock.
     private val deletedLyricsCache = mutableMapOf<String, DeletedLyricsEntry>()
     private var isDeletedCacheLoaded = false
+    private val cacheLock = Any()
 
     data class DeletedLyricsEntry(
         val key: String,
@@ -65,7 +67,7 @@ object LyricsMerger {
             return
         }
 
-        loadDeletedCache(context)
+        synchronized(cacheLock) { loadDeletedCache(context) }
 
         val db = MusicDatabase.getInstance(context)
         val lyricsDao = db.lyricsDao()
@@ -80,7 +82,7 @@ object LyricsMerger {
             if (cloudEntry.source == SOURCE_FILE) continue
 
             val localEntry = lyricsDao.getByKey(cloudEntry.key)
-            val localDeletedEntry = deletedLyricsCache[cloudEntry.key]
+            val localDeletedEntry = synchronized(cacheLock) { deletedLyricsCache[cloudEntry.key] }
 
             // Le fichier gagne : des paroles lues dans le MP3 de cet appareil ne sont
             // jamais remplacées, ni effacées, par celles d'un autre appareil. Sans cette
@@ -126,7 +128,7 @@ object LyricsMerger {
                             )
                         )
                         // Remove from deleted cache if was there
-                        deletedLyricsCache.remove(cloudEntry.key)
+                        synchronized(cacheLock) { deletedLyricsCache.remove(cloudEntry.key) }
                         addedCount++
                     } else {
                         lyricsDao.insert(
@@ -147,12 +149,12 @@ object LyricsMerger {
                         removedCount++
                     }
                     // Remove from deleted cache too (cloud deletion takes precedence)
-                    deletedLyricsCache.remove(cloudEntry.key)
+                    synchronized(cacheLock) { deletedLyricsCache.remove(cloudEntry.key) }
                 }
             }
         }
 
-        saveDeletedCache(context)
+        synchronized(cacheLock) { saveDeletedCache(context) }
         Log.d(TAG, "Merge complete: added $addedCount, updated $updatedCount, removed $removedCount")
     }
 
@@ -161,7 +163,10 @@ object LyricsMerger {
      */
     suspend fun getLocalLyrics(context: Context): List<SyncLyricsEntry> {
         return try {
-            loadDeletedCache(context)
+            val deletedSnapshot = synchronized(cacheLock) {
+                loadDeletedCache(context)
+                deletedLyricsCache.values.toList()
+            }
 
             val result = mutableListOf<SyncLyricsEntry>()
 
@@ -198,7 +203,7 @@ object LyricsMerger {
             }
 
             // Add deleted lyrics (soft-delete) for sync
-            for ((_, deletedEntry) in deletedLyricsCache) {
+            for (deletedEntry in deletedSnapshot) {
                 result.add(SyncLyricsEntry(
                     key = deletedEntry.key,
                     artist = deletedEntry.artist,
@@ -224,39 +229,52 @@ object LyricsMerger {
      * Call this when lyrics are deleted locally.
      */
     suspend fun trackLyricsDeletion(context: Context, entity: LyricsEntity) {
-        loadDeletedCache(context)
-
         val parts = entity.metadataKey.split("-", limit = 3)
         val title = parts.getOrNull(0) ?: ""
         val artist = parts.getOrNull(1) ?: ""
         val album = parts.getOrNull(2) ?: ""
 
-        deletedLyricsCache[entity.metadataKey] = DeletedLyricsEntry(
-            key = entity.metadataKey,
-            artist = artist,
-            title = title,
-            album = album,
-            lyrics = entity.lyrics,
-            source = entity.source,
-            isSynced = entity.isSynced,
-            modifiedAt = entity.lastModified,
-            deletedAt = System.currentTimeMillis()
-        )
-
-        saveDeletedCache(context)
+        synchronized(cacheLock) {
+            loadDeletedCache(context)
+            deletedLyricsCache[entity.metadataKey] = DeletedLyricsEntry(
+                key = entity.metadataKey,
+                artist = artist,
+                title = title,
+                album = album,
+                lyrics = entity.lyrics,
+                source = entity.source,
+                isSynced = entity.isSynced,
+                modifiedAt = entity.lastModified,
+                deletedAt = System.currentTimeMillis()
+            )
+            saveDeletedCache(context)
+        }
         Log.d(TAG, "Tracked lyrics deletion: ${entity.metadataKey}")
     }
 
     /**
-     * Clears the deleted lyrics cache after successful sync upload.
+     * Oublie, après un envoi réussi, les suppressions qui faisaient partie de cet envoi.
+     *
+     * Une suppression faite pendant la synchro (absente de [sent], ou plus récente) reste en
+     * attente : vider tout le cache l'effacerait sans qu'elle ait jamais quitté l'appareil.
+     *
+     * @param sent les entrées supprimées telles que [getLocalLyrics] les a données à l'envoi
      */
-    suspend fun clearDeletedCache(context: Context) {
-        deletedLyricsCache.clear()
-        saveDeletedCache(context)
-        Log.d(TAG, "Cleared deleted lyrics cache after sync")
+    suspend fun clearDeletedCache(context: Context, sent: List<SyncLyricsEntry>) {
+        synchronized(cacheLock) {
+            for (entry in sent) {
+                if (deletedLyricsCache[entry.key]?.deletedAt == entry.deletedAt) {
+                    deletedLyricsCache.remove(entry.key)
+                }
+            }
+            saveDeletedCache(context)
+        }
+        Log.d(TAG, "Cleared ${sent.size} sent lyrics deletion(s) after sync")
     }
 
     // ==================== Deleted Cache Persistence ====================
+
+    // loadDeletedCache et saveDeletedCache : à appeler sous cacheLock.
 
     private fun getDeletedCacheFile(context: Context): File {
         return File(context.filesDir, DELETED_LYRICS_FILENAME)

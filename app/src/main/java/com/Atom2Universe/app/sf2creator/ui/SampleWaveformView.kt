@@ -14,6 +14,7 @@ import com.Atom2Universe.app.R
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Custom View that displays audio waveform with trim and loop point markers.
@@ -34,8 +35,13 @@ class SampleWaveformView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val MARKER_TOUCH_SLOP = 40f
+        private const val MARKER_TOUCH_SLOP_DP = 24f
     }
+
+    private val density = resources.displayMetrics.density
+    private fun dp(value: Float): Float = value * density
+    private val markerTouchSlop = dp(MARKER_TOUCH_SLOP_DP)
+    private val noAudioText = context.getString(R.string.sf2_no_audio_loaded)
 
     /**
      * Edit mode determines which markers are draggable.
@@ -78,7 +84,7 @@ class SampleWaveformView @JvmOverloads constructor(
     private val waveformPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = getThemeAccentColor()
         style = Paint.Style.STROKE
-        strokeWidth = 1f
+        strokeWidth = dp(1f)
     }
 
     private val trimmedRegionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -101,7 +107,7 @@ class SampleWaveformView @JvmOverloads constructor(
     private val trimMarkerLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = "#2196F3".toColorInt()  // Blue
         style = Paint.Style.STROKE
-        strokeWidth = 3f
+        strokeWidth = dp(2f)
     }
 
     private val loopMarkerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -112,18 +118,18 @@ class SampleWaveformView @JvmOverloads constructor(
     private val loopMarkerLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = "#FFC107".toColorInt()  // Amber
         style = Paint.Style.STROKE
-        strokeWidth = 3f
+        strokeWidth = dp(2f)
     }
 
     private val playheadPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = "#F44336".toColorInt()  // Red
-        strokeWidth = 3f
+        strokeWidth = dp(2f)
         style = Paint.Style.STROKE
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
-        textSize = 28f
+        textSize = dp(14f)
         textAlign = Paint.Align.CENTER
     }
 
@@ -134,7 +140,7 @@ class SampleWaveformView @JvmOverloads constructor(
 
     private val centerLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = "#333333".toColorInt()
-        strokeWidth = 1f
+        strokeWidth = dp(1f)
     }
 
     /**
@@ -194,7 +200,7 @@ class SampleWaveformView @JvmOverloads constructor(
      */
     fun getTrimStartSample(): Int {
         val sampleCount = samples?.size ?: 0
-        return (trimStartFraction * sampleCount).toInt()
+        return (trimStartFraction * sampleCount).roundToInt()
     }
 
     /**
@@ -202,7 +208,7 @@ class SampleWaveformView @JvmOverloads constructor(
      */
     fun getTrimEndSample(): Int {
         val sampleCount = samples?.size ?: 0
-        return (trimEndFraction * sampleCount).toInt()
+        return (trimEndFraction * sampleCount).roundToInt()
     }
 
     /**
@@ -216,7 +222,7 @@ class SampleWaveformView @JvmOverloads constructor(
      */
     fun getLoopStartSample(): Int {
         val sampleCount = samples?.size ?: 0
-        return (loopStartFraction * sampleCount).toInt()
+        return (loopStartFraction * sampleCount).roundToInt()
     }
 
     /**
@@ -224,7 +230,7 @@ class SampleWaveformView @JvmOverloads constructor(
      */
     fun getLoopEndSample(): Int {
         val sampleCount = samples?.size ?: 0
-        return (loopEndFraction * sampleCount).toInt()
+        return (loopEndFraction * sampleCount).roundToInt()
     }
 
     /**
@@ -266,8 +272,8 @@ class SampleWaveformView @JvmOverloads constructor(
         val sampleArray = samples
         if (sampleArray == null || sampleArray.isEmpty()) {
             // No data - draw placeholder
-            textPaint.textSize = 32f
-            canvas.drawText("No audio loaded", w / 2, h / 2, textPaint)
+            textPaint.textSize = dp(16f)
+            canvas.drawText(noAudioText, w / 2, h / 2, textPaint)
             return
         }
 
@@ -340,7 +346,7 @@ class SampleWaveformView @JvmOverloads constructor(
         if (samples.isEmpty() || width <= 0 || height <= 0) return
 
         val centerY = height / 2f
-        val maxAmplitude = height / 2f - 4f  // Leave some padding
+        val maxAmplitude = height / 2f - dp(2f)  // Leave some padding
 
         waveformPath.moveTo(0f, centerY)
 
@@ -376,8 +382,8 @@ class SampleWaveformView @JvmOverloads constructor(
         canvas.drawLine(x, 0f, x, height, trimMarkerLinePaint)
 
         // Draw handle at top
-        val handleWidth = 28f
-        val handleHeight = 36f
+        val handleWidth = dp(20f)
+        val handleHeight = dp(28f)
         val handleX = if (isStart) x else x - handleWidth
 
         canvas.drawRect(
@@ -389,8 +395,8 @@ class SampleWaveformView @JvmOverloads constructor(
         )
 
         // Draw label (arrow character)
-        textPaint.textSize = 18f
-        canvas.drawText(label, handleX + handleWidth / 2, handleHeight - 10, textPaint)
+        textPaint.textSize = dp(12f)
+        canvas.drawText(label, handleX + handleWidth / 2, handleHeight - dp(8f), textPaint)
 
         // Draw handle at bottom
         canvas.drawRect(
@@ -402,7 +408,7 @@ class SampleWaveformView @JvmOverloads constructor(
         )
 
         // Draw label at bottom
-        canvas.drawText(label, handleX + handleWidth / 2, height - 12, textPaint)
+        canvas.drawText(label, handleX + handleWidth / 2, height - dp(9f), textPaint)
     }
 
     /**
@@ -413,8 +419,8 @@ class SampleWaveformView @JvmOverloads constructor(
         canvas.drawLine(x, 0f, x, height, loopMarkerLinePaint)
 
         // Draw handle at top
-        val handleWidth = 24f
-        val handleHeight = 32f
+        val handleWidth = dp(18f)
+        val handleHeight = dp(24f)
         val handleX = if (isStart) x else x - handleWidth
 
         canvas.drawRect(
@@ -426,8 +432,8 @@ class SampleWaveformView @JvmOverloads constructor(
         )
 
         // Draw label
-        textPaint.textSize = 20f
-        canvas.drawText(label, handleX + handleWidth / 2, handleHeight - 8, textPaint)
+        textPaint.textSize = dp(13f)
+        canvas.drawText(label, handleX + handleWidth / 2, handleHeight - dp(6f), textPaint)
 
         // Draw handle at bottom
         canvas.drawRect(
@@ -454,14 +460,14 @@ class SampleWaveformView @JvmOverloads constructor(
 
                 dragTarget = if (editMode == EditMode.TRIM) {
                     when {
-                        abs(x - trimStartX) < MARKER_TOUCH_SLOP -> DragTarget.TRIM_START
-                        abs(x - trimEndX) < MARKER_TOUCH_SLOP -> DragTarget.TRIM_END
+                        abs(x - trimStartX) < markerTouchSlop -> DragTarget.TRIM_START
+                        abs(x - trimEndX) < markerTouchSlop -> DragTarget.TRIM_END
                         else -> DragTarget.NONE
                     }
                 } else if (hasLoop) {
                     when {
-                        abs(x - loopStartX) < MARKER_TOUCH_SLOP -> DragTarget.LOOP_START
-                        abs(x - loopEndX) < MARKER_TOUCH_SLOP -> DragTarget.LOOP_END
+                        abs(x - loopStartX) < markerTouchSlop -> DragTarget.LOOP_START
+                        abs(x - loopEndX) < markerTouchSlop -> DragTarget.LOOP_END
                         else -> DragTarget.NONE
                     }
                 } else {

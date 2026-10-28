@@ -121,6 +121,8 @@ class SamplePlayer {
     // Single reusable AudioTrack to avoid creation/destruction overhead
     private var reusableTrack: AudioTrack? = null
     private var reusableTrackSize: Int = 0
+    // Frames of the static buffer that may hold sound from an earlier playback (beyond: silence)
+    private var reusableTrackDirtyFrames: Int = 0
     private val trackLock = Any()
 
     // Reusable silence buffer for clearing STATIC AudioTrack buffer between playbacks
@@ -761,6 +763,7 @@ class SamplePlayer {
             reusableTrack?.release()
             reusableTrack = null
             reusableTrackSize = 0
+            reusableTrackDirtyFrames = 0
         }
 
         rawSamples = null
@@ -848,6 +851,7 @@ class SamplePlayer {
                             .build()
 
                         reusableTrackSize = bufferSize
+                        reusableTrackDirtyFrames = bufferSize / 2
                         Log.d(TAG, "Created new reusable AudioTrack with buffer size: $bufferSize")
                     }
 
@@ -873,10 +877,10 @@ class SamplePlayer {
                     // Zero-fill rest of buffer to prevent old data from causing clicks.
                     // With setLoopPoints(0, N, 0), loopCount=0 DISABLES looping and the
                     // track plays the ENTIRE buffer. Old data beyond our samples would
-                    // create an audible click at the boundary. Filling with silence
-                    // eliminates this completely.
-                    val totalFrames = reusableTrackSize / 2
-                    var remainingFrames = totalFrames - samples.size
+                    // create an audible click at the boundary. Only the part an earlier
+                    // playback wrote needs it: the rest is still silence.
+                    var remainingFrames = reusableTrackDirtyFrames - samples.size
+                    reusableTrackDirtyFrames = samples.size
                     while (remainingFrames > 0) {
                         val toWrite = minOf(remainingFrames, silenceChunk.size)
                         track.write(silenceChunk, 0, toWrite)

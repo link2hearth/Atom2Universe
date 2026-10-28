@@ -545,12 +545,18 @@ class MusicSettingsActivity : AudioThemedActivity() {
      */
     private fun formatApiTestResult(result: ApiTestResult, apiName: String): String {
         return when (result) {
-            is ApiTestResult.Success -> "✓ $apiName: ${getString(R.string.lyrics_api_status_ok)}"
-            is ApiTestResult.RateLimited -> "⚠ $apiName: ${getString(R.string.lyrics_api_status_rate_limited)}"
-            is ApiTestResult.UnknownHost -> "✗ $apiName: ${getString(R.string.lyrics_api_status_unknown_host)}"
-            is ApiTestResult.Timeout -> "✗ $apiName: ${getString(R.string.lyrics_api_status_timeout)}"
-            is ApiTestResult.HttpError -> "✗ $apiName: HTTP ${result.code}"
-            is ApiTestResult.Error -> "✗ $apiName: ${result.message}"
+            is ApiTestResult.Success ->
+                getString(R.string.music_api_test_line_ok, apiName, getString(R.string.lyrics_api_status_ok))
+            is ApiTestResult.RateLimited ->
+                getString(R.string.music_api_test_line_warning, apiName, getString(R.string.lyrics_api_status_rate_limited))
+            is ApiTestResult.UnknownHost ->
+                getString(R.string.music_api_test_line_error, apiName, getString(R.string.lyrics_api_status_unknown_host))
+            is ApiTestResult.Timeout ->
+                getString(R.string.music_api_test_line_error, apiName, getString(R.string.lyrics_api_status_timeout))
+            is ApiTestResult.HttpError ->
+                getString(R.string.music_api_test_line_error, apiName, getString(R.string.music_api_test_http_error, result.code))
+            is ApiTestResult.Error ->
+                getString(R.string.music_api_test_line_error, apiName, result.message)
         }
     }
 

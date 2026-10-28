@@ -102,7 +102,7 @@ class FarmSprites(context: Context) {
         // A short sprig, 2 to 4 texels - 8 to 16 world units. It used to be the TALLER of the two
         // kinds of blade the meadow grows, at 16 to 32, which put the big grass in the layer that
         // cannot move and the small grass in the one that sways: backwards, and it showed. The
-        // sizes are now swapped with the loose tufts (see [tuftAt]), so what waves is what stands out.
+        // sizes are now swapped with the loose tufts (see [tuftHash]), so what waves is what stands out.
         repeat(1) {
             val x = 4 + random.nextInt(size - 8); val y = 10 + random.nextInt(size - 14)
             val h = 2 + random.nextInt(3)
@@ -118,11 +118,13 @@ class FarmSprites(context: Context) {
     /** A single leaning tuft of grass, its base fixed to the ground and only its blades swaying. */
     private val tuftSprites = mutableMapOf<Int, Bitmap>()
     /**
-     * The tuft's own footprint in world units, anchored on the point [tuftAt] reports - which is
+     * The tuft's own footprint in world units, anchored on the point [tuftHash] places - which is
      * where its base sits, art pixel (7, 20) of a 16x24 sprite, at two world units per art pixel.
      */
-    private fun tuftTarget(x: Float, y: Float, scale: Float) =
-        RectF(x - 14f * scale, y - 40f * scale, x + 18f * scale, y + 8f * scale)
+    private fun tuftTarget(x: Float, y: Float, scale: Float, out: RectF): RectF =
+        out.apply { set(x - 14f * scale, y - 40f * scale, x + 18f * scale, y + 8f * scale) }
+    /** The live tufts' target, reused: hundreds of them are stamped on every frame. */
+    private val tuftRect = RectF()
     private fun tuftSprite(cache: MutableMap<Int, Bitmap>, brush: Paint,
                            height: Float, sway: Float, flower: Boolean, seed: Int): Bitmap {
         // Two world units per art pixel. The sprite is 24 tall rather than 16 because these are now
@@ -140,7 +142,7 @@ class FarmSprites(context: Context) {
     private fun drawTuft(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float,
                          flower: Boolean, seed: Int, scale: Float = 1f) {
         canvas.drawBitmap(tuftSprite(tuftSprites, paint, height, sway, flower, seed), null,
-            tuftTarget(x, y, scale), paint)
+            tuftTarget(x, y, scale, tuftRect), paint)
     }
     private fun drawTuftPixels(canvas: Canvas, paint: Paint, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
         paint.style = Paint.Style.FILL; paint.color = Color.rgb(0x69, 0xa6, 0x57)
@@ -159,6 +161,9 @@ class FarmSprites(context: Context) {
         }
     }
 
+    /** Lets go of the tiles and tufts painted so far; they are simply painted again when next needed. */
+    fun trim() { grassTiles.clear(); tuftSprites.clear() }
+
     fun grass(canvas: Canvas, target: RectF, column: Int, row: Int, windTime: Float = 0f, detailed: Boolean = true) {
         val bitmap = grassTiles.getOrPut(tileKey(column, row)) { buildGrassTile(column, row) }
         canvas.drawBitmap(bitmap, null, target, paint)
@@ -174,9 +179,10 @@ class FarmSprites(context: Context) {
         // 34 pixels a tile, an unscaled tuft would stand taller than the tile it grows in.
         val scale = target.width() / GRASS_TILE
         for (slot in 0 until 3) {
-            val tuft = tuftAt(column, row, slot) ?: continue
-            val fx = target.left + tuft.dx * scale; val fy = target.top + tuft.dy * scale
-            drawTuft(canvas, fx, fy, tuft.height, windAt(fx, windTime), tuft.flower, tuft.seed, scale)
+            val tuft = tuftHash(column, row, slot)
+            if (!hasTuft(tuft)) continue
+            val fx = target.left + tuftDx(tuft) * scale; val fy = target.top + tuftDy(tuft) * scale
+            drawTuft(canvas, fx, fy, tuftHeight(tuft), windAt(fx, windTime), tuftFlower(tuft), tuft, scale)
         }
     }
 
@@ -185,14 +191,16 @@ class FarmSprites(context: Context) {
      * the live draw above and the whole-map bake below plant exactly the same blades in exactly the
      * same spots - the meadow must not shift when one takes over from the other.
      */
-    private class Tuft(val dx: Float, val dy: Float, val height: Float, val flower: Boolean, val seed: Int)
-    private fun tuftAt(column: Int, row: Int, slot: Int): Tuft? {
-        var tuft = column * 0x2c1b3c6d xor row * 0x165667b1 xor (slot * 0x9e3779b1.toInt())
-        tuft = tuft xor (tuft ushr 13)
-        if ((tuft ushr 3) % 6 == 0) return null
-        return Tuft(8f + (tuft ushr 8) % 64, 20f + (tuft ushr 15) % 52,
-            16f + (tuft ushr 21) % 17, (tuft ushr 25) % 4 == 0, tuft)
+    // A tuft is read straight off its hash, never boxed into an object: thousands are asked for per frame.
+    private fun tuftHash(column: Int, row: Int, slot: Int): Int {
+        val tuft = column * 0x2c1b3c6d xor row * 0x165667b1 xor (slot * 0x9e3779b1.toInt())
+        return tuft xor (tuft ushr 13)
     }
+    private fun hasTuft(tuft: Int) = (tuft ushr 3) % 6 != 0
+    private fun tuftDx(tuft: Int) = 8f + (tuft ushr 8) % 64
+    private fun tuftDy(tuft: Int) = 20f + (tuft ushr 15) % 52
+    private fun tuftHeight(tuft: Int) = 16f + (tuft ushr 21) % 17
+    private fun tuftFlower(tuft: Int) = (tuft ushr 25) % 4 == 0
 
     /**
      * The meadow, painted ONCE into bitmaps laid out in WORLD coordinates at [MEADOW_SCALE] texels
@@ -245,12 +253,14 @@ class FarmSprites(context: Context) {
         canvas.translate(-columnStart * GRASS_TILE.toFloat(), -rowStart * GRASS_TILE.toFloat())
         val brush = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
         val cache = mutableMapOf<Int, Bitmap>()
+        // Its own rectangle: this runs off the UI thread, alongside the live draw.
+        val target = RectF()
         // One tile of bleed on every side: a tuft stands well above its own base, so the ones rooted
         // just outside still lean into this bitmap. They are clipped by its edges, which is right.
         forEachTuft(columnStart - 1, rowStart - 1, columns + 2, rows + 2) { column, row, slot, x, y, tuft ->
             if (mask.allows(column, row, slot))
-                canvas.drawBitmap(tuftSprite(cache, brush, tuft.height, 0f, tuft.flower, tuft.seed),
-                    null, tuftTarget(x, y, 1f), brush)
+                canvas.drawBitmap(tuftSprite(cache, brush, tuftHeight(tuft), 0f, tuftFlower(tuft), tuft),
+                    null, tuftTarget(x, y, 1f, target), brush)
         }
         return bitmap
     }
@@ -265,17 +275,18 @@ class FarmSprites(context: Context) {
               windTime: Float, mask: TuftMask) {
         forEachTuft(columnStart, rowStart, columns, rows) { column, row, slot, x, y, tuft ->
             if (mask.allows(column, row, slot))
-                drawTuft(canvas, x, y, tuft.height, windAt(x, windTime), tuft.flower, tuft.seed)
+                drawTuft(canvas, x, y, tuftHeight(tuft), windAt(x, windTime), tuftFlower(tuft), tuft)
         }
     }
     private inline fun forEachTuft(columnStart: Int, rowStart: Int, columns: Int, rows: Int,
-                                   action: (column: Int, row: Int, slot: Int, x: Float, y: Float, tuft: Tuft) -> Unit) {
+                                   action: (column: Int, row: Int, slot: Int, x: Float, y: Float, tuft: Int) -> Unit) {
         for (row in 0 until rows) for (column in 0 until columns) {
             val c = columnStart + column; val r = rowStart + row
             val left = c * GRASS_TILE.toFloat(); val top = r * GRASS_TILE.toFloat()
             for (slot in 0 until 3) {
-                val tuft = tuftAt(c, r, slot) ?: continue
-                action(c, r, slot, left + tuft.dx, top + tuft.dy, tuft)
+                val tuft = tuftHash(c, r, slot)
+                if (!hasTuft(tuft)) continue
+                action(c, r, slot, left + tuftDx(tuft), top + tuftDy(tuft), tuft)
             }
         }
     }

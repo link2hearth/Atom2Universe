@@ -21,12 +21,19 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
         fun hit(x: Float, y: Float) = pens.indexOfFirst { it.contains(x, y) }.takeIf { it >= 0 }?.let { LivestockKind.entries[it] }
     }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val hitAreas = mutableListOf<Pair<Long, RectF>>()
-    private val greetings = mutableMapOf<Long, Long>()
-    fun hitAnimal(x: Float, y: Float): Long? = hitAreas.asReversed().firstOrNull { it.second.contains(x, y) }?.first
+    // Where each animal was drawn this frame, for the taps. The rectangles are kept from one frame
+    // to the next and only refilled: a pen redraws every animal many times a second.
+    private var hitIds = LongArray(LivestockState.CAPACITY)
+    private val hitRects = ArrayList<RectF>()
+    private var hitCount = 0
+    private val greetings = android.util.LongSparseArray<Long>()
+    fun hitAnimal(x: Float, y: Float): Long? {
+        for (i in hitCount - 1 downTo 0) if (hitRects[i].contains(x, y)) return hitIds[i]
+        return null
+    }
     fun greet(ids: Collection<Long>) {
         val now = SystemClock.uptimeMillis()
-        ids.forEach { greetings[it] = now }
+        ids.forEach { greetings.put(it, now) }
     }
     private data class Motion(val random: java.util.Random, var time: Double, var x: Double = 0.0,
                               var y: Double = 0.0, var targetX: Double = 0.0, var targetY: Double = 0.0,
@@ -34,44 +41,63 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
                               var homeX: Double = 0.0, var homeY: Double = 0.0,
                               var roamAfter: Double = 0.0, var longTrip: Boolean = false,
                               var phase: Double = 0.0, var direction: Int = 1, var placed: Boolean = false)
-    private val motions = mutableMapOf<Long, Motion>()
+    private val motions = android.util.LongSparseArray<Motion>()
+    /** The animals of the page being drawn, and the same in drawing order - refilled, never rebuilt. */
+    private val herd = ArrayList<FarmAnimal>()
+    private val drawOrder = ArrayList<FarmAnimal>()
+    private val byDepth = Comparator<FarmAnimal> { a, b -> motions.get(a.id).y.compareTo(motions.get(b.id).y) }
+    private val pose = FarmAnimalArt.Pose()
+    private val heart = Path()
     private var lastFrame = 0L
     private fun ease(x: Double) = x.coerceIn(0.0, 1.0).let { it * it * (3 - 2 * it) }
     private val backgrounds = mutableMapOf<LivestockKind, Bitmap>()
     private var backgroundHeight = 0
-    fun drawPage(canvas: Canvas, kind: LivestockKind, height: Int, dt: Double) {
-        hitAreas.clear()
+    /** The pen's fences and troughs, in page units. Fixed, so not rebuilt on every frame. */
+    private val obstacles = listOf(RectF(24f, 22f, 145f, 125f), RectF(200f, 70f, 273f, 120f), RectF(212f, 131f, 284f, 159f))
+    private fun clear(x: Double, y: Double, size: Float, height: Int): Boolean {
+        val left = x - size * .43; val right = x + size * .43
+        val top = y - size * .86
+        if (left < 14 || right > 306 || top < 35 || y > height - 34) return false
+        for (i in obstacles.indices) {
+            val box = obstacles[i]
+            if (left < box.right && right > box.left && top < box.bottom && y + 3 > box.top) return false
+        }
+        return true
+    }
+    private fun route(ax: Double, ay: Double, bx: Double, by: Double, size: Float, height: Int): Boolean {
+        val steps = max(1, ceil(hypot(bx - ax, by - ay) / 3).toInt())
+        return (0..steps).all { val u = it.toDouble() / steps; clear(ax + (bx - ax) * u, ay + (by - ay) * u, size, height) }
+    }
+    /** Draws one herd's page. True while something on it moves - an empty pen has nothing to animate. */
+    fun drawPage(canvas: Canvas, kind: LivestockKind, height: Int, dt: Double): Boolean {
+        hitCount = 0
         val animationNow = SystemClock.uptimeMillis()
-        greetings.entries.removeAll { animationNow - it.value >= 1800 || state.find(it.key) == null }
+        for (i in greetings.size() - 1 downTo 0)
+            if (animationNow - greetings.valueAt(i) >= 1800 || state.find(greetings.keyAt(i)) == null) greetings.removeAt(i)
         if (backgroundHeight != height) { backgrounds.clear(); backgroundHeight = height }
         paint.isFilterBitmap = false
         paint.alpha = 255
         canvas.drawBitmap(backgrounds.getOrPut(kind) { LivestockHabitatArt.bake(kind, height) }, 0f, 0f, paint)
-        val ids = state.animals.mapTo(mutableSetOf()) { it.id }; motions.keys.retainAll(ids)
-        val herd = state.animals.filter { it.kind == kind }
+        // Animals sold or butchered leave their motion behind; it is dropped once there are more
+        // motions than animals, instead of rebuilding a set of every id on every frame.
+        if (motions.size() > state.animals.size)
+            for (i in motions.size() - 1 downTo 0) if (state.find(motions.keyAt(i)) == null) motions.removeAt(i)
+        herd.clear()
+        val animals = state.animals
+        for (i in animals.indices) if (animals[i].kind == kind) herd.add(animals[i])
         // Fixed world proportions: a pair is no larger than a full herd.
         val size = when (kind) { LivestockKind.CHICKENS -> 46f; LivestockKind.SHEEP -> 55f
             LivestockKind.PIGS -> 53f; LivestockKind.CATTLE -> 66f }
-        val obstacles = listOf(RectF(24f, 22f, 145f, 125f), RectF(200f, 70f, 273f, 120f), RectF(212f, 131f, 284f, 159f))
-        fun clear(x: Double, y: Double): Boolean {
-            val left = x - size * .43; val right = x + size * .43
-            val top = y - size * .86
-            return left >= 14 && right <= 306 && top >= 35 && y <= height - 34 &&
-                obstacles.none { left < it.right && right > it.left && top < it.bottom && y + 3 > it.top }
-        }
-        fun route(ax: Double, ay: Double, bx: Double, by: Double): Boolean {
-            val steps = max(1, ceil(hypot(bx - ax, by - ay) / 3).toInt())
-            return (0..steps).all { val u = it.toDouble() / steps; clear(ax + (bx - ax) * u, ay + (by - ay) * u) }
-        }
-        herd.forEach { animal ->
+        for (animal in herd) {
             val bird = kind == LivestockKind.CHICKENS
-            val m = motions.getOrPut(animal.id) { Motion(java.util.Random(animal.id * 719 + kind.ordinal), (animal.id * 7 % 24).toDouble()) }
-            if (!m.placed || !clear(m.x, m.y)) {
+            val m = motions.get(animal.id) ?: Motion(java.util.Random(animal.id * 719 + kind.ordinal),
+                (animal.id * 7 % 24).toDouble()).also { motions.put(animal.id, it) }
+            if (!m.placed || !clear(m.x, m.y, size, height)) {
                 // Reposition only on first appearance or a screen-size change, never when buying a neighbour.
                 for (attempt in 0..100) {
                     val x = 35 + m.random.nextDouble() * 250
                     val y = 180 + m.random.nextDouble() * (height - 218).coerceAtLeast(1)
-                    if (clear(x, y)) { m.x = x; m.y = y; break }
+                    if (clear(x, y, size, height)) { m.x = x; m.y = y; break }
                 }
                 m.targetX = m.x; m.targetY = m.y; m.placed = true
                 m.homeX = m.x; m.homeY = m.y; m.longTrip = false
@@ -79,10 +105,10 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
                 m.roamAfter = 60 + m.random.nextDouble() * 40
             }
             m.time += dt
-            if (!clear(m.targetX, m.targetY)) {
+            if (!clear(m.targetX, m.targetY, size, height)) {
                 m.targetX = m.x; m.targetY = m.y; m.wait = 0.0
             }
-            if (greetings.containsKey(animal.id)) { m.wait = 2.0; m.targetX = m.x; m.targetY = m.y }
+            if (greetings.indexOfKey(animal.id) >= 0) { m.wait = 2.0; m.targetX = m.x; m.targetY = m.y }
             m.wait = (m.wait - dt).coerceAtLeast(0.0)
             m.roamAfter = (m.roamAfter - dt).coerceAtLeast(0.0)
             var distance = hypot(m.targetX - m.x, m.targetY - m.y)
@@ -95,7 +121,7 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
                     val y = if (wander) 90 + m.random.nextDouble() * (height - 125).coerceAtLeast(1) else m.homeY + sin(angle) * radius
                     val length = hypot(x - m.x, y - m.y)
                     val lengths = if (wander) 40.0..100.0 else 3.0..14.0
-                    if (length in lengths && route(m.x, m.y, x, y)) {
+                    if (length in lengths && route(m.x, m.y, x, y, size, height)) {
                         m.longTrip = wander
                         m.targetX = x; m.targetY = y; distance = length; break
                     }
@@ -129,27 +155,34 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
             }
         }
         // Back-to-front drawing makes crossings read naturally instead of following purchase order.
-        herd.sortedBy { motions.getValue(it.id).y }.forEach { animal ->
-            val m = motions.getValue(animal.id)
+        drawOrder.clear()
+        for (i in herd.indices) drawOrder.add(herd[i])
+        drawOrder.sortWith(byDepth)
+        for (animal in drawOrder) {
+            val m = motions.get(animal.id)
             val x = m.x.toFloat(); val bottom = m.y.toFloat()
-            val target = RectF(x - size / 2, bottom - size, x + size / 2, bottom)
-            hitAreas += animal.id to target
-            sprites.livestock(canvas, animal.sprite, target,
-                FarmAnimalArt.Pose(m.time, m.walk, m.eat, m.phase, m.direction))
-            greetings[animal.id]?.let { started ->
+            if (hitCount == hitRects.size) hitRects.add(RectF())
+            if (hitCount == hitIds.size) hitIds = hitIds.copyOf(hitIds.size * 2)
+            val target = hitRects[hitCount]
+            target.set(x - size / 2, bottom - size, x + size / 2, bottom)
+            hitIds[hitCount++] = animal.id
+            pose.time = m.time; pose.walk = m.walk; pose.eat = m.eat; pose.phase = m.phase; pose.direction = m.direction
+            sprites.livestock(canvas, animal.sprite, target, pose)
+            greetings.get(animal.id)?.let { started ->
                 val t = (animationNow - started) / 1800f
                 val cy = bottom - size - 3 - t * 16
                 paint.color = Color.argb(((1 - t) * 255).toInt().coerceIn(0, 255), 216, 112, 108)
-                canvas.drawPath(Path().apply {
-                    moveTo(x, cy + 5); cubicTo(x - 13, cy - 2, x - 8, cy - 12, x, cy - 5)
-                    cubicTo(x + 8, cy - 12, x + 13, cy - 2, x, cy + 5); close()
-                }, paint)
+                heart.reset()
+                heart.moveTo(x, cy + 5); heart.cubicTo(x - 13, cy - 2, x - 8, cy - 12, x, cy - 5)
+                heart.cubicTo(x + 8, cy - 12, x + 13, cy - 2, x, cy + 5); heart.close()
+                canvas.drawPath(heart, paint)
                 paint.alpha = 255
             }
         }
         if (!state.available(kind)) {
             paint.color = Color.argb(45, 76, 76, 57); canvas.drawRect(0f, 22f, 320f, height.toFloat(), paint)
         }
+        return herd.isNotEmpty()
     }
     fun draw(canvas: Canvas, visible: RectF) = drawPage(canvas, LivestockKind.CHICKENS, 360, 0.0)
 }

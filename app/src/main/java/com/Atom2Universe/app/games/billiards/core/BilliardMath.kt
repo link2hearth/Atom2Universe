@@ -61,12 +61,15 @@ data class Shot(val angle: Double, val speed: Double = 2.0, val side: Double = 0
                 val cueMass: Double = .567, val endMass: Double = .012)
 
 /** First root with approaching motion. Stable quadratic evaluation avoids cancellation. */
-internal fun impactTime(p: V3, v: V3, radius: Double): Double {
-    val c = p.dot(p) - radius * radius
-    val b = p.dot(v)
+internal fun impactTime(p: V3, v: V3, radius: Double): Double = impactTime(p.x, p.y, p.z, v.x, v.y, v.z, radius)
+
+/** Same operations in the same order as the V3 form, without allocating; planar callers pass 0.0 for z. */
+internal fun impactTime(px: Double, py: Double, pz: Double, vx: Double, vy: Double, vz: Double, radius: Double): Double {
+    val c = px * px + py * py + pz * pz - radius * radius
+    val b = px * vx + py * vy + pz * vz
     if (b >= 0.0) return Double.POSITIVE_INFINITY
     if (c <= 1e-12) return 0.0
-    val a = v.dot(v); val disc = b * b - a * c
+    val a = vx * vx + vy * vy + vz * vz; val disc = b * b - a * c
     if (a < 1e-20 || disc < 0.0) return Double.POSITIVE_INFINITY
     return c / (-b + sqrt(disc))
 }

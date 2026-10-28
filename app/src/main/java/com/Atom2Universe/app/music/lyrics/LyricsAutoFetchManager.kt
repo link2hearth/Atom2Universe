@@ -137,16 +137,9 @@ object LyricsAutoFetchManager {
 
             when (val result = LyricsManager.fetchLyricsOnline(track)) {
                 is LyricsResult.Success -> {
-                    Log.d(TAG, "✓ Found lyrics from ${result.source} for: ${track.title}")
-
-                    // Sauvegarder automatiquement
-                    val saved = LyricsManager.saveLyrics(track, result.lyrics, result.source)
-
-                    if (saved) {
-                        Log.d(TAG, "✓ Auto-saved lyrics for: ${track.title}")
-                    } else {
-                        Log.w(TAG, "✗ Failed to save lyrics for: ${track.title}")
-                    }
+                    // fetchLyricsOnline a déjà tout fait : cache, écriture dans le tag, synchro.
+                    // Les sauvegarder une seconde fois doublait l'écriture du fichier.
+                    Log.d(TAG, "✓ Found and saved lyrics from ${result.source} for: ${track.title}")
                 }
                 is LyricsResult.NotFound -> {
                     Log.d(TAG, "✗ No lyrics found for: ${track.title}")

@@ -1876,23 +1876,37 @@ class Combat(
      * Les tranches de temps d'une jauge freinée : gelée ([chill] premières unités, ×[Relic.CHILL_SPEED])
      * et ralentie ([slow] premières unités, ×[Relic.SLOW_SPEED]). Quand les deux se chevauchent, le
      * frein le plus fort l'emporte. La dernière tranche est libre et sans fin.
+     * Chaque tranche est passée à [slice] (longueur, multiplicateur), sans liste : la barre
+     * d'ordre et la jauge l'appellent souvent.
      */
-    private fun brakes(chill: Double, slow: Double): List<Pair<Double, Double>> {
-        val cuts = listOf(chill, slow).filter { it > 0 }.distinct().sorted()
+    private inline fun brakes(chill: Double, slow: Double, slice: (Double, Double) -> Unit) {
+        // Les coupures : les freins positifs, sans doublon, dans l'ordre croissant
+        var first = 0.0
+        var second = 0.0
+        var cuts = 0
+        if (chill > 0) { first = chill; cuts = 1 }
+        if (slow > 0) {
+            if (cuts == 0) { first = slow; cuts = 1 }
+            else if (slow != first) {
+                if (slow < first) { second = first; first = slow } else second = slow
+                cuts = 2
+            }
+        }
         var from = 0.0
-        return cuts.map { to ->
-            val mid = (from + to) / 2
-            val mult = minOf(if (mid < chill) Relic.CHILL_SPEED else 1.0, if (mid < slow) Relic.SLOW_SPEED else 1.0)
-            (to - from).also { from = to } to mult
-        } + (Double.POSITIVE_INFINITY to 1.0)
+        if (cuts >= 1) { slice(first - from, brakeMult((from + first) / 2, chill, slow)); from = first }
+        if (cuts >= 2) slice(second - from, brakeMult((from + second) / 2, chill, slow))
+        slice(Double.POSITIVE_INFINITY, 1.0)
     }
+
+    private fun brakeMult(mid: Double, chill: Double, slow: Double) =
+        minOf(if (mid < chill) Relic.CHILL_SPEED else 1.0, if (mid < slow) Relic.SLOW_SPEED else 1.0)
 
     /** Le temps pour remplir une jauge à [gauge] qui gagne [rate] par unité de temps, freinée par le gel et le ralentissement. */
     private fun fillTime(gauge: Double, rate: Double, chill: Double, slow: Double): Double {
         var need = 1.0 - gauge
         if (need <= 0.0) return 0.0
         var time = 0.0
-        for ((length, mult) in brakes(chill, slow)) {
+        brakes(chill, slow) { length, mult ->
             val gain = rate * mult * length
             if (need <= gain) return time + need / (rate * mult)
             need -= gain; time += length
@@ -1904,11 +1918,14 @@ class Combat(
     private fun gainOver(rate: Double, chill: Double, slow: Double, dt: Double): Double {
         var left = dt
         var gain = 0.0
-        for ((length, mult) in brakes(chill, slow)) {
-            val used = minOf(length, left)
-            gain += rate * mult * used
-            left -= used
-            if (left <= 0.0) break
+        var done = false
+        brakes(chill, slow) { length, mult ->
+            if (!done) {
+                val used = minOf(length, left)
+                gain += rate * mult * used
+                left -= used
+                if (left <= 0.0) done = true
+            }
         }
         return gain
     }

@@ -266,8 +266,17 @@ class GearMachineGame(
         // près de trois cents mètres. Rapprocher le village à la distance du mannequin —
         // soixante mètres — mettait un château en travers de chaque tir dès la première
         // image. La distance de visée resservira pour placer un site **choisi**.
-        site.load(seed?.let { TargetGenerator.generate(it) })
+        applyLevel(seed?.let { TargetGenerator.generate(it) })
     }
+
+    /**
+     * Pose un site **déjà fabriqué**, ou le retire. La fabrication se fait en fond, comme
+     * au trébuchet : voir `TrebuchetActivity.loadLevel`.
+     */
+    fun applyLevel(lvl: TargetLevel?) = site.load(lvl)
+
+    /** Fait vivre fumée, gravats et feux d'artifice, une fois par image : voir [step]. */
+    fun stepEffects(dt: Float) = effects.update(dt)
 
 
 
@@ -627,7 +636,15 @@ class GearMachineGame(
         }
     }
 
-    fun step(dt: Float) {
+    /**
+     * Un pas de simulation.
+     *
+     * [withEffects] faux laisse fumée et étincelles à l'appelant, qui les fait vivre une
+     * fois par image avec [stepEffects] : une charge joue des centaines de pas par image,
+     * et chacun parcourait le bassin entier des particules, au temps machine en plus —
+     * une fumée y disparaissait d'un coup. Les effets ne décident de rien dans le monde.
+     */
+    fun step(dt: Float, withEffects: Boolean = true) {
         val h = dt.coerceIn(0f, 1f / 30f)
         updateProgressiveClutches(h)
         updateMotorMeshClutch(h)
@@ -639,7 +656,7 @@ class GearMachineGame(
         // la manivelle une fois le couple résistant du réservoir pris en compte, pas
         // celle d'avant qui l'ignorait encore.
         updatePumpReservoir(h)
-        effects.update(h)
+        if (withEffects) effects.update(h)
         celebrate()
         // Le choc se lit **avant** que la cible ne remette ses compteurs a zero une
         // fois les degats appliques -- meme ordre qu'au trebuchet, voir
@@ -847,17 +864,24 @@ class GearMachineGame(
      * La charge est découpée en tranches plutôt que jouée d'un bloc : la vue reste
      * vivante, et on **voit** le train monter en régime au lieu d'attendre devant une
      * image figée.
+     *
+     * [deadlineNanos] borne la tranche en temps réel (`System.nanoTime`) : sur une
+     * machine lourde, deux mille pas gelaient l'image. La suite des pas ne dépend pas du
+     * découpage, donc la machine chargée est la même. Les effets ne sont pas joués ici :
+     * voir [step].
      */
-    fun advanceCharge(fixed: Float, maxSteps: Int): Float {
+    fun advanceCharge(fixed: Float, maxSteps: Int, deadlineNanos: Long = Long.MAX_VALUE): Float {
         if (chargeRemaining <= 0f) return 0f
         var consumed = 0f
         var steps = 0
         while (chargeRemaining > 0f && steps < maxSteps) {
             val h = minOf(fixed, chargeRemaining)
-            step(h)
+            step(h, withEffects = false)
             chargeRemaining -= h
             consumed += h
             steps++
+            // L'horloge ne se lit que tous les huit pas : elle n'est pas gratuite.
+            if ((steps and 7) == 0 && System.nanoTime() >= deadlineNanos) break
         }
         if (chargeRemaining <= 1e-4f) cancelCharge()
         return consumed
@@ -2397,7 +2421,40 @@ class GearMachineGame(
      * pas, memes formules de trainee et d'amortissement que [PhysWorld.stepFrame],
      * juste sans corps ni collision a fabriquer pour un chiffre d'avant-tir.
      */
-    fun estimatedRange(): Float = estimatedRange(launchSpeedNow())
+    fun estimatedRange(): Float {
+        val wheel = config.launcher() ?: return 0f
+        val speed = launchSpeedNow()
+        val state = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+        // Le panneau la redemande à chaque image : la chute ne se rejoue que si l'une de
+        // ses entrées a bougé — le sens de rotation compris, qui place la gorge du volant.
+        val spin = launchSpin(wheel.id)
+        if (speed != rangeNowSpeed || wheel.launchAngle != rangeNowAngle ||
+            config.shotMass != rangeNowMass || config.projectileKind != rangeNowKind ||
+            state.body.y != rangeNowY || spin != rangeNowSpin || wheel.kind != rangeNowWheel ||
+            wheel.launchRadius != rangeNowRadius
+        ) {
+            rangeNowSpeed = speed
+            rangeNowAngle = wheel.launchAngle
+            rangeNowMass = config.shotMass
+            rangeNowKind = config.projectileKind
+            rangeNowY = state.body.y
+            rangeNowSpin = spin
+            rangeNowWheel = wheel.kind
+            rangeNowRadius = wheel.launchRadius
+            rangeNowValue = estimatedRange(speed)
+        }
+        return rangeNowValue
+    }
+
+    private var rangeNowSpeed = Float.NaN
+    private var rangeNowAngle = Float.NaN
+    private var rangeNowMass = Float.NaN
+    private var rangeNowY = Float.NaN
+    private var rangeNowSpin = Float.NaN
+    private var rangeNowRadius = Float.NaN
+    private var rangeNowKind: Projectile? = null
+    private var rangeNowWheel: GearWheelKind? = null
+    private var rangeNowValue = 0f
 
     /**
      * La meme chute, jouee pour une vitesse de depart au choix.

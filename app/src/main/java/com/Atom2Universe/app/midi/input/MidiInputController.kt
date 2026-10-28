@@ -36,6 +36,11 @@ data class MidiKeyboardInfo(
     val outputPortCount: Int
 )
 
+/**
+ * @param onMidiBytesReceived appelé DIRECTEMENT sur le fil MIDI (pas le fil principal), pour
+ * que le son parte sans attendre la file de l'interface : l'appelant poste lui-même l'affichage.
+ * Reçoit les Note On/Off et les Control Change, toujours en messages de 3 octets.
+ */
 class MidiInputController(
     context: Context,
     private val onMidiBytesReceived: (ByteArray) -> Unit,
@@ -55,6 +60,8 @@ class MidiInputController(
     private var isReceiverRegistered = false
     private var isDeviceCallbackRegistered = false
     private var isActive = false
+    // Change à chaque start/stop : une ouverture qui répond trop tard est refermée
+    private var connectGeneration = 0
     private val midiReceiver = object : MidiReceiver() {
         override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
             handleMidiData(data, offset, count)
@@ -70,8 +77,12 @@ class MidiInputController(
 
         override fun onDeviceRemoved(device: MidiDeviceInfo) {
             handler.post {
-                closeCurrentDevice()
-                onStatusChanged?.invoke(MidiConnectionStatus.NO_DEVICE)
+                // Un autre appareil débranché ne coupe pas le clavier
+                val isOurs = device.id == connectedDeviceInfo?.id || device.id == pendingDeviceInfo?.id
+                if (isOurs) {
+                    closeCurrentDevice()
+                    onStatusChanged?.invoke(MidiConnectionStatus.NO_DEVICE)
+                }
             }
         }
     }
@@ -107,6 +118,7 @@ class MidiInputController(
     fun start() {
         stop()
         isActive = true
+        connectGeneration++
         registerDeviceCallback()
 
         @Suppress("DEPRECATION")
@@ -126,6 +138,7 @@ class MidiInputController(
 
     fun stop() {
         isActive = false
+        connectGeneration++
         closeCurrentDevice()
         unregisterDeviceCallback()
         unregisterPermissionReceiver()
@@ -170,7 +183,13 @@ class MidiInputController(
     }
 
     private fun openMidiDevice(deviceInfo: MidiDeviceInfo) {
+        val generation = connectGeneration
         midiManager.openDevice(deviceInfo, { device ->
+            // Réponse arrivée après stop() (écran quitté) ou alors qu'un appareil est déjà ouvert
+            if (!isActive || generation != connectGeneration || midiDevice != null) {
+                device?.close()
+                return@openDevice
+            }
             if (device == null) {
                 onStatusChanged?.invoke(MidiConnectionStatus.DEVICE_UNAUTHORIZED)
                 return@openDevice
@@ -252,19 +271,16 @@ class MidiInputController(
         while (index + 2 < end) {
             val status = data[index].toInt() and 0xFF
             val messageType = status and 0xF0
-            if (messageType == NOTE_OFF || messageType == NOTE_ON) {
-                val note = data[index + 1]
-                val velocity = data[index + 2]
-                val midiBytes = if (messageType == NOTE_ON && velocity.toInt() == 0) {
-                    byteArrayOf((NOTE_OFF or (status and 0x0F)).toByte(), note, velocity)
+            if (messageType == NOTE_OFF || messageType == NOTE_ON || messageType == CONTROL_CHANGE) {
+                val data1 = data[index + 1]
+                val data2 = data[index + 2]
+                val midiBytes = if (messageType == NOTE_ON && data2.toInt() == 0) {
+                    byteArrayOf((NOTE_OFF or (status and 0x0F)).toByte(), data1, data2)
                 } else {
-                    byteArrayOf(data[index], note, velocity)
+                    byteArrayOf(data[index], data1, data2)
                 }
-                // BUG FIX 3.29: Poster sur le main thread pour éviter les problèmes de timing
-                // Le callback MIDI peut arriver depuis n'importe quel thread
-                handler.post {
-                    onMidiBytesReceived(midiBytes)
-                }
+                // Directement sur le fil MIDI : le synthé joue sans attendre la file de l'interface
+                onMidiBytesReceived(midiBytes)
                 index += 3
             } else {
                 index += 1
@@ -476,6 +492,7 @@ class MidiInputController(
         private const val TAG = "MidiInputController"
         private const val NOTE_OFF = 0x80
         private const val NOTE_ON = 0x90
+        private const val CONTROL_CHANGE = 0xB0
         private const val ACTION_USB_PERMISSION = "com.Atom2Universe.app.midi.USB_PERMISSION"
     }
 }

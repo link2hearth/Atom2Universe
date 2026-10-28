@@ -272,31 +272,35 @@ internal class EarthTerrainArt {
         }
     }
 
-    private fun shell(c:Canvas,phase:Float) {
+    private fun shell(c:Canvas,phase:Float,l:ArtLayer) {
         val terrain=profile(42f,325f,230f,333f,370f,321f,435f,304f,490f,276f,540f,252f,590f,235f,630f,242f,702f,175f,735f,194f,780f,232f,865f,247f,958f,253f)
         val top={x:Float->terrain(x)+rough(x)*.65f}
         val moho=profile(42f,355f,250f,362f,420f,362f,505f,405f,580f,439f,690f,470f,735f,464f,845f,425f,958f,420f)
-        foundation(c,{510f})
-        band(c,moho,{510f},0xff655d52.toInt())
-        band(c,top,moho,sand,Grain.CRYSTAL)
-        // The thinner oceanic crust is mineralogically darker; the boundary is gradational in this sketch.
-        c.save()
-        path.reset();path.moveTo(42f,100f);path.lineTo(467f,100f);path.lineTo(458f,300f);path.lineTo(426f,420f);path.lineTo(42f,420f);path.close()
-        c.clipPath(path)
-        band(c,top,moho,basalt,Grain.MASSIVE)
-        c.restore()
-        surfaceDetail(c,top,260f,alpine=true)
-        snowfield(c,top,682f,738f,18f)
+        if(l.base) {
+            foundation(c,{510f})
+            band(c,moho,{510f},0xff655d52.toInt())
+            band(c,top,moho,sand,Grain.CRYSTAL)
+            // The thinner oceanic crust is mineralogically darker; the boundary is gradational in this sketch.
+            c.save()
+            path.reset();path.moveTo(42f,100f);path.lineTo(467f,100f);path.lineTo(458f,300f);path.lineTo(426f,420f);path.lineTo(42f,420f);path.close()
+            c.clipPath(path)
+            band(c,top,moho,basalt,Grain.MASSIVE)
+            c.restore()
+            surfaceDetail(c,top,260f,alpine=true)
+            snowfield(c,top,682f,738f,18f)
+        }
+        if(!l.top) return
         ocean(c,top,260f,phase)
         trace(c,0xbedbccad.toInt(),1.7f,y=moho)
         for(i in 0..3) circulation(c,165f+i*220,575f,phase+i*.17f,i%2==1)
     }
 
-    private fun ridge(c:Canvas,phase:Float) {
+    private fun ridge(c:Canvas,phase:Float,l:ArtLayer) {
         val terrain=profile(42f,355f,170f,349f,275f,335f,355f,307f,410f,291f,455f,258f,480f,250f,497f,270f,515f,249f,545f,264f,605f,300f,690f,328f,815f,345f,958f,352f)
         val top={x:Float->terrain(x)+rough(x)*1.4f}
         val bottom={x:Float->top(x)+35f+abs(x-500)*.06f}
-        foundation(c,bottom);band(c,top,bottom,basalt)
+        if(l.base) { foundation(c,bottom);band(c,top,bottom,basalt) }
+        if(!l.top) return
         c.save();c.clipPath(Path(outline(top,bottom)))
         for(i in 0..10) {
             val d=(i+phase)/11*470
@@ -315,24 +319,27 @@ internal class EarthTerrainArt {
         arrow(c,500f,580f,0f,-63f,phase)
     }
 
-    private fun subduction(c:Canvas,phase:Float) {
+    private fun subduction(c:Canvas,phase:Float,l:ArtLayer) {
         val terrain=profile(42f,317f,235f,320f,365f,329f,413f,349f,438f,371f,470f,340f,507f,297f,551f,279f,603f,259f,649f,266f,690f,246f,721f,205f,754f,176f,762f,184f,775f,177f,803f,227f,846f,259f,904f,246f,958f,241f)
         val top={x:Float->terrain(x)+rough(x)*.65f}
         val slab=profile(42f,317f,250f,320f,375f,336f,435f,371f,506f,417f,580f,473f,659f,544f,735f,608f)
-        foundation(c,top)
-        val moho=profile(435f,407f,555f,434f,715f,449f,835f,409f,958f,405f)
-        band(c,top,moho,sand,Grain.CRYSTAL,left=435f)
-        band(c,slab,{x->slab(x)+36f},basalt,left=42f,right=735f)
-        trace(c,0xa1e7d2a5.toInt(),2f,42f,735f,slab)
-        // Small imbricated sediment wedges at the trench, not a sheer vertical water edge.
-        band(c,top,{x->min(top(x)+31,moho(x))},0xffa99372.toInt(),Grain.BEDDED,438f,555f)
-        c.save();c.clipPath(Path(outline(top,{x->min(top(x)+31,moho(x))},438f,555f)))
-        repeat(5) { i ->
-            val x=435f+i*22
-            stroke(c,0x78e0c89d,1.1f,x,top(x)+28,x+15,top(x)+12,x+31,top(x)-3)
+        if(l.base) {
+            foundation(c,top)
+            val moho=profile(435f,407f,555f,434f,715f,449f,835f,409f,958f,405f)
+            band(c,top,moho,sand,Grain.CRYSTAL,left=435f)
+            band(c,slab,{x->slab(x)+36f},basalt,left=42f,right=735f)
+            trace(c,0xa1e7d2a5.toInt(),2f,42f,735f,slab)
+            // Small imbricated sediment wedges at the trench, not a sheer vertical water edge.
+            band(c,top,{x->min(top(x)+31,moho(x))},0xffa99372.toInt(),Grain.BEDDED,438f,555f)
+            c.save();c.clipPath(Path(outline(top,{x->min(top(x)+31,moho(x))},438f,555f)))
+            repeat(5) { i ->
+                val x=435f+i*22
+                stroke(c,0x78e0c89d,1.1f,x,top(x)+28,x+15,top(x)+12,x+31,top(x)-3)
+            }
+            c.restore()
+            surfaceDetail(c,top,250f,left=490f,alpine=true)
         }
-        c.restore()
-        surfaceDetail(c,top,250f,left=490f,alpine=true)
+        if(!l.top) return
         ocean(c,top,250f,phase)
         chamber(c,772f,440f,40f,24f)
         conduit(c,phase,772f,441f,761f,407f,776f,371f,765f,333f,776f,295f,764f,256f,767f,184f)
@@ -350,7 +357,7 @@ internal class EarthTerrainArt {
         arrow(c,191f,409f,84f,0f,phase);arrow(c,886f,468f,-65f,0f,phase)
     }
 
-    private fun mountains(c:Canvas,stage:Float,phase:Float,folded:Boolean) {
+    private fun mountains(c:Canvas,stage:Float,phase:Float,folded:Boolean,l:ArtLayer) {
         val skyline=profile(42f,355f,150f,335f,225f,320f,280f,291f,330f,309f,378f,243f,425f,270f,478f,178f,512f,144f,550f,207f,586f,228f,626f,203f,680f,276f,730f,264f,780f,318f,865f,329f,958f,355f)
         val top={x:Float->355f+(skyline(x)-355f)*(.42f+stage*.58f)+rough(x)*(.5f+stage)}
         fun bed(x:Float,layer:Int):Float {
@@ -359,20 +366,23 @@ internal class EarthTerrainArt {
             // Blend the eroded surface into the deeper structural folds without inverting beds.
             return max(top(x)+layer*18,foldedY)
         }
-        foundation(c,{x->bed(x,5)})
-        val root={x:Float->bed(x,5)+exp(-((x-505)/128).pow(2))*(70+stage*126)}
-        band(c,{x->bed(x,5)},root,basalt,Grain.CRYSTAL)
-        val colors=intArrayOf(0xffb9a588.toInt(),0xff8f8275.toInt(),0xffc8b99a.toInt(),0xff997b64.toInt(),0xff696f70.toInt())
-        for(i in 4 downTo 0) band(c,{x->bed(x,i)},{x->bed(x,i+1)},colors[i],if(i%2==0) Grain.BEDDED else Grain.MASSIVE)
-        surfaceDetail(c,top,alpine=true)
-        snowfield(c,top,482f,546f,12f+stage*16)
-        snowfield(c,top,610f,648f,8f+stage*7)
-        // Thin thrust trace is distinct from the magmatic plumbing in volcanic scenes.
-        stroke(c,0xb6ead2a3.toInt(),1.6f,363f,498f,422f,439f,488f,375f,555f,310f,603f,274f)
+        if(l.base) {
+            foundation(c,{x->bed(x,5)})
+            val root={x:Float->bed(x,5)+exp(-((x-505)/128).pow(2))*(70+stage*126)}
+            band(c,{x->bed(x,5)},root,basalt,Grain.CRYSTAL)
+            val colors=intArrayOf(0xffb9a588.toInt(),0xff8f8275.toInt(),0xffc8b99a.toInt(),0xff997b64.toInt(),0xff696f70.toInt())
+            for(i in 4 downTo 0) band(c,{x->bed(x,i)},{x->bed(x,i+1)},colors[i],if(i%2==0) Grain.BEDDED else Grain.MASSIVE)
+            surfaceDetail(c,top,alpine=true)
+            snowfield(c,top,482f,546f,12f+stage*16)
+            snowfield(c,top,610f,648f,8f+stage*7)
+            // Thin thrust trace is distinct from the magmatic plumbing in volcanic scenes.
+            stroke(c,0xb6ead2a3.toInt(),1.6f,363f,498f,422f,439f,488f,375f,555f,310f,603f,274f)
+        }
+        if(!l.top) return
         arrow(c,168f,467f,80f,0f,phase);arrow(c,843f,467f,-80f,0f,phase)
     }
 
-    private fun hotspot(c:Canvas,phase:Float) {
+    private fun hotspot(c:Canvas,phase:Float,l:ArtLayer) {
         val top={x:Float ->
             var y=348f+rough(x)*.8f
             for(i in 0..4) {
@@ -383,8 +393,11 @@ internal class EarthTerrainArt {
             }
             y
         }
-        foundation(c,{420f});band(c,top,{420f},basalt)
-        surfaceDetail(c,top,248f,alpine=true)
+        if(l.base) {
+            foundation(c,{420f});band(c,top,{420f},basalt)
+            surfaceDetail(c,top,248f,alpine=true)
+        }
+        if(!l.top) return
         ocean(c,top,248f,phase)
         // Broad warm upwelling narrows into branching melt pathways beneath the active edifice.
         halo(c,760f,601f,101f,gold,54)
@@ -401,8 +414,14 @@ internal class EarthTerrainArt {
         arrow(c,460f,454f,-92f,0f,phase)
     }
 
-    private fun faults(c:Canvas,stage:Float,phase:Float) {
+    private fun faults(c:Canvas,stage:Float,phase:Float,l:ArtLayer) {
         val drop=stage*110
+        if(l.base) faultBlocks(c,drop)
+        if(!l.top) return
+        arrow(c,214f,509f,-78f,0f,phase);arrow(c,785f,509f,78f,0f,phase)
+        arrow(c,500f,267f+drop,0f,44f,phase)
+    }
+    private fun faultBlocks(c:Canvas,drop:Float) {
         foundation(c,{388f})
         val colors=intArrayOf(0xffb6a689.toInt(),0xff917b66.toInt(),0xffc1b397.toInt(),basalt)
         for(layer in 3 downTo 0) {
@@ -421,11 +440,9 @@ internal class EarthTerrainArt {
         surfaceDetail(c,{250+drop},left=328+drop*.48f,right=677-drop*.4f)
         stroke(c,0xc9e0cba9.toInt(),1.5f,325f,250f,433f,475f)
         stroke(c,0xc9e0cba9.toInt(),1.5f,680f,250f,590f,475f)
-        arrow(c,214f,509f,-78f,0f,phase);arrow(c,785f,509f,78f,0f,phase)
-        arrow(c,500f,267f+drop,0f,44f,phase)
     }
 
-    private fun transform(c:Canvas,stage:Float,phase:Float) {
+    private fun transform(c:Canvas,stage:Float,phase:Float,l:ArtLayer) {
         val shift=(stage-.5f)*80
         fun plate(left:Boolean) {
             c.save()
@@ -444,28 +461,34 @@ internal class EarthTerrainArt {
             for(i in 0..38) tree(c,125f+(i*127%780),225f+(i*67%280),9f+i%5)
             c.restore();c.restore()
         }
-        plate(true);plate(false)
-        stroke(c,0xd5e7cd9f.toInt(),2f,444f,208f,478f,270f,502f,318f,542f,384f,593f,485f)
+        if(l.base) {
+            plate(true);plate(false)
+            stroke(c,0xd5e7cd9f.toInt(),2f,444f,208f,478f,270f,502f,318f,542f,384f,593f,485f)
+        }
+        if(!l.top) return
         arrow(c,398f,396f,-33f,-62f,phase);arrow(c,641f,299f,33f,62f,phase)
         seismic(c,520f,350f,(phase*2)%1f,54f)
     }
 
-    private fun landscape(c:Canvas,stage:Float,phase:Float) {
+    private fun landscape(c:Canvas,stage:Float,phase:Float,l:ArtLayer) {
         val skyline=profile(42f,491f,140f,458f,234f,383f,293f,365f,349f,261f,384f,307f,422f,384f,465f,423f,505f,425f,553f,357f,610f,302f,663f,378f,719f,440f,818f,468f,958f,491f)
         val top={x:Float->skyline(x)+exp(-((x-420)/270).pow(2))*stage*83+rough(x)*(1.5f-stage)}
-        foundation(c,{585f})
-        band(c,top,{585f},0xff9f937d.toInt(),Grain.MASSIVE)
-        band(c,{x->top(x)+45},{x->min(top(x)+68,585f)},0xffb9a488.toInt(),Grain.BEDDED)
-        surfaceDetail(c,top,alpine=true)
-        snowfield(c,top,329f,391f,26f-stage*9)
-        snowfield(c,top,582f,645f,17f-stage*6)
-        val ice=floatArrayOf(369f,top(369f)+15,386f,top(386f)+20,415f,top(415f)+14,445f,top(445f)+7,482f,top(482f)+3)
-        stroke(c,0xff7ea8b3.toInt(),22f,*ice);stroke(c,0xffc0dedf.toInt(),16f,*ice);stroke(c,0xffedf0dd.toInt(),4f,*ice)
-        for(i in 0..6) {
-            val x=389f+i*12;stroke(c,0x8e6996a1.toInt(),1f,x,top(x)+8,x+5,top(x)+20)
-        }
         val river=floatArrayOf(482f,top(482f)+3,525f,478f,581f,496f,629f,501f,666f,520f,736f,527f,786f,548f,860f,547f,926f,563f)
-        stroke(c,0xff6f806e.toInt(),11f,*river);stroke(c,0xff4e9ca4.toInt(),6f,*river);stroke(c,0xa3d0e9dc.toInt(),1.5f,*river)
+        if(l.base) {
+            foundation(c,{585f})
+            band(c,top,{585f},0xff9f937d.toInt(),Grain.MASSIVE)
+            band(c,{x->top(x)+45},{x->min(top(x)+68,585f)},0xffb9a488.toInt(),Grain.BEDDED)
+            surfaceDetail(c,top,alpine=true)
+            snowfield(c,top,329f,391f,26f-stage*9)
+            snowfield(c,top,582f,645f,17f-stage*6)
+            val ice=floatArrayOf(369f,top(369f)+15,386f,top(386f)+20,415f,top(415f)+14,445f,top(445f)+7,482f,top(482f)+3)
+            stroke(c,0xff7ea8b3.toInt(),22f,*ice);stroke(c,0xffc0dedf.toInt(),16f,*ice);stroke(c,0xffedf0dd.toInt(),4f,*ice)
+            for(i in 0..6) {
+                val x=389f+i*12;stroke(c,0x8e6996a1.toInt(),1f,x,top(x)+8,x+5,top(x)+20)
+            }
+            stroke(c,0xff6f806e.toInt(),11f,*river);stroke(c,0xff4e9ca4.toInt(),6f,*river);stroke(c,0xa3d0e9dc.toInt(),1.5f,*river)
+        }
+        if(!l.top) return
         particles(c,phase,0xffe0c29a.toInt(),15,*river)
         for(i in 0..5) trace(c,0x85cab18d.toInt(),2f,795f+i*8,948f) {x->558f+i*5+(x-870)*.02f+sin(x*.04f)*2}
         arrow(c,350f,632f,0f,-38f,phase)
@@ -484,10 +507,12 @@ internal class EarthTerrainArt {
         }
     }
 
-    private fun strata(c:Canvas,stage:Float,phase:Float,archive:Boolean) {
+    private fun strata(c:Canvas,stage:Float,phase:Float,archive:Boolean,l:ArtLayer) {
         val colors=intArrayOf(0xff7e8179.toInt(),0xffbeaa85.toInt(),0xffa17a5e.toInt(),0xffc9bc9a.toInt(),0xff8c8e81.toInt())
         val erosion={x:Float->358f+sin(x*.019f)*5+rough(x)*.6f}
-        foundation(c,{x->if(archive) 568-(x-65)*.135f else 570f})
+        // The archive is entirely fixed: it is baked whole.
+        if(archive && !l.base) return
+        if(l.base) foundation(c,{x->if(archive) 568-(x-65)*.135f else 570f})
         if(archive) {
             c.save();c.clipPath(Path(outline(erosion,{665f},65f,940f)))
             for(i in 0..5) {
@@ -505,17 +530,20 @@ internal class EarthTerrainArt {
             fossil(c,278f,310f,13f);fossil(c,773f,331f,10f)
         } else {
             val bed=570-stage*335
-            for(i in 0..4) {
-                val reveal=(stage*5-i).coerceIn(0f,1f)
-                if(reveal<=0) continue
-                val bottom=570-i*67
-                band(c,{x->bottom-67*reveal+sin(x*.018f+i)*2},{x->bottom+sin(x*.018f+i+1)*2},colors[i],Grain.BEDDED,65f,940f)
-            }
             val shore=profile(65f,171f,97f,215f,135f,335f,190f,502f,240f,579f,775f,579f,840f,510f,891f,355f,920f,245f,940f,173f)
-            band(c,shore,{665f},0xff8e9382.toInt(),Grain.MASSIVE,65f,240f)
-            band(c,shore,{665f},0xff8e9382.toInt(),Grain.MASSIVE,775f,940f)
-            surfaceDetail(c,shore,194f,65f,240f)
-            surfaceDetail(c,shore,194f,775f,940f)
+            if(l.base) {
+                for(i in 0..4) {
+                    val reveal=(stage*5-i).coerceIn(0f,1f)
+                    if(reveal<=0) continue
+                    val bottom=570-i*67
+                    band(c,{x->bottom-67*reveal+sin(x*.018f+i)*2},{x->bottom+sin(x*.018f+i+1)*2},colors[i],Grain.BEDDED,65f,940f)
+                }
+                band(c,shore,{665f},0xff8e9382.toInt(),Grain.MASSIVE,65f,240f)
+                band(c,shore,{665f},0xff8e9382.toInt(),Grain.MASSIVE,775f,940f)
+                surfaceDetail(c,shore,194f,65f,240f)
+                surfaceDetail(c,shore,194f,775f,940f)
+            }
+            if(!l.top) return
             val bottom={x:Float->min(bed+sin(x*.018f)*2,shore(x))}
             ocean(c,bottom,194f,phase,65f,940f)
             repeat(30) { i ->
@@ -529,41 +557,58 @@ internal class EarthTerrainArt {
         }
     }
 
-    private fun cycle(c:Canvas,phase:Float) {
+    private fun cycle(c:Canvas,phase:Float,l:ArtLayer) {
         val skyline=profile(42f,440f,120f,407f,179f,313f,223f,281f,264f,225f,300f,273f,340f,315f,405f,360f,471f,407f,530f,426f,600f,439f,670f,451f,744f,478f,847f,508f,958f,519f)
         val top={x:Float->skyline(x)+rough(x)}
-        foundation(c,{560f});band(c,top,{560f},sand,Grain.BEDDED)
-        surfaceDetail(c,top,454f,alpine=true);snowfield(c,top,245f,292f,21f)
-        band(c,top,{x->top(x)+10f},basalt,Grain.MASSIVE,282f,336f)
+        if(l.base) {
+            foundation(c,{560f});band(c,top,{560f},sand,Grain.BEDDED)
+            surfaceDetail(c,top,454f,alpine=true);snowfield(c,top,245f,292f,21f)
+            band(c,top,{x->top(x)+10f},basalt,Grain.MASSIVE,282f,336f)
+        }
         // A coast that slopes continuously into the basin, not a blue rectangle perched on land.
-        ocean(c,top,454f,phase)
-        val graniteTop=profile(123f,541f,150f,468f,184f,442f,226f,451f,266f,483f,285f,541f)
-        band(c,graniteTop,{548f},0xffaaa497.toInt(),Grain.CRYSTAL,123f,285f)
-        chamber(c,485f,595f,52f,48f)
-        conduit(c,phase,488f,591f,478f,551f,489f,521f,477f,480f)
-        conduit(c,phase+.3f,482f,548f,448f,525f,426f,523f)
-        val metamorphic={x:Float->570+sin(x*.025f)*8}
-        band(c,metamorphic,{x->metamorphic(x)+64},0xff666d70.toInt(),Grain.CRYSTAL,650f,895f)
-        repeat(8) { i ->trace(c,0x99baa997.toInt(),2f,650f,895f) {x->metamorphic(x)+6+i*7+sin(x*.055f+i*.4f)*2} }
-        for(i in 0..4) trace(c,0x9499a693.toInt(),1.5f,742f,951f) {x->top(x)+6+i*7}
+        if(l.top) ocean(c,top,454f,phase)
+        // The basin lies east of x 660 and above y 525: the granite, the chamber and the
+        // metamorphic belt never meet the water or the conduits, so they bake with the base.
+        if(l.base) {
+            val graniteTop=profile(123f,541f,150f,468f,184f,442f,226f,451f,266f,483f,285f,541f)
+            band(c,graniteTop,{548f},0xffaaa497.toInt(),Grain.CRYSTAL,123f,285f)
+            chamber(c,485f,595f,52f,48f)
+        }
+        if(l.top) {
+            conduit(c,phase,488f,591f,478f,551f,489f,521f,477f,480f)
+            conduit(c,phase+.3f,482f,548f,448f,525f,426f,523f)
+        }
+        if(l.base) {
+            val metamorphic={x:Float->570+sin(x*.025f)*8}
+            band(c,metamorphic,{x->metamorphic(x)+64},0xff666d70.toInt(),Grain.CRYSTAL,650f,895f)
+            repeat(8) { i ->trace(c,0x99baa997.toInt(),2f,650f,895f) {x->metamorphic(x)+6+i*7+sin(x*.055f+i*.4f)*2} }
+            for(i in 0..4) trace(c,0x9499a693.toInt(),1.5f,742f,951f) {x->top(x)+6+i*7}
+        }
+        if(!l.top) return
         arrow(c,340f,371f,80f,44f,phase);arrow(c,817f,517f,0f,39f,phase)
         arrow(c,640f,636f,-70f,-4f,phase);arrow(c,196f,602f,0f,-44f,phase)
         particles(c,phase,0xffe6c99a.toInt(),11,339f,348f,425f,388f,536f,432f,654f,452f,793f,490f,917f,512f)
     }
 
-    fun render(c:Canvas,scene:EarthScene,stage:Float,phase:Float) {
-        backdrop(c,phase,scene in listOf(EarthScene.SHELL,EarthScene.SUBDUCTION,EarthScene.COLLISION,EarthScene.FOLDS,EarthScene.LANDSCAPE,EarthScene.ROCK_CYCLE))
+    /**
+     * [layer] splits a scene for the section view: the drifting sky under, the fixed rock baked
+     * once, the motion on top. Every BASE element either precedes the animated ones in the
+     * drawing order or never overlaps them, so the three passes compose the same picture as ALL.
+     */
+    fun render(c:Canvas,scene:EarthScene,stage:Float,phase:Float,layer:ArtLayer=ArtLayer.ALL) {
+        if(layer.under) backdrop(c,phase,scene in listOf(EarthScene.SHELL,EarthScene.SUBDUCTION,EarthScene.COLLISION,EarthScene.FOLDS,EarthScene.LANDSCAPE,EarthScene.ROCK_CYCLE))
+        if(layer==ArtLayer.UNDER) return
         when(scene) {
-            EarthScene.SHELL -> shell(c,phase)
-            EarthScene.RIDGE -> ridge(c,phase)
-            EarthScene.SUBDUCTION -> subduction(c,phase)
-            EarthScene.COLLISION,EarthScene.FOLDS -> mountains(c,stage,phase,scene==EarthScene.FOLDS)
-            EarthScene.TRANSFORM -> transform(c,stage,phase)
-            EarthScene.HOTSPOT -> hotspot(c,phase)
-            EarthScene.FAULTS -> faults(c,stage,phase)
-            EarthScene.LANDSCAPE -> landscape(c,stage,phase)
-            EarthScene.STRATA,EarthScene.ARCHIVE -> strata(c,stage,phase,scene==EarthScene.ARCHIVE)
-            EarthScene.ROCK_CYCLE -> cycle(c,phase)
+            EarthScene.SHELL -> shell(c,phase,layer)
+            EarthScene.RIDGE -> ridge(c,phase,layer)
+            EarthScene.SUBDUCTION -> subduction(c,phase,layer)
+            EarthScene.COLLISION,EarthScene.FOLDS -> mountains(c,stage,phase,scene==EarthScene.FOLDS,layer)
+            EarthScene.TRANSFORM -> transform(c,stage,phase,layer)
+            EarthScene.HOTSPOT -> hotspot(c,phase,layer)
+            EarthScene.FAULTS -> faults(c,stage,phase,layer)
+            EarthScene.LANDSCAPE -> landscape(c,stage,phase,layer)
+            EarthScene.STRATA,EarthScene.ARCHIVE -> strata(c,stage,phase,scene==EarthScene.ARCHIVE,layer)
+            EarthScene.ROCK_CYCLE -> cycle(c,phase,layer)
             else -> Unit
         }
     }

@@ -64,7 +64,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         tableau = t
         setContentView(R.layout.activity_infernale)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         vue = findViewById(R.id.infernale_view)
         etat = findViewById(R.id.infernale_status)
@@ -165,6 +164,19 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         main.postDelayed(ecrire, DELAI_SAUVEGARDE)
     }
 
+    override fun surVeille() {
+        vue.partieCourante()?.let { majEcran(it) }
+    }
+
+    /**
+     * L'ecran reste allume pendant qu'on regarde la machine tourner, pas pendant le montage,
+     * ni devant une machine qui a fini et ne bouge plus depuis une demi-minute.
+     */
+    private fun majEcran(partie: Partie) {
+        if (partie.lancee && !vue.ecranLibre) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
     // ── Interface ────────────────────────────────────────────────────────────
 
     private fun rafraichir() {
@@ -188,6 +200,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonLancer.text = getString(
             if (partie.lancee) R.string.infernale_stop else R.string.infernale_launch
         )
+        majEcran(partie)
         boutonTraces.visibility = if (!partie.lancee && vue.aDesTraces()) View.VISIBLE else View.GONE
         construireReserve(partie)
     }

@@ -87,8 +87,8 @@ class MidiNoteTracker(private val context: Context) {
                 isDetected = true,
                 leftHandChannel = leftHand.channel,
                 rightHandChannel = rightHand.channel,
-                leftHandName = leftHand.trackName.ifEmpty { "Left Hand" },
-                rightHandName = rightHand.trackName.ifEmpty { "Right Hand" },
+                leftHandName = leftHand.trackName.ifEmpty { leftHand.instrumentName },
+                rightHandName = rightHand.trackName.ifEmpty { rightHand.instrumentName },
                 leftHandNoteRange = Pair(leftHand.channelNoteRangeMin, leftHand.channelNoteRangeMax),
                 rightHandNoteRange = Pair(rightHand.channelNoteRangeMin, rightHand.channelNoteRangeMax)
             )

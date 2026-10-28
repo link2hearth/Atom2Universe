@@ -52,7 +52,16 @@ class MobileView @JvmOverloads constructor(
     private var scale = 100f
     private var originX = 0f
     private var originY = 0f
+    /** Le monde sur lequel la caméra est cadrée. Fil de jeu seulement. */
     private var camKey: Any? = null
+
+    // Ce que l'interface demande au fil de jeu. Elle ne touche pas elle-même à son état : un
+    // « Suivant » pendant la cascade remettait la note à -1 pendant que le fil l'avançait, et
+    // la cloche repartait ou la veille ne venait plus.
+    /** Recadrer à la prochaine image : surface neuve, ou nouveau tableau. */
+    @Volatile private var recadrer = true
+    /** Oublier la victoire en cours et le geste commencé : nouveau tableau. */
+    @Volatile private var remettre = false
     private var viewW = 0
     private var viewH = 0
 
@@ -122,16 +131,82 @@ class MobileView @JvmOverloads constructor(
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
         viewW = w
         viewH = h
-        camKey = null
+        recadrer = true
         fond?.setBounds(0, 0, w, h)
+        reveiller()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = pause()
 
     fun pause() {
         running = false
+        reveiller()
         thread?.join(1500)
         thread = null
+    }
+
+    // ── Veille ────────────────────────────────────────────────────────────────
+
+    /**
+     * Le fil dort ici quand le mobile ne bouge plus : redessiner cent fois la même image ne
+     * montre rien et chauffe. Un geste, un changement de tableau ou une surface neuve le
+     * réveille.
+     */
+    private val veille = Object()
+    private var reveil = false
+
+    /** Ce que l'écran montre a-t-il cessé de bouger ? Voir [ReposEcran]. Fil de jeu seulement. */
+    private val repos = ReposEcran()
+
+    private fun reveiller() {
+        synchronized(veille) {
+            reveil = true
+            veille.notifyAll()
+        }
+    }
+
+    private fun dormir() {
+        var dormi = false
+        synchronized(veille) {
+            while (running && !reveil) {
+                veille.wait()
+                dormi = true
+            }
+            reveil = false
+        }
+        // Le temps passé à dormir ne compte pas : le mobile était immobile.
+        if (dormi) lastNanos = System.nanoTime()
+        // Ce qui vient de changer n'a peut-être pas encore bougé (un objet accroché à
+        // l'instant pend encore droit) : on regarde une fenêtre entière avant de se rendormir.
+        repos.oublier()
+    }
+
+    /**
+     * Vrai quand l'image ne change plus : rien en main, ni victoire en cours (cascade, gain,
+     * brise), ni mobile juste qui attend sa victoire, ni objet qui rentre à l'étagère, et
+     * aucune pièce n'a bougé d'un demi-pixel à l'écran depuis une demi-seconde.
+     */
+    private fun auRepos(dt: Float): Boolean {
+        repos.debut()
+        repos.monde(game.monde.world, originX, originY, scale)
+        return repos.fin(dt, rienQuiAnime())
+    }
+
+    /** Vrai quand rien d'autre que les pièces du mobile ne peut faire changer l'image. */
+    private fun rienQuiAnime(): Boolean {
+        if (game.enMain != null || noteCascade >= 0) return false
+        if (game.gagne && game.depuisVictoire < MobileGame.POSE + MobileGame.BRISE_DUREE) return false
+        if (!game.gagne && game.tenue > 0f) return false
+        val cases = game.casesEtagere
+        for ((i, o) in game.casesObjets.withIndex()) {
+            if (game.etagere.none { it === o } || 2 * i + 1 >= cases.size) continue
+            val p = vu[o] ?: continue
+            if (kotlin.math.abs(p[0] - cases[2 * i]) >= 0.001f ||
+                kotlin.math.abs(p[1] - cases[2 * i + 1]) >= 0.001f ||
+                kotlin.math.abs(p[2] - game.echelleEtagere) >= 0.001f
+            ) return false
+        }
+        return true
     }
 
     fun resume() {
@@ -142,18 +217,24 @@ class MobileView @JvmOverloads constructor(
         thread = Thread(this, "MobilePhysics").also { it.start() }
     }
 
-    /** Après un changement de tableau piloté par l'activité. */
+    /**
+     * Après un changement de tableau piloté par l'activité. Le fil de jeu fait lui-même la
+     * remise à zéro, au début de sa prochaine image : voir [remettre].
+     */
     fun syncLevel() {
-        camKey = null
-        victoireDepuis = -1f
         gestures.clear()
-        appuiEnAttente = false
-        noteCascade = -1
+        recadrer = true
+        remettre = true
         gain = null
+        reveiller()
     }
 
     /** Le gain de la victoire, affiché au-dessus du mobile ; posé par l'activité. */
     @Volatile var gain: String? = null
+        set(value) {
+            field = value
+            reveiller()
+        }
 
     // ── Boucle ────────────────────────────────────────────────────────────────
 
@@ -167,6 +248,13 @@ class MobileView @JvmOverloads constructor(
 
             var justWon = false
             synchronized(game) {
+                if (remettre) {
+                    remettre = false
+                    victoireDepuis = -1f
+                    appuiEnAttente = false
+                    noteCascade = -1
+                    sons.clear()
+                }
                 fitCamera()
                 drainGestures()
                 accumulator += frameDt
@@ -203,6 +291,15 @@ class MobileView @JvmOverloads constructor(
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
+            val figee = synchronized(game) { auRepos(frameDt) }
+            // L'échéance de l'image, comptée depuis son début : soixante par seconde, comme le
+            // trébuchet. Sans elle, la boucle suivait la file d'affichage, soit cent vingt fois
+            // par seconde sur la tablette. La physique avance par pas fixes, elle n'y voit rien.
+            // Elle vaut aussi avant de dormir : un doigt qui glisse réveille le fil à chaque
+            // mouvement, et ne doit pas le faire dessiner plus souvent.
+            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
+            if (figee) dormir()
         }
     }
 
@@ -234,6 +331,9 @@ class MobileView @JvmOverloads constructor(
     private companion object {
         const val FIXED_DT = 1f / 120f
 
+        /** Une image toutes les 16,7 ms, soit soixante par seconde. */
+        const val FRAME_NANOS = 1_000_000_000L / 60L
+
         /** Épaisseur de la poutre du plafond, en dp. */
         const val HAUT_PLAFOND = 10f
 
@@ -260,7 +360,8 @@ class MobileView @JvmOverloads constructor(
 
     private fun fitCamera() {
         if (viewW == 0 || viewH == 0) return
-        if (camKey === game.monde) return
+        if (!recadrer && camKey === game.monde) return
+        recadrer = false
         camKey = game.monde
         compterProfondeurs()
         val b = game.bornes
@@ -298,6 +399,7 @@ class MobileView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> gestures.add(floatArrayOf(1f, e.x, e.y))
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> gestures.add(floatArrayOf(2f, e.x, e.y))
         }
+        reveiller()
         return true
     }
 

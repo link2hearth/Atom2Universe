@@ -127,10 +127,9 @@ class MicRecordingService : Service() {
             )
         }
 
+        /** stopService plutôt qu'une commande : toujours permis, même appli en arrière-plan, et sans effet si rien ne tourne. */
         fun stop(context: Context) {
-            context.startService(
-                Intent(context, MicRecordingService::class.java).apply { action = ACTION_STOP }
-            )
+            context.stopService(Intent(context, MicRecordingService::class.java))
         }
     }
 }

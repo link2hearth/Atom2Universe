@@ -16,10 +16,51 @@ import kotlin.math.floor
  *
  * Le minimum est arrondi vers le bas et le maximum vers le haut : la silhouette dessinée englobe
  * toujours le vrai signal, elle ne le rabote jamais.
+ *
+ * Dézoomé, une colonne couvre des milliers de blocs : des niveaux plus grossiers (chacun résume
+ * [LEVEL_FACTOR] cases du précédent) évitent de tous les relire, pour exactement le même résultat.
  */
 class PeakData(val channels: Int, val frames: Long, val blockSize: Int, private val data: ByteArray) {
 
     val blocks: Int get() = ((frames + blockSize - 1) / blockSize).toInt()
+
+    /** Les niveaux grossiers, du plus fin au plus grossier ; calculés une fois, à la première demande. */
+    private val levels: Array<ByteArray> by lazy { buildLevels() }
+
+    /** Calcule les niveaux grossiers maintenant (sur un fil de fond) plutôt qu'au premier dessin. */
+    fun prepareLevels() {
+        levels
+    }
+
+    private fun buildLevels(): Array<ByteArray> {
+        val out = ArrayList<ByteArray>()
+        var prev = data
+        var count = blocks
+        while (count > LEVEL_FACTOR) {
+            val next = (count + LEVEL_FACTOR - 1) / LEVEL_FACTOR
+            val d = ByteArray(next * channels * 2)
+            for (e in 0 until next) {
+                val first = e * LEVEL_FACTOR
+                val last = minOf(first + LEVEL_FACTOR, count)
+                for (c in 0 until channels) {
+                    var lo = 127
+                    var hi = -127
+                    for (k in first until last) {
+                        val i = (k * channels + c) * 2
+                        if (prev[i] < lo) lo = prev[i].toInt()
+                        if (prev[i + 1] > hi) hi = prev[i + 1].toInt()
+                    }
+                    val o = (e * channels + c) * 2
+                    d[o] = lo.toByte()
+                    d[o + 1] = hi.toByte()
+                }
+            }
+            out += d
+            prev = d
+            count = next
+        }
+        return out.toTypedArray()
+    }
 
     fun min(block: Int, channel: Int): Float = data[(block * channels + channel) * 2] / 127f
     fun max(block: Int, channel: Int): Float = data[(block * channels + channel) * 2 + 1] / 127f
@@ -32,6 +73,9 @@ class PeakData(val channels: Int, val frames: Long, val blockSize: Int, private 
      */
     fun columns(channel: Int, startFrame: Long, framesPerPixel: Double, pixels: Int, outMin: FloatArray, outMax: FloatArray) {
         val total = blocks
+        val f = LEVEL_FACTOR
+        // Les niveaux ne servent qu'à partir de deux cases grossières par colonne.
+        val lv = if (framesPerPixel >= 2.0 * f * blockSize) levels else NO_LEVELS
         for (p in 0 until pixels) {
             val f0 = startFrame + p * framesPerPixel
             val f1 = f0 + framesPerPixel
@@ -46,10 +90,37 @@ class PeakData(val channels: Int, val frames: Long, val blockSize: Int, private 
             }
             var lo = 127
             var hi = -127
-            for (b in b0 until b1) {
-                val i = (b * channels + channel) * 2
-                if (data[i] < lo) lo = data[i].toInt()
-                if (data[i + 1] > hi) hi = data[i + 1].toInt()
+            // Les bords qui ne tombent pas sur une case du niveau supérieur se lisent à ce niveau-ci,
+            // le milieu au niveau supérieur, et ainsi de suite : mêmes octets qu'un parcours bloc à bloc.
+            var a = b0
+            var b = b1
+            var arr = data
+            var level = -1
+            while (a < b) {
+                if (level + 1 >= lv.size || b - a < 2 * f) {
+                    for (k in a until b) {
+                        val i = (k * channels + channel) * 2
+                        if (arr[i] < lo) lo = arr[i].toInt()
+                        if (arr[i + 1] > hi) hi = arr[i + 1].toInt()
+                    }
+                    break
+                }
+                while (a % f != 0) {
+                    val i = (a * channels + channel) * 2
+                    if (arr[i] < lo) lo = arr[i].toInt()
+                    if (arr[i + 1] > hi) hi = arr[i + 1].toInt()
+                    a++
+                }
+                while (b % f != 0) {
+                    b--
+                    val i = (b * channels + channel) * 2
+                    if (arr[i] < lo) lo = arr[i].toInt()
+                    if (arr[i + 1] > hi) hi = arr[i + 1].toInt()
+                }
+                a /= f
+                b /= f
+                level++
+                arr = lv[level]
             }
             outMin[p] = lo / 127f
             outMax[p] = hi / 127f
@@ -71,6 +142,9 @@ class PeakData(val channels: Int, val frames: Long, val blockSize: Int, private 
     companion object {
         private const val MAGIC = 0x41325042 // « A2PB »
         private const val VERSION = 1
+        /** Cases d'un niveau résumées par une case du niveau suivant. */
+        const val LEVEL_FACTOR = 8
+        private val NO_LEVELS = emptyArray<ByteArray>()
 
         fun read(input: InputStream): PeakData {
             val d = DataInputStream(input)

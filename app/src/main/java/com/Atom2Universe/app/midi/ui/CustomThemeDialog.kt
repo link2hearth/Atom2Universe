@@ -146,7 +146,7 @@ class CustomThemeDialog(
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     val opacity = 0.1f + progress / 100f
-                    opacityValueText.text = "${(opacity * 100).toInt()}%"
+                    opacityValueText.text = context.getString(R.string.midi_ui_percent, (opacity * 100).toInt())
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -162,7 +162,7 @@ class CustomThemeDialog(
 
         opacityValueText = TextView(context).apply {
             val opacity = PracticeThemeManager.getCustomImageOpacity()
-            text = "${(opacity * 100).toInt()}%"
+            text = context.getString(R.string.midi_ui_percent, (opacity * 100).toInt())
             setTextColor(AudioStyle.primaryText(context))
             textSize = 14f
             minWidth = dp(48)

@@ -65,9 +65,11 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Collections
@@ -406,8 +408,10 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             // Jouer le fichier
             MusicPlaybackHolder.setPlaylist(listOf(track))
             MusicPlaybackHolder.play(this@MusicPlayerActivity, track)
+            // Rappel gardé par un objet global : contexte d'application, jamais l'écran
+            val appContext = applicationContext
             AudioPlaybackManager.registerPlayback(AudioPlaybackManager.AudioSource.MUSIC) {
-                MusicPlaybackHolder.stop(this@MusicPlayerActivity)
+                MusicPlaybackHolder.stop(appContext)
             }
 
             // Ouvrir le full player
@@ -432,10 +436,16 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
                 val title = MusicScanner.fixEncoding(
                     retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                         ?: getFileNameFromUri(uri)
-                        ?: "Unknown"
+                        ?: getString(R.string.music_unknown_title)
                 )
-                val artist = MusicScanner.fixEncoding(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) ?: "Unknown Artist")
-                val album = MusicScanner.fixEncoding(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM) ?: "Unknown Album")
+                val artist = MusicScanner.fixEncoding(
+                    retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                        ?: getString(R.string.music_unknown_artist)
+                )
+                val album = MusicScanner.fixEncoding(
+                    retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                        ?: getString(R.string.music_unknown_album)
+                )
                 val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: 0L
 
                 MusicTrack(
@@ -454,9 +464,9 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             // En cas d'erreur, créer un track minimal
             MusicTrack(
                 id = uri.hashCode().toLong(),
-                title = getFileNameFromUri(uri) ?: "Unknown",
-                artist = "Unknown Artist",
-                album = "Unknown Album",
+                title = getFileNameFromUri(uri) ?: getString(R.string.music_unknown_title),
+                artist = getString(R.string.music_unknown_artist),
+                album = getString(R.string.music_unknown_album),
                 duration = 0L,
                 uri = uri,
                 filePath = null
@@ -556,22 +566,20 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
         if (!::trackAdapter.isInitialized) return
 
         lifecycleScope.launch {
-            // Recharger le cache des favoris depuis le fichier (au cas où sync en background)
-            MusicFavoritesManager.invalidateCache()
+            // La synchro cloud (même en arrière-plan) met à jour favoris et compteurs en
+            // mémoire : pas de relecture du fichier ni de la base à chaque retour
             MusicFavoritesManager.loadFavorites(this@MusicPlayerActivity)
 
-            // Recharger le cache des play counts (au cas où sync en background)
-            MusicPlayCountManager.refreshCache(this@MusicPlayerActivity)
-
-            // Mettre à jour l'adapteur avec les nouveaux favoris
+            // Mettre à jour l'adapteur avec les nouveaux favoris (seuls les changés sont redessinés)
             val currentTracks = trackAdapter.currentList
             if (currentTracks.isNotEmpty()) {
                 updateAdapterFavorites(currentTracks)
-                // Forcer le rafraîchissement de l'affichage des play counts
-                if (preferences.showPlayCount) {
+                // Compteurs : tout redessiner seulement s'ils ont changé depuis le dernier retour
+                val playCountVersion = MusicPlayCountManager.cacheVersion
+                if (preferences.showPlayCount && playCountVersion != lastPlayCountVersion) {
                     trackAdapter.refreshPlayCountCache()
-                    trackAdapter.notifyItemRangeChanged(0, trackAdapter.itemCount)
                 }
+                lastPlayCountVersion = playCountVersion
             }
 
             // Mettre à jour aussi les favoris des artistes et albums
@@ -602,6 +610,11 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
         super.onStop()
         MusicPlaybackHolder.removeListener(this)
     }
+
+    // Écouteur enregistré seulement à l'écran : la barre du mini-lecteur suit la lecture
+    override val wantsFrequentProgress: Boolean get() = true
+
+    private var lastPlayCountVersion = -1L
 
     /**
      * Applique les préférences sauvegardées
@@ -2394,7 +2407,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
                             if (success) {
                                 // Rescan par filePath (pas par ID car il peut avoir changé)
                                 val updatedTrack = MusicScanner.scanSingleTrackByPath(this@MusicPlayerActivity, filePath)
-                                runOnUiThread {
+                                withContext(Dispatchers.Main) {
                                     Snackbar.make(contentList, R.string.music_tags_saved, Snackbar.LENGTH_SHORT).show()
                                     if (updatedTrack != null) {
                                         val needsReorganization = MusicLibrary.updateTrack(track, updatedTrack)
@@ -2491,7 +2504,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
                             if (successCount > 0) {
                                 // Rescan par filePath (pas par ID car ils peuvent avoir changé)
                                 val updatedTracksByPath = MusicScanner.scanTracksByPaths(this@MusicPlayerActivity, filePaths)
-                                runOnUiThread {
+                                withContext(Dispatchers.Main) {
                                     Snackbar.make(
                                         contentList,
                                         getString(R.string.music_album_tags_saved, successCount, album.tracks.size),
@@ -2625,7 +2638,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
                             if (successCount > 0) {
                                 // Rescan by filePath (not by ID as they may have changed)
                                 val updatedTracksByPath = MusicScanner.scanTracksByPaths(this@MusicPlayerActivity, filePaths)
-                                runOnUiThread {
+                                withContext(Dispatchers.Main) {
                                     Snackbar.make(
                                         contentList,
                                         getString(R.string.music_folder_tags_saved, successCount, tracks.size),
@@ -3921,8 +3934,8 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             // Snapshot des IDs d'albums sans année AVANT la correction (pour forcer le rebind après)
             val albumsNeedingYear = artist.albums.filter { it.year == null }.map { it.id }.toSet()
             lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                // Retrie aussi les albums si des années ont été trouvées
                 MusicLibrary.fixMissingYears()
-                MusicLibrary.setAlbumSortOrder(MusicLibrary.currentAlbumSortOrder)
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                     if (currentLevel == NavigationLevel.ALBUMS && currentArtist == artist) {
                         val refreshedAllTracks = artist.albums.flatMap { it.tracks }
@@ -4213,7 +4226,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
                     filePaths
                 }
                 val updatedTracksByPath = MusicScanner.scanTracksByPaths(this@MusicPlayerActivity, pathsToScan)
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Snackbar.make(
                         contentList,
                         getString(R.string.music_auto_track_number_success, successCount, totalCount),
@@ -4318,7 +4331,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
         val pass = preferences.navidromePassword
         if (url.isBlank() || user.isBlank()) return null
         val existing = navidromeApiClient
-        if (existing != null && existing.serverUrl == url) return existing
+        if (existing != null && existing.isSameAccount(url, user, pass)) return existing
         val client = SubsonicApiClient(url, user, pass)
         navidromeApiClient = client
         return client
@@ -4873,9 +4886,11 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             AudioPlaybackManager.AudioSource.MUSIC,
             this
         ) {
-            // Enregistre la source MUSIC avec un callback d'arrêt
+            // Enregistre la source MUSIC avec un callback d'arrêt.
+            // Rappel gardé par un objet global : contexte d'application, jamais l'écran
+            val appContext = applicationContext
             AudioPlaybackManager.registerPlayback(AudioPlaybackManager.AudioSource.MUSIC) {
-                MusicPlaybackHolder.stop(this)
+                MusicPlaybackHolder.stop(appContext)
             }
             onGranted()
         }
@@ -5080,8 +5095,11 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             // (MediaStore ne lit pas toujours correctement l'année, et ne lit ALBUM_ARTIST que sur Android 11+)
             if (deepScan) {
                 // Lecture des album artists depuis les tags ID3 (optimisé : 1 fichier par album)
+                // Le rappel arrive d'un fil d'E/S : la vue ne se touche que sur le fil UI
                 val albumArtistsFixed = MusicLibrary.fixMissingAlbumArtists { current, total ->
-                    statsInfo.text = getString(R.string.music_scanning) + " ($current/$total)"
+                    runOnUiThread {
+                        statsInfo.text = getString(R.string.music_scanning_progress, current, total)
+                    }
                 }
 
                 // Lecture des années depuis les tags ID3
@@ -5106,7 +5124,9 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             // Appliquer le tri des albums depuis les préférences utilisateur.
             // Doit être fait ICI, après le chargement complet (cache ou scan),
             // car applyPreferences() est appelé avant au démarrage sur une library vide.
-            MusicLibrary.setAlbumSortOrder(preferences.albumSortOrder)
+            // Hors du fil UI : après un chargement depuis le cache, ce premier appel retrie tout.
+            val albumSortOrder = preferences.albumSortOrder
+            withContext(Dispatchers.Default) { MusicLibrary.setAlbumSortOrder(albumSortOrder) }
 
             // Build favorite IDs set for the adapter
             updateAdapterFavorites(tracks)
@@ -5145,7 +5165,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
      */
     private fun checkForNewTracksInBackground() {
         lifecycleScope.launch {
-            val newTracksCount = MusicCacheManager.checkForNewTracks(this@MusicPlayerActivity)
+            val newTracksCount = MusicLibraryCache.countNewTracks(this@MusicPlayerActivity, MusicLibrary.getAllTracks())
             if (newTracksCount != null && newTracksCount > 0) {
                 Snackbar.make(
                     contentList,
@@ -5327,8 +5347,8 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
             val playCountsBefore = tracks.associate { it.id to MusicStatsManager.getPlayCount(it) }
             val favoritesBefore = tracks.associate { it.id to MusicFavoritesManager.isFavorite(it) }
 
-            // Scan POPM : lecture des tags ID3 depuis le disque
-            MusicStatsManager.loadStatsForTracks(tracks)
+            // Scan POPM : lecture des tags ID3 des seuls fichiers modifiés depuis la dernière lecture
+            MusicStatsManager.loadStatsForTracks(tracks, skipUnchangedFiles = true)
 
             if (!isActive) return@launch
 

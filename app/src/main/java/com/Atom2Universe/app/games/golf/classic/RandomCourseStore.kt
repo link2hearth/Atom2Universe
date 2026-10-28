@@ -48,10 +48,7 @@ internal class RandomCourseStore(private val context: Context) {
 
     /** A deleted course takes its saved round and records with it. */
     private fun forget(spec: RandomGolfSpec) {
-        val course = ClassicCourses.random(spec)
-        ClassicRoundLength.WHOLE.let {
-            context.getSharedPreferences(it.progressName(course), Context.MODE_PRIVATE).edit().clear().apply()
-        }
+        context.getSharedPreferences(ClassicRoundLength.WHOLE.progressName(spec.progressName), Context.MODE_PRIVATE).edit().clear().apply()
     }
 
     companion object {

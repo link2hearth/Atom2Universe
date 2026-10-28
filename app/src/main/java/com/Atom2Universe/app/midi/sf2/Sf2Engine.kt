@@ -2,9 +2,9 @@ package com.Atom2Universe.app.midi.sf2
 
 import android.content.Context
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import androidx.core.net.toUri
-import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer
-import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer.RequiredInstruments
 import com.Atom2Universe.app.midi.service.MidiAudioMixer
 import com.Atom2Universe.app.midi.service.MidiEngine
 import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.locks.ReentrantLock
 
@@ -36,15 +37,19 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         private const val POSITION_UPDATE_INTERVAL_MS = 100L
         private const val SEEK_DEBOUNCE_MS = 50L
         private const val OPERATION_TIMEOUT_MS = 2000L
+        // Délai entre la dernière note et la fin signalée (laisse sonner les relâchements)
+        private const val COMPLETION_DELAY_MS = 500L
         // BUG FIX 3.17: Limite max d'evenements MIDI pour eviter les fichiers corrompus/infinis
         private const val MAX_MIDI_EVENTS = 500_000
+        // Bande d'égaliseur jamais réglée (le synthé garde sa valeur par défaut)
+        private const val EQ_UNSET = Int.MIN_VALUE
 
         @Suppress("unused")
         fun isSupported(): Boolean = true
     }
 
     // State
-    private var state: MidiEngine.State = MidiEngine.State.UNINITIALIZED
+    @Volatile private var state: MidiEngine.State = MidiEngine.State.UNINITIALIZED
     private val stateLock = Any()
 
     // Operation lock to prevent concurrent operations
@@ -58,14 +63,32 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     @Volatile private var pendingSeekPosition: Long? = null
     private var seekDebounceJob: ScheduledFuture<*>? = null
 
-    // État de l'écran — mémorisé pour être réappliqué si le synthesizer est recréé
-    // (streaming SF2 : loadWithMemoryMapping / loadWithBasicStreamingInternal recrée un Sf2Synthesizer)
+    // Réglages mémorisés pour être recopiés dans tout nouveau synthétiseur (changement de
+    // SoundFont) : écran éteint, réverbe, chorus, égaliseur, gain (et le volume, plus bas).
+    // settingsLock garantit qu'un réglage reçu pendant un changement de synthé n'est pas perdu.
+    private val settingsLock = Any()
     @Volatile private var isScreenOff: Boolean = false
+    private var reverbPreset: Int? = null
+    private var chorusPreset: Int? = null
+    private var eqEnabled: Boolean? = null
+    private val eqBandLevels = IntArray(MidiEqualizerEngine.BAND_COUNT) { EQ_UNSET }
+    private var globalGain: Float? = null
 
     // SF2 components
-    private var sf2File: Sf2File? = null
-    private var synthesizer: Sf2Synthesizer? = null
-    private var audioRenderer: AudioRenderer? = null
+    @Volatile private var sf2File: Sf2File? = null
+    @Volatile private var synthesizer: Sf2Synthesizer? = null
+    @Volatile private var audioRenderer: AudioRenderer? = null
+
+    // Change à chaque arrêt, recherche, reprise ou départ : une fin programmée d'une lecture
+    // précédente est ignorée
+    private val playbackGeneration = AtomicInteger(0)
+    // Lecture dont la fin a déjà été signalée (le fil audio repasse par la fin à chaque tampon)
+    private val signaledGeneration = AtomicInteger(-1)
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    // Messages MIDI vers le visualiseur, réutilisés (fil audio seulement, lus sur le champ)
+    private val visualizerBytes3 = ByteArray(3)
+    private val visualizerBytes2 = ByteArray(2)
 
     // MIDI playback
     private var midiFile: MidiFile? = null
@@ -107,81 +130,101 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
     // ==================== MidiEngine Interface ====================
 
+    /**
+     * Charge la SoundFont. Peut être appelé depuis un fil de fond (aucune vue touchée, sous le
+     * verrou des opérations) ; renvoie false si le fichier est absent, illisible ou si la
+     * mémoire manque, pour que l'appelant retombe sur Sonivox.
+     */
     override fun initialize(soundFontPath: String): Boolean {
         if (soundFontPath.isBlank()) {
             notifyError("No SoundFont file specified")
             return false
         }
 
-        // BUG FIX 1.4: Utiliser try-finally pour garantir la libération des ressources
-        // même en cas d'exception après fermeture de l'ancien fichier
-        val oldSf2File = sf2File
-        var newSf2File: Sf2File? = null
-        var newSynthesizer: Sf2Synthesizer? = null
-        var newAudioRenderer: AudioRenderer? = null
+        return safeOperation("initialize", false) {
+            var newSynthesizer: Sf2Synthesizer? = null
+            var newAudioRenderer: AudioRenderer? = null
 
-        try {
-            val file = File(soundFontPath)
-            if (!file.exists()) {
-                notifyError("SoundFont file not found")
-                return false
+            try {
+                val file = File(soundFontPath)
+                if (!file.exists()) {
+                    notifyError("SoundFont file not found")
+                    return@safeOperation false
+                }
+
+                val newSf2File = Sf2FileCache.getMemoryMapped(soundFontPath)
+                if (newSf2File == null) {
+                    notifyError("Failed to load SoundFont")
+                    return@safeOperation false
+                }
+
+                // Même fichier déjà chargé : garder le synthétiseur et ses réglages
+                val keepSynthesizer = newSf2File === sf2File && synthesizer != null
+                if (!keepSynthesizer) newSynthesizer = Sf2Synthesizer(newSf2File, SAMPLE_RATE)
+
+                newAudioRenderer = AudioRenderer(
+                    context = context,
+                    sampleRate = SAMPLE_RATE,
+                    bufferSizeFrames = BUFFER_SIZE
+                )
+
+                // Tout est prêt : libérer les anciennes ressources puis assigner les nouvelles
+                // (l'ancien Sf2File projeté reste valable tant qu'il est référencé)
+                audioRenderer?.release()
+                val createdSynthesizer = newSynthesizer
+                if (createdSynthesizer != null) {
+                    installSynthesizer(createdSynthesizer)
+                } else {
+                    synthesizer?.reset()
+                }
+                sf2File = newSf2File
+                audioRenderer = newAudioRenderer
+                configureRenderCallback()
+
+                currentSoundFontPath = soundFontPath
+
+                MidiEventDispatcher.addChannelControlListener(this)
+
+                updateState(MidiEngine.State.INITIALIZED)
+                return@safeOperation true
+
+            } catch (e: Exception) {
+                // Nettoyer les ressources partiellement créées en cas d'erreur
+                try { newAudioRenderer?.release() } catch (_: Exception) {}
+                try { newSynthesizer?.release() } catch (_: Exception) {}
+                notifyError("Initialization failed: ${e.message}")
+                updateState(MidiEngine.State.ERROR)
+                return@safeOperation false
+            } catch (_: OutOfMemoryError) {
+                try { newAudioRenderer?.release() } catch (_: Exception) {}
+                try { newSynthesizer?.release() } catch (_: Exception) {}
+                notifyError("Out of memory")
+                updateState(MidiEngine.State.ERROR)
+                return@safeOperation false
             }
-
-            newSf2File = if (Sf2FileCache.shouldUseMmap(soundFontPath)) {
-                Sf2FileCache.getMemoryMapped(soundFontPath)
-            } else {
-                Sf2FileCache.get(soundFontPath)
-            }
-            if (newSf2File == null) {
-                notifyError("Failed to load SoundFont")
-                return false
-            }
-
-            newSynthesizer = Sf2Synthesizer(newSf2File, SAMPLE_RATE)
-            newSynthesizer.masterVolume = volume
-
-            newAudioRenderer = AudioRenderer(
-                context = context,
-                sampleRate = SAMPLE_RATE,
-                bufferSizeFrames = BUFFER_SIZE
-            )
-
-            // Tout est prêt, maintenant on peut faire le swap atomique
-            // Fermer l'ancien SF2 et libérer les anciennes ressources
-            oldSf2File?.close()
-            synthesizer?.release()
-            audioRenderer?.release()
-
-            // Assigner les nouvelles ressources
-            sf2File = newSf2File
-            synthesizer = newSynthesizer
-            audioRenderer = newAudioRenderer
-            configureRenderCallback()
-
-            currentSoundFontPath = soundFontPath
-
-            MidiEventDispatcher.addChannelControlListener(this)
-
-            updateState(MidiEngine.State.INITIALIZED)
-            return true
-
-        } catch (e: Sf2ParseException) {
-            // Nettoyer les ressources partiellement créées en cas d'erreur
-            try { newAudioRenderer?.release() } catch (_: Exception) {}
-            try { newSynthesizer?.release() } catch (_: Exception) {}
-            try { newSf2File?.close() } catch (_: Exception) {}
-            notifyError("Invalid SoundFont file: ${e.message}")
-            updateState(MidiEngine.State.ERROR)
-            return false
-        } catch (e: Exception) {
-            // Nettoyer les ressources partiellement créées en cas d'erreur
-            try { newAudioRenderer?.release() } catch (_: Exception) {}
-            try { newSynthesizer?.release() } catch (_: Exception) {}
-            try { newSf2File?.close() } catch (_: Exception) {}
-            notifyError("Initialization failed: ${e.message}")
-            updateState(MidiEngine.State.ERROR)
-            return false
         }
+    }
+
+    /**
+     * Remplace le synthétiseur par [newSynthesizer] après y avoir recopié tous les réglages
+     * mémorisés, puis libère l'ancien.
+     */
+    private fun installSynthesizer(newSynthesizer: Sf2Synthesizer) {
+        val old: Sf2Synthesizer?
+        synchronized(settingsLock) {
+            newSynthesizer.masterVolume = volume
+            newSynthesizer.setForceSequentialRendering(isScreenOff)
+            reverbPreset?.let { newSynthesizer.setReverbPreset(it) }
+            chorusPreset?.let { newSynthesizer.setChorusPreset(it) }
+            eqEnabled?.let { newSynthesizer.setEqEnabled(it) }
+            for (band in eqBandLevels.indices) {
+                if (eqBandLevels[band] != EQ_UNSET) newSynthesizer.setEqBandLevel(band, eqBandLevels[band])
+            }
+            globalGain?.let { newSynthesizer.globalGain = it }
+            old = synthesizer
+            synthesizer = newSynthesizer
+        }
+        old?.release()
     }
 
     private inline fun <T> safeOperation(
@@ -241,12 +284,11 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
             buildMidiTimeline()
 
-            if (currentSoundFontPath.isNotEmpty() && Sf2FileCache.shouldUseStreaming(currentSoundFontPath)) {
-                reloadSf2WithStreamingForMidi(file.absolutePath)
-            }
-
+            // La SoundFont est projetée en entier : le synthétiseur (et ses réglages) reste
+            // le même d'un morceau à l'autre
             currentPositionMs.set(0)
             currentEventIndex = 0
+            newPlaybackGeneration()
             updateState(MidiEngine.State.MIDI_LOADED)
 
             analyzeLoadedMidiFile(file)
@@ -256,54 +298,17 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         } catch (e: Exception) {
             notifyError("Failed to load MIDI: ${e.message}")
             return@safeOperation false
+        } catch (_: OutOfMemoryError) {
+            midiFile = null
+            midiTimeline = emptyList()
+            notifyError("Out of memory")
+            return@safeOperation false
         }
     }
 
-    private fun reloadSf2WithStreamingForMidi(midiFilePath: String) {
-        if (currentSoundFontPath.isBlank()) return
-
-        try {
-            // For small SF2 files, use memory mapping (fast, loads everything)
-            if (Sf2FileCache.shouldUseMmap(currentSoundFontPath)) {
-                loadWithMemoryMapping()
-                return
-            }
-
-            // For large SF2 files, load only required instruments upfront
-            // This is simpler and more reliable than dynamic loading
-            loadWithBasicStreaming(midiFilePath)
-
-        } catch (_: Exception) { }
-    }
-
-    private fun loadWithMemoryMapping() {
-        val mmapSf2 = Sf2FileCache.getMemoryMapped(currentSoundFontPath) ?: return
-
-        sf2File = mmapSf2
-        synthesizer?.release()
-        synthesizer = Sf2Synthesizer(mmapSf2, SAMPLE_RATE)
-        synthesizer?.masterVolume = volume
-        synthesizer?.setForceSequentialRendering(isScreenOff)
-
-        configureRenderCallback()
-    }
-
-    private fun loadWithBasicStreaming(midiFilePath: String) {
-        val analyzer = MidiFileAnalyzer(context)
-        val requiredInstruments = analyzer.analyzeRequiredInstrumentsFromPath(midiFilePath)
-        loadWithBasicStreamingInternal(requiredInstruments)
-    }
-
-    private fun loadWithBasicStreamingInternal(requiredInstruments: RequiredInstruments) {
-        val streamedSf2 = Sf2FileCache.getStreaming(currentSoundFontPath, requiredInstruments) ?: return
-
-        sf2File = streamedSf2
-        synthesizer?.release()
-        synthesizer = Sf2Synthesizer(streamedSf2, SAMPLE_RATE)
-        synthesizer?.masterVolume = volume
-        synthesizer?.setForceSequentialRendering(isScreenOff)
-
-        configureRenderCallback()
+    /** Nouvelle lecture : une fin déjà signalée ou programmée ne compte plus. */
+    private fun newPlaybackGeneration() {
+        playbackGeneration.incrementAndGet()
     }
 
     private fun configureRenderCallback() {
@@ -413,6 +418,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 synthesizer?.reset()
             }
 
+            newPlaybackGeneration()
             startMidiPlayback()
             startPositionUpdates()
 
@@ -436,6 +442,14 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         stopMidiPlayback()
         audioRenderer?.pause()
 
+        // La position ne bouge plus : une dernière mise à jour, puis plus rien jusqu'à la reprise
+        stopPositionUpdates()
+        val listener = onPositionChangedListener
+        val position = currentPositionMs.get()
+        try {
+            playbackExecutor?.execute { listener?.invoke(position, durationMs) }
+        } catch (_: Exception) { }
+
         MidiEventDispatcher.dispatchAllNotesOff()
 
         updateState(MidiEngine.State.PAUSED)
@@ -444,6 +458,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     override fun resume(): Unit = safeOperation("resume", Unit) {
         if (state != MidiEngine.State.PAUSED) return@safeOperation
 
+        // Une fin signalée juste avant la pause (et ignorée depuis) le sera de nouveau
+        newPlaybackGeneration()
         audioRenderer?.resume()
         startMidiPlayback()
         startPositionUpdates()
@@ -451,6 +467,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     }
 
     private fun stopInternal() {
+        newPlaybackGeneration()
         stopMidiPlayback()
         stopPositionUpdates()
 
@@ -482,6 +499,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
         safeOperation("release", Unit, allowWhenReleased = true) {
             stopInternal()
+            mainHandler.removeCallbacksAndMessages(null)
 
             MidiEventDispatcher.removeChannelControlListener(this)
 
@@ -577,6 +595,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             playbackStartPositionMs = clampedPos
             playbackStartFrame = 0L
         }
+        newPlaybackGeneration()
 
         replayStateEvents(clampedPos)
 
@@ -586,24 +605,38 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     }
 
     override fun setVolume(volume: Float) {
-        this.volume = volume.coerceIn(0f, 1f)
-        synthesizer?.masterVolume = this.volume
+        synchronized(settingsLock) {
+            this.volume = volume.coerceIn(0f, 1f)
+            synthesizer?.masterVolume = this.volume
+        }
     }
 
     override fun setReverb(preset: Int) {
-        synthesizer?.setReverbPreset(preset)
+        synchronized(settingsLock) {
+            reverbPreset = preset
+            synthesizer?.setReverbPreset(preset)
+        }
     }
 
     override fun setChorus(preset: Int) {
-        synthesizer?.setChorusPreset(preset)
+        synchronized(settingsLock) {
+            chorusPreset = preset
+            synthesizer?.setChorusPreset(preset)
+        }
     }
 
     fun setEqEnabled(enabled: Boolean) {
-        synthesizer?.setEqEnabled(enabled)
+        synchronized(settingsLock) {
+            eqEnabled = enabled
+            synthesizer?.setEqEnabled(enabled)
+        }
     }
 
     fun setEqBandLevel(band: Int, millibels: Int) {
-        synthesizer?.setEqBandLevel(band, millibels)
+        synchronized(settingsLock) {
+            if (band in eqBandLevels.indices) eqBandLevels[band] = millibels
+            synthesizer?.setEqBandLevel(band, millibels)
+        }
     }
 
     fun getEqBandLevel(band: Int): Int = synthesizer?.getEqBandLevel(band) ?: 0
@@ -616,7 +649,10 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
      */
     @Suppress("unused")
     fun setGlobalGain(gain: Float) {
-        synthesizer?.globalGain = gain
+        synchronized(settingsLock) {
+            globalGain = gain
+            synthesizer?.globalGain = gain
+        }
     }
 
     /**
@@ -659,49 +695,39 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         val success = safeOperation("reloadSoundFont", false) {
             stopInternal()
 
-            audioRenderer?.release()
-            audioRenderer = null
-            synthesizer?.release()
-            synthesizer = null
-
-            // BUG FIX 3.4 & 3.8: Fermer l'ancien sf2File AVANT d'en charger un nouveau
-            // pour éviter les fuites de file descriptors (memory-mapped files)
-            val oldSf2File = sf2File
-            sf2File = null
-
             if (soundFontPath.isBlank()) {
-                // Fermer l'ancien fichier même en cas d'erreur
-                oldSf2File?.close()
+                releaseSynthesis()
                 notifyError("No SoundFont file specified")
                 return@safeOperation false
             }
 
             val file = File(soundFontPath)
             if (!file.exists()) {
-                // Fermer l'ancien fichier même en cas d'erreur
-                oldSf2File?.close()
+                releaseSynthesis()
                 notifyError("SoundFont file not found")
                 return@safeOperation false
             }
 
             try {
-                // Fermer l'ancien fichier avant de charger le nouveau
-                oldSf2File?.close()
-
-                sf2File = if (Sf2FileCache.shouldUseMmap(soundFontPath)) {
-                    Sf2FileCache.getMemoryMapped(soundFontPath)
-                } else {
-                    Sf2FileCache.get(soundFontPath)
-                }
-                if (sf2File == null) {
+                val newSf2File = Sf2FileCache.getMemoryMapped(soundFontPath)
+                if (newSf2File == null) {
+                    releaseSynthesis()
                     notifyError("Failed to load SoundFont")
                     return@safeOperation false
                 }
 
-                synthesizer = Sf2Synthesizer(sf2File!!, SAMPLE_RATE)
-                synthesizer?.masterVolume = volume
-                synthesizer?.setForceSequentialRendering(isScreenOff)
+                if (newSf2File === sf2File && synthesizer != null) {
+                    // Fichier inchangé : même synthétiseur (réverbe, chorus, égaliseur, gain
+                    // conservés), remis à l'état d'un synthé neuf
+                    synthesizer?.reset()
+                } else {
+                    installSynthesizer(Sf2Synthesizer(newSf2File, SAMPLE_RATE))
+                    sf2File = newSf2File
+                }
 
+                // Sortie audio toujours neuve (le mode hybride recharge pour réparer une sortie
+                // qui ne démarre plus)
+                audioRenderer?.release()
                 audioRenderer = AudioRenderer(
                     context = context,
                     sampleRate = SAMPLE_RATE,
@@ -721,22 +747,28 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 return@safeOperation true
 
             } catch (e: Exception) {
-                // BUG FIX 3.8: En cas d'exception, fermer l'ancien fichier s'il n'a pas été fermé
-                // et nettoyer le nouveau s'il a été partiellement chargé
-                try {
-                    oldSf2File?.close()
-                } catch (_: Exception) { }
-                try {
-                    sf2File?.close()
-                    sf2File = null
-                } catch (_: Exception) { }
+                releaseSynthesis()
                 notifyError("Failed to reload SoundFont: ${e.message}")
+                updateState(MidiEngine.State.ERROR)
+                return@safeOperation false
+            } catch (_: OutOfMemoryError) {
+                releaseSynthesis()
+                notifyError("Out of memory")
                 updateState(MidiEngine.State.ERROR)
                 return@safeOperation false
             }
         }
 
         return success
+    }
+
+    /** Échec d'un rechargement : le moteur reste sans synthé, comme avant. */
+    private fun releaseSynthesis() {
+        audioRenderer?.release()
+        audioRenderer = null
+        synthesizer?.release()
+        synthesizer = null
+        sf2File = null
     }
 
     override fun forceDriverRestart() {
@@ -753,8 +785,10 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
      * est utilisé — beaucoup plus résistant au throttling, élimine les craquements en background.
      */
     fun setScreenOff(isOff: Boolean) {
-        isScreenOff = isOff
-        synthesizer?.setForceSequentialRendering(isOff)
+        synchronized(settingsLock) {
+            isScreenOff = isOff
+            synthesizer?.setForceSequentialRendering(isOff)
+        }
     }
 
     override fun getDriverStats(): String {
@@ -1197,33 +1231,24 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         // court-circuiter pour éviter les allocations ByteArray sur le thread audio.
         if (!MidiEventDispatcher.hasMidiEventListeners()) return
 
+        // Tableaux réutilisés : le dispatcher lit le message sur le champ sans le garder
         val midiBytes = when (event.type) {
-            MidiEventType.NOTE_ON -> {
-                byteArrayOf(
-                    (0x90 or event.channel).toByte(),
-                    event.data1.toByte(),
-                    event.data2.toByte()
-                )
-            }
-            MidiEventType.NOTE_OFF -> {
-                byteArrayOf(
-                    (0x80 or event.channel).toByte(),
-                    event.data1.toByte(),
-                    event.data2.toByte()
-                )
+            MidiEventType.NOTE_ON, MidiEventType.NOTE_OFF -> {
+                val status = if (event.type == MidiEventType.NOTE_ON) 0x90 else 0x80
+                visualizerBytes3[0] = (status or event.channel).toByte()
+                visualizerBytes3[1] = event.data1.toByte()
+                visualizerBytes3[2] = event.data2.toByte()
+                visualizerBytes3
             }
             MidiEventType.PROGRAM_CHANGE -> {
-                byteArrayOf(
-                    (0xC0 or event.channel).toByte(),
-                    event.data1.toByte()
-                )
+                visualizerBytes2[0] = (0xC0 or event.channel).toByte()
+                visualizerBytes2[1] = event.data1.toByte()
+                visualizerBytes2
             }
-            else -> null
+            else -> return
         }
 
-        midiBytes?.let {
-            MidiEventDispatcher.processMidiBytes(it)
-        }
+        MidiEventDispatcher.processMidiBytes(midiBytes)
     }
 
     private fun replayStateEvents(upToMs: Long) {
@@ -1292,19 +1317,27 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     }
 
     private fun onPlaybackComplete() {
+        // Le fil audio repasse ici à chaque tampon jusqu'à l'arrêt : une seule fin par lecture
+        val generation = playbackGeneration.get()
+        if (signaledGeneration.getAndSet(generation) == generation) return
+
         MidiEventDispatcher.dispatchAllNotesOff()
 
-        playbackExecutor?.schedule({
-            if (state == MidiEngine.State.PLAYING) {
+        // Suite sur le fil principal : stop() arrête le fil de lecture, une tâche de ce fil
+        // s'interrompait elle-même avant de prévenir le service
+        mainHandler.postDelayed({
+            if (generation == playbackGeneration.get() && state == MidiEngine.State.PLAYING) {
                 stop()
                 onCompletionListener?.invoke()
             }
-        }, 500, TimeUnit.MILLISECONDS)
+        }, COMPLETION_DELAY_MS)
     }
 
     // ==================== Position Updates ====================
 
     private fun startPositionUpdates() {
+        // Une seule tâche de position : chaque reprise en ajoutait une qui ne s'arrêtait plus
+        stopPositionUpdates()
         positionUpdateFuture = playbackExecutor?.scheduleWithFixedDelay(
             {
                 onPositionChangedListener?.invoke(currentPositionMs.get(), durationMs)

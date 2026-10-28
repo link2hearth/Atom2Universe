@@ -29,8 +29,21 @@ abstract class Joint(val a: PhysBody, val b: PhysBody) {
      */
     var collideConnected = false
 
-    /** Prépare la résolution du pas : masses effectives, écarts, réapplication. */
-    internal abstract fun preStep(invDt: Float)
+    /**
+     * Durée du pas où les impulsions mémorisées ont été trouvées, 0 avant le premier.
+     * Tenue par le monde : voir [preStep].
+     */
+    internal var impulseDt = 0f
+
+    /**
+     * Prépare la résolution du pas : masses effectives, écarts, réapplication.
+     *
+     * [dtRatio] est le rapport entre ce pas et celui des impulsions mémorisées : une
+     * impulsion vaut une force fois une durée, elle se remet donc à l'échelle avant
+     * d'être rendue (le `dtRatio` de Box2D). Sans ça, un sous-pas cent fois plus court
+     * que le précédent recevait cent fois la force qui tenait la machine.
+     */
+    internal abstract fun preStep(invDt: Float, dtRatio: Float)
 
     /** Une passe sur les vitesses réelles. */
     internal abstract fun applyImpulse()

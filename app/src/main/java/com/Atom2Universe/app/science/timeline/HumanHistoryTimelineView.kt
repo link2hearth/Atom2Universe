@@ -65,8 +65,11 @@ class HumanHistoryTimelineView(
     var selectedId: String? = null
         set(value) { field = value; refresh() }
 
+    // shownEntries / shownSelected: what the button already shows. Dragging remeasures every
+    // frame; without them, text, description and a new background were rebuilt each time.
     private data class Target(val button: Button, var entries: List<HumanLandmark> = emptyList(),
-        val bounds: RectF = RectF(), var anchor: Float = 0f)
+        val bounds: RectF = RectF(), var anchor: Float = 0f,
+        var shownEntries: List<HumanLandmark>? = null, var shownSelected: Boolean? = null)
     private data class Group(val entries: List<HumanLandmark>, val lane: Int, val anchor: Float,
         val left: Float, val occupiedStart: Float, val occupiedEnd: Float)
     private val targets = linkedMapOf<String, Target>()
@@ -150,16 +153,23 @@ class HumanHistoryTimelineView(
         groups.forEach { group ->
             val target = targets.getValue(group.entries.first().id)
             target.entries = group.entries; target.button.visibility = VISIBLE
-            val entry = group.entries.singleOrNull()
-            target.button.text = if (entry != null) context.getString(entry.title)
-                else context.getString(R.string.ct_history_cluster, group.entries.size)
-            target.button.contentDescription = if (entry != null)
-                context.getString(R.string.ct_history_entry_description, context.getString(entry.title), entry.dateLabel(context))
-                else context.getString(R.string.ct_history_cluster_description, group.entries.size,
-                    HumanDate(group.entries.first().range.first.year).label(context),
-                    HumanDate(group.entries.last().range.last.year).label(context))
-            target.button.background = palette.shape(if (group.entries.any { it.id == selectedId })
-                ColorUtils.blendARGB(palette.raised, palette.accent, .22f) else palette.raised, 6f)
+            if (target.shownEntries != group.entries) {
+                target.shownEntries = group.entries
+                val entry = group.entries.singleOrNull()
+                target.button.text = if (entry != null) context.getString(entry.title)
+                    else context.getString(R.string.ct_history_cluster, group.entries.size)
+                target.button.contentDescription = if (entry != null)
+                    context.getString(R.string.ct_history_entry_description, context.getString(entry.title), entry.dateLabel(context))
+                    else context.getString(R.string.ct_history_cluster_description, group.entries.size,
+                        HumanDate(group.entries.first().range.first.year).label(context),
+                        HumanDate(group.entries.last().range.last.year).label(context))
+            }
+            val selected = group.entries.any { it.id == selectedId }
+            if (target.shownSelected != selected) {
+                target.shownSelected = selected
+                target.button.background = palette.shape(if (selected)
+                    ColorUtils.blendARGB(palette.raised, palette.accent, .22f) else palette.raised, 6f)
+            }
             val top = (recordsTop + group.lane * rowHeight).toFloat()
             target.bounds.set(group.left, top, group.left + labelWidth, top + rowHeight - dp(10))
             target.anchor = group.anchor

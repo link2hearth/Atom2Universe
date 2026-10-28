@@ -31,6 +31,10 @@ class ChannelActivityView @JvmOverloads constructor(
     private var noteMin = 0
     private var noteMax = MidiLiveState.NOTES
     private var level = 0f
+    // Hauteur visée, recalculée seulement quand les notes changent
+    private var target = 0f
+    private var seenNotesVersion = -1
+    private var needsSync = true
 
     private val density = resources.displayMetrics.density
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
@@ -43,7 +47,9 @@ class ChannelActivityView @JvmOverloads constructor(
         noteMax = maxNote.coerceIn(noteMin + 1, MidiLiveState.NOTES)
         paint.color = color
         level = 0f
+        needsSync = true
         invalidate()
+        MidiFrameClock.requestFrame()
     }
 
     fun setColor(color: Int) {
@@ -62,32 +68,61 @@ class ChannelActivityView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    override fun onFrame(frameTimeNanos: Long) {
+    // Application en arrière-plan : l'horloge s'arrête si plus personne n'est visible
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == VISIBLE && isAttachedToWindow) {
+            lastFrameNanos = 0L
+            MidiFrameClock.register(this)
+        } else {
+            MidiFrameClock.unregister(this)
+        }
+    }
+
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (isVisible) {
+            needsSync = true
+            lastFrameNanos = 0L
+            MidiFrameClock.requestFrame()
+        }
+    }
+
+    override fun onFrame(frameTimeNanos: Long): Boolean {
         if (!isShown) {
             lastFrameNanos = 0L
-            return
+            needsSync = true
+            return false
         }
         val dt = if (lastFrameNanos == 0L) 0.016f
         else min((frameTimeNanos - lastFrameNanos) / 1_000_000_000f, 0.05f)
         lastFrameNanos = frameTimeNanos
 
-        var count = 0
-        var maxVelocity = 0
-        for (note in noteMin until noteMax) {
-            val v = MidiLiveState.velocity(channel, note)
-            if (v > 0) {
-                count++
-                if (v > maxVelocity) maxVelocity = v
+        // Les notes ne sont relues que si elles ont changé
+        val version = MidiLiveState.notesVersion()
+        if (version != seenNotesVersion || needsSync) {
+            seenNotesVersion = version
+            needsSync = false
+            var count = 0
+            var maxVelocity = 0
+            for (note in noteMin until noteMax) {
+                val v = MidiLiveState.velocity(channel, note)
+                if (v > 0) {
+                    count++
+                    if (v > maxVelocity) maxVelocity = v
+                }
             }
+            target = if (count == 0) 0f
+            else ((0.35f + 0.13f * count).coerceAtMost(1f) * (0.4f + 0.6f * maxVelocity / 127f))
         }
-        val target = if (count == 0) 0f
-        else ((0.35f + 0.13f * count).coerceAtMost(1f) * (0.4f + 0.6f * maxVelocity / 127f))
 
         val next = if (target >= level) target else (level - FALL_PER_SECOND * dt).coerceAtLeast(target)
         if (next != level) {
             level = next
             invalidate()
         }
+        // Encore en train de retomber : l'horloge doit continuer
+        return level != target
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

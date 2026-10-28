@@ -4,8 +4,6 @@
     <string name="hub_toggle_view">Changer vue</string>
     <string name="hub_edit_mode">Mode édition</string>
     <string name="hub_confirm_edit">Terminer</string>
-    <string name="notification_channel_audio_name">Lecture audio</string>
-    <string name="notification_channel_audio_description">Maintient la lecture audio en arrière-plan.</string>
     <string name="hub_edit_tile">Modifier la tuile</string>
     <string name="hub_change_language">Changer la langue</string>
     <string name="hub_select_language">Choisir la langue</string>

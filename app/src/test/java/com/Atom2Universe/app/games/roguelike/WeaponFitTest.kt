@@ -86,19 +86,13 @@ class WeaponFitTest {
         assertTrue(c.attack(0, Timing.GOOD).damage > 0)
     }
 
-    @Test fun armorPrimaryFollowsClassAndLegacyMigrationPreservesOtherStats() {
+    @Test fun armorPrimaryFollowsClass() {
         val mapping = mapOf(ArmorWeight.HEAVY to StatType.CON, ArmorWeight.LIGHT to StatType.DEX,
             ArmorWeight.CLOTH to StatType.INT, ArmorWeight.MEDIUM to StatType.END,
             ArmorWeight.ULTRALIGHT to StatType.WIS, ArmorWeight.FUR to StatType.STR)
         for ((weight, stat) in mapping) for (base in ArmorWeight.WEIGHTED) {
             val item = LootSystem.create(base, 20, Rarity.EPIC, 42, Random(9), forcedWeight = weight)
             assertEquals(stat, item.implicits.first().type)
-            val old = item.copy(implicits = item.implicits.mapIndexed { i, roll ->
-                if (i == 0) roll.copy(type = StatType.CHA) else roll
-            })
-            val upgraded = old.withClassPrimaryAttribute()
-            assertEquals(item, upgraded)
-            assertEquals(upgraded, upgraded.withClassPrimaryAttribute())
         }
     }
 }

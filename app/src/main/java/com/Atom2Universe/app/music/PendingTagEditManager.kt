@@ -5,6 +5,8 @@ import android.util.Log
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.data.PendingTagEdit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
@@ -18,6 +20,10 @@ import kotlinx.coroutines.withContext
 object PendingTagEditManager {
 
     private const val TAG = "PendingTagEditManager"
+
+    // onResume et le changement de piste peuvent lancer l'application en même temps :
+    // un seul passage à la fois, le suivant relit la liste (déjà purgée)
+    private val applyMutex = Mutex()
 
     /**
      * Vérifie si un fichier est actuellement en cours de lecture.
@@ -80,7 +86,11 @@ object PendingTagEditManager {
      *
      * @return Le nombre d'éditions appliquées avec succès
      */
-    suspend fun applyPendingEdits(context: Context): Int = withContext(Dispatchers.IO) {
+    suspend fun applyPendingEdits(context: Context): Int = applyMutex.withLock {
+        applyPendingEditsLocked(context)
+    }
+
+    private suspend fun applyPendingEditsLocked(context: Context): Int = withContext(Dispatchers.IO) {
         val db = MusicDatabase.getInstance(context)
         val pendingEdits = db.pendingTagEditDao().getAllPendingEdits()
 

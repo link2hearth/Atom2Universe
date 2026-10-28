@@ -34,7 +34,7 @@
             android:fontFamily="monospace"
             android:paddingHorizontal="6dp"
             android:paddingVertical="2dp"
-            android:text="-- FPS"
+            android:text=""
             android:textColor="#99FFFFFF"
             android:textSize="11sp" />
 
@@ -79,7 +79,7 @@
             android:fontFamily="monospace"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
-            android:text="0.0  0.0  0.0"
+            android:text=""
             android:textColor="#CCFFFFFF"
             android:textSize="11sp"
             android:visibility="gone" />

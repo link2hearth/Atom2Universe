@@ -14,11 +14,20 @@ class SonivoxPracticeSynth(private val context: Context) : PracticeSynthesizer {
 
     companion object {
         private const val TAG = "SonivoxPracticeSynth"
+
+        // Contrôleurs dont la valeur est perdue au redémarrage du moteur EAS
+        // (banque, volume, panoramique, expression, réverbe, chorus)
+        private val RESTORED_CONTROLLERS = intArrayOf(0, 32, 7, 10, 11, 91, 93)
     }
 
     private var midiDriver: MidiDriver? = null
     private var isInitialized = false
     private var isForcedToSpeaker = false
+    private var isPaused = false
+
+    // État des canaux, renvoyé après le redémarrage du moteur dans resume()
+    private val channelPrograms = IntArray(16) { -1 }
+    private val channelControllers = Array(16) { IntArray(128) { -1 } }
 
     override fun initialize(): Boolean {
         try {
@@ -60,7 +69,47 @@ class SonivoxPracticeSynth(private val context: Context) : PracticeSynthesizer {
             allSoundOff()
         }
         isInitialized = false
+        isPaused = false
         // Ne pas mettre midiDriver = null, c'est un singleton partagé
+    }
+
+    override fun pause() {
+        if (!isInitialized || isPaused) return
+        allSoundOff()
+        // Le moteur EAS écrit du silence en continu tant qu'il tourne
+        try {
+            midiDriver?.stop()
+        } catch (e: Exception) {
+            android.util.Log.w(TAG, "pause: stop() failed", e)
+        }
+        isPaused = true
+    }
+
+    override fun resume() {
+        if (!isInitialized || !isPaused) return
+        isPaused = false
+        val driver = midiDriver ?: return
+        try {
+            // Le lecteur principal a pu le relancer entre-temps : ne pas l'initialiser deux fois
+            if (driver.config() == null) {
+                driver.start()
+            }
+        } catch (e: Exception) {
+            android.util.Log.w(TAG, "resume: start() failed", e)
+            return
+        }
+        if (isForcedToSpeaker) {
+            forceOutputToSpeaker()
+        }
+        for (channel in 0..15) {
+            val controllers = channelControllers[channel]
+            for (controller in RESTORED_CONTROLLERS) {
+                val value = controllers[controller]
+                if (value >= 0) writeControlChange(channel, controller, value)
+            }
+            val program = channelPrograms[channel]
+            if (program >= 0) writeProgramChange(channel, program)
+        }
     }
 
     override fun noteOn(channel: Int, note: Int, velocity: Int) {
@@ -83,14 +132,30 @@ class SonivoxPracticeSynth(private val context: Context) : PracticeSynthesizer {
 
     override fun programChange(channel: Int, program: Int) {
         if (!isInitialized) return
+        channelPrograms[channel and 0x0F] = program and 0x7F
+        writeProgramChange(channel, program)
+    }
+
+    override fun controlChange(channel: Int, controller: Int, value: Int) {
+        if (!isInitialized) return
+        val controllers = channelControllers[channel and 0x0F]
+        if (controller == 121) {
+            // Reset All Controllers remet l'expression à sa valeur par défaut
+            controllers[11] = -1
+        } else {
+            controllers[controller and 0x7F] = value and 0x7F
+        }
+        writeControlChange(channel, controller, value)
+    }
+
+    private fun writeProgramChange(channel: Int, program: Int) {
         midiDriver?.write(byteArrayOf(
             (0xC0 or (channel and 0x0F)).toByte(),
             (program and 0x7F).toByte()
         ))
     }
 
-    override fun controlChange(channel: Int, controller: Int, value: Int) {
-        if (!isInitialized) return
+    private fun writeControlChange(channel: Int, controller: Int, value: Int) {
         midiDriver?.write(byteArrayOf(
             (0xB0 or (channel and 0x0F)).toByte(),
             (controller and 0x7F).toByte(),

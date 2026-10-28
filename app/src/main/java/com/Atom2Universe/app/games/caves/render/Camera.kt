@@ -97,8 +97,6 @@ internal class Camera(val target: CavePlayer) {
     fun chunkY() = Math.floorDiv(Math.floor(playerY).toInt(), CHUNK_SIZE)
     fun chunkZ() = Math.floorDiv(Math.floor(playerZ).toInt(), CHUNK_SIZE)
 
-    fun posString() = "%.1f  %.1f  %.1f".format(playerX, playerY, playerZ)
-
     // Appelé après une collision caméra : repositionne l'œil et reconstruit les matrices.
     fun applyCollision(ex: Double, ey: Double, ez: Double) {
         x = ex; y = ey; z = ez

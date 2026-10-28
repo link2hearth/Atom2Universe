@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicLong
  * - Play / Pause / Resume
  * - Seek (navigation à n'importe quelle position)
  * - Récupération de la position et durée
- *
- * Remplace MidiPlaybackEngine/MidiProcessor qui ne supportait pas le seek.
  */
 class MidiFilePlayer {
 
@@ -469,10 +467,12 @@ class MidiFilePlayer {
                         }
                     }
 
-                    // Rate limiting: vérifier si on doit envoyer cet événement
-                    val isNoteEvent = event.event is NoteOn || event.event is NoteOff
+                    // Rate limiting: seuls les débuts de note peuvent être sautés. Un NoteOff
+                    // (ou NoteOn de vélocité 0) jeté laisserait la note bloquée jusqu'à la fin.
+                    val midiEvent = event.event
+                    val isNoteEvent = midiEvent is NoteOn && midiEvent.velocity > 0
                     val shouldSend = when {
-                        // Toujours envoyer les événements de contrôle (Program Change, Controller, etc.)
+                        // Toujours envoyer les fins de note et les contrôles (Program Change, Controller, etc.)
                         !isNoteEvent -> true
                         // Limiter les notes par fenêtre
                         notesInWindow >= MAX_NOTES_PER_WINDOW -> false
@@ -522,25 +522,45 @@ class MidiFilePlayer {
     }
 
     /**
-     * Envoie les ProgramChange pour restaurer l'état des instruments à une position
-     * Utile après un seek pour avoir les bons sons
+     * Renvoie l'état des canaux à une position : banque et instrument, contrôleurs courants
+     * (volume, pan, expression, pédale, effets) et pitch bend.
+     * Utile après un seek (les contrôleurs viennent d'être remis à zéro) ou un pilote redémarré
+     * (il repart du piano).
      */
-    fun sendProgramChangesUpToPosition(positionMs: Long) {
-        val programsByChannel = mutableMapOf<Int, ByteArray>()
+    fun sendChannelStateUpToPosition(positionMs: Long) {
+        val programs = arrayOfNulls<ByteArray>(16)
+        val pitchBends = arrayOfNulls<ByteArray>(16)
+        val controllers = Array(16) { LinkedHashMap<Int, ByteArray>() }
 
-        // Parcourir les événements jusqu'à la position pour collecter les derniers ProgramChange
+        // Parcourir les événements jusqu'à la position pour garder le dernier message de chaque sorte
         for (event in events) {
             if (event.timestampMs > positionMs) break
+            val bytes = event.midiBytes ?: continue
+            val channel = bytes[0].toInt() and 0x0F
 
-            if (event.event is ProgramChange && event.midiBytes != null) {
-                val channel = (event.midiBytes[0].toInt() and 0x0F)
-                programsByChannel[channel] = event.midiBytes
+            when (event.event) {
+                is ProgramChange -> programs[channel] = bytes
+                is PitchBend -> pitchBends[channel] = bytes
+                is Controller -> {
+                    val number = bytes[1].toInt() and 0x7F
+                    if (number in RESTORED_CONTROLLERS) controllers[channel][number] = bytes
+                }
+                else -> { }
             }
         }
 
-        // Envoyer les ProgramChange
-        programsByChannel.values.forEach { bytes ->
-            onMidiEvent?.invoke(bytes)
+        for (channel in 0 until 16) {
+            // La banque (CC 0 / 32) doit précéder le changement d'instrument
+            controllers[channel][0]?.let { onMidiEvent?.invoke(it) }
+            controllers[channel][32]?.let { onMidiEvent?.invoke(it) }
+            programs[channel]?.let { onMidiEvent?.invoke(it) }
+            for ((number, bytes) in controllers[channel]) {
+                if (number != 0 && number != 32) onMidiEvent?.invoke(bytes)
+            }
+            pitchBends[channel]?.let { onMidiEvent?.invoke(it) }
         }
     }
 }
+
+// Contrôleurs dont seule la dernière valeur compte (pas les séquences RPN/NRPN)
+private val RESTORED_CONTROLLERS = setOf(0, 1, 7, 10, 11, 32, 64, 91, 93)

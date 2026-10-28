@@ -25,6 +25,8 @@ internal class CavePausePanel(private val activity: CaveActivity) {
             distances.save(activity)
             val value = distances
             activity.glView.queueEvent { activity.renderer.setViewDistances(value) }
+            // Derrière le panneau, la scène ne se redessine qu'à la demande.
+            activity.glView.requestRender()
         }
         val root = object : LinearLayout(activity) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -113,6 +115,7 @@ internal class CavePausePanel(private val activity: CaveActivity) {
             fun applyNature() {
                 val w = weather; val life = wildlife
                 activity.glView.queueEvent { activity.renderer.setNatureEnabled(w, life) }
+                activity.glView.requestRender()
             }
             body.addView(android.widget.Switch(activity).apply {
                 setText(R.string.cave_nature_weather); setTextColor(CaveUiStyle.TEXT)
@@ -128,6 +131,39 @@ internal class CavePausePanel(private val activity: CaveActivity) {
             })
             label().apply { setText(R.string.cave_nature_hint); textSize = 12f }
         }
+        // Résolution de la 3D : un petit processeur graphique remplit moins de pixels.
+        label().setText(R.string.cave_pause_resolution)
+        val scaleRow = LinearLayout(activity).apply { orientation = LinearLayout.HORIZONTAL }
+        body.addView(scaleRow, LinearLayout.LayoutParams(-1, dp(44)))
+        val scaleButtons = CaveRenderScale.CHOICES.map { percent ->
+            Button(activity).apply {
+                CaveUiStyle.button(this)
+                text = activity.getString(R.string.cave_pause_resolution_choice, percent)
+                scaleRow.addView(this, LinearLayout.LayoutParams(0, -1, 1f).apply {
+                    marginEnd = if (percent == CaveRenderScale.CHOICES.last()) 0 else dp(6)
+                })
+            }
+        }
+        fun refreshScale() {
+            val current = CaveRenderScale.load(activity)
+            CaveRenderScale.CHOICES.forEachIndexed { index, percent ->
+                val button = scaleButtons[index]
+                val active = percent == current
+                button.isSelected = active
+                button.background = android.graphics.drawable.RippleDrawable(ColorStateList.valueOf(0x337DAD8B),
+                    CaveUiStyle.panel(activity, if (active) CaveUiStyle.SELECTED else CaveUiStyle.CARD,
+                        if (active) CaveUiStyle.ACCENT else CaveUiStyle.BORDER, active), null)
+            }
+        }
+        CaveRenderScale.CHOICES.forEachIndexed { index, percent ->
+            scaleButtons[index].setOnClickListener {
+                CaveRenderScale.save(activity, percent)
+                refreshScale()
+                activity.applyRenderScale()
+                activity.glView.requestRender()
+            }
+        }
+        refreshScale()
         root.addView(Button(activity).apply {
             setText(R.string.cave_quit_confirm); CaveUiStyle.button(this)
             setTextColor(CaveUiStyle.WARNING)

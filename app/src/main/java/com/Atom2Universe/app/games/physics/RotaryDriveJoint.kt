@@ -52,7 +52,7 @@ class RotaryDriveJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         stalled = false
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         driving = false
         torque = 0f
         stalled = false
@@ -70,7 +70,7 @@ class RotaryDriveJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         // Couple × durée : changer la fréquence de simulation ne change ni la force
         // du moteur ni sa puissance.
         maxImpulse = maxTorque / invDt
-        impulse = clampToDriveSide(impulse)
+        impulse = clampToDriveSide(impulse * dtRatio)
         a.omega -= a.invI * impulse
         b.omega += b.invI * impulse
         driving = true

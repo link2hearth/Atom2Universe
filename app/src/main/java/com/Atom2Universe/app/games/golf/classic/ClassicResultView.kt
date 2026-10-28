@@ -61,6 +61,17 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
         }.toInt()
         private val titleSize = ui.dpf(when (kind) { Kind.ACE -> 54f; Kind.EAGLE -> 46f; Kind.BIRDIE -> 44f; else -> 38f })
         private val dimAlpha = when (kind) { Kind.ACE -> 90; Kind.EAGLE -> 80; Kind.BIRDIE -> 70; Kind.PAR -> 60; Kind.BOGEY -> 90; Kind.WORSE -> 120 }
+        /** Fireworks, rain and pulses last this long, then slow down over [SETTLE] seconds and the picture holds still. */
+        private val showSeconds = when (kind) { Kind.ACE -> 4.5f; Kind.EAGLE, Kind.BIRDIE -> 2.5f; else -> 0f }
+
+        /** 1 during the show, down to 0 at its end. */
+        private fun liveliness(t: Float) = (1f - (t - showSeconds) / SETTLE).coerceIn(0f, 1f)
+
+        /** Angle of the turning rays: the same speed during the show, then slowing evenly to a stop. */
+        private fun raysAngle(t: Float): Float {
+            val after = (t - showSeconds).coerceIn(0f, SETTLE)
+            return .45f * (min(t, showSeconds) + after - after * after / (2f * SETTLE))
+        }
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
             val r = max(w, h) * .6f
@@ -82,11 +93,11 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
             when (kind) {
                 Kind.ACE -> {
                     if (!opened && t >= .15f) { opened = true; burst(w / 2, h * .34f, 90, true, 140f..420f, false) }
-                    if (t >= nextBurst) {
+                    if (t >= nextBurst && t < showSeconds) {
                         nextBurst = t + .35f + random.nextFloat() * .3f
                         burst(w * (.15f + random.nextFloat() * .7f), h * (.1f + random.nextFloat() * .35f), 36, false, 90f..260f, false)
                     }
-                    rain += dt * 40f
+                    if (t < showSeconds) rain += dt * 40f
                 }
                 Kind.EAGLE -> {
                     if (!opened && t >= .2f) { opened = true; burst(w / 2, h * .34f, 70, true, 160f..420f, true) }
@@ -134,9 +145,9 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
                 c.save(); c.translate(cx, cy)
                 paint.style = Paint.Style.FILL; paint.shader = rays; paint.alpha = (255 * appear * (if (kind == Kind.EAGLE) .7f else 1f)).toInt()
                 if (kind == Kind.BIRDIE) {
-                    c.drawCircle(0f, 0f, min(w, h) * (.45f + .03f * sin(t * 4f)), paint)
+                    c.drawCircle(0f, 0f, min(w, h) * (.45f + .03f * sin(t * 4f) * liveliness(t)), paint)
                 } else {
-                    val spin = t * .45f; val half = (PI / 24).toFloat(); val r = max(w, h)
+                    val spin = raysAngle(t); val half = (PI / 24).toFloat(); val r = max(w, h)
                     ray.reset()
                     for (i in 0 until 12) {
                         val a = spin + i * (2 * PI / 12).toFloat()
@@ -165,7 +176,7 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
             val fit = min(1f, w * .9f / max(1f, paint.measureText(title)))
             var scale = fit; var shiftY = 0f; var turn = 0f; var alpha = appear
             when (kind) {
-                Kind.ACE, Kind.EAGLE, Kind.BIRDIE -> { scale *= easeBack(appear).coerceAtLeast(0f); alpha = min(1f, appear * 2.5f); if (kind == Kind.ACE && t > .5f) scale *= 1f + .04f * sin(t * 6f) }
+                Kind.ACE, Kind.EAGLE, Kind.BIRDIE -> { scale *= easeBack(appear).coerceAtLeast(0f); alpha = min(1f, appear * 2.5f); if (kind == Kind.ACE && t > .5f) scale *= 1f + .04f * sin(t * 6f) * liveliness(t) }
                 Kind.PAR -> shiftY = (1f - appear) * ui.dpf(16f)
                 Kind.BOGEY -> shiftY = -(1f - bounce(appear)) * ui.dpf(70f)
                 Kind.WORSE -> { scale *= 1f + .25f * (1f - appear); turn = sin(t * 30f) * 4f * exp(-t * 4f) }
@@ -177,7 +188,10 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
             paint.strokeWidth = 0f; paint.color = fill; paint.alpha = (255 * alpha).toInt()
             c.drawText(title, 0f, baseline, paint)
             c.restore()
-            postInvalidateOnAnimation()
+            // Everything has landed and come to rest: the last picture stays, nothing more to draw.
+            if (sparks.isNotEmpty() || t < showSeconds + SETTLE) postInvalidateOnAnimation()
         }
     }
+
+    private companion object { const val SETTLE = 1.5f }
 }

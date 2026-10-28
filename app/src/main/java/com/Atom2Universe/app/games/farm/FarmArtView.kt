@@ -23,6 +23,7 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
     var alert: Boolean = false
         set(value) { field = value; invalidate() }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val alertMark = context.getString(com.Atom2Universe.app.R.string.farm_alert_mark)
     private fun rect(c: Canvas, l: Float, t: Float, r: Float, b: Float, color: Int, radius: Float = 3f) {
         paint.color = color; paint.style = Paint.Style.FILL
         c.drawRoundRect(l, t, r, b, radius, radius, paint)
@@ -402,7 +403,7 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
             canvas.drawCircle(38f, 10f, 9f, paint)
             paint.color = cream; paint.textSize = 12f
             paint.typeface = Typeface.DEFAULT_BOLD; paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("i", 38f, 14.5f, paint)
+            canvas.drawText(alertMark, 38f, 14.5f, paint)
         }
         canvas.restore()
     }

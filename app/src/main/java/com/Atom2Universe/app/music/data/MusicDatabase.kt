@@ -54,7 +54,7 @@ import com.Atom2Universe.app.music.equalizer.data.EqSettingsDao
         ListenEvent::class,
         AlbumTrackCheckEntity::class
     ],
-    version = 16,
+    version = 17,
     exportSchema = false
 )
 abstract class MusicDatabase : RoomDatabase() {
@@ -538,6 +538,19 @@ abstract class MusicDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Migration 16 → 17 : date de dernière modification des préréglages d'égaliseur.
+         *
+         * La synchro cloud comparait la date de création : un préréglage modifié ne partait
+         * jamais. Les préréglages existants démarrent à leur date de création.
+         */
+        private val MIGRATION_16_17 = object : Migration(16, 17) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE eq_presets ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("UPDATE eq_presets SET updatedAt = createdAt")
+            }
+        }
+
         fun getInstance(context: Context): MusicDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -545,7 +558,7 @@ abstract class MusicDatabase : RoomDatabase() {
                     MusicDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
                     .build()
                 INSTANCE = instance
                 instance

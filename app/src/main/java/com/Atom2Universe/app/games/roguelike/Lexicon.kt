@@ -43,7 +43,7 @@ class LexiconEnv(val ctx: Context, val hero: Hero?, val floor: Int) {
         NumberFormat.getNumberInstance(ctx.resources.configuration.locales[0]).apply {
             maximumFractionDigits = max; minimumFractionDigits = min; isGroupingUsed = false
         }.format(v.toDouble())
-    fun signed(n: Int) = if (n > 0) "+$n" else if (n < 0) "−${-n}" else "0"
+    fun signed(n: Int) = if (n > 0) s(R.string.lex_signed_plus, n) else if (n < 0) s(R.string.lex_signed_minus, -n) else n.toString()
 }
 
 /**

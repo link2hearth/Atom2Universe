@@ -42,6 +42,7 @@ class Sf2Reader {
         private const val IMOD = "imod"
         private const val IGEN = "igen"
         private const val SHDR = "shdr"
+        private val PDTA_RECORDS = setOf(PHDR, PBAG, PMOD, PGEN, INST, IBAG, IMOD, IGEN, SHDR)
 
         // Generator types - using Sf2Constants values
         private const val GEN_KEY_RANGE = 43
@@ -94,6 +95,58 @@ class Sf2Reader {
         // Fixed key/velocity generators
         private const val GEN_FIXED_KEY = 46
         private const val GEN_FIXED_VELOCITY = 47
+
+        /** Largest pdta sub-chunk read (64 MB, far above any real bank). */
+        private const val MAX_PDTA_CHUNK_BYTES = 64L * 1024 * 1024
+
+        /** Largest INFO field read. */
+        private const val MAX_INFO_FIELD_BYTES = 1024 * 1024
+
+        /** Longest sample read in one piece (100 M frames). */
+        private const val MAX_SAMPLE_FRAMES = 100_000_000L
+
+        /**
+         * Reads [size] bytes of 16-bit little-endian PCM at [offset] of [file], or null when
+         * the range is outside the file, too large, or memory runs out.
+         */
+        fun readPcm16(file: File, offset: Long, size: Long): ShortArray? {
+            if (offset < 0 || size <= 0 || size / 2 > MAX_SAMPLE_FRAMES) return null
+            return try {
+                RandomAccessFile(file, "r").use { raf ->
+                    if (offset + size > raf.length()) return null
+                    val frames = (size / 2).toInt()
+                    val result = ShortArray(frames)
+                    val buffer = ByteArray(minOf(frames * 2, 1024 * 1024))
+                    raf.seek(offset)
+                    var done = 0
+                    while (done < frames) {
+                        val count = minOf(buffer.size / 2, frames - done)
+                        raf.readFully(buffer, 0, count * 2)
+                        for (i in 0 until count) {
+                            result[done + i] = ((buffer[2 * i].toInt() and 0xFF) or (buffer[2 * i + 1].toInt() shl 8)).toShort()
+                        }
+                        done += count
+                    }
+                    result
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Cannot read sample audio from ${file.absolutePath}", e)
+                null
+            } catch (e: OutOfMemoryError) {
+                Log.e(TAG, "Sample too large to load: $size bytes", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Uses an earlier parse of the same file (same reader or not) to read sample audio,
+     * without parsing the file again.
+     */
+    fun useParsed(result: Sf2ParseResult) {
+        sf2File = File(result.filePath)
+        smplChunkStart = result.smplDataOffset
+        sm24ChunkStart = result.sm24DataOffset
     }
 
     // File reference for lazy loading
@@ -146,6 +199,8 @@ class Sf2Reader {
         }
 
         sf2File = file
+        smplChunkStart = 0
+        smplChunkSize = 0
         sm24ChunkStart = -1
 
         try {
@@ -211,16 +266,26 @@ class Sf2Reader {
                                         val subSize = readUInt32(raf)
                                         val subStart = raf.filePointer
 
-                                        when (subId) {
-                                            PHDR -> parsePresetHeaders(raf, subSize, presetHeaders)
-                                            PBAG -> parseBags(raf, subSize, presetBags)
-                                            PMOD -> parseModulators(raf, subSize, presetMods)
-                                            PGEN -> parseGenerators(raf, subSize, presetGens)
-                                            INST -> parseInstHeaders(raf, subSize, instHeaders)
-                                            IBAG -> parseBags(raf, subSize, instBags)
-                                            IMOD -> parseModulators(raf, subSize, instMods)
-                                            IGEN -> parseGenerators(raf, subSize, instGens)
-                                            SHDR -> parseSampleHeaders(raf, subSize, sampleHeaders)
+                                        if (subId in PDTA_RECORDS) {
+                                            // Read the whole sub-chunk at once, then decode it
+                                            if (subSize > MAX_PDTA_CHUNK_BYTES || subStart + subSize > raf.length()) {
+                                                Log.e(TAG, "Invalid $subId size: $subSize")
+                                                return null
+                                            }
+                                            val bytes = ByteArray(subSize.toInt())
+                                            raf.readFully(bytes)
+                                            val data = ChunkData(bytes)
+                                            when (subId) {
+                                                PHDR -> parsePresetHeaders(data, subSize, presetHeaders)
+                                                PBAG -> parseBags(data, subSize, presetBags)
+                                                PMOD -> parseModulators(data, subSize, presetMods)
+                                                PGEN -> parseGenerators(data, subSize, presetGens)
+                                                INST -> parseInstHeaders(data, subSize, instHeaders)
+                                                IBAG -> parseBags(data, subSize, instBags)
+                                                IMOD -> parseModulators(data, subSize, instMods)
+                                                IGEN -> parseGenerators(data, subSize, instGens)
+                                                SHDR -> parseSampleHeaders(data, subSize, sampleHeaders)
+                                            }
                                         }
 
                                         raf.seek(subStart + subSize)
@@ -239,6 +304,15 @@ class Sf2Reader {
                     }
                 }
 
+                // Every sample must lie inside smpl (the last header is the terminal EOS)
+                val smplFrames = smplChunkSize / 2
+                for (header in sampleHeaders.dropLast(1)) {
+                    if (header.start >= header.end || header.end > smplFrames) {
+                        Log.e(TAG, "Sample ${header.name} outside smpl: ${header.start}..${header.end} of $smplFrames")
+                        return null
+                    }
+                }
+
                 // Build the parsed structure
                 return buildParseResult(
                     info ?: Sf2Info("Unknown", "", ""),
@@ -249,6 +323,9 @@ class Sf2Reader {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error parsing SF2 file", e)
+            return null
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "SF2 file too large to parse", e)
             return null
         }
     }
@@ -269,7 +346,7 @@ class Sf2Reader {
                 val startByte = smplChunkStart + (sample.start * 2L)
                 val numSamples = (sample.end - sample.start).toInt()
 
-                if (numSamples <= 0 || numSamples > 100_000_000) {
+                if (numSamples <= 0 || numSamples > MAX_SAMPLE_FRAMES) {
                     Log.e(TAG, "Invalid sample size: $numSamples")
                     return null
                 }
@@ -304,6 +381,9 @@ class Sf2Reader {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error extracting sample audio", e)
+            return null
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "Sample too large to extract", e)
             return null
         }
     }
@@ -494,30 +574,6 @@ class Sf2Reader {
         return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).int.toLong() and 0xFFFFFFFFL
     }
 
-    private fun readUInt16(raf: RandomAccessFile): Int {
-        val bytes = ByteArray(2)
-        raf.read(bytes)
-        return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).short.toInt() and 0xFFFF
-    }
-
-    private fun readInt16(raf: RandomAccessFile): Int {
-        val bytes = ByteArray(2)
-        raf.read(bytes)
-        return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).short.toInt()
-    }
-
-    private fun readInt8(raf: RandomAccessFile): Int {
-        return raf.read()
-    }
-
-    private fun readString(raf: RandomAccessFile, length: Int): String {
-        val bytes = ByteArray(length)
-        raf.read(bytes)
-        // Find null terminator; Latin-1 keeps every byte, so names are written back unchanged
-        val end = bytes.indexOf(0.toByte()).takeIf { it >= 0 } ?: length
-        return String(bytes, 0, end, Charsets.ISO_8859_1)
-    }
-
     private fun parseInfoChunk(raf: RandomAccessFile, endPos: Long): Sf2Info {
         var name = "Unknown"
         var engine = ""
@@ -528,7 +584,9 @@ class Sf2Reader {
             val subId = readChunkId(raf)
             val subSize = readUInt32(raf).toInt()
             val subStart = raf.filePointer
-            if (subSize < 0 || subStart + subSize > endPos) break
+            if (subSize < 0 || subSize > MAX_INFO_FIELD_BYTES || subStart + subSize > endPos ||
+                subStart + subSize > raf.length()
+            ) break
 
             val data = ByteArray(subSize)
             raf.readFully(data)
@@ -547,75 +605,98 @@ class Sf2Reader {
         return Sf2Info(name, engine, comment, fields)
     }
 
-    private fun parsePresetHeaders(raf: RandomAccessFile, size: Long, list: MutableList<RawPresetHeader>) {
+    private fun parsePresetHeaders(data: ChunkData, size: Long, list: MutableList<RawPresetHeader>) {
         val count = (size / 38).toInt()
         repeat(count) {
-            val name = readString(raf, 20)
-            val preset = readUInt16(raf)
-            val bank = readUInt16(raf)
-            val bagIndex = readUInt16(raf)
-            raf.skipBytes(12) // library, genre, morphology
+            val name = data.string(20)
+            val preset = data.u16()
+            val bank = data.u16()
+            val bagIndex = data.u16()
+            data.skip(12) // library, genre, morphology
             list.add(RawPresetHeader(name, preset, bank, bagIndex))
         }
     }
 
-    private fun parseInstHeaders(raf: RandomAccessFile, size: Long, list: MutableList<RawInstHeader>) {
+    private fun parseInstHeaders(data: ChunkData, size: Long, list: MutableList<RawInstHeader>) {
         val count = (size / 22).toInt()
         repeat(count) {
-            val name = readString(raf, 20)
-            val bagIndex = readUInt16(raf)
+            val name = data.string(20)
+            val bagIndex = data.u16()
             list.add(RawInstHeader(name, bagIndex))
         }
     }
 
-    private fun parseBags(raf: RandomAccessFile, size: Long, list: MutableList<RawBag>) {
+    private fun parseBags(data: ChunkData, size: Long, list: MutableList<RawBag>) {
         val count = (size / 4).toInt()
         repeat(count) {
-            val genIndex = readUInt16(raf)
-            val modIndex = readUInt16(raf)
+            val genIndex = data.u16()
+            val modIndex = data.u16()
             list.add(RawBag(genIndex, modIndex))
         }
     }
 
-    private fun parseGenerators(raf: RandomAccessFile, size: Long, list: MutableList<RawGenerator>) {
+    private fun parseGenerators(data: ChunkData, size: Long, list: MutableList<RawGenerator>) {
         val count = (size / 4).toInt()
         repeat(count) {
-            val oper = readUInt16(raf)
-            val amount = readInt16(raf)
+            val oper = data.u16()
+            val amount = data.s16()
             list.add(RawGenerator(oper, amount))
         }
     }
 
-    private fun parseModulators(raf: RandomAccessFile, size: Long, list: MutableList<RawModulator>) {
+    private fun parseModulators(data: ChunkData, size: Long, list: MutableList<RawModulator>) {
         val count = (size / 10).toInt() // Each modulator is 10 bytes
         repeat(count) {
-            val srcOper = readUInt16(raf)
-            val destOper = readUInt16(raf)
-            val amount = readInt16(raf)
-            val amtSrcOper = readUInt16(raf)
-            val transOper = readUInt16(raf)
+            val srcOper = data.u16()
+            val destOper = data.u16()
+            val amount = data.s16()
+            val amtSrcOper = data.u16()
+            val transOper = data.u16()
             list.add(RawModulator(srcOper, destOper, amount, amtSrcOper, transOper))
         }
     }
 
-    private fun parseSampleHeaders(raf: RandomAccessFile, size: Long, list: MutableList<RawSampleHeader>) {
+    private fun parseSampleHeaders(data: ChunkData, size: Long, list: MutableList<RawSampleHeader>) {
         val count = (size / 46).toInt()
         repeat(count) {
-            val name = readString(raf, 20)
-            val start = readUInt32(raf)
-            val end = readUInt32(raf)
-            val loopStart = readUInt32(raf)
-            val loopEnd = readUInt32(raf)
-            val sampleRate = readUInt32(raf).toInt()
-            val originalPitch = readInt8(raf)
-            val pitchCorrection = raf.readByte().toInt()
-            val sampleLink = readUInt16(raf)
-            val sampleType = readUInt16(raf)
+            val name = data.string(20)
+            val start = data.u32()
+            val end = data.u32()
+            val loopStart = data.u32()
+            val loopEnd = data.u32()
+            val sampleRate = data.u32().toInt()
+            val originalPitch = data.u8()
+            val pitchCorrection = data.s8()
+            val sampleLink = data.u16()
+            val sampleType = data.u16()
 
             list.add(RawSampleHeader(
                 name, start, end, loopStart, loopEnd,
                 sampleRate, originalPitch, pitchCorrection, sampleLink, sampleType
             ))
+        }
+    }
+
+    /** Little-endian reading of one pdta sub-chunk held in memory. */
+    private class ChunkData(private val bytes: ByteArray) {
+        private val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+
+        fun u8(): Int = buffer.get().toInt() and 0xFF
+        fun s8(): Int = buffer.get().toInt()
+        fun u16(): Int = buffer.short.toInt() and 0xFFFF
+        fun s16(): Int = buffer.short.toInt()
+        fun u32(): Long = buffer.int.toLong() and 0xFFFFFFFFL
+        fun skip(count: Int) {
+            buffer.position(buffer.position() + count)
+        }
+
+        /** Zero-terminated name; Latin-1 keeps every byte, so names are written back unchanged. */
+        fun string(length: Int): String {
+            val start = buffer.position()
+            var end = start
+            while (end < start + length && bytes[end] != 0.toByte()) end++
+            buffer.position(start + length)
+            return String(bytes, start, end - start, Charsets.ISO_8859_1)
         }
     }
 

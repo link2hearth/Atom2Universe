@@ -97,7 +97,7 @@ class MidiChannelAdapter(private val context: Context) :
     private fun instrumentLabel(row: Row): String {
         if (row.isDrumTrack) return context.getString(R.string.gm_drum_channel)
         val program = currentProgram(row)
-        return "$program: ${GeneralMidiInstruments.getName(context, program)}"
+        return context.getString(R.string.practice_current_instrument, program, GeneralMidiInstruments.getName(context, program))
     }
 
     // === RecyclerView.Adapter ===
@@ -125,7 +125,11 @@ class MidiChannelAdapter(private val context: Context) :
         val row = rows[position]
 
         bindInstrument(holder, row)
-        holder.channelNumber.text = if (row.isDrumTrack) "Dr" else "${row.channel + 1}"
+        holder.channelNumber.text = if (row.isDrumTrack) {
+            context.getString(R.string.midi_channel_drum_short)
+        } else {
+            (row.channel + 1).toString()
+        }
 
         // Le clavier et l'indicateur se branchent sur le canal puis se débrouillent seuls
         holder.keyboard.bindChannel(row.channel, row.noteRangeMin, row.noteRangeMax, row.program)
@@ -176,7 +180,7 @@ class MidiChannelAdapter(private val context: Context) :
 
         if (row.programCount > 1) {
             holder.multiProgramBadge.visibility = View.VISIBLE
-            holder.multiProgramBadge.text = "x${row.programCount}"
+            holder.multiProgramBadge.text = context.getString(R.string.midi_channel_program_count, row.programCount)
         } else {
             holder.multiProgramBadge.visibility = View.GONE
         }
@@ -229,7 +233,8 @@ class MidiChannelAdapter(private val context: Context) :
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         seenProgramsVersion = -1
-        MidiFrameClock.register(this)
+        // Les barres d'activité des lignes font tourner l'horloge ; l'adaptateur suit
+        MidiFrameClock.register(this, keepsClockRunning = false)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -237,11 +242,12 @@ class MidiChannelAdapter(private val context: Context) :
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
-    override fun onFrame(frameTimeNanos: Long) {
+    override fun onFrame(frameTimeNanos: Long): Boolean {
         val version = MidiLiveState.programsVersion()
-        if (version == seenProgramsVersion) return
+        if (version == seenProgramsVersion) return false
         seenProgramsVersion = version
         if (rows.isNotEmpty()) notifyItemRangeChanged(0, rows.size, PAYLOAD_PROGRAM)
+        return false
     }
 
     private companion object {

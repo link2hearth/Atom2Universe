@@ -6,8 +6,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
+import android.os.SystemClock
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -15,17 +18,25 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.Atom2Universe.app.AudioFocusManager
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.data.MidiTrack
 import com.Atom2Universe.app.midi.repository.SettingsRepository
 import com.Atom2Universe.app.midi.sf2.Sf2Voice
 import com.Atom2Universe.app.midi.sf2.VelocityCurve
 import com.Atom2Universe.app.stats.StatsTracker
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.util.concurrent.Executors
 
 /**
  * Service de playback MIDI en arrière-plan
  * Utilise MediaBrowserServiceCompat pour la compatibilité avec MediaSession
  * Gère: MidiSynthesizerManager (Sonivox/Sf2Engine), Queue, Notifications, Audio Focus
+ *
+ * Toutes les opérations sur les moteurs passent par un fil unique (« MidiEngine ») :
+ * chargements de SoundFont et de MIDI hors du fil principal, exécutés dans l'ordre d'arrivée,
+ * jamais deux à la fois.
  */
 class MidiPlaybackService : MediaBrowserServiceCompat() {
 
@@ -36,13 +47,26 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     private lateinit var audioManager: AudioManager
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private var isForegroundService = false
+    private val engineExecutor = Executors.newSingleThreadExecutor { runnable -> Thread(runnable, "MidiEngine") }
+    private val engineDispatcher = engineExecutor.asCoroutineDispatcher()
+    private val engineMutex = Mutex()
+    @Volatile private var destroyed = false
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    @Volatile private var isForegroundService = false
+    // Notification laissée en place après une longue pause (service sorti du premier plan)
+    private var notificationDetached = false
 
     // Wake lock pour garder le CPU actif pendant la lecture (écran éteint)
     private var wakeLock: PowerManager.WakeLock? = null
 
     // État actuel
-    private var currentPlaybackState = PlaybackStateCompat.STATE_NONE
+    @Volatile private var currentPlaybackState = PlaybackStateCompat.STATE_NONE
+
+    // Publication vers MediaSession : l'état et la position ne doivent pas se croiser
+    private val publishLock = Any()
+    @Volatile private var lastPositionPublishMs = 0L
 
     // Position où reprendre un morceau après un changement de SoundFont ou de moteur
     // (le nouveau moteur repart sans fichier MIDI chargé). Liée au fichier pour ne pas
@@ -67,8 +91,19 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     private val screenStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                Intent.ACTION_SCREEN_OFF -> synthesizerManager.setScreenOff(true)
-                Intent.ACTION_SCREEN_ON  -> synthesizerManager.setScreenOff(false)
+                Intent.ACTION_SCREEN_OFF -> onEngine { synthesizerManager.setScreenOff(true) }
+                Intent.ACTION_SCREEN_ON -> onEngine { synthesizerManager.setScreenOff(false) }
+            }
+        }
+    }
+
+    // Longue pause : le service quitte le premier plan (la notification reste)
+    private val detachForegroundRunnable = Runnable {
+        onEngine {
+            if (currentPlaybackState == PlaybackStateCompat.STATE_PAUSED && isForegroundService) {
+                stopForeground(STOP_FOREGROUND_DETACH)
+                isForegroundService = false
+                notificationDetached = true
             }
         }
     }
@@ -96,11 +131,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         }
 
         override fun onAudioFocusDuck() {
-            synthesizerManager.setVolume(0.2f)
+            onEngine { synthesizerManager.setVolume(0.2f) }
         }
 
         override fun onAudioFocusUnduck() {
-            synthesizerManager.setVolume(currentVolume)
+            val volume = currentVolume
+            onEngine { synthesizerManager.setVolume(volume) }
         }
     }
 
@@ -155,6 +191,13 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
 
         // Seuil pour Previous (3 secondes)
         private const val PREVIOUS_THRESHOLD_MS = 3000L
+
+        // Position publiée environ deux fois par seconde (chaque publication est un appel
+        // inter-processus) : l'écran n'affiche que les secondes et ne la lit que là
+        private const val POSITION_PUBLISH_INTERVAL_MS = 450L
+
+        // Pause plus longue que ça : le service quitte le premier plan
+        private const val FOREGROUND_DETACH_DELAY_MS = 5 * 60 * 1000L
     }
 
     override fun onCreate() {
@@ -171,7 +214,10 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         wakeLock = powerManager.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
             "A2U:MidiPlaybackWakeLock"
-        )
+        ).apply {
+            // Non compté : chaque acquire() repart sur un nouveau délai, un seul release() suffit
+            setReferenceCounted(false)
+        }
 
         // Initialiser MediaSession
         setupMediaSession()
@@ -188,7 +234,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         // Appliquer l'état initial : si le service démarre avec l'écran déjà éteint,
         // activer immédiatement le mode séquentiel (isInteractive = false = écran éteint)
         if (!powerManager.isInteractive) {
-            synthesizerManager.setScreenOff(true)
+            onEngine { synthesizerManager.setScreenOff(true) }
         }
     }
 
@@ -241,7 +287,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             }
             ACTION_SET_EQ_ENABLED -> {
                 val enabled = intent.getBooleanExtra(EXTRA_EQ_ENABLED, false)
-                synthesizerManager.setEqualizerEnabled(enabled)
+                onEngine { synthesizerManager.setEqualizerEnabled(enabled) }
                 serviceScope.launch {
                     SettingsRepository(applicationContext).setMidiEqEnabled(enabled)
                 }
@@ -249,7 +295,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             ACTION_SET_EQ_BAND -> {
                 val band = intent.getIntExtra(EXTRA_EQ_BAND, 0)
                 val millibels = intent.getIntExtra(EXTRA_EQ_MILLIBELS, 0)
-                synthesizerManager.setEqualizerBandLevel(band, millibels)
+                onEngine { synthesizerManager.setEqualizerBandLevel(band, millibels) }
                 serviceScope.launch {
                     SettingsRepository(applicationContext).setMidiEqBandLevel(band, millibels)
                 }
@@ -280,6 +326,9 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     }
 
     override fun onDestroy() {
+        destroyed = true
+        mainHandler.removeCallbacks(detachForegroundRunnable)
+
         try {
             unregisterReceiver(widgetCommandReceiver)
         } catch (e: Exception) {
@@ -293,8 +342,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         }
 
         try {
-            // Abandonner l'audio focus
-            AudioFocusManager.abandonFocus()
+            // Rendre l'audio focus, seulement s'il est encore à nous
+            AudioFocusManager.abandonFocus(audioFocusListener)
         } catch (e: Exception) {
             android.util.Log.w(TAG, "onDestroy: abandonFocus failed", e)
         }
@@ -305,10 +354,19 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             android.util.Log.w(TAG, "onDestroy: serviceScope.cancel failed", e)
         }
 
+        // Les moteurs se libèrent sur leur fil, après l'opération en cours (jamais pendant
+        // un chargement). Le fil s'arrête ensuite.
         try {
-            synthesizerManager.release()
+            engineExecutor.execute {
+                try {
+                    synthesizerManager.release()
+                } catch (e: Exception) {
+                    android.util.Log.w(TAG, "onDestroy: synthesizerManager.release failed", e)
+                }
+            }
+            engineExecutor.shutdown()
         } catch (e: Exception) {
-            android.util.Log.w(TAG, "onDestroy: synthesizerManager.release failed", e)
+            android.util.Log.w(TAG, "onDestroy: engine thread shutdown failed", e)
         }
 
         // BUG FIX 3.10: Toujours nettoyer le callback MediaSession même en cas d'exception
@@ -358,6 +416,26 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         // Retourne true pour recevoir onRebind() quand un client se reconnecte
         // Le service continue de tourner si en lecture (grâce à startForeground)
         return true
+    }
+
+    /**
+     * Exécute [block] sur le fil des moteurs, après les opérations déjà demandées.
+     * Utilisable depuis n'importe quel fil (boutons, notification, rappels des moteurs).
+     */
+    private fun onEngine(block: suspend () -> Unit) {
+        if (destroyed) return
+        serviceScope.launch(engineDispatcher) {
+            engineMutex.withLock {
+                if (destroyed) return@withLock
+                try {
+                    block()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    android.util.Log.w(TAG, "Engine operation failed", e)
+                }
+            }
+        }
     }
 
     // === MediaSession Setup ===
@@ -435,8 +513,9 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 for (i in 0 until queueSize) {
                     val trackId = extras.getLong("track_${i}_id", -1)
                     val trackPath = extras.getString("track_${i}_path") ?: ""
-                    val trackTitle = extras.getString("track_${i}_title") ?: "Unknown"
-                    val trackArtist = extras.getString("track_${i}_artist") ?: "Unknown"
+                    // Vide = inconnu : le texte traduit est choisi à l'affichage
+                    val trackTitle = extras.getString("track_${i}_title") ?: ""
+                    val trackArtist = extras.getString("track_${i}_artist") ?: ""
                     val trackAlbum = extras.getString("track_${i}_album") ?: ""
 
                     if (trackId != -1L && trackPath.isNotEmpty()) {
@@ -454,36 +533,34 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 }
 
                 if (tracks.isNotEmpty()) {
-                    // IMPORTANT: Stopper et réinitialiser l'état avant de changer de piste
-                    synthesizerManager.stop()
-                    currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
-
-                    queueManager.setQueue(tracks, startIndex)
-
-                    // Vérifie si le shuffle doit être activé
                     val enableShuffle = extras.getBoolean("enable_shuffle", false)
-                    if (enableShuffle) {
-                        if (!queueManager.isShuffleEnabled()) {
-                            queueManager.toggleShuffle()
-                        }
-                    }
+                    onEngine {
+                        // IMPORTANT: Stopper et réinitialiser l'état avant de changer de piste
+                        synthesizerManager.stop()
+                        currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
 
-                    handlePlay()
+                        queueManager.setQueue(tracks, startIndex)
+
+                        // Vérifie si le shuffle doit être activé
+                        if (enableShuffle) {
+                            if (!queueManager.isShuffleEnabled()) {
+                                queueManager.toggleShuffle()
+                            }
+                        }
+
+                        doPlay()
+                    }
                 }
             } else {
                 // Track unique (legacy)
                 val trackId = extras.getLong("track_id", -1)
                 val trackPath = extras.getString("track_path") ?: ""
-                val trackTitle = extras.getString("track_title") ?: "Unknown"
-                val trackArtist = extras.getString("track_artist") ?: "Unknown"
+                val trackTitle = extras.getString("track_title") ?: ""
+                val trackArtist = extras.getString("track_artist") ?: ""
 
                 if (trackId == -1L || trackPath.isEmpty()) {
                     return
                 }
-
-                // IMPORTANT: Stopper et réinitialiser l'état avant de changer de piste
-                synthesizerManager.stop()
-                currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
 
                 val track = MidiTrack(
                     id = trackId,
@@ -496,8 +573,14 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                     fileSize = 0L
                 )
 
-                queueManager.setQueue(listOf(track), 0)
-                handlePlay()
+                onEngine {
+                    // IMPORTANT: Stopper et réinitialiser l'état avant de changer de piste
+                    synthesizerManager.stop()
+                    currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
+
+                    queueManager.setQueue(listOf(track), 0)
+                    doPlay()
+                }
             }
         }
     }
@@ -510,25 +593,21 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             // TODO: Mettre à jour MediaSession metadata
         }
 
+        // Appelés depuis les fils des moteurs : on repasse par le fil des moteurs
         synthesizerManager.setOnCompletionListener {
             handleSkipNext() // Auto-play next
         }
 
         synthesizerManager.setOnErrorListener { _ ->
-            updatePlaybackState(PlaybackStateCompat.STATE_ERROR)
+            onEngine { updatePlaybackState(PlaybackStateCompat.STATE_ERROR) }
         }
 
-        // Position change callback - met à jour l'état du playback périodiquement
+        // Position : publiée au plus deux fois par seconde, sans toucher à l'état de lecture
         synthesizerManager.setOnPositionChangedListener { positionMs, durationMs ->
-            // Mettre à jour l'état pour que les clients reçoivent la position
-            // positionUpdateOnly=true évite le spam de notifications widget
-            if (currentPlaybackState == PlaybackStateCompat.STATE_PLAYING) {
-                updatePlaybackState(
-                    currentPlaybackState,
-                    positionMs,
-                    durationMs,
-                    positionUpdateOnly = true
-                )
+            val now = SystemClock.elapsedRealtime()
+            if (now - lastPositionPublishMs >= POSITION_PUBLISH_INTERVAL_MS) {
+                lastPositionPublishMs = now
+                publishPosition(positionMs, durationMs)
             }
         }
 
@@ -544,6 +623,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      * @param forceRefreshDuration Si true, récupère la durée depuis le synthétiseur
      */
     private fun updateMediaMetadata(track: MidiTrack?, forceRefreshDuration: Boolean = false) {
+        if (destroyed) return
+
         if (track == null) {
             mediaSession.setMetadata(null)
             return
@@ -557,12 +638,16 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             track.duration
         }
 
+        // Titre ou artiste vide = inconnu : texte traduit
+        val title = track.title.ifBlank { getString(R.string.midi_engine_unknown_title) }
+        val artist = track.artist.ifBlank { getString(R.string.midi_engine_unknown_artist) }
+
         val metadata = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.id.toString())
-            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
-            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, track.title)
-            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
-            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, track.artist)
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, artist)
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, track.filePath)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, actualDuration)
@@ -572,18 +657,69 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     }
 
     // === Playback Actions ===
+    // handleXxx() : point d'entrée depuis n'importe quel fil, met l'opération en file.
+    // doXxx() : l'opération elle-même, sur le fil des moteurs.
 
-    private fun handlePlay() {
-        // Demander l'audio focus avant de démarrer/reprendre
-        AudioFocusManager.requestFocus(audioFocusListener)
+    private fun handlePlay() = onEngine { doPlay() }
+
+    private fun handlePause() = onEngine { doPause() }
+
+    private fun handlePlayPause() = onEngine {
+        // Décidé sur le fil des moteurs : l'état tient compte des opérations déjà en file
+        when (currentPlaybackState) {
+            PlaybackStateCompat.STATE_PLAYING -> doPause()
+            else -> doPlay()
+        }
+    }
+
+    private fun handleStop() = onEngine { doStop() }
+
+    private fun handleSkipNext() = onEngine { doSkipNext() }
+
+    private fun handleSkipPrevious() = onEngine { doSkipPrevious() }
+
+    private fun handleSeekTo(positionMs: Long) = onEngine { doSeekTo(positionMs) }
+
+    private fun handleToggleShuffle() = onEngine {
+        queueManager.toggleShuffle()
+        updatePlaybackState(currentPlaybackState)
+    }
+
+    private fun handleCycleRepeat() = onEngine {
+        queueManager.cycleRepeatMode()
+        updatePlaybackState(currentPlaybackState)
+    }
+
+    private fun handleSyncVisualizer() = onEngine {
+        synthesizerManager.syncVisualizerToCurrentPosition()
+    }
+
+    private fun handleReloadSoundFont(
+        soundFontPath: String,
+        isHybridMode: Boolean = false,
+        isFluidSynthMode: Boolean = false,
+        hybridPrograms: Set<Int> = emptySet(),
+        useSf2ForDrums: Boolean = false
+    ) = onEngine {
+        doReloadSoundFont(soundFontPath, isHybridMode, isFluidSynthMode, hybridPrograms, useSf2ForDrums)
+    }
+
+    private fun handleRefreshAfterPractice() = onEngine { doRefreshAfterPractice() }
+
+    private suspend fun doPlay() {
+        // Demander l'audio focus avant de démarrer/reprendre. AudioFocusManager est partagé
+        // avec les autres lecteurs de l'appli, qui l'utilisent depuis le fil principal.
+        withContext(Dispatchers.Main) {
+            AudioFocusManager.requestFocus(audioFocusListener)
+        }
 
         // Re-initialize synthesizer if it was released (e.g. after handleStop)
         if (synthesizerManager.needsReinitialization()) {
-            serviceScope.launch {
-                initializeSynthesizer()
-                handlePlay()  // Retry after re-initialization
+            initializeSynthesizer()
+            if (synthesizerManager.needsReinitialization()) {
+                updatePlaybackState(PlaybackStateCompat.STATE_ERROR)
+                return
             }
-            return
         }
 
         // Si on était en pause, reprendre — seulement si le moteur est réellement en pause.
@@ -600,7 +736,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 StatsTracker.resumeMidiSession()
                 updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
                 acquireWakeLock()
-                updateNotification()
+                // Après une longue pause, le service n'est plus au premier plan
+                startForegroundWithNotification()
             } catch (_: Exception) {
                 updatePlaybackState(PlaybackStateCompat.STATE_ERROR)
             }
@@ -662,29 +799,20 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         }
     }
 
-    private fun handlePause() {
+    private fun doPause() {
         try {
             synthesizerManager.pause()
             StatsTracker.pauseMidiSession()
             updatePlaybackState(PlaybackStateCompat.STATE_PAUSED)
             releaseWakeLock()
             updateNotification()
+            // Pause qui dure : le service quittera le premier plan
+            mainHandler.removeCallbacks(detachForegroundRunnable)
+            mainHandler.postDelayed(detachForegroundRunnable, FOREGROUND_DETACH_DELAY_MS)
         } catch (_: Exception) { }
     }
 
-    private fun handlePlayPause() {
-        when (currentPlaybackState) {
-            PlaybackStateCompat.STATE_PLAYING -> handlePause()
-            PlaybackStateCompat.STATE_PAUSED -> handlePlay()
-            PlaybackStateCompat.STATE_STOPPED, PlaybackStateCompat.STATE_NONE -> handlePlay()
-            else -> {
-                // En cas d'erreur ou autre état, essayer de jouer
-                handlePlay()
-            }
-        }
-    }
-
-    private fun handleStop() {
+    private suspend fun doStop() {
         try {
             synthesizerManager.stop()
             // Release all engines (including FluidSynth Oboe driver) since the service
@@ -697,24 +825,31 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             // Terminer le tracking de la session MIDI
             StatsTracker.endMidiSession()
 
-            // Abandonner l'audio focus et désenregistrer le listener
-            // Note: AudioFocusManager.abandonFocus() met currentListener à null,
-            // ce qui empêche les callbacks d'être appelés après l'arrêt
-            AudioFocusManager.abandonFocus()
+            // Rendre l'audio focus s'il est encore à nous : une autre source (radio, musique)
+            // a pu le prendre entre-temps, il ne faut pas le lui retirer
+            withContext(Dispatchers.Main) {
+                AudioFocusManager.abandonFocus(audioFocusListener)
+                // Reset local audio focus state
+                wasPlayingBeforeAudioFocusLoss = false
+            }
 
-            // Reset local audio focus state
-            wasPlayingBeforeAudioFocusLoss = false
-
+            mainHandler.removeCallbacks(detachForegroundRunnable)
             if (isForegroundService) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 isForegroundService = false
+            } else if (notificationDetached) {
+                val notifManager = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
+                notifManager.cancel(MidiNotificationManager.NOTIFICATION_ID)
             }
+            notificationDetached = false
 
             stopSelf()
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) { }
     }
 
-    private fun handleSkipNext() {
+    private suspend fun doSkipNext() {
         val nextTrack = queueManager.skipToNext()
 
         if (nextTrack != null) {
@@ -722,15 +857,15 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             // Cela garde les streams audio Oboe actifs pour éviter les race conditions
             // et crashes SIGBUS lors de la transition entre pistes en background
             synthesizerManager.stopForTrackTransition()
-            // Réinitialiser l'état pour que handlePlay() charge le nouveau fichier
+            // Réinitialiser l'état pour que doPlay() charge le nouveau fichier
             currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
-            handlePlay()
+            doPlay()
         } else {
-            handleStop()
+            doStop()
         }
     }
 
-    private fun handleSkipPrevious() {
+    private suspend fun doSkipPrevious() {
         // Seuil 3 secondes: si on a joué moins de 3s, passer au précédent
         // sinon, redémarrer le morceau actuel
         val elapsedMs = System.currentTimeMillis() - playbackStartTimeMs
@@ -738,98 +873,81 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         // IMPORTANT: Utiliser stopForTrackTransition() au lieu de stop()
         // Cela garde les streams audio Oboe actifs pour éviter les race conditions
         synthesizerManager.stopForTrackTransition()
-        // Réinitialiser l'état pour que handlePlay() charge le fichier
+        // Réinitialiser l'état pour que doPlay() charge le fichier
         currentPlaybackState = PlaybackStateCompat.STATE_STOPPED
 
-        if (elapsedMs >= PREVIOUS_THRESHOLD_MS) {
-            // Redémarrer le morceau actuel
-            handlePlay()
-        } else {
-            // Passer au morceau précédent
+        if (elapsedMs < PREVIOUS_THRESHOLD_MS) {
+            // Passer au morceau précédent (sinon : redémarrer le morceau actuel)
             queueManager.skipToPrevious()
-            handlePlay()
         }
+        doPlay()
     }
 
-    private fun handleToggleShuffle() {
-        queueManager.toggleShuffle()
-        updatePlaybackState(currentPlaybackState)
-    }
-
-    private fun handleCycleRepeat() {
-        queueManager.cycleRepeatMode()
-        updatePlaybackState(currentPlaybackState)
-    }
-
-    private fun handleSyncVisualizer() {
-        synthesizerManager.syncVisualizerToCurrentPosition()
-    }
-
-    private fun handleReloadSoundFont(
+    private suspend fun doReloadSoundFont(
         soundFontPath: String,
-        isHybridMode: Boolean = false,
-        isFluidSynthMode: Boolean = false,
-        hybridPrograms: Set<Int> = emptySet(),
-        useSf2ForDrums: Boolean = false
+        isHybridMode: Boolean,
+        isFluidSynthMode: Boolean,
+        hybridPrograms: Set<Int>,
+        useSf2ForDrums: Boolean
     ) {
-        android.util.Log.i("MidiPlaybackService", "handleReloadSoundFont: path=$soundFontPath, isFluidSynth=$isFluidSynthMode, isHybrid=$isHybridMode")
+        android.util.Log.i(TAG, "handleReloadSoundFont: path=$soundFontPath, isFluidSynth=$isFluidSynthMode, isHybrid=$isHybridMode")
 
-        serviceScope.launch {
-            // Mémoriser l'état de lecture : le nouveau moteur repartira sans fichier MIDI chargé
-            val wasPlaying = currentPlaybackState == PlaybackStateCompat.STATE_PLAYING
-            val wasPaused = currentPlaybackState == PlaybackStateCompat.STATE_PAUSED
-            val currentTrack = queueManager.getCurrentTrack()
-            val resumePositionMs = if (wasPlaying || wasPaused) synthesizerManager.getCurrentPosition() else 0L
+        // Mémoriser l'état de lecture : le nouveau moteur repartira sans fichier MIDI chargé
+        val wasPlaying = currentPlaybackState == PlaybackStateCompat.STATE_PLAYING
+        val wasPaused = currentPlaybackState == PlaybackStateCompat.STATE_PAUSED
+        val currentTrack = queueManager.getCurrentTrack()
+        val resumePositionMs = if (wasPlaying || wasPaused) synthesizerManager.getCurrentPosition() else 0L
 
-            // Stop current playback
-            synthesizerManager.stop()
+        // Stop current playback
+        synthesizerManager.stop()
 
-            // Configure operating mode
-            val selectedMode: MidiSynthesizerManager.OperatingMode
-            if (isFluidSynthMode && soundFontPath.isNotBlank()) {
-                selectedMode = MidiSynthesizerManager.OperatingMode.FLUIDSYNTH_ONLY
-                synthesizerManager.setOperatingMode(selectedMode)
-            } else if (isHybridMode && soundFontPath.isNotBlank() && hybridPrograms.isNotEmpty()) {
-                selectedMode = MidiSynthesizerManager.OperatingMode.HYBRID
-                synthesizerManager.setOperatingMode(selectedMode, hybridPrograms, useSf2ForDrums)
-            } else if (soundFontPath.isNotBlank()) {
-                selectedMode = MidiSynthesizerManager.OperatingMode.SF2_ONLY
-                synthesizerManager.setOperatingMode(selectedMode)
-            } else {
-                selectedMode = MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY
-                synthesizerManager.setOperatingMode(selectedMode)
-            }
-            android.util.Log.i("MidiPlaybackService", "handleReloadSoundFont: selectedMode=$selectedMode")
-
-            // Reload with new configuration
-            val success = reloadSoundFont(soundFontPath)
-            android.util.Log.i("MidiPlaybackService", "handleReloadSoundFont: reload success=$success")
-
-            // L'ancien état (lecture / pause) ne vaut plus pour le nouveau moteur : sans ce
-            // retour à STOPPED, le bouton Lecture envoyait « pause » puis « reprendre » à un
-            // moteur sans fichier chargé, et rien ne se passait.
-            if (wasPlaying || wasPaused) {
-                pendingResumeFilePath = currentTrack?.filePath
-                pendingResumePositionMs = resumePositionMs
-                updatePlaybackState(PlaybackStateCompat.STATE_STOPPED, positionMs = resumePositionMs)
-                if (wasPlaying) {
-                    // La lecture continue avec le nouveau son, au même endroit
-                    handlePlay()
-                } else {
-                    releaseWakeLock()
-                }
-            }
-
-            // Broadcast that SF2 loading is complete
-            val broadcastIntent = Intent(ACTION_SF2_LOAD_COMPLETE).apply {
-                setPackage(packageName)
-                putExtra(EXTRA_SF2_LOAD_SUCCESS, success)
-            }
-            sendBroadcast(broadcastIntent)
+        // Configure operating mode
+        val selectedMode: MidiSynthesizerManager.OperatingMode
+        if (isFluidSynthMode && soundFontPath.isNotBlank()) {
+            selectedMode = MidiSynthesizerManager.OperatingMode.FLUIDSYNTH_ONLY
+            synthesizerManager.setOperatingMode(selectedMode)
+        } else if (isHybridMode && soundFontPath.isNotBlank() && hybridPrograms.isNotEmpty()) {
+            selectedMode = MidiSynthesizerManager.OperatingMode.HYBRID
+            synthesizerManager.setOperatingMode(
+                selectedMode, hybridPrograms, useSf2ForDrums, isHybridOnFluidSynth()
+            )
+        } else if (soundFontPath.isNotBlank()) {
+            selectedMode = MidiSynthesizerManager.OperatingMode.SF2_ONLY
+            synthesizerManager.setOperatingMode(selectedMode)
+        } else {
+            selectedMode = MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY
+            synthesizerManager.setOperatingMode(selectedMode)
         }
+        android.util.Log.i(TAG, "handleReloadSoundFont: selectedMode=$selectedMode")
+
+        // Reload with new configuration
+        val success = reloadSoundFont(soundFontPath)
+        android.util.Log.i(TAG, "handleReloadSoundFont: reload success=$success")
+
+        // L'ancien état (lecture / pause) ne vaut plus pour le nouveau moteur : sans ce
+        // retour à STOPPED, le bouton Lecture envoyait « pause » puis « reprendre » à un
+        // moteur sans fichier chargé, et rien ne se passait.
+        if (wasPlaying || wasPaused) {
+            pendingResumeFilePath = currentTrack?.filePath
+            pendingResumePositionMs = resumePositionMs
+            updatePlaybackState(PlaybackStateCompat.STATE_STOPPED, positionMs = resumePositionMs)
+            if (wasPlaying) {
+                // La lecture continue avec le nouveau son, au même endroit
+                doPlay()
+            } else {
+                releaseWakeLock()
+            }
+        }
+
+        // Broadcast that SF2 loading is complete
+        val broadcastIntent = Intent(ACTION_SF2_LOAD_COMPLETE).apply {
+            setPackage(packageName)
+            putExtra(EXTRA_SF2_LOAD_SUCCESS, success)
+        }
+        sendBroadcast(broadcastIntent)
     }
 
-    private fun handleSeekTo(positionMs: Long) {
+    private fun doSeekTo(positionMs: Long) {
         try {
             synthesizerManager.seekTo(positionMs)
             // Mettre à jour le temps de départ pour le seuil Previous
@@ -838,106 +956,106 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         } catch (_: Exception) { }
     }
 
-    private fun handleRefreshAfterPractice() {
-        serviceScope.launch {
-            try {
-                synthesizerManager.stop()
+    private suspend fun doRefreshAfterPractice() {
+        try {
+            synthesizerManager.stop()
 
-                val settingsRepository = SettingsRepository(applicationContext)
-                val soundFontPath = getSoundFontPath().orEmpty()
-                val synthMode = settingsRepository.getSynthMode()
-                val sf2Programs = settingsRepository.getHybridSf2Programs()
-                val useSf2ForDrums = settingsRepository.isHybridUseSf2ForDrums()
+            val settingsRepository = SettingsRepository(applicationContext)
+            val soundFontPath = getSoundFontPath().orEmpty()
+            val synthMode = settingsRepository.getSynthMode()
+            val sf2Programs = settingsRepository.getHybridSf2Programs()
+            val useSf2ForDrums = settingsRepository.isHybridUseSf2ForDrums()
 
-                when (synthMode) {
-                    SettingsRepository.SYNTH_MODE_HYBRID -> {
-                        if (soundFontPath.isNotBlank() && sf2Programs.isNotEmpty()) {
-                            synthesizerManager.setOperatingMode(
-                                MidiSynthesizerManager.OperatingMode.HYBRID,
-                                sf2Programs,
-                                useSf2ForDrums
-                            )
-                        } else {
-                            synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
-                        }
-                    }
-                    SettingsRepository.SYNTH_MODE_SF2 -> {
-                        if (soundFontPath.isNotBlank()) {
-                            synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SF2_ONLY)
-                        } else {
-                            synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
-                        }
-                    }
-                    SettingsRepository.SYNTH_MODE_FLUIDSYNTH -> {
-                        if (soundFontPath.isNotBlank()) {
-                            synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.FLUIDSYNTH_ONLY)
-                        } else {
-                            synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
-                        }
-                    }
-                    else -> {
+            when (synthMode) {
+                SettingsRepository.SYNTH_MODE_HYBRID -> {
+                    if (soundFontPath.isNotBlank() && sf2Programs.isNotEmpty()) {
+                        synthesizerManager.setOperatingMode(
+                            MidiSynthesizerManager.OperatingMode.HYBRID,
+                            sf2Programs,
+                            useSf2ForDrums,
+                            isHybridOnFluidSynth()
+                        )
+                    } else {
                         synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
                     }
                 }
-
-                synthesizerManager.reloadSoundFont(soundFontPath)
-                loadSf2Settings()
-
-                queueManager.getCurrentTrack()?.let { track ->
-                    synthesizerManager.loadMidiFile(track.filePath)
-                    updateMediaMetadata(track, forceRefreshDuration = true)
+                SettingsRepository.SYNTH_MODE_SF2 -> {
+                    if (soundFontPath.isNotBlank()) {
+                        synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SF2_ONLY)
+                    } else {
+                        synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
+                    }
                 }
-
-                updatePlaybackState(PlaybackStateCompat.STATE_STOPPED)
-            } catch (_: Exception) {
-                updatePlaybackState(PlaybackStateCompat.STATE_STOPPED)
+                SettingsRepository.SYNTH_MODE_FLUIDSYNTH -> {
+                    if (soundFontPath.isNotBlank()) {
+                        synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.FLUIDSYNTH_ONLY)
+                    } else {
+                        synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
+                    }
+                }
+                else -> {
+                    synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
+                }
             }
+
+            synthesizerManager.reloadSoundFont(soundFontPath)
+            loadSf2Settings()
+
+            queueManager.getCurrentTrack()?.let { track ->
+                synthesizerManager.loadMidiFile(track.filePath)
+                updateMediaMetadata(track, forceRefreshDuration = true)
+            }
+
+            updatePlaybackState(PlaybackStateCompat.STATE_STOPPED)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            updatePlaybackState(PlaybackStateCompat.STATE_STOPPED)
         }
     }
 
     // === State Management ===
 
-    private fun updatePlaybackState(
-        state: Int,
-        positionMs: Long? = null,
-        durationMs: Long? = null,
-        positionUpdateOnly: Boolean = false
-    ) {
-        val stateChanged = currentPlaybackState != state
-        currentPlaybackState = state
-
-        val currentPosition = positionMs ?: synthesizerManager.getCurrentPosition()
-        val duration = durationMs?.takeIf { it > 0 } ?: synthesizerManager.getDuration()
-
+    private fun buildPlaybackState(state: Int, positionMs: Long, durationMs: Long): PlaybackStateCompat {
         // Inclure l'état shuffle/repeat et position/durée dans les extras
         val extras = Bundle().apply {
             putBoolean(EXTRA_SHUFFLE_ENABLED, queueManager.isShuffleEnabled())
             putInt(EXTRA_REPEAT_MODE, queueManager.getRepeatMode().ordinal)
-            putLong(EXTRA_POSITION_MS, currentPosition)
-            putLong(EXTRA_DURATION_MS, duration)
+            putLong(EXTRA_POSITION_MS, positionMs)
+            putLong(EXTRA_DURATION_MS, durationMs)
         }
 
-        val playbackState = PlaybackStateCompat.Builder()
-            .setState(state, currentPosition, 1.0f)
+        return PlaybackStateCompat.Builder()
+            .setState(state, positionMs, 1.0f)
             .setActions(getAvailableActions())
             .setExtras(extras)
             .build()
+    }
 
-        mediaSession.setPlaybackState(playbackState)
+    private fun updatePlaybackState(
+        state: Int,
+        positionMs: Long? = null,
+        durationMs: Long? = null
+    ) {
+        if (destroyed) return
 
-        // Mettre à jour l'état partagé pour le widget
+        val currentPosition = positionMs ?: synthesizerManager.getCurrentPosition()
+        val duration = durationMs?.takeIf { it > 0 } ?: synthesizerManager.getDuration()
+
+        val stateChanged = synchronized(publishLock) {
+            val changed = currentPlaybackState != state
+            currentPlaybackState = state
+            mediaSession.setPlaybackState(buildPlaybackState(state, currentPosition, duration))
+            lastPositionPublishMs = SystemClock.elapsedRealtime()
+            changed
+        }
+
+        // Mettre à jour l'état partagé pour le widget (notifié seulement s'il change vraiment)
         val isPlaying = state == PlaybackStateCompat.STATE_PLAYING
         val track = queueManager.getCurrentTrack()
         val hasNext = queueManager.hasNext()
         val hasPrevious = queueManager.hasPrevious()
-
-        // Pour les mises à jour de position, utiliser la version silencieuse
-        // Le widget sera notifié uniquement lors de vrais changements d'état
-        if (positionUpdateOnly && !stateChanged) {
-            MidiPlaybackState.updateStateQuiet(track, isPlaying, hasNext, hasPrevious)
-        } else {
-            MidiPlaybackState.updateState(this, track, isPlaying, hasNext, hasPrevious)
-        }
+        MidiPlaybackState.updateState(this, track, isPlaying, hasNext, hasPrevious)
 
         // Enregistrer/désenregistrer auprès de AudioPlaybackManager (seulement si état change)
         if (stateChanged) {
@@ -949,6 +1067,21 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             } else if (state == PlaybackStateCompat.STATE_STOPPED) {
                 MidiPlaybackState.onPlaybackStopped(this)
             }
+        }
+    }
+
+    /**
+     * Publie la position pendant la lecture, sans changer l'état (appelé depuis les fils des moteurs).
+     */
+    private fun publishPosition(positionMs: Long, durationMs: Long) {
+        if (destroyed) return
+        val duration = durationMs.takeIf { it > 0 } ?: synthesizerManager.getDuration()
+        synchronized(publishLock) {
+            // Une pause ou un arrêt publié entre-temps l'emporte
+            if (currentPlaybackState != PlaybackStateCompat.STATE_PLAYING) return
+            mediaSession.setPlaybackState(
+                buildPlaybackState(PlaybackStateCompat.STATE_PLAYING, positionMs, duration)
+            )
         }
     }
 
@@ -964,6 +1097,9 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     // === Notification Management ===
 
     private fun startForegroundWithNotification() {
+        mainHandler.removeCallbacks(detachForegroundRunnable)
+        if (destroyed) return
+
         if (!isForegroundService) {
             val notification = notificationManager.buildNotification(
                 queueManager.getCurrentTrack(),
@@ -971,15 +1107,24 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 mediaSession.sessionToken
             )
 
-            startForeground(MidiNotificationManager.NOTIFICATION_ID, notification)
-            isForegroundService = true
+            try {
+                startForeground(MidiNotificationManager.NOTIFICATION_ID, notification)
+                isForegroundService = true
+                notificationDetached = false
+            } catch (e: Exception) {
+                // Android 12+ peut refuser le premier plan depuis l'arrière-plan (reprise après
+                // une longue pause) : la lecture continue, la notification est mise à jour
+                android.util.Log.w(TAG, "startForeground refused", e)
+                updateNotification()
+            }
         } else {
             updateNotification()
         }
     }
 
     private fun updateNotification() {
-        if (isForegroundService) {
+        if (destroyed) return
+        if (isForegroundService || notificationDetached) {
             val notification = notificationManager.buildNotification(
                 queueManager.getCurrentTrack(),
                 currentPlaybackState,
@@ -998,8 +1143,10 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      */
     @Suppress("unused")
     fun playTracks(tracks: List<MidiTrack>, startIndex: Int = 0) {
-        queueManager.setQueue(tracks, startIndex)
-        handlePlay()
+        onEngine {
+            queueManager.setQueue(tracks, startIndex)
+            doPlay()
+        }
     }
 
     /**
@@ -1007,7 +1154,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      */
     @Suppress("unused")
     fun addToQueue(track: MidiTrack) {
-        queueManager.addToQueue(track)
+        onEngine { queueManager.addToQueue(track) }
     }
 
     /**
@@ -1019,17 +1166,16 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     }
 
     /**
-     * Initialise le synthétiseur MIDI avec un SoundFont optionnel
-     * (Sf2Engine si SF2 fourni, sinon Sonivox)
+     * Le moteur à SoundFont du mode hybride est-il FluidSynth ? (réglage du dialogue des synthétiseurs)
      */
-    @Suppress("unused")
-    fun initializeSf2Engine(soundFontPath: String): Boolean {
-        return synthesizerManager.initialize(soundFontPath)
+    private suspend fun isHybridOnFluidSynth(): Boolean {
+        return SettingsRepository(applicationContext).getHybridBaseEngine() ==
+            SettingsRepository.SYNTH_MODE_FLUIDSYNTH
     }
 
     /**
      * Initializes the synthesizer based on current settings.
-     * Supports Sonivox, SF2, and Hybrid modes.
+     * Supports Sonivox, SF2, FluidSynth and Hybrid modes.
      */
     private suspend fun initializeSynthesizer() {
         val settingsRepository = SettingsRepository(applicationContext)
@@ -1050,7 +1196,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                     synthesizerManager.setOperatingMode(
                         MidiSynthesizerManager.OperatingMode.HYBRID,
                         sf2Programs,
-                        useSf2ForDrums
+                        useSf2ForDrums,
+                        isHybridOnFluidSynth()
                     )
                     initSuccess = synthesizerManager.initialize(soundFontPath)
                 } else {
@@ -1092,9 +1239,10 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     /**
      * Loads saved SF2 engine settings (velocity curve, reverb, etc.)
      * Applied globally to Sf2Voice and synthesizer for all future notes.
+     * Lecture des réglages sur IO, application au moteur sur le fil des moteurs.
      */
     private suspend fun loadSf2Settings() {
-        withContext(Dispatchers.IO) {
+        val reverbPreset = withContext(Dispatchers.IO) {
             try {
                 val settingsRepository = SettingsRepository(applicationContext)
 
@@ -1110,10 +1258,14 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 Sf2Voice.velocityCurve = curve
 
                 // Load reverb preset
-                val reverbPreset = settingsRepository.getReverbPreset()
-                synthesizerManager.setReverb(reverbPreset)
-            } catch (_: Exception) { }
+                settingsRepository.getReverbPreset()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                null
+            }
         }
+        reverbPreset?.let { synthesizerManager.setReverb(it) }
     }
 
     /**
@@ -1127,12 +1279,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     }
 
     /**
-     * Recharge le SoundFont (appelé depuis l'Activity après un changement de SF2)
+     * Recharge le SoundFont (sur le fil des moteurs)
      *
      * @param soundFontPath Chemin vers le nouveau fichier SF2, ou chaîne vide pour Sonivox
      * @return true si le rechargement a réussi, false sinon
      */
-    fun reloadSoundFont(soundFontPath: String): Boolean {
+    private fun reloadSoundFont(soundFontPath: String): Boolean {
         return synthesizerManager.reloadSoundFont(soundFontPath)
     }
 
@@ -1141,7 +1293,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      * @param preset -1 = Off, 0 = Large Hall, 1 = Hall, 2 = Chamber, 3 = Room
      */
     fun setReverb(preset: Int) {
-        synthesizerManager.setReverb(preset)
+        onEngine { synthesizerManager.setReverb(preset) }
     }
 
     /**
@@ -1150,7 +1302,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      */
     @Suppress("unused")
     fun setChorus(preset: Int) {
-        synthesizerManager.setChorus(preset)
+        onEngine { synthesizerManager.setChorus(preset) }
     }
 
     // === Wake Lock Management ===
@@ -1162,13 +1314,10 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
      */
     private fun acquireWakeLock() {
         try {
-            wakeLock?.let { lock ->
-                if (!lock.isHeld) {
-                    // Timeout de 30 minutes pour éviter les fuites de batterie
-                    // Le wake lock est renouvelé automatiquement tant que la lecture continue
-                    lock.acquire(30 * 60 * 1000L)
-                }
-            }
+            // Timeout de 30 minutes pour éviter les fuites de batterie. Appelé à chaque
+            // morceau et à chaque reprise : le délai repart de zéro (verrou non compté),
+            // une longue file d'attente n'est donc pas coupée au bout de 30 minutes.
+            wakeLock?.acquire(30 * 60 * 1000L)
         } catch (_: Exception) {
             // Ignorer les erreurs de wake lock
         }

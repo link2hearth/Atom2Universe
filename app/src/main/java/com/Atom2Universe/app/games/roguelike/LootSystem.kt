@@ -74,20 +74,6 @@ enum class Rarity(
     COMMON(R.string.roguelike_rarity_common, 0xFFBDBDBD.toInt(), 0, 0, 1f),
     RARE  (R.string.roguelike_rarity_rare,   0xFF6E9BFF.toInt(), 1, 2, 2f),
     EPIC  (R.string.roguelike_rarity_epic,   0xFFB388FF.toInt(), 3, 3, 4f);
-
-    companion object {
-        /**
-         * Les noms des sauvegardes d'avant le 25/09/2026 : Normal, Magique, Rare. Le « RARE »
-         * d'alors (3 affixes) est l'Épique d'aujourd'hui, d'où la clé à part ([SaveManager]).
-         */
-        fun fromLegacy(name: String): Rarity = when (name) {
-            "NORMAL" -> COMMON
-            "MAGIC" -> RARE
-            "RARE" -> EPIC
-            else -> valueOf(name)
-        }
-        fun legacyName(r: Rarity) = when (r) { COMMON -> "NORMAL"; RARE -> "MAGIC"; EPIC -> "RARE" }
-    }
 }
 
 // ─── Emplacements ──────────────────────────────────────────────────────────────
@@ -250,26 +236,6 @@ data class Equipment(
     val slot get() = base.slot
     /** Ce que la pièce change à la vitesse par son poids (les affixes de vitesse sont à part). */
     val weightSpeed get() = weight?.speedPerPiece ?: 0f
-    /** Upgrade old armor without rerolling its values or secondary affixes. */
-    fun withClassPrimaryAttribute(): Equipment {
-        val primary = weight?.primaryAttribute ?: return this
-        if (base !in ArmorWeight.WEIGHTED) return this
-        val index = implicits.indexOfFirst { it.type in StatType.ATTRIBUTES }
-        if (index < 0 || implicits[index].type == primary) return this
-        return copy(implicits = implicits.mapIndexed { i, stat ->
-            if (i == index) stat.copy(type = primary) else stat
-        })
-    }
-
-    /**
-     * Les objets sauvegardés avant le 24/09/2026 : le bâton, le sceptre et l'orbe perdent leurs dégâts des
-     * sorts d'office, le bouclier son armure et ses PV d'office. Les affixes ne bougent pas.
-     */
-    fun withoutRemovedImplicits(): Equipment = when {
-        base == ItemBase.SHIELD -> copy(armor = 0, implicits = implicits.filter { it.type != StatType.MAX_HP })
-        base in setOf(ItemBase.STAFF, ItemBase.SCEPTER, ItemBase.ORB) -> copy(implicits = implicits.filter { it.type != StatType.SPELL_DMG })
-        else -> this
-    }
 
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()

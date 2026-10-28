@@ -69,9 +69,81 @@ class InventoryPanel(
     private val selectionBar = column()
     private val selectionCount = text("", 14f, ink, true)
     private val sellSelection = button("") { confirmSellSelection() }
+    /** Character page portrait art, kept across page rebuilds. */
+    private val characterArt by lazy { DungeonCombatArt() }
     val isOpen get() = root.visibility == View.VISIBLE
 
-    private class Holder(v: View) : RecyclerView.ViewHolder(v)
+    private open class Holder(v: View) : RecyclerView.ViewHolder(v)
+
+    /** A bag row built once: recycling only rebinds its values. */
+    private inner class ItemHolder(val box: LinearLayout) : Holder(box) {
+        var item: Equipment? = null
+        val tile = column()
+        val card = row().apply {
+            setPadding(dp(10), dp(10), dp(10), dp(10))
+            minimumHeight = dp(84)
+        }
+        val check = CheckBox(ctx).apply {
+            isClickable = false
+            isFocusable = false
+            buttonTintList = android.content.res.ColorStateList.valueOf(accent)
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        val icon = ImageView(ctx).apply {
+            scaleType = ImageView.ScaleType.FIT_XY
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        val name = text("", 15f, ink, true)
+        val tags = text("", 12f, muted)
+        val rating = text("", 12f, muted)
+        /** The detailed comparison, only under the expanded item. */
+        var detail: View? = null
+
+        init {
+            card.addView(check, LinearLayout.LayoutParams(dp(36), dp(48)))
+            card.addView(icon, LinearLayout.LayoutParams(dp(48), dp(56)))
+            val words = column()
+            words.addView(name)
+            words.addView(tags)
+            words.addView(rating)
+            card.addView(words, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
+            card.setOnClickListener {
+                val shown = item ?: return@setOnClickListener
+                if (selectedEquipment.isNotEmpty()) toggleEquipmentSelection(shown) else toggleDetail(shown, box.top)
+            }
+            card.setOnLongClickListener {
+                val shown = item ?: return@setOnLongClickListener false
+                if (game?.isExploring == true) { toggleEquipmentSelection(shown); true } else false
+            }
+            tile.addView(card)
+            box.addView(tile, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        }
+
+        fun bind(item: Equipment) {
+            this.item = item
+            val selected = item in selectedEquipment
+            val expanded = expandedItem == item && selectedEquipment.isEmpty()
+            tile.background = frame(if (selected || expanded) accent else item.inventoryColor)
+            tile.isSelected = selected || expanded
+            if (selected) card.setBackgroundColor(palette.raised) else card.background = null
+            card.isSelected = selected
+            check.visibility = if (selectedEquipment.isNotEmpty()) View.VISIBLE else View.GONE
+            check.isChecked = selected
+            check.jumpDrawablesToCurrentState()   // no check animation, like a fresh box
+            icon.setImageDrawable(PixelArtIcon(EquipmentArt.icon(item)))
+            name.text = LootSystem.displayName(ctx, item)
+            name.setTextColor(readable(item.inventoryColor))
+            tags.text = subtitle(item)
+            val worn = game?.hero?.equipped?.get(item.slot)
+            val score = LootSystem.rating(item, game?.hero?.archetype)
+            val delta = score - (worn?.let { LootSystem.rating(it, game?.hero?.archetype) } ?: 0)
+            rating.text = ctx.getString(R.string.inv_rating, number.format(score))
+            rating.setTextColor(readable(if (delta > 0) green else if (delta < 0) red else muted))
+            detail?.let { tile.removeView(it) }
+            detail = if (expanded) comparisonDetail(item).also { tile.addView(it) } else null
+        }
+    }
+
     private val adapter = object : RecyclerView.Adapter<Holder>() {
         override fun getItemCount() = 1 + when (page) {
             Page.CHARACTER -> 0
@@ -79,57 +151,21 @@ class InventoryPanel(
             Page.RELICS -> availableRelics.size
         }
         override fun getItemViewType(position: Int) = if (position == 0) 0 else if (page == Page.RELICS) 2 else 1
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder =
-            Holder(if (viewType == 0) header else column().apply {
-                layoutParams = RecyclerView.LayoutParams(-1, -2)
-            })
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder = when (viewType) {
+            0 -> Holder(header)
+            1 -> ItemHolder(column().apply { layoutParams = RecyclerView.LayoutParams(-1, -2) })
+            else -> Holder(column().apply { layoutParams = RecyclerView.LayoutParams(-1, -2) })
+        }
         override fun onBindViewHolder(holder: Holder, position: Int) {
             if (position == 0) return
-            val box = holder.itemView as LinearLayout
-            box.removeAllViews()
-            if (page == Page.RELICS) {
-                game?.hero?.let { box.addView(relicCard(it, availableRelics[position - 1])) }
+            if (holder is ItemHolder) {
+                holder.bind(items[position - 1])
                 return
             }
-            val item = items[position - 1]
-            val selected = item in selectedEquipment
-            val expanded = expandedItem == item && selectedEquipment.isEmpty()
-            val tile = column().apply {
-                background = frame(if (selected || expanded) accent else item.inventoryColor)
-                isSelected = selected || expanded
-            }
-            val card = row().apply {
-                if (selected) setBackgroundColor(palette.raised)
-                isSelected = selected
-                setPadding(dp(10), dp(10), dp(10), dp(10))
-                minimumHeight = dp(84)
-            }
-            if (selectedEquipment.isNotEmpty()) card.addView(CheckBox(ctx).apply {
-                isChecked = selected
-                isClickable = false
-                isFocusable = false
-                buttonTintList = android.content.res.ColorStateList.valueOf(accent)
-                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-            }, LinearLayout.LayoutParams(dp(36), dp(48)))
-            card.addView(icon(item), LinearLayout.LayoutParams(dp(48), dp(56)))
-            val words = column()
-            words.addView(text(LootSystem.displayName(ctx, item), 15f, item.inventoryColor, true))
-            words.addView(text(subtitle(item), 12f, muted))
-            val worn = game?.hero?.equipped?.get(item.slot)
-            val rating = LootSystem.rating(item, game?.hero?.archetype)
-            val delta = rating - (worn?.let { LootSystem.rating(it, game?.hero?.archetype) } ?: 0)
-            words.addView(text(ctx.getString(R.string.inv_rating, number.format(rating)), 12f,
-                if (delta > 0) green else if (delta < 0) red else muted))
-            card.addView(words, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
-            card.setOnClickListener {
-                if (selectedEquipment.isNotEmpty()) toggleEquipmentSelection(item) else toggleDetail(item, box.top)
-            }
-            card.setOnLongClickListener {
-                if (game?.isExploring == true) { toggleEquipmentSelection(item); true } else false
-            }
-            tile.addView(card)
-            if (expanded) tile.addView(comparisonDetail(item))
-            box.addView(tile, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+            // Relic cards are few: they are still rebuilt on bind
+            val box = holder.itemView as LinearLayout
+            box.removeAllViews()
+            game?.hero?.let { box.addView(relicCard(it, availableRelics[position - 1])) }
         }
     }
 
@@ -347,14 +383,16 @@ class InventoryPanel(
         listOf(EquipSlot.HELMET, EquipSlot.CHEST).forEach { left.addView(slotCard(hero, it)) }
         listOf(EquipSlot.AMULET, EquipSlot.RING).forEach { right.addView(slotCard(hero, it)) }
         dollRow.addView(left, LinearLayout.LayoutParams(0, -2, 1f))
-        val art = DungeonCombatArt()
+        val art = characterArt
         dollRow.addView(object : View(ctx) {
+            private val bounds = RectF()
             init { contentDescription = ctx.getString(R.string.inv_character_preview) }
             override fun onDraw(canvas: Canvas) {
                 super.onDraw(canvas)
                 val width = minOf(width, height) * .8f
                 val left = (getWidth() - width) / 2
-                art.drawHero(canvas, RectF(left, height / 2f - width / 2, left + width, height / 2f + width / 2), hero)
+                bounds.set(left, height / 2f - width / 2, left + width, height / 2f + width / 2)
+                art.drawHero(canvas, bounds, hero)
             }
         }, LinearLayout.LayoutParams(0, dp(160), 1f))
         dollRow.addView(right, LinearLayout.LayoutParams(0, -2, 1f))
@@ -742,8 +780,9 @@ class InventoryPanel(
     private fun dp(n: Int) = (n * density).toInt()
     private fun column() = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
     private fun row() = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+    private fun readable(color: Int) = com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5)
     private fun text(value: String, size: Float, color: Int, bold: Boolean = false) = TextView(ctx).apply {
-        text = value; textSize = size; setTextColor(com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5))
+        text = value; textSize = size; setTextColor(readable(color))
         if (bold) setTypeface(typeface, Typeface.BOLD)
         setPadding(0, dp(3), 0, dp(3))
     }

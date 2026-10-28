@@ -5,30 +5,40 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.*
 
+/** Min x, y, z then max x, y, z of the points among [values] (every [stride] floats) from [from] to [to]. */
+internal fun boundsOf(values: FloatArray, stride: Int, from: Int = 0, to: Int = values.size, into: FloatArray = FloatArray(6), at: Int = 0): FloatArray {
+    for(axis in 0..2) { into[at+axis]=Float.MAX_VALUE; into[at+axis+3]=-Float.MAX_VALUE }
+    for(i in from until to step stride) for(axis in 0..2) {
+        into[at+axis]=min(into[at+axis],values[i+axis]);into[at+axis+3]=max(into[at+axis+3],values[i+axis])
+    }
+    return into
+}
+
+/** Conservative world-space test of the box at [at] in [b] (as [boundsOf]) against the frustum of [vp], grown by [margin]. */
+internal fun boxVisible(vp: FloatArray, b: FloatArray, at: Int = 0, margin: Float = 0f): Boolean {
+    for(axis in 0..2) for(side in 0..1) {
+        val sign=if(side==0)-1f else 1f
+        val x=vp[3]+sign*vp[axis];val y=vp[7]+sign*vp[axis+4]
+        val z=vp[11]+sign*vp[axis+8];val w=vp[15]+sign*vp[axis+12]
+        if(x*(if(x>=0f)b[at+3]+margin else b[at]-margin)+y*(if(y>=0f)b[at+4]+margin else b[at+1]-margin)+
+            z*(if(z>=0f)b[at+5]+margin else b[at+2]-margin)+w<0f)return false
+    }
+    return true
+}
+
 /** A single interleaved position / lit colour VBO. No image assets or per-object draw calls. */
-internal class ClassicMesh(private val vertices: FloatArray) {
+internal class ClassicMesh(private var vertices: FloatArray) {
     private var buffer = 0
-    val count get() = vertices.size / 6
-    private val bounds by lazy {
-        val b=floatArrayOf(Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE,-Float.MAX_VALUE,-Float.MAX_VALUE,-Float.MAX_VALUE)
-        for(i in vertices.indices step 6) for(axis in 0..2) {
-            b[axis]=min(b[axis],vertices[i+axis]);b[axis+3]=max(b[axis+3],vertices[i+axis])
-        }
-        b
-    }
-    /** Conservative world-space AABB/frustum test for immutable scenery batches. */
-    fun visible(vp:FloatArray):Boolean {
-        if(count==0)return false
-        val b=bounds
-        for(axis in 0..2) for(side in 0..1) {
-            val sign=if(side==0)-1f else 1f
-            val x=vp[3]+sign*vp[axis];val y=vp[7]+sign*vp[axis+4]
-            val z=vp[11]+sign*vp[axis+8];val w=vp[15]+sign*vp[axis+12]
-            if(x*b[if(x>=0f)3 else 0]+y*b[if(y>=0f)4 else 1]+z*b[if(z>=0f)5 else 2]+w<0f)return false
-        }
-        return true
-    }
-    fun upload() {
+    val count = vertices.size / 6
+    private var box: FloatArray? = null
+    private fun bounds() = box ?: boundsOf(vertices, 6).also { box = it }
+    /** Conservative world-space AABB/frustum test for immutable scenery batches, the box grown by [margin] metres. */
+    fun visible(vp:FloatArray,margin:Float=0f):Boolean = count>0 && boxVisible(vp,bounds(),0,margin)
+    /**
+     * Without [keep], the processor's copy is let go once on the GPU: the scenery of a hole weighs
+     * megabytes, and after a lost context the renderer meshes it again rather than keep it.
+     */
+    fun upload(keep: Boolean = true) {
         val ids = IntArray(1)
         GL.glGenBuffers(1, ids, 0)
         buffer = ids[0]
@@ -36,6 +46,7 @@ internal class ClassicMesh(private val vertices: FloatArray) {
         bytes.put(vertices).position(0)
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer)
         GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.size * 4, bytes, GL.GL_STATIC_DRAW)
+        if (!keep) { bounds(); vertices = FloatArray(0) }
     }
     fun draw() {
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer)

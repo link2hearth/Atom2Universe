@@ -71,6 +71,28 @@ class PeaksTest {
     }
 
     @Test
+    fun `les niveaux grossiers donnent les memes colonnes qu un parcours bloc a bloc`() {
+        val l = noise(600_000, 11); val r = noise(600_000, 12)
+        val p = PeakBuilder(2).also { it.add(arrayOf(l, r), l.size) }.finish()
+        val mn = FloatArray(97); val mx = FloatArray(97)
+        for (fpp in listOf(4096.0, 6173.3, 50_000.0)) for (start in listOf(-3000L, 0L, 777L)) for (c in 0..1) {
+            p.columns(c, start, fpp, mn.size, mn, mx)
+            for (px in mn.indices) {
+                val f0 = start + px * fpp
+                var b0 = kotlin.math.floor(f0 / p.blockSize).toInt()
+                var b1 = kotlin.math.ceil((f0 + fpp) / p.blockSize).toInt()
+                if (b1 <= b0) b1 = b0 + 1
+                b0 = b0.coerceAtLeast(0); b1 = b1.coerceAtMost(p.blocks)
+                if (b0 >= b1 || f0 + fpp <= 0.0 || f0 >= p.frames) { assertEquals(0f, mx[px], 0f); continue }
+                var lo = 1f; var hi = -1f
+                for (b in b0 until b1) { lo = minOf(lo, p.min(b, c)); hi = maxOf(hi, p.max(b, c)) }
+                assertEquals("min $fpp $start $px", lo, mn[px], 0f)
+                assertEquals("max $fpp $start $px", hi, mx[px], 0f)
+            }
+        }
+    }
+
+    @Test
     fun `hors de la source les colonnes sont nulles`() {
         val p = PeakBuilder(1).also { it.add(arrayOf(FloatArray(1000) { 0.5f }), 1000) }.finish()
         val mn = FloatArray(4); val mx = FloatArray(4)

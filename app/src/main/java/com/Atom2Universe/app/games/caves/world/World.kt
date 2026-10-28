@@ -94,6 +94,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             keys[next] = key; vals[next] = v; next = (next + 1) % 6
             return v
         }
+        /** Oublie tout : pour réutiliser le même cache d'une image à l'autre sans garder de vieux chunks. */
+        fun clear() { keys.fill(Long.MIN_VALUE); vals.fill(null); next = 0 }
     }
     fun allChunks(): Collection<Chunk> = chunks.values
 
@@ -466,6 +468,23 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         return chunk.blockAt(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE)
     }
 
+    /**
+     * Feuilles à revérifier autour d'un bois ou d'une feuille qui disparaît : le losange de
+     * rayon 6, dans le même ordre qu'avant, sans parcourir les 13³ cases du cube englobant.
+     */
+    private fun queueLeafChecksAround(wx: Int, wy: Int, wz: Int) {
+        val lookup = ChunkLookupCache()
+        for (dz in -6..6) {
+            val ry = 6 - kotlin.math.abs(dz)
+            for (dy in -ry..ry) {
+                val rx = ry - kotlin.math.abs(dy)
+                for (dx in -rx..rx)
+                    if (isLeaf(blockAt(wx + dx, wy + dy, wz + dz, lookup)))
+                        leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
+            }
+        }
+    }
+
     // Place un bloc directement (bypass "generated" check, pour construction au spawn)
     private fun setBlockRaw(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
@@ -477,13 +496,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val lz = wz - cz * CHUNK_SIZE
         val old = chunk.blockAt(lx, ly, lz)
         if (old == type) return
-        if (isWood(old) || isLeaf(old)) {
-            for (dz in -6..6) for (dy in -6..6) for (dx in -6..6) {
-                if (kotlin.math.abs(dx) + kotlin.math.abs(dy) + kotlin.math.abs(dz) <= 6 &&
-                    isLeaf(blockAt(wx + dx, wy + dy, wz + dz)))
-                    leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
-            }
-        }
+        if (isWood(old) || isLeaf(old)) queueLeafChecksAround(wx, wy, wz)
         chunk.setBlock(lx, ly, lz, type)
         chunk.version++; chunk.meshDirty = true
         val key = chunkKey(cx, cy, cz)
@@ -620,13 +633,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
         val old = chunk.blockAt(lx, ly, lz)
         if (old == type) return
-        if (isWood(old) || isLeaf(old)) {
-            for (dz in -6..6) for (dy in -6..6) for (dx in -6..6) {
-                if (kotlin.math.abs(dx) + kotlin.math.abs(dy) + kotlin.math.abs(dz) <= 6 &&
-                    isLeaf(blockAt(wx + dx, wy + dy, wz + dz)))
-                    leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
-            }
-        }
+        if (isWood(old) || isLeaf(old)) queueLeafChecksAround(wx, wy, wz)
         onBlockReplaced(wx,wy,wz)
         val oldDoorMeta = chunk.metaAt(lx, ly, lz)
         chunk.setBlock(lx, ly, lz, type)
@@ -649,11 +656,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         rebuildQueue.add(key)
         if (skyPassable(old) != skyPassable(type) || emission(old)!=emission(type)) enqueueLightAndNeighbors(cx, cy, cz)
         storage?.recordChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
-        for ((nx, ny, nz) in arrayOf(
-            intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),
-            intArrayOf(cx,cy-1,cz), intArrayOf(cx,cy+1,cz),
-            intArrayOf(cx,cy,cz-1), intArrayOf(cx,cy,cz+1)
-        )) {
+        for (i in 0 until 6) {
+            val nx = cx + NEIGHBOR_OFFSETS[i * 3]; val ny = cy + NEIGHBOR_OFFSETS[i * 3 + 1]; val nz = cz + NEIGHBOR_OFFSETS[i * 3 + 2]
             val n = getChunk(nx, ny, nz) ?: continue
             if (n.generated) { n.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
         }
@@ -665,10 +669,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         // Un obstacle ou un trou peut modifier un chemin à plusieurs cases de distance.
         // Inclure les sorties voisines pour retirer les branches devenues non prioritaires.
         val routingRadius = WaterFlowRouting.SEARCH_DISTANCE + 1
+        val lookup = ChunkLookupCache()
         for (dy in 0..1) for (dz in -routingRadius..routingRadius)
             for (dx in -routingRadius..routingRadius) {
                 if (kotlin.math.abs(dx) + kotlin.math.abs(dz) <= routingRadius &&
-                    isWater(blockAt(wx + dx, wy + dy, wz + dz)))
+                    isWater(blockAt(wx + dx, wy + dy, wz + dz, lookup)))
                     queueWaterUpdate(wx + dx, wy + dy, wz + dz, urgent = true)
             }
     }
@@ -686,11 +691,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         chunk.version++
         chunk.meshDirty = true
         rebuildQueue.add(chunkKey(cx, cy, cz))
-        for ((nx, ny, nz) in arrayOf(
-            intArrayOf(cx - 1, cy, cz), intArrayOf(cx + 1, cy, cz),
-            intArrayOf(cx, cy - 1, cz), intArrayOf(cx, cy + 1, cz),
-            intArrayOf(cx, cy, cz - 1), intArrayOf(cx, cy, cz + 1)
-        )) {
+        for (i in 0 until 6) {
+            val nx = cx + NEIGHBOR_OFFSETS[i * 3]; val ny = cy + NEIGHBOR_OFFSETS[i * 3 + 1]; val nz = cz + NEIGHBOR_OFFSETS[i * 3 + 2]
             val neighbor = getChunk(nx, ny, nz)?.takeIf { it.generated } ?: continue
             neighbor.meshDirty = true
             rebuildQueue.add(chunkKey(nx, ny, nz))
@@ -1268,5 +1270,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         // Missing deep neighbours therefore need no height lookup at all.
         if (source == null && wy <= SEA_LEVEL) return 0
         return if (wy >= surfaceTopY(wx, wz)) 15 else 0
+    }
+
+    private companion object {
+        /** Les six chunks voisins (x−1, x+1, y−1, y+1, z−1, z+1), sans tableau alloué à chaque bloc posé. */
+        val NEIGHBOR_OFFSETS = intArrayOf(-1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1)
     }
 }

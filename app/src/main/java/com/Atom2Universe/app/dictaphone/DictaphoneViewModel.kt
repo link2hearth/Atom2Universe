@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -12,6 +13,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.Atom2Universe.app.AudioFocusManager
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audioeditor.MicRecordingService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,17 +52,40 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
     private val _isPlaying = MutableLiveData(false)
     val isPlaying: LiveData<Boolean> = _isPlaying
 
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> = _errorMessage
+    /** Message à montrer (ressource de texte), remis à `null` une fois montré. */
+    private val _errorMessage = MutableLiveData<Int?>()
+    val errorMessage: LiveData<Int?> = _errorMessage
 
     private var mediaPlayer: MediaPlayer? = null
     private var recordingStartMs = 0L
     private var timerJob: Job? = null
     private var amplitudeJob: Job? = null
+    /** L'écran est visible : les compteurs ne tournent que pour lui. */
+    private var uiVisible = false
+
+    private val focusListener = object : AudioFocusManager.AudioFocusListener {
+        override fun onAudioFocusPause() {
+            val mp = mediaPlayer ?: return
+            if (mp.isPlaying) {
+                mp.pause()
+                _isPlaying.value = false
+            }
+        }
+
+        override fun onAudioFocusResume() {}
+
+        override fun onAudioFocusDuck() { mediaPlayer?.setVolume(DUCK_VOLUME, DUCK_VOLUME) }
+
+        override fun onAudioFocusUnduck() { mediaPlayer?.setVolume(1f, 1f) }
+    }
 
     init {
         observeRecorderState()
-        loadRecordings()
+        viewModelScope.launch(Dispatchers.IO) {
+            recorder.recoverPending()
+            val list = queryRecordings()
+            withContext(Dispatchers.Main) { _recordings.value = list }
+        }
     }
 
     private fun observeRecorderState() {
@@ -76,31 +102,36 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
                         stopTimers()
                     }
                     is DictaphoneRecorder.State.Completed -> {
-                        _isRecording.value = false
-                        _isSaving.value = false
-                        stopTimers()
+                        endRecordingUi()
                         loadRecordings()
+                        if (state.warning != 0) _errorMessage.value = state.warning
                     }
                     is DictaphoneRecorder.State.Error -> {
-                        _isRecording.value = false
-                        _isSaving.value = false
-                        stopTimers()
+                        endRecordingUi()
                         _errorMessage.value = state.message
                     }
-                    is DictaphoneRecorder.State.Idle -> {
-                        _isRecording.value = false
-                        _isSaving.value = false
-                        stopTimers()
-                    }
+                    is DictaphoneRecorder.State.Idle -> endRecordingUi()
                 }
             }
         }
     }
 
+    /** L'enregistrement est fini, quelle qu'en soit la raison (y compris tout seul : stockage plein). */
+    private fun endRecordingUi() {
+        val wasActive = _isRecording.value == true || _isSaving.value == true
+        _isRecording.value = false
+        _isSaving.value = false
+        stopTimers()
+        // Seulement après un enregistrement d'ici : le service peut servir à l'éditeur audio.
+        if (wasActive) MicRecordingService.stop(app)
+    }
+
+    /** L'écran a déjà obtenu la permission du micro. */
     fun startRecording() {
         val q = _quality.value ?: DictaphoneRecorder.Quality.M4A
         if (recorder.startRecording(q)) {
             recordingStartMs = System.currentTimeMillis()
+            _durationMs.value = 0L
             startTimers()
             MicRecordingService.start(app)
         }
@@ -119,6 +150,16 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
         _amplitude.value = 0f
     }
 
+    fun consumeError() {
+        _errorMessage.value = null
+    }
+
+    /** Appelé par l'écran à son démarrage et à son arrêt. */
+    fun setUiVisible(visible: Boolean) {
+        uiVisible = visible
+        if (visible && _isRecording.value == true) startTimers() else if (!visible) stopTimers()
+    }
+
     fun toggleQuality() {
         if (_isRecording.value == true || _isSaving.value == true) return
         val current = _quality.value ?: DictaphoneRecorder.Quality.M4A
@@ -133,8 +174,9 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
             if (mp != null && mp.isPlaying) {
                 mp.pause()
                 _isPlaying.value = false
-            } else {
-                mp?.start()
+            } else if (mp != null) {
+                AudioFocusManager.requestFocus(focusListener)
+                mp.start()
                 _isPlaying.value = true
             }
         } else {
@@ -151,6 +193,7 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
         mediaPlayer = null
         _playingUri.value = null
         _isPlaying.value = false
+        AudioFocusManager.abandonFocus(focusListener)
     }
 
     fun deleteRecording(recording: DictaphoneRecording) {
@@ -192,37 +235,50 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             try {
                 val mp = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                            .build()
+                    )
                     setDataSource(app, recording.uri)
                     setOnCompletionListener {
                         _playingUri.value = null
                         _isPlaying.value = false
                         it.release()
                         mediaPlayer = null
+                        AudioFocusManager.abandonFocus(focusListener)
                     }
                     prepare()
-                    start()
                 }
                 mediaPlayer = mp
+                AudioFocusManager.requestFocus(focusListener)
+                mp.start()
                 _isPlaying.value = true
             } catch (e: Exception) {
                 _playingUri.value = null
                 _isPlaying.value = false
-                _errorMessage.value = e.message
+                _errorMessage.value = R.string.dictaphone_error_playback
             }
         }
     }
 
     private fun startTimers() {
-        timerJob = viewModelScope.launch {
-            while (true) {
-                delay(100)
-                _durationMs.value = System.currentTimeMillis() - recordingStartMs
+        if (!uiVisible) return
+        if (timerJob == null) {
+            timerJob = viewModelScope.launch {
+                while (true) {
+                    _durationMs.value = System.currentTimeMillis() - recordingStartMs
+                    delay(100)
+                }
             }
         }
-        amplitudeJob = viewModelScope.launch {
-            while (true) {
-                delay(50)
-                _amplitude.value = recorder.getAmplitude()
+        if (amplitudeJob == null) {
+            amplitudeJob = viewModelScope.launch {
+                while (true) {
+                    delay(50)
+                    _amplitude.value = recorder.getAmplitude()
+                }
             }
         }
     }
@@ -281,8 +337,10 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
     override fun onCleared() {
         super.onCleared()
         stopPlayback()
-        if (_isRecording.value == true || _isSaving.value == true) {
-            recorder.cancelRecording()
+        // Quitter l'écran en plein enregistrement le termine et le garde (un enregistrement WAV en train
+        // de s'écrire finit tout seul sur son fil).
+        if (_isRecording.value == true) {
+            recorder.stopRecording()
             MicRecordingService.stop(app)
         }
         stopTimers()
@@ -290,5 +348,6 @@ class DictaphoneViewModel(application: Application) : AndroidViewModel(applicati
 
     companion object {
         private const val PREF_QUALITY = "quality"
+        private const val DUCK_VOLUME = 0.2f
     }
 }

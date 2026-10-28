@@ -106,11 +106,17 @@ abstract class CardGameActivity : ThemedActivity() {
     private val moves = ArrayList<Int>()
     private var finished = false
     private var recorded = false
+    /** Le joueur a joué au moins un coup : abandonner la partie compte alors une défaite. */
+    private var started = false
     private var generation = 0
     private var aiJob: Job? = null
+    /** Entre onResume et onPause : hors de là, les adversaires ne jouent pas. */
+    private var active = false
 
     private lateinit var statusView: TextView
     private lateinit var controlsRow: LinearLayout
+    /** Les boutons affichés : on ne refait la rangée que s'ils changent. */
+    private var shownControls: List<Control> = emptyList()
     private val levelChips = ArrayList<TextView>()
 
     private val prefs by lazy { getSharedPreferences("$PREFS_PREFIX$gameKey", MODE_PRIVATE) }
@@ -135,10 +141,12 @@ abstract class CardGameActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        active = true
         drive()
     }
 
     override fun onPause() {
+        active = false
         aiJob?.cancel()
         table.skipAnimations()
         save()
@@ -151,12 +159,18 @@ abstract class CardGameActivity : ThemedActivity() {
         aiJob?.cancel()
         generation++
         table.skipAnimations()
+        // Abandonner une partie commencée compte une défaite (sans neutrinos).
+        if (::engine.isInitialized && !finished && !recorded && started) {
+            recorded = true
+            record(won = false)
+        }
         level = newLevel
         seed = Random.nextLong()
         moves.clear()
         lifted.clear()
         finished = false
         recorded = false
+        started = false
         engine = createEngine(seed)
         engine.drainEvents()
         table.painter.newBack()
@@ -172,37 +186,50 @@ abstract class CardGameActivity : ThemedActivity() {
 
     /** Le joueur joue [move], s'il est permis. */
     protected fun submit(move: Int) {
-        if (!canAct() || !engine.legalMoves().contains(move)) return
+        if (!canAct() || !engine.isLegal(move)) return
         applyMove(move)
     }
 
     private fun applyMove(move: Int) {
+        val mover = engine.current
+        val scoresBefore = engine.scores
         engine.play(move)
         moves.add(move)
+        if (mover == HUMAN) started = true
         lifted.clear()
         onMovePlayed()
         val events = engine.drainEvents()
         table.present(buildScene(), events)
         refresh(rebuildScene = false)
-        save()
+        // Chaque coup du joueur est gardé tout de suite (l'appli peut être tuée) ; ceux des adversaires
+        // partent avec lui, à la fin d'une manche ou à la pause.
+        if (mover == HUMAN || engine.isOver || !engine.scores.contentEquals(scoresBefore)) save()
         drive()
     }
 
-    /** Fait avancer la partie : le prochain adversaire joue, ou on attend le joueur, ou c'est fini. */
+    /**
+     * Fait avancer la partie : le prochain adversaire joue, ou on attend le joueur, ou c'est fini.
+     * Appelée après chaque coup et à la fin des trajets : un seul adversaire réfléchit à la fois, et
+     * jamais pendant qu'une carte voyage.
+     */
     private fun drive() {
-        if (!::engine.isInitialized || finished || table.busy) return
+        if (!::engine.isInitialized || !active || finished || table.busy) return
         if (engine.isOver) { endGame(); return }
         if (engine.current == HUMAN) { refresh(); return }
         if (aiJob?.isActive == true) return
         val snapshot = engine.copy()
-        val started = SystemClock.uptimeMillis()
+        val startedAt = SystemClock.uptimeMillis()
         val lvl = level
         val gen = generation
         aiJob = lifecycleScope.launch {
-            val move = withContext(Dispatchers.Default) { snapshot.aiMove(lvl, Random(started xor seed)) }
-            val wait = AI_MIN_MS - (SystemClock.uptimeMillis() - started)
+            val move = withContext(Dispatchers.Default) { snapshot.aiMove(lvl, Random(startedAt xor seed)) }
+            val wait = AI_MIN_MS - (SystemClock.uptimeMillis() - startedAt)
             if (wait > 0) delay(wait)
-            if (gen == generation && !finished) applyMove(move)
+            if (aiJob !== coroutineContext[Job] || gen != generation || finished || !active) return@launch
+            // Ce robot a fini : son coup peut relancer le suivant tout de suite (une annonce ou une
+            // passe, sans carte qui voyage, ne repasse pas par la fin des trajets).
+            aiJob = null
+            applyMove(move)
         }
     }
 
@@ -249,6 +276,7 @@ abstract class CardGameActivity : ThemedActivity() {
             putInt(KEY_LEVEL, level)
             putString(KEY_MOVES, moves.joinToString(","))
             putBoolean(KEY_RECORDED, recorded)
+            putBoolean(KEY_STARTED, started)
             putBoolean(KEY_SAVED, true)
         }
     }
@@ -267,9 +295,17 @@ abstract class CardGameActivity : ThemedActivity() {
             moves.clear()
             moves.addAll(savedMoves.map { it.toInt() })
             recorded = prefs.getBoolean(KEY_RECORDED, false)
+            started = prefs.getBoolean(KEY_STARTED, false)
             finished = engine.isOver
+            table.painter.newBack()
             updateChips()
             table.show(buildScene())
+            // Une partie finie pendant le dernier trajet puis quittée : elle compte, sans la fête.
+            if (finished && !recorded) {
+                recorded = true
+                record(humanWon())
+                save()
+            }
             refresh()
             true
         } catch (_: Exception) {
@@ -296,11 +332,24 @@ abstract class CardGameActivity : ThemedActivity() {
     }
 
     private fun updateControls() {
-        controlsRow.removeAllViews()
-        if (!finished && engine.current == HUMAN && !table.busy) {
-            for (c in controls()) controlsRow.addView(button(c.label, c.primary, c.enabled, c.action), buttonParams())
+        val wanted = ArrayList<Control>()
+        if (!finished && engine.current == HUMAN && !table.busy) wanted.addAll(controls())
+        wanted.add(Control(getString(R.string.kit_new), primary = finished) { askNewGame() })
+        val old = shownControls
+        val same = old.size == wanted.size && controlsRow.childCount == wanted.size && wanted.indices.all {
+            old[it].label == wanted[it].label && old[it].enabled == wanted[it].enabled && old[it].primary == wanted[it].primary
         }
-        controlsRow.addView(button(getString(R.string.kit_new), primary = finished, enabled = true) { askNewGame() }, buttonParams())
+        if (same) {
+            // Les mêmes boutons : seule leur action change (elle capture l'état du moment).
+            for (i in wanted.indices) {
+                val c = wanted[i]
+                controlsRow.getChildAt(i).setOnClickListener { c.action() }
+            }
+        } else {
+            controlsRow.removeAllViews()
+            for (c in wanted) controlsRow.addView(button(c.label, c.primary, c.enabled, c.action), buttonParams())
+        }
+        shownControls = wanted
     }
 
     private fun askNewGame() {
@@ -476,6 +525,7 @@ abstract class CardGameActivity : ThemedActivity() {
         private const val KEY_LEVEL = "level"
         private const val KEY_MOVES = "moves"
         private const val KEY_RECORDED = "recorded"
+        private const val KEY_STARTED = "started"
         private const val KEY_SAVED = "saved"
         // Lues aussi par la page des stats de jeux (ClickerStatsActivity) et synchronisées sur le
         // Drive (SharedGameStats, GamesSyncFile) : parties jouées et gagnées, plus haut niveau

@@ -41,6 +41,18 @@ interface ListenEventDao {
     suspend fun countForDeviceAndTrack(deviceId: String, trackKey: String): Long
 
     /**
+     * [countForDeviceAndTrack] pour plusieurs morceaux en une requête. Les morceaux sans
+     * aucune écoute n'ont pas de ligne. Garder [trackKeys] sous ~900 éléments (limite SQLite).
+     */
+    @Query("""
+        SELECT trackKey, COUNT(*) AS eventCount
+        FROM listen_events
+        WHERE deviceId = :deviceId AND trackKey IN (:trackKeys)
+        GROUP BY trackKey
+    """)
+    suspend fun countForDeviceAndTracks(deviceId: String, trackKeys: List<String>): List<TrackEventCount>
+
+    /**
      * Résumé par morceau des écoutes de cet appareil ANTÉRIEURES à :cutoff.
      *
      * C'est ce qu'on envoie à la place des écoutes une par une : quelques dizaines
@@ -82,6 +94,12 @@ interface ListenEventDao {
     @Query("SELECT MAX(listenedAt) FROM listen_events")
     suspend fun getLatestTimestamp(): Long?
 }
+
+/** Nombre d'écoutes d'un morceau pour un appareil (voir [ListenEventDao.countForDeviceAndTracks]). */
+data class TrackEventCount(
+    val trackKey: String,
+    val eventCount: Long
+)
 
 /**
  * Ligne du résumé agrégé : toutes les écoutes d'un morceau sur un appareil,

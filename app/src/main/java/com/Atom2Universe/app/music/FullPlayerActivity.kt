@@ -121,12 +121,13 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     private var currentTrackId: Long = -1
 
     private val handler = Handler(Looper.getMainLooper())
-    private val updateProgressRunnable = object : Runnable {
-        override fun run() {
-            updateProgress()
-            handler.postDelayed(this, 1000)
-        }
-    }
+    // La progression arrive du lecteur (onProgressChanged) : pas de minuteur propre à l'écran
+    override val wantsFrequentProgress: Boolean get() = true
+
+    // Visualizer seulement entre onStart et onStop, en lecture, avec un mode actif
+    private var isScreenStarted = false
+    private val setupVisualizerRunnable = Runnable { syncAudioVisualizer(recreate = true) }
+    private var lastPlayCountVersion = -1L
 
     companion object {
         private const val PERMISSION_REQUEST_RECORD_AUDIO = 1001
@@ -268,23 +269,25 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
 
     override fun onStart() {
         super.onStart()
+        isScreenStarted = true
         MusicPlaybackHolder.addListener(this)
         refreshPlaybackState()
-        handler.post(updateProgressRunnable)
+        updateProgress()
         checkAudioPermissionAndSetupVisualizer()
     }
 
     override fun onStop() {
         super.onStop()
+        isScreenStarted = false
         MusicPlaybackHolder.removeListener(this)
-        handler.removeCallbacks(updateProgressRunnable)
+        handler.removeCallbacks(setupVisualizerRunnable)
         handler.removeCallbacks(hideControlsRunnable)
         releaseVisualizer()
     }
 
     override fun onDestroy() {
-        // S'assurer que le handler runnable est bien retiré même si onStop n'a pas été appelé
-        handler.removeCallbacks(updateProgressRunnable)
+        // S'assurer que les runnables sont bien retirés même si onStop n'a pas été appelé
+        handler.removeCallbacks(setupVisualizerRunnable)
         handler.removeCallbacks(hideControlsRunnable)
         // Bug 5.13: Release visualizer also in onDestroy to ensure cleanup
         // even if onStop wasn't called (e.g., configuration change)
@@ -304,11 +307,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         // Bug 5.23: Re-vérifier la permission RECORD_AUDIO au retour de l'activité.
         // Si l'utilisateur a accordé la permission dans les Settings après un refus initial,
         // on peut maintenant activer le visualizer.
-        if (audioVisualizer == null &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            setupAudioVisualizer()
+        if (audioVisualizer == null) {
+            syncAudioVisualizer()
         }
     }
 
@@ -319,8 +319,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         if (!::queueAdapter.isInitialized) return
 
         lifecycleScope.launch {
-            // Recharger le cache des favoris depuis le fichier
-            MusicFavoritesManager.invalidateCache()
+            // La synchro cloud met à jour les favoris en mémoire : pas de relecture du fichier
             MusicFavoritesManager.loadFavorites(this@FullPlayerActivity)
 
             // Mettre à jour les favoris dans la queue
@@ -337,17 +336,20 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                 updatePlayCount(currentTrack)
             }
 
-            // Rafraîchir les play counts dans la queue (peuvent avoir changé pendant que
-            // l'écran était éteint ou l'activité en arrière-plan)
-            if (queueAdapter.itemCount > 0) {
+            // Rafraîchir les play counts dans la queue seulement s'ils ont changé pendant que
+            // l'écran était éteint ou l'activité en arrière-plan
+            val playCountVersion = MusicPlayCountManager.cacheVersion
+            if (playCountVersion != lastPlayCountVersion && queueAdapter.itemCount > 0) {
                 queueAdapter.notifyItemRangeChanged(0, queueAdapter.itemCount)
             }
+            lastPlayCountVersion = playCountVersion
         }
     }
 
     private fun refreshPlaybackState() {
         MusicPlaybackHolder.getCurrentTrack()?.let { updateTrackInfo(it) }
         updatePlayPauseButton(MusicPlaybackHolder.isPlaying())
+        applyPlaybackActivity(MusicPlaybackHolder.isPlaying())
         updateShuffleButton()
         updateRepeatButton()
         updateEqualizerButton()
@@ -1167,6 +1169,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         saveVisualizerMode(mode)
         updateVisualizerButtons()
         updateVisualizerVisibility()
+        // Mode « aucun » : plus de capture audio
+        syncAudioVisualizer()
 
         // Si on est en mode vrai fullscreen, synchroniser aussi le visualiseur fullscreen
         if (isTrueFullscreen) {
@@ -1479,6 +1483,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                     MusicPlaybackHolder.seekTo(position)
                 }
                 isUserSeeking = false
+                updateProgress()
             }
         }
         seekBar.setOnSeekBarChangeListener(listener)
@@ -1553,7 +1558,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
             == PackageManager.PERMISSION_GRANTED
         ) {
-            setupAudioVisualizer()
+            syncAudioVisualizer()
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -1586,9 +1591,25 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setupAudioVisualizer()
+                syncAudioVisualizer()
             }
             // Si refusé, le visualiseur fonctionnera en mode animation idle
+        }
+    }
+
+    /**
+     * Le Visualizer capte l'audio en continu : seulement quand l'écran est visible, en lecture,
+     * avec un mode de visualisation actif et la permission accordée.
+     */
+    private fun syncAudioVisualizer(recreate: Boolean = false) {
+        val wanted = isScreenStarted &&
+            MusicPlaybackHolder.isPlaying() &&
+            currentVisualizerMode != AudioVisualizerView.VisualizationMode.NONE &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+        when {
+            !wanted -> releaseVisualizer()
+            recreate || audioVisualizer == null -> setupAudioVisualizer()
         }
     }
 
@@ -1702,10 +1723,9 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         }
 
         // Re-setup visualizer for new track
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            handler.postDelayed({ setupAudioVisualizer() }, 500)
+        handler.removeCallbacks(setupVisualizerRunnable)
+        if (isScreenStarted) {
+            handler.postDelayed(setupVisualizerRunnable, 500)
         }
     }
 
@@ -1730,11 +1750,11 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         }
     }
 
-    private fun updateProgress() {
+    private fun updateProgress(
+        position: Long = MusicPlaybackHolder.getPosition(),
+        duration: Long = MusicPlaybackHolder.getDuration()
+    ) {
         if (!isUserSeeking) {
-            val position = MusicPlaybackHolder.getPosition()
-            val duration = MusicPlaybackHolder.getDuration()
-
             if (duration > 0) {
                 val progress = ((position.toFloat() / duration) * 100).toInt()
                 val formatted = formatDuration(position)
@@ -2121,6 +2141,10 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     override fun onPlaybackStateChanged(isPlaying: Boolean) {
         runOnUiThread {
             updatePlayPauseButton(isPlaying)
+            applyPlaybackActivity(isPlaying)
+            // En pause, plus de progression du lecteur : afficher la position exacte une fois
+            updateProgress()
+            syncAudioVisualizer()
             // Mettre à jour aussi le bouton fullscreen si on est en mode fullscreen
             if (isTrueFullscreen) {
                 updateFullscreenPlayPauseButton(isPlaying)
@@ -2143,7 +2167,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     }
 
     override fun onProgressChanged(position: Long, duration: Long) {
-        // Handled by our own progress updater
+        updateProgress(position, duration)
     }
 
     override fun onError(error: PlaybackException) {
@@ -2176,8 +2200,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         isTrueFullscreen = true
         visualizer.isRenderingActive = false
 
-        // Empêcher la mise en veille de l'écran
-        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // Empêcher la mise en veille de l'écran, seulement pendant la lecture
+        applyPlaybackActivity(MusicPlaybackHolder.isPlaying())
 
         // Afficher le container fullscreen
         trueFullscreenContainer.visibility = View.VISIBLE
@@ -2249,6 +2273,20 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
 
         // Si les lyrics sont affichées, les réafficher dans le bon container
         refreshLyricsIfVisible()
+    }
+
+    /**
+     * Écran gardé allumé (plein écran) et visualiseurs animés seulement pendant la lecture :
+     * en pause, l'image se fige et l'écran peut s'éteindre.
+     */
+    private fun applyPlaybackActivity(isPlaying: Boolean) {
+        visualizer.isPlaybackActive = isPlaying
+        visualizerFullscreen.isPlaybackActive = isPlaying
+        if (isTrueFullscreen && isPlaying) {
+            window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 
     private fun showFullscreenControls() {

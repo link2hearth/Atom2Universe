@@ -42,6 +42,7 @@ class GuessActivity : PuzzleActivity<GuessState>() {
     override val hasHints = true
     override fun hint(state: GuessState) = state.hint()
     override fun isLost(state: GuessState) = state.isLost
+    override val revealsOnLoss = true
     override fun statusText(state: GuessState) = getString(R.string.guess_status, state.guesses.size, state.maxGuesses)
 
     override fun createControls(): View = LinearLayout(this).apply {

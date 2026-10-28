@@ -69,13 +69,12 @@ internal class RivalCar(private val track: PrototypeTrack, val index: Int) : Rac
         val settling = exp(-6f * dt)
         routeResidualX *= settling; routeResidualZ *= settling
         val config = config(difficulty)
-        val here = track.sampleAt(distance)
-        val turn = angleDifference(track.headingRadians(track.sampleAt(distance + 1.5f)),
-            track.headingRadians(track.sampleAt(distance - 1.5f))) / 3f
+        // Caps et largeurs lus sans construire d'échantillon : une trentaine d'appels par pas.
+        val turn = angleDifference(track.headingAt(distance + 1.5f), track.headingAt(distance - 1.5f)) / 3f
         // Préparer le rétrécissement avant d'y entrer, sans couper le bas-côté
         // lorsque le dépassement engagé sur une portion large se termine.
-        val upcomingWidth = track.sampleAt(distance + 2f + speed * .45f).roadWidth
-        val maxLane = (minOf(here.roadWidth, upcomingWidth) * .5f - .70f).coerceAtLeast(0f)
+        val upcomingWidth = track.roadWidthAt(distance + 2f + speed * .45f)
+        val maxLane = (minOf(track.roadWidthAt(distance), upcomingWidth) * .5f - .70f).coerceAtLeast(0f)
         val baseLane = ((index - 2) * .28f + turn.coerceIn(-.05f, .05f) * 10f).coerceIn(-maxLane, maxLane)
         chooseTrafficLane(player, rivals, baseLane, maxLane, config.braking, dt)
 
@@ -84,9 +83,8 @@ internal class RivalCar(private val track: PrototypeTrack, val index: Int) : Rac
         var cornerLimit = Float.POSITIVE_INFINITY
         var look = 0f
         while (look <= 6f + speed * 1.15f) {
-            val a = track.sampleAt(distance + look - 1.5f)
-            val b = track.sampleAt(distance + look + 1.5f)
-            val curvature = abs(angleDifference(track.headingRadians(b), track.headingRadians(a))) / 3f
+            val curvature = abs(angleDifference(track.headingAt(distance + look + 1.5f),
+                track.headingAt(distance + look - 1.5f))) / 3f
             if (curvature > .0001f) {
                 val cornerSpeedSquared = config.cornerGrip / curvature
                 val allowed = sqrt(cornerSpeedSquared + 2f * config.braking * (look - 1.5f).coerceAtLeast(0f))

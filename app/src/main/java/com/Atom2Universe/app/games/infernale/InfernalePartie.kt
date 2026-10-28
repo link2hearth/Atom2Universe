@@ -61,6 +61,7 @@ class Partie(
         if (!Liens.complementaires(pa, pb)) return false
         val lien = if (pa == TypePiece.PLAQUE) Lien(a, b) else Lien(b, a)
         if (!plateau.liens.remove(lien)) plateau.liens.add(lien)
+        plateau.majEteints()
         return true
     }
 
@@ -98,6 +99,7 @@ class Partie(
         if (verdict != Refus.OK) return verdict
         corps.add(plateau.poser(pose.creer()))
         placements.add(pose)
+        plateau.majEteints()
         return Refus.OK
     }
 
@@ -137,10 +139,14 @@ class Partie(
         if (lancee) return Refus.DEJA_LANCEE
         if (index !in placements.indices) return Refus.OCCUPE
         if (pose.type != placements[index].type) return Refus.OCCUPE
+        // Le doigt repasse cent fois par le meme cran de grille : rien a refabriquer.
+        if (pose == placements[index]) return Refus.OK
         val verdict = verifier(pose, sauf = index)
         if (verdict != Refus.OK) return verdict
         corps[index] = plateau.remplacer(index, pose.creer())
         placements[index] = pose
+        // La piece refaite repart allumee : si une plaque la commande, elle doit le redire.
+        plateau.majEteints()
         return Refus.OK
     }
 
@@ -161,6 +167,7 @@ class Partie(
         }
         plateau.liens.clear()
         plateau.liens.addAll(gardes)
+        plateau.majEteints()
         return true
     }
 

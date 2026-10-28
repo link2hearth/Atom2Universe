@@ -20,8 +20,20 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
     /** Same trajectories without the drawn rotation or resting balls (BilliardSimulationTest). */
     fun copyHeadless() = BilliardWorld(table,balls.map { it.copyDeep() }.toMutableList(), pins.map { it.copy() }.toMutableList(),false).also { it.time=time }
 
-    private data class Hit(val t: Double, val kind: EventKind, val a: Int, val b: Int,
-                           val normal: V3 = V3.ZERO, val endpoint: V3? = null)
+    // Earliest contact of the current step. Plain fields: the search runs for every pair
+    // and rail at every step, so it must not allocate a candidate it then rejects.
+    private var hitFound = false
+    private var hitT = 0.0
+    private var hitKind = EventKind.BALL
+    private var hitA = 0
+    private var hitB = 0
+    private var hitNormal = V3.ZERO
+    private var hitEndpoint: V3? = null
+    private fun accepts(t: Double, dt: Double) = t.isFinite() && t >= -1e-10 && t <= dt && (!hitFound || t < hitT)
+    private fun take(t: Double, kind: EventKind, a: Int, b: Int, normal: V3 = V3.ZERO, endpoint: V3? = null) {
+        hitFound = true; hitT = max(0.0, t); hitKind = kind; hitA = a; hitB = b; hitNormal = normal; hitEndpoint = endpoint
+    }
+    private fun offer(t: Double, dt: Double, kind: EventKind, a: Int, b: Int) { if(accepts(t, dt)) take(t, kind, a, b) }
 
     fun advance(seconds: Double) {
         resolveBoundaryContacts()
@@ -43,19 +55,23 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
             val speed = balls.maxOfOrNull { it.v.length() } ?: 0.0
             var dt = min(left,min(.002,table.radius/(4*max(1.0,speed))))
             balls.forEach { dt=min(dt,max(1e-9,PooltoolPhysics.transitionTime(it,table.cloth))) }
-            var hit: Hit? = null
-            fun offer(h: Hit) { if(h.t.isFinite() && h.t >= -1e-10 && h.t <= dt && (hit == null || h.t < hit!!.t)) hit=h.copy(t=max(0.0,h.t)) }
+            hitFound=false; hitEndpoint=null; hitNormal=V3.ZERO
+            // Components are read once; every expression keeps the V3 operations in the
+            // same order (planar vectors with z=0.0), so the roots are bit-for-bit the same.
             for(i in balls.indices) {
                 val a=balls[i]; if(a.motion == Motion.POCKETED) continue
+                val ap=a.p; val av=a.v
+                val px=ap.x; val py=ap.y; val pz=ap.z; val vx=av.x; val vy=av.y; val vz=av.z
                 if(a.motion == Motion.AIRBORNE) {
-                    val root=(a.v.z+sqrt(a.v.z*a.v.z+2*PooltoolPhysics.G*max(0.0,a.p.z-a.radius)))/PooltoolPhysics.G
-                    offer(Hit(root,EventKind.LAND,i,0))
+                    val root=(vz+sqrt(vz*vz+2*PooltoolPhysics.G*max(0.0,pz-a.radius)))/PooltoolPhysics.G
+                    offer(root,dt,EventKind.LAND,i,0)
                 }
                 for(j in i+1 until balls.size) {
                     val b=balls[j]; if(b.motion == Motion.POCKETED) continue
                     if((a.motion==Motion.STILL || a.motion==Motion.SPINNING) &&
                         (b.motion==Motion.STILL || b.motion==Motion.SPINNING)) continue
-                    offer(Hit(impactTime(b.p-a.p,b.v-a.v,a.radius+b.radius),EventKind.BALL,i,j))
+                    val bp=b.p; val bv=b.v
+                    offer(impactTime(bp.x-px,bp.y-py,bp.z-pz,bv.x-vx,bv.y-vy,bv.z-vz,a.radius+b.radius),dt,EventKind.BALL,i,j)
                 }
                 // Boundary contacts were already resolved. A stationary ball
                 // still participates in ball collisions above, but has no swept
@@ -63,34 +79,48 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
                 if(!trackVisualRotation && (a.motion==Motion.STILL || a.motion==Motion.SPINNING)) continue
                 // A slow ball can stop on the lip during this interval. Capture
                 // is positional as well as swept, even when its speed is zero.
-                if(a.p.z <= a.radius*1.3) for(p in table.pockets) {
-                    val rel=(a.p-p.center).planar()
-                    if(rel.length() <= p.radius) offer(Hit(0.0,EventKind.POCKET,i,p.id))
-                    else offer(Hit(impactTime(rel,a.v.planar(),p.radius),EventKind.POCKET,i,p.id))
+                if(pz <= a.radius*1.3) for(k in table.pockets.indices) {
+                    val p=table.pockets[k]; val c=p.center
+                    val rx=px-c.x; val ry=py-c.y
+                    // A sum of squares is never -0.0: the z=0.0 term of length() changes nothing.
+                    if(sqrt(rx*rx+ry*ry) <= p.radius) offer(0.0,dt,EventKind.POCKET,i,p.id)
+                    else offer(impactTime(rx,ry,0.0,vx,vy,0.0,p.radius),dt,EventKind.POCKET,i,p.id)
                 }
-                if(a.v.length() < 1e-10) continue
+                val ballSpeed=sqrt(vx*vx+vy*vy+vz*vz)
+                if(ballSpeed < 1e-10) continue
                 // Airborne balls can clear the cushion nose.
-                if(a.p.z < a.radius*2.2) for((j,rail) in table.rails.withIndex()) {
-                    val n=rail.normal; val speedN=a.v.dot(n)
-                    val signed=(a.p-rail.a).dot(n)
-                    if(speedN > 1e-8 && signed <= a.radius*.25) {
-                        val t=(-a.radius-signed)/speedN
-                        val p=a.p+a.v*max(0.0,t); val along=(p-rail.a).dot(rail.tangent)
-                        if(along >= 0 && along <= rail.length) offer(Hit(max(0.0,t),EventKind.CUSHION,i,j,n))
-                    }
-                    for(endpoint in 0..1) {
-                        val end=if(endpoint==0) rail.a else rail.b
-                        val rel=(a.p-end).planar()
-                        val t=impactTime(rel,a.v.planar(),a.radius)
-                        if(t <= dt) offer(Hit(t,EventKind.CUSHION,i,j,-(rel+a.v.planar()*max(0.0,t)).unit(),end))
+                if(pz < a.radius*2.2) {
+                    // No contact within this step can come from a rail farther than the
+                    // radius plus the distance travelled: its box is skipped untouched.
+                    val reach=a.radius+ballSpeed*dt+1e-3
+                    val rails=table.rails
+                    for(j in rails.indices) {
+                        val rail=rails[j]; val ra=rail.a; val rb=rail.b
+                        if(px < min(ra.x,rb.x)-reach || px > max(ra.x,rb.x)+reach ||
+                            py < min(ra.y,rb.y)-reach || py > max(ra.y,rb.y)+reach) continue
+                        val n=rail.normal; val speedN=vx*n.x+vy*n.y+vz*n.z
+                        val signed=(px-ra.x)*n.x+(py-ra.y)*n.y+(pz-ra.z)*n.z
+                        if(speedN > 1e-8 && signed <= a.radius*.25) {
+                            val t=(-a.radius-signed)/speedN
+                            val s=max(0.0,t); val tg=rail.tangent
+                            val along=(px+vx*s-ra.x)*tg.x+(py+vy*s-ra.y)*tg.y+(pz+vz*s-ra.z)*tg.z
+                            if(along >= 0 && along <= rail.length && accepts(s,dt)) take(s,EventKind.CUSHION,i,j,n)
+                        }
+                        for(endpoint in 0..1) {
+                            val end=if(endpoint==0) ra else rb
+                            val rx=px-end.x; val ry=py-end.y
+                            val t=impactTime(rx,ry,0.0,vx,vy,0.0,a.radius)
+                            if(t <= dt && accepts(t,dt)) take(t,EventKind.CUSHION,i,j,-(V3(rx,ry)+av.planar()*max(0.0,t)).unit(),end)
+                        }
                     }
                 }
-                if(a.p.z < a.radius+.025) for((j,p) in pins.withIndex()) if(!p.down) {
-                    offer(Hit(impactTime((a.p-p.p).planar(),a.v.planar(),a.radius+.005),EventKind.PIN,i,j))
+                if(pz < a.radius+.025) for(j in pins.indices) {
+                    val p=pins[j]; if(p.down) continue
+                    offer(impactTime(px-p.p.x,py-p.p.y,0.0,vx,vy,0.0,a.radius+.005),dt,EventKind.PIN,i,j)
                 }
             }
-            val h=hit
-            val elapsed=h?.t ?: dt
+            val found=hitFound
+            val elapsed=if(found) hitT else dt
             balls.forEach {
                 if(!trackVisualRotation && (it.motion==Motion.STILL || it.motion==Motion.POCKETED)) return@forEach
                 val old=it.p
@@ -101,16 +131,18 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
                     events+=BilliardEvent(EventKind.CROSS_LINE,it.id,if(it.p.x<oldX) -1 else 1,0.0,time+elapsed)
                 if(oldX>table.headLine && it.p.x<=table.headLine || oldX<table.headLine && it.p.x>=table.headLine)
                     events+=BilliardEvent(EventKind.HEAD_CROSS,it.id,if(it.p.x<oldX) -1 else 1,0.0,time+elapsed)
-                for(region in table.regions) if(region.contains(old) && !region.contains(it.p))
-                    events+=BilliardEvent(EventKind.REGION_EXIT,it.id,region.id,0.0,time+elapsed)
+                val regions=table.regions
+                for(r in regions.indices) { val region=regions[r]; if(region.contains(old) && !region.contains(it.p))
+                    events+=BilliardEvent(EventKind.REGION_EXIT,it.id,region.id,0.0,time+elapsed) }
             }
             time+=elapsed; left-=elapsed
-            if(h != null) {
-                val a=balls[h.a]
+            if(found) {
+                val kind=hitKind; val hb=hitB
+                val a=balls[hitA]
                 var strength=0.0
-                when(h.kind) {
+                when(kind) {
                     EventKind.BALL -> {
-                        val b=balls[h.b]; val n=(b.p-a.p).unit(); val overlap=a.radius+b.radius-(b.p-a.p).length()
+                        val b=balls[hb]; val n=(b.p-a.p).unit(); val overlap=a.radius+b.radius-(b.p-a.p).length()
                         // Position-only correction does not inject kinetic energy.
                         if(abs(overlap) < .003) { a.p-=n*(overlap/2+1e-9); b.p+=n*(overlap/2+1e-9) }
                         strength=PooltoolPhysics.collide(a,b,table.cloth.restitution)
@@ -120,11 +152,11 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
                         if(b.p.z<=b.radius+1e-7 && b.v.z<0) PooltoolPhysics.land(b)
                     }
                     EventKind.CUSHION -> {
-                        val endpoint=h.endpoint
-                        val normal=if(endpoint==null) h.normal else (endpoint-a.p).planar().unit().let {
-                            if(it.length()>0.0) it else h.normal
+                        val endpoint=hitEndpoint
+                        val normal=if(endpoint==null) hitNormal else (endpoint-a.p).planar().unit().let {
+                            if(it.length()>0.0) it else hitNormal
                         }
-                        val separation=if(endpoint==null) -(a.p-table.rails[h.b].a).dot(normal)
+                        val separation=if(endpoint==null) -(a.p-table.rails[hb].a).dot(normal)
                             else (a.p-endpoint).planar().length()
                         // The root uses local velocity but motion includes friction/spin.
                         // Correct any overlap, not just a fixed epsilon, without adding speed.
@@ -132,12 +164,12 @@ class BilliardWorld(val table: BilliardTable, val balls: MutableList<Ball>, val 
                         strength=PooltoolPhysics.cushion(a,normal,table.cloth)
                     }
                     EventKind.POCKET -> { strength=a.v.length(); a.motion=Motion.POCKETED; a.stop() }
-                    EventKind.PIN -> { strength=a.v.length(); pins[h.b].down=true; a.v*=.995; a.classify() }
+                    EventKind.PIN -> { strength=a.v.length(); pins[hb].down=true; a.v*=.995; a.classify() }
                     EventKind.LAND -> { strength=abs(a.v.z); PooltoolPhysics.land(a) }
                     else -> Unit
                 }
-                if(strength > 1e-8 || h.kind == EventKind.POCKET || h.kind == EventKind.LAND)
-                    events+=BilliardEvent(h.kind,a.id,if(h.kind == EventKind.BALL) balls[h.b].id else h.b,strength,time,a.p)
+                if(strength > 1e-8 || kind == EventKind.POCKET || kind == EventKind.LAND)
+                    events+=BilliardEvent(kind,a.id,if(kind == EventKind.BALL) balls[hb].id else hb,strength,time,a.p)
                 if(elapsed < 1e-9) {
                     // Avoid zero-time loops at simultaneous rack contacts. Keep the
                     // nudge much smaller than the collision-position tolerance.

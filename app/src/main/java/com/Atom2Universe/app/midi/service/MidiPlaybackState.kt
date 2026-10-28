@@ -12,10 +12,11 @@ import com.Atom2Universe.app.widget.MusicWidgetController
  */
 object MidiPlaybackState {
 
-    private var currentTrack: MidiTrack? = null
-    private var isPlaying: Boolean = false
-    private var hasNext: Boolean = false
-    private var hasPrevious: Boolean = false
+    // Écrit par le fil des moteurs du service, lu par le widget sur le fil principal
+    @Volatile private var currentTrack: MidiTrack? = null
+    @Volatile private var isPlaying: Boolean = false
+    @Volatile private var hasNext: Boolean = false
+    @Volatile private var hasPrevious: Boolean = false
 
     /**
      * Met à jour l'état depuis le service.
@@ -44,22 +45,6 @@ object MidiPlaybackState {
         if (stateChanged) {
             MusicWidgetController.notifyStateChanged(context)
         }
-    }
-
-    /**
-     * Met à jour l'état interne sans notifier le widget.
-     * Utilisé pour les mises à jour de position fréquentes.
-     */
-    fun updateStateQuiet(
-        track: MidiTrack?,
-        playing: Boolean,
-        canNext: Boolean,
-        canPrevious: Boolean
-    ) {
-        currentTrack = track
-        isPlaying = playing
-        hasNext = canNext
-        hasPrevious = canPrevious
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.midi.ui.adapter
 
 import android.content.Context
+import android.text.format.Formatter
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer
 import com.Atom2Universe.app.midi.data.MidiTrack
+import com.Atom2Universe.app.midi.ui.formatMidiTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -49,8 +54,20 @@ class MidiTrackAdapter(
     // Cache des infos MIDI chargées (par trackId)
     private val infoCache = mutableMapOf<Long, MidiFileAnalyzer.MidiFileInfo>()
 
-    // Jobs de chargement en cours
+    // Jobs de chargement en cours, dans une portée liée à la liste (annulée quand elle s'en va)
     private val loadingJobs = mutableMapOf<Long, Job>()
+    private var loadScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        if (!loadScope.isActive) loadScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        loadScope.cancel()
+        loadingJobs.clear()
+    }
 
     /**
      * Met à jour la liste des favoris
@@ -261,26 +278,30 @@ class MidiTrackAdapter(
                 return
             }
 
-            // Annuler le job précédent si en cours
-            loadingJobs[track.id]?.cancel()
-
             // Afficher le loading
             infoLoading.visibility = View.VISIBLE
             infoError.visibility = View.GONE
             infoContent.visibility = View.GONE
 
-            // Charger en arrière-plan
-            loadingJobs[track.id] = CoroutineScope(Dispatchers.Main).launch {
+            // Déjà en cours de chargement : la ligne sera prévenue à la fin
+            if (loadingJobs[track.id]?.isActive == true) return
+
+            // Charger en arrière-plan. À la fin, on prévient la ligne qui montre ce titre à ce
+            // moment-là (celle-ci a pu être recyclée pour un autre titre entre-temps)
+            val trackId = track.id
+            loadingJobs[trackId] = loadScope.launch {
                 val info = withContext(Dispatchers.IO) {
                     MidiFileAnalyzer(context).analyze(track.filePath)
                 }
 
                 // Mettre en cache
-                infoCache[track.id] = info
+                infoCache[trackId] = info
+                loadingJobs.remove(trackId)
 
                 // Afficher si toujours étendu
-                if (expandedTrackId == track.id) {
-                    showInfo(info)
+                if (expandedTrackId == trackId) {
+                    val position = currentList.indexOfFirst { it.id == trackId }
+                    if (position >= 0) notifyItemChanged(position, PAYLOAD_INFO_LOADED)
                 }
             }
         }
@@ -296,21 +317,37 @@ class MidiTrackAdapter(
                 infoError.visibility = View.GONE
                 infoContent.visibility = View.VISIBLE
 
-                // Résumé
-                infoSummary.text = info.summary
+                val res = context.resources
+                val separator = context.getString(R.string.midi_ui_info_separator)
+
+                // Résumé : durée, notes, canaux, tempo
+                infoSummary.text = buildList {
+                    add(
+                        if (info.durationMs > 0) formatMidiTime(context, info.durationMs)
+                        else context.getString(R.string.midi_ui_time_unknown)
+                    )
+                    add(res.getQuantityString(R.plurals.midi_ui_info_notes, info.totalNoteCount, info.totalNoteCount))
+                    add(res.getQuantityString(R.plurals.midi_ui_info_channels, info.channels.size, info.channels.size))
+                    if (info.mainBpm > 0) add(context.getString(R.string.midi_ui_info_bpm, info.mainBpm.toInt()))
+                }.joinToString(separator)
 
                 // Infos fichier
-                val fileInfo = "${info.midiTypeDescription} • ${info.trackCount} pistes • ${info.resolution} PPQ • ${info.formattedFileSize}"
-                infoFile.text = fileInfo
+                infoFile.text = listOf(
+                    context.getString(R.string.midi_ui_info_midi_type, info.midiType),
+                    res.getQuantityString(R.plurals.midi_ui_info_tracks, info.trackCount, info.trackCount),
+                    context.getString(R.string.midi_ui_info_ppq, info.resolution),
+                    Formatter.formatShortFileSize(context, info.fileSize)
+                ).joinToString(separator)
 
                 // Tempo
                 val tempoInfo = buildString {
-                    append("Tempo: ${info.mainBpm.toInt()} BPM")
+                    append(context.getString(R.string.midi_ui_info_tempo, info.mainBpm.toInt()))
                     if (info.tempoCount > 1) {
-                        append(" (${info.tempoCount} changements)")
+                        append(res.getQuantityString(R.plurals.midi_ui_info_tempo_changes, info.tempoCount, info.tempoCount))
                     }
                     if (info.timeSignature.isNotEmpty()) {
-                        append(" • Mesure: ${info.timeSignature}")
+                        append(separator)
+                        append(context.getString(R.string.midi_ui_info_time_signature, info.timeSignature))
                     }
                 }
                 infoTempo.text = tempoInfo
@@ -320,7 +357,7 @@ class MidiTrackAdapter(
 
                 // Copyright
                 if (info.copyright != null) {
-                    infoCopyright.text = "© ${info.copyright}"
+                    infoCopyright.text = context.getString(R.string.midi_ui_info_copyright, info.copyright)
                     infoCopyright.visibility = View.VISIBLE
                 } else {
                     infoCopyright.visibility = View.GONE
@@ -332,8 +369,8 @@ class MidiTrackAdapter(
             currentTrack = track
             isFavorite = favorite
             titleText.text = track.title
-            artistText.text = track.artist
-            albumText.text = track.album
+            artistText.text = track.artist.ifEmpty { itemView.context.getString(R.string.midi_engine_unknown_artist) }
+            albumText.text = track.album.ifEmpty { itemView.context.getString(R.string.midi_engine_unknown_album) }
             updateFavoriteIcon(favorite)
             updatePlaybackIndicator(isPlaybackActive && track.id == nowPlayingTrackId)
 

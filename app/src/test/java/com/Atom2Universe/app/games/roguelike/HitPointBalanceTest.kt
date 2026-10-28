@@ -29,13 +29,6 @@ class HitPointBalanceTest {
         }
     }
 
-    @Test fun oldSavesScaleOnceAndCurrentSavesStayUnchanged() {
-        assertEquals(45, HitPointBalance.restore(18, 1.0, 1))
-        assertEquals(45, HitPointBalance.restore(90, 5.0, 1))
-        assertEquals(90, HitPointBalance.restore(36, 1.0, 1))
-        assertEquals(80, HitPointBalance.restore(100, 5.0, 250))
-        for (floor in listOf(1, 100, 250, 500)) assertEquals(73, HitPointBalance.restore(73, HitPointBalance.playerMultiplier(floor), floor))
-    }
     @Test fun curvesAreLinearAndStopAtFloor250() {
         assertEquals(2.5, HitPointBalance.playerMultiplier(1), 0.0)
         assertEquals(2.5, HitPointBalance.enemyMultiplier(1), 0.0)

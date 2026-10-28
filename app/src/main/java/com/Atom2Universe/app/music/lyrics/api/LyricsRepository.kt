@@ -135,8 +135,10 @@ class LyricsRepository(
      * Le try 4 n'est exécuté que si la forme normalisée diffère de la forme nettoyée (try 1).
      * Aucune tentative "titre seul" : trop imprécis, donne des résultats catastrophiques.
      *
-     * IMPORTANT : si toutes les tentatives échouent avec Error (timeout, erreur réseau),
-     * on retourne Error plutôt que NotFound pour ne pas stocker de marqueur noLyricsFound.
+     * IMPORTANT : une tentative qui échoue avec Error (timeout, erreur réseau, HTTP 5xx) arrête
+     * la cascade et renvoie Error, plutôt que NotFound, pour ne pas stocker de marqueur
+     * noLyricsFound. Une API en panne ne répondrait pas mieux aux tentatives suivantes : les
+     * enchaîner coûtait jusqu'à quatre requêtes (et quatre délais d'attente) pour rien.
      */
     private suspend fun searchWithCascade(
         client: GenericLyricsApiClient,
@@ -147,32 +149,24 @@ class LyricsRepository(
         album: String?,
         trackDurationSeconds: Long
     ): LyricsResult {
-        var lastError: LyricsResult.Error? = null
-
         // 1. titre + artiste — pas d'album dans l'URL (retourne tous les résultats),
         //    mais scoringAlbum permet quand même de scorer les correspondances d'album côté client.
         Log.d(TAG, "[$label] Try 1/4: title='$title' artist='$artist' (match dur=${trackDurationSeconds}s album scoring='$album')")
         val r1 = trySearch(client, label, title, artist, null, null, trackDurationSeconds, scoringAlbum = album, scoringAlbumArtist = albumArtist)
-        if (r1 is LyricsResult.Success) return r1
-        if (r1 is LyricsResult.RateLimited) return r1
-        if (r1 is LyricsResult.Error) lastError = r1
+        if (r1 !is LyricsResult.NotFound) return r1
 
         // 2. titre + albumArtist (si disponible et différent)
         if (!albumArtist.isNullOrBlank()) {
             Log.d(TAG, "[$label] Try 2/4: title='$title' albumArtist='$albumArtist'")
             val r2 = trySearch(client, label, title, albumArtist, null, null, trackDurationSeconds, scoringAlbum = album, scoringAlbumArtist = albumArtist)
-            if (r2 is LyricsResult.Success) return r2
-            if (r2 is LyricsResult.RateLimited) return r2
-            if (r2 is LyricsResult.Error) lastError = r2
+            if (r2 !is LyricsResult.NotFound) return r2
         }
 
         // 3. titre + artiste + album dans l'URL (filtre côté API pour désambiguïsation)
         if (!album.isNullOrBlank()) {
             Log.d(TAG, "[$label] Try 3/4: title='$title' artist='$artist' album='$album'")
             val r3 = trySearch(client, label, title, artist, album, null, trackDurationSeconds, scoringAlbum = album, scoringAlbumArtist = albumArtist)
-            if (r3 is LyricsResult.Success) return r3
-            if (r3 is LyricsResult.RateLimited) return r3
-            if (r3 is LyricsResult.Error) lastError = r3
+            if (r3 !is LyricsResult.NotFound) return r3
         }
 
         // 4. normalisation agressive : supprime les symboles (&, !, ...) et chiffres du titre et de l'artiste.
@@ -183,18 +177,12 @@ class LyricsRepository(
         val normArtist = com.Atom2Universe.app.music.lyrics.LyricsUtils.normalizeForSearch(artist)
         if (normTitle != title || normArtist != artist) {
             Log.d(TAG, "[$label] Try 4/4: normTitle='$normTitle' normArtist='$normArtist'")
-            val r4 = trySearch(client, label, normTitle, normArtist, null, null, trackDurationSeconds)
-            if (r4 is LyricsResult.Success) return r4
-            if (r4 is LyricsResult.RateLimited) return r4
-            if (r4 is LyricsResult.Error) lastError = r4
+            return trySearch(client, label, normTitle, normArtist, null, null, trackDurationSeconds)
         } else {
             Log.d(TAG, "[$label] Try 4/4 skipped: already in normalized form")
         }
 
-        // Si toutes les tentatives ont échoué avec des erreurs réseau (et aucune
-        // réponse propre "NotFound" de l'API), propager l'erreur pour éviter
-        // de stocker un marqueur noLyricsFound sur un échec temporaire.
-        return lastError ?: LyricsResult.NotFound
+        return LyricsResult.NotFound
     }
 
     private suspend fun trySearch(

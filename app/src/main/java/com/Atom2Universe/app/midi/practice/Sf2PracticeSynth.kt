@@ -43,6 +43,7 @@ class Sf2PracticeSynth(
     private var synthesizer: Sf2Synthesizer? = null
     private var audioRenderer: AudioRenderer? = null
     private var isInitialized = false
+    private var isPaused = false
     private var synthListener: Sf2PracticeSynthListener? = null
     private val audioManager: AudioManager? by lazy {
         context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
@@ -148,9 +149,26 @@ class Sf2PracticeSynth(
         // Don't null sf2File - it's managed by Sf2FileCache (shared resource)
         sf2File = null  // Just clear our reference
         isInitialized = false
+        isPaused = false
         synthListener = null
 
         android.util.Log.d(TAG, "release: complete")
+    }
+
+    override fun pause() {
+        if (!isInitialized || isPaused) return
+        synthesizer?.allSoundOff()
+        // stop() arrête le fil de rendu ; start() réutilisera la même AudioTrack
+        audioRenderer?.stop()
+        isPaused = true
+    }
+
+    override fun resume() {
+        if (!isInitialized || !isPaused) return
+        isPaused = false
+        if (audioRenderer?.start() != true) {
+            android.util.Log.w(TAG, "resume: failed to restart AudioRenderer")
+        }
     }
 
     /**

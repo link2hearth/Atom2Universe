@@ -71,17 +71,35 @@ class SoundFontManager(
             val warnSize = 500 * 1024 * 1024L // 500 MB
             val sizeWarning = if (fileSize > warnSize) "large" else null
 
-            // Supprime l'ancien SoundFont si existant
-            deleteOldSoundFont()
-
-            // Copie le fichier vers filesDir
+            // Copie d'abord dans un fichier temporaire : l'ancien SoundFont n'est supprimé
+            // qu'une fois le nouveau entièrement copié (une copie ratée le laisse en place)
             val destFile = File(context.filesDir, "soundfonts/$fileName")
             destFile.parentFile?.mkdirs() // Crée le dossier si nécessaire
+            val tempFile = File(destFile.parentFile, "$fileName.part")
 
-            context.contentResolver.openInputStream(sourceUri)?.use { input ->
-                FileOutputStream(destFile).use { output ->
-                    input.copyTo(output)
+            try {
+                val input = context.contentResolver.openInputStream(sourceUri)
+                    ?: return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_not_found))
+                input.use {
+                    FileOutputStream(tempFile).use { output ->
+                        input.copyTo(output)
+                    }
                 }
+
+                // Le renommage remplace l'entrée du dossier sans réécrire le fichier : un moteur qui
+                // projette encore l'ancien en mémoire garde son contenu. Puis seulement l'ancien est retiré.
+                val oldPath = getCurrentSoundFontPath()
+                if (!tempFile.renameTo(destFile)) {
+                    return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_unknown))
+                }
+                Sf2FileCache.clear()
+                if (!oldPath.isNullOrBlank() && oldPath != destFile.absolutePath) {
+                    try {
+                        File(oldPath).delete()
+                    } catch (_: Exception) { }
+                }
+            } finally {
+                if (tempFile.exists()) tempFile.delete()
             }
 
             // Sauvegarde le chemin dans les settings

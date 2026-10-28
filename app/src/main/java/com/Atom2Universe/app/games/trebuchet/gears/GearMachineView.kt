@@ -20,6 +20,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.ShotCamera
 import com.Atom2Universe.app.games.trebuchet.TREBUCHET_PREFS
 import com.Atom2Universe.app.games.trebuchet.ShotSite
+import com.Atom2Universe.app.games.trebuchet.TargetLevel
 import com.Atom2Universe.app.games.trebuchet.TimeScrub
 import com.Atom2Universe.app.games.trebuchet.LandScene
 import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
@@ -129,14 +130,15 @@ class GearMachineView @JvmOverloads constructor(
         color = Color.rgb(119, 239, 196); style = Paint.Style.STROKE; strokeWidth = 0.07f
         pathEffect = DashPathEffect(floatArrayOf(0.16f, 0.10f), 0f)
     }
+    // Bouts francs et non arrondis : tracés en segments ([drawPolyline]), des bouts
+    // ronds se chevaucheraient à chaque jointure et y fonceraient la translucidité.
     private val pTrail = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.argb(210, 255, 240, 205); style = Paint.Style.STROKE
-        strokeWidth = 2.4f * dp; strokeCap = Paint.Cap.ROUND
+        strokeWidth = 2.4f * dp; strokeCap = Paint.Cap.BUTT
     }
     private val pGhost = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.BUTT
     }
-    private val trailPath = Path()
     private val spinRect = RectF()
     /** Les quatre points des deux brins d'une courroie ou d'une chaîne — voir [beltTangentPoints]. */
     private val transmissionPts = FloatArray(8)
@@ -239,6 +241,7 @@ class GearMachineView @JvmOverloads constructor(
     private val fmtCount = resources.getString(R.string.trebuchet_gear_panel_count)
     private val fmtLitres = resources.getString(R.string.trebuchet_gear_panel_litres)
     private val fmtCharging = resources.getString(R.string.trebuchet_gear_charging)
+    private val fmtTimeScrub = resources.getString(R.string.trebuchet_time_scrub)
     private val labelToolPart = resources.getString(R.string.trebuchet_gear_tool_part)
     private val labelToolFrame = resources.getString(R.string.trebuchet_gear_tool_frame)
     private val nameNoMotor = resources.getString(R.string.trebuchet_gear_motor_none)
@@ -764,14 +767,15 @@ class GearMachineView @JvmOverloads constructor(
      * reglee, et la machine monte en regime sous les yeux.
      */
     /**
-     * Dresse un nouveau site : relief et batiments, tires d'une graine.
+     * Dresse un nouveau site : relief et batiments, deja fabriques en fond par
+     * l'activite — voir [GearMachineGame.applyLevel].
      *
      * Rien de la machine ne bouge — c'est le paysage qu'on change, pas l'atelier. Le
      * cadrage recule pour montrer ce qui vient d'apparaitre, sinon le joueur ne saurait
      * pas que quelque chose s'est passe a cinq cents metres de lui.
      */
-    fun loadSite(seed: Long?) {
-        game.loadSite(seed)
+    fun applySite(level: TargetLevel?) {
+        game.applyLevel(level)
         cameraView = CameraView.FULL
         manualCam = false
         invalidate()
@@ -1163,7 +1167,13 @@ class GearMachineView @JvmOverloads constructor(
             // devant une image figee, et rien ne bloque une image entiere.
             val steps = ceil(game.chargeTotal / fixed / CHARGE_FRAMES).toInt()
                 .coerceIn(CHARGE_MIN_STEPS, CHARGE_MAX_STEPS)
-            consumed = game.advanceCharge(fixed, steps)
+            // Et jamais plus d'une tranche de temps par image : une machine lourde
+            // gelait l'écran à deux mille pas. La charge dure alors un peu plus
+            // longtemps, elle arrive au même état.
+            consumed = game.advanceCharge(fixed, steps, now + CHARGE_BUDGET_NANOS)
+            // La fumée et les étincelles vivent à l'heure de l'écran, pas à celle de la
+            // machine : jouées au temps de charge, elles disparaissaient d'un coup.
+            game.stepEffects(elapsed)
             // Le ciel suit le temps **machine** : charger deux minutes deplace le
             // Soleil de deux minutes. Ces secondes-la sont deja des secondes de monde,
             // donc elles passent par `skipSeconds` et non par `clockDt` — ce dernier les
@@ -1178,11 +1188,14 @@ class GearMachineView @JvmOverloads constructor(
             accumulator += elapsed
             var guard = 0
             while (accumulator >= fixed && guard++ < 8) {
-                game.step(fixed)
+                game.step(fixed, withEffects = false)
                 updateTimeControl(fixed)
                 accumulator -= fixed
                 consumed += fixed
             }
+            // Les effets une seule fois par image, pour le temps simulé : voir
+            // [GearMachineGame.step].
+            game.stepEffects(consumed)
             // Le decor avance d'un coup du temps reellement simule : nuages et horloge
             // sont lineaires en dt, donc sommer les sous-pas donne le meme resultat que
             // les parcourir, pour un seul recalcul du ciel par image.
@@ -1329,8 +1342,9 @@ class GearMachineView @JvmOverloads constructor(
     private fun stopTimeControl() = timeScrub.stop()
 
     /** Retour détaillé pendant l'appui long, identique à celui du trébuchet. */
-    private fun drawTimeControl(canvas: Canvas) =
-        timeScrub.draw(canvas, pHint, skyClock, width.toFloat(), height.toFloat(), dp)
+    private fun drawTimeControl(canvas: Canvas) = timeScrub.draw(
+        canvas, pHint, skyClock, width.toFloat(), height.toFloat(), dp, fmtTimeScrub, fmtLocale
+    )
 
     /**
      * Ce que vaut la machine, en haut à droite — **et pourquoi elle vaut ça**.
@@ -1981,11 +1995,18 @@ class GearMachineView @JvmOverloads constructor(
         val root = (pitch - GearMachineRules.MODULE * 0.9f).coerceAtLeast(outer * 0.2f)
         gearPath.reset()
         val points = teeth * 4
+        // Le contour se tourne d'un bloc : un cosinus et un sinus pour la roue, et la
+        // table des directions de sa denture pour le reste — et non quatre cents par
+        // roue et par image.
+        val table = toothDirections(points)
+        val ca = cos(gear.body.angle)
+        val sa = sin(gear.body.angle)
         for (i in 0 until points) {
-            val angle = gear.body.angle + i * (2f * PI.toFloat() / points)
             val radius = if (i % 4 == 1 || i % 4 == 2) outer else root
-            val x = gear.body.x + cos(angle) * radius
-            val y = gear.body.y + sin(angle) * radius
+            val c = table[i * 2]
+            val s = table[i * 2 + 1]
+            val x = gear.body.x + (c * ca - s * sa) * radius
+            val y = gear.body.y + (s * ca + c * sa) * radius
             if (i == 0) gearPath.moveTo(x, y) else gearPath.lineTo(x, y)
         }
         gearPath.close()
@@ -2054,6 +2075,21 @@ class GearMachineView @JvmOverloads constructor(
         }
         pHub.alpha = 255
         pEdge.alpha = 255
+    }
+
+    /** Les directions des sommets d'une denture, (cos, sin) à la suite, une table par taille. */
+    private val toothTables = android.util.SparseArray<FloatArray>()
+
+    private fun toothDirections(points: Int): FloatArray {
+        toothTables.get(points)?.let { return it }
+        val table = FloatArray(points * 2)
+        for (i in 0 until points) {
+            val angle = i * (2f * PI.toFloat() / points)
+            table[i * 2] = cos(angle)
+            table[i * 2 + 1] = sin(angle)
+        }
+        toothTables.put(points, table)
+        return table
     }
 
     private fun drawMaterialTexture(canvas: Canvas, gear: GearMachineGame.GearState, pitch: Float, alpha: Int) {
@@ -2214,16 +2250,20 @@ class GearMachineView @JvmOverloads constructor(
      */
     private fun drawGhosts(canvas: Canvas) {
         if (game.ghosts.isEmpty()) {
-            releaseGhostLayer()
+            // Le calque reste alloué : le jeter ici le faisait réallouer, vingt
+            // mégaoctets, au premier fantôme de chaque tir. [pause] le libère.
+            ghostReady = false
             return
         }
         if (width <= 0 || height <= 0) return
 
         val stamp = game.ghostStamp
         val layer = ghostLayer
+        // Au demi-pixel près, comme le trébuchet : l'égalité stricte refaisait le calque
+        // une centaine d'images de trop après chaque recadrage. Voir [ShotCamera.beginFrame].
         if (layer != null && ghostReady &&
             layer.width == width && layer.height == height &&
-            ghostCamX == cam.x && ghostCamY == cam.y && ghostCamScale == cam.scale &&
+            cam.sameFraming(ghostCamX, ghostCamY, ghostCamScale) &&
             ghostStamp == stamp
         ) {
             canvas.drawBitmap(layer, 0f, 0f, null)
@@ -2328,14 +2368,11 @@ class GearMachineView @JvmOverloads constructor(
         if (count < 4) return
         val w = width.toFloat()
         val h = height.toFloat()
-        trailPath.reset()
+        lineCount = 0
         // `px, py` : dernier point retenu. `hx, hy` : celui qu'on garde sous le coude, en
         // attendant de savoir si le point suivant le rend inutile.
         var px = sx(points[0])
         var py = sy(points[1])
-        var lastX = Float.NaN
-        var lastY = Float.NaN
-        var drew = false
         var hx = Float.NaN
         var hy = Float.NaN
         var dirX = 0f
@@ -2345,13 +2382,7 @@ class GearMachineView @JvmOverloads constructor(
         fun poser(cx: Float, cy: Float) {
             val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
                 (py < 0f && cy < 0f) || (py > h && cy > h)
-            if (!outside) {
-                if (px != lastX || py != lastY) trailPath.moveTo(px, py)
-                trailPath.lineTo(cx, cy)
-                lastX = cx
-                lastY = cy
-                drew = true
-            }
+            if (!outside) addSegment(px, py, cx, cy)
             px = cx
             py = cy
         }
@@ -2392,7 +2423,29 @@ class GearMachineView @JvmOverloads constructor(
             hy = cy
         }
         if (!hx.isNaN()) poser(hx, hy)
-        if (drew) canvas.drawPath(trailPath, paint)
+        if (lineCount > 0) canvas.drawLines(linePts, 0, lineCount, paint)
+    }
+
+    /**
+     * Les segments d'une polyligne, prêts pour un seul `drawLines` — le remède du
+     * trébuchet, voir `TrebuchetView.linePts`.
+     *
+     * Une trajectoire en un seul `Path` antialiasé est un tracé large comme l'écran :
+     * Skia le rastérise au processeur dans un masque, à chaque fantôme. En segments
+     * indépendants il n'y a plus de masque. Les pinceaux s'arrêtent net (`Cap.BUTT`),
+     * donc deux segments voisins ne se recouvrent pas et leur translucidité ne
+     * s'additionne nulle part.
+     */
+    private var linePts = FloatArray(1024)
+    private var lineCount = 0
+
+    private fun addSegment(x0: Float, y0: Float, x1: Float, y1: Float) {
+        if (lineCount + 4 > linePts.size) linePts = linePts.copyOf(linePts.size * 2)
+        linePts[lineCount] = x0
+        linePts[lineCount + 1] = y0
+        linePts[lineCount + 2] = x1
+        linePts[lineCount + 3] = y1
+        lineCount += 4
     }
 
     /** Sélecteur d'étage fixe : il reste lisible quel que soit le zoom de la machine. */
@@ -2837,6 +2890,9 @@ class GearMachineView @JvmOverloads constructor(
         private const val CHARGE_FRAMES = 90f
         private const val CHARGE_MIN_STEPS = 20
         private const val CHARGE_MAX_STEPS = 2_000
+
+        /** Le temps de calcul qu'une image accorde à la charge, en nanosecondes. */
+        private const val CHARGE_BUDGET_NANOS = 6_000_000L
 
         /** De combien le sol est remonte depuis le bas de l'image. */
         private const val GROUND_INSET_DP = 30f

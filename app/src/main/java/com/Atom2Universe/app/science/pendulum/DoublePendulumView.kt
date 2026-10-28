@@ -169,8 +169,19 @@ class DoublePendulumView @JvmOverloads constructor(
         if (count < 2) return
         val first = trail.size - count
         trailPath.rewind()
-        trailPath.moveTo(trail.x(first), trail.y(first))
-        for (i in first + 1 until trail.size) trailPath.lineTo(trail.x(i), trail.y(i))
+        var lastX = trail.x(first); var lastY = trail.y(first)
+        trailPath.moveTo(lastX, lastY)
+        // Un point par sous-pas de 5 ms : quand le bob ralentit, des dizaines tombent dans le
+        // même pixel. On saute ceux à moins d'un pixel du dernier gardé (écart invisible),
+        // le dernier point est toujours tracé.
+        val last = trail.size - 1
+        for (i in first + 1..last) {
+            val px = trail.x(i); val py = trail.y(i)
+            val dx = px - lastX; val dy = py - lastY
+            if (i < last && dx * dx + dy * dy < 1f) continue
+            trailPath.lineTo(px, py)
+            lastX = px; lastY = py
+        }
 
         trailPaint.color = applyAlpha(color, opacityMax)
         canvas.drawPath(trailPath, trailPaint)
@@ -262,30 +273,30 @@ class DoublePendulumView @JvmOverloads constructor(
 
         fun integrate(dt: Double, g: Double, l: Double, m: Double) {
             // Équations de Lagrange du pendule double (masses égales, bras égaux)
-            val (a1, a2) = equations(theta1, theta2, omega1, omega2, g, l, m)
+            equations(theta1, theta2, omega1, omega2, g, l, m)
             // RK4
-            val k1o1 = a1; val k1o2 = a2
+            val k1o1 = alpha1; val k1o2 = alpha2
             val k1t1 = omega1; val k1t2 = omega2
 
-            val (a1b, a2b) = equations(
+            equations(
                 theta1 + k1t1 * dt / 2, theta2 + k1t2 * dt / 2,
                 omega1 + k1o1 * dt / 2, omega2 + k1o2 * dt / 2, g, l, m
             )
-            val k2o1 = a1b; val k2o2 = a2b
+            val k2o1 = alpha1; val k2o2 = alpha2
             val k2t1 = omega1 + k1o1 * dt / 2; val k2t2 = omega2 + k1o2 * dt / 2
 
-            val (a1c, a2c) = equations(
+            equations(
                 theta1 + k2t1 * dt / 2, theta2 + k2t2 * dt / 2,
                 omega1 + k2o1 * dt / 2, omega2 + k2o2 * dt / 2, g, l, m
             )
-            val k3o1 = a1c; val k3o2 = a2c
+            val k3o1 = alpha1; val k3o2 = alpha2
             val k3t1 = omega1 + k2o1 * dt / 2; val k3t2 = omega2 + k2o2 * dt / 2
 
-            val (a1d, a2d) = equations(
+            equations(
                 theta1 + k3t1 * dt, theta2 + k3t2 * dt,
                 omega1 + k3o1 * dt, omega2 + k3o2 * dt, g, l, m
             )
-            val k4o1 = a1d; val k4o2 = a2d
+            val k4o1 = alpha1; val k4o2 = alpha2
             val k4t1 = omega1 + k3o1 * dt; val k4t2 = omega2 + k3o2 * dt
 
             omega1 += dt / 6.0 * (k1o1 + 2 * k2o1 + 2 * k3o1 + k4o1)
@@ -309,22 +320,25 @@ class DoublePendulumView @JvmOverloads constructor(
          * La version précédente divisait par 2m·l²(2 − cos2Δ) : l'énergie dérivait de plus de
          * 100 % en 100 s (contre ~10⁻⁵ ici) et la longueur des bras jouait au carré.
          */
-        private fun equations(t1: Double, t2: Double, o1: Double, o2: Double, g: Double, l: Double, m: Double): Pair<Double, Double> {
+        // Résultat de [equations] : une Pair allouée à chaque appel (quatre par sous-pas et
+        // par pendule) nourrissait le ramasse-miettes.
+        private var alpha1 = 0.0
+        private var alpha2 = 0.0
+
+        private fun equations(t1: Double, t2: Double, o1: Double, o2: Double, g: Double, l: Double, m: Double) {
             val delta = t1 - t2
             val denom = l * m * (3.0 - cos(2 * delta))
 
-            val alpha1 = (-3 * m * g * sin(t1)
+            alpha1 = (-3 * m * g * sin(t1)
                     - m * g * sin(t1 - 2 * t2)
                     - 2 * sin(delta) * m * (o2 * o2 * l + o1 * o1 * l * cos(delta))
                     ) / denom
 
-            val alpha2 = (2 * sin(delta) * (
+            alpha2 = (2 * sin(delta) * (
                     o1 * o1 * l * (2 * m)
                             + g * (2 * m) * cos(t1)
                             + o2 * o2 * l * m * cos(delta)
                     )) / denom
-
-            return Pair(alpha1, alpha2)
         }
 
         private fun recordTrails() {

@@ -51,7 +51,7 @@ class OneWayRotaryJoint(
         slipping = false
     }
 
-    override fun preStep(invDt: Float) {
+    override fun preStep(invDt: Float, dtRatio: Float) {
         engaged = false
         slipping = false
         reactionTorqueOnB = 0f
@@ -77,7 +77,7 @@ class OneWayRotaryJoint(
         maxImpulse = if (maxTorqueOnB.isFinite()) {
             maxTorqueOnB.coerceAtLeast(0f) / invDt
         } else Float.POSITIVE_INFINITY
-        accumulatedImpulse = accumulatedImpulse.coerceIn(0f, maxImpulse)
+        accumulatedImpulse = (accumulatedImpulse * dtRatio).coerceIn(0f, maxImpulse)
         val warmImpulse = accumulatedImpulse * inputDirection
         a.omega -= a.invI * ratio * warmImpulse
         b.omega += b.invI * warmImpulse

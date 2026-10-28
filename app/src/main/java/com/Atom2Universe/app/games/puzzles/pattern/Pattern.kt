@@ -75,7 +75,14 @@ class PatternState(
             val p = text.split(':')
             val (w, h) = p[0].split(',').map { it.toInt() }
             fun clues(s: String) = s.split(';').map { l -> if (l.isEmpty()) IntArray(0) else l.split(',').map { it.toInt() }.toIntArray() }
-            return PatternState(w, h, clues(p[1]), clues(p[2]), p[3].map { it - '0' }.toIntArray(), p[4].toInt())
+            val state = PatternState(w, h, clues(p[1]), clues(p[2]), p[3].map { it - '0' }.toIntArray(), p[4].toInt())
+            // Une sauvegarde qui ne colle plus (image retirée ou redessinée à une autre taille) est refusée.
+            require(w > 0 && h > 0 && state.rows.size == h && state.cols.size == w && state.cells.size == w * h)
+            if (state.picture >= 0) {
+                val picture = PatternPictures.all.getOrNull(state.picture)
+                require(picture != null && picture.w == w && picture.h == h)
+            }
+            return state
         }
 
         fun blocks(line: IntArray): IntArray {

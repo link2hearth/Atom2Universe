@@ -296,6 +296,7 @@
     <string name="roguelike_log_spotted">%1$s t\'a repéré !</string>
     <string name="roguelike_log_lost_track">%1$s a perdu ta trace.</string>
     <string name="roguelike_pack_size">×%1$d</string>
+    <string name="roguelike_chase_mark">!</string>
     <string name="roguelike_hint_chased">Poursuivi !</string>
     <string name="roguelike_death_summary">Tombé à l\'étage %1$d, %2$s or perdus</string>
     <string name="roguelike_death_checkpoint">Retour à l\'étage %1$d avec tout ton équipement</string>

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.music
 
 import android.content.Context
+import android.provider.MediaStore
 import androidx.core.net.toUri
 import com.Atom2Universe.app.music.model.Album
 import com.Atom2Universe.app.music.model.Artist
@@ -182,6 +183,43 @@ object MusicLibraryCache {
     @Suppress("unused")
     fun clearCache(context: Context) {
         File(context.filesDir, CACHE_FILE_NAME).delete()
+    }
+
+    /**
+     * Compte les pistes du MediaStore (dossiers configurés) absentes de la bibliothèque
+     * restaurée depuis ce cache. Retourne null en cas d'erreur.
+     */
+    suspend fun countNewTracks(context: Context, libraryTracks: List<MusicTrack>): Int? = withContext(Dispatchers.IO) {
+        try {
+            if (libraryTracks.isEmpty()) return@withContext null
+            val knownIds = libraryTracks.mapTo(HashSet(libraryTracks.size * 2)) { it.id }
+
+            MusicFoldersManager.init(context)
+            val projection = arrayOf(MediaStore.Audio.Media._ID)
+            // Même sélection que MusicScanner.scanMusicFolder
+            val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DATA} LIKE ?"
+            val seenIds = HashSet<Long>()
+            var newCount = 0
+
+            for (folderPath in MusicFoldersManager.getAllFolderPaths(context)) {
+                context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    arrayOf("$folderPath%"),
+                    null
+                )?.use { cursor ->
+                    val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                    while (cursor.moveToNext()) {
+                        val id = cursor.getLong(idColumn)
+                        if (seenIds.add(id) && id !in knownIds) newCount++
+                    }
+                }
+            }
+            newCount
+        } catch (_: Exception) {
+            null
+        }
     }
 
     // === Sérialisation ===

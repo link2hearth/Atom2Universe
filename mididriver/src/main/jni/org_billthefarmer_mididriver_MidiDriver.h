@@ -72,6 +72,30 @@ JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_shutdown
 JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_loadDLS
         (JNIEnv *, jobject, jbyteArray);
 
+/*
+ * Class:     org_billthefarmer_mididriver_MidiDriver
+ * Method:    isStarted
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_isStarted
+        (JNIEnv *, jobject);
+
+/*
+ * Class:     org_billthefarmer_mididriver_MidiDriver
+ * Method:    setEqEnabled
+ * Signature: (Z)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_setEqEnabled
+        (JNIEnv *, jobject, jboolean);
+
+/*
+ * Class:     org_billthefarmer_mididriver_MidiDriver
+ * Method:    setEqBandGain
+ * Signature: (IF)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_setEqBandGain
+        (JNIEnv *, jobject, jint, jfloat);
+
 #ifdef __cplusplus
 }
 #endif

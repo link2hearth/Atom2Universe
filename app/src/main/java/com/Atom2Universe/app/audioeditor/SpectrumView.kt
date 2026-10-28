@@ -14,8 +14,8 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.core.graphics.createBitmap
-import androidx.core.graphics.set
 import androidx.core.graphics.toColorInt
+import com.Atom2Universe.app.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -41,6 +41,11 @@ class SpectrumView @JvmOverloads constructor(
     companion object {
         private const val HANDLE_WIDTH = 24f
         private const val HANDLE_TOUCH_SLOP = 40f
+        private val LABEL_FREQS = intArrayOf(100, 500, 1000, 2000, 5000, 10000, 20000)
+        private val GRID_FREQS = floatArrayOf(125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f)
+        // Cap bitmap dimensions to avoid OOM - reduced for better memory safety
+        private const val MAX_BITMAP_WIDTH = 2048
+        private const val MAX_BITMAP_HEIGHT = 256
     }
 
     // Spectrogram data - protected by dataLock for thread-safe access
@@ -107,11 +112,23 @@ class SpectrumView @JvmOverloads constructor(
         strokeWidth = 3f
         style = Paint.Style.STROKE
     }
+    private val arrowPaint = Paint(handleLinePaint).apply {
+        style = Paint.Style.FILL
+    }
+    // Réutilisés à chaque dessin : pas d'allocation dans onDraw.
+    private val handleRect = RectF()
+    private val shapePath = Path()
+    private val emptyText = context.getString(R.string.ae_spectrum_empty)
+    private val freqLabels = Array(LABEL_FREQS.size) { i ->
+        val f = LABEL_FREQS[i]
+        if (f >= 1000) context.getString(R.string.ae_spectrum_khz, f / 1000) else f.toString()
+    }
 
     // Processing - use SupervisorJob for proper lifecycle management
     private val fftProcessor = FFTProcessor()
     private val viewScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private var processingJob: Job? = null
+    private var bitmapJob: Job? = null
 
     // Labels
     private var showLabels = true
@@ -174,19 +191,23 @@ class SpectrumView @JvmOverloads constructor(
         this.fftSize = fftSize
 
         processingJob?.cancel()
+        bitmapJob?.cancel()
+        val palette = colorPalette
         processingJob = viewScope.launch {
             val spectrogram = fftProcessor.computeSpectrogram(
                 samples = samples,
                 fftSize = fftSize,
                 hopSize = fftSize / 4
             )
+            // L'image se calcule ici aussi, hors du fil de l'interface.
+            val bitmap = buildBitmap(spectrogram, palette)
 
             withContext(Dispatchers.Main) {
                 spectrogramData = spectrogram
                 zoomLevel = 1f
                 scrollOffset = 0f
                 clearSelection()
-                generateBitmap()
+                swapBitmap(bitmap)
                 invalidate()
             }
         }
@@ -242,6 +263,8 @@ class SpectrumView @JvmOverloads constructor(
      * Clear the spectrogram.
      */
     fun clear() {
+        processingJob?.cancel()
+        bitmapJob?.cancel()
         synchronized(dataLock) {
             spectrogramData = null
         }
@@ -423,51 +446,50 @@ class SpectrumView @JvmOverloads constructor(
 
     // ==================== Drawing ====================
 
+    /** Recalcule l'image du spectrogramme sur un fil de fond, puis la montre. */
     private fun generateBitmap() {
         // Synchronized access to spectrogramData for thread safety
-        val data: Array<FloatArray>
-        val timeFrames: Int
-        val freqBins: Int
-        synchronized(dataLock) {
-            val localData = spectrogramData ?: return
-            if (localData.isEmpty() || localData[0].isEmpty()) return
-            // Make a shallow copy of references for safe iteration outside the lock
-            data = localData
-            timeFrames = data.size
-            freqBins = data[0].size
+        val data = synchronized(dataLock) { spectrogramData } ?: return
+        val palette = colorPalette
+        bitmapJob?.cancel()
+        bitmapJob = viewScope.launch {
+            val bitmap = buildBitmap(data, palette) ?: return@launch
+            withContext(Dispatchers.Main) {
+                swapBitmap(bitmap)
+                invalidate()
+            }
         }
+    }
 
-        // Cap bitmap dimensions to avoid OOM - reduced for better memory safety
-        val maxBitmapWidth = 2048
-        val maxBitmapHeight = 256
+    /** Remplace l'image montrée et libère l'ancienne. Fil principal. */
+    private fun swapBitmap(bitmap: Bitmap?) {
+        // Bug 2.17: Synchronized write for thread safety
+        val oldBitmap: Bitmap?
+        synchronized(bitmapLock) {
+            oldBitmap = spectrogramBitmap
+            spectrogramBitmap = bitmap
+        }
+        if (oldBitmap !== bitmap) oldBitmap?.recycle()
+    }
 
-        val bitmapWidth = timeFrames.coerceAtMost(maxBitmapWidth)
-        val bitmapHeight = freqBins.coerceAtMost(maxBitmapHeight)
+    /**
+     * L'image d'un spectrogramme, écrite pixel par pixel dans un tableau puis posée d'un coup (jamais pixel par
+     * pixel dans le bitmap). Chaque pixel garde l'intensité la plus forte de la zone qu'il couvre.
+     */
+    private fun buildBitmap(data: Array<FloatArray>, palette: ColorPalette): Bitmap? {
+        if (data.isEmpty() || data[0].isEmpty()) return null
+        val timeFrames = data.size
+        val freqBins = data[0].size
+
+        val bitmapWidth = timeFrames.coerceAtMost(MAX_BITMAP_WIDTH)
+        val bitmapHeight = freqBins.coerceAtMost(MAX_BITMAP_HEIGHT)
 
         // Compute downsampling ratios
         val timeStep = timeFrames.toFloat() / bitmapWidth
         val freqStep = freqBins.toFloat() / bitmapHeight
 
-        // Recycle old bitmap safely with synchronization
-        val oldBitmap: Bitmap?
-        synchronized(bitmapLock) {
-            oldBitmap = spectrogramBitmap
-            spectrogramBitmap = null
-        }
-        oldBitmap?.recycle()
-
-        // Create new bitmap with capped dimensions - wrapped in try-catch for OOM
-        val bitmap: Bitmap
-        try {
-            bitmap = createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
-        } catch (e: OutOfMemoryError) {
-            android.util.Log.e("SpectrumView", "OOM while creating spectrogram bitmap", e)
-            return
-        }
-
-        // Fill pixels with downsampling (take max intensity in each bin)
-        // Note: We iterate over the captured 'data' reference which won't change during iteration
-        val colors = colorPalette.colors
+        val colors = palette.colors
+        val pixels = IntArray(bitmapWidth * bitmapHeight)
         for (bx in 0 until bitmapWidth) {
             val tStart = (bx * timeStep).toInt()
             val tEnd = ((bx + 1) * timeStep).toInt().coerceAtMost(timeFrames)
@@ -478,8 +500,9 @@ class SpectrumView @JvmOverloads constructor(
                 // Find max intensity in this region
                 var maxIntensity = 0f
                 for (t in tStart until tEnd) {
+                    val column = data[t]
                     for (f in fStart until fEnd) {
-                        val v = data[t][f]
+                        val v = column[f]
                         if (v > maxIntensity) maxIntensity = v
                     }
                 }
@@ -487,13 +510,18 @@ class SpectrumView @JvmOverloads constructor(
 
                 val colorIndex = (maxIntensity * (colors.size - 1)).toInt()
                 // Flip Y axis (low frequencies at bottom)
-                bitmap[bx, bitmapHeight - 1 - by] = colors[colorIndex]
+                pixels[(bitmapHeight - 1 - by) * bitmapWidth + bx] = colors[colorIndex]
             }
         }
 
-        // Bug 2.17: Synchronized write for thread safety
-        synchronized(bitmapLock) {
-            spectrogramBitmap = bitmap
+        // Créé modifiable puis rempli : un bitmap tiré d'un tableau d'entiers serait immuable.
+        return try {
+            createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888).also {
+                it.setPixels(pixels, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight)
+            }
+        } catch (e: OutOfMemoryError) {
+            android.util.Log.e("SpectrumView", "OOM while creating spectrogram bitmap", e)
+            null
         }
     }
 
@@ -562,10 +590,9 @@ class SpectrumView @JvmOverloads constructor(
 
     private fun drawEmptyState(canvas: Canvas) {
         canvas.drawColor(com.Atom2Universe.app.audio.AudioStyle.surface(context))
-        val text = "No spectrum data"
-        val textWidth = labelPaint.measureText(text)
+        val textWidth = labelPaint.measureText(emptyText)
         canvas.drawText(
-            text,
+            emptyText,
             (width - textWidth) / 2,
             height / 2f,
             labelPaint
@@ -576,17 +603,13 @@ class SpectrumView @JvmOverloads constructor(
         val maxFreq = sampleRate / 2f // Nyquist frequency
 
         // Draw labels at key frequencies
-        val freqLabels = listOf(100, 500, 1000, 2000, 5000, 10000, 20000)
-            .filter { it <= maxFreq }
-
-        for (freq in freqLabels) {
+        for (i in LABEL_FREQS.indices) {
+            val freq = LABEL_FREQS[i]
+            if (freq > maxFreq) continue
             val normalizedFreq = freq / maxFreq
             val y = bottom - (bottom - top) * normalizedFreq
 
-            // Format label
-            val label = if (freq >= 1000) "${freq / 1000}k" else "$freq"
-
-            canvas.drawText(label, 4f, y + labelPaint.textSize / 3, labelPaint)
+            canvas.drawText(freqLabels[i], 4f, y + labelPaint.textSize / 3, labelPaint)
             canvas.drawLine(left.toFloat(), y, left + 8f, y, gridPaint)
         }
     }
@@ -594,10 +617,8 @@ class SpectrumView @JvmOverloads constructor(
     private fun drawGrid(canvas: Canvas, left: Int, top: Int, right: Int, bottom: Int) {
         // Horizontal grid lines at octave intervals
         val maxFreq = sampleRate / 2f
-        val octaves = listOf(125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f)
-            .filter { it <= maxFreq }
-
-        for (freq in octaves) {
+        for (freq in GRID_FREQS) {
+            if (freq > maxFreq) continue
             val normalizedFreq = freq / maxFreq
             val y = bottom - (bottom - top) * normalizedFreq
             canvas.drawLine(left.toFloat(), y, right.toFloat(), y, gridPaint)
@@ -649,18 +670,15 @@ class SpectrumView @JvmOverloads constructor(
 
         // Handle body (rounded rectangle at top)
         val left = if (isLeft) x - handleWidth else x
-        val rect = RectF(left, 0f, left + handleWidth, handleHeight)
-        canvas.drawRoundRect(rect, 8f, 8f, handlePaint)
+        handleRect.set(left, 0f, left + handleWidth, handleHeight)
+        canvas.drawRoundRect(handleRect, 8f, 8f, handlePaint)
 
         // Handle line going down
         canvas.drawLine(x, handleHeight + paddingTop, x, (height - paddingBottom).toFloat(), handleLinePaint)
 
-        // Arrow indicator
-        // Bug fix: Use local Paint copy to avoid mutating shared handleLinePaint
-        val arrowPaint = Paint(handleLinePaint).apply {
-            style = Paint.Style.FILL
-        }
-        val path = Path()
+        // Arrow indicator (arrowPaint : copie pleine de handleLinePaint, qui reste un trait)
+        val path = shapePath
+        path.reset()
         if (isLeft) {
             path.moveTo(left + handleWidth - 6f, handleHeight / 2f - 6f)
             path.lineTo(left + 6f, handleHeight / 2f)
@@ -681,7 +699,8 @@ class SpectrumView @JvmOverloads constructor(
         canvas.drawLine(x, paddingTop.toFloat(), x, (height - paddingBottom).toFloat(), playheadPaint)
 
         // Triangle at top
-        val path = Path()
+        val path = shapePath
+        path.reset()
         path.moveTo(x - 8f, paddingTop.toFloat())
         path.lineTo(x + 8f, paddingTop.toFloat())
         path.lineTo(x, paddingTop + 12f)
@@ -725,6 +744,8 @@ class SpectrumView @JvmOverloads constructor(
         // Cancel processing job first to ensure it's stopped
         processingJob?.cancel()
         processingJob = null
+        bitmapJob?.cancel()
+        bitmapJob = null
         // Cancel all coroutines in the view scope
         viewScope.cancel()
         // Bug 2.17: Safely recycle bitmap with synchronization

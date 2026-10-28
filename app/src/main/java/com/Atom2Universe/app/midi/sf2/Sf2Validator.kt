@@ -22,70 +22,96 @@ object Sf2Validator {
         val hasProblems: Boolean get() = issues.isNotEmpty() || warnings.isNotEmpty()
         val hasCriticalIssues: Boolean get() = issues.any { it.severity == Severity.CRITICAL }
 
-        fun getSummary(): String = buildString {
-            append("SF2 Validation: ")
+        /** Report in plain words, in the language of [context]. */
+        fun getDetailedReport(context: Context): String = buildString {
+            val res = context.resources
+            append(context.getString(R.string.midi_ui_sf2_report_contents,
+                res.getQuantityString(R.plurals.midi_ui_sf2_report_presets, stats.presetCount, stats.presetCount),
+                res.getQuantityString(R.plurals.midi_ui_sf2_report_samples, stats.sampleCount, stats.sampleCount)))
+            append("\n\n")
+
             if (!hasProblems) {
-                append("OK")
-            } else {
-                append("${issues.size} issues, ${warnings.size} warnings")
+                append(context.getString(R.string.midi_ui_sf2_report_fine))
+                return@buildString
             }
-            append("\n")
-            append("Stats: ${stats.presetCount} presets, ${stats.instrumentCount} instruments, ${stats.sampleCount} samples")
-            if (stats.problematicZoneCount > 0) {
-                append("\n${stats.problematicZoneCount} zones with extreme pitch offsets")
-            }
-            if (stats.suspiciousPresetCount > 0) {
-                append("\n${stats.suspiciousPresetCount} presets with unusual configurations")
-            }
-        }
 
-        fun getDetailedReport(): String = buildString {
-            append("=== SF2 Validation Report ===\n\n")
-            append("Statistics:\n")
-            append("  Presets: ${stats.presetCount}\n")
-            append("  Instruments: ${stats.instrumentCount}\n")
-            append("  Samples: ${stats.sampleCount}\n")
-            append("  Problematic zones: ${stats.problematicZoneCount}\n")
-            append("  Suspicious presets: ${stats.suspiciousPresetCount}\n")
-            append("\n")
-
-            if (issues.isNotEmpty()) {
-                append("Issues (${issues.size}):\n")
-                issues.forEach { issue ->
-                    append("  [${issue.severity}] ${issue.message}\n")
-                    issue.details?.let { append("    $it\n") }
+            for (issue in issues) {
+                append(issue.describe(context))
+                append("\n")
+                issue.sampleNames.take(MAX_LISTED).forEach { name ->
+                    append(context.getString(R.string.midi_ui_sf2_report_item, name))
+                    append("\n")
+                }
+                if (issue.sampleNames.size > MAX_LISTED) {
+                    val more = issue.sampleNames.size - MAX_LISTED
+                    append(res.getQuantityString(R.plurals.midi_ui_sf2_report_more, more, more))
+                    append("\n")
                 }
                 append("\n")
             }
 
             if (warnings.isNotEmpty()) {
-                append("Warnings (${warnings.size}):\n")
-                warnings.take(20).forEach { warning ->
-                    append("  ${warning.message}\n")
+                append(context.getString(R.string.midi_ui_sf2_report_details_title))
+                append("\n")
+                warnings.take(MAX_LISTED).forEach { warning ->
+                    append(context.getString(R.string.midi_ui_sf2_report_item, warning.describe(context)))
+                    append("\n")
                 }
-                if (warnings.size > 20) {
-                    append("  ... and ${warnings.size - 20} more warnings\n")
+                if (warnings.size > MAX_LISTED) {
+                    val more = warnings.size - MAX_LISTED
+                    append(res.getQuantityString(R.plurals.midi_ui_sf2_report_more, more, more))
+                    append("\n")
                 }
-            }
-
-            if (!hasProblems) {
-                append("No issues detected. SF2 file appears valid.\n")
             }
         }
     }
 
+    // Lignes listées au plus dans le rapport pour chaque rubrique
+    private const val MAX_LISTED = 20
+
     enum class Severity { WARNING, ERROR, CRITICAL }
 
+    enum class IssueKind { NO_PRESETS, NO_SAMPLES, NO_INSTRUMENTS, MANY_STRETCHED_ZONES, MANY_SUSPICIOUS_PRESETS, INVALID_SAMPLES }
+
+    /** A problem of the whole file; [count] and [sampleNames] depend on [kind]. */
     data class Issue(
         val severity: Severity,
-        val message: String,
-        val details: String? = null
-    )
+        val kind: IssueKind,
+        val count: Int = 0,
+        val sampleNames: List<String> = emptyList()
+    ) {
+        fun describe(context: Context): String {
+            val res = context.resources
+            return when (kind) {
+                IssueKind.NO_PRESETS -> context.getString(R.string.midi_ui_sf2_issue_no_presets)
+                IssueKind.NO_SAMPLES -> context.getString(R.string.midi_ui_sf2_issue_no_samples)
+                IssueKind.NO_INSTRUMENTS -> context.getString(R.string.midi_ui_sf2_issue_no_instruments)
+                IssueKind.MANY_STRETCHED_ZONES ->
+                    res.getQuantityString(R.plurals.midi_ui_sf2_issue_stretched, count, count)
+                IssueKind.MANY_SUSPICIOUS_PRESETS ->
+                    res.getQuantityString(R.plurals.midi_ui_sf2_issue_suspicious, count, count)
+                IssueKind.INVALID_SAMPLES ->
+                    res.getQuantityString(R.plurals.midi_ui_sf2_issue_invalid_samples, count, count)
+            }
+        }
+    }
 
+    enum class WarningKind { STRETCHED_PRESET, MISMATCHED_INSTRUMENT }
+
+    /** A remark about one preset: [count] stretched notes, or the [instrumentName] it uses. */
     data class Warning(
-        val message: String,
-        val presetInfo: String? = null
-    )
+        val kind: WarningKind,
+        val presetName: String,
+        val count: Int = 0,
+        val instrumentName: String = ""
+    ) {
+        fun describe(context: Context): String = when (kind) {
+            WarningKind.STRETCHED_PRESET ->
+                context.resources.getQuantityString(R.plurals.midi_ui_sf2_warning_stretched, count, presetName, count)
+            WarningKind.MISMATCHED_INSTRUMENT ->
+                context.getString(R.string.midi_ui_sf2_warning_mismatch, presetName, instrumentName)
+        }
+    }
 
     data class Stats(
         val presetCount: Int,
@@ -109,15 +135,15 @@ object Sf2Validator {
 
         // Check basic structure
         if (metadata.presetCount == 0) {
-            issues.add(Issue(Severity.CRITICAL, "SF2 file has no presets"))
+            issues.add(Issue(Severity.CRITICAL, IssueKind.NO_PRESETS))
         }
 
         if (metadata.sampleHeaders.isEmpty()) {
-            issues.add(Issue(Severity.CRITICAL, "SF2 file has no samples"))
+            issues.add(Issue(Severity.CRITICAL, IssueKind.NO_SAMPLES))
         }
 
         if (metadata.instrumentHeaders.isEmpty()) {
-            issues.add(Issue(Severity.CRITICAL, "SF2 file has no instruments"))
+            issues.add(Issue(Severity.CRITICAL, IssueKind.NO_INSTRUMENTS))
         }
 
         // Check each preset
@@ -128,10 +154,7 @@ object Sf2Validator {
                 problematicZoneCount += presetIssues.problematicZones
 
                 if (presetIssues.problematicZones > 5) {
-                    warnings.add(Warning(
-                        "Preset '${preset.name}' (${preset.bank}:${preset.preset}) has ${presetIssues.problematicZones} zones with extreme pitch offsets",
-                        "${preset.bank}:${preset.preset}"
-                    ))
+                    warnings.add(Warning(WarningKind.STRETCHED_PRESET, preset.name, count = presetIssues.problematicZones))
                 }
             }
 
@@ -143,10 +166,7 @@ object Sf2Validator {
 
             // Check for unusual instrument names in standard presets
             presetIssues.suspiciousInstruments.forEach { (instName, presetName) ->
-                warnings.add(Warning(
-                    "Preset '$presetName' uses instrument '$instName' which may not match expected sound",
-                    presetName
-                ))
+                warnings.add(Warning(WarningKind.MISMATCHED_INSTRUMENT, presetName, instrumentName = instName))
             }
         }
 
@@ -156,25 +176,18 @@ object Sf2Validator {
 
         // Summary warnings
         if (problematicZoneCount > 50) {
-            issues.add(Issue(
-                Severity.WARNING,
-                "SF2 has many zones with extreme pitch configurations ($problematicZoneCount zones)",
-                "This may cause incorrect playback for some instruments. The SF2 file may be corrupted or have unusual design."
-            ))
+            issues.add(Issue(Severity.WARNING, IssueKind.MANY_STRETCHED_ZONES, count = problematicZoneCount))
         }
 
         if (suspiciousPresetCount > 10) {
-            issues.add(Issue(
-                Severity.WARNING,
-                "$suspiciousPresetCount presets have suspicious configurations",
-                "Some instruments may not sound as expected."
-            ))
+            issues.add(Issue(Severity.WARNING, IssueKind.MANY_SUSPICIOUS_PRESETS, count = suspiciousPresetCount))
         }
 
         val stats = Stats(
             presetCount = metadata.presetCount,
             instrumentCount = metadata.instrumentHeaders.size,
-            sampleCount = metadata.sampleHeaders.size,
+            // Sans l'en-tête terminal (EOS)
+            sampleCount = (metadata.sampleHeaders.size - 1).coerceAtLeast(0),
             problematicZoneCount = problematicZoneCount,
             suspiciousPresetCount = suspiciousPresetCount,
             totalZoneCount = totalZoneCount
@@ -393,10 +406,9 @@ object Sf2Validator {
     }
 
     private fun validateSamples(samples: List<Sf2SampleHeader>): List<Issue> {
-        val issues = mutableListOf<Issue>()
-        val invalidSampleDetails = mutableListOf<String>()
+        val invalidSampleNames = mutableListOf<String>()
 
-        for ((index, sample) in samples.withIndex()) {
+        for (sample in samples) {
             // Skip terminal/placeholder samples (EOS = End Of Samples)
             // These are normal SF2 structure markers, not real samples
             if (sample.name.equals("EOS", ignoreCase = true) ||
@@ -405,45 +417,21 @@ object Sf2Validator {
                 continue
             }
 
-            val sampleProblems = mutableListOf<String>()
+            val invalid =
+                // Invalid sample boundaries
+                sample.end <= sample.start ||
+                // Invalid loop points (only if loop is enabled, i.e., points are non-zero)
+                ((sample.startLoop > 0 || sample.endLoop > 0) && sample.endLoop < sample.startLoop) ||
+                // Invalid sample rate
+                sample.sampleRate <= 0 || sample.sampleRate > 192000 ||
+                // Invalid original pitch (255 is the special "unpitched" value for drums)
+                (sample.originalPitch > 127 && sample.originalPitch != 255)
 
-            // Check for invalid sample boundaries
-            if (sample.end <= sample.start) {
-                sampleProblems.add("invalid boundaries (end=${sample.end} <= start=${sample.start})")
-            }
-
-            // Check for invalid loop points (only if loop is enabled, i.e., points are non-zero)
-            if (sample.startLoop > 0 || sample.endLoop > 0) {
-                if (sample.endLoop < sample.startLoop) {
-                    sampleProblems.add("invalid loop (endLoop=${sample.endLoop} < startLoop=${sample.startLoop})")
-                }
-            }
-
-            // Check for invalid sample rate
-            if (sample.sampleRate <= 0 || sample.sampleRate > 192000) {
-                sampleProblems.add("invalid sample rate (${sample.sampleRate} Hz)")
-            }
-
-            // Check for invalid original pitch
-            if (sample.originalPitch > 127 && sample.originalPitch != 255) {
-                // 255 is special "unpitched" value for drums
-                sampleProblems.add("invalid pitch (${sample.originalPitch})")
-            }
-
-            if (sampleProblems.isNotEmpty()) {
-                invalidSampleDetails.add("'${sample.name}' [#$index]: ${sampleProblems.joinToString(", ")}")
-            }
+            if (invalid) invalidSampleNames.add(sample.name)
         }
 
-        if (invalidSampleDetails.isNotEmpty()) {
-            issues.add(Issue(
-                Severity.WARNING,
-                "${invalidSampleDetails.size} samples have invalid parameters:",
-                invalidSampleDetails.joinToString("\n")
-            ))
-        }
-
-        return issues
+        if (invalidSampleNames.isEmpty()) return emptyList()
+        return listOf(Issue(Severity.WARNING, IssueKind.INVALID_SAMPLES, invalidSampleNames.size, invalidSampleNames))
     }
 
     /**

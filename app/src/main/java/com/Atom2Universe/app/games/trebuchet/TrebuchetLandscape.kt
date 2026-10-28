@@ -11,6 +11,7 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.Shape
 import kotlin.math.abs
@@ -88,6 +89,19 @@ class LandScene(context: Context) {
     }
 
     /**
+     * Les libellés des bornes, faits une fois par distance : une borne garde le sien
+     * d'une image à l'autre, et le refabriquer à chaque image était une chaîne neuve par
+     * borne visible.
+     */
+    private val markFormat = context.getString(R.string.trebuchet_distance_mark)
+    private val markLocale = context.resources.configuration.locales[0]
+    private val markLabels = android.util.SparseArray<String>()
+
+    private fun markLabel(metres: Int): String =
+        markLabels.get(metres) ?: String.format(markLocale, markFormat, metres)
+            .also { markLabels.put(metres, it) }
+
+    /**
      * Les peintures de la cible, une par matériau, plus leur trait de contour.
      *
      * Elles sont dans le même ordre que [Material], ce qui permet d'aller les chercher
@@ -139,7 +153,7 @@ class LandScene(context: Context) {
      * et ce qui est tombé se reconnaît autrement : la matière éteinte, tirée vers la
      * poussière, et deux coins entamés.
      */
-    private fun rubbleColor(c: Int): Int = ColorUtils.blendARGB(c, "#4A4640".toColorInt(), 0.45f)
+    private fun rubbleColor(c: Int): Int = ColorUtils.blendARGB(c, 0xFF4A4640.toInt(), 0.45f)
 
     private fun rubbleTint(colors: IntArray) {
         for (i in colors.indices) colors[i] = rubbleColor(colors[i])
@@ -209,6 +223,12 @@ class LandScene(context: Context) {
         strokeCap = Paint.Cap.SQUARE
     }
     private val decorPath = Path()
+
+    /** Les sommets d'un polygone de décor, en repère local : voir [appendDecor]. */
+    private val polyPts = FloatArray(14)
+
+    /** Les trois teintes d'une matière, recopiées ici avant d'être éteintes en gravats. */
+    private val surfaceColors = IntArray(3)
 
     /** Le profil du sol, refait à chaque image : il ne dépend que du cadrage. */
     private val groundPath = Path()
@@ -284,6 +304,9 @@ class LandScene(context: Context) {
     private var lastLevelForDecor: TargetLevel? = null
     private var lastPieceBroken = 0
     private var villagerCooldown = 0f
+
+    /** Plus personne ne court : le paysage n'a plus rien qui doive bouger vite. */
+    val calm: Boolean get() = villagers.list.isEmpty()
 
 
     /**
@@ -386,7 +409,7 @@ class LandScene(context: Context) {
                 val py = sy(terrain.heightAt(x))
                 canvas.drawLine(px, py, px, py + 10f * dp, pTick)
                 if (d > 0f) {
-                    canvas.drawText("${d.toInt()} m", px, py + 24f * dp, pTickLabel)
+                    canvas.drawText(markLabel(d.toInt()), px, py + 24f * dp, pTickLabel)
                 }
             }
             d += step
@@ -570,10 +593,26 @@ class LandScene(context: Context) {
                     appendGable(piecePath, p)
                     canvas.drawPath(piecePath, paint)
                 } else {
-                    for (k in b.parts.indices) drawPart(canvas, b, k, paint, spoke)
+                    for (k in b.parts.indices) {
+                        // Un morceau que [drawSurface] repeint en entier n'a pas à être
+                        // rempli ici d'abord : sa matière le couvre, et son contour passe
+                        // par-dessus le bord.
+                        if (!spoke && coveredBySurface(b, k)) continue
+                        drawPart(canvas, b, k, paint, spoke)
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Vrai si [drawSurface] remplira ce morceau d'un bout à l'autre — la même condition
+     * de taille qu'elle. Les disques restent remplis deux fois : leur matière se peint
+     * dans un cercle dont le rayon n'est pas forcément le leur.
+     */
+    private fun coveredBySurface(b: PhysBody, part: Int): Boolean {
+        val p = b.parts[part]
+        return p.shape != Shape.CIRCLE && minOf(p.halfW, p.halfH) * camScale >= 2.2f * dp
     }
 
     /** Peint les joints, fibres et rangées qui font lire la matière au premier coup d'œil. */
@@ -611,30 +650,40 @@ class LandScene(context: Context) {
             }
             canvas.clipPath(decorPath)
 
-            val colors = when (surface) {
-                Surface.THATCH -> intArrayOf(0xFFC9A84C.toInt(), 0xFF806329.toInt(), 0xFFE1C66E.toInt())
-                Surface.SHINGLES -> intArrayOf(0xFF81522F.toInt(), 0xFF4D2D19.toInt(), 0xFFB27A48.toInt())
-                Surface.TILES -> intArrayOf(0xFFB85C3D.toInt(), 0xFF713323.toInt(), 0xFFD9845E.toInt())
-                Surface.SLATE -> intArrayOf(0xFF58636E.toInt(), 0xFF303943.toInt(), 0xFF89949E.toInt())
-                Surface.PLANKS -> intArrayOf(0xFF8B5E3C.toInt(), 0xFF50331F.toInt(), 0xFFC08A58.toInt())
-                Surface.TIMBER_FRAME -> intArrayOf(0xFFC6A879.toInt(), 0xFF4B2D19.toInt(), 0xFFE0C99E.toInt())
-                Surface.BRICK -> intArrayOf(0xFFA94F37.toInt(), 0xFF663426.toInt(), 0xFFD07A5B.toInt())
-                Surface.FIELDSTONE -> intArrayOf(0xFF92999C.toInt(), 0xFF596064.toInt(), 0xFFC0C3BE.toInt())
-                Surface.CUT_STONE -> intArrayOf(0xFFA4A9AA.toInt(), 0xFF666D70.toInt(), 0xFFCED0CB.toInt())
-                Surface.CARDBOARD -> intArrayOf(0xFFD9B26A.toInt(), 0xFF9B7139.toInt(), 0xFFF0D18C.toInt())
-                Surface.CONCRETE -> intArrayOf(0xFFB9BCB8.toInt(), 0xFF7C817E.toInt(), 0xFFDCDED9.toInt())
-                Surface.GLASS_WALL -> intArrayOf(0xFF6FA8BD.toInt(), 0xFF3C5F70.toInt(), 0xFFCDEAF5.toInt())
-                Surface.CLADDING -> intArrayOf(0xFF8E97A0.toInt(), 0xFF515A63.toInt(), 0xFFC3CBD2.toInt())
+            // Les teintes viennent de tables faites une fois, recopiées dans un tableau
+            // déjà alloué : le gravat les éteint sur place, l'original ne doit pas bouger.
+            val colors = surfaceColors
+            val palette = when (surface) {
+                Surface.THATCH -> SURFACE_THATCH
+                Surface.SHINGLES -> SURFACE_SHINGLES
+                Surface.TILES -> SURFACE_TILES
+                Surface.SLATE -> SURFACE_SLATE
+                Surface.PLANKS -> SURFACE_PLANKS
+                Surface.TIMBER_FRAME -> SURFACE_TIMBER_FRAME
+                Surface.BRICK -> SURFACE_BRICK
+                Surface.FIELDSTONE -> SURFACE_FIELDSTONE
+                Surface.CUT_STONE -> SURFACE_CUT_STONE
+                Surface.CARDBOARD -> SURFACE_CARDBOARD
+                Surface.CONCRETE -> SURFACE_CONCRETE
+                Surface.GLASS_WALL -> SURFACE_GLASS
+                Surface.CLADDING -> SURFACE_CLADDING
                 Surface.AUTO -> when (piece.material) {
-                    Material.ICE -> intArrayOf(0xFFA8D8E8.toInt(), 0xFF6EAABD.toInt(), 0xFFD9F4FA.toInt())
-                    Material.CONCRETE -> intArrayOf(0xFFB9BCB8.toInt(), 0xFF7C817E.toInt(), 0xFFDCDED9.toInt())
-                    Material.GLASS -> intArrayOf(0xFF6FA8BD.toInt(), 0xFF3C5F70.toInt(), 0xFFCDEAF5.toInt())
-                    Material.STEEL -> intArrayOf(0xFF7E8896.toInt(), 0xFF4A525C.toInt(), 0xFFB4BCC6.toInt())
-                    Material.COB -> intArrayOf(0xFFB8916A.toInt(), 0xFF806044.toInt(), 0xFFD4B38C.toInt())
-                    Material.EARTH -> intArrayOf(0xFF7A6247.toInt(), 0xFF4E3C2C.toInt(), 0xFFA48A69.toInt())
-                    Material.IRON -> intArrayOf(0xFF54606B.toInt(), 0xFF303942.toInt(), 0xFF87939D.toInt())
-                    else -> intArrayOf(targetFills[piece.material.ordinal].color, targetEdges[piece.material.ordinal].color, Color.WHITE)
+                    Material.ICE -> SURFACE_ICE
+                    Material.CONCRETE -> SURFACE_CONCRETE
+                    Material.GLASS -> SURFACE_GLASS
+                    Material.STEEL -> SURFACE_STEEL
+                    Material.COB -> SURFACE_COB
+                    Material.EARTH -> SURFACE_EARTH
+                    Material.IRON -> SURFACE_IRON
+                    else -> null
                 }
+            }
+            if (palette != null) {
+                palette.copyInto(colors)
+            } else {
+                colors[0] = targetFills[piece.material.ordinal].color
+                colors[1] = targetEdges[piece.material.ordinal].color
+                colors[2] = Color.WHITE
             }
             if (piece.debris) rubbleTint(colors)
             pSurfaceFill.color = colors[0]
@@ -809,12 +858,14 @@ class LandScene(context: Context) {
             Material.SANDSTONE -> Surface.TILES
             else -> Surface.SHINGLES
         }
-        val colors = when (surface) {
-            Surface.THATCH -> intArrayOf(0xFFC9A84C.toInt(), 0xFF806329.toInt(), 0xFFE1C66E.toInt())
-            Surface.TILES -> intArrayOf(0xFFB85C3D.toInt(), 0xFF713323.toInt(), 0xFFD9845E.toInt())
-            Surface.SLATE -> intArrayOf(0xFF58636E.toInt(), 0xFF303943.toInt(), 0xFF89949E.toInt())
-            else -> intArrayOf(0xFF81522F.toInt(), 0xFF4D2D19.toInt(), 0xFFB27A48.toInt())
+        val colors = surfaceColors
+        val palette = when (surface) {
+            Surface.THATCH -> SURFACE_THATCH
+            Surface.TILES -> SURFACE_TILES
+            Surface.SLATE -> SURFACE_SLATE
+            else -> SURFACE_SHINGLES
         }
+        palette.copyInto(colors)
 
         canvas.save()
         canvas.translate(sx(b.x), sy(b.y))
@@ -896,30 +947,43 @@ class LandScene(context: Context) {
             pDecorLine.strokeWidth = width * dp
             canvas.drawLine(sxd(x0, y0), syd(x0, y0), sxd(x1, y1), syd(x1, y1), pDecorLine)
         }
-        fun poly(pts: List<Pair<Float, Float>>, fill: Int) {
+        // Les sommets se rangent dans [polyPts], déjà alloué : une liste de paires par
+        // fenêtre et par image, c'était une dizaine d'objets neufs pour chaque décor.
+        fun poly(n: Int, fill: Int) {
+            val pts = polyPts
             pDecorFill.color = fill
             decorPath.reset()
-            decorPath.moveTo(sxd(pts[0].first, pts[0].second), syd(pts[0].first, pts[0].second))
-            for (i in 1 until pts.size) {
-                decorPath.lineTo(sxd(pts[i].first, pts[i].second), syd(pts[i].first, pts[i].second))
+            decorPath.moveTo(sxd(pts[0], pts[1]), syd(pts[0], pts[1]))
+            for (i in 1 until n) {
+                decorPath.lineTo(sxd(pts[i * 2], pts[i * 2 + 1]), syd(pts[i * 2], pts[i * 2 + 1]))
             }
             decorPath.close()
             canvas.drawPath(decorPath, pDecorFill)
+        }
+        fun quad(
+            x0: Float, y0: Float, x1: Float, y1: Float,
+            x2: Float, y2: Float, x3: Float, y3: Float, fill: Int
+        ) {
+            val pts = polyPts
+            pts[0] = x0; pts[1] = y0; pts[2] = x1; pts[3] = y1
+            pts[4] = x2; pts[5] = y2; pts[6] = x3; pts[7] = y3
+            poly(4, fill)
         }
         when (piece.decor) {
             Decor.WINDOW_SHUTTERS -> {
                 val fw = minOf(hw * 0.55f, TargetRules.detail(0.62f))
                 val fh = minOf(hh * 0.55f, TargetRules.detail(0.62f))
-                poly(listOf(-fw to -fh, fw to -fh, fw to fh, -fw to fh), "#BFE0EE".toColorInt())
-                line(0f, -fh, 0f, fh, "#3A2A1A".toColorInt(), 1.2f)
-                line(-fw, 0f, fw, 0f, "#3A2A1A".toColorInt(), 1.2f)
-                for (side in floatArrayOf(-1f, 1f)) {
+                quad(-fw, -fh, fw, -fh, fw, fh, -fw, fh, 0xFFBFE0EE.toInt())
+                line(0f, -fh, 0f, fh, 0xFF3A2A1A.toInt(), 1.2f)
+                line(-fw, 0f, fw, 0f, 0xFF3A2A1A.toInt(), 1.2f)
+                for (cote in 0..1) {
+                    val side = if (cote == 0) -1f else 1f
                     val x0 = side * fw
                     val x1 = side * hw * 0.92f
-                    poly(listOf(x0 to -fh, x1 to -fh, x1 to fh, x0 to fh), "#5B3A22".toColorInt())
+                    quad(x0, -fh, x1, -fh, x1, fh, x0, fh, 0xFF5B3A22.toInt())
                     for (k in 1..2) {
                         val lx = x0 + (x1 - x0) * k / 3f
-                        line(lx, -fh * 0.9f, lx, fh * 0.9f, "#2A1A0E".toColorInt(), 1f)
+                        line(lx, -fh * 0.9f, lx, fh * 0.9f, 0xFF2A1A0E.toInt(), 1f)
                     }
                 }
             }
@@ -929,7 +993,7 @@ class LandScene(context: Context) {
                 val fh = minOf(hh * 0.68f, TargetRules.detail(0.78f))
                 val bottom = -fh
                 val shoulder = fh * 0.15f
-                pDecorFill.color = "#8FC4D8".toColorInt()
+                pDecorFill.color = 0xFF8FC4D8.toInt()
                 decorPath.reset()
                 decorPath.moveTo(sxd(-fw, bottom), syd(-fw, bottom))
                 decorPath.lineTo(sxd(-fw, shoulder), syd(-fw, shoulder))
@@ -937,21 +1001,21 @@ class LandScene(context: Context) {
                 decorPath.lineTo(sxd(fw, bottom), syd(fw, bottom))
                 decorPath.close()
                 canvas.drawPath(decorPath, pDecorFill)
-                line(0f, bottom, 0f, fh * 0.78f, "#3A2A1A".toColorInt(), 1.2f)
-                line(-fw, 0f, fw, 0f, "#3A2A1A".toColorInt(), 1.2f)
+                line(0f, bottom, 0f, fh * 0.78f, 0xFF3A2A1A.toInt(), 1.2f)
+                line(-fw, 0f, fw, 0f, 0xFF3A2A1A.toInt(), 1.2f)
             }
 
             Decor.DOOR -> {
                 val dw = minOf(hw * 0.58f, TargetRules.detail(0.62f))
                 val bottom = -hh * 0.96f
                 val top = minOf(hh * 0.62f, bottom + TargetRules.detail(2.05f))
-                poly(listOf(-dw to bottom, dw to bottom, dw to top, -dw to top), "#59371F".toColorInt())
+                quad(-dw, bottom, dw, bottom, dw, top, -dw, top, 0xFF59371F.toInt())
                 for (k in -1..1) {
                     val x = dw * k / 1.5f
-                    line(x, bottom, x, top, "#2D1A0F".toColorInt(), 1f)
+                    line(x, bottom, x, top, 0xFF2D1A0F.toInt(), 1f)
                 }
-                line(-dw, -hh * 0.1f, dw, -hh * 0.1f, "#25282A".toColorInt(), 2.2f)
-                pDecorFill.color = "#C89B45".toColorInt()
+                line(-dw, -hh * 0.1f, dw, -hh * 0.1f, 0xFF25282A.toInt(), 2.2f)
+                pDecorFill.color = 0xFFC89B45.toInt()
                 canvas.drawCircle(sxd(dw * 0.62f, -hh * 0.12f), syd(dw * 0.62f, -hh * 0.12f), 2f * dp, pDecorFill)
             }
 
@@ -959,51 +1023,39 @@ class LandScene(context: Context) {
                 val slitW = minOf(hw * 0.18f, TargetRules.detail(0.14f))
                 val slitH = minOf(hh * 0.68f, TargetRules.detail(0.58f))
                 val crossW = minOf(hw * 0.36f, TargetRules.detail(0.34f))
-                poly(
-                    listOf(
-                        -slitW to -slitH, slitW to -slitH,
-                        slitW to slitH, -slitW to slitH
-                    ),
-                    "#0B0B0B".toColorInt()
+                quad(
+                    -slitW, -slitH, slitW, -slitH, slitW, slitH, -slitW, slitH,
+                    0xFF0B0B0B.toInt()
                 )
-                poly(
-                    listOf(
-                        -crossW to slitH * 0.05f, crossW to slitH * 0.05f,
-                        crossW to slitH * 0.2f, -crossW to slitH * 0.2f
-                    ),
-                    "#000000".toColorInt()
+                quad(
+                    -crossW, slitH * 0.05f, crossW, slitH * 0.05f,
+                    crossW, slitH * 0.2f, -crossW, slitH * 0.2f,
+                    0xFF000000.toInt()
                 )
             }
 
             Decor.BELL -> {
                 val openingW = minOf(hw * 0.55f, TargetRules.detail(0.65f))
                 val openingH = minOf(hh * 0.72f, TargetRules.detail(0.82f))
-                poly(
-                    listOf(
-                        -openingW to -openingH,
-                        openingW to -openingH,
-                        openingW to openingH * 0.25f,
-                        openingW * 0.65f to openingH * 0.72f,
-                        0f to openingH,
-                        -openingW * 0.65f to openingH * 0.72f,
-                        -openingW to openingH * 0.25f
-                    ),
-                    "#171512".toColorInt()
-                )
+                val pts = polyPts
+                pts[0] = -openingW; pts[1] = -openingH
+                pts[2] = openingW; pts[3] = -openingH
+                pts[4] = openingW; pts[5] = openingH * 0.25f
+                pts[6] = openingW * 0.65f; pts[7] = openingH * 0.72f
+                pts[8] = 0f; pts[9] = openingH
+                pts[10] = -openingW * 0.65f; pts[11] = openingH * 0.72f
+                pts[12] = -openingW; pts[13] = openingH * 0.25f
+                poly(7, 0xFF171512.toInt())
                 val bellW = openingW * 0.58f
                 val bellTop = openingH * 0.35f
                 val bellBottom = -openingH * 0.38f
-                poly(
-                    listOf(
-                        -bellW * 0.35f to bellTop,
-                        bellW * 0.35f to bellTop,
-                        bellW to bellBottom,
-                        -bellW to bellBottom
-                    ),
-                    "#C28B32".toColorInt()
+                quad(
+                    -bellW * 0.35f, bellTop, bellW * 0.35f, bellTop,
+                    bellW, bellBottom, -bellW, bellBottom,
+                    0xFFC28B32.toInt()
                 )
-                line(-bellW, bellBottom, bellW, bellBottom, "#6E451B".toColorInt(), 2f)
-                line(0f, bellBottom, 0f, -openingH * 0.62f, "#6E451B".toColorInt(), 1.4f)
+                line(-bellW, bellBottom, bellW, bellBottom, 0xFF6E451B.toInt(), 2f)
+                line(0f, bellBottom, 0f, -openingH * 0.62f, 0xFF6E451B.toInt(), 1.4f)
             }
 
             Decor.WINDOW_BAND -> {
@@ -1021,26 +1073,22 @@ class LandScene(context: Context) {
                 val bandeW = hw * 0.86f
                 for (k in 0 until niveaux) {
                     val cy = -hh + pas * (k + 0.62f)
-                    poly(
-                        listOf(
-                            -bandeW to cy - bandeH,
-                            bandeW to cy - bandeH,
-                            bandeW to cy + bandeH,
-                            -bandeW to cy + bandeH
-                        ),
-                        "#3E5F6E".toColorInt()
+                    quad(
+                        -bandeW, cy - bandeH, bandeW, cy - bandeH,
+                        bandeW, cy + bandeH, -bandeW, cy + bandeH,
+                        0xFF3E5F6E.toInt()
                     )
                     val meneaux = (bandeW / TargetRules.detail(0.6f)).toInt().coerceIn(2, 7)
                     for (m in 1 until meneaux) {
                         val x = -bandeW + 2f * bandeW * m / meneaux
-                        line(x, cy - bandeH, x, cy + bandeH, "#B9BCB8".toColorInt(), 1.1f)
+                        line(x, cy - bandeH, x, cy + bandeH, 0xFFB9BCB8.toInt(), 1.1f)
                     }
                     // Un reflet en biais dans une travée sur deux : c'est ce qui fait
                     // qu'une tour de béton se lit comme du verre et pas comme un trou.
                     if ((k + piece.visualVariant) % 2 == 0) {
                         line(
                             -bandeW * 0.55f, cy - bandeH, -bandeW * 0.1f, cy + bandeH,
-                            "#9FD4E4".toColorInt(), 1.6f
+                            0xFF9FD4E4.toInt(), 1.6f
                         )
                     }
                 }
@@ -1050,35 +1098,27 @@ class LandScene(context: Context) {
                 // La vitrine : une baie qui descend au sol, son auvent, et l'enseigne.
                 val baieW = hw * 0.9f
                 val baieH = hh * 0.72f
-                poly(
-                    listOf(
-                        -baieW to -hh * 0.92f,
-                        baieW to -hh * 0.92f,
-                        baieW to baieH * 0.55f,
-                        -baieW to baieH * 0.55f
-                    ),
-                    "#31505C".toColorInt()
+                quad(
+                    -baieW, -hh * 0.92f, baieW, -hh * 0.92f,
+                    baieW, baieH * 0.55f, -baieW, baieH * 0.55f,
+                    0xFF31505C.toInt()
                 )
                 val travees = (baieW / TargetRules.detail(0.8f)).toInt().coerceIn(2, 5)
                 for (m in 1 until travees) {
                     val x = -baieW + 2f * baieW * m / travees
-                    line(x, -hh * 0.92f, x, baieH * 0.55f, "#C6CBC8".toColorInt(), 1.2f)
+                    line(x, -hh * 0.92f, x, baieH * 0.55f, 0xFFC6CBC8.toInt(), 1.2f)
                 }
                 line(
                     -baieW * 0.7f, -hh * 0.5f, -baieW * 0.15f, baieH * 0.45f,
-                    "#BFE6F2".toColorInt(), 2f
+                    0xFFBFE6F2.toInt(), 2f
                 )
                 // L'auvent, incliné, et l'enseigne au-dessus.
-                poly(
-                    listOf(
-                        -baieW to baieH * 0.58f,
-                        baieW to baieH * 0.58f,
-                        baieW * 0.9f to baieH * 0.86f,
-                        -baieW * 0.9f to baieH * 0.86f
-                    ),
-                    if (piece.visualVariant % 2 == 0) "#B4462F".toColorInt() else "#2F6B57".toColorInt()
+                quad(
+                    -baieW, baieH * 0.58f, baieW, baieH * 0.58f,
+                    baieW * 0.9f, baieH * 0.86f, -baieW * 0.9f, baieH * 0.86f,
+                    if (piece.visualVariant % 2 == 0) 0xFFB4462F.toInt() else 0xFF2F6B57.toInt()
                 )
-                line(-baieW * 0.75f, hh * 0.78f, baieW * 0.75f, hh * 0.78f, "#E8D9A8".toColorInt(), 2.4f)
+                line(-baieW * 0.75f, hh * 0.78f, baieW * 0.75f, hh * 0.78f, 0xFFE8D9A8.toInt(), 2.4f)
             }
 
             Decor.NONE -> Unit
@@ -1442,5 +1482,26 @@ class LandScene(context: Context) {
          * d'un coup : dix habitants pour un seul choc.
          */
         const val VILLAGER_PANIC_COOLDOWN = 1.1f
+
+        // Les teintes des matières peintes : fond, trait sombre, trait clair. Lues par
+        // [drawSurface] et [drawGableSurface], jamais modifiées.
+        private val SURFACE_THATCH = intArrayOf(0xFFC9A84C.toInt(), 0xFF806329.toInt(), 0xFFE1C66E.toInt())
+        private val SURFACE_SHINGLES = intArrayOf(0xFF81522F.toInt(), 0xFF4D2D19.toInt(), 0xFFB27A48.toInt())
+        private val SURFACE_TILES = intArrayOf(0xFFB85C3D.toInt(), 0xFF713323.toInt(), 0xFFD9845E.toInt())
+        private val SURFACE_SLATE = intArrayOf(0xFF58636E.toInt(), 0xFF303943.toInt(), 0xFF89949E.toInt())
+        private val SURFACE_PLANKS = intArrayOf(0xFF8B5E3C.toInt(), 0xFF50331F.toInt(), 0xFFC08A58.toInt())
+        private val SURFACE_TIMBER_FRAME = intArrayOf(0xFFC6A879.toInt(), 0xFF4B2D19.toInt(), 0xFFE0C99E.toInt())
+        private val SURFACE_BRICK = intArrayOf(0xFFA94F37.toInt(), 0xFF663426.toInt(), 0xFFD07A5B.toInt())
+        private val SURFACE_FIELDSTONE = intArrayOf(0xFF92999C.toInt(), 0xFF596064.toInt(), 0xFFC0C3BE.toInt())
+        private val SURFACE_CUT_STONE = intArrayOf(0xFFA4A9AA.toInt(), 0xFF666D70.toInt(), 0xFFCED0CB.toInt())
+        private val SURFACE_CARDBOARD = intArrayOf(0xFFD9B26A.toInt(), 0xFF9B7139.toInt(), 0xFFF0D18C.toInt())
+        private val SURFACE_CONCRETE = intArrayOf(0xFFB9BCB8.toInt(), 0xFF7C817E.toInt(), 0xFFDCDED9.toInt())
+        private val SURFACE_GLASS = intArrayOf(0xFF6FA8BD.toInt(), 0xFF3C5F70.toInt(), 0xFFCDEAF5.toInt())
+        private val SURFACE_CLADDING = intArrayOf(0xFF8E97A0.toInt(), 0xFF515A63.toInt(), 0xFFC3CBD2.toInt())
+        private val SURFACE_ICE = intArrayOf(0xFFA8D8E8.toInt(), 0xFF6EAABD.toInt(), 0xFFD9F4FA.toInt())
+        private val SURFACE_STEEL = intArrayOf(0xFF7E8896.toInt(), 0xFF4A525C.toInt(), 0xFFB4BCC6.toInt())
+        private val SURFACE_COB = intArrayOf(0xFFB8916A.toInt(), 0xFF806044.toInt(), 0xFFD4B38C.toInt())
+        private val SURFACE_EARTH = intArrayOf(0xFF7A6247.toInt(), 0xFF4E3C2C.toInt(), 0xFFA48A69.toInt())
+        private val SURFACE_IRON = intArrayOf(0xFF54606B.toInt(), 0xFF303942.toInt(), 0xFF87939D.toInt())
     }
 }

@@ -26,6 +26,7 @@
     <string name="cloud_sync_success">Synchronisation terminée</string>
     <string name="cloud_sync_failed">Échec de la synchronisation : %1$s</string>
     <string name="cloud_sync_unavailable">Synchronisation indisponible</string>
+    <string name="cloud_sync_already_running">Synchronisation déjà en cours</string>
     <string name="cloud_sync_not_signed_in">Connectez-vous d\'abord</string>
     <string name="cloud_last_sync">Dernière sync : %1$s</string>
     <string name="cloud_last_sync_never">Jamais synchronisé</string>

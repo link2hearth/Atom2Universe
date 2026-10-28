@@ -2,10 +2,14 @@ package com.Atom2Universe.app.games
 
 import android.content.Intent
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.farm.FarmState
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Le hub des jeux, en deux files côte à côte : les casse-têtes (puzzles, plateau, cartes) et les
@@ -71,10 +75,15 @@ class GamesActivity : BaseHubActivity() {
      * La tuile de la ferme porte une pastille avec le nombre de cultures pretes. Elle est recalculee
      * a chaque retour sur le hub et nulle part ailleurs : les plantes murissent en heures, une
      * minuterie qui tourne pendant qu'on regarde la grille ne changerait jamais le chiffre.
+     * La lecture se fait hors du fil de l'ecran : au retour de la ferme, la sauvegarde vient de
+     * changer, et la relire en entier sur ce fil retardait l'affichage du hub.
      */
     override fun onResume() {
         super.onResume()
-        val ready = FarmState.readyToHarvest(this)
-        paneAdapters.forEach { it.setNotificationCount("farm", ready) }
+        val app = applicationContext
+        lifecycleScope.launch {
+            val ready = withContext(Dispatchers.Default) { FarmState.readyToHarvest(app) }
+            paneAdapters.forEach { it.setNotificationCount("farm", ready) }
+        }
     }
 }

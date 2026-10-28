@@ -311,14 +311,21 @@ internal class SpawnManager(
         val bx = Math.floor(sx).toInt()
         val bz = Math.floor(sz).toInt()
         val startY = (nearY + 20.0).toInt()
+        // Toute la descente reste dans une seule colonne de chunks : un petit cache local évite
+        // cinq recherches de chunk par case (jusqu'à ~35 000 par tentative d'apparition).
+        val cx = Math.floorDiv(bx,16); val cz = Math.floorDiv(bz,16)
+        val chunks = World.ChunkLookupCache()
+        fun ready(y: Int): Boolean {
+            val cy = Math.floorDiv(y,16)
+            return chunks.getOrPut(world.chunkKey(cx,cy,cz)) { world.getChunk(cx,cy,cz) }?.generated == true
+        }
         for (by in startY downTo startY - 120) {
-            if (world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by+2,16),Math.floorDiv(bz,16))?.generated != true ||
-                world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by,16),Math.floorDiv(bz,16))?.generated != true) continue
-            val b = world.blockAt(bx, by, bz)
+            if (!ready(by+2) || !ready(by)) continue
+            val b = world.blockAt(bx, by, bz, chunks)
             if (b == AIR || isWater(b) || isDecoration(b) || isLeaf(b) ||
                 com.Atom2Universe.app.games.caves.node.BlockRegistry.isPartial(b)) continue
-            val a1 = world.blockAt(bx, by + 1, bz)
-            val a2 = world.blockAt(bx, by + 2, bz)
+            val a1 = world.blockAt(bx, by + 1, bz, chunks)
+            val a2 = world.blockAt(bx, by + 2, bz, chunks)
             // Les plantes traversables ne doivent pas stériliser les sols des biomes fongiques.
             // La lumière reste vérifiée séparément, notamment dans une case contenant une torche.
             if ((a1 == AIR || exploration && isDecoration(a1)) &&

@@ -2,8 +2,6 @@ package com.Atom2Universe.app.crypto
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -35,19 +33,10 @@ class PipeTapWidgetView @JvmOverloads constructor(
     private lateinit var newGamePanel: LinearLayout
 
     private val game = PipeTapGame()
-    private val handler = Handler(Looper.getMainLooper())
 
+    // Le widget n'affiche pas le temps : il se calcule à l'arrêt du chrono, sans minuteur.
     private var timerStartMs = 0L
     private var timerRunning = false
-
-    private val timerRunnable = object : Runnable {
-        override fun run() {
-            if (!timerRunning) return
-            game.elapsedSeconds = (System.currentTimeMillis() - timerStartMs) / 1000
-            updateStats()
-            handler.postDelayed(this, 500L)
-        }
-    }
 
     // ── Scale (pinch) ─────────────────────────────────────────────────────────────
     private val minScale = 0.35f
@@ -131,7 +120,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
         val dp4 = (4 * context.resources.displayMetrics.density).toInt()
         for (diff in PipeTapDifficulty.entries) {
             val chip = MaterialButton(context, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                text = diff.label
+                text = context.getString(R.string.pipetap_grid_size, diff.gridSize)
                 textSize = 9f
                 setPadding(dp4 * 2, 0, dp4 * 2, 0)
                 val params = LinearLayout.LayoutParams(
@@ -162,7 +151,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
 
     // ── Game ──────────────────────────────────────────────────────────────────────
     private fun showWinOverlay() {
-        winMovesText.text = "${game.moves} mvt"
+        winMovesText.text = context.getString(R.string.pipetap_moves, game.moves)
         winOverlay.visibility = VISIBLE
     }
 
@@ -177,7 +166,11 @@ class PipeTapWidgetView @JvmOverloads constructor(
     }
 
     private fun updateStats() {
-        statsText.text = "${game.difficulty.label} · ${game.moves} mvt"
+        statsText.text = context.getString(
+            R.string.pipetap_widget_stats,
+            context.getString(R.string.pipetap_grid_size, game.difficulty.gridSize),
+            context.getString(R.string.pipetap_moves, game.moves)
+        )
     }
 
     // ── Timer ─────────────────────────────────────────────────────────────────────
@@ -185,13 +178,12 @@ class PipeTapWidgetView @JvmOverloads constructor(
         if (timerRunning) return
         timerStartMs = System.currentTimeMillis() - game.elapsedSeconds * 1000
         timerRunning = true
-        handler.post(timerRunnable)
     }
 
     private fun stopTimer() {
+        if (!timerRunning) return
         timerRunning = false
-        handler.removeCallbacks(timerRunnable)
-        if (timerStartMs > 0) game.elapsedSeconds = (System.currentTimeMillis() - timerStartMs) / 1000
+        game.elapsedSeconds = (System.currentTimeMillis() - timerStartMs) / 1000
     }
 
     // ── Opacity ───────────────────────────────────────────────────────────────────
@@ -245,8 +237,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
     }
 
     fun reload() {
-        handler.removeCallbacks(timerRunnable)
-        timerRunning = false
+        stopTimer()
         if (game.solved) {
             winOverlay.visibility = VISIBLE
         } else {
@@ -255,10 +246,5 @@ class PipeTapWidgetView @JvmOverloads constructor(
         }
         gameView.refresh()
         updateStats()
-    }
-
-    override fun onDetachedFromWindow() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDetachedFromWindow()
     }
 }

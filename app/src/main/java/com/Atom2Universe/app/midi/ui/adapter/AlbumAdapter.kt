@@ -37,7 +37,7 @@ class AlbumAdapter(
 
         fun bind(album: AlbumItem) {
             // Nom de l'album
-            albumName.text = album.album
+            albumName.text = album.album.ifEmpty { itemView.context.getString(R.string.midi_engine_unknown_album) }
 
             // Nombre de titres
             albumTrackCount.text = itemView.resources.getQuantityString(

@@ -51,6 +51,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Main coordinator for cloud synchronization.
@@ -67,11 +68,15 @@ object CloudSyncManager {
     private const val TAG = "CloudSyncManager"
     private const val WORK_NAME = "a2u_cloud_sync"
     private const val WORK_NAME_DEBOUNCED = "a2u_debounced_sync"
+    private const val WORK_NAME_STARTUP = "a2u_startup_sync"
 
     // Empreinte du dernier journal d'écoutes publié, pour ne pas ré-uploader à l'identique
     private const val PREFS_SYNC_STATE = "a2u_cloud_sync_state"
     private const val KEY_UPLOADED_EVENTS_COUNT = "uploaded_events_total"
     private const val KEY_UPLOADED_EVENTS_LATEST = "uploaded_events_latest"
+
+    // Date Drive de chaque journal des autres appareils déjà fusionné (clé = nom du fichier)
+    private const val PREFS_MERGED_JOURNALS = "a2u_cloud_merged_journals"
     private const val SYNC_HOUR = 3  // 3 AM
 
     // Instant sync configuration
@@ -92,8 +97,14 @@ object CloudSyncManager {
 
     private var isInitialized = false
     // Sync state
+    private val isSyncInProgress = AtomicBoolean(false)
+
+    /**
+     * L'interrupteur de l'écran Cloud, gardé en mémoire : [triggerDebouncedSync] est appelé
+     * depuis le fil principal à chaque favori ou page lue, il ne peut pas interroger Room.
+     */
     @Volatile
-    private var isSyncInProgress = false
+    private var syncEnabledCached = false
 
     /**
      * Initializes the CloudSyncManager.
@@ -108,6 +119,10 @@ object CloudSyncManager {
 
         // Ensure device is registered
         ensureDeviceRegistered()
+
+        syncEnabledCached = syncMetadataDao.isSyncEnabled() == true
+        // Une synchro de nuit planifiée interrupteur coupé (ancienne connexion) n'a rien à faire là.
+        if (!syncEnabledCached) cancelScheduledSync()
 
         isInitialized = true
         Log.d(TAG, "CloudSyncManager initialized")
@@ -154,6 +169,7 @@ object CloudSyncManager {
      */
     suspend fun setSyncEnabled(enabled: Boolean) {
         syncMetadataDao.setSyncEnabled(enabled)
+        syncEnabledCached = enabled
 
         if (enabled) {
             scheduleNightlySync()
@@ -205,9 +221,13 @@ object CloudSyncManager {
     }
 
     /**
-     * Schedules the nightly sync job.
+     * Schedules the nightly sync job, only when the sync switch is on.
      */
     fun scheduleNightlySync() {
+        if (!isInitialized || !syncEnabledCached) {
+            Log.d(TAG, "scheduleNightlySync: sync not enabled, skipping")
+            return
+        }
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
@@ -276,6 +296,15 @@ object CloudSyncManager {
             return
         }
 
+        // Planifie aussi l'export Syncthing (même débounce). Il a son propre réglage (le
+        // dossier choisi) et ne passe pas par Drive : l'interrupteur ne le concerne pas.
+        SyncthingManager.scheduleExport()
+
+        if (!syncEnabledCached) {
+            Log.d(TAG, "triggerDebouncedSync: sync not enabled, skipping")
+            return
+        }
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -295,9 +324,6 @@ object CloudSyncManager {
         )
 
         Log.d(TAG, "Debounced sync scheduled in $DEBOUNCE_DELAY_MINUTES minutes (WorkManager)")
-
-        // Planifie aussi l'export Syncthing (même débounce)
-        SyncthingManager.scheduleExport()
     }
 
     /**
@@ -342,7 +368,13 @@ object CloudSyncManager {
             .addTag("startup_sync")
             .build()
 
-        WorkManager.getInstance(appContext).enqueue(syncRequest)
+        // KEEP : une synchro de démarrage déjà en attente (réseau absent) suffit, chaque
+        // onResume n'en empile pas une de plus.
+        WorkManager.getInstance(appContext).enqueueUniqueWork(
+            WORK_NAME_STARTUP,
+            ExistingWorkPolicy.KEEP,
+            syncRequest
+        )
         Log.d(TAG, "Startup sync scheduled (last sync was ${timeSinceLastSync / 60000} min ago)")
     }
 
@@ -381,20 +413,24 @@ object CloudSyncManager {
     /**
      * Performs immediate sync.
      *
+     * @param force true pour le bouton « Synchroniser maintenant » : il marche dès que le compte
+     *   est lié. Sans lui (synchros automatiques), l'interrupteur coupé renvoie [SyncResult.NotEnabled].
      * @param onStep appelé au début de chaque grande étape, depuis un fil d'arrière-plan :
      *   l'écran qui s'en sert doit repasser sur le fil principal.
      */
-    suspend fun syncNow(onStep: (SyncStep) -> Unit = {}): SyncResult = withContext(Dispatchers.IO) {
+    suspend fun syncNow(
+        force: Boolean = false,
+        onStep: (SyncStep) -> Unit = {}
+    ): SyncResult = withContext(Dispatchers.IO) {
         Log.d(TAG, "Starting sync...")
 
         if (!isInitialized) {
             return@withContext SyncResult.NotInitialized
         }
 
-        // Prevent concurrent syncs
-        if (isSyncInProgress) {
-            Log.d(TAG, "Sync already in progress, skipping")
-            return@withContext SyncResult.Error("Sync already in progress")
+        if (!force && syncMetadataDao.isSyncEnabled() != true) {
+            Log.d(TAG, "Sync not enabled, skipping")
+            return@withContext SyncResult.NotEnabled
         }
 
         val googleSignInManager = GoogleSignInManager(appContext)
@@ -405,14 +441,18 @@ object CloudSyncManager {
         val account = googleSignInManager.getSignedInAccount()
             ?: return@withContext SyncResult.NotSignedIn
 
-        isSyncInProgress = true
+        // Prevent concurrent syncs : tester et poser le drapeau en un seul geste
+        if (!isSyncInProgress.compareAndSet(false, true)) {
+            Log.d(TAG, "Sync already in progress, skipping")
+            return@withContext SyncResult.AlreadyInProgress
+        }
+
         val syncStart = SystemClock.elapsedRealtime()
         try {
             val client = GoogleDriveAppDataClient(appContext, account)
 
             // Phase 1: Download
             onStep(SyncStep.MUSIC_DOWNLOAD)
-            timed("download manifest") { downloadManifest(client) }
             val cloudFavorites = timed("download favoris") { downloadFavorites(client) }
             val cloudLyrics = timed("download paroles") { downloadLyrics(client) }
             val cloudEqPresets = timed("download égaliseur") { downloadEqPresets(client) }
@@ -497,25 +537,32 @@ object CloudSyncManager {
             SyncResult.Error(e.message ?: "Unknown error")
         } finally {
             Log.i(TIMING_TAG, "TOTAL : ${SystemClock.elapsedRealtime() - syncStart} ms")
-            isSyncInProgress = false
+            isSyncInProgress.set(false)
         }
     }
 
     /**
-     * Downloads the sync manifest from Google Drive.
+     * Lit un fichier du cloud : son contenu, le fichier vide de [empty] s'il n'existe pas encore,
+     * ou null si Drive n'a pas répondu ou si le JSON est illisible.
+     *
+     * Null veut dire « on ne sait pas ce qu'il y a là-haut » : ni fusion ni envoi. Prendre une
+     * panne pour un cloud vide ferait republier notre version locale par-dessus, et les
+     * suppressions des autres appareils ressusciteraient.
      */
-    private suspend fun downloadManifest(client: GoogleDriveAppDataClient): SyncManifest {
-        val json = client.readJsonFile("sync_manifest.json")
-        return if (json != null) {
-            try {
-                SyncManifest.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing manifest, creating new one", e)
-                SyncManifest()
-            }
-        } else {
-            SyncManifest()
+    private suspend fun <T> readCloudFile(
+        client: GoogleDriveAppDataClient,
+        filename: String,
+        empty: () -> T,
+        parse: (JSONObject) -> T
+    ): T? = when (val read = client.readJsonFileChecked(filename)) {
+        is GoogleDriveAppDataClient.ReadResult.Found -> try {
+            parse(JSONObject(read.content))
+        } catch (e: Exception) {
+            Log.e(TAG, "Unreadable $filename", e)
+            null
         }
+        GoogleDriveAppDataClient.ReadResult.NotFound -> empty()
+        GoogleDriveAppDataClient.ReadResult.Failed -> null
     }
 
     /**
@@ -526,73 +573,88 @@ object CloudSyncManager {
      * une union dédupliquée : re-télécharger le même fichier ne change rien,
      * et l'ordre des appareils n'a aucune importance.
      *
+     * Un journal dont la date Drive n'a pas bougé depuis sa dernière fusion est sauté : le
+     * relire n'ajouterait rien, puisque la fusion est idempotente.
+     *
      * @return nombre d'écoutes réellement ajoutées localement
      */
     private suspend fun downloadAndMergeListenEvents(client: GoogleDriveAppDataClient): Int {
         val selfDeviceId = DeviceIdentity.getDeviceId(appContext)
-        val files = client.listFilesWithPrefix(ListenEventsSyncFile.FILE_PREFIX)
-        remoteJournals = files.toSet()
+        val files = client.listFileDetailsChecked("name contains '${ListenEventsSyncFile.FILE_PREFIX}'")
+        if (files == null) {
+            remoteJournals = emptySet()
+            Log.w(TAG, "Listen events: Drive did not answer, skipping")
+            return 0
+        }
+        remoteJournals = files.map { it.name }.toSet()
+        val merged = appContext.getSharedPreferences(PREFS_MERGED_JOURNALS, Context.MODE_PRIVATE)
         var imported = 0
+        var skipped = 0
 
-        for (filename in files) {
+        for (file in files) {
+            val filename = file.name
             if (!ListenEventsSyncFile.isForeignEventsFile(filename, selfDeviceId)) continue
+            if (file.modifiedTime > 0L && merged.getLong(filename, -1L) == file.modifiedTime) {
+                skipped++
+                continue
+            }
             try {
-                val content = client.readJsonFile(filename) ?: continue
+                val content = client.readJsonFileById(file.id, filename) ?: continue
                 val payload = ListenEventsSyncFile.decode(JSONObject(content))
                 if (payload == null) {
                     Log.w(TAG, "Unknown format in $filename, skipping")
                     continue
                 }
                 imported += ListenEventsMerger.merge(appContext, payload)
+                merged.edit().putLong(filename, file.modifiedTime).apply()
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Error parsing listen events file: $filename", e)
             }
         }
 
-        Log.d(TAG, "Listen events: read ${files.size} device file(s), imported $imported new")
+        Log.d(TAG, "Listen events: ${files.size} device file(s), $skipped unchanged, imported $imported new")
         return imported
     }
 
     /**
-     * Downloads favorites file if newer than local.
+     * Oublie quels journaux des autres appareils ont déjà été fusionnés : la prochaine
+     * synchro les relira tous.
      */
-    private suspend fun downloadFavorites(client: GoogleDriveAppDataClient): FavoritesSyncFile {
-        val json = client.readJsonFile(FavoritesSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                FavoritesSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing favorites", e)
-                FavoritesSyncFile.empty()
-            }
-        } else {
-            FavoritesSyncFile.empty()
-        }
+    private fun forgetMergedJournals() {
+        appContext.getSharedPreferences(PREFS_MERGED_JOURNALS, Context.MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
     }
+
+    /**
+     * Downloads favorites file (empty if absent, null if Drive failed or the file is unreadable).
+     */
+    private suspend fun downloadFavorites(client: GoogleDriveAppDataClient): FavoritesSyncFile? =
+        readCloudFile(client, FavoritesSyncFile.FILENAME, { FavoritesSyncFile.empty() }) {
+            FavoritesSyncFile.fromJson(it)
+        }
 
     /**
      * Télécharge le fichier des paroles, une seule fois par sync : la fusion et l'envoi
      * s'en servent tous les deux.
      *
-     * @return le fichier (vide s'il n'existe pas encore), ou null s'il est illisible.
-     *   Dans ce dernier cas l'envoi est sauté : renvoyer nos seules paroles écraserait
-     *   celles des autres appareils.
+     * @return le fichier (vide s'il n'existe pas encore), ou null si Drive n'a pas répondu
+     *   ou s'il est illisible. Dans ce dernier cas l'envoi est sauté : renvoyer nos seules
+     *   paroles écraserait celles des autres appareils.
      */
-    private suspend fun downloadLyrics(client: GoogleDriveAppDataClient): LyricsSyncFile? {
-        val json = client.readJsonFile(LyricsSyncFile.FILENAME) ?: return LyricsSyncFile.empty()
-        return try {
-            LyricsSyncFile.fromJson(JSONObject(json))
-        } catch (e: Exception) {
-            Log.e(TAG, "Error parsing lyrics", e)
-            null
+    private suspend fun downloadLyrics(client: GoogleDriveAppDataClient): LyricsSyncFile? =
+        readCloudFile(client, LyricsSyncFile.FILENAME, { LyricsSyncFile.empty() }) {
+            LyricsSyncFile.fromJson(it)
         }
-    }
 
     /**
      * Merges cloud favorites with local data.
      */
-    private suspend fun mergeFavorites(cloudFavorites: FavoritesSyncFile) {
-        if (cloudFavorites.favorites.isEmpty()) return
+    private suspend fun mergeFavorites(cloudFavorites: FavoritesSyncFile?) {
+        if (cloudFavorites == null || cloudFavorites.favorites.isEmpty()) return
         FavoritesMerger.merge(appContext, cloudFavorites)
     }
 
@@ -607,27 +669,18 @@ object CloudSyncManager {
     // ==================== Playlists Sync ====================
 
     /**
-     * Downloads playlists sync file.
+     * Downloads playlists sync file (null if Drive failed or the file is unreadable).
      */
-    private suspend fun downloadPlaylists(client: GoogleDriveAppDataClient): PlaylistsSyncFile {
-        val json = client.readJsonFile(PlaylistsSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                PlaylistsSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing playlists", e)
-                PlaylistsSyncFile.empty()
-            }
-        } else {
-            PlaylistsSyncFile.empty()
+    private suspend fun downloadPlaylists(client: GoogleDriveAppDataClient): PlaylistsSyncFile? =
+        readCloudFile(client, PlaylistsSyncFile.FILENAME, { PlaylistsSyncFile.empty() }) {
+            PlaylistsSyncFile.fromJson(it)
         }
-    }
 
     /**
      * Merges cloud playlists with local data.
      */
-    private suspend fun mergePlaylists(cloudPlaylists: PlaylistsSyncFile) {
-        if (cloudPlaylists.playlists.isEmpty()) return
+    private suspend fun mergePlaylists(cloudPlaylists: PlaylistsSyncFile?) {
+        if (cloudPlaylists == null || cloudPlaylists.playlists.isEmpty()) return
         PlaylistsMerger.merge(appContext, cloudPlaylists)
     }
 
@@ -643,17 +696,14 @@ object CloudSyncManager {
         }
 
         // Download existing cloud playlists
+        val cloudFile = downloadPlaylists(client)
+        if (cloudFile == null) {
+            Log.w(TAG, "Could not read existing playlists from cloud, upload skipped")
+            return
+        }
         val cloudPlaylistsMap = mutableMapOf<String, SyncPlaylistEntry>()
-        try {
-            val cloudJson = client.readJsonFile(PlaylistsSyncFile.FILENAME)
-            if (cloudJson != null) {
-                val cloudFile = PlaylistsSyncFile.fromJson(JSONObject(cloudJson))
-                for (entry in cloudFile.playlists) {
-                    cloudPlaylistsMap[entry.id] = entry
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not read existing playlists from cloud", e)
+        for (entry in cloudFile.playlists) {
+            cloudPlaylistsMap[entry.id] = entry
         }
 
         // Merge: local takes precedence if timestamps are newer
@@ -687,27 +737,18 @@ object CloudSyncManager {
     // ==================== Album Favorites Sync ====================
 
     /**
-     * Downloads album favorites sync file.
+     * Downloads album favorites sync file (null if Drive failed or the file is unreadable).
      */
-    private suspend fun downloadAlbumFavorites(client: GoogleDriveAppDataClient): AlbumFavoritesSyncFile {
-        val json = client.readJsonFile(AlbumFavoritesSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                AlbumFavoritesSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing album favorites", e)
-                AlbumFavoritesSyncFile.empty()
-            }
-        } else {
-            AlbumFavoritesSyncFile.empty()
+    private suspend fun downloadAlbumFavorites(client: GoogleDriveAppDataClient): AlbumFavoritesSyncFile? =
+        readCloudFile(client, AlbumFavoritesSyncFile.FILENAME, { AlbumFavoritesSyncFile.empty() }) {
+            AlbumFavoritesSyncFile.fromJson(it)
         }
-    }
 
     /**
      * Merges cloud album favorites with local data.
      */
-    private suspend fun mergeAlbumFavorites(cloudFavorites: AlbumFavoritesSyncFile) {
-        if (cloudFavorites.favorites.isEmpty()) return
+    private suspend fun mergeAlbumFavorites(cloudFavorites: AlbumFavoritesSyncFile?) {
+        if (cloudFavorites == null || cloudFavorites.favorites.isEmpty()) return
         AlbumFavoritesMerger.merge(appContext, cloudFavorites)
     }
 
@@ -723,17 +764,14 @@ object CloudSyncManager {
         }
 
         // Download existing cloud favorites
+        val cloudFile = downloadAlbumFavorites(client)
+        if (cloudFile == null) {
+            Log.w(TAG, "Could not read existing album favorites from cloud, upload skipped")
+            return
+        }
         val cloudFavoritesMap = mutableMapOf<String, SyncAlbumFavoriteEntry>()
-        try {
-            val cloudJson = client.readJsonFile(AlbumFavoritesSyncFile.FILENAME)
-            if (cloudJson != null) {
-                val cloudFile = AlbumFavoritesSyncFile.fromJson(JSONObject(cloudJson))
-                for (entry in cloudFile.favorites) {
-                    cloudFavoritesMap[entry.key] = entry
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not read existing album favorites from cloud", e)
+        for (entry in cloudFile.favorites) {
+            cloudFavoritesMap[entry.key] = entry
         }
 
         // Merge: local takes precedence if timestamps are newer
@@ -767,27 +805,18 @@ object CloudSyncManager {
     // ==================== Artist Favorites Sync ====================
 
     /**
-     * Downloads artist favorites sync file.
+     * Downloads artist favorites sync file (null if Drive failed or the file is unreadable).
      */
-    private suspend fun downloadArtistFavorites(client: GoogleDriveAppDataClient): ArtistFavoritesSyncFile {
-        val json = client.readJsonFile(ArtistFavoritesSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                ArtistFavoritesSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing artist favorites", e)
-                ArtistFavoritesSyncFile.empty()
-            }
-        } else {
-            ArtistFavoritesSyncFile.empty()
+    private suspend fun downloadArtistFavorites(client: GoogleDriveAppDataClient): ArtistFavoritesSyncFile? =
+        readCloudFile(client, ArtistFavoritesSyncFile.FILENAME, { ArtistFavoritesSyncFile.empty() }) {
+            ArtistFavoritesSyncFile.fromJson(it)
         }
-    }
 
     /**
      * Merges cloud artist favorites with local data.
      */
-    private suspend fun mergeArtistFavorites(cloudFavorites: ArtistFavoritesSyncFile) {
-        if (cloudFavorites.favorites.isEmpty()) return
+    private suspend fun mergeArtistFavorites(cloudFavorites: ArtistFavoritesSyncFile?) {
+        if (cloudFavorites == null || cloudFavorites.favorites.isEmpty()) return
         ArtistFavoritesMerger.merge(appContext, cloudFavorites)
     }
 
@@ -803,17 +832,14 @@ object CloudSyncManager {
         }
 
         // Download existing cloud favorites
+        val cloudFile = downloadArtistFavorites(client)
+        if (cloudFile == null) {
+            Log.w(TAG, "Could not read existing artist favorites from cloud, upload skipped")
+            return
+        }
         val cloudFavoritesMap = mutableMapOf<String, SyncArtistFavoriteEntry>()
-        try {
-            val cloudJson = client.readJsonFile(ArtistFavoritesSyncFile.FILENAME)
-            if (cloudJson != null) {
-                val cloudFile = ArtistFavoritesSyncFile.fromJson(JSONObject(cloudJson))
-                for (entry in cloudFile.favorites) {
-                    cloudFavoritesMap[entry.key] = entry
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not read existing artist favorites from cloud", e)
+        for (entry in cloudFile.favorites) {
+            cloudFavoritesMap[entry.key] = entry
         }
 
         // Merge: local takes precedence if timestamps are newer
@@ -906,15 +932,10 @@ object CloudSyncManager {
         val localFavorites = FavoritesMerger.getLocalFavorites(appContext)
 
         // Download existing cloud favorites to merge
-        val cloudJson = client.readJsonFile(FavoritesSyncFile.FILENAME)
-        val cloudFavorites = if (cloudJson != null) {
-            try {
-                FavoritesSyncFile.fromJson(JSONObject(cloudJson)).favorites
-            } catch (_: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
+        val cloudFavorites = downloadFavorites(client)?.favorites
+        if (cloudFavorites == null) {
+            Log.w(TAG, "Could not read existing favorites from cloud, upload skipped")
+            return
         }
 
         // Merge: local takes precedence, but preserve cloud entries not in local
@@ -1037,8 +1058,8 @@ object CloudSyncManager {
 
         val success = client.writeJsonFile(LyricsSyncFile.FILENAME, syncFile.toJson().toString())
         if (success == true) {
-            // Clear the deleted lyrics cache since they've been uploaded
-            LyricsMerger.clearDeletedCache(appContext)
+            // Oublie les suppressions envoyées, pas celles faites pendant l'envoi
+            LyricsMerger.clearDeletedCache(appContext, localLyrics.filter { it.deletedAt != null })
             Log.d(TAG, "Uploaded ${mergedLyrics.size} lyrics entries (merged with cloud)")
         } else {
             Log.e(TAG, "Failed to upload lyrics")
@@ -1048,35 +1069,28 @@ object CloudSyncManager {
     // ==================== EQ PRESETS SYNC ====================
 
     private const val DELETED_EQ_PRESETS_FILENAME = "deleted_eq_presets.json"
+    // Écrit depuis l'écran de l'égaliseur et lu par la synchro, sur deux fils : sous verrou.
     private val deletedEqPresetsCache = mutableMapOf<String, SyncEqPreset>()
     private var isDeletedEqCacheLoaded = false
+    private val deletedEqPresetsLock = Any()
 
     /**
-     * Downloads EQ presets file from Google Drive.
+     * Downloads EQ presets file (null if Drive failed or the file is unreadable).
      */
-    private suspend fun downloadEqPresets(client: GoogleDriveAppDataClient): EqPresetsSyncFile {
-        val json = client.readJsonFile(EqPresetsSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                EqPresetsSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing EQ presets", e)
-                EqPresetsSyncFile()
-            }
-        } else {
-            EqPresetsSyncFile()
+    private suspend fun downloadEqPresets(client: GoogleDriveAppDataClient): EqPresetsSyncFile? =
+        readCloudFile(client, EqPresetsSyncFile.FILENAME, { EqPresetsSyncFile() }) {
+            EqPresetsSyncFile.fromJson(it)
         }
-    }
 
     /**
      * Merges cloud EQ presets with local data.
      * Only custom presets are synced (not system presets).
      * Supports soft-delete for proper cross-device sync.
      */
-    private suspend fun mergeEqPresets(cloudPresets: EqPresetsSyncFile) {
-        if (cloudPresets.presets.isEmpty()) return
+    private suspend fun mergeEqPresets(cloudPresets: EqPresetsSyncFile?) {
+        if (cloudPresets == null || cloudPresets.presets.isEmpty()) return
 
-        loadDeletedEqPresetsCache()
+        synchronized(deletedEqPresetsLock) { loadDeletedEqPresetsCache() }
 
         val db = MusicDatabase.getInstance(appContext)
         val eqPresetDao = db.eqPresetDao()
@@ -1087,11 +1101,11 @@ object CloudSyncManager {
 
         for (cloudPreset in cloudPresets.presets) {
             val localPreset = eqPresetDao.getPresetByName(cloudPreset.name)
-            val localDeletedPreset = deletedEqPresetsCache[cloudPreset.name]
+            val localDeletedPreset = synchronized(deletedEqPresetsLock) { deletedEqPresetsCache[cloudPreset.name] }
 
             // Determine local timestamp
             val localTimestamp = when {
-                localPreset != null -> localPreset.createdAt
+                localPreset != null -> localPreset.updatedAt
                 localDeletedPreset != null -> localDeletedPreset.deletedAt ?: 0
                 else -> 0L
             }
@@ -1118,10 +1132,11 @@ object CloudSyncManager {
                             band16kHz = cloudPreset.band16kHz,
                             bassBoostStrength = cloudPreset.bassBoostStrength,
                             virtualizerStrength = cloudPreset.virtualizerStrength,
-                            createdAt = cloudPreset.createdAt
+                            createdAt = cloudPreset.createdAt,
+                            updatedAt = cloudTimestamp
                         )
                         eqPresetDao.insertPreset(newPreset)
-                        deletedEqPresetsCache.remove(cloudPreset.name)
+                        synchronized(deletedEqPresetsLock) { deletedEqPresetsCache.remove(cloudPreset.name) }
                         addedCount++
                         Log.d(TAG, "Added EQ preset from cloud: ${cloudPreset.name}")
                     } else if (!localPreset.isSystemPreset) {
@@ -1137,7 +1152,8 @@ object CloudSyncManager {
                             band8kHz = cloudPreset.band8kHz,
                             band16kHz = cloudPreset.band16kHz,
                             bassBoostStrength = cloudPreset.bassBoostStrength,
-                            virtualizerStrength = cloudPreset.virtualizerStrength
+                            virtualizerStrength = cloudPreset.virtualizerStrength,
+                            updatedAt = cloudTimestamp
                         )
                         eqPresetDao.updatePreset(updatedPreset)
                         updatedCount++
@@ -1150,12 +1166,12 @@ object CloudSyncManager {
                         removedCount++
                         Log.d(TAG, "Removed EQ preset from cloud: ${cloudPreset.name}")
                     }
-                    deletedEqPresetsCache.remove(cloudPreset.name)
+                    synchronized(deletedEqPresetsLock) { deletedEqPresetsCache.remove(cloudPreset.name) }
                 }
             }
         }
 
-        saveDeletedEqPresetsCache()
+        synchronized(deletedEqPresetsLock) { saveDeletedEqPresetsCache() }
         Log.d(TAG, "Merged EQ presets: added $addedCount, updated $updatedCount, removed $removedCount")
     }
 
@@ -1165,7 +1181,11 @@ object CloudSyncManager {
      * Merges with cloud data to preserve soft-delete entries.
      */
     private suspend fun uploadEqPresets(client: GoogleDriveAppDataClient) {
-        loadDeletedEqPresetsCache()
+        // Les suppressions telles qu'elles partent : seules celles-là seront oubliées après l'envoi.
+        val sentDeletions = synchronized(deletedEqPresetsLock) {
+            loadDeletedEqPresetsCache()
+            deletedEqPresetsCache.values.toList()
+        }
 
         val db = MusicDatabase.getInstance(appContext)
         val eqPresetDao = db.eqPresetDao()
@@ -1192,26 +1212,19 @@ object CloudSyncManager {
                 bassBoostStrength = preset.bassBoostStrength,
                 virtualizerStrength = preset.virtualizerStrength,
                 createdAt = preset.createdAt,
-                updatedAt = preset.createdAt,
+                updatedAt = preset.updatedAt,
                 deletedAt = null
             ))
         }
 
         // Add deleted presets (soft-delete)
-        for ((_, deletedPreset) in deletedEqPresetsCache) {
-            localPresets.add(deletedPreset)
-        }
+        localPresets.addAll(sentDeletions)
 
         // Download existing cloud presets to merge
-        val cloudJson = client.readJsonFile(EqPresetsSyncFile.FILENAME)
-        val cloudPresets = if (cloudJson != null) {
-            try {
-                EqPresetsSyncFile.fromJson(JSONObject(cloudJson)).presets
-            } catch (_: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
+        val cloudPresets = downloadEqPresets(client)?.presets
+        if (cloudPresets == null) {
+            Log.w(TAG, "Could not read existing EQ presets from cloud, upload skipped")
+            return
         }
 
         // Merge: local takes precedence
@@ -1250,8 +1263,15 @@ object CloudSyncManager {
 
         val success = client.writeJsonFile(EqPresetsSyncFile.FILENAME, syncFile.toJson().toString())
         if (success == true) {
-            deletedEqPresetsCache.clear()
-            saveDeletedEqPresetsCache()
+            synchronized(deletedEqPresetsLock) {
+                for (sent in sentDeletions) {
+                    // Supprimé de nouveau pendant l'envoi : date différente, on la garde.
+                    if (deletedEqPresetsCache[sent.name]?.deletedAt == sent.deletedAt) {
+                        deletedEqPresetsCache.remove(sent.name)
+                    }
+                }
+                saveDeletedEqPresetsCache()
+            }
             Log.d(TAG, "Uploaded ${mergedPresets.size} EQ presets (merged with cloud)")
         } else {
             Log.e(TAG, "Failed to upload EQ presets")
@@ -1262,7 +1282,7 @@ object CloudSyncManager {
      * Tracks an EQ preset deletion for cloud sync.
      * Call this when an EQ preset is deleted locally.
      */
-    fun trackEqPresetDeletion(preset: com.Atom2Universe.app.music.equalizer.data.EqPreset) {
+    fun trackEqPresetDeletion(preset: com.Atom2Universe.app.music.equalizer.data.EqPreset): Unit = synchronized(deletedEqPresetsLock) {
         loadDeletedEqPresetsCache()
 
         deletedEqPresetsCache[preset.name] = SyncEqPreset(
@@ -1280,7 +1300,7 @@ object CloudSyncManager {
             bassBoostStrength = preset.bassBoostStrength,
             virtualizerStrength = preset.virtualizerStrength,
             createdAt = preset.createdAt,
-            updatedAt = preset.createdAt,
+            updatedAt = preset.updatedAt,
             deletedAt = System.currentTimeMillis()
         )
 
@@ -1290,6 +1310,7 @@ object CloudSyncManager {
 
     // ==================== Deleted EQ Presets Cache Persistence ====================
 
+    /** À appeler sous [deletedEqPresetsLock]. */
     private fun loadDeletedEqPresetsCache() {
         if (isDeletedEqCacheLoaded) return
 
@@ -1315,6 +1336,7 @@ object CloudSyncManager {
         isDeletedEqCacheLoaded = true
     }
 
+    /** À appeler sous [deletedEqPresetsLock]. */
     private fun saveDeletedEqPresetsCache() {
         try {
             val json = JSONObject().apply {
@@ -1336,15 +1358,13 @@ object CloudSyncManager {
      * Updates the sync manifest on Google Drive.
      */
     private suspend fun updateManifest(client: GoogleDriveAppDataClient) {
-        val existingJson = client.readJsonFile("sync_manifest.json")
-        val existing = if (existingJson != null) {
-            try {
-                SyncManifest.fromJson(JSONObject(existingJson))
-            } catch (_: Exception) {
-                SyncManifest()
-            }
-        } else {
-            SyncManifest()
+        // Illisible ou sans réponse : le réécrire effacerait les autres appareils de la liste.
+        val existing = readCloudFile(client, "sync_manifest.json", { SyncManifest() }) {
+            SyncManifest.fromJson(it)
+        }
+        if (existing == null) {
+            Log.w(TAG, "Could not read manifest, update skipped")
+            return
         }
 
         val deviceId = getDeviceId()
@@ -1424,6 +1444,8 @@ object CloudSyncManager {
             playCountDao.resetPlayCountsToEarned()
             val resetCount = beforeCount // All entries were potentially affected
             Log.d(TAG, "Reset $resetCount play count entries to earnedPlayCount")
+            // Les journaux des autres appareils seront relus en entier à la prochaine synchro
+            forgetMergedJournals()
 
             // Step 3: Update POPM tags in files to match new counts
             // (This will be done progressively by MusicPopmSyncManager)
@@ -1457,6 +1479,7 @@ object CloudSyncManager {
             .remove(KEY_UPLOADED_EVENTS_COUNT)
             .remove(KEY_UPLOADED_EVENTS_LATEST)
             .apply()
+        forgetMergedJournals()
         remoteJournals = emptySet()
         Log.d(TAG, "Uploaded listen-events state forgotten")
     }
@@ -1524,6 +1547,8 @@ sealed class SyncResult {
     object NotInitialized : SyncResult()
     object NotSignedIn : SyncResult()
     object NotEnabled : SyncResult()
+    /** Une autre synchro tourne déjà : elle fera le travail, ce n'est pas un échec. */
+    object AlreadyInProgress : SyncResult()
     data class Error(val message: String) : SyncResult()
 }
 

@@ -15,6 +15,7 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.toColorInt
+import com.Atom2Universe.app.R
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -81,6 +82,7 @@ class BalanceView @JvmOverloads constructor(
     private var lastNanos = 0L
     private var accumulator = 0f
     private var lastPhase = BalanceGame.Phase.PLACING
+    private var lastTrayReturns = 0
     private var trayGesture = false
     private var trayScrolling = false
     private var lastTouchWorldX = 0f
@@ -99,6 +101,9 @@ class BalanceView @JvmOverloads constructor(
     private companion object {
         const val FIXED_DT = 1f / 120f
         const val GAUGE_RANGE_DEG = 12f
+
+        /** Une image toutes les 16,7 ms, soit soixante par seconde. */
+        const val FRAME_NANOS = 1_000_000_000L / 60L
     }
 
     // ── Palette ───────────────────────────────────────────────────────────────
@@ -213,6 +218,18 @@ class BalanceView @JvmOverloads constructor(
     private val tmpRect = RectF()
     private val tmpPath = Path()
 
+    // Couleurs et formats lus une fois, et non à chaque brique de chaque image.
+    private val refusedColor = "#B0555F".toColorInt()
+    private val needleOk = "#4CDC8C".toColorInt()
+    private val needleBad = "#FF7043".toColorInt()
+    private val sumFormat = resources.getString(R.string.balance_sum)
+    private val leanFormat = resources.getString(R.string.balance_lean_deg)
+    private val torqueFormat = resources.getString(R.string.balance_torque)
+
+    /** Colonnes des masses posées, refaites à chaque image sans rien allouer. */
+    private val leftColumn = ArrayList<BalanceWeight>()
+    private val rightColumn = ArrayList<BalanceWeight>()
+
     /** Ciel étoilé de fond, tiré une seule fois. */
     private val starsX = FloatArray(46)
     private val starsY = FloatArray(46)
@@ -244,14 +261,64 @@ class BalanceView @JvmOverloads constructor(
             game.setViewport(h / scale + worldYOffset)
             if (game.weights.isEmpty()) game.newLevel()
         }
+        reveiller()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = pause()
 
     fun pause() {
         running = false
+        reveiller()
         thread?.join(1500)
         thread = null
+    }
+
+    // ── Veille ────────────────────────────────────────────────────────────────
+
+    /**
+     * Le fil dort ici quand plus rien ne bouge : une planche posée, des briques immobiles,
+     * redessinées cent fois par seconde, ne montrent rien et chauffent. Un geste, un bouton
+     * de l'activité ou une surface neuve le réveillent.
+     */
+    private val veille = Object()
+    private var reveil = false
+
+    /** Ce que l'écran montre a-t-il cessé de bouger ? Voir [ReposEcran]. Fil de jeu seulement. */
+    private val repos = ReposEcran()
+
+    private fun reveiller() {
+        synchronized(veille) {
+            reveil = true
+            veille.notifyAll()
+        }
+    }
+
+    private fun dormir() {
+        var dormi = false
+        synchronized(veille) {
+            while (running && !reveil) {
+                veille.wait()
+                dormi = true
+            }
+            reveil = false
+        }
+        // Le temps passé à dormir ne compte pas : rien ne bougeait.
+        if (dormi) lastNanos = System.nanoTime()
+        // Ce qui vient de changer n'a peut-être pas encore bougé (une brique posée à
+        // l'instant, un test lancé) : on regarde une fenêtre entière avant de se rendormir.
+        repos.oublier()
+    }
+
+    /**
+     * Vrai quand l'image ne change plus : pas de test en cours, et ni la planche, ni les
+     * briques, ni l'aiguille de la jauge n'ont bougé d'un demi-pixel depuis une demi-seconde.
+     */
+    private fun auRepos(dt: Float): Boolean {
+        repos.debut()
+        repos.monde(game.world, cx, height + worldYOffset * scale, scale)
+        // L'aiguille grossit l'inclinaison bien plus que la planche : elle se juge à part.
+        if (game.phase != BalanceGame.Phase.PLACING) repos.point(aiguilleX(width.toFloat()), 0f)
+        return repos.fin(dt, game.phase != BalanceGame.Phase.TESTING)
     }
 
     fun resume() {
@@ -269,6 +336,7 @@ class BalanceView @JvmOverloads constructor(
             lastNanos = now
 
             var finished: Boolean? = null
+            var rendue = false
             synchronized(game) {
                 accumulator += frameDt
                 while (accumulator >= FIXED_DT) {
@@ -280,8 +348,15 @@ class BalanceView @JvmOverloads constructor(
                     if (game.phase == BalanceGame.Phase.LOST) finished = false
                     lastPhase = game.phase
                 }
+                // Une brique tombée de la planche est revenue au plateau : « Tester » doit
+                // redevenir pâle, puisque tout n'est plus posé.
+                if (game.trayReturns != lastTrayReturns) {
+                    lastTrayReturns = game.trayReturns
+                    rendue = true
+                }
             }
             finished?.let { won -> post { listener?.onResult(won) } }
+            if (rendue) post { listener?.onPlacementChanged() }
 
             // La surface peut ne pas être encore prête : on patiente plutôt que
             // de tourner à vide sur le processeur.
@@ -295,13 +370,26 @@ class BalanceView @JvmOverloads constructor(
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
-            Thread.sleep(4)
+            val figee = synchronized(game) { auRepos(frameDt) }
+            // L'échéance de l'image, comptée depuis son début : soixante par seconde, comme
+            // le trébuchet. Le `sleep(4)` d'avant laissait la boucle suivre la file
+            // d'affichage, soit cent vingt fois par seconde sur la tablette. La physique
+            // avance par pas fixes, elle n'y voit rien. Elle vaut aussi avant de dormir : un
+            // doigt qui glisse réveille le fil à chaque mouvement, et ne doit pas le faire
+            // dessiner plus souvent.
+            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
+            if (figee) dormir()
         }
     }
 
     /** Remet le suivi de phase à zéro après un changement piloté par l'activité. */
     fun syncPhase() {
-        synchronized(game) { lastPhase = game.phase }
+        synchronized(game) {
+            lastPhase = game.phase
+            lastTrayReturns = game.trayReturns
+        }
+        reveiller()
     }
 
     // ── Conversion monde → écran ──────────────────────────────────────────────
@@ -312,6 +400,14 @@ class BalanceView @JvmOverloads constructor(
     // ── Saisie ────────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val pris = toucher(event)
+        // Après le geste et pas avant : réveillé trop tôt, le fil pourrait se rendormir sur
+        // l'image d'avant.
+        reveiller()
+        return pris
+    }
+
+    private fun toucher(event: MotionEvent): Boolean {
         val wx = (event.x - cx) / scale
         val wy = (height - event.y) / scale + worldYOffset
 
@@ -474,7 +570,7 @@ class BalanceView @JvmOverloads constructor(
             val color = weightFill[w.index % weightFill.size]
             // Une brique tenue au-dessus d'un emplacement interdit vire au rouge.
             val refused = w.dragging && !game.dragValid && b.y < game.trayBottom
-            pBox.color = if (refused) "#B0555F".toColorInt() else color
+            pBox.color = if (refused) refusedColor else color
             pBox.alpha = if (w.dragging) 200 else 255
             pBoxEdge.color = darken(pBox.color)
             pBoxEdge.alpha = pBox.alpha
@@ -533,8 +629,13 @@ class BalanceView @JvmOverloads constructor(
             canvas.drawText(weight.mass.toString(), sx(weight.body.x), trayLabelY, pBoxLabel)
         }
 
-        val left = game.weights.filter { it.placed && it.body.x < 0f }.sortedBy { it.index }
-        val right = game.weights.filter { it.placed && it.body.x >= 0f }.sortedBy { it.index }
+        // Les poids sont rangés par index une fois pour toutes : le tri d'avant ne changeait rien.
+        leftColumn.clear()
+        rightColumn.clear()
+        for (weight in game.weights) {
+            if (!weight.placed) continue
+            if (weight.body.x < 0f) leftColumn.add(weight) else rightColumn.add(weight)
+        }
         pBoxLabel.textSize = 28f * dp
         fun column(items: List<BalanceWeight>, x: Float, align: Paint.Align) {
             pBoxLabel.textAlign = align
@@ -548,12 +649,12 @@ class BalanceView @JvmOverloads constructor(
             // côtés, sans réintroduire de texte dans les formes elles-mêmes.
             if (game.phase == BalanceGame.Phase.WON && items.isNotEmpty()) {
                 pBoxLabel.textSize = 22f * dp
-                canvas.drawText("Σ ${items.sumOf { it.mass }}", x, start + items.size * step + 5f * dp, pBoxLabel)
+                canvas.drawText(sumFormat.format(items.sumOf { it.mass }), x, start + items.size * step + 5f * dp, pBoxLabel)
                 pBoxLabel.textSize = 28f * dp
             }
         }
-        column(left, width * 0.14f, Paint.Align.CENTER)
-        column(right, width * 0.86f, Paint.Align.CENTER)
+        column(leftColumn, width * 0.14f, Paint.Align.CENTER)
+        column(rightColumn, width * 0.86f, Paint.Align.CENTER)
         pBoxLabel.textAlign = Paint.Align.CENTER
     }
 
@@ -627,26 +728,32 @@ class BalanceView @JvmOverloads constructor(
         }
 
         val lean = game.leanDeg
-        val clamped = lean.coerceIn(-GAUGE_RANGE_DEG, GAUGE_RANGE_DEG)
-        val nx = w / 2f + gw / 2f * (clamped / GAUGE_RANGE_DEG)
-        pNeedle.color = if (abs(lean) <= tol) "#4CDC8C".toColorInt() else "#FF7043".toColorInt()
+        val nx = aiguilleX(w)
+        pNeedle.color = if (abs(lean) <= tol) needleOk else needleBad
         canvas.drawLine(nx, gy - gh * 0.95f, nx, gy + gh * 0.95f, pNeedle)
 
         pHudValue.textSize = 14f * dp
         pHudValue.color = pNeedle.color
-        canvas.drawText(String.format("%.1f°", lean), w / 2f, gy - gh * 1.7f, pHudValue)
+        canvas.drawText(leanFormat.format(lean), w / 2f, gy - gh * 1.7f, pHudValue)
 
         // Une fois le verdict rendu, on montre les couples : c'est là que le
         // joueur apprend de quel côté et de combien il s'est trompé.
         if (game.phase != BalanceGame.Phase.TESTING) {
             pHudText.textSize = 12f * dp
             canvas.drawText(
-                String.format("%.1f", game.leftTorque), w / 2f - gw / 2f - 24f * dp, gy + 5f * dp, pHudText
+                torqueFormat.format(game.leftTorque), w / 2f - gw / 2f - 24f * dp, gy + 5f * dp, pHudText
             )
             canvas.drawText(
-                String.format("%.1f", game.rightTorque), w / 2f + gw / 2f + 24f * dp, gy + 5f * dp, pHudText
+                torqueFormat.format(game.rightTorque), w / 2f + gw / 2f + 24f * dp, gy + 5f * dp, pHudText
             )
         }
+    }
+
+    /** Abscisse de l'aiguille de la jauge, en pixels, pour une vue large de [w]. */
+    private fun aiguilleX(w: Float): Float {
+        val clamped = game.leanDeg.coerceIn(-GAUGE_RANGE_DEG, GAUGE_RANGE_DEG)
+        val gw = w * 0.72f
+        return w / 2f + gw / 2f * (clamped / GAUGE_RANGE_DEG)
     }
 
     private fun darken(color: Int): Int {

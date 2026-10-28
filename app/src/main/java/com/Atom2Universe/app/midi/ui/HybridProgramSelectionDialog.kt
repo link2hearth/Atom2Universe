@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.repository.SettingsRepository
+import com.Atom2Universe.app.midi.visualizer.GeneralMidiInstruments
 import kotlinx.coroutines.launch
 
 /**
@@ -62,84 +63,29 @@ class HybridProgramSelectionDialog : DialogFragment() {
     companion object {
         const val TAG = "HybridProgramSelectionDialog"
 
-        /**
-         * General MIDI instrument families with their program ranges
-         */
-        val GM_FAMILIES = listOf(
-            InstrumentFamily("Piano", 0..7, listOf(
-                "Acoustic Grand Piano", "Bright Acoustic Piano", "Electric Grand Piano",
-                "Honky-tonk Piano", "Electric Piano 1", "Electric Piano 2", "Harpsichord", "Clavinet"
-            )),
-            InstrumentFamily("Chromatic Percussion", 8..15, listOf(
-                "Celesta", "Glockenspiel", "Music Box", "Vibraphone",
-                "Marimba", "Xylophone", "Tubular Bells", "Dulcimer"
-            )),
-            InstrumentFamily("Organ", 16..23, listOf(
-                "Drawbar Organ", "Percussive Organ", "Rock Organ", "Church Organ",
-                "Reed Organ", "Accordion", "Harmonica", "Tango Accordion"
-            )),
-            InstrumentFamily("Guitar", 24..31, listOf(
-                "Acoustic Guitar (nylon)", "Acoustic Guitar (steel)", "Electric Guitar (jazz)", "Electric Guitar (clean)",
-                "Electric Guitar (muted)", "Overdriven Guitar", "Distortion Guitar", "Guitar Harmonics"
-            )),
-            InstrumentFamily("Bass", 32..39, listOf(
-                "Acoustic Bass", "Electric Bass (finger)", "Electric Bass (pick)", "Fretless Bass",
-                "Slap Bass 1", "Slap Bass 2", "Synth Bass 1", "Synth Bass 2"
-            )),
-            InstrumentFamily("Strings", 40..47, listOf(
-                "Violin", "Viola", "Cello", "Contrabass",
-                "Tremolo Strings", "Pizzicato Strings", "Orchestral Harp", "Timpani"
-            )),
-            InstrumentFamily("Ensemble", 48..55, listOf(
-                "String Ensemble 1", "String Ensemble 2", "Synth Strings 1", "Synth Strings 2",
-                "Choir Aahs", "Voice Oohs", "Synth Choir", "Orchestra Hit"
-            )),
-            InstrumentFamily("Brass", 56..63, listOf(
-                "Trumpet", "Trombone", "Tuba", "Muted Trumpet",
-                "French Horn", "Brass Section", "Synth Brass 1", "Synth Brass 2"
-            )),
-            InstrumentFamily("Reed", 64..71, listOf(
-                "Soprano Sax", "Alto Sax", "Tenor Sax", "Baritone Sax",
-                "Oboe", "English Horn", "Bassoon", "Clarinet"
-            )),
-            InstrumentFamily("Pipe", 72..79, listOf(
-                "Piccolo", "Flute", "Recorder", "Pan Flute",
-                "Blown Bottle", "Shakuhachi", "Whistle", "Ocarina"
-            )),
-            InstrumentFamily("Synth Lead", 80..87, listOf(
-                "Lead 1 (square)", "Lead 2 (sawtooth)", "Lead 3 (calliope)", "Lead 4 (chiff)",
-                "Lead 5 (charang)", "Lead 6 (voice)", "Lead 7 (fifths)", "Lead 8 (bass + lead)"
-            )),
-            InstrumentFamily("Synth Pad", 88..95, listOf(
-                "Pad 1 (new age)", "Pad 2 (warm)", "Pad 3 (polysynth)", "Pad 4 (choir)",
-                "Pad 5 (bowed)", "Pad 6 (metallic)", "Pad 7 (halo)", "Pad 8 (sweep)"
-            )),
-            InstrumentFamily("Synth Effects", 96..103, listOf(
-                "FX 1 (rain)", "FX 2 (soundtrack)", "FX 3 (crystal)", "FX 4 (atmosphere)",
-                "FX 5 (brightness)", "FX 6 (goblins)", "FX 7 (echoes)", "FX 8 (sci-fi)"
-            )),
-            InstrumentFamily("Ethnic", 104..111, listOf(
-                "Sitar", "Banjo", "Shamisen", "Koto",
-                "Kalimba", "Bagpipe", "Fiddle", "Shanai"
-            )),
-            InstrumentFamily("Percussive", 112..119, listOf(
-                "Tinkle Bell", "Agogo", "Steel Drums", "Woodblock",
-                "Taiko Drum", "Melodic Tom", "Synth Drum", "Reverse Cymbal"
-            )),
-            InstrumentFamily("Sound Effects", 120..127, listOf(
-                "Guitar Fret Noise", "Breath Noise", "Seashore", "Bird Tweet",
-                "Telephone Ring", "Helicopter", "Applause", "Gunshot"
-            ))
-        )
-
         fun newInstance() = HybridProgramSelectionDialog()
     }
 
+    /** A General MIDI family with its localized name and the localized names of its programs. */
     data class InstrumentFamily(
         val name: String,
         val programRange: IntRange,
         val programNames: List<String>
     )
+
+    private fun buildFamilies(): List<InstrumentFamily> {
+        val context = requireContext()
+        val instrumentNames = context.resources.getStringArray(R.array.gm_instruments)
+        return GeneralMidiInstruments.Category.entries.map { category ->
+            InstrumentFamily(
+                name = category.getDisplayName(context),
+                programRange = category.range,
+                programNames = category.range.map { program ->
+                    instrumentNames.getOrElse(program) { context.getString(R.string.gm_instrument_unknown) }
+                }
+            )
+        }
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         settingsRepository = SettingsRepository(requireContext())
@@ -174,7 +120,7 @@ class HybridProgramSelectionDialog : DialogFragment() {
 
         // Setup RecyclerView
         adapter = InstrumentFamilyAdapter(
-            families = GM_FAMILIES,
+            families = buildFamilies(),
             selectedPrograms = selectedPrograms,
             onProgramSelectionChanged = { updateSummary() }
         )
@@ -245,8 +191,8 @@ class HybridProgramSelectionDialog : DialogFragment() {
 
     private fun updateSummary() {
         val count = selectedPrograms.size
-        val drumsText = if (useSf2ForDrums) " + drums" else ""
-        textSummary.text = getString(R.string.hybrid_selection_summary_format, count, drumsText)
+        val summaryRes = if (useSf2ForDrums) R.plurals.midi_ui_hybrid_summary_drums else R.plurals.midi_ui_hybrid_summary
+        textSummary.text = resources.getQuantityString(summaryRes, count, count)
     }
 
     /**
@@ -284,7 +230,9 @@ class HybridProgramSelectionDialog : DialogFragment() {
 
             // Selected count in this family
             val selectedInFamily = family.programRange.count { selectedPrograms.contains(it) }
-            holder.textSelectedCount.text = "$selectedInFamily/8"
+            holder.textSelectedCount.text = getString(
+                R.string.midi_ui_count_of, selectedInFamily, family.programRange.count()
+            )
             holder.textSelectedCount.visibility = if (selectedInFamily > 0) View.VISIBLE else View.GONE
 
             // Family checkbox state
@@ -332,7 +280,7 @@ class HybridProgramSelectionDialog : DialogFragment() {
                     val textName = programView.findViewById<TextView>(R.id.text_program_name)
 
                     textNumber.text = programNumber.toString()
-                    textName.text = family.programNames.getOrElse(index) { "Program $programNumber" }
+                    textName.text = family.programNames.getOrElse(index) { getString(R.string.gm_instrument_unknown) }
 
                     checkboxProgram.setOnCheckedChangeListener(null)
                     checkboxProgram.isChecked = selectedPrograms.contains(programNumber)

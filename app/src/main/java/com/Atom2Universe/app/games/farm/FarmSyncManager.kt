@@ -98,8 +98,11 @@ object FarmSyncManager {
      * @param openedWith the save as it stood when the screen opened, read synchronously by the
      * activity. The download takes a moment and the player can plant something meanwhile; a farm
      * that changed under us during that moment counts as played on, not as untouched.
+     * @param holdScreen run on the main thread just before the cloud farm is written: the screen
+     * writes what it still holds, and stops writing for good only if the save on disk is still the
+     * one given here. False means the farm moved on meanwhile, and the player gets the choice.
      */
-    suspend fun onFarmOpened(context: Context, openedWith: String?): OpenResult =
+    suspend fun onFarmOpened(context: Context, openedWith: String?, holdScreen: (String?) -> Boolean): OpenResult =
         withContext(Dispatchers.IO) {
             lock.withLock {
                 val app = context.applicationContext
@@ -131,11 +134,15 @@ object FarmSyncManager {
                 val local = localState(app)
                 val played = local != null &&
                     (local.fingerprint() != prefs.getString(KEY_SENT_HASH, null) || local != openedWith)
-                if (!played) {
+                // The screen falls silent BEFORE the write, on its own thread: a tap or a timer landing
+                // between the write and the rebuild would otherwise put the old farm back on disk,
+                // and the next closing would publish it over the one just downloaded.
+                if (!played && withContext(Dispatchers.Main) { holdScreen(local) }) {
                     apply(app, remote)
                     return@withLock OpenResult.Applied
                 }
-                OpenResult.Conflict(local = describeLocal(app, local!!), remote = remote)
+                val current = localState(app) ?: return@withLock OpenResult.Idle
+                OpenResult.Conflict(local = describeLocal(app, current), remote = remote)
             }
         }
 

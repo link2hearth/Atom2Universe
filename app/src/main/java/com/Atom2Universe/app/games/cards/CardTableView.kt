@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.Celebration
 import com.Atom2Universe.app.games.kit.KitPalette
 import kotlin.math.hypot
@@ -80,7 +81,10 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     var palette: KitPalette = KitPalette.artwork(0xFF4FC3F7.toInt())
         set(value) { field = value; painter.palette = value; invalidate() }
 
-    val painter = CardPainter(context, labels = labels)
+    /** Le dos est tiré par l'écran (nouvelle partie ou reprise) : un seul décodage au lancement. */
+    val painter = CardPainter(context, loadBack = false, labels = labels)
+
+    private val separator = context.getString(R.string.kit_separator)
 
     var onCardTap: ((PlayingCard) -> Unit)? = null
 
@@ -119,11 +123,18 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     // ── Géométrie, recalculée quand la scène ou la taille changent ───────────────────────────
     private val handRects = LinkedHashMap<PlayingCard, RectF>()
     private class Fan(val first: RectF, val dx: Float, val dy: Float, val count: Int) {
-        fun rect(i: Int) = RectF(first).apply { offset(dx * i, dy * i) }
-        fun bounds() = RectF(first).apply { if (count > 0) union(rect(count - 1)) }
+        fun rect(i: Int, out: RectF = RectF()) = out.apply { set(first); offset(dx * i, dy * i) }
+        fun bounds(out: RectF): RectF {
+            out.set(first)
+            if (count > 0) out.union(first.left + dx * (count - 1), first.top + dy * (count - 1),
+                first.right + dx * (count - 1), first.bottom + dy * (count - 1))
+            return out
+        }
     }
     private val fans = HashMap<Int, Fan>()
     private val pills = HashMap<Int, RectF>()
+    /** Le texte de chaque pastille, composé à la mise en page plutôt qu'à chaque image. */
+    private val pillLabels = HashMap<Int, String>()
     private val stockRect = RectF()
     private val discardRect = RectF()
     private val rowRect = RectF()
@@ -158,6 +169,10 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
     }
     private val rect = RectF()
+    private val slotRect = RectF()
+    private val boundsRect = RectF()
+    private val zoneRect = RectF()
+    private val areaRect = RectF()
 
     // ── API ─────────────────────────────────────────────────────────────────────────────────
 
@@ -220,9 +235,10 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         when (event) {
             is CardEvent.Play -> {
                 val n = scene?.seats?.size ?: 4
+                // Lu maintenant : le lâcher est oublié dès que le coup est joué, avant le début du trajet.
+                val dropped = if (event.seat == 0) dropFrom?.takeIf { it.first == event.card }?.second else null
                 queue.add(Step(PLAY_MS, begin = {
                     ensureLayout()
-                    val dropped = dropFrom?.takeIf { it.first == event.card }?.second
                     val from = if (event.seat == 0) dropped ?: before[event.card] ?: seatAnchor(0) else seatAnchor(event.seat)
                     val to = when {
                         event.toPile -> RectF(discardRect)
@@ -325,21 +341,18 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     }
 
     /** La place de la carte numéro [index] de la rangée du centre. */
-    private fun rowSlot(index: Int): RectF {
+    private fun rowSlot(index: Int, out: RectF = RectF()): RectF {
         ensureLayout()
-        return RectF(rowRect.left + rowStep * index, rowRect.top, rowRect.left + rowStep * index + trickW, rowRect.bottom)
+        return out.apply { set(rowRect.left + rowStep * index, rowRect.top, rowRect.left + rowStep * index + trickW, rowRect.bottom) }
     }
 
-    private fun trickSlot(seat: Int, n: Int): RectF {
+    private fun trickSlot(seat: Int, n: Int, out: RectF = RectF()): RectF {
         val cx = centerX
         val cy = centerY
-        val (dx, dy) = when (positionOf(seat, n)) {
-            BOTTOM -> 0f to trickH * 0.34f
-            TOP -> 0f to -trickH * 0.34f
-            LEFT -> -trickW * 0.78f to 0f
-            else -> trickW * 0.78f to 0f
-        }
-        return RectF(cx + dx - trickW / 2, cy + dy - trickH / 2, cx + dx + trickW / 2, cy + dy + trickH / 2)
+        val pos = positionOf(seat, n)
+        val dx = when (pos) { LEFT -> -trickW * 0.78f; RIGHT -> trickW * 0.78f; else -> 0f }
+        val dy = when (pos) { BOTTOM -> trickH * 0.34f; TOP -> -trickH * 0.34f; else -> 0f }
+        return out.apply { set(cx + dx - trickW / 2, cy + dy - trickH / 2, cx + dx + trickW / 2, cy + dy + trickH / 2) }
     }
 
     private fun ensureLayout() {
@@ -388,7 +401,8 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
 
         // ── Mon étiquette, au-dessus de la main, à gauche.
         pills.clear()
-        pills[0] = pillRect(s.seats[0], padL + 6 * density, handBandTop - pillH - gap, pillH, leftAligned = true)
+        pillLabels.clear()
+        pills[0] = pillRect(0, s.seats[0], padL + 6 * density, handBandTop - pillH - gap, pillH, leftAligned = true)
 
         // ── Les adversaires.
         fans.clear()
@@ -398,7 +412,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
             val count = info.handSize
             when (positionOf(seat, n)) {
                 TOP -> {
-                    val pill = pillRect(info, padL + w / 2f, padT + gap, pillH, centered = true)
+                    val pill = pillRect(seat, info, padL + w / 2f, padT + gap, pillH, centered = true)
                     pills[seat] = pill
                     val avail = w - 24 * density
                     val step = if (count <= 1) 0f else min(oppW * 0.34f, (avail - oppW) / (count - 1))
@@ -425,7 +439,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
             val blockH = pillH + gap + total
             val top = centerY - blockH / 2f
             val x = if (pos == LEFT) padL + 6 * density else padL + w - 6 * density - oppW
-            val pill = pillRect(info, x + oppW / 2f, top, pillH, centered = true)
+            val pill = pillRect(seat, info, x + oppW / 2f, top, pillH, centered = true)
             pills[seat] = pill
             // La pastille peut être plus large que les cartes : on la cale dans l'écran.
             val shift = if (pill.left < padL + 2 * density) padL + 2 * density - pill.left
@@ -450,16 +464,17 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         rowRect.set(centerX - rowTotal / 2f, rowY - ph / 2f, centerX - rowTotal / 2f + trickW, rowY + ph / 2f)
     }
 
-    private fun pillRect(info: SeatInfo, anchorX: Float, top: Float, height: Float,
+    private fun pillRect(seat: Int, info: SeatInfo, anchorX: Float, top: Float, height: Float,
                          centered: Boolean = false, leftAligned: Boolean = false): RectF {
         text.textSize = sp(12f)
         val label = pillText(info)
+        pillLabels[seat] = label
         val width = text.measureText(label) + 20 * density
         val left = if (leftAligned) anchorX else anchorX - width / 2f
         return RectF(left, top, left + width, top + height)
     }
 
-    private fun pillText(info: SeatInfo): String = info.caption?.let { "${info.name} · $it" } ?: info.name
+    private fun pillText(info: SeatInfo): String = info.caption?.let { info.name + separator + it } ?: info.name
 
     // ── Dessin ──────────────────────────────────────────────────────────────────────────────
 
@@ -472,9 +487,9 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         // Les adversaires : pastille, cartes cachées, nombre de cartes.
         for (seat in 1 until n) {
             val fan = fans[seat] ?: continue
-            for (i in 0 until fan.count) painter.drawBack(canvas, fan.rect(i))
+            for (i in 0 until fan.count) painter.drawBack(canvas, fan.rect(i, rect))
             if (fan.count > 0) drawCount(canvas, fan, fan.count)
-            pills[seat]?.let { drawPill(canvas, s.seats[seat], it) }
+            pills[seat]?.let { drawPill(canvas, s.seats[seat], seat, it) }
         }
 
         // La pioche et la défausse.
@@ -484,7 +499,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
 
         // Le pli.
         if (!trickFlying) for ((seat, card) in shownTrick) {
-            val r = trickSlot(seat, n)
+            val r = trickSlot(seat, n, slotRect)
             canvas.save()
             canvas.rotate(tilt(card), r.centerX(), r.centerY())
             painter.drawFace(canvas, card, r)
@@ -505,21 +520,27 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
                 dimmed = me.playable != null && card !in me.playable,
                 outline = if (card in me.marked || up) palette.accent else null)
         }
-        pills[0]?.let { drawPill(canvas, me, it) }
+        pills[0]?.let { drawPill(canvas, me, 0, it) }
 
         drawFlights(canvas)
         drawDragged(canvas)
 
         if (celebration.running) {
-            celebration.drawOver(canvas, RectF(paddingLeft.toFloat(), paddingTop.toFloat(),
-                (width - paddingRight).toFloat(), (height - paddingBottom).toFloat()), palette)
+            areaRect.set(paddingLeft.toFloat(), paddingTop.toFloat(),
+                (width - paddingRight).toFloat(), (height - paddingBottom).toFloat())
+            celebration.drawOver(canvas, areaRect, palette)
         }
-        if (busy || celebration.running) postInvalidateOnAnimation()
+        val s0 = step
+        when {
+            celebration.running || items.isNotEmpty() -> postInvalidateOnAnimation()
+            // Une pause sans carte en vol : rien ne bouge, une seule image à la fin de l'étape.
+            s0 != null -> postInvalidateDelayed((s0.duration - (SystemClock.uptimeMillis() - stepStart)).coerceAtLeast(1L))
+        }
     }
 
     private fun drawRow(canvas: Canvas, s: TableScene) {
-        if (shownRow.isEmpty()) painter.drawSlot(canvas, rowSlot(0))
-        if (!trickFlying) for ((i, pair) in shownRow.withIndex()) painter.drawFace(canvas, pair.second, rowSlot(i))
+        if (shownRow.isEmpty()) painter.drawSlot(canvas, rowSlot(0, slotRect))
+        if (!trickFlying) for ((i, pair) in shownRow.withIndex()) painter.drawFace(canvas, pair.second, rowSlot(i, slotRect))
         // Le total se pose à droite de la défausse (la retournée), là où il y a toujours de la place ; sans pile, au-dessus de la rangée.
         s.rowBadge?.let {
             if (s.pile != null) drawBadge(canvas, it, discardRect.right + 24 * density, discardRect.centerY())
@@ -530,7 +551,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     /** La table s'éclaire derrière les cartes quand une carte glissée peut y être lâchée. */
     private fun drawDropZone(canvas: Canvas) {
         if (!dragging || !overZone) return
-        val zone = RectF(centerX - trickW * 1.35f, centerY - trickH * 0.85f, centerX + trickW * 1.35f, centerY + trickH * 0.85f)
+        val zone = zoneRect.apply { set(centerX - trickW * 1.35f, centerY - trickH * 0.85f, centerX + trickW * 1.35f, centerY + trickH * 0.85f) }
         fill.color = palette.withAlpha(palette.accent, 0.14f)
         canvas.drawRoundRect(zone, 18 * density, 18 * density, fill)
         line.color = palette.withAlpha(palette.accent, 0.7f)
@@ -578,7 +599,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
                 line.strokeWidth = 2.5f * density
                 canvas.drawRoundRect(stockRect, stockRect.width() * 0.09f, stockRect.width() * 0.09f, line)
             }
-            drawBadge(canvas, pile.stock.toString(), stockRect.centerX(), stockRect.bottom)
+            drawBadge(canvas, number(pile.stock), stockRect.centerX(), stockRect.bottom)
         } else painter.drawSlot(canvas, stockRect)
 
         // La défausse : la carte du dessus, et la couleur à suivre.
@@ -609,11 +630,14 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     }
 
     private fun drawCount(canvas: Canvas, fan: Fan, count: Int) {
-        val b = fan.bounds()
-        drawBadge(canvas, count.toString(), b.centerX(), b.centerY())
+        val b = fan.bounds(boundsRect)
+        drawBadge(canvas, number(count), b.centerX(), b.centerY())
     }
 
-    private fun drawPill(canvas: Canvas, info: SeatInfo, r: RectF) {
+    /** Un nombre de cartes en texte, sans en refaire la chaîne à chaque image. */
+    private fun number(n: Int): String = if (n in NUMBERS.indices) NUMBERS[n] else n.toString()
+
+    private fun drawPill(canvas: Canvas, info: SeatInfo, seat: Int, r: RectF) {
         val rad = r.height() / 2f
         fill.color = if (info.active) palette.accent else palette.raised
         canvas.drawRoundRect(r, rad, rad, fill)
@@ -622,7 +646,7 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         canvas.drawRoundRect(r, rad, rad, line)
         text.textSize = sp(12f)
         text.color = if (info.active) palette.onAccent else palette.text
-        canvas.drawText(pillText(info), r.centerX(), r.centerY() - (text.ascent() + text.descent()) / 2f, text)
+        canvas.drawText(pillLabels[seat] ?: info.name, r.centerX(), r.centerY() - (text.ascent() + text.descent()) / 2f, text)
     }
 
     /** Le papier d'une carte, pour les pastilles qui montrent une couleur posée dessus. */
@@ -730,5 +754,6 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         const val TAKE_PAUSE_MS = 650L
         const val TAKE_MS = 330L
         const val LAY_PAUSE_MS = 120L
+        val NUMBERS = Array(105) { it.toString() }
     }
 }

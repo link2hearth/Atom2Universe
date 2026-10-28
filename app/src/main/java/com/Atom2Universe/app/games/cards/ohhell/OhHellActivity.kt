@@ -41,7 +41,7 @@ class OhHellActivity : CardGameActivity() {
                 lifted = if (s == 0) lifted.toSet() else emptySet(),
                 playable = if (s == 0 && !g.bidding) playableCards() else null,
                 caption = if (g.bids[s] == OhHellEngine.NO_BID) g.totals[s].toString()
-                    else "${g.totals[s]} · ${g.tricksWon[s]}/${g.bids[s]}",
+                    else getString(R.string.ohhell_caption, g.totals[s], g.tricksWon[s], g.bids[s]),
                 active = g.current == s,
             )
         }
@@ -66,11 +66,11 @@ class OhHellActivity : CardGameActivity() {
         val choice = bidChoice.coerceIn(0, g.handSize)
         val allowed = g.legalMoves().contains(OhHellEngine.BID_BASE + choice)
         return listOf(
-            Control("−", enabled = choice > 0) { bidChoice = choice - 1; refresh() },
+            Control(getString(R.string.cards_bid_less), enabled = choice > 0) { bidChoice = choice - 1; refresh() },
             Control(getString(R.string.ohhell_bid, choice), enabled = allowed, primary = true) {
                 submit(OhHellEngine.BID_BASE + choice)
             },
-            Control("+", enabled = choice < g.handSize) { bidChoice = choice + 1; refresh() },
+            Control(getString(R.string.cards_bid_more), enabled = choice < g.handSize) { bidChoice = choice + 1; refresh() },
         )
     }
 

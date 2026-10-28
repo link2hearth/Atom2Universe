@@ -213,16 +213,26 @@ class AudioExporter(private val provider: SampleProvider, private val transcoder
     /**
      * Un fichier par piste, dans [outDir] : `01 - Nom.ext`. Chaque piste est exportée avec ses propres
      * réglages (volume, panoramique, enveloppe) mais ni sourdine ni solo : on exporte ce qu'on a demandé.
-     * Les pistes sans clip sont ignorées.
+     * Les pistes sans clip sont ignorées. [onEach] reçoit chaque fichier dès qu'il est écrit, avant la piste
+     * suivante : on peut le copier ailleurs puis l'effacer sans attendre que tout soit rendu.
      */
-    fun exportTracks(project: Project, o: ExportOptions, outDir: File, tmpDir: File, ctx: RunContext): List<ExportResult> {
+    fun exportTracks(
+        project: Project,
+        o: ExportOptions,
+        outDir: File,
+        tmpDir: File,
+        ctx: RunContext,
+        onEach: (ExportResult) -> Unit = {},
+    ): List<ExportResult> {
         val tracks = project.tracks.filter { it.clips.isNotEmpty() }
         val results = ArrayList<ExportResult>()
         for ((i, t) in tracks.withIndex()) {
             val single = project.copy(tracks = listOf(t.copy(mute = false, solo = false)))
             // Le numéro d'ordre rend les noms uniques même si deux pistes portent le même titre.
             val base = "%02d - %s".format(i + 1, safeName(t.name))
-            results += export(single, o, File(outDir, "$base.${o.format.extension}"), tmpDir, sub(ctx, i.toFloat() / tracks.size, (i + 1f) / tracks.size))
+            val r = export(single, o, File(outDir, "$base.${o.format.extension}"), tmpDir, sub(ctx, i.toFloat() / tracks.size, (i + 1f) / tracks.size))
+            results += r
+            onEach(r)
         }
         return results
     }

@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
 import com.Atom2Universe.app.R
-import android.graphics.Color
 
 /**
  * Thèmes gratuits (correspondant aux anciens VisualStyle)
@@ -17,16 +16,16 @@ class ClassicTheme : BasePracticeTheme() {
 
 
     override fun getBackgroundColors() = Pair(
-        Color.parseColor("#1A1A2E"),
-        Color.parseColor("#16213E")
+        0xFF1A1A2E.toInt(),
+        0xFF16213E.toInt()
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#4CAF50")
-    override fun getGridLineColor() = Color.parseColor("#15FFFFFF")
+    override fun getHitZoneColor() = 0xFF4CAF50.toInt()
+    override fun getGridLineColor() = 0x15FFFFFF.toInt()
 
     override fun getNoteColor(pitchClass: Int): Int {
         // Vert classique pour toutes les notes
-        return Color.parseColor("#4CAF50")
+        return 0xFF4CAF50.toInt()
     }
 }
 
@@ -57,12 +56,12 @@ class RainbowTheme : BasePracticeTheme() {
     }
 
     override fun getBackgroundColors() = Pair(
-        Color.parseColor("#0D0D1A"),
-        Color.parseColor("#1A1A2E")
+        0xFF0D0D1A.toInt(),
+        0xFF1A1A2E.toInt()
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#00E5CC")
-    override fun getGridLineColor() = Color.parseColor("#15FFFFFF")
+    override fun getHitZoneColor() = 0xFF00E5CC.toInt()
+    override fun getGridLineColor() = 0x15FFFFFF.toInt()
 
     override fun getNoteColor(pitchClass: Int) = CHROMATIC_COLORS[pitchClass % 12]
 
@@ -97,12 +96,12 @@ class NeonTheme : BasePracticeTheme() {
     }
 
     override fun getBackgroundColors() = Pair(
-        Color.parseColor("#0A0A0F"),
-        Color.parseColor("#15151F")
+        0xFF0A0A0F.toInt(),
+        0xFF15151F.toInt()
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#00FFFF")
-    override fun getGridLineColor() = Color.parseColor("#20FFFFFF")
+    override fun getHitZoneColor() = 0xFF00FFFF.toInt()
+    override fun getGridLineColor() = 0x20FFFFFF.toInt()
 
     override fun getNoteColor(pitchClass: Int) = NEON_COLORS[pitchClass % 12]
 
@@ -139,13 +138,13 @@ class OceanTheme : BasePracticeTheme() {
     }
 
     override fun getBackgroundColors() = Pair(
-        Color.parseColor("#001219"),
-        Color.parseColor("#002233")
+        0xFF001219.toInt(),
+        0xFF002233.toInt()
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#00D4AA")
-    override fun getGridLineColor() = Color.parseColor("#15FFFFFF")
-    override fun getSheetMusicNoteColor() = Color.parseColor("#1E88E5")
+    override fun getHitZoneColor() = 0xFF00D4AA.toInt()
+    override fun getGridLineColor() = 0x15FFFFFF.toInt()
+    override fun getSheetMusicNoteColor() = 0xFF1E88E5.toInt()
 
     override fun getNoteColor(pitchClass: Int) = OCEAN_COLORS[pitchClass % 12]
 
@@ -180,13 +179,13 @@ class FireTheme : BasePracticeTheme() {
     }
 
     override fun getBackgroundColors() = Pair(
-        Color.parseColor("#1A0A00"),
-        Color.parseColor("#2A1500")
+        0xFF1A0A00.toInt(),
+        0xFF2A1500.toInt()
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#FF6600")
-    override fun getGridLineColor() = Color.parseColor("#20FF6600")
-    override fun getSheetMusicNoteColor() = Color.parseColor("#FF5722")
+    override fun getHitZoneColor() = 0xFFFF6600.toInt()
+    override fun getGridLineColor() = 0x20FF6600.toInt()
+    override fun getSheetMusicNoteColor() = 0xFFFF5722.toInt()
 
     override fun getNoteColor(pitchClass: Int) = FIRE_COLORS[pitchClass % 12]
 

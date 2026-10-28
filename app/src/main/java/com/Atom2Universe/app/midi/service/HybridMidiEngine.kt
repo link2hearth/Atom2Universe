@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.Atom2Universe.app.midi.sf2.MidiEventType
 import com.Atom2Universe.app.midi.sf2.ScheduledMidiEvent
-import com.Atom2Universe.app.midi.sf2.Sf2Engine
 import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
 import com.leff.midi.MidiFile
 import com.leff.midi.event.*
@@ -16,6 +15,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Hybrid MIDI Engine - Routes MIDI events to SF2 or Sonivox based on program selection.
  *
  * Architecture:
- * - Both Sf2Engine (AudioTrack) and SonivoxEngine (OpenSL ES) run simultaneously
+ * - A SoundFont engine (Sf2Engine or FluidSynth, see HybridSoundFontSide) and SonivoxEngine run simultaneously
  * - MIDI events are routed based on sf2Programs set (which programs use SF2)
  * - Program Change and Control Change are sent to BOTH engines for state coherence
  * - Note On/Off are routed to the engine handling that channel's current program
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicLong
  */
 class HybridMidiEngine(
     private val context: Context,
-    private val sf2Engine: Sf2Engine,
+    private val soundFont: HybridSoundFontSide,
     private val sonivoxEngine: SonivoxEngine
 ) : MidiEngine {
 
@@ -47,12 +47,6 @@ class HybridMidiEngine(
     // State
     private var state: MidiEngine.State = MidiEngine.State.UNINITIALIZED
     private val stateLock = Any()
-
-    init {
-        // Le mode hybride applique déjà le gain du mixeur aux vélocités (comme pour Sonivox) :
-        // le moteur SF2 ne doit pas l'appliquer une seconde fois au signal
-        sf2Engine.applyMixerGain = false
-    }
 
     // Configuration
     private var sf2Programs: Set<Int> = emptySet()  // Programs (0-127) that use SF2
@@ -79,6 +73,9 @@ class HybridMidiEngine(
     private var playbackExecutor: ScheduledExecutorService? = null
     private var playbackFuture: ScheduledFuture<*>? = null
     private var positionUpdateFuture: ScheduledFuture<*>? = null
+    // Fin de morceau : programmée une seule fois (la boucle de 5 ms la voyait à chaque tour)
+    private val completionPending = AtomicBoolean(false)
+    private var completionFuture: ScheduledFuture<*>? = null
 
     // Temp file for content URI
     private var currentTempFile: File? = null
@@ -140,7 +137,7 @@ class HybridMidiEngine(
 
             // Initialize SF2 engine with SoundFont
             if (soundFontPath.isNotBlank()) {
-                sf2Engine.initialize(soundFontPath)
+                soundFont.initialize(soundFontPath)
             }
 
             // Initialize channel routing
@@ -230,11 +227,11 @@ class HybridMidiEngine(
         synchronized(sf2StateLock) {
             try {
                 // Check if SF2 engine is still valid
-                if (!sf2Engine.isReadyForDirectMidi()) {
+                if (!soundFont.isReady()) {
                     // SF2 engine lost its state - force it to reload from cache
-                    val soundFontPath = sf2Engine.getCurrentSoundFontPath()
+                    val soundFontPath = soundFont.soundFontPath()
                     if (soundFontPath.isNotBlank()) {
-                        sf2Engine.reloadSoundFont(soundFontPath)
+                        soundFont.reloadSoundFont(soundFontPath)
                     }
                 }
             } catch (_: Exception) {
@@ -253,10 +250,10 @@ class HybridMidiEngine(
             // Ensure SF2 engine is ready (might have been invalidated after practice mode)
             // Use synchronized block to prevent race condition
             synchronized(sf2StateLock) {
-                if (!sf2Engine.isReadyForDirectMidi()) {
-                    val soundFontPath = sf2Engine.getCurrentSoundFontPath()
+                if (!soundFont.isReady()) {
+                    val soundFontPath = soundFont.soundFontPath()
                     if (soundFontPath.isNotBlank()) {
-                        sf2Engine.reloadSoundFont(soundFontPath)
+                        soundFont.reloadSoundFont(soundFontPath)
                     }
                 }
             }
@@ -315,21 +312,21 @@ class HybridMidiEngine(
 
     private fun ensureSf2AudioStarted(): Boolean {
         try {
-            if (!sf2Engine.isReadyForDirectMidi()) {
-                val soundFontPath = sf2Engine.getCurrentSoundFontPath()
+            if (!soundFont.isReady()) {
+                val soundFontPath = soundFont.soundFontPath()
                 if (soundFontPath.isNotBlank()) {
-                    sf2Engine.reloadSoundFont(soundFontPath)
+                    soundFont.reloadSoundFont(soundFontPath)
                 }
             }
 
-            if (sf2Engine.isReadyForDirectMidi()) {
-                if (sf2Engine.startAudioRenderer()) {
+            if (soundFont.isReady()) {
+                if (soundFont.startAudio()) {
                     return true
                 }
 
-                val soundFontPath = sf2Engine.getCurrentSoundFontPath()
-                if (soundFontPath.isNotBlank() && sf2Engine.reloadSoundFont(soundFontPath)) {
-                    return sf2Engine.startAudioRenderer()
+                val soundFontPath = soundFont.soundFontPath()
+                if (soundFontPath.isNotBlank() && soundFont.reloadSoundFont(soundFontPath)) {
+                    return soundFont.startAudio()
                 }
             }
         } catch (_: Exception) {
@@ -342,13 +339,17 @@ class HybridMidiEngine(
         if (state != MidiEngine.State.PLAYING) return
 
         stopMidiPlayback()
+        // Rien à publier pendant la pause ; resume() relance une seule tâche de position
+        stopPositionUpdates()
 
         // Send all notes off to both engines
-        sf2Engine.sendAllNotesOff()
+        soundFont.allNotesOff()
         sonivoxEngine.sendAllSoundOffDirect()
 
-        // Pause audio systems
-        sf2Engine.pauseAudioRenderer()
+        // Pause audio systems : le flux Sonivox calculerait du silence pendant toute la
+        // pause (arrêté seulement s'il est à nous, resume() le relance)
+        soundFont.pauseAudio()
+        sonivoxEngine.stopDriver()
 
         // Clear keyboard visualization
         MidiEventDispatcher.dispatchAllNotesOff()
@@ -360,7 +361,14 @@ class HybridMidiEngine(
         if (state != MidiEngine.State.PAUSED) return
 
         // Resume audio systems
-        sf2Engine.resumeAudioRenderer()
+        soundFont.resumeAudio()
+        if (!sonivoxEngine.isReadyForDirectMidi()) {
+            sonivoxEngine.startDriver()
+            // Pilote Sonivox neuf (il repart du piano) : instruments et contrôleurs à renvoyer
+            synchronized(timelineLock) {
+                replayStateEvents(currentPositionMs.get())
+            }
+        }
 
         startMidiPlayback()
         startPositionUpdates()
@@ -382,14 +390,15 @@ class HybridMidiEngine(
     fun stopForTransition(stopAudioEngines: Boolean = true) {
         stopMidiPlayback()
         stopPositionUpdates()
+        cancelCompletion()
 
         // Send all notes off to both engines
-        sf2Engine.sendAllNotesOff()
+        soundFont.allNotesOff()
         sonivoxEngine.sendAllSoundOffDirect()
 
         if (stopAudioEngines) {
             // Full stop - stop audio systems
-            sf2Engine.stopAudioRenderer()
+            soundFont.stopAudio()
             sonivoxEngine.stopDriver()
         }
         // If !stopAudioEngines, keep audio streams running for next track
@@ -418,7 +427,7 @@ class HybridMidiEngine(
     override fun release() {
         // IMPORTANT: Garantir sendAllNotesOff avant shutdown pour éviter les notes bloquées
         try {
-            sf2Engine.sendAllNotesOff()
+            soundFont.allNotesOff()
             sonivoxEngine.sendAllSoundOffDirect()
         } catch (_: Exception) {
             // Ignorer les erreurs lors du cleanup
@@ -434,7 +443,7 @@ class HybridMidiEngine(
         // Note: On ne release pas sf2Engine/sonivoxEngine car ils sont owned by MidiSynthesizerManager,
         // mais on s'assure que leurs ressources internes (voix, buffers) sont liberees.
         try {
-            sf2Engine.resetSynthesizer()
+            soundFont.reset()
         } catch (_: Exception) {
             // Ignorer les erreurs lors du cleanup
         }
@@ -464,43 +473,25 @@ class HybridMidiEngine(
         }
 
         // Stop all current sounds on both engines
-        sf2Engine.sendAllSoundOff()
+        soundFont.allSoundOff()
         sonivoxEngine.sendAllSoundOffDirect()
 
         // Reset both synthesizers to clear all internal state
         // This is crucial to prevent lingering notes/effects
-        sf2Engine.resetSynthesizer()
+        soundFont.reset()
         sonivoxEngine.resetAllControllers()
 
         // Flush the SF2 audio buffer to immediately cut off any pending audio
         // This prevents ghost notes that would continue playing from the buffer
-        sf2Engine.flushAudioBuffer()
+        soundFont.flushAudio()
 
         // Clear keyboard visualization
         MidiEventDispatcher.dispatchAllNotesOff()
 
-        // Check if SF2 needs to load instruments for this position
-        if (sf2Engine.hasActivePreloader()) {
-            val isReady = sf2Engine.prepareForSeek(clampedPos) { _ ->
-                // Callback when SF2 is ready - complete the seek
-                completeSeek(clampedPos, wasPlaying)
-            }
-
-            if (isReady) {
-                // SF2 already has all instruments, complete seek immediately
-                completeSeek(clampedPos, wasPlaying)
-            }
-            // else: wait for callback, playback stays paused
-        } else {
-            // No preloader active, complete seek immediately
-            completeSeek(clampedPos, wasPlaying)
-        }
+        // Les SoundFonts sont chargées en entier : le seek se termine tout de suite
+        completeSeek(clampedPos, wasPlaying)
     }
 
-    /**
-     * Complete the seek operation after SF2 is ready.
-     * Called either immediately or from prepareForSeek callback.
-     */
     private fun completeSeek(clampedPos: Long, wasPlaying: Boolean) {
         // Synchronize access to midiTimeline to prevent race condition
         synchronized(timelineLock) {
@@ -524,17 +515,17 @@ class HybridMidiEngine(
 
     override fun setVolume(volume: Float) {
         this.volume = volume.coerceIn(0f, 1f)
-        sf2Engine.setVolume(this.volume)
+        soundFont.setVolume(this.volume)
         sonivoxEngine.setVolume(this.volume)
     }
 
     override fun setReverb(preset: Int) {
-        sf2Engine.setReverb(preset)
+        soundFont.setReverb(preset)
         sonivoxEngine.setReverb(preset)
     }
 
     override fun setChorus(preset: Int) {
-        sf2Engine.setChorus(preset)
+        soundFont.setChorus(preset)
         sonivoxEngine.setChorus(preset)
     }
 
@@ -546,7 +537,7 @@ class HybridMidiEngine(
 
     override fun getState(): MidiEngine.State = state
 
-    override fun getAudioSessionId(): Int = sf2Engine.getAudioSessionId()
+    override fun getAudioSessionId(): Int = soundFont.audioSessionId()
 
     /**
      * Synchronizes the visualizer (keyboards) with the current playback position.
@@ -637,13 +628,13 @@ class HybridMidiEngine(
         stop()
 
         // BUG FIX 1.15: S'assurer que l'ancien MappedByteBuffer est libere avant de recharger.
-        // sf2Engine.reloadSoundFont() appelle close() sur l'ancien Sf2File en interne,
+        // soundFont.reloadSoundFont() appelle close() sur l'ancien Sf2File en interne,
         // mais nous ajoutons un reset du synthesizer pour liberer toutes les voix actives
         // qui pourraient detenir des references aux samples.
-        sf2Engine.resetSynthesizer()
+        soundFont.reset()
 
         // Reload SF2 engine (ferme l'ancien Sf2File et son MappedByteBuffer en interne)
-        val success = sf2Engine.reloadSoundFont(soundFontPath)
+        val success = soundFont.reloadSoundFont(soundFontPath)
 
         if (success && midiTimeline.isNotEmpty()) {
             updateState(MidiEngine.State.MIDI_LOADED)
@@ -652,13 +643,34 @@ class HybridMidiEngine(
         return success
     }
 
-    override fun forceDriverRestart() {
-        sf2Engine.forceDriverRestart()
-        sonivoxEngine.forceDriverRestart()
+    // ==================== Égaliseur et sortie audio (les deux moteurs) ====================
+
+    fun setEqEnabled(enabled: Boolean) {
+        soundFont.setEqEnabled(enabled)
+        sonivoxEngine.setEqEnabled(enabled)
+    }
+
+    fun setEqBandLevel(band: Int, millibels: Int) {
+        soundFont.setEqBandLevel(band, millibels)
+        sonivoxEngine.setEqBandLevel(band, millibels)
+    }
+
+    fun getEqBandLevel(band: Int): Int = soundFont.getEqBandLevel(band)
+
+    fun forceOutputToSpeaker(): Boolean {
+        val soundFontResult = soundFont.forceOutputToSpeaker()
+        val sonivoxResult = sonivoxEngine.forceOutputToSpeaker()
+        return soundFontResult || sonivoxResult
+    }
+
+    fun resetOutputDevice(): Boolean {
+        val soundFontResult = soundFont.resetOutputDevice()
+        val sonivoxResult = sonivoxEngine.resetOutputDevice()
+        return soundFontResult || sonivoxResult
     }
 
     override fun getDriverStats(): String {
-        val sf2Stats = sf2Engine.getDriverStats()
+        val sf2Stats = soundFont.driverStats()
         val sonivoxStats = sonivoxEngine.getDriverStats()
         val sf2Count = sf2Programs.size
         return "Hybrid: SF2($sf2Count progs) | $sf2Stats | Sonivox: $sonivoxStats"
@@ -775,6 +787,10 @@ class HybridMidiEngine(
     // ==================== MIDI Playback ====================
 
     private fun startMidiPlayback() {
+        // Une seule boucle de lecture, et plus de fin programmée pour l'ancienne position
+        stopMidiPlayback()
+        cancelCompletion()
+
         playbackStartTimeNs = System.nanoTime()
         playbackStartPositionMs = currentPositionMs.get()
 
@@ -817,8 +833,10 @@ class HybridMidiEngine(
                 currentEventIndex.compareAndSet(index, index + 1)
             }
 
-            // Check for completion
-            if (currentEventIndex.get() >= timelineSize && position >= durationMs) {
+            // Check for completion (une seule fois par morceau)
+            if (currentEventIndex.get() >= timelineSize && position >= durationMs &&
+                completionPending.compareAndSet(false, true)
+            ) {
                 onPlaybackComplete()
             }
         }
@@ -837,7 +855,7 @@ class HybridMidiEngine(
                 updateChannelRouting(channel, event.data1)
 
                 // Send to BOTH engines for state coherence
-                sf2Engine.sendProgramChange(channel, event.data1)
+                soundFont.programChange(channel, event.data1)
                 sonivoxEngine.sendProgramChange(channel, event.data1)
 
                 // Apply instrument boost
@@ -858,7 +876,7 @@ class HybridMidiEngine(
                     val target = channelRouting[channel]
 
                     when (target) {
-                        SynthTarget.SF2 -> sf2Engine.sendNoteOn(channel, event.data1, normalizedVelocity)
+                        SynthTarget.SF2 -> soundFont.noteOn(channel, event.data1, normalizedVelocity)
                         SynthTarget.SONIVOX -> sonivoxEngine.sendNoteOn(channel, event.data1, normalizedVelocity)
                     }
                 }
@@ -872,7 +890,7 @@ class HybridMidiEngine(
                     // If routing changed between Note On and Note Off (due to Program Change),
                     // the note would be stuck on the old engine. Sending to both ensures
                     // the note is properly released regardless of routing changes.
-                    sf2Engine.sendNoteOff(channel, event.data1)
+                    soundFont.noteOff(channel, event.data1)
                     sonivoxEngine.sendNoteOff(channel, event.data1)
                 }
                 dispatchMidiToVisualizer(event)
@@ -880,14 +898,14 @@ class HybridMidiEngine(
 
             MidiEventType.CONTROL_CHANGE -> {
                 // Send to BOTH engines for state coherence
-                sf2Engine.sendControlChange(channel, event.data1, event.data2)
+                soundFont.controlChange(channel, event.data1, event.data2)
                 sonivoxEngine.sendControlChange(channel, event.data1, event.data2)
             }
 
             MidiEventType.PITCH_BEND -> {
                 val value = event.data1 or (event.data2 shl 7)
                 // Send to BOTH engines for state coherence
-                sf2Engine.sendPitchBend(channel, value)
+                soundFont.pitchBend(channel, value)
                 sonivoxEngine.sendPitchBend(channel, value)
             }
         }
@@ -959,27 +977,27 @@ class HybridMidiEngine(
             updateChannelRouting(channel, finalProgram[channel])
 
             // Send program change
-            sf2Engine.sendProgramChange(channel, finalProgram[channel])
+            soundFont.programChange(channel, finalProgram[channel])
             sonivoxEngine.sendProgramChange(channel, finalProgram[channel])
 
             // Send control changes
-            sf2Engine.sendControlChange(channel, 1, finalModulation[channel])
+            soundFont.controlChange(channel, 1, finalModulation[channel])
             sonivoxEngine.sendControlChange(channel, 1, finalModulation[channel])
 
-            sf2Engine.sendControlChange(channel, 7, finalVolume[channel])
+            soundFont.controlChange(channel, 7, finalVolume[channel])
             sonivoxEngine.sendControlChange(channel, 7, finalVolume[channel])
 
-            sf2Engine.sendControlChange(channel, 10, finalPan[channel])
+            soundFont.controlChange(channel, 10, finalPan[channel])
             sonivoxEngine.sendControlChange(channel, 10, finalPan[channel])
 
-            sf2Engine.sendControlChange(channel, 11, finalExpression[channel])
+            soundFont.controlChange(channel, 11, finalExpression[channel])
             sonivoxEngine.sendControlChange(channel, 11, finalExpression[channel])
 
-            sf2Engine.sendControlChange(channel, 64, if (finalSustain[channel]) 127 else 0)
+            soundFont.controlChange(channel, 64, if (finalSustain[channel]) 127 else 0)
             sonivoxEngine.sendControlChange(channel, 64, if (finalSustain[channel]) 127 else 0)
 
             // Send pitch bend
-            sf2Engine.sendPitchBend(channel, finalPitchBend[channel])
+            soundFont.pitchBend(channel, finalPitchBend[channel])
             sonivoxEngine.sendPitchBend(channel, finalPitchBend[channel])
         }
     }
@@ -996,18 +1014,21 @@ class HybridMidiEngine(
         }
 
         // Reset SF2 synthesizer (resets pitch bend, modulation, etc.)
-        sf2Engine.resetSynthesizer()
+        soundFont.reset()
 
         // Reset Sonivox controllers (pitch bend, modulation, etc.)
         sonivoxEngine.resetAllControllers()
     }
 
     private fun onPlaybackComplete() {
+        // Plus rien à jouer : la boucle de 5 ms s'arrête
+        stopMidiPlayback()
+
         // Clear keyboard visualization
         MidiEventDispatcher.dispatchAllNotesOff()
 
         // Let notes ring out briefly, then stop
-        playbackExecutor?.schedule({
+        completionFuture = playbackExecutor?.schedule({
             if (state == MidiEngine.State.PLAYING) {
                 stopForTransition(stopAudioEngines = false)
                 onCompletionListener?.invoke()
@@ -1015,9 +1036,17 @@ class HybridMidiEngine(
         }, 500, TimeUnit.MILLISECONDS)
     }
 
+    private fun cancelCompletion() {
+        completionFuture?.cancel(false)
+        completionFuture = null
+        completionPending.set(false)
+    }
+
     // ==================== Position Updates ====================
 
     private fun startPositionUpdates() {
+        // Jamais deux tâches de position à la fois
+        stopPositionUpdates()
         positionUpdateFuture = playbackExecutor?.scheduleWithFixedDelay(
             {
                 onPositionChangedListener?.invoke(currentPositionMs.get(), durationMs)
@@ -1122,7 +1151,7 @@ class HybridMidiEngine(
                 // Stop all notes on this channel for BOTH engines
                 // We must send to both because notes might have been started
                 // when routing was different (before a Program Change)
-                sf2Engine.sendControlChange(channel, 123, 0) // All Notes Off
+                soundFont.controlChange(channel, 123, 0) // All Notes Off
                 sonivoxEngine.sendControlChange(channel, 123, 0)
             }
         }
@@ -1130,7 +1159,7 @@ class HybridMidiEngine(
         override fun onChannelVolumeChanged(channel: Int, volume: Float) {
             val midiVolume = (volume * 127).toInt().coerceIn(0, 127)
             // Send to both engines for consistent state
-            sf2Engine.sendControlChange(channel, 7, midiVolume) // CC7 = Volume
+            soundFont.controlChange(channel, 7, midiVolume) // CC7 = Volume
             sonivoxEngine.sendControlChange(channel, 7, midiVolume)
         }
     }

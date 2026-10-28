@@ -140,9 +140,13 @@ class CrazyEightsEngine private constructor(
         discard = arrayListOf(top)
     }
 
-    /** Tout le monde passe de suite : la manche est bloquée, et gagne celui qui a le moins de points en main. */
+    /**
+     * Tout le monde passe de suite : la manche est bloquée, et gagne celui qui a le moins de points en
+     * main. À égalité, le premier dans l'ordre du jeu en partant du joueur qui suit le dernier à avoir
+     * passé ([turn]) : aucun siège n'est avantagé d'office.
+     */
     private fun finishBlocked() {
-        winner = (0 until seats).minByOrNull { handValue(it) }!!
+        winner = (1..seats).map { (turn + it) % seats }.minByOrNull { handValue(it) }!!
         roundPoints = (0 until seats).filter { it != winner }.sumOf { handValue(it) } - handValue(winner)
         if (roundPoints < 0) roundPoints = 0
     }

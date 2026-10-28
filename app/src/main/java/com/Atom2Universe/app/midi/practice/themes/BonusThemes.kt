@@ -185,7 +185,9 @@ class GalaxyTheme : BasePracticeTheme() {
         val driftSpeed: Float,
         val driftPhase: Float,
         val colors: IntArray,
-        val stops: FloatArray
+        val stops: FloatArray,
+        // Dégradé centré sur l'origine, créé une fois : on déplace le canevas, pas le dégradé
+        val shader: android.graphics.RadialGradient
     )
     private var dustCloudCaches: Array<DustCloudCache>? = null
 
@@ -194,7 +196,7 @@ class GalaxyTheme : BasePracticeTheme() {
         Color.parseColor("#190028")   // Violet sombre
     )
 
-    override fun getHitZoneColor() = Color.parseColor("#FFFFFF")  // Blanc stellaire
+    override fun getHitZoneColor() = 0xFFFFFFFF.toInt()  // Blanc stellaire
     override fun getGridLineColor() = Color.parseColor("#20FFFFFF")
 
     override fun hasGlowEffect() = true
@@ -282,16 +284,20 @@ class GalaxyTheme : BasePracticeTheme() {
         // PERFORMANCE: Pre-compute dust cloud positions once
         val baseRadius = max(width, height) * 0.45f
         dustCloudCaches = DUST_TEMPLATES.mapIndexed { index, template ->
+            val radius = baseRadius * template.radiusFactor
             DustCloudCache(
                 baseX = template.xFactor * width,
                 baseY = template.yFactor * height,
-                radius = baseRadius * template.radiusFactor,
+                radius = radius,
                 driftX = template.driftX,
                 driftY = template.driftY,
                 driftSpeed = template.driftSpeed,
                 driftPhase = template.phaseOffset + index * 0.77f,
                 colors = template.colors,
-                stops = template.stops
+                stops = template.stops,
+                shader = android.graphics.RadialGradient(
+                    0f, 0f, radius, template.colors, template.stops, Shader.TileMode.CLAMP
+                )
             )
         }.toTypedArray()
     }
@@ -309,15 +315,11 @@ class GalaxyTheme : BasePracticeTheme() {
             val centerX = cache.baseX + offsetX
             val centerY = cache.baseY + offsetY
 
-            nebulaPaint.shader = android.graphics.RadialGradient(
-                centerX,
-                centerY,
-                cache.radius,
-                cache.colors,
-                cache.stops,
-                Shader.TileMode.CLAMP
-            )
-            canvas.drawCircle(centerX, centerY, cache.radius, nebulaPaint)
+            nebulaPaint.shader = cache.shader
+            canvas.save()
+            canvas.translate(centerX, centerY)
+            canvas.drawCircle(0f, 0f, cache.radius, nebulaPaint)
+            canvas.restore()
         }
 
         // Léger voile sombre pour préserver la lisibilité des notes
@@ -489,7 +491,7 @@ class CyberpunkTheme : BasePracticeTheme() {
 
     override fun getBackgroundColors() = Pair(BG_TOP, BG_BOTTOM)
 
-    override fun getHitZoneColor() = Color.parseColor("#00FFFF")
+    override fun getHitZoneColor() = 0xFF00FFFF.toInt()
     override fun getGridLineColor() = Color.parseColor("#25FF00FF")
     override fun getNoteColor(pitchClass: Int) = CYBER_COLORS[pitchClass % 12]
 

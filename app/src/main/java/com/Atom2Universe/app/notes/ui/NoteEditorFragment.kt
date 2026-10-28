@@ -46,12 +46,16 @@ import com.Atom2Universe.app.pixelart.ui.iconButton
 import com.Atom2Universe.app.pixelart.ui.label
 import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.scrollRow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
@@ -62,7 +66,8 @@ import kotlinx.coroutines.withContext
 class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
 
     private val notesActivity get() = activity as NotesActivity
-    private val vm: NotesViewModel get() = notesActivity.viewModel
+    /** Gardé ici : la sauvegarde de sortie peut finir après le détachement de l'éditeur. */
+    private lateinit var vm: NotesViewModel
     private lateinit var prefs: NotesPreferences
 
     private lateinit var root: View
@@ -91,10 +96,13 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
     private var tts: TextToSpeechManager? = null
     private var speaking = false
     private var autoSave: Job? = null
+    /** Une seule écriture à la fois : deux insertions d'une note neuve la créeraient en double. */
+    private val saveLock = Mutex()
 
     private val micPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { ok -> if (ok) startDictation() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        vm = notesActivity.viewModel
         prefs = NotesPreferences(requireContext())
         root = view.findViewById(R.id.nt_ed_root)
         titleField = view.findViewById(R.id.nt_ed_title)
@@ -180,7 +188,9 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
     }
 
     /** Écrit la note telle qu'elle est à l'écran. Une note neuve et vide n'est pas créée. */
-    private suspend fun save(force: Boolean = false) {
+    private suspend fun save(force: Boolean = false) = saveLock.withLock { writeNote(force) }
+
+    private suspend fun writeNote(force: Boolean) {
         if (!loaded || discarded) return
         val title = titleField.text.toString().trim()
         val content = editor.markdown
@@ -223,10 +233,15 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
         if (!loaded || discarded) return
         // En quittant pour de bon, une note restée vide est effacée au lieu d'être gardée.
         val leaving = isRemoving || requireActivity().isFinishing
-        runBlocking {
-            if (leaving && isBlank() && tagIds.isEmpty()) {
-                if (note.id != 0L) vm.deleteForever(note.id)
-            } else save()
+        val dropBlank = leaving && isBlank() && tagIds.isEmpty()
+        // Hors du fil de l'écran, dans un scope qui survit à l'éditeur et à l'activité :
+        // l'écriture va au bout même si l'écran est détruit entre-temps.
+        exitSaves.launch {
+            withContext(NonCancellable) {
+                if (dropBlank) {
+                    saveLock.withLock { if (note.id != 0L) vm.deleteForever(note.id) }
+                } else save()
+            }
         }
     }
 
@@ -388,6 +403,8 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
         val box = view.findViewById<View>(R.id.nt_ed_backlinks)
         val list = view.findViewById<ViewGroup>(R.id.nt_ed_backlinks_list)
         val links = if (note.id == 0L) emptyList() else vm.getBacklinks(note.title, note.id)
+        // Une sauvegarde de sortie peut arriver ici après la fermeture de l'éditeur.
+        if (!isAdded || this.view !== view) return
         list.removeAllViews()
         box.visibility = if (links.isEmpty()) View.GONE else View.VISIBLE
         if (links.isEmpty()) return
@@ -567,6 +584,8 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
         private const val ARG_TAG_ID = "tag_id"
         private const val ARG_FAVORITE = "favorite"
         private const val SAVE_DELAY_MS = 1500L
+        /** Sauvegardes lancées en onPause ; jamais annulé. */
+        private val exitSaves = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
         fun newInstance(noteId: Long?, groupId: Long? = null, tagId: Long? = null, favorite: Boolean = false) = NoteEditorFragment().apply {
             arguments = Bundle().apply {

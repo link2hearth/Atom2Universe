@@ -53,6 +53,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), AudioHubPlaybackController.Listener, SleepTimerManager.Listener {
 
@@ -131,6 +132,8 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
     private var isGridMode = true
     private var isEditMode = false
     private var pendingRestoreEditMode = false
+    /** Derniere pastille connue de la ferme, reposee tout de suite pour qu'elle ne clignote pas. */
+    private var farmReadyCount = 0
 
     // CoroutineScope pour les opérations en arrière-plan
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -406,8 +409,14 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             loadTiles()
             // Meme pastille que sur la tuile de la ferme, mais posee sur le raccourci Ma Ferme de la
             // tuile Jeux : sans raccourci epingle, rien ne s'affiche, la tuile Jeux ne compte pas.
-            tilesAdapter.setQuickAccessNotificationCount(TILE_GAMES, FarmActivity::class.java.name,
-                FarmState.readyToHarvest(this))
+            tilesAdapter.setQuickAccessNotificationCount(TILE_GAMES, FarmActivity::class.java.name, farmReadyCount)
+            // Lire la sauvegarde de la ferme est trop lourd pour le fil de l'ecran.
+            val app = applicationContext
+            activityScope.launch {
+                val ready = withContext(Dispatchers.Default) { FarmState.readyToHarvest(app) }
+                farmReadyCount = ready
+                tilesAdapter.setQuickAccessNotificationCount(TILE_GAMES, FarmActivity::class.java.name, ready)
+            }
         }
     }
 

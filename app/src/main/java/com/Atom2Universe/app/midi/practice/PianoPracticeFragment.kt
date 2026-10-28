@@ -17,6 +17,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -43,6 +44,7 @@ import androidx.core.content.edit
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.input.MidiConnectionStatus
@@ -64,9 +66,12 @@ import com.Atom2Universe.app.midi.fluidsynth.FluidSynthEngine
 import com.Atom2Universe.app.midi.fluidsynth.FluidSynthPracticeSynth
 import com.Atom2Universe.app.midi.visualizer.GeneralMidiInstruments
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.coroutines.cancellation.CancellationException
 import androidx.documentfile.provider.DocumentFile
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -255,7 +260,13 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     private var midiInputController: MidiInputController? = null
     private var isMidiKeyboardConnected = false
     private var ledOutputChannel = 0  // 0-15 (displayed as 1-16 in UI)
+    @Volatile
     private var muteKeyboardSound = false  // Default OFF - avoid muting on practice entry
+    // Lu aussi par le fil MIDI (notes du clavier externe jouées sans passer par le fil UI)
+    @Volatile
+    private var userNoteChannel = 0
+    // Le fil MIDI joue sur le synthé : on ne le libère jamais pendant qu'il s'en sert
+    private val externalSynthLock = Any()
     private var ledOctaveOffset = 0  // -4 to +4 octaves (in semitones: -48 to +48)
     private var sendLedsToKeyboard = true  // Send note LEDs to external keyboard (default ON)
     private var muteLedChannelSound = true  // Mute the sound on LED channel (default ON - light only, no sound)
@@ -267,8 +278,15 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     private lateinit var playbackController: PracticePlaybackController
     private lateinit var session: PracticeSession
 
-    // Synthesizer (Sonivox ou SF2)
+    // Synthesizer (Sonivox ou SF2), lu aussi par le fil MIDI (voir externalSynthLock)
+    @Volatile
     private var synthesizer: PracticeSynthesizer? = null
+    // Fichier MIDI lu et converti hors du fil UI : la lecture ne démarre pas avant la fin
+    private var midiLoadJob: Job? = null
+    private var isMidiLoading = false
+    // Chargement en cours hors du fil UI : la lecture ne démarre pas avant la fin
+    private var synthLoadJob: Job? = null
+    private var isSynthLoading = false
 
     // Scoring system (passive observer - never modifies practice flow)
     private lateinit var scoringObserver: ScoringObserver
@@ -285,6 +303,9 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     private val audioStreamRecorder = AudioStreamRecorder()
     private val recordingHandler = Handler(Looper.getMainLooper())
     private val maxRecordingDurationMs = 30L * 60 * 1000 // 30 minutes
+    // Le plafond ne s'écoule que pendant que le synthé tourne (en pause en arrière-plan)
+    private var recordingRemainingMs = 0L
+    private var recordingTimerStartMs = 0L
     private val autoStopRecordingRunnable = Runnable {
         if (audioStreamRecorder.isRecording()) {
             stopAudioRecording()
@@ -318,11 +339,23 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     // Mode attente (wait mode)
     private var isInWaitMode = false
 
-    // Pour le tracking des notes avec timing (validation ordonnée)
-    data class TimedNote(val note: Int, val timeMs: Long)
-
     // Notes en attente d'être jouées en mode attente (avec timing pour grouper les accords)
-    private val waitingNotesWithTiming = mutableListOf<TimedNote>()
+    private val waitingNotesWithTiming = mutableListOf<ScheduledNote>()
+
+    // Notes du groupe d'attente en cours (chaque note du morceau, pas seulement sa hauteur)
+    private val currentWaitingGroup = mutableListOf<ScheduledNote>()
+
+    // Notes du morceau déjà jouées (ou tentées) : à leur passage elles ne comptent pas comme
+    // manquées. Suivies par identité, car deux notes répétées sont égales en valeur
+    private val judgedNotes: MutableSet<ScheduledNote> =
+        java.util.Collections.newSetFromMap(java.util.IdentityHashMap())
+
+    // Notes attendues sur le clavier (masque de hauteurs), réutilisé à chaque image
+    private val expectedNotesMask = LongArray(2)
+
+    // Textes de position : réécrits seulement quand la seconde affichée change
+    private var shownPositionSec = -1L
+    private var shownRemainingSec = -1L
 
     // Notes du groupe actuel que l'utilisateur doit jouer (un accord ou une note seule)
     // Utilise un Map pour compter combien de fois chaque note doit être jouée
@@ -464,17 +497,14 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         val args = parseArguments()
         android.util.Log.d(TAG, "onViewCreated: args parsed - file=${args.trackFilePath}, channel=${args.channelNumber}")
         session = PracticeSession(args)
+        userNoteChannel = args.channelNumber
 
         // Detect free mode (no MIDI file)
         isFreeMode = args.trackFilePath.isEmpty()
 
-        // Init synthesizer FIRST (chooses between Sonivox and SF2)
-        initSynthesizer()
-        configurePracticeAudioRouting("after_init_synth")
-
-        // Init playback controller BEFORE setupListeners (listeners access it)
+        // Init playback controller BEFORE setupListeners (listeners access it).
+        // Le synthé lui est branché à la fin de loadSynthesizer().
         playbackController = PracticePlaybackController()
-        synthesizer?.let { playbackController.initialize(it) }
 
         // Init views
         initViews(view)
@@ -503,6 +533,9 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             setupDisplay(args)
             loadMidiFile(args)
         }
+
+        // Synthé (SoundFont) chargé en arrière-plan, une fois tout l'écran en place
+        loadSynthesizer()
     }
 
     private fun parseArguments(): PracticeArgs {
@@ -512,8 +545,8 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             channelNumber = args.getInt(ARG_CHANNEL_NUMBER, 0),
             noteRangeMin = args.getInt(ARG_NOTE_RANGE_MIN, 48),
             noteRangeMax = args.getInt(ARG_NOTE_RANGE_MAX, 84),
-            instrumentName = args.getString(ARG_INSTRUMENT_NAME) ?: "Piano",
-            trackTitle = args.getString(ARG_TRACK_TITLE) ?: "Track",
+            instrumentName = args.getString(ARG_INSTRUMENT_NAME) ?: getString(R.string.practice_default_instrument),
+            trackTitle = args.getString(ARG_TRACK_TITLE) ?: getString(R.string.practice_default_track),
             trackIndex = args.getInt(ARG_TRACK_INDEX, 0),
             programNumber = args.getInt(ARG_PROGRAM_NUMBER, 0),
             // Two-hands mode
@@ -852,7 +885,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
                 if (fromUser) {
                     val durationMs = playbackController.getDurationMs()
                     val positionMs = (progress.toLong() * durationMs) / 1000L
-                    txtTimeCurrent.text = formatTime(positionMs)
+                    updateTimeTexts(positionMs, durationMs)
                 }
             }
 
@@ -861,41 +894,35 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                isUserSeeking = false
                 seekBar?.let {
                     val durationMs = playbackController.getDurationMs()
-                    val positionMs = (it.progress.toLong() * durationMs) / 1000L
-                    playbackController.seekTo(positionMs)  // Le callback onAllNotesOff sera appele automatiquement
-                    fallingNotesView.updatePosition(positionMs)
-                    sheetMusicView.updatePosition(positionMs)
-                    handlePracticeRecordingSeek(positionMs)
+                    performSeek((it.progress.toLong() * durationMs) / 1000L)
                 }
-                isUserSeeking = false
             }
         })
 
-        // MarkerSeekBar callbacks
+        // MarkerSeekBar : pendant le glissement on n'affiche que le temps, le seek se fait au lâcher
+        markerSeekBar.onSeekStarted = {
+            isUserSeeking = true
+        }
+
         markerSeekBar.onProgressChanged = { progress, fromUser ->
             if (fromUser) {
                 val durationMs = playbackController.getDurationMs()
                 val positionMs = (progress * durationMs).toLong()
-                txtTimeCurrent.text = formatTime(positionMs)
-                updateRemainingTimeDisplay(positionMs, durationMs)
-
-                // Effectuer le seek immédiatement
-                playbackController.seekTo(positionMs)
-                fallingNotesView.updatePosition(positionMs)
-                sheetMusicView.updatePosition(positionMs)
-                handlePracticeRecordingSeek(positionMs)
+                updateTimeTexts(positionMs, durationMs)
             }
+        }
+
+        markerSeekBar.onSeekFinished = { progress ->
+            isUserSeeking = false
+            performSeek((progress * playbackController.getDurationMs()).toLong())
         }
 
         markerSeekBar.onMarkerClicked = { positionMs ->
             // Sauter à la position du marqueur
-            playbackController.seekTo(positionMs)
-            fallingNotesView.updatePosition(positionMs)
-            sheetMusicView.updatePosition(positionMs)
-            updatePositionDisplay(positionMs)
-            handlePracticeRecordingSeek(positionMs)
+            performSeek(positionMs)
         }
 
         markerSeekBar.onMarkersChanged = { markers ->
@@ -925,11 +952,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // Bouton Goto Mark : revenir a la position marquee
         btnGotoMark.setOnClickListener {
             if (markedPositionMs >= 0) {
-                playbackController.seekTo(markedPositionMs)  // Le callback onAllNotesOff sera appele automatiquement
-                fallingNotesView.updatePosition(markedPositionMs)
-                sheetMusicView.updatePosition(markedPositionMs)
-                updatePositionDisplay(markedPositionMs)
-                handlePracticeRecordingSeek(markedPositionMs)
+                performSeek(markedPositionMs)
             }
         }
 
@@ -1088,23 +1111,23 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         }
 
         // Falling notes hit zone callback
-        fallingNotesView.onNoteReachHitZone = onNoteReachHitZone@{ note, timeMs ->
+        fallingNotesView.onNoteReachHitZone = onNoteReachHitZone@{ scheduled ->
             // Ignore in free mode - no expected notes
             if (isFreeMode) return@onNoteReachHitZone
 
-            pianoView.addExpectedNote(note)
+            pianoView.addExpectedNote(scheduled.note)
 
             // Mode attente : pause IMMÉDIATE quand une note atteint la zone
             if (session.waitModeEnabled) {
                 // Toujours ajouter la note (même si déjà en wait mode, pour les accords)
-                waitingNotesWithTiming.add(TimedNote(note, timeMs))
+                waitingNotesWithTiming.add(scheduled)
 
                 if (!isInWaitMode) {
                     // Première note - entrer en mode attente
                     enterWaitModeImmediate()
                 } else {
                     // Déjà en mode attente - ajouter au groupe si c'est un accord
-                    addNoteToCurrentChordIfApplicable(note, timeMs)
+                    addNoteToCurrentChordIfApplicable(scheduled)
                 }
             }
         }
@@ -1113,6 +1136,14 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             // Ignore in free mode
             if (isFreeMode) return@onNoteLeaveHitZone
             pianoView.removeExpectedNote(note)
+        }
+
+        // Fenêtre de jugement refermée : une note ni jouée ni tentée compte comme manquée.
+        // La vue ne le signale que pendant la lecture (et à la fin du morceau), une fois par note
+        fallingNotesView.onNotePassed = onNotePassed@{ scheduled ->
+            if (isFreeMode) return@onNotePassed
+            if (judgedNotes.remove(scheduled)) return@onNotePassed
+            scoringObserver.onNoteMissed(scheduled.note, scheduled.startTimeMs)
         }
 
         // Playback callbacks
@@ -1384,33 +1415,41 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     }
 
     /**
-     * Handle MIDI bytes received from external keyboard
+     * Handle MIDI bytes received from external keyboard.
+     * Appelée sur le fil MIDI : le synthé joue tout de suite (tous les synthés de pratique
+     * acceptent des appels depuis plusieurs fils : verrou dans le moteur SF2, mutex natif pour
+     * Sonivox et FluidSynth), seul l'affichage est posté au fil UI.
      */
     private fun handleExternalMidiBytes(bytes: ByteArray) {
         if (bytes.size < 3) return
 
         val status = bytes[0].toInt() and 0xFF
-        val note = bytes[1].toInt() and 0x7F
-        val velocity = bytes[2].toInt() and 0x7F
+        val data1 = bytes[1].toInt() and 0x7F
+        val data2 = bytes[2].toInt() and 0x7F
 
         when (status and 0xF0) {
             0x90 -> { // NOTE_ON
-                if (velocity > 0) {
-                    handleExternalNoteOn(note, velocity)
+                if (data2 > 0) {
+                    handleExternalNoteOn(data1, data2)
                 } else {
-                    handleExternalNoteOff(note)
+                    handleExternalNoteOff(data1)
                 }
             }
             0x80 -> { // NOTE_OFF
-                handleExternalNoteOff(note)
+                handleExternalNoteOff(data1)
+            }
+            0xB0 -> { // CONTROL_CHANGE : seule la pédale de sustain (CC64) nous concerne
+                if (data1 == 64 && muteKeyboardSound) {
+                    synchronized(externalSynthLock) {
+                        synthesizer?.controlChange(userNoteChannel, 64, data2)
+                    }
+                }
             }
         }
     }
 
     /**
-     * Handle note on from external MIDI keyboard
-     * Note: Cette fonction est appelée depuis un thread MIDI, donc on doit
-     * wrapper les opérations UI dans runOnUiThread
+     * Handle note on from external MIDI keyboard (fil MIDI)
      *
      * Audio routing logic:
      * - If muteKeyboardSound=true: Keyboard is muted, app synth plays the note
@@ -1422,20 +1461,16 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         currentlyHeldNotes.add(note)
 
         // Play via app synth only if keyboard is muted (to avoid double sound)
-        val playViaAppSynth = muteKeyboardSound
-        if (playViaAppSynth) {
-            synthesizer?.noteOn(session.args.channelNumber, note, velocity)
-        }
-
-        // Log for debugging (only occasionally to avoid spam)
-        if (note % 12 == 0) { // Log every C note
-            android.util.Log.d(TAG, "handleExternalNoteOn: note=$note vel=$velocity " +
-                "muteKeyboard=$muteKeyboardSound playViaAppSynth=$playViaAppSynth " +
-                "synthReady=${synthesizer?.isReady()}")
+        if (muteKeyboardSound) {
+            synchronized(externalSynthLock) {
+                synthesizer?.noteOn(userNoteChannel, note, velocity)
+            }
         }
 
         // Toutes les opérations UI doivent être sur le UI thread
-        activity?.runOnUiThread {
+        handler.post {
+            // Écran détruit entre-temps
+            if (midiInputController == null) return@post
             // Display on piano UI with glow effect
             pianoView.externalNoteOn(0, note, velocity)
 
@@ -1450,8 +1485,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     }
 
     /**
-     * Handle note off from external MIDI keyboard
-     * Note: Cette fonction est appelée depuis un thread MIDI
+     * Handle note off from external MIDI keyboard (fil MIDI)
      */
     private fun handleExternalNoteOff(note: Int) {
         // Retirer la note (thread-safe)
@@ -1459,11 +1493,14 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
         // Couper le son si notre synthé jouait
         if (muteKeyboardSound) {
-            synthesizer?.noteOff(session.args.channelNumber, note)
+            synchronized(externalSynthLock) {
+                synthesizer?.noteOff(userNoteChannel, note)
+            }
         }
 
         // Opérations UI sur le UI thread
-        activity?.runOnUiThread {
+        handler.post {
+            if (midiInputController == null) return@post
             pianoView.externalNoteOff(note)
 
             // Relâcher note montante en mode libre
@@ -1554,110 +1591,197 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         }
     }
 
-    private fun initSynthesizer() {
-        try {
-            val settingsRepository = SettingsRepository(requireContext())
-            val synthMode = runBlocking { settingsRepository.getSynthMode() }
-            val soundFontPath = runBlocking { settingsRepository.getSoundFontPath() }
+    /**
+     * Retire le synthé de l'écran et du lecteur avant de le libérer : après le verrou, le fil
+     * MIDI ne peut plus lui envoyer de notes.
+     */
+    private fun detachSynthesizer(): PracticeSynthesizer? {
+        val old = synchronized(externalSynthLock) {
+            synthesizer.also { synthesizer = null }
+        }
+        if (::playbackController.isInitialized) playbackController.detachSynthesizer()
+        return old
+    }
 
-            when (synthMode) {
+    /** Synthé créé hors du fil UI ; [soundFontError] = SoundFont demandée mais introuvable/illisible. */
+    private class SynthLoadResult(val synth: PracticeSynthesizer?, val soundFontError: Boolean = false)
+
+    /**
+     * Lit les réglages et charge le synthé sur un fil de fond (un gros SF2 prend
+     * plusieurs secondes). Rien n'est branché au lecteur avant la fin : voir [onSynthesizerReady].
+     */
+    private fun loadSynthesizer() {
+        val previous = synthLoadJob
+        isSynthLoading = true
+        val appContext = requireContext().applicationContext
+        synthLoadJob = viewLifecycleOwner.lifecycleScope.launch {
+            // Un seul chargement à la fois : le pilote Sonivox est partagé
+            previous?.cancelAndJoin()
+            val created = AtomicReference<SynthLoadResult?>(null)
+            try {
+                withContext(Dispatchers.IO) { created.set(createSynthesizer(appContext)) }
+            } catch (e: CancellationException) {
+                // Écran fermé pendant le chargement : ne pas laisser un flux audio orphelin
+                created.get()?.synth?.release()
+                throw e
+            }
+            val result = created.get() ?: return@launch
+            isSynthLoading = false
+            synthesizer = result.synth
+            if (result.soundFontError) showSf2Error()
+            onSynthesizerReady()
+        }
+    }
+
+    private suspend fun createSynthesizer(context: Context): SynthLoadResult {
+        try {
+            val settingsRepository = SettingsRepository(context)
+            val synthMode = settingsRepository.getSynthMode()
+            val soundFontPath = settingsRepository.getSoundFontPath()
+
+            return when (synthMode) {
                 SettingsRepository.SYNTH_MODE_SONIVOX -> {
                     // Sonivox mode - use Sonivox directly
-                    synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
+                    SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
                 }
 
                 SettingsRepository.SYNTH_MODE_SF2 -> {
                     // SF2 mode - use SF2 only, NO fallback to Sonivox
                     if (!soundFontPath.isNullOrBlank() && File(soundFontPath).exists()) {
-                        val sf2Synth = Sf2PracticeSynth(requireContext(), soundFontPath)
+                        val sf2Synth = Sf2PracticeSynth(context, soundFontPath)
                         if (sf2Synth.initialize()) {
-                            synthesizer = sf2Synth
+                            SynthLoadResult(sf2Synth)
                         } else {
                             // SF2 failed - show error, no fallback
-                            showSf2Error()
-                            synthesizer = null
+                            SynthLoadResult(null, soundFontError = true)
                         }
                     } else {
                         // No SF2 configured but SF2 mode selected - show error
-                        showSf2Error()
-                        synthesizer = null
+                        SynthLoadResult(null, soundFontError = true)
                     }
                 }
 
                 SettingsRepository.SYNTH_MODE_HYBRID -> {
                     // True hybrid mode: SoundFont engine + Sonivox running simultaneously
                     // Routes per-channel based on configured sf2Programs
-                    val sf2Programs = runBlocking { settingsRepository.getHybridSf2Programs() }
-                    val useSf2ForDrums = runBlocking { settingsRepository.isHybridUseSf2ForDrums() }
-                    val baseEngine = runBlocking { settingsRepository.getHybridBaseEngine() }
+                    val sf2Programs = settingsRepository.getHybridSf2Programs()
+                    val useSf2ForDrums = settingsRepository.isHybridUseSf2ForDrums()
+                    val baseEngine = settingsRepository.getHybridBaseEngine()
 
                     if (!soundFontPath.isNullOrBlank() && File(soundFontPath).exists()) {
                         // Create the SoundFont synth based on user preference
-                        val sfSynth: PracticeSynthesizer? = when (baseEngine) {
+                        val sfSynth: PracticeSynthesizer = when (baseEngine) {
                             SettingsRepository.SYNTH_MODE_FLUIDSYNTH -> {
                                 if (FluidSynthEngine.isSupported()) {
-                                    FluidSynthPracticeSynth(requireContext(), soundFontPath)
+                                    FluidSynthPracticeSynth(context, soundFontPath)
                                 } else {
                                     // FluidSynth not available, try SF2
-                                    Sf2PracticeSynth(requireContext(), soundFontPath)
+                                    Sf2PracticeSynth(context, soundFontPath)
                                 }
                             }
-                            else -> Sf2PracticeSynth(requireContext(), soundFontPath)
+                            else -> Sf2PracticeSynth(context, soundFontPath)
                         }
 
-                        if (sfSynth != null) {
-                            val sonivox = SonivoxPracticeSynth(requireContext())
-                            val hybrid = HybridPracticeSynth(sfSynth, sonivox, sf2Programs, useSf2ForDrums)
-                            if (hybrid.initialize()) {
-                                synthesizer = hybrid
-                            } else {
-                                // Hybrid failed - fallback to Sonivox only
-                                synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
-                            }
+                        val sonivox = SonivoxPracticeSynth(context)
+                        val hybrid = HybridPracticeSynth(sfSynth, sonivox, sf2Programs, useSf2ForDrums)
+                        if (hybrid.initialize()) {
+                            SynthLoadResult(hybrid)
                         } else {
-                            synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
+                            // Hybrid failed - fallback to Sonivox only
+                            SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
                         }
                     } else {
                         // No SoundFont configured - use Sonivox only
-                        synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
+                        SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
                     }
                 }
 
                 SettingsRepository.SYNTH_MODE_FLUIDSYNTH -> {
                     // FluidSynth mode - use FluidSynth only, NO fallback to Sonivox
                     if (!soundFontPath.isNullOrBlank() && File(soundFontPath).exists()) {
-                        val fluidSynth = FluidSynthPracticeSynth(requireContext(), soundFontPath)
+                        val fluidSynth = FluidSynthPracticeSynth(context, soundFontPath)
                         if (fluidSynth.initialize()) {
-                            synthesizer = fluidSynth
+                            SynthLoadResult(fluidSynth)
                         } else {
-                            showSf2Error()
-                            synthesizer = null
+                            SynthLoadResult(null, soundFontError = true)
                         }
                     } else {
-                        showSf2Error()
-                        synthesizer = null
+                        SynthLoadResult(null, soundFontError = true)
                     }
                 }
 
                 else -> {
                     // Unknown mode - default to Sonivox
-                    synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
+                    SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             // Critical error - try Sonivox as last resort
-            synthesizer = SonivoxPracticeSynth(requireContext()).also { it.initialize() }
+            return SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
+        }
+    }
+
+    /**
+     * Branche le synthé tout juste chargé : routage audio, lecteur, et instrument(s)
+     * que l'écran a demandés avant qu'il soit prêt.
+     */
+    private fun onSynthesizerReady() {
+        configurePracticeAudioRouting("after_init_synth")
+        synthesizer?.let { playbackController.initialize(it) }
+
+        if (isFreeMode) {
+            sendProgramChange(currentProgram)
+        } else {
+            // Instruments d'accompagnement valables à la position actuelle : un seek fait
+            // pendant le rechargement les avait envoyés à l'ancien synthé
+            playbackController.resendProgramChanges()
+            if (session.args.isTwoHandsMode) {
+                synthesizer?.programChange(session.args.leftHandChannel, session.args.programNumber)
+                synthesizer?.programChange(session.args.rightHandChannel, session.args.programNumber)
+            } else {
+                synthesizer?.programChange(session.args.channelNumber, session.args.programNumber)
+            }
+        }
+
+        // Chargement fini alors que l'écran est déjà en arrière-plan
+        if (!viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            pauseSynthesizerInBackground()
+        }
+    }
+
+    /**
+     * Coupe le flux audio du synthé de pratique. Le pilote Sonivox est un singleton
+     * partagé avec le lecteur principal : s'il joue (relancé depuis la notification),
+     * on se contente de couper nos notes pour ne pas l'interrompre.
+     */
+    private fun pauseSynthesizerInBackground() {
+        val synth = synthesizer ?: return
+        if (isMainPlaybackPlaying()) {
+            synth.allSoundOff()
+        } else {
+            synth.pause()
+        }
+    }
+
+    private fun isMainPlaybackPlaying(): Boolean {
+        val act = activity ?: return false
+        return try {
+            MediaControllerCompat.getMediaController(act)?.playbackState?.state ==
+                PlaybackStateCompat.STATE_PLAYING
+        } catch (_: Exception) {
+            false
         }
     }
 
     private fun showSf2Error() {
-        activity?.runOnUiThread {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.practice_sf2_load_error),
-                Toast.LENGTH_LONG
-            ).show()
-        }
+        val ctx = context ?: return
+        Toast.makeText(
+            ctx,
+            getString(R.string.practice_sf2_load_error),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun setupDisplay(args: PracticeArgs) {
@@ -1692,6 +1816,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // Initialize time display (temps restant en format négatif)
         txtTimeCurrent.text = getString(R.string.practice_time_zero)
         txtTimeTotal.text = getString(R.string.practice_time_remaining, getString(R.string.practice_time_zero))
+        forgetShownTimeTexts()
         seekbarPosition.progress = 0
         markerSeekBar.setProgress(0f)
 
@@ -1716,92 +1841,110 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         playbackController.muteLeftHandChannel = false
         playbackController.muteRightHandChannel = false
 
-        val loadSuccess: Boolean
+        // Lecture et conversion du fichier hors du fil UI ; branchement ensuite sur le fil UI
+        val appContext = requireContext().applicationContext
+        val controller = playbackController
+        isMidiLoading = true
+        midiLoadJob?.cancel()
+        midiLoadJob = viewLifecycleOwner.lifecycleScope.launch {
+            val outcome = withContext(Dispatchers.IO) { readMidiFile(appContext, controller, args) }
+            isMidiLoading = false
+            when (outcome) {
+                is MidiReadOutcome.Ready -> onMidiFileRead(args, outcome.prepared)
+                is MidiReadOutcome.Failed -> showError(getString(outcome.messageRes))
+            }
+        }
+    }
+
+    private sealed class MidiReadOutcome {
+        class Ready(val prepared: PracticePlaybackController.PreparedMidi) : MidiReadOutcome()
+        class Failed(val messageRes: Int) : MidiReadOutcome()
+    }
+
+    /** Fil de fond : ouvre, lit et convertit le fichier sans toucher au lecteur. */
+    private fun readMidiFile(
+        context: Context,
+        controller: PracticePlaybackController,
+        args: PracticeArgs
+    ): MidiReadOutcome {
+        fun prepare(input: java.io.InputStream) = if (args.isTwoHandsMode) {
+            controller.prepareTwoHands(input, args.leftHandChannel, args.rightHandChannel)
+        } else {
+            controller.prepare(input, args.channelNumber)
+        }
 
         // Verifier si c'est un Content URI ou un chemin de fichier
-        if (args.trackFilePath.startsWith("content://")) {
+        return if (args.trackFilePath.startsWith("content://")) {
             // Content URI - utiliser ContentResolver
-            val uri = args.trackFilePath.toUri()
             try {
-                val inputStream = requireContext().contentResolver.openInputStream(uri)
-                if (inputStream != null) {
-                    loadSuccess = inputStream.use {
-                        if (args.isTwoHandsMode) {
-                            playbackController.loadFromInputStreamTwoHands(
-                                it, args.leftHandChannel, args.rightHandChannel
-                            )
-                        } else {
-                            playbackController.loadFromInputStream(it, args.channelNumber)
-                        }
-                    }
-                } else {
-                    showError(getString(R.string.midi_practice_err_open))
-                    return
-                }
+                val inputStream = context.contentResolver.openInputStream(args.trackFilePath.toUri())
+                    ?: return MidiReadOutcome.Failed(R.string.midi_practice_err_open)
+                MidiReadOutcome.Ready(inputStream.use { prepare(it) })
             } catch (_: Exception) {
-                showError(getString(R.string.midi_practice_err_opening))
-                return
+                MidiReadOutcome.Failed(R.string.midi_practice_err_opening)
             }
         } else {
             // Chemin de fichier normal
             val file = File(args.trackFilePath)
-            if (!file.exists()) {
-                showError(getString(R.string.midi_practice_err_not_found))
-                return
-            }
-            loadSuccess = if (args.isTwoHandsMode) {
-                playbackController.loadFileTwoHands(file, args.leftHandChannel, args.rightHandChannel)
-            } else {
-                playbackController.loadFile(file, args.channelNumber)
+            if (!file.exists()) return MidiReadOutcome.Failed(R.string.midi_practice_err_not_found)
+            try {
+                MidiReadOutcome.Ready(file.inputStream().use { prepare(it) })
+            } catch (_: Exception) {
+                MidiReadOutcome.Failed(R.string.midi_practice_err_loading)
             }
         }
+    }
 
-        if (loadSuccess) {
-            val notes = playbackController.getTargetChannelNotes()
-            // S'assurer que le mode est FALLING pour la lecture MIDI
-            fallingNotesView.setNoteDirection(FallingNotesView.NoteDirection.FALLING)
-            fallingNotesView.setNotes(notes)
+    /** Fil UI : branche le fichier lu et met l'écran en place. */
+    private fun onMidiFileRead(args: PracticeArgs, prepared: PracticePlaybackController.PreparedMidi) {
+        // Passé en mode libre pendant la lecture du fichier
+        if (isFreeMode) return
+        playbackController.load(prepared)
+        judgedNotes.clear()
 
-            // En mode deux mains, configurer FallingNotesView pour distinguer les mains
-            if (args.isTwoHandsMode) {
-                fallingNotesView.setTwoHandsMode(true, args.leftHandChannel, args.rightHandChannel)
-                // Afficher les boutons de selection de main (LED) et de son
-                handSelectionContainer.visibility = View.VISIBLE
-                handSoundContainer.visibility = View.VISIBLE
-                updateHandSelectionButtonStates()
-                updateHandSoundButtonStates()
-            } else {
-                handSelectionContainer.visibility = View.GONE
-                handSoundContainer.visibility = View.GONE
-            }
+        val notes = playbackController.getTargetChannelNotes()
+        // S'assurer que le mode est FALLING pour la lecture MIDI
+        fallingNotesView.setNoteDirection(FallingNotesView.NoteDirection.FALLING)
+        fallingNotesView.setNotes(notes)
 
-            sheetMusicView.setNotes(notes)  // Also set notes on sheet music view
-            session.setTotalNotes(notes.size)
-
-            // Initialize scoring with total expected notes
-            scoringObserver.setTotalExpectedNotes(notes.size)
-            scoreDisplayView.reset()
-
-            // Reset practice recording timeline for the newly loaded score
-            clearPracticeRecordingNotes()
-            sheetMusicView.setRecordingModeEnabled(isPracticeRecordingEnabled)
-            resyncPracticeRecordingClock(playbackController.getCurrentPositionMs())
-            startPracticeRecordingUpdatesIfNeeded()
-
-            // Utiliser le range reel calcule depuis les notes chargees
-            playbackController.getActualNoteRange()?.let { (actualMin, actualMax) ->
-                pianoView.setNoteRange(actualMin, actualMax)
-                fallingNotesView.setNoteRange(actualMin, actualMax)
-            }
-
-            // Update total time display and configure markerSeekBar
-            val durationMs = playbackController.getDurationMs()
-            txtTimeTotal.text = getString(R.string.practice_time_remaining, formatTime(durationMs))
-            markerSeekBar.setMaxDuration(durationMs)
-            markerSeekBar.setProgress(0f)
+        // En mode deux mains, configurer FallingNotesView pour distinguer les mains
+        if (args.isTwoHandsMode) {
+            fallingNotesView.setTwoHandsMode(true, args.leftHandChannel, args.rightHandChannel)
+            // Afficher les boutons de selection de main (LED) et de son
+            handSelectionContainer.visibility = View.VISIBLE
+            handSoundContainer.visibility = View.VISIBLE
+            updateHandSelectionButtonStates()
+            updateHandSoundButtonStates()
         } else {
-            showError(getString(R.string.midi_practice_err_loading))
+            handSelectionContainer.visibility = View.GONE
+            handSoundContainer.visibility = View.GONE
         }
+
+        sheetMusicView.setNotes(notes)  // Also set notes on sheet music view
+        session.setTotalNotes(notes.size)
+
+        // Initialize scoring with total expected notes
+        scoringObserver.setTotalExpectedNotes(notes.size)
+        scoreDisplayView.reset()
+
+        // Reset practice recording timeline for the newly loaded score
+        clearPracticeRecordingNotes()
+        sheetMusicView.setRecordingModeEnabled(isPracticeRecordingEnabled)
+        resyncPracticeRecordingClock(playbackController.getCurrentPositionMs())
+        startPracticeRecordingUpdatesIfNeeded()
+
+        // Utiliser le range reel calcule depuis les notes chargees
+        playbackController.getActualNoteRange()?.let { (actualMin, actualMax) ->
+            pianoView.setNoteRange(actualMin, actualMax)
+            fallingNotesView.setNoteRange(actualMin, actualMax)
+        }
+
+        // Update total time display and configure markerSeekBar
+        val durationMs = playbackController.getDurationMs()
+        txtTimeTotal.text = getString(R.string.practice_time_remaining, formatTime(durationMs))
+        forgetShownTimeTexts()
+        markerSeekBar.setMaxDuration(durationMs)
+        markerSeekBar.setProgress(0f)
     }
 
     private fun showError(message: String) {
@@ -1821,7 +1964,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             isWaitingForFirstNote = false
             btnPlayPause.setImageResource(R.drawable.ic_play)
             Toast.makeText(requireContext(), R.string.practice_countdown_cancelled, Toast.LENGTH_SHORT).show()
-        } else {
+        } else if (!isSynthLoading && !isMidiLoading) {
             // Use countdown/start-on-first-note if configured
             startPlaybackWithCountdown()
         }
@@ -1830,6 +1973,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     private fun restart() {
         resetWaitMode()  // Réinitialiser le mode attente
         session.clearActiveHeldNotes()  // Effacer le tracking des notes maintenues
+        judgedNotes.clear()
         playbackController.restart()  // Le callback onAllNotesOff sera appele automatiquement
         fallingNotesView.reset()
         sheetMusicView.reset()
@@ -1850,6 +1994,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     private fun stop() {
         resetWaitMode()  // Réinitialiser le mode attente
         session.clearActiveHeldNotes()  // Effacer le tracking des notes maintenues
+        judgedNotes.clear()
         playbackController.stop()  // Le callback onAllNotesOff sera appele automatiquement
         btnPlayPause.setImageResource(R.drawable.ic_play)
         stopAnimation()
@@ -1873,6 +2018,8 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
      * Shows results dialog and resets for next play.
      */
     private fun handlePlaybackCompleted() {
+        // Les toutes dernières notes ni jouées ni tentées comptent aussi comme manquées
+        if (!isFreeMode) fallingNotesView.reportRemainingNotesPassed()
         btnPlayPause.setImageResource(R.drawable.ic_play)
         stopAnimation()
         if (isPracticeRecordingEnabled) {
@@ -1982,6 +2129,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
      */
     private fun resetScoringForNextSession() {
         val totalNotes = playbackController.getTargetChannelNotes().size
+        judgedNotes.clear()
         scoringObserver.reset(totalNotes)
         scoreDisplayView.reset()
     }
@@ -2000,8 +2148,14 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             }
 
             // Démarrer la mise à jour UI (slider, expected notes)
-            handler.post(positionUpdateRunnable)
+            restartPositionUpdates()
         }
+    }
+
+    /** Une seule boucle de mise à jour de la position, même si on la relance plusieurs fois. */
+    private fun restartPositionUpdates() {
+        handler.removeCallbacks(positionUpdateRunnable)
+        handler.post(positionUpdateRunnable)
     }
 
     private fun stopAnimation() {
@@ -2021,9 +2175,9 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
     @Suppress("UNUSED_PARAMETER")
     private fun updateExpectedNotes(positionMs: Long) {
-        // Get notes that should be in the hit zone
-        val expectedNotes = fallingNotesView.getExpectedNotesWindow()
-        pianoView.setExpectedNotes(expectedNotes.map { it.note }.toSet())
+        // Notes qui doivent être dans la hit zone ; le clavier ne se redessine que si elles changent
+        fallingNotesView.getExpectedNotesMask(expectedNotesMask)
+        pianoView.setExpectedNotes(expectedNotesMask[0], expectedNotesMask[1])
     }
 
     private fun playNote(note: Int, velocity: Int) {
@@ -2090,6 +2244,8 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         if (audioStreamRecorder.start(tmpFile)) {
             sf2Synth.setAudioTapCallback(audioStreamRecorder.tapCallback)
             updateRecordButtonState(true)
+            recordingRemainingMs = maxRecordingDurationMs
+            recordingTimerStartMs = SystemClock.uptimeMillis()
             recordingHandler.postDelayed(autoStopRecordingRunnable, maxRecordingDurationMs)
             Toast.makeText(ctx, getString(R.string.practice_recording_enabled), Toast.LENGTH_SHORT).show()
         }
@@ -2360,6 +2516,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // En mode attente : vérifier si l'utilisateur joue une note attendue
         if (isInWaitMode && currentWaitingNoteCounts.containsKey(note)) {
             // Bonne note jouée ! Décrémenter le compteur
+            markWaitingNoteJudged(note)
             val count = currentWaitingNoteCounts[note] ?: 0
             if (count <= 1) {
                 // Dernière occurrence de cette note
@@ -2398,6 +2555,8 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             }
         } else if (!isInWaitMode && isScoringActive) {
             // Mode normal : vérifier timing (only when scoring is active)
+            // Note attendue tentée (bon ou mauvais rythme) : elle ne comptera pas comme manquée
+            result.expectedNote?.let { judgedNotes.add(it) }
             val isCorrectNote = result.isExpected && result.timing == PracticeSession.TimingJudgement.GOOD
             if (isCorrectNote) {
                 pianoView.removeExpectedNote(note)
@@ -2596,15 +2755,19 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
         // Prendre la première note (et les notes d'accord proches en timing)
         currentWaitingNoteCounts.clear()
+        currentWaitingGroup.clear()
         val firstNote = waitingNotesWithTiming.first()
 
         // Compter combien de fois chaque note apparaît dans le groupe (accord ou notes rapides)
         currentWaitingNoteCounts[firstNote.note] = (currentWaitingNoteCounts[firstNote.note] ?: 0) + 1
+        currentWaitingGroup.add(firstNote)
 
         // Ajouter les notes d'accord (timing proche) - avec comptage des doublons
-        for (timedNote in waitingNotesWithTiming.drop(1)) {
-            if (kotlin.math.abs(timedNote.timeMs - firstNote.timeMs) <= CHORD_TIMING_TOLERANCE_MS) {
+        for (index in 1 until waitingNotesWithTiming.size) {
+            val timedNote = waitingNotesWithTiming[index]
+            if (kotlin.math.abs(timedNote.startTimeMs - firstNote.startTimeMs) <= CHORD_TIMING_TOLERANCE_MS) {
                 currentWaitingNoteCounts[timedNote.note] = (currentWaitingNoteCounts[timedNote.note] ?: 0) + 1
+                currentWaitingGroup.add(timedNote)
             } else {
                 break
             }
@@ -2615,6 +2778,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // L'utilisateur devra relâcher et réappuyer pour les notes répétées
         val alreadyHeld = currentWaitingNoteCounts.keys.intersect(currentlyHeldNotes)
         for (heldNote in alreadyHeld) {
+            markWaitingNoteJudged(heldNote)
             val count = currentWaitingNoteCounts[heldNote] ?: 0
             if (count <= 1) {
                 currentWaitingNoteCounts.remove(heldNote)
@@ -2626,7 +2790,10 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
         // Si toutes les notes sont déjà tenues, pas besoin d'entrer en mode attente
         if (currentWaitingNoteCounts.isEmpty()) {
-            waitingNotesWithTiming.clear()
+            // Le groupe est en tête de liste ; les notes suivantes (hors accord) passent à leur tour
+            repeat(currentWaitingGroup.size) { waitingNotesWithTiming.removeAt(0) }
+            currentWaitingGroup.clear()
+            if (waitingNotesWithTiming.isNotEmpty()) enterWaitModeImmediate()
             return  // Continuer sans pause
         }
 
@@ -2667,15 +2834,17 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
     /**
      * Ajoute une note au groupe actuel si c'est un accord (timing proche)
      */
-    private fun addNoteToCurrentChordIfApplicable(note: Int, timeMs: Long) {
+    private fun addNoteToCurrentChordIfApplicable(scheduled: ScheduledNote) {
+        val note = scheduled.note
         // Vérifier si c'est un accord (timing proche de la première note)
-        val firstNoteTime = waitingNotesWithTiming.firstOrNull()?.timeMs ?: return
-        val timeDiff = kotlin.math.abs(timeMs - firstNoteTime)
+        val firstNoteTime = waitingNotesWithTiming.firstOrNull()?.startTimeMs ?: return
+        val timeDiff = kotlin.math.abs(scheduled.startTimeMs - firstNoteTime)
 
         if (timeDiff <= CHORD_TIMING_TOLERANCE_MS) {
             // C'est un accord ou note répétée - incrémenter le compteur
             val wasEmpty = !currentWaitingNoteCounts.containsKey(note)
             currentWaitingNoteCounts[note] = (currentWaitingNoteCounts[note] ?: 0) + 1
+            currentWaitingGroup.add(scheduled)
 
             // Ajouter au piano seulement si c'est une nouvelle note (pas juste un compteur en plus)
             if (wasEmpty) {
@@ -2700,13 +2869,30 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             }
         }
 
+        // Notes arrivées dans la zone en même temps mais hors de l'accord : leur tour vient
+        // maintenant (avant, elles étaient oubliées puis comptées manquées)
+        val remaining = waitingNotesWithTiming.filter { pending -> currentWaitingGroup.none { it === pending } }
+
         // Nettoyer
         pianoView.clearExpectedNotes()
         currentWaitingNoteCounts.clear()
         waitingNotesWithTiming.clear()
+        currentWaitingGroup.clear()
 
         isInWaitMode = false
 
+        if (remaining.isNotEmpty() && session.waitModeEnabled) {
+            waitingNotesWithTiming.addAll(remaining)
+            enterWaitModeImmediate()
+            // Nouvelle attente : la lecture reste en pause
+            if (isInWaitMode) return
+        }
+
+        resumeAfterWait()
+    }
+
+    /** Reprend la lecture et l'animation figées par le mode attente. */
+    private fun resumeAfterWait() {
         // IMPORTANT: Reprendre audio AVANT l'animation pour que isPlaying() soit true
         // quand les prochaines notes atteignent la zone
         if (isPracticeRecordingEnabled) {
@@ -2721,14 +2907,37 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             sheetMusicView.resumeAnimation()
         }
 
-        // Redémarrer le position update runnable
-        handler.post(positionUpdateRunnable)
+        // Redémarrer le position update runnable (sans doublon si onPlaybackStarted l'a déjà fait)
+        restartPositionUpdates()
 
         // Mettre à jour l'UI
         btnPlayPause.setImageResource(R.drawable.ic_pause)
 
         // Cacher l'indicateur
         hideWaitModeIndicator()
+    }
+
+    /** Une note du groupe d'attente vient d'être jouée (ou était déjà tenue) : elle est jugée. */
+    private fun markWaitingNoteJudged(pitch: Int) {
+        val scheduled = currentWaitingGroup.firstOrNull { it.note == pitch && it !in judgedNotes } ?: return
+        judgedNotes.add(scheduled)
+    }
+
+    /**
+     * Saut de position (barre, marqueur, repère). En mode attente, l'attente est abandonnée
+     * et la lecture repart de la nouvelle position (sinon l'écran restait figé).
+     */
+    private fun performSeek(positionMs: Long) {
+        val wasWaiting = isInWaitMode
+        if (wasWaiting) resetWaitMode()
+        judgedNotes.clear()
+        playbackController.seekTo(positionMs)  // Le callback onAllNotesOff sera appele automatiquement
+        val target = playbackController.getCurrentPositionMs()
+        fallingNotesView.updatePosition(target)
+        sheetMusicView.updatePosition(target)
+        updatePositionDisplay(target)
+        handlePracticeRecordingSeek(target)
+        if (wasWaiting) resumeAfterWait()
     }
 
     /**
@@ -2765,6 +2974,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         isInWaitMode = false
         currentWaitingNoteCounts.clear()
         waitingNotesWithTiming.clear()
+        currentWaitingGroup.clear()
         hideWaitModeIndicator()
     }
 
@@ -2782,20 +2992,35 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             val normalizedProgress = (positionMs.toFloat() / durationMs).coerceIn(0f, 1f)
             markerSeekBar.setProgress(normalizedProgress)
         }
-        txtTimeCurrent.text = formatTime(positionMs)
-        updateRemainingTimeDisplay(positionMs, playbackController.getDurationMs())
+        updateTimeTexts(positionMs, durationMs)
     }
 
     /**
-     * Met à jour l'affichage du temps restant (format négatif)
+     * Temps écoulé et temps restant (format négatif). Appelé à chaque image pendant la lecture :
+     * les textes ne sont réécrits que lorsque la seconde affichée change.
      */
-    private fun updateRemainingTimeDisplay(positionMs: Long, durationMs: Long) {
-        val remainingMs = durationMs - positionMs
-        txtTimeTotal.text = if (remainingMs > 0) {
-            getString(R.string.practice_time_remaining, formatTime(remainingMs))
-        } else {
-            getString(R.string.practice_time_zero)
+    private fun updateTimeTexts(positionMs: Long, durationMs: Long) {
+        val positionSec = positionMs / 1000
+        if (positionSec != shownPositionSec) {
+            shownPositionSec = positionSec
+            txtTimeCurrent.text = formatTime(positionMs)
         }
+        val remainingMs = durationMs - positionMs
+        val remainingSec = if (remainingMs > 0) remainingMs / 1000 else -1L
+        if (remainingSec != shownRemainingSec) {
+            shownRemainingSec = remainingSec
+            txtTimeTotal.text = if (remainingMs > 0) {
+                getString(R.string.practice_time_remaining, formatTime(remainingMs))
+            } else {
+                getString(R.string.practice_time_zero)
+            }
+        }
+    }
+
+    /** Les textes de temps ont été écrits ailleurs : la prochaine mise à jour les réécrira. */
+    private fun forgetShownTimeTexts() {
+        shownPositionSec = Long.MIN_VALUE
+        shownRemainingSec = Long.MIN_VALUE
     }
 
     /**
@@ -2805,7 +3030,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         val totalSeconds = (ms / 1000).toInt()
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
-        return String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
+        return getString(R.string.practice_time_format, minutes, seconds)
     }
 
     /**
@@ -3159,7 +3384,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
      * Met a jour l'affichage de la vitesse
      */
     private fun updateSpeedDisplay(speed: Float) {
-        txtSpeed.text = String.format(Locale.ROOT, "%.1fx", speed)
+        txtSpeed.text = getString(R.string.practice_speed_value, speed)
 
         // Changer la couleur si vitesse reduite
         val color = if (speed < 1.0f) {
@@ -3524,7 +3749,11 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // Clear waiting notes tracking BEFORE resetting views
         waitingNotesWithTiming.clear()
         currentWaitingNoteCounts.clear()
+        currentWaitingGroup.clear()
+        judgedNotes.clear()
         currentlyHeldNotes.clear()
+        midiLoadJob?.cancel()
+        isMidiLoading = false
 
         // Clear piano state FIRST (before views that might trigger callbacks)
         pianoView.clearExpectedNotes()
@@ -3585,6 +3814,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
         // Create new session for free mode
         session = PracticeSession(freeModeArgs)
+        userNoteChannel = freeModeArgs.channelNumber
 
         // Reinitialize playback controller without file
         synthesizer?.let { playbackController.initialize(it) }
@@ -3953,29 +4183,17 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             playbackController.pause()
         }
 
-        // Release old synthesizer
-        synthesizer?.allSoundOff()
-        synthesizer?.release()
-        synthesizer = null
-
-        // Reinitialize by reading fresh settings from DB
-        initSynthesizer()
-
-        // Reconnect to playback controller
-        synthesizer?.let { playbackController.initialize(it) }
-
-        // Send current program change
-        if (isFreeMode) {
-            sendProgramChange(currentProgram)
-        } else {
-            // Training mode - restore the instrument from args
-            synthesizer?.programChange(session.args.channelNumber, session.args.programNumber)
+        // Release old synthesizer (débranché d'abord : plus personne ne lui envoie de notes)
+        detachSynthesizer()?.let {
+            it.allSoundOff()
+            it.release()
         }
 
-        // Update UI
-        activity?.runOnUiThread {
-            btnPlayPause.setImageResource(R.drawable.ic_play)
-        }
+        // Relit les réglages et recharge hors du fil UI ; onSynthesizerReady()
+        // rebranche le lecteur et l'instrument
+        loadSynthesizer()
+
+        btnPlayPause.setImageResource(R.drawable.ic_play)
     }
 
     /**
@@ -4012,6 +4230,11 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // Start MIDI input controller for external keyboard
         midiInputController?.start()
 
+        // onPause a arrêté l'animation des notes montantes du mode libre
+        if (isFreeMode) {
+            fallingNotesView.startRisingAnimation()
+        }
+
         if (isPracticeRecordingEnabled) {
             if (isSheetMusicVisible) {
                 sheetMusicView.updatePosition(getPracticeRecordingPositionMs())
@@ -4037,6 +4260,28 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         stopPracticeRecordingUpdates()
         // Stop MIDI input controller
         midiInputController?.stop()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Rien à rouvrir au premier passage : resume() ne fait rien si le synthé n'est pas en pause
+        synthesizer?.resume()
+        if (audioStreamRecorder.isRecording()) {
+            recordingTimerStartMs = SystemClock.uptimeMillis()
+            recordingHandler.postDelayed(autoStopRecordingRunnable, recordingRemainingMs)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Écran invisible : plus de flux audio qui écrit du silence et empêche la veille.
+        // Un enregistrement en cours reprend au retour (le synthé ne produit rien entre-temps).
+        if (audioStreamRecorder.isRecording()) {
+            recordingHandler.removeCallbacks(autoStopRecordingRunnable)
+            val elapsed = SystemClock.uptimeMillis() - recordingTimerStartMs
+            recordingRemainingMs = (recordingRemainingMs - elapsed).coerceAtLeast(0L)
+        }
+        pauseSynthesizerInBackground()
     }
 
     override fun onDestroyView() {
@@ -4081,9 +4326,10 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
         // Release synthesizer (SF2 will stop its AudioRenderer, Sonivox keeps driver running)
         // Send allSoundOff before releasing to cut any lingering notes
-        synthesizer?.allSoundOff()
-        synthesizer?.release()
-        synthesizer = null
+        detachSynthesizer()?.let {
+            it.allSoundOff()
+            it.release()
+        }
 
         // Restaurer le clavier externe à son état normal
         if (isMidiKeyboardConnected) {

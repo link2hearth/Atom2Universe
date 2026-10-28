@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.music
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import androidx.core.net.toUri
@@ -8,6 +9,8 @@ import com.Atom2Universe.app.music.model.MusicTrack
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Gestionnaire de persistance de la file de lecture musique.
@@ -15,17 +18,34 @@ import java.io.File
  * Permet de sauvegarder et restaurer la queue de lecture pour que le widget
  * puisse reprendre la lecture même après un redémarrage du téléphone ou si l'app est tuée.
  *
- * Version 2: Sauvegarde les données complètes des tracks (pas juste les clés).
- * Ainsi le widget peut restaurer la queue même sans MusicLibrary chargée.
+ * La liste des pistes (lourde) vit dans un fichier à part, réécrit seulement quand elle
+ * change, sur un fil dédié (écritures dans l'ordre, la dernière gagne). L'index, la position
+ * et les modes sont de petites clés SharedPreferences écrites avec apply().
  */
 object MusicQueuePersistence {
 
     private const val TAG = "MusicQueuePersistence"
     private const val PREFS_NAME = "music_queue_prefs"
-    private const val KEY_QUEUE_DATA = "queue_data"
-    // Bug 5.21: Backup key for migration recovery
-    private const val KEY_QUEUE_DATA_BACKUP = "queue_data_backup"
-    private const val VERSION = 2
+    private const val TRACKS_FILENAME = "music_queue_tracks.json"
+    private const val KEY_INDEX = "current_index"
+    private const val KEY_POSITION = "position_ms"
+    private const val KEY_SHUFFLE = "shuffle_enabled"
+    private const val KEY_REPEAT = "repeat_mode"
+    private const val KEY_PLAYLIST_ID = "playlist_id"
+    private const val KEY_SAVED_AT = "saved_at"
+    // Ancien format (toute la file en JSON dans une clé) : effacé, jamais converti
+    private const val LEGACY_KEY_QUEUE_DATA = "queue_data"
+    private const val LEGACY_KEY_QUEUE_DATA_BACKUP = "queue_data_backup"
+
+    private val tracksWriter = Executors.newSingleThreadExecutor()
+    // Liste à écrire ; une liste vide signifie « supprimer le fichier »
+    private val pendingTracks = AtomicReference<List<PersistedTrack>?>(null)
+    // Dernière liste connue (écrite ou lue) : évite de relire le fichier
+    @Volatile
+    private var knownTracks: List<PersistedTrack>? = null
+    private var lastSavedPlaylist: List<MusicTrack>? = null
+    @Volatile
+    private var legacyChecked = false
 
     /**
      * Données d'un track sauvegardé.
@@ -118,11 +138,26 @@ object MusicQueuePersistence {
         val savedAt: Long
     )
 
+    private fun prefs(context: Context): SharedPreferences {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (!legacyChecked) {
+            legacyChecked = true
+            if (prefs.contains(LEGACY_KEY_QUEUE_DATA) || prefs.contains(LEGACY_KEY_QUEUE_DATA_BACKUP)) {
+                prefs.edit {
+                    remove(LEGACY_KEY_QUEUE_DATA)
+                    remove(LEGACY_KEY_QUEUE_DATA_BACKUP)
+                }
+            }
+        }
+        return prefs
+    }
+
+    private fun tracksFile(context: Context) = File(context.applicationContext.filesDir, TRACKS_FILENAME)
+
     /**
-     * Sauvegarde la queue actuelle avec toutes les données des tracks.
-     * Bug 5.18: Uses commit() instead of apply() and writes atomically
-     * to ensure data integrity even if the app is killed during save.
+     * Sauvegarde la queue actuelle. La liste des pistes n'est réécrite que si elle a changé.
      */
+    @Synchronized
     fun saveQueue(context: Context, playlist: List<MusicTrack>, currentIndex: Int,
                   positionMs: Long, shuffleEnabled: Boolean, repeatMode: MusicPlaybackHolder.RepeatMode,
                   playlistId: String? = null) {
@@ -132,104 +167,76 @@ object MusicQueuePersistence {
         }
 
         try {
-            val json = JSONObject().apply {
-                put("version", VERSION)
-                put("currentIndex", currentIndex)
-                put("positionMs", positionMs)
-                put("shuffleEnabled", shuffleEnabled)
-                put("repeatMode", repeatMode.name)
-                put("savedAt", System.currentTimeMillis())
-                if (playlistId != null) {
-                    put("playlistId", playlistId)
-                }
-
-                // Sauvegarder les données complètes des tracks
-                val tracksArray = JSONArray()
-                for (track in playlist) {
-                    val persistedTrack = PersistedTrack.fromMusicTrack(track)
-                    tracksArray.put(persistedTrack.toJson())
-                }
-                put("tracks", tracksArray)
+            if (playlist !== lastSavedPlaylist && playlist != lastSavedPlaylist) {
+                val tracks = playlist.map { PersistedTrack.fromMusicTrack(it) }
+                lastSavedPlaylist = playlist
+                knownTracks = tracks
+                scheduleTracksWrite(context, tracks)
             }
 
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            // Bug 5.18: Use commit() instead of apply() for critical queue data
-            // This ensures data is written synchronously before returning.
-            // While slightly slower, it guarantees the queue is persisted even if
-            // the app is killed immediately after.
-            @Suppress("ApplySharedPref")
-            val success = prefs.edit().putString(KEY_QUEUE_DATA, json.toString()).commit()
-
-            if (success) {
-                Log.d(TAG, "Queue saved: ${playlist.size} tracks, index=$currentIndex, pos=$positionMs, playlistId=$playlistId")
-            } else {
-                Log.e(TAG, "Failed to commit queue save")
+            prefs(context).edit {
+                putInt(KEY_INDEX, currentIndex)
+                putLong(KEY_POSITION, positionMs)
+                putBoolean(KEY_SHUFFLE, shuffleEnabled)
+                putString(KEY_REPEAT, repeatMode.name)
+                if (playlistId != null) putString(KEY_PLAYLIST_ID, playlistId) else remove(KEY_PLAYLIST_ID)
+                putLong(KEY_SAVED_AT, System.currentTimeMillis())
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error saving queue", e)
         }
     }
 
+    private fun scheduleTracksWrite(context: Context, tracks: List<PersistedTrack>) {
+        val file = tracksFile(context)
+        pendingTracks.set(tracks)
+        tracksWriter.execute {
+            val latest = pendingTracks.getAndSet(null) ?: return@execute
+            try {
+                if (latest.isEmpty()) {
+                    file.delete()
+                } else {
+                    val array = JSONArray()
+                    latest.forEach { array.put(it.toJson()) }
+                    MusicFileWriter.writeTextAtomically(file, array.toString())
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error writing queue tracks", e)
+            }
+        }
+    }
+
+    private fun readTracksFile(context: Context): List<PersistedTrack> {
+        val file = tracksFile(context)
+        if (!file.exists()) return emptyList()
+        val array = JSONArray(file.readText())
+        val tracks = ArrayList<PersistedTrack>(array.length())
+        for (i in 0 until array.length()) {
+            try {
+                tracks.add(PersistedTrack.fromJson(array.getJSONObject(i)))
+            } catch (trackError: Exception) {
+                Log.e(TAG, "Error parsing track at index $i, skipping", trackError)
+            }
+        }
+        return tracks
+    }
+
     /**
      * Restaure la queue sauvegardée.
      * Retourne null si aucune queue n'est sauvegardée ou si les données sont invalides.
-     * Bug 5.21: Creates backup before migration and logs errors properly.
      */
     fun loadQueue(context: Context): SavedQueue? {
         try {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val jsonString = prefs.getString(KEY_QUEUE_DATA, null) ?: return null
+            val prefs = prefs(context)
+            if (!prefs.contains(KEY_INDEX)) return null
 
-            val json = JSONObject(jsonString)
-            val version = json.optInt("version", 0)
-
-            // Bug 5.21: Migration with backup
-            if (version < VERSION) {
-                Log.w(TAG, "Queue version mismatch ($version < $VERSION), attempting migration")
-
-                // Create backup before clearing
-                try {
-                    prefs.edit {
-                        putString(KEY_QUEUE_DATA_BACKUP, jsonString)
-                    }
-                    Log.d(TAG, "Created backup of old queue data (version $version)")
-                } catch (backupError: Exception) {
-                    Log.e(TAG, "Failed to create backup before migration", backupError)
-                }
-
-                // Try to migrate old format if possible
-                val migratedQueue = tryMigrateOldFormat(json, version)
-                if (migratedQueue != null) {
-                    Log.i(TAG, "Successfully migrated queue from version $version to $VERSION")
-                    // Remove backup after successful migration
-                    prefs.edit { remove(KEY_QUEUE_DATA_BACKUP) }
-                    return migratedQueue
-                }
-
-                // Migration failed, clear and log
-                Log.w(TAG, "Migration failed, clearing old queue data. Backup preserved in $KEY_QUEUE_DATA_BACKUP")
-                clearQueue(context)
-                return null
-            }
-
-            val tracksArray = json.optJSONArray("tracks") ?: return null
-            val tracks = mutableListOf<PersistedTrack>()
-            for (i in 0 until tracksArray.length()) {
-                try {
-                    val trackJson = tracksArray.getJSONObject(i)
-                    tracks.add(PersistedTrack.fromJson(trackJson))
-                } catch (trackError: Exception) {
-                    // Bug 5.21: Log individual track parsing errors but continue
-                    Log.e(TAG, "Error parsing track at index $i, skipping", trackError)
-                }
-            }
-
+            val tracks = knownTracks ?: readTracksFile(context).also { knownTracks = it }
             if (tracks.isEmpty()) {
                 Log.w(TAG, "Queue loaded but no valid tracks found")
                 return null
             }
 
-            val repeatModeName = json.optString("repeatMode", "OFF")
+            val repeatModeName = prefs.getString(KEY_REPEAT, null) ?: MusicPlaybackHolder.RepeatMode.OFF.name
             val repeatMode = try {
                 MusicPlaybackHolder.RepeatMode.valueOf(repeatModeName)
             } catch (_: Exception) {
@@ -237,78 +244,17 @@ object MusicQueuePersistence {
                 MusicPlaybackHolder.RepeatMode.OFF
             }
 
-            val playlistId = if (json.has("playlistId")) json.optString("playlistId") else null
-
             return SavedQueue(
                 tracks = tracks,
-                currentIndex = json.optInt("currentIndex", 0),
-                positionMs = json.optLong("positionMs", 0),
-                shuffleEnabled = json.optBoolean("shuffleEnabled", false),
+                currentIndex = prefs.getInt(KEY_INDEX, 0),
+                positionMs = prefs.getLong(KEY_POSITION, 0),
+                shuffleEnabled = prefs.getBoolean(KEY_SHUFFLE, false),
                 repeatMode = repeatMode,
-                playlistId = playlistId,
-                savedAt = json.optLong("savedAt", 0)
+                playlistId = prefs.getString(KEY_PLAYLIST_ID, null),
+                savedAt = prefs.getLong(KEY_SAVED_AT, 0)
             )
         } catch (e: Exception) {
             Log.e(TAG, "Error loading queue", e)
-            return null
-        }
-    }
-
-    /**
-     * Bug 5.21: Attempts to migrate old queue format to current version.
-     * Returns migrated SavedQueue or null if migration fails.
-     */
-    private fun tryMigrateOldFormat(json: JSONObject, oldVersion: Int): SavedQueue? {
-        try {
-            val tracksArray = json.optJSONArray("tracks") ?: run {
-                Log.w(TAG, "No tracks array found for version $oldVersion, cannot migrate")
-                return null
-            }
-            val tracks = mutableListOf<PersistedTrack>()
-            for (i in 0 until tracksArray.length()) {
-                try {
-                    val trackJson = tracksArray.getJSONObject(i)
-                    tracks.add(PersistedTrack.fromJson(trackJson))
-                } catch (trackError: Exception) {
-                    Log.e(TAG, "Error parsing track at index $i during migration, skipping", trackError)
-                }
-            }
-
-            if (tracks.isEmpty()) {
-                Log.w(TAG, "No valid tracks found during migration from version $oldVersion")
-                return null
-            }
-
-            // Version 1 had a different format with track IDs only
-            // Version 2 has full track data
-            if (oldVersion == 1) {
-                // Version 1 stored track IDs in "trackIds" array
-                // We can't migrate without MusicLibrary, so return null
-                Log.w(TAG, "Cannot migrate version 1 queue (track IDs only) without MusicLibrary")
-                return null
-            }
-
-            val repeatModeName = json.optString("repeatMode", "OFF")
-            val repeatMode = try {
-                MusicPlaybackHolder.RepeatMode.valueOf(repeatModeName)
-            } catch (_: Exception) {
-                Log.w(TAG, "Invalid repeat mode '$repeatModeName' during migration, defaulting to OFF")
-                MusicPlaybackHolder.RepeatMode.OFF
-            }
-
-            val playlistId = if (json.has("playlistId")) json.optString("playlistId") else null
-
-            return SavedQueue(
-                tracks = tracks,
-                currentIndex = json.optInt("currentIndex", 0),
-                positionMs = json.optLong("positionMs", 0),
-                shuffleEnabled = json.optBoolean("shuffleEnabled", false),
-                repeatMode = repeatMode,
-                playlistId = playlistId,
-                savedAt = json.optLong("savedAt", System.currentTimeMillis())
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during queue migration from version $oldVersion", e)
             return null
         }
     }
@@ -324,10 +270,22 @@ object MusicQueuePersistence {
     /**
      * Efface la queue sauvegardée.
      */
+    @Synchronized
     fun clearQueue(context: Context) {
         try {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            prefs.edit { remove(KEY_QUEUE_DATA) }
+            lastSavedPlaylist = null
+            if (knownTracks?.isEmpty() != true) {
+                knownTracks = emptyList()
+                scheduleTracksWrite(context, emptyList())
+            }
+            prefs(context).edit {
+                remove(KEY_INDEX)
+                remove(KEY_POSITION)
+                remove(KEY_SHUFFLE)
+                remove(KEY_REPEAT)
+                remove(KEY_PLAYLIST_ID)
+                remove(KEY_SAVED_AT)
+            }
             Log.d(TAG, "Queue cleared")
         } catch (e: Exception) {
             Log.e(TAG, "Error clearing queue", e)
@@ -338,25 +296,20 @@ object MusicQueuePersistence {
      * Vérifie si une queue est sauvegardée.
      */
     fun hasQueue(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.contains(KEY_QUEUE_DATA)
+        return prefs(context).contains(KEY_INDEX)
     }
 
     /**
      * Met à jour uniquement la position de lecture (appelé périodiquement).
-     * Bug fix: Utilise commit() au lieu de apply() pour garantir la persistance
-     * en cas de kill de l'app, cohérent avec saveQueue().
      */
     fun updatePosition(context: Context, positionMs: Long) {
         try {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val jsonString = prefs.getString(KEY_QUEUE_DATA, null) ?: return
-
-            val json = JSONObject(jsonString)
-            json.put("positionMs", positionMs)
-            json.put("savedAt", System.currentTimeMillis())
-
-            prefs.edit(commit = true) { putString(KEY_QUEUE_DATA, json.toString()) }
+            val prefs = prefs(context)
+            if (!prefs.contains(KEY_INDEX)) return
+            prefs.edit {
+                putLong(KEY_POSITION, positionMs)
+                putLong(KEY_SAVED_AT, System.currentTimeMillis())
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error updating position", e)
         }
@@ -364,20 +317,16 @@ object MusicQueuePersistence {
 
     /**
      * Met à jour l'index courant (appelé lors du changement de track).
-     * Bug fix: Utilise commit() au lieu de apply() pour garantir la persistance
-     * en cas de kill de l'app, cohérent avec saveQueue().
      */
     fun updateCurrentIndex(context: Context, currentIndex: Int) {
         try {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val jsonString = prefs.getString(KEY_QUEUE_DATA, null) ?: return
-
-            val json = JSONObject(jsonString)
-            json.put("currentIndex", currentIndex)
-            json.put("positionMs", 0L)  // Reset position on track change
-            json.put("savedAt", System.currentTimeMillis())
-
-            prefs.edit(commit = true) { putString(KEY_QUEUE_DATA, json.toString()) }
+            val prefs = prefs(context)
+            if (!prefs.contains(KEY_INDEX)) return
+            prefs.edit {
+                putInt(KEY_INDEX, currentIndex)
+                putLong(KEY_POSITION, 0L)  // Reset position on track change
+                putLong(KEY_SAVED_AT, System.currentTimeMillis())
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error updating current index", e)
         }

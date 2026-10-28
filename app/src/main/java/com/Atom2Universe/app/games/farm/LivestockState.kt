@@ -35,8 +35,15 @@ data class FarmAnimal(val id: Long, val kind: LivestockKind, val male: Boolean, 
                       var name: String = "", var affection: Int = 0, var lastPetAt: Long = -1,
                       var productAt: Long = -1) {
     val adult get() = adultAt == 0L
-    val sprite get() = (if (!adult) kind.young else if (male) kind.male else kind.female) + "_" +
-        variant
+    // Built once per stage of life rather than on every frame the pen draws this animal.
+    private var spriteName: String? = null
+    private var spriteAdult = false
+    val sprite: String get() {
+        val grown = adult
+        spriteName?.let { if (spriteAdult == grown) return it }
+        return ((if (!grown) kind.young else if (male) kind.male else kind.female) + "_" + variant)
+            .also { spriteName = it; spriteAdult = grown }
+    }
     val product: FarmAnimalProduct? get() = if (!adult) null else futureProduct
     val futureProduct: FarmAnimalProduct? get() = when (kind) {
         LivestockKind.CHICKENS -> if (male) null else FarmAnimalProduct.EGG
@@ -208,6 +215,10 @@ class LivestockState {
     fun spendManure(cost: Int): Boolean {
         if (cost <= 0 || manure < cost) return false
         manure -= cost; return true
+    }
+    /** Puts back what [spendManure] took, for a planting undone before it was ever watered. */
+    fun refundManure(cost: Int) {
+        if (cost > 0) manure = (manure + cost).coerceAtMost(maxOf(manure, manureCapacity()))
     }
 
     /** Replay dated events, including offspring growing up while the app is closed. */

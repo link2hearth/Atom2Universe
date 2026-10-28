@@ -1,15 +1,18 @@
 package com.Atom2Universe.app.music
 
 import android.content.Context
+import android.net.Uri
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.model.Album
 import com.Atom2Universe.app.music.model.Artist
 import com.Atom2Universe.app.music.model.Folder
 import com.Atom2Universe.app.music.model.MusicTrack
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import java.text.Normalizer
+import java.util.concurrent.ConcurrentHashMap
 
 object MusicLibrary {
 
@@ -26,6 +29,29 @@ object MusicLibrary {
     private var allAlbums: List<Album> = emptyList()       // Tous les albums
     @Volatile
     private var folderTree: Folder? = null                 // Arborescence des dossiers
+
+    // Ordre dans lequel les albums des artistes sont actuellement triés (null = à retrier)
+    @Volatile
+    private var albumsSortedFor: AlbumSortOrder? = null
+
+    // Albums dont l'année a déjà été lue dans les tags depuis la dernière organisation
+    private val yearCheckedAlbums = ConcurrentHashMap.newKeySet<String>()
+
+    // Index chemin/URI -> album pour les pochettes, reconstruit après chaque changement
+    private class ArtworkIndex(
+        val byPath: Map<String, Album>,
+        val byUriWithoutPath: Map<Uri, Album>,
+        val byUri: Map<Uri, Album>
+    )
+    @Volatile
+    private var artworkIndex: ArtworkIndex? = null
+
+    private val COMBINING_MARKS = Regex("\\p{InCombiningDiacriticalMarks}+")
+    private val LEADING_NUMBER = Regex("^(\\d+)")
+
+    // Clés de tri des noms (albums, artistes, dossiers) calculées une seule fois
+    private val sortKeyCache = ConcurrentHashMap<String, String>()
+    private val artistSortKeyCache = ConcurrentHashMap<String, String>()
 
     // Strings de fallback localisées
     private var unknownArtist: String = "Unknown Artist"
@@ -53,7 +79,20 @@ object MusicLibrary {
      */
     fun removeAccents(text: String): String {
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
-        return normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+        return normalized.replace(COMBINING_MARKS, "")
+    }
+
+    private fun sortKey(text: String): String =
+        sortKeyCache.getOrPut(text) { removeAccents(text).lowercase() }
+
+    private fun artistSortKey(name: String): String =
+        artistSortKeyCache.getOrPut(name) { getArtistSortName(name).lowercase() }
+
+    /** Tri stable par nom sans accents, clé calculée une fois par élément. */
+    private inline fun <T> sortByAccentlessText(list: MutableList<T>, crossinline text: (T) -> String) {
+        if (list.size < 2) return
+        val sorted = list.map { it to removeAccents(text(it)).lowercase() }.sortedBy { it.second }
+        for (i in sorted.indices) list[i] = sorted[i].first
     }
 
     /**
@@ -70,7 +109,7 @@ object MusicLibrary {
         return removeAccents(withoutThe)
     }
 
-    fun setTracks(tracks: List<MusicTrack>) {
+    suspend fun setTracks(tracks: List<MusicTrack>) {
         allTracks = tracks
         organizeLibrary()
     }
@@ -86,6 +125,10 @@ object MusicLibrary {
         allAlbums = sortedByName(cached.allAlbums)
         folderTree = cached.folderTree
         currentAlbumSortOrder = cached.sortOrder
+        // Le premier setAlbumSortOrder() retrie une fois, ensuite seulement si l'ordre change
+        albumsSortedFor = null
+        artworkIndex = null
+        yearCheckedAlbums.clear()
     }
 
     /**
@@ -112,14 +155,35 @@ object MusicLibrary {
     fun getAllAlbums(): List<Album> = allAlbums
 
     /** Resolve the same album for artwork in artist views and playback, including compilations. */
-    internal fun getArtworkAlbum(track: MusicTrack): Album? = synchronized(libraryLock) {
-        allAlbums.firstOrNull { album ->
-            album.name.equals(track.album, ignoreCase = true) && album.tracks.any { candidate ->
-                if (!track.filePath.isNullOrBlank() && !candidate.filePath.isNullOrBlank()) {
-                    candidate.filePath == track.filePath
-                } else candidate.uri == track.uri
+    internal fun getArtworkAlbum(track: MusicTrack): Album? {
+        val index = artworkIndex ?: synchronized(libraryLock) {
+            artworkIndex ?: buildArtworkIndex().also { artworkIndex = it }
+        }
+        val path = track.filePath
+        val candidate = if (!path.isNullOrBlank()) {
+            index.byPath[path] ?: index.byUriWithoutPath[track.uri]
+        } else {
+            index.byUri[track.uri]
+        }
+        return candidate?.takeIf { it.name.equals(track.album, ignoreCase = true) }
+    }
+
+    private fun buildArtworkIndex(): ArtworkIndex {
+        val byPath = HashMap<String, Album>()
+        val byUriWithoutPath = HashMap<Uri, Album>()
+        val byUri = HashMap<Uri, Album>()
+        for (album in allAlbums) {
+            for (candidate in album.tracks) {
+                val candidatePath = candidate.filePath
+                if (!candidatePath.isNullOrBlank()) {
+                    byPath.putIfAbsent(candidatePath, album)
+                } else {
+                    byUriWithoutPath.putIfAbsent(candidate.uri, album)
+                }
+                byUri.putIfAbsent(candidate.uri, album)
             }
         }
+        return ArtworkIndex(byPath, byUriWithoutPath, byUri)
     }
 
     fun getFolderTree(): Folder? = folderTree
@@ -191,16 +255,23 @@ object MusicLibrary {
     fun setAlbumSortOrder(sortOrder: AlbumSortOrder) {
         synchronized(libraryLock) {
             currentAlbumSortOrder = sortOrder
-            // Re-trier les albums de chaque artiste
-            artists.forEach { artist ->
-                sortAlbums(artist.albums)
-            }
-            // Re-trier aussi les albums des artistes d'album
-            albumArtists.forEach { artist ->
-                sortAlbums(artist.albums)
-            }
-            // Tous les albums ne suit pas ce réglage : toujours par nom, voir sortedByName
+            // Déjà trié dans cet ordre : rien à faire (appelé à chaque retour sur l'écran)
+            if (albumsSortedFor == sortOrder) return
+            resortArtistAlbumsLocked()
         }
+    }
+
+    /** Retrie les albums de chaque artiste ; à appeler sous libraryLock. */
+    private fun resortArtistAlbumsLocked() {
+        val order = currentAlbumSortOrder
+        artists.forEach { artist ->
+            sortAlbums(artist.albums, order)
+        }
+        albumArtists.forEach { artist ->
+            sortAlbums(artist.albums, order)
+        }
+        // Tous les albums ne suit pas ce réglage : toujours par nom, voir sortedByName
+        albumsSortedFor = order
     }
 
     /**
@@ -209,17 +280,17 @@ object MusicLibrary {
      * cette section compte sur cet ordre.
      */
     private fun sortedByName(albums: Collection<Album>): List<Album> =
-        albums.sortedBy { removeAccents(it.name).lowercase() }
+        albums.sortedBy { sortKey(it.name) }
 
-    private fun sortAlbums(albums: MutableList<Album>) {
-        when (currentAlbumSortOrder) {
-            AlbumSortOrder.NAME_ASC -> albums.sortBy { removeAccents(it.name).lowercase() }
-            AlbumSortOrder.NAME_DESC -> albums.sortByDescending { removeAccents(it.name).lowercase() }
+    private fun sortAlbums(albums: MutableList<Album>, order: AlbumSortOrder) {
+        when (order) {
+            AlbumSortOrder.NAME_ASC -> albums.sortBy { sortKey(it.name) }
+            AlbumSortOrder.NAME_DESC -> albums.sortByDescending { sortKey(it.name) }
             AlbumSortOrder.YEAR_ASC -> albums.sortWith(
-                compareBy<Album> { it.year ?: Int.MAX_VALUE }.thenBy { removeAccents(it.name).lowercase() }
+                compareBy<Album> { it.year ?: Int.MAX_VALUE }.thenBy { sortKey(it.name) }
             )
             AlbumSortOrder.YEAR_DESC -> albums.sortWith(
-                compareByDescending<Album> { it.year ?: Int.MIN_VALUE }.thenBy { removeAccents(it.name).lowercase() }
+                compareByDescending<Album> { it.year ?: Int.MIN_VALUE }.thenBy { sortKey(it.name) }
             )
         }
     }
@@ -235,7 +306,7 @@ object MusicLibrary {
         // 2. Essayer d'extraire le numéro au début du nom de fichier
         val filePath = track.filePath ?: return null
         val fileName = filePath.substringAfterLast('/').substringAfterLast('\\')
-        val match = Regex("^(\\d+)").find(fileName)
+        val match = LEADING_NUMBER.find(fileName)
         return match?.groupValues?.get(1)?.toIntOrNull()
     }
 
@@ -244,12 +315,17 @@ object MusicLibrary {
      * Pour les albums multi-disques (ex: disque 1/2 et 2/2), affiche toutes les pistes
      * du disque 1 d'abord (1, 2, 3...) puis toutes les pistes du disque 2 (1, 2, 3...).
      */
+    private class TrackSortKey(val track: MusicTrack, val disc: Int?, val number: Int?, val title: String)
+
     private fun sortTracksInAlbum(tracks: MutableList<MusicTrack>) {
-        tracks.sortWith { a, b ->
-            val discA = a.discNumber
-            val discB = b.discNumber
-            val numA = getEffectiveTrackNumber(a)
-            val numB = getEffectiveTrackNumber(b)
+        if (tracks.size < 2) return
+        // Numéros et titres calculés une fois par piste, pas à chaque comparaison
+        val keyed = tracks.map { TrackSortKey(it, it.discNumber, getEffectiveTrackNumber(it), it.title.lowercase()) }
+        val sorted = keyed.sortedWith { a, b ->
+            val discA = a.disc
+            val discB = b.disc
+            val numA = a.number
+            val numB = b.number
 
             when {
                 // Si les deux ont un numéro de disque différent, trier par disque
@@ -259,14 +335,16 @@ object MusicLibrary {
                 numA != null -> -1  // a a un numéro, b non -> a en premier
                 numB != null -> 1   // b a un numéro, a non -> b en premier
                 // Aucun numéro, trier par titre
-                else -> a.title.lowercase().compareTo(b.title.lowercase())
+                else -> a.title.compareTo(b.title)
             }
         }
+        for (i in sorted.indices) tracks[i] = sorted[i].track
     }
 
-    private fun organizeLibrary() {
+    private suspend fun organizeLibrary() = withContext(Dispatchers.Default) {
         // Construire toutes les structures dans des variables locales
         // puis faire un swap atomique à la fin pour la thread-safety
+        val order = currentAlbumSortOrder
         val artistMap = mutableMapOf<String, Artist>()
         val albumArtistMap = mutableMapOf<String, Artist>()
         val albumsMap = mutableMapOf<String, Album>()  // Clé: "albumName|albumArtist" pour unicité
@@ -374,7 +452,7 @@ object MusicLibrary {
             artist.albums.forEach { album ->
                 sortTracksInAlbum(album.tracks)
             }
-            sortAlbums(artist.albums)
+            sortAlbums(artist.albums, order)
         }
 
         // Trier les pistes et albums pour les album artists
@@ -382,7 +460,7 @@ object MusicLibrary {
             artist.albums.forEach { album ->
                 sortTracksInAlbum(album.tracks)
             }
-            sortAlbums(artist.albums)
+            sortAlbums(artist.albums, order)
         }
 
         // Trier les pistes pour tous les albums
@@ -391,8 +469,8 @@ object MusicLibrary {
         }
 
         // Construire les listes finales triées
-        val newArtists = artistMap.values.sortedBy { getArtistSortName(it.name).lowercase() }
-        val newAlbumArtists = albumArtistMap.values.sortedBy { getArtistSortName(it.name).lowercase() }
+        val newArtists = artistMap.values.sortedBy { artistSortKey(it.name) }
+        val newAlbumArtists = albumArtistMap.values.sortedBy { artistSortKey(it.name) }
         val newAllAlbums = sortedByName(albumsMap.values)
 
         // Construire le folder tree
@@ -404,6 +482,10 @@ object MusicLibrary {
             albumArtists = newAlbumArtists
             allAlbums = newAllAlbums
             folderTree = newFolderTree
+            albumsSortedFor = order
+            artworkIndex = null
+            // Les années lues dans les tags étaient portées par les anciens albums
+            yearCheckedAlbums.clear()
         }
     }
 
@@ -453,8 +535,8 @@ object MusicLibrary {
 
         // Sort subfolders and tracks in each folder
         fun sortFolderContents(folder: Folder) {
-            folder.subfolders.sortBy { removeAccents(it.name).lowercase() }
-            folder.tracks.sortBy { removeAccents(it.title).lowercase() }
+            folder.subfolders.sortBy { sortKey(it.name) }
+            sortByAccentlessText(folder.tracks) { it.title }
             folder.subfolders.forEach { sortFolderContents(it) }
         }
         sortFolderContents(rootFolder)
@@ -536,10 +618,10 @@ object MusicLibrary {
     /**
      * Corrige les années manquantes dans les albums en lisant directement les tags ID3.
      * MediaStore ne lit pas toujours correctement le champ année (notamment ID3v2.4 TDRC).
-     * Appelé manuellement lors d'un refresh complet (bouton refresh).
-     * Bug fix: Utilise synchronized(libraryLock) pour éviter les race conditions.
+     * Lit un fichier par album sur un fil d'E/S, une seule fois par album tant que la
+     * bibliothèque n'est pas réorganisée, puis retrie les albums si des années ont changé.
      */
-    fun fixMissingYears() {
+    suspend fun fixMissingYears() = withContext(Dispatchers.IO) {
         // Collecte tous les albums sans année sous le lock
         val albumsWithoutYear: List<Album>
         synchronized(libraryLock) {
@@ -554,7 +636,7 @@ object MusicLibrary {
             albumsWithoutYear = tempList.toList()
         }
 
-        if (albumsWithoutYear.isEmpty()) return
+        if (albumsWithoutYear.isEmpty()) return@withContext
 
         // Collecte les années à mettre à jour (hors du lock pour éviter les I/O sous lock)
         val yearUpdates = mutableMapOf<String, Int>()  // albumKey -> year
@@ -562,8 +644,10 @@ object MusicLibrary {
 
         for (album in albumsWithoutYear) {
             val albumKey = "${album.name}|${album.artist}"
-            if (albumKey in processedAlbums) continue
-            processedAlbums.add(albumKey)
+            if (!processedAlbums.add(albumKey)) continue
+            // Déjà lu sans succès depuis la dernière organisation
+            if (!yearCheckedAlbums.add(albumKey)) continue
+            ensureActive()
 
             // Trouve une piste avec un filePath
             val trackWithPath = album.tracks.firstOrNull { !it.filePath.isNullOrBlank() }
@@ -585,6 +669,8 @@ object MusicLibrary {
                         updateAlbumYearEverywhere(parts[0], parts[1], year)
                     }
                 }
+                // Les années ont changé : le tri par année doit être refait
+                resortArtistAlbumsLocked()
             }
         }
     }
@@ -610,7 +696,7 @@ object MusicLibrary {
      * Si l'artiste ou l'album change, réorganise la bibliothèque.
      * @return true si une réorganisation complète a été nécessaire
      */
-    fun updateTrack(oldTrack: MusicTrack, newTrack: MusicTrack): Boolean {
+    suspend fun updateTrack(oldTrack: MusicTrack, newTrack: MusicTrack): Boolean {
         val needsReorganization = oldTrack.artist != newTrack.artist ||
                 oldTrack.album != newTrack.album ||
                 oldTrack.albumArtist != newTrack.albumArtist
@@ -632,7 +718,7 @@ object MusicLibrary {
      * Met à jour plusieurs tracks dans la bibliothèque.
      * @return true si une réorganisation complète a été nécessaire
      */
-    fun updateTracks(updates: List<Pair<MusicTrack, MusicTrack>>): Boolean {
+    suspend fun updateTracks(updates: List<Pair<MusicTrack, MusicTrack>>): Boolean {
         if (updates.isEmpty()) return false
 
         val needsReorganization = updates.any { (oldTrack, newTrack) ->
@@ -698,6 +784,9 @@ object MusicLibrary {
         folderTree?.let { root ->
             updateTrackInFolderTree(root, oldTrack, newTrack)
         }
+
+        // Chemin ou URI ont pu changer
+        synchronized(libraryLock) { artworkIndex = null }
     }
 
     /**
@@ -734,6 +823,9 @@ object MusicLibrary {
         albumArtists = emptyList()
         allAlbums = emptyList()
         folderTree = null
+        albumsSortedFor = null
+        artworkIndex = null
+        yearCheckedAlbums.clear()
     }
 
     fun getTotalTrackCount(): Int = allTracks.size

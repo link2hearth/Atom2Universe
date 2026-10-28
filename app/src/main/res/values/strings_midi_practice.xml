@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tableau des scores de la pratique -->
+    <string name="practice_score_label">"Score: "</string>
+    <string name="practice_combo_label">"Combo: "</string>
+    <string name="practice_accuracy_label">"Accuracy: "</string>
+    <string name="practice_streak_label">"Streak: "</string>
+    <string name="practice_best_label">"Best: "</string>
+    <string name="practice_good_label">"Good: "</string>
+    <string name="practice_perfect_label">"Perfect: "</string>
+    <string name="practice_missed_label">"Missed: "</string>
+    <string name="practice_accuracy_value">%1$.1f%%</string>
+    <string name="practice_combo_value">%1$dx</string>
+    <string name="practice_grade_s">S</string>
+    <string name="practice_grade_a">A</string>
+    <string name="practice_grade_b">B</string>
+    <string name="practice_grade_c">C</string>
+    <string name="practice_grade_d">D</string>
+    <string name="practice_grade_f">F</string>
+
+    <!-- Écran de pratique -->
+    <string name="practice_speed_value">%1$.1fx</string>
+    <string name="practice_time_format">%1$d:%2$02d</string>
+    <string name="practice_default_instrument">Piano</string>
+    <string name="practice_default_track">Track</string>
+
+    <!-- Lignes des canaux du visualiseur -->
+    <string name="midi_channel_drum_short">Dr</string>
+    <string name="midi_channel_program_count">x%1$d</string>
+</resources>

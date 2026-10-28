@@ -14,7 +14,10 @@ import java.nio.ByteOrder
  * dessiner le chunk ne coûte plus que deux appels (lier le VAO, dessiner) au lieu d'une vingtaine.
  * À 9 000 chunks affichés, ces appels saturaient le fil de rendu (mesuré).
  */
-internal class SolidChunkMesh {
+internal class SolidChunkMesh(
+    /** Clé du chunk (World.chunkKey) : la boucle de dessin la lit sans reboxer de Long. */
+    val key: Long,
+) {
     private var vbo = 0
     private var ibo = 0
     private var vao = 0

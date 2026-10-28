@@ -37,6 +37,11 @@ class RadioRecordingService : Service() {
                 showNotification()
             }
             ACTION_STOP -> stopSelf()
+            // Le bouton de la notification : l'enregistrement vit dans RadioPlaybackHolder, qui arrête aussi ce service.
+            ACTION_STOP_FROM_NOTIFICATION -> {
+                com.Atom2Universe.app.radio.RadioPlaybackHolder.stopRecording(this)
+                stopSelf()
+            }
         }
         return START_NOT_STICKY
     }
@@ -73,9 +78,9 @@ class RadioRecordingService : Service() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val stopBroadcast = PendingIntent.getBroadcast(
+        val stopIntent = PendingIntent.getService(
             this, 0,
-            Intent(ACTION_STOP_FROM_NOTIFICATION).apply { `package` = packageName },
+            Intent(this, RadioRecordingService::class.java).apply { action = ACTION_STOP_FROM_NOTIFICATION },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -90,7 +95,7 @@ class RadioRecordingService : Service() {
                 NotificationCompat.Action(
                     R.drawable.ic_launcher_background,
                     getString(R.string.radio_recording_action_stop_notif),
-                    stopBroadcast
+                    stopIntent
                 )
             )
             .build()
@@ -142,10 +147,9 @@ class RadioRecordingService : Service() {
             ContextCompat.startForegroundService(context, intent)
         }
 
+        /** stopService plutôt qu'une commande : toujours permis, même appli en arrière-plan. */
         fun stop(context: Context) {
-            context.startService(
-                Intent(context, RadioRecordingService::class.java).apply { action = ACTION_STOP }
-            )
+            context.stopService(Intent(context, RadioRecordingService::class.java))
         }
     }
 }

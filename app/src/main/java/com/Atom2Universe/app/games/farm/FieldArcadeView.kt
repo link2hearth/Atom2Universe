@@ -18,7 +18,11 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private val land = RectF()
     private val sprites = FarmSprites(context)
     private val scenery by lazy { FarmScenery(sprites) }
-    private val atlas = context.assets.open("garden/field_vehicles.png").use { BitmapFactory.decodeStream(it) }
+    // Decoded the first time a vehicle is drawn, and let go by [release]: a player who never opens
+    // the fields never pays for it, and one who left them stops paying.
+    private var atlasBitmap: Bitmap? = null
+    private val atlas: Bitmap get() = atlasBitmap
+        ?: context.assets.open("garden/field_vehicles.png").use { BitmapFactory.decodeStream(it) }.also { atlasBitmap = it }
     // Measured alpha bounds, including the combine's header which extends across an atlas third.
     private val sources = listOf(Rect(125, 96, 461, 791), Rect(644, 96, 1120, 802), Rect(1161, 80, 1754, 809))
     private val field get() = state.largeFields.fields[state.largeFields.selected]
@@ -27,11 +31,19 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private var blocked = false
     private var lastTick = 0L
     private var lastUi = 0L
-    private var lastSave = 0L
+    /** The field's text and fuel gauge, many times a second while driving; [changed] is the whole screen. */
+    var onProgress: (() -> Unit)? = null
+    private val spriteRect = RectF()
     // The fine mask is painted into a low-res bitmap once per frame (bulk setPixels) rather than
     // one drawRect per fine cell, so the tractor's footprint can be far finer than the driving grid.
     private var maskBitmap: Bitmap? = null
     private var maskPixels = IntArray(0)
+    // What the mask and the crop layer were last painted from. Both are repainted only when that
+    // moves - a new stroke of the tractor, a new pass, another field - not on every frame.
+    private var maskField = -1; private var maskPhase = -1; private var maskStrokes = -1
+    private var maskPainted: BooleanArray? = null; private var maskEligible: BooleanArray? = null
+    private var cropField = -1; private var cropStrokes = -1; private var cropGrowth = -1
+    private var cropPainted: BooleanArray? = null; private var cropEligible: BooleanArray? = null
     // Grass tiles, the orchard fringe and the soil-bed border never change frame to frame, so they're
     // rendered once into a cached bitmap instead of redrawing dozens of sprites at 60fps.
     private var bgBitmap: Bitmap? = null
@@ -61,16 +73,24 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                 }
                 blocked = false
                 if (f.coverage == 100) { invalidate(); conclude(); return }
-                if (now - lastSave > 500) { state.save(); lastSave = now }
+                // Noted, not written: the farm screen writes the farm every few seconds and as it leaves.
+                state.save()
             } else if (f.distanceUsed >= f.budget) { invalidate(); conclude(); return }
             else if (!blocked) { blocked = true; performHapticFeedback(HapticFeedbackConstants.REJECT) }
-            if (now - lastUi > 90) { lastUi = now; changed() }
+            if (now - lastUi > 90) { lastUi = now; onProgress?.invoke() ?: changed() }
             invalidate(); postDelayed(this, 16)
         }
     }
     init { contentDescription = context.getString(R.string.farm_field_steer); isFocusable = true }
     fun stop() { finger = null; removeCallbacks(drive) }
     fun resetMotion() { stop(); blocked = false; invalidate() }
+    /** Lets go of every layer and of the vehicles; all of it is rebuilt on the next visit. */
+    fun release() {
+        if (bgBitmap == null && cropBitmap == null && maskBitmap == null && atlasBitmap == null) return
+        bgBitmap = null; bgW = -1; cropBitmap = null; cropW = -1; maskBitmap = null; maskPixels = IntArray(0)
+        maskStrokes = -1; cropStrokes = -1; atlasBitmap = null
+        sprites.trim()
+    }
     override fun onDetachedFromWindow() { stop(); super.onDetachedFromWindow() }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
@@ -94,8 +114,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
             // Match the main farm's pixel rocks; seed from field coordinates, not screen size.
             is Obstacle.Trunk -> {
                 val d = o.r * cell * 2.6f
-                scenery.rock(c, RectF(ox - d / 2, oy - d / 2, ox + d / 2, oy + d / 2),
-                    o.cx.toBits() xor (o.cy.toBits() * 31))
+                spriteRect.set(ox - d / 2, oy - d / 2, ox + d / 2, oy + d / 2)
+                scenery.rock(c, spriteRect, o.cx.toBits() xor (o.cy.toBits() * 31))
             }
             // The bush tile is round, so a long hedge is a short row of bushes rather than one stretched sprite.
             is Obstacle.Hedge -> {
@@ -107,8 +127,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                     val t = (k + .5f) / count - .5f
                     val bx = if (horizontal) ox + t * length else ox
                     val by = if (horizontal) oy else oy + t * length
-                    scenery.bush(c, RectF(bx - bush / 2, by - bush / 2, bx + bush / 2, by + bush / 2), 0f,
-                        (o.cx.toBits() xor o.cy.toBits()) + k * 31)
+                    spriteRect.set(bx - bush / 2, by - bush / 2, bx + bush / 2, by + bush / 2)
+                    scenery.bush(c, spriteRect, 0f, (o.cx.toBits() xor o.cy.toBits()) + k * 31)
                 }
             }
         }
@@ -122,9 +142,12 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private fun maskBitmap(f: LargeField): Bitmap {
         val w = f.maskCols; val h = f.maskRows
         var bmp = maskBitmap
+        if (bmp != null && bmp.width == w && bmp.height == h && maskField == f.index && maskPhase == f.phase &&
+            maskStrokes == f.strokes && maskPainted === f.painted && maskEligible === f.eligible) return bmp
         if (bmp == null || bmp.width != w || bmp.height != h) {
             bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888); maskBitmap = bmp; maskPixels = IntArray(w * h)
         }
+        maskField = f.index; maskPhase = f.phase; maskStrokes = f.strokes; maskPainted = f.painted; maskEligible = f.eligible
         val unploughed = Color.argb(80, 45, 60, 30); val worked = Color.rgb(126, 91, 64); val harvested = Color.rgb(172, 140, 82)
         for (i in 0 until w * h) {
             maskPixels[i] = if (!f.eligible[i]) Color.TRANSPARENT else {
@@ -177,7 +200,12 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
         val w = land.width().toInt().coerceAtLeast(1); val h = land.height().toInt().coerceAtLeast(1)
         val now = android.os.SystemClock.uptimeMillis()
         var bmp = cropBitmap
-        if (bmp == null || cropW != w || cropH != h || cropPhase != f.phase || now - lastCropBuild > 150) {
+        val growthStep = FarmPlantArt.growthStep(f.growthProgress(System.currentTimeMillis()))
+        // Only what changes the picture: a new stroke (at most every 150 ms while driving), another
+        // phase, pass or field, or the wheat reaching its next snapshot of growth.
+        val stale = cropField != f.index || cropPainted !== f.painted || cropEligible !== f.eligible ||
+            cropGrowth != growthStep || (cropStrokes != f.strokes && now - lastCropBuild > 150)
+        if (bmp == null || cropW != w || cropH != h || cropPhase != f.phase || stale) {
             if (bmp == null || cropW != w || cropH != h) {
                 bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888); cropBitmap = bmp; cropW = w; cropH = h
             } else bmp.eraseColor(Color.TRANSPARENT)
@@ -215,6 +243,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                 }
             }
             cropPhase = f.phase; lastCropBuild = now
+            cropField = f.index; cropStrokes = f.strokes; cropGrowth = growthStep
+            cropPainted = f.painted; cropEligible = f.eligible
         }
         return bmp
     }
@@ -233,7 +263,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
             val src = sources[if (f.phase == 3) 2 else f.phase]
             val h = cell * 1.15f; val w = h * src.width() / src.height()
             c.save(); c.rotate(angle, x, y)
-            c.drawBitmap(atlas, src, RectF(x - w / 2, y - h / 2, x + w / 2, y + h / 2), paint.apply { color = Color.WHITE; isFilterBitmap = true })
+            spriteRect.set(x - w / 2, y - h / 2, x + w / 2, y + h / 2)
+            c.drawBitmap(atlas, src, spriteRect, paint.apply { color = Color.WHITE; isFilterBitmap = true })
             c.restore()
             if (finger != null) postInvalidateOnAnimation()
         }
