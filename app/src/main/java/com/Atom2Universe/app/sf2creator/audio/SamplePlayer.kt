@@ -12,15 +12,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Advanced sample player for previewing recorded samples at different pitches.
+ * Sample player for previewing a recorded sample at its own pitch.
  *
  * Features:
- * - Two pitch shifting algorithms: WSOLA (fast) and Phase Vocoder (quality)
  * - Full audio processing pipeline: noise gate, normalization, trim, fades, loop detection
- * - Caching of processed samples for faster playback
+ * - The cleaned-up playback buffer is computed once and reused
  */
 class SamplePlayer {
 
@@ -30,16 +28,7 @@ class SamplePlayer {
         private const val MAX_VOICES = 4  // Polyphony: max simultaneous notes
     }
 
-    /**
-     * Pitch shifting algorithm selection.
-     */
-    enum class PitchShiftAlgorithm {
-        WSOLA,         // Fast, good for small shifts (< 6 semitones)
-        PHASE_VOCODER, // Higher quality, better for large shifts
-        HYBRID         // Auto-select best algorithm based on interval size
-    }
-
-    // Fade applied after pitch shifting to eliminate clicks
+    // Fade applied to the playback buffer to eliminate clicks
     // Increased values for smoother transitions on short/loud samples
     private val postPitchFadeInMs = 8
     private val postPitchFadeOutMs = 25
@@ -129,38 +118,15 @@ class SamplePlayer {
     private val silenceChunk = ShortArray(4096)
 
     // Audio processors
-    private val pitchShifterWSOLA = PitchShifter(SAMPLE_RATE)
-    private val pitchShifterPV = PitchShifterPV(SAMPLE_RATE)
     private val audioProcessor = AudioProcessor(SAMPLE_RATE)
     private val deClicker = DeClicker(SAMPLE_RATE)
-    private val normalizer = Normalizer()
-    private val envelopeGenerator = EnvelopeGenerator(SAMPLE_RATE)
 
     // Settings
-    private var algorithm = PitchShiftAlgorithm.HYBRID  // Default to hybrid for best quality
     private var processingOptions = AudioProcessor.ProcessingOptions()
 
-    // Cache for pitch-shifted versions (thread-safe)
-    private val pitchCache = ConcurrentHashMap<Int, ShortArray>()
-    private val computingNotes = ConcurrentHashMap.newKeySet<Int>() // Notes currently being computed
-    private var cacheEnabled = true
-
-    /**
-     * Set the pitch shifting algorithm.
-     */
-    @Suppress("unused")
-    fun setAlgorithm(algo: PitchShiftAlgorithm) {
-        if (algorithm != algo) {
-            algorithm = algo
-            pitchCache.clear() // Clear cache when algorithm changes
-        }
-    }
-
-    /**
-     * Get the current algorithm.
-     */
-    @Suppress("unused")
-    fun getAlgorithm(): PitchShiftAlgorithm = algorithm
+    // Cleaned-up playback buffer, computed on first play (null when the sample changes)
+    @Volatile
+    private var playbackCache: ShortArray? = null
 
     /**
      * Set processing options.
@@ -186,7 +152,7 @@ class SamplePlayer {
         rawSamples?.let { samples ->
             processingOptions = audioProcessor.analyzeAndSuggest(samples)
             preprocess(samples)
-            pitchCache.clear()
+            playbackCache = null
         }
     }
 
@@ -207,7 +173,7 @@ class SamplePlayer {
         )
         rawSamples?.let {
             preprocess(it)
-            pitchCache.clear()
+            playbackCache = null
         }
     }
 
@@ -232,17 +198,8 @@ class SamplePlayer {
         )
         rawSamples?.let {
             preprocess(it)
-            pitchCache.clear()
+            playbackCache = null
         }
-    }
-
-    /**
-     * Enable or disable pitch cache.
-     */
-    @Suppress("unused")
-    fun setCacheEnabled(enabled: Boolean) {
-        cacheEnabled = enabled
-        if (!enabled) pitchCache.clear()
     }
 
     /**
@@ -269,7 +226,7 @@ class SamplePlayer {
      */
     fun loadSample(samples: ShortArray) {
         rawSamples = samples.copyOf()
-        pitchCache.clear()
+        playbackCache = null
         preprocess(samples)
     }
 
@@ -297,7 +254,7 @@ class SamplePlayer {
     fun setRootNote(note: Int) {
         if (rootNote != note) {
             rootNote = note.coerceIn(0, 127)
-            pitchCache.clear() // Clear cache when root note changes
+            playbackCache = null
         }
     }
 
@@ -309,24 +266,9 @@ class SamplePlayer {
 
     /**
      * Play the sample at its original pitch.
+     * The cleaned-up buffer (DC offset, soft clipping, anti-click fades) is computed once.
      */
     fun play() {
-        playSampleAtNote(rootNote)
-    }
-
-    /**
-     * Play the sample with an ADSR envelope applied for preview.
-     * This gives an approximation of how the sound will behave with the given envelope.
-     */
-    @Suppress("unused")
-    fun playWithEnvelope(adsrSettings: EnvelopeGenerator.ADSRSettings) {
-        playWithEnvelopeAtNote(rootNote, adsrSettings)
-    }
-
-    /**
-     * Play the sample at a specific note with ADSR envelope applied.
-     */
-    fun playWithEnvelopeAtNote(targetNote: Int, adsrSettings: EnvelopeGenerator.ADSRSettings) {
         val samples = processedSamples ?: rawSamples
         if (samples == null || samples.isEmpty()) {
             Log.w(TAG, "No sample loaded")
@@ -336,108 +278,13 @@ class SamplePlayer {
         // Don't stop - polyphony handles multiple voices
         playbackJob = scope.launch {
             try {
-                val semitones = (targetNote - rootNote).toFloat()
-
-                // Get pitch-shifted samples (use cache if available)
-                var shiftedSamples = if (cacheEnabled && pitchCache.containsKey(targetNote)) {
-                    pitchCache[targetNote]!!.copyOf()
-                } else {
-                    var shifted = when {
-                        semitones == 0f -> samples.copyOf()
-                        else -> selectAndApplyPitchShift(samples, semitones)
-                    }
-
-                    // Always apply cleanup (even for original pitch)
-                    shifted = deClicker.removeDCOffset(shifted)
-                    shifted = deClicker.applySoftClipping(shifted, threshold = 0.95f)
-
-                    shifted
+                val data = playbackCache ?: run {
+                    var cleaned = deClicker.removeDCOffset(samples.copyOf())
+                    cleaned = deClicker.applySoftClipping(cleaned, threshold = 0.95f)
+                    applyAntiClickFades(cleaned).also { playbackCache = it }
                 }
-
-                // Apply ADSR envelope
-                Log.d(TAG, "Applying ADSR: attack=${adsrSettings.attackMs}ms, decay=${adsrSettings.decayMs}ms, sustain=${adsrSettings.sustainLevel}, release=${adsrSettings.releaseMs}ms")
-                Log.d(TAG, "Sample length before envelope: ${shiftedSamples.size} samples (${shiftedSamples.size * 1000 / SAMPLE_RATE}ms)")
-
-                shiftedSamples = envelopeGenerator.applyEnvelope(shiftedSamples, adsrSettings)
-
-                Log.d(TAG, "Sample length after envelope: ${shiftedSamples.size} samples")
-
-                // Trim trailing zeros to avoid playing silence
-                shiftedSamples = trimTrailingZeros(shiftedSamples)
-                Log.d(TAG, "Sample length after trim: ${shiftedSamples.size} samples (${shiftedSamples.size * 1000 / SAMPLE_RATE}ms)")
-
-                // Ensure zero crossings at start/end to prevent clicks
-                shiftedSamples = ensureZeroCrossings(shiftedSamples)
-
-                // Play the result with polyphony
                 withContext(Dispatchers.Main) {
-                    playAudio(shiftedSamples, targetNote)
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error playing sample with envelope", e)
-            }
-        }
-    }
-
-    /**
-     * Play the sample transposed to the target MIDI note.
-     * Uses the selected pitch shifting algorithm to maintain original duration.
-     */
-    fun playSampleAtNote(targetNote: Int) {
-        val samples = processedSamples ?: rawSamples
-        if (samples == null || samples.isEmpty()) {
-            Log.w(TAG, "No sample loaded")
-            return
-        }
-
-        // Don't stop - polyphony handles multiple voices
-        playbackJob = scope.launch {
-            try {
-                val semitones = (targetNote - rootNote).toFloat()
-
-                // Check cache first
-                val pitchShiftedData = if (cacheEnabled && pitchCache.containsKey(targetNote)) {
-                    Log.d(TAG, "Using cached pitch shift for note $targetNote")
-                    pitchCache[targetNote]!!
-                } else {
-                    // Wait if this note is currently being computed by precompute
-                    var waitAttempts = 0
-                    while (computingNotes.contains(targetNote) && waitAttempts < 50) {
-                        kotlinx.coroutines.delay(50) // Wait 50ms
-                        waitAttempts++
-                    }
-
-                    // Check cache again after waiting
-                    if (pitchCache.containsKey(targetNote)) {
-                        Log.d(TAG, "Using cached pitch shift for note $targetNote (after wait)")
-                        pitchCache[targetNote]!!
-                    } else {
-                        // Perform pitch shifting using selected algorithm
-                        Log.d(TAG, "Computing pitch shift on-demand for note $targetNote")
-                        var shifted = when {
-                            semitones == 0f -> samples.copyOf()
-                            else -> selectAndApplyPitchShift(samples, semitones)
-                        }
-
-                        // Always apply cleanup (even for original pitch)
-                        shifted = deClicker.removeDCOffset(shifted)
-                        shifted = deClicker.applySoftClipping(shifted, threshold = 0.95f)
-
-                        // Apply fade after processing to eliminate edge clicks
-                        shifted = applyAntiClickFades(shifted)
-
-                        // Cache the result
-                        if (cacheEnabled) {
-                            pitchCache[targetNote] = shifted
-                        }
-
-                        shifted
-                    }
-                }
-
-                // Play the pitch-shifted audio with polyphony
-                withContext(Dispatchers.Main) {
-                    playAudio(pitchShiftedData, targetNote)
+                    playAudio(data, rootNote)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error playing sample", e)
@@ -484,192 +331,6 @@ class SamplePlayer {
         }
 
         return output
-    }
-
-    /**
-     * Trim trailing zeros/near-zeros from the end of samples.
-     * This avoids playing silence which can cause glitches on some devices.
-     * Adds a gentle fade out at the end to prevent abrupt cutoff.
-     */
-    private fun trimTrailingZeros(samples: ShortArray): ShortArray {
-        if (samples.isEmpty()) return samples
-
-        // Find the last non-zero sample (with threshold for near-zero)
-        val threshold = 50 // Small values considered as silence
-        var lastNonZero = samples.lastIndex
-
-        while (lastNonZero > 0 && kotlin.math.abs(samples[lastNonZero].toInt()) < threshold) {
-            lastNonZero--
-        }
-
-        // Keep a small buffer of samples after the last non-zero for smooth fade
-        val keepExtra = (SAMPLE_RATE * 0.02).toInt() // 20ms extra for fade
-        val endIndex = (lastNonZero + keepExtra).coerceAtMost(samples.lastIndex)
-
-        // Minimum length to avoid issues
-        val minLength = (SAMPLE_RATE * 0.05).toInt() // At least 50ms
-        if (endIndex < minLength) return samples
-
-        val trimmed = samples.copyOfRange(0, endIndex + 1)
-
-        // Apply a gentle fade out at the end (15ms)
-        val fadeOutSamples = (SAMPLE_RATE * 0.015).toInt().coerceAtMost(trimmed.size / 4)
-        val fadeStart = trimmed.size - fadeOutSamples
-
-        for (i in 0 until fadeOutSamples) {
-            val index = fadeStart + i
-            val progress = i.toFloat() / fadeOutSamples
-            // S-curve fade out
-            val gain = (1 + kotlin.math.cos(progress * kotlin.math.PI)) / 2
-            trimmed[index] = (trimmed[index] * gain).toInt().toShort()
-        }
-
-        // Force last few samples to zero
-        val zeroCount = minOf(8, trimmed.size)
-        for (i in 0 until zeroCount) {
-            trimmed[trimmed.lastIndex - i] = 0
-        }
-
-        return trimmed
-    }
-
-    /**
-     * Apply a gentle fade at the start only.
-     * The envelope handles the end, so we only need to prevent start clicks.
-     */
-    /**
-     * Ensure the sample starts and ends at zero crossings to prevent clicks.
-     * Zero crossing = where the waveform crosses through zero.
-     */
-    private fun ensureZeroCrossings(samples: ShortArray): ShortArray {
-        if (samples.size < 100) return samples
-
-        val output = samples.copyOf()
-        val searchWindow = (SAMPLE_RATE * 0.002).toInt() // 2ms search window
-
-        // Find zero crossing near start
-        var startZeroCrossing = 0
-        for (i in 0 until minOf(searchWindow, samples.size - 1)) {
-            val curr = samples[i].toInt()
-            val next = samples[i + 1].toInt()
-            // Zero crossing: sign change or exactly zero
-            if (curr == 0 || (curr > 0 && next <= 0) || (curr < 0 && next >= 0)) {
-                startZeroCrossing = i
-                break
-            }
-        }
-
-        // Fade in from start to zero crossing (very short fade)
-        if (startZeroCrossing > 0) {
-            for (i in 0 until startZeroCrossing) {
-                val progress = i.toFloat() / startZeroCrossing
-                output[i] = (output[i] * progress).toInt().toShort()
-            }
-        }
-
-        // Find zero crossing near end
-        var endZeroCrossing = samples.lastIndex
-        for (i in samples.lastIndex downTo maxOf(0, samples.lastIndex - searchWindow)) {
-            val curr = samples[i].toInt()
-            if (i > 0) {
-                val prev = samples[i - 1].toInt()
-                if (curr == 0 || (curr > 0 && prev <= 0) || (curr < 0 && prev >= 0)) {
-                    endZeroCrossing = i
-                    break
-                }
-            }
-        }
-
-        // Fade out from zero crossing to end (very short fade)
-        if (endZeroCrossing < samples.lastIndex) {
-            val fadeLength = samples.lastIndex - endZeroCrossing
-            for (i in endZeroCrossing..samples.lastIndex) {
-                val progress = 1f - ((i - endZeroCrossing).toFloat() / fadeLength)
-                output[i] = (output[i] * progress).toInt().toShort()
-            }
-        }
-
-        return output
-    }
-
-    /**
-     * Select and apply the best pitch shifting algorithm based on settings and interval.
-     *
-     * HYBRID mode strategy:
-     * - Small shifts (0-4 semitones): WSOLA (fast, stable, minimal artifacts)
-     * - Large shifts (5+ semitones): Phase Vocoder (better for preserving formants)
-     */
-    private fun selectAndApplyPitchShift(samples: ShortArray, semitones: Float): ShortArray {
-        val absSemitones = kotlin.math.abs(semitones)
-
-        return when (algorithm) {
-            PitchShiftAlgorithm.WSOLA -> {
-                Log.d(TAG, "Using WSOLA for $semitones semitones")
-                pitchShifterWSOLA.shiftPitch(samples, semitones)
-            }
-            PitchShiftAlgorithm.PHASE_VOCODER -> {
-                Log.d(TAG, "Using Phase Vocoder for $semitones semitones")
-                pitchShifterPV.shiftPitch(samples, semitones)
-            }
-            PitchShiftAlgorithm.HYBRID -> {
-                // Auto-select based on interval size
-                if (absSemitones <= 4f) {
-                    // Small intervals: WSOLA is more stable
-                    Log.d(TAG, "HYBRID: Using WSOLA for small shift ($semitones semitones)")
-                    pitchShifterWSOLA.shiftPitch(samples, semitones)
-                } else {
-                    // Larger intervals: Phase Vocoder handles better
-                    Log.d(TAG, "HYBRID: Using Phase Vocoder for large shift ($semitones semitones)")
-                    pitchShifterPV.shiftPitch(samples, semitones)
-                }
-            }
-        }
-    }
-
-    /**
-     * Precompute pitch-shifted versions for common notes.
-     * Call this after loading a sample to reduce latency during playback.
-     *
-     * @param notes List of MIDI notes to precompute (e.g., one octave around root)
-     */
-    @Suppress("unused")
-    suspend fun precomputePitchCache(notes: List<Int>) {
-        val samples = processedSamples ?: rawSamples ?: return
-
-        withContext(Dispatchers.Default) {
-            for (note in notes) {
-                // Skip if already cached or currently being computed
-                if (pitchCache.containsKey(note)) continue
-
-                // Try to claim this note for computation
-                if (!computingNotes.add(note)) {
-                    // Another thread is already computing this note
-                    continue
-                }
-
-                try {
-                    // Double-check cache after claiming (another thread might have just finished)
-                    if (pitchCache.containsKey(note)) continue
-
-                    val semitones = (note - rootNote).toFloat()
-                    var shifted = when {
-                        semitones == 0f -> samples.copyOf()
-                        else -> selectAndApplyPitchShift(samples, semitones)
-                    }
-
-                    // Always apply cleanup (even for original pitch)
-                    shifted = deClicker.removeDCOffset(shifted)
-                    shifted = deClicker.applySoftClipping(shifted, threshold = 0.95f)
-
-                    // Apply anti-click fades
-                    shifted = applyAntiClickFades(shifted)
-                    pitchCache[note] = shifted
-                    Log.d(TAG, "Precomputed pitch cache for note $note")
-                } finally {
-                    computingNotes.remove(note)
-                }
-            }
-        }
     }
 
     /**
@@ -768,7 +429,7 @@ class SamplePlayer {
 
         rawSamples = null
         processedSamples = null
-        pitchCache.clear()
+        playbackCache = null
     }
 
     /**
@@ -1097,45 +758,9 @@ class SamplePlayer {
     }
 
     /**
-     * Get sample info for display.
-     */
-    @Suppress("unused")
-    fun getSampleInfo(): SampleInfo? {
-        val raw = rawSamples ?: return null
-        val result = processedResult
-
-        return SampleInfo(
-            rawDurationMs = (raw.size * 1000 / SAMPLE_RATE),
-            processedDurationMs = result?.processedLengthMs ?: (raw.size * 1000 / SAMPLE_RATE),
-            peakDb = result?.peakDb ?: normalizer.measurePeakDb(raw),
-            rmsDb = result?.rmsDb ?: normalizer.measureRMSDb(raw),
-            rootNote = rootNote,
-            algorithm = algorithm,
-            hasLoop = result?.hasLoop ?: false,
-            loopStart = result?.loopStart ?: 0,
-            loopEnd = result?.loopEnd ?: 0,
-            loopQuality = result?.loopQuality ?: 0f,
-            processingInfo = result?.processingInfo ?: ""
-        )
-    }
-
-    /**
      * Get the full processing result (for SF2 export).
      */
     @Suppress("unused")
     fun getProcessingResult(): AudioProcessor.ProcessedResult? = processedResult
 
-    data class SampleInfo(
-        val rawDurationMs: Int,
-        val processedDurationMs: Int,
-        val peakDb: Float,
-        val rmsDb: Float,
-        val rootNote: Int,
-        val algorithm: PitchShiftAlgorithm,
-        val hasLoop: Boolean = false,
-        val loopStart: Int = 0,
-        val loopEnd: Int = 0,
-        val loopQuality: Float = 0f,
-        val processingInfo: String = ""
-    )
 }

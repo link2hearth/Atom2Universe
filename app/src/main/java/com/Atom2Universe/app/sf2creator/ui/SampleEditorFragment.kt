@@ -19,7 +19,6 @@ import com.Atom2Universe.app.sf2creator.audio.AudioProcessor
 import com.Atom2Universe.app.sf2creator.audio.DeClicker
 import com.Atom2Universe.app.sf2creator.audio.EnvelopeGenerator
 import com.Atom2Universe.app.sf2creator.audio.Normalizer
-import com.Atom2Universe.app.sf2creator.audio.SamplePlayer
 import com.Atom2Universe.app.sf2creator.audio.SampleRecorder
 import com.Atom2Universe.app.sf2creator.audio.SimpleSamplePlayer
 import com.google.android.material.button.MaterialButton
@@ -44,7 +43,6 @@ class SampleEditorFragment : Fragment() {
 
     private lateinit var waveformView: SampleWaveformView
     private lateinit var spectrumView: SpectrumView
-    private lateinit var samplePlayer: SamplePlayer
     private lateinit var simplePlayer: SimpleSamplePlayer  // Clean player for sustain/loop tests
     private lateinit var normalizer: Normalizer
 
@@ -109,7 +107,6 @@ class SampleEditorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize processors
-        samplePlayer = SamplePlayer()
         simplePlayer = SimpleSamplePlayer(sampleRate)  // Clean player for loop/sustain tests
         normalizer = Normalizer()
 
@@ -725,12 +722,10 @@ class SampleEditorFragment : Fragment() {
         // Nothing keeps playing in the background
         stopSustainTest()
         simplePlayer.stop()
-        samplePlayer.stop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        samplePlayer.release()
         simplePlayer.release()
     }
 

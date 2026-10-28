@@ -179,14 +179,6 @@ class Sf2ProjectRepository(private val context: Context) {
     suspend fun deleteProgram(programId: Long): Boolean = withContext(Dispatchers.IO) {
         val program = dao.getProgramById(programId) ?: return@withContext false
 
-        // Mark ALL chunks as modified BEFORE deleting (for hybrid export detection)
-        // Deleting a program removes its preset zones and potentially orphans instruments/samples
-        markChunksModified(program.projectId, listOf(
-            "phdr", "pbag", "pgen", "pmod",  // Preset chunks
-            "inst", "ibag", "igen", "imod",  // Instrument chunks
-            "smpl", "shdr"                   // Sample chunks
-        ))
-
         // Get all preset zones for this program BEFORE deletion
         val presetZones = dao.getPresetZonesForProgram(programId)
         val allPresets = dao.getPresetsForProject(program.projectId)
@@ -328,10 +320,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     suspend fun deleteInstrument(instrumentId: Long): Boolean = withContext(Dispatchers.IO) {
         val instrument = dao.getInstrumentById(instrumentId) ?: return@withContext false
-
-        // Mark chunks as modified BEFORE deleting (for hybrid export detection)
-        // Deleting an instrument affects both instrument and sample chunks
-        markChunksModified(instrument.projectId, listOf("smpl", "shdr", "inst", "ibag", "igen", "imod"))
 
         // Delete audio files for all samples in this instrument
         val samples = dao.getSamplesForInstrument(instrumentId)
@@ -823,24 +811,8 @@ class Sf2ProjectRepository(private val context: Context) {
 
         // Check if the instrument is still referenced by other preset zones
         val instrumentId = preset.instrumentId
-        val otherPresetsUsingInstrument = presets.filter {
+        val instrumentWillBeOrphaned = presets.none {
             it.id != presetId && it.instrumentId == instrumentId
-        }
-
-        // Mark chunks as modified BEFORE deleting (for hybrid export detection)
-        // If the instrument is no longer used, its samples won't be exported,
-        // so we need to mark smpl/shdr as modified to force a rebuild
-        val instrumentWillBeOrphaned = otherPresetsUsingInstrument.isEmpty()
-        if (instrumentWillBeOrphaned) {
-            // Instrument will be deleted - mark all chunks as modified
-            markChunksModified(preset.projectId, listOf(
-                "phdr", "pbag", "pgen", "pmod",  // Preset chunks
-                "inst", "ibag", "igen", "imod",  // Instrument chunks
-                "smpl", "shdr"                   // Sample chunks
-            ))
-        } else {
-            // Instrument still used by other presets - only preset chunks affected
-            markChunksModified(preset.projectId, listOf("phdr", "pbag", "pgen", "pmod"))
         }
 
         // Delete preset zone first
@@ -1378,12 +1350,8 @@ class Sf2ProjectRepository(private val context: Context) {
     suspend fun deleteSample(sampleId: Long) {
         val sample = dao.getSampleById(sampleId)
         if (sample != null) {
-            // Get instrument BEFORE deleting (for hybrid export detection and timestamp update)
+            // Get instrument BEFORE deleting (for timestamp update)
             val instrument = dao.getInstrumentById(sample.instrumentId)
-            // Mark chunks as modified for hybrid export detection
-            instrument?.let {
-                markChunksModified(it.projectId, listOf("smpl", "shdr", "igen", "ibag"))
-            }
             // Delete audio file
             File(sample.audioFilePath).delete()
             // Delete from database
@@ -1479,14 +1447,6 @@ class Sf2ProjectRepository(private val context: Context) {
         dao.deleteSourceMetadata(projectId)
     }
 
-    /**
-     * Update the chunk registry for a project.
-     * Called when modifications are made to mark affected chunks.
-     */
-    suspend fun updateChunkRegistry(projectId: Long, registry: String) {
-        dao.updateChunkRegistry(projectId, registry)
-    }
-
     // ==================== Modification Tracking ====================
 
     /**
@@ -1496,18 +1456,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     suspend fun markSampleModified(sampleId: Long, flags: Int) {
         dao.markSampleModified(sampleId, flags)
-        // Also update the project's chunk registry to mark affected chunks
-        val sample = dao.getSampleById(sampleId) ?: return
-        val instrument = dao.getInstrumentById(sample.instrumentId) ?: return
-
-        // Only mark smpl as modified if audio data changed, not just parameters
-        val chunksToMark = if ((flags and ModificationFlags.MOD_FLAG_AUDIO) != 0) {
-            listOf("smpl", "shdr", "igen", "ibag")
-        } else {
-            // Parameter-only changes don't affect smpl chunk
-            listOf("shdr", "igen", "ibag")
-        }
-        markChunksModified(instrument.projectId, chunksToMark)
     }
 
     /**
@@ -1515,8 +1463,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     suspend fun markPresetModified(presetId: Long, flags: Int) {
         dao.markPresetModified(presetId, flags)
-        val preset = dao.getPresetById(presetId) ?: return
-        markChunksModified(preset.projectId, listOf("pgen", "pbag"))
     }
 
     /**
@@ -1524,29 +1470,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     suspend fun markInstrumentModified(instrumentId: Long, flags: Int) {
         dao.markInstrumentModified(instrumentId, flags)
-        val instrument = dao.getInstrumentById(instrumentId) ?: return
-        markChunksModified(instrument.projectId, listOf("inst", "igen", "ibag", "imod"))
-    }
-
-    /**
-     * Mark specific chunks as modified in the chunk registry.
-     * This affects which chunks can use passthrough at export time.
-     */
-    private suspend fun markChunksModified(projectId: Long, chunkIds: List<String>) {
-        val metadata = dao.getSourceMetadata(projectId) ?: return
-
-        try {
-            val registry = org.json.JSONObject(metadata.chunkRegistry)
-            for (chunkId in chunkIds) {
-                if (registry.has(chunkId)) {
-                    val chunk = registry.getJSONObject(chunkId)
-                    chunk.put("isModified", true)
-                }
-            }
-            dao.updateChunkRegistry(projectId, registry.toString())
-        } catch (e: Exception) {
-            // Ignore JSON errors
-        }
     }
 
     /**

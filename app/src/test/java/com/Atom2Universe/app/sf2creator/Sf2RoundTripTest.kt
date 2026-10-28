@@ -197,15 +197,15 @@ class Sf2RoundTripTest {
     }
 
     @Test
-    fun databaseFromVersion15KeepsItsProjects() {
+    fun databaseFromVersion16KeepsItsProjects() {
         context.deleteDatabase("sf2_projects.db")
         val file = context.getDatabasePath("sf2_projects.db").apply { parentFile?.mkdirs() }
         android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(file, null).use { db ->
-            javaClass.getResource("/sf2creator/schema_v15.sql")!!.readText().lines()
+            javaClass.getResource("/sf2creator/schema_v16.sql")!!.readText().lines()
                 .filter { it.isNotBlank() }
                 .forEach { db.execSQL(it) }
             db.execSQL("INSERT INTO sf2_projects (name, isLegacyProject, createdAt, modifiedAt) VALUES ('Ancien projet', 0, 0, 0)")
-            db.version = 15
+            db.version = 16
         }
         val projects = runBlocking { Sf2ProjectRepository(context).getAllProjects() }
         assertEquals(listOf("Ancien projet"), projects.map { it.name })

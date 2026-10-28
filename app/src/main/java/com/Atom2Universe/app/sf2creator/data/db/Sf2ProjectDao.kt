@@ -325,13 +325,6 @@ interface Sf2ProjectDao {
     suspend fun getSourceMetadata(projectId: Long): Sf2SourceMetadataEntity?
 
     /**
-     * Update the chunk registry JSON for a project.
-     * Called when entities are modified to mark affected chunks.
-     */
-    @Query("UPDATE sf2_source_metadata SET chunkRegistry = :registry WHERE projectId = :projectId")
-    suspend fun updateChunkRegistry(projectId: Long, registry: String)
-
-    /**
      * Update the sample index mapping JSON for a project.
      * Called when sample mappings need to be updated.
      */

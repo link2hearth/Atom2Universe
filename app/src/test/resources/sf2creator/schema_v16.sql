@@ -23,3 +23,13 @@ CREATE TABLE IF NOT EXISTS `sf2_index` (`id` INTEGER PRIMARY KEY AUTOINCREMENT N
 CREATE INDEX IF NOT EXISTS `index_sf2_index_projectId` ON `sf2_index` (`projectId`)
 CREATE INDEX IF NOT EXISTS `index_sf2_index_elementType` ON `sf2_index` (`elementType`)
 CREATE INDEX IF NOT EXISTS `index_sf2_index_originalIndex` ON `sf2_index` (`originalIndex`)
+ALTER TABLE sf2_samples ADD COLUMN importedGenerators TEXT DEFAULT NULL
+ALTER TABLE sf2_samples ADD COLUMN importBaseline TEXT DEFAULT NULL
+ALTER TABLE sf2_instruments ADD COLUMN importedGenerators TEXT DEFAULT NULL
+ALTER TABLE sf2_instruments ADD COLUMN importBaseline TEXT DEFAULT NULL
+ALTER TABLE sf2_presets ADD COLUMN importedGenerators TEXT DEFAULT NULL
+ALTER TABLE sf2_presets ADD COLUMN importBaseline TEXT DEFAULT NULL
+ALTER TABLE sf2_programs ADD COLUMN importedGenerators TEXT DEFAULT NULL
+ALTER TABLE sf2_programs ADD COLUMN importBaseline TEXT DEFAULT NULL
+ALTER TABLE sf2_source_metadata ADD COLUMN importFingerprint TEXT DEFAULT NULL
+ALTER TABLE sf2_source_metadata ADD COLUMN importProjectName TEXT DEFAULT NULL
