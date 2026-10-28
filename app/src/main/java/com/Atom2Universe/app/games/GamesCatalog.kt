@@ -179,6 +179,14 @@ object GamesCatalog {
             activityClass = com.Atom2Universe.app.games.glutton.GluttonActivity::class.java
         ),
         HubTile(
+            id = "papattes",
+            titleRes = R.string.papattes_title,
+            descriptionRes = R.string.papattes_description,
+            iconRes = android.R.drawable.btn_star_big_on,
+            defaultColorRes = R.color.game_tile_orbite,
+            activityClass = com.Atom2Universe.app.games.papattes.PapattesActivity::class.java
+        ),
+        HubTile(
             id = "mochi",
             titleRes = R.string.mochi_title,
             descriptionRes = R.string.mochi_description,
@@ -450,7 +458,7 @@ object GamesCatalog {
     val bigGameIds: Set<String> = setOf(
         "clicker", "billiards", "golf", "trebuchet", "infernale", "toybox_racers",
         "caves", "farm", "roguelike", "survivor", "starswar", "nuclea", "orbite", "reflex", "particules",
-        "motocross", "cosmorun", "hexrunner", "wavesurf", "flappycat", "hotpotato", "mochi", "glutton",
+        "motocross", "cosmorun", "hexrunner", "wavesurf", "flappycat", "hotpotato", "mochi", "glutton", "papattes",
         "roulette", "escape_labyrinth"
     )
 

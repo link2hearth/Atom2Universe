@@ -15,6 +15,13 @@ import com.Atom2Universe.app.games.kit.KitGames
  */
 object NeutrinoRewards {
 
+    /** Grandes papattes : une étape finie la première fois paie 2 + étape ÷ 2, puis 1 à chaque nouvelle traversée. */
+    const val PAPATTES_FIRST_BASE = 2
+    const val PAPATTES_FIRST_DIVISOR = 2
+    const val PAPATTES_REPLAY = 1
+    fun papattes(stage: Int, firstTime: Boolean) =
+        if (firstTime) PAPATTES_FIRST_BASE + stage.coerceAtLeast(0) / PAPATTES_FIRST_DIVISOR else PAPATTES_REPLAY
+
     const val MOCHI_POINTS_PER_NEUTRINO = 100
     fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO
 
@@ -304,6 +311,8 @@ object NeutrinoRewards {
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.mochi_title, context.getString(R.string.mochi_reward_rate, MOCHI_POINTS_PER_NEUTRINO), R.string.neutrino_info_note_score),
             Entry(R.string.glutton_title, context.getString(R.string.glutton_reward_rate), R.string.neutrino_info_note_score),
+            Entry(R.string.papattes_title, context.getString(R.string.papattes_reward_rate, PAPATTES_FIRST_BASE,
+                PAPATTES_FIRST_DIVISOR, PAPATTES_REPLAY), R.string.neutrino_info_note_level),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance),

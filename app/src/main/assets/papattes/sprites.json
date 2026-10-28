@@ -1,0 +1,964 @@
+{
+ "head_cat": {
+  "w": 320,
+  "h": 273,
+  "anchors": {
+   "neck": [
+    153,
+    264
+   ]
+  }
+ },
+ "head_frog": {
+  "w": 320,
+  "h": 259,
+  "anchors": {
+   "neck": [
+    159,
+    250
+   ]
+  }
+ },
+ "head_owl": {
+  "w": 320,
+  "h": 298,
+  "anchors": {
+   "neck": [
+    161,
+    287
+   ]
+  }
+ },
+ "head_axolotl": {
+  "w": 320,
+  "h": 240,
+  "anchors": {
+   "neck": [
+    154,
+    213
+   ]
+  }
+ },
+ "head_hamster": {
+  "w": 320,
+  "h": 239,
+  "anchors": {
+   "neck": [
+    144,
+    231
+   ]
+  }
+ },
+ "head_capybara": {
+  "w": 320,
+  "h": 225,
+  "anchors": {
+   "neck": [
+    156,
+    217
+   ]
+  }
+ },
+ "head_snail": {
+  "w": 320,
+  "h": 310,
+  "anchors": {
+   "neck": [
+    164,
+    299
+   ]
+  }
+ },
+ "head_dragon": {
+  "w": 320,
+  "h": 243,
+  "anchors": {
+   "neck": [
+    158,
+    235
+   ]
+  }
+ },
+ "head_panda": {
+  "w": 320,
+  "h": 269,
+  "anchors": {
+   "neck": [
+    152,
+    260
+   ]
+  }
+ },
+ "body_pompom": {
+  "w": 320,
+  "h": 298,
+  "anchors": {
+   "neck": [
+    160,
+    12
+   ],
+   "hip": [
+    160,
+    288
+   ]
+  }
+ },
+ "body_bee": {
+  "w": 311,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    152,
+    31
+   ],
+   "hip": [
+    152,
+    309
+   ]
+  }
+ },
+ "body_shell": {
+  "w": 320,
+  "h": 264,
+  "anchors": {
+   "neck": [
+    159,
+    8
+   ],
+   "hip": [
+    159,
+    255
+   ]
+  }
+ },
+ "body_wool": {
+  "w": 320,
+  "h": 296,
+  "anchors": {
+   "neck": [
+    160,
+    9
+   ],
+   "hip": [
+    160,
+    285
+   ]
+  }
+ },
+ "body_buoy": {
+  "w": 320,
+  "h": 215,
+  "anchors": {
+   "neck": [
+    160,
+    6
+   ],
+   "hip": [
+    160,
+    208
+   ]
+  }
+ },
+ "body_pumpkin": {
+  "w": 320,
+  "h": 314,
+  "anchors": {
+   "neck": [
+    160,
+    9
+   ],
+   "hip": [
+    160,
+    304
+   ]
+  }
+ },
+ "body_dandelion": {
+  "w": 320,
+  "h": 311,
+  "anchors": {
+   "neck": [
+    160,
+    9
+   ],
+   "hip": [
+    160,
+    301
+   ]
+  }
+ },
+ "body_jelly": {
+  "w": 320,
+  "h": 299,
+  "anchors": {
+   "neck": [
+    160,
+    9
+   ],
+   "hip": [
+    160,
+    287
+   ]
+  }
+ },
+ "body_walnut": {
+  "w": 320,
+  "h": 303,
+  "anchors": {
+   "neck": [
+    162,
+    9
+   ],
+   "hip": [
+    162,
+    293
+   ]
+  }
+ },
+ "thigh_stilts": {
+  "w": 114,
+  "h": 448,
+  "anchors": {
+   "top": [
+    55,
+    15
+   ],
+   "bottom": [
+    55,
+    432
+   ]
+  }
+ },
+ "thigh_flamingo": {
+  "w": 105,
+  "h": 448,
+  "anchors": {
+   "top": [
+    51,
+    15
+   ],
+   "bottom": [
+    63,
+    432
+   ]
+  }
+ },
+ "thigh_dachshund": {
+  "w": 169,
+  "h": 448,
+  "anchors": {
+   "top": [
+    82,
+    15
+   ],
+   "bottom": [
+    80,
+    432
+   ]
+  }
+ },
+ "thigh_frog": {
+  "w": 155,
+  "h": 448,
+  "anchors": {
+   "top": [
+    69,
+    15
+   ],
+   "bottom": [
+    77,
+    432
+   ]
+  }
+ },
+ "thigh_gecko": {
+  "w": 144,
+  "h": 448,
+  "anchors": {
+   "top": [
+    65,
+    15
+   ],
+   "bottom": [
+    66,
+    432
+   ]
+  }
+ },
+ "thigh_ostrich": {
+  "w": 164,
+  "h": 448,
+  "anchors": {
+   "top": [
+    79,
+    15
+   ],
+   "bottom": [
+    82,
+    432
+   ]
+  }
+ },
+ "shin_stilts": {
+  "w": 146,
+  "h": 448,
+  "anchors": {
+   "top": [
+    44,
+    14
+   ],
+   "bottom": [
+    80,
+    432
+   ],
+   "ankle": [
+    47,
+    432
+   ]
+  }
+ },
+ "shin_flamingo": {
+  "w": 165,
+  "h": 448,
+  "anchors": {
+   "top": [
+    33,
+    15
+   ],
+   "bottom": [
+    94,
+    431
+   ],
+   "ankle": [
+    27,
+    431
+   ]
+  }
+ },
+ "shin_dachshund": {
+  "w": 171,
+  "h": 448,
+  "anchors": {
+   "top": [
+    66,
+    15
+   ],
+   "bottom": [
+    100,
+    430
+   ],
+   "ankle": [
+    77,
+    430
+   ]
+  }
+ },
+ "shin_frog": {
+  "w": 214,
+  "h": 448,
+  "anchors": {
+   "top": [
+    48,
+    15
+   ],
+   "bottom": [
+    129,
+    432
+   ],
+   "ankle": [
+    48,
+    432
+   ]
+  }
+ },
+ "shin_gecko": {
+  "w": 177,
+  "h": 448,
+  "anchors": {
+   "top": [
+    46,
+    15
+   ],
+   "bottom": [
+    85,
+    431
+   ],
+   "ankle": [
+    50,
+    431
+   ]
+  }
+ },
+ "shin_ostrich": {
+  "w": 165,
+  "h": 448,
+  "anchors": {
+   "top": [
+    51,
+    15
+   ],
+   "bottom": [
+    113,
+    430
+   ],
+   "ankle": [
+    42,
+    430
+   ]
+  }
+ },
+ "head_fox": {
+  "w": 320,
+  "h": 303,
+  "anchors": {
+   "neck": [
+    145,
+    293
+   ]
+  }
+ },
+ "head_rabbit": {
+  "w": 303,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    147,
+    309
+   ]
+  }
+ },
+ "head_penguin": {
+  "w": 320,
+  "h": 263,
+  "anchors": {
+   "neck": [
+    143,
+    254
+   ]
+  }
+ },
+ "head_koala": {
+  "w": 320,
+  "h": 232,
+  "anchors": {
+   "neck": [
+    162,
+    222
+   ]
+  }
+ },
+ "head_hedgehog": {
+  "w": 320,
+  "h": 233,
+  "anchors": {
+   "neck": [
+    154,
+    225
+   ]
+  }
+ },
+ "head_raccoon": {
+  "w": 320,
+  "h": 253,
+  "anchors": {
+   "neck": [
+    156,
+    244
+   ]
+  }
+ },
+ "head_sloth": {
+  "w": 320,
+  "h": 278,
+  "anchors": {
+   "neck": [
+    161,
+    269
+   ]
+  }
+ },
+ "head_otter": {
+  "w": 320,
+  "h": 225,
+  "anchors": {
+   "neck": [
+    146,
+    217
+   ]
+  }
+ },
+ "head_redpanda": {
+  "w": 320,
+  "h": 260,
+  "anchors": {
+   "neck": [
+    157,
+    251
+   ]
+  }
+ },
+ "head_mouse": {
+  "w": 320,
+  "h": 249,
+  "anchors": {
+   "neck": [
+    138,
+    241
+   ]
+  }
+ },
+ "head_pig": {
+  "w": 320,
+  "h": 247,
+  "anchors": {
+   "neck": [
+    165,
+    239
+   ]
+  }
+ },
+ "head_duckling": {
+  "w": 320,
+  "h": 271,
+  "anchors": {
+   "neck": [
+    146,
+    261
+   ]
+  }
+ },
+ "head_bat": {
+  "w": 320,
+  "h": 311,
+  "anchors": {
+   "neck": [
+    154,
+    298
+   ]
+  }
+ },
+ "head_lion": {
+  "w": 320,
+  "h": 302,
+  "anchors": {
+   "neck": [
+    161,
+    291
+   ]
+  }
+ },
+ "head_monkey": {
+  "w": 320,
+  "h": 271,
+  "anchors": {
+   "neck": [
+    160,
+    262
+   ]
+  }
+ },
+ "head_unicorn": {
+  "w": 320,
+  "h": 286,
+  "anchors": {
+   "neck": [
+    162,
+    262
+   ]
+  }
+ },
+ "head_shiba": {
+  "w": 320,
+  "h": 283,
+  "anchors": {
+   "neck": [
+    155,
+    274
+   ]
+  }
+ },
+ "head_sheep": {
+  "w": 320,
+  "h": 281,
+  "anchors": {
+   "neck": [
+    156,
+    272
+   ]
+  }
+ },
+ "body_cloud": {
+  "w": 320,
+  "h": 295,
+  "anchors": {
+   "neck": [
+    161,
+    11
+   ],
+   "hip": [
+    161,
+    285
+   ]
+  }
+ },
+ "body_beachball": {
+  "w": 317,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    159,
+    10
+   ],
+   "hip": [
+    159,
+    309
+   ]
+  }
+ },
+ "body_boulder": {
+  "w": 320,
+  "h": 307,
+  "anchors": {
+   "neck": [
+    159,
+    9
+   ],
+   "hip": [
+    159,
+    297
+   ]
+  }
+ },
+ "body_cauldron": {
+  "w": 320,
+  "h": 279,
+  "anchors": {
+   "neck": [
+    160,
+    8
+   ],
+   "hip": [
+    160,
+    270
+   ]
+  }
+ },
+ "body_rubberball": {
+  "w": 320,
+  "h": 311,
+  "anchors": {
+   "neck": [
+    159,
+    9
+   ],
+   "hip": [
+    159,
+    301
+   ]
+  }
+ },
+ "body_marshmallow": {
+  "w": 320,
+  "h": 301,
+  "anchors": {
+   "neck": [
+    161,
+    9
+   ],
+   "hip": [
+    161,
+    291
+   ]
+  }
+ },
+ "body_strawberry": {
+  "w": 308,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    154,
+    22
+   ],
+   "hip": [
+    154,
+    309
+   ]
+  }
+ },
+ "body_cactus": {
+  "w": 307,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    153,
+    11
+   ],
+   "hip": [
+    153,
+    309
+   ]
+  }
+ },
+ "body_pineapple": {
+  "w": 281,
+  "h": 320,
+  "anchors": {
+   "neck": [
+    140,
+    12
+   ],
+   "hip": [
+    140,
+    309
+   ]
+  }
+ },
+ "thigh_spring": {
+  "w": 128,
+  "h": 448,
+  "anchors": {
+   "top": [
+    63,
+    15
+   ],
+   "bottom": [
+    65,
+    432
+   ]
+  }
+ },
+ "thigh_kangaroo": {
+  "w": 163,
+  "h": 448,
+  "anchors": {
+   "top": [
+    70,
+    16
+   ],
+   "bottom": [
+    74,
+    432
+   ]
+  }
+ },
+ "thigh_skates": {
+  "w": 125,
+  "h": 448,
+  "anchors": {
+   "top": [
+    59,
+    16
+   ],
+   "bottom": [
+    56,
+    432
+   ]
+  }
+ },
+ "thigh_rollers": {
+  "w": 133,
+  "h": 448,
+  "anchors": {
+   "top": [
+    65,
+    16
+   ],
+   "bottom": [
+    64,
+    432
+   ]
+  }
+ },
+ "shin_spring": {
+  "w": 142,
+  "h": 448,
+  "anchors": {
+   "top": [
+    51,
+    15
+   ],
+   "bottom": [
+    71,
+    432
+   ],
+   "ankle": [
+    58,
+    432
+   ]
+  }
+ },
+ "shin_kangaroo": {
+  "w": 272,
+  "h": 448,
+  "anchors": {
+   "top": [
+    65,
+    15
+   ],
+   "bottom": [
+    150,
+    431
+   ],
+   "ankle": [
+    62,
+    431
+   ]
+  }
+ },
+ "shin_skates": {
+  "w": 227,
+  "h": 448,
+  "anchors": {
+   "top": [
+    77,
+    15
+   ],
+   "bottom": [
+    112,
+    433
+   ],
+   "ankle": [
+    77,
+    433
+   ]
+  }
+ },
+ "shin_rollers": {
+  "w": 219,
+  "h": 448,
+  "anchors": {
+   "top": [
+    60,
+    15
+   ],
+   "bottom": [
+    96,
+    430
+   ],
+   "ankle": [
+    69,
+    430
+   ]
+  }
+ },
+ "prop_finish_flag": {
+  "w": 224,
+  "h": 256,
+  "anchors": {
+   "base": [
+    14,
+    247
+   ]
+  }
+ },
+ "prop_checkpoint_flag": {
+  "w": 167,
+  "h": 256,
+  "anchors": {
+   "base": [
+    15,
+    247
+   ]
+  }
+ },
+ "prop_stepping_stone": {
+  "w": 256,
+  "h": 91,
+  "anchors": {
+   "base": [
+    118,
+    87
+   ]
+  }
+ },
+ "prop_rock": {
+  "w": 256,
+  "h": 174,
+  "anchors": {
+   "base": [
+    133,
+    167
+   ]
+  }
+ },
+ "prop_bush": {
+  "w": 256,
+  "h": 222,
+  "anchors": {
+   "base": [
+    126,
+    213
+   ]
+  }
+ },
+ "prop_mushroom": {
+  "w": 255,
+  "h": 256,
+  "anchors": {
+   "base": [
+    127,
+    247
+   ]
+  }
+ },
+ "prop_reeds": {
+  "w": 235,
+  "h": 256,
+  "anchors": {
+   "base": [
+    118,
+    247
+   ]
+  }
+ },
+ "prop_lily_pad": {
+  "w": 256,
+  "h": 135,
+  "anchors": {
+   "base": [
+    158,
+    130
+   ]
+  }
+ },
+ "prop_snow_pile": {
+  "w": 256,
+  "h": 160,
+  "anchors": {
+   "base": [
+    150,
+    153
+   ]
+  }
+ },
+ "prop_egg": {
+  "w": 189,
+  "h": 256,
+  "anchors": {
+   "base": [
+    95,
+    247
+   ]
+  }
+ },
+ "prop_seed": {
+  "w": 191,
+  "h": 256,
+  "anchors": {
+   "base": [
+    62,
+    247
+   ]
+  }
+ },
+ "prop_flask": {
+  "w": 193,
+  "h": 256,
+  "anchors": {
+   "base": [
+    96,
+    246
+   ]
+  }
+ }
+}

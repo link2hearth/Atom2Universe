@@ -158,6 +158,7 @@ val bancsDeMesure = listOf(
     "*.golf.ClassicGolfApercuTest",
     "*.golf.GolfTerrainApercuTest",
     "*.golf.GolfTerrainPerformanceTest",
+    "*.papattes.PapattesDiagTest",
     "*.golf.MiniGolfApercuTest",
     "*.golf.GardensScoringCalibrationTest",
     "*.golf.GardensPuttingBenchmarkTest",
