@@ -143,7 +143,6 @@ class ZoomPerfBench {
         source.clear()
         val fake = object : ZoomScene.LayerPager {
             override fun wantLoad(depth: Long) {}
-            override fun loadNow(depth: Long) = kept[depth]
         }
         scene.pager = fake
         scene.refreshResidency()

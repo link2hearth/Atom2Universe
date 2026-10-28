@@ -25,7 +25,10 @@ object ImageExport {
     /** Côté maximal d'un fichier exporté : au-delà, les tampons explosent la mémoire. */
     const val MAX_EXPORT_SIDE = 8192
 
-    fun maxScaleFor(w: Int, h: Int): Int = (MAX_EXPORT_SIDE / maxOf(w, h)).coerceIn(1, 64)
+    /** JPEG et WebP passent par un Bitmap entier (4 octets par pixel, plus une copie) : on reste plus petit. */
+    const val MAX_BITMAP_EXPORT_SIDE = 4096
+
+    fun maxScaleFor(w: Int, h: Int, maxSide: Int = MAX_EXPORT_SIDE): Int = (maxSide / maxOf(w, h)).coerceIn(1, 64)
 
     fun flatten(doc: Document, frameIndex: Int): IntArray =
         Compositor.compositeFrame(doc, doc.frames[frameIndex.coerceIn(0, doc.frames.size - 1)].id)
@@ -41,16 +44,13 @@ object ImageExport {
         val h = doc.height * s
         val order = frameOrder(doc.frames.size, opt.direction)
         val gif = GifWriter(out, w, h, opt.loops)
-        // Une même image (ping-pong) n'est aplatie et agrandie qu'une fois.
-        val cache = HashMap<Int, IntArray>()
+        // Une image à la fois, à sa taille d'origine : l'encodeur l'agrandit lui-même en écrivant
+        // (la palette se calcule sur les vrais pixels, rien n'est gardé en mémoire à la taille agrandie).
         for (i in order) {
-            val px = cache.getOrPut(i) {
-                var flat = flatten(doc, i)
-                opt.background?.let { bg -> flat = flattenOver(flat, bg) }
-                if (s > 1) scaleNearest(flat, doc.width, doc.height, s) else flat
-            }
+            var flat = flatten(doc, i)
+            opt.background?.let { bg -> flat = flattenOver(flat, bg) }
             val ms = (doc.frames[i].durationMs * 100 / opt.speedPercent.coerceIn(10, 1000))
-            gif.addFrame(px, ms)
+            gif.addFrame(flat, doc.width, doc.height, s, ms)
         }
         gif.finish()
     }

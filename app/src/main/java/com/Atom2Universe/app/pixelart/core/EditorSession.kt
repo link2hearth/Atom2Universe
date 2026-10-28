@@ -33,15 +33,18 @@ class ToolOptions {
 
 /** Ce que la session dit à l'écran. Toutes les méthodes sont facultatives. */
 interface SessionListener {
-    /** Une zone de l'image composée doit être rafraîchie. */
+    /** Une zone de l'image composée doit être rafraîchie. [rect] n'est valable que pendant l'appel. */
     fun onPixelsChanged(rect: PixelRect) {}
-    /** Tout est à rafraîchir (annuler, calque supprimé, taille changée…). */
+    /** Tout est à rafraîchir (annuler, calque supprimé, taille changée…), calque et image actifs compris. */
     fun onDocumentChanged() {}
     fun onSelectionChanged() {}
     fun onFloatingChanged() {}
+    /** La pipette a fini son geste sur une nouvelle couleur (elle rejoint les récentes). */
     fun onColorPicked(color: Int) {}
+    /** La couleur principale suit la pipette pendant le geste, ou revient à celle d'avant. */
+    fun onColorChanged() {}
     fun onHistoryChanged() {}
-    /** Le calque ou l'image active a changé. */
+    /** Seul le calque ou l'image active a changé (le dessin, lui, n'a pas bougé). */
     fun onActiveChanged() {}
     /** Aperçu d'un geste en cours (cadre, lasso) : simple redessin. */
     fun onOverlayChanged() {}
@@ -137,9 +140,14 @@ class EditorSession(val doc: Document) {
     val lassoPoints: Pair<FloatArray, FloatArray>? get() =
         if (lassoXs.n >= 2) lassoXs.toArray() to lassoYs.toArray() else null
 
+    /** Lecture du lasso sans copie (l'écran le redessine à chaque image). */
+    val lassoCount get() = if (lassoXs.n >= 2) lassoXs.n else 0
+    fun lassoX(i: Int): Float = lassoXs.a[i]
+    fun lassoY(i: Int): Float = lassoYs.a[i]
+
     // ---- État du geste -----------------------------------------------------------------------
 
-    private enum class Gesture { NONE, FREEHAND, SHAPE, RECT_SELECT, LASSO, MOVE_FLOAT, PICK }
+    private enum class Gesture { NONE, FREEHAND, SHAPE, RECT_SELECT, LASSO, MOVE_FLOAT, PICK, FILL, WAND }
 
     private var gesture = Gesture.NONE
     private var editor: CelEditor? = null
@@ -155,7 +163,10 @@ class EditorSession(val doc: Document) {
     private val dirty = PixelRect.empty()
     private var ppA: IntArray? = null
     private var ppB: IntArray? = null
+    /** Couleur principale avant la pipette : un pincement la rend. */
+    private var pickBefore = 0
 
+    /** Un doigt est posé et son geste n'est pas fini (trait, forme, cadre, déplacement…). */
     val gestureActive get() = gesture != Gesture.NONE
 
     // ==== Gestes ================================================================================
@@ -166,8 +177,9 @@ class EditorSession(val doc: Document) {
         when (tool) {
             Tool.HAND -> Unit
             Tool.PENCIL, Tool.BRUSH, Tool.ERASER -> beginFreehand(x, y)
-            Tool.FILL -> fillAt(x, y)
-            Tool.PICKER -> { gesture = Gesture.PICK; pickAt(x, y) }
+            // Pot et baguette agissent au relâchement : le premier doigt d'un pincement ne remplit rien.
+            Tool.FILL -> gesture = Gesture.FILL
+            Tool.PICKER -> { gesture = Gesture.PICK; pickBefore = primary; pickAt(x, y) }
             Tool.SHAPE -> beginShape()
             Tool.SELECT_RECT -> {
                 commitFloating()
@@ -183,7 +195,7 @@ class EditorSession(val doc: Document) {
                 lassoXs.add(x.toFloat()); lassoYs.add(y.toFloat())
                 listener?.onOverlayChanged()
             }
-            Tool.SELECT_WAND -> wandAt(x, y)
+            Tool.SELECT_WAND -> gesture = Gesture.WAND
             Tool.MOVE -> beginMove(x, y)
         }
     }
@@ -210,13 +222,15 @@ class EditorSession(val doc: Document) {
                 }
             }
             Gesture.PICK -> pickAt(x, y)
-            Gesture.NONE -> Unit
+            Gesture.FILL, Gesture.WAND, Gesture.NONE -> Unit
         }
         lastX = x; lastY = y
     }
 
     fun pointerUp() {
-        when (gesture) {
+        val g = gesture
+        gesture = Gesture.NONE
+        when (g) {
             Gesture.FREEHAND, Gesture.SHAPE -> commitEditor()
             Gesture.RECT_SELECT -> {
                 val tap = previewRect.width == 1 && previewRect.height == 1
@@ -233,9 +247,11 @@ class EditorSession(val doc: Document) {
                 lassoXs.clear(); lassoYs.clear()
                 listener?.onOverlayChanged()
             }
-            Gesture.MOVE_FLOAT, Gesture.PICK, Gesture.NONE -> Unit
+            Gesture.FILL -> fillAt(lastX, lastY)
+            Gesture.WAND -> wandAt(lastX, lastY)
+            Gesture.PICK -> if (primary != pickBefore) listener?.onColorPicked(primary)
+            Gesture.MOVE_FLOAT, Gesture.NONE -> Unit
         }
-        gesture = Gesture.NONE
     }
 
     /** Un deuxième doigt arrive : le geste en cours n'était pas un dessin, on l'efface. */
@@ -255,6 +271,7 @@ class EditorSession(val doc: Document) {
                 val f = floating
                 if (f != null) { f.x = dragOriginX; f.y = dragOriginY; listener?.onFloatingChanged() }
             }
+            Gesture.PICK -> if (primary != pickBefore) { primary = pickBefore; listener?.onColorChanged() }
             else -> Unit
         }
         gesture = Gesture.NONE
@@ -462,9 +479,9 @@ class EditorSession(val doc: Document) {
     private fun pickAt(x: Int, y: Int) {
         var c = compositeAt(x, y)
         if (c ushr 24 == 0) c = fallbackSampler?.invoke(x, y) ?: 0
-        if (c ushr 24 != 0) {
+        if (c ushr 24 != 0 && c != primary) {
             primary = c
-            listener?.onColorPicked(c)
+            listener?.onColorChanged()
         }
     }
 
@@ -724,7 +741,7 @@ class EditorSession(val doc: Document) {
     private fun flushDirty() {
         if (dirty.isEmpty) return
         doc.touch(gLayerId, gFrameId)
-        listener?.onPixelsChanged(dirty.copy())
+        listener?.onPixelsChanged(dirty)
         dirty.set(0, 0, 0, 0)
     }
 
@@ -767,8 +784,8 @@ class EditorSession(val doc: Document) {
         fixActive()
         if (selection != null && (selection!!.w != doc.width || selection!!.h != doc.height)) selection = null
         listener?.onHistoryChanged()
+        // Un seul rafraîchissement : « tout a changé » couvre aussi le calque et l'image actifs.
         listener?.onDocumentChanged()
-        listener?.onActiveChanged()
     }
 
     // ==== Calques et images actifs ==================================================================
@@ -794,7 +811,6 @@ class EditorSession(val doc: Document) {
         if (id == activeFrameId) return
         activeFrameId = id
         listener?.onActiveChanged()
-        listener?.onDocumentChanged()
     }
 
     // ==== Structure ============================================================================
@@ -805,18 +821,21 @@ class EditorSession(val doc: Document) {
         fixActive()
         listener?.onHistoryChanged()
         listener?.onDocumentChanged()
-        listener?.onActiveChanged()
     }
 
-    fun addLayer(name: String) {
+    /** Ajoute un calque vide ; faux (et rien ne change) quand le dessin en a déjà le maximum. */
+    fun addLayer(name: String): Boolean {
         commitFloating()
+        if (doc.layers.size >= Document.MAX_LAYERS) return false
         val (layer, edit) = DocumentOps.addLayer(doc, layerIndex, name)
         activeLayerId = layer.id
         structural(edit)
+        return true
     }
 
     fun duplicateLayer(name: String) {
         commitFloating()
+        if (doc.layers.size >= Document.MAX_LAYERS) return
         val (layer, edit) = DocumentOps.duplicateLayer(doc, layerIndex, name)
         activeLayerId = layer.id
         structural(edit)
@@ -850,6 +869,7 @@ class EditorSession(val doc: Document) {
 
     fun addFrame(copyCurrent: Boolean) {
         commitFloating()
+        if (doc.frames.size >= Document.MAX_FRAMES) return
         val (frame, edit) = DocumentOps.addFrame(doc, frameIndex, if (copyCurrent) frameIndex else null)
         activeFrameId = frame.id
         structural(edit)
@@ -872,8 +892,9 @@ class EditorSession(val doc: Document) {
         structural(DocumentOps.setFrameDuration(doc, frameId, ms))
     }
 
+    /** « Appliquer à toutes » : une seule étape à annuler. */
     fun setAllFrameDurations(ms: Int) {
-        for (f in doc.frames) structural(DocumentOps.setFrameDuration(doc, f.id, ms))
+        structural(DocumentOps.setAllFrameDurations(doc, ms))
     }
 
     private fun canvasChanged(edit: Edit?) {

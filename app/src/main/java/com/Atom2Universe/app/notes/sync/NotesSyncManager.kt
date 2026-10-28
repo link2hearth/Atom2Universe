@@ -19,6 +19,7 @@ import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient.ReadResult
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.notes.data.NotesDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -49,6 +50,13 @@ object NotesSyncManager {
 
     /** Après une modification, on attend ce délai (renouvelé à chaque modification) avant d'envoyer. */
     private const val DEBOUNCE_MINUTES = 2L
+    private const val DEBOUNCE_MS = DEBOUNCE_MINUTES * 60_000L
+
+    /** Des modifications sans fin ne repoussent pas l'envoi au-delà de ça après la première (sous les 10 min d'un travail). */
+    private const val MAX_WAIT_MS = 7 * 60_000L
+
+    /** La présence d'un compte n'est revérifiée qu'au plus une fois par minute, pas à chaque écriture. */
+    private const val ACCOUNT_CHECK_MS = 60_000L
 
     /** À l'ouverture des notes, pas de nouvelle sync si la dernière date de moins que ça. */
     private const val OPEN_THROTTLE_MS = 2 * 60_000L
@@ -123,7 +131,8 @@ object NotesSyncManager {
 
     /**
      * Surveille la base : toute écriture dans les notes (la leur, les groupes, les tags) programme une sync
-     * dans [DEBOUNCE_MINUTES] minutes, renouvelée à chaque nouvelle écriture. Un seul observateur, posé une fois.
+     * [DEBOUNCE_MINUTES] minutes après la dernière écriture. Un seul observateur, posé une fois.
+     * Les écritures de la synchro elle-même ne comptent pas : sinon chaque synchro en programmait une autre.
      */
     fun watch(context: Context) {
         if (watching) return
@@ -131,19 +140,71 @@ object NotesSyncManager {
         val app = context.applicationContext
         NotesDatabase.getInstance(app).invalidationTracker.addObserver(
             object : InvalidationTracker.Observer("notes", "note_groups", "tags", "tag_categories", "note_tags") {
-                override fun onInvalidated(tables: Set<String>) = scheduleSoon(app)
+                override fun onInvalidated(tables: Set<String>) {
+                    if (!NotesSyncStore.isOwnWrite()) scheduleSoon(app)
+                }
             },
         )
     }
 
+    /** La dernière et la première écriture pas encore envoyées ([System.currentTimeMillis]). */
+    @Volatile
+    private var lastChangeAt = 0L
+    @Volatile
+    private var firstChangeAt = 0L
+    /** Un travail est déjà programmé et n'a pas encore commencé sa sync : une écriture de plus n'a qu'à avancer [lastChangeAt]. */
+    @Volatile
+    private var pending = false
+
+    @Volatile
+    private var hasAccount = false
+    @Volatile
+    private var signedInCheckedAt = 0L
+
+    private fun signedIn(context: Context): Boolean {
+        val now = System.currentTimeMillis()
+        if (now - signedInCheckedAt > ACCOUNT_CHECK_MS) {
+            hasAccount = GoogleSignInManager(context).isSignedIn()
+            signedInCheckedAt = now
+        }
+        return hasAccount
+    }
+
+    /**
+     * Un vrai anti-rebond, sans jamais annuler un travail : chaque écriture note sa date, et un seul travail est
+     * programmé à la fois. Le travail relit ces dates en démarrant ([waitForQuiet]). Une écriture pendant
+     * une sync en cours ajoute un travail à la suite (APPEND_OR_REPLACE), au lieu d'interrompre celle-ci.
+     */
     private fun scheduleSoon(context: Context) {
+        val now = System.currentTimeMillis()
+        lastChangeAt = now
+        if (pending) return
         // Pas de compte, pas de travail à programmer ; l'interrupteur, lui, est relu par le travail.
-        if (!GoogleSignInManager(context).isSignedIn()) return
+        if (!signedIn(context)) return
+        pending = true
+        firstChangeAt = now
         val request = OneTimeWorkRequestBuilder<NotesSyncWorker>()
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .setInitialDelay(DEBOUNCE_MINUTES, TimeUnit.MINUTES)
             .build()
-        WorkManager.getInstance(context).enqueueUniqueWork(WORK_DEBOUNCED, ExistingWorkPolicy.REPLACE, request)
+        WorkManager.getInstance(context).enqueueUniqueWork(WORK_DEBOUNCED, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
+    }
+
+    /**
+     * Au démarrage du travail : attend que les écritures se calment ([DEBOUNCE_MS] après la dernière), sans
+     * dépasser [MAX_WAIT_MS] après la première. Ensuite, toute nouvelle écriture programmera un nouveau travail.
+     */
+    internal suspend fun waitForQuiet() {
+        try {
+            while (true) {
+                val wait = minOf(lastChangeAt + DEBOUNCE_MS, firstChangeAt + MAX_WAIT_MS) - System.currentTimeMillis()
+                if (wait <= 0) break
+                delay(wait)
+            }
+        } finally {
+            // Avant la photo de la sync : une écriture qui arrive après sera dans un prochain travail.
+            pending = false
+        }
     }
 
     // ─── Branchements ─────────────────────────────────────────────────────────
@@ -169,6 +230,7 @@ object NotesSyncManager {
 /** Le travail programmé après une modification : une sync automatique des notes, si elle est permise. */
 class NotesSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
+        NotesSyncManager.waitForQuiet()
         val report = NotesSyncManager.syncIfEnabled(applicationContext)
         return if (report?.outcome == NotesSyncManager.Outcome.FAILED && runAttemptCount < 3) Result.retry() else Result.success()
     }

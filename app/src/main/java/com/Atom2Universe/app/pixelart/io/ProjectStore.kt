@@ -29,13 +29,15 @@ import java.util.zip.ZipOutputStream
  * Les projets vivent chacun dans un dossier :
  *
  *     <racine>/<id>/manifest.json      calques, images, couleurs, lien vers le fichier d'origine…
- *                   cels/<calque>_<image>.cel   pixels (ARGB compressé zlib), un fichier par cel non vide
+ *                   cels/<calque>_<image>_<génération>.cel   pixels (ARGB compressé zlib), un fichier par cel non vide
  *                   thumb.png          vignette de la galerie
  *                   reference.png      image de référence, si le projet en a une
  *
  * L'enregistrement est **incrémental** : seules les cels modifiées sont réécrites (voir
- * [Document.peekDirty]). Toute écriture passe par un fichier temporaire renommé ensuite, donc une
- * coupure en plein milieu laisse l'ancienne version intacte.
+ * [Document.peekDirty]). Une cel réécrite ne remplace jamais son ancien fichier : elle en prend un neuf
+ * (génération suivante), et c'est le manifeste, écrit en dernier, qui dit quels fichiers valent. Une
+ * coupure à n'importe quel moment laisse donc un manifeste et des cels qui vont ensemble ; les fichiers
+ * qu'il ne cite plus sont effacés après coup.
  */
 class ProjectStore(val root: File) {
 
@@ -47,8 +49,7 @@ class ProjectStore(val root: File) {
     fun thumbFile(id: String) = File(dir(id), "thumb.png")
     fun referenceFile(id: String) = File(dir(id), "reference.png")
     private fun manifestFile(id: String) = File(dir(id), "manifest.json")
-    private fun celFile(id: String, key: Long) =
-        File(File(dir(id), "cels"), "${Document.unpackLayer(key)}_${Document.unpackFrame(key)}.cel")
+    private fun celFile(id: String, key: Long, generation: Long) = File(File(dir(id), "cels"), celName(key, generation))
 
     // ---- Catalogue -----------------------------------------------------------------------
 
@@ -110,7 +111,7 @@ class ProjectStore(val root: File) {
         val doc = Document.blank(width, height, layerName)
         val layerId = doc.layers[0].id
         doc.setCel(layerId, doc.frames[0].id, frames[0].copyOf())
-        for (i in 1 until frames.size) {
+        for (i in 1 until minOf(frames.size, Document.MAX_FRAMES)) {
             val f = Frame(doc.newFrameId())
             doc.frames.add(f)
             doc.setCel(layerId, f.id, frames[i].copyOf())
@@ -123,15 +124,30 @@ class ProjectStore(val root: File) {
     // ---- Enregistrement ------------------------------------------------------------------
 
     /**
-     * Photographie ce qui doit être écrit. **À appeler sur le fil qui modifie le document** : les cels
-     * sont copiées ici, l'écriture ([save]) peut ensuite se faire sur un autre fil.
+     * Prépare ce qui doit être écrit. **À appeler sur le fil qui modifie le document** : chaque cel modifiée
+     * reçoit ici sa génération neuve et le manifeste est figé ; l'écriture ([save]) se fait ensuite sur un autre fil.
+     *
+     * Les cels ne sont pas copiées ici (une copie pleine taille par cel bloquait l'écran) : [save] lit les
+     * tableaux du dessin. Si l'on redessine pendant l'écriture, la cel change de révision, [Document.markSaved]
+     * la laisse « sale » et le prochain enregistrement la réécrit : le disque finit toujours à jour.
      */
     fun prepareSave(p: LoadedProject, forceAll: Boolean = false): SavePlan {
         val doc = p.doc
+        val meta = p.meta
         if (forceAll) doc.markEverythingDirty()
         val dirty = doc.peekDirty()
-        val cels = HashMap<Long, IntArray>()
-        for (k in dirty.written.keys) doc.celAt(k)?.let { cels[k] = it.copyOf() }
+        val writes = ArrayList<CelWrite>()
+        for (k in dirty.written.keys) {
+            val data = doc.celAt(k)
+            // Une cel vide n'a pas de fichier.
+            if (data == null || isBlank(data)) { meta.celFiles.remove(k); continue }
+            val gen = ++meta.celGeneration
+            meta.celFiles[k] = gen
+            writes.add(CelWrite(k, gen, data))
+        }
+        for (k in dirty.removed.keys) meta.celFiles.remove(k)
+        // Une cel qui a quitté le dessin (calque ou image supprimés) ne garde pas de fichier.
+        meta.celFiles.keys.retainAll { doc.celAt(it) != null }
         // La vignette montre la première image : inutile de la refaire quand on dessine ailleurs.
         val firstFrame = doc.frames.firstOrNull()?.id
         val thumbStale = dirty.meta || dirty.removed.isNotEmpty() ||
@@ -141,14 +157,20 @@ class ProjectStore(val root: File) {
         // pas : la sync du cloud compare cette date, et deux appareils qui n'ont fait que regarder le même
         // projet ne doivent pas se déclarer en conflit.
         if (!dirty.isEmpty) p.meta.modified = System.currentTimeMillis()
-        val manifest = ManifestCodec.encode(doc, p.meta).toString()
-        return SavePlan(p.meta.id, dirty, cels, thumb, manifest, doc.width, doc.height)
+        val manifest = ManifestCodec.encode(doc, meta).toString()
+        val keep = HashSet<String>()
+        for ((k, g) in meta.celFiles) keep.add(celName(k, g))
+        return SavePlan(meta.id, dirty, writes, keep, thumb, manifest, doc.width, doc.height)
     }
+
+    internal class CelWrite(val key: Long, val generation: Long, val data: IntArray)
 
     class SavePlan internal constructor(
         val id: String,
         val dirty: Document.DirtySet,
-        internal val cels: Map<Long, IntArray>,
+        internal val writes: List<CelWrite>,
+        /** Noms des fichiers de cels que cite le manifeste : les autres sont à effacer. */
+        internal val keep: Set<String>,
         internal val thumb: Thumb?,
         internal val manifest: String,
         internal val width: Int,
@@ -164,17 +186,23 @@ class ProjectStore(val root: File) {
         p.doc.markSaved(plan.dirty)
     }
 
-    /** Écrit le plan sur le disque. Peut tourner hors du fil principal. */
+    /**
+     * Écrit le plan sur le disque. Peut tourner hors du fil principal.
+     * Ordre : les cels neuves, la vignette, le manifeste, puis seulement le ménage des fichiers périmés.
+     */
     fun save(plan: SavePlan) {
-        val d = dir(plan.id)
-        File(d, "cels").mkdirs()
-        for (k in plan.dirty.removed.keys) celFile(plan.id, k).delete()
-        for ((k, data) in plan.cels) {
-            val f = celFile(plan.id, k)
-            if (data.all { it == 0 }) f.delete() else writeCel(f, data, plan.width, plan.height)
-        }
+        val cels = File(dir(plan.id), "cels")
+        cels.mkdirs()
+        for (w in plan.writes) writeCel(File(cels, celName(w.key, w.generation)), w.data, plan.width, plan.height)
         plan.thumb?.let { t -> atomicWrite(thumbFile(plan.id)) { PngWriter.write(it, t.pixels, t.w, t.h) } }
         atomicWrite(manifestFile(plan.id)) { it.write(plan.manifest.toByteArray(Charsets.UTF_8)) }
+        // Anciennes générations, cels effacées, restes d'un enregistrement interrompu : le manifeste ne les cite plus.
+        for (f in cels.listFiles().orEmpty()) if (f.name !in plan.keep) f.delete()
+    }
+
+    private fun isBlank(data: IntArray): Boolean {
+        for (c in data) if (c != 0) return false
+        return true
     }
 
     private fun makeThumbnail(doc: Document): Thumb {
@@ -249,8 +277,12 @@ class ProjectStore(val root: File) {
         if (!mf.isFile) return null
         return try {
             val (doc, meta) = ManifestCodec.decode(id, JSONObject(mf.readText()))
-            for (l in doc.layers) for (f in doc.frames) {
-                readCel(celFile(id, Document.key(l.id, f.id)), doc.width, doc.height)?.let { doc.setCel(l.id, f.id, it) }
+            for ((k, gen) in meta.celFiles.entries.toList()) {
+                val l = Document.unpackLayer(k)
+                val f = Document.unpackFrame(k)
+                val data = if (doc.layerById(l) != null && doc.frameById(f) != null) readCel(celFile(id, k, gen), doc.width, doc.height) else null
+                // Fichier absent ou illisible : la cel reste vide, et le prochain manifeste ne la cite plus.
+                if (data != null) doc.setCel(l, f, data) else meta.celFiles.remove(k)
             }
             // Ce qu'on vient de lire est déjà sur le disque : rien à réécrire.
             doc.markSaved(doc.peekDirty())
@@ -309,17 +341,38 @@ class ProjectStore(val root: File) {
 
     // ---- Fichier de projet (partage) ---------------------------------------------------------
 
+    /**
+     * Le manifeste est lu une seule fois, en premier, et seules les cels qu'il cite partent avec lui : un
+     * enregistrement qui passe pendant l'export (le cloud peut exporter à tout moment) ne peut pas mélanger
+     * deux versions. Si une cel citée a disparu entre-temps, l'export échoue et sera refait.
+     */
     fun exportZip(id: String, out: OutputStream) {
+        val base = dir(id)
+        val manifest = manifestFile(id).readBytes()
+        val cited: Set<String>? = try {
+            val j = JSONObject(String(manifest, Charsets.UTF_8))
+            if (j.has("cels")) ManifestCodec.decode(id, j).second.celFiles.map { (k, g) -> celName(k, g) }.toSet() else null
+        } catch (e: Exception) {
+            null
+        }
+        val sent = HashSet<String>()
         ZipOutputStream(BufferedOutputStream(out)).use { z ->
-            val base = dir(id)
+            z.putNextEntry(ZipEntry("manifest.json"))
+            z.write(manifest)
+            z.closeEntry()
             for (f in base.walkTopDown()) {
                 if (!f.isFile || f.name.endsWith(".tmp")) continue
                 val rel = f.relativeTo(base).path.replace(File.separatorChar, '/')
+                if (rel == "manifest.json") continue
+                val isCel = rel.startsWith("cels/")
+                if (isCel && cited != null && f.name !in cited) continue
                 z.putNextEntry(ZipEntry(rel))
                 f.inputStream().use { it.copyTo(z) }
                 z.closeEntry()
+                if (isCel) sent.add(f.name)
             }
         }
+        if (cited != null && !sent.containsAll(cited)) throw java.io.IOException("Cel disparue pendant l'export de $id")
     }
 
     /** Ouvre un fichier de projet partagé ; retourne l'identifiant du nouveau projet, ou null s'il est illisible. */
@@ -388,9 +441,9 @@ class ProjectStore(val root: File) {
             if (!keepModified) j.put("modified", System.currentTimeMillis())
             atomicWrite(mf) { it.write(j.toString().toByteArray(Charsets.UTF_8)) }
             // Le manifeste et les cels doivent être lisibles : on ne garde pas un projet qui ne s'ouvrira pas.
-            val (doc, _) = ManifestCodec.decode(target.name, j)
-            for (l in doc.layers) for (f in doc.frames) {
-                val cel = File(File(target, "cels"), "${l.id}_${f.id}.cel")
+            val (doc, meta) = ManifestCodec.decode(target.name, j)
+            for ((k, gen) in meta.celFiles) {
+                val cel = File(File(target, "cels"), celName(k, gen))
                 if (cel.isFile && readCel(cel, doc.width, doc.height) == null) { target.deleteRecursively(); return false }
             }
             return true
@@ -415,6 +468,12 @@ class ProjectStore(val root: File) {
 
     private companion object {
         const val CEL_MAGIC = 0x43454C31 // "CEL1"
+
+        /** Nom du fichier d'une cel. La génération 0 est le nom des projets d'avant les générations. */
+        fun celName(key: Long, generation: Long): String {
+            val base = "${Document.unpackLayer(key)}_${Document.unpackFrame(key)}"
+            return if (generation == 0L) "$base.cel" else "${base}_$generation.cel"
+        }
     }
 }
 
@@ -423,9 +482,14 @@ object ManifestCodec {
 
     const val VERSION = 1
 
-    fun encodeLink(l: SourceLink) = JSONObject()
-        .put("uri", l.uri).put("name", l.name).put("format", l.format.name)
-        .put("scale", l.scale).put("writable", l.writable)
+    fun encodeLink(l: SourceLink): JSONObject {
+        val j = JSONObject()
+            .put("uri", l.uri).put("name", l.name).put("format", l.format.name)
+            .put("scale", l.scale).put("writable", l.writable)
+            .put("gifLoops", l.gifLoops).put("gifDirection", l.gifDirection.name).put("gifSpeed", l.gifSpeedPercent)
+        l.gifBackground?.let { j.put("gifBackground", it) }
+        return j
+    }
 
     fun encode(doc: Document, meta: ProjectMeta): JSONObject {
         val layers = JSONArray()
@@ -447,6 +511,9 @@ object ManifestCodec {
             .put("nextLayer", doc.nextLayerId).put("nextFrame", doc.nextFrameId)
             .put("activeLayer", meta.activeLayerId).put("activeFrame", meta.activeFrameId)
             .put("primary", meta.primary).put("secondary", meta.secondary)
+        val cels = JSONObject()
+        for ((k, gen) in meta.celFiles) cels.put("${Document.unpackLayer(k)}_${Document.unpackFrame(k)}", gen)
+        j.put("cels", cels).put("celGen", meta.celGeneration)
         meta.link?.let { j.put("link", encodeLink(it)) }
         meta.reference?.let {
             j.put(
@@ -490,11 +557,28 @@ object ManifestCodec {
             activeLayerId = j.optInt("activeLayer", doc.layers.last().id),
             activeFrameId = j.optInt("activeFrame", doc.frames.first().id),
         )
+        val cels = j.optJSONObject("cels")
+        if (cels != null) {
+            for (name in cels.keys()) {
+                val l = name.substringBefore('_').toIntOrNull() ?: continue
+                val f = name.substringAfter('_', "").toIntOrNull() ?: continue
+                meta.celFiles[Document.key(l, f)] = cels.optLong(name, 0L)
+            }
+        } else {
+            // Projet d'avant les générations : une cel par case calque × image, sous son ancien nom.
+            for (l in doc.layers) for (f in doc.frames) meta.celFiles[Document.key(l.id, f.id)] = 0L
+        }
+        meta.celGeneration = maxOf(j.optLong("celGen", 0L), meta.celFiles.values.maxOrNull() ?: 0L)
         j.optJSONObject("link")?.let { l ->
             val format = runCatching { ImageFormat.valueOf(l.optString("format", "PNG")) }.getOrDefault(ImageFormat.PNG)
             meta.link = SourceLink(
                 l.getString("uri"), l.optString("name", ""), format,
                 l.optInt("scale", 1).coerceIn(1, 64), l.optBoolean("writable", true),
+                gifLoops = l.optInt("gifLoops", 0).coerceAtLeast(0),
+                gifDirection = runCatching { ImageExport.GifDirection.valueOf(l.optString("gifDirection", "FORWARD")) }
+                    .getOrDefault(ImageExport.GifDirection.FORWARD),
+                gifBackground = if (l.has("gifBackground")) l.optInt("gifBackground") else null,
+                gifSpeedPercent = l.optInt("gifSpeed", 100).coerceIn(10, 1000),
             )
         }
         j.optJSONObject("reference")?.let { r ->

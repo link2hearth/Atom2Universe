@@ -9,20 +9,22 @@ import kotlinx.coroutines.launch
 
 class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
 
+    // Chaque liste n'est relue que tant qu'un écran l'affiche : l'éditeur seul ne relit pas toutes les notes
+    // à chaque sauvegarde. Il suit les groupes lui-même (voir NoteEditorFragment).
     val allNotesWithTags: StateFlow<List<NoteWithTags>> = repository.getAllNotesWithTags()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val trashedNotes: StateFlow<List<NoteWithTags>> = repository.getTrashedNotesWithTags()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val allGroupsWithCount: StateFlow<List<GroupWithCount>> = repository.getAllGroupsWithCount()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val allTagsWithCount: StateFlow<List<TagWithCount>> = repository.getAllTagsWithCount()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val allCategories: StateFlow<List<TagCategory>> = repository.getAllCategories()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /**
      * Le filtre de la bibliothèque, gardé ici pour survivre à un aller-retour dans l'éditeur.
@@ -128,5 +130,7 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
 
     companion object {
         const val TRASH_DAYS = 30
+        /** Un écran quitté garde ses listes à jour encore un instant : un aller-retour rapide ne relance rien. */
+        private const val STOP_TIMEOUT_MS = 5000L
     }
 }

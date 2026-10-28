@@ -35,6 +35,12 @@ object ZoomRenderer {
      * zoom ou au-delà, et dézoomé il ne coûte plus que ce qu'on en voit.
      */
     const val MIN_STEP_PX = 0.5
+    /**
+     * Épaisseur tracée au plus, en écrans : seulement quand le bord d'un trait encore plus épais traverse
+     * l'écran (zoomé tout près du bord d'un trait immense). Un écran entièrement dans le trait est couvert
+     * d'un disque, quelle que soit l'épaisseur (voir [Builder.farCornerReach]).
+     */
+    const val MAX_WIDTH_SCREENS = 64.0
 
     /** Ce que garde un tracé de couche : tout, tout sauf les coups de gomme, ou eux seuls (peints en couleur vive). */
     private const val ALL = 0
@@ -79,7 +85,25 @@ object ZoomRenderer {
      * de fond qui trace pour son compte a le sien.
      */
     class Builder {
-        private class Visible(val layer: Layer, val x: Double, val y: Double, val zoom: Double)
+        /** Une couche à tracer et la caméra vue depuis elle. Réutilisée d'une image à l'autre (rien n'est alloué par image). */
+        private class Visible {
+            var layer: Layer? = null
+            var x = 0.0
+            var y = 0.0
+            var zoom = 1.0
+            fun set(l: Layer, x: Double, y: Double, zoom: Double): Visible {
+                layer = l; this.x = x; this.y = y; this.zoom = zoom
+                return this
+            }
+        }
+
+        /** Les couches vues depuis la couche de travail vers le bas ([MAX_LAYERS] au plus), et celle du dessus. */
+        private val visible = Array(MAX_LAYERS) { Visible() }
+        private val upper = Visible()
+        private val upperView = ZoomScene.View()
+        /** Plus grande étendue de contenu à partir de chaque profondeur (voir [build]). */
+        private var suffixExtent = DoubleArray(8)
+        private val boundsTmp = DoubleArray(4)
 
         private val cand = ArrayList<Entry>()
         private val src = DoubleArray(4)
@@ -122,12 +146,13 @@ object ZoomRenderer {
             val first = scene.depth
             val last = scene.lastDepth
             val count = (last - first + 1).toInt()
-            val suffixExtent = DoubleArray(count + 1)
+            if (suffixExtent.size < count + 1) suffixExtent = DoubleArray(count + 1)
+            suffixExtent[count] = 0.0
             for (i in count - 1 downTo 0) {
                 suffixExtent[i] = max(suffixExtent[i + 1], scene.layer(first + i)?.extentApprox() ?: 0.0)
             }
 
-            val visible = ArrayList<Visible>(4)
+            var visibleCount = 0
             var x = scene.cx
             var y = scene.cy
             var zz = scene.zoom
@@ -141,21 +166,22 @@ object ZoomRenderer {
                 if (!x.isFinite() || !y.isFinite() || zz <= 0.0) break
                 if (suffixExtent[i] * zz < MIN_PX) break
                 if (i >= MAX_LAYERS) break
-                if (!l.isEmpty) visible.add(Visible(l, x, y, zz))
+                if (!l.isEmpty) visible[visibleCount++].set(l, x, y, zz)
             }
 
             // Du fond vers l'avant : la couche d'en dessous…
-            for (k in visible.indices.reversed()) {
+            var working: Visible? = null
+            for (k in visibleCount - 1 downTo 0) {
                 val v = visible[k]
-                if (v.layer.depth == scene.depth) continue
-                out.beginGroup(ghost || v.layer.hasEraser, if (ghost) GHOST_ALPHA else 1f)
-                drawLayer(v, scene.layerAlpha(v.layer.depth), viewW, viewH, out, ALL)
+                val vl = v.layer!!
+                if (vl.depth == scene.depth) { working = v; continue }
+                out.beginGroup(ghost || vl.hasEraser, if (ghost) GHOST_ALPHA else 1f)
+                drawLayer(v, scene.layerAlpha(vl.depth), viewW, viewH, out, ALL)
                 out.endGroup()
             }
             // … puis la couche de travail, avec le trait en cours (qui peut être un coup de gomme).
             val live = scene.live
             val drawing = live.count > 0
-            val working = visible.firstOrNull { it.layer.depth == scene.depth }
             if (ghost) {
                 // Les éléments d'un bloc, estompés (sans gomme : on voit tout ce qu'elle cache) ; les gommes au-dessus, en couleur.
                 out.beginGroup(true, GHOST_ALPHA)
@@ -186,15 +212,18 @@ object ZoomRenderer {
             val upAlpha = scene.upperAlpha()
             val up = scene.layer(scene.depth - 1)
             if (up != null && !up.isEmpty && upAlpha > 0.0) {
-                val v = scene.viewOf(up.depth)
+                val v = scene.viewOf(up.depth, upperView)
                 if (v.x.isFinite() && v.y.isFinite() && v.zoom > 0.0) {
                     val shown = if (ghost) upAlpha.toFloat() * GHOST_ALPHA else upAlpha.toFloat()
                     out.beginGroup(true, shown)
-                    drawLayer(Visible(up, v.x, v.y, v.zoom), 1.0, viewW, viewH, out, ALL)
+                    drawLayer(upper.set(up, v.x, v.y, v.zoom), 1.0, viewW, viewH, out, ALL)
                     out.endGroup()
                     out.fadeAlpha = shown
                 }
             }
+            // Le calculateur vit plus longtemps que la scène : il ne doit pas en retenir les couches.
+            for (v in visible) v.layer = null
+            upper.layer = null
         }
 
         private fun view(vx: Double, vy: Double, z: Double, alpha: Double, w: Double, h: Double) {
@@ -205,9 +234,10 @@ object ZoomRenderer {
 
         private fun drawLayer(v: Visible, alpha: Double, w: Double, h: Double, out: RenderList, keep: Int) {
             if (alpha <= 0.0) return
+            val layer = v.layer ?: return
             // L'encombrement d'une couche ignore les coups de gomme : on ne s'y fie pas pour les montrer.
-            if (keep == ERASERS_ONLY) { if (!v.layer.hasEraser) return }
-            else if (!layerOnScreen(v, w, h)) return
+            if (keep == ERASERS_ONLY) { if (!layer.hasEraser) return }
+            else if (!layerOnScreen(layer, v, w, h)) return
             out.layersDrawn++
             view(v.x, v.y, v.zoom, alpha, w, h)
             // Ce qui touche l'écran, plus de quoi ne pas couper l'épaisseur d'un trait fin ou le tour d'un pixel.
@@ -218,11 +248,11 @@ object ZoomRenderer {
             val y1 = v.y + hh / v.zoom + reach
             val policy = cachePolicy
             // Trop d'éléments pour les tracer un à un à chaque image : la vue posera le cache raster de la couche.
-            if (policy != null && keep == ALL && policy.useCache(v.layer, v.layer.countIn(x0, y0, x1, y1))) {
-                out.setGroupCache(v.layer, v.x, v.y, v.zoom)
+            if (policy != null && keep == ALL && policy.useCache(layer, layer.countIn(x0, y0, x1, y1))) {
+                out.setGroupCache(layer, v.x, v.y, v.zoom)
                 return
             }
-            v.layer.query(x0, y0, x1, y1, cand)
+            layer.query(x0, y0, x1, y1, cand)
             emitEntries(cand, keep, out)
             cand.clear()
         }
@@ -244,8 +274,9 @@ object ZoomRenderer {
             }
         }
 
-        private fun layerOnScreen(v: Visible, w: Double, h: Double): Boolean {
-            val b = v.layer.boundsApprox() ?: return false
+        private fun layerOnScreen(layer: Layer, v: Visible, w: Double, h: Double): Boolean {
+            val b = boundsTmp
+            if (!layer.boundsApprox(b)) return false
             val x0 = (b[0] - v.x) * v.zoom + w / 2
             val y0 = (b[1] - v.y) * v.zoom + h / 2
             val x1 = (b[2] - v.x) * v.zoom + w / 2
@@ -417,16 +448,30 @@ object ZoomRenderer {
             if (!(bx1 >= 0 && by1 >= 0 && bx0 <= w && by0 <= h)) return
             if ((maxX - minX) * z < MIN_PX && (maxY - minY) * z < MIN_PX && widthPx < MIN_PX) return
 
-            val drawnWidth = min(max(widthPx, MIN_WIDTH_PX), 4 * max(w, h))
+            val np = n / 2
+            if (np == 0) return
+            val full = max(widthPx, MIN_WIDTH_PX)
             val a = (alpha * if (widthPx < MIN_WIDTH_PX) max(widthPx / MIN_WIDTH_PX, 0.3) else 1.0).toFloat()
+            // Un trait plus épais que l'écran (zoomé dedans) : au-delà de la distance de son axe au coin de
+            // l'écran le plus éloigné, l'épaisseur ne change plus rien à ce qu'on voit. On s'arrête là (le
+            // moteur graphique ne suit pas les épaisseurs immenses), et si l'écran est tout entier dedans,
+            // on le couvre d'un disque.
+            var drawnWidth = full
+            if (full > max(w, h)) {
+                val reach = farCornerReach(ox, oy, p, np)
+                if (full / 2 >= reach && kind != Stroke.BRUSH) {
+                    out.beginRun(color, (2 * (hypot(w, h) / 2 + 2.0)).toFloat(), a, erase, kind)
+                    out.addPoint(w / 2, h / 2)
+                    return
+                }
+                drawnWidth = min(min(full, 2 * (reach + 2.0)), MAX_WIDTH_SCREENS * max(w, h))
+            }
             // Zone de découpe : l'écran plus de quoi ne pas couper l'épaisseur du trait.
             val m = drawnWidth / 2 + 2.0
             val cx0 = -m
             val cy0 = -m
             val cx1 = w + m
             val cy1 = h + m
-            val np = n / 2
-            if (np == 0) return
 
             if (np == 1) {
                 if (ox in cx0..cx1 && oy in cy0..cy1) {
@@ -458,9 +503,9 @@ object ZoomRenderer {
                     val seg = alongB - alongA
                     if (!open) {
                         out.beginRun(color, drawnWidth.toFloat(), a, erase, kind)
-                        out.addPoint(ax + t0 * dx, ay + t0 * dy, if (brush) brushWidth(width, alongA + t0 * seg, brushLen, drawnWidth) else drawnWidth)
+                        out.addPoint(ax + t0 * dx, ay + t0 * dy, if (brush) brushWidth(width, alongA + t0 * seg, brushLen, full, drawnWidth) else drawnWidth)
                     }
-                    out.addPoint(ax + t1 * dx, ay + t1 * dy, if (brush) brushWidth(width, alongA + t1 * seg, brushLen, drawnWidth) else drawnWidth)
+                    out.addPoint(ax + t1 * dx, ay + t1 * dy, if (brush) brushWidth(width, alongA + t1 * seg, brushLen, full, drawnWidth) else drawnWidth)
                     open = t1 >= 1.0
                 }
                 alongA = alongB
@@ -469,9 +514,44 @@ object ZoomRenderer {
             }
         }
 
-        /** Épaisseur à l'écran du pinceau à [d] du début d'un trait long de [total]. */
-        private fun brushWidth(width: Double, d: Double, total: Double, full: Double): Double =
-            full * Stroke.brushFactor(min(d, total - d), width)
+        /** Épaisseur à l'écran du pinceau à [d] du début d'un trait long de [total], sans dépasser [cap]. */
+        private fun brushWidth(width: Double, d: Double, total: Double, full: Double, cap: Double): Double =
+            min(full * Stroke.brushFactor(min(d, total - d), width), cap)
+
+        /**
+         * Pour le tracé de [np] points [p] dont l'origine est à l'écran en ([ox], [oy]) : sur ses segments, la plus
+         * petite des distances au coin de l'écran le plus éloigné. La distance à un segment ne fait que croître
+         * en s'éloignant de lui : elle est la plus grande, sur l'écran, à l'un de ses coins. Chaque point de
+         * l'écran est donc à moins de cette distance du tracé : une demi-épaisseur au moins aussi grande couvre
+         * tout l'écran, et la grossir encore ne change rien à ce qu'on voit.
+         */
+        private fun farCornerReach(ox: Double, oy: Double, p: FloatArray, np: Int): Double {
+            var best = Double.POSITIVE_INFINITY
+            var ax = ox + p[0] * z
+            var ay = oy + p[1] * z
+            for (i in 0 until max(np - 1, 1)) {
+                val bx = if (np > 1) ox + p[2 * i + 2] * z else ax
+                val by = if (np > 1) oy + p[2 * i + 3] * z else ay
+                var far = 0.0
+                far = max(far, segmentDistance(0.0, 0.0, ax, ay, bx, by))
+                far = max(far, segmentDistance(w, 0.0, ax, ay, bx, by))
+                far = max(far, segmentDistance(0.0, h, ax, ay, bx, by))
+                far = max(far, segmentDistance(w, h, ax, ay, bx, by))
+                if (far < best) best = far
+                ax = bx
+                ay = by
+            }
+            return best
+        }
+
+        /** Distance du point ([px], [py]) au segment A→B. */
+        private fun segmentDistance(px: Double, py: Double, ax: Double, ay: Double, bx: Double, by: Double): Double {
+            val dx = bx - ax
+            val dy = by - ay
+            val len2 = dx * dx + dy * dy
+            val t = if (len2 > 0.0) (((px - ax) * dx + (py - ay) * dy) / len2).coerceIn(0.0, 1.0) else 0.0
+            return hypot(px - (ax + t * dx), py - (ay + t * dy))
+        }
 
         // Résultat de [clip].
         private var t0 = 0.0

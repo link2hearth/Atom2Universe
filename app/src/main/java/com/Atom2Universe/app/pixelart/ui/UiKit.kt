@@ -47,16 +47,26 @@ fun Context.themeColor(attr: Int, fallback: Int = Color.WHITE): Int {
 fun Context.accentColor(): Int = themeColor(androidx.appcompat.R.attr.colorAccent)
 fun Context.onAccentColor(): Int = themeColor(R.attr.a2uMidiAccentOnText)
 
+/** Carreaux de damier déjà dessinés, partagés par tous les aperçus (clé : taille et couleurs). */
+private val checkerTiles = HashMap<Triple<Int, Int, Int>, Bitmap>()
+
 /** Un damier gris clair/foncé : le fond de tout aperçu de pixel art transparent. */
 fun Context.checkerDrawable(cell: Int = dp(6)): Drawable {
-    val tile = Bitmap.createBitmap(cell * 2, cell * 2, Bitmap.Config.ARGB_8888)
-    val c = Canvas(tile)
-    val p = Paint()
-    p.color = ContextCompat.getColor(this, R.color.px_checker_a)
-    c.drawRect(0f, 0f, cell * 2f, cell * 2f, p)
-    p.color = ContextCompat.getColor(this, R.color.px_checker_b)
-    c.drawRect(cell.toFloat(), 0f, cell * 2f, cell.toFloat(), p)
-    c.drawRect(0f, cell.toFloat(), cell.toFloat(), cell * 2f, p)
+    val ca = ContextCompat.getColor(this, R.color.px_checker_a)
+    val cb = ContextCompat.getColor(this, R.color.px_checker_b)
+    val tile = synchronized(checkerTiles) {
+        checkerTiles.getOrPut(Triple(cell, ca, cb)) {
+            val t = Bitmap.createBitmap(cell * 2, cell * 2, Bitmap.Config.ARGB_8888)
+            val c = Canvas(t)
+            val p = Paint()
+            p.color = ca
+            c.drawRect(0f, 0f, cell * 2f, cell * 2f, p)
+            p.color = cb
+            c.drawRect(cell.toFloat(), 0f, cell * 2f, cell.toFloat(), p)
+            c.drawRect(0f, cell.toFloat(), cell.toFloat(), cell * 2f, p)
+            t
+        }
+    }
     return BitmapDrawable(resources, tile).apply {
         setTileModeXY(android.graphics.Shader.TileMode.REPEAT, android.graphics.Shader.TileMode.REPEAT)
     }

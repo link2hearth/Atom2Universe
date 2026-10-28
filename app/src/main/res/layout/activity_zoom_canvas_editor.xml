@@ -72,11 +72,14 @@
             android:paddingEnd="10dp"
             android:paddingBottom="5dp">
 
+            <!-- Largeur fixe : le texte change pendant le zoom sans remettre l'écran en page à chaque image -->
             <TextView
                 android:id="@+id/zc_level_text"
                 style="@style/PxCaption"
-                android:layout_width="wrap_content"
+                android:layout_width="72dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
                 android:textColor="@color/audio_text_primary"
                 android:textSize="12sp" />
 

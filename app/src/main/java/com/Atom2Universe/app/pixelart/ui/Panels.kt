@@ -55,12 +55,27 @@ class PaletteAdapter(
     private var colors: List<Int> = emptyList()
     /** La case qui porte le liseré (la couleur principale). */
     var ringIndex = -1
-        set(v) { if (field != v) { field = v; notifyDataSetChanged() } }
+        set(v) {
+            if (field == v) return
+            val old = field
+            field = v
+            if (old in colors.indices) notifyItemChanged(old, SAME_HOLDER)
+            if (v in colors.indices) notifyItemChanged(v, SAME_HOLDER)
+        }
 
     fun submit(list: List<Int>) {
         if (list == colors) return
+        val old = colors
         colors = list
-        notifyDataSetChanged()
+        // Réglage d'une case en direct : seule cette case est redessinée, pas toute la barre.
+        if (old.size == list.size) {
+            for (i in list.indices) if (old[i] != list[i]) notifyItemChanged(i, SAME_HOLDER)
+        } else notifyDataSetChanged()
+    }
+
+    private companion object {
+        /** Charge utile d'une mise à jour : la case est redessinée sur place, sans fondu à chaque mouvement du réglage. */
+        val SAME_HOLDER = Any()
     }
 
     override fun getItemCount() = colors.size + 1
@@ -127,8 +142,11 @@ class LayersAdapter(
     /** La liste montre le calque du dessus en premier : la position d'écran est l'inverse de l'indice. */
     private fun layerIndex(position: Int) = session().doc.layers.size - 1 - position
 
+    // Le damier est posé une fois par ligne créée, pas à chaque affichage.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_px_layer, parent, false))
+        Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_px_layer, parent, false)).also {
+            it.thumb.background = parent.context.checkerDrawable(parent.context.dp(4))
+        }
 
     override fun onBindViewHolder(h: Holder, position: Int) {
         val s = session()
@@ -143,7 +161,6 @@ class LayersAdapter(
         h.visible.alpha = if (layer.visible) 1f else 0.5f
         h.lock.setImageResource(if (layer.locked) R.drawable.ic_px_lock else R.drawable.ic_px_unlock)
         h.lock.alpha = if (layer.locked) 1f else 0.4f
-        h.thumb.background = ctx.checkerDrawable(ctx.dp(4))
         val bmp = thumbs.getOrPut(layer.id) { Thumbs.ofLayer(s.doc, layer.id, s.activeFrameId) }
         h.thumb.setImageDrawable(ctx.pixelDrawable(bmp))
         // Un appui sur le calque déjà actif ouvre ses réglages ; l'appui long le déplace.
@@ -164,6 +181,9 @@ class LayersAdapter(
         thumbs.clear()
         notifyDataSetChanged()
     }
+
+    /** Seul le calque actif a changé : les vignettes restent bonnes, on ne redessine que la mise en avant. */
+    fun refreshHighlight() = notifyDataSetChanged()
 
     /** Glisser-déposer : la poignée est toute la ligne, appui long pour saisir. */
     fun touchHelper(): ItemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
@@ -214,7 +234,9 @@ class FramesAdapter(
     override fun getItemCount() = session().doc.frames.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_px_frame, parent, false))
+        Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_px_frame, parent, false)).also {
+            it.thumb.background = parent.context.checkerDrawable(parent.context.dp(4))
+        }
 
     override fun onBindViewHolder(h: Holder, position: Int) {
         val s = session()
@@ -222,7 +244,6 @@ class FramesAdapter(
         val ctx = h.itemView.context
         h.itemView.isSelected = if (playing >= 0) position == playing else position == s.frameIndex
         h.index.text = (position + 1).toString()
-        h.thumb.background = ctx.checkerDrawable(ctx.dp(4))
         val bmp = thumbs.getOrPut(frame.id) { Thumbs.ofFrame(s.doc, frame.id) }
         h.thumb.setImageDrawable(ctx.pixelDrawable(bmp))
         h.itemView.setOnClickListener { onSelect(position) }
@@ -238,6 +259,9 @@ class FramesAdapter(
         thumbs.clear()
         notifyDataSetChanged()
     }
+
+    /** Seule l'image active a changé : les vignettes restent bonnes. */
+    fun refreshHighlight() = notifyDataSetChanged()
 
     fun touchHelper(): ItemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0) {
         private var from = -1

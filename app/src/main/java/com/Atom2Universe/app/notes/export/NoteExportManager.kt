@@ -13,6 +13,8 @@ object NoteExportManager {
     fun generateExportContent(note: Note, tags: List<Tag>, group: NoteGroup?): String {
         val sb = StringBuilder()
         sb.appendLine("---")
+        // L'identité de la note : rendue à l'import, pour que la synchro la reconnaisse au lieu d'en voir une nouvelle.
+        if (note.uuid.isNotBlank()) sb.appendLine("uuid: \"${note.uuid}\"")
         if (tags.isNotEmpty()) {
             sb.appendLine("tags: [${tags.joinToString(", ") { "\"${it.name}\"" }}]")
         }
@@ -70,6 +72,7 @@ object NoteExportManager {
         }
 
         return ImportedNoteData(
+            uuid = frontMatter["uuid"] as? String,
             title = title,
             content = noteContent,
             tagNames = (frontMatter["tags"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
@@ -115,5 +118,7 @@ object NoteExportManager {
         val colorHex: String?,
         val created: Long? = null,
         val modified: Long? = null,
+        /** L'identité de la note dans la sauvegarde ; null si le fichier n'en porte pas (une neuve est alors donnée). */
+        val uuid: String? = null,
     )
 }

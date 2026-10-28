@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -27,6 +24,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.reading.COVER_THUMB_PX
+import com.Atom2Universe.app.reading.CoverThumbs
+import com.Atom2Universe.app.reading.decodeSampledBytes
+import com.Atom2Universe.app.reading.decodeSampledFile
+import com.Atom2Universe.app.reading.decodeSampledStream
+import com.Atom2Universe.app.reading.dispatchListDiff
+import com.Atom2Universe.app.reading.renderPdfThumb
 import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +41,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
+import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 import androidx.core.content.edit
 
@@ -74,6 +78,8 @@ class ComicsTreeActivity : ThemedActivity() {
     // Temps de lecture cumulé par titre (stats), pour l'affichage sur les tuiles
     private var readingTimeByTitle: Map<String, Long> = emptyMap()
     private var currentFolderPath: String? = null
+    // Dossier actuellement affiché : au retour du lecteur on met la liste à jour en place
+    private var shownFolderPath: String? = null
     private var currentFilteredEntries: List<ComicEntry> = emptyList()
     private var hasFolderLevel = false
     private var rootId: String = ""
@@ -156,7 +162,7 @@ class ComicsTreeActivity : ThemedActivity() {
                 StatsRepository(this@ComicsTreeActivity).getReadingTimeByTitle(StatsRepository.MODULE_COMIC)
             }
             readingTimeByTitle = times
-            recycler.adapter?.notifyDataSetChanged()
+            (recycler.adapter as? ComicBrowseAdapter)?.updateReadingTimes(times)
         }
     }
 
@@ -170,6 +176,7 @@ class ComicsTreeActivity : ThemedActivity() {
     private fun handleBack() {
         if (hasFolderLevel && currentFolderPath != null) {
             currentFolderPath = null
+            shownFolderPath = null
             currentFilteredEntries = emptyList()
             contentContainer.visibility = View.GONE
             foldersContainer.visibility = View.VISIBLE
@@ -237,8 +244,14 @@ class ComicsTreeActivity : ThemedActivity() {
         showFoldersContainer()
         foldersEmpty.visibility = View.GONE
         foldersRecycler.visibility = View.VISIBLE
+        // Retour du lecteur : mêmes dossiers, on garde l'adaptateur et la position
+        val current = foldersRecycler.adapter
+        if (current is ComicSeriesFoldersAdapter) {
+            current.submit(folders)
+            return
+        }
         foldersRecycler.layoutManager = LinearLayoutManager(this)
-        foldersRecycler.adapter = ComicSeriesFoldersAdapter(folders, getString(R.string.comics_series_count)) { folder ->
+        foldersRecycler.adapter = ComicSeriesFoldersAdapter(folders) { folder ->
             openFolderPath(folder.pathPrefix)
         }
     }
@@ -329,6 +342,19 @@ class ComicsTreeActivity : ThemedActivity() {
         recycler.visibility = View.VISIBLE
 
         val folderPath = currentFolderPath ?: ""
+        // Retour du lecteur : même dossier, même affichage → mise à jour en place (position gardée)
+        val current = recycler.adapter
+        if (shownFolderPath == folderPath) {
+            if (displayMode == MODE_GRID && current is CoverGridAdapter) {
+                current.submit(entries)
+                return
+            }
+            if (displayMode == MODE_LIST && current is ComicBrowseAdapter) {
+                current.submit(entries, folderPath, readingTimeByTitle)
+                return
+            }
+        }
+        shownFolderPath = folderPath
         if (displayMode == MODE_GRID) {
             recycler.layoutManager = GridLayoutManager(this, gridColumns)
             recycler.adapter = CoverGridAdapter(entries, scope) { entry -> openComic(entry) }
@@ -367,10 +393,15 @@ class ComicsTreeActivity : ThemedActivity() {
 // ── Adapter : liste des dossiers/séries ──────────────────────────────────────
 
 private class ComicSeriesFoldersAdapter(
-    private val folders: List<ComicSeriesFolder>,
-    private val countFormat: String,
+    private var folders: List<ComicSeriesFolder>,
     private val onFolderClick: (ComicSeriesFolder) -> Unit
 ) : RecyclerView.Adapter<ComicSeriesFoldersAdapter.VH>() {
+
+    fun submit(newFolders: List<ComicSeriesFolder>) {
+        val old = folders
+        folders = newFolders
+        dispatchListDiff(old, newFolders, { a, b -> a.pathPrefix == b.pathPrefix }, { a, b -> a == b })
+    }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.series_folder_name)
@@ -385,7 +416,8 @@ private class ComicSeriesFoldersAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val folder = folders[position]
         holder.name.text = folder.displayName
-        holder.count.text = countFormat.format(folder.comicCount)
+        holder.count.text = holder.itemView.resources
+            .getQuantityString(R.plurals.comics_series_count, folder.comicCount, folder.comicCount)
         holder.itemView.setOnClickListener { onFolderClick(folder) }
     }
 }
@@ -427,11 +459,34 @@ private class ComicBrowseAdapter(
     private val scope: CoroutineScope,
     entries: List<ComicEntry>,
     folderPath: String,
-    private val readingTimeByTitle: Map<String, Long>,
+    private var readingTimeByTitle: Map<String, Long>,
     private val onComicClick: (ComicEntry) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val rows = buildBrowseRows(entries, folderPath)
+    private var rows = buildBrowseRows(entries, folderPath)
+
+    /** Nouvelles données (page en cours, temps de lecture) sans perdre la position. */
+    fun submit(entries: List<ComicEntry>, folderPath: String, times: Map<String, Long>) {
+        val oldRows = rows
+        val oldTimes = readingTimeByTitle
+        rows = buildBrowseRows(entries, folderPath)
+        readingTimeByTitle = times
+        dispatchListDiff(oldRows, rows,
+            sameItem = { a, b ->
+                (a is ComicBrowseRow.SectionHeader && b is ComicBrowseRow.SectionHeader && a.name == b.name) ||
+                    (a is ComicBrowseRow.ComicItem && b is ComicBrowseRow.ComicItem && a.entry.id == b.entry.id)
+            },
+            sameContent = { a, b ->
+                a == b && (a !is ComicBrowseRow.ComicItem || oldTimes[a.entry.title] == times[a.entry.title])
+            }
+        )
+    }
+
+    fun updateReadingTimes(times: Map<String, Long>) {
+        if (times == readingTimeByTitle) return
+        readingTimeByTitle = times
+        notifyItemRangeChanged(0, rows.size)
+    }
 
     companion object {
         private const val TYPE_HEADER = 0
@@ -475,7 +530,7 @@ private class BrowseSectionVH(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(row: ComicBrowseRow.SectionHeader) {
         indent.layoutParams = indent.layoutParams.also { it.width = 0 }
         name.text = row.name
-        count.text = "${row.count}"
+        count.text = itemView.context.getString(R.string.comics_section_count, row.count)
         chevron.visibility = View.GONE
         itemView.isClickable = false
     }
@@ -484,10 +539,16 @@ private class BrowseSectionVH(view: View) : RecyclerView.ViewHolder(view) {
 // ── Cover grid adapter ────────────────────────────────────────────────────────
 
 private class CoverGridAdapter(
-    private val entries: List<ComicEntry>,
+    private var entries: List<ComicEntry>,
     private val scope: CoroutineScope,
     private val onComicClick: (ComicEntry) -> Unit
 ) : RecyclerView.Adapter<CoverGridAdapter.VH>() {
+
+    fun submit(newEntries: List<ComicEntry>) {
+        val old = entries
+        entries = newEntries
+        dispatchListDiff(old, newEntries, { a, b -> a.id == b.id }, { a, b -> a == b })
+    }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val cover: ImageView = view.findViewById(R.id.comic_grid_cover)
@@ -502,13 +563,19 @@ private class CoverGridAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val entry = entries[position]
         holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
-        holder.cover.setImageResource(R.drawable.ic_hub_comics)
+        holder.itemView.setOnClickListener { onComicClick(entry) }
         holder.loadJob?.cancel()
+        holder.loadJob = null
+        val cached = CoverThumbs.cached(comicCoverKey(entry.id))
+        if (cached != null) {
+            holder.cover.setImageBitmap(cached)
+            return
+        }
+        holder.cover.setImageResource(R.drawable.ic_hub_comics)
         holder.loadJob = scope.launch {
-            val bmp = withContext(Dispatchers.IO) { loadCover(holder.cover.context, entry) }
+            val bmp = withContext(CoverThumbs.dispatcher) { loadCover(holder.cover.context, entry) }
             if (bmp != null) holder.cover.setImageBitmap(bmp)
         }
-        holder.itemView.setOnClickListener { onComicClick(entry) }
     }
 
     override fun onViewRecycled(holder: VH) {
@@ -541,16 +608,22 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
         val ctx = itemView.context
         pages.text = ctx.getString(R.string.comics_page_counter, entry.currentPage + 1, entry.totalPages)
         progress.progress = entry.progressPercent
-        progressText.text = "${entry.progressPercent}%"
+        progressText.text = ctx.getString(R.string.comics_progress_percent, entry.progressPercent)
         date.text = if (entry.lastOpenedAt > 0)
             DateUtils.getRelativeTimeSpanString(entry.lastOpenedAt, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
         else ""
         bindComicReadingTime(readingTime, readingTimeMs)
 
-        cover.setImageResource(R.drawable.ic_hub_comics)
         loadJob?.cancel()
+        loadJob = null
+        val cached = CoverThumbs.cached(comicCoverKey(entry.id))
+        if (cached != null) {
+            cover.setImageBitmap(cached)
+            return
+        }
+        cover.setImageResource(R.drawable.ic_hub_comics)
         loadJob = scope.launch {
-            val bmp = withContext(Dispatchers.IO) { loadCover(context, entry) }
+            val bmp = withContext(CoverThumbs.dispatcher) { loadCover(context, entry) }
             if (bmp != null) cover.setImageBitmap(bmp)
         }
     }
@@ -559,82 +632,61 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 /** Affiche (ou masque) la durée de lecture cumulée sur une tuile BD. */
-private fun bindComicReadingTime(view: TextView, durationMs: Long?) {
+internal fun bindComicReadingTime(view: TextView, durationMs: Long?) {
     if (durationMs == null || durationMs <= 0L) {
         view.visibility = View.GONE
         return
     }
     view.visibility = View.VISIBLE
-    view.text = "🕐 " + formatComicReadingDuration(durationMs)
+    val context = view.context
+    view.text = context.getString(R.string.comics_reading_time, formatComicReadingDuration(context, durationMs))
 }
 
-private fun formatComicReadingDuration(durationMs: Long): String {
+private fun formatComicReadingDuration(context: Context, durationMs: Long): String {
     val totalMinutes = (durationMs / 1000 / 60).toInt()
     val hours = totalMinutes / 60
     val minutes = totalMinutes % 60
-    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
+    return if (hours > 0) context.getString(R.string.comics_duration_h_min, hours, minutes)
+    else context.getString(R.string.comics_duration_min, minutes)
 }
 
 // ── Cover thumbnail helper ────────────────────────────────────────────────────
 
-private fun loadCover(context: Context, entry: ComicEntry): Bitmap? {
-    val cacheFile = File(context.filesDir, "comics_covers/${entry.id}.jpg")
-    if (cacheFile.exists()) {
-        return BitmapFactory.decodeFile(cacheFile.path, BitmapFactory.Options().apply { inSampleSize = 2 })
-    }
-    val bmp = entry.firstImagePath?.let { path ->
-        BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = 2 })
-    } ?: when (entry.format) {
-        "pdf" -> {
-            val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
-            pdfFirstPage(context, uri)
-        }
-        "folder" -> {
-            val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
-            folderFirstImage(context, uri)
-        }
-        "cbz" -> {
-            val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
-            cbzFirstImage(context, uri)
-        }
-        else -> null
-    } ?: return null
-    cacheFile.parentFile?.mkdirs()
-    try { FileOutputStream(cacheFile).use { bmp.compress(Bitmap.CompressFormat.JPEG, 85, it) } } catch (_: Exception) {}
-    return bmp
+private fun comicCoverKey(id: String) = "comic:$id"
+
+/** Supprime la vignette en cache d'une BD retirée (fichier et mémoire). */
+internal fun deleteComicCover(context: Context, id: String) {
+    File(context.filesDir, "comics_covers/$id.jpg").delete()
+    CoverThumbs.forget(comicCoverKey(id))
 }
 
-private fun pdfFirstPage(context: Context, uri: Uri): Bitmap? = try {
-    context.contentResolver.openFileDescriptor(uri, "r")?.use { fd ->
-        PdfRenderer(fd).use { renderer ->
-            if (renderer.pageCount == 0) return null
-            renderer.openPage(0).use { page ->
-                val scale = 600f / maxOf(page.width, page.height).coerceAtLeast(1)
-                val w = (page.width * scale).toInt().coerceAtLeast(1)
-                val h = (page.height * scale).toInt().coerceAtLeast(1)
-                val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                bmp.eraseColor(Color.WHITE)
-                page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                bmp
-            }
+/** Vignette d'une BD : mémoire, cache disque (taille vignette), sinon première page. */
+private fun loadCover(context: Context, entry: ComicEntry): Bitmap? {
+    val cacheFile = File(context.filesDir, "comics_covers/${entry.id}.jpg")
+    return CoverThumbs.load(comicCoverKey(entry.id), cacheFile) {
+        val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
+        entry.firstImagePath?.let { decodeSampledFile(it, COVER_THUMB_PX) } ?: when (entry.format) {
+            "pdf" -> renderPdfThumb(context, uri)
+            "folder" -> folderFirstImage(context, uri)
+            "cbz" -> cbzFirstImage(context, uri)
+            else -> null
         }
     }
-} catch (_: Exception) { null }
+}
 
 private fun folderFirstImage(context: Context, uri: Uri): Bitmap? = try {
-    val opts = BitmapFactory.Options().apply { inSampleSize = 4 }
     if (uri.scheme == "file") {
         val dir = File(uri.path ?: return null)
         val first = dir.listFiles()
             ?.filter { it.isFile && isComicImage(it.name) }
             ?.minWithOrNull(Comparator { a, b -> naturalCompare(a.name, b.name) }) ?: return null
-        BitmapFactory.decodeFile(first.path, opts)
+        decodeSampledFile(first.path, COVER_THUMB_PX)
     } else {
         val doc = DocumentFile.fromTreeUri(context, uri) ?: return null
         val first = doc.listFiles()
             .filter { it.isFile && it.type?.startsWith("image/") == true }
             .minWithOrNull(Comparator { a, b -> naturalCompare(a.name ?: "", b.name ?: "") }) ?: return null
-        context.contentResolver.openInputStream(first.uri)?.use { BitmapFactory.decodeStream(it, null, opts) }
+        decodeSampledStream(COVER_THUMB_PX) { context.contentResolver.openInputStream(first.uri) }
     }
 } catch (_: Exception) { null }
 
@@ -643,39 +695,52 @@ private fun isComicImage(name: String): Boolean {
     return l.endsWith(".jpg") || l.endsWith(".jpeg") || l.endsWith(".png") || l.endsWith(".webp")
 }
 
+/**
+ * Première image d'un CBZ. Chemin de fichier : accès direct par le répertoire du ZIP (ZipFile),
+ * sans rien décompresser d'autre. Document SAF : même chose par /proc/self/fd, sinon lecture en flux.
+ */
 private fun cbzFirstImage(context: Context, uri: Uri): Bitmap? {
     return try {
-        // Passe 1 : collecter les noms des entrées images sans lire leurs bytes
-        val imageNames = mutableListOf<String>()
-        context.contentResolver.openInputStream(uri)?.use { stream ->
-            val zis = ZipInputStream(stream)
-            var entry = zis.nextEntry
-            while (entry != null) {
-                val n = entry.name.lowercase()
-                if (!entry.isDirectory && (n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp"))) {
-                    imageNames.add(entry.name)
-                }
-                zis.closeEntry()
-                entry = zis.nextEntry
-            }
-        }
-        val target = imageNames.minWithOrNull(Comparator { a, b -> naturalCompare(a, b) })
-            ?: return null
-        // Passe 2 : décoder uniquement l'entrée cible avec subsample
-        val opts = BitmapFactory.Options().apply { inSampleSize = 4 }
-        context.contentResolver.openInputStream(uri)?.use { stream ->
-            val zis = ZipInputStream(stream)
-            var entry = zis.nextEntry
-            var result: Bitmap? = null
-            while (entry != null && result == null) {
-                if (entry.name == target) {
-                    result = BitmapFactory.decodeStream(zis, null, opts)
-                } else {
-                    zis.closeEntry()
-                }
-                entry = zis.nextEntry
-            }
-            result
+        if (uri.scheme == "file") {
+            ZipFile(File(uri.path ?: return null)).use { cbzFirstImage(it) }
+        } else {
+            context.contentResolver.openFileDescriptor(uri, "r")?.use { pfd ->
+                runCatching { ZipFile("/proc/self/fd/${pfd.fd}").use { cbzFirstImage(it) } }.getOrNull()
+            } ?: cbzFirstImageStream(context, uri)
         }
     } catch (_: Exception) { null }
+}
+
+private fun cbzFirstImage(zip: ZipFile): Bitmap? {
+    val first = zip.entries().asSequence()
+        .filter { !it.isDirectory && isComicImage(it.name) }
+        .minWithOrNull(Comparator { a, b -> naturalCompare(a.name, b.name) }) ?: return null
+    return decodeSampledStream(COVER_THUMB_PX) { zip.getInputStream(first) }
+}
+
+private fun cbzFirstImageStream(context: Context, uri: Uri): Bitmap? {
+    // Passe 1 : collecter les noms des entrées images sans lire leurs bytes
+    val imageNames = mutableListOf<String>()
+    context.contentResolver.openInputStream(uri)?.use { stream ->
+        val zis = ZipInputStream(stream)
+        var entry = zis.nextEntry
+        while (entry != null) {
+            if (!entry.isDirectory && isComicImage(entry.name)) imageNames.add(entry.name)
+            zis.closeEntry()
+            entry = zis.nextEntry
+        }
+    }
+    val target = imageNames.minWithOrNull(Comparator { a, b -> naturalCompare(a, b) }) ?: return null
+    // Passe 2 : lire uniquement l'entrée cible, puis la décoder à la taille vignette
+    val bytes = context.contentResolver.openInputStream(uri)?.use { stream ->
+        val zis = ZipInputStream(stream)
+        var entry = zis.nextEntry
+        var result: ByteArray? = null
+        while (entry != null && result == null) {
+            if (entry.name == target) result = zis.readBytes() else zis.closeEntry()
+            entry = zis.nextEntry
+        }
+        result
+    } ?: return null
+    return decodeSampledBytes(bytes, COVER_THUMB_PX)
 }

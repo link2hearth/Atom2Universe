@@ -15,6 +15,8 @@ import android.os.Build
 import com.Atom2Universe.app.zoomcanvas.core.RenderList
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.TextItem
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
@@ -200,12 +202,25 @@ class RunPainter {
         val kx = bmp.width.toFloat() / list.imagePx[2 * i]
         val ky = bmp.height.toFloat() / list.imagePx[2 * i + 1]
         val sr = list.imageSrc
+        val sl = sr[4 * i] * kx
+        val st = sr[4 * i + 1] * ky
+        val sRight = sr[4 * i + 2] * kx
+        val sb = sr[4 * i + 3] * ky
         srcRect.set(
-            (sr[4 * i] * kx).toInt(), (sr[4 * i + 1] * ky).toInt(),
-            kotlin.math.ceil(sr[4 * i + 2] * kx).toInt().coerceAtMost(bmp.width),
-            kotlin.math.ceil(sr[4 * i + 3] * ky).toInt().coerceAtMost(bmp.height),
+            floor(sl).toInt().coerceAtLeast(0), floor(st).toInt().coerceAtLeast(0),
+            ceil(sRight).toInt().coerceAtMost(bmp.width), ceil(sb).toInt().coerceAtMost(bmp.height),
         )
         if (srcRect.width() <= 0 || srcRect.height() <= 0) return
+        // Le rectangle source est arrondi aux pixels entiers de l'image : la destination s'élargit d'autant,
+        // dans la même proportion, sinon l'image coupée au bord de l'écran glisse quand on la fait défiler.
+        if (sRight > sl && sb > st) {
+            val px = dstRect.width() / (sRight - sl)
+            val py = dstRect.height() / (sb - st)
+            dstRect.left -= (sl - srcRect.left) * px
+            dstRect.right += (srcRect.right - sRight) * px
+            dstRect.top -= (st - srcRect.top) * py
+            dstRect.bottom += (srcRect.bottom - sb) * py
+        }
         imagePaint.alpha = (alpha * 255).toInt().coerceIn(0, 255)
         canvas.drawBitmap(bmp, srcRect, dstRect, imagePaint)
     }

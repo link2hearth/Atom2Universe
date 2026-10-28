@@ -197,10 +197,14 @@ object MarkdownSyntax {
     fun render(markdown: String, maxLines: Int = Int.MAX_VALUE): Rendered {
         val sb = StringBuilder()
         val tokens = ArrayList<Token>()
-        val lines = markdown.split('\n')
-        for ((n, line) in lines.withIndex()) {
-            if (n >= maxLines) break
+        // Ligne après ligne, sans découper tout le texte d'avance : un aperçu ne lit que le début de la note.
+        var from = 0
+        var n = 0
+        while (n < maxLines) {
+            val nl = markdown.indexOf('\n', from)
+            val line = if (nl < 0) markdown.substring(from) else markdown.substring(from, nl)
             if (n > 0) sb.append('\n')
+            n++
             val parsed = parseLine(line)
             val base = sb.length
             // Le préfixe rendu
@@ -228,6 +232,8 @@ object MarkdownSyntax {
                     else -> if (at[t.end] > at[t.start]) tokens += t.copy(start = at[t.start], end = at[t.end])
                 }
             }
+            if (nl < 0) break
+            from = nl + 1
         }
         return Rendered(sb.toString(), tokens)
     }
@@ -243,15 +249,44 @@ object MarkdownSyntax {
     fun checklistProgress(markdown: String): Pair<Int, Int> {
         var done = 0
         var total = 0
-        for (line in markdown.split('\n')) {
-            val m = CHECK.find(line) ?: continue
-            total++
-            if (m.groupValues[3] != " ") done++
+        var from = 0
+        while (from <= markdown.length) {
+            val nl = markdown.indexOf('\n', from).let { if (it < 0) markdown.length else it }
+            // Seule une ligne qui commence (après son retrait) par `-` ou `*` peut être une case : les autres ne sont pas copiées.
+            var i = from
+            while (i < nl && markdown[i] == ' ') i++
+            if (i < nl && (markdown[i] == '-' || markdown[i] == '*')) {
+                CHECK.find(markdown.substring(from, nl))?.let { m ->
+                    total++
+                    if (m.groupValues[3] != " ") done++
+                }
+            }
+            from = nl + 1
         }
         return done to total
     }
 
     /** Le nombre de mots du texte rendu. */
-    fun wordCount(markdown: String): Int =
-        toPlainText(markdown).split(Regex("[\\s☐☑•]+")).count { it.any(Char::isLetterOrDigit) }
+    fun wordCount(markdown: String): Int = wordsIn(toPlainText(markdown))
+
+    /** Le nombre de mots d'un texte déjà rendu ([toPlainText]). */
+    fun wordsIn(plainText: String): Int = plainText.split(WORD_SEPARATORS).count { it.any(Char::isLetterOrDigit) }
+
+    private val WORD_SEPARATORS = Regex("[\\s☐☑•]+")
+
+    /** Ce que l'éditeur tire d'une note à chaque sauvegarde : son texte brut, ses mots, ses cases. */
+    data class Stats(val markdown: String, val plainText: String, val words: Int, val done: Int, val total: Int)
+
+    /** [Stats] en une seule lecture du texte : les cases sont comptées dans le rendu qui donne le texte brut. */
+    fun stats(markdown: String): Stats {
+        val r = render(markdown)
+        var done = 0
+        var total = 0
+        for (t in r.tokens) if (t.kind == Kind.CHECK) {
+            total++
+            if (t.level == 1) done++
+        }
+        val plain = r.text.trim()
+        return Stats(markdown, plain, wordsIn(plain), done, total)
+    }
 }

@@ -269,8 +269,9 @@ private class ProjectsAdapter(
         val p = items[position]
         h.name.text = p.name
         val sb = StringBuilder(context.getString(R.string.px_subtitle_size, p.width, p.height))
-        if (p.frames > 1) sb.append(" · ").append(context.resources.getQuantityString(R.plurals.px_frames_count, p.frames, p.frames))
-        sb.append(" · ").append(DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS))
+        // « · élément » : même séparateur que le sous-titre de l'éditeur.
+        if (p.frames > 1) sb.append(context.getString(R.string.px_subtitle_file, context.resources.getQuantityString(R.plurals.px_frames_count, p.frames, p.frames)))
+        sb.append(context.getString(R.string.px_subtitle_file, DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)))
         h.info.text = sb.toString()
         h.badge.visibility = if (p.linkName != null) View.VISIBLE else View.GONE
         when (CloudProjectSync.badge(context, CloudModule.PIXEL_ART, p.id, p.modified)) {

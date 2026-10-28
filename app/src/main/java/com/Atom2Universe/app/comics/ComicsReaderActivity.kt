@@ -27,8 +27,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStream
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
+import kotlin.math.roundToInt
+
+/** Plus grand côté d'une page décodée ou rendue. */
+private const val MAX_PAGE_SIDE = 4096
 
 class ComicsReaderActivity : ThemedActivity() {
 
@@ -54,21 +59,26 @@ class ComicsReaderActivity : ThemedActivity() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     // Scope IO dédié à la sauvegarde — non annulé avec l'activité
     private val saveScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    // Un seul fil pour tout ce qui touche au PdfRenderer et à l'archive : ouverture, rendus,
+    // fermeture. La fermeture passe après le dernier rendu, jamais pendant.
+    private val renderDispatcher = Dispatchers.IO.limitedParallelism(1)
     private var currentPage = 0
     private var totalPages = 0
     private var barsVisible = true
     private var currentLayout = ZoomableImageView.ViewLayout.FULL
 
     private var comicId: String? = null
+    // Titre de la BD : clé de progression et de stats (le titre affiché ne change jamais en cours de lecture)
+    private var comicTitle = ""
     private var fromBooks = false
     private var comicFormat = "pdf"
     private var sourceUri: Uri? = null
 
-    private var pdfRenderer: PdfRenderer? = null
-    private var pdfFd: ParcelFileDescriptor? = null
+    @Volatile private var pdfRenderer: PdfRenderer? = null
+    @Volatile private var pdfFd: ParcelFileDescriptor? = null
     private var cbzNames: List<String>? = null
-    private var cbzZipFile: ZipFile? = null   // accès aléatoire O(1) par entrée
-    private var cbzPfd: ParcelFileDescriptor? = null  // maintenu ouvert pour /proc/self/fd
+    @Volatile private var cbzZipFile: ZipFile? = null   // accès aléatoire O(1) par entrée
+    @Volatile private var cbzPfd: ParcelFileDescriptor? = null  // maintenu ouvert pour /proc/self/fd
     private var folderImages: List<Uri>? = null
 
     private var isLoading = false
@@ -123,7 +133,7 @@ class ComicsReaderActivity : ThemedActivity() {
         sourceUri = if (sourcePath.startsWith("/")) Uri.fromFile(java.io.File(sourcePath)) else Uri.parse(sourcePath)
         // Page de départ depuis l'intent (sera écrasée par la valeur DB si disponible)
         currentPage = intent.getIntExtra(EXTRA_COMIC_PAGE, 0)
-        titleText.text = intent.getStringExtra(EXTRA_COMIC_TITLE) ?: ""
+        setComicTitle(intent.getStringExtra(EXTRA_COMIC_TITLE) ?: "")
 
         // Lire la page réelle depuis la DB pour ne pas dépendre de l'appelant
         scope.launch {
@@ -138,6 +148,11 @@ class ComicsReaderActivity : ThemedActivity() {
         }
     }
 
+    private fun setComicTitle(title: String) {
+        comicTitle = title
+        titleText.text = title
+    }
+
     private fun bookPrefs() = getSharedPreferences(
         com.Atom2Universe.app.books.BookLibraryActivity.PREFS_NAME, MODE_PRIVATE
     )
@@ -149,7 +164,7 @@ class ComicsReaderActivity : ThemedActivity() {
         val saved = com.Atom2Universe.app.books.BookLibraryActivity.loadLibrary(bookPrefs())
             .firstOrNull { it.uri == uri.toString() }
         currentPage = ((saved?.lastReadItem ?: 1) - 1).coerceAtLeast(0)
-        titleText.text = saved?.title ?: (uri.lastPathSegment?.substringBeforeLast('.') ?: "")
+        setComicTitle(saved?.title ?: (uri.lastPathSegment?.substringBeforeLast('.') ?: ""))
         setupSource()
     }
 
@@ -170,9 +185,9 @@ class ComicsReaderActivity : ThemedActivity() {
                 val idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 if (idx >= 0) c.getString(idx) else null
             } else null
-        } ?: uri.lastPathSegment ?: "Document"
+        } ?: uri.lastPathSegment ?: getString(R.string.comics_default_document)
         val title = fileName.substringBeforeLast('.')
-        titleText.text = title
+        setComicTitle(title)
         val uriStr = uri.toString()
         scope.launch {
             val dao = ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao()
@@ -191,7 +206,7 @@ class ComicsReaderActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
-        titleText.text?.toString()?.takeIf { it.isNotEmpty() }?.let {
+        comicTitle.takeIf { it.isNotEmpty() }?.let {
             StatsTracker.startReadingSession(StatsRepository.MODULE_COMIC, it)
         }
     }
@@ -203,28 +218,39 @@ class ComicsReaderActivity : ThemedActivity() {
         // l'activité est détruite. La page est déjà écrite à chaque changement (voir
         // initNavigation), donc la bibliothèque qui se rouvre lit la bonne page même si cette
         // écriture-ci, qui rafraîchit surtout la date de lecture, finit après elle.
-        saveProgress()
+        // Fin de séance : c'est ici seulement que la synchro entre appareils est déclenchée.
+        saveProgress(sync = true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
-        pdfRenderer?.close()
-        pdfFd?.close()
-        cbzZipFile?.close()
-        cbzPfd?.close()
+        // Sur le fil des rendus : passe après un rendu en cours au lieu de fermer sous ses pieds
+        saveScope.launch(renderDispatcher) {
+            runCatching { pdfRenderer?.close() }
+            pdfRenderer = null
+            runCatching { pdfFd?.close() }
+            pdfFd = null
+            runCatching { cbzZipFile?.close() }
+            cbzZipFile = null
+            runCatching { cbzPfd?.close() }
+            cbzPfd = null
+        }
     }
 
-    private fun saveProgress() {
+    private fun saveProgress(sync: Boolean = false) {
         if (fromBooks) { saveBookPdfProgress(); return }
         val id = comicId ?: return
         val page = currentPage
-        val title = titleText.text?.toString()
+        val title = comicTitle
+        val total = totalPages
         saveScope.launch {
             ComicsDatabase.getInstance(applicationContext).comicsDao()
                 .updateProgress(id, page, System.currentTimeMillis())
-            if (totalPages > 0 && !title.isNullOrBlank()) {
-                readingProgressRepository.updateProgress(StatsRepository.MODULE_COMIC, title, page.toFloat() / totalPages)
+            if (total > 0 && title.isNotBlank()) {
+                readingProgressRepository.updateProgress(
+                    StatsRepository.MODULE_COMIC, title, page.toFloat() / total, triggerSync = sync
+                )
             }
         }
     }
@@ -241,14 +267,16 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private suspend fun setupPdf(uri: Uri) {
-        val ok = withContext(Dispatchers.IO) {
+        val ok = withContext(renderDispatcher) {
             try {
-                pdfFd = when (uri.scheme) {
+                val fd = when (uri.scheme) {
                     "file" -> ParcelFileDescriptor.open(java.io.File(uri.path!!), ParcelFileDescriptor.MODE_READ_ONLY)
                     else -> contentResolver.openFileDescriptor(uri, "r")
                 }
-                pdfRenderer = PdfRenderer(pdfFd!!)
-                totalPages = pdfRenderer!!.pageCount
+                pdfFd = fd
+                val renderer = PdfRenderer(fd!!)
+                pdfRenderer = renderer
+                totalPages = renderer.pageCount
                 true
             } catch (e: Exception) { false }
         }
@@ -259,7 +287,7 @@ class ComicsReaderActivity : ThemedActivity() {
 
     private suspend fun setupCbz(uri: Uri) {
         val names = mutableListOf<String>()
-        val ok = withContext(Dispatchers.IO) {
+        val ok = withContext(renderDispatcher) {
             try {
                 val zf = openZipFileRandom(uri)
                 if (zf != null) {
@@ -338,14 +366,16 @@ class ComicsReaderActivity : ThemedActivity() {
         // Reprise synchronisée : si un autre appareil a lu ce titre plus récemment, on saute à sa page
         val startPage = currentPage
         val id = comicId
-        val title = titleText.text?.toString()
-        if (id != null && totalPages > 0 && !title.isNullOrBlank()) {
+        val title = comicTitle
+        if (id != null && totalPages > 0 && title.isNotBlank()) {
             val localEntry = withContext(Dispatchers.IO) {
                 ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao().getComicById(id)
             }
             val remote = readingProgressRepository.getProgress(StatsRepository.MODULE_COMIC, title)
-            if (remote != null && remote.lastReadTimestamp > (localEntry?.lastOpenedAt ?: 0L)) {
-                currentPage = (remote.progressPercent * totalPages).toInt().coerceIn(0, totalPages - 1)
+            // sourceDeviceId nul = progression écrite ici : jamais prise pour une reprise d'ailleurs
+            if (remote != null && remote.sourceDeviceId != null &&
+                remote.lastReadTimestamp > (localEntry?.lastOpenedAt ?: 0L)) {
+                currentPage = (remote.progressPercent * totalPages).roundToInt().coerceIn(0, totalPages - 1)
             }
         }
 
@@ -365,6 +395,7 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private fun navigatePage(delta: Int) {
+        if (totalPages <= 0) return
         val newPage = (currentPage + delta).coerceIn(0, totalPages - 1)
         if (newPage != currentPage) {
             currentPage = newPage
@@ -374,46 +405,54 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private fun loadCurrentPage() {
-        if (isLoading) return
         updatePageText()
-        updatePageTitle()
         seekBar.progress = currentPage
+        // Un chargement est déjà en cours : à sa fin, il relance la dernière page demandée
+        if (isLoading) return
         isLoading = true
+        val page = currentPage
+        val (targetW, targetH) = renderTarget()
         scope.launch {
-            val bmp = withContext(Dispatchers.IO) { renderPage(currentPage) }
-            imageView.setBitmap(bmp, currentLayout)
-            isLoading = false
-        }
-    }
-
-    private fun updatePageTitle() {
-        val name: String? = when (comicFormat) {
-            "folder" -> folderImages?.getOrNull(currentPage)?.let { uri ->
-                if (uri.scheme == "file") java.io.File(uri.path!!).name
-                else uri.lastPathSegment
+            val bmp = try {
+                withContext(renderDispatcher) { renderPage(page, targetW, targetH) }
+            } finally {
+                isLoading = false
             }
-            "cbz" -> cbzNames?.getOrNull(currentPage)?.let { java.io.File(it).name }
-            else -> null
+            imageView.setBitmap(bmp, currentLayout)
+            if (page != currentPage) loadCurrentPage()
         }
-        if (!name.isNullOrBlank()) titleText.text = name
     }
 
-    private fun renderPage(page: Int): Bitmap? = when (comicFormat) {
-        "pdf" -> renderPdfPage(page)
-        "cbz" -> renderCbzPage(page)
-        "folder" -> renderFolderPage(page)
+    /** Taille visée pour une page : deux fois la vue (marge pour le zoom), plafonnée. */
+    private fun renderTarget(): Pair<Int, Int> {
+        val dm = resources.displayMetrics
+        val w = imageView.width.takeIf { it > 0 } ?: dm.widthPixels
+        val h = imageView.height.takeIf { it > 0 } ?: dm.heightPixels
+        return (w * 2).coerceIn(1, MAX_PAGE_SIDE) to (h * 2).coerceIn(1, MAX_PAGE_SIDE)
+    }
+
+    private fun renderPage(page: Int, targetW: Int, targetH: Int): Bitmap? = when (comicFormat) {
+        "pdf" -> renderPdfPage(page, targetW, targetH)
+        "cbz" -> renderCbzPage(page, targetW, targetH)
+        "folder" -> renderFolderPage(page, targetW, targetH)
         else -> null
     }
 
-    private fun renderPdfPage(page: Int): Bitmap? {
+    private fun renderPdfPage(page: Int, targetW: Int, targetH: Int): Bitmap? {
         val renderer = pdfRenderer ?: return null
         if (page >= renderer.pageCount) return null
         return try {
             renderer.openPage(page).use { pdfPage ->
-                val scale = 2f
+                val pw = pdfPage.width.coerceAtLeast(1)
+                val ph = pdfPage.height.coerceAtLeast(1)
+                // Échelle d'après la vue (au lieu d'un ×2 fixe), plafonnée sur le plus grand côté
+                val scale = minOf(
+                    minOf(targetW.toFloat() / pw, targetH.toFloat() / ph),
+                    MAX_PAGE_SIDE.toFloat() / maxOf(pw, ph)
+                )
                 val bmp = Bitmap.createBitmap(
-                    (pdfPage.width * scale).toInt(),
-                    (pdfPage.height * scale).toInt(),
+                    (pw * scale).toInt().coerceAtLeast(1),
+                    (ph * scale).toInt().coerceAtLeast(1),
                     Bitmap.Config.ARGB_8888
                 )
                 bmp.eraseColor(Color.WHITE)
@@ -422,10 +461,10 @@ class ComicsReaderActivity : ThemedActivity() {
                 pdfPage.render(bmp, null, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                 bmp
             }
-        } catch (e: Exception) { null }
+        } catch (e: Exception) { null } catch (e: OutOfMemoryError) { null }
     }
 
-    private fun renderCbzPage(page: Int): Bitmap? {
+    private fun renderCbzPage(page: Int, targetW: Int, targetH: Int): Bitmap? {
         val names = cbzNames ?: return null
         if (page >= names.size) return null
         val target = names[page]
@@ -433,32 +472,58 @@ class ComicsReaderActivity : ThemedActivity() {
             val zf = cbzZipFile
             if (zf != null) {
                 val entry = zf.getEntry(target) ?: return null
-                zf.getInputStream(entry).use { BitmapFactory.decodeStream(it) }
+                decodePage(targetW, targetH) { zf.getInputStream(entry) }
             } else {
-                // Fallback streaming si ZipFile n'a pas pu être ouvert
-                openCbzStream(sourceUri ?: return null)?.use { s ->
+                // Fallback streaming si ZipFile n'a pas pu être ouvert : on garde les octets de
+                // cette seule page pour lire ses dimensions puis la décoder
+                val bytes = openCbzStream(sourceUri ?: return null)?.use { s ->
                     val zis = ZipInputStream(java.io.BufferedInputStream(s, 65536))
                     var entry = zis.nextEntry
-                    var result: Bitmap? = null
+                    var result: ByteArray? = null
                     while (entry != null && result == null) {
-                        if (entry.name == target) result = BitmapFactory.decodeStream(zis)
+                        if (entry.name == target) result = zis.readBytes()
                         else zis.closeEntry()
                         entry = zis.nextEntry
                     }
                     result
-                }
+                } ?: return null
+                decodePage(targetW, targetH) { bytes.inputStream() }
             }
-        } catch (e: Exception) { null }
+        } catch (e: Exception) { null } catch (e: OutOfMemoryError) { null }
     }
 
-    private fun renderFolderPage(page: Int): Bitmap? {
+    private fun renderFolderPage(page: Int, targetW: Int, targetH: Int): Bitmap? {
         val uris = folderImages ?: return null
         if (page >= uris.size) return null
         return try {
             val u = uris[page]
-            if (u.scheme == "file") BitmapFactory.decodeFile(u.path)
-            else contentResolver.openInputStream(u)?.use { BitmapFactory.decodeStream(it) }
-        } catch (e: Exception) { null }
+            if (u.scheme == "file") decodePage(targetW, targetH) { java.io.FileInputStream(u.path!!) }
+            else decodePage(targetW, targetH) { contentResolver.openInputStream(u) }
+        } catch (e: Exception) { null } catch (e: OutOfMemoryError) { null }
+    }
+
+    /** Dimensions d'abord, puis décodage sous-échantillonné ; [open] rouvre un flux neuf à chaque appel. */
+    private fun decodePage(targetW: Int, targetH: Int, open: () -> InputStream?): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        val first = open() ?: return null
+        first.use { BitmapFactory.decodeStream(it, null, bounds) }
+        val opts = BitmapFactory.Options().apply {
+            inSampleSize = pageSampleSize(bounds.outWidth, bounds.outHeight, targetW, targetH)
+        }
+        return open()?.use { BitmapFactory.decodeStream(it, null, opts) }
+    }
+
+    /**
+     * Plus grande puissance de 2 qui garde la page au moins à la taille visée une fois ajustée
+     * à l'écran, et sous le plafond [MAX_PAGE_SIDE].
+     */
+    private fun pageSampleSize(width: Int, height: Int, targetW: Int, targetH: Int): Int {
+        if (width <= 0 || height <= 0) return 1
+        val fit = minOf(targetW.toFloat() / width, targetH.toFloat() / height)
+        var sample = 1
+        while (fit * sample * 2 <= 1f) sample *= 2
+        while (maxOf(width, height) / sample > MAX_PAGE_SIDE) sample *= 2
+        return sample
     }
 
     private fun updatePageText() {

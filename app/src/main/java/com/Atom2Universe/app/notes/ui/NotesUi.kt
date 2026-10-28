@@ -149,7 +149,7 @@ fun Context.showTagPicker(all: List<Tag>, selected: Set<Long>, createTag: suspen
     val dialog = bottomSheet(getString(R.string.notes_tags)) { root, _ ->
         val flow = com.google.android.material.chip.ChipGroup(this).apply { chipSpacingHorizontal = dp(2) }
         fun addChip(id: Long, name: String) {
-            val c = chip("#$name") { v ->
+            val c = chip(getString(R.string.notes_tag_label, name)) { v ->
                 if (!chosen.remove(id)) chosen += id
                 v.isSelected = id in chosen
             }
@@ -173,9 +173,10 @@ fun Context.showTagPicker(all: List<Tag>, selected: Set<Long>, createTag: suspen
             launch {
                 val id = createTag(name)
                 if (all.none { it.id == id } && chosen.add(id)) addChip(id, name) else chosen += id
+                val shown = getString(R.string.notes_tag_label, name)
                 for (i in 0 until flow.childCount) {
                     val v = flow.getChildAt(i) as TextView
-                    if (v.text.toString().equals("#$name", ignoreCase = true)) v.isSelected = true
+                    if (v.text.toString().equals(shown, ignoreCase = true)) v.isSelected = true
                 }
             }
         }

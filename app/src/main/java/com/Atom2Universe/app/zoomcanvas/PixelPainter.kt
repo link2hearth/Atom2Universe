@@ -96,9 +96,13 @@ class PixelPainter {
         ((world - cam) * zoom + extent / 2).roundToInt().toFloat()
 
     private companion object {
-        /** Images de tuiles gardées : 1024 × 16 Ko = 16 Mo. */
-        const val MAX_CACHED = 1024
-        /** Au-delà, on ne trace plus (dézoomé très loin sur un grand tableau, des milliers de tuiles d'un pixel). */
-        const val MAX_DRAWN = 4000
+        /** Images de tuiles gardées : 2048 × 16 Ko = 32 Mo. */
+        const val MAX_CACHED = 2048
+        /**
+         * Au-delà, on ne trace plus (dézoomé très loin sur un grand tableau, des milliers de tuiles d'un pixel).
+         * Jamais plus que [MAX_CACHED] : sinon chaque image chasserait du cache les tuiles qu'elle vient de
+         * tracer, et toutes seraient refaites (et renvoyées au moteur graphique) à l'image suivante.
+         */
+        const val MAX_DRAWN = MAX_CACHED
     }
 }

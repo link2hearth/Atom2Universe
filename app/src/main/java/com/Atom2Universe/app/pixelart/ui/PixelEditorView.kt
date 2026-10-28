@@ -92,6 +92,10 @@ class PixelEditorView @JvmOverloads constructor(
     }
     private val antsBlack = Paint().apply { style = Paint.Style.STROKE; color = Color.BLACK; isAntiAlias = false }
     private val antsWhite = Paint().apply { style = Paint.Style.STROKE; color = Color.WHITE; isAntiAlias = false }
+    /** Pointillés des contours : en coordonnées d'écran (fixes) et du dessin (refaits seulement quand le zoom change). */
+    private val dashScreen = DashPathEffect(floatArrayOf(4f * density, 4f * density), 0f)
+    private var dashDoc: DashPathEffect? = null
+    private var dashDocScale = 0f
     private val cursorPaint = Paint().apply { style = Paint.Style.STROKE; color = 0xFFFFFFFF.toInt(); strokeWidth = 1.5f * density }
     private val cursorShadow = Paint().apply { style = Paint.Style.STROKE; color = 0xFF000000.toInt(); strokeWidth = 3f * density }
     private val onionPaint = Paint().apply { isFilterBitmap = false }
@@ -106,7 +110,6 @@ class PixelEditorView @JvmOverloads constructor(
     private var gridLines = FloatArray(0)
 
     init {
-        setLayerType(LAYER_TYPE_HARDWARE, null)
         isFocusable = true
         rebuildChecker()
     }
@@ -139,20 +142,39 @@ class PixelEditorView @JvmOverloads constructor(
         currentFrameId = playbackFrame ?: s.activeFrameId
         Compositor.composite(d, currentFrameId, pixels)
         bitmap!!.setPixels(pixels, 0, docW, 0, 0, docW, docH)
+        // Tout vient d'être recomposé : la zone en attente n'a plus lieu d'être.
+        pendingRegion.set(0, 0, 0, 0)
         selectionPathDirty = true
     }
 
-    /** Une zone de l'image composée a changé (un trait en cours) : on ne recompose que celle-là. */
-    fun refreshRegion(r: PixelRect) {
-        val s = session ?: return
-        val bmp = bitmap ?: return
-        if (playbackFrame != null) return
+    /** Zone changée depuis la dernière image affichée : recomposée une seule fois, juste avant de dessiner. */
+    private val pendingRegion = PixelRect.empty()
+    private var regionPosted = false
+    private val applyRegion = Runnable {
+        regionPosted = false
+        val s = session ?: return@Runnable
+        val bmp = bitmap ?: return@Runnable
+        val r = pendingRegion
         val l = r.left.coerceIn(0, docW); val t = r.top.coerceIn(0, docH)
         val rr = r.right.coerceIn(0, docW); val b = r.bottom.coerceIn(0, docH)
-        if (l >= rr || t >= b) return
+        r.set(0, 0, 0, 0)
+        if (playbackFrame != null || l >= rr || t >= b) return@Runnable
         Compositor.composite(s.doc, s.activeFrameId, pixels, l, t, rr, b)
         bmp.setPixels(pixels, t * docW + l, docW, l, t, rr - l, b - t)
         invalidate()
+    }
+
+    /**
+     * Une zone de l'image composée a changé (un trait en cours) : on ne recompose que celle-là, et une seule
+     * fois par image affichée, même si le doigt a déposé des dizaines de points entre deux images.
+     */
+    fun refreshRegion(r: PixelRect) {
+        if (bitmap == null || playbackFrame != null || r.isEmpty) return
+        pendingRegion.union(r)
+        if (!regionPosted) {
+            regionPosted = true
+            postOnAnimation(applyRegion)
+        }
     }
 
     /** Tout est à recomposer (annuler, changement d'image ou de calque, taille…). */
@@ -160,6 +182,17 @@ class PixelEditorView @JvmOverloads constructor(
         rebuildBitmap()
         refreshOnion()
         invalidate()
+    }
+
+    /**
+     * Le calque ou l'image active a changé. Le dessin affiché ne dépend que de l'image : on ne recompose
+     * que si elle a changé. Retourne vrai dans ce cas.
+     */
+    fun activeChanged(): Boolean {
+        val s = session ?: return false
+        if (playbackFrame != null || s.activeFrameId == currentFrameId) { invalidate(); return false }
+        refreshAll()
+        return true
     }
 
     fun selectionChanged() {
@@ -172,30 +205,50 @@ class PixelEditorView @JvmOverloads constructor(
     // ---- Lecture d'animation -----------------------------------------------------------------
 
     private var playbackFrame: Int? = null
+    /** Images déjà composées, seulement si toute l'animation tient dans [PLAYBACK_CACHE_BYTES]. */
     private var playbackCache: HashMap<Int, Bitmap>? = null
+    /** Sinon, une seule image réutilisée, recomposée à chaque pas de la lecture. */
+    private var playbackScratch: Bitmap? = null
+    private var playbackPixels: IntArray? = null
 
     /** Affiche l'image [frameId] sans toucher à la session (lecture) ; `null` revient à l'édition. */
     fun showFrame(frameId: Int?) {
         val s = session ?: return
         if (frameId == null) {
             playbackFrame = null
-            playbackCache?.values?.forEach { it.recycle() }
-            playbackCache = null
+            releasePlayback()
             rebuildBitmap()
             invalidate()
             return
         }
         playbackFrame = frameId
-        val cache = playbackCache ?: HashMap<Int, Bitmap>().also { playbackCache = it }
-        val bmp = cache.getOrPut(frameId) {
-            val px = Compositor.compositeFrame(s.doc, frameId)
-            Bitmap.createBitmap(docW, docH, Bitmap.Config.ARGB_8888).also { it.setPixels(px, 0, docW, 0, 0, docW, docH) }
+        val frameBytes = docW.toLong() * docH * 4L
+        if (frameBytes * s.doc.frames.size <= PLAYBACK_CACHE_BYTES) {
+            val cache = playbackCache ?: HashMap<Int, Bitmap>().also { playbackCache = it }
+            playbackBitmap = cache.getOrPut(frameId) {
+                val px = Compositor.compositeFrame(s.doc, frameId)
+                Bitmap.createBitmap(docW, docH, Bitmap.Config.ARGB_8888).also { it.setPixels(px, 0, docW, 0, 0, docW, docH) }
+            }
+        } else {
+            val bmp = playbackScratch ?: Bitmap.createBitmap(docW, docH, Bitmap.Config.ARGB_8888).also { playbackScratch = it }
+            val px = playbackPixels ?: IntArray(docW * docH).also { playbackPixels = it }
+            Compositor.composite(s.doc, frameId, px)
+            bmp.setPixels(px, 0, docW, 0, 0, docW, docH)
+            playbackBitmap = bmp
         }
-        playbackBitmap = bmp
         invalidate()
     }
 
     private var playbackBitmap: Bitmap? = null
+
+    private fun releasePlayback() {
+        playbackCache?.values?.forEach { it.recycle() }
+        playbackCache = null
+        playbackScratch?.recycle()
+        playbackScratch = null
+        playbackPixels = null
+        playbackBitmap = null
+    }
 
     // ---- Pelure d'oignon ------------------------------------------------------------------------
 
@@ -484,6 +537,11 @@ class PixelEditorView @JvmOverloads constructor(
     private var floatBitmap: Bitmap? = null
     private var floatOwner: Any? = null
 
+    /**
+     * Le contenu flottant a changé. Un glissement ne fait que redessiner : le contenu et le contour sont
+     * posés à leur nouvelle place au moment du dessin. Seul un nouveau contenu détaché refait son bitmap et
+     * recompose le dessin ; la pose ou l'abandon, eux, arrivent avec un rafraîchissement complet.
+     */
     fun floatingChanged() {
         val s = session ?: return
         val f = s.floating
@@ -494,9 +552,9 @@ class PixelEditorView @JvmOverloads constructor(
             val px = IntArray(f.bw * f.bh) { if (f.mask[it].toInt() != 0) f.pixels[it] else 0 }
             floatBitmap = Bitmap.createBitmap(f.bw, f.bh, Bitmap.Config.ARGB_8888).also { it.setPixels(px, 0, f.bw, 0, 0, f.bw, f.bh) }
             floatOwner = f
+            selectionPathDirty = true
+            rebuildBitmap()
         }
-        selectionPathDirty = true
-        rebuildBitmap()
         invalidate()
     }
 
@@ -519,7 +577,11 @@ class PixelEditorView @JvmOverloads constructor(
             val w = 1.5f * density / scale
             antsBlack.strokeWidth = w
             antsWhite.strokeWidth = w
-            antsWhite.pathEffect = DashPathEffect(floatArrayOf(4f * density / scale, 4f * density / scale), 0f)
+            if (dashDoc == null || dashDocScale != scale) {
+                dashDoc = DashPathEffect(floatArrayOf(4f * density / scale, 4f * density / scale), 0f)
+                dashDocScale = scale
+            }
+            antsWhite.pathEffect = dashDoc
             if (sel != null) {
                 c.drawPath(selectionPath, antsBlack)
                 c.drawPath(selectionPath, antsWhite)
@@ -536,20 +598,21 @@ class PixelEditorView @JvmOverloads constructor(
             tmpRect.set(panX + r.left * scale, panY + r.top * scale, panX + r.right * scale, panY + r.bottom * scale)
             antsBlack.strokeWidth = 1.5f * density
             antsWhite.strokeWidth = 1.5f * density
-            antsWhite.pathEffect = DashPathEffect(floatArrayOf(4f * density, 4f * density), 0f)
+            antsWhite.pathEffect = dashScreen
             c.drawRect(tmpRect, antsBlack)
             c.drawRect(tmpRect, antsWhite)
         }
-        s.lassoPoints?.let { (xs, ys) ->
+        val n = s.lassoCount
+        if (n > 0) {
             lassoPath.reset()
-            for (i in xs.indices) {
-                val sx = panX + (xs[i] + 0.5f) * scale
-                val sy = panY + (ys[i] + 0.5f) * scale
+            for (i in 0 until n) {
+                val sx = panX + (s.lassoX(i) + 0.5f) * scale
+                val sy = panY + (s.lassoY(i) + 0.5f) * scale
                 if (i == 0) lassoPath.moveTo(sx, sy) else lassoPath.lineTo(sx, sy)
             }
             antsBlack.strokeWidth = 1.5f * density
             antsWhite.strokeWidth = 1.5f * density
-            antsWhite.pathEffect = DashPathEffect(floatArrayOf(4f * density, 4f * density), 0f)
+            antsWhite.pathEffect = dashScreen
             c.drawPath(lassoPath, antsBlack)
             c.drawPath(lassoPath, antsWhite)
         }
@@ -583,6 +646,15 @@ class PixelEditorView @JvmOverloads constructor(
     private var pinchDist = 0f
     private var pinchCx = 0f
     private var pinchCy = 0f
+    /** Les deux doigts du pincement, suivis par identifiant : leurs indices changent quand un autre doigt se lève. */
+    private var pinchIdA = -1
+    private var pinchIdB = -1
+    // Mesure du pincement à cet instant, remplie par [readPinch] (aucun objet neuf à chaque mouvement).
+    private var nowCx = 0f
+    private var nowCy = 0f
+    private var nowDist = 0f
+    /** La référence a bougé pendant le geste : l'écran l'apprend une fois les doigts levés. */
+    private var referenceMoved = false
 
     private fun px(sx: Float) = floor((sx - panX) / scale).toInt()
     private fun py(sy: Float) = floor((sy - panY) / scale).toInt()
@@ -609,7 +681,9 @@ class PixelEditorView @JvmOverloads constructor(
             MotionEvent.ACTION_POINTER_DOWN -> {
                 if (mode == Mode.DRAW) {
                     // Un doigt de plus tout de suite : c'était le début d'un pincement, pas un trait.
-                    if (e.eventTime - drawStart < 350) s.pointerCancel() else s.pointerUp()
+                    // Le pot et la baguette n'agissent qu'au relâchement : un deuxième doigt les annule toujours.
+                    val pinchOnly = s.tool == Tool.FILL || s.tool == Tool.SELECT_WAND
+                    if (pinchOnly || e.eventTime - drawStart < 350) s.pointerCancel() else s.pointerUp()
                 }
                 if (mode != Mode.IGNORE) {
                     mode = if (referenceEditing && reference != null) Mode.REFERENCE else Mode.GESTURE
@@ -638,15 +712,23 @@ class PixelEditorView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 if (mode == Mode.DRAW) s.pointerUp()
                 mode = Mode.NONE
+                reportReferenceMove()
                 invalidate()
             }
             MotionEvent.ACTION_CANCEL -> {
                 if (mode == Mode.DRAW) s.pointerCancel()
                 mode = Mode.NONE
+                reportReferenceMove()
                 invalidate()
             }
         }
         return true
+    }
+
+    private fun reportReferenceMove() {
+        if (!referenceMoved) return
+        referenceMoved = false
+        host?.onReferenceMoved(referenceScale, referenceX, referenceY)
     }
 
     private fun moveDraw(s: EditorSession, x: Float, y: Float) {
@@ -655,30 +737,41 @@ class PixelEditorView @JvmOverloads constructor(
         invalidate()
     }
 
+    /**
+     * Choisit les deux doigts du pincement (les deux premiers encore posés, sauf l'indice [skip] qui se lève)
+     * et prend leur position comme point de départ.
+     */
     private fun startPinch(e: MotionEvent, skip: Int = -1) {
-        var n = 0
-        var sx = 0f; var sy = 0f
-        val pts = ArrayList<Int>()
-        for (i in 0 until e.pointerCount) if (i != skip) pts.add(i)
-        for (i in pts) { sx += e.getX(i); sy += e.getY(i); n++ }
-        pinchCx = sx / n; pinchCy = sy / n
-        pinchDist = if (pts.size >= 2) hypot(e.getX(pts[0]) - e.getX(pts[1]), e.getY(pts[0]) - e.getY(pts[1])) else 0f
-        pinchSkip = skip
+        pinchIdA = -1; pinchIdB = -1
+        for (i in 0 until e.pointerCount) {
+            if (i == skip) continue
+            if (pinchIdA < 0) pinchIdA = e.getPointerId(i)
+            else if (pinchIdB < 0) { pinchIdB = e.getPointerId(i); break }
+        }
+        if (readPinch(e)) {
+            pinchCx = nowCx; pinchCy = nowCy; pinchDist = nowDist
+        } else {
+            pinchDist = 0f
+        }
     }
 
-    private var pinchSkip = -1
-
-    private fun pinchPoints(e: MotionEvent): Triple<Float, Float, Float>? {
-        val pts = (0 until e.pointerCount).filter { it != pinchSkip }
-        if (pts.size < 2) return null
-        val cx = (e.getX(pts[0]) + e.getX(pts[1])) / 2f
-        val cy = (e.getY(pts[0]) + e.getY(pts[1])) / 2f
-        val d = hypot(e.getX(pts[0]) - e.getX(pts[1]), e.getY(pts[0]) - e.getY(pts[1]))
-        return Triple(cx, cy, d)
+    /** Lit la position des deux doigts suivis dans [nowCx], [nowCy], [nowDist] ; faux si l'un d'eux n'est plus là. */
+    private fun readPinch(e: MotionEvent): Boolean {
+        if (pinchIdA < 0 || pinchIdB < 0) return false
+        val a = e.findPointerIndex(pinchIdA)
+        val b = e.findPointerIndex(pinchIdB)
+        if (a < 0 || b < 0) return false
+        nowCx = (e.getX(a) + e.getX(b)) / 2f
+        nowCy = (e.getY(a) + e.getY(b)) / 2f
+        nowDist = hypot(e.getX(a) - e.getX(b), e.getY(a) - e.getY(b))
+        return true
     }
 
     private fun movePinch(e: MotionEvent) {
-        val (cx, cy, d) = pinchPoints(e) ?: return
+        if (!readPinch(e)) { startPinch(e); return }
+        val cx = nowCx
+        val cy = nowCy
+        val d = nowDist
         if (pinchDist > 0f && d > 0f) {
             val ns = (scale * d / pinchDist).coerceIn(minScale, maxScale)
             val k = ns / scale
@@ -697,7 +790,10 @@ class PixelEditorView @JvmOverloads constructor(
 
     private fun moveReference(e: MotionEvent) {
         if (e.pointerCount >= 2) {
-            val (cx, cy, d) = pinchPoints(e) ?: return
+            if (!readPinch(e)) { startPinch(e); return }
+            val cx = nowCx
+            val cy = nowCy
+            val d = nowDist
             if (pinchDist > 0f && d > 0f) {
                 val k = d / pinchDist
                 val newScale = (referenceScale * k).coerceIn(0.02f, 64f)
@@ -714,7 +810,7 @@ class PixelEditorView @JvmOverloads constructor(
             referenceY += (e.y - lastY) / scale
             lastX = e.x; lastY = e.y
         }
-        host?.onReferenceMoved(referenceScale, referenceX, referenceY)
+        referenceMoved = true
         invalidate()
     }
 
@@ -731,8 +827,15 @@ class PixelEditorView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        removeCallbacks(applyRegion)
+        regionPosted = false
         bitmap?.recycle(); bitmap = null
         onionPrev?.recycle(); onionNext?.recycle(); floatBitmap?.recycle()
-        playbackCache?.values?.forEach { it.recycle() }
+        releasePlayback()
+    }
+
+    private companion object {
+        /** Au-delà, la lecture compose chaque image au vol au lieu de toutes les garder. */
+        const val PLAYBACK_CACHE_BYTES = 24L * 1024 * 1024
     }
 }

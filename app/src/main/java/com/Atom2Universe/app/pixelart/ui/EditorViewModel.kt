@@ -79,16 +79,23 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Enregistrement différé : on attend la fin du geste pour ne pas écrire à chaque trait. */
+    /**
+     * Enregistrement différé : on attend la fin du geste pour ne pas écrire à chaque trait.
+     * Si un doigt dessine encore ou qu'un contenu flotte, on repousse : l'enregistrement automatique
+     * ne doit jamais couper un trait ni poser un contenu qu'on est en train de déplacer.
+     */
     fun scheduleAutosave() {
         autosaveJob?.cancel()
         autosaveJob = viewModelScope.launch {
-            delay(AUTOSAVE_DELAY_MS)
+            do {
+                delay(AUTOSAVE_DELAY_MS)
+                val s = session
+            } while (s != null && (s.gestureActive || s.floating != null))
             flush()
         }
     }
 
-    /** Écrit tout de suite ce qui a changé (l'écriture se fait hors du fil principal). */
+    /** Écrit tout de suite ce qui a changé, geste en cours compris (l'écriture se fait hors du fil principal). */
     fun flush() {
         val p = project ?: return
         val s = session ?: return
@@ -130,6 +137,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
     override fun onCleared() {
         flush()
+        palettes.flush()
         session?.listener = null
         super.onCleared()
     }

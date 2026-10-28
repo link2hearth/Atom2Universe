@@ -211,7 +211,11 @@ class ZoomScene(
     }
 
     /** Point de la couche de travail sous un écart d'écran [sx], [sy] (pixels depuis le centre). */
-    fun screenToLocal(sx: Double, sy: Double): DoubleArray = doubleArrayOf(cx + sx / zoom, cy + sy / zoom)
+    fun screenToLocal(sx: Double, sy: Double): DoubleArray = doubleArrayOf(localX(sx), localY(sy))
+
+    /** Les deux moitiés de [screenToLocal], sans tableau : pour ce qui suit le doigt à chaque mouvement. */
+    fun localX(sx: Double): Double = cx + sx / zoom
+    fun localY(sy: Double): Double = cy + sy / zoom
 
     // ---- Caméra ---------------------------------------------------------------------------
 
@@ -362,11 +366,11 @@ class ZoomScene(
      * [kind] : crayon, pinceau ou feutre ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]).
      */
     fun beginStroke(sx: Double, sy: Double, color: Int, widthPx: Double, kind: Int = Stroke.PEN) {
-        anchorIfFresh(working())
-        val p = screenToLocal(sx, sy)
-        live.originX = p[0]
-        live.originY = p[1]
         live.count = 0
+        // La couche n'est pas encore arrivée de la base : le trait ne commence pas (elle est redemandée).
+        anchorIfFresh(working() ?: return)
+        live.originX = localX(sx)
+        live.originY = localY(sy)
         live.color = color
         live.width = widthPx / zoom
         live.kind = if (color ushr 24 == 0) Stroke.PEN else kind
@@ -401,7 +405,7 @@ class ZoomScene(
     /** Termine le trait et l'ajoute à la couche de travail. Un coup de gomme dans le vide ne laisse rien. */
     fun endStroke(): Stroke? {
         if (live.count == 0) return null
-        val l = working()
+        val l = working() ?: run { live.count = 0; return null }
         val s = Stroke(nextStrokeId, live.originX, live.originY, live.pts.copyOf(live.count), live.color, live.width, live.kind)
         live.count = 0
         if (s.isEraser && !l.touches(s)) return null
@@ -437,10 +441,10 @@ class ZoomScene(
 
     /**
      * Pose une image de [pxW]×[pxH] pixels au centre de l'écran, dans la couche de travail, à une
-     * taille qui tient dans [fitW]×[fitH] pixels d'écran.
+     * taille qui tient dans [fitW]×[fitH] pixels d'écran. Null si la couche n'est pas encore arrivée de la base.
      */
-    fun addImage(key: String, pxW: Int, pxH: Int, fitW: Double, fitH: Double): ImageItem {
-        val l = working()
+    fun addImage(key: String, pxW: Int, pxH: Int, fitW: Double, fitH: Double): ImageItem? {
+        val l = working() ?: return null
         anchorIfFresh(l)
         val k = min(fitW / pxW, fitH / pxH) / zoom
         val item = ImageItem(nextStrokeId++, key, pxW, pxH, cx, cy, pxW * k, pxH * k)
@@ -457,11 +461,10 @@ class ZoomScene(
     fun addText(text: String, sx: Double, sy: Double, fontPx: Double, color: Int, style: Int, font: String, unitWidth: Double): TextItem? {
         val t = text.take(TextItem.MAX_LENGTH)
         if (t.isBlank()) return null
-        val l = working()
+        val l = working() ?: return null
         anchorIfFresh(l)
-        val p = screenToLocal(sx, sy)
         val size = fontPx / zoom
-        val item = TextItem(nextStrokeId++, t, p[0], p[1], unitWidth * size, TextItem.heightOf(t, size), size, color, style, font)
+        val item = TextItem(nextStrokeId++, t, localX(sx), localY(sy), unitWidth * size, TextItem.heightOf(t, size), size, color, style, font)
         l.addBox(item)
         record(Edit.AddBox(depth, item))
         return item
@@ -474,17 +477,19 @@ class ZoomScene(
      */
     fun boxAt(sx: Double, sy: Double, below: Long? = null, textOnly: Boolean = false, erasers: Boolean = false): BoxItem? {
         val l = layer(depth) ?: return null
-        val p = screenToLocal(sx, sy)
-        return l.boxAt(p[0], p[1], HIT_SLACK_PX / zoom, below, textOnly, erasers)
+        return l.boxAt(localX(sx), localY(sy), HIT_SLACK_PX / zoom, below, textOnly, erasers)
     }
 
     fun box(id: Long): BoxItem? = layer(depth)?.box(id)
 
-    /** Coins d'un objet à l'écran (écarts depuis le centre) : x0, y0, x1, y1. */
-    fun boxScreenRect(item: BoxItem): DoubleArray = doubleArrayOf(
-        (item.x - item.w / 2 - cx) * zoom, (item.y - item.h / 2 - cy) * zoom,
-        (item.x + item.w / 2 - cx) * zoom, (item.y + item.h / 2 - cy) * zoom,
-    )
+    /** Coins d'un objet à l'écran (écarts depuis le centre) : x0, y0, x1, y1, rangés dans [out]. */
+    fun boxScreenRect(item: BoxItem, out: DoubleArray = DoubleArray(4)): DoubleArray {
+        out[0] = (item.x - item.w / 2 - cx) * zoom
+        out[1] = (item.y - item.h / 2 - cy) * zoom
+        out[2] = (item.x + item.w / 2 - cx) * zoom
+        out[3] = (item.y + item.h / 2 - cy) * zoom
+        return out
+    }
 
     private var boxBefore: BoxItem? = null
 
@@ -512,28 +517,29 @@ class ZoomScene(
         val signY = if (corner >= 2) 1.0 else -1.0
         val ox = start.x - signX * start.w / 2
         val oy = start.y - signY * start.h / 2
-        val p = screenToLocal(sx, sy)
+        val px = localX(sx)
+        val py = localY(sy)
         if (start.keepsRatio) {
             if (start.w <= 0.0 && start.h <= 0.0) return
             // On suit le doigt sur la diagonale : l'échelle est la projection du doigt sur celle-ci.
             val dx = signX * start.w
             val dy = signY * start.h
-            val k = (((p[0] - ox) * dx + (p[1] - oy) * dy) / (dx * dx + dy * dy)).coerceAtLeast(MIN_IMAGE_PX / (zoom * max(start.w, start.h)))
+            val k = (((px - ox) * dx + (py - oy) * dy) / (dx * dx + dy * dy)).coerceAtLeast(MIN_IMAGE_PX / (zoom * max(start.w, start.h)))
             val w = start.w * k
             val h = start.h * k
             replaceBox(start.boxed(ox + signX * w / 2, oy + signY * h / 2, w, h))
             return
         }
         // Forme libre : la boîte va du coin fixe au doigt, retournée si le doigt passe de l'autre côté.
-        var w = abs(p[0] - ox)
-        var h = abs(p[1] - oy)
+        var w = abs(px - ox)
+        var h = abs(py - oy)
         val floor = MIN_IMAGE_PX / zoom
         if (w < floor && h < floor) {
             // Jamais réduite à un point : une forme qu'on ne voit plus ne se rattrape pas.
             if (w >= h) w = floor else h = floor
         }
-        val crossX = (p[0] - ox) * signX < 0
-        val crossY = (p[1] - oy) * signY < 0
+        val crossX = (px - ox) * signX < 0
+        val crossY = (py - oy) * signY < 0
         val x = ox + (if (crossX) -signX else signX) * w / 2
         val y = oy + (if (crossY) -signY else signY) * h / 2
         replaceBox(start.boxed(x, y, w, h, crossX, crossY))
@@ -645,9 +651,10 @@ class ZoomScene(
      * [square] force une forme carrée / ronde / équilatérale (sans effet sur la ligne et la flèche).
      */
     fun beginShape(kind: ShapeKind, fill: ShapeFill, strokeColor: Int, fillColor: Int, widthPx: Double, sx: Double, sy: Double, square: Boolean) {
-        anchorIfFresh(working())
-        val p = screenToLocal(sx, sy)
-        shapeAx = p[0]; shapeAy = p[1]; shapeBx = p[0]; shapeBy = p[1]
+        shapeActive = false
+        // La couche n'est pas encore arrivée de la base : la forme ne commence pas (elle est redemandée).
+        anchorIfFresh(working() ?: return)
+        shapeAx = localX(sx); shapeAy = localY(sy); shapeBx = shapeAx; shapeBy = shapeAy
         shapeKind = kind; shapeFill = fill; shapeStroke = strokeColor; shapeFillColor = fillColor
         shapeWidth = widthPx / zoom
         shapeSquare = square
@@ -657,8 +664,7 @@ class ZoomScene(
     /** Tire le coin opposé jusqu'à l'écart d'écran [sx], [sy]. */
     fun updateShape(sx: Double, sy: Double) {
         if (!shapeActive) return
-        val p = screenToLocal(sx, sy)
-        shapeBx = p[0]; shapeBy = p[1]
+        shapeBx = localX(sx); shapeBy = localY(sy)
     }
 
     /** La forme en cours (id 0), tracée par-dessus tout le reste, ou null. */
@@ -689,8 +695,9 @@ class ZoomScene(
         shapeActive = false
         val probe = buildShape(0L)
         if (max(probe.w, probe.h) * zoom < MIN_SHAPE_PX) return null
+        val l = working() ?: return null
         val item = probe.copy(id = nextStrokeId++)
-        working().addBox(item)
+        l.addBox(item)
         record(Edit.AddBox(depth, item))
         return item
     }
@@ -754,9 +761,14 @@ class ZoomScene(
     private var pixelSettingsDirty = false
 
     /** Ce que la case ([x], [y]) était avant le geste en cours : de quoi défaire d'un seul pas d'historique. */
-    private var pixelBefore: LinkedHashMap<Long, Int>? = null
+    private var pixelBefore: CellMap? = null
+    /** La table du geste, gardée d'un geste à l'autre (vidée, jamais réallouée). */
+    private val pixelTable = CellMap(1024)
 
     val isEditingPixels: Boolean get() = pixelBefore != null
+
+    /** Cases touchées par le geste en cours (chacune comptée une fois). */
+    val pixelEditCells: Int get() = pixelBefore?.size ?: 0
 
     /** La case sous l'écart d'écran [sx] (pixels depuis le centre de la vue). */
     fun cellX(sx: Double): Int = Math.floor(cx + sx / zoom).coerceIn(-PixelLayer.LIMIT.toDouble(), PixelLayer.LIMIT.toDouble()).toInt()
@@ -764,7 +776,8 @@ class ZoomScene(
 
     /** Commence un geste de pixels : tout ce qu'on peint jusqu'à [endPixelEdit] est un seul pas d'historique. */
     fun beginPixelEdit() {
-        pixelBefore = LinkedHashMap()
+        pixelTable.clear()
+        pixelBefore = pixelTable
     }
 
     /** Peint la case ([x], [y]) pendant un geste ([beginPixelEdit]). Faux si rien n'a changé. */
@@ -779,23 +792,26 @@ class ZoomScene(
     /** Remet la case ([x], [y]) comme elle était avant le geste (le « pixel parfait » retire ainsi un coin). */
     fun unpaintCell(x: Int, y: Int) {
         val before = pixelBefore ?: return
-        val old = before[PixelLayer.cellKey(x, y)] ?: return
-        pixels.set(x, y, old)
+        val key = PixelLayer.cellKey(x, y)
+        if (!before.containsKey(key)) return
+        pixels.set(x, y, before.get(key, 0))
     }
 
     /** Termine le geste : ce qui a vraiment changé entre dans l'historique. Faux s'il n'a rien changé. */
     fun endPixelEdit(): Boolean {
         val before = pixelBefore ?: return false
         pixelBefore = null
-        val keys = ArrayList<Long>()
-        val was = ArrayList<Int>()
-        val now = ArrayList<Int>()
-        for ((k, b) in before) {
+        val keys = LongArray(before.size)
+        val was = IntArray(before.size)
+        val now = IntArray(before.size)
+        var n = 0
+        before.forEach { k, b ->
             val a = pixels.get(PixelLayer.cellX(k), PixelLayer.cellY(k))
-            if (a != b) { keys.add(k); was.add(b); now.add(a) }
+            if (a != b) { keys[n] = k; was[n] = b; now[n] = a; n++ }
         }
-        if (keys.isEmpty()) return false
-        record(Edit.Pixels(keys.toLongArray(), was.toIntArray(), now.toIntArray()))
+        before.clear()
+        if (n == 0) return false
+        record(Edit.Pixels(keys.copyOf(n), was.copyOf(n), now.copyOf(n)))
         return true
     }
 
@@ -803,7 +819,8 @@ class ZoomScene(
     fun cancelPixelEdit() {
         val before = pixelBefore ?: return
         pixelBefore = null
-        for ((k, b) in before) pixels.set(PixelLayer.cellX(k), PixelLayer.cellY(k), b)
+        before.forEach { k, b -> pixels.set(PixelLayer.cellX(k), PixelLayer.cellY(k), b) }
+        before.clear()
         contentVersion++
     }
 
@@ -821,7 +838,8 @@ class ZoomScene(
         val h = y1 - y0 + 1
         if (w.toLong() * h > MAX_FILL_AREA) return false
         val seen = BooleanArray(w * h)
-        val region = ArrayList<Int>()
+        var region = IntArray(256)
+        var regionN = 0
         var stack = IntArray(256)
         var n = 0
         fun push(px: Int, py: Int) {
@@ -835,14 +853,15 @@ class ZoomScene(
         push(x, y)
         while (n > 0) {
             val i = stack[--n]
-            region.add(i)
-            if (region.size > MAX_FILL_CELLS) return false
+            if (regionN == MAX_FILL_CELLS) return false
+            if (regionN == region.size) region = region.copyOf(region.size * 2)
+            region[regionN++] = i
             val px = x0 + i % w
             val py = y0 + i / w
             push(px - 1, py); push(px + 1, py); push(px, py - 1); push(px, py + 1)
         }
         beginPixelEdit()
-        for (i in region) paintCell(x0 + i % w, y0 + i / w, c)
+        for (k in 0 until regionN) paintCell(x0 + region[k] % w, y0 + region[k] / w, c)
         return endPixelEdit()
     }
 
@@ -1027,12 +1046,11 @@ class ZoomScene(
     /**
      * Ce qui lit les éléments d'une couche dans la base : la scène ne connaît pas la base, elle dit
      * seulement quelles couches elle voudra bientôt ([wantLoad], sans attendre : le résultat revient
-     * par [installLayer]) ou tout de suite ([loadNow], qui bloque : seulement si on va dessiner dans
-     * une couche pas encore arrivée).
+     * par [installLayer]). Elle n'attend jamais la base : dessiner dans une couche pas encore arrivée
+     * ne fait rien, et la redemande.
      */
     interface LayerPager {
         fun wantLoad(depth: Long)
-        fun loadNow(depth: Long): List<Pair<LayerItem, Long>>?
     }
 
     /** Sans pager (tests, projet neuf), toutes les couches restent en mémoire. */
@@ -1092,11 +1110,15 @@ class ZoomScene(
         updateResidency()
     }
 
-    /** La couche de travail, chargée : si elle n'est pas encore arrivée (on a zoomé très vite), on l'attend. */
-    private fun working(): Layer {
+    /**
+     * La couche de travail, si elle est en mémoire. Pas encore arrivée (on a zoomé très vite) : null, et on
+     * la redemande ; le geste ne fait rien plutôt que de figer l'écran en attendant la base.
+     */
+    private fun working(): Layer? {
         val l = layer(depth)!!
-        if (!l.isLoaded) pager?.loadNow(depth)?.let { l.load(it) }
-        return l
+        if (l.isLoaded) return l
+        pager?.wantLoad(depth)
+        return null
     }
 
     class View(var x: Double = 0.0, var y: Double = 0.0, var zoom: Double = 1.0)
@@ -1137,7 +1159,10 @@ class ZoomScene(
         /** De combien un doigt déborde d'un objet pour le toucher (pixels d'écran). */
         const val HIT_SLACK_PX = 8.0
         const val MAX_HISTORY = 300
-        /** Le pot de peinture ne remplit pas plus de cases que ça (l'historique garde chaque case : 16 octets). */
+        /**
+         * Le pot de peinture ne remplit pas plus de cases que ça, et une forme de pixels n'en couvre pas plus
+         * (au-delà, elle ne fait rien) : l'historique garde chaque case (16 octets).
+         */
         const val MAX_FILL_CELLS = 262_144
         /** Aire de la boîte dans laquelle il cherche (cases) : un tableau de marques de cette taille. */
         const val MAX_FILL_AREA = 4_000_000L

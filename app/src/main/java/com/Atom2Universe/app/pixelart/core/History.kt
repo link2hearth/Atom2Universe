@@ -148,7 +148,13 @@ class LambdaEdit(
  * Pile annuler / rétablir bornée en mémoire (les plus anciennes étapes s'éteignent d'abord).
  * Sait aussi dire si le dessin diffère de celui du dernier enregistrement.
  */
-class History(private val budgetBytes: Long = 96L * 1024 * 1024, private val maxSteps: Int = 400) {
+class History(private val budgetBytes: Long = defaultBudget(), private val maxSteps: Int = 400) {
+
+    companion object {
+        /** Un huitième de la mémoire permise à l'appli, entre 16 et 64 Mo : l'historique ne doit pas l'étouffer. */
+        fun defaultBudget(): Long =
+            (Runtime.getRuntime().maxMemory() / 8).coerceIn(16L * 1024 * 1024, 64L * 1024 * 1024)
+    }
 
     private val undoStack = ArrayDeque<Edit>()
     private val redoStack = ArrayDeque<Edit>()

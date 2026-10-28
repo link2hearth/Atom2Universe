@@ -36,5 +36,16 @@
     <string name="comics_storage_perm_grant">Grant access</string>
     <string name="comics_storage_perm_skip">Scan anyway</string>
     <string name="comics_section_root">(Other comics)</string>
-    <string name="comics_series_count">%1$d comics</string>
+    <plurals name="comics_series_count">
+        <item quantity="one">%1$d comic</item>
+        <item quantity="other">%1$d comics</item>
+    </plurals>
+    <string name="comics_section_count">%1$d</string>
+    <string name="comics_progress_percent">%1$d%%</string>
+    <string name="comics_reading_time">🕐 %1$s</string>
+    <string name="comics_duration_h_min">%1$dh%2$02d</string>
+    <string name="comics_duration_min">%1$d min</string>
+    <string name="comics_default_title">Comic</string>
+    <string name="comics_default_root_name">Comics</string>
+    <string name="comics_default_document">Document</string>
 </resources>

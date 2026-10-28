@@ -50,13 +50,19 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
     private val notesActivity get() = activity as NotesActivity
     private val vm: NotesViewModel get() = notesActivity.viewModel
     private lateinit var prefs: NotesPreferences
-    private lateinit var adapter: NoteCardsAdapter
-    private lateinit var searchField: EditText
-    private lateinit var title: TextView
-    private lateinit var filtersRow: LinearLayout
-    private lateinit var emptyView: View
-    private lateinit var emptyText: TextView
-    private lateinit var list: RecyclerView
+
+    /** Les vues de l'écran. Relâchées en onDestroyView : la bibliothèque reste dans la pile sous l'éditeur. */
+    private class Views(view: View) {
+        val searchField: EditText = view.findViewById(R.id.nt_lib_search)
+        val title: TextView = view.findViewById(R.id.nt_lib_title)
+        val filtersRow: LinearLayout = view.findViewById(R.id.nt_lib_filters)
+        val emptyView: View = view.findViewById(R.id.nt_lib_empty)
+        val emptyText: TextView = view.findViewById(R.id.nt_lib_empty_text)
+        val list: RecyclerView = view.findViewById(R.id.nt_lib_list)
+        lateinit var adapter: NoteCardsAdapter
+    }
+
+    private var ui: Views? = null
 
     private var query = ""
     private var notes: List<NoteWithTags> = emptyList()
@@ -76,22 +82,18 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefs = NotesPreferences(requireContext())
-        searchField = view.findViewById(R.id.nt_lib_search)
-        title = view.findViewById(R.id.nt_lib_title)
-        filtersRow = view.findViewById(R.id.nt_lib_filters)
-        emptyView = view.findViewById(R.id.nt_lib_empty)
-        emptyText = view.findViewById(R.id.nt_lib_empty_text)
-        list = view.findViewById(R.id.nt_lib_list)
+        val u = Views(view)
+        ui = u
 
         val widthDp = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-        list.layoutManager = StaggeredGridLayoutManager((widthDp / 180f).toInt().coerceAtLeast(2), StaggeredGridLayoutManager.VERTICAL)
-        adapter = NoteCardsAdapter(
+        u.list.layoutManager = StaggeredGridLayoutManager((widthDp / 180f).toInt().coerceAtLeast(2), StaggeredGridLayoutManager.VERTICAL)
+        u.adapter = NoteCardsAdapter(
             requireContext(),
             showGroup = { vm.filter.value !is LibraryFilter.Group },
             onOpen = { notesActivity.openNote(it.note.id) },
             onMenu = { showNoteMenu(it) },
         )
-        list.adapter = adapter
+        u.list.adapter = u.adapter
 
         view.findViewById<View>(R.id.nt_lib_back).setOnClickListener {
             if (searchBack.isEnabled) closeSearch() else requireActivity().finish()
@@ -103,7 +105,7 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
         view.findViewById<View>(R.id.nt_lib_btn_more).setOnClickListener { showLibraryMenu() }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, searchBack)
 
-        searchField.addTextChangedListener(object : TextWatcher {
+        u.searchField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -130,23 +132,32 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Le RecyclerView garde sinon ses cartes (et l'écran entier) tant que la bibliothèque est dans la pile.
+        ui?.list?.adapter = null
+        ui = null
+    }
+
     // ---- Recherche -----------------------------------------------------------------------------
 
     private fun openSearch() {
+        val u = ui ?: return
         searchBack.isEnabled = true
-        title.visibility = View.GONE
-        searchField.visibility = View.VISIBLE
-        searchField.requestFocus()
-        imm()?.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT)
+        u.title.visibility = View.GONE
+        u.searchField.visibility = View.VISIBLE
+        u.searchField.requestFocus()
+        imm()?.showSoftInput(u.searchField, InputMethodManager.SHOW_IMPLICIT)
         view?.findViewById<ImageButton>(R.id.nt_lib_btn_search)?.setImageResource(R.drawable.ic_px_close)
     }
 
     private fun closeSearch() {
         searchBack.isEnabled = false
-        searchField.setText("")
-        imm()?.hideSoftInputFromWindow(searchField.windowToken, 0)
-        searchField.visibility = View.GONE
-        title.visibility = View.VISIBLE
+        val u = ui ?: return
+        u.searchField.setText("")
+        imm()?.hideSoftInputFromWindow(u.searchField.windowToken, 0)
+        u.searchField.visibility = View.GONE
+        u.title.visibility = View.VISIBLE
         view?.findViewById<ImageButton>(R.id.nt_lib_btn_search)?.setImageResource(R.drawable.ic_nt_search)
     }
 
@@ -154,14 +165,15 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
 
     /** Chaque mot doit se trouver dans le titre, le texte ou un tag ; `#mot` ne cherche que les tags. */
     private fun matches(n: NoteWithTags, words: List<String>): Boolean = words.all { w ->
-        if (w.startsWith("#") && w.length > 1) n.tags.any { it.name.lowercase().contains(w.substring(1)) }
-        else n.note.title.lowercase().contains(w) || n.note.contentPlainText.lowercase().contains(w) ||
-            n.tags.any { it.name.lowercase().contains(w) }
+        if (w.startsWith("#") && w.length > 1) n.tags.any { it.name.contains(w.substring(1), ignoreCase = true) }
+        else n.note.title.contains(w, ignoreCase = true) || n.note.contentPlainText.contains(w, ignoreCase = true) ||
+            n.tags.any { it.name.contains(w, ignoreCase = true) }
     }
 
     // ---- Filtres -------------------------------------------------------------------------------
 
     private fun buildFilters() {
+        val filtersRow = ui?.filtersRow ?: return
         val ctx = requireContext()
         val f = vm.filter.value
         filtersRow.removeAllViews()
@@ -205,9 +217,9 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
     // ---- Grille --------------------------------------------------------------------------------
 
     private fun render() {
-        if (!::adapter.isInitialized) return
+        val u = ui ?: return
         val f = vm.filter.value
-        val words = query.lowercase().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        val words = query.split(SPACES).filter { it.isNotEmpty() }
         val shown = notes.filter { n ->
             when (f) {
                 LibraryFilter.All -> true
@@ -219,7 +231,9 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
             when (prefs.sort) {
                 NotesPreferences.Sort.MODIFIED -> l.sortedByDescending { it.note.dateModified }
                 NotesPreferences.Sort.CREATED -> l.sortedByDescending { it.note.dateCreated }
-                NotesPreferences.Sort.TITLE -> l.sortedBy { it.note.title.ifBlank { it.note.contentPlainText }.lowercase() }
+                // La clé de chaque note est calculée une fois, pas à chaque comparaison ; le début du texte suffit.
+                NotesPreferences.Sort.TITLE -> l.map { it to it.note.title.ifBlank { it.note.contentPlainText }.take(SORT_KEY_LENGTH).lowercase() }
+                    .sortedBy { it.second }.map { it.first }
             }
         }
         val (pinned, others) = shown.partition { it.note.isPinned }
@@ -230,10 +244,10 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
             if (others.isNotEmpty()) rows += NoteRow.Header(getString(R.string.notes_section_others))
         }
         others.mapTo(rows) { NoteRow.Card(it) }
-        adapter.submitList(rows)
+        u.adapter.submitList(rows)
 
-        emptyView.visibility = if (shown.isEmpty()) View.VISIBLE else View.GONE
-        emptyText.setText(when {
+        u.emptyView.visibility = if (shown.isEmpty()) View.VISIBLE else View.GONE
+        u.emptyText.setText(when {
             words.isNotEmpty() -> R.string.notes_search_empty
             f is LibraryFilter.Favorites -> R.string.notes_favorites_empty
             f !is LibraryFilter.All -> R.string.notes_filter_empty
@@ -368,6 +382,12 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
             val r = backupManager().importFullBackup(uri, mode)
             view?.let { Snackbar.make(it, r.message, Snackbar.LENGTH_SHORT).show() }
         }
+    }
+
+    companion object {
+        private val SPACES = Regex("\\s+")
+        /** Pour trier par titre, les premiers caractères suffisent : inutile de mettre toute une note en minuscules. */
+        private const val SORT_KEY_LENGTH = 100
     }
 }
 

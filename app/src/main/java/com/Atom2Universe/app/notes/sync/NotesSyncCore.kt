@@ -239,6 +239,9 @@ class NotesSyncState(
  *
  * @property expectedLocal l'empreinte qu'avait la note ici quand le plan a été fait (null : elle n'existait pas).
  *   Le plan est calculé sur une photo ; si la note a été modifiée entre-temps, on ne l'écrase pas.
+ * @property conflictOf pour chaque copie « (conflit) » de [newLocal], l'uuid de la note d'où elle vient. Si cette
+ *   note n'est finalement pas écrasée ici (sautée), sa copie n'a pas lieu d'être : elle n'est ni écrite ni envoyée,
+ *   et le conflit sera repris, une seule fois, au tour suivant.
  */
 class NotesPlan(
     val applyLocal: List<SyncNote>,
@@ -248,7 +251,12 @@ class NotesPlan(
     val purged: Map<String, Long>,
     val hashes: Map<String, String>,
     val expectedLocal: Map<String, String?>,
-)
+    val conflictOf: Map<String, String> = emptyMap(),
+) {
+    /** Les copies de conflit qui n'ont plus lieu d'être, une fois connues les notes sautées. */
+    fun droppedCopies(skipped: Set<String>): Set<String> =
+        conflictOf.filterValues { it in skipped }.keys
+}
 
 object NotesMerge {
 
@@ -272,6 +280,7 @@ object NotesMerge {
         val purgedOut = LinkedHashMap<String, Long>()
         val hashes = LinkedHashMap<String, String>()
         val expected = LinkedHashMap<String, String?>()
+        val conflictOf = LinkedHashMap<String, String>()
         val horizon = now - NotesSyncFile.TOMBSTONE_DAYS * DAY_MS
         for ((id, at) in purged) if (at >= horizon) purgedOut[id] = at
 
@@ -299,6 +308,7 @@ object NotesMerge {
                                 isPinned = false, dateModified = maxOf(winner.dateModified, loser.dateModified),
                             )
                             newLocal += copy; cloudOut[copy.uuid] = copy; hashes[copy.uuid] = copy.hash()
+                            conflictOf[copy.uuid] = id
                             purgedOut.remove(id)
                         }
                     }
@@ -326,7 +336,7 @@ object NotesMerge {
                 else -> Unit
             }
         }
-        return NotesPlan(applyLocal, deleteLocal, newLocal, cloudOut.values.toList(), purgedOut, hashes, expected)
+        return NotesPlan(applyLocal, deleteLocal, newLocal, cloudOut.values.toList(), purgedOut, hashes, expected, conflictOf)
     }
 
     // ─── Groupes, tags, catégories : des noms ────────────────────────────────

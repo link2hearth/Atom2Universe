@@ -19,14 +19,25 @@ import com.Atom2Universe.app.notes.editor.MarkdownSyntax.Token
 
 /**
  * Les mises en forme posées par l'éditeur. Toutes portent la marque [MdSpan] : l'éditeur les
- * retire et les repose à chaque frappe sans jamais toucher à autre chose.
+ * retire et les repose quand une ligne change, sans jamais toucher à autre chose.
  */
-interface MdSpan
+interface MdSpan {
+    /** Dessine exactement comme [other] : même sorte, mêmes réglages. Une ligne déjà juste n'est pas reposée. */
+    fun same(other: MdSpan): Boolean = other.javaClass == javaClass
+}
 
-class MdStyle(style: Int) : StyleSpan(style), MdSpan
-class MdSize(size: Float) : RelativeSizeSpan(size), MdSpan
-class MdColor(color: Int) : ForegroundColorSpan(color), MdSpan
-class MdBackground(color: Int) : BackgroundColorSpan(color), MdSpan
+class MdStyle(style: Int) : StyleSpan(style), MdSpan {
+    override fun same(other: MdSpan) = other is MdStyle && other.style == style
+}
+class MdSize(size: Float) : RelativeSizeSpan(size), MdSpan {
+    override fun same(other: MdSpan) = other is MdSize && other.sizeChange == sizeChange
+}
+class MdColor(color: Int) : ForegroundColorSpan(color), MdSpan {
+    override fun same(other: MdSpan) = other is MdColor && other.foregroundColor == foregroundColor
+}
+class MdBackground(color: Int) : BackgroundColorSpan(color), MdSpan {
+    override fun same(other: MdSpan) = other is MdBackground && other.backgroundColor == backgroundColor
+}
 class MdUnderline : UnderlineSpan(), MdSpan
 class MdStrike : StrikethroughSpan(), MdSpan
 class MdMono : TypefaceSpan("monospace"), MdSpan
@@ -54,6 +65,8 @@ abstract class PrefixSpan : ReplacementSpan(), MdSpan {
 }
 
 class BulletSpan(private val color: Int, private val indent: Int) : PrefixSpan() {
+    override fun same(other: MdSpan) = other is BulletSpan && other.color == color && other.indent == indent
+
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
         val p = Paint(paint).apply { this.color = this@BulletSpan.color; style = Paint.Style.FILL; isAntiAlias = true }
         val textH = paint.textSize
@@ -71,6 +84,8 @@ class BulletSpan(private val color: Int, private val indent: Int) : PrefixSpan()
 }
 
 class CheckboxSpan(private val checked: Boolean, private val palette: MdPalette, private val indent: Int) : PrefixSpan() {
+
+    override fun same(other: MdSpan) = other is CheckboxSpan && other.checked == checked && other.palette == palette && other.indent == indent
 
     override fun width(paint: Paint, text: CharSequence, start: Int, end: Int): Int {
         val pad = paint.measureText(text, start, start + indent)
@@ -110,6 +125,8 @@ class CheckboxSpan(private val checked: Boolean, private val palette: MdPalette,
 }
 
 class QuoteBarSpan(private val color: Int) : PrefixSpan() {
+    override fun same(other: MdSpan) = other is QuoteBarSpan && other.color == color
+
     override fun width(paint: Paint, text: CharSequence, start: Int, end: Int): Int = (paint.textSize * 0.9f).toInt()
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
@@ -122,18 +139,28 @@ class QuoteBarSpan(private val color: Int) : PrefixSpan() {
 /** Pose sur [text] (de [offset] à [offset] + longueur de ligne) les mises en forme d'une ligne lue. */
 object MarkdownStyler {
 
-    private const val FLAGS = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+    const val FLAGS = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
     private val HEADING_SIZES = floatArrayOf(1f, 1.6f, 1.35f, 1.15f)
 
+    /** Une mise en forme à poser : le dessin et sa plage dans le texte. */
+    class Placed(val span: MdSpan, val start: Int, val end: Int)
+
     fun styleLine(text: Spannable, offset: Int, line: MarkdownSyntax.Line, palette: MdPalette) {
-        for (t in line.tokens) apply(text, offset, t, line, palette)
+        for (p in lineSpans(offset, line, palette)) text.setSpan(p.span, p.start, p.end, FLAGS)
     }
 
-    private fun apply(text: Spannable, offset: Int, t: Token, line: MarkdownSyntax.Line, palette: MdPalette) {
+    /** Les mises en forme d'une ligne lue, dans l'ordre où [styleLine] les pose, sans les poser. */
+    fun lineSpans(offset: Int, line: MarkdownSyntax.Line, palette: MdPalette): List<Placed> {
+        val out = ArrayList<Placed>()
+        for (t in line.tokens) add(out, offset, t, line, palette)
+        return out
+    }
+
+    private fun add(out: MutableList<Placed>, offset: Int, t: Token, line: MarkdownSyntax.Line, palette: MdPalette) {
         val s = offset + t.start
         val e = offset + t.end
         if (e <= s) return
-        fun set(span: Any) = text.setSpan(span, s, e, FLAGS)
+        fun set(span: MdSpan) { out += Placed(span, s, e) }
         when (t.kind) {
             Kind.MARKER -> set(MdColor(palette.marker))
             Kind.HEADING -> { set(MdSize(HEADING_SIZES[t.level.coerceIn(1, 3)])); set(MdStyle(Typeface.BOLD)) }

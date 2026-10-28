@@ -210,6 +210,21 @@ object DocumentOps {
         )
     }
 
+    /** Même durée pour toutes les images, en une seule étape ; `null` si aucune ne change. */
+    fun setAllFrameDurations(doc: Document, ms: Int): Edit? {
+        val after = ms.coerceIn(Frame.MIN_DURATION_MS, Frame.MAX_DURATION_MS)
+        val before = HashMap<Int, Int>()
+        for (f in doc.frames) if (f.durationMs != after) before[f.id] = f.durationMs
+        if (before.isEmpty()) return null
+        for (f in doc.frames) f.durationMs = after
+        doc.markMetaDirty()
+        return LambdaEdit(
+            0,
+            { d -> for ((id, v) in before) d.frameById(id)?.durationMs = v; d.markMetaDirty() },
+            { d -> for (id in before.keys) d.frameById(id)?.durationMs = after; d.markMetaDirty() },
+        )
+    }
+
     // ---- Taille du dessin ----------------------------------------------------------------
 
     private fun replaceEdit(doc: Document, newW: Int, newH: Int, newCels: Map<Long, IntArray>): Edit {

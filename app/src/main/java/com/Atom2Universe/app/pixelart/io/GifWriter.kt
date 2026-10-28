@@ -33,9 +33,15 @@ class GifWriter(
         }
     }
 
-    fun addFrame(pixels: IntArray, delayMs: Int) {
+    fun addFrame(pixels: IntArray, delayMs: Int) = addFrame(pixels, width, height, 1, delayMs)
+
+    /**
+     * Ajoute une image de `srcW × srcH` agrandie [scale] fois (plus proche voisin) : la palette se calcule
+     * sur l'image d'origine et chaque indice est répété à l'écriture, sans jamais fabriquer l'image agrandie.
+     */
+    fun addFrame(pixels: IntArray, srcW: Int, srcH: Int, scale: Int, delayMs: Int) {
         check(!finished)
-        require(pixels.size == width * height)
+        require(scale >= 1 && srcW * scale == width && srcH * scale == height && pixels.size == srcW * srcH)
         val q = quantize(pixels)
         val bits = bitsFor(q.palette.size)
         val tableSize = 1 shl bits
@@ -54,7 +60,7 @@ class GifWriter(
             val c = if (i < q.palette.size) q.palette[i] else 0
             out.write((c shr 16) and 0xFF); out.write((c shr 8) and 0xFF); out.write(c and 0xFF)
         }
-        lzw(q.indices, maxOf(2, bits))
+        lzw(q.indices, srcW, scale, maxOf(2, bits))
     }
 
     fun finish() {
@@ -81,32 +87,104 @@ class GifWriter(
 
     private class Entry(val rgb: Int, var count: Int)
 
+    /**
+     * Table couleur (0xRRGGBB) -> entier, à adressage ouvert : aucun objet par pixel, contrairement à une
+     * HashMap<Int, …> qui emballe chaque clé.
+     */
+    private class IntTable(expected: Int) {
+        private var keys = IntArray(capacityFor(expected)) { EMPTY }
+        private var values = IntArray(keys.size)
+        var size = 0
+            private set
+
+        private fun capacityFor(n: Int): Int {
+            var c = 16
+            while (c < n * 2) c = c shl 1
+            return c
+        }
+
+        private fun slot(k: Int, ks: IntArray): Int {
+            val mask = ks.size - 1
+            var h = (k * -1640531535 ushr 7) and mask
+            while (ks[h] != EMPTY && ks[h] != k) h = (h + 1) and mask
+            return h
+        }
+
+        /** Valeur de [k], ou -1. */
+        fun get(k: Int): Int {
+            val h = slot(k, keys)
+            return if (keys[h] == k) values[h] else -1
+        }
+
+        fun put(k: Int, v: Int) {
+            if ((size + 1) * 2 > keys.size) grow()
+            val h = slot(k, keys)
+            if (keys[h] != k) { keys[h] = k; size++ }
+            values[h] = v
+        }
+
+        /** Ajoute 1 au compte de [k]. */
+        fun increment(k: Int) {
+            if ((size + 1) * 2 > keys.size) grow()
+            val h = slot(k, keys)
+            if (keys[h] != k) { keys[h] = k; values[h] = 0; size++ }
+            values[h]++
+        }
+
+        fun forEach(f: (Int, Int) -> Unit) {
+            for (i in keys.indices) if (keys[i] != EMPTY) f(keys[i], values[i])
+        }
+
+        private fun grow() {
+            val oldK = keys
+            val oldV = values
+            keys = IntArray(oldK.size * 2) { EMPTY }
+            values = IntArray(keys.size)
+            for (i in oldK.indices) if (oldK[i] != EMPTY) {
+                val h = slot(oldK[i], keys)
+                keys[h] = oldK[i]; values[h] = oldV[i]
+            }
+        }
+
+        companion object {
+            /** Aucune couleur 0xRRGGBB ne vaut -1 (les 8 bits du haut sont toujours à 0). */
+            const val EMPTY = -1
+        }
+    }
+
     private fun quantize(pixels: IntArray): Quantized {
-        val counts = HashMap<Int, Entry>()
+        val counts = IntTable(256)
         var transparent = false
         for (c in pixels) {
             if (c ushr 24 < 128) { transparent = true; continue }
-            val rgb = c and 0xFFFFFF
-            val e = counts[rgb]
-            if (e == null) counts[rgb] = Entry(rgb, 1) else e.count++
+            counts.increment(c and 0xFFFFFF)
         }
         val reserved = if (transparent) 1 else 0
         val maxColors = 256 - reserved
-        val entries = counts.values.toList()
-        val chosen: IntArray = if (entries.size <= maxColors) IntArray(entries.size) { entries[it].rgb }
-        else medianCut(entries, maxColors)
+        val exact = counts.size <= maxColors
+        val chosen: IntArray = if (exact) {
+            val out = IntArray(counts.size)
+            var n = 0
+            counts.forEach { rgb, _ -> out[n++] = rgb }
+            out
+        } else {
+            // Au-delà de 256 couleurs seulement : une entrée par couleur distincte (jamais par pixel).
+            val entries = ArrayList<Entry>(counts.size)
+            counts.forEach { rgb, n -> entries.add(Entry(rgb, n)) }
+            medianCut(entries, maxColors)
+        }
 
         val palette = IntArray(chosen.size + reserved)
         for (i in chosen.indices) palette[i + reserved] = chosen[i]
         val indices = ByteArray(pixels.size)
-        val cache = HashMap<Int, Int>()
-        val exact = entries.size <= maxColors
-        if (exact) for (i in chosen.indices) cache[chosen[i]] = i + reserved
+        val cache = IntTable(if (exact) chosen.size else 1024)
+        if (exact) for (i in chosen.indices) cache.put(chosen[i], i + reserved)
         for (i in pixels.indices) {
             val c = pixels[i]
             if (c ushr 24 < 128) { indices[i] = 0; continue }
             val rgb = c and 0xFFFFFF
-            val idx = cache.getOrPut(rgb) { nearest(palette, reserved, rgb) }
+            var idx = cache.get(rgb)
+            if (idx < 0) { idx = nearest(palette, reserved, rgb); cache.put(rgb, idx) }
             indices[i] = idx.toByte()
         }
         return Quantized(if (palette.isEmpty()) intArrayOf(0, 0) else palette, indices, if (transparent) 0 else -1)
@@ -188,7 +266,8 @@ class GifWriter(
         }
     }
 
-    private fun lzw(indices: ByteArray, minCodeSize: Int) {
+    /** Compresse les indices de l'image d'origine ([srcW] de large), chacun répété [scale] fois en largeur et en hauteur. */
+    private fun lzw(indices: ByteArray, srcW: Int, scale: Int, minCodeSize: Int) {
         out.write(minCodeSize)
         blockLen = 0; bitBuf = 0; bitCount = 0
 
@@ -227,24 +306,28 @@ class GifWriter(
         if (indices.isEmpty()) {
             emit(eoi)
         } else {
-            var prefix = indices[0].toInt() and 0xFF
-            for (i in 1 until indices.size) {
-                val c = indices[i].toInt() and 0xFF
-                val key = (prefix shl 8) or c
-                var h = (key * -1640531535 ushr 19) and (HASH_SIZE - 1)
-                while (keys[h] != -1 && keys[h] != key) h = (h + 1) and (HASH_SIZE - 1)
-                if (keys[h] == key) {
-                    prefix = vals[h]
-                } else {
-                    emit(prefix)
-                    if (next < 4096) {
-                        keys[h] = key
-                        vals[h] = next++
+            var prefix = -1
+            for (y in 0 until height) {
+                val row = (y / scale) * srcW
+                for (x in 0 until width) {
+                    val c = indices[row + x / scale].toInt() and 0xFF
+                    if (prefix < 0) { prefix = c; continue }
+                    val key = (prefix shl 8) or c
+                    var h = (key * -1640531535 ushr 19) and (HASH_SIZE - 1)
+                    while (keys[h] != -1 && keys[h] != key) h = (h + 1) and (HASH_SIZE - 1)
+                    if (keys[h] == key) {
+                        prefix = vals[h]
                     } else {
-                        emit(clear)
-                        reset()
+                        emit(prefix)
+                        if (next < 4096) {
+                            keys[h] = key
+                            vals[h] = next++
+                        } else {
+                            emit(clear)
+                            reset()
+                        }
+                        prefix = c
                     }
-                    prefix = c
                 }
             }
             emit(prefix)

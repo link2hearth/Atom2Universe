@@ -94,10 +94,20 @@ class PaletteStore(context: Context) {
         return p
     }
 
+    /**
+     * Change les couleurs d'une palette. Le réglage de couleur appelle ceci à chaque mouvement du doigt :
+     * la liste en mémoire suit tout de suite, l'écriture dans les préférences attend que le doigt se calme.
+     */
     fun update(id: String, colors: List<Int>) {
         val i = users.indexOfFirst { it.id == id }
         if (i < 0) return
         users[i] = NamedPalette(id, users[i].name, colors)
+        writeLater()
+    }
+
+    /** Écrit tout de suite ce qui attend encore (sortie de l'écran). */
+    fun flush() {
+        if (!writePending) return
         writeUsers()
     }
 
@@ -153,7 +163,19 @@ class PaletteStore(context: Context) {
         return out
     }
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var writePending = false
+    private val delayedWrite = Runnable { if (writePending) writeUsers() }
+
+    private fun writeLater() {
+        writePending = true
+        handler.removeCallbacks(delayedWrite)
+        handler.postDelayed(delayedWrite, WRITE_DELAY_MS)
+    }
+
     private fun writeUsers() {
+        writePending = false
+        handler.removeCallbacks(delayedWrite)
         val a = JSONArray()
         for (p in users) a.put(JSONObject().put("id", p.id).put("name", p.name).put("colors", JSONArray(p.colors)))
         prefs.edit().putString(KEY_USERS, a.toString()).apply()
@@ -164,6 +186,7 @@ class PaletteStore(context: Context) {
         private const val KEY_CURRENT = "current_palette"
         private const val KEY_RECENT = "recent_colors"
         const val MAX_RECENT = 14
+        private const val WRITE_DELAY_MS = 400L
 
         private fun hex(vararg v: Int): List<Int> = v.map { it or (0xFF shl 24) }
 

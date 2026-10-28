@@ -60,17 +60,17 @@ interface NoteDao {
     @Query("DELETE FROM note_tags WHERE noteId = :noteId")
     suspend fun deleteAllTagsForNote(noteId: Long)
 
-    @Query("SELECT * FROM notes WHERE deletedAt IS NULL AND LOWER(title) = LOWER(:title) LIMIT 1")
-    suspend fun getNoteByTitle(title: String): Note?
-
-    /** Les notes qui citent `[[titre]]` (sans tenir compte de la casse). */
+    /**
+     * Les notes qui contiennent au moins un lien `[[…]]`. Le titre cité est comparé ensuite, en Kotlin :
+     * `LOWER()` de SQLite ne connaît pas les accents (« Équipe » ≠ « équipe »).
+     */
     @Transaction
     @Query("""
         SELECT * FROM notes
-        WHERE deletedAt IS NULL AND id != :excludeNoteId AND instr(LOWER(content), LOWER(:needle)) > 0
+        WHERE deletedAt IS NULL AND id != :excludeNoteId AND instr(content, '[[') > 0
         ORDER BY dateModified DESC
     """)
-    suspend fun getNotesContaining(needle: String, excludeNoteId: Long): List<NoteWithTags>
+    suspend fun getNotesWithWikiLinks(excludeNoteId: Long): List<NoteWithTags>
 
     @Query("SELECT id, title FROM notes WHERE deletedAt IS NULL AND title != '' ORDER BY title COLLATE NOCASE")
     suspend fun getAllTitles(): List<NoteTitle>

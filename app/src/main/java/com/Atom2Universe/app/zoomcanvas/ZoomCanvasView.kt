@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.InputDevice
@@ -16,6 +17,7 @@ import com.Atom2Universe.app.pixelart.core.PointSink
 import com.Atom2Universe.app.pixelart.core.Raster
 import com.Atom2Universe.app.pixelart.core.ShapeKind
 import com.Atom2Universe.app.zoomcanvas.core.BoxItem
+import com.Atom2Universe.app.zoomcanvas.core.CellMap
 import com.Atom2Universe.app.zoomcanvas.core.Layer
 import com.Atom2Universe.app.zoomcanvas.core.PixelLayer
 import com.Atom2Universe.app.zoomcanvas.core.RenderList
@@ -138,6 +140,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         override val typefaceProvider get() = this@ZoomCanvasView.typefaceProvider
         override fun cacheReady() = postInvalidateOnAnimation()
         override fun runOnMain(r: Runnable) { post(r) }
+        override fun runOnMainDelayed(r: Runnable, delayMs: Long) { postDelayed(r, delayMs) }
     })
     private val cursorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -176,29 +179,94 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         drawSelection(s, canvas)
     }
 
-    private fun draw(s: ZoomScene, canvas: Canvas, w: Double, h: Double, ghost: Boolean = false) {
+    /**
+     * Trace la scène. [policy] dit quelles couches denses se posent depuis leur cache raster ; null : tout
+     * est tracé trait par trait (l'export en taille réelle, qui doit être net).
+     */
+    private fun draw(s: ZoomScene, canvas: Canvas, w: Double, h: Double, ghost: Boolean = false, policy: ZoomRenderer.CachePolicy? = cachePolicy) {
         val now = SystemClock.uptimeMillis()
         if (!s.pixelsAbove) pixelPainter.draw(canvas, s.pixels, s.cx, s.cy, s.zoom, w, h)
-        ZoomRenderer.build(s, w, h, list, ghost, cachePolicy)
+        ZoomRenderer.build(s, w, h, list, ghost, policy)
         for (g in 0 until list.groupCount) {
             val from = list.groupStart[g]
             val to = list.groupEnd[g]
             val layer = list.groupLayer[g]
+            val alpha = (list.groupAlpha[g] * 255).toInt().coerceIn(0, 255)
             if (!list.groupIsolated[g]) {
-                if (layer != null) drawCached(canvas, g, layer, w, h, now, (list.groupAlpha[g] * 255).toInt().coerceIn(0, 255))
+                if (layer != null) drawCached(canvas, g, layer, w, h, now, alpha)
                 painter.drawRuns(canvas, list, from, to)
+                continue
+            }
+            // Posée depuis son cache, sans trait en cours : ses gommes y sont déjà appliquées, il suffit
+            // de poser l'image avec son opacité (pas de calque à part).
+            if (layer != null && from == to) {
+                drawCached(canvas, g, layer, w, h, now, alpha)
                 continue
             }
             // Une couche à part : ses coups de gomme ne creusent qu'elle, et une couche qui s'efface
             // est posée d'un bloc avec son opacité (deux de ses traits qui se croisent ne foncent pas).
-            val alpha = (list.groupAlpha[g] * 255).toInt().coerceIn(0, 255)
-            val saved = canvas.saveLayerAlpha(0f, 0f, w.toFloat(), h.toFloat(), alpha)
+            // Le calque ne couvre que ce que la couche trace à l'écran (tout l'écran s'il y a un texte).
+            groupX0 = Float.POSITIVE_INFINITY; groupY0 = Float.POSITIVE_INFINITY
+            groupX1 = Float.NEGATIVE_INFINITY; groupY1 = Float.NEGATIVE_INFINITY
+            val bounded = addRunBounds(from, to)
+            if (bounded && layer != null && caches.cacheFor(layer, now).drawnRect(list.groupViewX[g], list.groupViewY[g], list.groupViewZoom[g], w, h, cacheRect)) {
+                addBounds(cacheRect.left, cacheRect.top, cacheRect.right, cacheRect.bottom)
+            }
+            if (!bounded) { groupX0 = 0f; groupY0 = 0f; groupX1 = w.toFloat(); groupY1 = h.toFloat() }
+            var l = max(groupX0, 0f)
+            var t = max(groupY0, 0f)
+            var r = min(groupX1, w.toFloat())
+            var b = min(groupY1, h.toFloat())
+            // Rien à l'écran : un calque vide (le cache, lui, doit quand même voir passer l'image pour cuire).
+            if (!(r > l && b > t)) { l = 0f; t = 0f; r = 0f; b = 0f }
+            val saved = canvas.saveLayerAlpha(l, t, r, b, alpha)
             if (layer != null) drawCached(canvas, g, layer, w, h, now, 255)
             painter.drawRuns(canvas, list, from, to)
             canvas.restoreToCount(saved)
         }
         if (s.pixelsAbove) pixelPainter.draw(canvas, s.pixels, s.cx, s.cy, s.zoom, w, h)
         caches.trim(now)
+    }
+
+    // Le rectangle d'écran que trace un groupe (voir [addRunBounds]).
+    private var groupX0 = 0f
+    private var groupY0 = 0f
+    private var groupX1 = 0f
+    private var groupY1 = 0f
+    private val cacheRect = RectF()
+
+    private fun addBounds(x0: Float, y0: Float, x1: Float, y1: Float) {
+        if (x0 < groupX0) groupX0 = x0
+        if (y0 < groupY0) groupY0 = y0
+        if (x1 > groupX1) groupX1 = x1
+        if (y1 > groupY1) groupY1 = y1
+    }
+
+    /**
+     * Ajoute au rectangle du groupe ce que tracent les passes [from]..[to] : chaque point d'un trait avec
+     * sa demi-épaisseur (et le lissage du bord), le polygone d'un remplissage, le rectangle d'une image.
+     * Faux si une passe n'a pas de boîte connue d'avance (un texte) : il faut alors tout l'écran.
+     */
+    private fun addRunBounds(from: Int, to: Int): Boolean {
+        val c = list.coords
+        for (r in from until to) {
+            if (list.runText[r] != null) return false
+            val img = list.runImage[r]
+            if (img >= 0) {
+                val d = list.imageDst
+                addBounds(d[4 * img], d[4 * img + 1], d[4 * img + 2], d[4 * img + 3])
+                continue
+            }
+            // L'épaisseur de la passe borne celle de chacun de ses points (le pinceau s'affine, sans grossir).
+            val pad = list.runWidth[r] / 2 + 2f
+            val start = list.runStart[r]
+            for (k in 0 until list.runPoints[r]) {
+                val x = c[start + 2 * k]
+                val y = c[start + 2 * k + 1]
+                addBounds(x - pad, y - pad, x + pad, y + pad)
+            }
+        }
+        return true
     }
 
     /** La couche du groupe [g] est trop dense pour être tracée trait par trait : on pose son cache raster. */
@@ -240,20 +308,23 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         canvas.drawLines(gridLines, 0, n, gridPaint)
     }
 
-    /** Ce qu'on voit, en taille réelle, sur le papier (l'export de la vue). La grille n'en fait pas partie. */
+    /**
+     * Ce qu'on voit, en taille réelle, sur le papier (l'export de la vue). La grille n'en fait pas partie.
+     * Tout est tracé trait par trait, sans les caches raster (flous, ou pas encore cuits) : l'export est net.
+     */
     fun snapshot(): Bitmap? {
         val s = scene ?: return null
         if (width == 0 || height == 0) return null
         val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
         canvas.drawColor(paperColor)
-        draw(s, canvas, width.toDouble(), height.toDouble())
+        draw(s, canvas, width.toDouble(), height.toDouble(), policy = null)
         return bmp
     }
 
-    /** Une image du projet vient de se charger, ou une police : les caches qui ont cuit un cadre gris sont à refaire. */
-    fun invalidateCaches() {
-        caches.invalidateAll()
+    /** L'image [key] du projet vient de se charger : seuls les caches des couches qui la portent (cuits avec un cadre gris) sont à refaire. */
+    fun imageLoaded(key: String) {
+        caches.invalidateImage(key)
         invalidate()
     }
 
@@ -268,7 +339,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         val id = selectedItem ?: return
         val item = s.box(id)
         if (item == null) { selectItem(null); return }
-        val r = screenRect(s, id) ?: return
+        val r = screenRect(s, item)
         val m = 4.0 * handleReach
         val x0 = r[0].coerceIn(-m, width + m).toFloat()
         val y0 = r[1].coerceIn(-m, height + m).toFloat()
@@ -283,13 +354,19 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    /** Rectangle de l'objet [id] en pixels de la vue (Double, pas encore borné). */
-    private fun screenRect(s: ZoomScene, id: Long): DoubleArray? {
-        val item = s.box(id) ?: return null
-        val r = s.boxScreenRect(item)
+    /** Le rectangle de l'objet sélectionné (voir [screenRect]) : un seul tableau, réutilisé à chaque image. */
+    private val selRect = DoubleArray(4)
+
+    /** Rectangle de l'objet [item] en pixels de la vue (Double, pas encore borné), rangé dans [selRect]. */
+    private fun screenRect(s: ZoomScene, item: BoxItem): DoubleArray {
+        val r = s.boxScreenRect(item, selRect)
         // Un peu de marge : le cadre d'un trait droit ou d'un point n'est pas réduit à une ligne.
         val pad = 4.0 * density
-        return doubleArrayOf(r[0] + width / 2.0 - pad, r[1] + height / 2.0 - pad, r[2] + width / 2.0 + pad, r[3] + height / 2.0 + pad)
+        r[0] += width / 2.0 - pad
+        r[1] += height / 2.0 - pad
+        r[2] += width / 2.0 + pad
+        r[3] += height / 2.0 + pad
+        return r
     }
 
     /** Une vignette carrée de ce qu'on voit (pour la galerie). */
@@ -390,9 +467,14 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     invalidate()
                 }
                 Mode.PIXEL_SHAPE -> {
-                    pixelCurX = s.cellX(ox(e.x)); pixelCurY = s.cellY(oy(e.y))
-                    buildPixelPreview()
-                    invalidate()
+                    val cx = s.cellX(ox(e.x))
+                    val cy = s.cellY(oy(e.y))
+                    // L'aperçu ne se refait que si le doigt change de case.
+                    if (cx != pixelCurX || cy != pixelCurY) {
+                        pixelCurX = cx; pixelCurY = cy
+                        buildPixelPreview()
+                        invalidate()
+                    }
                 }
                 Mode.PIXEL_TAP -> if (hypot(e.x - downX, e.y - downY) > tapSlop) mode = Mode.IGNORE
                 // Un appui qui glisse n'est plus un appui : le texte ne se pose pas.
@@ -483,24 +565,74 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     private var pixelCurX = 0
     private var pixelCurY = 0
 
-    /** Cases d'un aperçu de forme (paires x, y) : le plein et le contour. */
-    private class CellList {
-        var a = IntArray(256)
+    /**
+     * Cases d'un aperçu de forme, par bouts de ligne (x0, x1, y) : le plein et le contour. Les cases d'une
+     * forme arrivent ligne par ligne, de gauche à droite : un rectangle plein n'y fait qu'un bout par ligne.
+     */
+    private class CellRuns {
+        var a = IntArray(384)
         var n = 0
-        val count: Int get() = n / 2
+        /** Nombre de bouts. */
+        val count: Int get() = n / 3
         fun add(x: Int, y: Int) {
-            if (n + 2 > a.size) a = a.copyOf(a.size * 2)
+            // La case prolonge le dernier bout (même ligne, juste à sa droite) : on l'allonge.
+            if (n > 0 && a[n - 1] == y && a[n - 2] == x - 1) { a[n - 2] = x; return }
+            if (n + 3 > a.size) a = a.copyOf(a.size * 2)
+            a[n++] = x
             a[n++] = x
             a[n++] = y
         }
         fun clear() { n = 0 }
     }
 
-    private val previewFill = CellList()
-    private val previewLine = CellList()
+    private val previewFill = CellRuns()
+    private val previewLine = CellRuns()
+    /** Les cases du contour déjà dans l'aperçu : les empreintes du pinceau se chevauchent. */
+    private val previewSeen = CellMap(1024)
     private val previewPaint = Paint().apply { isAntiAlias = false }
 
     private fun pixelSize() = strokeSize.toInt().coerceAtLeast(1)
+
+    /** Le pinceau (taille, rond) pour lequel [brushEdges] est calculé. */
+    private var edgesSize = -1
+    private var edgesRound = false
+    /**
+     * Pour chacune des 8 directions d'un pas d'une case (rangée en (dy + 1) × 3 + (dx + 1)) : les cases de
+     * l'empreinte du pinceau qui n'étaient pas dans l'empreinte précédente (paires dx, dy autour de la
+     * nouvelle case). Le long d'un trait, seul ce bord est neuf : le reste vient d'être peint.
+     */
+    private var brushEdges = arrayOfNulls<IntArray>(9)
+
+    private fun brushEdges(size: Int, round: Boolean): Array<IntArray?> {
+        if (size == edgesSize && round == edgesRound) return brushEdges
+        val f = Raster.footprint(size, round)
+        // L'empreinte dans une grille, avec une case de marge tout autour (un pas sort d'une case au plus).
+        var lo = 0
+        var hi = 0
+        var i = 0
+        while (i < f.size) { lo = min(lo, min(f[i], f[i + 1])); hi = max(hi, max(f[i], f[i + 1])); i += 2 }
+        val side = hi - lo + 3
+        val grid = BooleanArray(side * side)
+        i = 0
+        while (i < f.size) { grid[(f[i + 1] - lo + 1) * side + (f[i] - lo + 1)] = true; i += 2 }
+        val edges = arrayOfNulls<IntArray>(9)
+        val tmp = IntArray(f.size)
+        for (dy in -1..1) for (dx in -1..1) {
+            if (dx == 0 && dy == 0) continue
+            var n = 0
+            i = 0
+            while (i < f.size) {
+                // La case (centre + f) était déjà dans l'empreinte d'avant (centre − pas) si f + pas y est.
+                if (!grid[(f[i + 1] + dy - lo + 1) * side + (f[i] + dx - lo + 1)]) { tmp[n++] = f[i]; tmp[n++] = f[i + 1] }
+                i += 2
+            }
+            edges[(dy + 1) * 3 + (dx + 1)] = tmp.copyOf(n)
+        }
+        brushEdges = edges
+        edgesSize = size
+        edgesRound = round
+        return edges
+    }
 
     private fun startPixelStroke(s: ZoomScene, x: Float, y: Float) {
         s.beginPixelEdit()
@@ -519,14 +651,35 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         Raster.stamp(x, y, pixelSize(), pixelRound) { px, py -> s.paintCell(px, py, c) }
     }
 
+    /**
+     * Le pinceau avance d'un pas d'une case ([dx], [dy] dans −1..1) jusqu'à ([x], [y]) : seule la partie de
+     * son empreinte qui n'était pas sous lui au pas d'avant est neuve, on ne pose qu'elle (un pinceau de 64
+     * cases ne repeint pas ses 3 000 cases à chaque case du trait).
+     */
+    private fun stampPixelStep(s: ZoomScene, x: Int, y: Int, dx: Int, dy: Int) {
+        val edge = brushEdges(pixelSize(), pixelRound)[(dy + 1) * 3 + (dx + 1)]
+        if (edge == null) { stampPixel(s, x, y); return }
+        val c = if (tool == Tool.PIXEL_ERASER) 0 else color
+        var i = 0
+        while (i < edge.size) {
+            s.paintCell(x + edge[i], y + edge[i + 1], c)
+            i += 2
+        }
+    }
+
     private fun movePixelTo(s: ZoomScene, cx: Int, cy: Int) {
         if (cx == pixelLastX && cy == pixelLastY) return
         val fx = pixelLastX
         val fy = pixelLastY
+        // La ligne avance case par case (un pas de −1 à 1 sur chaque axe) depuis la case déjà peinte.
+        var px = fx
+        var py = fy
         Raster.line(fx, fy, cx, cy) { x, y ->
             if (x != fx || y != fy) {
-                stampPixel(s, x, y)
+                stampPixelStep(s, x, y, x - px, y - py)
                 pathAdd(s, x, y)
+                px = x
+                py = y
             }
         }
         pixelLastX = cx
@@ -573,8 +726,26 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     /** La couleur du plein d'une forme : la principale pour « plein », la secondaire pour « les deux ». */
     private fun shapeFillColor() = if (shapeFill == ShapeFill.FILL) color else fillColor
 
-    /** Envoie les cases de la forme en cours : le plein à [plotFill], le contour (épaissi par le pinceau) à [plotLine]. */
-    private fun shapeCells(plotFill: PointSink, plotLine: PointSink) {
+    /** Arrête l'énumération d'une forme qui dépasse le plafond (sans pile : rien n'est fabriqué à chaque fois). */
+    private object ShapeTooBig : RuntimeException() {
+        private fun readResolve(): Any = ShapeTooBig
+        override fun fillInStackTrace(): Throwable = this
+    }
+
+    /** Cases envoyées par la forme en cours (empreintes du pinceau comprises, avec leurs chevauchements). */
+    private var shapePlots = 0
+
+    private fun countPlot() {
+        if (++shapePlots > MAX_SHAPE_PLOTS) throw ShapeTooBig
+    }
+
+    /**
+     * Envoie les cases de la forme en cours : le plein à [plotFill], le contour (épaissi par le pinceau) à
+     * [plotLine]. Faux, sans rien envoyer ou en s'arrêtant en route, si la forme dépasse le plafond de
+     * cases ([ZoomScene.MAX_FILL_CELLS], comme le pot de peinture) : dézoomé, un rectangle plein couvrirait
+     * des centaines de millions de cases.
+     */
+    private fun shapeCells(plotFill: PointSink, plotLine: PointSink): Boolean {
         val ax = pixelAnchorX
         val ay = pixelAnchorY
         var bx = pixelCurX
@@ -588,58 +759,84 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             by = ay + if (dy < 0) -m else m
         }
         val size = pixelSize()
-        val line = PointSink { x, y -> Raster.stamp(x, y, size, pixelRound, plotLine) }
-        when {
-            shapeKind == ShapeKind.LINE || shapeFill == ShapeFill.OUTLINE -> Raster.shape(shapeKind, ax, ay, bx, by, false, line)
-            shapeFill == ShapeFill.FILL -> Raster.shape(shapeKind, ax, ay, bx, by, true, plotFill)
-            else -> {
-                Raster.shape(shapeKind, ax, ay, bx, by, true, plotFill)
-                Raster.shape(shapeKind, ax, ay, bx, by, false, line)
+        val outlineOnly = shapeKind == ShapeKind.LINE || shapeFill == ShapeFill.OUTLINE
+        // La boîte suffit à écarter une forme bien trop grande, sans parcourir ses cases : le plein couvre
+        // au plus la boîte, le contour au plus son tour épaissi par le pinceau.
+        val bw = Math.abs(bx.toLong() - ax) + 1
+        val bh = Math.abs(by.toLong() - ay) + 1
+        var estimate = 0L
+        if (outlineOnly || shapeFill == ShapeFill.BOTH) estimate += 2 * (bw + bh) * size
+        if (!outlineOnly) estimate += bw * bh
+        if (estimate > ZoomScene.MAX_FILL_CELLS) return false
+        shapePlots = 0
+        val fill = PointSink { x, y -> countPlot(); plotFill.plot(x, y) }
+        val stamped = PointSink { x, y -> countPlot(); plotLine.plot(x, y) }
+        val line = PointSink { x, y -> Raster.stamp(x, y, size, pixelRound, stamped) }
+        try {
+            when {
+                outlineOnly -> Raster.shape(shapeKind, ax, ay, bx, by, false, line)
+                shapeFill == ShapeFill.FILL -> Raster.shape(shapeKind, ax, ay, bx, by, true, fill)
+                else -> {
+                    Raster.shape(shapeKind, ax, ay, bx, by, true, fill)
+                    Raster.shape(shapeKind, ax, ay, bx, by, false, line)
+                }
             }
+        } catch (e: ShapeTooBig) {
+            return false
         }
+        return true
     }
 
     private fun buildPixelPreview() {
-        previewFill.clear()
-        previewLine.clear()
-        shapeCells(
+        clearPixelPreview()
+        val whole = shapeCells(
             { x, y -> if (previewFill.count < PREVIEW_MAX) previewFill.add(x, y) },
-            { x, y -> if (previewLine.count < PREVIEW_MAX) previewLine.add(x, y) },
+            { x, y -> if (previewLine.count < PREVIEW_MAX && previewSeen.putIfAbsent(PixelLayer.cellKey(x, y), 0)) previewLine.add(x, y) },
         )
+        // Trop grande : la forme ne fera rien, l'aperçu ne montre rien.
+        if (!whole) clearPixelPreview()
     }
 
     private fun clearPixelPreview() {
         previewFill.clear()
         previewLine.clear()
+        previewSeen.clear()
     }
 
     private fun finishPixelShape(s: ZoomScene) {
         clearPixelPreview()
         s.beginPixelEdit()
         val inside = shapeFillColor()
-        shapeCells({ x, y -> s.paintCell(x, y, inside) }, { x, y -> s.paintCell(x, y, color) })
+        val whole = shapeCells({ x, y -> s.paintCell(x, y, inside) }, { x, y -> s.paintCell(x, y, color) })
+        // Trop grande : la forme ne fait rien (ce qu'elle avait déjà peint est remis).
+        if (!whole || s.pixelEditCells > ZoomScene.MAX_FILL_CELLS) {
+            s.cancelPixelEdit()
+            return
+        }
         if (s.endPixelEdit()) listener?.onDrawingChanged()
     }
 
-    /** L'aperçu de la forme en cours, case par case. */
+    /** L'aperçu de la forme en cours, bout de ligne par bout de ligne. */
     private fun drawPixelPreview(s: ZoomScene, canvas: Canvas) {
         if (previewFill.count == 0 && previewLine.count == 0) return
+        paintPreview(s, canvas, previewFill, shapeFillColor())
+        paintPreview(s, canvas, previewLine, color)
+    }
+
+    private fun paintPreview(s: ZoomScene, canvas: Canvas, runs: CellRuns, c: Int) {
         val w = width.toDouble()
         val h = height.toDouble()
-        fun paintCells(list: CellList, c: Int) {
-            previewPaint.color = c
-            var i = 0
-            while (i < list.n) {
-                val l = ((list.a[i] - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
-                val t = ((list.a[i + 1] - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
-                val r = ((list.a[i] + 1 - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
-                val b = ((list.a[i + 1] + 1 - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
-                if (r >= 0 && b >= 0 && l <= w && t <= h) canvas.drawRect(l, t, r, b, previewPaint)
-                i += 2
-            }
+        previewPaint.color = c
+        var i = 0
+        while (i < runs.n) {
+            val l = ((runs.a[i] - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
+            val r = ((runs.a[i + 1] + 1 - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
+            val t = ((runs.a[i + 2] - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
+            val b = ((runs.a[i + 2] + 1 - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
+            // Un long bout est rogné au bord de l'écran (le moteur graphique n'aime pas les grands nombres).
+            if (r >= 0 && b >= 0 && l <= w && t <= h) canvas.drawRect(max(l, -1f), t, min(r, w.toFloat() + 1f), b, previewPaint)
+            i += 3
         }
-        paintCells(previewFill, shapeFillColor())
-        paintCells(previewLine, color)
     }
 
     /** Un appui avec le pot de peinture ou la pipette. */
@@ -665,15 +862,19 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
      */
     private fun startItemGesture(s: ZoomScene, x: Float, y: Float): Mode {
         val sel = selectedItem
-        if (sel != null) {
-            val r = screenRect(s, sel)
-            if (r != null) {
-                val corners = listOf(r[0] to r[1], r[2] to r[1], r[2] to r[3], r[0] to r[3])
-                val i = corners.indices.minByOrNull { hypot(corners[it].first - x, corners[it].second - y) }!!
-                if (hypot(corners[i].first - x, corners[i].second - y) <= handleReach && s.beginBoxEdit(sel)) {
-                    resizeCorner = i
-                    return Mode.ITEM_RESIZE
-                }
+        val selBox = sel?.let { s.box(it) }
+        if (sel != null && selBox != null) {
+            val r = screenRect(s, selBox)
+            // Le coin le plus proche du doigt (0 haut-gauche, 1 haut-droit, 2 bas-droit, 3 bas-gauche).
+            var i = 0
+            var best = Double.POSITIVE_INFINITY
+            for (k in 0 until 4) {
+                val d = hypot((if (k == 0 || k == 3) r[0] else r[2]) - x, (if (k < 2) r[1] else r[3]) - y)
+                if (d < best) { best = d; i = k }
+            }
+            if (best <= handleReach && s.beginBoxEdit(sel)) {
+                resizeCorner = i
+                return Mode.ITEM_RESIZE
             }
         }
         val hit: BoxItem? = s.boxAt(ox(x), oy(y), erasers = tool == Tool.ERASER_EDIT)
@@ -726,8 +927,13 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         const val TAP_MS = 500L
         /** La grille des cases se montre quand une case fait au moins 8 pixels d'écran. */
         const val PIXEL_GRID_MIN_ZOOM = 8.0
-        /** Cases d'un aperçu de forme au plus (au-delà, l'aperçu est tronqué ; la forme, elle, est posée en entier). */
+        /** Bouts de ligne d'un aperçu de forme au plus (au-delà, l'aperçu est tronqué ; la forme, elle, est posée en entier). */
         const val PREVIEW_MAX = 60_000
+        /**
+         * Cases qu'une forme de pixels peut envoyer, empreintes du pinceau comprises (elles se chevauchent :
+         * un contour au pinceau de 16 envoie chaque case plusieurs fois). Le garde-fou de [shapeCells].
+         */
+        const val MAX_SHAPE_PLOTS = ZoomScene.MAX_FILL_CELLS * 16
         /** Le pot de peinture cherche à au plus ces cases de l'appui, de chaque côté. */
         const val FILL_REACH = 900
     }
@@ -743,21 +949,37 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         listener?.onViewMoved()
     }
 
+    // Sans liste ni tableau : un pincement arrive à chaque image.
     private fun startPinch(e: MotionEvent, skip: Int = -1) {
-        val pts = (0 until e.pointerCount).filter { it != skip }
         pinchSkip = skip
-        if (pts.isEmpty()) return
-        pinchCx = pts.map { e.getX(it) }.average().toFloat()
-        pinchCy = pts.map { e.getY(it) }.average().toFloat()
-        pinchDist = if (pts.size >= 2) hypot(e.getX(pts[0]) - e.getX(pts[1]), e.getY(pts[0]) - e.getY(pts[1])) else 0f
+        var n = 0
+        var sx = 0.0
+        var sy = 0.0
+        var a = -1
+        var b = -1
+        for (i in 0 until e.pointerCount) {
+            if (i == skip) continue
+            sx += e.getX(i); sy += e.getY(i); n++
+            if (a < 0) a = i else if (b < 0) b = i
+        }
+        if (n == 0) return
+        pinchCx = (sx / n).toFloat()
+        pinchCy = (sy / n).toFloat()
+        pinchDist = if (b >= 0) hypot(e.getX(a) - e.getX(b), e.getY(a) - e.getY(b)) else 0f
     }
 
     private fun movePinch(s: ZoomScene, e: MotionEvent) {
-        val pts = (0 until e.pointerCount).filter { it != pinchSkip }
-        if (pts.size < 2) return
-        val cx = (e.getX(pts[0]) + e.getX(pts[1])) / 2f
-        val cy = (e.getY(pts[0]) + e.getY(pts[1])) / 2f
-        val d = hypot(e.getX(pts[0]) - e.getX(pts[1]), e.getY(pts[0]) - e.getY(pts[1]))
+        // Les deux premiers doigts (hors celui qui vient de se lever).
+        var a = -1
+        var b = -1
+        for (i in 0 until e.pointerCount) {
+            if (i == pinchSkip) continue
+            if (a < 0) a = i else { b = i; break }
+        }
+        if (b < 0) return
+        val cx = (e.getX(a) + e.getX(b)) / 2f
+        val cy = (e.getY(a) + e.getY(b)) / 2f
+        val d = hypot(e.getX(a) - e.getX(b), e.getY(a) - e.getY(b))
         s.pan((cx - pinchCx).toDouble(), (cy - pinchCy).toDouble())
         if (!zoomLocked && pinchDist > 0f && d > 0f) s.zoomAt((d / pinchDist).toDouble(), ox(cx), oy(cy))
         pinchCx = cx; pinchCy = cy; pinchDist = max(d, 1f)

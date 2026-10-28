@@ -710,7 +710,7 @@ class ZoomSceneTest {
         val e = scene.erase(listOf(0.0 to -30.0, 0.0 to 30.0), 20.0)!!
         // On redessine dans le trou, puis on pose une image par-dessus : ni l'un ni l'autre n'est creusé.
         val c = scene.draw(listOf(-10.0 to 0.0, 10.0 to 0.0), 6.0)
-        val img = scene.addImage("a.png", 100, 100, 50.0, 50.0)
+        val img = scene.addImage("a.png", 100, 100, 50.0, 50.0)!!
         assertEquals(listOf(a.id, e.id, c.id, img.id), scene.layer(0)!!.drawOrder().map { it.id })
         val out = RenderList()
         ZoomRenderer.build(scene, 1000.0, 1000.0, out)
@@ -727,7 +727,7 @@ class ZoomSceneTest {
     @Test
     fun anImageCanBeErasedToo() {
         val scene = scene(10.0)
-        val img = scene.addImage("a.png", 200, 200, 300.0, 300.0)
+        val img = scene.addImage("a.png", 200, 200, 300.0, 300.0)!!
         val e = scene.erase(listOf(-20.0 to -20.0, 20.0 to 20.0), 40.0)!!
         assertEquals(listOf(img.id, e.id), scene.layer(0)!!.drawOrder().map { it.id })
         val out = RenderList()
@@ -798,7 +798,7 @@ class ZoomSceneTest {
     fun anImportedImageIsPlacedAtTheCenterOfTheScreenAndFits() {
         val scene = scene(10.0)
         scene.zoomAt(2.0, 100.0, 50.0)
-        val img = scene.addImage("a.png", 400, 200, 600.0, 600.0)
+        val img = scene.addImage("a.png", 400, 200, 600.0, 600.0)!!
         val r = scene.boxScreenRect(img)
         // 400×200 px réduits pour tenir dans 600×600 : 600×300 à l'écran, centré.
         assertEquals(-300.0, r[0], 1e-9)
@@ -812,7 +812,7 @@ class ZoomSceneTest {
     @Test
     fun anImageCanBeMovedResizedAndUndone() {
         val scene = scene(10.0)
-        val img = scene.addImage("a.png", 100, 50, 200.0, 200.0) // 200×100 à l'écran
+        val img = scene.addImage("a.png", 100, 50, 200.0, 200.0)!! // 200×100 à l'écran
         assertTrue(scene.beginBoxEdit(img.id))
         scene.moveBoxBy(30.0, -10.0)
         scene.endBoxEdit()
@@ -852,7 +852,7 @@ class ZoomSceneTest {
         val scene = scene(10.0)
         scene.draw(gesture)
         scene.zoomInto(200)
-        val img = scene.addImage("a.png", 300, 300, 300.0, 300.0)
+        val img = scene.addImage("a.png", 300, 300, 300.0, 300.0)!!
         val r = scene.boxScreenRect(img)
         assertEquals(-150.0, r[0], 1e-9)
         assertEquals(150.0, r[3], 1e-9)

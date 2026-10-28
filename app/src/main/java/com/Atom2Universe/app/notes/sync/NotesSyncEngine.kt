@@ -84,9 +84,14 @@ class NotesSyncEngine(
         for ((k, v) in tags.removed) removed["${NameKind.TAG.letter}:$k"] = v
         for ((k, v) in categories.removed) removed["${NameKind.CATEGORY.letter}:$k"] = v
 
+        val skipped = store.apply(ApplyJob(notes, groups, tags, categories, removed.keys))
+        // La copie « (conflit) » d'une note sautée n'a pas été écrite ici : elle ne part pas non plus là-haut.
+        val dropped = notes.droppedCopies(skipped)
+
         val file = NotesSyncFile(
             format = NotesSyncFile.FORMAT, savedAt = t, deviceName = deviceName,
-            notes = notes.cloudNotes, groups = groups.cloud, tags = tags.cloud, categories = categories.cloud,
+            notes = if (dropped.isEmpty()) notes.cloudNotes else notes.cloudNotes.filter { it.uuid !in dropped },
+            groups = groups.cloud, tags = tags.cloud, categories = categories.cloud,
             purged = notes.purged, removed = removed,
         )
         val needUpload = if (remote == null) {
@@ -95,7 +100,6 @@ class NotesSyncEngine(
             file.contentOnly() != remote.contentOnly()
         }
 
-        val skipped = store.apply(ApplyJob(notes, groups, tags, categories, removed.keys))
         if (needUpload && !cloud.write(file.toJson())) {
             // Le cloud n'a pas bougé, mais ici a déjà été écrit. Ce qu'on sait de chaque note qu'il porte, c'est
             // sa version à lui : sans le noter, une copie « (conflit) » faite ici serait refaite au tour suivant.
@@ -111,9 +115,10 @@ class NotesSyncEngine(
             val old = state.notes[id]
             if (old != null) hashes[id] = old else hashes.remove(id)
         }
+        for (id in dropped) hashes.remove(id)
         stateStore.save(NotesSyncState(hashes, groups.synced, tags.synced, categories.synced))
 
-        val changedLocal = notes.applyLocal.any { it.uuid !in skipped } || notes.newLocal.isNotEmpty() ||
+        val changedLocal = notes.applyLocal.any { it.uuid !in skipped } || notes.newLocal.any { it.uuid !in dropped } ||
             notes.deleteLocal.any { it !in skipped } ||
             groups.createLocal.isNotEmpty() || groups.updateLocal.isNotEmpty() || groups.deleteLocal.isNotEmpty() ||
             tags.createLocal.isNotEmpty() || tags.deleteLocal.isNotEmpty() ||

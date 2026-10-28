@@ -842,17 +842,7 @@
             android:theme="@style/Theme.A2U"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Bibliothèque de livres et explorateur de bibliothèques -->
-        <activity
-            android:name=".books.BookshelfActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:theme="@style/Theme.A2U" />
-        <activity
-            android:name=".books.BookshelfTreeActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:theme="@style/Theme.A2U" />
+        <!-- Bibliothèque de livres -->
         <activity
             android:name=".books.BookLibraryActivity"
             android:exported="false"

@@ -27,6 +27,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.pixelart.core.ClipData
 import com.Atom2Universe.app.pixelart.core.Compositor
+import com.Atom2Universe.app.pixelart.core.Document
 import com.Atom2Universe.app.pixelart.core.EditorSession
 import com.Atom2Universe.app.pixelart.core.PixelRect
 import com.Atom2Universe.app.pixelart.core.SessionListener
@@ -195,7 +196,9 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
         if (::session.isInitialized) {
             stopPlayback()
             vm.flush()
+            if (prefsPending) savePrefs()
         }
+        vm.palettes.flush()
     }
 
     override fun onDestroy() {
@@ -274,7 +277,19 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
             .takeIf { it != Tool.MOVE } ?: Tool.PENCIL
     }
 
+    /** Un curseur de réglage bouge : on n'enregistre qu'une fois qu'il s'est arrêté (ou à la sortie). */
+    private var prefsPending = false
+    private val savePrefsLater = Runnable { if (prefsPending) savePrefs() }
+
+    private fun savePrefsSoon() {
+        prefsPending = true
+        handler.removeCallbacks(savePrefsLater)
+        handler.postDelayed(savePrefsLater, 500)
+    }
+
     private fun savePrefs() {
+        prefsPending = false
+        handler.removeCallbacks(savePrefsLater)
         val o = session.options
         prefs.edit()
             .putInt("size", o.size).putBoolean("round", o.round).putBoolean("pixel_perfect", o.pixelPerfect)
@@ -302,6 +317,7 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
             handler.postDelayed(thumbRefresh, 300)
         }
 
+        /** Un seul rafraîchissement complet : la session n'envoie plus « actif changé » juste après. */
         override fun onDocumentChanged() {
             view.refreshAll()
             layersAdapter.refreshAll()
@@ -322,15 +338,17 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
             refreshColors()
         }
 
+        override fun onColorChanged() = refreshColors()
+
         override fun onHistoryChanged() {
             refreshChrome()
             vm.scheduleAutosave()
         }
 
+        /** Calque ou image actifs : le dessin n'est recomposé (et les vignettes de calques refaites) que si l'image a changé. */
         override fun onActiveChanged() {
-            layersAdapter.refreshAll()
-            framesAdapter.refreshAll()
-            view.refreshAll()
+            if (view.activeChanged()) layersAdapter.refreshAll() else layersAdapter.refreshHighlight()
+            framesAdapter.refreshHighlight()
             refreshChrome()
         }
     }
@@ -429,7 +447,7 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
 
     private val optionsListener = object : ToolOptionsBar.Listener {
         override fun onOptionsChanged() {
-            savePrefs()
+            savePrefsSoon()
             view.overlayChanged()
         }
 
@@ -794,8 +812,20 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
 
     // ==== Vue =======================================================================================
 
+    /** Zoom affiché, en dixièmes : le texte n'est refait que quand ce nombre change (pas à chaque image d'un pincement). */
+    private var shownZoomTenths = -1
+    private val zoomFormat by lazy {
+        java.text.NumberFormat.getNumberInstance(resources.configuration.locales[0]).apply {
+            maximumFractionDigits = 1
+            minimumFractionDigits = 0
+        }
+    }
+
     override fun onViewportChanged(scale: Float) {
-        txtZoom.text = getString(R.string.px_zoom, if (scale >= 10f) scale.roundToInt().toString() else String.format(java.util.Locale.getDefault(), "%.1f", scale).removeSuffix(".0"))
+        val tenths = if (scale >= 10f) scale.roundToInt() * 10 else (scale * 10f).roundToInt()
+        if (tenths == shownZoomTenths) return
+        shownZoomTenths = tenths
+        txtZoom.text = getString(R.string.px_zoom, zoomFormat.format(tenths / 10.0))
     }
 
     override fun onReferenceMoved(scale: Float, x: Float, y: Float) {
@@ -843,13 +873,19 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
     }
 
     private fun overwriteLinked(link: SourceLink, onSuccess: () -> Unit = {}) {
-        val doc = session.doc
-        val frameIndex = session.frameIndex
         lifecycleScope.launch {
-            val snapshot = if (doc.pixelBytes() < SNAPSHOT_LIMIT) doc.copy() else doc
-            val ok = withContext(Dispatchers.Default) {
-                val bytes = DeviceImages.encode(snapshot, link.format, link.scale, frameIndex, ImageExport.GifOptions(scale = link.scale))
-                DeviceImages.overwrite(this@PixelArtEditorActivity, Uri.parse(link.uri), bytes)
+            val (snapshot, frameIndex) = snapshotFor(link.format == ImageFormat.GIF)
+            // Comme pour un export : un manque de mémoire ou un fichier refusé ne doit pas fermer l'appli.
+            val ok = try {
+                withContext(Dispatchers.Default) {
+                    // Un GIF lié garde les réglages de son export (boucles, sens, fond, vitesse).
+                    val bytes = DeviceImages.encode(snapshot, link.format, link.scale, frameIndex, link.gifOptions())
+                    DeviceImages.overwrite(this@PixelArtEditorActivity, Uri.parse(link.uri), bytes)
+                }
+            } catch (e: kotlin.coroutines.cancellation.CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                false
             }
             if (ok) {
                 session.history.markSaved()
@@ -876,6 +912,7 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
         val defaultScale = link?.scale ?: (if (maxOf(doc.width, doc.height) <= 64) 8 else 1)
         showExportSheet(
             doc, initial, defaultScale,
+            initialGif = link?.takeIf { it.format == ImageFormat.GIF }?.gifOptions(),
             pickBackground = { current, done ->
                 showColorPicker(current ?: 0xFFFFFFFF.toInt(), vm.palettes.recent(), vm.palettes.current().colors) { c -> done(c) }
             },
@@ -917,12 +954,23 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
         Toast.makeText(this, if (ok) okText else R.string.px_export_failed, Toast.LENGTH_SHORT).show()
     }
 
-    /** Fabrique les octets de l'export sur un fil de calcul, à partir d'une copie du dessin. */
-    private suspend fun encode(req: ExportRequest): ByteArray? {
+    /**
+     * Le dessin à exporter et l'indice de l'image courante dans celui-ci. Une copie, pour continuer à dessiner
+     * pendant l'encodage ; pour une seule image (PNG, JPEG, WebP), seules ses cels sont copiées.
+     */
+    private fun snapshotFor(allFrames: Boolean): Pair<Document, Int> {
         session.settle()
         val doc = session.doc
-        val frameIndex = session.frameIndex
-        val snapshot = if (doc.pixelBytes() < SNAPSHOT_LIMIT) doc.copy() else doc
+        if (!allFrames) {
+            val layerBytes = doc.layers.size.toLong() * doc.pixelCount * 4L
+            if (layerBytes < SNAPSHOT_LIMIT) return doc.copy(session.activeFrameId) to 0
+        } else if (doc.pixelBytes() < SNAPSHOT_LIMIT) return doc.copy() to session.frameIndex
+        return doc to session.frameIndex
+    }
+
+    /** Fabrique les octets de l'export sur un fil de calcul, à partir d'une copie du dessin. */
+    private suspend fun encode(req: ExportRequest): ByteArray? {
+        val (snapshot, frameIndex) = snapshotFor(req.format == ExportFormat.SHEET || req.imageFormat == ImageFormat.GIF)
         return try {
             withContext(Dispatchers.Default) {
                 if (req.format == ExportFormat.SHEET) ImageExport.encodeSheetPng(snapshot, req.sheetColumns, 0, req.scale)
@@ -943,7 +991,11 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
             val fileName = DeviceImages.displayName(this@PixelArtEditorActivity, uri) ?: "${baseName()}.${req.imageFormat.extension}"
             if (req.format != ExportFormat.SHEET) {
                 // Le fichier devient « l'image qu'on édite » : les prochains Enregistrer l'écrasent.
-                vm.setLink(SourceLink(uri.toString(), fileName, req.imageFormat, req.scale, writable))
+                val g = req.gif
+                vm.setLink(SourceLink(
+                    uri.toString(), fileName, req.imageFormat, req.scale, writable,
+                    gifLoops = g.loops, gifDirection = g.direction, gifBackground = g.background, gifSpeedPercent = g.speedPercent,
+                ))
                 session.history.markSaved()
                 refreshChrome()
             }
@@ -988,7 +1040,8 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
         lifecycleScope.launch {
             val d = withContext(Dispatchers.IO) { DeviceImages.decode(this@PixelArtEditorActivity, uri) } ?: return@launch
             val name = (DeviceImages.displayName(this@PixelArtEditorActivity, uri) ?: getString(R.string.px_layer_name, session.doc.nextLayerId)).substringBeforeLast('.')
-            session.addLayer(name)
+            // Plus de place pour un calque : l'import ne fait rien (il ne se pose pas sur le calque actif).
+            if (!session.addLayer(name)) return@launch
             val clip = ClipData(d.pixels, ByteArray(d.pixels.size) { 1 }, d.width, d.height)
             if (session.paste((session.doc.width - d.width) / 2, (session.doc.height - d.height) / 2, clip)) selectToolSilently(Tool.MOVE)
         }
@@ -1000,7 +1053,7 @@ class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
             showSheetImportSheet(d.width, d.height) { cols, rows ->
                 lifecycleScope.launch {
                     val cells = ImageExport.splitSheet(d.pixels, d.width, d.height, cols, rows)
-                    if (cells.isEmpty()) return@launch
+                    if (cells.isEmpty() || cells.size > Document.MAX_FRAMES) return@launch
                     val name = (DeviceImages.displayName(this@PixelArtEditorActivity, uri) ?: getString(R.string.px_untitled)).substringBeforeLast('.')
                     vm.flush()
                     val created = withContext(Dispatchers.IO) { vm.store.createFromFrames(name, d.width / cols, d.height / rows, cells, getString(R.string.px_layer_name, 1)) }

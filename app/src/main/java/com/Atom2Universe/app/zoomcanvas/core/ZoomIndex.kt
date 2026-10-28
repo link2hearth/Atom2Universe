@@ -321,6 +321,13 @@ internal class LayerIndex {
     fun visibleBounds(): DoubleArray? =
         if (vx1 < vx0) null else doubleArrayOf(vx0, vy0, vx1, vy1)
 
+    /** [visibleBounds] rangée dans [out], sans tableau neuf. Faux s'il n'y a rien. */
+    fun visibleBounds(out: DoubleArray): Boolean {
+        if (vx1 < vx0) return false
+        out[0] = vx0; out[1] = vy0; out[2] = vx1; out[3] = vy1
+        return true
+    }
+
     companion object {
         /** En dessous, la liste d'attente se parcourt si vite qu'il ne vaut pas la peine de reconstruire. */
         const val MIN_PENDING = 1024

@@ -39,16 +39,27 @@
     <string name="book_tab_shelf">Bibliothèques</string>
 
     <!-- Bookshelf -->
-    <string name="book_shelf_title">Bibliothèques</string>
     <string name="book_shelf_empty">Aucune bibliothèque.\nAppuyez sur + pour ajouter un dossier.</string>
-    <string name="book_shelf_add_library">Ajouter une bibliothèque</string>
     <string name="book_shelf_scanning_title">Scan en cours…</string>
     <string name="book_shelf_rescanning_title">Rescan en cours…</string>
     <string name="book_shelf_scanning_found">%1$d livres trouvés</string>
     <string name="book_shelf_options_rescan">Rescanner</string>
     <string name="book_shelf_options_delete">Supprimer la bibliothèque</string>
     <string name="book_shelf_delete_confirm">Supprimer cette bibliothèque et tous ses livres ?</string>
-    <string name="book_shelf_books_count">%1$d livres</string>
+    <plurals name="book_shelf_books_count">
+        <item quantity="one">%1$d livre</item>
+        <item quantity="other">%1$d livres</item>
+    </plurals>
+    <string name="book_shelf_root_info">"%1$s  ·  %2$s"</string>
+    <string name="book_shelf_default_name">Bibliothèque</string>
+    <string name="book_section_count">%1$d</string>
+    <string name="book_progress_percent">%1$d %%</string>
+    <string name="book_reading_time">🕐 %1$s</string>
+    <string name="book_duration_h_min">%1$d h %2$02d</string>
+    <string name="book_duration_min">%1$d min</string>
+    <string name="book_size_bytes">%1$d o</string>
+    <string name="book_size_kb">%1$d Ko</string>
+    <string name="book_size_mb">%1$.1f Mo</string>
     <string name="book_shelf_tree_empty">Aucun livre dans cette bibliothèque.</string>
     <string name="book_shelf_section_root">(Autres livres)</string>
     <string name="book_toggle_view">Changer la vue</string>
@@ -58,4 +69,12 @@
     <string name="book_reader_bookmark_removed">Marque-page supprimé</string>
     <string name="book_reader_bookmarks_clear">Tout effacer</string>
     <string name="book_reader_bookmarks_cleared">Tous les marque-pages effacés</string>
+    <string name="book_reader_bookmark_item">"★  %1$s"</string>
+    <string name="book_reader_speed_value">%1$.1f×</string>
+    <string name="book_reader_pitch_value">%1$.1f♪</string>
+    <string name="book_reader_tts_play">▶</string>
+    <string name="book_reader_tts_pause">⏸</string>
+    <string name="book_reader_voice_short">VOIX</string>
+    <string name="book_reader_voice_item">"%1$d.  %2$s · %3$s%4$s"</string>
+    <string name="book_reader_voice_network">"  ☁"</string>
 </resources>

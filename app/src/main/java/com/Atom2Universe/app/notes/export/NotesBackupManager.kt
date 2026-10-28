@@ -107,12 +107,13 @@ class NotesBackupManager(
                     }
                 }
 
-                repository.importBackup(
+                // En ajout, une note déjà présente ici (même uuid) n'est pas reprise : seules les autres comptent.
+                val imported = repository.importBackup(
                     categoriesFromFile, tagsFromFile, groupsFromFile, notesFromFile,
                     replace = mode == ImportMode.REPLACE,
                 )
 
-                BackupResult.Success(context.resources.getQuantityString(R.plurals.notes_backup_imported, notesFromFile.size, notesFromFile.size))
+                BackupResult.Success(context.resources.getQuantityString(R.plurals.notes_backup_imported, imported, imported))
             } catch (e: Exception) {
                 BackupResult.Error(context.getString(R.string.notes_backup_failed, e.message ?: ""), e)
             }

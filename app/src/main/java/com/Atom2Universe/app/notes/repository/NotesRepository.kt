@@ -24,13 +24,24 @@ class NotesRepository(private val db: NotesDatabase) {
 
     suspend fun getNoteById(noteId: Long): Note? = noteDao.getNoteById(noteId)
 
-    suspend fun getNoteByTitle(title: String): Note? = noteDao.getNoteByTitle(title)
+    /** La note de ce titre, sans tenir compte de la casse, accents compris (comparée en Kotlin, pas par SQLite). */
+    suspend fun getNoteByTitle(title: String): Note? {
+        val wanted = title.trim()
+        if (wanted.isEmpty()) return null
+        val id = noteDao.getAllTitles().firstOrNull { it.title.trim().equals(wanted, ignoreCase = true) }?.id ?: return null
+        return noteDao.getNoteById(id)
+    }
 
     suspend fun getAllTitles(): List<NoteTitle> = noteDao.getAllTitles()
 
-    /** Les notes qui citent celle-ci par `[[titre]]`. */
-    suspend fun getBacklinks(title: String, noteId: Long): List<NoteWithTags> =
-        if (title.isBlank()) emptyList() else noteDao.getNotesContaining("[[${title.trim()}]]", noteId)
+    /** Les notes qui citent celle-ci par `[[titre]]`, sans tenir compte de la casse, accents compris. */
+    suspend fun getBacklinks(title: String, noteId: Long): List<NoteWithTags> {
+        val wanted = title.trim()
+        if (wanted.isEmpty()) return emptyList()
+        return noteDao.getNotesWithWikiLinks(noteId).filter { n ->
+            MarkdownSyntax.wikiLinks(n.note.content).any { it.equals(wanted, ignoreCase = true) }
+        }
+    }
 
     suspend fun insertNote(note: Note): Long = noteDao.insertNote(note)
 
@@ -123,6 +134,12 @@ class NotesRepository(private val db: NotesDatabase) {
      * groupes sont retrouvés **par leur nom** (réutilisés s'ils existent déjà, créés sinon), et
      * chaque note est rattachée à son groupe et à ses tags par ces noms. En mode [replace], tout
      * est d'abord effacé ; sinon les notes s'ajoutent à celles qui existent.
+     *
+     * Chaque note garde son uuid : la synchro la reconnaît d'un appareil à l'autre (avec un uuid neuf,
+     * « remplacer » effaçait partout les notes et les recréait en double). Une note dont l'uuid est déjà
+     * ici (corbeille comprise) n'est pas importée : on ne remplace jamais une note existante.
+     *
+     * @return le nombre de notes importées
      */
     suspend fun importBackup(
         categories: List<TagCategory>,
@@ -130,7 +147,7 @@ class NotesRepository(private val db: NotesDatabase) {
         groups: List<NoteGroup>,
         notes: List<NoteExportManager.ImportedNoteData>,
         replace: Boolean,
-    ) = db.withTransaction {
+    ): Int = db.withTransaction {
         if (replace) {
             noteDao.deleteAllNoteTags()
             noteDao.deleteAllNotes()
@@ -153,12 +170,16 @@ class NotesRepository(private val db: NotesDatabase) {
         for (g in groups) {
             groupIds.getOrPut(g.name.lowercase()) { noteGroupDao.insertGroup(g.copy(id = 0, position = position++)) }
         }
+        var imported = 0
         for (n in notes) {
+            val uuid = n.uuid?.trim()?.takeIf { it.isNotEmpty() }
+            if (uuid != null && noteDao.getNoteByUuid(uuid) != null) continue
             val groupId = n.groupName?.takeIf { it.isNotBlank() }?.let { name ->
                 groupIds.getOrPut(name.lowercase()) { noteGroupDao.insertGroup(NoteGroup(name = name, position = position++)) }
             }
             val id = noteDao.insertNote(
                 Note(
+                    uuid = uuid ?: UUID.randomUUID().toString(),
                     title = n.title,
                     content = n.content,
                     contentPlainText = MarkdownSyntax.toPlainText(n.content),
@@ -174,6 +195,8 @@ class NotesRepository(private val db: NotesDatabase) {
                 val tagId = tagIds.getOrPut(tagName.lowercase()) { tagDao.insertTag(Tag(name = tagName)) }
                 noteDao.insertNoteTag(NoteTag(id, tagId))
             }
+            imported++
         }
+        imported
     }
 }

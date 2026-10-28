@@ -165,6 +165,15 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
         for (e in zList) (e.item as? ImageItem)?.let { out.add(it.key) }
     }
 
+    /** La couche porte-t-elle l'image [key] ? (Parcourt la couche : à l'arrivée d'une image, pas à chaque image.) */
+    fun hasImage(key: String): Boolean {
+        for (e in zList) {
+            val item = e.item
+            if (item is ImageItem && item.key == key) return true
+        }
+        return false
+    }
+
     // ---- Pose, retrait, remplacement ------------------------------------------------------
 
     fun add(s: Stroke) = insert(s, -1)
@@ -444,6 +453,17 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
         return index.visibleBounds()
     }
 
+    /** [boundsApprox] rangé dans [out], sans tableau neuf (le rendu le demande à chaque image). Faux si rien. */
+    fun boundsApprox(out: DoubleArray): Boolean {
+        if (!isLoaded) {
+            val b = sumBounds ?: return false
+            System.arraycopy(b, 0, out, 0, 4)
+            return true
+        }
+        index.ensure(zList)
+        return index.visibleBounds(out)
+    }
+
     /** Le trait [s] passe-t-il sur ce qu'on voit de la couche ? (Un coup de gomme dans le vide ne sert à rien.) */
     fun touches(s: Stroke): Boolean {
         val b = bounds() ?: return false
@@ -459,9 +479,12 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
 
     /** Comme [extent], à coût constant et par excès (voir [boundsApprox]). */
     fun extentApprox(): Double {
-        val b = boundsApprox() ?: return 0.0
-        return max(b[2] - b[0], b[3] - b[1])
+        if (!boundsApprox(extentTmp)) return 0.0
+        return max(extentTmp[2] - extentTmp[0], extentTmp[3] - extentTmp[1])
     }
+
+    /** Le tableau de travail de [extentApprox] (fil de l'écran). */
+    private val extentTmp = DoubleArray(4)
 
     companion object {
         /**

@@ -116,10 +116,10 @@ fun Context.showNewProjectSheet(
         }
         wField = numberField(w); hField = numberField(h)
         customBox.addView(wField, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        customBox.addView(label("×", 18f, true).apply { setPadding(dp(12), 0, dp(12), 0) })
+        customBox.addView(label(getString(R.string.px_size_times), 18f, true).apply { setPadding(dp(12), 0, dp(12), 0) })
         customBox.addView(hField, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
 
-        val choices = presets.map { it to "$it×$it" as CharSequence } + (-1 to getString(R.string.px_custom) as CharSequence)
+        val choices = presets.map { it to getString(R.string.px_size_square, it) as CharSequence } + (-1 to getString(R.string.px_custom) as CharSequence)
         val row = ChoiceRow(this, choices, 32) { v ->
             custom = v == -1
             customBox.visibility = if (custom) View.VISIBLE else View.GONE
@@ -162,7 +162,7 @@ fun Context.showCanvasSizeSheet(session: EditorSession, onApplied: () -> Unit) {
         val hField = numberField(doc.height)
         val sizeRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         sizeRow.addView(wField, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        sizeRow.addView(label("×", 18f, true).apply { setPadding(dp(12), 0, dp(12), 0) })
+        sizeRow.addView(label(getString(R.string.px_size_times), 18f, true).apply { setPadding(dp(12), 0, dp(12), 0) })
         sizeRow.addView(hField, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         root.addView(sizeRow)
 
@@ -340,19 +340,21 @@ class ExportRequest(
     }
 }
 
+/** [initialGif] : réglages GIF de départ (ceux du fichier lié), sinon les valeurs par défaut. */
 fun Context.showExportSheet(
     doc: Document,
     initialFormat: ExportFormat,
     initialScale: Int,
+    initialGif: ImageExport.GifOptions? = null,
     pickBackground: (Int?, (Int?) -> Unit) -> Unit,
     onExport: (ExportRequest) -> Unit,
 ) {
     var format = initialFormat
     var scale = initialScale.coerceIn(1, ImageExport.maxScaleFor(doc.width, doc.height))
-    var loops = 0
-    var direction = ImageExport.GifDirection.FORWARD
-    var background: Int? = null
-    var speed = 100
+    var loops = if ((initialGif?.loops ?: 0) == 1) 1 else 0
+    var direction = initialGif?.direction ?: ImageExport.GifDirection.FORWARD
+    var background: Int? = initialGif?.background
+    var speed = (initialGif?.speedPercent ?: 100).coerceIn(25, 300)
     var columns = if (doc.frames.size > 1) minOf(doc.frames.size, 8) else 1
     lateinit var sizeText: TextView
     lateinit var gifBox: LinearLayout
@@ -362,11 +364,15 @@ fun Context.showExportSheet(
     fun refresh() {
         val maxScale = ImageExport.maxScaleFor(doc.width, doc.height)
         scale = scale.coerceIn(1, maxScale)
+        // JPEG et WebP sont plafonnés plus bas à l'écriture : la taille affichée est celle du fichier.
+        val s = if (format == ExportFormat.JPEG || format == ExportFormat.WEBP) {
+            minOf(scale, ImageExport.maxScaleFor(doc.width, doc.height, ImageExport.MAX_BITMAP_EXPORT_SIDE))
+        } else scale
         val (w, h) = if (format == ExportFormat.SHEET) {
             val cols = columns.coerceIn(1, doc.frames.size)
             val rows = (doc.frames.size + cols - 1) / cols
-            doc.width * cols * scale to doc.height * rows * scale
-        } else doc.width * scale to doc.height * scale
+            doc.width * cols * s to doc.height * rows * s
+        } else doc.width * s to doc.height * s
         sizeText.text = getString(R.string.px_export_size, w, h)
         gifBox.visibility = if (format == ExportFormat.GIF) View.VISIBLE else View.GONE
         sheetBox.visibility = if (format == ExportFormat.SHEET) View.VISIBLE else View.GONE
@@ -375,12 +381,13 @@ fun Context.showExportSheet(
     val dialog = bottomSheet(getString(R.string.px_export_title)) { root, dlg ->
         root.addView(sectionLabel(R.string.px_export_format))
         val formats = listOf(
-            ExportFormat.PNG to "PNG", ExportFormat.GIF to "GIF", ExportFormat.SHEET to getString(R.string.px_export_sheet),
-            ExportFormat.JPEG to "JPEG", ExportFormat.WEBP to "WebP",
-        ).map { it.first to it.second as CharSequence }
+            ExportFormat.PNG to R.string.px_format_png, ExportFormat.GIF to R.string.px_format_gif,
+            ExportFormat.SHEET to R.string.px_export_sheet,
+            ExportFormat.JPEG to R.string.px_format_jpeg, ExportFormat.WEBP to R.string.px_format_webp,
+        ).map { it.first to getString(it.second) as CharSequence }
         root.addView(ChoiceRow(this, formats, format) { format = it; refresh() }.view)
 
-        scaleSlider = LabeledSlider(this, getString(R.string.px_export_scale), 1, ImageExport.maxScaleFor(doc.width, doc.height).coerceAtLeast(2), scale, { "×$it" }) {
+        scaleSlider = LabeledSlider(this, getString(R.string.px_export_scale), 1, ImageExport.maxScaleFor(doc.width, doc.height).coerceAtLeast(2), scale, { getString(R.string.px_zoom, it.toString()) }) {
             scale = it; refresh()
         }
         scaleSlider.setPadding(0, dp(14), 0, 0)
@@ -407,7 +414,8 @@ fun Context.showExportSheet(
         val bgRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         val swatch = SwatchView(this).apply { color = 0xFFFFFFFF.toInt(); radiusDp = 8f }
         val transparentChip = chip(getString(R.string.px_gif_bg_transparent)) { }
-        transparentChip.isSelected = true
+        transparentChip.isSelected = background == null
+        background?.let { swatch.color = it; swatch.ring = true }
         transparentChip.setOnClickListener {
             background = null
             transparentChip.isSelected = true

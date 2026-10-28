@@ -241,4 +241,16 @@
     <string name="px_color_page_square">Carré</string>
     <string name="px_color_as_secondary">Utiliser comme couleur secondaire</string>
     <string name="px_color_edit">Régler cette couleur</string>
+
+    <!-- Libellés courts : séparateur de taille, formats, préfixe hexadécimal, polices système -->
+    <string name="px_size_times">×</string>
+    <string name="px_size_square">%1$d×%1$d</string>
+    <string name="px_format_png">PNG</string>
+    <string name="px_format_gif">GIF</string>
+    <string name="px_format_jpeg">JPEG</string>
+    <string name="px_format_webp">WebP</string>
+    <string name="px_hex_prefix">#</string>
+    <string name="px_font_sans">Sans empattement</string>
+    <string name="px_font_serif">Avec empattement</string>
+    <string name="px_font_mono">Chasse fixe</string>
 </resources>

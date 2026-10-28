@@ -39,16 +39,27 @@
     <string name="book_tab_shelf">Libraries</string>
 
     <!-- Bookshelf -->
-    <string name="book_shelf_title">Libraries</string>
     <string name="book_shelf_empty">No library yet.\nTap + to add a folder.</string>
-    <string name="book_shelf_add_library">Add a library</string>
     <string name="book_shelf_scanning_title">Scanning…</string>
     <string name="book_shelf_rescanning_title">Rescanning…</string>
     <string name="book_shelf_scanning_found">%1$d books found</string>
     <string name="book_shelf_options_rescan">Rescan</string>
     <string name="book_shelf_options_delete">Delete library</string>
     <string name="book_shelf_delete_confirm">Delete this library and all its entries?</string>
-    <string name="book_shelf_books_count">%1$d books</string>
+    <plurals name="book_shelf_books_count">
+        <item quantity="one">%1$d book</item>
+        <item quantity="other">%1$d books</item>
+    </plurals>
+    <string name="book_shelf_root_info">"%1$s  ·  %2$s"</string>
+    <string name="book_shelf_default_name">Library</string>
+    <string name="book_section_count">%1$d</string>
+    <string name="book_progress_percent">%1$d%%</string>
+    <string name="book_reading_time">🕐 %1$s</string>
+    <string name="book_duration_h_min">%1$dh%2$02d</string>
+    <string name="book_duration_min">%1$d min</string>
+    <string name="book_size_bytes">%1$d B</string>
+    <string name="book_size_kb">%1$d KB</string>
+    <string name="book_size_mb">%1$.1f MB</string>
     <string name="book_shelf_tree_empty">No books in this library.</string>
     <string name="book_shelf_section_root">(Other books)</string>
     <string name="book_toggle_view">Toggle view</string>
@@ -58,4 +69,12 @@
     <string name="book_reader_bookmark_removed">Bookmark removed</string>
     <string name="book_reader_bookmarks_clear">Clear all</string>
     <string name="book_reader_bookmarks_cleared">All bookmarks cleared</string>
+    <string name="book_reader_bookmark_item">"★  %1$s"</string>
+    <string name="book_reader_speed_value">%1$.1f×</string>
+    <string name="book_reader_pitch_value">%1$.1f♪</string>
+    <string name="book_reader_tts_play">▶</string>
+    <string name="book_reader_tts_pause">⏸</string>
+    <string name="book_reader_voice_short">VOX</string>
+    <string name="book_reader_voice_item">"%1$d.  %2$s · %3$s%4$s"</string>
+    <string name="book_reader_voice_network">"  ☁"</string>
 </resources>

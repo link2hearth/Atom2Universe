@@ -124,7 +124,7 @@ class ZoomStoreTest {
         scene.updateShape(90.0, 70.0)
         val shape = scene.endShape()!!
         val text = scene.addText("Bonjour\nle monde", 10.0, -100.0, 24.0, black, TextItem.BOLD or TextItem.ITALIC, "Serif", 6.5)!!
-        val img = scene.addImage("a.png", 640, 480, 300.0, 300.0)
+        val img = scene.addImage("a.png", 640, 480, 300.0, 300.0)!!
         scene.beginStroke(0.0, -20.0, ZoomScene.ERASER, 12.0)
         scene.extendStroke(0.0, 60.0)
         val eraser = scene.endStroke()!!
@@ -225,7 +225,7 @@ class ZoomStoreTest {
         store.saveImage(p.meta.id, "a.png", byteArrayOf(1, 2, 3))
         store.saveImage(p.meta.id, "orphan.png", byteArrayOf(4))
         repeat(12) { p.scene.zoomAt(2.0, 0.0, 0.0) }
-        val img = p.scene.addImage("a.png", 640, 480, 300.0, 300.0)
+        val img = p.scene.addImage("a.png", 640, 480, 300.0, 300.0)!!
         p.save()
 
         val loaded = reload(p)
@@ -288,7 +288,6 @@ class ZoomStoreTest {
     private fun attachPager(p: LoadedZoomProject): ZoomScene.LayerPager {
         val pager = object : ZoomScene.LayerPager {
             override fun wantLoad(depth: Long) { p.scene.installLayer(depth, store.loadLayerItems(p.meta.pid, depth)) }
-            override fun loadNow(depth: Long) = store.loadLayerItems(p.meta.pid, depth)
         }
         p.scene.pager = pager
         return pager

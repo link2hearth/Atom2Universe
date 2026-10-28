@@ -90,8 +90,12 @@ open class ZoomCanvasLibraryActivity : ThemedActivity() {
         if (hasFocus) updateSystemBarsVisibility()
     }
 
+    /** Un éditeur est en train de s'ouvrir : un second appui (sur la même carte ou une autre) ne fait rien. */
+    private var opening = false
+
     override fun onResume() {
         super.onResume()
+        opening = false
         reload()
     }
 
@@ -106,6 +110,8 @@ open class ZoomCanvasLibraryActivity : ThemedActivity() {
     }
 
     private fun openProject(id: String) {
+        if (opening) return
+        opening = true
         startActivity(ZoomCanvasEditorActivity.intent(this, id))
     }
 

@@ -50,23 +50,56 @@ import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.w3c.dom.Element
 import android.graphics.BitmapFactory
+import android.util.LruCache
+import com.Atom2Universe.app.reading.decodeSampledStream
 import java.io.File
 import java.util.Locale
-import java.util.zip.ZipInputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
 import javax.xml.parsers.DocumentBuilderFactory
 import androidx.core.content.edit
+import kotlin.math.roundToInt
 
 // Regex précompilées: l'extraction EPUB les utilise pour chaque paragraphe (des milliers de fois)
 private val HTML_TAG_RE = Regex("<[^>]+>")
 private val WHITESPACE_RE = Regex("\\s+")
 private val HTML_BR_RE = Regex("<br\\s*/?>", RegexOption.IGNORE_CASE)
+private val HTML_COMMENT_RE = Regex("<!--.*?-->", RegexOption.DOT_MATCHES_ALL)
+private val HTML_ANY_TAG_RE = Regex("""<(/?)([a-zA-Z][a-zA-Z0-9:\-]*)(?=[\s/>])[^>]*>""")
+private val HTML_IMG_RE = Regex("""<img\b[^>]*?>""", RegexOption.IGNORE_CASE)
+private val HTML_SRC_RE = Regex("""\bsrc\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+private val HTML_ENTITY_RE = Regex("&(#[xX][0-9a-fA-F]+|#[0-9]+|[a-zA-Z][a-zA-Z0-9]*);")
+private val LINE_BREAK_RE = Regex("\r?\n")
+
+/** Paragraphe et titres : un bloc de texte, fermé par sa balise. */
+private val HTML_LEAF_CLOSE_RE: Map<String, Regex> = (listOf("p") + (1..6).map { "h$it" })
+    .associateWith { Regex("</$it\\s*>", RegexOption.IGNORE_CASE) }
+
+/** Contenu jamais affiché. */
+private val HTML_SKIP_CLOSE_RE: Map<String, Regex> = listOf("script", "style", "head")
+    .associateWith { Regex("</$it\\s*>", RegexOption.IGNORE_CASE) }
+
+/** Conteneurs : ils ne font que séparer le texte libre, on descend dans leurs paragraphes. */
+private val HTML_BLOCK_TAGS = setOf(
+    "body", "div", "section", "article", "aside", "main", "header", "footer", "nav",
+    "figure", "figcaption", "blockquote", "pre", "hr",
+    "ul", "ol", "li", "dl", "dt", "dd", "table", "caption", "tr", "td", "th"
+)
+
+/** Plus grand côté d'une image décodée (plafond commun aux lecteurs). */
+private const val MAX_DECODED_SIDE = 4096
+
+/** Côté le plus court de la couverture enregistrée pour les récents. */
+private const val READER_COVER_PX = 600
 
 class BookReaderActivity : ThemedActivity() {
 
@@ -112,10 +145,11 @@ class BookReaderActivity : ThemedActivity() {
     sealed class EpubItem {
         data class Paragraph(val text: String) : EpubItem()
         data class Heading(val text: String, val level: Int) : EpubItem()
-        class Image(val bitmap: Bitmap) : EpubItem()
+        /** Image : seulement son chemin dans l'archive et ses dimensions ; décodée à l'affichage. */
+        data class Image(val path: String, val width: Int, val height: Int) : EpubItem()
         object ChapterBreak : EpubItem()
     }
-    private data class EpubContent(val items: List<EpubItem>, val author: String, val coverPath: String?) {
+    private data class EpubContent(val items: List<EpubItem>, val author: String, val coverPath: String?, val zip: ZipFile? = null) {
         val paragraphs: List<String> get() = items.mapNotNull { when (it) {
             is EpubItem.Paragraph -> it.text
             is EpubItem.Heading  -> it.text
@@ -247,6 +281,20 @@ class BookReaderActivity : ThemedActivity() {
     // ── Vues ──────────────────────────────────────────────────────────────────
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    // Écritures de progression : jamais annulées avec l'activité, pour que la dernière aille au bout
+    private val saveScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    // Images EPUB décodées à la demande, deux à la fois au plus
+    private val epubImageDispatcher = Dispatchers.IO.limitedParallelism(2)
+    // Archive du livre ouvert, gardée ouverte pour lire les images au fil du défilement
+    private var epubZip: ZipFile? = null
+    private var autoSaveJob: Job? = null
+    // Dernière position écrite : l'auto-sauvegarde n'écrit que si elle a changé
+    private var lastSavedIdx = -1
+    private var lastSavedOff = 0
+    // Une position a été écrite depuis la dernière synchro (la synchro part en onStop)
+    private var progressSyncPending = false
+    // Faux tant que la position de reprise n'est pas appliquée : on n'écrase pas la sauvegarde avec 0
+    private var positionRestored = false
     private lateinit var prefs: SharedPreferences
     private var currentTheme = ReadingTheme.DARK
     private var paragraphDistinction = true
@@ -331,7 +379,6 @@ class BookReaderActivity : ThemedActivity() {
         applyThemeToUi()
         initTts()
         setupTtsControls()
-        startAutoSave()
         attachBarRevealListener(txtRecycler)
         // Toucher la toolbar ou la barre basse remet le compteur à zéro
         toolbar.setOnTouchListener { _, _ -> showBarsTemporarily(); false }
@@ -366,10 +413,17 @@ class BookReaderActivity : ThemedActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        startAutoSave()
+    }
+
     override fun onStop() {
         super.onStop()
         hideHandler.removeCallbacks(hideRunnable)
-        savePosition()
+        autoSaveJob?.cancel()
+        autoSaveJob = null
+        savePosition(finalSave = true)
         StatsTracker.endReadingSession()
     }
 
@@ -378,6 +432,7 @@ class BookReaderActivity : ThemedActivity() {
         tts?.stop()
         tts?.shutdown()
         scope.cancel()
+        closeEpubZip()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -450,7 +505,7 @@ class BookReaderActivity : ThemedActivity() {
             return
         }
         val sorted = bookmarkData.entries.sortedBy { it.key }
-        val labels = sorted.map { "★  ${it.value}" }.toTypedArray()
+        val labels = sorted.map { getString(R.string.book_reader_bookmark_item, it.value) }.toTypedArray()
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.book_reader_bookmarks)
             .setItems(labels) { _, which ->
@@ -534,8 +589,8 @@ class BookReaderActivity : ThemedActivity() {
                 currentTheme = chosen
                 prefs.edit { putInt(KEY_THEME, checkedId) }
                 applyThemeToUi()
+                // Le recoloriage suffit (texte, fonds, séparateurs) : pas de rechargement du livre
                 paragraphAdapter?.updateTheme(currentTheme)
-                if (currentViewType == ViewType.EPUB) currentUri?.let { loadEpub(it) }
             }
             dialog.dismiss()
         }
@@ -750,8 +805,9 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun setupTtsControls() {
-        speedBtn.text = "%.1f×".format(ttsSpeed)
-        pitchBtn.text = "%.1f♪".format(ttsPitch)
+        speedBtn.text = getString(R.string.book_reader_speed_value, ttsSpeed)
+        pitchBtn.text = getString(R.string.book_reader_pitch_value, ttsPitch)
+        updatePlayPauseBtn()
 
         playPauseBtn.setOnClickListener {
             when (ttsState) {
@@ -768,9 +824,9 @@ class BookReaderActivity : ThemedActivity() {
         }
 
         speedBtn.setOnClickListener {
-            showSliderPopup(speedBtn, ttsSpeed, 0.5f, 2.0f, 0.1f, "×") { v ->
+            showSliderPopup(speedBtn, ttsSpeed, 0.5f, 2.0f, 0.1f, R.string.book_reader_speed_value) { v ->
                 ttsSpeed = v
-                speedBtn.text = "%.1f×".format(v)
+                speedBtn.text = getString(R.string.book_reader_speed_value, v)
                 prefs.edit { putFloat(KEY_TTS_SPEED, v) }
                 tts?.setSpeechRate(v)
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
@@ -778,9 +834,9 @@ class BookReaderActivity : ThemedActivity() {
         }
 
         pitchBtn.setOnClickListener {
-            showSliderPopup(pitchBtn, ttsPitch, 0.5f, 2.0f, 0.1f, "♪") { v ->
+            showSliderPopup(pitchBtn, ttsPitch, 0.5f, 2.0f, 0.1f, R.string.book_reader_pitch_value) { v ->
                 ttsPitch = v
-                pitchBtn.text = "%.1f♪".format(v)
+                pitchBtn.text = getString(R.string.book_reader_pitch_value, v)
                 prefs.edit { putFloat(KEY_TTS_PITCH, v) }
                 tts?.setPitch(v)
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
@@ -810,8 +866,8 @@ class BookReaderActivity : ThemedActivity() {
             val code = if (xIdx >= 0 && xIdx + 1 < parts.size) parts[xIdx + 1].uppercase()
                        else v.name.take(6)
             val lang = v.locale.displayLanguage.replaceFirstChar { it.uppercase() }
-            val network = if (v.isNetworkConnectionRequired) "  ☁" else ""
-            "${i + 1}.  $lang · $code$network"
+            val network = if (v.isNetworkConnectionRequired) getString(R.string.book_reader_voice_network) else ""
+            getString(R.string.book_reader_voice_item, i + 1, lang, code, network)
         }
 
         val currentIdx = voices.indexOfFirst { it.name == selectedVoiceName }
@@ -841,14 +897,14 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun showSliderPopup(
-        anchor: View, current: Float, min: Float, max: Float, step: Float, suffix: String,
+        anchor: View, current: Float, min: Float, max: Float, step: Float, valueFormat: Int,
         onRelease: (Float) -> Unit
     ) {
         val steps = Math.round((max - min) / step)
         val popupWidth = dp(220)
 
         val valueLabel = TextView(this).apply {
-            text = "%.1f$suffix".format(current)
+            text = getString(valueFormat, current)
             textSize = 20f; gravity = Gravity.CENTER
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(currentTheme.textColor)
@@ -890,7 +946,7 @@ class BookReaderActivity : ThemedActivity() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
                 if (!fromUser) return
-                valueLabel.text = "%.1f$suffix".format((min + progress * step).coerceIn(min, max))
+                valueLabel.text = getString(valueFormat, (min + progress * step).coerceIn(min, max))
             }
             override fun onStartTrackingTouch(sb: SeekBar) {}
             override fun onStopTrackingTouch(sb: SeekBar) {
@@ -949,10 +1005,10 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun updatePlayPauseBtn() {
-        playPauseBtn.text = when (ttsState) {
-            TtsState.PLAYING -> "⏸"
-            else -> "▶"
-        }
+        playPauseBtn.setText(when (ttsState) {
+            TtsState.PLAYING -> R.string.book_reader_tts_pause
+            else -> R.string.book_reader_tts_play
+        })
     }
 
     private fun autoScrollToReadingParagraph(idx: Int) {
@@ -989,6 +1045,13 @@ class BookReaderActivity : ThemedActivity() {
         stopReading()
         val mimeType = contentResolver.getType(uri)
         val fileName = getFileName(uri)
+        // Le lecteur n'ouvre que l'EPUB, le PDF (passé au lecteur de BD) et le texte brut
+        if (!isEpub(mimeType, fileName) && !isPdf(mimeType, fileName) && !isTxt(mimeType, fileName)) {
+            pendingBookTitle = null
+            showEmpty()
+            Toast.makeText(this, R.string.book_reader_error, Toast.LENGTH_SHORT).show()
+            return
+        }
         // Le titre fourni par la bibliothèque (EPUB metadata, plus fiable) prime sur celui dérivé du nom de fichier,
         // pour que le titre affiché reste identique à celui utilisé par les stats de lecture et la sync de progression.
         val title = pendingBookTitle?.also { pendingBookTitle = null }
@@ -1032,14 +1095,34 @@ class BookReaderActivity : ThemedActivity() {
     private fun isPdf(mime: String?, name: String?) =
         mime?.contains("pdf") == true || name?.endsWith(".pdf", true) == true
 
+    private fun isTxt(mime: String?, name: String?) =
+        mime?.startsWith("text/plain") == true || name?.endsWith(".txt", true) == true
+
+    /** Oublie le livre affiché avant d'en charger un autre (la position ne sera écrite qu'après la reprise). */
+    private fun resetForNewBook() {
+        paragraphAdapter = null
+        positionRestored = false
+        lastSavedIdx = -1
+        lastSavedOff = 0
+        closeEpubZip()
+    }
+
+    private fun closeEpubZip() {
+        val zip = epubZip ?: return
+        epubZip = null
+        runCatching { zip.close() }
+    }
+
     // ── TXT ──────────────────────────────────────────────────────────────────
 
     private fun loadTxt(uri: Uri) {
+        resetForNewBook()
         showView(ViewType.TXT)
         scope.launch {
             val text = withContext(Dispatchers.IO) {
                 runCatching { readTextWithCharsetDetection(uri) }.getOrElse { "" }
             }
+            if (currentUri != uri) return@launch
             if (text.isEmpty()) {
                 showEmpty()
                 Toast.makeText(this@BookReaderActivity, R.string.book_reader_error, Toast.LENGTH_SHORT).show()
@@ -1053,38 +1136,56 @@ class BookReaderActivity : ThemedActivity() {
                 format = "TXT", addedAt = System.currentTimeMillis(), lastOpenedAt = System.currentTimeMillis(),
                 fileSize = currentFileSize
             ))
-            val items = paragraphs.map { EpubItem.Paragraph(it) }
-            val adapter = ParagraphAdapter(items, currentTheme, paragraphDistinction, currentTypeface, currentFontSize)
-            paragraphAdapter = adapter
-            adapter.setBookmarks(bookmarkData.keys.toSet())
-            val lm = LinearLayoutManager(this@BookReaderActivity)
-            txtRecycler.layoutManager = lm
-            txtRecycler.clearOnScrollListeners()
-            txtRecycler.adapter = adapter
-            pageIndicator.text = getString(R.string.book_reader_page_of, 1, paragraphs.size)
-            txtRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val firstItem = lm.findFirstVisibleItemPosition().coerceAtLeast(0)
-                    val paragraphNumber = (adapter.paragraphIndexAtOrAfter(firstItem) + 1)
-                        .coerceIn(1, paragraphs.size)
-                    pageIndicator.text = getString(R.string.book_reader_page_of, paragraphNumber, paragraphs.size)
-                }
-            })
-            restoreTxtPosition(uri)
+            showParagraphs(paragraphs.map { EpubItem.Paragraph(it) }, uri)
         }
     }
 
     private fun splitParagraphs(text: String): List<String> =
-        text.split(Regex("\r?\n"))
+        text.split(LINE_BREAK_RE)
             .map { it.trim() }.filter { it.length > 3 }
+
+    /** Installe l'adaptateur, le compteur de paragraphes et la reprise de lecture (TXT et EPUB). */
+    private fun showParagraphs(items: List<EpubItem>, uri: Uri) {
+        val adapter = ParagraphAdapter(items, currentTheme, paragraphDistinction, currentTypeface, currentFontSize)
+        paragraphAdapter = adapter
+        adapter.setBookmarks(bookmarkData.keys.toSet())
+        val lm = LinearLayoutManager(this)
+        txtRecycler.layoutManager = lm
+        txtRecycler.clearOnScrollListeners()
+        txtRecycler.adapter = adapter
+        pageIndicator.text = getString(R.string.book_reader_page_of, 1, paragraphs.size)
+        var shownParagraph = 1
+        txtRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val firstItem = lm.findFirstVisibleItemPosition().coerceAtLeast(0)
+                val paragraphNumber = (adapter.paragraphIndexAtOrAfter(firstItem) + 1)
+                    .coerceIn(1, paragraphs.size)
+                // Le défilement appelle ceci à chaque image : on ne réécrit le compteur que s'il change
+                if (paragraphNumber == shownParagraph) return
+                shownParagraph = paragraphNumber
+                pageIndicator.text = getString(R.string.book_reader_page_of, paragraphNumber, paragraphs.size)
+            }
+        })
+        restoreTxtPosition(uri)
+    }
 
     // ── EPUB ─────────────────────────────────────────────────────────────────
 
     private fun loadEpub(uri: Uri) {
+        resetForNewBook()
         showView(ViewType.EPUB)
         scope.launch {
-            val content = withContext(Dispatchers.IO) { extractEpubContent(uri) }
+            val content = withContext(Dispatchers.IO) {
+                extractEpubContent(uri).also { if (!isActive) it.zip?.let { z -> runCatching { z.close() } } }
+            }
+            // Un autre livre a été ouvert pendant l'analyse : celle-ci ne sert plus
+            if (currentUri != uri) {
+                content.zip?.let { runCatching { it.close() } }
+                return@launch
+            }
+            epubZip = content.zip
             if (content.paragraphs.isEmpty()) {
+                closeEpubZip()
                 showEmpty()
                 Toast.makeText(this@BookReaderActivity, R.string.book_reader_error, Toast.LENGTH_SHORT).show()
                 return@launch
@@ -1098,176 +1199,198 @@ class BookReaderActivity : ThemedActivity() {
                 format = "EPUB", addedAt = System.currentTimeMillis(), lastOpenedAt = System.currentTimeMillis(),
                 fileSize = currentFileSize
             ))
-            val adapter = ParagraphAdapter(content.items, currentTheme, paragraphDistinction, currentTypeface, currentFontSize)
-            paragraphAdapter = adapter
-            adapter.setBookmarks(bookmarkData.keys.toSet())
-            val lm = LinearLayoutManager(this@BookReaderActivity)
-            txtRecycler.layoutManager = lm
-            txtRecycler.clearOnScrollListeners()
-            txtRecycler.adapter = adapter
-            pageIndicator.text = getString(R.string.book_reader_page_of, 1, paragraphs.size)
-            txtRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val firstItem = lm.findFirstVisibleItemPosition().coerceAtLeast(0)
-                    val paragraphNumber = (adapter.paragraphIndexAtOrAfter(firstItem) + 1)
-                        .coerceIn(1, paragraphs.size)
-                    pageIndicator.text = getString(R.string.book_reader_page_of, paragraphNumber, paragraphs.size)
-                }
-            })
-            restoreTxtPosition(uri)
+            showParagraphs(content.items, uri)
         }
     }
 
-    private fun extractEpubContent(uri: Uri): EpubContent {
-        val files = mutableMapOf<String, ByteArray>()
-        runCatching {
-            contentResolver.openInputStream(uri)?.use { stream ->
-                ZipInputStream(stream).use { zip ->
-                    var entry = zip.nextEntry
-                    while (entry != null) {
-                        if (!entry.isDirectory) files[entry.name] = zip.readBytes()
-                        entry = zip.nextEntry
-                    }
-                }
+    /**
+     * Ouvre l'EPUB en accès direct (ZipFile) : seuls le sommaire et les chapitres sont lus,
+     * jamais tout le livre en mémoire. Un document `content://` est d'abord copié en cache.
+     */
+    private fun openEpubZip(uri: Uri): ZipFile? = runCatching {
+        if (uri.scheme == "file") return@runCatching ZipFile(File(uri.path ?: return@runCatching null))
+        val dir = File(cacheDir, "epub_reader").apply { mkdirs() }
+        val target = File(dir, "${uri.toString().hashCode()}.epub")
+        val upToDate = target.exists() && currentFileSize > 0 && target.length() == currentFileSize
+        if (!upToDate) {
+            dir.listFiles()?.forEach { it.delete() }
+            val part = File(dir, "${target.name}.part")
+            val copied = contentResolver.openInputStream(uri)?.use { input ->
+                part.outputStream().use { output -> input.copyTo(output, 64 * 1024) }
+                true
+            } ?: false
+            if (!copied || !part.renameTo(target)) {
+                part.delete()
+                return@runCatching null
             }
         }
-        val containerBytes = files["META-INF/container.xml"]
-            ?: return EpubContent(fallbackEpubParagraphs(files).map { EpubItem.Paragraph(it) }, "", null)
-        val opfPath = parseContainerXml(containerBytes)
-            ?: return EpubContent(fallbackEpubParagraphs(files).map { EpubItem.Paragraph(it) }, "", null)
-        val opfBytes = files[opfPath]
-            ?: return EpubContent(fallbackEpubParagraphs(files).map { EpubItem.Paragraph(it) }, "", null)
+        ZipFile(target)
+    }.getOrNull()
+
+    private fun extractEpubContent(uri: Uri): EpubContent {
+        val zip = openEpubZip(uri) ?: return EpubContent(emptyList(), "", null)
+        return try {
+            extractEpubContent(zip, uri)
+        } catch (_: Exception) {
+            runCatching { zip.close() }
+            EpubContent(emptyList(), "", null)
+        }
+    }
+
+    private fun extractEpubContent(zip: ZipFile, uri: Uri): EpubContent {
+        val opfPath = zip.getEntry("META-INF/container.xml")?.let { parseContainerXml(readEntry(zip, it)) }
+        val opfEntry = opfPath?.let { zip.getEntry(it) }
+        if (opfPath == null || opfEntry == null) return EpubContent(fallbackEpubItems(zip), "", null, zip)
         val opfDir = opfPath.substringBeforeLast('/', "")
-        val opf = parseOpf(opfBytes)
+        val opf = parseOpf(readEntry(zip, opfEntry))
         val result = mutableListOf<EpubItem>()
         var firstChapter = true
         for (id in opf.spineIds) {
             val href = opf.manifest[id] ?: continue
             // Résolution robuste (gère "./" et "../" dans les hrefs du manifest) : un simple
             // opfDir+href sans normalisation ratait des chapitres et sous-comptait le total.
-            val bytes = resolveEpubPath(href, opfDir, files) ?: continue
-            val path = if (opfDir.isEmpty()) href else "$opfDir/$href"
-            val htmlDir = normalizePath(path).substringBeforeLast('/', "")
+            val entry = resolveEpubEntry(href, opfDir, zip) ?: continue
+            val htmlDir = entry.name.substringBeforeLast('/', "")
+            val html = runCatching { readEntry(zip, entry).toString(Charsets.UTF_8) }.getOrNull() ?: continue
             val sizeBefore = result.size
-            extractContentFromHtml(bytes.toString(Charsets.UTF_8), result, files, htmlDir)
+            extractContentFromHtml(html, result, zip, htmlDir)
             if (result.size > sizeBefore) {
                 if (!firstChapter) result.add(sizeBefore, EpubItem.ChapterBreak)
                 firstChapter = false
             }
         }
-        val items = if (result.isEmpty())
-            fallbackEpubParagraphs(files).map { EpubItem.Paragraph(it) }
+        val items = if (result.none { it is EpubItem.Paragraph || it is EpubItem.Heading })
+            fallbackEpubItems(zip)
         else result
         val coverPath = opf.coverItemId?.let { coverId ->
             val href = opf.manifest[coverId] ?: return@let null
-            val path = if (opfDir.isEmpty()) href else "$opfDir/$href"
-            val bytes = files[path] ?: files[href] ?: return@let null
-            saveCoverBytes(bytes, uri)
+            val entry = resolveEpubEntry(href, opfDir, zip) ?: return@let null
+            saveCover(zip, entry, uri)
         }
-        return EpubContent(items, opf.author, coverPath)
+        return EpubContent(items, opf.author, coverPath, zip)
     }
 
-    private fun fallbackEpubParagraphs(files: Map<String, ByteArray>): List<String> {
-        val html = files.entries
-            .firstOrNull { it.key.endsWith(".html", true) || it.key.endsWith(".xhtml", true) }
-            ?.value?.toString(Charsets.UTF_8) ?: return emptyList()
-        return mutableListOf<String>().also { extractParagraphsFromHtml(html, it) }
-    }
+    private fun readEntry(zip: ZipFile, entry: ZipEntry): ByteArray =
+        zip.getInputStream(entry).use { it.readBytes() }
 
-    private fun extractParagraphsFromHtml(html: String, out: MutableList<String>) {
-        val body = run {
-            val s = html.indexOf("<body", ignoreCase = true).takeIf { it >= 0 } ?: return
-            val e = html.lastIndexOf("</body>", ignoreCase = true).takeIf { it > s } ?: return
-            html.substring(s, e + 7)
-        }
-        val tagRe = Regex("<(p|h[1-6]|div)[^>]*>(.*?)</(p|h[1-6]|div)>", RegexOption.DOT_MATCHES_ALL)
-        var found = false
-        for (m in tagRe.findAll(body)) {
-            val text = decodeHtmlEntities(m.groupValues[2].replace(HTML_TAG_RE, ""))
-                .replace(WHITESPACE_RE, " ").trim()
-            if (text.length > 5) { out.add(text); found = true }
-        }
-        if (!found) {
-            val stripped = body.replace(HTML_TAG_RE, " ").replace(WHITESPACE_RE, "\n\n").trim()
-            out.addAll(splitParagraphs(stripped))
+    /** Sans sommaire exploitable : le premier fichier HTML de l'archive. */
+    private fun fallbackEpubItems(zip: ZipFile): List<EpubItem> {
+        val entry = zip.entries().asSequence().firstOrNull {
+            !it.isDirectory && (it.name.endsWith(".html", true) || it.name.endsWith(".xhtml", true))
+        } ?: return emptyList()
+        val html = runCatching { readEntry(zip, entry).toString(Charsets.UTF_8) }.getOrNull() ?: return emptyList()
+        return mutableListOf<EpubItem>().also {
+            extractContentFromHtml(html, it, zip, entry.name.substringBeforeLast('/', ""))
         }
     }
 
+    /**
+     * Parcourt le corps d'un chapitre balise par balise. p et h1-h6 donnent un paragraphe
+     * ou un titre ; les conteneurs (div, section, figure…) ne font que couper le texte libre
+     * qu'ils contiennent : on descend dans leurs paragraphes au lieu de tout fusionner.
+     */
     private fun extractContentFromHtml(
         html: String,
         out: MutableList<EpubItem>,
-        files: Map<String, ByteArray>,
+        zip: ZipFile,
         htmlDir: String
     ) {
         val bodyStart = html.indexOf("<body", ignoreCase = true).takeIf { it >= 0 } ?: return
         val bodyEnd = html.lastIndexOf("</body>", ignoreCase = true).takeIf { it > bodyStart } ?: return
-        val body = html.substring(bodyStart, bodyEnd + 7)
+        var body = html.substring(bodyStart, bodyEnd)
+        if (body.contains("<!--")) body = body.replace(HTML_COMMENT_RE, "")
 
-        // Regex matches: block elements (p/h1-6/figure/div) OR standalone img tags
-        val elemRe = Regex(
-            """<(p|h[1-6]|figure|div)\b[^>]*>(.*?)</\1>|<img\b[^>]*?>""",
-            setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE)
-        )
-        val imgRe = Regex("""<img\b[^>]*?>""", RegexOption.IGNORE_CASE)
-        var found = false
-        for (m in elemRe.findAll(body)) {
-            val full = m.value
-            if (full.startsWith("<img", ignoreCase = true)) {
-                resolveAndDecodeImg(full, files, htmlDir)?.let { out.add(EpubItem.Image(it)); found = true }
-            } else {
-                val tagName = m.groupValues[1].lowercase()
-                val inner = m.groupValues[2]
-                // Nested images inside block elements
-                for (imgM in imgRe.findAll(inner)) {
-                    resolveAndDecodeImg(imgM.value, files, htmlDir)?.let { out.add(EpubItem.Image(it)); found = true }
+        // Texte hors paragraphe (directement dans un div, une cellule…) : <br> = saut de ligne
+        val loose = StringBuilder()
+        fun flushLoose() {
+            if (loose.isEmpty()) return
+            decodeHtmlEntities(loose.toString()).split('\n')
+                .map { it.replace(WHITESPACE_RE, " ").trim() }
+                .filter { it.length > 3 }
+                .forEach { out.add(EpubItem.Paragraph(it)) }
+            loose.setLength(0)
+        }
+        fun appendLoose(raw: String) {
+            // Même un simple espace compte : il sépare deux mots mis en forme (<i>un</i> <b>deux</b>)
+            if (raw.isNotEmpty()) loose.append(raw.replace(WHITESPACE_RE, " "))
+        }
+
+        var i = 0
+        while (i < body.length) {
+            val m = HTML_ANY_TAG_RE.find(body, i)
+            if (m == null) {
+                appendLoose(body.substring(i))
+                break
+            }
+            if (m.range.first > i) appendLoose(body.substring(i, m.range.first))
+            i = m.range.last + 1
+            val closing = m.groupValues[1].isNotEmpty()
+            val name = m.groupValues[2].substringAfter(':').lowercase()
+            when {
+                name == "br" -> loose.append('\n')
+                name == "img" -> {
+                    flushLoose()
+                    epubImage(m.value, zip, htmlDir)?.let { out.add(it) }
                 }
-                // Heading tags → single Heading item (bold, sized by level)
-                if (tagName.length == 2 && tagName[0] == 'h' && tagName[1].isDigit()) {
-                    val level = tagName[1].digitToInt()
-                    val text = decodeHtmlEntities(inner.replace(HTML_TAG_RE, ""))
-                        .replace(WHITESPACE_RE, " ").trim()
-                    if (text.isNotEmpty()) { out.add(EpubItem.Heading(text, level)); found = true }
-                } else if (tagName == "p") {
-                    // <p> : <br> = saut typographique, garder en un seul paragraphe
-                    val text = decodeHtmlEntities(
-                        inner.replace(HTML_BR_RE, " ")
-                             .replace(HTML_TAG_RE, "")
-                    ).replace(WHITESPACE_RE, " ").trim()
-                    if (text.length > 3) { out.add(EpubItem.Paragraph(text)); found = true }
-                } else {
-                    // div/figure : <br> = séparateur de lignes
-                    val withBreaks = inner.replace(HTML_BR_RE, "\n")
-                    val raw = decodeHtmlEntities(withBreaks.replace(HTML_TAG_RE, ""))
-                    val lines = raw.split("\n")
-                        .map { it.replace(WHITESPACE_RE, " ").trim() }.filter { it.length > 3 }
-                    if (lines.isNotEmpty()) { lines.forEach { out.add(EpubItem.Paragraph(it)) }; found = true }
+                closing -> if (name in HTML_BLOCK_TAGS || name in HTML_LEAF_CLOSE_RE) flushLoose()
+                name in HTML_SKIP_CLOSE_RE -> {
+                    if (!m.value.endsWith("/>")) {
+                        HTML_SKIP_CLOSE_RE.getValue(name).find(body, i)?.let { i = it.range.last + 1 }
+                    }
                 }
+                name in HTML_LEAF_CLOSE_RE -> {
+                    flushLoose()
+                    val close = if (m.value.endsWith("/>")) null else HTML_LEAF_CLOSE_RE.getValue(name).find(body, i)
+                    if (close != null) {
+                        addLeafBlock(name, body.substring(i, close.range.first), out, zip, htmlDir)
+                        i = close.range.last + 1
+                    }
+                }
+                name in HTML_BLOCK_TAGS -> flushLoose()
             }
         }
-        if (!found) {
-            val stripped = body.replace(HTML_TAG_RE, " ").replace(WHITESPACE_RE, "\n\n").trim()
-            splitParagraphs(stripped).forEach { out.add(EpubItem.Paragraph(it)) }
+        flushLoose()
+    }
+
+    /** Un <p> ou un <hN> : ses images d'abord, puis son texte (<br> = simple espace). */
+    private fun addLeafBlock(tagName: String, inner: String, out: MutableList<EpubItem>, zip: ZipFile, htmlDir: String) {
+        for (imgM in HTML_IMG_RE.findAll(inner)) {
+            epubImage(imgM.value, zip, htmlDir)?.let { out.add(it) }
+        }
+        val text = decodeHtmlEntities(
+            inner.replace(HTML_BR_RE, " ")
+                 .replace(HTML_TAG_RE, "")
+        ).replace(WHITESPACE_RE, " ").trim()
+        if (tagName == "p") {
+            if (text.length > 3) out.add(EpubItem.Paragraph(text))
+        } else if (text.isNotEmpty()) {
+            out.add(EpubItem.Heading(text, tagName[1].digitToInt()))
         }
     }
 
-    private fun resolveAndDecodeImg(imgTag: String, files: Map<String, ByteArray>, htmlDir: String): Bitmap? {
-        val srcRe = Regex("""src\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
-        val src = srcRe.find(imgTag)?.groupValues?.get(1) ?: return null
-        val bytes = resolveEpubPath(src.trim(), htmlDir, files) ?: return null
-        return decodeScaledBitmap(bytes)
+    /** Image : on ne lit que ses dimensions ici (en-tête du fichier), le décodage se fait à l'affichage. */
+    private fun epubImage(imgTag: String, zip: ZipFile, htmlDir: String): EpubItem.Image? {
+        val src = HTML_SRC_RE.find(imgTag)?.groupValues?.get(1)?.trim() ?: return null
+        val entry = resolveEpubEntry(src, htmlDir, zip) ?: return null
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        runCatching { zip.getInputStream(entry).use { BitmapFactory.decodeStream(it, null, bounds) } }
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+        return EpubItem.Image(entry.name, bounds.outWidth, bounds.outHeight)
     }
 
-    private fun resolveEpubPath(src: String, htmlDir: String, files: Map<String, ByteArray>): ByteArray? {
-        val clean = src.trimStart('/').removePrefix("./")
+    /** Retrouve un fichier de l'archive d'après un href (relatif au dossier du document, encodé en %xx). */
+    private fun resolveEpubEntry(src: String, baseDir: String, zip: ZipFile): ZipEntry? {
+        val clean = decodeHref(src.substringBefore('#')).trimStart('/').removePrefix("./")
+        if (clean.isEmpty()) return null
         val candidates = buildList {
-            if (htmlDir.isNotEmpty()) {
-                add(normalizePath("$htmlDir/$clean"))
-                add("$htmlDir/$clean")
+            if (baseDir.isNotEmpty()) {
+                add(normalizePath("$baseDir/$clean"))
+                add("$baseDir/$clean")
             }
             add(clean)
             add(normalizePath(clean))
         }
-        return candidates.firstNotNullOfOrNull { files[it] }
+        return candidates.firstNotNullOfOrNull { name -> zip.getEntry(name)?.takeIf { !it.isDirectory } }
     }
 
     private fun normalizePath(path: String): String {
@@ -1278,33 +1401,47 @@ class BookReaderActivity : ThemedActivity() {
         return result.joinToString("/")
     }
 
-    private fun decodeScaledBitmap(bytes: ByteArray): Bitmap? = runCatching {
-        val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
+    /** Décode une image du livre à la largeur de la liste (plafond [MAX_DECODED_SIDE]). */
+    private fun decodeEpubImage(zip: ZipFile, item: EpubItem.Image, targetWidth: Int): Bitmap? = try {
         var sample = 1
-        while (maxOf(opts.outWidth, opts.outHeight) / sample > 1800) sample *= 2
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
-    }.getOrNull()
+        while (item.width / (sample * 2) >= targetWidth ||
+            maxOf(item.width, item.height) / sample > MAX_DECODED_SIDE) sample *= 2
+        val entry = zip.getEntry(item.path)
+        if (entry == null) null
+        else zip.getInputStream(entry).use {
+            BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample })
+        }
+    } catch (_: Exception) {
+        null
+    } catch (_: OutOfMemoryError) {
+        null
+    }
+
+    private fun newXmlBuilder() = DocumentBuilderFactory.newInstance()
+        .apply { isNamespaceAware = true }
+        .newDocumentBuilder()
 
     private fun parseContainerXml(bytes: ByteArray): String? = runCatching {
-        val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(bytes.inputStream())
-        (doc.getElementsByTagName("rootfile").item(0) as? Element)?.getAttribute("full-path")
+        val doc = newXmlBuilder().parse(bytes.inputStream())
+        (doc.getElementsByTagNameNS("*", "rootfile").item(0) as? Element)
+            ?.getAttribute("full-path")?.takeIf { it.isNotBlank() }
+            ?.let { decodeHref(it) }
     }.getOrNull()
 
     private fun parseOpf(bytes: ByteArray): OpfData =
         runCatching {
-            val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(bytes.inputStream())
-            val itemrefs = doc.getElementsByTagName("itemref")
-            val spineIds = (0 until itemrefs.length).map { (itemrefs.item(it) as Element).getAttribute("idref") }
-            val items = doc.getElementsByTagName("item")
-            val manifest = (0 until items.length).associate { i ->
-                val el = items.item(i) as Element; el.getAttribute("id") to el.getAttribute("href")
-            }
-            val author = doc.getElementsByTagName("dc:creator").let {
+            // Espaces de noms pris en compte : <opf:item>, <dc:creator>… sont trouvés quel que soit leur préfixe
+            val doc = newXmlBuilder().parse(bytes.inputStream())
+            val itemrefs = doc.getElementsByTagNameNS("*", "itemref")
+            val spineIds = (0 until itemrefs.length).mapNotNull { (itemrefs.item(it) as? Element)?.getAttribute("idref") }
+            val items = doc.getElementsByTagNameNS("*", "item")
+            val itemElements = (0 until items.length).mapNotNull { items.item(it) as? Element }
+            val manifest = itemElements.associate { el -> el.getAttribute("id") to el.getAttribute("href") }
+            val author = doc.getElementsByTagNameNS("*", "creator").let {
                 if (it.length > 0) it.item(0).textContent.trim() else ""
             }
             var coverId: String? = null
-            val metas = doc.getElementsByTagName("meta")
+            val metas = doc.getElementsByTagNameNS("*", "meta")
             for (i in 0 until metas.length) {
                 val el = metas.item(i) as? Element ?: continue
                 if (el.getAttribute("name") == "cover") {
@@ -1312,8 +1449,13 @@ class BookReaderActivity : ThemedActivity() {
                 }
             }
             if (coverId == null) {
-                for (i in 0 until items.length) {
-                    val el = items.item(i) as Element
+                // EPUB3 : properties="cover-image"
+                coverId = itemElements.firstOrNull { el ->
+                    el.getAttribute("properties").split(' ').any { it == "cover-image" }
+                }?.getAttribute("id")
+            }
+            if (coverId == null) {
+                for (el in itemElements) {
                     val id = el.getAttribute("id").lowercase()
                     val mime = el.getAttribute("media-type")
                     if ((id == "cover-image" || id == "cover") && mime.startsWith("image/")) {
@@ -1322,8 +1464,7 @@ class BookReaderActivity : ThemedActivity() {
                 }
             }
             if (coverId == null) {
-                for (i in 0 until items.length) {
-                    val el = items.item(i) as Element
+                for (el in itemElements) {
                     val href = el.getAttribute("href").lowercase()
                     val mime = el.getAttribute("media-type")
                     if (href.contains("cover") && mime.startsWith("image/")) {
@@ -1338,19 +1479,30 @@ class BookReaderActivity : ThemedActivity() {
 
     private fun posKey(uri: Uri) = "pos_${uri.toString().hashCode()}"
 
-    private fun savePosition() {
-        val uri = currentUri ?: return; val k = posKey(uri)
-        when (currentViewType) {
-            ViewType.TXT, ViewType.EPUB -> {
-                val lm = txtRecycler.layoutManager as? LinearLayoutManager ?: return
-                val pos = lm.findFirstVisibleItemPosition()
-                val now = System.currentTimeMillis()
+    /**
+     * Écrit la position seulement si elle a changé. [finalSave] (onStop) déclenche en plus
+     * la synchro entre appareils si une position a été écrite depuis la dernière.
+     */
+    private fun savePosition(finalSave: Boolean = false) {
+        val uri = currentUri ?: return
+        val k = posKey(uri)
+        val adapter = paragraphAdapter
+        val lm = txtRecycler.layoutManager as? LinearLayoutManager
+        var percent: Float? = null
+        val title = toolbar.title?.toString()
+        if (adapter != null && lm != null && positionRestored &&
+            (currentViewType == ViewType.TXT || currentViewType == ViewType.EPUB)) {
+            val pos = lm.findFirstVisibleItemPosition()
+            val off = txtRecycler.getChildAt(0)?.top ?: 0
+            if (pos >= 0 && (pos != lastSavedIdx || off != lastSavedOff)) {
+                lastSavedIdx = pos
+                lastSavedOff = off
                 prefs.edit {
                     putInt("${k}_idx", pos)
-                    putInt("${k}_off", txtRecycler.getChildAt(0)?.top ?: 0)
-                    putLong("${k}_time", now)
+                    putInt("${k}_off", off)
+                    putLong("${k}_time", System.currentTimeMillis())
                 }
-                val paragraphNumber = (paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: pos) + 1
+                val paragraphNumber = adapter.paragraphIndexAtOrAfter(pos) + 1
                 BookLibraryActivity.updateProgress(
                     prefs,
                     uri.toString(),
@@ -1359,16 +1511,23 @@ class BookReaderActivity : ThemedActivity() {
                 )
                 // Progression synchronisable entre appareils : ratio position/nombre total d'items,
                 // indépendant de l'écran (déterminé uniquement par le contenu du fichier).
-                val itemCount = txtRecycler.adapter?.itemCount ?: 0
-                val title = toolbar.title?.toString()
+                val itemCount = adapter.itemCount
                 if (itemCount > 0 && !title.isNullOrBlank()) {
-                    val percent = pos.toFloat() / itemCount
-                    scope.launch {
-                        readingProgressRepository.updateProgress(StatsRepository.MODULE_BOOK, title, percent)
-                    }
+                    percent = pos.toFloat() / itemCount
+                    progressSyncPending = true
                 }
             }
-            ViewType.EMPTY -> {}
+        }
+        val sync = finalSave && progressSyncPending
+        if (sync) progressSyncPending = false
+        val toWrite = percent
+        if (toWrite == null && !sync) return
+        saveScope.launch {
+            if (toWrite != null && title != null) {
+                readingProgressRepository.updateProgress(StatsRepository.MODULE_BOOK, title, toWrite, triggerSync = sync)
+            } else {
+                ReadingProgressRepository.requestSync()
+            }
         }
     }
 
@@ -1382,35 +1541,53 @@ class BookReaderActivity : ThemedActivity() {
 
         scope.launch {
             val remote = title?.let { readingProgressRepository.getProgress(StatsRepository.MODULE_BOOK, it) }
-            val (pos, off) = if (remote != null && remote.lastReadTimestamp > localTime && itemCount > 0) {
-                // La progression synchronisée depuis un autre appareil est plus récente : on saute au bon endroit
-                (remote.progressPercent * itemCount).toInt().coerceIn(0, itemCount - 1) to 0
+            if (currentUri != uri) return@launch
+            // Seule une progression venue d'un autre appareil (sourceDeviceId non nul) peut remplacer
+            // la position locale : la nôtre, réécrite juste après la locale, garde son décalage précis.
+            val remotePos = if (remote != null && remote.sourceDeviceId != null &&
+                remote.lastReadTimestamp > localTime && itemCount > 0) {
+                (remote.progressPercent * itemCount).roundToInt().coerceIn(0, itemCount - 1)
+            } else null
+            val pos = remotePos ?: localPos.coerceIn(0, (itemCount - 1).coerceAtLeast(0))
+            val off = if (remotePos != null) 0 else localOff
+            // Reprise venue d'ailleurs : elle sera réécrite ici à la prochaine sauvegarde
+            lastSavedIdx = if (remotePos != null) -1 else pos
+            lastSavedOff = off
+            if (pos > 0) {
+                txtRecycler.post {
+                    if (currentUri != uri) return@post
+                    (txtRecycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, off)
+                    ttsCurrentParagraph = paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: 0
+                    positionRestored = true
+                }
             } else {
-                localPos to localOff
-            }
-            if (pos > 0) txtRecycler.post {
-                (txtRecycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, off)
-                ttsCurrentParagraph = paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: 0
+                positionRestored = true
             }
         }
     }
 
     private fun startAutoSave() {
-        scope.launch { while (true) { delay(15_000); if (currentViewType != ViewType.EMPTY) savePosition() } }
+        autoSaveJob?.cancel()
+        autoSaveJob = scope.launch { while (true) { delay(15_000); savePosition() } }
     }
 
     // ── Décodage entités HTML ────────────────────────────────────────────────
 
     private fun decodeHtmlEntities(text: String): String {
-        return text.replace(Regex("&(#x[0-9a-fA-F]+|#[0-9]+|[a-zA-Z][a-zA-Z0-9]*);")) { m ->
+        if (text.indexOf('&') < 0) return text
+        return text.replace(HTML_ENTITY_RE) { m ->
             val entity = m.groupValues[1]
             when {
-                entity.startsWith("#x") -> entity.substring(2).toIntOrNull(16)?.toChar()?.toString() ?: m.value
-                entity.startsWith("#") -> entity.substring(1).toIntOrNull()?.toChar()?.toString() ?: m.value
+                entity.startsWith("#x") || entity.startsWith("#X") -> codePointText(entity.substring(2).toIntOrNull(16)) ?: m.value
+                entity.startsWith("#") -> codePointText(entity.substring(1).toIntOrNull()) ?: m.value
                 else -> HTML_NAMED_ENTITIES[entity] ?: m.value
             }
         }
     }
+
+    /** Entité numérique → texte, y compris au-delà de U+FFFF (émojis, idéogrammes rares). */
+    private fun codePointText(codePoint: Int?): String? =
+        codePoint?.takeIf { Character.isValidCodePoint(it) }?.let { String(Character.toChars(it)) }
 
     // ── Détection d'encodage pour les fichiers TXT ────────────────────────────
 
@@ -1468,10 +1645,12 @@ class BookReaderActivity : ThemedActivity() {
         } ?: 0L
     } catch (_: Exception) { 0L }
 
-    private fun saveCoverBytes(bytes: ByteArray, uri: Uri): String? = runCatching {
-        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return@runCatching null
+    /** Couverture pour les récents : écrite une seule fois, réduite (~600 px), jamais en pleine taille. */
+    private fun saveCover(zip: ZipFile, entry: ZipEntry, uri: Uri): String? = runCatching {
         val dir = File(filesDir, "book_covers").apply { mkdirs() }
         val file = File(dir, "${uri.toString().hashCode()}.jpg")
+        if (file.exists()) return@runCatching file.absolutePath
+        val bmp = decodeSampledStream(READER_COVER_PX) { zip.getInputStream(entry) } ?: return@runCatching null
         file.outputStream().use { out -> bmp.compress(Bitmap.CompressFormat.JPEG, 85, out) }
         file.absolutePath
     }.getOrNull()
@@ -1587,8 +1766,18 @@ class BookReaderActivity : ThemedActivity() {
 
         private val TYPE_TEXT = 0; private val TYPE_IMAGE = 1; private val TYPE_CHAPTER = 2
 
+        // Images déjà décodées : un petit cache, le reste du livre reste sur disque
+        private val imageCache = object : LruCache<String, Bitmap>(
+            (Runtime.getRuntime().maxMemory() / 8).coerceAtMost(64L * 1024 * 1024).toInt()
+        ) {
+            override fun sizeOf(key: String, value: Bitmap): Int = value.byteCount
+        }
+
         inner class TextHolder(val tv: TextView) : RecyclerView.ViewHolder(tv)
-        inner class ImageHolder(val iv: ImageView) : RecyclerView.ViewHolder(iv)
+        inner class ImageHolder(val iv: ImageView) : RecyclerView.ViewHolder(iv) {
+            var path: String? = null
+            var job: Job? = null
+        }
         inner class ChapterHolder(root: FrameLayout, val line: View) : RecyclerView.ViewHolder(root)
 
         override fun getItemViewType(position: Int) = when (items[position]) {
@@ -1662,7 +1851,7 @@ class BookReaderActivity : ThemedActivity() {
                     h.itemView.setBackgroundColor(theme.bg1)
                     h.line.setBackgroundColor(lineColor)
                 }
-                is EpubItem.Image -> (holder as ImageHolder).iv.setImageBitmap(item.bitmap)
+                is EpubItem.Image -> bindImage(holder as ImageHolder, item)
                 is EpubItem.Heading -> {
                     val h = holder as TextHolder
                     val paraIdx = itemToParagraphIdx[position] ?: 0
@@ -1726,6 +1915,39 @@ class BookReaderActivity : ThemedActivity() {
 
         override fun getItemCount() = items.size
 
+        override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+            super.onViewRecycled(holder)
+            (holder as? ImageHolder)?.let { it.job?.cancel(); it.job = null }
+        }
+
+        /** Image décodée à la demande, sur un fil de fond, à la largeur de la liste. */
+        private fun bindImage(holder: ImageHolder, item: EpubItem.Image) {
+            val iv = holder.iv
+            holder.job?.cancel()
+            holder.path = item.path
+            imageCache.get(item.path)?.let {
+                iv.minimumHeight = 0
+                iv.setImageBitmap(it)
+                return
+            }
+            iv.setImageDrawable(null)
+            val listWidth = txtRecycler.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
+            val targetWidth = (listWidth - iv.paddingLeft - iv.paddingRight).coerceAtLeast(1)
+            // Hauteur réservée d'après les dimensions lues à l'ouverture : le texte ne saute pas
+            // quand l'image arrive
+            val shownWidth = minOf(item.width, targetWidth)
+            iv.minimumHeight = shownWidth * item.height / item.width + iv.paddingTop + iv.paddingBottom
+            val zip = epubZip ?: return
+            holder.job = scope.launch {
+                val bmp = withContext(epubImageDispatcher) { decodeEpubImage(zip, item, targetWidth) } ?: return@launch
+                imageCache.put(item.path, bmp)
+                if (holder.path == item.path) {
+                    iv.minimumHeight = 0
+                    iv.setImageBitmap(bmp)
+                }
+            }
+        }
+
         private fun applyWordHighlight(tv: TextView, text: String, start: Int, end: Int, paraIdx: Int) {
             if (start >= 0 && end > start && end <= text.length) {
                 val current = tv.text
@@ -1744,9 +1966,12 @@ class BookReaderActivity : ThemedActivity() {
 
         fun itemIndexForParagraph(paraIdx: Int): Int = textItemIndices.getOrElse(paraIdx) { paraIdx }
 
-        fun paragraphIndexAtOrAfter(itemPos: Int): Int =
-            textItemIndices.indexOfFirst { it >= itemPos }.takeIf { it >= 0 }
-                ?: textItemIndices.lastIndex.coerceAtLeast(0)
+        // Recherche dichotomique : appelée à chaque image de défilement sur des milliers de paragraphes
+        fun paragraphIndexAtOrAfter(itemPos: Int): Int {
+            val found = textItemIndices.binarySearch(itemPos)
+            val idx = if (found >= 0) found else -(found + 1)
+            return idx.coerceAtMost(textItemIndices.lastIndex).coerceAtLeast(0)
+        }
 
         fun setCursorParagraph(idx: Int) {
             val prevItemIdx = textItemIndices.getOrElse(cursorParagraph) { -1 }
@@ -1866,7 +2091,7 @@ class BookReaderActivity : ThemedActivity() {
 
         private fun applyBookmarkPrefix(tv: TextView, text: String, isBookmarked: Boolean) {
             if (!isBookmarked) { tv.text = text; return }
-            val full = "★  $text"
+            val full = getString(R.string.book_reader_bookmark_item, text)
             val s = SpannableString(full)
             s.setSpan(
                 android.text.style.ForegroundColorSpan(0xFFFFC107.toInt()),

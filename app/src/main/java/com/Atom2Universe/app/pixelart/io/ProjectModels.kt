@@ -30,6 +30,7 @@ enum class ImageFormat(val mime: String, val extension: String) {
 /**
  * Le fichier image auquel le projet est relié : « Enregistrer » l'écrase.
  * [scale] est l'agrandissement appliqué à l'écriture (un sprite 32×32 exporté ×8 reste ×8).
+ * Les réglages `gif…` sont ceux de l'export GIF qui a créé le lien : « Enregistrer » les reprend.
  */
 data class SourceLink(
     val uri: String,
@@ -38,7 +39,13 @@ data class SourceLink(
     val scale: Int = 1,
     /** Faux quand le fournisseur du fichier n'a pas donné le droit d'écriture. */
     val writable: Boolean = true,
-)
+    val gifLoops: Int = 0,
+    val gifDirection: ImageExport.GifDirection = ImageExport.GifDirection.FORWARD,
+    val gifBackground: Int? = null,
+    val gifSpeedPercent: Int = 100,
+) {
+    fun gifOptions() = ImageExport.GifOptions(scale, gifLoops, gifDirection, gifBackground, gifSpeedPercent)
+}
 
 /** Image de référence posée sous le dessin (calque de calque, jamais exportée). */
 data class ReferenceState(
@@ -62,7 +69,15 @@ class ProjectMeta(
     var link: SourceLink? = null,
     var reference: ReferenceState? = null,
     var hasReference: Boolean = false,
-)
+) {
+    /**
+     * Fichier de chaque cel sur le disque : clé de cel -> génération (le numéro dans le nom du fichier).
+     * Une cel réécrite prend une génération neuve ; le manifeste, écrit en dernier, dit lesquelles valent.
+     */
+    val celFiles = HashMap<Long, Long>()
+    /** Dernière génération donnée. */
+    var celGeneration = 0L
+}
 
 class LoadedProject(val doc: Document, val meta: ProjectMeta)
 

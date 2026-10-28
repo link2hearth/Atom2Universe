@@ -35,12 +35,19 @@ class PixelLayer {
         /** Change à chaque modification (et à la création) : le rendu s'en sert pour garder ses images à jour. */
         var version = 0
             internal set
+        /** Déjà dans la liste des tuiles à écrire : inutile de l'y remettre à chaque case. */
+        internal var queued = false
     }
 
     private val tiles = HashMap<Long, Tile>()
     private val dirty = HashSet<Long>()
     private val removed = HashSet<Long>()
     private var clock = 0
+    /**
+     * La dernière tuile lue ou écrite : un pinceau repasse des centaines de fois de suite dans la même,
+     * on s'évite alors la table (et sa clé emballée à chaque case).
+     */
+    private var lastTile: Tile? = null
 
     val tileCount: Int get() = tiles.size
     val isEmpty: Boolean get() = tiles.isEmpty()
@@ -49,29 +56,48 @@ class PixelLayer {
 
     fun tile(tx: Int, ty: Int): Tile? = tiles[tileKey(tx, ty)]
 
-    fun get(x: Int, y: Int): Int = tiles[tileKey(x shr SHIFT, y shr SHIFT)]?.px?.get(index(x, y)) ?: 0
+    fun get(x: Int, y: Int): Int {
+        val t = tileAt(x shr SHIFT, y shr SHIFT) ?: return 0
+        return t.px[index(x, y)]
+    }
+
+    /** La tuile ([tx], [ty]) ou null, en passant d'abord par la dernière servie. */
+    private fun tileAt(tx: Int, ty: Int): Tile? {
+        val last = lastTile
+        if (last != null && last.tx == tx && last.ty == ty) return last
+        val t = tiles[tileKey(tx, ty)] ?: return null
+        lastTile = t
+        return t
+    }
 
     /** Peint la case ([x], [y]) de [color] (0 ou un alpha nul : la vide). Faux si rien n'a changé. */
     fun set(x: Int, y: Int, color: Int): Boolean {
         if (x < -LIMIT || x > LIMIT || y < -LIMIT || y > LIMIT) return false
         val c = if (color ushr 24 == 0) 0 else color
-        val key = tileKey(x shr SHIFT, y shr SHIFT)
-        var t = tiles[key]
+        val tx = x shr SHIFT
+        val ty = y shr SHIFT
+        var t = tileAt(tx, ty)
         val i = index(x, y)
         val old = t?.px?.get(i) ?: 0
         if (old == c) return false
         if (t == null) {
-            t = Tile(x shr SHIFT, y shr SHIFT)
-            tiles[key] = t
+            t = Tile(tx, ty)
+            tiles[tileKey(tx, ty)] = t
+            lastTile = t
         }
         t.px[i] = c
         if (old == 0) t.count++ else if (c == 0) t.count--
         t.version = ++clock
         if (t.count == 0) {
+            val key = tileKey(tx, ty)
             tiles.remove(key)
-            dirty.remove(key)
+            if (t.queued) dirty.remove(key)
+            t.queued = false
             removed.add(key)
-        } else {
+            if (lastTile === t) lastTile = null
+        } else if (!t.queued) {
+            val key = tileKey(tx, ty)
+            t.queued = true
             dirty.add(key)
             removed.remove(key)
         }
@@ -102,7 +128,7 @@ class PixelLayer {
     fun drain(): PixelDelta {
         if (!hasUnsaved) return PixelDelta.EMPTY
         val up = ArrayList<Pair<Long, IntArray>>(dirty.size)
-        for (k in dirty) tiles[k]?.let { up.add(k to it.px.copyOf()) }
+        for (k in dirty) tiles[k]?.let { it.queued = false; up.add(k to it.px.copyOf()) }
         val del = removed.toLongArray()
         dirty.clear()
         removed.clear()
@@ -111,7 +137,7 @@ class PixelLayer {
 
     /** L'écriture de [d] a échoué : ses tuiles repartent (celles qui ont encore changé depuis sont déjà notées). */
     fun requeue(d: PixelDelta) {
-        for ((k, _) in d.upserts) if (tiles.containsKey(k)) { dirty.add(k); removed.remove(k) }
+        for ((k, _) in d.upserts) tiles[k]?.let { it.queued = true; dirty.add(k); removed.remove(k) }
         for (k in d.deletes) if (!tiles.containsKey(k)) { removed.add(k); dirty.remove(k) }
     }
 
@@ -120,6 +146,7 @@ class PixelLayer {
         tiles.clear()
         dirty.clear()
         removed.clear()
+        lastTile = null
         for ((k, px) in list) {
             if (px.size != SIZE * SIZE) continue
             val t = Tile(tileX(k), tileY(k))

@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.os.SystemClock
 import com.Atom2Universe.app.zoomcanvas.core.CacheWindow
@@ -48,6 +49,8 @@ class LayerCache(
         fun cacheReady()
         /** Exécuter sur le fil de l'écran. */
         fun runOnMain(r: Runnable)
+        /** Exécuter sur le fil de l'écran dans [delayMs] millisecondes (une cuisson remise au repos de la vue). */
+        fun runOnMainDelayed(r: Runnable, delayMs: Long)
     }
 
     private class Patch(val removed: Entry?, val added: Entry?, val append: Boolean)
@@ -69,6 +72,33 @@ class LayerCache(
     private var lastZ = 1.0
     private var lastW = 0.0
     private var lastH = 0.0
+    /** Quand la vue a bougé pour la dernière fois : pendant un geste, on ne recuit que si l'image ne suffit vraiment plus. */
+    private var movedAt = 0L
+    private var settlePending = false
+    private var idlePending = false
+
+    /** La vue est immobile depuis assez longtemps : la cuisson remise à plus tard peut partir. */
+    private val settleCheck = Runnable {
+        settlePending = false
+        if (!released) host.cacheReady()
+    }
+
+    /** Au repos, l'image de rechange (qui ne sert qu'à la prochaine cuisson) est rendue à la mémoire. */
+    private val idleCheck = Runnable {
+        idlePending = false
+        if (released || spare == null) return@Runnable
+        val still = SystemClock.uptimeMillis() - movedAt
+        if (!baking && still >= SPARE_KEEP_MS) {
+            spare?.recycle()
+            spare = null
+        } else scheduleIdle(if (baking) SPARE_KEEP_MS else SPARE_KEEP_MS - still)
+    }
+
+    private fun scheduleIdle(delayMs: Long) {
+        if (idlePending) return
+        idlePending = true
+        host.runOnMainDelayed(idleCheck, delayMs)
+    }
 
     var lastUsed = 0L
 
@@ -92,6 +122,8 @@ class LayerCache(
      * cuisson n'est pas finie.
      */
     fun draw(canvas: Canvas, cx: Double, cy: Double, z: Double, viewW: Double, viewH: Double, alpha: Int) {
+        val now = SystemClock.uptimeMillis()
+        if (cx != lastCx || cy != lastCy || z != lastZ || viewW != lastW || viewH != lastH) movedAt = now
         lastCx = cx; lastCy = cy; lastZ = z; lastW = viewW; lastH = viewH
         val bmp = front
         val win = frontWin
@@ -103,7 +135,38 @@ class LayerCache(
             paint.alpha = alpha
             canvas.drawBitmap(bmp, matrix, paint)
         }
-        if (!baking && SystemClock.uptimeMillis() >= retryAt && needsBake(cx, cy, z, viewW, viewH)) startBake()
+        if (!baking && now >= retryAt) maybeBake(now)
+    }
+
+    /** Où [draw] poserait l'image cuite pour cette caméra, en pixels d'écran (dans [out]) ; faux s'il n'y en a pas encore. */
+    fun drawnRect(cx: Double, cy: Double, z: Double, viewW: Double, viewH: Double, out: RectF): Boolean {
+        if (front == null) return false
+        val win = frontWin ?: return false
+        win.transformTo(cx, cy, z, viewW, viewH, transform)
+        out.set(
+            transform.tx.toFloat(), transform.ty.toFloat(),
+            (transform.tx + transform.scale * win.w).toFloat(), (transform.ty + transform.scale * win.h).toFloat(),
+        )
+        return true
+    }
+
+    /**
+     * Lance la cuisson qu'il faut pour la dernière vue. Si l'image actuelle ne suffit plus du tout (un bord
+     * se voit, ou elle est agrandie plus de [URGENT_STRETCH] fois), tout de suite ; si elle est seulement
+     * un peu floue, un peu juste, ou dépassée par un changement, on attend que la vue soit immobile depuis
+     * [SETTLE_MS] : pendant un pincement, les cuissons ne s'enchaînent plus à chaque petit zoom.
+     */
+    private fun maybeBake(now: Long) {
+        val win = frontWin
+        val urgent = win == null || !win.covers(lastCx, lastCy, lastZ, lastW, lastH, 0.0, transform) || lastZ / win.viewZoom > URGENT_STRETCH
+        if (urgent) { startBake(); return }
+        if (!needsBake(lastCx, lastCy, lastZ, lastW, lastH)) return
+        val still = now - movedAt
+        if (still >= SETTLE_MS) { startBake(); return }
+        if (!settlePending) {
+            settlePending = true
+            host.runOnMainDelayed(settleCheck, SETTLE_MS - still)
+        }
     }
 
     private fun needsBake(cx: Double, cy: Double, z: Double, viewW: Double, viewH: Double): Boolean {
@@ -191,8 +254,10 @@ class LayerCache(
             return
         }
         cancelled = false
-        // La vue a peut-être déjà bougé plus loin que cette fenêtre : on enchaîne.
-        if (needsBake(lastCx, lastCy, lastZ, lastW, lastH)) startBake()
+        // La vue a peut-être déjà bougé plus loin que cette fenêtre : on enchaîne (tout de suite, ou au repos).
+        val now = SystemClock.uptimeMillis()
+        if (now >= retryAt) maybeBake(now)
+        if (!baking && spare != null) scheduleIdle(SPARE_KEEP_MS)
     }
 
     // ---- Tenir à jour ------------------------------------------------------------------------
@@ -289,6 +354,12 @@ class LayerCache(
         /** Au-delà, recalculer une zone sur le fil de l'écran coûte trop : on recuit tout. */
         const val MAX_PATCH_ENTRIES = 2500
         const val RETRY_MS = 3000L
+        /** Une cuisson qui peut attendre part quand la vue est immobile depuis ce temps-là. */
+        const val SETTLE_MS = 120L
+        /** Agrandie plus que ça, l'image cuite est trop floue même le temps d'un geste : on recuit sans attendre. */
+        const val URGENT_STRETCH = 2.0
+        /** Au repos depuis ce temps-là, l'image de rechange est libérée (elle pèse autant que l'image affichée). */
+        const val SPARE_KEEP_MS = 1500L
     }
 }
 
@@ -320,6 +391,11 @@ class LayerCacheManager(private val host: LayerCache.Host) {
 
     fun invalidateAll() {
         for (c in caches.values) c.invalidate()
+    }
+
+    /** L'image [key] vient de se charger : seuls les caches des couches qui la portent sont à refaire. */
+    fun invalidateImage(key: String) {
+        for ((layer, c) in caches) if (layer.hasImage(key)) c.invalidate()
     }
 
     fun clear() {

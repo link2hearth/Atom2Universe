@@ -193,14 +193,17 @@ class Document(width: Int, height: Int) {
 
     fun snapshotCels(): Map<Long, IntArray> = HashMap(cels)
 
-    /** Une copie indépendante (pixels compris) : pour exporter sur un autre fil pendant qu'on continue à dessiner. */
-    fun copy(): Document {
+    /**
+     * Une copie indépendante (pixels compris) : pour exporter sur un autre fil pendant qu'on continue à dessiner.
+     * [onlyFrameId] : ne garde que cette image (export d'une seule image, inutile de tout dupliquer).
+     */
+    fun copy(onlyFrameId: Int? = null): Document {
         val d = Document(width, height)
         for (l in layers) d.layers.add(l.copyProps(l.id))
-        for (f in frames) d.frames.add(Frame(f.id, f.durationMs))
+        for (f in frames) if (onlyFrameId == null || f.id == onlyFrameId) d.frames.add(Frame(f.id, f.durationMs))
         d.nextLayerId = nextLayerId
         d.nextFrameId = nextFrameId
-        for ((k, v) in cels) d.cels[k] = v.copyOf()
+        for ((k, v) in cels) if (onlyFrameId == null || unpackFrame(k) == onlyFrameId) d.cels[k] = v.copyOf()
         return d
     }
 

@@ -77,9 +77,11 @@ object MarkdownEdits {
         val ls = lineStart(text, selStart)
         val le = lineEnd(text, selStart)
         if (maxOf(selStart, selEnd) > le) return emptySet()
-        val line = MarkdownSyntax.parseLine(text.substring(ls, le))
-        val s = minOf(selStart, selEnd) - ls
-        val e = maxOf(selStart, selEnd) - ls
+        return activeInline(MarkdownSyntax.parseLine(text.substring(ls, le)), minOf(selStart, selEnd) - ls, maxOf(selStart, selEnd) - ls)
+    }
+
+    /** Pareil sur une ligne déjà lue ; [s] et [e] sont comptés depuis son début et ne la dépassent pas. */
+    fun activeInline(line: MarkdownSyntax.Line, s: Int, e: Int): Set<Inline> {
         val out = HashSet<Inline>()
         for (t in line.tokens) {
             if (s < t.start || e > t.end) continue

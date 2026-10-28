@@ -2,8 +2,10 @@ package com.Atom2Universe.app.books
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
+import com.Atom2Universe.app.reading.COVER_THUMB_PX
+import com.Atom2Universe.app.reading.decodeSampledBytes
+import com.Atom2Universe.app.reading.decodeSampledStream
 import java.io.File
 import java.net.URLDecoder
 import java.util.zip.ZipFile
@@ -22,16 +24,17 @@ import java.util.zip.ZipInputStream
  *  - EPUB2 : `<meta name="cover" content="ID">` pointant vers un item du manifest ;
  *  - EPUB3 : item du manifest portant `properties="cover-image"`.
  * Avec repli sur les item dont l'id ou le href contient « cover ».
+ * L'image est décodée directement à la taille vignette ([COVER_THUMB_PX]).
  */
-internal fun loadEpubCoverBitmap(context: Context, sourcePath: String, sampleSize: Int = 2): Bitmap? =
+internal fun loadEpubCoverBitmap(context: Context, sourcePath: String): Bitmap? =
     if (sourcePath.startsWith("/")) {
-        loadEpubCoverBitmap(File(sourcePath), sampleSize)
+        loadEpubCoverBitmap(File(sourcePath))
     } else {
-        loadEpubCoverFromUri(context, Uri.parse(sourcePath), sampleSize)
+        loadEpubCoverFromUri(context, Uri.parse(sourcePath))
     }
 
 /** Variante accès direct (chemin fichier réel). */
-internal fun loadEpubCoverBitmap(epubFile: File, sampleSize: Int = 2): Bitmap? = try {
+internal fun loadEpubCoverBitmap(epubFile: File): Bitmap? = try {
     ZipFile(epubFile).use { zip ->
         val container = zip.getEntry("META-INF/container.xml")
         val containerText = container?.let { zip.getInputStream(it).readBytes().decodeToString() }
@@ -55,8 +58,7 @@ internal fun loadEpubCoverBitmap(epubFile: File, sampleSize: Int = 2): Bitmap? =
                 if (imgEntry == null) {
                     null
                 } else {
-                    val bytes = zip.getInputStream(imgEntry).readBytes()
-                    decode(bytes, sampleSize)
+                    decodeSampledStream(COVER_THUMB_PX) { zip.getInputStream(imgEntry) }
                 }
             }
         }
@@ -66,7 +68,7 @@ internal fun loadEpubCoverBitmap(epubFile: File, sampleSize: Int = 2): Bitmap? =
 }
 
 /** Variante flux (URI `content://`). */
-private fun loadEpubCoverFromUri(context: Context, uri: Uri, sampleSize: Int): Bitmap? = try {
+private fun loadEpubCoverFromUri(context: Context, uri: Uri): Bitmap? = try {
     // Passe 1 : récupérer les petits fichiers XML (container + opf).
     val xmlFiles = HashMap<String, ByteArray>()
     openZipStream(context, uri)?.use { zin ->
@@ -118,7 +120,7 @@ private fun loadEpubCoverFromUri(context: Context, uri: Uri, sampleSize: Int): B
                 entry = zin.nextEntry
             }
         }
-        (exact ?: fuzzy)?.let { decode(it, sampleSize) }
+        (exact ?: fuzzy)?.let { decodeSampledBytes(it, COVER_THUMB_PX) }
     }
 } catch (_: Exception) {
     null
@@ -126,9 +128,6 @@ private fun loadEpubCoverFromUri(context: Context, uri: Uri, sampleSize: Int): B
 
 private fun openZipStream(context: Context, uri: Uri): ZipInputStream? =
     context.contentResolver.openInputStream(uri)?.let { ZipInputStream(it.buffered()) }
-
-private fun decode(bytes: ByteArray, sampleSize: Int): Bitmap? =
-    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sampleSize })
 
 private fun coverKey(opfPath: String, coverHref: String): String {
     val opfDir = opfPath.substringBeforeLast("/", "")
@@ -183,7 +182,7 @@ private fun tagAttr(tag: String, name: String): String? =
         .find(tag)?.groupValues?.get(1)
 
 /** Décode les séquences %xx d'un href sans transformer les « + » en espaces. */
-private fun decodeHref(href: String): String =
+internal fun decodeHref(href: String): String =
     if (href.contains('%')) {
         runCatching { URLDecoder.decode(href.replace("+", "%2B"), "UTF-8") }.getOrDefault(href)
     } else {

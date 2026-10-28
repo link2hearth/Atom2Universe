@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.Atom2Universe.app.zoomcanvas.core.LayerItem
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import com.Atom2Universe.app.zoomcanvas.data.LoadedZoomProject
 import com.Atom2Universe.app.zoomcanvas.data.ZoomDatabase
@@ -17,9 +16,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -71,10 +70,16 @@ class ZoomCanvasViewModel(app: Application) : AndroidViewModel(app) {
         if (project?.meta?.id == id) { _state.value = State.READY; return }
         _state.value = State.LOADING
         viewModelScope.launch {
+            // L'éditeur qu'on vient de quitter écrit peut-être encore (retour puis réouverture rapide) : on attend
+            // la fin de ses écritures et on lit sous le même verrou, sinon ses derniers traits manqueraient, et
+            // l'image qu'il venait d'importer passerait pour inutilisée.
+            ZoomCanvasStorage.writesInFlight.first { it == 0 }
             val loaded = withContext(Dispatchers.IO) {
-                // À l'ouverture l'historique est vide : les images que plus rien n'utilise peuvent partir
-                // (on les cherche dans la base : toutes les couches ne sont pas en mémoire).
-                store.load(id)?.also { store.deleteUnusedImages(id, store.usedImageKeys(it.meta.pid)) }
+                ZoomCanvasStorage.saveMutex.withLock {
+                    // À l'ouverture l'historique est vide : les images que plus rien n'utilise peuvent partir
+                    // (on les cherche dans la base : toutes les couches ne sont pas en mémoire).
+                    store.load(id)?.also { store.deleteUnusedImages(id, store.usedImageKeys(it.meta.pid)) }
+                }
             }
             if (loaded == null) { _state.value = State.FAILED; return@launch }
             project = loaded
@@ -107,9 +112,6 @@ class ZoomCanvasViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
-
-        override fun loadNow(depth: Long): List<Pair<LayerItem, Long>>? =
-            try { runBlocking(Dispatchers.IO) { store.loadLayerItems(p.meta.pid, depth) } } catch (e: Exception) { null }
     }
 
     /** Après un trait : on enregistre vite. Après un déplacement de la vue : un peu plus tard. */

@@ -14,10 +14,11 @@ class ReadingProgressRepository(context: Context) {
     private val dao = ReadingProgressDatabase.getInstance(context).readingProgressDao()
 
     /**
-     * Met à jour la progression locale d'un titre et déclenche une sync différée
-     * (comme les autres données locales : favoris, playlists…).
+     * Met à jour la progression locale d'un titre et, si [triggerSync], déclenche une sync différée
+     * (comme les autres données locales : favoris, playlists…). Les sauvegardes périodiques passent
+     * false : relancer la sync différée à chaque fois la repoussait sans fin.
      */
-    suspend fun updateProgress(mediaType: String, title: String, progressPercent: Float) {
+    suspend fun updateProgress(mediaType: String, title: String, progressPercent: Float, triggerSync: Boolean = true) {
         withContext(Dispatchers.IO) {
             dao.upsert(
                 ReadingProgressEntity(
@@ -30,7 +31,12 @@ class ReadingProgressRepository(context: Context) {
                 )
             )
         }
-        CloudSyncManager.triggerDebouncedSync()
+        if (triggerSync) CloudSyncManager.triggerDebouncedSync()
+    }
+
+    companion object {
+        /** Déclenche la sync différée des progressions déjà écrites (fin de séance de lecture). */
+        fun requestSync() = CloudSyncManager.triggerDebouncedSync()
     }
 
     suspend fun getProgress(mediaType: String, title: String): ReadingProgressEntity? = withContext(Dispatchers.IO) {

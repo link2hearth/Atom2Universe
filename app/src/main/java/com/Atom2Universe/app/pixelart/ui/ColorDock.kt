@@ -135,7 +135,7 @@ class ColorDock @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         swatchPrimary.setOnClickListener { chooseTarget(false) }
         swatchSecondary.setOnClickListener { chooseTarget(true) }
 
-        row.addView(context.label("#", 13f, true).apply { setPadding(dp(8), 0, dp(1), 0) })
+        row.addView(context.label(context.getString(R.string.px_hex_prefix), 13f, true).apply { setPadding(dp(8), 0, dp(1), 0) })
         hexField.apply {
             setSingleLine()
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS

@@ -37,6 +37,8 @@ class LayerCacheTest {
         @Volatile var latch = CountDownLatch(1)
         override fun cacheReady() { latch.countDown() }
         override fun runOnMain(r: Runnable) { r.run() }
+        // Les cuissons remises au repos et la libération de l'image de rechange : les tests ne les attendent pas.
+        override fun runOnMainDelayed(r: Runnable, delayMs: Long) {}
         fun await() { assertTrue("cuisson trop longue", latch.await(30, TimeUnit.SECONDS)); latch = CountDownLatch(1) }
     }
 

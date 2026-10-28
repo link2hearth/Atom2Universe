@@ -18,7 +18,14 @@ class ApplyJob(
     val categories: NotesMerge.NamesPlan<SyncCategory>,
     /** Les clés (`g:nom`…) supprimées : une note qui y est rattachée n'en recrée pas. */
     val removedKeys: Set<String>,
-)
+) {
+    /** Vrai si le plan a quelque chose à écrire ici (au plus large : une note sautée compte quand même). */
+    fun writesHere(): Boolean =
+        notes.applyLocal.isNotEmpty() || notes.newLocal.isNotEmpty() || notes.deleteLocal.isNotEmpty() ||
+            groups.createLocal.isNotEmpty() || groups.updateLocal.isNotEmpty() || groups.deleteLocal.isNotEmpty() ||
+            tags.createLocal.isNotEmpty() || tags.deleteLocal.isNotEmpty() ||
+            categories.createLocal.isNotEmpty() || categories.deleteLocal.isNotEmpty()
+}
 
 /** La base des notes vue par la synchronisation : une photo, et l'écriture d'un plan. */
 class NotesSyncStore(private val db: NotesDatabase) {
@@ -37,6 +44,25 @@ class NotesSyncStore(private val db: NotesDatabase) {
          */
         @Volatile
         var editingNoteId: Long = 0L
+
+        /** Vrai pendant que la synchro écrit ici. */
+        @Volatile
+        private var ownWriting = false
+        /** Quand la dernière écriture de la synchro s'est finie ([System.nanoTime]) ; null : jamais. */
+        @Volatile
+        private var ownWroteAt: Long? = null
+        /** Room prévient ses observateurs juste après la transaction : ce délai les couvre largement. */
+        private const val OWN_WRITE_QUIET_NS = 2_000_000_000L
+
+        /**
+         * Vrai si une écriture qu'on vient de voir dans la base est (sans doute) celle de la synchro : elle ne doit
+         * pas en programmer une autre. Une frappe tombée dans ces deux secondes attend la synchro suivante (rien n'est perdu).
+         */
+        fun isOwnWrite(): Boolean {
+            if (ownWriting) return true
+            val at = ownWroteAt ?: return false
+            return System.nanoTime() - at < OWN_WRITE_QUIET_NS
+        }
     }
 
     private val noteDao = db.noteDao()
@@ -79,7 +105,21 @@ class NotesSyncStore(private val db: NotesDatabase) {
      * Écrit le plan, en une transaction. Une note modifiée ici depuis la photo, ou ouverte dans l'éditeur, n'est pas
      * écrasée (ni supprimée) : elle est rendue dans l'ensemble retourné, et la prochaine synchronisation la reprendra.
      */
-    suspend fun apply(job: ApplyJob): Set<String> = db.withTransaction {
+    suspend fun apply(job: ApplyJob): Set<String> {
+        // Marqué pour que l'observateur de la base ne reprogramme pas une synchro à cause de celle-ci.
+        val marks = job.writesHere()
+        if (marks) ownWriting = true
+        try {
+            return applyNow(job)
+        } finally {
+            if (marks) {
+                ownWroteAt = System.nanoTime()
+                ownWriting = false
+            }
+        }
+    }
+
+    private suspend fun applyNow(job: ApplyJob): Set<String> = db.withTransaction {
         val now = System.currentTimeMillis()
         val skipped = HashSet<String>()
 
@@ -151,7 +191,10 @@ class NotesSyncStore(private val db: NotesDatabase) {
             if (currentSync(n.uuid)?.hash() != expected) { skipped += n.uuid; continue }
             write(n, existing)
         }
-        for (n in job.notes.newLocal) write(n, null)
+        // La copie « (conflit) » d'une note qu'on vient de sauter n'est pas écrite : la note d'ici n'a pas été
+        // remplacée, elle n'a pas besoin de copie. Sans cela, chaque tour pendant l'édition en faisait une de plus.
+        val dropped = job.notes.droppedCopies(skipped)
+        for (n in job.notes.newLocal) if (n.uuid !in dropped) write(n, null)
         for (uuid in job.notes.deleteLocal) {
             if (editing != 0L && noteDao.getNoteByUuid(uuid)?.id == editing) { skipped += uuid; continue }
             if (currentSync(uuid)?.hash() != job.notes.expectedLocal[uuid]) { skipped += uuid; continue }

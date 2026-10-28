@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.documentfile.provider.DocumentFile
@@ -195,7 +196,7 @@ class ComicsLibraryActivity : ThemedActivity() {
 
     private fun buildEntryFromFile(uri: Uri): ComicEntry? {
         val doc = DocumentFile.fromSingleUri(this, uri) ?: return null
-        val name = doc.name ?: uri.lastPathSegment ?: "Comic"
+        val name = doc.name ?: uri.lastPathSegment ?: getString(R.string.comics_default_title)
         val title = name.substringBeforeLast(".")
         val format = if (name.endsWith(".pdf", true)) "pdf" else "cbz"
         val pages = if (format == "pdf") countPdfPages(uri) else countCbzPages(uri)
@@ -204,7 +205,7 @@ class ComicsLibraryActivity : ThemedActivity() {
 
     private fun buildEntryFromFolder(uri: Uri): ComicEntry? {
         val doc = DocumentFile.fromTreeUri(this, uri) ?: return null
-        val title = doc.name ?: "Comics"
+        val title = doc.name ?: getString(R.string.comics_default_title)
         val count = doc.listFiles().count { it.isFile && it.type?.startsWith("image/") == true }
         return ComicEntry(title = title, sourcePath = uri.toString(), format = "folder", totalPages = count)
     }
@@ -229,20 +230,50 @@ class ComicsLibraryActivity : ThemedActivity() {
         val (countText, nameText, scanDialog) = buildScanDialog(R.string.comics_rescanning_title)
         scanDialog.show()
         scope.launch {
-            val (newRoot, entries) = withContext(Dispatchers.IO) {
-                scanLibraryRoot(uri, existingRootId = root.id) { count, lastName ->
-                    runOnUiThread {
-                        countText.text = getString(R.string.comics_scanning_found, count)
-                        nameText.text = lastName
+            try {
+                val (newRoot, scanned) = withContext(Dispatchers.IO) {
+                    scanLibraryRoot(uri, existingRootId = root.id) { count, lastName ->
+                        runOnUiThread {
+                            countText.text = getString(R.string.comics_scanning_found, count)
+                            nameText.text = lastName
+                        }
                     }
                 }
-            }
-            scanDialog.dismiss()
-            val dao = ComicsDatabase.getInstance(this@ComicsLibraryActivity).comicsDao()
-            withContext(Dispatchers.IO) {
-                dao.deleteComicsByRoot(root.id)
-                dao.insertComics(entries)
-                dao.updateRoot(newRoot.copy(comicCount = entries.size, lastOpenedAt = System.currentTimeMillis()))
+                val dao = ComicsDatabase.getInstance(this@ComicsLibraryActivity).comicsDao()
+                val done = withContext(Dispatchers.IO) {
+                    val old = dao.getComicsByRoot(root.id)
+                    // Scan vide alors qu'il y avait des BD : dossier inaccessible, on ne détruit rien
+                    if (scanned.isEmpty() && old.isNotEmpty()) return@withContext false
+                    // Comme pour les livres : même chemin = même BD, on garde id (couverture en cache),
+                    // page en cours et dates
+                    val oldByPath = old.associateBy { it.sourcePath }
+                    val merged = scanned.map { e ->
+                        val o = oldByPath[e.sourcePath] ?: return@map e
+                        e.copy(
+                            id = o.id, currentPage = o.currentPage,
+                            totalPages = if (e.totalPages > 0) e.totalPages else o.totalPages,
+                            addedAt = o.addedAt, lastOpenedAt = o.lastOpenedAt
+                        )
+                    }
+                    val keptPaths = merged.mapTo(HashSet()) { it.sourcePath }
+                    old.filter { it.sourcePath !in keptPaths }
+                        .forEach { deleteComicCover(this@ComicsLibraryActivity, it.id) }
+                    dao.deleteComicsByRoot(root.id)
+                    dao.insertComics(merged)
+                    dao.updateRoot(newRoot.copy(
+                        comicCount = merged.size, addedAt = root.addedAt, lastOpenedAt = System.currentTimeMillis()
+                    ))
+                    true
+                }
+                if (!done) {
+                    Toast.makeText(this@ComicsLibraryActivity, getString(R.string.comics_scanning_found, 0), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.w("ComicsLibrary", "Rescan failed", e)
+            } finally {
+                scanDialog.dismiss()
             }
             loadData()
         }
@@ -329,7 +360,10 @@ class ComicsLibraryActivity : ThemedActivity() {
             .setPositiveButton(R.string.comics_delete_confirm) { _, _ ->
                 scope.launch {
                     val dao = ComicsDatabase.getInstance(this@ComicsLibraryActivity).comicsDao()
-                    withContext(Dispatchers.IO) { dao.deleteAllComics(); dao.deleteAllRoots() }
+                    withContext(Dispatchers.IO) {
+                        dao.getAllComics().forEach { deleteComicCover(this@ComicsLibraryActivity, it.id) }
+                        dao.deleteAllComics(); dao.deleteAllRoots()
+                    }
                     loadData()
                 }
             }
@@ -356,11 +390,12 @@ class ComicsLibraryActivity : ThemedActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && android.os.Environment.isExternalStorageManager()) {
             val rootFile = treeUriToFile(uri)
             if (rootFile != null && rootFile.isDirectory) {
-                return fastScan(rootFile, uri.toString(), existingRootId, onFound)
+                val result = fastScan(rootFile, uri.toString(), existingRootId, onFound)
+                if (result.second.isNotEmpty()) return result
             }
         }
         val rootDoc = DocumentFile.fromTreeUri(this, uri) ?: return Pair(
-            ComicsRootLibrary(name = "Unknown", rootUri = uri.toString()), emptyList()
+            ComicsRootLibrary(name = getString(R.string.comics_default_root_name), rootUri = uri.toString()), emptyList()
         )
         return safScan(rootDoc, uri.toString(), existingRootId, onFound)
     }
@@ -382,9 +417,12 @@ class ComicsLibraryActivity : ThemedActivity() {
         val archiveFiles = mutableListOf<java.io.File>()
 
         rootFile.walkTopDown().maxDepth(12).forEach { file ->
-            if (!file.isFile || file.parentFile == rootFile) return@forEach
+            if (!file.isFile) return@forEach
             when {
-                isImageFile(file.name) -> imageFolders.getOrPut(file.parentFile!!) { mutableListOf() }.add(file)
+                // Comme le scan SAF : les PDF/CBZ posés à la racine comptent, pas les images en vrac
+                isImageFile(file.name) -> if (file.parentFile != rootFile) {
+                    imageFolders.getOrPut(file.parentFile!!) { mutableListOf() }.add(file)
+                }
                 file.name.endsWith(".pdf", true) -> {
                     val rel = fileRelPath(file.parentFile!!, rootFile)
                     entries.add(ComicEntry(title = file.nameWithoutExtension, sourcePath = file.absolutePath, format = "pdf", totalPages = 0, rootId = root.id, relativePath = rel))
@@ -427,15 +465,16 @@ class ComicsLibraryActivity : ThemedActivity() {
     // ── Fallback SAF via ContentResolver (plus rapide que DocumentFile.listFiles) ──
 
     private fun safScan(rootDoc: DocumentFile, rootUriStr: String, existingRootId: String? = null, onFound: (Int, String) -> Unit): Pair<ComicsRootLibrary, List<ComicEntry>> {
+        val rootName = rootDoc.name ?: getString(R.string.comics_default_root_name)
         val root = if (existingRootId != null)
-            ComicsRootLibrary(id = existingRootId, name = rootDoc.name ?: "Comics", rootUri = rootUriStr)
+            ComicsRootLibrary(id = existingRootId, name = rootName, rootUri = rootUriStr)
         else
-            ComicsRootLibrary(name = rootDoc.name ?: "Comics", rootUri = rootUriStr)
+            ComicsRootLibrary(name = rootName, rootUri = rootUriStr)
         val entries = mutableListOf<ComicEntry>()
         val treeUri = Uri.parse(rootUriStr)
         val rootDocId = try { DocumentsContract.getTreeDocumentId(treeUri) } catch (_: Exception) { null }
             ?: return Pair(root.copy(comicCount = 0), entries)
-        safScanDirFast(treeUri, rootDocId, rootDoc.name ?: "Comics", "", root.id, entries, 0, onFound)
+        safScanDirFast(treeUri, rootDocId, rootName, "", root.id, entries, 0, onFound)
         return Pair(root.copy(comicCount = entries.size), entries)
     }
 
@@ -527,7 +566,10 @@ class ComicsLibraryActivity : ThemedActivity() {
             .setPositiveButton(R.string.comics_delete_confirm) { _, _ ->
                 scope.launch {
                     val dao = ComicsDatabase.getInstance(this@ComicsLibraryActivity).comicsDao()
-                    withContext(Dispatchers.IO) { dao.deleteRoot(root.id); dao.deleteComicsByRoot(root.id) }
+                    withContext(Dispatchers.IO) {
+                        dao.getComicsByRoot(root.id).forEach { deleteComicCover(this@ComicsLibraryActivity, it.id) }
+                        dao.deleteRoot(root.id); dao.deleteComicsByRoot(root.id)
+                    }
                     loadData()
                 }
             }
@@ -543,6 +585,7 @@ class ComicsLibraryActivity : ThemedActivity() {
                 scope.launch {
                     withContext(Dispatchers.IO) {
                         ComicsDatabase.getInstance(this@ComicsLibraryActivity).comicsDao().deleteComic(entry.id)
+                        deleteComicCover(this@ComicsLibraryActivity, entry.id)
                     }
                     loadData()
                 }
@@ -583,13 +626,6 @@ class ComicsLibraryActivity : ThemedActivity() {
 sealed class LibItem {
     data class Root(val lib: ComicsRootLibrary, val count: Int) : LibItem()
     data class Standalone(val entry: ComicEntry) : LibItem()
-}
-
-private fun formatComicCardReadingDuration(durationMs: Long): String {
-    val totalMinutes = (durationMs / 1000 / 60).toInt()
-    val hours = totalMinutes / 60
-    val minutes = totalMinutes % 60
-    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
 }
 
 // ── Adapter ───────────────────────────────────────────────────────────────────
@@ -649,14 +685,9 @@ class LibraryAdapter(
         val readingTime: TextView = view.findViewById(R.id.comic_reading_time)
         fun bind(entry: ComicEntry, readingTimeMs: Long?, onClick: (ComicEntry) -> Unit, onLong: (ComicEntry) -> Unit) {
             title.text = entry.title
-            progressText.text = "${entry.currentPage + 1} / ${entry.totalPages}"
+            progressText.text = itemView.context.getString(R.string.comics_page_counter, entry.currentPage + 1, entry.totalPages)
             progressBar.progress = entry.progressPercent
-            if (readingTimeMs != null && readingTimeMs > 0L) {
-                readingTime.visibility = View.VISIBLE
-                readingTime.text = "🕐 " + formatComicCardReadingDuration(readingTimeMs)
-            } else {
-                readingTime.visibility = View.GONE
-            }
+            bindComicReadingTime(readingTime, readingTimeMs)
             cover.setImageResource(R.drawable.ic_hub_comics)
             itemView.setOnClickListener { onClick(entry) }
             itemView.setOnLongClickListener { onLong(entry); true }

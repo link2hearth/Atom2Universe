@@ -60,12 +60,14 @@ class SwatchView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
 /** Carré saturation × luminosité pour une teinte donnée. */
 internal class SvSquare(context: Context, val onChange: (Float, Float) -> Unit) : View(context) {
+    /** Le dégradé n'est refait que si la teinte change (pas à chaque mouvement dans le carré). */
     var hue = 0f
-        set(v) { field = v; rebuild(); invalidate() }
+        set(v) { if (field != v || !built) { field = v; rebuild() }; invalidate() }
     var sat = 1f
     var value = 1f
     /** Appelé quand le doigt se lève. */
     var onEnd: () -> Unit = {}
+    private var built = false
     private val paint = Paint()
     private val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = context.dpf(2f); color = Color.WHITE }
     private val ringShadow = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = context.dpf(4f); color = 0x88000000.toInt() }
@@ -76,6 +78,7 @@ internal class SvSquare(context: Context, val onChange: (Float, Float) -> Unit) 
         val sx = LinearGradient(0f, 0f, width.toFloat(), 0f, Color.WHITE, h, Shader.TileMode.CLAMP)
         val sy = LinearGradient(0f, 0f, 0f, height.toFloat(), Color.TRANSPARENT, Color.BLACK, Shader.TileMode.CLAMP)
         paint.shader = ComposeShader(sx, sy, PorterDuff.Mode.SRC_OVER)
+        built = true
     }
 
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) { rebuild() }
@@ -118,6 +121,8 @@ internal class GradientBar(context: Context, val vertical: Boolean = false, val 
     private val clip = android.graphics.Path()
 
     fun setStops(colors: IntArray, withChecker: Boolean = false) {
+        // Même dégradé qu'avant : rien à refaire (le réglage de couleur rappelle ceci à chaque mouvement).
+        if (withChecker == showChecker && colors.contentEquals(stops) && paint.shader != null) return
         stops = colors
         showChecker = withChecker
         rebuild()
@@ -223,7 +228,7 @@ fun Context.showColorPicker(
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         preview = SwatchView(this).apply { radiusDp = 10f }
         row.addView(preview, LinearLayout.LayoutParams(dp(56), dp(44)))
-        row.addView(label("#", 16f, true).apply { setPadding(dp(16), 0, dp(4), 0) })
+        row.addView(label(getString(R.string.px_hex_prefix), 16f, true).apply { setPadding(dp(16), 0, dp(4), 0) })
         hexField = EditText(this).apply {
             setSingleLine()
             filters = arrayOf(InputFilter.LengthFilter(8), InputFilter.AllCaps())

@@ -88,8 +88,10 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     companion object {
         private const val EXTRA_ID = "zoom_canvas_id"
         private const val PREFS = "zoom_canvas_prefs"
-        /** Côté maximal d'une image importée (pixels) : au-delà, elle est réduite à l'import. */
+        /** Côté maximal d'une image importée (pixels) : au-delà, elle est réduite à l'import (et au décodage). */
         private const val MAX_IMAGE_SIDE = 2048
+        /** Une image chassée du cache n'est pas rechargée avant ce délai (elle reste un cadre gris en attendant). */
+        private const val RELOAD_AFTER_EVICT_MS = 4000L
 
         fun intent(context: Context, id: String) = Intent(context, ZoomCanvasEditorActivity::class.java).putExtra(EXTRA_ID, id)
     }
@@ -142,7 +144,7 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     private var shapeSquare = false
     private var textStyle = 0
     private var textFont = ""
-    private val typefaces = HashMap<String, Typeface>()
+    private val typefaces = HashMap<String, Array<Typeface?>>()
     private var fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
     private val measurePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply { isLinearText = true }
     private var linkedIndex = -1
@@ -155,8 +157,16 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     /** Les images du projet déjà décodées (le reste se charge en arrière-plan). */
     private val bitmaps = object : LruCache<String, Bitmap>((Runtime.getRuntime().maxMemory() / 6).toInt()) {
         override fun sizeOf(key: String, value: Bitmap) = value.byteCount
+        override fun entryRemoved(evicted: Boolean, key: String, oldValue: Bitmap, newValue: Bitmap?) {
+            if (evicted) synchronized(loading) { evictedAt[key] = android.os.SystemClock.uptimeMillis() }
+        }
     }
     private val loading = HashSet<String>()
+    /**
+     * Quand une image a été chassée du cache (sous le verrou de [loading]). Si toutes les images à l'écran
+     * n'y tiennent pas, les recharger aussitôt chasserait les autres, à chaque image : on attend un peu.
+     */
+    private val evictedAt = HashMap<String, Long>()
 
     private val importImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri -> uri?.let { importImageFrom(it) } }
     private val importPaletteLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri -> uri?.let { importPalette(it) } }
@@ -401,7 +411,12 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     private fun refreshLevel() {
         val s = vm.project?.scene ?: return
         if (single) {
-            levelText.text = getString(R.string.px_opt_percent, Math.round(s.zoom * 100).toInt())
+            // Le texte ne change que si le pourcentage affiché change (la caméra bouge à chaque image).
+            val percent = Math.round(s.zoom * 100)
+            if (percent != shownLevel) {
+                shownLevel = percent
+                levelText.text = getString(R.string.px_opt_percent, percent.toInt())
+            }
         } else if (s.depth != shownLevel) {
             shownLevel = s.depth
             levelText.text = getString(R.string.zc_level, s.depth.toString())
@@ -657,11 +672,15 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
             fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
             typefaces.clear()
         }
-        typefaces.getOrPut("$font|$style") {
+        // Rangées par police puis par style (gras, italique) : aucune clé à fabriquer à chaque texte tracé.
+        val styles = typefaces.getOrPut(font) { arrayOfNulls(4) }
+        val s = style and (TextItem.BOLD or TextItem.ITALIC)
+        styles[s] ?: run {
             val base = if (font.isEmpty()) Typeface.DEFAULT else FontManager.getTypeface(this, font)
-            val bold = style and TextItem.BOLD != 0
-            val italic = style and TextItem.ITALIC != 0
+            val bold = s and TextItem.BOLD != 0
+            val italic = s and TextItem.ITALIC != 0
             Typeface.create(base, when { bold && italic -> Typeface.BOLD_ITALIC; bold -> Typeface.BOLD; italic -> Typeface.ITALIC; else -> Typeface.NORMAL })
+                .also { styles[s] = it }
         }
     }
 
@@ -823,20 +842,41 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     private fun bitmapFor(key: String): Bitmap? {
         bitmaps.get(key)?.let { return it }
         val p = vm.project ?: return null
-        val start = synchronized(loading) { loading.add(key) }
+        val start = synchronized(loading) {
+            val gone = evictedAt[key]
+            if (gone != null && android.os.SystemClock.uptimeMillis() - gone < RELOAD_AFTER_EVICT_MS) false
+            else { evictedAt.remove(key); loading.add(key) }
+        }
         if (start) {
             val f = vm.store.imageFile(p.meta.id, key)
             lifecycleScope.launch {
-                val bmp = withContext(Dispatchers.IO) { if (f.isFile) BitmapFactory.decodeFile(f.path) else null }
+                val bmp = withContext(Dispatchers.IO) { if (f.isFile) decodeProjectImage(f.path) else null }
                 synchronized(loading) { loading.remove(key) }
                 if (bmp != null) {
                     bitmaps.put(key, bmp)
-                    // Les caches raster qui ont cuit un cadre gris à sa place sont à refaire.
-                    canvasView.invalidateCaches()
+                    // Les caches raster qui ont cuit un cadre gris à sa place sont à refaire (ceux des couches qui la portent).
+                    canvasView.imageLoaded(key)
                 }
             }
         }
         return null
+    }
+
+    /**
+     * Décode une image du projet, réduite (par puissances de deux) pour que son plus grand côté ne dépasse pas
+     * [MAX_IMAGE_SIDE] : la toile met de toute façon le rectangle source à l'échelle du bitmap chargé.
+     */
+    private fun decodeProjectImage(path: String): Bitmap? = try {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(path, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) null else {
+            var sample = 1
+            while (maxOf(bounds.outWidth, bounds.outHeight) / sample > MAX_IMAGE_SIDE) sample *= 2
+            BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample })
+        }
+    } catch (e: Throwable) {
+        // Pas assez de mémoire, fichier abîmé : l'image reste un cadre gris.
+        null
     }
 
     /** Importe une image de l'appareil dans la couche de travail, au centre de l'écran, et la sélectionne. */
@@ -857,8 +897,9 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
                 Toast.makeText(this@ZoomCanvasEditorActivity, R.string.zc_import_failed, Toast.LENGTH_SHORT).show()
                 return@launch
             }
+            // La couche de travail n'est pas encore arrivée de la base : rien n'est posé (le fichier, inutilisé, partira à la prochaine ouverture).
+            val item = p.scene.addImage(key, bmp.width, bmp.height, canvasView.width * 0.6, canvasView.height * 0.6) ?: return@launch
             bitmaps.put(key, bmp)
-            val item = p.scene.addImage(key, bmp.width, bmp.height, canvasView.width * 0.6, canvasView.height * 0.6)
             selectTool(ZoomCanvasView.Tool.SELECT, quiet = true)
             canvasView.selectItem(item.id)
             drawingChanged()

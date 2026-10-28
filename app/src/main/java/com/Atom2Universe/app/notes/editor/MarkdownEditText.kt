@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.SystemClock
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -82,7 +84,8 @@ class MarkdownEditText @JvmOverloads constructor(
                 val from = dirtyStart
                 val to = dirtyEnd
                 dirtyStart = -1; dirtyEnd = -1
-                restyle(from, to)
+                // Au chargement, le texte arrive déjà mis en forme : rien à refaire.
+                if (!loading) restyle(from, to)
             }
             if (applying) return
             val nl = newlineAt
@@ -95,7 +98,7 @@ class MarkdownEditText @JvmOverloads constructor(
                 else -> null
             }
             if (edit != null) applyEdit(edit)
-            onStateChanged?.invoke()
+            stateChanged()
         }
     }
 
@@ -105,16 +108,25 @@ class MarkdownEditText @JvmOverloads constructor(
 
     // ---- Contenu -------------------------------------------------------------------------------
 
-    /** Charge une note : le texte entier, sans historique. */
+    /** Vrai pendant [setMarkdown] : le texte posé porte déjà sa mise en forme. */
+    private var loading = false
+
+    /**
+     * Charge une note : le texte entier, sans historique. La mise en forme est posée sur une copie
+     * hors de l'écran, puis le texte entre d'un seul coup : un seul calcul, une seule mise en page.
+     */
     fun setMarkdown(markdown: String) {
+        val styled = SpannableStringBuilder(markdown)
+        styleLines(styled, 0, styled.length)
         recording = false
         applying = true
-        setText(markdown)
+        loading = true
+        setText(styled)
+        loading = false
         applying = false
         recording = true
         history.clear()
-        restyle(0, length())
-        onStateChanged?.invoke()
+        stateChanged()
     }
 
     val markdown: String get() = text?.toString() ?: ""
@@ -127,7 +139,7 @@ class MarkdownEditText @JvmOverloads constructor(
         applying = false
         setSelection(e.selStart.coerceIn(0, length()), e.selEnd.coerceIn(0, length()))
         history.seal()
-        onStateChanged?.invoke()
+        stateChanged()
     }
 
     fun insertAtCursor(s: String) {
@@ -140,14 +152,14 @@ class MarkdownEditText @JvmOverloads constructor(
         val c = history.undo() ?: return
         replaceQuietly(c.start, c.start + c.inserted.length, c.removed)
         setSelection((c.start + c.removed.length).coerceIn(0, length()))
-        onStateChanged?.invoke()
+        stateChanged()
     }
 
     fun redo() {
         val c = history.redo() ?: return
         replaceQuietly(c.start, c.start + c.removed.length, c.inserted)
         setSelection((c.start + c.inserted.length).coerceIn(0, length()))
-        onStateChanged?.invoke()
+        stateChanged()
     }
 
     private fun replaceQuietly(start: Int, end: Int, s: String) {
@@ -174,20 +186,75 @@ class MarkdownEditText @JvmOverloads constructor(
     /** Repose la mise en forme des lignes qui touchent [from, to]. */
     private fun restyle(from: Int, to: Int) {
         val ed = text ?: return
-        val ls = MarkdownEdits.lineStart(ed, from.coerceIn(0, ed.length))
-        val le = MarkdownEdits.lineEnd(ed, to.coerceIn(0, ed.length))
-        for (span in ed.getSpans(ls, le, MdSpan::class.java)) ed.removeSpan(span)
+        styleLines(ed, from, to)
+    }
+
+    /**
+     * Met en forme les lignes de [text] qui touchent [from, to]. Une ligne dont les mises en forme sont
+     * déjà exactement celles qu'il faut (mêmes dessins, mêmes plages, même ordre) n'est pas touchée :
+     * chaque retrait ou pose relance la mise en page du paragraphe. Au moindre écart, tout est reposé.
+     */
+    private fun styleLines(text: Spannable, from: Int, to: Int) {
+        val ls = MarkdownEdits.lineStart(text, from.coerceIn(0, text.length))
+        val le = MarkdownEdits.lineEnd(text, to.coerceIn(0, text.length))
         var start = ls
         while (start <= le) {
-            val end = MarkdownEdits.lineEnd(ed, start)
-            if (end > start) MarkdownStyler.styleLine(ed, start, MarkdownSyntax.parseLine(ed.substring(start, end)), palette)
+            val end = MarkdownEdits.lineEnd(text, start)
+            val wanted = if (end > start) MarkdownStyler.lineSpans(start, parse(text.substring(start, end)), palette) else emptyList()
+            val existing = text.getSpans(start, end, MdSpan::class.java)
+            if (!matches(text, existing, wanted)) {
+                for (span in existing) text.removeSpan(span)
+                for (p in wanted) text.setSpan(p.span, p.start, p.end, MarkdownStyler.FLAGS)
+            }
             start = end + 1
         }
     }
 
+    private fun matches(text: Spannable, existing: Array<MdSpan>, wanted: List<MarkdownStyler.Placed>): Boolean {
+        if (existing.size != wanted.size) return false
+        for (i in existing.indices) {
+            val e = existing[i]
+            val w = wanted[i]
+            if (text.getSpanStart(e) != w.start || text.getSpanEnd(e) != w.end || !e.same(w.span)) return false
+        }
+        return true
+    }
+
+    /** La dernière ligne lue : la mise en forme et la barre d'outils lisent la même à chaque frappe. */
+    private var lastLineText: String? = null
+    private var lastLine: MarkdownSyntax.Line? = null
+
+    private fun parse(line: String): MarkdownSyntax.Line {
+        val cached = lastLine
+        if (cached != null && line == lastLineText) return cached
+        return MarkdownSyntax.parseLine(line).also { lastLineText = line; lastLine = it }
+    }
+
+    /** La ligne qui contient [pos] : la position de son début, et la ligne lue. */
+    fun lineAt(pos: Int): Pair<Int, MarkdownSyntax.Line> {
+        val ed = text ?: return 0 to MarkdownSyntax.parseLine("")
+        val p = pos.coerceIn(0, ed.length)
+        val ls = MarkdownEdits.lineStart(ed, p)
+        return ls to parse(ed.substring(ls, MarkdownEdits.lineEnd(ed, p)))
+    }
+
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
+        stateChanged()
+    }
+
+    private var statePosted = false
+    private val notifyState = Runnable {
+        statePosted = false
         onStateChanged?.invoke()
+    }
+
+    /** Texte et curseur changent ensemble à chaque frappe : la barre d'outils n'est mise à jour qu'une fois. */
+    private fun stateChanged() {
+        // Appelé aussi par le constructeur de la vue, avant que nos champs existent : rien à faire alors.
+        if (onStateChanged == null || statePosted) return
+        statePosted = true
+        post(notifyState)
     }
 
     // ---- Toucher : cases et liens --------------------------------------------------------------

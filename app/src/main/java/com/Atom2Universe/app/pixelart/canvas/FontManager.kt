@@ -3,6 +3,7 @@ package com.Atom2Universe.app.pixelart.canvas
 import android.content.Context
 import android.graphics.Typeface
 import android.util.Log
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.fonts.PersonalFonts
 
 /**
@@ -20,12 +21,20 @@ object FontManager {
     private val availableFonts = mutableMapOf<String, String>()
     private var personalRevision = -1L
 
-    // Polices système
+    // Polices système : identifiant enregistré dans les dessins (ne change jamais) -> famille Android.
     private val systemFonts = listOf(
         "Sans Serif" to "sans-serif",
         "Serif" to "serif",
         "Monospace" to "monospace"
     )
+
+    // Nom affiché de chaque police système, dans la langue de l'appli (l'identifiant, lui, reste le même).
+    private val systemLabelRes = mapOf(
+        "Sans Serif" to R.string.px_font_sans,
+        "Serif" to R.string.px_font_serif,
+        "Monospace" to R.string.px_font_mono,
+    )
+    private val systemLabels = mutableMapOf<String, String>()
 
     /**
      * Initialise le gestionnaire en scannant les polices disponibles.
@@ -38,6 +47,7 @@ object FontManager {
         // Ajouter les polices système
         for ((displayName, _) in systemFonts) {
             availableFonts[displayName] = "system"
+            systemLabelRes[displayName]?.let { systemLabels[displayName] = context.getString(it) }
         }
 
         // Scanner le dossier fonts
@@ -76,7 +86,10 @@ object FontManager {
 
     /** Imported fonts use a stable ID in drawings, even when their display names collide later. */
     @Synchronized fun getAvailableFonts(): List<Pair<String, String>> = availableFonts.entries
-        .map { (label, source) -> (if (PersonalFonts.isPersonal(source)) source else label) to label }
+        .map { (label, source) ->
+            val shown = if (source == "system") systemLabels[label] ?: label else label
+            (if (PersonalFonts.isPersonal(source)) source else label) to shown
+        }
         .sortedBy { it.second }
 
     /**

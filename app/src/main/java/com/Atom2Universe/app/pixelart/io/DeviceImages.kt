@@ -175,7 +175,8 @@ object DeviceImages {
             ImageFormat.PNG -> ImageExport.encodePng(doc, frameIndex, scale)
             ImageFormat.GIF -> ImageExport.encodeGifBytes(doc, gif ?: ImageExport.GifOptions(scale = scale))
             ImageFormat.JPEG, ImageFormat.WEBP -> {
-                val s = scale.coerceIn(1, ImageExport.maxScaleFor(doc.width, doc.height))
+                // Un Bitmap entier en mémoire : côté plafonné plus bas que pour le PNG et le GIF.
+                val s = scale.coerceIn(1, ImageExport.maxScaleFor(doc.width, doc.height, ImageExport.MAX_BITMAP_EXPORT_SIDE))
                 val flat = ImageExport.flatten(doc, frameIndex)
                 val px = if (s > 1) ImageExport.scaleNearest(flat, doc.width, doc.height, s) else flat
                 compressWithBitmap(px, doc.width * s, doc.height * s, format)

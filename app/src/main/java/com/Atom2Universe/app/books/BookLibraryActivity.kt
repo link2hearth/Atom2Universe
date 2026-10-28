@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -32,6 +30,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.reading.COVER_THUMB_PX
+import com.Atom2Universe.app.reading.CoverThumbs
+import com.Atom2Universe.app.reading.decodeSampledFile
+import com.Atom2Universe.app.reading.dispatchListDiff
+import com.Atom2Universe.app.reading.renderPdfThumb
 import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
@@ -44,7 +47,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
 import java.util.zip.ZipFile
 import androidx.core.content.edit
 
@@ -192,6 +194,9 @@ class BookLibraryActivity : ThemedActivity() {
     private var currentTab = 0
     private var currentRoot: BookShelfRoot? = null
     private var currentAuthorPath: String? = null
+    // Dossier et bibliothèque actuellement affichés : au retour du lecteur on met à jour en place
+    private var shownAuthorPath: String? = null
+    private var shownAuthorsRootId: String? = null
     private val currentEntries = mutableListOf<BookShelfEntry>()
     private var displayMode = MODE_LIST
     private var gridColumns = DEFAULT_GRID_COLS
@@ -273,30 +278,34 @@ class BookLibraryActivity : ThemedActivity() {
         fab.setOnClickListener { onFabClick() }
 
         switchTab(0)
-        refreshBooks()
     }
 
     override fun onResume() {
         super.onResume()
-        refreshBooks()
-        loadReadingTimes()
-        if (currentTab == 1) {
-            val root = currentRoot
-            val authorPath = currentAuthorPath
-            when {
-                root != null && authorPath != null -> {
-                    shelfScope.launch {
-                        val entries = withContext(Dispatchers.IO) {
-                            BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao().getEntriesByRoot(root.id)
-                        }
-                        currentEntries.clear()
-                        currentEntries.addAll(entries)
-                        openAuthorPath(authorPath)
-                    }
-                }
-                root != null -> openRoot(root)
-                else -> loadRoots()
+        // Un seul rafraîchissement : temps de lecture d'abord, puis récents et étagère ensemble
+        shelfScope.launch {
+            readingTimeByTitle = withContext(Dispatchers.IO) {
+                StatsRepository(this@BookLibraryActivity).getReadingTimeByTitle(StatsRepository.MODULE_BOOK)
             }
+            refreshBooks()
+            if (currentTab == 1) refreshShelf()
+        }
+    }
+
+    private suspend fun refreshShelf() {
+        val root = currentRoot
+        val authorPath = currentAuthorPath
+        when {
+            root != null && authorPath != null -> {
+                val entries = withContext(Dispatchers.IO) {
+                    BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao().getEntriesByRoot(root.id)
+                }
+                currentEntries.clear()
+                currentEntries.addAll(entries)
+                openAuthorPath(authorPath)
+            }
+            root != null -> openRoot(root)
+            else -> loadRoots()
         }
     }
 
@@ -361,6 +370,7 @@ class BookLibraryActivity : ThemedActivity() {
         when {
             currentAuthorPath != null -> {
                 currentAuthorPath = null
+                shownAuthorPath = null
                 treeCoverScope?.cancel()
                 treeCoverScope = null
                 shelfTreeRecycler.adapter = null
@@ -411,16 +421,6 @@ class BookLibraryActivity : ThemedActivity() {
         recyclerView.visibility = if (empty) View.GONE else View.VISIBLE
     }
 
-    private fun loadReadingTimes() {
-        shelfScope.launch {
-            val times = withContext(Dispatchers.IO) {
-                StatsRepository(this@BookLibraryActivity).getReadingTimeByTitle(StatsRepository.MODULE_BOOK)
-            }
-            readingTimeByTitle = times
-            adapter.notifyDataSetChanged()
-        }
-    }
-
     private fun launchReader(uri: Uri, title: String? = null) {
         startActivity(Intent(this, BookReaderActivity::class.java).apply {
             putExtra(BookReaderActivity.EXTRA_BOOK_URI, uri.toString())
@@ -448,6 +448,7 @@ class BookLibraryActivity : ThemedActivity() {
     private fun openRoot(root: BookShelfRoot) {
         currentRoot = root
         currentAuthorPath = null
+        shownAuthorPath = null
         supportActionBar?.title = root.name
         shelfRootsContainer.visibility = View.GONE
         shelfAuthorsContainer.visibility = View.VISIBLE
@@ -499,6 +500,13 @@ class BookLibraryActivity : ThemedActivity() {
 
         shelfAuthorsEmpty.visibility = View.GONE
         shelfAuthorsRecycler.visibility = View.VISIBLE
+        val current = shelfAuthorsRecycler.adapter
+        val rootId = currentRoot?.id
+        if (current is AuthorFoldersAdapter && shownAuthorsRootId == rootId) {
+            current.submit(folders)
+            return
+        }
+        shownAuthorsRootId = rootId
         shelfAuthorsRecycler.layoutManager = LinearLayoutManager(this)
         shelfAuthorsRecycler.adapter = AuthorFoldersAdapter(folders) { folder ->
             openAuthorPath(folder.pathPrefix)
@@ -559,10 +567,25 @@ class BookLibraryActivity : ThemedActivity() {
             else currentEntries.filter { it.relativePath == authorPath || it.relativePath.startsWith("$authorPath/") }
         }
 
+        val bookEntries = withReadingProgress(sourceEntries)
+
+        // Retour du lecteur : même dossier, même affichage → mise à jour en place (position gardée)
+        val current = shelfTreeRecycler.adapter
+        if (shownAuthorPath == authorPath && treeCoverScope != null) {
+            if (displayMode == MODE_GRID && current is BookCoverGridAdapter) {
+                current.submit(bookEntries)
+                return
+            }
+            if (displayMode == MODE_LIST && current is AuthorBooksAdapter) {
+                current.submit(bookEntries, authorPath, readingTimeByTitle)
+                return
+            }
+        }
+        shownAuthorPath = authorPath
+
         treeCoverScope?.cancel()
         treeCoverScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         val coverScope = treeCoverScope!!
-        val bookEntries = withReadingProgress(sourceEntries)
 
         if (displayMode == MODE_GRID) {
             shelfTreeRecycler.layoutManager = GridLayoutManager(this, gridColumns)
@@ -587,6 +610,8 @@ class BookLibraryActivity : ThemedActivity() {
     private fun showRootsView() {
         currentRoot = null
         currentAuthorPath = null
+        shownAuthorPath = null
+        shownAuthorsRootId = null
         treeCoverScope?.cancel()
         treeCoverScope = null
         shelfTreeRecycler.adapter = null
@@ -777,7 +802,7 @@ class BookLibraryActivity : ThemedActivity() {
             if (result.second.isNotEmpty()) return result
         }
         val rootDoc = DocumentFile.fromTreeUri(this, uri)
-            ?: return Pair(BookShelfRoot(name = "Unknown", rootUri = uri.toString()), emptyList())
+            ?: return Pair(BookShelfRoot(name = getString(R.string.book_shelf_default_name), rootUri = uri.toString()), emptyList())
         return safScan(rootDoc, uri.toString(), existingRootId, onFound)
     }
 
@@ -789,18 +814,7 @@ class BookLibraryActivity : ThemedActivity() {
         val entries = mutableListOf<BookShelfEntry>()
         rootFile.walkTopDown().maxDepth(12).forEach { file ->
             if (!file.isFile) return@forEach
-            val lower = file.name.lowercase()
-            val format = when {
-                lower.endsWith(".epub") -> "epub"
-                lower.endsWith(".pdf") -> "pdf"
-                lower.endsWith(".txt") -> "txt"
-                lower.endsWith(".fb2") -> "fb2"
-                lower.endsWith(".mobi") -> "mobi"
-                lower.endsWith(".azw") || lower.endsWith(".azw3") -> "mobi"
-                lower.endsWith(".cbz") -> "cbz"
-                lower.endsWith(".cbr") -> "cbr"
-                else -> return@forEach
-            }
+            val format = readableBookFormat(file.name) ?: return@forEach
             val rel = fileRelPath(file.parentFile!!, rootFile)
             val (title, author) = if (format == "epub") extractEpubTitleAuthor(file) else Pair(file.nameWithoutExtension, "")
             entries.add(BookShelfEntry(
@@ -818,10 +832,11 @@ class BookLibraryActivity : ThemedActivity() {
     }
 
     private fun safScan(rootDoc: DocumentFile, rootUriStr: String, existingRootId: String? = null, onFound: (Int, String) -> Unit): Pair<BookShelfRoot, List<BookShelfEntry>> {
+        val name = rootDoc.name ?: getString(R.string.book_shelf_default_name)
         val root = if (existingRootId != null)
-            BookShelfRoot(id = existingRootId, name = rootDoc.name ?: "Library", rootUri = rootUriStr)
+            BookShelfRoot(id = existingRootId, name = name, rootUri = rootUriStr)
         else
-            BookShelfRoot(name = rootDoc.name ?: "Library", rootUri = rootUriStr)
+            BookShelfRoot(name = name, rootUri = rootUriStr)
         val entries = mutableListOf<BookShelfEntry>()
         safScanDir(rootDoc, "", root.id, entries, 0, onFound)
         return Pair(root.copy(bookCount = entries.size), entries)
@@ -833,21 +848,21 @@ class BookLibraryActivity : ThemedActivity() {
         for (f in dir.listFiles()) {
             if (f.isDirectory) { safScanDir(f, myRel, rootId, results, depth + 1, onFound); continue }
             val name = f.name ?: continue
-            val lower = name.lowercase()
-            val format = when {
-                lower.endsWith(".epub") -> "epub"
-                lower.endsWith(".pdf") -> "pdf"
-                lower.endsWith(".txt") -> "txt"
-                lower.endsWith(".fb2") -> "fb2"
-                lower.endsWith(".mobi") -> "mobi"
-                lower.endsWith(".azw") || lower.endsWith(".azw3") -> "mobi"
-                lower.endsWith(".cbz") -> "cbz"
-                lower.endsWith(".cbr") -> "cbr"
-                else -> continue
-            }
+            val format = readableBookFormat(name) ?: continue
             val title = name.substringBeforeLast(".")
             results.add(BookShelfEntry(title = title, sourcePath = f.uri.toString(), format = format, fileSize = f.length(), rootId = rootId, relativePath = myRel))
             onFound(results.size, title)
+        }
+    }
+
+    /** Seuls les formats que le lecteur ouvre vraiment (les autres s'affichaient en texte brut illisible). */
+    private fun readableBookFormat(fileName: String): String? {
+        val lower = fileName.lowercase()
+        return when {
+            lower.endsWith(".epub") -> "epub"
+            lower.endsWith(".pdf") -> "pdf"
+            lower.endsWith(".txt") -> "txt"
+            else -> null
         }
     }
 
@@ -875,13 +890,6 @@ class BookLibraryActivity : ThemedActivity() {
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
-    private fun formatFileSize(bytes: Long): String = when {
-        bytes <= 0L -> ""
-        bytes < 1024L -> "$bytes B"
-        bytes < 1024L * 1024L -> "${bytes / 1024} KB"
-        else -> "%.1f MB".format(bytes / (1024f * 1024f))
-    }
-
     private fun formatDate(timestamp: Long): String {
         if (timestamp <= 0L) return ""
         return DateUtils.getRelativeTimeSpanString(
@@ -903,31 +911,49 @@ class BookLibraryActivity : ThemedActivity() {
             val progressText: TextView = root.findViewById(R.id.book_progress_text)
             val date: TextView = root.findViewById(R.id.book_date)
             val readingTime: TextView = root.findViewById(R.id.book_reading_time)
+            var loadJob: Job? = null
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookVH =
             BookVH(layoutInflater.inflate(R.layout.item_book_card, parent, false))
 
+        override fun onViewRecycled(holder: BookVH) {
+            super.onViewRecycled(holder)
+            holder.loadJob?.cancel()
+            holder.loadJob = null
+        }
+
         override fun onBindViewHolder(holder: BookVH, position: Int) {
             val book = books[position]
             holder.title.text = book.title
             holder.author.text = book.author.ifEmpty { getString(R.string.book_library_author_unknown) }
-            holder.size.text = formatFileSize(book.fileSize)
+            holder.size.text = formatBookSize(this@BookLibraryActivity, book.fileSize)
             holder.progress.progress = book.progressPercent
-            holder.progressText.text = if (book.progressPercent > 0) "${book.progressPercent}%" else ""
+            holder.progressText.text = if (book.progressPercent > 0) getString(R.string.book_progress_percent, book.progressPercent) else ""
             holder.date.text = formatDate(book.lastOpenedAt)
             bindReadingTime(holder.readingTime, readingTimeByTitle[book.title])
 
-            val coverFile = book.coverPath?.let { File(it) }
-            if (coverFile != null && coverFile.exists()) {
-                val bmp = decodeSampledFile(coverFile.absolutePath, COVER_MAX_DIM)
-                if (bmp != null) {
-                    holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
-                    holder.cover.setPadding(0, 0, 0, 0)
-                    holder.cover.setImageBitmap(bmp)
-                    holder.cover.clearColorFilter()
-                } else { setPlaceholder(holder.cover) }
-            } else { setPlaceholder(holder.cover) }
+            // Couverture décodée hors du fil de l'écran, gardée en mémoire pour les retours suivants
+            holder.loadJob?.cancel()
+            holder.loadJob = null
+            val coverPath = book.coverPath
+            val cached = coverPath?.let { CoverThumbs.cached(recentCoverKey(it)) }
+            if (cached != null) {
+                showCover(holder.cover, cached)
+            } else {
+                setPlaceholder(holder.cover)
+                if (coverPath != null) {
+                    holder.loadJob = shelfScope.launch {
+                        val bmp = withContext(CoverThumbs.dispatcher) {
+                            if (!File(coverPath).exists()) null
+                            else CoverThumbs.load(recentCoverKey(coverPath), null) {
+                                decodeSampledFile(coverPath, COVER_THUMB_PX)
+                            }
+                        }
+                        if (bmp != null) showCover(holder.cover, bmp)
+                    }
+                }
+            }
 
             holder.root.setOnClickListener { launchReader(Uri.parse(book.uri), book.title) }
             holder.root.setOnLongClickListener {
@@ -935,7 +961,7 @@ class BookLibraryActivity : ThemedActivity() {
                     .setTitle(book.title)
                     .setMessage(R.string.book_library_delete_confirm)
                     .setPositiveButton(R.string.book_library_delete) { _, _ ->
-                        book.coverPath?.let { File(it).delete() }
+                        book.coverPath?.let { File(it).delete(); CoverThumbs.forget(recentCoverKey(it)) }
                         removeBook(prefs, book.uri)
                         val pos = books.indexOf(book)
                         if (pos >= 0) { books.removeAt(pos); notifyItemRemoved(pos) }
@@ -952,6 +978,13 @@ class BookLibraryActivity : ThemedActivity() {
             iv.setPadding(dp(20), dp(20), dp(20), dp(20))
             iv.setImageResource(R.drawable.ic_hub_books)
             iv.setColorFilter(Color.argb(100, 255, 255, 255))
+        }
+
+        private fun showCover(iv: ImageView, bmp: Bitmap) {
+            iv.scaleType = ImageView.ScaleType.CENTER_CROP
+            iv.setPadding(0, 0, 0, 0)
+            iv.setImageBitmap(bmp)
+            iv.clearColorFilter()
         }
 
         override fun getItemCount() = books.size
@@ -978,9 +1011,9 @@ class BookLibraryActivity : ThemedActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val root = roots[position]
             holder.name.text = root.name
-            val count = getString(R.string.book_shelf_books_count, root.bookCount)
+            val count = resources.getQuantityString(R.plurals.book_shelf_books_count, root.bookCount, root.bookCount)
             val scanned = DateUtils.getRelativeTimeSpanString(root.lastScannedAt, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS)
-            holder.count.text = "$count  ·  $scanned"
+            holder.count.text = getString(R.string.book_shelf_root_info, count, scanned)
             holder.itemView.setOnClickListener { onRootClick(root) }
             holder.itemView.setOnLongClickListener { onRootLongClick(root); true }
         }
@@ -989,9 +1022,15 @@ class BookLibraryActivity : ThemedActivity() {
     // ── Adapter : liste des dossiers auteurs ──────────────────────────────────
 
     inner class AuthorFoldersAdapter(
-        private val folders: List<AuthorFolder>,
+        private var folders: List<AuthorFolder>,
         private val onFolderClick: (AuthorFolder) -> Unit
     ) : RecyclerView.Adapter<AuthorFoldersAdapter.VH>() {
+
+        fun submit(newFolders: List<AuthorFolder>) {
+            val old = folders
+            folders = newFolders
+            dispatchListDiff(old, newFolders, { a, b -> a.pathPrefix == b.pathPrefix }, { a, b -> a == b })
+        }
 
         inner class VH(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView = view.findViewById(R.id.root_name)
@@ -1006,32 +1045,34 @@ class BookLibraryActivity : ThemedActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val folder = folders[position]
             holder.name.text = folder.displayName
-            holder.count.text = getString(R.string.book_shelf_books_count, folder.bookCount)
+            holder.count.text = resources.getQuantityString(R.plurals.book_shelf_books_count, folder.bookCount, folder.bookCount)
             holder.itemView.setOnClickListener { onFolderClick(folder) }
         }
     }
 }
-
-private const val COVER_MAX_DIM = 600
 
 private fun unescapeXml(text: String): String =
     if (!text.contains('&')) text else text
         .replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"")
         .replace("&apos;", "'").replace("&amp;", "&")
 
-/** Décode une image en la sous-échantillonnant (évite de charger une couverture pleine taille sur le thread UI). */
-private fun decodeSampledFile(path: String, maxDim: Int): Bitmap? {
-    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-    BitmapFactory.decodeFile(path, bounds)
-    var sample = 1
-    while (bounds.outWidth / (sample * 2) >= maxDim && bounds.outHeight / (sample * 2) >= maxDim) sample *= 2
-    return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample })
-}
+private fun recentCoverKey(coverPath: String) = "recent:$coverPath"
+
+private fun shelfCoverKey(entry: BookShelfEntry) = "book:${entry.id}"
 
 /** Supprime les couvertures (pré-extraite et cache) d'une entrée d'étagère. */
 private fun deleteShelfEntryCovers(context: Context, entry: BookShelfEntry) {
     entry.coverPath?.let { File(it).delete() }
     File(context.filesDir, "book_covers/${entry.id}.jpg").delete()
+    CoverThumbs.forget(shelfCoverKey(entry))
+}
+
+/** Taille de fichier lisible, unités traduites (o/Ko/Mo en français). */
+private fun formatBookSize(context: Context, bytes: Long): String = when {
+    bytes <= 0L -> ""
+    bytes < 1024L -> context.getString(R.string.book_size_bytes, bytes.toInt())
+    bytes < 1024L * 1024L -> context.getString(R.string.book_size_kb, (bytes / 1024).toInt())
+    else -> context.getString(R.string.book_size_mb, bytes / (1024f * 1024f))
 }
 
 // ── Author books rows ─────────────────────────────────────────────────────────
@@ -1071,11 +1112,28 @@ private class AuthorBooksAdapter(
     private val scope: CoroutineScope,
     entries: List<BookShelfEntry>,
     authorPath: String,
-    private val readingTimeByTitle: Map<String, Long>,
+    private var readingTimeByTitle: Map<String, Long>,
     private val onBookClick: (BookShelfEntry) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val rows = buildAuthorBooksRows(entries, authorPath)
+    private var rows = buildAuthorBooksRows(entries, authorPath)
+
+    /** Nouvelles données (progression, temps de lecture) sans perdre la position. */
+    fun submit(entries: List<BookShelfEntry>, authorPath: String, times: Map<String, Long>) {
+        val oldRows = rows
+        val oldTimes = readingTimeByTitle
+        rows = buildAuthorBooksRows(entries, authorPath)
+        readingTimeByTitle = times
+        dispatchListDiff(oldRows, rows,
+            sameItem = { a, b ->
+                (a is AuthorBooksRow.SectionHeader && b is AuthorBooksRow.SectionHeader && a.name == b.name) ||
+                    (a is AuthorBooksRow.BookItem && b is AuthorBooksRow.BookItem && a.entry.id == b.entry.id)
+            },
+            sameContent = { a, b ->
+                a == b && (a !is AuthorBooksRow.BookItem || oldTimes[a.entry.title] == times[a.entry.title])
+            }
+        )
+    }
 
     companion object { private const val TYPE_HEADER = 0; private const val TYPE_BOOK = 1 }
 
@@ -1120,7 +1178,7 @@ private class SectionHeaderVH(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(row: AuthorBooksRow.SectionHeader) {
         indent.layoutParams = indent.layoutParams.also { it.width = 0 }
         name.text = row.name
-        count.text = "${row.bookCount}"
+        count.text = itemView.context.getString(R.string.book_section_count, row.bookCount)
         chevron.visibility = View.GONE
         itemView.isClickable = false
     }
@@ -1146,28 +1204,36 @@ private class ShelfBookVH(view: View) : RecyclerView.ViewHolder(view) {
         }
         title.text = entry.title
         author.text = entry.author.ifEmpty { entry.format.uppercase() }
-        size.text = formatShelfSize(entry.fileSize)
+        size.text = formatBookSize(context, entry.fileSize)
         progress.progress = entry.progressPercent
-        progressText.text = if (entry.progressPercent > 0) "${entry.progressPercent}%" else ""
+        progressText.text = if (entry.progressPercent > 0) context.getString(R.string.book_progress_percent, entry.progressPercent) else ""
         date.text = if (entry.lastOpenedAt > 0)
             DateUtils.getRelativeTimeSpanString(entry.lastOpenedAt, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
         else ""
         bindReadingTime(readingTime, readingTimeMs)
 
-        setPlaceholder(cover)
         loadJob?.cancel()
+        loadJob = null
+        val cached = CoverThumbs.cached(shelfCoverKey(entry))
+        if (cached != null) {
+            showCover(cached)
+            return
+        }
+        setPlaceholder(cover)
         loadJob = scope.launch {
-            val bmp = withContext(Dispatchers.IO) { loadShelfCover(context, entry) }
-            if (bmp != null) {
-                cover.scaleType = ImageView.ScaleType.CENTER_CROP
-                cover.setPadding(0, 0, 0, 0)
-                cover.clearColorFilter()
-                cover.setImageBitmap(bmp)
-            }
+            val bmp = withContext(CoverThumbs.dispatcher) { loadShelfCover(context, entry) }
+            if (bmp != null) showCover(bmp)
         }
     }
 
     fun cancelLoad() { loadJob?.cancel(); loadJob = null }
+
+    private fun showCover(bmp: Bitmap) {
+        cover.scaleType = ImageView.ScaleType.CENTER_CROP
+        cover.setPadding(0, 0, 0, 0)
+        cover.clearColorFilter()
+        cover.setImageBitmap(bmp)
+    }
 
     private fun setPlaceholder(iv: ImageView) {
         val dp = iv.resources.displayMetrics.density
@@ -1185,30 +1251,31 @@ private fun bindReadingTime(view: TextView, durationMs: Long?) {
         return
     }
     view.visibility = View.VISIBLE
-    view.text = "🕐 " + formatReadingDuration(durationMs)
+    val context = view.context
+    view.text = context.getString(R.string.book_reading_time, formatReadingDuration(context, durationMs))
 }
 
-private fun formatReadingDuration(durationMs: Long): String {
+private fun formatReadingDuration(context: Context, durationMs: Long): String {
     val totalMinutes = (durationMs / 1000 / 60).toInt()
     val hours = totalMinutes / 60
     val minutes = totalMinutes % 60
-    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
-}
-
-private fun formatShelfSize(bytes: Long): String = when {
-    bytes <= 0L -> ""
-    bytes < 1024L -> "$bytes B"
-    bytes < 1024L * 1024L -> "${bytes / 1024} KB"
-    else -> "%.1f MB".format(bytes / (1024f * 1024f))
+    return if (hours > 0) context.getString(R.string.book_duration_h_min, hours, minutes)
+    else context.getString(R.string.book_duration_min, minutes)
 }
 
 // ── Cover grid adapter ────────────────────────────────────────────────────────
 
 private class BookCoverGridAdapter(
-    private val entries: List<BookShelfEntry>,
+    private var entries: List<BookShelfEntry>,
     private val scope: CoroutineScope,
     private val onBookClick: (BookShelfEntry) -> Unit
 ) : RecyclerView.Adapter<BookCoverGridAdapter.VH>() {
+
+    fun submit(newEntries: List<BookShelfEntry>) {
+        val old = entries
+        entries = newEntries
+        dispatchListDiff(old, newEntries, { a, b -> a.id == b.id }, { a, b -> a == b })
+    }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val cover: ImageView = view.findViewById(R.id.book_grid_cover)
@@ -1224,27 +1291,34 @@ private class BookCoverGridAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val entry = entries[position]
         val dp = holder.cover.resources.displayMetrics.density
+        holder.title.text = entry.title
+        holder.itemView.setOnClickListener { onBookClick(entry) }
 
+        holder.loadJob?.cancel()
+        holder.loadJob = null
+        val cached = CoverThumbs.cached(shelfCoverKey(entry))
+        if (cached != null) {
+            showCover(holder, cached)
+            return
+        }
         holder.cover.scaleType = ImageView.ScaleType.CENTER_INSIDE
         holder.cover.setPadding((20 * dp).toInt(), (20 * dp).toInt(), (20 * dp).toInt(), (20 * dp).toInt())
         holder.cover.setImageResource(R.drawable.ic_hub_books)
         holder.cover.setColorFilter(Color.argb(100, 255, 255, 255))
-        holder.title.text = entry.title
         holder.title.visibility = View.VISIBLE
 
-        holder.loadJob?.cancel()
         holder.loadJob = scope.launch {
-            val bmp = withContext(Dispatchers.IO) { loadShelfCover(holder.cover.context, entry) }
-            if (bmp != null) {
-                holder.cover.clearColorFilter()
-                holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
-                holder.cover.setPadding(0, 0, 0, 0)
-                holder.cover.setImageBitmap(bmp)
-                holder.title.visibility = View.GONE
-            }
+            val bmp = withContext(CoverThumbs.dispatcher) { loadShelfCover(holder.cover.context, entry) }
+            if (bmp != null) showCover(holder, bmp)
         }
+    }
 
-        holder.itemView.setOnClickListener { onBookClick(entry) }
+    private fun showCover(holder: VH, bmp: Bitmap) {
+        holder.cover.clearColorFilter()
+        holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
+        holder.cover.setPadding(0, 0, 0, 0)
+        holder.cover.setImageBitmap(bmp)
+        holder.title.visibility = View.GONE
     }
 
     override fun onViewRecycled(holder: VH) {
@@ -1256,40 +1330,18 @@ private class BookCoverGridAdapter(
 
 // ── Cover loader ──────────────────────────────────────────────────────────────
 
+/** Vignette d'un livre d'étagère : mémoire, cache disque (taille vignette), sinon extraction. */
 private fun loadShelfCover(context: Context, entry: BookShelfEntry): Bitmap? {
     val cacheFile = File(context.filesDir, "book_covers/${entry.id}.jpg")
-    if (cacheFile.exists()) {
-        // Déjà sous-échantillonné à l'extraction: pas de second sous-échantillonnage
-        return BitmapFactory.decodeFile(cacheFile.path)
-    }
-    entry.coverPath?.let { path ->
-        val f = File(path)
-        if (f.exists()) return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = 2 })
-    }
-    val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
-    val bmp = when (entry.format) {
-        "epub" -> loadEpubCoverBitmap(context, entry.sourcePath)
-        "pdf" -> loadShelfPdfCover(context, uri)
-        else -> null
-    } ?: return null
-    cacheFile.parentFile?.mkdirs()
-    try { FileOutputStream(cacheFile).use { bmp.compress(Bitmap.CompressFormat.JPEG, 85, it) } } catch (_: Exception) {}
-    return bmp
-}
-
-private fun loadShelfPdfCover(context: Context, uri: Uri): Bitmap? = try {
-    context.contentResolver.openFileDescriptor(uri, "r")?.use { fd ->
-        PdfRenderer(fd).use { renderer ->
-            if (renderer.pageCount == 0) return null
-            renderer.openPage(0).use { page ->
-                val scale = minOf(400f / page.width, 600f / page.height)
-                val w = (page.width * scale).toInt().coerceAtLeast(1)
-                val h = (page.height * scale).toInt().coerceAtLeast(1)
-                val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                bmp.eraseColor(Color.WHITE)
-                page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                bmp
+    return CoverThumbs.load(shelfCoverKey(entry), cacheFile) {
+        entry.coverPath?.takeIf { File(it).exists() }?.let { decodeSampledFile(it, COVER_THUMB_PX) }
+            ?: when (entry.format) {
+                "epub" -> loadEpubCoverBitmap(context, entry.sourcePath)
+                "pdf" -> {
+                    val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
+                    renderPdfThumb(context, uri)
+                }
+                else -> null
             }
-        }
     }
-} catch (_: Exception) { null }
+}

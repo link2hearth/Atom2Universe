@@ -9,6 +9,7 @@ import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -23,9 +24,7 @@ class ZoomPagingTest {
     /** La « base » : pour chaque profondeur, ses éléments. Sert de pager à la scène. */
     private class FakeDb(val items: Map<Long, List<Pair<LayerItem, Long>>>) : ZoomScene.LayerPager {
         val requested = ArrayList<Long>()
-        var syncLoads = 0
         override fun wantLoad(depth: Long) { requested.add(depth) }
-        override fun loadNow(depth: Long): List<Pair<LayerItem, Long>>? { syncLoads++; return items[depth] }
     }
 
     /** Une scène relue de [n] couches de 3 traits chacune (comme à l'ouverture d'un projet : propres, sans historique), caméra sur [cam]. */
@@ -139,18 +138,25 @@ class ZoomPagingTest {
     }
 
     @Test
-    fun drawingInALayerThatHasNotArrivedYetLoadsItFirst() {
+    fun drawingInALayerThatHasNotArrivedYetDoesNothingAndAsksForIt() {
         val (scene, db) = project(12, cam = 9)
-        // Zoom très vite vers une couche encore déchargée : son contenu doit être là avant le premier trait.
+        // Zoom très vite vers une couche encore déchargée : le geste ne fait rien (l'écran n'attend jamais la base)…
         scene.setCamera(1, 0.0, 0.0, 1.0)
         assertFalse(scene.layer(1)!!.isLoaded)
+        db.requested.clear()
         scene.beginStroke(5.0, 5.0, black, 3.0)
         scene.extendStroke(60.0, 60.0)
-        scene.endStroke()
-        assertEquals(1, db.syncLoads)
-        assertEquals(4, scene.layer(1)!!.size)
-        // L'arrivée tardive de la lecture asynchrone ne doit rien écraser.
-        assertFalse(scene.installLayer(1, db.items[1L]!!))
+        assertNull(scene.endStroke())
+        assertNull(scene.addImage("a.png", 10, 10, 50.0, 50.0))
+        assertFalse(scene.canUndo)
+        assertFalse(scene.layer(1)!!.isLoaded)
+        // … mais la couche est redemandée.
+        assertTrue(1L in db.requested)
+        // Une fois arrivée, on y dessine normalement.
+        assertTrue(scene.installLayer(1, db.items[1L]!!))
+        scene.beginStroke(5.0, 5.0, black, 3.0)
+        scene.extendStroke(60.0, 60.0)
+        assertNotNull(scene.endStroke())
         assertEquals(4, scene.layer(1)!!.size)
     }
 

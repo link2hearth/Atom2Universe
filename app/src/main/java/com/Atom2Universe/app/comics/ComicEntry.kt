@@ -4,11 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
+// Compilée une fois : le tri d'un dossier appelle la comparaison des milliers de fois
+private val NATURAL_CHUNK_RE = Regex("(\\d+)|(\\D+)")
+
 /** Tri naturel : "2.jpg" < "10.jpg" < "page10b.jpg" */
 internal fun naturalCompare(a: String, b: String): Int {
-    val re = Regex("(\\d+)|(\\D+)")
-    val aT = re.findAll(a).map { it.value }.toList()
-    val bT = re.findAll(b).map { it.value }.toList()
+    val aT = NATURAL_CHUNK_RE.findAll(a).map { it.value }.toList()
+    val bT = NATURAL_CHUNK_RE.findAll(b).map { it.value }.toList()
     for (i in 0 until minOf(aT.size, bT.size)) {
         val an = aT[i].toLongOrNull()
         val bn = bT[i].toLongOrNull()
