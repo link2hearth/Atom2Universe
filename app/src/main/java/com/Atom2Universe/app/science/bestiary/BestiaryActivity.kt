@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -25,24 +27,37 @@ import com.Atom2Universe.app.science.parentes.LifeTree
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.parentes.ParentesRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.Collator
+import org.json.JSONException
+import java.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 class BestiaryActivity : ThemedActivity() {
     private val palette by lazy { SciencePalette(this) }
     private var repository: ParentesRepository? = null
     private var index: BestiaryLifeIndex? = null
+    private var entries: List<BestiaryEntry>? = null
     private var selected: String? = null
     private var pendingNode: String? = null
     private var query = ""
     private var group = ""
+    private var listPosition = 0
+    private var listTop = 0
+    private var keepScroll = true
+    private var opening: Job? = null
+    // Classification block of the open profile, filled when the tree finishes loading.
+    private var pendingClassification: Pair<String, LinearLayout>? = null
     private lateinit var list: ListView
     private lateinit var count: TextView
     private lateinit var treeStatus: LinearLayout
     private lateinit var groups: LinearLayout
+    private val adapter = EntryAdapter()
+    private val searchHandler = Handler(Looper.getMainLooper())
+    private val applySearch = Runnable { renderList() }
     private val fiche by lazy {
-        ScienceFiche(this, palette, R.string.be_back, R.string.be_close) { selected = null }
+        ScienceFiche(this, palette, R.string.be_back, R.string.be_close) { selected = null; pendingClassification = null }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +70,10 @@ class BestiaryActivity : ThemedActivity() {
         group = savedInstanceState?.getString("group").orEmpty()
         selected = if (savedInstanceState != null) savedInstanceState.getString("species") else intent.getStringExtra(EXTRA_SPECIES_ID)
         pendingNode = if (savedInstanceState != null) savedInstanceState.getString("node") else intent.getStringExtra(EXTRA_LIFE_NODE)
+        listPosition = savedInstanceState?.getInt("listPosition") ?: 0
+        listTop = savedInstanceState?.getInt("listTop") ?: 0
         buildUi()
-        selected?.let { AnimalCatalog.byId[it]?.let(::open) }
+        loadEntries()
         loadTree()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (fiche.isShowing) fiche.dismiss() else finish() }
@@ -67,7 +84,9 @@ class BestiaryActivity : ThemedActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         pendingNode = intent.getStringExtra(EXTRA_LIFE_NODE)
-        intent.getStringExtra(EXTRA_SPECIES_ID)?.let { AnimalCatalog.byId[it]?.let(::open) }
+        intent.getStringExtra(EXTRA_SPECIES_ID)?.let { id ->
+            if (entries == null) selected = id else AnimalCatalog.byId[id]?.let(::open)
+        }
         applyLink()
     }
 
@@ -79,7 +98,7 @@ class BestiaryActivity : ThemedActivity() {
             contentDescription = getString(R.string.be_back); setOnClickListener { finish() }
         }
         ScienceNavigation.bindHomeAction(back) {
-            fiche.dismiss(); query = ""; group = ""; pendingNode = null
+            fiche.dismiss(); query = ""; group = ""; pendingNode = null; keepScroll = false
             intent.removeExtra(EXTRA_SPECIES_ID); intent.removeExtra(EXTRA_LIFE_NODE)
             recreate()
         }
@@ -92,7 +111,10 @@ class BestiaryActivity : ThemedActivity() {
             hint = getString(R.string.be_search); setSingleLine(); setText(query)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { query = s.toString(); renderList() }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    query = s.toString()
+                    searchHandler.removeCallbacks(applySearch); searchHandler.postDelayed(applySearch, SEARCH_DELAY_MS)
+                }
                 override fun afterTextChanged(s: Editable?) = Unit
             })
         }, full())
@@ -103,6 +125,8 @@ class BestiaryActivity : ThemedActivity() {
         treeStatus = column()
         root.addView(treeStatus)
         list = ListView(this).apply { divider = null; setBackgroundColor(palette.background) }
+        list.adapter = adapter
+        list.setOnItemClickListener { _, _, position, _ -> open(adapter.items[position].animal) }
         root.addView(list, LinearLayout.LayoutParams(-1, 0, 1f))
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val safe = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
@@ -110,12 +134,12 @@ class BestiaryActivity : ThemedActivity() {
             insets
         }
         setContentView(root)
-        renderGroups(); renderList()
+        renderGroups()
     }
 
     private fun renderGroups() {
         groups.removeAllViews()
-        (listOf("" to R.string.be_all) + AnimalCatalog.species.map { it.group }.distinct().map { it to groupTitle(it) }).forEach { (id, title) ->
+        (listOf("" to R.string.be_all) + GROUPS.map { it to groupTitle(it) }).forEach { (id, title) ->
             groups.addView(button(getString(title)) { group = id; renderGroups(); renderList() }.apply {
                 background = palette.control(group == id); setTextColor(if (group == id) palette.onAccent else palette.text)
                 isSelected = group == id
@@ -123,95 +147,129 @@ class BestiaryActivity : ThemedActivity() {
         }
     }
 
-    private fun renderList() {
-        if (!::list.isInitialized) return
-        val terms = LifeTree.normalize(query).split(Regex("\\s+")).filter { it.isNotBlank() }
-        val collator = Collator.getInstance(resources.configuration.locales[0])
-        val entries = AnimalCatalog.species.filter { animal ->
-            (group.isEmpty() || group == animal.group) && terms.all {
-                it in LifeTree.normalize(animalName(animal) + " " + animal.scientific)
-            }
-        }.sortedWith { a, b -> collator.compare(animalName(a), animalName(b)) }
-        count.text = getString(if (entries.isEmpty()) R.string.be_empty else R.string.be_count, entries.size, AnimalCatalog.species.size)
-        list.adapter = object : ArrayAdapter<AnimalSpecies>(this, android.R.layout.simple_list_item_1, entries) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val animal = getItem(position)!!
-                return (convertView as? LinearLayout ?: LinearLayout(this@BestiaryActivity).apply {
-                    gravity = Gravity.CENTER_VERTICAL
-                    setPadding(dp(8), dp(8), dp(16), dp(8)); minimumHeight = dp(96)
-                    addView(AnimalPlateView(this@BestiaryActivity).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO },
-                        LinearLayout.LayoutParams(dp(104), dp(80)))
-                    addView(column().apply { addView(label("", 18f, true)); addView(label("", 14f)) },
-                        LinearLayout.LayoutParams(0, -2, 1f))
-                }).apply {
-                    background = palette.shape(palette.surface)
-                    (getChildAt(0) as AnimalPlateView).variant = animal.id
-                    (getChildAt(1) as LinearLayout).apply {
-                        (getChildAt(0) as TextView).text = animalName(animal)
-                        (getChildAt(1) as TextView).text = animalLatin(animal)
-                    }
+    private fun renderList(position: Int = 0, top: Int = 0) {
+        searchHandler.removeCallbacks(applySearch)
+        val all = entries ?: return
+        val terms = LifeTree.normalize(query).split(SPACES).filter { it.isNotBlank() }
+        val shown = all.filter { entry ->
+            (group.isEmpty() || group == entry.animal.group) && terms.all { it in entry.searchKey }
+        }
+        count.text = getString(if (shown.isEmpty()) R.string.be_empty else R.string.be_count, shown.size, all.size)
+        adapter.items = shown
+        adapter.notifyDataSetChanged()
+        list.setSelectionFromTop(position, top)
+    }
+
+    private inner class EntryAdapter : BaseAdapter() {
+        var items: List<BestiaryEntry> = emptyList()
+        override fun getCount() = items.size
+        override fun getItem(position: Int) = items[position]
+        override fun getItemId(position: Int) = position.toLong()
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val entry = items[position]
+            return (convertView as? LinearLayout ?: LinearLayout(this@BestiaryActivity).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(8), dp(8), dp(16), dp(8)); minimumHeight = dp(96)
+                background = palette.shape(palette.surface)
+                addView(AnimalPlateView(this@BestiaryActivity, thumbnail = true).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO },
+                    LinearLayout.LayoutParams(dp(104), dp(80)))
+                addView(column().apply { addView(label("", 18f, true)); addView(label("", 14f)) },
+                    LinearLayout.LayoutParams(0, -2, 1f))
+            }).apply {
+                (getChildAt(0) as AnimalPlateView).variant = entry.animal.id
+                (getChildAt(1) as LinearLayout).apply {
+                    (getChildAt(0) as TextView).text = entry.name
+                    (getChildAt(1) as TextView).text = entry.animal.scientific
                 }
             }
         }
-        list.setOnItemClickListener { _, _, position, _ -> open(entries[position]) }
+    }
+
+    private fun loadEntries() {
+        val locale = resources.configuration.locales[0]
+        lifecycleScope.launch {
+            entries = withContext(Dispatchers.Default) { AnimalCatalog.entries(locale) }
+            renderList(listPosition, listTop)
+            selected?.let { AnimalCatalog.byId[it]?.let(::open) }
+            applyLink()
+        }
     }
 
     private fun loadTree() {
         treeStatus.removeAllViews()
         treeStatus.addView(label(getString(R.string.be_tree_loading), 12f))
         lifecycleScope.launch {
-            runCatching { withContext(Dispatchers.Default) { ParentesRepository.load(applicationContext) } }
-                .onSuccess {
-                    repository = it
-                    index = BestiaryLifeIndex(it.tree, AnimalCatalog.species.associate { animal -> animal.id to animal.scientific })
-                    treeStatus.removeAllViews()
-                    val linked = pendingNode != null
-                    applyLink()
-                    if (!linked) selected?.let { id -> AnimalCatalog.byId[id]?.let(::open) }
-                }.onFailure {
-                    treeStatus.removeAllViews()
-                    treeStatus.addView(button(getString(R.string.be_tree_retry)) { loadTree() })
+            val loaded = try {
+                withContext(Dispatchers.Default) {
+                    val repo = ParentesRepository.load(applicationContext)
+                    repo to BestiaryLifeIndex.of(repo.tree)
                 }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Throwable) {
+                null
+            }
+            treeStatus.removeAllViews()
+            if (loaded == null) {
+                treeStatus.addView(button(getString(R.string.be_tree_retry)) { loadTree() })
+                return@launch
+            }
+            repository = loaded.first
+            index = loaded.second
+            pendingClassification?.let { (id, block) -> pendingClassification = null; addClassification(block, id) }
+            applyLink()
         }
     }
 
     private fun applyLink() {
         val node = pendingNode ?: return
         val loaded = index ?: return
+        if (entries == null) return
         pendingNode = null
         val animal = loaded.forNode(node)?.let { AnimalCatalog.byId[it] }
-        if (animal != null) open(animal) else Toast.makeText(this, R.string.be_unavailable, Toast.LENGTH_LONG).show()
+        if (animal == null) Toast.makeText(this, R.string.be_unavailable, Toast.LENGTH_LONG).show()
+        else if (animal.id != selected) open(animal)
     }
 
     private fun open(animal: AnimalSpecies) {
         selected = animal.id
-        val encyclopediaProfile = animal.encyclopediaId?.let { id ->
-            runCatching {
-                AnimalEncyclopediaRepository.load(this, id, resources.configuration.locales[0].language)
-            }.getOrNull()
+        opening?.cancel()
+        val language = language()
+        opening = lifecycleScope.launch {
+            val profile = withContext(Dispatchers.IO) {
+                try {
+                    AnimalEncyclopediaRepository.load(applicationContext, animal.id, language)
+                } catch (_: IOException) {
+                    null
+                } catch (_: JSONException) {
+                    null
+                }
+            }
+            show(animal, profile)
         }
-        val profileSections = encyclopediaProfile?.sections
+    }
+
+    private fun show(animal: AnimalSpecies, profile: EncyclopediaProfile?) {
+        val name = AnimalCatalog.name(animal, language())
+        val profileSections = profile?.sections
         val top = column().apply {
-            addView(label(animalLatin(animal), 18f).apply { setTypeface(typeface, Typeface.ITALIC) })
+            addView(label(animal.scientific, 18f).apply { setTypeface(typeface, Typeface.ITALIC) })
             addView(label(getString(groupTitle(animal.group)), 13f))
         }
         val media = column()
         val plate = AnimalPlateView(this).apply {
             variant = animal.id
-            val identification = profileSections?.get("identification")
-                ?: animal.identification?.let(::getString)
-            contentDescription = identification?.let {
-                getString(R.string.be_plate_accessibility, animalName(animal), it)
-            } ?: getString(R.string.be_plate_accessibility_name, animalName(animal))
+            contentDescription = profileSections?.get("identification")?.let {
+                getString(R.string.be_plate_accessibility, name, it)
+            } ?: getString(R.string.be_plate_accessibility_name, name)
         }
         media.addView(FitFrame(this, .78f, dp(640)).apply { addView(plate, android.widget.FrameLayout.LayoutParams(-1, -1, Gravity.CENTER)) },
             if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else full())
         media.addView(label(getString(R.string.be_plate_note), 12f), full())
         val body = column()
-        if (encyclopediaProfile == null && animal.description == null) {
+        if (profileSections == null) {
             body.addView(label(getString(R.string.be_encyclopedia_coming), 15f), full())
-        }
-        val sections = if (profileSections != null) {
+        } else {
             listOf(
                 R.string.be_overview to profileSections["overview"],
                 R.string.be_identification to profileSections["identification"],
@@ -221,55 +279,45 @@ class BestiaryActivity : ThemedActivity() {
                 R.string.be_reproduction to profileSections["reproduction"],
                 R.string.be_ecology to profileSections["ecology"],
                 R.string.be_conservation to profileSections["conservation"]
-            )
-        } else {
-            listOf(R.string.be_overview to animal.description?.let(::getString),
-                R.string.be_identification to animal.identification?.let(::getString),
-                R.string.be_habitat to animal.habitat?.let(::getString),
-                R.string.be_diet to animal.diet?.let(::getString),
-                R.string.be_behavior to animal.behavior?.let(::getString),
-                R.string.be_reproduction to animal.reproduction?.let(::getString),
-                R.string.be_ecology to animal.ecology?.let(::getString),
-                R.string.be_conservation to animal.conservation?.let(::getString))
+            ).forEach { (title, text) ->
+                if (text == null) return@forEach
+                body.addView(label(getString(title), 18f, true).apply { ViewCompat.setAccessibilityHeading(this, true) }, full(18))
+                body.addView(label(text).apply { setTextIsSelectable(true) }, full(4))
+            }
         }
-        sections.forEach { (title, text) ->
-            if (text == null) return@forEach
-            body.addView(label(getString(title), 18f, true).apply { ViewCompat.setAccessibilityHeading(this, true) }, full(18))
-            body.addView(label(text).apply { setTextIsSelectable(true) }, full(4))
-        }
-        index?.forSpecies(animal.id)?.let { node ->
-            val repo = repository!!
-            body.addView(label(getString(R.string.be_classification), 18f, true), full(18))
-            body.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
-                .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }), full(4))
-            body.addView(button(getString(R.string.be_open_tree)) {
-                if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
-                else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
-                    .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
-            }, full())
-        }
-        val references = encyclopediaProfile?.references?.map { it.url to it.title }
-            ?: animal.references.map { it.url to getString(it.title) }
+        val classification = column()
+        body.addView(classification, LinearLayout.LayoutParams(-1, -2))
+        pendingClassification = null
+        if (index != null) addClassification(classification, animal.id) else pendingClassification = animal.id to classification
+        val references = profile?.references.orEmpty()
         if (references.isNotEmpty()) {
             body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
             body.addView(label(getString(R.string.be_source_note), 12f), full(4))
-            references.forEach { (url, title) ->
-                body.addView(button(title) {
-                    try { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
+            references.forEach { reference ->
+                body.addView(button(reference.title) {
+                    try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
                     catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
                 }, full())
-                body.addView(label(url, 12f).apply { setTextIsSelectable(true) }, full(4))
+                body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
             }
         }
-        fiche.show(animalName(animal), top, media, body)
+        fiche.show(name, top, media, body)
     }
 
-    private fun animalName(animal: AnimalSpecies): String = animal.encyclopediaId?.let {
-        BestiaryEncyclopediaCatalog.name(it, resources.configuration.locales[0].language)
-    } ?: getString(animal.name)
+    private fun addClassification(block: LinearLayout, animalId: String) {
+        val node = index?.forSpecies(animalId) ?: return
+        val repo = repository ?: return
+        block.addView(label(getString(R.string.be_classification), 18f, true), full(18))
+        block.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
+            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }), full(4))
+        block.addView(button(getString(R.string.be_open_tree)) {
+            if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
+            else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
+        }, full())
+    }
 
-    private fun animalLatin(animal: AnimalSpecies): String =
-        if (animal.encyclopediaId != null) animal.scientific else getString(animal.latin)
+    private fun language() = resources.configuration.locales[0].language
 
     private fun groupTitle(id: String) = when (id) {
         "mammals" -> R.string.be_mammals
@@ -293,10 +341,20 @@ class BestiaryActivity : ThemedActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("query", query); outState.putString("group", group)
         outState.putString("species", selected); outState.putString("node", pendingNode)
+        if (!keepScroll) return
+        if (entries != null && ::list.isInitialized) {
+            listPosition = list.firstVisiblePosition
+            listTop = list.getChildAt(0)?.top ?: 0
+        }
+        outState.putInt("listPosition", listPosition); outState.putInt("listTop", listTop)
     }
-    override fun onDestroy() { fiche.dismiss(); super.onDestroy() }
+    override fun onDestroy() { searchHandler.removeCallbacks(applySearch); fiche.dismiss(); super.onDestroy() }
     companion object {
         const val EXTRA_LIFE_NODE = "bestiary_life_node"
         const val EXTRA_SPECIES_ID = "bestiary_species_id"
+        private const val SEARCH_DELAY_MS = 150L
+        private val SPACES = Regex("\\s+")
+        // Order of the group filters as first shown in the catalogue.
+        private val GROUPS = listOf("birds", "fish", "invertebrates", "mammals", "amphibians", "reptiles")
     }
 }

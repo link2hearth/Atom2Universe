@@ -30,6 +30,12 @@ class BotanyRenderingTest {
         }
     }
 
+    @Test fun uneEspeceSansPlancheGardeSonDessin()=kotlinx.coroutines.runBlocking {
+        val species=BotanyCatalog.species.first{!PlantHerbarium.hasPlate(it.id)}
+        val drawing=PlantImageStore().load(species,PlantImageKey(species.id,PlantView.HABIT,256,true))
+        assertTrue("A missing plate must not leave an empty frame",pixels(drawing).distinct().size>1)
+    }
+
     @Test fun nouveauxFruitsDisponiblesSansProfilSpecialise() {
         for(id in listOf("ananas_comosus","ficus_carica")) {
             val p=BotanyCatalog.get(id)!!

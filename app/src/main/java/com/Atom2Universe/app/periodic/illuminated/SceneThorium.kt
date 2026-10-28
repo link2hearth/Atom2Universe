@@ -22,6 +22,8 @@ internal class SceneThorium : EngravedScene() {
     override val nameRes = R.string.card_scene_gas_lantern
     override val noteRes = R.string.card_note_gas_lantern
     override val explainRes = R.string.card_explain_gas_lantern
+    /** Les papillons tournent vite autour de la lampe : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le sol de la clairière, les sapins en ombres, la tente.
@@ -59,7 +61,9 @@ internal class SceneThorium : EngravedScene() {
     }
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val wing = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeWidth = 1.6f }
-    private val mantle = Path()
+    private val mantle = Path().apply {
+        moveTo(MX - 6f, MY - 12f); quadTo(MX - 10f, MY + 6f, MX, MY + 14f); quadTo(MX + 10f, MY + 6f, MX + 6f, MY - 12f); close()
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val pulse = .9f + .06f * sin(t * 3.1f) + .04f * sin(t * 11f)
@@ -70,8 +74,6 @@ internal class SceneThorium : EngravedScene() {
         fill.color = withAlpha(0xFFFFF4D8.toInt(), (60 * pulse).toInt())
         c.drawRoundRect(164f, 168f, 196f, 232f, 10f, 10f, fill)
         // Le manchon : une petite chaussette de cendre qui brille à blanc.
-        mantle.reset()
-        mantle.moveTo(MX - 6f, MY - 12f); mantle.quadTo(MX - 10f, MY + 6f, MX, MY + 14f); mantle.quadTo(MX + 10f, MY + 6f, MX + 6f, MY - 12f); mantle.close()
         fill.color = withAlpha(0xFFFFE8B0.toInt(), (120 * pulse).toInt()); c.drawCircle(MX, MY + 2f, 18f, fill)
         fill.color = withAlpha(0xFFFFFDF4.toInt(), (235 * pulse).toInt()); c.drawPath(mantle, fill)
         // Les papillons de nuit tournent autour.

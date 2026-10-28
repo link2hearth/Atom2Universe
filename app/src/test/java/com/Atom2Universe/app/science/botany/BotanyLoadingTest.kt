@@ -57,6 +57,15 @@ class BotanyLoadingTest {
         assertSame(plate,store.peek(image))
     }
 
+    @Test fun unePlancheDHerbierEstDecodeeUneSeuleFoisPourToutesLesVues()=runBlocking {
+        val calls=AtomicInteger()
+        val store=PlantImageStore(render={_,_->calls.incrementAndGet();Bitmap.createBitmap(12,12,Bitmap.Config.ARGB_8888)})
+        val plate=store.load(plant,key().copy(image=true))
+        assertSame(plate,store.load(plant,key(PlantView.LEAF).copy(image=true,compact=true)))
+        assertSame(plate,store.peek(key(PlantView.FRUIT).copy(image=true)))
+        assertEquals(1,calls.get())
+    }
+
     @Test fun changerDePageAnnuleLesDessinsEnAttenteEtNePubliePasLesAnciens()=runBlocking {
         val started=CountDownLatch(1)
         val release=CountDownLatch(1)

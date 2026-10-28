@@ -51,12 +51,8 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         val radioactive: Boolean
     )
 
-    /** L'ancienne scène, dessinée telle quelle dans la fenêtre tant que l'élément n'a pas sa gravure. */
-    fun interface LegacyArt { fun draw(c: Canvas, t: Float) }
-
     @Volatile private var content: Content? = null
     @Volatile private var scene: EngravedScene? = null
-    @Volatile private var legacy: LegacyArt? = null
     @Volatile private var livery = Livery.of(GachaRarity.PRIMORDIAL)
 
     /** Tout ce qui est cuit pour une taille donnée. Immuable : on le remplace d'un bloc. */
@@ -85,11 +81,10 @@ internal class IlluminatedCard(private val fonts: Fonts) {
     private val leafGlow = Array(6) { i -> LightingColorFilter(0xFFFFFF, (i * 0x0B) * 0x010100 + i * 0x04) }
     private val box = RectF(0f, 0f, W, H)
 
-    fun set(content: Content, scene: EngravedScene?, legacy: LegacyArt?) {
+    fun set(content: Content, scene: EngravedScene) {
         generation++
         this.content = content
         this.scene = scene
-        this.legacy = if (scene == null) legacy else null
         livery = Livery.of(content.rarity)
         baked = null
     }
@@ -107,6 +102,7 @@ internal class IlluminatedCard(private val fonts: Fonts) {
     fun prepare(scale: Float): Baked? {
         val gen = generation
         val data = content ?: return null
+        val s = scene ?: return null
         val w = ceil(W * scale).toInt(); val h = ceil(H * scale).toInt()
         val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val mask = Bitmap.createBitmap(w, h, Bitmap.Config.ALPHA_8)
@@ -116,7 +112,7 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         val nodes = ArrayList<Node>()
 
         vellum(b)
-        miniature(b)
+        miniature(b, s)
         val perimeter = borderStatic(b, nodes)
         keystone(b, data)
         ribbon(b, data)
@@ -124,7 +120,7 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         footer(b, data)
 
         val frame = Sprites(scale).apply { bake(frameSpriteList()) }
-        val sceneSprites = Sprites(scale).apply { bake(scene?.sprites() ?: emptyList()) }
+        val sceneSprites = Sprites(scale).apply { bake(s.sprites()) }
         return Baked(gen, scale, bmp, mask, frame, sceneSprites, nodes, perimeter)
     }
 
@@ -154,7 +150,6 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         c.clipRect(WIN_L, WIN_TOP, WIN_R, RIBBON_TOP)
         c.clipPath(windowPath)
         scene?.animate(c, p.sceneSprites, t)
-        legacy?.draw(c, t)
         c.restore()
 
         drawLiveBorder(c, p, t)
@@ -179,23 +174,13 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         b.c.drawRect(BAND_IN, BAND_IN, W - BAND_IN, H - BAND_IN, b.pen(livery.ink, .6f))
     }
 
-    private fun miniature(b: Burin) {
+    private fun miniature(b: Burin, s: EngravedScene) {
         val inner = window(0f) // un chemin à soi : la cuisson peut tourner sur un autre fil
         // Le papier de la planche, plus clair que le vélin.
-        b.fill(inner, if (scene == null) 0xFF14182A.toInt() else PAPER)
-        val s = scene
+        b.fill(inner, PAPER)
         b.c.save(); b.c.clipPath(inner)
-        if (s != null) {
-            sky(b, s.sky)
-            s.engrave(b)
-        } else {
-            // Fond d'azur semé d'or, en attendant la gravure de cet élément.
-            val rnd = Random(3)
-            repeat(40) {
-                val x = WIN_L + rnd.nextFloat() * (WIN_R - WIN_L); val y = WIN_TOP + rnd.nextFloat() * 250f
-                b.goldCircle(x, y, .8f + rnd.nextFloat())
-            }
-        }
+        sky(b, s.sky)
+        s.engrave(b)
         b.c.restore()
         // La baguette : or, couleur de la rareté, or.
         b.stroke(window(1.2f), 1.6f, livery.ink)
@@ -297,7 +282,8 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         }
         b.c.drawLines(stem, 0, n, ink)
         // Rosaces des coins : leur couronne d'or est fixe, la fleur intérieure tourne.
-        for ((x, y) in corners) {
+        for (i in 0 until 4) {
+            val x = corners[2 * i]; val y = corners[2 * i + 1]
             b.goldCircle(x, y, 12.5f)
             b.c.drawCircle(x, y, 12.5f, b.pen(livery.ink, .8f))
             b.c.drawCircle(x, y, 9f, b.pen(livery.pigment))
@@ -376,7 +362,9 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         val sprites = p.frameSprites
         val perimeter = p.perimeter
         val glintArc = (t * 62f) % perimeter
-        for (node in p.nodes) {
+        val nodes = p.nodes
+        for (n in 0 until nodes.size) {
+            val node = nodes[n]
             // Une onde de vent fait le tour du cadre : chaque feuille suit, un peu en retard.
             val sway = 8f * sin(t * 1.7f - node.arc * .045f) + 3f * sin(t * 3.1f + node.arc * .11f)
             var d = node.arc - glintArc
@@ -395,31 +383,37 @@ internal class IlluminatedCard(private val fonts: Fonts) {
             c.restore()
         }
         sprites.paint.colorFilter = null
-        for ((i, xy) in corners.withIndex()) {
-            c.save(); c.translate(xy.first, xy.second)
+        for (i in 0 until 4) {
+            c.save(); c.translate(corners[2 * i], corners[2 * i + 1])
             c.rotate(t * (if (i % 2 == 0) 14f else -14f))
             sprites.draw(c, ROSETTE)
             c.restore()
         }
         // L'éclat qui court sur la bordure.
-        val (gx, gy) = pointAt(glintArc)
+        pointAt(glintArc)
         glintPaint.shader = glint
-        c.save(); c.translate(gx, gy)
+        c.save(); c.translate(glintX, glintY)
         c.drawCircle(0f, 0f, 18f, glintPaint)
         c.restore()
     }
 
-    private fun pointAt(arc: Float): Pair<Float, Float> {
+    private var glintX = 0f
+    private var glintY = 0f
+    private val sideLengths = FloatArray(sides.size) { hypot(sides[it].x1 - sides[it].x0, sides[it].y1 - sides[it].y0) }
+
+    /** Le point de la bordure à l'abscisse [arc], rangé dans ([glintX], [glintY]) : rien d'alloué par image. */
+    private fun pointAt(arc: Float) {
         var a = arc
-        for (side in sides) {
-            val len = hypot(side.x1 - side.x0, side.y1 - side.y0)
+        for (i in 0 until sides.size) {
+            val side = sides[i]; val len = sideLengths[i]
             if (a <= len) {
                 val f = a / len
-                return (side.x0 + (side.x1 - side.x0) * f) to (side.y0 + (side.y1 - side.y0) * f)
+                glintX = side.x0 + (side.x1 - side.x0) * f; glintY = side.y0 + (side.y1 - side.y0) * f
+                return
             }
             a -= len
         }
-        return sides[0].x0 to sides[0].y0
+        glintX = sides[0].x0; glintY = sides[0].y0
     }
 
     private fun drawShimmer(c: Canvas, p: Baked, t: Float, lightX: Float, lightY: Float) {
@@ -428,8 +422,18 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         val cycle = 7.5f
         val f = (t % cycle) / cycle
         val x = -260f + f * 880f + (lightX - 180f) * 1.1f
+        val deg = -58f + (lightY - 220f) * .05f
+        // Hors de la bande (0 à 120 le long du dégradé), le dégradé est transparent : si la carte
+        // entière est d'un côté de la bande, il n'y a rien à peindre.
+        val rad = Math.toRadians(deg.toDouble())
+        val ux = cos(rad).toFloat(); val uy = sin(rad).toFloat()
+        val u0 = -x * ux
+        val du = W * ux; val dv = H * uy
+        val uMin = u0 + kotlin.math.min(0f, du) + kotlin.math.min(0f, dv)
+        val uMax = u0 + kotlin.math.max(0f, du) + kotlin.math.max(0f, dv)
+        if (uMax <= 0f || uMin >= 120f) return
         shimmerMatrix.reset()
-        shimmerMatrix.setRotate(-58f + (lightY - 220f) * .05f)
+        shimmerMatrix.setRotate(deg)
         shimmerMatrix.postTranslate(x, 0f)
         shimmer.setLocalMatrix(shimmerMatrix)
         shimmerPaint.shader = shimmer
@@ -637,7 +641,8 @@ internal class IlluminatedCard(private val fonts: Fonts) {
         }
     }
 
-    private val corners = listOf(MID to MID, W - MID to MID, W - MID to H - MID, MID to H - MID)
+    /** Les centres des rosaces, en (x, y) à la suite. */
+    private val corners = floatArrayOf(MID, MID, W - MID, MID, W - MID, H - MID, MID, H - MID)
 
     /** Les couleurs d'une rareté, prises aux pigments des enlumineurs. */
     private class Livery(

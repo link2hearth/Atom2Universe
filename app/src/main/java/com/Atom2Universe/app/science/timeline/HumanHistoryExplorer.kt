@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.science.timeline
 
 import android.content.Context
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -33,6 +34,7 @@ class HumanHistoryExplorer(
         private set
     var topic = initialTopic
         private set
+    private var lastFullUpdate = 0L
 
     init {
         orientation = VERTICAL
@@ -116,10 +118,19 @@ class HumanHistoryExplorer(
         timeline.stopMotion()
         window.change()
         panel.hide()
-        timeline.selectedId = null
+        // While the slider is dragged, only the chart follows every frame.
+        if (navigation.scrubbing && timeline.selectedId == null) timeline.refresh(live = true)
+        else timeline.selectedId = null
     }
 
-    private fun update() {
+    /** During a gesture only the slider follows each frame; dates, filter and chapters at most 10 times/s. */
+    private fun update(live: Boolean = false) {
+        val now = SystemClock.uptimeMillis()
+        if (live) {
+            navigation.bindSlider()
+            if (now - lastFullUpdate < 100) return
+        }
+        lastFullUpdate = now
         navigation.bind()
         filter.text = if (region == null) context.getString(topic.label)
             else context.getString(R.string.ct_history_filter_summary, context.getString(topic.label), context.getString(region!!.label))

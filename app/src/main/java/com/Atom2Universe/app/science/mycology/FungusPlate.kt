@@ -8,11 +8,25 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.RadialGradient
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.Typeface
+import android.util.Log
+import android.util.LruCache
 import android.view.View
+import android.view.ViewTreeObserver
 import com.Atom2Universe.app.R
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.max
 import kotlin.math.min
 
@@ -183,40 +197,122 @@ object FungusPlate {
     }
 }
 
-/** Une planche : un champignon, une vue. Le dessin est mis en cache tant que rien ne change. */
-class FungusPlateView(context: Context) : View(context) {
-    var look: FungusLook? = null
-        set(v) { field = v; invalidateCache() }
-    var mode: PlateMode = PlateMode.SIDE
-        set(v) { field = v; invalidateCache() }
-    var showMarks: Boolean = true
-        set(v) { field = v; invalidateCache() }
-    var compact: Boolean = false
-        set(v) { field = v; invalidateCache() }
-    /** Échelle commune (px par cm) pour comparer plusieurs champignons côte à côte. */
-    var fixedScale: Float? = null
-        set(v) { field = v; invalidateCache() }
-    /** Les autres champignons de la comparaison : l'échelle est celle qui les fait tous tenir. */
-    var sharedScaleWith: List<FungusLook>? = null
-        set(v) { field = v; invalidateCache() }
+/** Tout ce qui décide du dessin d'une planche : deux planches de même clé ont exactement la même image. */
+internal data class FungusPlateKey(
+    val look: FungusLook, val mode: PlateMode, val width: Int, val height: Int, val density: Float,
+    val showMarks: Boolean, val compact: Boolean, val scale: Float?, val language: String
+)
 
-    private var cache: Bitmap? = null
-    private val density = resources.displayMetrics.density
-
-    private fun invalidateCache() { cache?.recycle(); cache = null; invalidate() }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) { invalidateCache() }
-
-    override fun onDraw(canvas: Canvas) {
-        val l = look ?: return
-        if (width == 0 || height == 0) return
-        val bmp = cache ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { bitmap ->
-            val scale = fixedScale ?: sharedScaleWith?.minOfOrNull { FungusPlate.fitScale(it, width.toFloat(), height.toFloat(), density, compact, mode) }
-            FungusPlate.draw(Canvas(bitmap), { resources.getString(it) }, l, mode, width.toFloat(), height.toFloat(), density, showMarks, compact, scale)
-            cache = bitmap
-        }
-        canvas.drawBitmap(bmp, 0f, 0f, null)
+/**
+ * Les planches déjà dessinées, partagées par tous les écrans et bornées en mémoire. Le dessin se fait hors du
+ * fil de l'interface, deux à la fois au plus. Une image sortie du cache n'est jamais recyclée : une vue peut
+ * encore l'afficher.
+ */
+internal object FungusPlateCache {
+    private val dispatcher = Dispatchers.Default.limitedParallelism(2)
+    private val cache = object : LruCache<FungusPlateKey, Bitmap>(16 * 1024 * 1024) {
+        override fun sizeOf(key: FungusPlateKey, value: Bitmap) = value.allocationByteCount
     }
 
-    override fun onDetachedFromWindow() { cache?.recycle(); cache = null; super.onDetachedFromWindow() }
+    fun peek(key: FungusPlateKey): Bitmap? = cache.get(key)
+
+    suspend fun load(key: FungusPlateKey, text: (Int) -> String): Bitmap = withContext(dispatcher) {
+        currentCoroutineContext().ensureActive()
+        cache.get(key)?.let { return@withContext it }
+        val bitmap = Bitmap.createBitmap(key.width, key.height, Bitmap.Config.ARGB_8888)
+        FungusPlate.draw(Canvas(bitmap), text, key.look, key.mode, key.width.toFloat(), key.height.toFloat(),
+            key.density, key.showMarks, key.compact, key.scale)
+        currentCoroutineContext().ensureActive()
+        bitmap.prepareToDraw()
+        cache.put(key, bitmap)
+        bitmap
+    }
+}
+
+/**
+ * Une planche : un champignon, une vue. Elle n'est dessinée que lorsqu'elle est visible à l'écran, hors du fil
+ * de l'interface ; en attendant, la planche précédente reste affichée.
+ */
+class FungusPlateView(context: Context) : View(context) {
+    var look: FungusLook? = null
+        set(v) { field = v; changed() }
+    var mode: PlateMode = PlateMode.SIDE
+        set(v) { field = v; changed() }
+    var showMarks: Boolean = true
+        set(v) { field = v; changed() }
+    var compact: Boolean = false
+        set(v) { field = v; changed() }
+    /** Échelle commune (px par cm) pour comparer plusieurs champignons côte à côte. */
+    var fixedScale: Float? = null
+        set(v) { field = v; changed() }
+    /** Les autres champignons de la comparaison : l'échelle est celle qui les fait tous tenir. */
+    var sharedScaleWith: List<FungusLook>? = null
+        set(v) { field = v; changed() }
+
+    private var shown: Bitmap? = null
+    private var requested: FungusPlateKey? = null
+    private var job: Job? = null
+    private var scope: CoroutineScope? = null
+    private val visible = Rect()
+    private val density = resources.displayMetrics.density
+    private val scrollListener = ViewTreeObserver.OnScrollChangedListener { requestIfVisible() }
+
+    private fun changed() { job?.cancel(); job = null; requested = null; invalidate() }
+
+    /** Hors de l'écran, la planche ne garde rien (son dessin enregistré non plus) : seul le cache partagé conserve les images. */
+    private fun release() {
+        job?.cancel(); job = null; requested = null
+        if (shown != null) { shown = null; invalidate() }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) { release() }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+        viewTreeObserver.addOnScrollChangedListener(scrollListener)
+        post { requestIfVisible() }
+    }
+
+    override fun onDetachedFromWindow() {
+        if (viewTreeObserver.isAlive) viewTreeObserver.removeOnScrollChangedListener(scrollListener)
+        scope?.cancel(); scope = null; release()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) requestIfVisible()
+    }
+
+    private fun requestIfVisible() {
+        val l = look ?: return
+        if (!isAttachedToWindow || width <= 0 || height <= 0) return
+        if (!isShown || windowVisibility != VISIBLE || !getLocalVisibleRect(visible)) {
+            if (requested != null) release()
+            return
+        }
+        if (requested != null) return
+        val w = width.toFloat(); val h = height.toFloat()
+        val scale = fixedScale ?: sharedScaleWith?.minOfOrNull { FungusPlate.fitScale(it, w, h, density, compact, mode) }
+        val key = FungusPlateKey(l, mode, width, height, density, showMarks, compact, scale,
+            resources.configuration.locales[0].toLanguageTag())
+        requested = key
+        FungusPlateCache.peek(key)?.let { shown = it; invalidate(); return }
+        val res = resources
+        job = scope?.launch {
+            try {
+                val bitmap = FungusPlateCache.load(key) { res.getString(it) }
+                if (requested == key) { shown = bitmap; invalidate() }
+            } catch (cancelled: CancellationException) { throw cancelled
+            } catch (error: Exception) {
+                Log.w("MycologyPlate", "Cannot draw plate", error)
+            }
+        }
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        requestIfVisible()
+        shown?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+    }
 }

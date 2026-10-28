@@ -1,12 +1,10 @@
 package com.Atom2Universe.app.science.bestiary
 
-import com.Atom2Universe.app.R
 import com.Atom2Universe.app.science.parentes.LifeArchive
 import com.Atom2Universe.app.science.parentes.LifeTree
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
-import java.net.URI
 import javax.xml.parsers.DocumentBuilderFactory
 
 class BestiaryCatalogTest {
@@ -25,42 +23,19 @@ class BestiaryCatalogTest {
         assertTrue("At least 100 complete animal profiles", catalog.size >= 100)
         assertEquals(catalog.size, catalog.map { it.id }.distinct().size)
         assertEquals(catalog.size, catalog.map { it.scientific }.distinct().size)
-        val names = R.string::class.java.fields.associate { it.getInt(null) to it.name }
         val en = texts("values"); val fr = texts("values-fr")
         assertEquals(en.keys, fr.keys)
         val index = BestiaryLifeIndex(tree, catalog.associate { it.id to it.scientific })
+        // The localized profiles are optional assets kept outside Git.
+        val encyclopedia = File("src/main/assets/science/bestiary/encyclopedia")
         for (animal in catalog) {
             val node = requireNotNull(index.forSpecies(animal.id)) { "Missing tree link: ${animal.scientific}" }
             assertEquals(animal.scientific, tree.nodes.getValue(node).scientific)
             assertEquals(animal.id, index.forNode(node))
             assertTrue(animal.group in setOf("mammals", "birds", "reptiles", "amphibians", "fish", "invertebrates"))
-            for (resource in listOfNotNull(animal.name, animal.latin, animal.description, animal.identification, animal.habitat, animal.diet, animal.behavior,
-                animal.reproduction, animal.ecology, animal.conservation) + animal.references.map { it.title }) {
-                val key = names.getValue(resource)
-                assertFalse("EN/$key", en.getValue(key).isBlank())
-                assertFalse("FR/$key", fr.getValue(key).isBlank())
-            }
-            val latinKey = names.getValue(animal.latin)
-            assertEquals(animal.scientific, en.getValue(latinKey))
-            assertEquals(animal.scientific, fr.getValue(latinKey))
-            if (animal.sourceUrl != null) {
-                val source = URI(animal.sourceUrl)
-                assertEquals("https", source.scheme)
-                assertFalse(source.host.isNullOrBlank())
-                assertTrue("Species-specific source: ${animal.id}", source.path.length > 2 || !source.rawQuery.isNullOrBlank())
-            }
-            if (animal.description != null) assertTrue("Detailed profile has references: ${animal.id}", animal.references.isNotEmpty())
-            for (reference in animal.references) {
-                val uri = URI(reference.url)
-                assertEquals("https", uri.scheme)
-                assertFalse(uri.host.isNullOrBlank())
-                // University publication records may identify the document in the query.
-                assertTrue("Document source: ${reference.url}", uri.path.length > 2 || !uri.rawQuery.isNullOrBlank())
-            }
-            if (animal.reproduction != null) {
-                assertNotNull(animal.ecology)
-                assertNotNull(animal.conservation)
-                assertTrue("Complementary sources: ${animal.id}", animal.references.map { URI(it.url).host }.distinct().size >= 2)
+            for (language in listOf("en", "fr")) {
+                assertFalse("$language/${animal.id}", BestiaryEncyclopediaCatalog.name(animal.id, language).isNullOrBlank())
+                if (encyclopedia.isDirectory) assertTrue("$language/${animal.id}.json", File(encyclopedia, "$language/${animal.id}.json").isFile)
             }
         }
         val lion = catalog.single { it.scientific == "Panthera leo" }

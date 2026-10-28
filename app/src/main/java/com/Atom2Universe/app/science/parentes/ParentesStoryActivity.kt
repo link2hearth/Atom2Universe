@@ -33,6 +33,7 @@ class ParentesStoryActivity : ThemedActivity() {
     private var chapterIndex = 0
     private var autoPlay = false
     private var pendingAnimation = false
+    private var resumeArt = false
     private var advance: Job? = null
     private var illustration: ParentesIllustrationView? = null
     private var playButton: Button? = null
@@ -259,7 +260,13 @@ class ParentesStoryActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         if(pendingAnimation) { pendingAnimation=false; illustration?.play() }
+        else if(resumeArt) illustration?.resume()
+        resumeArt=false
     }
-    override fun onPause() { pause(); super.onPause() }
+    override fun onPause() {
+        // Only an animation interrupted by leaving the screen restarts on return, not one the reader paused.
+        resumeArt=illustration?.isPlaying == true
+        pause(); super.onPause()
+    }
     override fun onDestroy() { advance?.cancel(); illustration?.stop(); chapterDialog?.dismiss(); super.onDestroy() }
 }

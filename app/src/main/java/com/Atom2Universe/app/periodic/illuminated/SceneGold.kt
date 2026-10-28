@@ -373,7 +373,7 @@ internal class SceneGold : EngravedScene() {
             val cy = v * v * v * 214f + 3 * v * v * u * 250f + 3 * v * u * u * 296f + u * u * u * 346f
             val hw = 6f + 70f * u
             val x = cx + OFFSETS[i] * hw
-            if (ROCKS.any { (rx, ry) -> hypot(x - rx, (cy - ry) * 2f) < 22f }) continue
+            if (nearRock(x, cy)) continue
             val len = 2.5f + 9f * u
             flow.color = withAlpha(0xFFFFFFFF.toInt(), (160 * sin(u * PI.toFloat())).toInt()); flow.strokeWidth = .8f
             c.drawLine(x - len, cy, x + len * .6f, cy + len * .08f, flow)
@@ -383,6 +383,15 @@ internal class SceneGold : EngravedScene() {
             if (k < .6f) continue
             star(c, glints[i * 4], glints[i * 4 + 1], 1.5f + 3f * (k - .6f) / .4f, (255 * (k - .6f) / .4f).toInt())
         }
+    }
+
+    private fun nearRock(x: Float, y: Float): Boolean {
+        var k = 0
+        while (k < ROCKS.size) {
+            if (hypot(x - ROCKS[k], (y - ROCKS[k + 1]) * 2f) < 22f) return true
+            k += 2
+        }
+        return false
     }
 
     /** Les paillettes du lit de la rivière : x, y, phase, vitesse. Tirées une fois. */
@@ -460,6 +469,7 @@ internal class SceneGold : EngravedScene() {
         const val BOOT = 0xFF3A2A1E.toInt()
         const val BEARD = 0xFF6B5240.toInt()
         val OFFSETS = floatArrayOf(-.5f, .2f, .7f, -.2f, .45f, .9f, 0f, -.4f, .6f, .3f, -.1f, .8f, -.3f, .5f, .1f, .75f, -.45f, .35f)
-        val ROCKS = listOf(288f to 300f, 250f to 332f, 308f to 326f, 232f to 238f)
+        /** Les rochers de la rivière (x, y), que le courant contourne. */
+        val ROCKS = floatArrayOf(288f, 300f, 250f, 332f, 308f, 326f, 232f, 238f)
     }
 }

@@ -24,6 +24,8 @@ internal class SceneChromium : EngravedScene() {
     override val nameRes = R.string.card_scene_chrome_tap
     override val noteRes = R.string.card_note_chrome_tap
     override val explainRes = R.string.card_explain_chrome_tap
+    /** Les filets d'eau tombent très vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     private val spout = Path().apply {
         moveTo(COL_X, COL_TOP + 2f)

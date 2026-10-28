@@ -234,9 +234,12 @@ class AnatomyCatalog(
             return AnatomyCatalog(result, paths, modelBytes, atlas, defaults, hidden, external, variants, variantBounds)
         }
 
+        private val marks = Regex("\\p{M}+")
+        private val dashes = Regex("[\\p{Pd}−]")
+        val whitespace = Regex("\\s+")
+
         /** Recherche tolérante aux accents, dans les deux langues et par identifiant FMA. */
         fun normalize(text: String): String = Normalizer.normalize(text, Normalizer.Form.NFD)
-            .replace(Regex("\\p{M}+"), "")
-            .replace(Regex("[\\p{Pd}−]"), "-").lowercase(Locale.ROOT)
+            .replace(marks, "").replace(dashes, "-").lowercase(Locale.ROOT)
     }
 }

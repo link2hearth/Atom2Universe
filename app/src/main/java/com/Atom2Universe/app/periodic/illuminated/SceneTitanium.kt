@@ -3,7 +3,6 @@ package com.Atom2Universe.app.periodic.illuminated
 import com.Atom2Universe.app.R
 import android.graphics.Canvas
 import android.graphics.LinearGradient
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
@@ -145,7 +144,6 @@ internal class SceneTitanium : EngravedScene() {
     private val trailShader = LinearGradient(0f, 0f, -TRAIL_LEN, 0f,
         intArrayOf(0xE6FFFFFF.toInt(), 0x8CFFFFFF.toInt(), 0x00FFFFFF), floatArrayOf(0f, .45f, 1f), Shader.TileMode.CLAMP)
     private val trail = Paint(Paint.ANTI_ALIAS_FLAG).apply { shader = trailShader }
-    private val trailMatrix = Matrix()
     private val trailPath = Path()
     private val trailBottom = FloatArray(TRAIL_N * 2)
 
@@ -172,10 +170,14 @@ internal class SceneTitanium : EngravedScene() {
         val rad = Math.toRadians(deg.toDouble()).toFloat()
         val ca = cos(rad); val sa = sin(rad)
         // Les traînées : elles partent un peu derrière les réacteurs et s'élargissent en pâlissant.
-        for ((lx, ly) in TRAILS) {
+        var j = 0
+        while (j < TRAILS.size) {
+            val lx = TRAILS[j]; val ly = TRAILS[j + 1]
+            j += 2
             val ex = PX + lx * ca - ly * sa; val ey = py + lx * sa + ly * ca
             // Une seule forme pleine, bord haut puis bord bas : aucun raccord ne se voit. Elle
-            // s'élargit en s'éloignant, et le dégradé la fait pâlir jusqu'à disparaître.
+            // s'élargit en s'éloignant, et le dégradé la fait pâlir jusqu'à disparaître. Elle est
+            // tracée depuis là où le dégradé commence (ex − 12) : le canevas s'y déplace, pas le dégradé.
             trailPath.reset()
             var n = 0
             for (k in 0 until TRAIL_N) {
@@ -183,15 +185,15 @@ internal class SceneTitanium : EngravedScene() {
                 val x = ex - d
                 val y = ey + d * .03f + .6f * sin(d * .2f - t * 2f)
                 val w = 2.6f + d * .07f + .6f * sin(d * .33f - t * 2f)
-                if (k == 0) trailPath.moveTo(x, y - w / 2f) else trailPath.lineTo(x, y - w / 2f)
-                trailBottom[n * 2] = x; trailBottom[n * 2 + 1] = y + w / 2f; n++
+                if (k == 0) trailPath.moveTo(12f - d, y - w / 2f) else trailPath.lineTo(12f - d, y - w / 2f)
+                trailBottom[n * 2] = 12f - d; trailBottom[n * 2 + 1] = y + w / 2f; n++
                 if (x < 30f) break
             }
             for (i in n - 1 downTo 0) trailPath.lineTo(trailBottom[i * 2], trailBottom[i * 2 + 1])
             trailPath.close()
-            trailMatrix.setTranslate(ex - 12f, 0f)
-            trailShader.setLocalMatrix(trailMatrix)
+            c.save(); c.translate(ex - 12f, 0f)
             c.drawPath(trailPath, trail)
+            c.restore()
         }
         c.save(); c.translate(PX, py); c.rotate(deg)
         s.draw(c, PLANE)
@@ -237,6 +239,6 @@ internal class SceneTitanium : EngravedScene() {
         const val CUMULUS = 2
         const val CIRRUS = 3
         /** Les sorties des deux réacteurs, dans le repère de l'avion : celui d'en face, celui de ce côté. */
-        val TRAILS = listOf(4f to 14f, 9f to 22f)
+        val TRAILS = floatArrayOf(4f, 14f, 9f, 22f)
     }
 }

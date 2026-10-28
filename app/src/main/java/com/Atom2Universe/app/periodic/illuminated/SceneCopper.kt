@@ -29,6 +29,8 @@ internal class SceneCopper : EngravedScene() {
     override val nameRes = R.string.card_scene_electric_motor
     override val noteRes = R.string.card_note_electric_motor
     override val explainRes = R.string.card_explain_electric_motor
+    /** Le rotor tourne à 420°/s : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         wall(b)
@@ -301,11 +303,6 @@ internal class SceneCopper : EngravedScene() {
             plate(b, HINGE_X)
             b.c.drawCircle(HINGE_X, PIVOT_Y, 2f, b.pen(0xFFD8DCDE.toInt())); b.c.drawCircle(HINGE_X, PIVOT_Y, 2f, b.pen(Ink.SEPIA, .6f))
             plate(b, JAW_X)
-        },
-        Sprite(GLOW, RectF(-24f, -24f, 24f, 24f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 24f,
-                intArrayOf(0xEEFFFFFF.toInt(), 0x88A8D8FF.toInt(), 0x00A8D8FF), floatArrayOf(0f, .3f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 24f, b.p)
         }
     )
 
@@ -380,6 +377,10 @@ internal class SceneCopper : EngravedScene() {
         shader = RadialGradient(-8f, -8f, 36f, intArrayOf(0x00000000, 0x00000000, 0x77000000), floatArrayOf(0f, .45f, 1f), Shader.TileMode.CLAMP)
     }
     private val arc = FloatArray(28)
+    /** La lueur électrique : un dégradé de rayon 1, net à toutes les tailles. */
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0xEEFFFFFF.toInt(), 0x88A8D8FF.toInt(), 0x00A8D8FF), floatArrayOf(0f, .3f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val n = floor(t / CYCLE)
@@ -434,9 +435,7 @@ internal class SceneCopper : EngravedScene() {
                 val g = p - j
                 val x = wireX[j] + (wireX[j + 1] - wireX[j]) * g
                 val y = wireY[j] + (wireY[j + 1] - wireY[j]) * g
-                c.save(); c.translate(x, y); c.scale(.3f, .3f)
-                s.draw(c, GLOW, alpha = 200)
-                c.restore()
+                halo(c, x, y, 7.2f, 200)
                 fill.color = 0xFFFFF6D8.toInt()
                 c.drawCircle(x, y, 1.3f, fill)
             }
@@ -449,9 +448,7 @@ internal class SceneCopper : EngravedScene() {
             val a = Math.toRadians(deg.toDouble()).toFloat()
             val tipX = HINGE_X + 42f * cos(a); val tipY = PIVOT_Y - 42f * sin(a)
             val life = 1f - opening / ARC_TIME
-            c.save(); c.translate((tipX + JAW_X) / 2f, (tipY + 212f) / 2f); c.scale(.9f, .9f)
-            s.draw(c, GLOW, alpha = (255 * life).toInt())
-            c.restore()
+            halo(c, (tipX + JAW_X) / 2f, (tipY + 212f) / 2f, 21.6f, (255 * life).toInt())
             var px = JAW_X; var py = 212f
             for (k in 0 until 7) {
                 val q = (k + 1) / 7f
@@ -466,9 +463,7 @@ internal class SceneCopper : EngravedScene() {
             c.drawLines(arc, 0, 28, ink)
         } else if (closing in -.04f..SPARK_TIME) {
             val life = 1f - (closing + .04f) / (SPARK_TIME + .04f)
-            c.save(); c.translate(JAW_X, 213f); c.scale(.5f, .5f)
-            s.draw(c, GLOW, alpha = (255 * life).toInt())
-            c.restore()
+            halo(c, JAW_X, 213f, 12f, (255 * life).toInt())
         }
 
         // Des éclats qui scintillent sur les spires de la bobine.
@@ -481,6 +476,13 @@ internal class SceneCopper : EngravedScene() {
             ink.color = withAlpha(0xFFFFF6E0.toInt(), (240 * tw).toInt()); ink.strokeWidth = .8f
             c.drawLine(x - r, y, x + r, y, ink); c.drawLine(x, y - r, x, y + r, ink)
         }
+        c.restore()
+    }
+
+    private fun halo(c: Canvas, x: Float, y: Float, r: Float, alpha: Int) {
+        glow.alpha = alpha.coerceIn(0, 255)
+        c.save(); c.translate(x, y); c.scale(r, r)
+        c.drawCircle(0f, 0f, 1f, glow)
         c.restore()
     }
 
@@ -529,7 +531,6 @@ internal class SceneCopper : EngravedScene() {
         const val BRUSHES = 2
         const val BLADE = 3
         const val FRONT = 4
-        const val GLOW = 5
 
         /** Le cycle : fermé, on ouvre, ouvert, on referme (secondes). */
         const val CYCLE = 8f

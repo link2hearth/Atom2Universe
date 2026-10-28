@@ -25,6 +25,8 @@ internal class SceneCesium : EngravedScene() {
     override val nameRes = R.string.card_scene_cesium_fountain
     override val noteRes = R.string.card_note_cesium_fountain
     override val explainRes = R.string.card_explain_cesium_fountain
+    /** Le nuage d'atomes est lancé très vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le mur du laboratoire, le sol.

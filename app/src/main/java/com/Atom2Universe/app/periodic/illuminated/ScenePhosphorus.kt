@@ -21,6 +21,8 @@ internal class ScenePhosphorus : EngravedScene() {
     override val nameRes = R.string.card_scene_match
     override val noteRes = R.string.card_note_match
     override val explainRes = R.string.card_explain_match
+    /** La main frotte, s'en va et revient vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         room(b)
@@ -84,12 +86,7 @@ internal class ScenePhosphorus : EngravedScene() {
             b.body(head, 0xFFA8301E.toInt(), .35f, 30f, Fade(4f, 4f, -2f, -2f, 230, 0), outline = .7f, washAlpha = 255)
             b.c.drawCircle(-2f, -1.6f, 1.2f, b.pen(withAlpha(0xFFFFFFFF.toInt(), 160)))
         },
-        Sprite(HAND, RectF(50f, -34f, 150f, 44f)) { b -> hand(b) },
-        Sprite(GLOW, RectF(-80f, -80f, 80f, 80f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 80f,
-                intArrayOf(0xCCFFE6A0.toInt(), 0x66FFB050, 0x22FF8A30, 0x00FF8A30), floatArrayOf(0f, .2f, .55f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 80f, b.p)
-        }
+        Sprite(HAND, RectF(50f, -34f, 150f, 44f)) { b -> hand(b) }
     )
 
     /**
@@ -132,6 +129,11 @@ internal class ScenePhosphorus : EngravedScene() {
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val flame = Path()
     private val pts = FloatArray(128)
+    /** La lumière de la flamme : un dégradé de rayon 1, mis à l'échelle au dessin. */
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f,
+            intArrayOf(0xCCFFE6A0.toInt(), 0x66FFB050, 0x22FF8A30, 0x00FF8A30), floatArrayOf(0f, .2f, .55f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val u = t % CYCLE
@@ -187,9 +189,9 @@ internal class ScenePhosphorus : EngravedScene() {
         // La lumière de la flamme éclaire la pièce.
         val light = (size * (.92f + .08f * sin(t * 23f) * sin(t * 7f)) + flare * .8f).coerceAtMost(1.6f)
         if (light > .02f) {
-            c.save(); c.translate(hx, hy - 10f); val g = 1.3f + .5f * flare; c.scale(g, g)
-            s.draw(c, GLOW, alpha = (230 * light.coerceAtMost(1f)).toInt())
-            c.restore()
+            val g = 80f * (1.3f + .5f * flare)
+            glow.alpha = (230 * light.coerceAtMost(1f)).toInt()
+            c.save(); c.translate(hx, hy - 10f); c.scale(g, g); c.drawCircle(0f, 0f, 1f, glow); c.restore()
         }
         // La fumée qui monte après l'extinction.
         if (smoke >= 0f) smokeRibbon(c, LX - 2f, LY - 4f, smoke, t)
@@ -285,6 +287,5 @@ internal class ScenePhosphorus : EngravedScene() {
         const val LY = 196f
         const val MATCH = 1
         const val HAND = 2
-        const val GLOW = 3
     }
 }

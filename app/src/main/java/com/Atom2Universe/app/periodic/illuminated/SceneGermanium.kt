@@ -3,7 +3,6 @@ package com.Atom2Universe.app.periodic.illuminated
 import com.Atom2Universe.app.R
 import android.graphics.Canvas
 import android.graphics.LinearGradient
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RadialGradient
@@ -61,7 +60,8 @@ internal class SceneGermanium : EngravedScene() {
 
     override fun sprites(): List<Sprite> = listOf(
         // Le même jardin en fausses couleurs : froid en violet sombre, tiède en rouge, chaud en jaune.
-        Sprite(THERMAL, RectF(40f, 50f, 320f, 340f)) { b ->
+        // Cuit seulement là où l'écran peut le montrer (l'écran, plus le balancement de la caméra).
+        Sprite(THERMAL, RectF(86f, 154f, 274f, 272f)) { b ->
             b.pen(0xFF000000.toInt()).shader = LinearGradient(0f, 50f, 0f, GROUND,
                 intArrayOf(0xFF06021A.toInt(), 0xFF140840.toInt()), null, Shader.TileMode.CLAMP)
             b.c.drawRect(40f, 50f, 320f, GROUND, b.p)
@@ -105,12 +105,12 @@ internal class SceneGermanium : EngravedScene() {
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val fox = Path()
     private val legs = FloatArray(16)
-    private val heat = RadialGradient(0f, 0f, 30f,
-        intArrayOf(0xFFFFFCE8.toInt(), 0xFFFFD040.toInt(), 0xFFF07020.toInt(), 0xFFB0204A.toInt()),
-        floatArrayOf(0f, .3f, .65f, 1f), Shader.TileMode.CLAMP)
-    private val heatPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { shader = heat }
+    private val heatPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 30f,
+            intArrayOf(0xFFFFFCE8.toInt(), 0xFFFFD040.toInt(), 0xFFF07020.toInt(), 0xFFB0204A.toInt()),
+            floatArrayOf(0f, .3f, .65f, 1f), Shader.TileMode.CLAMP)
+    }
     private val heatLegs = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeWidth = 3f; color = 0xFFF07828.toInt() }
-    private val heatMatrix = Matrix()
     private val scale = LinearGradient(0f, SCR_T + 8f, 0f, SCR_B - 8f,
         intArrayOf(0xFFFFFCE8.toInt(), 0xFFFFD040.toInt(), 0xFFF07020.toInt(), 0xFFB0204A.toInt(), 0xFF2A0C5A.toInt(), 0xFF06021A.toInt()),
         null, Shader.TileMode.CLAMP)
@@ -122,11 +122,15 @@ internal class SceneGermanium : EngravedScene() {
         val fx = 362f - walk * 364f
         val fy = GROUND + 18f
         val stride = t * 9f
-        buildFox(fx, fy, stride)
+        // Le renard est tracé dans son propre repère, centré sur sa tache de chaleur : on y place le canevas.
+        val ox = fx - FOX_X; val oy = fy - FOX_Y
+        buildFox(FOX_X, FOX_Y, stride)
+        c.save(); c.translate(ox, oy)
         fill.color = 0xFF2E241C.toInt(); c.drawPath(fox, fill)
         ink.color = 0xFF2E241C.toInt(); ink.strokeWidth = 2.6f; c.drawLines(legs, ink)
         fill.color = withAlpha(0xFFE8F0A0.toInt(), 220)
-        c.drawCircle(fx - 21f, fy - 17f, 1.1f, fill)
+        c.drawCircle(FOX_X - 21f, FOX_Y - 17f, 1.1f, fill)
+        c.restore()
         // La caméra se balance un peu dans la main.
         val dx = 24f * sin(t * .33f)
         val dy = 3f * sin(t * .61f)
@@ -138,9 +142,8 @@ internal class SceneGermanium : EngravedScene() {
         c.clipRect(SCR_L, SCR_T, SCR_R, SCR_B)
         c.rotate(-tilt, 180f, 300f); c.translate(-dx, -dy)
         s.draw(c, THERMAL)
+        c.translate(ox, oy)
         c.drawLines(legs, heatLegs)
-        heatMatrix.setTranslate(fx - 4f, fy - 10f)
-        heat.setLocalMatrix(heatMatrix)
         c.drawPath(fox, heatPaint)
         c.restore()
         // Le réticule, l'échelle des couleurs, la pile.
@@ -184,6 +187,9 @@ internal class SceneGermanium : EngravedScene() {
     private companion object {
         const val GROUND = 236f
         const val FOX_LOOP = 14f
+        /** Le milieu du ventre du renard dans son repère, dont l'origine est le cœur de sa tache de chaleur. */
+        const val FOX_X = 4f
+        const val FOX_Y = 10f
         const val CAM_L = 104f
         const val CAM_R = 256f
         const val CAM_T = 150f

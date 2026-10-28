@@ -53,6 +53,7 @@ class HumanBiologyActivity : ThemedActivity() {
     private var showExternalGenitals = false
     private var loading: Job? = null
     private var openPanel: Dialog? = null
+    private var reopenPanel: (() -> Unit)? = null
     private var journey: AnatomyJourney? = null
     private var journeyStep = 0
     private var beforeJourney: Bundle? = null
@@ -132,7 +133,7 @@ class HumanBiologyActivity : ThemedActivity() {
             })
             addView(button(R.string.bio_ui_visibility) { showVisibility() }, LinearLayout.LayoutParams(-1, -2))
         }
-        root.addView(emptyView, FrameLayout.LayoutParams(cardWidth(340), -2, Gravity.CENTER))
+        root.addView(emptyView, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER))
 
         val toolbar = row().apply {
             setPadding(dp(2), dp(2), dp(2), dp(2))
@@ -200,13 +201,32 @@ class HumanBiologyActivity : ThemedActivity() {
         actions.addView(hideButton, square())
         actions.addView(icon(R.drawable.ic_more_vert_24, R.string.bio_ui_structure_actions) { showSelectionActions() }, square())
         selectionCard.addView(actions)
-        val landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        root.addView(selectionCard, FrameLayout.LayoutParams(cardWidth(if (landscape) 330 else 440), -2,
-            Gravity.BOTTOM or (if (landscape) Gravity.START else Gravity.CENTER_HORIZONTAL)).apply {
+        root.addView(selectionCard, FrameLayout.LayoutParams(-2, -2).apply {
             setMargins(dp(12), 0, dp(12), dp(12))
         })
+        layoutCards()
         setContentView(root)
         setRenderingEnabled(false)
+    }
+
+    /** Largeur et place des fiches selon l'orientation ; rappelé à la rotation, qui ne recrée plus l'écran. */
+    private fun layoutCards() {
+        val landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        (emptyView.layoutParams as FrameLayout.LayoutParams).width = cardWidth(340)
+        (selectionCard.layoutParams as FrameLayout.LayoutParams).apply {
+            width = cardWidth(if (landscape) 330 else 440)
+            gravity = Gravity.BOTTOM or (if (landscape) Gravity.START else Gravity.CENTER_HORIZONTAL)
+        }
+        emptyView.requestLayout()
+        selectionCard.requestLayout()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // L'atlas 3D reste chargé ; la surface suit seule sa nouvelle taille.
+        layoutCards()
+        // Un panneau ouvert est reconstruit à la largeur et à la hauteur du nouvel écran.
+        if (openPanel != null) reopenPanel?.invoke()
     }
 
     private fun loadAtlas() = lifecycleScope.launch {
@@ -314,6 +334,7 @@ class HumanBiologyActivity : ThemedActivity() {
     private fun showVisibility(layer: AnatomyLayer? = null) {
         val renderer = scene ?: return
         val data = catalog ?: return
+        val reopen = { showVisibility(layer) }
         val content = column()
         if (layer == null) {
             val checks = mutableMapOf<AnatomyLayer, CheckBox>()
@@ -342,16 +363,16 @@ class HumanBiologyActivity : ThemedActivity() {
             content.addView(button(R.string.bio_show_all) {
                 renderer.showAll(); refresh()
             }, LinearLayout.LayoutParams(-1, -2))
-            showPanel(getString(R.string.bio_ui_layers), content)
+            showPanel(getString(R.string.bio_ui_layers), content, reopen)
             return
         }
         val collator = Collator.getInstance(resources.configuration.locales[0])
-        val groups = data.groups.filter { it.layer == layer }.sortedWith { a, b ->
-            collator.compare(getString(a.label), getString(b.label))
-        }
+        val labels = data.groups.filter { it.layer == layer }.associateWith { getString(it.label) }
+        val groups = labels.keys.sortedWith(compareBy(collator) { labels.getValue(it) })
         val ids = groups.map { it.id }.toSet()
         var refreshing = false
         val checks = mutableMapOf<String, CheckBox>()
+        val searchNames = mutableMapOf<CheckBox, String>()
         val layerCheck = checkBox(getString(layer.label), layer in renderer.visibleLayers) { enabled ->
             if (!refreshing) renderer.setLayerVisible(layer, enabled)
         }
@@ -392,8 +413,7 @@ class HumanBiologyActivity : ThemedActivity() {
                 override fun afterTextChanged(s: Editable?) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val tokens = AnatomyCatalog.normalize(s?.toString().orEmpty()).split(" ").filter { it.isNotBlank() }
-                    checks.forEach { (_, check) ->
-                        val name = AnatomyCatalog.normalize(check.text.toString())
+                    searchNames.forEach { (check, name) ->
                         check.visibility = if (tokens.all { it in name }) View.VISIBLE else View.GONE
                     }
                 }
@@ -401,7 +421,7 @@ class HumanBiologyActivity : ThemedActivity() {
         }
         content.addView(list)
         groups.forEach { group ->
-            val checkbox = checkBox(getString(R.string.bio_ui_group_count, getString(group.label), group.count),
+            val checkbox = checkBox(getString(R.string.bio_ui_group_count, labels.getValue(group), group.count),
                 group.id in renderer.visibleGroups) { enabled ->
                 if (!refreshing) {
                     val selected = renderer.visibleGroups intersect ids
@@ -410,9 +430,10 @@ class HumanBiologyActivity : ThemedActivity() {
                 }
             }
             checks[group.id] = checkbox
+            searchNames[checkbox] = AnatomyCatalog.normalize(checkbox.text.toString())
             list.addView(checkbox)
         }
-        showPanel(getString(layer.label), content, onBack = { showVisibility() })
+        showPanel(getString(layer.label), content, reopen, onBack = { showVisibility() })
     }
 
     private fun showTools() {
@@ -478,7 +499,7 @@ class HumanBiologyActivity : ThemedActivity() {
         }
         content.addView(button(R.string.bio_ui_gestures) { openPanel?.dismiss(); showGestures() }, LinearLayout.LayoutParams(-1, -2))
         content.addView(button(R.string.bio_about) { openPanel?.dismiss(); showCoverage() }, LinearLayout.LayoutParams(-1, -2))
-        showPanel(getString(R.string.bio_ui_tools), content)
+        showPanel(getString(R.string.bio_ui_tools), content, ::showTools)
     }
 
     private fun saveAtlasState() {
@@ -522,7 +543,7 @@ class HumanBiologyActivity : ThemedActivity() {
                 alpha = if (isEnabled) 1f else .4f
             }, LinearLayout.LayoutParams(-1, -2))
         }
-        showPanel(getString(item.name), content)
+        showPanel(getString(item.name), content, ::showSelectionActions)
     }
 
     private fun showGestures() {
@@ -533,14 +554,15 @@ class HumanBiologyActivity : ThemedActivity() {
         showDocument(getString(R.string.bio_ui_gestures), content)
     }
 
-    private fun showPanel(title: String, content: LinearLayout, pinnedControls: View? = null,
+    /** [reopen] reconstruit ce panneau quand l'écran tourne. */
+    private fun showPanel(title: String, content: LinearLayout, reopen: () -> Unit, pinnedControls: View? = null,
         onBack: (() -> Unit)? = null, heightFraction: Float = .72f, onDismiss: (() -> Unit)? = null) {
         openPanel?.dismiss()
         journeyPanelVisible = false
         lateinit var dialog: Dialog
         val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)) }
         val header = row()
-        if (onBack != null) header.addView(icon(R.drawable.ic_arrow_back_24, R.string.bio_ui_layers, onBack), square())
+        if (onBack != null) header.addView(icon(R.drawable.ic_arrow_back_24, R.string.bio_ui_panel_back, onBack), square())
         header.addView(TextView(this).apply {
             text = title
             textSize = 19f
@@ -554,9 +576,9 @@ class HumanBiologyActivity : ThemedActivity() {
         pinnedControls?.let { body.addView(it) }
         // Un panneau court laisse le modèle visible ; un long reste défilable en paysage.
         // Le plafond est réévalué quand on passe des couches à la liste des régions.
-        val maximumHeight = (resources.displayMetrics.heightPixels * heightFraction).toInt()
         val scroll = object : NestedScrollView(this) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                val maximumHeight = (resources.displayMetrics.heightPixels * heightFraction).toInt()
                 val available = (maximumHeight - header.measuredHeight - (pinnedControls?.measuredHeight ?: 0) -
                     body.paddingTop - body.paddingBottom).coerceAtLeast(dp(80))
                 val limit = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED) available
@@ -571,10 +593,12 @@ class HumanBiologyActivity : ThemedActivity() {
             // Dismiss callbacks are posted: an old panel must not close the state of its replacement.
             if (openPanel === dialog) {
                 openPanel = null
+                reopenPanel = null
                 onDismiss?.invoke()
             }
         }
         openPanel = dialog
+        reopenPanel = reopen
         dialog.show()
     }
 
@@ -594,7 +618,7 @@ class HumanBiologyActivity : ThemedActivity() {
                 content.addView(paragraph(getString(current.intro), muted))
             }
         }
-        showPanel(getString(R.string.bio_j_title), content)
+        showPanel(getString(R.string.bio_j_title), content, ::showJourneys)
     }
 
     private fun showJourney(current: AnatomyJourney, index: Int, applyView: Boolean = true) {
@@ -631,7 +655,7 @@ class HumanBiologyActivity : ThemedActivity() {
             else showJourney(current, journeyStep + 1)
         }, LinearLayout.LayoutParams(0, -2, 1f))
         showPanel(getString(R.string.bio_j_progress, getString(current.title), journeyStep + 1, current.steps.size),
-            content, pinnedControls = navigation, onBack = { showJourneys() }, heightFraction = .52f,
+            content, { showJourney(current, journeyStep, applyView = false) }, pinnedControls = navigation, onBack = { showJourneys() }, heightFraction = .52f,
             onDismiss = { journeyPanelVisible = false })
         journeyPanelVisible = true
     }
@@ -660,12 +684,19 @@ class HumanBiologyActivity : ThemedActivity() {
         val englishContext = createConfigurationContext(Configuration(resources.configuration).apply { setLocale(java.util.Locale.ENGLISH) })
         val frenchContext = createConfigurationContext(Configuration(resources.configuration).apply { setLocale(java.util.Locale.FRENCH) })
         val collator = Collator.getInstance(locale)
-        val all = data.structures.sortedWith { a, b -> collator.compare(getString(a.name), getString(b.name)) }
+        val names = data.structures.associate { it.id to getString(it.name) }
+        val all = data.structures.sortedWith(compareBy(collator) { names.getValue(it.id) })
         val searchKeys = all.associate { item -> item.id to AnatomyCatalog.normalize(
-            getString(item.name) + " " + englishContext.getString(item.name) + " " + frenchContext.getString(item.name) + " " +
+            names.getValue(item.id) + " " + englishContext.getString(item.name) + " " + frenchContext.getString(item.name) + " " +
                 getString(item.layer.label) + " " + getString(item.groupLabel) + " " + getString(item.region.label) + " " + item.sourceName + " " + item.id) }
         var filtered = all
-        val list = ListView(this).apply { dividerHeight = dp(1) }
+        val list = object : ListView(this) {
+            // Hauteur relue à chaque mesure : la liste suit la rotation.
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                val limit = minOf(dp(380), (resources.displayMetrics.heightPixels * .46f).toInt())
+                super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(limit, MeasureSpec.EXACTLY))
+            }
+        }.apply { dividerHeight = dp(1) }
         val empty = label(R.string.bio_no_results, 15f, muted).apply { gravity = Gravity.CENTER; setPadding(0, dp(24), 0, dp(24)) }
         content.addView(empty)
         list.emptyView = empty
@@ -675,20 +706,22 @@ class HumanBiologyActivity : ThemedActivity() {
             override fun getItemId(position: Int) = position.toLong()
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val item = filtered[position]
-                return column().apply {
+                val row = convertView as? LinearLayout ?: column().apply {
                     setPadding(dp(6), dp(10), dp(6), dp(10))
                     addView(label(item.name, 16f))
-                    addView(TextView(this@HumanBiologyActivity).apply {
-                        text = if (item.hasMesh) getString(R.string.bio_classification,
-                            getString(item.layer.label), getString(item.groupLabel)) else getString(R.string.bio_sheet_only)
-                        textSize = 12f
-                        setTextColor(if (item.hasMesh) muted else accent)
-                    })
+                    addView(TextView(this@HumanBiologyActivity).apply { textSize = 12f })
                 }
+                (row.getChildAt(0) as TextView).text = names.getValue(item.id)
+                (row.getChildAt(1) as TextView).apply {
+                    text = if (item.hasMesh) getString(R.string.bio_classification,
+                        getString(item.layer.label), getString(item.groupLabel)) else getString(R.string.bio_sheet_only)
+                    setTextColor(if (item.hasMesh) muted else accent)
+                }
+                return row
             }
         }
         list.adapter = adapter
-        content.addView(list, LinearLayout.LayoutParams(-1, minOf(dp(380), (resources.displayMetrics.heightPixels * .46f).toInt())))
+        content.addView(list, LinearLayout.LayoutParams(-1, -2))
         val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.bio_catalog).setView(content)
             .setNegativeButton(R.string.bio_close, null).create()
         list.setOnItemClickListener { _, _, position, _ ->
@@ -705,7 +738,7 @@ class HumanBiologyActivity : ThemedActivity() {
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val tokens = AnatomyCatalog.normalize(s?.toString().orEmpty()).split(Regex("\\s+")).filter { it.isNotEmpty() }
+                val tokens = AnatomyCatalog.normalize(s?.toString().orEmpty()).split(AnatomyCatalog.whitespace).filter { it.isNotEmpty() }
                 filtered = all.filter { item -> tokens.all { searchKeys.getValue(item.id).contains(it) } }
                 adapter.notifyDataSetChanged()
             }

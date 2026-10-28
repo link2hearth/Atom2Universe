@@ -25,6 +25,8 @@ internal class SceneVanadium : EngravedScene() {
     override val nameRes = R.string.card_scene_car_spring
     override val noteRes = R.string.card_note_car_spring
     override val explainRes = R.string.card_explain_car_spring
+    /** La route et les bosses défilent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     private val shell = Path().apply {
         moveTo(38f, 136f)
@@ -172,7 +174,12 @@ internal class SceneVanadium : EngravedScene() {
         style = Paint.Style.STROKE; strokeWidth = 1.1f; color = Ink.SEPIA
         pathEffect = DashPathEffect(floatArrayOf(4f, 3f), 0f)
     }
-    private val hump = Path()
+    /** Un dos-d'âne, centré sur l'abscisse 0 : il défile d'un simple déplacement du canevas. */
+    private val hump = Path().apply {
+        moveTo(-HUMP_W / 2f, ROAD)
+        cubicTo(-HUMP_W * .2f, ROAD - HUMP_H * 1.3f, HUMP_W * .2f, ROAD - HUMP_H * 1.3f, HUMP_W / 2f, ROAD)
+        close()
+    }
     private val back = FloatArray(SEGMENTS * 4)
     private val front = FloatArray(SEGMENTS * 4)
     private var nBack = 0
@@ -191,14 +198,12 @@ internal class SceneVanadium : EngravedScene() {
         for (k in -1..1) {
             val x = HUB_X + k * GAP - (road % GAP) + GAP * .5f
             if (x < 20f || x > 340f) continue
-            hump.reset()
-            hump.moveTo(x - HUMP_W / 2f, ROAD)
-            hump.cubicTo(x - HUMP_W * .2f, ROAD - HUMP_H * 1.3f, x + HUMP_W * .2f, ROAD - HUMP_H * 1.3f, x + HUMP_W / 2f, ROAD)
-            hump.close()
+            c.save(); c.translate(x, 0f)
             fill.color = 0xFF7A7A7C.toInt(); c.drawPath(hump, fill)
             ink.color = 0xFFE0B030.toInt(); ink.strokeWidth = 1.6f
-            c.drawLine(x - 6f, ROAD - HUMP_H * .9f, x + 6f, ROAD - HUMP_H * .9f, ink)
+            c.drawLine(-6f, ROAD - HUMP_H * .9f, 6f, ROAD - HUMP_H * .9f, ink)
             ink.color = Ink.SEPIA; ink.strokeWidth = 1f; c.drawPath(hump, ink)
+            c.restore()
         }
         val hubY = HUB_Y - lift
         val seat = hubY - TIRE_R - 6f

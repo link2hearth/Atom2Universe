@@ -22,6 +22,7 @@ class ElementCardCaption(context: Context) : LinearLayout(context) {
     val text = TextView(context)
     private val button = ImageView(context)
     private var open = false
+    val isOpen: Boolean get() = open
 
     init {
         orientation = VERTICAL

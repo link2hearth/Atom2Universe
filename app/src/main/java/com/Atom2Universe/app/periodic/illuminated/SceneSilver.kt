@@ -6,7 +6,6 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RadialGradient
-import android.graphics.RectF
 import android.graphics.Shader
 import kotlin.math.sin
 
@@ -125,25 +124,21 @@ internal class SceneSilver : EngravedScene() {
         b.c.restore()
     }
 
-    override fun sprites(): List<Sprite> = listOf(
-        Sprite(GLOW, RectF(-90f, -90f, 90f, 90f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 90f,
-                intArrayOf(0x99FFE2A0.toInt(), 0x44FFB860, 0x18FF9A40, 0x00FF9A40), floatArrayOf(0f, .2f, .55f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 90f, b.p)
-        }
-    )
-
     // ───────────── animation ─────────────
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val flame = Path()
+    /** La lueur des bougies : un dégradé de rayon 1, mis à l'échelle au dessin. */
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f,
+            intArrayOf(0x99FFE2A0.toInt(), 0x44FFB860, 0x18FF9A40, 0x00FF9A40), floatArrayOf(0f, .2f, .55f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val flicker = .85f + .1f * sin(t * 9f) * sin(t * 3.7f) + .05f * sin(t * 23f)
-        c.save(); c.translate(CX, 150f); c.scale(1.6f, 1.4f)
-        s.draw(c, GLOW, alpha = (255 * flicker).toInt().coerceAtMost(255))
-        c.restore()
+        glow.alpha = (255 * flicker).toInt().coerceAtMost(255)
+        c.save(); c.translate(CX, 150f); c.scale(144f, 126f); c.drawCircle(0f, 0f, 1f, glow); c.restore()
         for (k in CANDLES.indices step 3) {
             val i = k / 3
             drawFlame(c, CANDLES[k], CANDLES[k + 1] - 4f, t + i * 1.3f)
@@ -186,7 +181,6 @@ internal class SceneSilver : EngravedScene() {
 
     private companion object {
         const val CX = 150f
-        const val GLOW = 1
         /** Les bougies : x, haut, bas. */
         val CANDLES = floatArrayOf(110f, 146f, 181f, 150f, 124f, 161f, 190f, 146f, 181f)
         /** Les éclats sur le métal. */

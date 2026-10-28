@@ -24,6 +24,8 @@ internal class SceneSamarium : EngravedScene() {
     override val nameRes = R.string.card_scene_guitar_pickup
     override val noteRes = R.string.card_note_guitar_pickup
     override val explainRes = R.string.card_explain_guitar_pickup
+    /** Le médiator gratte vite et les cordes vibrent : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // L'ampli derrière : simili-cuir noir, toile tissée, le haut-parleur deviné.

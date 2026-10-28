@@ -21,13 +21,12 @@ def main():
     destination.mkdir(parents=True, exist_ok=True)
     published_source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryEncyclopediaCatalog.kt").read_text(encoding="utf-8")
     published_ids = set(re.findall(r'id = "([a-z_]+)"', published_source))
-    illustrated_source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryIllustratedCatalog.kt").read_text(encoding="utf-8")
-    illustrated_ids = set(re.findall(r'id = "([a-z_]+)"', illustrated_source))
+    # The app lists encyclopedic profiles only: no initial notice nor illustration-only entry remains.
+    illustrated_ids = set()
     reviewed = [record for p in (ROOT / "tools/bestiary/data/profiles").glob("*.json")
                 for record in [json.loads(p.read_text(encoding="utf-8"))] if record["id"] in published_ids]
     extended = {r["scientific"]: r for r in reviewed}
-    original = dict(re.findall(r'AnimalSpecies\("([a-z_]+)", "([^"]+)"',
-                              (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/AnimalCatalog.kt").read_text(encoding="utf-8")))
+    original = {}
     original_scientific = {scientific: animal_id for animal_id, scientific in original.items()}
     inventory_path = ROOT / "app/build/bestiary_expansion/inventory.json"
     if not inventory_path.exists():
@@ -317,7 +316,7 @@ def write_illustration_wave_tracking(destination, root, initial_by_scientific, e
         lines.append("")
     lines.extend([
         "## État du catalogue natif", "",
-        f"Le catalogue natif contient {len(native_ids)} identités uniques : notices initiales, articles enrichis et fiches du catalogue `BestiaryIllustratedCatalog`. Les contrôles d’identité du suivi principal rejettent les doublons d’ID ou de nom scientifique.", "",
+        f"Le catalogue natif contient {len(native_ids)} identités uniques, toutes avec un article enrichi. Les contrôles d’identité du suivi principal rejettent les doublons d’ID ou de nom scientifique.", "",
         f"Textes : {len(enriched)} articles enrichis intégrés. Illustrations seules : {len(illustrated_ids - enriched_ids)} identités dans le catalogue illustré sans article enrichi.", "",
         "Les compteurs de textes et d’illustrations sont indépendants. Les espèces en file ne sont pas déclarées différées sans décision explicite, et une tentative unique n’est jamais relancée automatiquement.", "", "",
     ])

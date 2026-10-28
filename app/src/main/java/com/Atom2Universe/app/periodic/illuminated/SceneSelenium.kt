@@ -105,13 +105,15 @@ internal class SceneSelenium : EngravedScene() {
             c.save(); c.clipPath(glass)
             bar.reset()
             bar.moveTo(xb - 6f, GB_Y); bar.lineTo(xb + 6f, GB_Y); bar.lineTo(xf + 7f, GF_Y); bar.lineTo(xf - 7f, GF_Y); bar.close()
-            fill.color = withAlpha(0xFFB8FFD8.toInt(), (110 * power).toInt())
-            c.save(); c.clipPath(bare); c.drawPath(bar, fill); c.restore()
-            // Sous la feuille, on ne voit qu'un liseré qui déborde.
+            // Sous la feuille, on ne voit qu'un liseré qui déborde ; puis la barre vive sur la vitre nue
+            // (même teinte : l'ordre des deux couches n'y change rien).
             fill.color = withAlpha(0xFFB8FFD8.toInt(), (40 * power).toInt())
             c.drawPath(bar, fill)
+            c.clipPath(bare)
+            fill.color = withAlpha(0xFFB8FFD8.toInt(), (110 * power).toInt())
+            c.drawPath(bar, fill)
             ink.color = withAlpha(0xFFFFFFFF.toInt(), (255 * power).toInt()); ink.strokeWidth = 2f
-            c.save(); c.clipPath(bare); c.drawLine(xb, GB_Y, xf, GF_Y, ink); c.restore()
+            c.drawLine(xb, GB_Y, xf, GF_Y, ink)
             c.restore()
             // Le reflet de la barre sur la mousse du couvercle.
             fill.color = withAlpha(0xFFE8FFF0.toInt(), (90 * power).toInt())

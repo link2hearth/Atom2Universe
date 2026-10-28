@@ -104,13 +104,6 @@ internal class SceneNitrogen : EngravedScene() {
     override fun sprites(): List<Sprite> {
         val list = arrayListOf(
             Sprite(EAR, RectF(-26f, -104f, 26f, 6f)) { b -> ear(b) },
-            Sprite(SHEEN, RectF(-60f, -12f, 60f, 12f)) { b ->
-                b.c.save(); b.c.scale(1f, .2f)
-                b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 60f,
-                    intArrayOf(0x88FFF4C8.toInt(), 0x33FFF4C8, 0x00FFF4C8), floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
-                b.c.drawCircle(0f, 0f, 60f, b.p)
-                b.c.restore()
-            },
             Sprite(CLOUD, RectF(0f, 0f, 92f, 40f)) { b -> cloud(b, 46f, 26f, 40f) }
         )
         return list
@@ -171,6 +164,10 @@ internal class SceneNitrogen : EngravedScene() {
 
     private val stem = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val pts = FloatArray(64)
+    /** Le reflet d'une vague de vent : un dégradé de rayon 1, aplati en ellipse au dessin. */
+    private val sheen = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0x88FFF4C8.toInt(), 0x33FFF4C8, 0x00FFF4C8), floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         s.draw(c, CLOUD, dx = drift(t, 5f, 0f), dy = 76f)
@@ -180,10 +177,12 @@ internal class SceneNitrogen : EngravedScene() {
         c.save(); c.clipRect(40f, HORIZON, 320f, 340f)
         for ((i, row) in WAVES.withIndex()) {
             val x = wave(t, row[1], row[2])
-            c.save(); c.translate(x, row[0]); c.scale(row[3], row[3])
-            s.draw(c, SHEEN, alpha = 210)
-            c.restore()
-            if (i == 2) { c.save(); c.translate(x - 210f, row[0] + 8f); c.scale(row[3], row[3]); s.draw(c, SHEEN, alpha = 160); c.restore() }
+            sheen.alpha = 210
+            c.save(); c.translate(x, row[0]); c.scale(60f * row[3], 12f * row[3]); c.drawCircle(0f, 0f, 1f, sheen); c.restore()
+            if (i == 2) {
+                sheen.alpha = 160
+                c.save(); c.translate(x - 210f, row[0] + 8f); c.scale(60f * row[3], 12f * row[3]); c.drawCircle(0f, 0f, 1f, sheen); c.restore()
+            }
         }
         c.restore()
 
@@ -234,7 +233,6 @@ internal class SceneNitrogen : EngravedScene() {
         const val HORIZON = 188f
         const val GROUND = 336f
         const val EAR = 1
-        const val SHEEN = 2
         const val CLOUD = 3
         /** Les vagues : hauteur, vitesse, décalage, taille. */
         val WAVES = arrayOf(

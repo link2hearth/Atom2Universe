@@ -5,10 +5,13 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +19,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import androidx.core.net.toUri
+import androidx.core.os.BundleCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.Atom2Universe.app.R
@@ -43,10 +49,14 @@ class BotanyActivity : ThemedActivity() {
     private var tab=Tab.EXPLORE
     private var search=""
     private var sort=PlantSort.NAME
-    private var marks=true
     private var filtersOpen=false
     private lateinit var content:LinearLayout
     private lateinit var scroll:ScrollView
+    private lateinit var pane:FrameLayout
+    /** The explorer recycles its cards: the controls are the first row, results follow. */
+    private lateinit var list:RecyclerView
+    /** Tree buttons of the open fiche, filled in place when the tree finishes loading. */
+    private var lifeSlot:Pair<String,()->Unit>?=null
     private lateinit var tabs:LinearLayout
     private var current:String?=null
     private val history=mutableListOf<String>()
@@ -59,6 +69,7 @@ class BotanyActivity : ThemedActivity() {
     private var lifeBranch=""
     private var lifeLatinSort=false
     private var lifeLimit=40
+    private var lifeOrder:Pair<Boolean,List<BotanyLifeIndex.Entry>>?=null
     private val catalog=BotanyCatalog
     private val monthIds=listOf(R.string.bot_month_1,R.string.bot_month_2,R.string.bot_month_3,R.string.bot_month_4,
         R.string.bot_month_5,R.string.bot_month_6,R.string.bot_month_7,R.string.bot_month_8,R.string.bot_month_9,R.string.bot_month_10,R.string.bot_month_11,R.string.bot_month_12)
@@ -86,7 +97,7 @@ class BotanyActivity : ThemedActivity() {
         val family=catalog.family(p.familyId)
         p.id to listOf(english,french).flatMap{r->listOf(r.getString(p.name),r.getString(p.aliases),r.getString(p.latin),r.getString(family.name),
             if(family.aliases==0) "" else r.getString(family.aliases)) +
-            catalog.collections.filter{it.id in p.collectionIds}.map{r.getString(it.title)}}.joinToString(" ")
+            catalog.collections.filter{it.id in p.collectionIds}.map{r.getString(it.title)}}.joinToString(" ").let{PlantQuery.normalize(it)}
     }}
 
     override fun onCreate(savedInstanceState:Bundle?) {
@@ -98,7 +109,6 @@ class BotanyActivity : ThemedActivity() {
         tab=Tab.entries.firstOrNull{it.name==(savedInstanceState?.getString("tab") ?: prefs.getString("tab",null))} ?: Tab.EXPLORE
         search=savedInstanceState?.getString("search") ?: prefs.getString("search","").orEmpty()
         sort=PlantSort.entries.firstOrNull{it.name==(savedInstanceState?.getString("sort") ?: prefs.getString("sort",null))} ?: PlantSort.NAME
-        marks=savedInstanceState?.getBoolean("marks") ?: prefs.getBoolean("marks",true)
         filtersOpen=savedInstanceState?.getBoolean("filters") ?: prefs.getBoolean("filters",false)
         for(f in facets) {
             val ids=savedInstanceState?.getStringArrayList("facet_${f.key}")?.toSet() ?: prefs.getStringSet("facet_${f.key}",emptySet()).orEmpty()
@@ -118,13 +128,14 @@ class BotanyActivity : ThemedActivity() {
         sheet?.let { key->content.post{open(key,false)} }
         val y=savedInstanceState?.getInt("scroll") ?: 0
         scroll.post{scroll.scrollTo(0,y)}
+        savedInstanceState?.let{BundleCompat.getParcelable(it,"list",Parcelable::class.java)}?.let{list.layoutManager?.onRestoreInstanceState(it)}
     }
 
     private fun buildUi() {
         val root=column().apply{setBackgroundColor(palette.background)}
         val toolbar=row()
         toolbar.addView(icon(R.drawable.ic_arrow_back_24,R.string.bot_back){finish()}.apply{
-            ScienceNavigation.bindHomeAction(this){fiche.dismiss();tab=Tab.EXPLORE;render();scroll.scrollTo(0,0)}
+            ScienceNavigation.bindHomeAction(this){fiche.dismiss();tab=Tab.EXPLORE;render();toTop()}
         },LinearLayout.LayoutParams(dp(48),dp(48)))
         toolbar.addView(label(getString(R.string.bot_title),20f,true),LinearLayout.LayoutParams(0,-2,1f))
         toolbar.addView(icon(R.drawable.ic_more_vert_24,R.string.bot_about){open("about")},LinearLayout.LayoutParams(dp(48),dp(48)))
@@ -133,24 +144,40 @@ class BotanyActivity : ThemedActivity() {
         root.addView(horizontal(tabs))
         content=column().apply{setPadding(dp(16),dp(10),dp(16),dp(24))}
         scroll=ScrollView(this).apply{isFillViewport=true;addView(content,FrameLayout.LayoutParams(-1,-2,Gravity.CENTER_HORIZONTAL))}
-        root.addView(scroll,LinearLayout.LayoutParams(-1,0,1f))
+        list=RecyclerView(this).apply{
+            layoutManager=LinearLayoutManager(this@BotanyActivity);itemAnimator=null
+            setPadding(dp(16),dp(10),dp(16),dp(24));clipToPadding=false
+            recycledViewPool.setMaxRecycledViews(ROW_SPECIES,24)
+        }
+        pane=FrameLayout(this)
+        pane.addView(scroll,FrameLayout.LayoutParams(-1,-1))
+        pane.addView(list,FrameLayout.LayoutParams(-1,-1,Gravity.CENTER_HORIZONTAL))
+        root.addView(pane,LinearLayout.LayoutParams(-1,0,1f))
         setContentView(root)
         ViewCompat.setOnApplyWindowInsetsListener(root){view,insets->
             val safe=insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
             view.setPadding(safe.left,safe.top,safe.right,safe.bottom)
-            scroll.post {
-                val target=minOf(scroll.width,dp(840))
+            pane.post {
+                val target=minOf(pane.width,dp(840))
                 if(target>0 && content.layoutParams.width!=target)
                     content.layoutParams=(content.layoutParams as FrameLayout.LayoutParams).apply{width=target;gravity=Gravity.CENTER_HORIZONTAL}
+                if(target>0 && list.layoutParams.width!=target)
+                    list.layoutParams=(list.layoutParams as FrameLayout.LayoutParams).apply{width=target;gravity=Gravity.CENTER_HORIZONTAL}
             }
             insets
         }
         ViewCompat.requestApplyInsets(root)
     }
 
+    private fun toTop(){scroll.scrollTo(0,0);list.scrollToPosition(0)}
+
     private fun render() {
         tabs.removeAllViews();content.removeAllViews()
-        Tab.entries.forEach { t->tabs.addView(button(getString(t.title),tab==t){tab=t;render();scroll.scrollTo(0,0)},wrap()) }
+        val listed=tab==Tab.EXPLORE
+        scroll.visibility=if(listed)View.GONE else View.VISIBLE
+        list.visibility=if(listed)View.VISIBLE else View.GONE
+        if(!listed)list.adapter=null
+        Tab.entries.forEach { t->tabs.addView(button(getString(t.title),tab==t){tab=t;render();toTop()},wrap()) }
         when(tab) {
             Tab.EXPLORE->explore()
             Tab.LIFE->lifeBrowser()
@@ -173,7 +200,8 @@ class BotanyActivity : ThemedActivity() {
     }
 
     private fun explore() {
-        val results=column()
+        val header=column()
+        val rowsAdapter=ExploreAdapter(header)
         val controls=mutableListOf<Pair<Chip,Pair<String,String>>>()
         val toggle=button(getString(R.string.bot_filters),filtersOpen){}
         val filterPanel=column().apply{visibility=if(filtersOpen) View.VISIBLE else View.GONE}
@@ -184,24 +212,23 @@ class BotanyActivity : ThemedActivity() {
         }
         var pendingRefresh:Runnable?=null
         fun refresh() {
-            pendingRefresh?.let{results.removeCallbacks(it)};pendingRefresh=null
+            pendingRefresh?.let{list.removeCallbacks(it)};pendingRefresh=null
             controls.forEach{(chip,key)->chip.isChecked=key.second in selected[key.first].orEmpty()}
             val count=selected.values.sumOf{it.size}
             toggle.text=if(count==0)getString(R.string.bot_filters) else getString(R.string.bot_filters_count,count)
-            results.removeAllViews()
             val q=query()
-            val found=PlantQuery.sorted(catalog.species.filter{q.matches(it,searchIndex[it.id].orEmpty())},sort,resources.configuration.locales[0],
+            val found=PlantQuery.sorted(catalog.species.filter{q.matches(it,searchIndex[it.id].orEmpty(),normalized=true)},sort,resources.configuration.locales[0],
                 {getString(it.name)},{getString(it.latin)},{getString(catalog.family(it.familyId).name)})
-            results.addView(label(resources.getQuantityString(R.plurals.bot_species_count,found.size,found.size),13f).apply{accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE},full())
-            catalog.collections.filter{it.id in q.collections}.forEach{
-                results.addView(label(getString(it.description),13f).apply{setTextColor(palette.secondary)},full(4))
-            }
-            if(q.months.isNotEmpty())results.addView(label(getString(R.string.bot_month_scope),12f).apply{setTextColor(palette.secondary)},full(4))
-            if(found.isEmpty())results.addView(label(getString(R.string.bot_empty),15f),full())
-            found.forEach{results.addView(speciesCard(it),full())}
+            val rows=ArrayList<ExploreRow>()
+            rows+=ExploreRow.Note(resources.getQuantityString(R.plurals.bot_species_count,found.size,found.size),13f,false,8,live=true)
+            catalog.collections.filter{it.id in q.collections}.forEach{rows+=ExploreRow.Note(getString(it.description),13f,true,4)}
+            if(q.months.isNotEmpty())rows+=ExploreRow.Note(getString(R.string.bot_month_scope),12f,true,4)
+            if(found.isEmpty())rows+=ExploreRow.Note(getString(R.string.bot_empty),15f,false,8)
+            found.mapTo(rows){ExploreRow.Species(it)}
+            rowsAdapter.submit(rows)
         }
-        content.addView(searchBox,full())
-        content.addView(label(getString(R.string.bot_collections),13f,true),full(4))
+        header.addView(searchBox,full())
+        header.addView(label(getString(R.string.bot_collections),13f,true),full(4))
         val collections=ChipGroup(this)
         for(collection in catalog.collections) {
             val ch=chip(getString(collection.title),collection.id in selected["collection"].orEmpty()){
@@ -209,8 +236,8 @@ class BotanyActivity : ThemedActivity() {
             }
             controls+=ch to ("collection" to collection.id);collections.addView(ch)
         }
-        content.addView(collections,full(0))
-        content.addView(label(getString(R.string.bot_collection_help),12f).apply{setTextColor(palette.secondary)},full(4))
+        header.addView(collections,full(0))
+        header.addView(label(getString(R.string.bot_collection_help),12f).apply{setTextColor(palette.secondary)},full(4))
         val sectionGroup=ChipGroup(this)
         for(section in catalog.sections) {
             val chip=chip(getString(section.title),section.id in selected["section"].orEmpty()){
@@ -218,14 +245,14 @@ class BotanyActivity : ThemedActivity() {
             }
             controls+=chip to ("section" to section.id);sectionGroup.addView(chip)
         }
-        content.addView(sectionGroup,full(0))
-        content.addView(label(getString(R.string.bot_port_note),12.5f).apply{setTextColor(palette.secondary)},full(4))
+        header.addView(sectionGroup,full(0))
+        header.addView(label(getString(R.string.bot_port_note),12.5f).apply{setTextColor(palette.secondary)},full(4))
         val options=row()
         options.addView(toggle,LinearLayout.LayoutParams(0,-2,1f))
         options.addView(button(getString(R.string.bot_reset)){
             selected.values.forEach{it.clear()};search="";searchBox.setText("");refresh()
         },wrap())
-        content.addView(options,full())
+        header.addView(options,full())
         var filtersBuilt=false
         fun buildFilters() {
             if(filtersBuilt)return
@@ -257,7 +284,7 @@ class BotanyActivity : ThemedActivity() {
             filterPanel.visibility=if(filtersOpen)View.VISIBLE else View.GONE;style(toggle,filtersOpen)
         }
         if(filtersOpen)buildFilters()
-        content.addView(filterPanel,full(0))
+        header.addView(filterPanel,full(0))
         val sortRow=row()
         sortRow.addView(label(getString(R.string.bot_sort),13f),wrap())
         val sortTitles=listOf(R.string.bot_sort_name,R.string.bot_sort_latin,R.string.bot_sort_family,R.string.bot_sort_height,R.string.bot_sort_flowering)
@@ -274,12 +301,13 @@ class BotanyActivity : ThemedActivity() {
                 override fun onNothingSelected(parent:AdapterView<*>?)=Unit
             }
         },LinearLayout.LayoutParams(0,dp(48),1f))
-        content.addView(sortRow,full(4));content.addView(results,full(0))
+        header.addView(sortRow,full(4))
+        list.adapter=rowsAdapter
         searchBox.addTextChangedListener(object:TextWatcher {
             override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int)=Unit
             override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){
-                search=s.toString();pendingRefresh?.let{results.removeCallbacks(it)}
-                pendingRefresh=Runnable { if(results.isAttachedToWindow)refresh() }.also{results.postDelayed(it,140)}
+                search=s.toString();pendingRefresh?.let{list.removeCallbacks(it)}
+                pendingRefresh=Runnable { if(list.adapter===rowsAdapter)refresh() }.also{list.postDelayed(it,140)}
             }
             override fun afterTextChanged(s:Editable?)=Unit
         })
@@ -300,6 +328,63 @@ class BotanyActivity : ThemedActivity() {
         val text=column().apply{setPadding(dp(12),0,0,0)}
         text.addView(label(title,16f,true));subtitle?.let{text.addView(label(it,13f).apply{setTextColor(palette.secondary)},full(4))}
         r.addView(text,LinearLayout.LayoutParams(0,-2,1f));return r
+    }
+
+    private sealed class ExploreRow {
+        class Note(val text:String,val size:Float,val secondary:Boolean,val top:Int,val live:Boolean=false):ExploreRow()
+        class Species(val plant:PlantSpecies):ExploreRow()
+    }
+
+    /** Same card as [speciesCard], rebound to another species when it scrolls back into view. */
+    private inner class SpeciesHolder(val card:LinearLayout,val title:TextView,val subtitle:TextView):RecyclerView.ViewHolder(card) {
+        fun bind(p:PlantSpecies) {
+            if(card.childCount>1)card.removeViewAt(0)
+            card.addView(PlantPlateView(this@BotanyActivity,p,PlantView.HABIT,true).apply{importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO},0,LinearLayout.LayoutParams(dp(76),dp(88)))
+            title.text=getString(p.name);subtitle.text=getString(p.latin)
+            card.setOnClickListener{open("species:${p.id}")}
+        }
+    }
+
+    private inner class ExploreAdapter(private val header:LinearLayout):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        private var rows:List<ExploreRow> = emptyList()
+        /** Only result rows change: the controls row keeps its views, focus and keyboard. */
+        fun submit(next:List<ExploreRow>) {
+            val old=rows.size;rows=next
+            if(old>0)notifyItemRangeRemoved(1,old)
+            if(next.isNotEmpty())notifyItemRangeInserted(1,next.size)
+        }
+        override fun getItemCount()=1+rows.size
+        override fun getItemViewType(position:Int)=if(position==0)ROW_HEADER else if(rows[position-1] is ExploreRow.Species)ROW_SPECIES else ROW_NOTE
+        override fun onCreateViewHolder(parent:ViewGroup,viewType:Int):RecyclerView.ViewHolder=when(viewType) {
+            ROW_HEADER-> {
+                (header.parent as? ViewGroup)?.removeView(header)
+                header.layoutParams=RecyclerView.LayoutParams(-1,-2)
+                // One stateful row, never pooled: the same controls come back when scrolled to.
+                object:RecyclerView.ViewHolder(header){}.apply{setIsRecyclable(false)}
+            }
+            ROW_NOTE->object:RecyclerView.ViewHolder(label("",13f)){}
+            else-> {
+                val title=label("",16f,true)
+                val subtitle=label("",13f).apply{setTextColor(palette.secondary)}
+                val text=column().apply{setPadding(dp(12),0,0,0)}
+                text.addView(title);text.addView(subtitle,full(4))
+                val card=row().apply{background=palette.shape(palette.raised);setPadding(dp(10),dp(10),dp(12),dp(10));isClickable=true;isFocusable=true}
+                card.addView(text,LinearLayout.LayoutParams(0,-2,1f))
+                card.layoutParams=RecyclerView.LayoutParams(-1,-2).apply{topMargin=dp(8)}
+                SpeciesHolder(card,title,subtitle)
+            }
+        }
+        override fun onBindViewHolder(holder:RecyclerView.ViewHolder,position:Int) {
+            when(val row=if(position==0)null else rows[position-1]) {
+                is ExploreRow.Note->(holder.itemView as TextView).apply{
+                    text=row.text;textSize=row.size;setTextColor(if(row.secondary)palette.secondary else palette.text)
+                    accessibilityLiveRegion=if(row.live)View.ACCESSIBILITY_LIVE_REGION_POLITE else View.ACCESSIBILITY_LIVE_REGION_NONE
+                    layoutParams=RecyclerView.LayoutParams(-1,-2).apply{topMargin=dp(row.top)}
+                }
+                is ExploreRow.Species->(holder as SpeciesHolder).bind(row.plant)
+                null->Unit
+            }
+        }
     }
 
     private fun groupCard(g:PlantGroup):View {
@@ -368,10 +453,14 @@ class BotanyActivity : ThemedActivity() {
             body.addView(calendar(p),full(4))
         }
         body.addView(label(getString(p.phenologyNote.takeIf{it!=0} ?: R.string.bot_calendar_note),13f).apply{setTextColor(palette.secondary)},full(4))
-        life?.index?.forIllustrated(p.id)?.let { entry ->
-            body.addView(button(getString(R.string.bot_life_open_tree)){openTree(entry.nodeId)},full())
-            entry.lineage.reversed().filter { PlantGroupKnowledge.hasArticle(life!!.repository.tree.nodes.getValue(it).scientific) }.forEach { ancestor ->
-                body.addView(button(getString(R.string.plant_group_group_open,life!!.repository.name(this,ancestor))){open("taxon:$ancestor")},full(3))
+        val treeSlot=column()
+        body.addView(treeSlot,full(0))
+        whenLifeLoaded { data->
+            data.index.forIllustrated(p.id)?.let { entry ->
+                treeSlot.addView(button(getString(R.string.bot_life_open_tree)){openTree(entry.nodeId)},full())
+                entry.lineage.reversed().filter { PlantGroupKnowledge.hasArticle(data.repository.tree.nodes.getValue(it).scientific) }.forEach { ancestor ->
+                    treeSlot.addView(button(getString(R.string.plant_group_group_open,data.repository.name(this,ancestor))){open("taxon:$ancestor")},full(3))
+                }
             }
         }
         body.addView(label(catalog.collections.filter{it.id in p.collectionIds}.joinToString(" · "){getString(it.title)},12f).apply{setTextColor(palette.secondary)},full(4))
@@ -396,8 +485,11 @@ class BotanyActivity : ThemedActivity() {
             contentDescription=getString(R.string.bot_herbarium_accessibility,getString(p.name))
             setBackgroundColor(0xfff4f0e3.toInt())
         }
-        if(PlantHerbarium.hasPlate(p.id)) lifecycleScope.launch {
-            val key=PlantImageKey(p.id,PlantView.HABIT,768,false,true)
+        // Without a verified plate, the trait-driven habit drawing replaces the empty frame.
+        val herbarium=PlantHerbarium.hasPlate(p.id)
+        if(!herbarium)image.contentDescription=getString(R.string.bot_plate_accessibility,getString(p.name),getString(PlantView.HABIT.label),getString(p.captions.getValue(PlantView.HABIT)))
+        lifecycleScope.launch {
+            val key=PlantImageKey(p.id,PlantView.HABIT,768,false,herbarium)
             runCatching { PlantImageStore.shared.load(p,key) }.onSuccess { bitmap -> image.setImageBitmap(bitmap) }
         }
         return image
@@ -429,9 +521,13 @@ class BotanyActivity : ThemedActivity() {
     private fun showFamily(f:PlantFamily,back:(()->Unit)?) {
         val body=column()
         PlantGroupKnowledge.append(this,body,palette,f.id)
-        life?.repository?.tree?.nodes?.values?.firstOrNull{it.scientific==f.id}?.let { node ->
-            body.addView(button(getString(R.string.bot_life_open_tree)){openTree(node.id)},full())
-            body.addView(button(getString(R.string.plant_group_group_members)){open("taxon:${node.id}")},full())
+        val treeSlot=column()
+        body.addView(treeSlot,full(0))
+        whenLifeLoaded { data->
+            data.repository.tree.nodes.values.firstOrNull{it.scientific==f.id}?.let { node ->
+                treeSlot.addView(button(getString(R.string.bot_life_open_tree)){openTree(node.id)},full())
+                treeSlot.addView(button(getString(R.string.plant_group_group_members)){open("taxon:${node.id}")},full())
+            }
         }
         val members=catalog.species.filter{it.familyId==f.id}
         body.addView(label(resources.getQuantityString(R.plurals.bot_species_count,members.size,members.size),13f),full())
@@ -440,6 +536,12 @@ class BotanyActivity : ThemedActivity() {
             plants.forEach{body.addView(speciesCard(it),full())}
         }
         fiche.show(getString(f.name),null,null,body,back)
+    }
+
+    /** Fills part of the open fiche now, or in place once the tree has loaded, without rebuilding the fiche. */
+    private fun whenLifeLoaded(fill:(BotanyLifeCatalogue)->Unit) {
+        val data=life
+        if(data!=null)fill(data) else lifeSlot=current?.let{key->key to {life?.let(fill);Unit}}
     }
 
     private fun calendar(p:PlantSpecies):View {
@@ -465,13 +567,36 @@ class BotanyActivity : ThemedActivity() {
         heading(body,R.string.bot_references)
         catalog.sources.forEach{s->body.addView(button(getString(s.title)){link(s.url)},full(4))}
         heading(body,R.string.bot_sources_species)
-        catalog.species.forEach{p->
+        appendWhenReached(body,catalog.species.size) { i->
+            val p=catalog.species[i]
             val latin=getString(p.latin)
             body.addView(label(getString(p.name),15f,true),full(12))
             body.addView(button(getString(R.string.bot_lookup_powo,latin)){link("https://powo.science.kew.org/results?q="+android.net.Uri.encode(latin))},full(2))
             speciesReferences(body,p)
         }
         fiche.show(getString(R.string.bot_about),null,null,body,back)
+    }
+
+    /**
+     * Builds a long list by chunks: the next one is added when the end of the previous one scrolls into view,
+     * so the fiche opens without creating thousands of views at once. The fully scrolled page is unchanged.
+     */
+    private fun appendWhenReached(body:LinearLayout,count:Int,chunk:Int=24,build:(Int)->Unit) {
+        var next=0
+        val end=object:View(this) {
+            private val visible=android.graphics.Rect()
+            private val listener=ViewTreeObserver.OnScrollChangedListener{grow()}
+            fun grow() {
+                if(next>=count || !isAttachedToWindow || !getLocalVisibleRect(visible))return
+                body.removeView(this)
+                repeat(minOf(chunk,count-next)){build(next++)}
+                if(next<count)body.addView(this,LinearLayout.LayoutParams(-1,1))
+            }
+            override fun onAttachedToWindow(){super.onAttachedToWindow();viewTreeObserver.addOnScrollChangedListener(listener);post{grow()}}
+            override fun onDetachedFromWindow(){if(viewTreeObserver.isAlive)viewTreeObserver.removeOnScrollChangedListener(listener);super.onDetachedFromWindow()}
+        }
+        repeat(minOf(chunk,count)){build(next++)}
+        if(next<count)body.addView(end,LinearLayout.LayoutParams(-1,1))
     }
 
     private fun speciesReferences(body:LinearLayout,p:PlantSpecies) {
@@ -503,7 +628,10 @@ class BotanyActivity : ThemedActivity() {
                 lifeFailed=true;android.util.Log.e("BotanyLife", "Plant reference catalogue load failed",it)
             }
             if(tab==Tab.LIFE)render()
-            current?.takeIf{it.startsWith("life:") || it.startsWith("species:") || it.startsWith("taxon:") || it.startsWith("family:")}?.let{open(it,false)}
+            val slot=lifeSlot;lifeSlot=null
+            slot?.takeIf{it.first==current}?.second?.invoke()
+            // Only the pages that were waiting for the tree are rebuilt.
+            current?.takeIf{it.startsWith("life:") || it.startsWith("taxon:")}?.let{open(it,false)}
         }
     }
 
@@ -517,17 +645,23 @@ class BotanyActivity : ThemedActivity() {
         }
         val repo=data.repository
         val results=column()
-        fun refresh() {
-            results.removeAllViews()
-            val words=PlantQuery.normalize(lifeSearch).split(Regex("\\s+")).filter{it.isNotEmpty()}
+        // Sorted once per order; each search then only filters this list.
+        fun ordered():List<BotanyLifeIndex.Entry> {
+            lifeOrder?.takeIf{it.first==lifeLatinSort}?.let{return it.second}
             val collator=java.text.Collator.getInstance(resources.configuration.locales[0])
-            val found=data.index.entries.filter{entry->
+            val sorted=data.index.entries.map{it to collator.getCollationKey(if(lifeLatinSort)it.scientific else repo.name(this,it.nodeId))}
+                .sortedWith{a,b->a.second.compareTo(b.second).takeIf{it!=0} ?: a.first.nodeId.compareTo(b.first.nodeId)}.map{it.first}
+            lifeOrder=lifeLatinSort to sorted
+            return sorted
+        }
+        var pendingRefresh:Runnable?=null
+        fun refresh() {
+            pendingRefresh?.let{results.removeCallbacks(it)};pendingRefresh=null
+            results.removeAllViews()
+            val words=PlantQuery.normalize(lifeSearch).split(WHITESPACE).filter{it.isNotEmpty()}
+            val found=ordered().filter{entry->
                 (lifeFamily.isEmpty() || entry.family==lifeFamily) && (lifeBranch.isEmpty() || lifeBranch in entry.lineage) &&
                     words.all{it in data.searchTerms.getValue(entry.nodeId)}
-            }.sortedWith { a,b ->
-                val first=if(lifeLatinSort)a.scientific else repo.name(this,a.nodeId)
-                val second=if(lifeLatinSort)b.scientific else repo.name(this,b.nodeId)
-                collator.compare(first,second).takeIf{it!=0} ?: a.nodeId.compareTo(b.nodeId)
             }
             results.addView(label(getString(R.string.bot_life_count,found.size),13f),full())
             for(entry in found.take(lifeLimit)) {
@@ -541,26 +675,33 @@ class BotanyActivity : ThemedActivity() {
             isSingleLine=true;hint=getString(R.string.bot_life_search);setTextColor(palette.text);setHintTextColor(palette.secondary);setText(lifeSearch)
             addTextChangedListener(object:TextWatcher{
                 override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int)=Unit
-                override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){lifeSearch=s.toString();lifeLimit=40;refresh()}
+                override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){
+                    lifeSearch=s.toString();lifeLimit=40;pendingRefresh?.let{results.removeCallbacks(it)}
+                    pendingRefresh=Runnable { if(results.isAttachedToWindow)refresh() }.also{results.postDelayed(it,140)}
+                }
                 override fun afterTextChanged(s:Editable?)=Unit
             })
         },full())
-        fun selector(title:Int,items:List<Pair<String,String>>,selected:String,change:(String)->Unit) {
+        fun selector(title:Int,items:List<Pair<String,String>>,selected:()->String,change:(String)->Unit) {
             content.addView(label(getString(title),13f,true),full())
             content.addView(Spinner(this).apply{
                 adapter=ArrayAdapter(this@BotanyActivity,android.R.layout.simple_spinner_dropdown_item,items.map{it.second})
-                setSelection(items.indexOfFirst{it.first==selected}.coerceAtLeast(0))
+                setSelection(items.indexOfFirst{it.first==selected()}.coerceAtLeast(0))
                 onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
-                    override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){change(items[position].first);refresh()}
+                    // The spinner reports its initial selection too: only a real change refreshes the list.
+                    override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
+                        val next=items[position].first
+                        if(next!=selected()){change(next);refresh()}
+                    }
                     override fun onNothingSelected(parent:AdapterView<*>?)=Unit
                 }
             },full(2))
         }
         val all="" to getString(R.string.bot_life_all)
-        selector(R.string.bot_family,listOf(all)+data.index.entries.mapNotNull{it.family}.distinct().sorted().map{it to it},lifeFamily){if(it!=lifeFamily)lifeLimit=40;lifeFamily=it}
+        selector(R.string.bot_family,listOf(all)+data.index.entries.mapNotNull{it.family}.distinct().sorted().map{it to it},{lifeFamily}){lifeLimit=40;lifeFamily=it}
         val branches=repo.groups.keys.filter{it!=BotanyLifeIndex.GREEN_ROOT && data.index.isPlant(it)}
             .map{it to repo.name(this,it)}.sortedBy{it.second}
-        selector(R.string.bot_life_branch,listOf(all)+branches,lifeBranch){if(it!=lifeBranch)lifeLimit=40;lifeBranch=it}
+        selector(R.string.bot_life_branch,listOf(all)+branches,{lifeBranch}){lifeLimit=40;lifeBranch=it}
         content.addView(CheckBox(this).apply{text=getString(R.string.bot_life_sort_latin);setTextColor(palette.text);isChecked=lifeLatinSort
             setOnCheckedChangeListener{_,checked->lifeLatinSort=checked;refresh()}},full())
         content.addView(results,full());refresh()
@@ -635,6 +776,10 @@ class BotanyActivity : ThemedActivity() {
     companion object {
         const val EXTRA_LIFE_NODE="botany_life_node"
         const val EXTRA_SPECIES_ID="botany_species_id"
+        private const val ROW_HEADER=0
+        private const val ROW_NOTE=1
+        private const val ROW_SPECIES=2
+        private val WHITESPACE=Regex("\\s+")
     }
 
     private fun height(p:PlantSpecies):String {
@@ -667,15 +812,16 @@ class BotanyActivity : ThemedActivity() {
         out.putString("life_search",lifeSearch);out.putString("life_family",lifeFamily);out.putString("life_branch",lifeBranch)
         out.putBoolean("life_latin_sort",lifeLatinSort);out.putInt("life_limit",lifeLimit)
         out.putString("tab",tab.name);out.putString("search",search);out.putString("sort",sort.name)
-        out.putBoolean("marks",marks);out.putBoolean("filters",filtersOpen);out.putString("sheet",current)
+        out.putBoolean("filters",filtersOpen);out.putString("sheet",current)
         out.putStringArrayList("history",ArrayList(history));out.putStringArrayList("expanded",ArrayList(expanded));out.putInt("scroll",scroll.scrollY)
+        if(tab==Tab.EXPLORE)out.putParcelable("list",list.layoutManager?.onSaveInstanceState())
         selected.forEach{(key,value)->out.putStringArrayList("facet_$key",ArrayList(value))}
     }
     override fun onPause() {
         super.onPause()
         prefs.edit().apply{
             putString("tab",tab.name);putString("search",search);putString("sort",sort.name)
-            putBoolean("marks",marks);putBoolean("filters",filtersOpen);putStringSet("expanded",expanded.toSet())
+            putBoolean("filters",filtersOpen);putStringSet("expanded",expanded.toSet())
             selected.forEach{(key,value)->putStringSet("facet_$key",value.toSet())}
         }.apply()
     }

@@ -78,10 +78,14 @@ class SkeletonScene(
     private var multiTouch = false
     private var indirect: IndirectLight? = null
     private var interactiveResolution = false
+    private var highRefresh = false
+    private var skippedFrame = false
+    private var framePosted = false
     private val restoreResolution = Runnable {
         if (!disposed) {
             interactiveResolution = false
             applyRenderResolution()
+            applyGestureQuality()
             invalidate()
         }
     }
@@ -506,7 +510,10 @@ class SkeletonScene(
     private fun cameraMoving() {
         if (!interactiveResolution) {
             interactiveResolution = true
+            highRefresh = (surface.display?.refreshRate ?: 60f) > 100f
+            skippedFrame = false
             applyRenderResolution()
+            applyGestureQuality()
         }
         handler.removeCallbacks(restoreResolution)
         handler.postDelayed(restoreResolution, 180L)
@@ -526,10 +533,35 @@ class SkeletonScene(
         }
     }
 
-    private fun invalidate() { dirtyFrames = 8 }
+    /** Pendant un geste, ni occlusion ambiante ni MSAA ; tout revient à l'arrêt, comme la résolution. */
+    private fun applyGestureQuality() {
+        val full = !interactiveResolution
+        viewer.view.ambientOcclusionOptions = FilamentView.AmbientOcclusionOptions().apply { enabled = full }
+        viewer.view.multiSampleAntiAliasingOptions = FilamentView.MultiSampleAntiAliasingOptions().apply {
+            enabled = full
+            sampleCount = 2
+        }
+    }
+
+    private fun invalidate() {
+        dirtyFrames = 8
+        postFrame()
+    }
+    private fun postFrame() {
+        if (running && !disposed && !framePosted) {
+            framePosted = true
+            Choreographer.getInstance().postFrameCallback(callback)
+        }
+    }
     private val callback = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
+            framePosted = false
             if (!running || disposed) return
+            // Geste sur un écran à 120 Hz ou plus : une image sur deux suffit.
+            if (interactiveResolution && highRefresh) {
+                skippedFrame = !skippedFrame
+                if (skippedFrame) { postFrame(); return }
+            }
             if (surface.width > 0 && surface.height > 0 && (dirtyFrames > 0 || viewer.progress < 1f)) {
                 val camera = viewer.camera
                 camera.setProjection(35.0, surface.width.toDouble() / surface.height, .002, 50.0, Camera.Fov.VERTICAL)
@@ -537,7 +569,8 @@ class SkeletonScene(
                     target[2] + distance * cos(pitch) * cos(yaw), target[0], target[1], target[2], 0.0, 1.0, 0.0)
                 if (viewer.render(frameTimeNanos)) dirtyFrames = (dirtyFrames - 1).coerceAtLeast(0)
             }
-            Choreographer.getInstance().postFrameCallback(this)
+            // Modèle immobile : la boucle s'arrête, invalidate() la relance.
+            if (dirtyFrames > 0 || viewer.progress < 1f) postFrame()
         }
     }
 
@@ -545,16 +578,16 @@ class SkeletonScene(
         if (running || disposed) return
         running = true
         invalidate()
-        Choreographer.getInstance().postFrameCallback(callback)
     }
 
     fun pause() {
         running = false
         Choreographer.getInstance().removeFrameCallback(callback)
+        framePosted = false
         handler.removeCallbacks(restoreResolution)
         if (interactiveResolution) {
             interactiveResolution = false
-            if (!disposed) applyRenderResolution()
+            if (!disposed) { applyRenderResolution(); applyGestureQuality() }
         }
     }
 

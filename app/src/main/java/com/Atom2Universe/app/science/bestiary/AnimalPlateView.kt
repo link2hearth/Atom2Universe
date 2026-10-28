@@ -4,16 +4,20 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.View
 import com.Atom2Universe.app.R
 import java.io.Closeable
 
 /** A lazy offline illustration, safe when RecyclerView rebinds a thumbnail during decoding. */
-class AnimalPlateView(context: Context, variant: String = "lion") : View(context) {
+class AnimalPlateView(context: Context, variant: String = "lion", private val thumbnail: Boolean = false) : View(context) {
     var variant: String = variant
         set(value) { if (field != value) { field = value; reload() } }
     private val store = AnimalImageStore.get(context)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val destination = RectF()
+    private val loadingLabel = context.getString(R.string.best_plate_loading)
+    private val unavailableLabel = context.getString(R.string.best_plate_unavailable)
     private var image: Bitmap? = null
     private var request: Closeable? = null
     private var generation = 0
@@ -25,9 +29,9 @@ class AnimalPlateView(context: Context, variant: String = "lion") : View(context
         request?.close(); request = null
         val token = ++generation
         val id = variant
-        image = store.peek(id); failed = false; invalidate()
+        image = store.peek(id, thumbnail); failed = false; invalidate()
         if (!isAttachedToWindow || image != null) return
-        request = store.request(id) { bitmap ->
+        request = store.request(id, thumbnail) { bitmap ->
             if (generation == token && variant == id && isAttachedToWindow) {
                 image = bitmap; failed = bitmap == null; request = null; invalidate()
             }
@@ -42,10 +46,10 @@ class AnimalPlateView(context: Context, variant: String = "lion") : View(context
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawColor(android.graphics.Color.WHITE)
-        image?.let { AnimalImageStore.drawFit(canvas, it, width.toFloat(), height.toFloat(), paint); return }
+        image?.let { AnimalImageStore.drawFit(canvas, it, width.toFloat(), height.toFloat(), paint, destination); return }
         paint.color = 0xff777565.toInt(); paint.textSize = 12 * resources.displayMetrics.scaledDensity
         paint.textAlign = Paint.Align.CENTER
-        val label = context.getString(if (failed) R.string.best_plate_unavailable else R.string.best_plate_loading)
+        val label = if (failed) unavailableLabel else loadingLabel
         val available = (width - 16 * resources.displayMetrics.density).coerceAtLeast(1f)
         val measured = paint.measureText(label)
         if (measured > available) paint.textSize *= available / measured

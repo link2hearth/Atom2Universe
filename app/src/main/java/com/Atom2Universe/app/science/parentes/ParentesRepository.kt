@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap
 import android.content.ComponentCallbacks2
 import android.os.SystemClock
 import android.util.Log
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 data class GroupArticle(val id: String, val key: String, val sources: List<String>)
 data class LifeSource(val id: String, val citation: String, val url: String, val license: String, val licenseUrl: String)
@@ -49,15 +51,19 @@ class ParentesRepository private constructor(
             else -> context.getString(R.string.pt_junction)
         }
     }
-    fun search(query: String, speciesOnly: Boolean): List<LifeNode> {
-        val terms = LifeTree.normalize(query).split(Regex("\\s+")).filter { it.isNotEmpty() }
+    /** Cooperative: a newer keystroke cancels this scan instead of queueing behind it. */
+    suspend fun search(query: String, speciesOnly: Boolean): List<LifeNode> {
+        val terms = LifeTree.normalize(query).split(whitespace).filter { it.isNotEmpty() }
+        val context = currentCoroutineContext()
         return tree.nodes.values.filter { n ->
+            context.ensureActive()
             (n.species || (!speciesOnly && tree.isBrowsable(n.id))) &&
                 terms.all { it in searchTerms.getValue(n.id) }
         }
     }
 
     companion object {
+        private val whitespace = Regex("\\s+")
         private fun JSONArray.strings() = (0 until length()).map { getString(it) }
         @Volatile private var cached: ParentesRepository? = null
         private var callbacksRegistered = false

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.science.botany
 
+import java.text.CollationKey
 import java.text.Collator
 import java.text.Normalizer
 import java.util.Locale
@@ -15,7 +16,10 @@ data class PlantQuery(
     val habitats: Set<Habitat> = emptySet(), val months: Set<Int> = emptySet(), val evergreen: Boolean? = null,
     val collections: Set<String> = emptySet()
 ) {
-    fun matches(p: PlantSpecies, searchableText: String): Boolean {
+    private val words by lazy { normalize(text).split(' ').filter { it.isNotBlank() } }
+
+    /** [normalized]: [searchableText] already went through [normalize], as the screen's prepared index does. */
+    fun matches(p: PlantSpecies, searchableText: String, normalized: Boolean = false): Boolean {
         fun <T> permits(selected: Set<T>, actual: T) = selected.isEmpty() || actual in selected
         fun <T> overlaps(selected: Set<T>, actual: Set<T>) = selected.isEmpty() || actual.any { it in selected }
         return overlaps(collections,p.collectionIds) && overlaps(sections,p.sectionIds) && permits(families, p.familyId) &&
@@ -23,27 +27,38 @@ data class PlantQuery(
             overlaps(colors, p.flowerColors) && permits(flowers, p.look.flower) && permits(fruits, p.look.fruit) &&
             (habitats.isEmpty() || p.habitats.any { it in habitats }) &&
             (months.isEmpty() || p.flowering.any { it in months }) && (evergreen == null || p.variablePersistence || evergreen == p.evergreen) &&
-            normalize(text).split(' ').filter { it.isNotBlank() }.all { it in normalize(searchableText) }
+            (words.isEmpty() || (if (normalized) searchableText else normalize(searchableText)).let { s -> words.all { it in s } })
     }
 
     companion object {
+        private val accents = Regex("\\p{M}+")
+        private val separators = Regex("[^\\p{L}\\p{N}]+")
+
         fun normalize(text: String): String = Normalizer.normalize(text, Normalizer.Form.NFD)
-            .replace(Regex("\\p{M}+"), "").lowercase(Locale.ROOT).replace("œ", "oe").replace("æ", "ae")
-            .replace(Regex("[^\\p{L}\\p{N}]+"), " ").trim()
+            .replace(accents, "").lowercase(Locale.ROOT).replace("œ", "oe").replace("æ", "ae")
+            .replace(separators, " ").trim()
 
         fun sorted(plants: List<PlantSpecies>, sort: PlantSort, locale: Locale, name: (PlantSpecies) -> String,
                    latin: (PlantSpecies) -> String, family: (PlantSpecies) -> String): List<PlantSpecies> {
             val collator = Collator.getInstance(locale)
-            return plants.sortedWith(Comparator { a, b ->
+            // Collation keys are computed once per plant instead of at each comparison.
+            class Row(val plant: PlantSpecies, val name: CollationKey, val other: CollationKey?)
+            val rows = plants.map { p ->
+                Row(p, collator.getCollationKey(name(p)), when (sort) {
+                    PlantSort.LATIN -> collator.getCollationKey(latin(p))
+                    PlantSort.FAMILY -> collator.getCollationKey(family(p))
+                    else -> null
+                })
+            }
+            return rows.sortedWith(Comparator { a, b ->
                 val primary = when (sort) {
-                    PlantSort.NAME -> collator.compare(name(a), name(b))
-                    PlantSort.LATIN -> collator.compare(latin(a), latin(b))
-                    PlantSort.FAMILY -> collator.compare(family(a), family(b))
-                    PlantSort.HEIGHT -> a.heightMaxCm.compareTo(b.heightMaxCm)
-                    PlantSort.FLOWERING -> (a.flowering.minOrNull() ?: 13).compareTo(b.flowering.minOrNull() ?: 13)
+                    PlantSort.NAME -> a.name.compareTo(b.name)
+                    PlantSort.LATIN, PlantSort.FAMILY -> a.other!!.compareTo(b.other!!)
+                    PlantSort.HEIGHT -> a.plant.heightMaxCm.compareTo(b.plant.heightMaxCm)
+                    PlantSort.FLOWERING -> (a.plant.flowering.minOrNull() ?: 13).compareTo(b.plant.flowering.minOrNull() ?: 13)
                 }
-                if (primary != 0) primary else collator.compare(name(a), name(b))
-            })
+                if (primary != 0) primary else a.name.compareTo(b.name)
+            }).map { it.plant }
         }
     }
 }

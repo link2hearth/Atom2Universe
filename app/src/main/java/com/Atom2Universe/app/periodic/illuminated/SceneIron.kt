@@ -280,24 +280,37 @@ internal class SceneIron : EngravedScene() {
         }
     }
 
+    /** La gerbe du coup [sparkBlow] : direction et vitesse de chaque étincelle, tirées une fois par coup. */
+    private val sparkA = FloatArray(SPARKS)
+    private val sparkV = FloatArray(SPARKS)
+    private var sparkBlow = Int.MIN_VALUE
+
     private fun sparks(c: Canvas, age: Float, blow: Int) {
-        val rnd = Random(blow * 31 + 7)
+        if (blow != sparkBlow) {
+            val rnd = Random(blow * 31 + 7)
+            for (i in 0 until SPARKS) {
+                sparkA[i] = (-PI * .95 + rnd.nextFloat() * PI * .9).toFloat()   // vers le haut, en éventail
+                sparkV[i] = 80f + rnd.nextFloat() * 150f
+            }
+            sparkBlow = blow
+        }
         val fade = 1f - age / .42f
-        for (i in 0 until 20) {
-            val a = (-PI * .95 + rnd.nextFloat() * PI * .9).toFloat()   // vers le haut, en éventail
-            val v = 80f + rnd.nextFloat() * 150f
-            fun pos(tt: Float) = floatArrayOf(187f + cos(a) * v * tt, 239f + sin(a) * v * tt + 190f * tt * tt)
-            val head = pos(age); val tail = pos((age - .06f).coerceAtLeast(0f))
+        val back = (age - .06f).coerceAtLeast(0f)
+        for (i in 0 until SPARKS) {
+            val vx = cos(sparkA[i]) * sparkV[i]; val vy = sin(sparkA[i]) * sparkV[i]
+            val hx = 187f + vx * age; val hy = 239f + vy * age + 190f * age * age
+            val tx = 187f + vx * back; val ty = 239f + vy * back + 190f * back * back
             sparkPaint.strokeWidth = 1.4f
             sparkPaint.color = withAlpha(if (i % 3 == 0) 0xFFFFF6C8.toInt() else 0xFFFFA43C.toInt(), (255 * fade).toInt())
-            c.drawLine(tail[0], tail[1], head[0], head[1], sparkPaint)
-            c.drawCircle(head[0], head[1], 1.1f, sparkPaint)
+            c.drawLine(tx, ty, hx, hy, sparkPaint)
+            c.drawCircle(hx, hy, 1.1f, sparkPaint)
         }
         if (age < .12f) halo(c, 187f, 238f, 26f, (255 * (1f - age / .12f)).toInt())
     }
 
     private companion object {
         const val FLOOR = 292f
+        const val SPARKS = 20
         const val HELVE = 1
         const val CAM = 2
         const val STONE = 0xFFB8A684.toInt()

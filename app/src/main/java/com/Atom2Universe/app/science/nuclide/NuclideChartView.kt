@@ -32,8 +32,9 @@ class NuclideChartView @JvmOverloads constructor(
     private val paintBetaPlus = fill(R.color.nuclide_beta_plus)
     private val paintFission = fill(R.color.nuclide_fission)
     private val paintOther = fill(R.color.nuclide_other)
-    private val cellTextColors = listOf(paintStable, paintAlpha, paintBetaMinus, paintBetaPlus,
-        paintFission, paintOther).associate { it.color to SciencePalette.contrastingText(it.color) }
+    // Indexés par DecayType.ordinal : ni recherche ni boxing par case à chaque image.
+    private val decayPaints = arrayOf(paintStable, paintAlpha, paintBetaMinus, paintBetaPlus, paintFission, paintOther)
+    private val cellTextColors = IntArray(decayPaints.size) { SciencePalette.contrastingText(decayPaints[it].color) }
     private val paintSelected = Paint().apply { color = Color.BLACK; style = Paint.Style.STROKE; strokeWidth = 2f * resources.displayMetrics.density }
     private val paintSelectedHalo = Paint(paintSelected).apply { color = Color.WHITE; strokeWidth *= 2f }
     private val paintText = Paint().apply {
@@ -49,8 +50,13 @@ class NuclideChartView @JvmOverloads constructor(
     private val cellRect = RectF()
 
     private val nuclideMap = mutableMapOf<Pair<Int,Int>, Nuclide>()
+    private var nuclides: List<Nuclide> = emptyList()
     private var maxZ = 118
     private var maxN = 180
+    private var labelsN = tickLabels(maxN)
+    private var labelsZ = tickLabels(maxZ)
+    /** Pas encore zoomé : un changement de hauteur (rotation) recadre la carte entière. */
+    private var fitted = true
 
     private var cellSize = 0f  // 0 = not yet initialized
     private val density = resources.displayMetrics.density
@@ -73,6 +79,7 @@ class NuclideChartView @JvmOverloads constructor(
             translateX = focusX - (focusX - translateX) * (newCell / cellSize)
             translateY = focusY - (focusY - translateY) * (newCell / cellSize)
             cellSize = newCell
+            fitted = false
             constrainTranslation()
             invalidate()
             return true
@@ -106,14 +113,21 @@ class NuclideChartView @JvmOverloads constructor(
     fun loadNuclides(nuclides: List<Nuclide>) {
         nuclideMap.clear()
         nuclides.forEach { nuclideMap[it.Z to it.N] = it }
+        this.nuclides = nuclides
         maxZ = nuclides.maxOfOrNull { it.Z } ?: 118
         maxN = nuclides.maxOfOrNull { it.N } ?: 180
+        labelsN = tickLabels(maxN)
+        labelsZ = tickLabels(maxZ)
+        if (cellSize != 0f) constrainTranslation()
         invalidate()
     }
 
+    private fun tickLabels(max: Int) = Array(max / 10 + 1) { (it * 10).toString() }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (cellSize == 0f && w > 0 && h > 0) {
+        if (w <= 0 || h <= 0) return
+        if (cellSize == 0f || (fitted && h != oldh)) {
             val fitCell = minOf(
                 (w - margin * 2) / (maxN + 2),
                 (h - margin * 2) / (maxZ + 2)
@@ -121,7 +135,20 @@ class NuclideChartView @JvmOverloads constructor(
             cellSize = fitCell.coerceIn(4f, 150f)
             translateX = 0f
             translateY = 0f
+        } else {
+            // Panneau de détail ouvert ou zoom conservé : rester dans la carte, case choisie visible.
+            revealSelection()
         }
+    }
+
+    private fun revealSelection() {
+        selectedNuclide?.let { n ->
+            val left = translateX + margin + n.N * cellSize
+            val top = translateY + margin + (maxZ - n.Z) * cellSize
+            if (left < 0f) translateX -= left else if (left + cellSize > width) translateX -= left + cellSize - width
+            if (top < 0f) translateY -= top else if (top + cellSize > height) translateY -= top + cellSize - height
+        }
+        constrainTranslation()
     }
 
     private fun constrainTranslation() {
@@ -146,46 +173,45 @@ class NuclideChartView @JvmOverloads constructor(
         for (n in 0..maxN step 10) {
             val x = tx + n * cellSize + cellSize / 2
             if (x in 0f..width.toFloat()) {
-                canvas.drawText("$n", x, margin - 4f, paintAxisLabel)
+                canvas.drawText(labelsN[n / 10], x, margin - 4f, paintAxisLabel)
                 canvas.drawLine(x, margin, x, ty + (maxZ + 1) * cellSize, paintGrid)
             }
         }
         for (z in 0..maxZ step 10) {
             val y = ty + (maxZ - z) * cellSize + cellSize / 2
             if (y in 0f..height.toFloat()) {
-                canvas.drawText("$z", margin / 2, y + paintAxisLabel.textSize / 3, paintAxisLabel)
+                canvas.drawText(labelsZ[z / 10], margin / 2, y + paintAxisLabel.textSize / 3, paintAxisLabel)
                 canvas.drawLine(margin, y, tx + (maxN + 1) * cellSize, y, paintGrid)
             }
         }
 
         // Nuclides
-        for ((key, nuclide) in nuclideMap) {
-            val (Z, N) = key
-            val left = tx + N * cellSize
-            val top = ty + (maxZ - Z) * cellSize
+        for (nuclide in nuclides) {
+            val left = tx + nuclide.N * cellSize
+            val top = ty + (maxZ - nuclide.Z) * cellSize
             val right = left + cellSize - 1
             val bottom = top + cellSize - 1
 
             if (right < 0 || left > width || bottom < 0 || top > height) continue
 
             cellRect.set(left, top, right, bottom)
-            val paint = when (nuclide.decayType) {
-                DecayType.STABLE -> paintStable
-                DecayType.ALPHA -> paintAlpha
-                DecayType.BETA_MINUS -> paintBetaMinus
-                DecayType.BETA_PLUS -> paintBetaPlus
-                DecayType.FISSION -> paintFission
-                DecayType.OTHER -> paintOther
-            }
-            canvas.drawRect(cellRect, paint)
+            val type = nuclide.decayType.ordinal
+            canvas.drawRect(cellRect, decayPaints[type])
 
-            if (nuclide == selectedNuclide) {
-                canvas.drawRect(cellRect, paintSelectedHalo)
-                canvas.drawRect(cellRect, paintSelected)
+            if (cellSize >= 10f && nuclide !== selectedNuclide) {
+                paintText.color = cellTextColors[type]
+                canvas.drawText(nuclide.symbol, left + cellSize / 2, top + cellSize * 0.65f, paintText)
             }
-
+        }
+        // Après toutes les cases : le contour de la sélection n'est plus recouvert par ses voisines.
+        selectedNuclide?.let { nuclide ->
+            val left = tx + nuclide.N * cellSize
+            val top = ty + (maxZ - nuclide.Z) * cellSize
+            cellRect.set(left, top, left + cellSize - 1, top + cellSize - 1)
+            canvas.drawRect(cellRect, paintSelectedHalo)
+            canvas.drawRect(cellRect, paintSelected)
             if (cellSize >= 10f) {
-                paintText.color = cellTextColors.getValue(paint.color)
+                paintText.color = cellTextColors[nuclide.decayType.ordinal]
                 canvas.drawText(nuclide.symbol, left + cellSize / 2, top + cellSize * 0.65f, paintText)
             }
         }

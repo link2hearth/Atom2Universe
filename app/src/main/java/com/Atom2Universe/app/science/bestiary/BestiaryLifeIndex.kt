@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.science.bestiary
 
 import com.Atom2Universe.app.science.parentes.LifeTree
+import java.lang.ref.WeakReference
 
 /** Only unambiguous terminal scientific names link profiles; never infer a species from a genus. */
 class BestiaryLifeIndex(tree: LifeTree, names: Map<String, String>) {
@@ -13,4 +14,18 @@ class BestiaryLifeIndex(tree: LifeTree, names: Map<String, String>) {
     private val profileToNode = nodeToProfile.entries.associate { it.value to it.key }
     fun forNode(id: String?) = nodeToProfile[id]
     fun forSpecies(id: String) = profileToNode[id]
+
+    companion object {
+        private var tree = WeakReference<LifeTree>(null)
+        private var index: BestiaryLifeIndex? = null
+
+        /** Index of the bestiary profiles, shared by the bestiary and the tree of life; call off the UI thread. */
+        @Synchronized
+        fun of(tree: LifeTree): BestiaryLifeIndex {
+            index?.takeIf { this.tree.get() === tree }?.let { return it }
+            return BestiaryLifeIndex(tree, AnimalCatalog.species.associate { it.id to it.scientific }).also {
+                this.tree = WeakReference(tree); index = it
+            }
+        }
+    }
 }

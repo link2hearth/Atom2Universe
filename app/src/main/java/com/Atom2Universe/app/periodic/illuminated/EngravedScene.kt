@@ -33,6 +33,9 @@ internal abstract class EngravedScene {
 
     open fun animate(c: Canvas, s: Sprites, t: Float) {}
 
+    /** Images par seconde dont [animate] a besoin : 30 suffit aux mouvements lents. */
+    open val fps: Int = 30
+
     enum class Sky { DAY, DUSK, NIGHT, NONE }
 }
 

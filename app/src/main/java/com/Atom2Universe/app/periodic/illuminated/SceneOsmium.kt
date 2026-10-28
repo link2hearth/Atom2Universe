@@ -22,6 +22,8 @@ internal class SceneOsmium : EngravedScene() {
     override val nameRes = R.string.card_scene_fountain_pen
     override val noteRes = R.string.card_note_fountain_pen
     override val explainRes = R.string.card_explain_fountain_pen
+    /** La plume trace ses boucles cinq fois par seconde : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // La feuille couvre toute la fenêtre ; les lignes réglées défilent dans l'animation.
@@ -74,6 +76,9 @@ internal class SceneOsmium : EngravedScene() {
         style = Paint.Style.STROKE; strokeWidth = 1.6f; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND; color = 0xFF1A2A6A.toInt()
     }
     private val script = Path()
+    /** Les lignes finies, tracées une seule fois (base en 0) : seule la ligne en cours se refait à chaque image. */
+    private val done = Array(LINES) { Path() }
+    private val doneSeed = IntArray(LINES) { Int.MIN_VALUE }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val cycle = (t / CYCLE).toInt()
@@ -103,16 +108,28 @@ internal class SceneOsmium : EngravedScene() {
 
     private fun writeLine(c: Canvas, seed: Int, base: Float, upTo: Float) {
         if (base < 40f || upTo <= 0f) return
-        script.reset()
+        if (upTo < 1f) {
+            trace(script, seed, base, upTo)
+            c.drawPath(script, ink)
+            return
+        }
+        val slot = seed.mod(LINES)
+        if (doneSeed[slot] != seed) { trace(done[slot], seed, 0f, 1f); doneSeed[slot] = seed }
+        c.save(); c.translate(0f, base)
+        c.drawPath(done[slot], ink)
+        c.restore()
+    }
+
+    private fun trace(path: Path, seed: Int, base: Float, upTo: Float) {
+        path.reset()
         var down = false
         val n = (STEPS * upTo).toInt()
         for (i in 0..n) {
             val u = i / STEPS.toFloat()
             if (gap(u, seed)) { down = false; continue }
             val x = lineX(u, seed); val y = base + lineY(u, seed)
-            if (!down) { script.moveTo(x, y); down = true } else script.lineTo(x, y)
+            if (!down) { path.moveTo(x, y); down = true } else path.lineTo(x, y)
         }
-        c.drawPath(script, ink)
     }
 
     /** Une écriture en boucles : une cycloïde allongée, des hauteurs qui varient, des blancs entre les mots. */
@@ -137,6 +154,8 @@ internal class SceneOsmium : EngravedScene() {
         const val BASE = 262f
         const val LOOPS = 26f
         const val STEPS = 260
+        /** Les cinq lignes écrites et celle en cours. */
+        const val LINES = 6
         const val TIP_X = 120f
         const val TIP_Y = 250f
         const val LX = 98f

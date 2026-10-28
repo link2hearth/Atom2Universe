@@ -2,9 +2,9 @@ package com.Atom2Universe.app.periodic.illuminated
 
 import com.Atom2Universe.app.R
 
-/** Les éléments qui ont déjà leur gravure. Les autres gardent leur ancienne scène, sur fond de nuit. */
+/** La gravure de chaque élément. */
 internal object EngravedScenes {
-    fun forElement(z: Int): EngravedScene? = when (z) {
+    fun forElement(z: Int): EngravedScene = when (z) {
         1 -> SceneHydrogen()
         2 -> SceneHelium()
         3 -> SceneLithium()
@@ -103,26 +103,10 @@ internal object EngravedScenes {
         99 -> SceneEinsteinium()
         100 -> SceneReactorPool(R.string.card_note_el_fermium)
         101 -> SceneMendelevium()
-        102 -> SceneAccelerator(R.string.card_note_superheavy)
-        103 -> SceneAccelerator(R.string.card_note_superheavy)
-        104 -> SceneAccelerator(R.string.card_note_superheavy)
-        105 -> SceneAccelerator(R.string.card_note_superheavy)
-        106 -> SceneAccelerator(R.string.card_note_superheavy)
-        107 -> SceneAccelerator(R.string.card_note_superheavy)
-        108 -> SceneAccelerator(R.string.card_note_superheavy)
-        109 -> SceneAccelerator(R.string.card_note_superheavy)
-        110 -> SceneAccelerator(R.string.card_note_superheavy)
-        111 -> SceneAccelerator(R.string.card_note_superheavy)
-        112 -> SceneAccelerator(R.string.card_note_superheavy)
-        113 -> SceneAccelerator(R.string.card_note_superheavy)
-        114 -> SceneAccelerator(R.string.card_note_superheavy)
-        115 -> SceneAccelerator(R.string.card_note_superheavy)
-        116 -> SceneAccelerator(R.string.card_note_superheavy)
-        117 -> SceneAccelerator(R.string.card_note_superheavy)
-        118 -> SceneAccelerator(R.string.card_note_superheavy)
         79 -> SceneGold()
         80 -> SceneMercury()
         92 -> SceneUranium()
-        else -> null
+        // De 102 à 118 : les superlourds, faits quelques atomes à la fois.
+        else -> SceneAccelerator(R.string.card_note_superheavy)
     }
 }

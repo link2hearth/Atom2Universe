@@ -64,7 +64,8 @@ internal class SceneStrontium : EngravedScene() {
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
-    private val chute = Path()
+    /** Le parachute, au-dessus de la fusée posée en (0, 0). */
+    private val chute = Path().apply { moveTo(-9f, -16f); quadTo(0f, -28f, 9f, -16f); close() }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val ph = t % CYCLE
@@ -131,9 +132,8 @@ internal class SceneStrontium : EngravedScene() {
                 fill.color = withAlpha(0xFFD8B0A8.toInt(), ((60 - i * 5) * bright).toInt().coerceAtLeast(0))
                 c.drawCircle(sx, sy, 3f + i * 1.4f, fill)
             }
-            chute.reset()
-            chute.moveTo(fx - 9f, fy - 16f); chute.quadTo(fx, fy - 28f, fx + 9f, fy - 16f); chute.close()
-            fill.color = 0xFFE8E0D8.toInt(); c.drawPath(chute, fill)
+            fill.color = 0xFFE8E0D8.toInt()
+            c.save(); c.translate(fx, fy); c.drawPath(chute, fill); c.restore()
             ink.color = withAlpha(Ink.SEPIA, 200); ink.strokeWidth = .5f
             c.drawLine(fx - 9f, fy - 16f, fx, fy - 2f, ink); c.drawLine(fx + 9f, fy - 16f, fx, fy - 2f, ink)
             fill.color = withAlpha(0xFFFF8A6A.toInt(), (160 * bright).toInt()); c.drawCircle(fx, fy, 7f, fill)

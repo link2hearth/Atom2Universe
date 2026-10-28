@@ -44,11 +44,7 @@ class ElementCardRenderTest {
             mass = "MASSE ATOMIQUE · %.3f".format(e.atomicMass), rarityLabel = rarityOf(z).label.uppercase(),
             toxic = ElementCardHazards.isToxic(z), radioactive = ElementCardHazards.hasNoStableIsotope(z)
         )
-        // Sans gravure, l'ancienne scène dans la fenêtre, comme dans l'appli.
-        val legacy = ElementCardArt().apply { configure(e) }
-        card.set(content, EngravedScenes.forElement(z)) { c, t ->
-            legacy.draw(c, 0xFF7FD8FF.toInt(), 0xFFFF8AD8.toInt(), (t / 24f % 1f) * 6.2832f)
-        }
+        card.set(content, EngravedScenes.forElement(z))
         return card
     }
 
@@ -87,7 +83,6 @@ class ElementCardRenderTest {
     /** Quelques cartes en grand, à trois instants : l'animation se juge sur la planche. */
     @Test
     fun apercuEnGrand() {
-        // Les gravures, puis deux cartes sans gravure (ancienne scène dans le nouveau cadre).
         val choix = listOf(22, 23, 24, 25, 27)
         val instants = floatArrayOf(0.35f, 1.6f, 2.9f)
         val w = 720

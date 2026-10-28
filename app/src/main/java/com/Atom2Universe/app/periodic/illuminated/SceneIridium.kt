@@ -24,6 +24,8 @@ internal class SceneIridium : EngravedScene() {
     override val nameRes = R.string.card_scene_spark_plug
     override val noteRes = R.string.card_note_spark_plug
     override val explainRes = R.string.card_explain_spark_plug
+    /** Le vilebrequin et le piston vont vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le bloc moteur coupé : fonte grise hachurée.

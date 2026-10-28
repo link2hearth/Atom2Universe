@@ -76,6 +76,8 @@ class MycologyActivity : ThemedActivity() {
     private var current: Sheet? = null
     private var lifeIndex: MycologyLifeIndex? = null
     private var lifeRepo: ParentesRepository? = null
+    /** La place de la classification dans la fiche ouverte, remplie sur place quand l'arbre arrive. */
+    private var treeSlot: Pair<String, LinearLayout>? = null
     private val history = ArrayList<Sheet>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,13 +101,18 @@ class MycologyActivity : ThemedActivity() {
         scroll.post { scroll.scrollTo(0, y) }
     }
 
-    /** L'arbre se charge à part : le bouton « Retrouver dans l'arbre » apparaît dès qu'il est prêt. */
+    /** L'arbre se charge à part : le bouton « Retrouver dans l'arbre » apparaît dès qu'il est prêt, sans refaire la fiche. */
     private fun loadTree() {
+        val latin = FungusCatalog.species.associate { it.id to getString(it.latin) }
         lifecycleScope.launch {
-            val repo = runCatching { withContext(Dispatchers.Default) { ParentesRepository.load(applicationContext) } }.getOrNull() ?: return@launch
+            val (repo, index) = runCatching {
+                withContext(Dispatchers.Default) { ParentesRepository.load(applicationContext).let { it to MycologyLifeIndex.of(it.tree, latin) } }
+            }.getOrNull() ?: return@launch
             lifeRepo = repo
-            lifeIndex = MycologyLifeIndex(repo.tree, FungusCatalog.species.associate { it.id to getString(it.latin) })
-            (current as? Sheet.Species)?.let { open(it, push = false) }
+            lifeIndex = index
+            val slot = treeSlot
+            treeSlot = null
+            if (slot != null && (current as? Sheet.Species)?.id == slot.first) classification(slot.second, slot.first)
         }
     }
 
@@ -367,14 +374,25 @@ class MycologyActivity : ThemedActivity() {
 
     private fun topView(look: FungusLook) = look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN || look.capShape == CapShape.BALL
 
+    /** Le texte et la liste des planches se lisent hors du fil de l'interface ; la fiche s'ouvre ensuite. */
+    private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?) {
+        val sheet = current
+        val language = resources.configuration.locales[0].language
+        lifecycleScope.launch {
+            val (article, herbarium) = withContext(Dispatchers.IO) {
+                runCatching { MycologyArticleRepository.load(applicationContext, sp.id, language) }.getOrNull() to
+                    runCatching { FungusHerbarium.hasPlate(applicationContext, sp.id) }.getOrDefault(false)
+            }
+            // Une autre fiche a été demandée entre-temps : celle-ci n'est plus voulue.
+            if (current == sheet) showSpecies(sp, onBack, article, herbarium)
+        }
+    }
+
     /**
      * Une espèce en trois morceaux : le titre, le dessin avec ses boutons, le texte. Sur un écran large le dessin
      * a toute la hauteur à gauche et ne bouge pas ; sinon les trois se suivent dans une colonne qui défile.
      */
-    private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?) {
-        val article = runCatching {
-            MycologyArticleRepository.load(this, sp.id, resources.configuration.locales[0].language)
-        }.getOrNull()
+    private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?, article: MycologyArticle?, herbarium: Boolean) {
         val top = column()
         top.addView(label(getString(sp.latin), 14.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
         top.addView(label(getString(sp.altNames), 13f).apply { setTextColor(palette.secondary) })
@@ -398,7 +416,7 @@ class MycologyActivity : ThemedActivity() {
         }
         drawing.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }
             else LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
-        if (FungusHerbarium.hasPlate(this, sp.id)) {
+        if (herbarium) {
             val image = ImageView(this).apply {
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 contentDescription = getString(R.string.myco_herbarium_accessibility, getString(sp.name))
@@ -477,17 +495,9 @@ class MycologyActivity : ThemedActivity() {
                 body.addView(button(group.title) { open(Sheet.Group(group.id)) }, full(6))
             }
         }
-        lifeIndex?.forSpecies(sp.id)?.let { node ->
-            val repo = lifeRepo ?: return@let
-            body.addView(label(getString(R.string.myco_sec_classification), 16f, true), full(20))
-            body.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
-                .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }, 14.5f), full(4))
-            body.addView(button(R.string.myco_open_tree) {
-                if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
-                else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
-                    .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
-            }, full(8))
-        }
+        val slot = column()
+        body.addView(slot, full(0))
+        if (lifeIndex != null) classification(slot, sp.id) else treeSlot = sp.id to slot
         if (article != null && article.sources.isNotEmpty()) {
             body.addView(label(getString(R.string.myco_sec_references), 16f, true), full(20))
             article.sources.forEach { source ->
@@ -509,6 +519,19 @@ class MycologyActivity : ThemedActivity() {
             }
         }
         fiche.show(getString(sp.name), top, media, body, onBack)
+    }
+
+    private fun classification(slot: LinearLayout, speciesId: String) {
+        val node = lifeIndex?.forSpecies(speciesId) ?: return
+        val repo = lifeRepo ?: return
+        slot.addView(label(getString(R.string.myco_sec_classification), 16f, true), full(20))
+        slot.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
+            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }, 14.5f), full(4))
+        slot.addView(button(R.string.myco_open_tree) {
+            if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
+            else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
+        }, full(8))
     }
 
     // ------------------------------------------------------------------ un groupe de sosies

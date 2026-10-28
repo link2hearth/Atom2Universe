@@ -5,6 +5,7 @@ import android.graphics.*
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver
 import kotlin.math.*
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.ColorUtils
@@ -20,9 +21,9 @@ class AtomDiagramView @JvmOverloads constructor(
     var shells: List<Int> = emptyList()
         set(value) { field = value; recomputeGeometry(); invalidate() }
     var atomicNumber: Int = 0
-        set(value) { field = value; nucleusDirty = true; invalidate() }
+        set(value) { field = value; nucleusDirty = true; staticLayer = null; invalidate() }
     var neutronCount: Int = 0
-        set(value) { field = value; nucleusDirty = true; invalidate() }
+        set(value) { field = value; nucleusDirty = true; staticLayer = null; invalidate() }
 
     // Le noyau est immobile : mélange et spirale calculés une fois, pas à chaque image.
     private var nucleusDirty = true
@@ -32,6 +33,23 @@ class AtomDiagramView @JvmOverloads constructor(
 
     private var animating = false
     private var startTime = 0L
+
+    // Lueur, anneaux et noyau ne bougent pas : peints une fois par taille dans une image.
+    private var staticLayer: Bitmap? = null
+    private var staticFailed = false
+
+    // Les électrons avancent à 30 images par seconde, et seulement quand la vue se voit.
+    private var ticking = false
+    private val visibleRect = Rect()
+    private val tick = Runnable {
+        ticking = false
+        if (animating && isOnScreen()) {
+            invalidate()
+            scheduleFrame()
+        }
+    }
+    // Le défilement qui ramène l'atome à l'écran relance les électrons.
+    private val onScroll = ViewTreeObserver.OnScrollChangedListener { scheduleFrame() }
 
     // Géométrie précalculée
     private var cx = 0f
@@ -88,6 +106,7 @@ class AtomDiagramView @JvmOverloads constructor(
     }
 
     private fun recomputeGeometry() {
+        staticLayer = null; staticFailed = false
         if (width == 0 || height == 0 || shells.isEmpty()) return
         cx = width / 2f
         cy = height / 2f
@@ -117,15 +136,46 @@ class AtomDiagramView @JvmOverloads constructor(
         animating = true
         startTime = SystemClock.elapsedRealtime()
         invalidate()
+        scheduleFrame()
     }
 
     fun stopAnimation() {
         animating = false
+        removeCallbacks(tick); ticking = false
+        // Les électrons reviennent à leur place de repos.
+        invalidate()
+    }
+
+    private fun isOnScreen() = windowVisibility == VISIBLE && isShown && getLocalVisibleRect(visibleRect)
+
+    private fun scheduleFrame() {
+        if (!animating || ticking || !isAttachedToWindow || !isOnScreen()) return
+        ticking = true
+        postOnAnimationDelayed(tick, FRAME_MS)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        viewTreeObserver.addOnScrollChangedListener(onScroll)
+        scheduleFrame()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        viewTreeObserver.removeOnScrollChangedListener(onScroll)
+        removeCallbacks(tick); ticking = false
         animating = false
+        staticLayer = null
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        scheduleFrame()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        scheduleFrame()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -134,22 +184,8 @@ class AtomDiagramView @JvmOverloads constructor(
         val elapsed = if (animating) (SystemClock.elapsedRealtime() - startTime) / 1000f else 0f
         val numShells = shells.size
 
-        // Lueur de fond
-        canvas.drawCircle(cx, cy, minOf(cx, cy), bgGlowPaint)
-
-        // Anneaux des couches électroniques
-        for (i in 0 until numShells) {
-            canvas.drawCircle(cx, cy, shellRadii[i], shellPaint)
-        }
-
-        // Noyau — fond adapté à la palette
-        canvas.drawCircle(cx, cy, nucleusR, nucleusBgPaint)
-
-        // Protons + neutrons en spirale de Fibonacci
-        drawNucleus(canvas)
-
-        // Rim du noyau (par-dessus les particules)
-        canvas.drawCircle(cx, cy, nucleusR, nucleusRimPaint)
+        val layer = staticLayer ?: bakeStaticLayer()
+        if (layer != null) canvas.drawBitmap(layer, 0f, 0f, null) else paintStatic(canvas)
 
         // Électrons orbitaux
         val eR = dp(2.5f)
@@ -171,8 +207,30 @@ class AtomDiagramView @JvmOverloads constructor(
                 canvas.drawCircle(ex, ey, eR, electronPaint)
             }
         }
+    }
 
-        if (animating) postInvalidateOnAnimation()
+    /** L'image fixe à cette taille ; sans mémoire pour elle, la partie fixe se peint à chaque image. */
+    private fun bakeStaticLayer(): Bitmap? {
+        if (width <= 0 || height <= 0 || staticFailed) return null
+        val bmp = try { Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888) }
+            catch (e: OutOfMemoryError) { staticFailed = true; return null }
+        paintStatic(Canvas(bmp))
+        staticLayer = bmp
+        return bmp
+    }
+
+    /** Lueur, anneaux, noyau et son liseré. */
+    private fun paintStatic(c: Canvas) {
+        // Lueur de fond
+        c.drawCircle(cx, cy, minOf(cx, cy), bgGlowPaint)
+        // Anneaux des couches électroniques
+        for (r in shellRadii) c.drawCircle(cx, cy, r, shellPaint)
+        // Noyau — fond adapté à la palette
+        c.drawCircle(cx, cy, nucleusR, nucleusBgPaint)
+        // Protons + neutrons en spirale de Fibonacci
+        drawNucleus(c)
+        // Rim du noyau (par-dessus les particules)
+        c.drawCircle(cx, cy, nucleusR, nucleusRimPaint)
     }
 
     private fun rebuildNucleus() {
@@ -231,4 +289,9 @@ class AtomDiagramView @JvmOverloads constructor(
 
     private fun dp(v: Float): Float = v * resources.displayMetrics.density
     private fun dp(v: Int): Float = v * resources.displayMetrics.density
+
+    private companion object {
+        /** Un peu moins qu'un trentième de seconde : l'image suivante de l'écran tombe à 1/30 s. */
+        const val FRAME_MS = 29L
+    }
 }

@@ -1,12 +1,11 @@
-"""Generate minimal bilingual bestiary identities from the accepted art manifest.
+"""Validate the accepted art manifest against the tree and the published profiles.
 
-This deliberately imports names and taxonomy only. Detailed profiles remain owned by
-import_profiles.py and take precedence in AnimalCatalog.
+The app only lists encyclopedic profiles (import_profiles.py): an illustration whose
+profile is not published yet is reported, never turned into an identity-only entry.
 """
 import json
 import re
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,10 +13,6 @@ MANIFEST = ROOT / "tools/bestiary/illustrated_species.json"
 ASSETS = ROOT / "app/src/main/assets/science/bestiary"
 GROUPS = {"mammals", "birds", "reptiles", "amphibians", "fish", "invertebrates"}
 ID_RE = re.compile(r"[a-z][a-z0-9_]*\Z")
-
-
-def android_text(value):
-    return value.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n")
 
 
 def load_records():
@@ -78,12 +73,10 @@ def load_records():
         if row["image"] != f"{animal_id}.webp" or not (ASSETS / row["image"]).is_file():
             raise ValueError(f"Manifest image must be the existing {animal_id}.webp asset")
 
-    # Refuse identity collisions with either detailed source catalogue.
-    source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/AnimalCatalog.kt").read_text(encoding="utf-8")
-    initial = re.findall(r'AnimalSpecies\("([a-z][a-z0-9_]*)", "([^"]+)"', source)
-    detailed = {animal_id: scientific for animal_id, scientific in initial}
-    # Draft profile files may be written by another editorial task. They must
-    # not hide an illustrated entry until the detailed native entry is published.
+    # Refuse identity collisions with the published profiles.
+    detailed = {}
+    # Draft profile files may be written by another editorial task: only
+    # published profiles count.
     published_source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryEncyclopediaCatalog.kt").read_text(encoding="utf-8")
     published_ids = set(re.findall(r'id = "([a-z][a-z0-9_]*)"', published_source))
     for profile in (ROOT / "tools/bestiary/data/profiles").glob("*.json"):
@@ -96,60 +89,22 @@ def load_records():
         detailed[value["id"]] = value["scientific"]
 
     detailed_scientific = {scientific: animal_id for animal_id, scientific in detailed.items()}
-    minimal = []
+    awaiting = []
     for row in records:
         prior = detailed.get(row["id"])
         if prior is not None:
             if prior != row["scientific_name"]:
                 raise ValueError(f"Manifest id conflicts with detailed profile identity: {row['id']}")
-            continue  # Keep the detailed catalog entry and its reviewed content.
+            continue
         other_id = detailed_scientific.get(row["scientific_name"])
         if other_id is not None and other_id != row["id"]:
             raise ValueError(f"Manifest scientific name conflicts with detailed profile id {other_id}: {row['id']}")
-        minimal.append(row)
-    return minimal
-
-
-def write_resources(records):
-    for locale, directory, key in (("en", "values", "name_en"), ("fr", "values-fr", "name_fr")):
-        root = ET.Element("resources")
-        for row in records:
-            prefix = "animal_illustrated_" + row["id"]
-            # Accept names pasted with Python/Java-style escaped apostrophes in the JSON.
-            ET.SubElement(root, "string", name=f"{prefix}_name", formatted="false").text = android_text(row[key].replace("\\'", "'"))
-            ET.SubElement(root, "string", name=f"{prefix}_latin", formatted="false").text = android_text(row["scientific_name"])
-        ET.indent(root, space="    ")
-        ET.ElementTree(root).write(ROOT / f"app/src/main/res/{directory}/strings_bestiary_illustrated.xml",
-                                   encoding="utf-8", xml_declaration=True)
-
-
-def write_catalog(records):
-    lines = ["package com.Atom2Universe.app.science.bestiary", "", "import com.Atom2Universe.app.R", "",
-             "/** Generated from the accepted, identity-only illustration manifest. */",
-             "internal object BestiaryIllustratedCatalog {"]
-    chunks = [records[index:index + 40] for index in range(0, len(records), 40)]
-    lines.append("    val species: List<AnimalSpecies> = " +
-                 (" + ".join(f"batch{index}()" for index in range(len(chunks))) if chunks else "emptyList()"))
-    for index, chunk in enumerate(chunks):
-        lines += ["", f"    private fun batch{index}(): List<AnimalSpecies> = listOf("]
-        for row in chunk:
-            prefix = "R.string.animal_illustrated_" + row["id"]
-            lines += [
-                "        AnimalSpecies(",
-                f'            id = {json.dumps(row["id"])}, scientific = {json.dumps(row["scientific_name"])},',
-                f"            name = {prefix}_name, group = {json.dumps(row['group'])},",
-                "            description = null, identification = null, habitat = null, diet = null, behavior = null,",
-                "            sourceUrl = null, sourceTitle = null, latin = " + prefix + "_latin,",
-                "            references = emptyList()", "        ),"
-            ]
-        lines.append("    )")
-    lines += ["}", ""]
-    (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryIllustratedCatalog.kt").write_text(
-        "\n".join(lines), encoding="utf-8")
+        awaiting.append(row)
+    return awaiting
 
 
 if __name__ == "__main__":
-    reviewed = load_records()
-    write_resources(reviewed)
-    write_catalog(reviewed)
-    print(f"Published {len(reviewed)} accepted illustration-only identities in EN/FR")
+    awaiting = load_records()
+    for row in awaiting:
+        print(f"Awaiting a published profile: {row['id']} ({row['scientific_name']})")
+    print(f"Manifest valid; {len(awaiting)} illustrations are not shown until their profile is published")

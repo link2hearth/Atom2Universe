@@ -24,6 +24,8 @@ internal class SceneGallium : EngravedScene() {
     override val nameRes = R.string.card_scene_melting_spoon
     override val noteRes = R.string.card_note_melting_spoon
     override val explainRes = R.string.card_explain_melting_spoon
+    /** La cuillère entre et sort de la tasse très vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     private val dirX = sin(ANGLE * PI.toFloat() / 180f)
     private val dirY = -cos(ANGLE * PI.toFloat() / 180f)

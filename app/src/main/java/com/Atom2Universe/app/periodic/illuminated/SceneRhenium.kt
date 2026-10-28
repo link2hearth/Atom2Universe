@@ -21,6 +21,8 @@ internal class SceneRhenium : EngravedScene() {
     override val nameRes = R.string.card_scene_jet_engine
     override val noteRes = R.string.card_note_jet_engine
     override val explainRes = R.string.card_explain_jet_engine
+    /** Les aubes défilent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // L'atelier : mur clair, sol, le berceau qui porte le réacteur.

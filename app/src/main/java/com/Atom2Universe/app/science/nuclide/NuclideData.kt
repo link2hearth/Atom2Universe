@@ -23,23 +23,26 @@ data class Nuclide(
 ) {
     val notation get() = "${superscript(A)}$symbol"
 
-    /** Couleur de la carte : celle du mode principal, comme sur les cartes de nucléides usuelles. */
-    val decayType: DecayType get() {
-        if (stable) return DecayType.STABLE
-        val main = decayModes.firstOrNull()?.mode ?: return DecayType.OTHER
-        return when {
-            main.startsWith("α") -> DecayType.ALPHA
-            // 2β- (double bêta moins) et β-n, β-α… (émission retardée) restent de la famille β-.
-            main.startsWith("β-") || main.startsWith("2β-") -> DecayType.BETA_MINUS
-            main.startsWith("β+") || main.startsWith("2β+") || main.startsWith("EC") || main.startsWith("2EC") ->
-                DecayType.BETA_PLUS
-            main.startsWith("SF") -> DecayType.FISSION
-            else -> DecayType.OTHER
-        }
-    }
+    /** Couleur de la carte : celle du mode principal, comme sur les cartes de nucléides usuelles.
+     *  Calculée une fois : la carte la relit pour chaque case à chaque image. */
+    val decayType: DecayType = decayTypeOf(stable, decayModes)
 
     companion object {
         private const val SUPERSCRIPT_DIGITS = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+
+        private fun decayTypeOf(stable: Boolean, decayModes: List<DecayMode>): DecayType {
+            if (stable) return DecayType.STABLE
+            val main = decayModes.firstOrNull()?.mode ?: return DecayType.OTHER
+            return when {
+                main.startsWith("α") -> DecayType.ALPHA
+                // 2β- (double bêta moins) et β-n, β-α… (émission retardée) restent de la famille β-.
+                main.startsWith("β-") || main.startsWith("2β-") -> DecayType.BETA_MINUS
+                main.startsWith("β+") || main.startsWith("2β+") || main.startsWith("EC") || main.startsWith("2EC") ->
+                    DecayType.BETA_PLUS
+                main.startsWith("SF") -> DecayType.FISSION
+                else -> DecayType.OTHER
+            }
+        }
 
         fun superscript(n: Int): String = n.toString().map { c ->
             when (c) {

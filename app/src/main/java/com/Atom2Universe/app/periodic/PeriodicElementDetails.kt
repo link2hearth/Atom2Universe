@@ -74,6 +74,13 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
     // Fichier absent ou illisible : on ne retente pas l'ouverture à chaque nom affiché.
     private val missing = mutableSetOf<String>()
 
+    /** Lit d'avance les fichiers de la langue courante ; à appeler hors du fil de l'écran. */
+    fun preload(context: Context) {
+      val lang = LocaleHelper.getLanguage(context)
+      loadRoot(context, lang) ?: loadRoot(context, "en")
+      loadProperties(context, lang)
+    }
+
     fun loadRoot(context: Context, lang: String): JSONObject? =
       loadAsset(context, "science/Elements/periodic_descriptions_$lang.json")
 

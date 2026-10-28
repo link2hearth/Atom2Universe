@@ -118,7 +118,7 @@ internal class SceneGeiger(
             fill.color = withAlpha(0xFFFF3020.toInt(), (240 * flash).toInt()); c.drawCircle(LAMP_X, LAMP_Y, 4f, fill)
             fill.color = withAlpha(0xFFFF3020.toInt(), (70 * flash).toInt()); c.drawCircle(LAMP_X, LAMP_Y, 11f, fill)
             line.color = withAlpha(Ink.SEPIA, (200 * flash).toInt()); line.strokeWidth = 1f
-            for (r in floatArrayOf(10f, 15f)) {
+            for (r in TICKS) {
                 tick.set(266f - r, 249f - r, 266f + r, 249f + r)
                 c.drawArc(tick, -40f, 80f, false, line)
             }
@@ -151,5 +151,7 @@ internal class SceneGeiger(
         const val LAMP_Y = 204f
         const val PROBE = 1
         const val DEG = .017453292f
+        /** Les rayons des deux arcs du bip. */
+        val TICKS = floatArrayOf(10f, 15f)
     }
 }

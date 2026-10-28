@@ -192,17 +192,15 @@ internal class SceneLithium : EngravedScene() {
             b.c.drawCircle(0f, 0f, 3.6f, b.p)
             b.c.drawCircle(0f, 0f, 3.6f, b.pen(Ink.SEPIA, .5f))
             b.line(-1.5f, 0f, 1.5f, 0f, .6f); b.line(0f, -1.5f, 0f, 1.5f, .6f)
-        },
-        Sprite(GLOW, RectF(-30f, -30f, 30f, 30f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 30f,
-                intArrayOf(0xCCFFF2B0.toInt(), 0x44FFE08A, 0x00FFE08A), floatArrayOf(0f, .35f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 30f, b.p)
         }
     )
 
     // ───────────── animation ─────────────
 
     private val lamp = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0xCCFFF2B0.toInt(), 0x44FFE08A, 0x00FFE08A), floatArrayOf(0f, .35f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val u = t % CYCLE
@@ -228,9 +226,8 @@ internal class SceneLithium : EngravedScene() {
         }
         // L'éclair s'illumine pendant la charge.
         if (charging) {
-            c.save(); c.translate(BOLT_X, BOLT_Y)
-            s.draw(c, GLOW, alpha = (150 + 90 * sin(t * 6f)).toInt())
-            c.restore()
+            glow.alpha = (150 + 90 * sin(t * 6f)).toInt()
+            c.save(); c.translate(BOLT_X, BOLT_Y); c.scale(30f, 30f); c.drawCircle(0f, 0f, 1f, glow); c.restore()
         }
         // Les ions : de la cathode au graphite pendant la charge, retour à la décharge.
         c.save(); c.clipPath(lens)
@@ -276,7 +273,6 @@ internal class SceneLithium : EngravedScene() {
         const val CYCLE = 9f
         const val IONS = 10
         const val ION = 1
-        const val GLOW = 2
         const val STEEL = 0xFFB8BEC6.toInt()
         const val WRAP = 0xFF2E5C8A.toInt()
         const val COPPER = 0xFFC77B4A.toInt()

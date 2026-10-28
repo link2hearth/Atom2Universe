@@ -22,6 +22,8 @@ internal class SceneRhodium : EngravedScene() {
     override val nameRes = R.string.card_scene_catalytic_converter
     override val noteRes = R.string.card_note_catalytic_converter
     override val explainRes = R.string.card_explain_catalytic_converter
+    /** La route défile vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     private val can = Path().apply { addRoundRect(CAN_L, CAN_T, CAN_R, CAN_B, 26f, 26f, Path.Direction.CW) }
     private val core = rect(CORE_L, CAN_T + 10f, CORE_R, CAN_B - 10f)

@@ -32,7 +32,6 @@
     <string name="be_plate_accessibility">Illustration de %1$s. %2$s</string>
     <string name="be_plate_accessibility_name">Illustration de %1$s</string>
     <string name="be_encyclopedia_coming">Une illustration est disponible. La fiche encyclopédique sera ajoutée plus tard.</string>
-    <string name="be_encyclopedia_placeholder">Fiche espèce</string>
     <string name="be_no_browser">Aucun navigateur disponible pour ouvrir cette source.</string>
     <string name="best_plate_loading">Chargement de l’illustration…</string>
     <string name="best_plate_unavailable">Illustration indisponible</string>

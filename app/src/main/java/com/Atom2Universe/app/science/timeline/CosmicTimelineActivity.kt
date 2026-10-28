@@ -342,31 +342,49 @@ class CosmicTimelineActivity : ThemedActivity() {
         }
         body.addView(input, fullRow())
         val list = column(); body.addView(list)
-        fun results(query: String) {
-            list.removeAllViews()
-            val normalized = normalize(query)
-            val matches = TimelineChapters.all.filter { normalize(getString(it.title) + " " + getString(it.description)).contains(normalized) }
-            val chapters = matches.filter { it.datedAncestorId == null }
-            val ancestors = matches.filter { it.datedAncestorId != null }
-            val events = CosmicTimeline.events.filter { normalize(getString(it.title) + " " + getString(it.summary)).contains(normalized) }
-            val history = HumanHistory.entries.filter { normalize(it.indexedText(this)).contains(normalized) }
-            if (matches.isEmpty() && events.isEmpty() && history.isEmpty()) list.addView(paragraph(R.string.ct_search_empty))
-            if (chapters.isNotEmpty()) list.addView(paragraph(R.string.ct_periods, true))
-            chapters.forEach { chapter -> list.addView(button(chapter.title) { navigate(chapter.id) }.apply {
-                gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            }, fullRow()) }
-            if (ancestors.isNotEmpty()) list.addView(paragraph(R.string.ct_life_landmarks, true))
-            ancestors.forEach { chapter -> list.addView(button(chapter.title) { navigate(chapter.id) }.apply {
+        // Texts are normalized and buttons built once; a keystroke only shows or hides them.
+        val empty = paragraph(R.string.ct_search_empty)
+        list.addView(empty)
+        val sections = mutableListOf<Pair<View, List<Pair<View, String>>>>()
+        fun section(title: Int, rows: List<Pair<View, String>>) {
+            val header = paragraph(title, true)
+            list.addView(header)
+            rows.forEach { (view, _) -> list.addView(view, fullRow()) }
+            sections += header to rows
+        }
+        val chapters = TimelineChapters.all.map { it to normalize(getString(it.title) + " " + getString(it.description)) }
+        section(R.string.ct_periods, chapters.filter { it.first.datedAncestorId == null }.map { (chapter, key) ->
+            button(chapter.title) { navigate(chapter.id) }.apply { gravity = Gravity.START or Gravity.CENTER_VERTICAL } to key
+        })
+        section(R.string.ct_life_landmarks, chapters.filter { it.first.datedAncestorId != null }.map { (chapter, key) ->
+            button(chapter.title) { navigate(chapter.id) }.apply {
                 text = getString(R.string.ct_catalog_entry, getString(chapter.title), chapter.dateLabel(this@CosmicTimelineActivity))
                 gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            }, fullRow()) }
-            if (events.isNotEmpty()) list.addView(paragraph(R.string.ct_events, true))
-            events.forEach { list.addView(eventButton(it), fullRow()) }
-            if (history.isNotEmpty()) list.addView(paragraph(R.string.ct_history_landmarks, true))
-            history.forEach { entry -> list.addView(button(entry.title) { focusHumanEntries(listOf(entry)) }.apply {
+            } to key
+        })
+        section(R.string.ct_events, CosmicTimeline.events.map {
+            eventButton(it) to normalize(getString(it.title) + " " + getString(it.summary))
+        })
+        section(R.string.ct_history_landmarks, HumanHistory.entries.map { entry ->
+            button(entry.title) { focusHumanEntries(listOf(entry)) }.apply {
                 text = getString(R.string.ct_catalog_entry, getString(entry.title), entry.dateLabel(this@CosmicTimelineActivity))
                 gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            }, fullRow()) }
+            } to normalize(entry.indexedText(this))
+        })
+        fun results(query: String) {
+            val normalized = normalize(query)
+            var any = false
+            for ((header, rows) in sections) {
+                var shown = false
+                for ((view, key) in rows) {
+                    val match = key.contains(normalized)
+                    view.visibility = if (match) View.VISIBLE else View.GONE
+                    shown = shown || match
+                }
+                header.visibility = if (shown) View.VISIBLE else View.GONE
+                any = any || shown
+            }
+            empty.visibility = if (any) View.GONE else View.VISIBLE
         }
         input.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -496,9 +514,10 @@ class CosmicTimelineActivity : ThemedActivity() {
     private fun square() = LinearLayout.LayoutParams(dp(48), dp(48))
     private fun fullRow() = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
-    private fun normalize(value: String) = Normalizer.normalize(value, Normalizer.Form.NFD).replace(Regex("\\p{M}+"), "").lowercase(Locale.ROOT)
+    private fun normalize(value: String) = Normalizer.normalize(value, Normalizer.Form.NFD).replace(combiningMarks, "").lowercase(Locale.ROOT)
 
     companion object {
+        private val combiningMarks = Regex("\\p{M}+")
         /** Stable internal links to verified, dated tree nodes. */
         const val EXTRA_EVENT_ID = "cosmic_event_id"
         const val EXTRA_CHAPTER_ID = "cosmic_chapter_id"

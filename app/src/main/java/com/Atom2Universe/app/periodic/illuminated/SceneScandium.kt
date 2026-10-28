@@ -22,6 +22,8 @@ internal class SceneScandium : EngravedScene() {
     override val nameRes = R.string.card_scene_racing_bike
     override val noteRes = R.string.card_note_racing_bike
     override val explainRes = R.string.card_explain_racing_bike
+    /** La route et les roues défilent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         val far = Path().apply {
@@ -190,7 +192,7 @@ internal class SceneScandium : EngravedScene() {
         c.drawOval(REAR_X - 34f, WHEEL_Y + WR - 2f, FRONT_X + 34f, WHEEL_Y + WR + 4f, fill)
         // Les roues, qui roulent sans glisser sur la route.
         val spin = road / WR * 180f / PI.toFloat()
-        for (wx in floatArrayOf(REAR_X, FRONT_X)) s.draw(c, WHEEL, dx = wx, dy = WHEEL_Y, deg = spin, px = 0f, py = 0f)
+        for (wx in WHEELS_X) s.draw(c, WHEEL, dx = wx, dy = WHEEL_Y, deg = spin, px = 0f, py = 0f)
         // Le pédalier : la jambe de l'autre côté, le vélo et le coureur, puis la jambe de devant.
         val crank = t * CADENCE
         leg(c, crank + PI.toFloat(), far = true)
@@ -295,5 +297,6 @@ internal class SceneScandium : EngravedScene() {
         const val POPLAR = 3
         const val OAK = 4
         const val CLOUD = 5
+        val WHEELS_X = floatArrayOf(REAR_X, FRONT_X)
     }
 }

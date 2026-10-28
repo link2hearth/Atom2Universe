@@ -23,6 +23,8 @@ internal class SceneIndium : EngravedScene() {
     override val nameRes = R.string.card_scene_phone_touch
     override val noteRes = R.string.card_note_phone_touch
     override val explainRes = R.string.card_explain_phone_touch
+    /** Le doigt saute vite d'une icône à l'autre : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le bureau de bois, vu d'en haut.
@@ -82,6 +84,13 @@ internal class SceneIndium : EngravedScene() {
         }
     }
 
+    /** L'ombre de la main, d'un seul ton sombre, l'index en (0, 0) : posée ensuite translucide. */
+    override fun sprites() = listOf(Sprite(SHADOW, RectF(-10f, -8f, 86f, 120f)) { b ->
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG)
+        val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
+        hand(b.c, 0f, 0f, true, fill, ink)
+    })
+
     private fun iconX(i: Int) = if (i < GRID) SL + 15f + (i % 4) * 30f else SL + 15f + (i - GRID) * 30f
     private fun iconY(i: Int) = if (i < GRID) ST + 28f + (i / 4) * 33f else DOCK_Y
 
@@ -133,26 +142,24 @@ internal class SceneIndium : EngravedScene() {
         }
         c.restore()
         // Le doigt et la main droite, paume en bas, l'index tendu ; d'abord leur ombre sur la vitre,
-        // peinte opaque dans un calque translucide pour qu'elle reste d'un seul ton.
+        // cuite opaque et posée translucide pour qu'elle reste d'un seul ton.
         val shadow = 2f + 8f * lift
-        c.saveLayerAlpha(x + shadow - 60f, y + shadow - 20f, x + shadow + 120f, y + shadow + 150f, 70)
-        hand(c, x + shadow, y + shadow, true)
-        c.restore()
-        hand(c, x, y, false)
+        s.draw(c, SHADOW, dx = x + shadow, dy = y + shadow, alpha = 70)
+        hand(c, x, y, false, fill, ink)
     }
 
     /** La main dont l'index touche ([x], [y]) ; en ombre, d'une seule teinte sombre et sans contour. */
-    private fun hand(c: Canvas, x: Float, y: Float, shadow: Boolean) {
+    private fun hand(c: Canvas, x: Float, y: Float, shadow: Boolean, fill: Paint, ink: Paint) {
         val skin = if (shadow) 0xFF1A0E06.toInt() else SKIN
         // Les doigts repliés, à droite de l'index ; la paume ; le pouce à gauche ; l'index.
         for (k in 0 until 3) {
             val fx = x + DX * (68f + k * 6f) - NX * (14f + k * 11f)
             val fy = y + DY * (68f + k * 6f) - NY * (14f + k * 11f)
-            disc(c, fx, fy, 9.5f - k * .8f, skin, shadow)
+            disc(c, fx, fy, 9.5f - k * .8f, skin, shadow, fill, ink)
         }
-        disc(c, x + DX * 98f - NX * 14f, y + DY * 98f - NY * 14f, 30f, skin, shadow)
-        stick(c, x + DX * 92f + NX * 26f, y + DY * 92f + NY * 26f, x + DX * 66f + NX * 18f, y + DY * 66f + NY * 18f, 12f, skin, shadow)
-        stick(c, x + DX * 4f, y + DY * 4f, x + DX * 74f, y + DY * 74f, 15f, skin, shadow)
+        disc(c, x + DX * 98f - NX * 14f, y + DY * 98f - NY * 14f, 30f, skin, shadow, fill, ink)
+        stick(c, x + DX * 92f + NX * 26f, y + DY * 92f + NY * 26f, x + DX * 66f + NX * 18f, y + DY * 66f + NY * 18f, 12f, skin, shadow, ink)
+        stick(c, x + DX * 4f, y + DY * 4f, x + DX * 74f, y + DY * 74f, 15f, skin, shadow, ink)
         if (shadow) return
         // L'ongle et les plis des phalanges.
         c.save(); c.rotate(ANGLE, x + DX * 9f, y + DY * 9f)
@@ -167,12 +174,12 @@ internal class SceneIndium : EngravedScene() {
         }
     }
 
-    private fun disc(c: Canvas, x: Float, y: Float, r: Float, color: Int, shadow: Boolean) {
+    private fun disc(c: Canvas, x: Float, y: Float, r: Float, color: Int, shadow: Boolean, fill: Paint, ink: Paint) {
         fill.color = color; c.drawCircle(x, y, r, fill)
         if (!shadow) { ink.color = Ink.SEPIA; ink.strokeWidth = .9f; c.drawCircle(x, y, r, ink) }
     }
 
-    private fun stick(c: Canvas, x0: Float, y0: Float, x1: Float, y1: Float, w: Float, color: Int, shadow: Boolean) {
+    private fun stick(c: Canvas, x0: Float, y0: Float, x1: Float, y1: Float, w: Float, color: Int, shadow: Boolean, ink: Paint) {
         if (!shadow) { ink.color = Ink.SEPIA; ink.strokeWidth = w + 1.8f; c.drawLine(x0, y0, x1, y1, ink) }
         ink.color = color; ink.strokeWidth = w; c.drawLine(x0, y0, x1, y1, ink)
     }
@@ -206,6 +213,7 @@ internal class SceneIndium : EngravedScene() {
         const val GRID = 20
         const val ICONS = 24
         const val HALF = 9.5f
+        const val SHADOW = 1
         /** L'écart des fils de la grille transparente. */
         const val WIRE = 10f
         /** Un appui : le trajet, puis le doigt posé entre [PRESS_IN] et [PRESS_OUT] (fractions du trajet). */

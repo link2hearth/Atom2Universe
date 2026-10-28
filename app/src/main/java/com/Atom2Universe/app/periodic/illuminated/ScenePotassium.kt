@@ -201,7 +201,7 @@ internal class ScenePotassium : EngravedScene() {
         val by = 140f + 34f * sin(p * 1.7f) + 10f * cos(p * 3.1f)
         val flap = abs(sin(t * 16f))
         c.save(); c.translate(bx, by); c.rotate(12f * sin(p * 2f))
-        for (side in floatArrayOf(-1f, 1f)) {
+        for (side in SIDES) {
             wing.color = 0xFF2A7AD0.toInt()
             c.drawOval(if (side < 0) -7f * flap else 0f, -5f, if (side < 0) 0f else 7f * flap, 1f, wing)
             wing.color = 0xFF1A2A4A.toInt()
@@ -225,6 +225,7 @@ internal class ScenePotassium : EngravedScene() {
         const val LEAF_MID = 2
         const val LEAF_YOUNG = 3
         const val BUNCH = 4
+        val SIDES = floatArrayOf(-1f, 1f)
         /** Les feuilles : base x, y, angle, sens (−1 vers la gauche), devant (1) ou derrière, modèle. */
         val LEAVES = arrayOf(
             floatArrayOf(160f, 168f, 50f, -1f, 0f, 2f),

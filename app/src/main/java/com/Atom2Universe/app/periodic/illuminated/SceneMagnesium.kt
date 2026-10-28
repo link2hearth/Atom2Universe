@@ -26,6 +26,8 @@ internal class SceneMagnesium : EngravedScene() {
     override val nameRes = R.string.card_scene_fireworks
     override val noteRes = R.string.card_note_fireworks
     override val explainRes = R.string.card_explain_fireworks
+    /** Les fusées et les étoiles filent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         val lit = ArrayList<Float>()
@@ -131,11 +133,6 @@ internal class SceneMagnesium : EngravedScene() {
     }
 
     override fun sprites(): List<Sprite> = listOf(
-        Sprite(GLOW, RectF(-60f, -60f, 60f, 60f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 60f,
-                intArrayOf(0xCCFFFFFF.toInt(), 0x55E8EEFF, 0x00E8EEFF), floatArrayOf(0f, .3f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 60f, b.p)
-        },
         Sprite(SMOKE, RectF(-44f, -30f, 44f, 30f)) { b ->
             val rnd = Random(3)
             val puff = Path()
@@ -153,6 +150,10 @@ internal class SceneMagnesium : EngravedScene() {
     private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val core = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val pts = FloatArray(SPARKS * 4)
+    /** L'éclair de l'éclatement : un dégradé de rayon 1, mis à l'échelle au dessin. */
+    private val flash = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0xCCFFFFFF.toInt(), 0x55E8EEFF, 0x00E8EEFF), floatArrayOf(0f, .3f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         for (k in SHELLS.indices) {
@@ -212,10 +213,9 @@ internal class SceneMagnesium : EngravedScene() {
         c.restore()
         if (a < .6f) {
             val f = 1f - a / .6f
-            val g = radius * 2.1f / 60f
-            c.save(); c.translate(x, y); c.scale(g, g)
-            s.draw(c, GLOW, alpha = (255f * f * f).toInt())
-            c.restore()
+            val g = radius * 2.1f
+            flash.alpha = (255f * f * f).toInt()
+            c.save(); c.translate(x, y); c.scale(g, g); c.drawCircle(0f, 0f, 1f, flash); c.restore()
         }
         val light = fade.pow(1.1f)
         val crackle = a > CRACKLE
@@ -292,7 +292,6 @@ internal class SceneMagnesium : EngravedScene() {
         const val TRAIL = 4
         const val SEG = .1f
         const val REFL_ROWS = 7
-        const val GLOW = 1
         const val SMOKE = 2
         val LAUNCHES = floatArrayOf(160f, 200f, 180f, 170f)
         /** Les tirs : x, y d'éclatement, (inutilisé), rayon, décalage dans le temps. */

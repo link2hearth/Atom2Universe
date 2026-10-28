@@ -16,7 +16,7 @@ import com.Atom2Universe.app.science.botany.BotanyCatalog
  * Family diagnosis comes directly from the atlas resources, never a copied article.
  * Order comparisons describe common traits, not an identification key or a new topology.
  * Sources: P. F. Stevens, Angiosperm Phylogeny Website; Kew POWO.
- * Checked 2026-10-11. The offline OpenTree archive remains authoritative for ancestry.
+ * Checked 2026-10-28. The offline OpenTree archive remains authoritative for ancestry.
  */
 object PlantGroupKnowledge {
     private val orderFamilies = mapOf(
@@ -56,7 +56,53 @@ object PlantGroupKnowledge {
         "Arecales" to listOf("Arecaceae"),
         "Saxifragales" to listOf("Grossulariaceae", "Crassulaceae"),
     )
+    /** Families placed only for their APweb page: their order has no comparison written for them. */
+    private val pageOnlyFamilies = mapOf(
+        "Alismatales" to listOf("Araceae", "Zosteraceae", "Scheuchzeriaceae"),
+        "Ericales" to listOf("Sapotaceae", "Sarraceniaceae"),
+        "Myrtales" to listOf("Myrtaceae", "Onagraceae"),
+        "Asparagales" to listOf("Iridaceae"),
+        "Gentianales" to listOf("Gentianaceae"),
+        "Sapindales" to listOf("Anacardiaceae", "Meliaceae", "Nitrariaceae"),
+        "Solanales" to listOf("Convolvulaceae"),
+        "Cupressales" to listOf("Taxaceae"),
+        "Lamiales" to listOf("Lentibulariaceae", "Orobanchaceae", "Plocospermataceae", "Scrophulariaceae", "Retziaceae"),
+        "Fagales" to listOf("Rhoipteleaceae"),
+        "Malvales" to listOf("Dipterocarpaceae"),
+        "Rosales" to listOf("Cannabaceae"),
+        "Malpighiales" to listOf("Clusiaceae", "Euphorbiaceae", "Malpighiaceae", "Ochnaceae", "Passifloraceae", "Lophopyxidaceae"),
+        "Dipsacales" to listOf("Caprifoliaceae"),
+        "Poales" to listOf("Cyperaceae", "Juncaceae"),
+        "Brassicales" to listOf("Caricaceae", "Koeberliniaceae", "Salvadoraceae", "Setchellanthaceae"),
+        "Caryophyllales" to listOf("Amaranthaceae", "Dioncophyllaceae", "Nepenthaceae", "Nyctaginaceae", "Polygonaceae"),
+        "Saxifragales" to listOf("Saxifragaceae"),
+        "Dioscoreales" to listOf("Burmanniaceae"),
+        // APweb keeps Columelliaceae in its own Desfontainiales page.
+        "Desfontainiales" to listOf("Columelliaceae"),
+        "Dilleniales" to listOf("Dilleniaceae"),
+        "Oxalidales" to listOf("Elaeocarpaceae"),
+        "Crossosomatales" to listOf("Guamatelaceae"),
+        "Nymphaeales" to listOf("Nymphaeaceae"),
+        "Austrobaileyales" to listOf("Schisandraceae"),
+        "Ginkgoales" to listOf("Ginkgoaceae"),
+        "Gnetales" to listOf("Welwitschiaceae"),
+    )
+    /** APweb describes Araucariaceae on its Cupressales page, not on the Pinales one. */
+    private val familyPages = mapOf("Araucariaceae" to "cupressalesweb.html")
+    /** APweb treats Retziaceae as a synonym of Stilbaceae. */
+    private val familyAnchors = mapOf("Retziaceae" to "Stilbaceae")
+    /** Spore-bearing families have no order page: their anchor on APweb's non-seed plant page. */
+    private val sporingFamilies = mapOf(
+        "Takakiaceae" to "Takaia", "Sphagnaceae" to "Sphagnopsida", "Ambuchananiaceae" to "Sphagnopsida",
+        "Andreaeobryaceae" to "Andraeabryopsida", "Polytrichaceae" to "Mosses", "Buxbaumiaceae" to "Mosses",
+        "Bryaceae" to "Mosses", "Mniaceae" to "Mosses", "Mielichhoferiaceae" to "Mosses", "Catoscopiaceae" to "Mosses",
+        "Orthotrichaceae" to "Mosses", "Pottiaceae" to "Mosses", "Amblystegiaceae" to "Mosses",
+        "Brachytheciaceae" to "Mosses", "Hylocomiaceae" to "Mosses",
+        "Marchantiaceae" to "Marchantiales", "Ricciaceae" to "Marchantiales",
+        "Equisetaceae" to "Equisetaceae", "Osmundaceae" to "Osmundaceae", "Dennstaedtiaceae" to "Dennstaedtiaceae",
+    )
     private val familyOrders = orderFamilies.flatMap { (order, families) -> families.map { it to order } }.toMap()
+    private val pageOrders = familyOrders + pageOnlyFamilies.flatMap { (order, families) -> families.map { it to order } }
     private val clades = mapOf(
         "Chlorophyta" to R.string.plant_group_Chlorophyta,
         "Streptophyta" to R.string.plant_group_Streptophyta,
@@ -169,7 +215,8 @@ object PlantGroupKnowledge {
         "Laurales" to "lauralesweb.htm", "Asparagales" to "asparagalesweb.htm",
         "Cucurbitales" to "cucurbitalesweb.htm", "Gentianales" to "gentianalesweb.htm",
         "Sapindales" to "sapindalesweb.htm", "Solanales" to "solanalesweb.htm",
-        "Pinales" to "conifers.html", "Cupressales" to "conifers.html",
+        "Boraginales" to "boraginalesweb.htm", "Piperales" to "piperalesweb2.htm",
+        "Pinales" to "conifers.html", "Cupressales" to "cupressalesweb.html",
         "Zygophyllales" to "zygophyllalesweb.htm", "Lamiales" to "lamialesweb.htm",
         "Fagales" to "fagalesweb.htm", "Malvales" to "malvalesweb.htm",
         "Rosales" to "rosalesweb.htm", "Malpighiales" to "malpighialesweb.htm",
@@ -180,21 +227,33 @@ object PlantGroupKnowledge {
         "Apiales" to "apialesweb.htm", "Poales" to "poalesweb.htm",
         "Brassicales" to "brassicalesweb.htm", "Caryophyllales" to "caryophyllalesweb.htm",
         "Geraniales" to "geranialesweb.htm", "Zingiberales" to "zingiberalesweb.htm",
-        "Arecales" to "arecalesweb.htm", "Saxifragales" to "saxifragalesweb.htm"
+        "Arecales" to "arecalesweb.htm", "Saxifragales" to "saxifragalesweb.htm",
+        "Dioscoreales" to "dioscorealesweb.htm", "Desfontainiales" to "desfontainialesweb.htm",
+        "Dilleniales" to "dillenialesweb.html", "Oxalidales" to "oxalidalesweb.htm",
+        "Crossosomatales" to "crossosomatalesweb.htm", "Nymphaeales" to "nymphaealesweb.htm",
+        "Austrobaileyales" to "austrobaileyalesweb.htm", "Ginkgoales" to "ginkgoales.html",
+        "Gnetales" to "gnetales.html"
     )
+    private val sporingClades = setOf("Chloroplastida", "Viridiplantae", "Chlorophyta", "Streptophyta", "Embryophyta",
+        "Tracheophyta", "Bryophyta", "Marchantiophyta", "Monilophyta", "Polypodiopsida")
 
     fun sources(scientific: String): List<Pair<Int, String>> {
-        val order = familyOrders[scientific] ?: scientific.takeIf { it in comparisons }
+        val kew = R.string.plant_group_source_kew to "https://powo.science.kew.org/results?q=${android.net.Uri.encode(scientific)}"
+        val family = scientific in pageOrders
+        val order = pageOrders[scientific] ?: scientific.takeIf { it in comparisons }
         // A source page is metadata, never a replacement parent in the offline tree.
-        val subgroupSource = subgroups[scientific]?.second
-        val page = subgroupSource ?: order?.let { orderPages.getValue(it) }
-            ?: if(scientific in setOf("Chloroplastida", "Viridiplantae", "Chlorophyta", "Streptophyta", "Embryophyta", "Tracheophyta", "Bryophyta", "Marchantiophyta", "Monilophyta", "Polypodiopsida")) "sporing.html"
-            else if(scientific in setOf("Gymnospermae", "Acrogymnospermae")) "conifers.html"
-            else "amborellalesweb2.htm"
-        val apweb = "https://www.mobot.org/MOBOT/research/APweb/orders/$page"
-        return listOf(R.string.plant_group_source_apweb to (apweb +
-            if (scientific in familyOrders) "#$scientific" else ""),
-            R.string.plant_group_source_kew to "https://powo.science.kew.org/results?q=${android.net.Uri.encode(scientific)}")
+        val page = subgroups[scientific]?.second
+            ?: (familyPages[scientific] ?: order?.let { orderPages[it] })?.let { if (family) "$it#${familyAnchors[scientific] ?: scientific}" else it }
+            ?: sporingFamilies[scientific]?.let { "sporing.html#$it" }
+            ?: when {
+                scientific in sporingClades -> "sporing.html"
+                scientific in setOf("Gymnospermae", "Acrogymnospermae") -> "conifers.html"
+                // A family of unknown order (green algae) gets no misleading APweb page.
+                family || BotanyCatalog.families.any { it.id == scientific } -> null
+                else -> "amborellalesweb2.htm"
+            }
+            ?: return listOf(kew)
+        return listOf(R.string.plant_group_source_apweb to "https://www.mobot.org/MOBOT/research/APweb/orders/$page", kew)
     }
 
     /** Shared presentation avoids source links/qualifications drifting between modules. */

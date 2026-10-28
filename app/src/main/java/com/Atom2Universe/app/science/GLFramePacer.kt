@@ -9,6 +9,7 @@ import android.view.Choreographer
  * Cadence d'une GLSurfaceView en RENDERMODE_WHEN_DIRTY : une image quand quelque chose change
  * (geste, réglage), et tant que le rendu en réclame une autre, des images plafonnées.
  * L'écran de la tablette tourne à 120 Hz : sans plafond, une scène lente se payait deux fois.
+ * Le plafond tient à 60, 90, 120 et 144 Hz.
  * Rien n'est demandé entre [pause] et [resume].
  */
 internal class GLFramePacer(private val view: GLSurfaceView) : Choreographer.FrameCallback {
@@ -16,7 +17,8 @@ internal class GLFramePacer(private val view: GLSurfaceView) : Choreographer.Fra
     private var running = false
     private var posted = false
     private var pendingHz = 0
-    private var lastRequestNanos = 0L
+    /** Échéance de la prochaine image, cumulée : la moyenne tient [pendingHz] quel que soit l'écran. */
+    private var deadlineNanos = 0L
     @Volatile private var continueHz = 0
     private val continueRunnable = Runnable { requestFrame(continueHz) }
 
@@ -40,9 +42,14 @@ internal class GLFramePacer(private val view: GLSurfaceView) : Choreographer.Fra
     override fun doFrame(frameTimeNanos: Long) {
         posted = false
         if (!running || pendingHz <= 0) return
-        // Marge de 6 ms : à 120 Hz on sert une image sur deux, à 90 Hz chaque image (sous 60).
-        if (frameTimeNanos - lastRequestNanos >= 1_000_000_000L / pendingHz - SLACK_NANOS) {
-            lastRequestNanos = frameTimeNanos
+        val period = 1_000_000_000L / pendingHz
+        // Une demi-période d'écran de tolérance absorbe la gigue des vsync ; l'échéance avance
+        // d'une période à chaque image servie, donc 60 i/s à 90 Hz = deux vsync sur trois,
+        // à 144 Hz = alternance 2-3, et pas de rafale de rattrapage après une pause.
+        val refreshHz = view.display?.refreshRate?.takeIf { it >= 1f } ?: 60f
+        val tolerance = (500_000_000.0 / refreshHz).toLong()
+        if (frameTimeNanos >= deadlineNanos - tolerance) {
+            deadlineNanos = (if (frameTimeNanos - deadlineNanos > period) frameTimeNanos else deadlineNanos) + period
             pendingHz = 0
             view.requestRender()
         } else {
@@ -70,6 +77,5 @@ internal class GLFramePacer(private val view: GLSurfaceView) : Choreographer.Fra
         const val INTERACTIVE_HZ = 60
         /** Seul un lent bruit de surface bouge : la moitié suffit. */
         const val SLOW_HZ = 30
-        private const val SLACK_NANOS = 6_000_000L
     }
 }

@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import android.content.Intent
 import com.Atom2Universe.app.science.botany.BotanyActivity
 import com.Atom2Universe.app.science.botany.BotanyLifeIndex
-import com.Atom2Universe.app.science.bestiary.AnimalCatalog
+import com.Atom2Universe.app.science.bestiary.AnimalEncyclopediaRepository
 import com.Atom2Universe.app.science.bestiary.BestiaryActivity
 import com.Atom2Universe.app.science.bestiary.BestiaryLifeIndex
 import com.Atom2Universe.app.science.mycology.FungusCatalog
@@ -33,6 +33,7 @@ import com.Atom2Universe.app.science.timeline.CosmicTimelineActivity
 import com.Atom2Universe.app.science.timeline.LifeDate
 import com.Atom2Universe.app.science.timeline.LifeTimeline
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -52,6 +53,8 @@ class ParentesActivity : ThemedActivity() {
     private var pendingSecond: String? = null
     private var pendingDate: String? = null
     private var scene: TreeScene? = null
+    private var renderJob: Job? = null
+    private var overviewPrepared: ParentesTreeView.Prepared? = null
     private lateinit var root: LinearLayout
     private lateinit var back: ImageButton
     private lateinit var controls: LinearLayout
@@ -99,20 +102,24 @@ class ParentesActivity : ThemedActivity() {
     private fun loadAtlas() {
         loading.visibility = View.VISIBLE
         lifecycleScope.launch {
-            val loaded = withContext(Dispatchers.Default) { runCatching { ParentesRepository.load(applicationContext) } }
-            loaded.onSuccess { result ->
+            val loaded = withContext(Dispatchers.Default) { runCatching {
+                val atlas = ParentesRepository.load(applicationContext)
+                // Catalog cross-indexes are built here too, not on the UI thread.
+                Triple(atlas, BestiaryLifeIndex.of(atlas.tree),
+                    MycologyLifeIndex(atlas.tree, FungusCatalog.species.associate { it.id to getString(it.latin) }))
+            } }
+            loaded.onSuccess { (result, bestiary, mycology) ->
                 loading.visibility = View.GONE
                 repository = result
-                bestiaryIndex = BestiaryLifeIndex(result.tree, AnimalCatalog.species.associate { it.id to it.scientific })
-                mycologyIndex = MycologyLifeIndex(result.tree, FungusCatalog.species.associate { it.id to getString(it.latin) })
+                bestiaryIndex = bestiary
+                mycologyIndex = mycology
                 focus = focus.takeIf { it in repo.tree.nodes } ?: repo.tree.root
                 selected = selected.takeIf { it in repo.tree.nodes } ?: focus
                 fun defaultSpecies(name: String) = repo.tree.species.first { it.scientific == name }.id
                 first = first.takeIf { repo.tree.nodes[it]?.species == true } ?: defaultSpecies("Apis mellifera")
                 second = second.takeIf { repo.tree.nodes[it]?.species == true } ?: defaultSpecies("Bombus terrestris")
                 val restoredSelection = selected
-                render()
-                if (restoredSelection in requireNotNull(scene).parents) select(restoredSelection)
+                render { if (restoredSelection in requireNotNull(scene).parents) select(restoredSelection) }
                 applyPendingLink()
             }.onFailure { error ->
                 android.util.Log.e("ParentesLoad", "Atlas load failed", error)
@@ -246,21 +253,33 @@ class ParentesActivity : ThemedActivity() {
         }
     }
 
-    private fun render() {
-        scene=if(comparing) repo.tree.compare(first,second) else if(focus==repo.tree.root) repo.overview else repo.tree.atlas(focus)
-        val current=requireNotNull(scene)
-        selected=if(comparing) current.common!! else focus
+    /** Panels follow at once; the drawing is prepared off the UI thread and swapped in, then [after] runs. */
+    private fun render(after:(()->Unit)?=null) {
+        val atlas=repo
+        val compare=comparing; val target=focus; val a=first; val b=second
+        selected=if(compare) atlas.tree.lca(a,b) else target
         chart.selected=selected
-        chart.show(current,repo.tree,repo.groups.keys,if(current===repo.overview) repo.overviewPositions else null) { id ->
-            when {
-                comparing && id==current.common && repo.tree.nodes.getValue(id).scientific.isEmpty() -> getString(R.string.pt_common_node)
-                repo.tree.nodes.getValue(id).species || repo.tree.isBrowsable(id) || comparing -> repo.name(this,id)
-                else -> ""
-            }
-        }
         refreshNavigation()
         buildControls()
         showSummary()
+        val cached=if(!compare && target==atlas.tree.root) overviewPrepared else null
+        renderJob?.cancel()
+        renderJob=lifecycleScope.launch {
+            val prepared=cached ?: withContext(Dispatchers.Default) {
+                val current=if(compare) atlas.tree.compare(a,b) else if(target==atlas.tree.root) atlas.overview else atlas.tree.atlas(target)
+                chart.prepare(current,atlas.tree,atlas.groups.keys,if(current===atlas.overview) atlas.overviewPositions else null) { id ->
+                    when {
+                        compare && id==current.common && atlas.tree.nodes.getValue(id).scientific.isEmpty() -> getString(R.string.pt_common_node)
+                        atlas.tree.nodes.getValue(id).species || atlas.tree.isBrowsable(id) || compare -> atlas.name(this@ParentesActivity,id)
+                        else -> ""
+                    }
+                }
+            }
+            if(prepared.scene===atlas.overview) overviewPrepared=prepared
+            scene=prepared.scene
+            chart.show(prepared)
+            after?.invoke()
+        }
     }
 
     private fun refreshNavigation() {
@@ -289,15 +308,14 @@ class ParentesActivity : ThemedActivity() {
         status.text=getString(if(comparing) R.string.pt_comparison_hint else R.string.pt_map_hint)
     }
 
-    private fun explore(id:String) {
+    private fun explore(id:String,after:(()->Unit)?=null) {
         comparing=false; focus=id; selected=id
-        render()
+        render(after)
     }
     private fun reveal(id:String) {
         if(repo.tree.nodes.getValue(id).species) {
-            explore(repo.tree.displayParent(id) ?: repo.tree.root)
+            explore(repo.tree.displayParent(id) ?: repo.tree.root) { chart.post { chart.reveal(id) } }
             select(id)
-            chart.post { chart.reveal(id) }
         } else explore(id)
     }
     private fun select(id:String) { selected=id; chart.selected=id; showSummary() }
@@ -411,9 +429,17 @@ class ParentesActivity : ThemedActivity() {
         val node = repo.tree.nodes.getValue(id)
         if (node.scientific.isNotEmpty()) body.addView(label(node.scientific,16f,true))
         body.addView(label(article(id)))
-        bestiaryIndex?.forNode(id)?.let { speciesId ->
-            AnimalCatalog.byId[speciesId]?.let { animal ->
-                animal.description?.let { body.addView(label(getString(it))) }
+        bestiaryIndex?.forNode(id)?.let { profile ->
+            // The animal's description is the overview of its encyclopedia profile, read off the UI thread.
+            val description = label("").apply { visibility = View.GONE }
+            body.addView(description)
+            val language = resources.configuration.locales[0].language
+            lifecycleScope.launch {
+                val overview = withContext(Dispatchers.IO) {
+                    try { AnimalEncyclopediaRepository.load(applicationContext, profile, language).sections["overview"] }
+                    catch (_: java.io.IOException) { null } catch (_: org.json.JSONException) { null }
+                }
+                if (!overview.isNullOrBlank()) { description.text = overview; description.visibility = View.VISIBLE }
             }
         }
         PlantGroupKnowledge.append(this,body,palette,node.scientific,includeDescription=false)
@@ -541,9 +567,11 @@ class ParentesActivity : ThemedActivity() {
             searchJob = lifecycleScope.launch {
                 results = withContext(Dispatchers.Default) {
                     val collator = java.text.Collator.getInstance(resources.configuration.locales[0])
-                    repo.search(query,speciesOnly).filter { within==null || it.id in within }
-                        .map { it to repo.name(this@ParentesActivity,it.id) }
-                        .sortedWith { a,b -> collator.compare(a.second,b.second) }.map { it.first }
+                    val found = repo.search(query,speciesOnly).filter { within==null || it.id in within }
+                    ensureActive()
+                    val named = found.map { it to collator.getCollationKey(repo.name(this@ParentesActivity,it.id)) }
+                    ensureActive()
+                    named.sortedBy { it.second }.map { it.first }
                 }
                 list.isEnabled = true
                 empty.text = getString(R.string.pt_none)

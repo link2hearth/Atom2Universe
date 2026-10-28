@@ -196,10 +196,11 @@ internal class SceneAluminium : EngravedScene() {
         sea(c, t)
         // Un voilier passe au large, très lentement.
         val bx = 330f - (t * 3f) % 300f
+        val boat = sail(bx)
         fill.color = 0xFFF8F4EA.toInt()
-        c.drawPath(sail(bx), fill)
+        c.drawPath(boat, fill)
         ink.color = Ink.SEPIA; ink.strokeWidth = .6f
-        c.drawPath(sail(bx), ink)
+        c.drawPath(boat, ink)
         c.drawLine(bx - 7f, HORIZON - 1.5f, bx + 7f, HORIZON - 1.5f, ink)
         // Les bulles du verre.
         c.save(); c.clipPath(glassClip)

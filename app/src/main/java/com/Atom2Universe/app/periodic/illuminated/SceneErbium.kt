@@ -51,16 +51,16 @@ internal class SceneErbium : EngravedScene() {
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val ray = Path()
+    /** Un rai de lumière, tracé une fois à l'abscisse 0 puis posé à sa place. */
+    private val shaft = Path().apply { moveTo(-6f, 50f); lineTo(6f, 50f); lineTo(40f, 250f); lineTo(18f, 250f); close() }
     private val fish = Path()
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         // Les rais de lumière qui descendent de la surface.
         for (k in 0 until 4) {
             val x = 70f + k * 70f + 10f * sin(t * .3f + k)
-            ray.reset()
-            ray.moveTo(x - 6f, 50f); ray.lineTo(x + 6f, 50f); ray.lineTo(x + 40f, 250f); ray.lineTo(x + 18f, 250f); ray.close()
             fill.color = withAlpha(0xFFBFEFFF.toInt(), (22 + 12 * sin(t * .8f + k * 2f)).toInt())
-            c.drawPath(ray, fill)
+            c.save(); c.translate(x, 0f); c.drawPath(shaft, fill); c.restore()
         }
         // Les poissons passent.
         for (k in 0 until 3) {

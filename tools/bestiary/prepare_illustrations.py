@@ -68,11 +68,6 @@ def main():
     inventory = {r["scientific"]: r for r in read(BUILD / "inventory.json")}
     views = dorsal_constraints()
     used_scientific, used_ids = set(), set()
-    initial = re.findall(r'AnimalSpecies\("([a-z_]+)", "([^"]+)"',
-                         (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/AnimalCatalog.kt").read_text("utf-8"))
-    for animal_id, scientific in initial:
-        used_ids.add(animal_id)
-        used_scientific.add(scientific)
     for profile in (ROOT / "tools/bestiary/data/profiles").glob("*.json"):
         row = read(profile)
         used_ids.add(row["id"])

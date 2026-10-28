@@ -54,6 +54,7 @@ class HumanTimelineNavigator(
     private val firstDate = date(Gravity.START)
     private val lastDate = date(Gravity.END)
     private var scrubMinimum: Double? = null
+    val scrubbing get() = scrubMinimum != null
     private val slider = SeekBar(context).apply {
         max = 10000
         layoutDirection = LAYOUT_DIRECTION_LTR
@@ -76,7 +77,8 @@ class HumanTimelineNavigator(
             override fun onStopTrackingTouch(bar: SeekBar) {
                 scrubMinimum = null
                 bar.parent.requestDisallowInterceptTouchEvent(false)
-                bind()
+                // Complete update of the screen once the finger lifts.
+                changeWindow { }
             }
         })
     }
@@ -119,8 +121,7 @@ class HumanTimelineNavigator(
         ViewCompat.setStateDescription(slider, visibleRange)
         val travel = HumanTimeWindow.MAX - minimum - window.span
         slider.isEnabled = travel > .001
-        if (scrubMinimum == null) slider.progress = if (travel > .001)
-            ((window.start - minimum) / travel * slider.max).roundToInt().coerceIn(0, slider.max) else 0
+        bindSlider()
         slider.keyProgressIncrement = if (travel > .001)
             (window.span / travel * slider.max).roundToInt().coerceIn(1, slider.max) else 1
         enabled(earlier, window.start > window.navigationMin + .001)
@@ -133,6 +134,15 @@ class HumanTimelineNavigator(
             century.setPadding(dp(10), dp(10), dp(10), dp(10))
             century.setTextColor(if (selected) palette.ink(palette.accent, surface) else palette.secondary)
         }
+    }
+
+    /** Cursor position only: what must follow every frame of a drag. */
+    fun bindSlider() {
+        if (scrubMinimum != null) return
+        val minimum = window.navigationMin
+        val travel = HumanTimeWindow.MAX - minimum - window.span
+        slider.progress = if (travel > .001)
+            ((window.start - minimum) / travel * slider.max).roundToInt().coerceIn(0, slider.max) else 0
     }
 
     private fun arrow(drawable: Int, description: Int, action: () -> Unit) = ImageButton(context).apply {

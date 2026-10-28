@@ -238,7 +238,8 @@ internal class SceneOxygen : EngravedScene() {
         c.restore()
         s.draw(c, AIRWAY)
         // L'air : des molécules d'O₂ qui descendent à l'inspiration et remontent à l'expiration.
-        for ((p, path) in AIR.withIndex()) {
+        for (p in AIR.indices) {
+            val path = AIR[p]
             for (i in 0 until 7) {
                 val u = i / 7f * .42f + breath * .58f
                 along(path, u)
@@ -252,7 +253,7 @@ internal class SceneOxygen : EngravedScene() {
                 val dx = cos(tilt) * 1.25f; val dy = sin(tilt) * 1.25f
                 molecule.color = withAlpha(0xFFCFE8FF.toInt(), (240 * a).toInt())
                 rim.alpha = (230 * a).toInt()
-                for (k in floatArrayOf(-1f, 1f)) {
+                for (k in SIDES) {
                     c.drawCircle(x + dx * k, y + dy * k, 1.5f, molecule)
                     c.drawCircle(x + dx * k, y + dy * k, 1.5f, rim)
                 }
@@ -302,7 +303,8 @@ internal class SceneOxygen : EngravedScene() {
         const val LUNG = 0xFFE3A79C.toInt()
         const val CARTILAGE = 0xFFF1E6D6.toInt()
         const val BRONCHUS = 0xFFF6EDE2.toInt()
-        val AIR = listOf(
+        val SIDES = floatArrayOf(-1f, 1f)
+        val AIR = arrayOf(
             floatArrayOf(180f, 66f, 180f, 150f, 150f, 178f, 126f, 204f, 108f, 236f),
             floatArrayOf(180f, 70f, 180f, 150f, 214f, 174f, 238f, 202f, 252f, 236f)
         )

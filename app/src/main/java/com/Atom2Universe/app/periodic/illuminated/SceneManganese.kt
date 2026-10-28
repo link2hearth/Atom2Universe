@@ -150,11 +150,6 @@ internal class SceneManganese : EngravedScene() {
             b.stroke(head, .8f)
             b.body(rect(40f, -9f, 48f, -7f), 0xFF2A2A2E.toInt(), 0f, outline = .5f, washAlpha = 255)
             b.fill(ellipse(72f, 0f, 2f, 10f), 0xFFFFF8D8.toInt())
-        },
-        Sprite(GLOW, RectF(-50f, -50f, 50f, 50f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 50f,
-                intArrayOf(0xAAFFF0C8.toInt(), 0x44FFE0A0, 0x00FFE0A0), floatArrayOf(0f, .45f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 50f, b.p)
         }
     )
 
@@ -164,6 +159,9 @@ internal class SceneManganese : EngravedScene() {
     private val spot = Path()
     private val haze = Paint(Paint.ANTI_ALIAS_FLAG)
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0xAAFFF0C8.toInt(), 0x44FFE0A0, 0x00FFE0A0), floatArrayOf(0f, .45f, 1f), Shader.TileMode.CLAMP)
+    }
     private val motes = FloatArray(MOTES * 3).also { m ->
         val rnd = Random(17)
         for (k in 0 until MOTES) { m[k * 3] = 60f + rnd.nextFloat() * 250f; m[k * 3 + 1] = 70f + rnd.nextFloat() * 200f; m[k * 3 + 2] = rnd.nextFloat() * 6.3f }
@@ -188,16 +186,15 @@ internal class SceneManganese : EngravedScene() {
         val d = hypot(tx - lx, ty - ly)
         val r = d * .24f
         spot.reset(); spot.addOval(tx - r, ty - r * .86f, tx + r, ty + r * .86f, Path.Direction.CW)
+        // Le cône n'est découpé qu'une fois : la tache s'y emboîte, puis on y revient.
         c.save(); c.clipPath(cone)
         s.draw(c, LIT, alpha = 110)
-        c.clipPath(spot)
+        c.save(); c.clipPath(spot)
         s.draw(c, LIT, alpha = 255)
         c.restore()
-        c.save(); c.clipPath(cone)
         haze.color = withAlpha(0xFFFFF0C8.toInt(), 26)
         c.drawPath(cone, haze)
-        c.translate(tx, ty); c.scale(r / 40f, r / 40f)
-        s.draw(c, GLOW, alpha = 150)
+        halo(c, tx, ty, r * 1.25f, 150)
         c.restore()
         // La poussière qui danse dans le faisceau.
         for (k in 0 until MOTES) {
@@ -218,9 +215,16 @@ internal class SceneManganese : EngravedScene() {
             c.drawCircle(EYE_X, EYE_Y, 5f, fill); c.drawCircle(EYE_X + 6f, EYE_Y, 5f, fill)
         }
         // La lampe, et la lueur autour de sa vitre.
-        c.save(); c.translate(lx, ly); c.scale(.5f, .5f); s.draw(c, GLOW, alpha = 220); c.restore()
+        halo(c, lx, ly, 25f, 220)
         c.save(); c.translate(PIVOT_X, PIVOT_Y); c.rotate(Math.toDegrees(aim.toDouble()).toFloat())
         s.draw(c, TORCH)
+        c.restore()
+    }
+
+    private fun halo(c: Canvas, x: Float, y: Float, r: Float, alpha: Int) {
+        glow.alpha = alpha
+        c.save(); c.translate(x, y); c.scale(r, r)
+        c.drawCircle(0f, 0f, 1f, glow)
         c.restore()
     }
 
@@ -243,6 +247,5 @@ internal class SceneManganese : EngravedScene() {
         const val MOTES = 26
         const val LIT = 1
         const val TORCH = 2
-        const val GLOW = 3
     }
 }

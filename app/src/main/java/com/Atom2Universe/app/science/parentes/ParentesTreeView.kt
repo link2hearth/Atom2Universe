@@ -9,6 +9,8 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.text.TextPaint
+import android.text.TextUtils
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -22,19 +24,42 @@ class ParentesTreeView(context:Context):View(context) {
     private val palette=SciencePalette(context)
     private val density=resources.displayMetrics.density
     private val fontScale=resources.configuration.fontScale
-    private val text=android.text.TextPaint(Paint.ANTI_ALIAS_FLAG).apply { textSize=13f*resources.displayMetrics.scaledDensity }
+    private val labelSize=13f*resources.displayMetrics.scaledDensity
+    private val text=TextPaint(Paint.ANTI_ALIAS_FLAG).apply { textSize=labelSize }
     private val edge=Paint(Paint.ANTI_ALIAS_FLAG).apply { style=Paint.Style.STROKE; strokeCap=Paint.Cap.ROUND }
     private val dot=Paint(Paint.ANTI_ALIAS_FLAG)
+    // Points with a round (or square) cap draw the same discs (or squares) as drawCircle, in one call per group.
+    private val point=Paint(Paint.ANTI_ALIAS_FLAG).apply { style=Paint.Style.STROKE }
     private val paper=Paint(Paint.ANTI_ALIAS_FLAG).apply { color=palette.background }
     private var dashed=DashPathEffect(floatArrayOf(9f*density,7f*density),0f)
     private var dashZoom=-1f
     private val firstColor=palette.mark(0xff4cbeac.toInt())
     private val secondColor=palette.mark(0xffe1a65c.toInt())
-    private data class Mark(val id:String,val x:Float,val y:Float,val label:String,val color:Int,
-        val species:Boolean,val priority:Int,val width:Float,val hit:RectF=RectF(),val bounds:RectF=RectF())
-    private data class Branch(val id:String,val path:Path,val color:Int,val bounds:RectF=RectF())
+    internal class Mark(val id:String,val x:Float,val y:Float,val label:String,val color:Int,val dotColor:Int,val ink:Int,
+        val species:Boolean,val priority:Int,val width:Float,val square:Boolean) {
+        val hit=RectF()
+        val bounds=RectF()
+        private var ellipsized=""
+        private var shortRoom=-1f
+        /** Ellipsized once per available width, not once per frame. */
+        fun short(paint:TextPaint,room:Float):String {
+            if(room!=shortRoom) { ellipsized=TextUtils.ellipsize(label,paint,room,TextUtils.TruncateAt.END).toString(); shortRoom=room }
+            return ellipsized
+        }
+    }
+    /** Branches sharing a color, a highlight state and a sibling layer, merged into one path. */
+    internal class Stroke(val path:Path,val color:Int,val highlighted:Boolean,val dashed:Boolean)
+    private data class StrokeKey(val color:Int,val highlighted:Boolean,val dashed:Boolean,val layer:Int)
+    /** Dot centres (x, y pairs, scene units) sharing a color and a size rule. */
+    internal class Dots(val points:FloatArray,val color:Int,val kind:Int,val square:Boolean)
+    /** Everything derived from a scene; built off the UI thread by [prepare]. */
+    class Prepared internal constructor(internal val scene:TreeScene,internal val radial:Boolean,internal val leafCount:Int,
+        internal val marks:List<Mark>,internal val byId:Map<String,Mark>,internal val strokes:List<Stroke>,
+        internal val dots:List<Dots>,internal val labelSpacing:Float,internal val maxZoom:Float,internal val extent:RectF)
     private var marks:List<Mark> = emptyList()
-    private var branches:List<Branch> = emptyList()
+    private var byId:Map<String,Mark> = emptyMap()
+    private var strokes:List<Stroke> = emptyList()
+    private var dots:List<Dots> = emptyList()
     private var scene:TreeScene?=null
     private var radial=true
     private var leafCount=1
@@ -46,9 +71,10 @@ class ParentesTreeView(context:Context):View(context) {
     private var ty=0f
     private var animator:ValueAnimator?=null
     private val extent=RectF()
+    private var selectedMark:Mark?=null
     var onSelect:(String)->Unit={}
     var selected:String?=null
-        set(value) { field=value; invalidate() }
+        set(value) { field=value; selectedMark=value?.let { byId[it] }; invalidate() }
 
     init {
         setBackgroundColor(palette.background)
@@ -56,12 +82,14 @@ class ParentesTreeView(context:Context):View(context) {
         isClickable=true
     }
 
-    fun show(scene:TreeScene,tree:LifeTree,groups:Set<String>,prepared:Map<String,TreeLayout.RadialPoint>?=null,label:(String)->String) {
-        animator?.cancel()
-        this.scene=scene
-        radial=scene.common==null
-        leafCount=scene.parents.keys.count { tree.nodes.getValue(it).species }.coerceAtLeast(1)
-        val circular=if(radial) prepared ?: TreeLayout.radial(scene) else emptyMap()
+    fun show(scene:TreeScene,tree:LifeTree,groups:Set<String>,positions:Map<String,TreeLayout.RadialPoint>?=null,label:(String)->String)=
+        show(prepare(scene,tree,groups,positions,label))
+
+    /** Touches no view state: safe on a background thread. */
+    fun prepare(scene:TreeScene,tree:LifeTree,groups:Set<String>,positions:Map<String,TreeLayout.RadialPoint>?=null,label:(String)->String):Prepared {
+        val radial=scene.common==null
+        val leafCount=scene.parents.keys.count { tree.nodes.getValue(it).species }.coerceAtLeast(1)
+        val circular=if(radial) positions ?: TreeLayout.radial(scene) else emptyMap()
         val horizontal=if(radial) emptyMap() else TreeLayout.place(scene,94f*fontScale)
         // These colors follow actual ancestor IDs; they never create editorial branches.
         val hues=mapOf("Mammalia" to 0xff73c9d0.toInt(),"Aves" to 0xff71a8e8.toInt(),
@@ -71,7 +99,8 @@ class ParentesTreeView(context:Context):View(context) {
             .mapValues { palette.mark(it.value) }
         fun color(id:String)=tree.ancestors(id).firstNotNullOfOrNull { hues[tree.nodes.getValue(it).scientific] } ?: palette.secondary
         val major=setOf("Mammalia","Aves","Insecta","Chloroplastida","Fungi","Bacteria","Archaea")
-        marks=scene.parents.keys.map { id ->
+        val measure=TextPaint(Paint.ANTI_ALIAS_FLAG).apply { textSize=labelSize }
+        val marks=scene.parents.keys.map { id ->
             val node=tree.nodes.getValue(id)
             val name=label(id)
             val display=when(id) {
@@ -84,35 +113,77 @@ class ParentesTreeView(context:Context):View(context) {
                 id in groups -> 2
                 node.species -> 4
                 else -> 3 }
-            text.typeface=if(!node.species) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+            measure.typeface=if(!node.species) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+            val hue=color(id)
             Mark(id,(circular[id]?.x ?: horizontal.getValue(id).x)*density,
-                (circular[id]?.y ?: horizontal.getValue(id).y)*density,display,color(id),node.species,priority,text.measureText(display))
+                (circular[id]?.y ?: horizontal.getValue(id).y)*density,display,hue,
+                when { id==scene.common -> palette.accent; id in scene.second -> secondColor; id in scene.first -> firstColor; else -> hue },
+                if(node.species) palette.text else palette.ink(hue,palette.background),
+                node.species,priority,measure.measureText(display),id in scene.second && id!=scene.common)
         }.sortedBy { it.priority }
         // Leave enough room for complete horizontal labels even in the densest sector.
-        labelSpacing=2f*(marks.maxOfOrNull { it.width } ?: 0f)+24f*density
-        maxZoom=TreeZoom.limit(marks.filter { it.label.isNotEmpty() }.map { TreeZoom.Point(it.x,it.y) },
-            labelSpacing,text.descent()-text.ascent()+12f*density)
+        val labelSpacing=2f*(marks.maxOfOrNull { it.width } ?: 0f)+24f*density
+        val maxZoom=TreeZoom.limit(marks.filter { it.label.isNotEmpty() }.map { TreeZoom.Point(it.x,it.y) },
+            labelSpacing,measure.descent()-measure.ascent()+12f*density)
         val indexed=marks.associateBy { it.id }
-        branches=scene.parents.mapNotNull { (id,parent) ->
-            parent ?: return@mapNotNull null
+        val strokes=LinkedHashMap<StrokeKey,Stroke>()
+        // Siblings leaving one side of a parent overlap there; each goes to its own layer so the
+        // translucent strokes still build up as with one drawPath per branch. Other branches meet
+        // at nodes, under their dots (and, far zoomed out, along a few sector edges).
+        val siblings=HashMap<String,IntArray>()
+        val oval=RectF()
+        for((id,parent) in scene.parents) {
+            parent ?: continue
             val a=indexed.getValue(parent); val b=indexed.getValue(id)
-            Branch(id,Path().apply {
-                moveTo(a.x,a.y)
-                if(radial) {
-                    val from=circular.getValue(parent); val to=circular.getValue(id)
-                    val r=from.radius*density
-                    // Circular arcs stay inside the parent's angular sector. Unlike
-                    // free cubic curves, they cannot cut across neighbouring clades.
-                    if(r>0f) arcTo(RectF(-r,-r,r,r),Math.toDegrees(from.angle.toDouble()).toFloat(),
-                        Math.toDegrees((to.angle-from.angle).toDouble()).toFloat(),false)
-                    lineTo(b.x,b.y)
-                } else {
-                    val middle=(a.x+b.x)*.5f
-                    cubicTo(middle,a.y,middle,b.y,b.x,b.y)
-                }
-            },b.color).also { it.path.computeBounds(it.bounds,true) }
+            val first=id in scene.first; val second=id in scene.second
+            val color=when { second -> secondColor; first -> firstColor; else -> b.color }
+            // Around the centre (radius 0) every child starts at the same point: one shared count.
+            val side=if(radial && circular.getValue(parent).radius>0f &&
+                circular.getValue(id).angle<circular.getValue(parent).angle) 0 else 1
+            val layer=siblings.getOrPut(parent) { IntArray(2) }[side]++
+            val key=StrokeKey(color,first || second,second,layer)
+            val path=strokes.getOrPut(key) { Stroke(Path(),color,first || second,second) }.path
+            path.moveTo(a.x,a.y)
+            if(radial) {
+                val from=circular.getValue(parent); val to=circular.getValue(id)
+                val r=from.radius*density
+                // Circular arcs stay inside the parent's angular sector. Unlike
+                // free cubic curves, they cannot cut across neighbouring clades.
+                if(r>0f) path.arcTo(oval.apply { set(-r,-r,r,r) },Math.toDegrees(from.angle.toDouble()).toFloat(),
+                    Math.toDegrees((to.angle-from.angle).toDouble()).toFloat(),false)
+                path.lineTo(b.x,b.y)
+            } else {
+                val middle=(a.x+b.x)*.5f
+                path.cubicTo(middle,a.y,middle,b.y,b.x,b.y)
+            }
         }
-        extent.set(marks.minOf { it.x },marks.minOf { it.y },marks.maxOf { it.x },marks.maxOf { it.y })
+        val dotGroups=LinkedHashMap<Triple<Int,Int,Boolean>,ArrayList<Mark>>()
+        for(m in marks) {
+            val kind=when { m.species -> LEAF; m.label.isEmpty() -> PLAIN; m.priority<=2 -> NAMED; else -> NAMED_DETAIL }
+            dotGroups.getOrPut(Triple(m.dotColor,kind,m.square)) { ArrayList() }.add(m)
+        }
+        val dots=dotGroups.map { (key,members) ->
+            val points=FloatArray(members.size*2)
+            members.forEachIndexed { i,m -> points[2*i]=m.x; points[2*i+1]=m.y }
+            Dots(points,key.first,key.second,key.third)
+        }
+        val extent=RectF(marks.minOf { it.x },marks.minOf { it.y },marks.maxOf { it.x },marks.maxOf { it.y })
+        return Prepared(scene,radial,leafCount,marks,indexed,strokes.values.toList(),dots,labelSpacing,maxZoom,extent)
+    }
+
+    fun show(prepared:Prepared) {
+        animator?.cancel()
+        scene=prepared.scene
+        radial=prepared.radial
+        leafCount=prepared.leafCount
+        marks=prepared.marks
+        byId=prepared.byId
+        strokes=prepared.strokes
+        dots=prepared.dots
+        labelSpacing=prepared.labelSpacing
+        maxZoom=prepared.maxZoom
+        extent.set(prepared.extent)
+        selectedMark=selected?.let { byId[it] }
         post { fit(false) }
     }
 
@@ -134,7 +205,7 @@ class ParentesTreeView(context:Context):View(context) {
         moveCamera(camera.zoom,camera.x,camera.y,true)
     }
     fun reveal(id:String,minimumZoom:Float=zoom) {
-        val m=marks.firstOrNull { it.id==id } ?: return
+        val m=byId[id] ?: return
         val distance=marks.asSequence().filter { it.id!=id && it.label.isNotEmpty() }
             .map { hypot(it.x-m.x,it.y-m.y) }.filter { it>0f }.minOrNull() ?: Float.POSITIVE_INFINITY
         val next=max(minimumZoom,TreeZoom.readable(distance,labelSpacing,text.descent()-text.ascent()+12f*density)).coerceAtMost(maxZoom)
@@ -169,75 +240,85 @@ class ParentesTreeView(context:Context):View(context) {
 
     override fun onDraw(canvas:Canvas) {
         super.onDraw(canvas)
-        val s=scene ?: return
+        if(scene==null) return
         if(dashZoom!=zoom) { dashed=DashPathEffect(floatArrayOf(8f*density/zoom,6f*density/zoom),0f); dashZoom=zoom }
         canvas.save()
         canvas.translate(tx,ty); canvas.scale(zoom,zoom)
-        for(b in branches) {
-            if(b.bounds.right*zoom+tx < -4f*density || b.bounds.left*zoom+tx > width+4f*density ||
-                b.bounds.bottom*zoom+ty < -4f*density || b.bounds.top*zoom+ty > height+4f*density) continue
-            val a=b.id in s.first; val c=b.id in s.second
-            edge.color=when { c -> secondColor; a -> firstColor; else -> b.color }
+        for(b in strokes) {
+            edge.color=b.color
             edge.alpha=if(radial) 165 else 230
-            edge.strokeWidth=(if(a || c) 2.5f else 1.2f)*density/zoom
-            edge.pathEffect=if(c) dashed else null
+            edge.strokeWidth=(if(b.highlighted) 2.5f else 1.2f)*density/zoom
+            edge.pathEffect=if(b.dashed) dashed else null
             canvas.drawPath(b.path,edge)
         }
-        canvas.restore()
-        for(m in marks) { m.hit.setEmpty(); m.bounds.setEmpty() }
         // All selected species remain visible as leaves at overview scale.
+        val leafRadius=if(radial) (2f*PI.toFloat()*640f*zoom/leafCount*.33f).coerceIn(.7f,2.8f) else 2.8f
+        for(d in dots) {
+            val radius=when(d.kind) {
+                LEAF -> leafRadius
+                NAMED -> 3.5f
+                NAMED_DETAIL -> if(zoom>=.65f) 3.5f else 1.4f
+                else -> 1.4f
+            }*density
+            point.color=d.color
+            point.strokeCap=if(d.square) Paint.Cap.SQUARE else Paint.Cap.ROUND
+            point.strokeWidth=2f*radius/zoom
+            canvas.drawPoints(d.points,point)
+        }
+        canvas.restore()
         for(m in marks) {
+            m.bounds.setEmpty()
             val x=m.x*zoom+tx; val y=m.y*zoom+ty
-            if(x<0 || x>width || y<0 || y>height) continue
-            dot.color=when { m.id==s.common -> palette.accent; m.id in s.second -> secondColor; m.id in s.first -> firstColor; else -> m.color }
-            val leafRadius=if(radial) (2f*PI.toFloat()*640f*zoom/leafCount*.33f).coerceIn(.7f,2.8f) else 2.8f
-            val namedVisible=m.label.isNotEmpty() && (m.priority<=2 || zoom>=.65f)
-            val radius=(if(m.id==selected) 5f else if(m.species) leafRadius else if(namedVisible) 3.5f else 1.4f)*density
-            if(m.id==selected) {
+            if(m.label.isEmpty() || x<0 || x>width || y<0 || y>height) m.hit.setEmpty()
+            else m.hit.set(x-12f*density,y-12f*density,x+12f*density,y+12f*density)
+        }
+        val chosen=selectedMark
+        if(chosen!=null) {
+            val x=chosen.x*zoom+tx; val y=chosen.y*zoom+ty
+            if(x>=0 && x<=width && y>=0 && y<=height) {
+                val radius=5f*density
+                dot.color=chosen.dotColor
                 dot.style=Paint.Style.STROKE; dot.strokeWidth=1.5f*density
                 canvas.drawCircle(x,y,radius+4f*density,dot); dot.style=Paint.Style.FILL
+                if(chosen.square) canvas.drawRect(x-radius,y-radius,x+radius,y+radius,dot)
+                else canvas.drawCircle(x,y,radius,dot)
             }
-            if(m.id in s.second && m.id!=s.common) canvas.drawRect(x-radius,y-radius,x+radius,y+radius,dot)
-            else canvas.drawCircle(x,y,radius,dot)
-            if(m.label.isNotEmpty()) m.hit.set(x-12f*density,y-12f*density,x+12f*density,y+12f*density)
-        }
-        val chosen=marks.firstOrNull { it.id==selected }
-        val ordered=sequence {
-            if(chosen!=null)yield(chosen)
-            yieldAll(marks.asSequence().filter { it!==chosen })
         }
         drawnLabels.clear()
-        for(m in ordered) {
-            if(m.label.isEmpty()) continue
-            val essential=m.id==selected || m.priority==0
-            if(radial && m.species && zoom < .38f && marks.size>40 && !essential) continue
-            if(radial && m.priority==3 && zoom < .65f && !essential) continue
-            val x=m.x*zoom+tx; val y=m.y*zoom+ty
-            if(y < -text.textSize || y > height+text.textSize) continue
-            text.typeface=if(m.species) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
-            val room=(width-12f*density).coerceAtLeast(density)
-            // At detail scale names remain complete and attached to their node. Panning can
-            // reveal a long name even when its dot is outside the viewport.
-            val detail=zoom>=.65f
-            val label=if(detail)m.label else android.text.TextUtils.ellipsize(m.label,text,room,android.text.TextUtils.TruncateAt.END).toString()
-            val length=if(detail)m.width else min(m.width,room)
-            val anchor=if(radial && m.x<0)x-length-9f*density else x+9f*density
-            val left=if(detail)anchor else anchor.coerceIn(6f*density,max(6f*density,width-length-6f*density))
-            if(left+length<0 || left>width || (!detail && (x<0 || x>width)))continue
-            val top=y-(text.descent()-text.ascent())*.5f-3*density
-            m.bounds.set(left-3*density,top,left+length+3*density,top+text.descent()-text.ascent()+6*density)
-            if(m.bounds.top<0 || m.bounds.bottom>height || drawnLabels.any { RectF.intersects(it,m.bounds) }) {
-                m.bounds.setEmpty(); continue
-            }
-            drawnLabels.add(m.bounds)
-            // Quiet backing keeps letters readable over branches without turning labels into buttons.
-            paper.alpha=235
-            canvas.drawRoundRect(m.bounds,4f*density,4f*density,paper)
-            text.color=if(m.species) palette.text else palette.ink(m.color,palette.background)
-            canvas.drawText(label,left,y-(text.ascent()+text.descent())*.5f,text)
-            m.hit.union(m.bounds)
-            m.hit.inset(0f,-6f*density)
+        if(chosen!=null) drawLabel(canvas,chosen)
+        for(m in marks) if(m!==chosen) drawLabel(canvas,m)
+    }
+
+    private fun drawLabel(canvas:Canvas,m:Mark) {
+        if(m.label.isEmpty()) return
+        val essential=m===selectedMark || m.priority==0
+        if(radial && m.species && zoom < .38f && marks.size>40 && !essential) return
+        if(radial && m.priority==3 && zoom < .65f && !essential) return
+        val x=m.x*zoom+tx; val y=m.y*zoom+ty
+        if(y < -text.textSize || y > height+text.textSize) return
+        text.typeface=if(m.species) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
+        val room=(width-12f*density).coerceAtLeast(density)
+        // At detail scale names remain complete and attached to their node. Panning can
+        // reveal a long name even when its dot is outside the viewport.
+        val detail=zoom>=.65f
+        val label=if(detail)m.label else m.short(text,room)
+        val length=if(detail)m.width else min(m.width,room)
+        val anchor=if(radial && m.x<0)x-length-9f*density else x+9f*density
+        val left=if(detail)anchor else anchor.coerceIn(6f*density,max(6f*density,width-length-6f*density))
+        if(left+length<0 || left>width || (!detail && (x<0 || x>width)))return
+        val top=y-(text.descent()-text.ascent())*.5f-3*density
+        m.bounds.set(left-3*density,top,left+length+3*density,top+text.descent()-text.ascent()+6*density)
+        if(m.bounds.top<0 || m.bounds.bottom>height || drawnLabels.any { RectF.intersects(it,m.bounds) }) {
+            m.bounds.setEmpty(); return
         }
+        drawnLabels.add(m.bounds)
+        // Quiet backing keeps letters readable over branches without turning labels into buttons.
+        paper.alpha=235
+        canvas.drawRoundRect(m.bounds,4f*density,4f*density,paper)
+        text.color=m.ink
+        canvas.drawText(label,left,y-(text.ascent()+text.descent())*.5f,text)
+        m.hit.union(m.bounds)
+        m.hit.inset(0f,-6f*density)
     }
 
     private val scaleDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -320,4 +401,12 @@ class ParentesTreeView(context:Context):View(context) {
     }
     override fun performClick(): Boolean { super.performClick(); return true }
     override fun onDetachedFromWindow() { animator?.cancel(); super.onDetachedFromWindow() }
+
+    private companion object {
+        // Dot size rules, see onDraw.
+        const val LEAF=0
+        const val NAMED=1
+        const val NAMED_DETAIL=2
+        const val PLAIN=3
+    }
 }

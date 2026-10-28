@@ -23,6 +23,8 @@ internal class SceneArgon : EngravedScene() {
     override val nameRes = R.string.card_scene_light_bulb
     override val noteRes = R.string.card_note_light_bulb
     override val explainRes = R.string.card_explain_light_bulb
+    /** Le papillon tourne vite autour de la lampe : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         room(b)
@@ -105,11 +107,6 @@ internal class SceneArgon : EngravedScene() {
     }
 
     override fun sprites(): List<Sprite> = listOf(
-        Sprite(HALO, RectF(-120f, -120f, 120f, 120f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 120f,
-                intArrayOf(0xEEFFF6D8.toInt(), 0x88FFD890.toInt(), 0x30FFB050, 0x00FFB050), floatArrayOf(0f, .18f, .5f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 120f, b.p)
-        },
         Sprite(MOTH, RectF(-9f, -7f, 9f, 7f)) { b ->
             for (side in floatArrayOf(-1f, 1f)) {
                 val wing = Path().apply {
@@ -127,6 +124,10 @@ internal class SceneArgon : EngravedScene() {
 
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val halo = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f,
+            intArrayOf(0xEEFFF6D8.toInt(), 0x88FFD890.toInt(), 0x30FFB050, 0x00FFB050), floatArrayOf(0f, .18f, .5f, 1f), Shader.TileMode.CLAMP)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val u = t % CYCLE
@@ -139,12 +140,10 @@ internal class SceneArgon : EngravedScene() {
         val light = heat * heat
         // La pièce s'éclaire : un grand halo chaud, puis sa tache sur la table.
         if (light > .01f) {
-            c.save(); c.translate(180f, 196f); c.scale(1.5f, 1.5f)
-            s.draw(c, HALO, alpha = (235 * light).toInt())
-            c.restore()
-            c.save(); c.translate(180f, 300f); c.scale(1.5f, .32f)
-            s.draw(c, HALO, alpha = (170 * light).toInt())
-            c.restore()
+            halo.alpha = (235 * light).toInt()
+            c.save(); c.translate(180f, 196f); c.scale(180f, 180f); c.drawCircle(0f, 0f, 1f, halo); c.restore()
+            halo.alpha = (170 * light).toInt()
+            c.save(); c.translate(180f, 300f); c.scale(180f, 38.4f); c.drawCircle(0f, 0f, 1f, halo); c.restore()
         }
         // Le filament : rouge sombre, orange, puis blanc.
         val color = filamentColor(heat)
@@ -165,7 +164,7 @@ internal class SceneArgon : EngravedScene() {
     }
 
     private fun filamentColor(h: Float): Int {
-        val stops = intArrayOf(0xFF6A1A10.toInt(), 0xFFFF7A2A.toInt(), 0xFFFFF6DC.toInt())
+        val stops = FILAMENT
         val x = (h * 2f).coerceIn(0f, 2f)
         val i = x.toInt().coerceAtMost(1)
         val f = x - i
@@ -192,7 +191,8 @@ internal class SceneArgon : EngravedScene() {
         const val FIL_Y = 184f
         const val COIL = 104
         const val CYCLE = 9f
-        const val HALO = 1
         const val MOTH = 2
+        /** Le filament : rouge sombre, orange, blanc. */
+        val FILAMENT = intArrayOf(0xFF6A1A10.toInt(), 0xFFFF7A2A.toInt(), 0xFFFFF6DC.toInt())
     }
 }

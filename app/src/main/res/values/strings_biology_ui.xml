@@ -30,4 +30,5 @@
     <string name="bio_ui_surface">Interactive anatomy model. Tap a structure to identify it. Use Layers to combine regions and systems, or Find a structure to search.</string>
     <string name="bio_ui_loading">Preparing the anatomy atlas…</string>
     <string name="bio_ui_search">Bone, muscle, organ, cartilage…</string>
+    <string name="bio_ui_panel_back">Previous panel</string>
 </resources>

@@ -130,6 +130,12 @@ class PeriodicTableActivity : ThemedActivity() {
       }
     }
 
+    // Les textes traduits (noms, apparence, découvreur) sont gros : lus hors du fil de l'écran
+    // avant le premier appui.
+    lifecycleScope.launch(Dispatchers.IO) {
+      PeriodicElementDescriptionProvider.preload(applicationContext)
+    }
+
     populatePeriodicTable()
     if (!launchedFromScience) addLegendCells()
     createInfoPanel()
@@ -465,28 +471,11 @@ class PeriodicTableActivity : ThemedActivity() {
       dialog.show()
       dialog.window?.decorView?.alpha = 0f
 
-      // Re-mesurer le contenu sans contrainte de hauteur pour obtenir la taille naturelle,
-      // puis forcer la fenêtre à cette taille (plafonnée à 88 % de l'écran).
       scrollView.post {
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(scrollView.width, View.MeasureSpec.EXACTLY)
-        contentLayout.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        val naturalH = contentLayout.measuredHeight
-        val headerH = header.height
-        val maxH = (resources.displayMetrics.heightPixels * 0.88).toInt()
-        val neededH = naturalH + headerH
-
-        if (neededH <= maxH) {
-          dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, neededH)
-        } else {
-          dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, maxH)
-          scrollView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            maxH - headerH
-          )
-          scrollView.requestLayout()
-        }
+        fitToContent(dialog, scrollView, contentLayout, header.height)
         dialog.window?.decorView?.alpha = 1f
       }
+      refitOnRotation(scrollView) { fitToContent(dialog, scrollView, contentLayout, header.height) }
     }
   }
 
@@ -992,22 +981,34 @@ class PeriodicTableActivity : ThemedActivity() {
     dialog.window?.decorView?.alpha = 0f
 
     scrollView.post {
-      val widthSpec = View.MeasureSpec.makeMeasureSpec(scrollView.width, View.MeasureSpec.EXACTLY)
-      content.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-      val naturalH = content.measuredHeight
-      val headerH = header.height + colorBar.height
-      val maxH = (resources.displayMetrics.heightPixels * 0.88).toInt()
-      val neededH = naturalH + headerH
-      if (neededH <= maxH) {
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, neededH)
-      } else {
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, maxH)
-        scrollView.layoutParams = LinearLayout.LayoutParams(
-          LinearLayout.LayoutParams.MATCH_PARENT, maxH - headerH
-        )
-        scrollView.requestLayout()
-      }
+      fitToContent(dialog, scrollView, content, header.height + colorBar.height)
       dialog.window?.decorView?.alpha = 1f
+    }
+    refitOnRotation(scrollView) { fitToContent(dialog, scrollView, content, header.height + colorBar.height) }
+  }
+
+  /**
+   * Re-mesure le contenu sans contrainte de hauteur pour obtenir sa taille naturelle, puis force
+   * la fenêtre à cette taille (plafonnée à 88 % de l'écran). [headerH] : ce qui surmonte le défilement.
+   */
+  private fun fitToContent(dialog: Dialog, scrollView: ScrollView, content: View, headerH: Int) {
+    val widthSpec = View.MeasureSpec.makeMeasureSpec(scrollView.width, View.MeasureSpec.EXACTLY)
+    content.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+    val maxH = (resources.displayMetrics.heightPixels * 0.88).toInt()
+    val neededH = content.measuredHeight + headerH
+    val fits = neededH <= maxH
+    dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, if (fits) neededH else maxH)
+    scrollView.layoutParams = LinearLayout.LayoutParams(
+      LinearLayout.LayoutParams.MATCH_PARENT,
+      if (fits) LinearLayout.LayoutParams.WRAP_CONTENT else maxH - headerH
+    )
+  }
+
+  /** L'activité n'est pas recréée à la rotation : la fiche se remesure quand sa largeur change. */
+  private fun refitOnRotation(scrollView: ScrollView, refit: () -> Unit) {
+    scrollView.addOnLayoutChangeListener { v, left, _, right, _, oldLeft, _, oldRight, _ ->
+      val oldWidth = oldRight - oldLeft
+      if (oldWidth != 0 && right - left != oldWidth) v.post { refit() }
     }
   }
 
@@ -1103,10 +1104,7 @@ class PeriodicTableActivity : ThemedActivity() {
     root.addView(starfield)
 
     val cardImage = ProceduralElementCardView(this).apply {
-
-      val maxW = (resources.displayMetrics.widthPixels * 0.80).toInt()
-      val maxH = (resources.displayMetrics.heightPixels * 0.75).toInt()
-      layoutParams = FrameLayout.LayoutParams(maxW, maxH).apply {
+      layoutParams = FrameLayout.LayoutParams(0, 0).apply {
         gravity = android.view.Gravity.CENTER
       }
       // Départ invisible → animation entrée
@@ -1124,12 +1122,38 @@ class PeriodicTableActivity : ThemedActivity() {
     // Dépliée, elle pousse la carte vers le haut (et la réduit s'il le faut) : la carte se déplace
     // et se met à l'échelle sans changer de taille, donc sans se recuire.
     val caption = ElementCardCaption(this).apply {
-      val width = minOf(resources.displayMetrics.widthPixels - dpToPx(32), dpToPx(520))
-      layoutParams = FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+      layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
         gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
         bottomMargin = dpToPx(8)
       }
       bind(cardImage)
+    }
+    // Tailles prises sur l'écran ; l'activité n'étant pas recréée à la rotation, elles suivent
+    // chaque changement de taille de la fenêtre.
+    fun fitToScreen() {
+      val metrics = resources.displayMetrics
+      val cardLp = cardImage.layoutParams
+      val cardW = (metrics.widthPixels * 0.80).toInt()
+      val cardH = (metrics.heightPixels * 0.75).toInt()
+      if (cardLp.width != cardW || cardLp.height != cardH) {
+        cardLp.width = cardW; cardLp.height = cardH
+        cardImage.layoutParams = cardLp
+      }
+      val captionLp = caption.layoutParams
+      val captionW = minOf(metrics.widthPixels - dpToPx(32), dpToPx(520))
+      if (captionLp.width != captionW) {
+        captionLp.width = captionW
+        caption.layoutParams = captionLp
+      }
+    }
+    fitToScreen()
+    root.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      if (oldRight - oldLeft == 0) return@addOnLayoutChangeListener
+      if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) root.post {
+        // Une légende dépliée a placé la carte pour l'ancien écran : on la replie.
+        if (caption.isOpen) caption.toggle()
+        fitToScreen()
+      }
     }
     caption.onToggle = { open ->
       if (!open) {
@@ -1148,9 +1172,11 @@ class PeriodicTableActivity : ThemedActivity() {
     root.addView(caption)
 
     // ── Tilt 3D au doigt ─────────────────────────────────────────────────
+    // L'écouteur garde le geste pour lui : il passe aussi le doigt à la carte, pour la lumière.
     val maxTilt = 18f
     cardImage.setOnTouchListener { v, event ->
       when (event.action) {
+        MotionEvent.ACTION_DOWN -> cardImage.moveLight(event.x, event.y)
         MotionEvent.ACTION_MOVE -> {
           val cx = v.width / 2f
           val cy = v.height / 2f
@@ -1158,6 +1184,7 @@ class PeriodicTableActivity : ThemedActivity() {
           val dy = (event.y - cy) / cy
           v.rotationY = dx * maxTilt
           v.rotationX = -dy * maxTilt
+          cardImage.moveLight(event.x, event.y)
         }
         MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
           v.animate()

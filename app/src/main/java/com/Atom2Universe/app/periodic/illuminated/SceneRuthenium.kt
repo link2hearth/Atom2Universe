@@ -25,6 +25,8 @@ internal class SceneRuthenium : EngravedScene() {
     override val nameRes = R.string.card_scene_hard_drive
     override val noteRes = R.string.card_note_hard_drive
     override val explainRes = R.string.card_explain_hard_drive
+    /** Le bras bascule d'un coup et rebondit : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le tapis antistatique, un tournevis.

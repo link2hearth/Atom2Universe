@@ -98,6 +98,19 @@ internal class SceneNeodymium : EngravedScene() {
     private val dial = RectF()
     private var fx = 0f
     private var fy = 0f
+    /** Les grains de limaille (x, y), hors des boussoles : ils ne bougent pas, seul le champ tourne. */
+    private val grains = run {
+        val xy = FloatArray(COLS * ROWS * 2)
+        var n = 0
+        for (j in 0 until ROWS) for (i in 0 until COLS) {
+            val id = j * COLS + i
+            val x = X0 + (i + .2f + .6f * hash(id, 1)) * STEP
+            val y = Y0 + (j + .2f + .6f * hash(id, 2)) * STEP
+            if (underCompass(x, y)) continue
+            xy[n++] = x; xy[n++] = y
+        }
+        xy.copyOf(n)
+    }
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         val deg = t * SPIN
@@ -108,15 +121,14 @@ internal class SceneNeodymium : EngravedScene() {
 
         // La limaille : chaque grain se couche le long du champ, plus marqué près des pôles.
         counts.fill(0)
-        for (j in 0 until ROWS) for (i in 0 until COLS) {
-            val id = j * COLS + i
-            val x = X0 + (i + .2f + .6f * hash(id, 1)) * STEP
-            val y = Y0 + (j + .2f + .6f * hash(id, 2)) * STEP
+        var g = 0
+        while (g < grains.size) {
+            val x = grains[g]; val y = grains[g + 1]
+            g += 2
             val lx = (x - CX) * ux + (y - CY) * uy
             val ly = -(x - CX) * uy + (y - CY) * ux
             if (abs(lx) < 46f && abs(ly) < 16f) continue
             if (abs(lx) < 66f && abs(ly) < 10f) continue
-            if (underCompass(x, y)) continue
             field(x, y, nx, ny, sx, sy)
             val m = sqrt(fx * fx + fy * fy)
             if (m < 1e-9f) continue

@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="bot_family_Zosteraceae">Zostéracées</string>
+    <string name="bot_family_Zosteraceae_desc">Plantes à fleurs marines submergées, à rhizomes rampants et feuilles en ruban ; les fleurs sont portées sur des spadices aplatis.</string>
+    <string name="bot_family_Zosteraceae_aliases">Zostéracées ; famille des zostères</string>
+    <string name="bot_family_Iridaceae">Iridacées</string>
+    <string name="bot_family_Iridaceae_desc">Herbacées monocotylédones, souvent à rhizome ou à bulbe, aux feuilles en forme de glaive et aux fleurs formées de trois sépales et trois pétales.</string>
+    <string name="bot_family_Iridaceae_aliases">Iridacées ; famille des iris</string>
+    <string name="bot_family_Welwitschiaceae">Welwitschiacées</string>
+    <string name="bot_family_Welwitschiaceae_desc">Famille ancienne de gymnospermes représentée par le welwitschia, plante du désert à deux feuilles persistantes et à cônes mâles et femelles séparés.</string>
+    <string name="bot_family_Welwitschiaceae_aliases">Welwitschiacées</string>
+    <string name="bot_family_Equisetaceae">Équisétacées</string>
+    <string name="bot_family_Equisetaceae_desc">Les prêles actuelles sont des plantes à rhizome, aux tiges articulées et côtelées terminées par des strobiles porteurs de spores ; elles n’ont ni fleurs ni graines.</string>
+    <string name="bot_family_Equisetaceae_aliases">Équisétacées ; famille des prêles</string>
+    <string name="bot_family_Nepenthaceae">Népenthacées</string>
+    <string name="bot_family_Nepenthaceae_desc">Lianes carnivores tropicales dont les feuilles se prolongent en vrilles terminées par des urnes-pièges remplies de liquide ; les fleurs sont petites et unisexuées.</string>
+    <string name="bot_family_Nepenthaceae_aliases">Népenthacées ; plantes à urnes tropicales</string>
+    <string name="bot_dracaena_fragrans_name">Dragonnier odorant</string>
+    <string name="bot_dracaena_fragrans_latin" translatable="false">Dracaena fragrans</string>
+    <string name="bot_dracaena_fragrans_aliases">dracéna odorant ; bois du Brésil</string>
+    <string name="bot_dracaena_fragrans_description">Arbuste ou petit arbre formant des cannes, aux tiges annelées et aux touffes terminales denses de feuilles arquées en lanière. Ses grappes ramifiées de fleurs blanches striées de rose sont très parfumées, surtout la nuit ; des baies rouge orangé leur succèdent.</string>
+    <string name="bot_dracaena_fragrans_distribution">Afrique tropicale ; couramment cultivé ailleurs.</string>
+    <string name="bot_dracaena_fragrans_habit">Port : canne ramifiée à touffes de feuilles terminales</string>
+    <string name="bot_dracaena_fragrans_leaf">Feuille : large feuille en lanière</string>
+    <string name="bot_dracaena_fragrans_flower">Fleur : fleur blanche parfumée striée de rose</string>
+    <string name="bot_dracaena_fragrans_fruit">Fruit : baie rouge orangé</string>
+    <string name="bot_lemna_minor_name">Petite lentille d’eau</string>
+    <string name="bot_lemna_minor_latin" translatable="false">Lemna minor</string>
+    <string name="bot_lemna_minor_aliases">lentille d’eau ; lenticule mineure</string>
+    <string name="bot_lemna_minor_description">Minuscule plante aquatique flottante, formée d’une ou plusieurs frondes plates et ovales portant chacune, en général, une seule racine pendante. Les fleurs minuscules sont rares ; la plante se multiplie surtout par bourgeonnement de frondes filles.</string>
+    <string name="bot_lemna_minor_distribution">Eaux douces calmes et riches en nutriments d’une grande partie du monde tempéré ; largement répandue.</string>
+    <string name="bot_lemna_minor_habit">Fronde flottante à une racine</string>
+    <string name="bot_lemna_minor_leaf">Fronde plate et ovale</string>
+    <string name="bot_lemna_minor_flower">Fleur minuscule et rare</string>
+    <string name="bot_lemna_minor_fruit">Petit fruit à une graine</string>
+    <string name="bot_zostera_marina_name">Zostère marine</string>
+    <string name="bot_zostera_marina_latin" translatable="false">Zostera marina</string>
+    <string name="bot_zostera_marina_aliases">grande zostère ; herbe à paillasse</string>
+    <string name="bot_zostera_marina_description">Plante à fleurs marine entièrement submergée, et non une algue. De longues feuilles en ruban naissent d’un rhizome rampant ancré dans le sédiment. Les pousses reproductrices portent un spadice aplati enveloppé d’une gaine, où alternent fleurs mâles et femelles ; les fruits sont de petits akènes.</string>
+    <string name="bot_zostera_marina_distribution">Côtes marines tempérées de l’hémisphère Nord, enracinée dans les fonds peu profonds de sable ou de vase.</string>
+    <string name="bot_zostera_marina_habit">Rhizome submergé et pousses feuillées</string>
+    <string name="bot_zostera_marina_leaf">Feuille en ruban à nervures parallèles</string>
+    <string name="bot_zostera_marina_flower">Spadice enveloppé de minuscules fleurs</string>
+    <string name="bot_zostera_marina_fruit">Petit akène porteur de graine</string>
+    <string name="bot_iris_pseudacorus_name">Iris des marais</string>
+    <string name="bot_iris_pseudacorus_latin" translatable="false">Iris pseudacorus</string>
+    <string name="bot_iris_pseudacorus_aliases">iris faux acore ; iris jaune</string>
+    <string name="bot_iris_pseudacorus_description">Vivace rhizomateuse des zones humides, aux feuilles dressées en forme de glaive disposées en éventail. Les grandes fleurs jaunes ont trois larges tépales externes étalés vers le bas, marqués de fines veines brun-pourpre, et trois tépales internes plus petits. Les capsules renferment de nombreuses graines aplaties. Le rhizome et les autres tissus sont toxiques ; l’espèce peut devenir envahissante hors de son aire d’origine.</string>
+    <string name="bot_iris_pseudacorus_distribution">Originaire d’Europe, d’Asie occidentale et du nord-ouest de l’Afrique ; naturalisée et envahissante dans certaines régions hors de son aire.</string>
+    <string name="bot_iris_pseudacorus_habit">Éventail de feuilles en glaive et rhizome</string>
+    <string name="bot_iris_pseudacorus_leaf">Feuille plate en glaive</string>
+    <string name="bot_iris_pseudacorus_flower">Fleur jaune à tépales externes veinés</string>
+    <string name="bot_iris_pseudacorus_fruit">Capsule à trois angles et graines plates</string>
+    <string name="bot_yucca_pallida_name">Yucca pâle</string>
+    <string name="bot_yucca_pallida_latin" translatable="false">Yucca pallida</string>
+    <string name="bot_yucca_pallida_aliases">yucca pâle du Texas</string>
+    <string name="bot_yucca_pallida_description">Yucca sans tige ou presque, formant des colonies lâches de rosettes vert bleuté pâle. Les feuilles raides sont étroites et dentées de petits aiguillons sur les bords ; une panicule ramifiée dressée porte des fleurs pâles en clochette, suivies de capsules sèches.</string>
+    <string name="bot_yucca_pallida_distribution">Originaire du centre-nord du Texas, aux États-Unis, sur les prairies calcaires et les sols rocailleux.</string>
+    <string name="bot_yucca_pallida_habit">Colonie de rosettes pâles et hampe florale</string>
+    <string name="bot_yucca_pallida_leaf">Feuille glauque à minuscules dents marginales</string>
+    <string name="bot_yucca_pallida_flower">Fleur pendante à six tépales</string>
+    <string name="bot_yucca_pallida_fruit">Capsule sèche et graines</string>
+    <string name="bot_dracaena_reflexa_name">Dragonnier réfléchi</string>
+    <string name="bot_dracaena_reflexa_latin" translatable="false">Dracaena reflexa</string>
+    <string name="bot_dracaena_reflexa_aliases">chant de l’Inde ; pléomèle</string>
+    <string name="bot_dracaena_reflexa_description">Arbuste ou petit arbre persistant très ramifié, aux tiges grêles en canne et aux feuilles courtes et étroites groupées vers l’extrémité des rameaux. Les feuilles s’écartent souvent de la tige en se courbant vers l’arrière. De petites fleurs parfumées en panicules terminales précèdent des baies arrondies orange à rouges. La forme des feuilles varie selon les variétés reconnues.</string>
+    <string name="bot_dracaena_reflexa_distribution">Originaire du nord-est du Mozambique et des îles de l’ouest de l’océan Indien, dont Madagascar, Maurice et La Réunion.</string>
+    <string name="bot_dracaena_reflexa_habit">Arbuste ramifié à extrémités feuillées</string>
+    <string name="bot_dracaena_reflexa_leaf">Feuille étroite recourbée</string>
+    <string name="bot_dracaena_reflexa_flower">Petites fleurs en panicule terminale</string>
+    <string name="bot_dracaena_reflexa_fruit">Baie arrondie rouge orangé</string>
+    <string name="bot_musa_balbisiana_name">Bananier sauvage</string>
+    <string name="bot_musa_balbisiana_latin" translatable="false">Musa balbisiana</string>
+    <string name="bot_musa_balbisiana_aliases">bananier de Balbis ; bananier à graines</string>
+    <string name="bot_musa_balbisiana_description">Très grande herbe à rhizome dont le tronc apparent est un pseudo-tronc formé de gaines foliaires emboîtées. Les larges feuilles se déchirent facilement le long de leurs nervures parallèles. L’inflorescence pendante porte de grandes bractées sombres ; les fruits anguleux sont remplis de dures graines noires, contrairement aux bananes de dessert cultivées, presque toujours sans graines.</string>
+    <string name="bot_musa_balbisiana_distribution">Originaire de l’Asie du Sud et du Sud-Est tropicales jusqu’au sud de la Chine ; cultivé et naturalisé dans les régions plus chaudes.</string>
+    <string name="bot_musa_balbisiana_habit">Pseudo-tronc et inflorescence pendante</string>
+    <string name="bot_musa_balbisiana_leaf">Large feuille à nervures parallèles</string>
+    <string name="bot_musa_balbisiana_flower">Inflorescence de bananier à bractées sombres</string>
+    <string name="bot_musa_balbisiana_fruit">Banane sauvage remplie de graines</string>
+    <string name="bot_phoenix_canariensis_name">Palmier des Canaries</string>
+    <string name="bot_phoenix_canariensis_latin" translatable="false">Phoenix canariensis</string>
+    <string name="bot_phoenix_canariensis_aliases">dattier des Canaries</string>
+    <string name="bot_phoenix_canariensis_description">Palmier massif et solitaire, au tronc épais orné de cicatrices de bases foliaires en losange et couronné de palmes pennées arquées. Les folioles sont étroites et raides, avec de fortes épines à la base de la palme. Des inflorescences ramifiées apparaissent parmi les feuilles ; les pieds femelles portent des grappes de drupes orange semblables à des dattes, en général plus petites et moins charnues que celles de Phoenix dactylifera.</string>
+    <string name="bot_phoenix_canariensis_distribution">Endémique des îles Canaries ; largement planté dans les régions chaudes.</string>
+    <string name="bot_phoenix_canariensis_habit">Palmier solitaire à tronc cicatrisé et couronne</string>
+    <string name="bot_phoenix_canariensis_leaf">Palme pennée à épines basales acérées</string>
+    <string name="bot_phoenix_canariensis_flower">Inflorescence ramifiée de palmier</string>
+    <string name="bot_phoenix_canariensis_fruit">Grappe de drupes orange</string>
+    <string name="bot_pinus_strobus_name">Pin Weymouth</string>
+    <string name="bot_pinus_strobus_latin" translatable="false">Pinus strobus</string>
+    <string name="bot_pinus_strobus_aliases">pin blanc ; pin blanc d’Amérique</string>
+    <string name="bot_pinus_strobus_description">Grand pin au tronc droit, à la cime ouverte à maturité. Ses aiguilles souples et fines, groupées par cinq, portent de fines lignes blanches de stomates. De longs cônes femelles étroits, légèrement arqués, pendent des branches ; les cônes polliniques forment des grappes à la base des pousses.</string>
+    <string name="bot_pinus_strobus_distribution">Est de l’Amérique du Nord, de Terre-Neuve et de la région des Grands Lacs vers le sud par les Appalaches.</string>
+    <string name="bot_pinus_strobus_habit">Grand pin à cime ouverte</string>
+    <string name="bot_pinus_strobus_leaf">Faisceau de cinq aiguilles</string>
+    <string name="bot_pinus_strobus_flower">Long cône femelle pendant</string>
+    <string name="bot_pinus_strobus_fruit">Grappe de cônes polliniques</string>
+    <string name="bot_pinus_edulis_name">Pin pignon du Colorado</string>
+    <string name="bot_pinus_edulis_latin" translatable="false">Pinus edulis</string>
+    <string name="bot_pinus_edulis_aliases">pin à pignons ; pinyon</string>
+    <string name="bot_pinus_edulis_description">Pin court à croissance lente, souvent à plusieurs troncs, à la cime large et irrégulière. Ses aiguilles robustes, groupées par deux, persistent plusieurs années. Les cônes femelles arrondis mûrissent en deux saisons et libèrent de gros pignons comestibles ; les récoltes de cônes varient beaucoup d’une année à l’autre.</string>
+    <string name="bot_pinus_edulis_distribution">Originaire du plateau du Colorado et des hautes terres sèches voisines du sud-ouest des États-Unis.</string>
+    <string name="bot_pinus_edulis_habit">Pin à pignons bas à cime irrégulière</string>
+    <string name="bot_pinus_edulis_leaf">Faisceau de deux aiguilles</string>
+    <string name="bot_pinus_edulis_flower">Cône femelle arrondi</string>
+    <string name="bot_pinus_edulis_fruit">Gros pignons comestibles</string>
+    <string name="bot_picea_abies_name">Épicéa commun</string>
+    <string name="bot_picea_abies_latin" translatable="false">Picea abies</string>
+    <string name="bot_picea_abies_aliases">sapin rouge ; épinette de Norvège</string>
+    <string name="bot_picea_abies_description">Grand conifère persistant au tronc droit, à la cime conique et aux rameaux nettement retombants. Ses aiguilles piquantes à quatre faces sont insérées une à une tout autour du rameau sur de petits coussinets ligneux. Les longs cônes femelles cylindriques pendent et tombent entiers après avoir libéré leurs graines ailées.</string>
+    <string name="bot_picea_abies_distribution">Originaire d’Europe du Nord et d’Europe centrale ; son aire naturelle s’étend jusqu’aux Alpes et à l’ouest de la Russie.</string>
+    <string name="bot_picea_abies_habit">Épicéa conique à rameaux retombants</string>
+    <string name="bot_picea_abies_leaf">Aiguilles isolées à quatre angles sur coussinets</string>
+    <string name="bot_picea_abies_flower">Long cône femelle pendant</string>
+    <string name="bot_picea_abies_fruit">Petits cônes polliniques</string>
+    <string name="bot_larix_decidua_name">Mélèze d’Europe</string>
+    <string name="bot_larix_decidua_latin" translatable="false">Larix decidua</string>
+    <string name="bot_larix_decidua_aliases">mélèze commun</string>
+    <string name="bot_larix_decidua_description">Conifère caduc à la cime ouverte et étagée, portant de courts rameaux nains. Ses aiguilles souples sont isolées sur les rameaux longs mais groupées en rosettes denses sur les rameaux courts ; elles dorent avant de tomber en automne. Les petits cônes femelles se dressent sur les branches et y persistent après leur ouverture.</string>
+    <string name="bot_larix_decidua_distribution">Originaire des Alpes et d’autres massifs montagneux d’Europe centrale ; largement planté ailleurs.</string>
+    <string name="bot_larix_decidua_habit">Arbre ouvert et étagé à rosettes d’aiguilles</string>
+    <string name="bot_larix_decidua_leaf">Aiguilles groupées sur un rameau court</string>
+    <string name="bot_larix_decidua_flower">Petit cône ligneux dressé</string>
+    <string name="bot_larix_decidua_fruit">Petits cônes polliniques mâles</string>
+    <string name="bot_pseudotsuga_menziesii_name">Sapin de Douglas</string>
+    <string name="bot_pseudotsuga_menziesii_latin" translatable="false">Pseudotsuga menziesii</string>
+    <string name="bot_pseudotsuga_menziesii_aliases">douglas ; pin d’Oregon</string>
+    <string name="bot_pseudotsuga_menziesii_description">Conifère persistant de très grande taille, au tronc droit et à la cime conique qui s’élargit avec l’âge. Ses aiguilles aplaties et souples sont insérées une à une tout autour du rameau. Le cône femelle pendant se reconnaît à ses longues bractées trifides qui dépassent des écailles.</string>
+    <string name="bot_pseudotsuga_menziesii_distribution">Ouest de l’Amérique du Nord, de la Colombie-Britannique à la Californie et aux montagnes Rocheuses.</string>
+    <string name="bot_pseudotsuga_menziesii_habit">Grand arbre persistant conique</string>
+    <string name="bot_pseudotsuga_menziesii_leaf">Aiguilles aplaties isolées autour du rameau</string>
+    <string name="bot_pseudotsuga_menziesii_flower">Cône pendant à bractées trifides</string>
+    <string name="bot_pseudotsuga_menziesii_fruit">Petits cônes polliniques</string>
+    <string name="bot_taxodium_distichum_name">Cyprès chauve</string>
+    <string name="bot_taxodium_distichum_latin" translatable="false">Taxodium distichum</string>
+    <string name="bot_taxodium_distichum_aliases">cyprès de Louisiane</string>
+    <string name="bot_taxodium_distichum_description">Grand conifère caduc au tronc renflé, cannelé ou à contreforts, et aux fines pousses plumeuses. Ses feuilles plates et linéaires, disposées sur deux rangs, tombent en automne. Les arbres situés dans l’eau ou à proximité peuvent former des genoux, excroissances ligneuses des racines dressées vers le haut (pneumatophores). Les cônes femelles arrondis et les grappes grêles de cônes polliniques sont des structures reproductrices distinctes.</string>
+    <string name="bot_taxodium_distichum_distribution">Originaire du sud-est et du centre-est des États-Unis ainsi que de régions du Mexique et du Guatemala, surtout dans les plaines inondables et les marécages.</string>
+    <string name="bot_taxodium_distichum_habit">Conifère caduc à base en contreforts et genoux</string>
+    <string name="bot_taxodium_distichum_leaf">Pousse plumeuse à feuilles sur deux rangs</string>
+    <string name="bot_taxodium_distichum_flower">Cône femelle arrondi</string>
+    <string name="bot_taxodium_distichum_fruit">Grappe pendante de cônes polliniques</string>
+    <string name="bot_dendrocalamus_giganteus_name">Bambou géant</string>
+    <string name="bot_dendrocalamus_giganteus_latin" translatable="false">Dendrocalamus giganteus</string>
+    <string name="bot_dendrocalamus_giganteus_aliases">bambou géant de l’Inde ; dendrocalame géant</string>
+    <string name="bot_dendrocalamus_giganteus_description">Bambou tropical géant poussant en touffe, à rhizomes courts pachymorphes et aux chaumes creux exceptionnellement hauts et épais, divisés par des nœuds saillants. Les rameaux et les grandes feuilles lancéolées se concentrent dans le haut des chaumes. Les fleurs discrètes sont des épillets de graminée et la floraison est rare ; le fruit est un caryopse.</string>
+    <string name="bot_dendrocalamus_giganteus_distribution">Originaire de l’est de l’Inde et de l’est de l’Himalaya jusqu’au sud de la Chine et à l’Asie du Sud-Est continentale.</string>
+    <string name="bot_dendrocalamus_giganteus_habit">Touffe de hauts chaumes articulés</string>
+    <string name="bot_dendrocalamus_giganteus_leaf">Large limbe lancéolé à nervures parallèles</string>
+    <string name="bot_dendrocalamus_giganteus_flower">Inflorescence ramifiée à épillets</string>
+    <string name="bot_dendrocalamus_giganteus_fruit">Petit caryopse de graminée</string>
+    <string name="bot_puya_raimondii_name">Reine des Andes</string>
+    <string name="bot_puya_raimondii_latin" translatable="false">Puya raimondii</string>
+    <string name="bot_puya_raimondii_aliases">puya de Raimondi ; titanka</string>
+    <string name="bot_puya_raimondii_description">Broméliacée géante des hautes Andes formant une rosette dense de feuilles raides armées d’épines acérées. Après plusieurs décennies, elle dresse une énorme inflorescence ramifiée haute de plusieurs mètres, fleurit une seule fois, produit des capsules puis meurt (monocarpie). Sa floraison exceptionnellement tardive et son habitat restreint de haute altitude la rendent vulnérable aux perturbations.</string>
+    <string name="bot_puya_raimondii_distribution">Puna des hautes Andes du Pérou et de la Bolivie.</string>
+    <string name="bot_puya_raimondii_habit">Rosette épineuse géante et immense hampe florale</string>
+    <string name="bot_puya_raimondii_leaf">Feuille rigide à épines marginales acérées</string>
+    <string name="bot_puya_raimondii_flower">Petite fleur à six tépales</string>
+    <string name="bot_puya_raimondii_fruit">Capsule sèche à graines fines</string>
+    <string name="bot_puya_chilensis_name">Puya du Chili</string>
+    <string name="bot_puya_chilensis_latin" translatable="false">Puya chilensis</string>
+    <string name="bot_puya_chilensis_aliases">puya chilien ; chagual</string>
+    <string name="bot_puya_chilensis_description">Grande broméliacée terrestre à rosette dense de longues feuilles raides vert-gris, bordées de fortes épines recourbées. La hampe florale ramifiée porte des fleurs tubulaires jaune verdâtre à trois sépales et trois pétales ; des capsules sèches contiennent les graines. Les épines crochues peuvent retenir des animaux, mais les récits d’animaux piégés restent anecdotiques et ne doivent pas servir de caractère d’identification fiable.</string>
+    <string name="bot_puya_chilensis_distribution">Centre du Chili, surtout dans les fourrés côtiers à saison sèche.</string>
+    <string name="bot_puya_chilensis_habit">Rosette épineuse et haute hampe florale</string>
+    <string name="bot_puya_chilensis_leaf">Bord de feuille à crochets recourbés</string>
+    <string name="bot_puya_chilensis_flower">Fleur tubulaire jaune verdâtre</string>
+    <string name="bot_puya_chilensis_fruit">Capsule sèche et graines</string>
+    <string name="bot_welwitschia_mirabilis_name">Welwitschia</string>
+    <string name="bot_welwitschia_mirabilis_latin" translatable="false">Welwitschia mirabilis</string>
+    <string name="bot_welwitschia_mirabilis_aliases">welwitschie ; tumboa</string>
+    <string name="bot_welwitschia_mirabilis_description">Gymnosperme d’une longévité exceptionnelle, au tronc court, ligneux et non ramifié, qui ne porte que deux feuilles persistantes en lanière. Ces feuilles poussent continuellement depuis leur base et se déchirent en rubans effilochés à leur extrémité. Les cônes reproducteurs mâles et femelles naissent sur des plantes distinctes ; elle n’a ni fleurs ni vrais fruits.</string>
+    <string name="bot_welwitschia_mirabilis_distribution">Désert côtier aride et brumeux du sud-ouest de l’Angola et du nord-ouest de la Namibie.</string>
+    <string name="bot_welwitschia_mirabilis_habit">Tronc court portant deux longues feuilles en ruban</string>
+    <string name="bot_welwitschia_mirabilis_leaf">Large feuille en lanière se divisant en rubans</string>
+    <string name="bot_welwitschia_mirabilis_flower">Cône femelle à graines</string>
+    <string name="bot_welwitschia_mirabilis_fruit">Rameau à cônes polliniques mâles</string>
+    <string name="bot_equisetum_palustre_name">Prêle des marais</string>
+    <string name="bot_equisetum_palustre_latin" translatable="false">Equisetum palustre</string>
+    <string name="bot_equisetum_palustre_aliases">prêle des marécages</string>
+    <string name="bot_equisetum_palustre_description">Plante à rhizome et à spores, aux tiges vertes creuses, côtelées et articulées. Les pousses stériles portent des verticilles de rameaux grêles aux nœuds ; les pousses fertiles, en général non ramifiées, se terminent par un strobile de sporanges. Elle n’a ni fleurs, ni graines, ni fruits. L’espèce contient des alcaloïdes toxiques et représente un danger pour le bétail lorsqu’elle contamine le fourrage.</string>
+    <string name="bot_equisetum_palustre_distribution">Hémisphère Nord tempéré, surtout dans les marais, les prairies humides et les bas-marais.</string>
+    <string name="bot_equisetum_palustre_habit">Pousses articulées à rameaux verticillés et strobile</string>
+    <string name="bot_equisetum_palustre_leaf">Dents de la gaine à un nœud de la tige</string>
+    <string name="bot_equisetum_palustre_flower">Strobile terminal porteur de spores</string>
+    <string name="bot_equisetum_palustre_fruit">Rameaux verticillés à un nœud</string>
+    <string name="bot_nepenthes_rajah_name">Népenthès rajah</string>
+    <string name="bot_nepenthes_rajah_latin" translatable="false">Nepenthes rajah</string>
+    <string name="bot_nepenthes_rajah_aliases">plante à urnes géante des montagnes</string>
+    <string name="bot_nepenthes_rajah_description">Plante carnivore terrestre à urnes, à tige rampante et à feuilles coriaces dont les vrilles se terminent par de grands pièges en forme d’urne. Les urnes basses peuvent contenir plusieurs litres ; un péristome côtelé et denté entoure l’ouverture et le couvercle porte des glandes à nectar sur sa face inférieure. Ses fleurs, petites, sont groupées en grappe ; l’espèce est en danger et inscrite à l’annexe I de la CITES.</string>
+    <string name="bot_nepenthes_rajah_distribution">Endémique des sites d’altitude du mont Kinabalu et du mont Tambuyukon, au Sabah (Bornéo).</string>
+    <string name="bot_nepenthes_rajah_habit">Rosette terrestre à grandes urnes posées au sol</string>
+    <string name="bot_nepenthes_rajah_leaf">Limbe et vrille terminale</string>
+    <string name="bot_nepenthes_rajah_flower">Urne à couvercle et lèvre côtelée</string>
+    <string name="bot_nepenthes_rajah_fruit">Capsule sèche après la floraison</string>
+    <string name="bot_collection_tree_diversity">Arbre du vivant · diversité végétale mondiale</string>
+    <string name="bot_collection_tree_diversity_desc">Lignées végétales choisies, des herbiers marins et forêts tempérées aux déserts et montagnes tropicales.</string>
+</resources>

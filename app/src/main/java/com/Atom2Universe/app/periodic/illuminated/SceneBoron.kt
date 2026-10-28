@@ -154,31 +154,24 @@ internal class SceneBoron : EngravedScene() {
         b.stroke(path, w * .3f, withAlpha(0xFFFFFFFF.toInt(), 220))
     }
 
-    override fun sprites(): List<Sprite> = listOf(
-        Sprite(STEAM, RectF(-20f, -20f, 20f, 20f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 20f,
-                intArrayOf(0xCCFFFFFF.toInt(), 0x66F4F6F8, 0x00F4F6F8), floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 20f, b.p)
-        },
-        Sprite(GLOW, RectF(-40f, -40f, 40f, 40f)) { b ->
-            b.pen(0xFF000000.toInt()).shader = RadialGradient(0f, 0f, 40f,
-                intArrayOf(0x995AA8FF.toInt(), 0x333A7AE0, 0x003A7AE0), floatArrayOf(0f, .4f, 1f), Shader.TileMode.CLAMP)
-            b.c.drawCircle(0f, 0f, 40f, b.p)
-        }
-    )
-
     // ───────────── animation ─────────────
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val flame = Path()
+    // La vapeur et la lueur : des dégradés de rayon 1, mis à l'échelle au dessin.
+    private val steam = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0xCCFFFFFF.toInt(), 0x66F4F6F8, 0x00F4F6F8), floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
+    }
+    private val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(0f, 0f, 1f, intArrayOf(0x995AA8FF.toInt(), 0x333A7AE0, 0x003A7AE0), floatArrayOf(0f, .4f, 1f), Shader.TileMode.CLAMP)
+    }
     private val surface = FloatArray(SURFACE_N * 4)
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
         // La lueur bleue des flammes sur le fond de verre.
-        c.save(); c.translate(CX, BURNER_Y - 4f); c.scale(1.1f, .5f)
-        s.draw(c, GLOW, alpha = (200 + 40 * sin(t * 13f)).toInt())
-        c.restore()
+        glow.alpha = (200 + 40 * sin(t * 13f)).toInt()
+        c.save(); c.translate(CX, BURNER_Y - 4f); c.scale(44f, 20f); c.drawCircle(0f, 0f, 1f, glow); c.restore()
         // L'eau qui bout : les bulles montent en grossissant, la surface frémit.
         c.save(); c.clipPath(water)
         for (k in 0 until BUBBLES) {
@@ -222,9 +215,8 @@ internal class SceneBoron : EngravedScene() {
             val y = SPOUT_Y - 4f - life * 70f
             val sc = .25f + life * .9f
             val a = (if (life < .12f) life / .12f else 1f) * (1f - life)
-            c.save(); c.translate(x, y); c.scale(sc, sc)
-            s.draw(c, STEAM, alpha = (230 * a).toInt())
-            c.restore()
+            steam.alpha = (230 * a).toInt()
+            c.save(); c.translate(x, y); c.scale(20f * sc, 20f * sc); c.drawCircle(0f, 0f, 1f, steam); c.restore()
         }
     }
 
@@ -240,8 +232,6 @@ internal class SceneBoron : EngravedScene() {
         const val BURNER_Y = 236f
         const val SPOUT_X = 112f
         const val SPOUT_Y = 150f
-        const val STEAM = 1
-        const val GLOW = 2
         const val BUBBLES = 24
         const val FLAMES = 14
         const val PUFFS = 8

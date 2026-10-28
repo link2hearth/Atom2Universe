@@ -22,6 +22,8 @@ internal class ScenePraseodymium : EngravedScene() {
     override val nameRes = R.string.card_scene_glassblower_glasses
     override val noteRes = R.string.card_note_glassblower_glasses
     override val explainRes = R.string.card_explain_glassblower_glasses
+    /** La flamme et la goutte de verre bougent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // L'atelier dans la pénombre.
@@ -82,15 +84,17 @@ internal class ScenePraseodymium : EngravedScene() {
     private val cone = Path()
     private val tongue = Path()
     private val ball = RectF(GX - 11f, GY - 11f, GX + 11f, GY + 11f)
-    private val lenses = Path().apply {
-        addRoundRect(LX - 78f, LY - 58f, LX + 78f, LY + 58f, 40f, 40f, Path.Direction.CW)
-        addRoundRect(LX + 102f, LY - 58f, LX + 258f, LY + 58f, 40f, 40f, Path.Direction.CW)
-    }
+    // Chaque verre seul est un rectangle arrondi, que le GPU découpe sans masque ; les deux ensemble pour le trait.
+    private val lensL = Path().apply { addRoundRect(LX - 78f, LY - 58f, LX + 78f, LY + 58f, 40f, 40f, Path.Direction.CW) }
+    private val lensR = Path().apply { addRoundRect(LX + 102f, LY - 58f, LX + 258f, LY + 58f, 40f, 40f, Path.Direction.CW) }
+    private val lenses = Path().apply { addPath(lensL); addPath(lensR) }
     private val arms = Path().apply {
         moveTo(LX + 78f, LY - 40f); quadTo(LX + 90f, LY - 54f, LX + 102f, LY - 40f)
         moveTo(LX - 78f, LY - 44f); lineTo(LX - 160f, LY - 50f)
     }
     private val lensesMoved = Path()
+    private val lensLMoved = Path()
+    private val lensRMoved = Path()
     private val armsMoved = Path()
 
     override fun animate(c: Canvas, s: Sprites, t: Float) {
@@ -115,10 +119,12 @@ internal class ScenePraseodymium : EngravedScene() {
         val dx = 58f * sin(t * TWO_PI / SWAY)
         val dy = 5f * sin(t * TWO_PI / SWAY * 2.3f)
         lenses.offset(dx, dy, lensesMoved)
+        lensL.offset(dx, dy, lensLMoved)
+        lensR.offset(dx, dy, lensRMoved)
         arms.offset(dx, dy, armsMoved)
 
         // Hors des verres : l'éblouissement jaune du verre chaud, qui noie tout.
-        c.save(); c.clipOutPath(lensesMoved)
+        c.save(); c.clipOutPath(lensLMoved); c.clipOutPath(lensRMoved)
         flare.alpha = (210 + 45 * sin(t * 9f) * sin(t * 5.3f)).toInt()
         c.drawCircle(GX + 6f, GY, 96f, flare)
         tongue.reset()
@@ -127,9 +133,7 @@ internal class ScenePraseodymium : EngravedScene() {
         fill.color = withAlpha(0xFFFFD050.toInt(), 170); c.drawPath(tongue, fill)
         c.restore()
         // Dans les verres : une teinte lilas, et rien d'autre.
-        c.save(); c.clipPath(lensesMoved)
-        fill.color = withAlpha(0xFF8A7AB8.toInt(), 58); c.drawPaint(fill)
-        c.restore()
+        fill.color = withAlpha(0xFF8A7AB8.toInt(), 58); c.drawPath(lensesMoved, fill)
         c.drawPath(armsMoved, frame)
         c.drawPath(lensesMoved, frame)
         c.drawPath(lensesMoved, rim)

@@ -28,6 +28,8 @@ internal class SceneAccelerator(
 ) : EngravedScene() {
 
     override val sky = Sky.NONE
+    /** Les paquets d'ions font le tour de l'anneau très vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le hall : mur sombre, chemins de câbles, sol de béton en perspective.

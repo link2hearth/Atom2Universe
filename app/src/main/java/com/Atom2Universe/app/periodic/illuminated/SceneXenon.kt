@@ -25,6 +25,8 @@ internal class SceneXenon : EngravedScene() {
     override val nameRes = R.string.card_scene_xenon_headlights
     override val noteRes = R.string.card_note_xenon_headlights
     override val explainRes = R.string.card_explain_xenon_headlights
+    /** La route et les roues défilent vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // La lune.

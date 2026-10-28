@@ -23,6 +23,8 @@ internal class SceneNeon : EngravedScene() {
     override val nameRes = R.string.card_scene_neon_sign
     override val noteRes = R.string.card_note_neon_sign
     override val explainRes = R.string.card_explain_neon_sign
+    /** La pluie tombe vite : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         facade(b)
@@ -206,7 +208,8 @@ internal class SceneNeon : EngravedScene() {
         c.drawCircle(0f, 0f, 1f, halo)
         c.restore()
 
-        for ((k, seg) in segments.withIndex()) {
+        for (k in segments.indices) {
+            val seg = segments[k]
             val level = when (k) {
                 2 -> handle
                 in 4..6 -> if (((t * .6f - (k - 4) * .25f) % 1f + 1f) % 1f < .7f) 1f else 0f

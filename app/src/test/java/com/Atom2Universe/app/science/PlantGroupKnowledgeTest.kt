@@ -24,16 +24,28 @@ class PlantGroupKnowledgeTest {
     }
 
     @Test fun toutesLesFamillesPartagentLaDescriptionEtUneSourcePrecise() {
+        // Green algae have no APweb page: only the Kew search, never a borrowed page.
+        val kewOnly=setOf("Chlamydomonadaceae","Cladophoraceae","Volvocaceae")
         for(family in BotanyCatalog.families) {
             assertTrue(family.id,PlantGroupKnowledge.hasArticle(family.id))
             // One resource ID means edits to the atlas diagnosis immediately reach the tree.
             assertEquals(family.id,family.description,PlantGroupKnowledge.descriptionResource(family.id))
             val links=PlantGroupKnowledge.sources(family.id)
-            assertEquals(2,links.size)
-            assertTrue(family.id,links.first().second.endsWith("#${family.id}"))
-            assertFalse(family.id,links.first().second.contains("amborellalesweb2"))
+            assertEquals(family.id,if(family.id in kewOnly)1 else 2,links.size)
+            if(family.id !in kewOnly) {
+                assertTrue(family.id,links.first().second.substringAfter('#',"").isNotEmpty())
+                assertFalse(family.id,links.first().second.contains("amborellalesweb2"))
+            }
             assertTrue(family.id,links.last().second.startsWith("https://powo.science.kew.org/results?q="))
         }
+        // These orders were missing and crashed the family page.
+        assertTrue(PlantGroupKnowledge.sources("Boraginaceae").first().second.endsWith("boraginalesweb.htm#Boraginaceae"))
+        assertTrue(PlantGroupKnowledge.sources("Aristolochiaceae").first().second.endsWith("piperalesweb2.htm#Aristolochiaceae"))
+        assertTrue(PlantGroupKnowledge.sources("Myrtaceae").first().second.endsWith("myrtalesweb2.htm#Myrtaceae"))
+        assertTrue(PlantGroupKnowledge.sources("Retziaceae").first().second.endsWith("lamialesweb.htm#Stilbaceae"))
+        assertTrue(PlantGroupKnowledge.sources("Sphagnaceae").first().second.endsWith("sporing.html#Sphagnopsida"))
+        assertTrue(PlantGroupKnowledge.sources("Equisetaceae").first().second.endsWith("sporing.html#Equisetaceae"))
+        assertTrue(PlantGroupKnowledge.sources("Cupressaceae").first().second.endsWith("cupressalesweb.html#Cupressaceae"))
         // These real filenames break the tempting order-name + web.htm rule.
         assertTrue(PlantGroupKnowledge.sources("Aquifoliaceae").first().second.contains("aquifolialesweb2.htm"))
         assertTrue(PlantGroupKnowledge.sources("Lythraceae").first().second.contains("myrtalesweb2.htm"))

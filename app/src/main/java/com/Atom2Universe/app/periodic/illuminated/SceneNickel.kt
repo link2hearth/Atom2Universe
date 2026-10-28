@@ -27,6 +27,8 @@ internal class SceneNickel : EngravedScene() {
     override val nameRes = R.string.card_scene_spinning_coin
     override val noteRes = R.string.card_note_spinning_coin
     override val explainRes = R.string.card_explain_spinning_coin
+    /** La pièce tourne sur elle-même à 400°/s : à 30 images/s, ça saccaderait. */
+    override val fps = 60
 
     override fun engrave(b: Burin) {
         // Le mur tapissé de rayures, la lampe en haut à droite.

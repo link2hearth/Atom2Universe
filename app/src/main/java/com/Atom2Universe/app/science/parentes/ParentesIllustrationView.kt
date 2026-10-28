@@ -19,6 +19,25 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
     private val purple = palette.mark(0xffb69cdb.toInt())
     private var progress = 1f
     private var motion: ValueAnimator? = null
+    // Reused every frame: strokes and fixed silhouettes are not reallocated while animating.
+    private val trace = Path()
+    private val helixA = Path()
+    private val helixB = Path()
+    private val fishBody by lazy { Path().apply {
+        moveTo(77f,114f); cubicTo(144f,35f,276f,67f,305f,111f)
+        lineTo(340f,80f); lineTo(337f,150f); lineTo(305f,123f)
+        cubicTo(220f,182f,129f,156f,77f,114f); close()
+    } }
+    private val birdBody by lazy { Path().apply {
+        moveTo(101f,144f); cubicTo(126f,112f,177f,91f,225f,115f)
+        cubicTo(237f,96f,232f,69f,254f,64f); cubicTo(283f,53f,300f,91f,277f,108f)
+        cubicTo(272f,156f,219f,181f,153f,161f); lineTo(92f,176f); close()
+    } }
+    private val birdWing by lazy { Path().apply {
+        moveTo(219f,123f); cubicTo(169f,68f,127f,58f,80f,42f)
+        cubicTo(98f,116f,136f,145f,219f,140f); close()
+    } }
+    private val beak by lazy { Path().apply { moveTo(281f,82f); lineTo(307f,89f); lineTo(282f,95f); close() } }
     var onProgress: (Float) -> Unit = {}
 
     init { background = palette.shape(palette.surface, 24f) }
@@ -36,6 +55,7 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
     fun pause() { motion?.pause() }
     fun resume() { motion?.resume() }
     fun stop() { motion?.cancel(); motion = null }
+    val isPlaying get() = motion?.let { it.isRunning && !it.isPaused } == true
     override fun onDetachedFromWindow() { stop(); super.onDetachedFromWindow() }
 
     private fun fill(color: Int, alpha: Int = 255) {
@@ -47,8 +67,9 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
     }
     private fun line(c: Canvas, color: Int, width: Float, vararg points: Float) {
         stroke(color, width)
-        val p = Path().apply { moveTo(points[0], points[1]); for (i in 2 until points.size step 2) lineTo(points[i], points[i+1]) }
-        c.drawPath(p, paint)
+        trace.rewind(); trace.moveTo(points[0], points[1])
+        for (i in 2 until points.size step 2) trace.lineTo(points[i], points[i+1])
+        c.drawPath(trace, paint)
     }
     private fun oval(c: Canvas, x: Float, y: Float, rx: Float, ry: Float, color: Int, alpha: Int = 255) {
         fill(color, alpha); c.drawOval(x-rx, y-ry, x+rx, y+ry, paint)
@@ -88,11 +109,7 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
             }
             "fish" -> {
                 fill(blue,210)
-                c.drawPath(Path().apply {
-                    moveTo(77f,114f); cubicTo(144f,35f,276f,67f,305f,111f)
-                    lineTo(340f,80f); lineTo(337f,150f); lineTo(305f,123f)
-                    cubicTo(220f,182f,129f,156f,77f,114f); close()
-                },paint)
+                c.drawPath(fishBody,paint)
                 line(c,gold,4f,109f,112f,300f,117f)
                 repeat(12) { i -> val x=133f+i*12; line(c,palette.surface,2f,x,115f,x-7,93f); line(c,palette.surface,2f,x,115f,x-5,136f) }
                 oval(c,113f,101f,5f,5f,palette.text)
@@ -238,7 +255,8 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
                     line(c,palette.surface,2f,x-12,y+3,x-6,y-4,x,y+4,x+6,y-4,x+12,y+3)
                 }
             } else {
-                val p=Path(); val q=Path()
+                val p=helixA; val q=helixB
+                p.rewind(); q.rewind()
                 for(i in 0..50) {
                     val x=143f+i*2.2f; val y=sin(i*.27f+wave*.2f)*20f
                     if(i==0) { p.moveTo(x,112+y); q.moveTo(x,112-y) }
@@ -253,22 +271,15 @@ class ParentesIllustrationView(context: Context, private val subject: String) : 
     private fun bird(c:Canvas,pigeon:Boolean,wave:Float) {
         val body=if(pigeon) ColorUtils.blendARGB(blue,palette.secondary,.45f) else blue
         fill(body)
-        c.drawPath(Path().apply {
-            moveTo(101f,144f); cubicTo(126f,112f,177f,91f,225f,115f)
-            cubicTo(237f,96f,232f,69f,254f,64f); cubicTo(283f,53f,300f,91f,277f,108f)
-            cubicTo(272f,156f,219f,181f,153f,161f); lineTo(92f,176f); close()
-        },paint)
+        c.drawPath(birdBody,paint)
         oval(c,252f,111f,17f,17f,green,130)
         c.save(); c.rotate(if(pigeon) -5f else -24f+wave*12,217f,123f)
         fill(body)
-        c.drawPath(Path().apply {
-            moveTo(219f,123f); cubicTo(169f,68f,127f,58f,80f,42f)
-            cubicTo(98f,116f,136f,145f,219f,140f); close()
-        },paint)
+        c.drawPath(birdWing,paint)
         repeat(8) { i -> line(c,palette.surface,1.5f,111f+i*12,77f+i*4,126f+i*10,120f+i*2) }
         if(pigeon) { line(c,palette.text,6f,146f,82f,171f,136f); line(c,palette.text,5f,163f,89f,187f,139f) }
         c.restore()
-        fill(gold); c.drawPath(Path().apply { moveTo(281f,82f); lineTo(307f,89f); lineTo(282f,95f); close() },paint)
+        fill(gold); c.drawPath(beak,paint)
         oval(c,270f,78f,4f,4f,palette.text)
         line(c,gold,4f,207f,166f,206f,192f,196f,197f)
         line(c,gold,4f,227f,160f,232f,190f,245f,194f)
@@ -281,17 +292,31 @@ class ParentesStoryForkView(context:Context) : View(context) {
     private val pen=Paint(Paint.ANTI_ALIAS_FLAG).apply { style=Paint.Style.STROKE; strokeCap=Paint.Cap.ROUND }
     var progress=1f
         set(value) { field=value; invalidate() }
+    private val colors=intArrayOf(palette.mark(0xff71cba5.toInt()),palette.mark(0xffe6b574.toInt()))
+    private val branches=arrayOf(Path(),Path())
+    private val measures=arrayOf(PathMeasure(),PathMeasure())
+    private val revealed=Path()
+    // Both branches only depend on the size: built here, not once per animation frame.
+    override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int) {
+        super.onSizeChanged(w,h,oldw,oldh)
+        val d=resources.displayMetrics.density
+        val mid=w*.5f; val top=12*d; val end=h-12*d
+        for(i in branches.indices) {
+            val x=w*(if(i==0) .16f else .84f)
+            branches[i].rewind(); branches[i].moveTo(mid,top); branches[i].cubicTo(mid,end*.65f,x,end*.4f,x,end)
+            measures[i].setPath(branches[i],false)
+        }
+    }
     override fun onDraw(c:Canvas) {
         super.onDraw(c)
         val d=resources.displayMetrics.density
         val mid=width*.5f; val top=12*d; val end=height-12*d
-        val paths=listOf(width*.16f to palette.mark(0xff71cba5.toInt()),width*.84f to palette.mark(0xffe6b574.toInt()))
-        for((x,color) in paths) {
-            val p=Path().apply { moveTo(mid,top); cubicTo(mid,end*.65f,x,end*.4f,x,end) }
-            pen.color=palette.grid; pen.strokeWidth=3*d; c.drawPath(p,pen)
-            val measure=PathMeasure(p,false); val revealed=Path()
-            measure.getSegment(0f,measure.length*(progress*1.6f).coerceAtMost(1f),revealed,true)
-            pen.color=color; c.drawPath(revealed,pen)
+        for(i in branches.indices) {
+            val x=width*(if(i==0) .16f else .84f)
+            pen.color=palette.grid; pen.strokeWidth=3*d; c.drawPath(branches[i],pen)
+            revealed.rewind()
+            measures[i].getSegment(0f,measures[i].length*(progress*1.6f).coerceAtMost(1f),revealed,true)
+            pen.color=colors[i]; c.drawPath(revealed,pen)
             pen.style=Paint.Style.FILL; c.drawCircle(x,end,5*d,pen); pen.style=Paint.Style.STROKE
         }
         pen.style=Paint.Style.FILL; pen.color=palette.text; c.drawCircle(mid,top,5*d,pen); pen.style=Paint.Style.STROKE

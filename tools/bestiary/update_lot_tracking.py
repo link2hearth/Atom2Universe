@@ -13,8 +13,6 @@ def main():
     build = root / "app/build/bestiary_expansion"
     catalog = root / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryEncyclopediaCatalog.kt"
     published_ids = set(re.findall(r'id = "([a-z_]+)"', catalog.read_text(encoding="utf-8"))) if catalog.exists() else set()
-    illustrated_catalog = root / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryIllustratedCatalog.kt"
-    illustrated_ids = set(re.findall(r'id = "([a-z_]+)"', illustrated_catalog.read_text(encoding="utf-8"))) if illustrated_catalog.exists() else set()
     destination = args.documents / "Bestiaire"
     destination.mkdir(parents=True, exist_ok=True)
     for lot in sorted(build.glob("lot20_*")):
@@ -47,7 +45,8 @@ def main():
                 else:
                     art = "Génération en cours"
             integrated = animal_id in published_ids
-            image_is_integrated = animal_id in illustrated_ids or integrated
+            # The app shows an illustration only with its published profile.
+            image_is_integrated = integrated
             published += integrated
             image_integrated += image_is_integrated
             lines.append(f"| {row['scientific']} | {draft} | {art} | {'Oui' if image_is_integrated else 'Non'} | {'Oui' if integrated else 'Non'} |")

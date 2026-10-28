@@ -23,7 +23,8 @@ import kotlin.math.roundToInt
 class HumanHistoryTimelineView(
     context: Context,
     val window: HumanTimeWindow,
-    private val changed: () -> Unit,
+    /** live = a frame of a drag, pinch, fling or scrub; false once the window settles. */
+    private val changed: (live: Boolean) -> Unit,
     private val openEntries: (List<HumanLandmark>) -> Unit
 ) : FrameLayout(context) {
     private val palette = SciencePalette(context)
@@ -40,6 +41,7 @@ class HumanHistoryTimelineView(
     private var pinched = false
     private var verticalGesture = false
     private var touching = false
+    private var liveChanges = false
     private var axisY = 0f
     private val plotTop get() = dp(8).toFloat()
     private var recordsTop = 0
@@ -80,7 +82,7 @@ class HumanHistoryTimelineView(
         }
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             window.zoom(detector.scaleFactor.toDouble(), ((detector.focusX - inset) / plotWidth).toDouble())
-            refresh(); return true
+            refresh(live = true); return true
         }
     })
 
@@ -107,7 +109,15 @@ class HumanHistoryTimelineView(
             window.intersects(it.range.first.year, it.range.last.year)
     }
 
-    fun refresh() { requestLayout(); invalidate(); changed() }
+    fun refresh(live: Boolean = false) {
+        requestLayout(); invalidate()
+        liveChanges = live
+        changed(live)
+    }
+    /** The surrounding screen gets one complete update when a gesture or fling ends. */
+    private fun settle() {
+        if (liveChanges) { liveChanges = false; changed(false) }
+    }
     fun stopMotion() { scroller.forceFinished(true); requestLayout() }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -290,7 +300,7 @@ class HumanHistoryTimelineView(
             }
             if (dragging) {
                 window.pan((lastX - event.x) / plotWidth * window.span)
-                refresh()
+                refresh(live = true)
             }
             lastX = event.x
         }
@@ -309,6 +319,7 @@ class HumanHistoryTimelineView(
             velocity?.recycle(); velocity = null; parent?.requestDisallowInterceptTouchEvent(false)
             dragging = false; pinched = false; touching = false
             requestLayout()
+            if (scroller.isFinished) settle()
         }
         return handled
     }
@@ -321,8 +332,12 @@ class HumanHistoryTimelineView(
         if (scroller.computeScrollOffset()) {
             val before = window.start
             window.pan((scroller.currX - flingX) / plotWidth * window.span); flingX = scroller.currX
-            refresh()
-            if (before == window.start) stopMotion() else postInvalidateOnAnimation()
+            refresh(live = true)
+            when {
+                before == window.start -> { stopMotion(); settle() }
+                scroller.isFinished -> settle()
+                else -> postInvalidateOnAnimation()
+            }
         }
     }
 
