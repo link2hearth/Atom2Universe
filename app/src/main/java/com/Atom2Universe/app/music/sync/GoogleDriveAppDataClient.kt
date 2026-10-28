@@ -643,13 +643,22 @@ class GoogleDriveAppDataClient(
      */
     suspend fun deleteAllFiles(): Int = withContext(Dispatchers.IO) {
         try {
-            val files = driveService.files().list()
-                .setSpaces(APP_DATA_FOLDER)
-                .setFields("files(id, name)")
-                .execute()
+            // Toutes les pages d'abord : supprimer pendant le parcours décalerait les pages suivantes.
+            val files = mutableListOf<File>()
+            var pageToken: String? = null
+            do {
+                val page = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setFields("nextPageToken, files(id, name)")
+                    .setPageSize(1000)
+                    .setPageToken(pageToken)
+                    .execute()
+                page.files?.let { files += it }
+                pageToken = page.nextPageToken
+            } while (pageToken != null)
 
             var deletedCount = 0
-            files.files.forEach { file ->
+            files.forEach { file ->
                 try {
                     driveService.files().delete(file.id).execute()
                     Log.d(TAG, "Deleted file: ${file.name}")
