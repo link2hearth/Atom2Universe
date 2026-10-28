@@ -62,6 +62,15 @@ class TheLineWidgetView @JvmOverloads constructor(
     // Mode sélectionné dans l'overlay (pas encore appliqué)
     private var pendingMode = TheLineMode.SINGLE
 
+    // Seule la dernière génération lancée est chargée ; les précédentes sont ignorées à leur arrivée
+    private var generationId = 0
+    private var generating = false
+    // Réglages de la grille en cours de génération, puis de la grille affichée
+    private var requestedMode: TheLineMode? = null
+    private var requestedDifficulty: TheLineDifficulty? = null
+    private var loadedMode: TheLineMode? = null
+    private var loadedDifficulty: TheLineDifficulty? = null
+
     private val minScale = 0.4f
     private val maxScale = 3.0f
     private var currentScale = 1f
@@ -77,6 +86,7 @@ class TheLineWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     private var dragLastX = 0f
@@ -133,6 +143,7 @@ class TheLineWidgetView @JvmOverloads constructor(
 
         val headerArea = findViewById<FrameLayout>(R.id.the_line_widget_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     private fun openResetOverlay() {
@@ -196,6 +207,7 @@ class TheLineWidgetView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -229,12 +241,20 @@ class TheLineWidgetView @JvmOverloads constructor(
         boardView.visibility = INVISIBLE
         val mode = game.mode
         val diff = game.difficulty
+        val id = ++generationId
+        generating = true
+        requestedMode = mode
+        requestedDifficulty = diff
         Thread {
             val puzzle = TheLineGenerator.generate(mode, diff)
             mainHandler.post {
+                if (id != generationId) return@post
+                generating = false
                 if (puzzle != null) {
                     game.loadPuzzle(puzzle)
                     boardView.loadGame(game)
+                    loadedMode = mode
+                    loadedDifficulty = diff
                 }
                 loadingView.visibility = GONE
                 boardView.visibility = VISIBLE
@@ -250,8 +270,6 @@ class TheLineWidgetView @JvmOverloads constructor(
     }
 
     fun reload() {
-        resultOverlay.visibility = GONE
-        resetOverlay.visibility = GONE
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         game.difficulty = TheLineDifficulty.entries.find { it.name == prefs.getString(KEY_DIFFICULTY, null) }
             ?: TheLineDifficulty.EASY
@@ -259,7 +277,21 @@ class TheLineWidgetView @JvmOverloads constructor(
             ?: TheLineMode.SINGLE
         pendingMode = game.mode
         updateDifficultyLabel()
+        // Retour sur l'écran : la grille en cours (ou en génération) est gardée telle quelle
+        val keep = if (generating) requestedMode == game.mode && requestedDifficulty == game.difficulty
+        else game.puzzle != null && loadedMode == game.mode && loadedDifficulty == game.difficulty
+        if (keep) return
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         generateAndLoad()
+    }
+
+    override fun onDetachedFromWindow() {
+        // Une génération encore en cours n'a plus où se charger
+        generationId++
+        generating = false
+        mainHandler.removeCallbacksAndMessages(null)
+        super.onDetachedFromWindow()
     }
 
     fun applyBackgroundOpacity(percent: Int) {

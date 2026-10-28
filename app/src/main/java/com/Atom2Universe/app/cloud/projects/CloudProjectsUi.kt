@@ -97,7 +97,7 @@ object CloudProjectsUi {
                 name,
                 fmt.format(Date(localModified)),
                 fmt.format(Date(remote.driveModified)),
-                remote.deviceName.ifBlank { "?" },
+                remote.deviceName.ifBlank { activity.getString(R.string.cloud_proj_unknown_device) },
             )
             fun resolve(choice: CloudProjectSync.Choice) {
                 toast(activity, R.string.cloud_proj_syncing)

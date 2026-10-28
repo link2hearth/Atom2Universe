@@ -9,6 +9,7 @@ import android.graphics.Matrix
 import android.graphics.Shader
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -262,7 +263,7 @@ class ClickerBannerView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val refreshTick = object : Runnable {
         override fun run() {
-            val nowMs = System.currentTimeMillis()
+            val nowMs = SystemClock.elapsedRealtime()
             refreshFrenzyDisplay(nowMs)
             scheduleRefreshIfNeeded(nowMs)
         }
@@ -314,13 +315,18 @@ class ClickerBannerView @JvmOverloads constructor(
 
     // ── Bannière principale ───────────────────────────────────────────────────
 
+    // L'état arrive 10 fois/s : un setText, même identique, relance une mise en page.
     fun update(state: ClickerGameState) {
-        atomsText.text = state.atoms.toString()
-        apcText.text   = state.perClick.toString()
-        apsText.text   = state.perSecond.toString()
+        setTextIfChanged(atomsText, state.atoms.toString())
+        setTextIfChanged(apcText, state.perClick.toString())
+        setTextIfChanged(apsText, state.perSecond.toString())
         val threshold = cachedDrawMultiplier.coerceAtLeast(1)
-        gachaButton.text = if (state.gachaTickets >= threshold) "☀+" else "☀"
-        fusionButton.text = if (state.isFusionAvailable) "⚛+" else "⚛"
+        setTextIfChanged(gachaButton, if (state.gachaTickets >= threshold) "☀+" else "☀")
+        setTextIfChanged(fusionButton, if (state.isFusionAvailable) "⚛+" else "⚛")
+    }
+
+    private fun setTextIfChanged(view: TextView, text: String) {
+        if (!android.text.TextUtils.equals(view.text, text)) view.text = text
     }
 
     fun refreshDrawMultiplier() {
@@ -421,12 +427,13 @@ class ClickerBannerView @JvmOverloads constructor(
     fun bindFrenzy(state: FrenzyUiState) {
         currentFrenzy = state
         handler.removeCallbacks(refreshTick)
-        val nowMs = System.currentTimeMillis()
+        // Même horloge monotone que FrenzyManager (expirations en elapsedRealtime).
+        val nowMs = SystemClock.elapsedRealtime()
         refreshFrenzyDisplay(nowMs)
         scheduleRefreshIfNeeded(nowMs)
     }
 
-    private fun scheduleRefreshIfNeeded(nowMs: Long = System.currentTimeMillis()) {
+    private fun scheduleRefreshIfNeeded(nowMs: Long = SystemClock.elapsedRealtime()) {
         val s         = currentFrenzy
         val apcActive = s.apcEffectExpiries.any { it > nowMs }
         val apsActive = s.apsEffectExpiries.any { it > nowMs }
@@ -438,7 +445,7 @@ class ClickerBannerView @JvmOverloads constructor(
         }
     }
 
-    private fun refreshFrenzyDisplay(nowMs: Long = System.currentTimeMillis()) {
+    private fun refreshFrenzyDisplay(nowMs: Long = SystemClock.elapsedRealtime()) {
         val s     = currentFrenzy
 
         val apcFx    = s.apcEffectExpiries.filter { it > nowMs }
@@ -462,7 +469,7 @@ class ClickerBannerView @JvmOverloads constructor(
 
                 val secsLeft = (apcFx.max() - nowMs) / 1000f
                 frenzyApcMult.text    = "×${lastApcMult}"
-                frenzyApcTimer.text   = "  ${secsLeft.toInt()}s"
+                frenzyApcTimer.text   = context.getString(R.string.clicker_frenzy_seconds_left, secsLeft.toInt())
                 frenzyApcTimer.visibility = VISIBLE
                 frenzyApcClicks.text  = "  ${lastApcClicks}"
                 frenzyApcBox.alpha    = 1f

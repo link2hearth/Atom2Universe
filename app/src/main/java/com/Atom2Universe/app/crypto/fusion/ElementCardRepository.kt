@@ -30,11 +30,16 @@ class ElementCardRepository(context: Context) {
         return if (missing.isNotEmpty()) missing.random() else pool.cards.random()
     }
 
-    /** Enregistre l'obtention d'une carte : +1 exemplaire. */
-    fun markObtained(atomicNumber: Int) {
+    /**
+     * Enregistre l'obtention d'une carte : +1 exemplaire. Avec [save] = false (lot de fusions),
+     * seul l'état en mémoire change : appeler [saveCounts] une fois le lot terminé.
+     */
+    fun markObtained(atomicNumber: Int, save: Boolean = true) {
         counts[atomicNumber] = (counts[atomicNumber] ?: 0) + 1
-        persistCounts()
+        if (save) persistCounts()
     }
+
+    fun saveCounts() = persistCounts()
 
     fun hasCard(atomicNumber: Int): Boolean = (counts[atomicNumber] ?: 0) > 0
 

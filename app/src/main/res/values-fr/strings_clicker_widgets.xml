@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget Blackjack -->
+    <string name="blackjack_widget_title">♠ BlackJack</string>
+    <string name="blackjack_widget_deal">MISE ▶</string>
+    <string name="blackjack_widget_bet_free">GRATUIT +</string>
+    <string name="blackjack_widget_bet">⚛%1$d +</string>
+    <string name="blackjack_widget_gain">+%1$d ⚛</string>
+    <string name="blackjack_widget_bj_gain">BJ !\n+%1$d ⚛</string>
+    <string name="blackjack_widget_loss">-%1$d ⚛</string>
+
+    <!-- Widget échecs -->
+    <string name="chess_widget_stalemate">Pat !</string>
+    <string name="chess_widget_draw">Nulle !</string>
+    <string name="chess_widget_checkmate">Mat !</string>
+    <string name="chess_widget_checkmate_defeat">Mat •\nDéfaite</string>
+    <string name="chess_widget_checkmate_victory">Mat •\nVictoire</string>
+
+    <!-- Titres des widgets -->
+    <string name="solitaire_widget_title">♠ Solitaire</string>
+    <string name="pipetap_widget_title">⬡ PipeTap</string>
+
+    <!-- Widget audio de l'écran d'accueil -->
+    <string name="music_widget_radio_label">Radio</string>
+    <string name="music_widget_midi_label">MIDI</string>
+    <string name="music_widget_badge_radio">RADIO</string>
+    <string name="music_widget_badge_midi">MIDI</string>
+</resources>

@@ -110,6 +110,53 @@ class PeriodicCollectionStore(context: Context) {
     prefs.edit { clear() }
   }
 
+  /** Lot de modifications appliquées en mémoire puis écrites en une fois (voir [Batch]). */
+  fun batch(): Batch = Batch()
+
+  /**
+   * Même effet que des appels successifs à [consumeCopy] / [addCopyFromFusion], mais les compteurs
+   * sont lus une fois, modifiés en mémoire et écrits en une seule fois par [apply]
+   * (« Tout fusionner » : des milliers d'opérations).
+   */
+  inner class Batch internal constructor() {
+    private val copies = HashMap<Int, Int>()
+    private val maxCopies = HashMap<Int, Int>()
+    private val totals = HashMap<Int, Int>()
+    private val fusions = HashMap<Int, Int>()
+
+    fun getCopyCount(atomicNumber: Int): Int =
+      copies.getOrPut(atomicNumber) { this@PeriodicCollectionStore.getCopyCount(atomicNumber) }
+
+    fun consumeCopy(atomicNumber: Int): Boolean {
+      val current = getCopyCount(atomicNumber)
+      if (current <= 0) return false
+      copies[atomicNumber] = current - 1
+      return true
+    }
+
+    fun addCopyFromFusion(atomicNumber: Int): Int {
+      val newCount = getCopyCount(atomicNumber) + 1
+      copies[atomicNumber] = newCount
+      maxCopies[atomicNumber] = maxOf(newCount, maxCopies.getOrPut(atomicNumber) { getMaxCopyCount(atomicNumber) })
+      totals[atomicNumber] = totals.getOrPut(atomicNumber) { getTotalEverCount(atomicNumber) } + 1
+      fusions[atomicNumber] = fusions.getOrPut(atomicNumber) { getFusionCount(atomicNumber) } + 1
+      return newCount
+    }
+
+    fun apply() {
+      if (copies.isEmpty()) return
+      prefs.edit {
+        copies.forEach { (n, v) -> putInt(copyKey(n), v) }
+        maxCopies.forEach { (n, v) -> putInt(maxCopyKey(n), v) }
+        totals.forEach { (n, v) ->
+          putInt(totalEverKey(n), v)
+          putBoolean(everKey(n), true)
+        }
+        fusions.forEach { (n, v) -> putInt(fusionCountKey(n), v) }
+      }
+    }
+  }
+
   companion object {
     private const val PREFS_NAME = "periodic_collection"
   }

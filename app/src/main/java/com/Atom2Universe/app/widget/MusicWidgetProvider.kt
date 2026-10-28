@@ -138,18 +138,17 @@ class MusicWidgetProvider : AppWidgetProvider() {
             }
             MusicWidgetController.ActiveSource.RADIO -> {
                 views.setViewVisibility(R.id.widget_source_badge, View.VISIBLE)
-                views.setTextViewText(R.id.widget_source_badge, "RADIO")
+                views.setTextViewText(R.id.widget_source_badge, context.getString(R.string.music_widget_badge_radio))
                 views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_radio)
             }
             MusicWidgetController.ActiveSource.MIDI -> {
                 views.setViewVisibility(R.id.widget_source_badge, View.VISIBLE)
-                views.setTextViewText(R.id.widget_source_badge, "MIDI")
+                views.setTextViewText(R.id.widget_source_badge, context.getString(R.string.music_widget_badge_midi))
                 views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_midi)
             }
             MusicWidgetController.ActiveSource.NONE -> {
                 // Vérifier si c'est une dernière station radio ou une queue musique
-                val isRadioSaved = state.musicTrack == null && state.artist == "Radio"
-                if (isRadioSaved) {
+                if (state.isSavedRadio) {
                     views.setViewVisibility(R.id.widget_source_badge, View.GONE)
                     views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_radio)
                 } else {
@@ -165,8 +164,7 @@ class MusicWidgetProvider : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.widget_btn_prev, createActionPendingIntent(context, ACTION_PREVIOUS))
 
         // Clic sur la pochette pour ouvrir l'activité appropriée selon la source
-        val isRadioSaved = state.source == MusicWidgetController.ActiveSource.NONE &&
-                state.musicTrack == null && state.artist == "Radio"
+        val isRadioSaved = state.source == MusicWidgetController.ActiveSource.NONE && state.isSavedRadio
         val isMusicSource = state.source == MusicWidgetController.ActiveSource.MUSIC ||
                 (state.source == MusicWidgetController.ActiveSource.NONE && !isRadioSaved && state.title.isNotEmpty())
         val targetActivity = when {

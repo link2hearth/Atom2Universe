@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.edit
 import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
@@ -33,6 +34,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
     private lateinit var newGamePanel: LinearLayout
 
     private val game = PipeTapGame()
+    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     // Le widget n'affiche pas le temps : il se calcule à l'arrêt du chrono, sans minuteur.
     private var timerStartMs = 0L
@@ -50,6 +52,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
                 scaleY = currentScale
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag (header only) ────────────────────────────────────────────────────────
@@ -73,6 +76,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
 
         val header = findViewById<FrameLayout>(R.id.pipetap_widget_header)
         header.setOnTouchListener { _, ev -> handleHeaderTouch(ev) }
+        keepFloatingWidgetOnScreenOnResize()
 
         findViewById<TextView>(R.id.pipetap_widget_btn_new).setOnClickListener {
             stopTimer()
@@ -104,10 +108,23 @@ class PipeTapWidgetView @JvmOverloads constructor(
                         GameStatsRepository(context).recordPipeTapHardWon()
                     }
                 }
+                saveGame()
             }
         }
 
-        startNewGame(PipeTapDifficulty.MEDIUM)
+        val saved = prefs.getString(KEY_SAVE, null)
+        if (saved != null && game.deserialize(saved)) {
+            gameView.game = game
+            reload()
+        } else {
+            startNewGame(PipeTapDifficulty.MEDIUM)
+        }
+    }
+
+    companion object {
+        // Sauvegarde propre au widget : la partie de PipeTapActivity reste à part
+        private const val PREFS_NAME = "pipetap_widget_save"
+        private const val KEY_SAVE = "game"
     }
 
     override fun onFinishInflate() {
@@ -163,6 +180,12 @@ class PipeTapWidgetView @JvmOverloads constructor(
         gameView.refresh()
         updateStats()
         startTimer()
+        saveGame()
+    }
+
+    private fun saveGame() {
+        if (timerRunning) game.elapsedSeconds = (System.currentTimeMillis() - timerStartMs) / 1000
+        prefs.edit { putString(KEY_SAVE, game.serialize()) }
     }
 
     private fun updateStats() {
@@ -231,6 +254,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -239,7 +263,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
     fun reload() {
         stopTimer()
         if (game.solved) {
-            winOverlay.visibility = VISIBLE
+            showWinOverlay()
         } else {
             winOverlay.visibility = GONE
             startTimer()

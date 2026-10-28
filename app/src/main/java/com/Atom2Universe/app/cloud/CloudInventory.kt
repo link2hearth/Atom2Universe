@@ -13,6 +13,7 @@ import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.notes.sync.NotesSyncManager
 import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
+import com.Atom2Universe.app.stats.sync.StatsSyncManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,7 +22,7 @@ import kotlinx.coroutines.withContext
  *
  * Le classement se fait sur le NOM du fichier, parce que c'est la seule chose que
  * Drive nous donne sans télécharger le contenu. Chaque module publie des noms fixes
- * (`games_state.json`, `usage_sessions.json`…) ou un préfixe (`a2u_events_`), donc
+ * (`games_state.json`, `notes_sync.json`…) ou un préfixe (`a2u_events_`, `usage_sessions_`), donc
  * la correspondance est exacte, pas devinée.
  *
  * Un fichier qu'aucune règle ne reconnaît tombe dans [CloudCategory.UNKNOWN] plutôt
@@ -40,6 +41,9 @@ object CloudInventory {
      * trop lourdes pour ce qu'elles apportent. Chaque appareil garde les siennes.
      */
     private const val LEGACY_ARTIST_IMAGE_PREFIX = "artist_img_"
+
+    /** L'ancien fichier commun des statistiques, remplacé par un fichier par appareil. */
+    private const val LEGACY_STATS_FILE = "usage_sessions.json"
 
     /** Fichiers de synchronisation musicale, hors journaux et images. */
     private val MUSIC_SYNC_FILES = setOf(
@@ -203,10 +207,9 @@ object CloudInventory {
     suspend fun load(context: Context): Report? = withContext(Dispatchers.IO) {
         val account = GoogleSignInManager(context).getSignedInAccount() ?: return@withContext null
         val client = GoogleDriveAppDataClient(context, account)
-        val files = client.listFileDetails()
+        // Une panne n'est pas un cloud vide : l'écran le dit au lieu d'afficher « rien là-haut ».
+        val files = client.listFileDetailsChecked() ?: return@withContext null
 
-        // Une liste vide est ambiguë : soit le cloud est vide, soit Drive a échoué.
-        // On la traite comme un inventaire vide, l'écran dira « rien à afficher ».
         val selfDeviceId = DeviceIdentity.getDeviceId(context)
 
         val grouped = files.groupBy { categorize(it.name) }
@@ -268,11 +271,12 @@ object CloudInventory {
         name.startsWith(ListenEventsSyncFile.FILE_PREFIX) -> CloudCategory.LISTENS
         name.startsWith(LEGACY_DELTA_PREFIX) -> CloudCategory.OBSOLETE
         name.startsWith(LEGACY_ARTIST_IMAGE_PREFIX) -> CloudCategory.OBSOLETE
+        name.startsWith(StatsSyncManager.FILE_PREFIX) -> CloudCategory.STATS
         name == "games_state.json" -> CloudCategory.GAMES
         name == FarmSyncManager.SYNC_FILE -> CloudCategory.GAMES
         name == "reading_progress.json" -> CloudCategory.READING
         name == NotesSyncManager.SYNC_FILE -> CloudCategory.NOTES
-        name == "usage_sessions.json" -> CloudCategory.STATS
+        name == LEGACY_STATS_FILE -> CloudCategory.OBSOLETE
         name in LEGACY_BACKUP_FILES -> CloudCategory.OBSOLETE
         name in MUSIC_SYNC_FILES -> CloudCategory.MUSIC
         else -> categorizeProject(name)

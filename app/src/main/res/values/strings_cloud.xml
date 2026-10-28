@@ -73,7 +73,7 @@
 
     <string name="cloud_cat_stats">Usage stats</string>
     <string name="cloud_cat_stats_desc">Time spent per module, across devices</string>
-    <string name="cloud_cat_stats_warning">History gathered from your other devices is lost. This device republishes its own.</string>
+    <string name="cloud_cat_stats_warning">Each device republishes its own history at its next sync. A device you no longer use loses what only it held.</string>
 
     <string name="cloud_cat_obsolete">Obsolete files</string>
     <string name="cloud_cat_obsolete_desc">Left over from an older sync format</string>
@@ -162,4 +162,19 @@
     <string name="cloud_notes_synced">Notes synced</string>
     <string name="cloud_notes_synced_new">Notes synced, new ones arrived</string>
     <string name="cloud_notes_too_new">A newer version of the app is needed to sync notes</string>
+
+    <!-- Sync: errors and small texts -->
+    <string name="games_sync_cloud_unreadable">the cloud save cannot be read, so nothing was sent.</string>
+    <string name="games_sync_cloud_too_new">the cloud save comes from a newer version of the app, so nothing was sent.</string>
+    <string name="cloud_load_failed">Could not read the cloud</string>
+    <string name="cloud_proj_unknown_device">an unknown device</string>
+    <string name="cloud_value_none">—</string>
+
+    <!-- Clicker numbers in the conflict dialog -->
+    <string name="cloud_number_plain">%1$.0f</string>
+    <string name="cloud_number_thousands">%1$.2fk</string>
+    <string name="cloud_number_millions">%1$.2fM</string>
+    <string name="cloud_number_billions">%1$.2fG</string>
+    <string name="cloud_number_exponent">%1$.3fe%2$d</string>
+    <string name="cloud_number_layered">e(e%1$.1f)</string>
 </resources>

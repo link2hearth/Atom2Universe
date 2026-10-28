@@ -16,6 +16,8 @@ import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.VisibleWindowGate
+import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreen
+import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreenOnResize
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -104,6 +106,7 @@ class NewsWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Swipe 1 doigt → navigation articles ──────────────────────────────────
@@ -218,6 +221,7 @@ class NewsWidgetView @JvmOverloads constructor(
         btnHide.setOnClickListener { hideCurrentArticle() }
         btnOpen.setOnClickListener { openCurrentArticle() }
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
 
         showStatus(context.getString(R.string.news_widget_loading))
     }
@@ -457,8 +461,12 @@ class NewsWidgetView @JvmOverloads constructor(
                     context.startActivity(intent)
                 }
                 isDragging = false
+                keepFloatingWidgetOnScreen()
             }
-            MotionEvent.ACTION_CANCEL -> isDragging = false
+            MotionEvent.ACTION_CANCEL -> {
+                isDragging = false
+                keepFloatingWidgetOnScreen()
+            }
         }
         return true
     }

@@ -35,7 +35,11 @@ class ColorStackWidgetView @JvmOverloads constructor(
             ColorStackGame.Difficulty.MEDIUM,
             ColorStackGame.Difficulty.HARD
         )
-        private val DIFFICULTY_LABELS = listOf("Facile", "Moyen", "Difficile")
+        private val DIFFICULTY_LABELS = listOf(
+            R.string.color_stack_difficulty_easy,
+            R.string.color_stack_difficulty_medium,
+            R.string.color_stack_difficulty_hard
+        )
         private val DIFFICULTY_COLORS = listOf("#4AB3FF", "#F6B93B", "#FF6B6B")
     }
 
@@ -52,6 +56,9 @@ class ColorStackWidgetView @JvmOverloads constructor(
     // Timer pour la partie Hard : ms depuis le début, 0 si annulé ou hors Hard
     private var hardGameStartMs = 0L
 
+    // Récompense de cette partie déjà versée (sauvegardé avec la partie, même clé que ColorStackActivity)
+    private var victoryRecorded = false
+
     private val minScale = 0.4f
     private val maxScale = 3.0f
     private var currentScale = 1f
@@ -67,6 +74,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     private var dragLastX = 0f
@@ -133,6 +141,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
 
         val headerArea = findViewById<FrameLayout>(R.id.color_stack_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
@@ -176,6 +185,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -185,6 +195,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
         resultOverlay.visibility = GONE
         resetOverlay.visibility = GONE
         game.newGame(diff)
+        victoryRecorded = false
         colorStackView.game = game
         colorStackView.refresh()
         updateDifficultyLabel()
@@ -195,7 +206,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
 
     private fun updateDifficultyLabel() {
         val idx = DIFFICULTIES.indexOf(game.difficulty).coerceAtLeast(0)
-        difficultyLabel.text = DIFFICULTY_LABELS[idx]
+        difficultyLabel.setText(DIFFICULTY_LABELS[idx])
         difficultyLabel.setTextColor(Color.parseColor(DIFFICULTY_COLORS[idx]))
     }
 
@@ -209,11 +220,10 @@ class ColorStackWidgetView @JvmOverloads constructor(
 
     private fun afterMove() {
         colorStackView.refresh()
-        if (game.solved) {
-            resultText.text = context.getString(R.string.color_stack_widget_solved)
-            resultOverlay.visibility = VISIBLE
-            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit { remove(KEY_SAVE) }
+        if (game.solved) showSolved()
+        // ↩ après la victoire puis nouvelle résolution : pas de seconde récompense
+        if (game.solved && !victoryRecorded) {
+            victoryRecorded = true
             GameStatsRepository(context).recordColorStackWon(game.difficulty.name)
             when (game.difficulty) {
                 ColorStackGame.Difficulty.HARD -> {
@@ -228,17 +238,22 @@ class ColorStackWidgetView @JvmOverloads constructor(
                 ColorStackGame.Difficulty.EASY -> NeutrinoRepository(context).addBalance(1)
                 else -> Unit
             }
-        } else {
-            persistGame()
         }
+        persistGame()
+    }
+
+    private fun showSolved() {
+        resultText.text = context.getString(R.string.color_stack_widget_solved)
+        resultOverlay.visibility = VISIBLE
     }
 
     override fun onColumnSelected(col: Int?) {}
 
     private fun persistGame() {
-        if (game.solved) return
+        val json = org.json.JSONObject(game.serialize())
+            .put("stats_victory_recorded", victoryRecorded).toString()
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit { putString(KEY_SAVE, game.serialize()) }
+            .edit { putString(KEY_SAVE, json) }
     }
 
     fun reload() {
@@ -247,14 +262,19 @@ class ColorStackWidgetView @JvmOverloads constructor(
         val json = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_SAVE, null)
         val restored = json != null && game.deserialize(json)
-        if (!restored) {
+        if (restored) {
+            victoryRecorded = runCatching { org.json.JSONObject(json!!).optBoolean("stats_victory_recorded", game.solved) }
+                .getOrDefault(game.solved)
+        } else {
             game.newGame(ColorStackGame.Difficulty.EASY)
+            victoryRecorded = false
             GameStatsRepository(context).recordColorStackStarted(game.difficulty.name)
             persistGame()
         }
         colorStackView.game = game
         colorStackView.refresh()
         updateDifficultyLabel()
+        if (game.solved) showSolved()
     }
 
     fun applyBackgroundOpacity(percent: Int) {

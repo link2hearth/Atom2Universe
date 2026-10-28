@@ -96,13 +96,15 @@ class GachaActivity : ThemedActivity() {
     private lateinit var multiBtn: TextView
     private lateinit var multiResultOverlay: FrameLayout
     private lateinit var multiResultContainer: LinearLayout
-    private val miniCardAnimators = mutableListOf<ValueAnimator>()
+
+    // Un seul animateur pour toutes les bordures arc-en-ciel (carte résultat et mini-cartes)
+    private val rainbowCards = mutableListOf<Pair<View, RainbowBorderDrawable>>()
+    private var rainbowAnimator: ValueAnimator? = null
+    private val rainbowVisibleRect = android.graphics.Rect()
 
     private var isAnimating = false
     private var isFirstDiscovery = false
     private val handler = Handler(Looper.getMainLooper())
-
-    private var discoveryAnimator: ValueAnimator? = null
 
     private val dismissGesture by lazy {
         GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -241,6 +243,13 @@ class GachaActivity : ThemedActivity() {
         earthMoonView.updateSnapshot(snapshot)
     }
 
+    /** Fondu puis INVISIBLE : à alpha 0 la vue animerait encore son orbite pour rien. */
+    private fun hideEarthMoon() {
+        earthMoonView.animate().alpha(0f).setDuration(300).withEndAction {
+            earthMoonView.visibility = View.INVISIBLE
+        }.start()
+    }
+
     private fun hideSunGlow() {
         sunGlow.animate().cancel()
         sunGlow.alpha = 0f
@@ -267,7 +276,7 @@ class GachaActivity : ThemedActivity() {
                 sunBtn.animate().alpha(0f).setDuration(300).withEndAction {
                     (sunImage.drawable as? Animatable)?.stop()
                 }.start()
-                earthMoonView.animate().alpha(0f).setDuration(300).start()
+                hideEarthMoon()
 
                 // Démarrer les particules
                 particleView.post {
@@ -343,7 +352,7 @@ class GachaActivity : ThemedActivity() {
                                         sunBtn.animate().alpha(0f).setDuration(300).withEndAction {
                                             (sunImage.drawable as? Animatable)?.stop()
                                         }.start()
-                                        earthMoonView.animate().alpha(0f).setDuration(300).start()
+                                        hideEarthMoon()
                                         cont.resume(Unit)
                                     }.start()
                             }.start()
@@ -442,18 +451,7 @@ class GachaActivity : ThemedActivity() {
         }
 
         if (isFirst) {
-            val rainbow = RainbowBorderDrawable()
-            card.background = rainbow
-            ValueAnimator.ofFloat(0f, 1f).apply {
-                duration = 2000
-                repeatCount = ValueAnimator.INFINITE
-                interpolator = null
-                addUpdateListener {
-                    rainbow.phase = it.animatedValue as Float
-                    card.invalidate()
-                }
-                start()
-            }.also { miniCardAnimators.add(it) }
+            addRainbowBorder(card)
         } else {
             card.background = GradientStrokeDrawable(rarity.color)
         }
@@ -461,17 +459,47 @@ class GachaActivity : ThemedActivity() {
         return card
     }
 
+    private fun addRainbowBorder(card: View) {
+        val rainbow = RainbowBorderDrawable()
+        card.background = rainbow
+        rainbowCards.add(card to rainbow)
+        if (rainbowAnimator != null) return
+        rainbowAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 2000
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = null
+            addUpdateListener {
+                val phase = it.animatedValue as Float
+                for ((view, drawable) in rainbowCards) {
+                    drawable.phase = phase
+                    // Mini-cartes sorties de la zone de défilement : rien à redessiner
+                    if (view.getLocalVisibleRect(rainbowVisibleRect)) view.invalidate()
+                }
+            }
+            start()
+            if (!lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) pause()
+        }
+    }
+
+    private fun clearRainbowBorders() {
+        rainbowAnimator?.cancel()
+        rainbowAnimator = null
+        rainbowCards.clear()
+    }
+
     override fun onResume() {
         super.onResume()
         if (sunBtn.alpha > 0f) {
             (sunImage.drawable as? Animatable)?.start()
         }
+        rainbowAnimator?.resume()
         loadAndDisplayTickets()
         updateBigBangButtonVisibility()
     }
 
     override fun onPause() {
         (sunImage.drawable as? Animatable)?.stop()
+        rainbowAnimator?.pause()
         super.onPause()
     }
 
@@ -512,18 +540,7 @@ class GachaActivity : ThemedActivity() {
 
         // Fond de la card : arc-en-ciel animé si premier tirage, sinon bordure de rareté
         if (isFirst) {
-            val rainbowDrawable = RainbowBorderDrawable()
-            resultCard.background = rainbowDrawable
-            discoveryAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                duration = 2000
-                repeatCount = ValueAnimator.INFINITE
-                interpolator = null
-                addUpdateListener {
-                    rainbowDrawable.phase = it.animatedValue as Float
-                    resultCard.invalidate()
-                }
-                start()
-            }
+            addRainbowBorder(resultCard)
         } else {
             resultCard.background = GradientStrokeDrawable(rarity.color)
         }
@@ -544,10 +561,7 @@ class GachaActivity : ThemedActivity() {
     }
 
     private fun resetToIdle() {
-        discoveryAnimator?.cancel()
-        discoveryAnimator = null
-        miniCardAnimators.forEach { it.cancel() }
-        miniCardAnimators.clear()
+        clearRainbowBorders()
 
         if (multiResultOverlay.visibility == View.VISIBLE) {
             multiResultOverlay.animate().alpha(0f).setDuration(300).withEndAction {
@@ -566,6 +580,7 @@ class GachaActivity : ThemedActivity() {
                 (sunImage.drawable as? Animatable)?.start()
             }
             sunBtn.animate().alpha(1f).setDuration(300).start()
+            earthMoonView.visibility = View.VISIBLE
             earthMoonView.animate().alpha(1f).setDuration(300).start()
             hideSunGlow()
         }.start()
@@ -602,8 +617,7 @@ class GachaActivity : ThemedActivity() {
     override fun onDestroy() {
         (sunImage.drawable as? Animatable)?.stop()
         super.onDestroy()
-        discoveryAnimator?.cancel()
-        miniCardAnimators.forEach { it.cancel() }
+        clearRainbowBorders()
         particleView.stop()
     }
 
@@ -626,6 +640,10 @@ class GachaActivity : ThemedActivity() {
         private val pathMeasure = android.graphics.PathMeasure()
         private val pos = FloatArray(2)
         private val cornerRadius = 40f
+        private val segments = 120
+        // Extrémités (x0, y0, x1, y1) de chaque segment, recalculées seulement quand la taille change
+        private val segmentPoints = FloatArray(segments * 4)
+        private var borderLength = 0f
 
         // Palette arc-en-ciel : rouge → orange → jaune → vert → cyan → bleu → violet → retour rouge
         private val rainbow = intArrayOf(
@@ -648,38 +666,42 @@ class GachaActivity : ThemedActivity() {
             return lerpColor(rainbow[idx], rainbow[idx + 1], scaled - idx)
         }
 
-        override fun draw(canvas: android.graphics.Canvas) {
-            val b = bounds
+        override fun onBoundsChange(b: android.graphics.Rect) {
+            super.onBoundsChange(b)
             val sw = segmentPaint.strokeWidth / 2f
             val rect = android.graphics.RectF(b.left + sw, b.top + sw, b.right - sw, b.bottom - sw)
-
-            // Fond de la card
             borderPath.reset()
             borderPath.addRoundRect(rect, cornerRadius, cornerRadius, android.graphics.Path.Direction.CW)
-            canvas.drawPath(borderPath, bgPaint)
 
-            // Mesurer le périmètre réel
+            // Mesurer le périmètre réel puis le découper en segments
             pathMeasure.setPath(borderPath, false)
-            val total = pathMeasure.length
-            if (total <= 0f) return
+            borderLength = pathMeasure.length
+            if (borderLength <= 0f) return
+            val segLen = borderLength / segments
+            for (i in 0 until segments) {
+                val d0 = i * segLen
+                val d1 = (d0 + segLen).coerceAtMost(borderLength - 0.1f)
+                pathMeasure.getPosTan(d0, pos, null)
+                segmentPoints[i * 4] = pos[0]; segmentPoints[i * 4 + 1] = pos[1]
+                pathMeasure.getPosTan(d1, pos, null)
+                segmentPoints[i * 4 + 2] = pos[0]; segmentPoints[i * 4 + 3] = pos[1]
+            }
+        }
 
-            // Décomposer en 120 segments et colorer chacun selon sa position + phase
-            val segments = 120
-            val segLen = total / segments
+        override fun draw(canvas: android.graphics.Canvas) {
+            // Fond de la card
+            canvas.drawPath(borderPath, bgPaint)
+            if (borderLength <= 0f) return
 
+            // Chaque segment coloré selon sa position + phase
             for (i in 0 until segments) {
                 val t = (i.toFloat() / segments + phase) % 1f
                 segmentPaint.color = colorAt(t)
-
-                val d0 = i * segLen
-                val d1 = (d0 + segLen).coerceAtMost(total - 0.1f)
-
-                pathMeasure.getPosTan(d0, pos, null)
-                val x0 = pos[0]; val y0 = pos[1]
-                pathMeasure.getPosTan(d1, pos, null)
-                val x1 = pos[0]; val y1 = pos[1]
-
-                canvas.drawLine(x0, y0, x1, y1, segmentPaint)
+                canvas.drawLine(
+                    segmentPoints[i * 4], segmentPoints[i * 4 + 1],
+                    segmentPoints[i * 4 + 2], segmentPoints[i * 4 + 3],
+                    segmentPaint
+                )
             }
         }
 

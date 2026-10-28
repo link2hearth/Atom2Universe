@@ -10,6 +10,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.Atom2Universe.app.crypto.sync.SharedGameStats
+import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient.ReadResult
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
@@ -107,18 +108,21 @@ object FarmSyncManager {
             lock.withLock {
                 val app = context.applicationContext
                 val client = driveClient(app) ?: return@withLock OpenResult.Idle
+                if (!syncAllowed(app)) return@withLock OpenResult.Idle
                 val remote = when (val read = client.readJsonFileChecked(SYNC_FILE)) {
                     // No answer is not an empty cloud. Play on the farm we have; nothing is decided.
                     ReadResult.Failed -> return@withLock OpenResult.Idle
-                    ReadResult.NotFound -> null
-                    is ReadResult.Found -> FarmSyncFile.fromJson(read.content)
-                }
-                if (remote == null) {
-                    // Nothing usable up there: never published, or wiped from the cloud screen,
-                    // whose warning promises that this device republishes what it holds. Ours is
-                    // then the only copy, so it goes up - through the job, which retries if needed.
-                    scheduleUpload(app)
-                    return@withLock OpenResult.Idle
+                    ReadResult.NotFound -> {
+                        // Never published, or wiped from the cloud screen, whose warning promises
+                        // that this device republishes what it holds. Ours is then the only copy:
+                        // forget that it was ever sent, or the job would find nothing new to send.
+                        prefs(app).edit { remove(KEY_SENT_HASH) }
+                        scheduleUpload(app)
+                        return@withLock OpenResult.Idle
+                    }
+                    // A file we cannot read is not an empty cloud either: it may hold a farm this
+                    // build does not understand. It stays as it is, and so does ours.
+                    is ReadResult.Found -> FarmSyncFile.fromJson(read.content) ?: return@withLock OpenResult.Idle
                 }
                 if (remote.format > FarmState.MAX_SAVE_VERSION) {
                     // A farm written by a newer build. Applying it would make the parser refuse the
@@ -166,8 +170,15 @@ object FarmSyncManager {
 
     // ─── Fermeture du jeu ─────────────────────────────────────────────────────
 
-    /** Called as the farm leaves the screen. The work itself happens in [FarmUploadWorker]. */
-    fun onFarmClosed(context: Context) = scheduleUpload(context.applicationContext)
+    /**
+     * Called as the farm leaves the screen. The work itself happens in [FarmUploadWorker], which also
+     * checks the sync switch: this runs on the main thread and cannot ask the database.
+     */
+    fun onFarmClosed(context: Context) {
+        val app = context.applicationContext
+        if (!GoogleSignInManager(app).isSignedIn()) return
+        scheduleUpload(app)
+    }
 
     /**
      * Queues the upload for whenever a network is there.
@@ -196,6 +207,7 @@ object FarmSyncManager {
         lock.withLock {
             val app = context.applicationContext
             val client = driveClient(app) ?: return@withLock UploadOutcome.NOTHING_NEW
+            if (!syncAllowed(app)) return@withLock UploadOutcome.NOTHING_NEW
             var outcome = upload(app, client)
             var rounds = 1
             while (outcome == UploadOutcome.SENT && rounds < MAX_ROUNDS) {
@@ -222,8 +234,9 @@ object FarmSyncManager {
             // An empty cloud, or one wiped from the cloud screen: ours is the only copy.
             ReadResult.NotFound -> Unit
             is ReadResult.Found -> {
-                val remote = FarmSyncFile.fromJson(read.content)
-                if (remote != null && remote.seq != base) {
+                // Unreadable: never written over (see onFarmOpened). Nothing to retry either.
+                val remote = FarmSyncFile.fromJson(read.content) ?: return UploadOutcome.DEFERRED
+                if (remote.seq != base) {
                     // Someone published while we were playing. Ours is no longer a continuation of
                     // the cloud farm, and writing over it would erase a whole session. We stay
                     // quiet: the local farm remains unsent, and the next opening turns the mess
@@ -303,6 +316,12 @@ object FarmSyncManager {
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    /** The "Sync" switch of the cloud screen: off, the farm stays on this device. */
+    private suspend fun syncAllowed(context: Context): Boolean {
+        CloudSyncManager.init(context)
+        return CloudSyncManager.isSyncEnabled()
+    }
 
     private fun driveClient(context: Context): GoogleDriveAppDataClient? {
         val signIn = GoogleSignInManager(context)

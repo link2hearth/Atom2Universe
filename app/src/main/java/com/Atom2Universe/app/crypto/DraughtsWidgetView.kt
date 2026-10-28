@@ -67,6 +67,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag depuis le header ─────────────────────────────────────────────────
@@ -110,6 +111,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
 
         val headerArea = findViewById<FrameLayout>(R.id.draughts_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     // ── Pinch-zoom ────────────────────────────────────────────────────────────
@@ -156,8 +158,12 @@ class DraughtsWidgetView @JvmOverloads constructor(
                     context.startActivity(intent)
                 }
                 isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
-            MotionEvent.ACTION_CANCEL -> { isDragging = false; skipNextDragFrame = false }
+            MotionEvent.ACTION_CANCEL -> {
+                isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
+            }
         }
         return true
     }
@@ -167,6 +173,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
         difficultyOverlay.visibility = GONE
         resultOverlay.visibility = GONE
         ai?.cancel(); ai = null
+        mainHandler.removeCallbacksAndMessages(null)
         difficulty = newDifficulty
         aiThinking = false
 
@@ -190,6 +197,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
     // ── Chargement de l'état sauvegardé ──────────────────────────────────────
     fun reload() {
         ai?.cancel(); ai = null; aiThinking = false
+        mainHandler.removeCallbacksAndMessages(null)
 
         val prefs = context.getSharedPreferences("draughts_save", Context.MODE_PRIVATE)
         val savedDiff = prefs.getString("difficulty", null)
@@ -288,6 +296,10 @@ class DraughtsWidgetView @JvmOverloads constructor(
         mainHandler.postDelayed({
             if (game.isGameOver) { aiThinking = false; return@postDelayed }
             aiThinking = false
+            // Coup calculé pour une autre position (nouvelle partie, rechargement) : ignoré
+            if (ai == null || game.currentTurn != DraughtsPieceColor.BLACK ||
+                game.getLegalMovesFrom(move.from).none { it.to == move.to && it.captures == move.captures }
+            ) return@postDelayed
             applyMove(move)
         }, 250)
     }

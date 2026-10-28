@@ -208,7 +208,12 @@ class HubCarouselLayout @JvmOverloads constructor(
             interpolator = DecelerateInterpolator()
             addUpdateListener { setOffset(it.animatedValue as Float) }
             addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) { flip() }
+                // Annulé (une autre animation le remplace) : onAnimationEnd suit quand même
+                private var cancelled = false
+                override fun onAnimationCancel(animation: Animator) { cancelled = true }
+                override fun onAnimationEnd(animation: Animator) {
+                    if (!cancelled) flip()
+                }
             })
             start()
         }

@@ -30,6 +30,15 @@ class NotesSyncStore(private val db: NotesDatabase) {
         val categories: List<SyncCategory>,
     )
 
+    companion object {
+        /**
+         * La note ouverte dans l'éditeur (0 : aucune). La synchro ne l'écrit ni ne la supprime : l'éditeur, qui
+         * tient encore l'ancienne version en mémoire, la réécrirait par-dessus. Elle est reprise au tour suivant.
+         */
+        @Volatile
+        var editingNoteId: Long = 0L
+    }
+
     private val noteDao = db.noteDao()
     private val groupDao = db.noteGroupDao()
     private val tagDao = db.tagDao()
@@ -67,8 +76,8 @@ class NotesSyncStore(private val db: NotesDatabase) {
     }
 
     /**
-     * Écrit le plan, en une transaction. Une note modifiée ici depuis la photo n'est pas écrasée (ni supprimée) :
-     * elle est rendue dans l'ensemble retourné, et la prochaine synchronisation la reprendra.
+     * Écrit le plan, en une transaction. Une note modifiée ici depuis la photo, ou ouverte dans l'éditeur, n'est pas
+     * écrasée (ni supprimée) : elle est rendue dans l'ensemble retourné, et la prochaine synchronisation la reprendra.
      */
     suspend fun apply(job: ApplyJob): Set<String> = db.withTransaction {
         val now = System.currentTimeMillis()
@@ -134,13 +143,17 @@ class NotesSyncStore(private val db: NotesDatabase) {
             for (name in n.tags) tagIdOrCreate(name)?.let { noteDao.insertNoteTag(NoteTag(id, it)) }
         }
 
+        val editing = editingNoteId
         for (n in job.notes.applyLocal) {
             val expected = job.notes.expectedLocal[n.uuid]
+            val existing = noteDao.getNoteByUuid(n.uuid)
+            if (editing != 0L && existing?.id == editing) { skipped += n.uuid; continue }
             if (currentSync(n.uuid)?.hash() != expected) { skipped += n.uuid; continue }
-            write(n, noteDao.getNoteByUuid(n.uuid))
+            write(n, existing)
         }
         for (n in job.notes.newLocal) write(n, null)
         for (uuid in job.notes.deleteLocal) {
+            if (editing != 0L && noteDao.getNoteByUuid(uuid)?.id == editing) { skipped += uuid; continue }
             if (currentSync(uuid)?.hash() != job.notes.expectedLocal[uuid]) { skipped += uuid; continue }
             noteDao.deleteNoteByUuid(uuid)
         }

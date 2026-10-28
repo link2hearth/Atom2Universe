@@ -401,11 +401,11 @@ class LayeredNumber {
                 return if (absolute >= 1) {
                     numeric.toLong().toString()
                 } else {
-                    String.format(Locale.FRENCH, "%.2f", numeric)
+                    String.format(Locale.getDefault(), "%.2f", numeric)
                 }
             }
             val digits = mantissaFractionDigits
-            val mantissaStr = String.format(Locale.FRENCH, "%.${digits}f", sign * mantissa)
+            val mantissaStr = String.format(Locale.getDefault(), "%.${digits}f", sign * mantissa)
             return "${mantissaStr}e${exponent.toInt()}"
         }
         val expText = formatExponent(value)

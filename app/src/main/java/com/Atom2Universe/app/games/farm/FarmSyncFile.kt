@@ -48,8 +48,8 @@ data class FarmSyncFile(
         const val ENVELOPE_VERSION = 1
 
         /**
-         * Null when the file is not a farm envelope at all. Better to act as if the cloud were
-         * empty than to hand a malformed farm to the game.
+         * Null when the file is not a farm envelope at all. Never handed to the game, and never
+         * written over either: it may be a farm this build cannot read.
          */
         fun fromJson(raw: String): FarmSyncFile? = runCatching {
             val j = JSONObject(raw)

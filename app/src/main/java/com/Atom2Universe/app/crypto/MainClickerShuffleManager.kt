@@ -91,84 +91,100 @@ class MainClickerShuffleManager(
         return currentUri()
     }
 
+    // L'état (listes, position) n'est lu et modifié que sur le fil appelant (UI) ; seuls le
+    // parcours du dossier et la base passent sur IO, avec des copies.
     suspend fun reloadFromFolder(
         context: Context,
         folderUri: Uri?,
         force: Boolean
-    ): ReloadResult = withContext(Dispatchers.IO) {
+    ): ReloadResult {
         if (folderUri == null) {
             clearState()
-            repository.clearState()
-            return@withContext ReloadResult(ReloadReason.NO_FOLDER, 0)
+            withContext(Dispatchers.IO) { repository.clearState() }
+            return ReloadResult(ReloadReason.NO_FOLDER, 0)
         }
 
         val uriString = folderUri.toString()
 
+        // Liste déjà en mémoire pour ce dossier (retour sur l'écran) : rien à relire.
+        if (!force && uriString == lastFolderUriString && imageUris.isNotEmpty()) {
+            return ReloadResult(ReloadReason.UNCHANGED, imageUris.size)
+        }
+
         if (!force) {
-            repository.loadState(uriString)?.let { persisted ->
+            val persisted = withContext(Dispatchers.IO) { repository.loadState(uriString) }
+            if (persisted != null) {
                 applyPersistedState(uriString, persisted)
                 val needsPersist =
                     persisted.isDirty ||
                     uriStrings(persisted.shuffledOrderUris) != uriStrings(shuffledOrderUris()) ||
                     uriStrings(persisted.historyUris) != uriStrings(historyUris()) ||
                     persisted.historyPosition != historyPosition
-                if (needsPersist) {
-                    repository.replaceFolderData(
-                        folderUriString = uriString,
-                        imageUris = imageUris,
-                        shuffledOrderUris = shuffledOrderUris(),
-                        historyUris = historyUris(),
-                        historyPosition = historyPosition
-                    )
-                }
-                return@withContext ReloadResult(ReloadReason.UNCHANGED, imageUris.size)
+                if (needsPersist) persistFolderData(uriString)
+                return ReloadResult(ReloadReason.UNCHANGED, imageUris.size)
             }
         }
 
-        if (!force && uriString == lastFolderUriString && imageUris.isNotEmpty()) {
-            return@withContext ReloadResult(ReloadReason.UNCHANGED, imageUris.size)
+        val images = withContext(Dispatchers.IO) {
+            val root = DocumentFile.fromTreeUri(context, folderUri)
+            if (root == null || !root.canRead()) {
+                null
+            } else {
+                val found = mutableListOf<Uri>()
+                collectImages(root, found)
+                found.distinctBy { it.toString() }.sortedBy { it.toString() }
+            }
         }
 
-        val root = DocumentFile.fromTreeUri(context, folderUri)
-        if (root == null || !root.canRead()) {
+        if (images == null) {
             clearState()
             lastFolderUriString = uriString
-            repository.clearState()
-            return@withContext ReloadResult(ReloadReason.ERROR, 0)
+            withContext(Dispatchers.IO) { repository.clearState() }
+            return ReloadResult(ReloadReason.ERROR, 0)
         }
-
-        val images = mutableListOf<Uri>()
-        collectImages(root, images)
 
         if (images.isEmpty()) {
             clearState()
             lastFolderUriString = uriString
-            repository.replaceFolderData(
-                folderUriString = uriString,
-                imageUris = emptyList(),
-                shuffledOrderUris = emptyList(),
-                historyUris = emptyList(),
-                historyPosition = -1
-            )
-            return@withContext ReloadResult(ReloadReason.NO_IMAGES, 0)
+            withContext(Dispatchers.IO) {
+                repository.replaceFolderData(
+                    folderUriString = uriString,
+                    imageUris = emptyList(),
+                    shuffledOrderUris = emptyList(),
+                    historyUris = emptyList(),
+                    historyPosition = -1
+                )
+            }
+            return ReloadResult(ReloadReason.NO_IMAGES, 0)
         }
 
-        imageUris = images.distinctBy { it.toString() }.sortedBy { it.toString() }
+        imageUris = images
         lastFolderUriString = uriString
         history = mutableListOf()
         historyPosition = -1
         shuffledOrder = mutableListOf()
         reshufflePreservingHistory()
 
-        repository.replaceFolderData(
-            folderUriString = uriString,
-            imageUris = imageUris,
-            shuffledOrderUris = shuffledOrderUris(),
-            historyUris = historyUris(),
-            historyPosition = historyPosition
-        )
+        persistFolderData(uriString)
 
-        ReloadResult(ReloadReason.LOADED, imageUris.size)
+        return ReloadResult(ReloadReason.LOADED, imageUris.size)
+    }
+
+    /** Enregistre une copie de l'état courant (prise sur le fil appelant) en base, sur IO. */
+    private suspend fun persistFolderData(folderUriString: String) {
+        val images = imageUris
+        val order = shuffledOrderUris()
+        val historyList = historyUris()
+        val position = historyPosition
+        withContext(Dispatchers.IO) {
+            repository.replaceFolderData(
+                folderUriString = folderUriString,
+                imageUris = images,
+                shuffledOrderUris = order,
+                historyUris = historyList,
+                historyPosition = position
+            )
+        }
     }
 
     suspend fun persistPlaybackState() {
@@ -189,39 +205,35 @@ class MainClickerShuffleManager(
         if (imageUris.isNotEmpty()) reshufflePreservingHistory()
     }
 
-    suspend fun removeInvalidUri(uri: Uri): Boolean = withContext(Dispatchers.IO) {
-        val folderUriString = lastFolderUriString ?: return@withContext false
+    suspend fun removeInvalidUri(uri: Uri): Boolean {
+        val folderUriString = lastFolderUriString ?: return false
         val removedIndex = imageUris.indexOfFirst { it.toString() == uri.toString() }
-        if (removedIndex < 0) return@withContext false
+        if (removedIndex < 0) return false
 
         val currentUriString = currentUri()?.toString()
 
         imageUris = imageUris.filterIndexed { index, _ -> index != removedIndex }
         if (imageUris.isEmpty()) {
             clearState()
-            repository.replaceFolderData(
-                folderUriString = folderUriString,
-                imageUris = emptyList(),
-                shuffledOrderUris = emptyList(),
-                historyUris = emptyList(),
-                historyPosition = -1
-            )
-            return@withContext true
+            withContext(Dispatchers.IO) {
+                repository.replaceFolderData(
+                    folderUriString = folderUriString,
+                    imageUris = emptyList(),
+                    shuffledOrderUris = emptyList(),
+                    historyUris = emptyList(),
+                    historyPosition = -1
+                )
+            }
+            return true
         }
 
         adjustAfterRemoval(removedIndex)
         restoreHistoryPosition(currentUriString)
         reshufflePreservingHistory()
 
-        repository.replaceFolderData(
-            folderUriString = folderUriString,
-            imageUris = imageUris,
-            shuffledOrderUris = shuffledOrderUris(),
-            historyUris = historyUris(),
-            historyPosition = historyPosition
-        )
+        persistFolderData(folderUriString)
 
-        true
+        return true
     }
 
     private fun collectImages(directory: DocumentFile, output: MutableList<Uri>) {

@@ -65,7 +65,7 @@ class ClickerStatsActivity : ThemedActivity() {
 
         val cps = stats.maxCps.toInt()
         findViewById<TextView>(R.id.stat_max_cps_value).text =
-            if (cps > 0) "$cps /s" else "—"
+            if (cps > 0) getString(R.string.clicker_rate_per_second, cps) else "—"
 
         findViewById<TextView>(R.id.stat_max_apc_clicks_value).text =
             if (stats.maxClicksPerApcFrenzy > 0) "${stats.maxClicksPerApcFrenzy}" else "—"
@@ -223,9 +223,9 @@ class ClickerStatsActivity : ThemedActivity() {
         val minutes  = (totalSec % 3600) / 60
         val secs     = totalSec % 60
         return when {
-            hours > 0   -> "${hours}h ${minutes}min"
-            minutes > 0 -> "${minutes}min ${secs}s"
-            else        -> "${secs}s"
+            hours > 0   -> getString(R.string.clicker_duration_h_min, hours, minutes)
+            minutes > 0 -> getString(R.string.clicker_duration_min_s, minutes, secs)
+            else        -> getString(R.string.clicker_duration_s, secs)
         }
     }
 
@@ -706,6 +706,7 @@ class ClickerStatsActivity : ThemedActivity() {
     }
 
     private fun formatMs(ms: Long): String {
-        return if (ms >= 1000) "${"%.1f".format(ms / 1000.0)}s" else "${ms}ms"
+        return if (ms >= 1000) getString(R.string.clicker_duration_s_decimal, ms / 1000.0)
+               else getString(R.string.clicker_duration_ms, ms)
     }
 }

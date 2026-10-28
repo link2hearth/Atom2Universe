@@ -96,7 +96,14 @@ class NotesSyncEngine(
         }
 
         val skipped = store.apply(ApplyJob(notes, groups, tags, categories, removed.keys))
-        if (needUpload && !cloud.write(file.toJson())) return Result.Failed
+        if (needUpload && !cloud.write(file.toJson())) {
+            // Le cloud n'a pas bougé, mais ici a déjà été écrit. Ce qu'on sait de chaque note qu'il porte, c'est
+            // sa version à lui : sans le noter, une copie « (conflit) » faite ici serait refaite au tour suivant.
+            val known = HashMap(state.notes)
+            for (c in remote?.notes.orEmpty()) if (c.uuid !in skipped) known[c.uuid] = c.hash()
+            stateStore.save(NotesSyncState(known, state.groups, state.tags, state.categories))
+            return Result.Failed
+        }
 
         // Une note qu'on n'a pas osé écraser garde sa base d'avant : la prochaine fois, elle sera reprise.
         val hashes = HashMap(notes.hashes)

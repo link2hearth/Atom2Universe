@@ -25,6 +25,31 @@ class FusionStore(context: Context) {
         }
     }
 
+    /**
+     * Équivaut à [tries] appels de [recordAttempt] dont [wins] réussis, en une seule écriture
+     * (« Tout fusionner »). Les bonus alternent APS/APC comme une victoire après l'autre.
+     */
+    fun recordAttempts(recipe: FusionRecipe, tries: Int, wins: Int) {
+        if (tries <= 0) return
+        val oldTotalWins = getTotalWins()
+        var aps = getBonusMultAps()
+        var apc = getBonusMultApc()
+        for (i in 0 until wins) {
+            if ((oldTotalWins + i) % 2 == 0) aps = (aps + 0.01).toFloat().toDouble()
+            else apc = (apc + 0.01).toFloat().toDouble()
+        }
+        prefs.edit {
+            putInt("${recipe.id}_tries", getTries(recipe) + tries)
+            if (wins > 0) {
+                putInt("${recipe.id}_wins", getWins(recipe) + wins)
+                putInt(KEY_TOTAL_WINS, oldTotalWins + wins)
+                putFloat(KEY_BONUS_APS, aps.toFloat())
+                putFloat(KEY_BONUS_APC, apc.toFloat())
+                putInt(KEY_QUARKS, getQuarks() + wins)
+            }
+        }
+    }
+
     fun getQuarks(): Int = prefs.getInt(KEY_QUARKS, 0)
 
     fun spendQuarks(n: Int): Boolean {

@@ -124,12 +124,25 @@ class CandleChartView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         strokeWidth = max(1f, density)
     }
+    /** Corps et volumes tracés en traits épais à bouts carrés : même rectangle, mais groupables. */
     private val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.BUTT
     }
     private val volumePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.BUTT
     }
+
+    /**
+     * Segments (x0, y0, x1, y1) d'une suite de bougies consécutives de même couleur, dessinés
+     * en un seul drawLines. L'ordre de dessin entre couleurs est conservé (une suite après
+     * l'autre) et, à l'intérieur d'une suite, la couleur est la même : image identique, mais
+     * bien moins d'appels de dessin en zoom arrière (jusqu'à 2 000 bougies).
+     */
+    private var wickBatch = FloatArray(64)
+    private var bodyBatch = FloatArray(64)
+    private var batchCount = 0
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f * density
@@ -301,6 +314,10 @@ class CandleChartView @JvmOverloads constructor(
     /** Notifie le prix de la dernière bougie visible et la variation % de la fenêtre affichée. */
     var onViewportChanged: ((lastPrice: Double, changePercent: Double) -> Unit)? = null
 
+    /** Bornes visibles déjà notifiées : l'en-tête n'est réécrit que si elles changent. */
+    private var notifiedFirstIndex = -1
+    private var notifiedLastIndex = -1
+
     /**
      * Invoqué quand la fenêtre visible approche du début de l'historique chargé : le parent
      * peut alors télécharger des bougies plus anciennes et les préfixer via
@@ -364,7 +381,7 @@ class CandleChartView @JvmOverloads constructor(
             crosshairDragging = false
             autoScale = true
         }
-        notifyViewport()
+        notifyViewport(force = true)
         invalidate()
     }
 
@@ -565,26 +582,46 @@ class CandleChartView @JvmOverloads constructor(
         return (exclusive - 1).coerceIn(firstVisibleIndex(), (candles.size - 1).coerceAtLeast(0))
     }
 
-    private fun notifyViewport() {
+    private fun notifyViewport(force: Boolean = false) {
         if (candles.isEmpty()) return
-        val first = candles[firstVisibleIndex()].open
-        val last = candles[lastVisibleIndex()].close
-        val change = if (first != 0.0) (last - first) / first * 100.0 else 0.0
-        onViewportChanged?.invoke(last, change)
+        val firstIndex = firstVisibleIndex()
+        val lastIndex = lastVisibleIndex()
+        if (force || firstIndex != notifiedFirstIndex || lastIndex != notifiedLastIndex) {
+            notifiedFirstIndex = firstIndex
+            notifiedLastIndex = lastIndex
+            val first = candles[firstIndex].open
+            val last = candles[lastIndex].close
+            val change = if (first != 0.0) (last - first) / first * 100.0 else 0.0
+            onViewportChanged?.invoke(last, change)
+        }
         // Près du début de l'historique chargé : demander des bougies plus anciennes.
         if (scrollOffset < 120f) onNeedOlderCandles?.invoke()
     }
 
+    /** Format des dates, recréé seulement quand l'intervalle change. */
+    private var cachedDateFormat: SimpleDateFormat? = null
+    private var cachedDateFormatInterval: CryptoCandleInterval? = null
+    private val scratchDate = Date()
+
     private val dateFormat: SimpleDateFormat
         get() {
+            cachedDateFormat?.let { if (cachedDateFormatInterval == interval) return it }
             val pattern = when (interval) {
                 CryptoCandleInterval.M1, CryptoCandleInterval.M5, CryptoCandleInterval.M15 -> "HH:mm"
                 CryptoCandleInterval.H1, CryptoCandleInterval.H4 -> "dd/MM HH:mm"
                 CryptoCandleInterval.D1, CryptoCandleInterval.W1 -> "dd/MM/yy"
                 CryptoCandleInterval.MN1 -> "MM/yyyy"
             }
-            return SimpleDateFormat(pattern, Locale.getDefault())
+            return SimpleDateFormat(pattern, Locale.getDefault()).also {
+                cachedDateFormat = it
+                cachedDateFormatInterval = interval
+            }
         }
+
+    private fun formatDate(time: Long): String {
+        scratchDate.time = time
+        return dateFormat.format(scratchDate)
+    }
 
     private fun chartLeft() = 0f
     private fun chartRight() = width - priceAxisWidth
@@ -775,7 +812,8 @@ class CandleChartView @JvmOverloads constructor(
         val anchors = ArrayList<Pair<Float, String>>(labelCount + 1)
         for (i in 0..labelCount) {
             val index = scrollOffset + visibleCount * i / labelCount
-            anchors.add(xForIndex(index) to fmt.format(Date(indexToTime(index))))
+            scratchDate.time = indexToTime(index)
+            anchors.add(xForIndex(index) to fmt.format(scratchDate))
         }
         return anchors
     }
@@ -924,18 +962,35 @@ class CandleChartView @JvmOverloads constructor(
         val first = firstVisibleIndex()
         val last = lastVisibleIndex()
         val slot = (chartRight() - chartLeft()) / visibleCount
-        val barWidth = max(1f, slot * 0.7f)
         val bottom = chartBottom()
         val zoneHeight = (bottom - chartTop()) * volumeZoneFraction
+        val upVolumeColor = ColorUtils.setAlphaComponent(upColor, 80)
+        val downVolumeColor = ColorUtils.setAlphaComponent(downColor, 80)
+        volumePaint.strokeWidth = max(1f, slot * 0.7f)
 
+        batchCount = 0
+        var batchBullish = false
         for (index in first..last) {
             val candle = candles[index]
             if (candle.volume <= 0.0) continue
-            val centerX = candleCenterX(index)
             val bullish = candle.close >= candle.open
-            volumePaint.color = ColorUtils.setAlphaComponent(if (bullish) upColor else downColor, 80)
+            if (batchCount > 0 && bullish != batchBullish) {
+                volumePaint.color = if (batchBullish) upVolumeColor else downVolumeColor
+                canvas.drawLines(bodyBatch, 0, batchCount * 4, volumePaint)
+                batchCount = 0
+            }
+            batchBullish = bullish
+            val centerX = candleCenterX(index)
             val barHeight = (zoneHeight * (candle.volume / maxVolume)).toFloat().coerceAtLeast(1f)
-            canvas.drawRect(centerX - barWidth / 2f, bottom - barHeight, centerX + barWidth / 2f, bottom, volumePaint)
+            ensureBatchCapacity()
+            val o = batchCount * 4
+            bodyBatch[o] = centerX; bodyBatch[o + 1] = bottom - barHeight
+            bodyBatch[o + 2] = centerX; bodyBatch[o + 3] = bottom
+            batchCount++
+        }
+        if (batchCount > 0) {
+            volumePaint.color = if (batchBullish) upVolumeColor else downVolumeColor
+            canvas.drawLines(bodyBatch, 0, batchCount * 4, volumePaint)
         }
     }
 
@@ -943,24 +998,49 @@ class CandleChartView @JvmOverloads constructor(
         val first = firstVisibleIndex()
         val last = lastVisibleIndex()
         val slot = (chartRight() - chartLeft()) / visibleCount
-        val bodyWidth = max(1f, slot * 0.7f)
+        bodyPaint.strokeWidth = max(1f, slot * 0.7f)
 
+        batchCount = 0
+        var batchBullish = false
         for (index in first..last) {
             val candle = candles[index]
-            val centerX = candleCenterX(index)
             val bullish = candle.close >= candle.open
-            val color = if (bullish) upColor else downColor
-            wickPaint.color = color
-            bodyPaint.color = color
-
-            canvas.drawLine(centerX, priceToY(candle.high), centerX, priceToY(candle.low), wickPaint)
-
+            if (batchCount > 0 && bullish != batchBullish) {
+                flushCandleBatch(canvas, batchBullish)
+            }
+            batchBullish = bullish
+            val centerX = candleCenterX(index)
             val openY = priceToY(candle.open)
             val closeY = priceToY(candle.close)
             val topY = min(openY, closeY)
             val bottomY = max(max(openY, closeY), topY + density)
-            canvas.drawRect(centerX - bodyWidth / 2f, topY, centerX + bodyWidth / 2f, bottomY, bodyPaint)
+            ensureBatchCapacity()
+            val o = batchCount * 4
+            wickBatch[o] = centerX; wickBatch[o + 1] = priceToY(candle.high)
+            wickBatch[o + 2] = centerX; wickBatch[o + 3] = priceToY(candle.low)
+            bodyBatch[o] = centerX; bodyBatch[o + 1] = topY
+            bodyBatch[o + 2] = centerX; bodyBatch[o + 3] = bottomY
+            batchCount++
         }
+        if (batchCount > 0) flushCandleBatch(canvas, batchBullish)
+    }
+
+    /** Mèches puis corps de la suite en cours (même couleur : l'ordre interne est indifférent). */
+    private fun flushCandleBatch(canvas: Canvas, bullish: Boolean) {
+        val color = if (bullish) upColor else downColor
+        wickPaint.color = color
+        bodyPaint.color = color
+        canvas.drawLines(wickBatch, 0, batchCount * 4, wickPaint)
+        canvas.drawLines(bodyBatch, 0, batchCount * 4, bodyPaint)
+        batchCount = 0
+    }
+
+    private fun ensureBatchCapacity() {
+        val needed = (batchCount + 1) * 4
+        if (needed <= bodyBatch.size) return
+        val size = max(needed, bodyBatch.size * 2)
+        wickBatch = wickBatch.copyOf(size)
+        bodyBatch = bodyBatch.copyOf(size)
     }
 
     /**
@@ -1131,7 +1211,7 @@ class CandleChartView @JvmOverloads constructor(
         }
 
         // Bulle date en bas, sur l'axe du temps.
-        val dateLabel = dateFormat.format(Date(candle.openTime))
+        val dateLabel = formatDate(candle.openTime)
         val dateWidth = bubbleTextPaint.measureText(dateLabel) + padH * 2
         val dateLeft = (centerX - dateWidth / 2f).coerceIn(left, right - dateWidth)
         val dateTop = chartBottom()

@@ -49,10 +49,7 @@ internal object ClickerShopEngine {
 
     fun bonus(level: Int): LayeredNumber {
         if (level <= 0) return LayeredNumber.zero()
-        val lb = logBonus(level)
-        val v = 10.0.pow(lb)
-        if (!v.isFinite() || v <= 0) return LayeredNumber.zero()
-        return LayeredNumber(maxOf(1.0, floor(v)))
+        return fromLog10(logBonus(level))
     }
 
     private fun logCost(level: Int, discountLevel: Int): Double {
@@ -67,11 +64,19 @@ internal object ClickerShopEngine {
         return lc
     }
 
-    fun cost(level: Int, discountLevel: Int = 0): LayeredNumber {
-        val lc = logCost(level, discountLevel)
-        val c = 10.0.pow(lc)
-        if (!c.isFinite() || c <= 0) return LayeredNumber.zero()
-        return LayeredNumber(maxOf(1.0, floor(c)))
+    fun cost(level: Int, discountLevel: Int = 0): LayeredNumber =
+        fromLog10(logCost(level, discountLevel))
+
+    /**
+     * 10^log, au moins 1. Au-delà de 1e15 (plus d'unités exactes en Double), le nombre est
+     * construit directement en mantisse/exposant : un Double déborderait vers l'infini
+     * après 1e308 et deviendrait 0 (achats gratuits).
+     */
+    internal fun fromLog10(log: Double): LayeredNumber {
+        if (log.isNaN() || log == Double.NEGATIVE_INFINITY) return LayeredNumber.zero()
+        if (log < 15.0) return LayeredNumber(maxOf(1.0, floor(10.0.pow(log))))
+        val exponent = floor(log)
+        return LayeredNumber.fromLayer0(10.0.pow(log - exponent), exponent)
     }
 
     fun batchCost(fromLevel: Int, quantity: Int, discountLevel: Int = 0): LayeredNumber {

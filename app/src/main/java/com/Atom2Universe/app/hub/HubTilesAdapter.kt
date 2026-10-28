@@ -55,6 +55,7 @@ class HubTilesAdapter(
     private var squareTiles: Boolean = false
     private var illustratedListMode: Boolean = false
     private var recyclerView: RecyclerView? = null
+    private var wobblePaused = false
     /** Tailles normalisées déjà préchargées pour ce catalogue. */
     private val prefetchedSizes = mutableSetOf<Pair<Int, Int>>()
 
@@ -296,6 +297,27 @@ class HubTilesAdapter(
         tiles.forEach { tile ->
             tile.artworkClass?.let { CachedHubArtworkDrawable.prefetch(context, it.java, width, height) }
         }
+    }
+
+    /** Écran caché : les tuiles du mode édition cessent de trembler, et reprennent au retour. */
+    fun setWobblePaused(paused: Boolean) {
+        if (wobblePaused == paused) return
+        wobblePaused = paused
+        val rv = recyclerView ?: return
+        for (i in 0 until rv.childCount) {
+            (rv.getChildViewHolder(rv.getChildAt(i)) as? TileViewHolder)?.pauseWobble(paused)
+        }
+    }
+
+    // Les vues gardées hors écran (cache de la liste) ne tremblent pas pour rien.
+    override fun onViewAttachedToWindow(holder: TileViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.pauseWobble(wobblePaused)
+    }
+
+    override fun onViewDetachedFromWindow(holder: TileViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.pauseWobble(true)
     }
 
     override fun onViewRecycled(holder: TileViewHolder) {
@@ -631,6 +653,12 @@ class HubTilesAdapter(
             }
             card.setTag(R.id.wobble_animator_tag, animator)
             animator.start()
+            if (wobblePaused) animator.pause()
+        }
+
+        fun pauseWobble(paused: Boolean) {
+            val animator = card.getTag(R.id.wobble_animator_tag) as? ObjectAnimator ?: return
+            if (paused) animator.pause() else animator.resume()
         }
 
         fun stopWobble() {

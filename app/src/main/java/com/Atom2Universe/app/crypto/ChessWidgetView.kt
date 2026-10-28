@@ -76,6 +76,7 @@ class ChessWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag du widget (header uniquement) ────────────────────────────────────
@@ -123,10 +124,12 @@ class ChessWidgetView @JvmOverloads constructor(
             difficultyOverlay.visibility = GONE
         }
 
-        reload()
+        // L'IA n'est lancée (et sa table créée) qu'au reload() de l'activité, widget activé
+        loadSavedGame()
 
         val headerArea = findViewById<FrameLayout>(R.id.chess_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     // ── Pinch-zoom : intercepter les gestes 2 doigts avant les enfants ────────
@@ -185,10 +188,12 @@ class ChessWidgetView @JvmOverloads constructor(
                 }
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
             MotionEvent.ACTION_CANCEL -> {
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -199,16 +204,11 @@ class ChessWidgetView @JvmOverloads constructor(
         difficultyOverlay.visibility = GONE
         resultOverlay.visibility = GONE
 
-        ai?.cancel()
-        ai = null
+        cancelAI()
         difficulty = newDifficulty
 
         game.newGame()
         GameStatsRepository(context).recordChessStarted()
-
-        if (difficulty.hasAI()) {
-            ai = ChessAI(game, difficulty, context)
-        }
 
         chessView.isTwoPlayerMode = (difficulty == ChessDifficulty.TWO_PLAYER)
         chessView.setSelectedSquare(null)
@@ -226,8 +226,13 @@ class ChessWidgetView @JvmOverloads constructor(
 
     // ── Chargement de la partie et des réglages sauvegardés ──────────────────
     fun reload() {
-        ai?.cancel()
-        ai = null
+        loadSavedGame()
+        // Si c'est déjà le tour de l'IA après chargement, la faire jouer
+        triggerAIIfNeeded()
+    }
+
+    private fun loadSavedGame() {
+        cancelAI()
 
         val prefs = context.getSharedPreferences("chess_save", Context.MODE_PRIVATE)
 
@@ -262,11 +267,6 @@ class ChessWidgetView @JvmOverloads constructor(
             }
         }
 
-        // Créer l'IA selon la difficulté (null en mode 2 joueurs)
-        if (difficulty.hasAI()) {
-            ai = ChessAI(game, difficulty, context)
-        }
-
         // Activer le flip des pièces noires uniquement en mode 2 joueurs
         chessView.isTwoPlayerMode = (difficulty == ChessDifficulty.TWO_PLAYER)
         chessView.game = game
@@ -274,9 +274,29 @@ class ChessWidgetView @JvmOverloads constructor(
         chessView.refresh()
 
         capturedPiecesView.update(game.capturedPieces)
+    }
 
-        // Si c'est déjà le tour de l'IA après chargement, la faire jouer
-        triggerAIIfNeeded()
+    /** Arrête la recherche et oublie un coup trouvé pas encore joué ; l'IA reste en mémoire. */
+    private fun cancelAI() {
+        ai?.cancel()
+        mainHandler.removeCallbacksAndMessages(null)
+    }
+
+    /** L'IA (et sa grosse table) n'est créée qu'au premier coup qu'elle doit jouer. */
+    private fun aiForDifficulty(): ChessAI? {
+        if (!difficulty.hasAI()) return null
+        ai?.let { if (it.getDifficulty() == difficulty) return it }
+        ai?.cancel()
+        return ChessAI(game, difficulty, context).also { ai = it }
+    }
+
+    // Widget masqué : on rend la mémoire de l'IA
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (changedView === this && visibility != VISIBLE && ai != null) {
+            ai?.cancel()
+            ai = null
+        }
     }
 
     // ── ChessView.ChessViewListener ───────────────────────────────────────────
@@ -284,7 +304,7 @@ class ChessWidgetView @JvmOverloads constructor(
     override fun onSquareClicked(square: Square) {
         if (game.isGameOver()) return
         // Bloquer l'interaction si c'est le tour de l'IA
-        if (game.currentTurn == PieceColor.BLACK && ai != null) return
+        if (game.currentTurn == PieceColor.BLACK && difficulty.hasAI()) return
 
         val piece = game.getPieceAt(square)
         if (piece != null && piece.color == game.currentTurn) {
@@ -299,7 +319,7 @@ class ChessWidgetView @JvmOverloads constructor(
 
     override fun onPieceDragged(from: Square, to: Square): Boolean {
         if (game.isGameOver()) return false
-        if (game.currentTurn == PieceColor.BLACK && ai != null) return false
+        if (game.currentTurn == PieceColor.BLACK && difficulty.hasAI()) return false
         return attemptMove(from, to)
     }
 
@@ -336,9 +356,9 @@ class ChessWidgetView @JvmOverloads constructor(
     }
 
     private fun triggerAIIfNeeded() {
-        val currentAI = ai ?: return
         if (game.isGameOver()) return
         if (game.currentTurn != PieceColor.BLACK) return
+        val currentAI = aiForDifficulty() ?: return
         currentAI.findMove(listener = this, scope = aiScope)
     }
 
@@ -352,6 +372,9 @@ class ChessWidgetView @JvmOverloads constructor(
         // Petit délai pour que le coup ne soit pas instantané (comme dans ChessActivity)
         mainHandler.postDelayed({
             if (game.isGameOver()) return@postDelayed
+            // Coup calculé pour une autre position (nouvelle partie, rechargement) : ignoré
+            if (game.currentTurn != PieceColor.BLACK || !difficulty.hasAI() ||
+                game.getLegalMoves(move.from).none { it.to == move.to }) return@postDelayed
 
             val finalMove = if (move.piece.type == PieceType.PAWN &&
                 (move.to.row == 0 || move.to.row == 7) &&
@@ -371,17 +394,19 @@ class ChessWidgetView @JvmOverloads constructor(
 
     private fun checkGameOver() {
         if (!game.isGameOver()) return
-        val playerWon = !game.isStalemate
+        // Seul un mat rapporte : pat et nulles d'office (répétition, 50 coups, matériel) non
+        val playerWon = game.isCheckmate
             && difficulty != ChessDifficulty.TWO_PLAYER
             && game.currentTurn == PieceColor.BLACK
         val (label, color) = when {
-            game.isStalemate -> "Pat !" to Color.parseColor("#94A3B8")
-            difficulty == ChessDifficulty.TWO_PLAYER -> "Mat !" to Color.parseColor("#EAB308")
+            game.isStalemate -> R.string.chess_widget_stalemate to Color.parseColor("#94A3B8")
+            !game.isCheckmate -> R.string.chess_widget_draw to Color.parseColor("#94A3B8")
+            difficulty == ChessDifficulty.TWO_PLAYER -> R.string.chess_widget_checkmate to Color.parseColor("#EAB308")
             // vs IA : currentTurn = couleur qui vient d'être matée
-            game.currentTurn == PieceColor.WHITE -> "Mat •\nDéfaite" to Color.parseColor("#EF4444")
-            else -> "Mat •\nVictoire" to Color.parseColor("#22C55E")
+            game.currentTurn == PieceColor.WHITE -> R.string.chess_widget_checkmate_defeat to Color.parseColor("#EF4444")
+            else -> R.string.chess_widget_checkmate_victory to Color.parseColor("#22C55E")
         }
-        resultText.text = label
+        resultText.setText(label)
         resultText.setTextColor(color)
         resultOverlay.visibility = VISIBLE
         if (playerWon) {

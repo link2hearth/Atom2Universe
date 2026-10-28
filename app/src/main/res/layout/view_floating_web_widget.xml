@@ -136,9 +136,9 @@
             android:max="100"
             android:visibility="gone" />
 
-        <!-- WebView -->
-        <WebView
-            android:id="@+id/floating_web_view"
+        <!-- WebView, créée en code au premier article ouvert -->
+        <FrameLayout
+            android:id="@+id/floating_web_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />

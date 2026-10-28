@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import androidx.core.content.edit
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONObject
 
 /**
@@ -83,6 +85,9 @@ object SharedGameStats {
     private const val PREFS = "games_sync_state"
     private const val KEY_OTHER_DEVICES = "other_devices"
     private const val KEY_RESETS = "resets"
+
+    /** Pris par [delete] et par la fusion de la sync : l'une écraserait sinon les suppressions de l'autre. */
+    val lock = Mutex()
 
     /** Le nom affiché pour cet appareil : celui choisi dans les réglages Android, sinon le modèle. */
     fun deviceName(context: Context): String =
@@ -174,7 +179,7 @@ object SharedGameStats {
      * Supprime ces statistiques ici, tout de suite, et note la date pour que la
      * prochaine sync les efface aussi du cloud et des autres appareils.
      */
-    suspend fun delete(context: Context, stats: List<SyncedStat>, now: Long = System.currentTimeMillis()) {
+    suspend fun delete(context: Context, stats: List<SyncedStat>, now: Long = System.currentTimeMillis()) = lock.withLock {
         stats.forEach { stat -> eraseLocal(context, stat.pattern) }
 
         // Les compteurs des autres appareils disparaissent aussi de l'affichage d'ici,

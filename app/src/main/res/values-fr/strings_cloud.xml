@@ -73,7 +73,7 @@
 
     <string name="cloud_cat_stats">Statistiques d\'usage</string>
     <string name="cloud_cat_stats_desc">Temps passé par module, tous appareils confondus</string>
-    <string name="cloud_cat_stats_warning">L\'historique venu de vos autres appareils est perdu. Cet appareil republie le sien.</string>
+    <string name="cloud_cat_stats_warning">Chaque appareil republie son historique à sa prochaine sync. Un appareil que vous n\'utilisez plus perd ce que lui seul détenait.</string>
 
     <string name="cloud_cat_obsolete">Fichiers obsolètes</string>
     <string name="cloud_cat_obsolete_desc">Restes d\'un ancien format de synchronisation</string>
@@ -162,4 +162,19 @@
     <string name="cloud_notes_synced">Notes synchronisées</string>
     <string name="cloud_notes_synced_new">Notes synchronisées, des nouvelles sont arrivées</string>
     <string name="cloud_notes_too_new">Il faut une version plus récente de l\'application pour synchroniser les notes</string>
+
+    <!-- Synchro : erreurs et petits textes -->
+    <string name="games_sync_cloud_unreadable">la sauvegarde du cloud est illisible, rien n\'a été envoyé.</string>
+    <string name="games_sync_cloud_too_new">la sauvegarde du cloud vient d\'une version plus récente de l\'application, rien n\'a été envoyé.</string>
+    <string name="cloud_load_failed">Impossible de lire le cloud</string>
+    <string name="cloud_proj_unknown_device">un appareil inconnu</string>
+    <string name="cloud_value_none">—</string>
+
+    <!-- Nombres du clicker dans la question de conflit -->
+    <string name="cloud_number_plain">%1$.0f</string>
+    <string name="cloud_number_thousands">%1$.2f k</string>
+    <string name="cloud_number_millions">%1$.2f M</string>
+    <string name="cloud_number_billions">%1$.2f G</string>
+    <string name="cloud_number_exponent">%1$.3fe%2$d</string>
+    <string name="cloud_number_layered">e(e%1$.1f)</string>
 </resources>

@@ -198,10 +198,15 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
 
         // Pause plus longue que ça : le service quitte le premier plan
         private const val FOREGROUND_DETACH_DELAY_MS = 5 * 60 * 1000L
+
+        /** Vrai entre onCreate et onDestroy : le hub ne s'y lie que s'il tourne déjà. */
+        @Volatile var isRunning = false
+            private set
     }
 
     override fun onCreate() {
         super.onCreate()
+        isRunning = true
 
         // Initialiser les composants
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
@@ -327,6 +332,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
 
     override fun onDestroy() {
         destroyed = true
+        isRunning = false
         mainHandler.removeCallbacks(detachForegroundRunnable)
 
         try {

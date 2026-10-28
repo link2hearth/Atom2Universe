@@ -19,11 +19,11 @@ interface UsageSessionDao {
     suspend fun insertSession(session: UsageSessionEntity): Long
 
     /**
-     * Insère une session en ignorant les doublons (utilisé pour l'import depuis la sync).
-     * Retourne -1 si la session existe déjà (via la contrainte unique moduleType+startTimestamp+endTimestamp).
+     * Insère d'un coup, en une transaction, les sessions importées par la sync, en ignorant les doublons.
+     * Pour chaque session, -1 si elle existe déjà (contrainte unique moduleType+startTimestamp+endTimestamp).
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertSessionIgnoreConflict(session: UsageSessionEntity): Long
+    suspend fun insertSessionsIgnoreConflict(sessions: List<UsageSessionEntity>): List<Long>
 
     /**
      * Récupère la durée totale d'utilisation pour un module donné dans une période.
@@ -180,6 +180,10 @@ interface UsageSessionDao {
     @Query("SELECT * FROM usage_sessions WHERE endTimestamp >= :sinceTimestamp AND sourceDeviceId IS NULL ORDER BY endTimestamp DESC")
     suspend fun getLocalSessionsSince(sinceTimestamp: Long): List<UsageSessionEntity>
 
+    /** Combien de sessions locales, et la fin de la plus récente : de quoi savoir sans tout lire s'il y a du neuf à envoyer. */
+    @Query("SELECT COUNT(*) AS sessionCount, COALESCE(MAX(endTimestamp), 0) AS latestEnd FROM usage_sessions WHERE sourceDeviceId IS NULL")
+    suspend fun getLocalSessionsSummary(): LocalSessionsSummary
+
     /**
      * Récupère les sessions dans une plage de timestamps.
      */
@@ -231,6 +235,12 @@ interface UsageSessionDao {
     """)
     suspend fun getTopReadingTitles(moduleTypes: List<String>, startDate: Long, endDate: Long, limit: Int): List<ReadingTitleStats>
 }
+
+/** Le nombre de sessions locales et la fin de la plus récente (0 s'il n'y en a aucune). */
+data class LocalSessionsSummary(
+    val sessionCount: Int,
+    val latestEnd: Long
+)
 
 /**
  * Classe de données pour le top des titres de lecture (livre/BD) sur une période.

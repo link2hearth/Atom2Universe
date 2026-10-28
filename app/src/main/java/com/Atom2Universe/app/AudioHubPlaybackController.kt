@@ -102,7 +102,7 @@ class AudioHubPlaybackController(private val context: Context) {
             // Post to main thread and synchronize mediaController modification
             handler.post {
                 try {
-                    val browser = mediaBrowser ?: return@post
+                    val browser = mediaBrowser?.takeIf { it.isConnected } ?: return@post
                     val token = browser.sessionToken
                     synchronized(stateLock) {
                         mediaController = MediaControllerCompat(context, token).apply {
@@ -142,8 +142,8 @@ class AudioHubPlaybackController(private val context: Context) {
         MusicPlaybackHolder.addListener(musicListener)
         RadioPlaybackHolder.addListener(radioListener)
 
-        // Connecte au service MIDI via MediaBrowser seulement si pas deja connecte
-        if (mediaBrowser?.isConnected != true) {
+        // Se lier au service MIDI le créerait : seulement s'il tourne déjà (une lecture MIDI a eu lieu)
+        if (MidiPlaybackService.isRunning && mediaBrowser?.isConnected != true) {
             mediaBrowser?.disconnect()
             mediaBrowser = MediaBrowserCompat(
                 context,
@@ -170,12 +170,8 @@ class AudioHubPlaybackController(private val context: Context) {
         mediaController?.unregisterCallback(mediaControllerCallback)
         mediaController = null
 
-        // Deconnecter proprement le MediaBrowser
-        mediaBrowser?.let { browser ->
-            if (browser.isConnected) {
-                browser.disconnect()
-            }
-        }
+        // Même en cours de connexion : sinon la liaison reste ouverte et garde le service en vie
+        mediaBrowser?.disconnect()
         mediaBrowser = null
 
         listeners.clear()

@@ -383,4 +383,12 @@
     <string name="earth_loc_hawaii">Hawaii</string>
     <string name="earth_loc_central_pacific">Central Pacific</string>
     <string name="color_stack_widget_solved">🎉 Sorted!</string>
+    <string name="clicker_rate_per_second">%1$d /s</string>
+    <string name="clicker_duration_h_min">%1$dh %2$dm</string>
+    <string name="clicker_duration_min_s">%1$dm %2$ds</string>
+    <string name="clicker_duration_min">%1$d min</string>
+    <string name="clicker_duration_s">%1$ds</string>
+    <string name="clicker_duration_s_decimal">%1$.1fs</string>
+    <string name="clicker_duration_ms">%1$dms</string>
+    <string name="clicker_frenzy_seconds_left">\u0020\u0020%1$ds</string>
 </resources>

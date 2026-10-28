@@ -30,7 +30,9 @@ object SharedSonivoxDriver {
      */
     fun acquire(onReady: () -> Unit) {
         synchronized(lock) {
-            if (refCount == 0) {
+            // Un autre module peut avoir arrêté le moteur unique alors qu'on le détient
+            // encore : on le relance aussi dans ce cas.
+            if (refCount == 0 || isStopped()) {
                 // On pilote la disponibilité manuellement via onReady ; on neutralise
                 // le listener du singleton pour ne pas déclencher celui d'un autre moteur.
                 driver.setOnMidiStartListener { }
@@ -39,6 +41,16 @@ object SharedSonivoxDriver {
             refCount++
         }
         onReady()
+    }
+
+    /** Vrai seulement si le pilote natif se dit arrêté ; dans le doute, on le croit lancé. */
+    private fun isStopped(): Boolean = try {
+        !driver.isStarted()
+    } catch (_: UnsatisfiedLinkError) {
+        // Bibliothèque native sans isStarted() : config() vaut null si le pilote est arrêté
+        try { driver.config() == null } catch (_: Exception) { false }
+    } catch (_: Exception) {
+        false
     }
 
     /** Libère le moteur. Le moteur natif n'est arrêté qu'au dernier release. */

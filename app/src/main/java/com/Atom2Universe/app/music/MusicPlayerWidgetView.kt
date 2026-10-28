@@ -27,6 +27,8 @@ import androidx.media3.common.PlaybackException
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.VisibleWindowGate
+import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreen
+import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreenOnResize
 import com.Atom2Universe.app.music.lyrics.LrcParser
 import com.Atom2Universe.app.music.lyrics.LyricsManager
 import com.Atom2Universe.app.music.model.MusicTrack
@@ -109,6 +111,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                 scaleY = currentScale
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag via header ───────────────────────────────────────────────────────
@@ -162,6 +165,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         applyVizMode(currentVizMode)
 
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
         setOnTouchListener { _, event ->
             scaleDetector.onTouchEvent(event)
             false
@@ -287,7 +291,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                         fft?.let { visualizerView.updateFft(it) }
                     }
                 }, Visualizer.getMaxCaptureRate() / 2, true, true)
-                enabled = true
+                enabled = MusicPlaybackHolder.isPlaying()
             }
             showVisualizerFallback(true)
         } catch (_: Exception) { showVisualizerFallback(false) }
@@ -296,6 +300,12 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     private fun showVisualizerFallback(active: Boolean) {
         visualizerView.visibility = if (active) VISIBLE else GONE
         bgView.visibility = if (active) GONE else VISIBLE
+    }
+
+    // En pause, le Visualizer reste créé (l'image ne change pas) mais ne capte plus rien
+    private fun setVisualizerCapturing(capturing: Boolean) {
+        val v = audioVisualizer ?: return
+        try { if (v.enabled != capturing) v.enabled = capturing } catch (_: Exception) {}
     }
 
     private fun releaseVisualizer() {
@@ -476,7 +486,11 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
 
     override fun onPlaybackStateChanged(isPlaying: Boolean) {
         updatePlayPauseButton(isPlaying)
-        if (isPlaying && audioVisualizer == null) post { trySetupVisualizer() }
+        if (isPlaying && audioVisualizer == null) {
+            post { trySetupVisualizer() }
+        } else {
+            setVisualizerCapturing(isPlaying)
+        }
     }
 
     override fun onTrackChanged(track: MusicTrack?) {
@@ -515,6 +529,8 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
 
     private fun updatePlayPauseButton(isPlaying: Boolean) {
         btnPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+        // En pause, le visualiseur retombe puis se fige au lieu de redessiner 60 fois par seconde
+        visualizerView.isPlaybackActive = isPlaying
     }
 
     private fun openMusicLibrary() {
@@ -550,6 +566,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                 return false
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                if (isDragging) keepFloatingWidgetOnScreen()
                 isDragging = false
                 return false
             }

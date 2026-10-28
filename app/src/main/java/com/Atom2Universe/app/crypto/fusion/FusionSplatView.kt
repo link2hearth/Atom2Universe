@@ -63,8 +63,11 @@ class FusionSplatView @JvmOverloads constructor(
                 scale = it.animatedValue as Float
                 invalidate()
             }
+            // Annulée (hide, vue détachée en quittant l'écran) : pas de suite
             addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) = onDone()
+                private var cancelled = false
+                override fun onAnimationCancel(animation: Animator) { cancelled = true }
+                override fun onAnimationEnd(animation: Animator) { if (!cancelled) onDone() }
             })
             start()
         }

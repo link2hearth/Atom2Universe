@@ -46,6 +46,9 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private val betLevels = listOf(0, 1, 2, 5, 10, 25)
     private var betLevelIndex = 0
 
+    // Mise déjà débitée du dépôt à la donne, rendue (avec le gain) au règlement de la main
+    private var stakeInPlay = 0
+
     // ── Zoom ──────────────────────────────────────────────────────────────────────
     private val minScale = 0.35f
     private val maxScale = 3.0f
@@ -58,6 +61,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
                 scaleY = currentScale
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag (header only) ────────────────────────────────────────────────────────
@@ -124,6 +128,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
         // Header drag
         val header = findViewById<FrameLayout>(R.id.bj_widget_header)
         header.setOnTouchListener { _, ev -> handleHeaderTouch(ev) }
+        keepFloatingWidgetOnScreenOnResize()
 
         showBettingUI()
         bjView.refresh()
@@ -141,7 +146,8 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private fun updateBetCycleButton() {
         val bet = betLevels[betLevelIndex]
         game.pendingBet = bet
-        btnBetCycle.text = if (bet == 0) "FREE +" else "⚛$bet +"
+        btnBetCycle.text = if (bet == 0) context.getString(R.string.blackjack_widget_bet_free)
+        else context.getString(R.string.blackjack_widget_bet, bet)
     }
 
     // ── Pinch zoom ────────────────────────────────────────────────────────────────
@@ -179,6 +185,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isDragging = false; skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -216,6 +223,9 @@ class BlackjackWidgetView @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
         resultOverlay.visibility = GONE
         resetOverlay.visibility = GONE
+        // Main abandonnée : la mise débitée à la donne est perdue
+        stakeInPlay = 0
+        game.phase = GamePhase.BETTING
         syncBalanceFromRepo()
         betLevelIndex = 0
         updateBetCycleButton()
@@ -224,10 +234,22 @@ class BlackjackWidgetView @JvmOverloads constructor(
         bjView.refresh()
     }
 
+    private val isRoundInProgress: Boolean
+        get() = game.phase == GamePhase.PLAYER_TURNS || game.phase == GamePhase.DEALER_TURN ||
+            (game.phase == GamePhase.PAYOUT && stakeInPlay > 0)
+
     private fun onWidgetDeal() {
-        val balance = game.humanPlayer.balance
-        game.pendingBet = betLevels[betLevelIndex].coerceAtMost(if (balance > 0) balance else 0)
+        if (isRoundInProgress || resultOverlay.visibility == VISIBLE) return
+        val balance = neutrinoRepo.getBalance()
+        val bet = betLevels[betLevelIndex].coerceAtMost(balance.coerceAtLeast(0))
+        // La mise quitte le solde dès la donne : quitter ou ↺ en cours de main ne la rend pas
+        if (bet > 0 && !neutrinoRepo.subtractBalance(bet)) return
+        game.humanPlayer.balance = balance
+        game.pendingBet = bet
         game.startRound()
+        stakeInPlay = bet
+        game.humanPlayer.balance = balance - bet
+        updateNeutrinoDisplay()
         bjView.game = game
         bjView.refresh()
         showActionUI()
@@ -244,6 +266,9 @@ class BlackjackWidgetView @JvmOverloads constructor(
     }
 
     private fun onWidgetAction(action: PlayerAction) {
+        if (!game.isHumanTurn) return
+        // Un seul enchaînement en attente : un second appui ne lance pas un second tour du croupier
+        handler.removeCallbacksAndMessages(null)
         val movedToDealer = when (action) {
             PlayerAction.HIT -> game.hit()
             PlayerAction.STAND -> game.stand()
@@ -273,31 +298,36 @@ class BlackjackWidgetView @JvmOverloads constructor(
 
     private fun processRoundEnd() {
         val hand = game.humanPlayer.hands.firstOrNull() ?: return
-        // calculatePayouts() a déjà mis à jour game.humanPlayer.balance
-        val netChange = when (hand.payoutResult) {
+        val gain = when (hand.payoutResult) {
             PayoutResult.WIN -> hand.bet
-            PayoutResult.WIN_BJ -> (hand.bet * 1.5f).toInt()
-            PayoutResult.LOSE -> -hand.bet
+            PayoutResult.WIN_BJ -> BlackjackGame.blackjackGain(hand.bet)
             else -> 0
         }
 
-        // Synchroniser le vrai solde neutrinos (sauf mode gratuit)
-        if (hand.bet > 0 && netChange != 0) {
-            neutrinoRepo.setBalance(game.humanPlayer.balance)
-            if (netChange > 0) GameStatsRepository(context).recordBlackjackWon()
+        // La mise a été débitée à la donne : on rend mise + gain (ou la mise seule en égalité)
+        if (stakeInPlay > 0) {
+            val credit = when (hand.payoutResult) {
+                PayoutResult.WIN, PayoutResult.WIN_BJ -> stakeInPlay + gain
+                PayoutResult.PUSH -> stakeInPlay
+                else -> 0
+            }
+            stakeInPlay = 0
+            if (credit > 0) neutrinoRepo.setBalance(neutrinoRepo.getBalance() + credit)
+            if (gain > 0) GameStatsRepository(context).recordBlackjackWon()
         }
+        syncBalanceFromRepo()
 
         val rText = if (hand.bet == 0) {
             when (hand.payoutResult) {
-                PayoutResult.WIN, PayoutResult.WIN_BJ -> "WIN"
-                PayoutResult.LOSE -> "LOSE"
+                PayoutResult.WIN, PayoutResult.WIN_BJ -> context.getString(R.string.blackjack_result_win_free)
+                PayoutResult.LOSE -> context.getString(R.string.blackjack_result_lose_free)
                 else -> "="
             }
         } else {
             when (hand.payoutResult) {
-                PayoutResult.WIN -> "+${hand.bet} ⚛"
-                PayoutResult.WIN_BJ -> "BJ!\n+${(hand.bet * 1.5f).toInt()} ⚛"
-                PayoutResult.LOSE -> "-${hand.bet} ⚛"
+                PayoutResult.WIN -> context.getString(R.string.blackjack_widget_gain, gain)
+                PayoutResult.WIN_BJ -> context.getString(R.string.blackjack_widget_bj_gain, gain)
+                PayoutResult.LOSE -> context.getString(R.string.blackjack_widget_loss, hand.bet)
                 else -> "="
             }
         }
@@ -314,23 +344,32 @@ class BlackjackWidgetView @JvmOverloads constructor(
         updateNeutrinoDisplay()
     }
 
-    /** Appelé par l'activité quand l'état ViewModel change (source de vérité pour le solde). */
+    /** Appelé par l'activité quand l'état ViewModel change : affichage seul, le solde vit dans le dépôt. */
     fun setNeutrinoBalance(n: Int) {
-        if (game.phase == GamePhase.BETTING) {
-            game.humanPlayer.balance = n
-            neutrinoRepo.setBalance(n)
-            updateNeutrinoDisplay()
-            showBettingUI()
+        if (n == game.humanPlayer.balance) return
+        game.humanPlayer.balance = n
+        updateNeutrinoDisplay()
+        if (game.phase == GamePhase.BETTING && betLevels[betLevelIndex] > n) {
+            betLevelIndex = 0
+            updateBetCycleButton()
         }
     }
 
     // ── Appelé par MainClickerActivity quand le widget devient visible ─────────────
     fun reload() {
         handler.removeCallbacksAndMessages(null)
-        resultOverlay.visibility = GONE
         resetOverlay.visibility = GONE
-        syncBalanceFromRepo()
         bjView.game = game
+        if (isRoundInProgress) {
+            // Main en cours (mise déjà débitée) : on la reprend là où elle en était
+            syncBalanceFromRepo()
+            updateNeutrinoDisplay()
+            processWidgetTurn()
+            bjView.refresh()
+            return
+        }
+        resultOverlay.visibility = GONE
+        syncBalanceFromRepo()
         showBettingUI()
         bjView.refresh()
     }

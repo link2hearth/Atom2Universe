@@ -97,7 +97,6 @@ class FusionActivity : ThemedActivity() {
         findViewById<View>(R.id.fusion_back).setOnClickListener { finish() }
         animOverlay.setOnClickListener { if (!isAnimating) closeOverlay() }
 
-        soundEngine.start()
         soundEngine.muted = prefs.getBoolean("sound_muted", false)
         updateMuteButton()
 
@@ -109,6 +108,17 @@ class FusionActivity : ThemedActivity() {
 
         buildRecipeTiles()
         refreshBonusDisplay()
+    }
+
+    // Moteur Sonivox réservé seulement tant que l'écran est visible (sinon flux audio actif en arrière-plan)
+    override fun onStart() {
+        super.onStart()
+        soundEngine.start()
+    }
+
+    override fun onStop() {
+        soundEngine.stop()
+        super.onStop()
     }
 
     override fun onResume() {
@@ -274,28 +284,34 @@ class FusionActivity : ThemedActivity() {
         var wins   = 0
         var losses = 0
         val droppedCards = mutableListOf<ElementCard>()
+        // Tout en mémoire puis une seule écriture par magasin (pas des milliers d'apply()).
+        val collection = collectionStore.batch()
+        val randomPool = (recipe.output as? FusionOutput.RandomRarity)?.let { out ->
+            atomicNumbersOf(out.rarity).filter { it !in out.exclude }
+        }
         repeat(maxFusions) {
-            for (input in recipe.inputs) repeat(input.count) { collectionStore.consumeCopy(input.atomicNumber) }
+            for (input in recipe.inputs) repeat(input.count) { collection.consumeCopy(input.atomicNumber) }
             val success = Math.random() < recipe.baseRate
             if (success) {
                 val atomicOut = when (val out = recipe.output) {
                     is FusionOutput.Element      -> out.atomicNumber
-                    is FusionOutput.RandomRarity -> atomicNumbersOf(out.rarity)
-                        .filter { it !in out.exclude }.random()
+                    is FusionOutput.RandomRarity -> randomPool!!.random()
                 }
-                collectionStore.addCopyFromFusion(atomicOut)
-                // Drop de carte, comme en fusion individuelle ; markObtained immédiat
+                collection.addCopyFromFusion(atomicOut)
+                // Drop de carte, comme en fusion individuelle ; markObtained immédiat (en mémoire)
                 // pour que les tirages suivants du lot excluent la carte déjà gagnée.
                 cardRepository.rollDrop(recipe.id)?.also {
-                    cardRepository.markObtained(it.atomicNumber)
+                    cardRepository.markObtained(it.atomicNumber, save = false)
                     droppedCards.add(it)
                 }
                 wins++
             } else {
                 losses++
             }
-            fusionStore.recordAttempt(recipe, success)
         }
+        collection.apply()
+        if (droppedCards.isNotEmpty()) cardRepository.saveCounts()
+        fusionStore.recordAttempts(recipe, maxFusions, wins)
 
         startBatchAnimation(wins, losses, droppedCards)
     }
@@ -362,6 +378,8 @@ class FusionActivity : ThemedActivity() {
         )
 
         fun runStep(index: Int) {
+            // Écran quitté pendant le compte à rebours : pas de suite
+            if (isFinishing || isDestroyed) return
             if (index >= steps.size) {
                 splatView.hide()
                 handler.postDelayed({ onDone() }, 250L)
@@ -554,6 +572,5 @@ class FusionActivity : ThemedActivity() {
         rainbowAnimator?.cancel()
         handler.removeCallbacksAndMessages(null)
         confettiView.stop()
-        soundEngine.stop()
     }
 }

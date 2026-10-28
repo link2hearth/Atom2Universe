@@ -11,7 +11,6 @@ class SaveCore(context: Context) {
 
     private val appContext = context.applicationContext
     private val preferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-    private val saveLock = Any()
 
     fun get(key: String?): String? {
         if (key.isNullOrBlank()) {
@@ -75,8 +74,7 @@ class SaveCore(context: Context) {
     fun import(blob: String?): Boolean {
         synchronized(saveLock) {
             if (blob.isNullOrBlank()) {
-                clearLocked()
-                return true
+                return clearLocked()
             }
             val parsed = parseJsonObject(blob) ?: return false
             if (isArcadeProgressPayload(parsed)) {
@@ -127,23 +125,15 @@ class SaveCore(context: Context) {
         return imported
     }
 
-    private fun clearLocked() {
-        preferences.edit(commit = true) {
-            remove(KEY_BLOB)
-        }
-    }
+    private fun clearLocked(): Boolean = preferences.edit().remove(KEY_BLOB).commit()
 
     private fun loadJsonObjectLocked(): JSONObject? {
         val raw = preferences.getString(KEY_BLOB, null) ?: return null
         return parseJsonObject(raw)
     }
 
-    private fun persistJsonLocked(payload: JSONObject): Boolean {
-        preferences.edit(commit = true) {
-            putString(KEY_BLOB, payload.toString())
-        }
-        return true
-    }
+    private fun persistJsonLocked(payload: JSONObject): Boolean =
+        preferences.edit().putString(KEY_BLOB, payload.toString()).commit()
 
     private fun parseJsonValue(raw: String): Any {
         return try {
@@ -188,6 +178,9 @@ class SaveCore(context: Context) {
         private const val PREF_NAME = "atom2univers_save_core"
         private const val KEY_BLOB = "save_core_blob"
         private const val KEY_MIGRATED = "save_core_migrated"
+
+        // One file for every instance: read-modify-write must share one lock.
+        private val saveLock = Any()
     }
 }
 

@@ -97,6 +97,16 @@ abstract class BaseHubActivity : ThemedActivity() {
         updateViewMode()
     }
 
+    override fun onStart() {
+        super.onStart()
+        paneAdapters.forEach { it.setWobblePaused(false) }
+    }
+
+    override fun onStop() {
+        paneAdapters.forEach { it.setWobblePaused(true) }
+        super.onStop()
+    }
+
     abstract fun getLayoutResId(): Int
     abstract fun getPrefsName(): String
     abstract fun getHubTitle(): Int
@@ -219,7 +229,9 @@ abstract class BaseHubActivity : ThemedActivity() {
                 else rv.layoutManager = GridLayoutManager(this, spanCount)
                 adapter.setSpanCount(spanCount)
             } else {
-                rv.layoutManager = LinearLayoutManager(this)
+                // GridLayoutManager hérite de LinearLayoutManager : seule une vraie liste est gardée (et sa position)
+                val current = rv.layoutManager
+                if (current !is LinearLayoutManager || current is GridLayoutManager) rv.layoutManager = LinearLayoutManager(this)
             }
             adapter.setGridMode(isGridMode)
         }
@@ -452,6 +464,8 @@ abstract class BaseHubActivity : ThemedActivity() {
         val colorHex = String.format("#%06X", 0xFFFFFF and colorInt)
 
         val tileName = getString(tile.titleRes)
+        // Le hub parent relit le titre dans la langue du moment
+        val savedLabel = "@" + resources.getResourceEntryName(tile.titleRes)
         val alreadyShortcut = isAlreadyShortcut(parentPrefsName, parentTileId, tile.activityClass.name)
 
         if (alreadyShortcut) {
@@ -459,7 +473,7 @@ abstract class BaseHubActivity : ThemedActivity() {
                 .setTitle(R.string.hub_shortcut_add_title)
                 .setMessage(getString(R.string.hub_shortcut_exists_message, tileName))
                 .setPositiveButton(R.string.confirm_return_menu_yes) { _, _ ->
-                    saveShortcutToParentHub(parentPrefsName, parentTileId, tileName, tile.activityClass.name, colorHex)
+                    saveShortcutToParentHub(parentPrefsName, parentTileId, savedLabel, tile.activityClass.name, colorHex)
                 }
                 .setNegativeButton(R.string.confirm_return_menu_no) { _, _ ->
                     removeShortcutFromParentHub(parentPrefsName, parentTileId, tile.activityClass.name)
@@ -470,7 +484,7 @@ abstract class BaseHubActivity : ThemedActivity() {
                 .setTitle(R.string.hub_shortcut_add_title)
                 .setMessage(getString(R.string.hub_shortcut_add_message, tileName))
                 .setPositiveButton(R.string.confirm_return_menu_yes) { _, _ ->
-                    saveShortcutToParentHub(parentPrefsName, parentTileId, tileName, tile.activityClass.name, colorHex)
+                    saveShortcutToParentHub(parentPrefsName, parentTileId, savedLabel, tile.activityClass.name, colorHex)
                     Toast.makeText(this, R.string.hub_shortcut_added, Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.confirm_return_menu_no, null)

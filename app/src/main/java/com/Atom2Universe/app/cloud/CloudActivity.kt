@@ -20,6 +20,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.cloud.projects.CloudProjectSync
 import com.Atom2Universe.app.crypto.sync.GamesSyncFile
 import com.Atom2Universe.app.crypto.sync.GamesSyncManager
 import com.Atom2Universe.app.crypto.sync.LayeredNumberData
@@ -34,9 +35,11 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat
 import java.util.Date
 
@@ -83,6 +86,9 @@ class CloudActivity : ThemedActivity() {
 
     /** Empêche deux opérations Drive de se chevaucher sur un double appui. */
     private var isBusy = false
+
+    /** Le dernier inventaire affiché : ce que « Tout effacer » efface. */
+    private var lastReport: CloudInventory.Report? = null
 
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -298,21 +304,26 @@ class CloudActivity : ThemedActivity() {
             gamesStatus.visibility = View.VISIBLE
             gamesStatus.setText(R.string.games_sync_in_progress)
 
-            val result = GamesSyncManager.syncGames()
+            // Comme les projets : quitter l'écran ne coupe pas la sync entre l'envoi et ce qu'on en note.
+            val result = withContext(NonCancellable) { GamesSyncManager.syncGames() }
 
             isBusy = false
             btnSyncGames.isEnabled = true
-            when (result) {
-                is GamesSyncManager.SyncResult.Success ->
-                    gamesStatus.setText(R.string.games_sync_success)
-                is GamesSyncManager.SyncResult.Error ->
-                    gamesStatus.text = getString(R.string.games_sync_error, result.message(this@CloudActivity))
-                is GamesSyncManager.SyncResult.Conflict -> {
-                    gamesStatus.visibility = View.GONE
-                    showGamesConflictDialog(result.local, result.remote)
-                }
-            }
+            showGamesResult(result)
             loadInventory()
+        }
+    }
+
+    private fun showGamesResult(result: GamesSyncManager.SyncResult) {
+        when (result) {
+            is GamesSyncManager.SyncResult.Success ->
+                gamesStatus.setText(R.string.games_sync_success)
+            is GamesSyncManager.SyncResult.Error ->
+                gamesStatus.text = getString(R.string.games_sync_error, result.message(this@CloudActivity))
+            is GamesSyncManager.SyncResult.Conflict -> {
+                gamesStatus.visibility = View.GONE
+                showGamesConflictDialog(result.local, result.remote)
+            }
         }
     }
 
@@ -324,10 +335,11 @@ class CloudActivity : ThemedActivity() {
             view.findViewById<TextView>(dateId).text = formatDate(file.lastModified)
 
             val clicker = file.clicker
+            val none = getString(R.string.cloud_value_none)
             view.findViewById<TextView>(atomsId).text =
-                clicker?.let { formatLayeredNumber(it.atoms) } ?: "—"
-            view.findViewById<TextView>(godId).text = clicker?.godFingerLevel?.toString() ?: "—"
-            view.findViewById<TextView>(starId).text = clicker?.starCoreLevel?.toString() ?: "—"
+                clicker?.let { formatLayeredNumber(it.atoms) } ?: none
+            view.findViewById<TextView>(godId).text = clicker?.godFingerLevel?.toString() ?: none
+            view.findViewById<TextView>(starId).text = clicker?.starCoreLevel?.toString() ?: none
 
             val elementCount = file.gacha?.copies?.count { it.value > 0 } ?: 0
             view.findViewById<TextView>(gachaId).text =
@@ -345,7 +357,7 @@ class CloudActivity : ThemedActivity() {
             remote
         )
 
-        fun resolve(chosen: GamesSyncFile) {
+        fun resolve(keepCloud: Boolean) {
             dialog.dismiss()
             if (isBusy) return
             scope.launch {
@@ -357,20 +369,18 @@ class CloudActivity : ThemedActivity() {
                 // Le clicker n'est pas au premier plan : sa boucle est arrêtée et sa partie
                 // déjà sauvegardée. S'il est resté ouvert derrière, il relira le disque
                 // en revenant (voir GamesSyncManager.restoreGeneration).
-                val result = GamesSyncManager.resolveConflict(chosen)
+                // NonCancellable : quitter l'écran ne laisse pas une partie à moitié appliquée.
+                val result = withContext(NonCancellable) { GamesSyncManager.resolveConflict(keepCloud, remote) }
 
                 isBusy = false
                 btnSyncGames.isEnabled = true
-                gamesStatus.text = when (result) {
-                    is GamesSyncManager.SyncResult.Error -> getString(R.string.games_sync_error, result.message(this@CloudActivity))
-                    else -> getString(R.string.games_sync_success)
-                }
+                showGamesResult(result)
                 loadInventory()
             }
         }
 
-        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_local).setOnClickListener { resolve(local) }
-        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_remote).setOnClickListener { resolve(remote) }
+        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_local).setOnClickListener { resolve(keepCloud = false) }
+        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_remote).setOnClickListener { resolve(keepCloud = true) }
 
         dialog.setContentView(view)
         dialog.show()
@@ -378,20 +388,20 @@ class CloudActivity : ThemedActivity() {
 
     /** Notation courte des grands nombres du clicker (k, M, G, puis exposant). */
     private fun formatLayeredNumber(n: LayeredNumberData): String {
-        if (n.sign == 0) return "0"
+        if (n.sign == 0) return getString(R.string.cloud_number_plain, 0.0)
         val prefix = if (n.sign < 0) "-" else ""
         return when (n.layer) {
             0 -> {
                 val exp = n.exponent.toLong()
                 when {
-                    exp < 3  -> String.format("%.0f", n.mantissa * Math.pow(10.0, n.exponent))
-                    exp < 6  -> String.format("%.2fk", n.mantissa * Math.pow(10.0, n.exponent - 3))
-                    exp < 9  -> String.format("%.2fM", n.mantissa * Math.pow(10.0, n.exponent - 6))
-                    exp < 12 -> String.format("%.2fG", n.mantissa * Math.pow(10.0, n.exponent - 9))
-                    else     -> String.format("%.3fe%d", n.mantissa, exp)
+                    exp < 3  -> getString(R.string.cloud_number_plain, n.mantissa * Math.pow(10.0, n.exponent))
+                    exp < 6  -> getString(R.string.cloud_number_thousands, n.mantissa * Math.pow(10.0, n.exponent - 3))
+                    exp < 9  -> getString(R.string.cloud_number_millions, n.mantissa * Math.pow(10.0, n.exponent - 6))
+                    exp < 12 -> getString(R.string.cloud_number_billions, n.mantissa * Math.pow(10.0, n.exponent - 9))
+                    else     -> getString(R.string.cloud_number_exponent, n.mantissa, exp)
                 }.let { prefix + it }
             }
-            else -> "${prefix}e(e${String.format("%.1f", n.value)})"
+            else -> prefix + getString(R.string.cloud_number_layered, n.value)
         }
     }
 
@@ -404,9 +414,12 @@ class CloudActivity : ThemedActivity() {
             val report = CloudInventory.load(this@CloudActivity)
             setBusy(false, null)
             if (report == null) {
-                toast(getString(R.string.cloud_delete_failed))
+                // Pas un cloud vide : on n'en sait rien. Le total ne dit plus « Lecture du cloud… ».
+                usageTotal.setText(R.string.cloud_load_failed)
+                toast(getString(R.string.cloud_load_failed))
                 return@launch
             }
+            lastReport = report
             renderInventory(report)
         }
     }
@@ -617,6 +630,11 @@ class CloudActivity : ThemedActivity() {
                         val result = CloudSyncManager.deleteAllCloudData()
                         setBusy(false, null)
                         if (result.success) {
+                            // Les projets créatifs oublient qu'ils étaient sur le cloud : sinon leur
+                            // pastille mentirait, et ils ne sauraient pas qu'il faut les republier.
+                            lastReport?.let { report ->
+                                CloudProjectSync.forgetFiles(this@CloudActivity, report.categories.flatMap { it.files })
+                            }
                             toast(getString(R.string.cloud_deleted, result.deletedFilesCount))
                         } else {
                             toast(getString(R.string.cloud_delete_failed))

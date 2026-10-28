@@ -15,12 +15,23 @@ import kotlin.math.*
  */
 object SphereRenderer {
 
+    /** Texture équirectangulaire déjà extraite en pixels : lue une fois, pas à chaque rendu. */
+    class Texture(val pixels: IntArray, val width: Int, val height: Int) {
+        companion object {
+            fun from(bitmap: Bitmap): Texture {
+                val pixels = IntArray(bitmap.width * bitmap.height)
+                bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+                return Texture(pixels, bitmap.width, bitmap.height)
+            }
+        }
+    }
+
     /**
      * Rend la Terre comme une sphère texturée depuis le point de vue donné.
      * Si une texture de nuit est fournie, elle est utilisée côté ombre (lumières des villes).
      *
-     * @param texture      Bitmap équirectangulaire de jour
-     * @param nightTexture Bitmap équirectangulaire de nuit (lumières des villes), ou null
+     * @param texture      Texture équirectangulaire de jour
+     * @param nightTexture Texture équirectangulaire de nuit (lumières des villes), ou null
      * @param snap         Snapshot astronomique
      * @param right        Vecteur "droite" de la caméra (coordonnées écliptiques)
      * @param up           Vecteur "haut" de la caméra
@@ -28,8 +39,8 @@ object SphereRenderer {
      * @param radiusPx     Rayon de la sphère en pixels
      */
     fun renderEarth(
-        texture: Bitmap,
-        nightTexture: Bitmap?,
+        texture: Texture,
+        nightTexture: Texture?,
         snap: AstronomyCalculator.AstroSnapshot,
         right: AstronomyCalculator.Vec3,
         up: AstronomyCalculator.Vec3,
@@ -41,19 +52,12 @@ object SphereRenderer {
         val bmpW = texture.width
         val bmpH = texture.height
 
-        val dayPixels = IntArray(bmpW * bmpH)
-        texture.getPixels(dayPixels, 0, bmpW, 0, 0, bmpW, bmpH)
+        val dayPixels = texture.pixels
 
         // Texture de nuit (peut avoir une résolution différente)
-        val nightPixels: IntArray?
-        val nW: Int; val nH: Int
-        if (nightTexture != null) {
-            nightPixels = IntArray(nightTexture.width * nightTexture.height)
-            nightTexture.getPixels(nightPixels, 0, nightTexture.width, 0, 0, nightTexture.width, nightTexture.height)
-            nW = nightTexture.width; nH = nightTexture.height
-        } else {
-            nightPixels = null; nW = bmpW; nH = bmpH
-        }
+        val nightPixels: IntArray? = nightTexture?.pixels
+        val nW = nightTexture?.width ?: bmpW
+        val nH = nightTexture?.height ?: bmpH
 
         val outPixels = IntArray(size * size) { Color.TRANSPARENT }
 
@@ -170,7 +174,7 @@ object SphereRenderer {
      * La Lune est en rotation synchrone : la même face est toujours dirigée vers la Terre.
      */
     fun renderMoon(
-        texture: Bitmap,
+        texture: Texture,
         snap: AstronomyCalculator.AstroSnapshot,
         right: AstronomyCalculator.Vec3,
         up: AstronomyCalculator.Vec3,
@@ -181,8 +185,7 @@ object SphereRenderer {
         val bmpW = texture.width
         val bmpH = texture.height
 
-        val texPixels = IntArray(bmpW * bmpH)
-        texture.getPixels(texPixels, 0, bmpW, 0, 0, bmpW, bmpH)
+        val texPixels = texture.pixels
 
         val outPixels = IntArray(size * size) { Color.TRANSPARENT }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Blackjack widget -->
+    <string name="blackjack_widget_title">♠ BlackJack</string>
+    <string name="blackjack_widget_deal">DEAL ▶</string>
+    <string name="blackjack_widget_bet_free">FREE +</string>
+    <string name="blackjack_widget_bet">⚛%1$d +</string>
+    <string name="blackjack_widget_gain">+%1$d ⚛</string>
+    <string name="blackjack_widget_bj_gain">BJ!\n+%1$d ⚛</string>
+    <string name="blackjack_widget_loss">-%1$d ⚛</string>
+
+    <!-- Chess widget -->
+    <string name="chess_widget_stalemate">Stalemate!</string>
+    <string name="chess_widget_draw">Draw!</string>
+    <string name="chess_widget_checkmate">Checkmate!</string>
+    <string name="chess_widget_checkmate_defeat">Checkmate •\nDefeat</string>
+    <string name="chess_widget_checkmate_victory">Checkmate •\nVictory</string>
+
+    <!-- Widget titles -->
+    <string name="solitaire_widget_title">♠ Solitaire</string>
+    <string name="pipetap_widget_title">⬡ PipeTap</string>
+
+    <!-- Home screen audio widget -->
+    <string name="music_widget_radio_label">Radio</string>
+    <string name="music_widget_midi_label">MIDI</string>
+    <string name="music_widget_badge_radio">RADIO</string>
+    <string name="music_widget_badge_midi">MIDI</string>
+</resources>

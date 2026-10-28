@@ -21,6 +21,13 @@ class GachaTicketRepository(context: Context) {
 
     suspend fun awardTickets(nowMs: Long): GachaTicketStateEntity {
         val current = load()
+        // Horloge reculée : on repart de maintenant au lieu de bloquer les tickets jusqu'à
+        // ce que l'heure rattrape l'ancien horodatage.
+        if (current.lastTicketAwardMs > nowMs) {
+            val rearmed = current.copy(lastTicketAwardMs = nowMs)
+            save(rearmed)
+            return rearmed
+        }
         val elapsedMs = if (current.lastTicketAwardMs > 0L) nowMs - current.lastTicketAwardMs else 0L
         val hoursElapsed = (elapsedMs / (60 * 60 * 1000L)).toInt()
         if (hoursElapsed <= 0) return current

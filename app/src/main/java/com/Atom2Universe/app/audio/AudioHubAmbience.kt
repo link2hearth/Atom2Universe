@@ -5,24 +5,37 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.os.SystemClock
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
-/** Décor dans l'espace réellement libre : ne participe ni au défilement ni aux interactions. */
-class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDecoration() {
+/**
+ * Décor dans l'espace réellement libre, dessiné dans sa propre vue sous la liste : il s'anime
+ * sans redessiner les cartes, et ne participe ni au défilement ni aux interactions.
+ */
+class AudioHubAmbience(private val recycler: RecyclerView) : View(recycler.context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
-    private val density = recycler.resources.displayMetrics.density
+    private val density = resources.displayMetrics.density
     private val colors = intArrayOf(0xFFB59AFF.toInt(), 0xFF66D6EF.toInt(),
         0xFFEABD85.toInt(), 0xFF74D7BE.toInt(), 0xFFDD8FAB.toInt())
     private var active = false
     private var phase = 0f
+    /** Haut de la zone libre dessinée en dernier (NaN : pas de décor). */
+    private var drawnTop = Float.NaN
 
-    // Le décor bouge lentement (un tour en 24 s) : 30 images/s suffisent, au lieu de
-    // redessiner toute la liste à la cadence de l'écran (120 Hz sur la tablette).
+    // La liste a été redessinée (défilement, animation, mise en page) : le décor ne suit que si sa place a changé.
+    private val listWatcher = object : RecyclerView.ItemDecoration() {
+        override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+            if (freeTop().toBits() != drawnTop.toBits()) invalidate()
+        }
+    }
+
+    // Le décor bouge lentement (un tour en 24 s) : 30 images/s suffisent.
     private var running = false
     private var startUptimeMs = 0L
     private val tick = object : Runnable {
@@ -30,64 +43,91 @@ class AudioHubAmbience(private val recycler: RecyclerView) : RecyclerView.ItemDe
             if (!running) return
             val elapsed = (SystemClock.uptimeMillis() - startUptimeMs) % PERIOD_MS
             phase = (elapsed / PERIOD_MS.toFloat()) * (2 * PI).toFloat()
-            recycler.invalidate()
-            recycler.postDelayed(this, FRAME_MS)
+            invalidate()
+            postDelayed(this, FRAME_MS)
         }
     }
 
-    private fun startAnimation() {
+    init {
+        // Mêmes limites que la liste, juste en dessous d'elle
+        val layout = recycler.parent as ConstraintLayout
+        val params = ConstraintLayout.LayoutParams(0, 0).apply {
+            topToTop = recycler.id
+            bottomToBottom = recycler.id
+            startToStart = recycler.id
+            endToEnd = recycler.id
+        }
+        isClickable = false
+        isFocusable = false
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        layout.addView(this, layout.indexOfChild(recycler), params)
+        recycler.addItemDecoration(listWatcher)
+    }
+
+    private fun startTicking() {
         if (running) return
         running = true
         // Reprend là où le décor s'était arrêté
         startUptimeMs = SystemClock.uptimeMillis() - (phase / (2 * PI).toFloat() * PERIOD_MS).toLong()
-        recycler.postDelayed(tick, FRAME_MS)
+        postDelayed(tick, FRAME_MS)
     }
 
-    private fun stopAnimation() {
+    private fun stopTicking() {
         running = false
-        recycler.removeCallbacks(tick)
+        removeCallbacks(tick)
     }
 
     fun setActive(value: Boolean) {
         active = value
-        if (!value) stopAnimation()
-        recycler.invalidate()
+        if (!value) stopTicking()
+        invalidate()
     }
 
     fun dispose() {
-        stopAnimation()
-        recycler.removeItemDecoration(this)
+        stopTicking()
+        recycler.removeItemDecoration(listWatcher)
     }
 
-    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        // Le décor disparaît si la liste défile, ou si toutes les tuiles ne tiennent pas à l'écran.
-        val count = parent.adapter?.itemCount ?: 0
-        val last = parent.findViewHolderForAdapterPosition(count - 1)?.itemView
-        if (count == 0 || last == null || parent.canScrollVertically(1) || parent.canScrollVertically(-1)) {
-            stopAnimation()
-            return
+    /**
+     * Haut de l'espace libre sous les tuiles, dans les coordonnées de la liste ; NaN s'il n'y a pas de
+     * décor : la liste défile, toutes les tuiles ne tiennent pas à l'écran, ou la place manque.
+     */
+    private fun freeTop(): Float {
+        val list = recycler
+        val count = list.adapter?.itemCount ?: 0
+        val last = list.findViewHolderForAdapterPosition(count - 1)?.itemView
+        if (count == 0 || last == null || list.canScrollVertically(1) || list.canScrollVertically(-1)) {
+            return Float.NaN
         }
         var bottom = 0f
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
+        for (i in 0 until list.childCount) {
+            val child = list.getChildAt(i)
             bottom = maxOf(bottom, child.bottom + child.translationY)
         }
         val top = bottom + 24f * density
-        val available = parent.height - parent.paddingBottom - top
-        if (available < 140f * density) {
-            stopAnimation()
+        val available = list.height - list.paddingBottom - top
+        return if (available < 140f * density) Float.NaN else top
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        val top = freeTop()
+        drawnTop = top
+        if (top.isNaN()) {
+            stopTicking()
             return
         }
+        val list = recycler
+        val available = list.height - list.paddingBottom - top
         if (active && ValueAnimator.areAnimatorsEnabled()) {
-            startAnimation()
+            startTicking()
         } else {
-            stopAnimation()
+            stopTicking()
         }
 
         canvas.save()
-        canvas.clipRect(0f, top, parent.width.toFloat(), top + available)
+        canvas.clipRect(0f, top, list.width.toFloat(), top + available)
         canvas.translate(0f, top)
-        val w = parent.width.toFloat()
+        val w = list.width.toFloat()
         val h = available
         val unit = min(w / 620f, h / 370f)
 

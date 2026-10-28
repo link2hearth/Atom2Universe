@@ -19,8 +19,11 @@ import kotlin.math.*
  * Vue Canvas 2D qui affiche la Terre et la Lune avec rendu sphérique réel.
  *
  * Deux executors séparés :
- *  - renderExecutor : rendu sphérique pixel par pixel (SphereRenderer)
- *  - networkExecutor : téléchargements HTTP (photo EPIC, texture sans nuages)
+ *  - renderExecutor : chargement des textures puis rendu sphérique pixel par pixel (SphereRenderer)
+ *  - networkExecutor : téléchargements HTTP (photo EPIC)
+ *
+ * Rien n'est chargé ni rendu tant que la vue n'est pas visible à l'écran : un rendu demandé
+ * entre-temps est fait à la réapparition.
  */
 class EarthMoonCanvasView @JvmOverloads constructor(
     context: Context,
@@ -40,6 +43,8 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val ORBIT_DASH_STEPS = 48
+
         data class LocationPreset(@StringRes val nameRes: Int, val latDeg: Double, val lonDeg: Double)
 
         val LOCATION_PRESETS = listOf(
@@ -67,13 +72,13 @@ class EarthMoonCanvasView @JvmOverloads constructor(
         )
     }
 
-    // ── Textures sources (équirectangulaires) ───────────────────────────────
-    private var earthTexture: Bitmap? = null
-    private var earthNightTexture: Bitmap? = null
-    private var moonTexture: Bitmap? = null
+    // ── Textures sources (équirectangulaires), chargées sur renderExecutor au premier rendu ──
+    @Volatile private var earthTexture: SphereRenderer.Texture? = null
+    @Volatile private var earthNightTexture: SphereRenderer.Texture? = null
+    @Volatile private var moonTexture: SphereRenderer.Texture? = null
 
-    // ── Texture sans nuages (assets/textures/earth_clear.jpg) ───────────────
-    private var clearEarthTexture: Bitmap? = null
+    // ── Texture sans nuages (assets/textures/earth_clear.jpg), seulement si l'option est utilisée ──
+    @Volatile private var clearEarthTexture: SphereRenderer.Texture? = null
 
     // ── Cache photo NASA EPIC ────────────────────────────────────────────────
     private var epicBitmap: Bitmap? = null
@@ -95,36 +100,44 @@ class EarthMoonCanvasView @JvmOverloads constructor(
 
     // ── Vue caméra ───────────────────────────────────────────────────────────
     var cameraView: CameraView = CameraView.FROM_SUN
-        set(value) { field = value; triggerRender() }
+        set(value) { if (field == value) return; field = value; triggerRender(); updateOrbitAnimation() }
 
     // ── Mode Terre seule ─────────────────────────────────────────────────────
     var showMoon: Boolean = true
-        set(value) { field = value; triggerRender(); updateOrbitAnimation() }
+        set(value) { if (field == value) return; field = value; triggerRender(); updateOrbitAnimation() }
 
     // ── Mode sans nuages ─────────────────────────────────────────────────────
     var showClouds: Boolean = true
-        set(value) { field = value; triggerRender() }
+        set(value) { if (field == value) return; field = value; triggerRender() }
 
     // ── Ligne de terminateur ─────────────────────────────────────────────────
     var showTerminator: Boolean = true
-        set(value) { field = value; triggerRender() }
+        set(value) { if (field == value) return; field = value; triggerRender() }
 
     // ── Fond avec étoiles ────────────────────────────────────────────────────
     var drawBackground: Boolean = true
 
     // ── Multiplicateur distance Lune ─────────────────────────────────────────
     var moonDistanceMultiplier: Float = 1.3f
-        set(value) { field = value; triggerRender() }
+        set(value) { if (field == value) return; field = value; triggerRender() }
 
     // ── Échelle Terre personnalisée (0f = automatique) ───────────────────────
     var earthScaleOverride: Float = 0f
-        set(value) { field = value; triggerRender() }
+        set(value) { if (field == value) return; field = value; triggerRender() }
 
     // ── Localisation fixe (pour CameraView.FIXED_LOCATION) ──────────────────
     var fixedLatDeg: Double = 51.5  // Greenwich par défaut
-        set(value) { field = value; triggerRender() }
+        set(value) {
+            if (field == value) return
+            field = value
+            if (cameraView == CameraView.FIXED_LOCATION) triggerRender()
+        }
     var fixedLonDeg: Double = 0.0
-        set(value) { field = value; triggerRender() }
+        set(value) {
+            if (field == value) return
+            field = value
+            if (cameraView == CameraView.FIXED_LOCATION) triggerRender()
+        }
 
     // ── Client HTTP (OkHttp, réutilisé pour toutes les requêtes) ────────────
     private val httpClient: OkHttpClient by lazy {
@@ -141,6 +154,12 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     private var pendingRender:  Future<*>? = null
     private var pendingNetwork: Future<*>? = null
 
+    // Plusieurs réglages modifiés d'affilée ne donnent qu'un rendu
+    private var renderRequested = false
+    private val renderRunnable = Runnable { renderRequested = false; startRender() }
+    // Rendu demandé pendant que la vue était cachée : fait à la réapparition
+    private var renderPending = false
+
     // ── Peints ───────────────────────────────────────────────────────────────
     private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val orbitPaint  = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -149,26 +168,47 @@ class EarthMoonCanvasView @JvmOverloads constructor(
         strokeWidth = 1.2f
     }
     private val starPaint    = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val epicPlaceholderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#0D1B2A")
+    }
+    private val epicPlaceholderRingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = Color.parseColor("#2A4A7A")
+        strokeWidth = 2f
+    }
+    private val epicRect = RectF()
 
     // ── Animation orbite lunaire ─────────────────────────────────────────────
+    // Tracé de l'orbite mis en cache : recalculé seulement quand la vue, la date ou la taille change.
+    private val orbitPath = Path()
+    private var orbitPathValid = false
+    // Pointillés précalculés par pas de 0,25 px sur la période 5 + 7 = 12 px
+    private val orbitDashEffects = Array(ORBIT_DASH_STEPS) { DashPathEffect(floatArrayOf(5f, 7f), it * 0.25f) }
     private var orbitPulseAlpha = 80
-    private var orbitDashPhase  = 0f
+    private var orbitDashStep   = 0
     private val orbitAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
         duration = 2500
         repeatCount = ValueAnimator.INFINITE
         interpolator = null
         addUpdateListener { anim ->
             val t = anim.animatedValue as Float
-            orbitPulseAlpha = (30 + 140 * (0.5f + 0.5f * sin(PI * 2 * t)).toFloat()).toInt()
-            orbitDashPhase  = t * 24f
-            if (showMoon) invalidate()
+            val alpha = (30 + 140 * (0.5f + 0.5f * sin(PI * 2 * t)).toFloat()).toInt()
+            val step = (t * 96f).toInt() % ORBIT_DASH_STEPS
+            if (alpha != orbitPulseAlpha || step != orbitDashStep) {
+                orbitPulseAlpha = alpha
+                orbitDashStep = step
+                if (showMoon) invalidate()
+            }
         }
     }
-    // L'orbite n'anime que si elle est dessinée et que la vue est à l'écran.
-    private val orbitGate = VisibleWindowGate(this) { updateOrbitAnimation() }
+    // L'orbite n'anime et les sphères ne se rendent que si la vue est à l'écran.
+    private val visibleGate = VisibleWindowGate(this) { active ->
+        updateOrbitAnimation()
+        if (active && renderPending) triggerRender()
+    }
 
     private fun updateOrbitAnimation() {
-        if (orbitGate.isActive && showMoon) {
+        if (visibleGate.isActive && showMoon && cameraView != CameraView.EPIC_REALTIME) {
             if (!orbitAnimator.isStarted) orbitAnimator.start() else orbitAnimator.resume()
         } else if (orbitAnimator.isStarted) {
             orbitAnimator.pause()
@@ -182,28 +222,30 @@ class EarthMoonCanvasView @JvmOverloads constructor(
         floatArrayOf(rng.nextFloat(), rng.nextFloat(), 0.5f + rng.nextFloat() * 1.5f)
     }
 
-    init {
-        loadTextures()
+    // ── Chargement des textures (sur renderExecutor) ─────────────────────────
+
+    private fun ensureTextures(needClear: Boolean) {
+        val assets = context.assets
+        if (earthTexture == null)      earthTexture      = loadTexture(assets, "textures/earth.jpg",       512)
+        if (earthNightTexture == null) earthNightTexture = loadTexture(assets, "textures/earth_night.jpg", 512)
+        if (moonTexture == null)       moonTexture       = loadTexture(assets, "textures/moon.jpg",        256)
+        // Texture sans nuages optionnelle — place earth_clear.jpg dans assets/textures/
+        if (needClear && clearEarthTexture == null) {
+            clearEarthTexture = loadTexture(assets, "textures/earth_clear.jpg", 512)
+        }
     }
 
-    // ── Chargement des textures ──────────────────────────────────────────────
-
-    private fun loadTextures() {
-        try {
-            val assets = context.assets
-            earthTexture      = loadScaled(assets, "textures/earth.jpg",       512)
-            earthNightTexture = loadScaled(assets, "textures/earth_night.jpg", 512)
-            moonTexture       = loadScaled(assets, "textures/moon.jpg",        256)
-            // Texture sans nuages optionnelle — place earth_clear.jpg dans assets/textures/
-            clearEarthTexture = loadScaled(assets, "textures/earth_clear.jpg", 512)
-        } catch (_: Exception) { }
-
-        triggerRender()
-    }
-
-    private fun loadScaled(assets: android.content.res.AssetManager, path: String, maxSide: Int): Bitmap? {
+    /** Décode directement en taille réduite (inSampleSize), puis ramène à [maxSide]. */
+    private fun loadTexture(assets: android.content.res.AssetManager, path: String, maxSide: Int): SphereRenderer.Texture? {
         return try {
-            assets.open(path).use { BitmapFactory.decodeStream(it)?.let { bmp -> scaleDown(bmp, maxSide) } }
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
+            var sample = 1
+            while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxSide) sample *= 2
+            val options = BitmapFactory.Options().apply { inSampleSize = sample }
+            val raw = assets.open(path).use { BitmapFactory.decodeStream(it, null, options) } ?: return null
+            val scaled = scaleDown(raw, maxSide)
+            SphereRenderer.Texture.from(scaled).also { scaled.recycle() }
         } catch (_: Exception) { null }
     }
 
@@ -225,9 +267,21 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     // ── Déclenchement du rendu ───────────────────────────────────────────────
 
     private fun triggerRender() {
+        orbitPathValid = false
+        if (renderRequested) return
+        renderRequested = true
+        post(renderRunnable)
+    }
+
+    private fun startRender() {
         val view = cameraView
         val w = width; val h = height
         if (w <= 0 || h <= 0 || renderExecutor.isShutdown) return
+        if (!visibleGate.isActive) {
+            renderPending = true
+            return
+        }
+        renderPending = false
 
         pendingRender?.cancel(false)
 
@@ -245,22 +299,25 @@ class EarthMoonCanvasView @JvmOverloads constructor(
 
         val snap = snapshot ?: return
 
-        // Texture du jour : sans nuages si disponible et option activée
-        val earthTex = if (!showClouds) clearEarthTexture ?: earthTexture else earthTexture
-        val earthNightTex = earthNightTexture
-        val moonTex = moonTexture
+        val useClear = !showClouds
+        val withMoon = showMoon
+        val terminator = showTerminator
+        val moonMultiplier = moonDistanceMultiplier
 
-        val earthScale = if (earthScaleOverride > 0f) earthScaleOverride else if (showMoon) 0.25f else 0.46f
+        val earthScale = if (earthScaleOverride > 0f) earthScaleOverride else if (withMoon) 0.25f else 0.46f
         val earthR = (minOf(w, h) * earthScale).toInt().coerceAtLeast(4)
         val moonR  = (earthR * 0.273f).toInt().coerceAtLeast(2)
 
         pendingRender = renderExecutor.submit {
+            ensureTextures(useClear)
+            // Texture du jour : sans nuages si disponible et option activée
+            val earthTex = if (useClear) clearEarthTexture ?: earthTexture else earthTexture
             val (right, up, forward) = cameraVectors(snap, view)
 
             val earth = earthTex?.let {
-                SphereRenderer.renderEarth(it, earthNightTex, snap, right, up, forward, earthR, showTerminator)
+                SphereRenderer.renderEarth(it, earthNightTexture, snap, right, up, forward, earthR, terminator)
             }
-            val moon = if (showMoon) moonTex?.let {
+            val moon = if (withMoon) moonTexture?.let {
                 SphereRenderer.renderMoon(it, snap, right, up, forward, moonR)
             } else null
 
@@ -269,7 +326,7 @@ class EarthMoonCanvasView @JvmOverloads constructor(
             val mv = snap.moonPos.dot(up)
             val md = snap.moonPos.dot(forward)
             val cx = w / 2f; val cy = h / 2f
-            val orbitScale = minOf(w, h) * 0.42f * moonDistanceMultiplier
+            val orbitScale = minOf(w, h) * 0.42f * moonMultiplier
             val mx = cx + (mu / norm * orbitScale).toFloat()
             val my = cy - (mv / norm * orbitScale).toFloat()
             val inFront = md <= 0 || hypot(mx - cx, my - cy) > earthR * 0.85f
@@ -358,17 +415,17 @@ class EarthMoonCanvasView @JvmOverloads constructor(
             epicIsLoading = false
             triggerRender()
         }
-        orbitGate.update()
+        visibleGate.update()
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        if (isAttachedToWindow) orbitGate.update()
+        if (isAttachedToWindow) visibleGate.update()
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
-        if (isAttachedToWindow) orbitGate.update()
+        if (isAttachedToWindow) visibleGate.update()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -377,7 +434,7 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        orbitGate.detach()
+        visibleGate.detach()
         super.onDetachedFromWindow()
         orbitAnimator.cancel()
         pendingRender?.cancel(true)
@@ -424,25 +481,17 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     private fun drawEpicImage(canvas: Canvas, cx: Float, cy: Float, radius: Float) {
         val bmp = epicBitmap
         if (bmp == null) {
-            canvas.drawCircle(cx, cy, radius, Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#0D1B2A")
-            })
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                style = Paint.Style.STROKE
-                color = Color.parseColor("#2A4A7A")
-                strokeWidth = 2f
-            }.also {
-                canvas.drawCircle(cx, cy, radius * 0.65f, it)
-                canvas.drawCircle(cx, cy, radius * 0.35f, it)
-            }
+            canvas.drawCircle(cx, cy, radius, epicPlaceholderPaint)
+            canvas.drawCircle(cx, cy, radius * 0.65f, epicPlaceholderRingPaint)
+            canvas.drawCircle(cx, cy, radius * 0.35f, epicPlaceholderRingPaint)
             return
         }
         epicClipPath.reset()
         epicClipPath.addCircle(cx, cy, radius, Path.Direction.CW)
         canvas.save()
         canvas.clipPath(epicClipPath)
-        canvas.drawBitmap(bmp, null,
-            RectF(cx - radius, cy - radius, cx + radius, cy + radius), bitmapPaint)
+        epicRect.set(cx - radius, cy - radius, cx + radius, cy + radius)
+        canvas.drawBitmap(bmp, null, epicRect, bitmapPaint)
         canvas.restore()
     }
 
@@ -477,23 +526,33 @@ class EarthMoonCanvasView @JvmOverloads constructor(
         canvas: Canvas, snap: AstronomyCalculator.AstroSnapshot,
         cx: Float, cy: Float, orbitScale: Float
     ) {
+        if (!orbitPathValid) {
+            buildOrbitPath(snap, cx, cy, orbitScale)
+            orbitPathValid = true
+        }
+        orbitPaint.alpha = orbitPulseAlpha
+        orbitPaint.pathEffect = orbitDashEffects[orbitDashStep]
+        canvas.drawPath(orbitPath, orbitPaint)
+    }
+
+    private fun buildOrbitPath(
+        snap: AstronomyCalculator.AstroSnapshot,
+        cx: Float, cy: Float, orbitScale: Float
+    ) {
         val (right, up, _) = cameraVectors(snap, cameraView)
         val Om = snap.moonAscendingNodeRad; val i = snap.moonInclinationRad
         val e1 = AstronomyCalculator.Vec3(cos(Om), sin(Om), 0.0)
         val e2 = AstronomyCalculator.Vec3(-cos(i) * sin(Om), cos(i) * cos(Om), sin(i))
         val moonDist = snap.moonPos.length(); val norm = 384400.0
-        val path = Path()
+        orbitPath.reset()
         for (step in 0..64) {
             val angle = step * 2.0 * PI / 64.0
             val p = e1 * (cos(angle) * moonDist) + e2 * (sin(angle) * moonDist)
             val pu = (p.dot(right) / norm * orbitScale + cx).toFloat()
             val pv = (-(p.dot(up)  / norm * orbitScale) + cy).toFloat()
-            if (step == 0) path.moveTo(pu, pv) else path.lineTo(pu, pv)
+            if (step == 0) orbitPath.moveTo(pu, pv) else orbitPath.lineTo(pu, pv)
         }
-        path.close()
-        orbitPaint.alpha = orbitPulseAlpha
-        orbitPaint.pathEffect = DashPathEffect(floatArrayOf(5f, 7f), orbitDashPhase)
-        canvas.drawPath(path, orbitPaint)
+        orbitPath.close()
     }
 
     // ── Calcul des vecteurs caméra ───────────────────────────────────────────

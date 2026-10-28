@@ -56,6 +56,10 @@ class SolitaireWidgetView @JvmOverloads constructor(
     private var isGameWon = false
 
     private val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    // Écritures en base l'une après l'autre : une ancienne ne passe jamais après une récente
+    private var saveJob: Job? = null
+    // Chrono de SolitaireActivity, recopié tel quel : le widget ne le fait pas tourner
+    private var savedElapsedMs = 0L
 
     // ── Zoom ──────────────────────────────────────────────────────────────────
     private val minScale = 0.4f
@@ -73,6 +77,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag du widget (header uniquement) ────────────────────────────────────
@@ -124,6 +129,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
         // Header : drag uniquement (pas d'ouverture d'activité au tap)
         val headerArea = findViewById<FrameLayout>(R.id.solitaire_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     // ── Pinch-zoom : intercepter les gestes 2 doigts avant les enfants ────────
@@ -177,10 +183,12 @@ class SolitaireWidgetView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
             MotionEvent.ACTION_CANCEL -> {
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -192,6 +200,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
         resetOverlay.visibility = GONE
         isGameWon = false
         moves = 0
+        savedElapsedMs = 0L
         game.newGame()
         solitaireView.loadNewCardBack()
         solitaireView.refresh()
@@ -322,21 +331,23 @@ class SolitaireWidgetView @JvmOverloads constructor(
             solitaireView.startVictoryAnimation()
             NeutrinoRepository(context).addBalance(20)
             GameStatsRepository(context).recordSolitaireWon()
-            ioScope.launch {
-                runCatching { SolitaireDatabase.getInstance(context).solitaireDao().deleteSave() }
-            }
+            queueWrite { SolitaireDatabase.getInstance(context).solitaireDao().deleteSave() }
         }
     }
 
     // ── Persistance ──────────────────────────────────────────────────────────
     private fun persistGame() {
         if (isGameWon) return
-        val capturedMoves = moves
-        ioScope.launch {
-            runCatching {
-                val save = SolitaireSaveEntity.fromGame(game, capturedMoves, 0L)
-                SolitaireDatabase.getInstance(context).solitaireDao().saveSave(save)
-            }
+        // Sérialisée ici, sur le fil UI : la partie continue de changer pendant l'écriture
+        val save = SolitaireSaveEntity.fromGame(game, moves, savedElapsedMs)
+        queueWrite { SolitaireDatabase.getInstance(context).solitaireDao().saveSave(save) }
+    }
+
+    private fun queueWrite(write: suspend () -> Unit) {
+        val previous = saveJob
+        saveJob = ioScope.launch {
+            previous?.join()
+            runCatching { write() }
         }
     }
 
@@ -345,6 +356,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
         resultOverlay.visibility = GONE
         resetOverlay.visibility = GONE
         scope.launch {
+            saveJob?.join()
             val save = runCatching {
                 SolitaireDatabase.getInstance(context).solitaireDao().getSave()
             }.getOrNull()
@@ -353,6 +365,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
                 if (save != null && !save.isWon) {
                     save.restoreGame(game)
                     moves = save.moves
+                    savedElapsedMs = save.elapsedTimeMs
                     isGameWon = false
                     solitaireView.loadNewCardBack()  // charge un fond de carte aléatoire
                     solitaireView.game = game
@@ -361,6 +374,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
                     // Pas de sauvegarde → nouvelle partie et on la persiste
                     game.newGame()
                     moves = 0
+                    savedElapsedMs = 0L
                     isGameWon = false
                     solitaireView.loadNewCardBack()
                     solitaireView.game = game

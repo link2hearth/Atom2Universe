@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.crypto.clicker
 
 import com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber
+import kotlin.math.log10
 import kotlin.math.pow
 
 internal object FactoryEngine {
@@ -8,8 +9,12 @@ internal object FactoryEngine {
     private const val PRICE_SCALE = 1.35
 
     fun cost(type: FactoryType, currentCount: Int): LayeredNumber {
-        val price = type.basePrice * PRICE_SCALE.pow(currentCount)
-        return LayeredNumber(price)
+        val logPrice = log10(type.basePrice) + currentCount * log10(PRICE_SCALE)
+        // Petits prix : calcul direct, identique à avant ; au-delà, mantisse/exposant
+        // (un Double passerait à l'infini, donc à 0, vers 1e308).
+        if (logPrice < 15.0) return LayeredNumber(type.basePrice * PRICE_SCALE.pow(currentCount))
+        val exponent = kotlin.math.floor(logPrice)
+        return LayeredNumber.fromLayer0(10.0.pow(logPrice - exponent), exponent)
     }
 
     fun computeApcBonus(counts: Map<FactoryType, Int>): Double {

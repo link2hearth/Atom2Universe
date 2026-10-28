@@ -51,6 +51,12 @@ class GachaParticleView @JvmOverloads constructor(
     }
     private val starPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    // Dégradés de rayon 1 centrés sur l'origine, mis en cache par couleur : la position,
+    // la taille et l'intensité passent par le canvas et l'alpha du pinceau (pas d'allocation par image).
+    private val bloomShaders = HashMap<Int, RadialGradient>()
+    private val edgeShaders = HashMap<Int, RadialGradient>()
+    private val arcRect = android.graphics.RectF()
+
     data class Particle(
         val angle: Float, val speed: Float,
         val size: Float,  val color: Int,
@@ -80,6 +86,10 @@ class GachaParticleView @JvmOverloads constructor(
 
     companion object {
         private const val BASE_MS = 1500L
+
+        // La pluie finale s'arrête d'elle-même (fondu) : la scène figée n'est plus redessinée ensuite.
+        private const val FALLOUT_RAIN_S = 8f
+        private const val FALLOUT_FADE_S = 2f
 
         // Palette arc-en-ciel complète pour les particules de base
         private val RAINBOW = listOf(
@@ -311,6 +321,8 @@ class GachaParticleView @JvmOverloads constructor(
 
         if (rarity != GachaRarity.PRIMORDIAL && progress > bpe) {
             val ps = (progress - bpe) / (1f - bpe)
+            // Les tremblements (translate) restent limités à l'effet de rareté
+            canvas.save()
             when (rarity) {
                 GachaRarity.FUSION      -> drawFusion(canvas, cx, cy, w, h, ps)
                 GachaRarity.SUPERNOVA   -> drawSupernova(canvas, cx, cy, w, h, ps)
@@ -319,10 +331,12 @@ class GachaParticleView @JvmOverloads constructor(
                 GachaRarity.SYNTHETIQUE -> drawSynthetique(canvas, cx, cy, w, h, ps)
                 else -> {}
             }
+            canvas.restore()
         }
 
-        drawGravityFallout(canvas, w, h, progress, if (falloutActive) (SystemClock.uptimeMillis() - falloutStartMs) / 1000f else 0f)
-        if (falloutActive) postInvalidateOnAnimation()
+        val postEndSeconds = if (falloutActive) (SystemClock.uptimeMillis() - falloutStartMs) / 1000f else 0f
+        drawGravityFallout(canvas, w, h, progress, postEndSeconds)
+        if (falloutActive && postEndSeconds < FALLOUT_RAIN_S + FALLOUT_FADE_S) postInvalidateOnAnimation()
     }
 
     // ── COUCHE DE BASE ────────────────────────────────────────────────────────
@@ -932,14 +946,9 @@ class GachaParticleView @JvmOverloads constructor(
             val arcStep = 60f - ring * 8f
             val rotation = progress * (140f + ring * 65f) * ringSpeed
             var angle = rotation
+            arcRect.set(cx - ringRadius, cy - ringRadius, cx + ringRadius, cy + ringRadius)
             while (angle < rotation + 360f) {
-                val sr = android.graphics.RectF(
-                    cx - ringRadius,
-                    cy - ringRadius,
-                    cx + ringRadius,
-                    cy + ringRadius
-                )
-                canvas.drawArc(sr, angle, arcSweep, false, paint)
+                canvas.drawArc(arcRect, angle, arcSweep, false, paint)
                 angle += arcStep
             }
         }
@@ -951,7 +960,8 @@ class GachaParticleView @JvmOverloads constructor(
     private fun drawGravityFallout(canvas: Canvas, w: Float, h: Float, mainProgress: Float, postEndSeconds: Float) {
         val preFall = ((mainProgress - 0.45f) / 0.55f).coerceIn(0f, 1f)
         val postFall = if (falloutActive) (postEndSeconds * 0.14f).coerceIn(0f, 1f) else 0f
-        val alphaGlobal = ((preFall * 0.7f) + (postFall * 0.9f)).coerceIn(0f, 1f)
+        val fadeOut = if (falloutActive) (1f - (postEndSeconds - FALLOUT_RAIN_S) / FALLOUT_FADE_S).coerceIn(0f, 1f) else 1f
+        val alphaGlobal = ((preFall * 0.7f) + (postFall * 0.9f)).coerceIn(0f, 1f) * fadeOut
         if (alphaGlobal <= 0f) return
 
         val finalRarityCategory = blendColor(rarity.color, categoryColor, 0.62f)
@@ -981,30 +991,52 @@ class GachaParticleView @JvmOverloads constructor(
     private fun drawCenterBloom(canvas: Canvas, cx: Float, cy: Float, radius: Float, color: Int, intensity: Float) {
         if (radius <= 0f || intensity <= 0f) return
         val alpha = (255f * intensity.coerceIn(0f, 1f)).toInt()
-        paint2.shader = RadialGradient(
-            cx, cy, radius,
-            intArrayOf(withAlpha(color, alpha), withAlpha(color, (alpha * 0.42f).toInt()), Color.TRANSPARENT),
-            floatArrayOf(0f, 0.55f, 1f),
-            Shader.TileMode.CLAMP
-        )
+        if (alpha <= 0) return
+        val opaque = withAlpha(color, 255)
+        // L'aura de catégorie change de teinte pendant l'animation : cache borné
+        if (bloomShaders.size > 64 && opaque !in bloomShaders) bloomShaders.clear()
+        paint2.shader = bloomShaders.getOrPut(opaque) {
+            RadialGradient(
+                0f, 0f, 1f,
+                intArrayOf(opaque, withAlpha(opaque, 107), Color.TRANSPARENT),
+                floatArrayOf(0f, 0.55f, 1f),
+                Shader.TileMode.CLAMP
+            )
+        }
         paint2.style = Paint.Style.FILL
-        canvas.drawCircle(cx, cy, radius, paint2)
+        paint2.alpha = alpha
+        canvas.save()
+        canvas.translate(cx, cy)
+        canvas.scale(radius, radius)
+        canvas.drawCircle(0f, 0f, 1f, paint2)
+        canvas.restore()
         paint2.shader = null
     }
 
     private fun drawEdgeAura(canvas: Canvas, w: Float, h: Float, color: Int, intensity: Float) {
         if (intensity <= 0f) return
+        val alpha = (255f * intensity).toInt().coerceIn(0, 255)
+        if (alpha <= 0) return
         val edge = maxOf(w, h) * 0.75f
+        if (edge <= 0f) return
         val cx = w / 2f
         val cy = h / 2f
-        paint2.shader = RadialGradient(
-            cx, cy, edge,
-            intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, withAlpha(color, (255f * intensity).toInt())),
-            floatArrayOf(0f, 0.72f, 1f),
-            Shader.TileMode.CLAMP
-        )
+        val opaque = withAlpha(color, 255)
+        paint2.shader = edgeShaders.getOrPut(opaque) {
+            RadialGradient(
+                0f, 0f, 1f,
+                intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, opaque),
+                floatArrayOf(0f, 0.72f, 1f),
+                Shader.TileMode.CLAMP
+            )
+        }
         paint2.style = Paint.Style.FILL
-        canvas.drawRect(0f, 0f, w, h, paint2)
+        paint2.alpha = alpha
+        canvas.save()
+        canvas.translate(cx, cy)
+        canvas.scale(edge, edge)
+        canvas.drawRect(-cx / edge, -cy / edge, cx / edge, cy / edge, paint2)
+        canvas.restore()
         paint2.shader = null
     }
 

@@ -92,6 +92,10 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         private const val ETH_ENDPOINT_EUR = "/api/v3/ticker/price?symbol=ETHEUR"
         private const val EURUSD_URL = "https://api.frankfurter.app/latest?from=EUR&to=USD"
         private const val EURUSD_REFRESH_MS = 60 * 60 * 1000L // 1 heure
+        /** Durée d'une image des atomes de crit (~30 i/s). */
+        private const val CRIT_ATOM_FRAME_MS = 30L
+        // Un seul client pour toutes les instances de l'écran (pool de connexions et fils partagés).
+        private val httpClient: OkHttpClient by lazy { OkHttpClient() }
     }
 
     private var useEurCurrency = false
@@ -103,7 +107,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     private var refreshInterval: MainClickerRefreshInterval = MainClickerRefreshInterval.ONE_MIN
 
-    private val httpClient: OkHttpClient by lazy { OkHttpClient() }
     private val backgroundRepository: MainClickerRepository by lazy {
         val database = MainClickerDatabase.getInstance(applicationContext)
         MainClickerRepository.getInstance(database)
@@ -155,6 +158,19 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     /** La génération de restauration cloud que la partie en mémoire connaît déjà. */
     private var seenRestoreGeneration = 0L
+
+    /** Dernier solde transmis au Blackjack (affichage seul) : -1 = jamais transmis. */
+    private var lastBlackjackNeutrinos = -1
+
+    /** Toggles « + » du shop, lus une fois (et mis à jour au clic) plutôt qu'à chaque état. */
+    private val shopPlusEnabled = mutableMapOf<String, Boolean>()
+
+    /** Atome de crit : un seul moteur de dessin partagé par toutes les popups. */
+    private val critAtomRenderer by lazy { com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer() }
+
+    // Formatage du shop : créé une fois, pas à chaque état publié.
+    private val shopNumberFormat by lazy { java.text.NumberFormat.getNumberInstance(java.util.Locale.getDefault()) }
+    private var shopHasHadBigBang = false
 
     private lateinit var bannerViewCache: Map<String, Pair<View, View>>
 
@@ -622,7 +638,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                     if (shopDialog?.isShowing == true) {
                         updateShopViews(state)
                     }
-                    if (blackjackWidgetView.visibility == View.VISIBLE) {
+                    if (blackjackWidgetView.visibility == View.VISIBLE && state.neutrinos != lastBlackjackNeutrinos) {
+                        lastBlackjackNeutrinos = state.neutrinos
                         blackjackWidgetView.setNeutrinoBalance(state.neutrinos)
                     }
                 }
@@ -685,8 +702,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             clickerViewModel.startGameLoop()
         }
         startRefreshLoop()
-        startAstronomyLoop()
-        if (MainClickerPreferences.isCryptoEurUsdEnabled(this)) startEurUsdLoop()
+        if (MainClickerPreferences.isEarthWidgetEnabled(this)) startAstronomyLoop()
+        startEurUsdLoop()
         if (bannerExpanded) scheduleHideBanner()
     }
 
@@ -866,6 +883,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun showShopDialog() {
         if (shopDialog?.isShowing == true) return
         clickerViewModel.refreshNeutrinoBalance()
+        shopHasHadBigBang = clickerViewModel.getBigBangCount() > 0
         val view = layoutInflater.inflate(R.layout.view_clicker_shop, null)
 
         shopGodFingerLevelView  = view.findViewById(R.id.shop_god_finger_level)
@@ -1083,12 +1101,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val floorY   = rootView.height.toFloat() - sizePx
 
         val img = object : View(this) {
-            private val renderer = com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer()
             private val started = android.os.SystemClock.uptimeMillis()
             override fun onDraw(canvas: android.graphics.Canvas) {
-                renderer.draw(canvas, width / 2f, height / 2f, width.toFloat(), variant,
+                critAtomRenderer.draw(canvas, width / 2f, height / 2f, width.toFloat(), variant,
                     (android.os.SystemClock.uptimeMillis() - started) / 1000f)
-                if (isShown && windowVisibility == VISIBLE) postInvalidateOnAnimation()
+                // Le dessin de l'atome (petit) suit ~30 i/s ; le vol, porté par translation/rotation,
+                // reste fluide à chaque image.
+                if (isShown && windowVisibility == VISIBLE) postInvalidateDelayed(CRIT_ATOM_FRAME_MS)
             }
         }
         img.layoutParams = ViewGroup.LayoutParams(sizePx, sizePx)
@@ -1384,7 +1403,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR,
             com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST,
             com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON ->
-                String.format(java.util.Locale.US, "×%.2f", 1.0 + count * 0.20)
+                String.format(java.util.Locale.getDefault(), "×%.2f", 1.0 + count * 0.20)
         }
     }
 
@@ -1551,14 +1570,18 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
      */
     private fun bindShopPlusToggle(toggle: TextView?, upgradeId: String) {
         toggle ?: return
-        applyShopPlusToggleColor(toggle, MainClickerPreferences.isShopPlusEnabled(this, upgradeId))
+        applyShopPlusToggleColor(toggle, isShopPlusEnabled(upgradeId))
         toggle.setOnClickListener {
-            val next = !MainClickerPreferences.isShopPlusEnabled(this, upgradeId)
+            val next = !isShopPlusEnabled(upgradeId)
             MainClickerPreferences.setShopPlusEnabled(this, upgradeId, next)
+            shopPlusEnabled[upgradeId] = next
             applyShopPlusToggleColor(toggle, next)
             refreshShopPlusBadge()
         }
     }
+
+    private fun isShopPlusEnabled(upgradeId: String): Boolean =
+        shopPlusEnabled.getOrPut(upgradeId) { MainClickerPreferences.isShopPlusEnabled(this, upgradeId) }
 
     private fun applyShopPlusToggleColor(toggle: TextView, enabled: Boolean) {
         toggle.setTextColor(if (enabled) 0xFF22C55E.toInt() else uiPalette.tertiary)
@@ -1575,50 +1598,60 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
      * (doigt créateur, cœur d'étoile, usines). Pilote le badge "$+" du bandeau.
      */
     private fun computeShopPlusAffordable(state: ClickerGameState): Boolean {
-        if (MainClickerPreferences.isShopPlusEnabled(this, "godFinger") &&
+        if (isShopPlusEnabled("godFinger") &&
             state.atoms.greaterOrEqual(clickerViewModel.shopCost("godFinger", 1))) return true
-        if (MainClickerPreferences.isShopPlusEnabled(this, "starCore") &&
+        if (isShopPlusEnabled("starCore") &&
             state.atoms.greaterOrEqual(clickerViewModel.shopCost("starCore", 1))) return true
         for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
-            if (MainClickerPreferences.isShopPlusEnabled(this, type.name) &&
+            if (isShopPlusEnabled(type.name) &&
                 state.atoms.greaterOrEqual(clickerViewModel.factoryCost(type))) return true
         }
         return false
     }
 
     private fun styleShopPurchase(button: Button?, affordable: Boolean) {
-        button?.backgroundTintList = android.content.res.ColorStateList.valueOf(if (affordable) uiPalette.accent else uiPalette.raised)
-        button?.setTextColor(if (affordable) uiPalette.onAccent else uiPalette.secondary)
+        button ?: return
+        // Le shop est réécrit 10 fois/s : on ne retouche le bouton que si son état change.
+        if (button.tag == affordable) return
+        button.tag = affordable
+        button.backgroundTintList = android.content.res.ColorStateList.valueOf(if (affordable) uiPalette.accent else uiPalette.raised)
+        button.setTextColor(if (affordable) uiPalette.onAccent else uiPalette.secondary)
     }
+
+    /** Évite la mise en page qu'un setText relance même quand le texte n'a pas changé. */
+    private fun TextView?.setTextIfChanged(text: CharSequence) {
+        if (this != null && !android.text.TextUtils.equals(this.text, text)) this.text = text
+    }
+
     private fun updateShopViews(state: ClickerGameState) {
-        val fmt = java.text.NumberFormat.getNumberInstance(java.util.Locale.FRENCH)
+        val fmt = shopNumberFormat
 
         val godFingerCost = clickerViewModel.shopCost("godFinger", shopGodFingerMult)
-        shopGodFingerLevelView?.text = getString(R.string.clicker_shop_level, state.godFingerLevel)
-        shopGodFingerPriceView?.text = godFingerCost.toString()
+        shopGodFingerLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.godFingerLevel))
+        shopGodFingerPriceView.setTextIfChanged(godFingerCost.toString())
         styleShopPurchase(shopGodFingerBuyBtn, !godFingerCost.greaterThan(state.atoms))
 
         val starCoreCost = clickerViewModel.shopCost("starCore", shopStarCoreMult)
-        shopStarCoreLevelView?.text  = getString(R.string.clicker_shop_level, state.starCoreLevel)
-        shopStarCorePriceView?.text  = starCoreCost.toString()
+        shopStarCoreLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.starCoreLevel))
+        shopStarCorePriceView.setTextIfChanged(starCoreCost.toString())
         styleShopPurchase(shopStarCoreBuyBtn, !starCoreCost.greaterThan(state.atoms))
 
         val neutrinoTicketCost = clickerViewModel.neutrinoTicketCost()
-        shopNeutrinoTicketEffectView?.text = "$neutrinoTicketCost ⚛ → 1 🎟"
-        shopNeutrinoTicketCostView?.text   = "$neutrinoTicketCost ⚛"
+        shopNeutrinoTicketEffectView.setTextIfChanged("$neutrinoTicketCost ⚛ → 1 🎟")
+        shopNeutrinoTicketCostView.setTextIfChanged("$neutrinoTicketCost ⚛")
         styleShopPurchase(shopNeutrinoTicketBuyBtn, state.neutrinos >= neutrinoTicketCost)
 
         val apcToApsCost = clickerViewModel.apcToApsCost()
-        shopNeutrinoBalance?.text    = state.neutrinos.toString()
-        shopApcToApsLevelView?.text  = getString(R.string.clicker_shop_level, state.apcToApsLevel)
-        shopApcToApsEffectView?.text = getString(R.string.clicker_shop_apc_to_aps_effect, state.apcToApsLevel)
-        shopApcToApsCostView?.text   = "$apcToApsCost ⚛"
+        shopNeutrinoBalance.setTextIfChanged(state.neutrinos.toString())
+        shopApcToApsLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.apcToApsLevel))
+        shopApcToApsEffectView.setTextIfChanged(getString(R.string.clicker_shop_apc_to_aps_effect, state.apcToApsLevel))
+        shopApcToApsCostView.setTextIfChanged("$apcToApsCost ⚛")
         styleShopPurchase(shopApcToApsBuyBtn, state.neutrinos >= apcToApsCost)
 
         val apsToApcCost = clickerViewModel.apsToApcCost()
-        shopApsToApcLevelView?.text  = getString(R.string.clicker_shop_level, state.apsToApcLevel)
-        shopApsToApcEffectView?.text = getString(R.string.clicker_shop_aps_to_apc_effect, state.apsToApcLevel)
-        shopApsToApcCostView?.text   = "$apsToApcCost ⚛"
+        shopApsToApcLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.apsToApcLevel))
+        shopApsToApcEffectView.setTextIfChanged(getString(R.string.clicker_shop_aps_to_apc_effect, state.apsToApcLevel))
+        shopApsToApcCostView.setTextIfChanged("$apsToApcCost ⚛")
         styleShopPurchase(shopApsToApcBuyBtn, state.neutrinos >= apsToApcCost)
 
         shopCritSection?.visibility = if (state.critUnlocked) View.VISIBLE else View.GONE
@@ -1626,49 +1659,49 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             val gamowCost = clickerViewModel.critChanceCost()
             val fermiCost = clickerViewModel.critDamageCost()
             val critChancePct = (1 + state.critChanceLevel).toString()
-            val critMultVal   = String.format(java.util.Locale.US, "%.1f", 1.5 + state.critDamageLevel * 0.1)
-            shopQuarkBalance?.text    = state.quarks.toString()
+            val critMultVal   = String.format(java.util.Locale.getDefault(), "%.1f", 1.5 + state.critDamageLevel * 0.1)
+            shopQuarkBalance.setTextIfChanged(state.quarks.toString())
             val critChanceMaxed = clickerViewModel.critChanceMaxed()
-            shopGamowLevelView?.text  = getString(R.string.clicker_shop_level, state.critChanceLevel)
-            shopGamowEffectView?.text = getString(R.string.clicker_crit_chance_effect, critChancePct)
-            shopGamowCostView?.text   = if (critChanceMaxed) getString(R.string.clicker_shop_max) else "$gamowCost ☢"
+            shopGamowLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.critChanceLevel))
+            shopGamowEffectView.setTextIfChanged(getString(R.string.clicker_crit_chance_effect, critChancePct))
+            shopGamowCostView.setTextIfChanged(if (critChanceMaxed) getString(R.string.clicker_shop_max) else "$gamowCost ☢")
             shopGamowBuyBtn?.isEnabled = !critChanceMaxed
             styleShopPurchase(shopGamowBuyBtn, !critChanceMaxed && state.quarks >= gamowCost)
             val critDamageMaxed = clickerViewModel.critDamageMaxed()
-            shopFermiLevelView?.text  = getString(R.string.clicker_shop_level, state.critDamageLevel)
-            shopFermiEffectView?.text = getString(R.string.clicker_crit_damage_effect, critMultVal)
-            shopFermiCostView?.text   = if (critDamageMaxed) getString(R.string.clicker_shop_max) else "$fermiCost ☢"
+            shopFermiLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.critDamageLevel))
+            shopFermiEffectView.setTextIfChanged(getString(R.string.clicker_crit_damage_effect, critMultVal))
+            shopFermiCostView.setTextIfChanged(if (critDamageMaxed) getString(R.string.clicker_shop_max) else "$fermiCost ☢")
             shopFermiBuyBtn?.isEnabled = !critDamageMaxed
             styleShopPurchase(shopFermiBuyBtn, !critDamageMaxed && state.quarks >= fermiCost)
         }
 
-        shopStatLifetime?.text    = state.lifetime.toString()
-        val hasHadBigBang = clickerViewModel.getBigBangCount() > 0
-        val allTimeVisibility = if (hasHadBigBang) android.view.View.VISIBLE else android.view.View.GONE
+        shopStatLifetime.setTextIfChanged(state.lifetime.toString())
+        val allTimeVisibility = if (shopHasHadBigBang) android.view.View.VISIBLE else android.view.View.GONE
         shopStatAllTimeRow?.visibility           = allTimeVisibility
         shopStatAllTimeDividerTop?.visibility    = allTimeVisibility
         shopStatAllTimeDividerBottom?.visibility = allTimeVisibility
-        shopStatAllTimeTotal?.text = state.allTimeTotalAtoms.add(state.lifetime).toString()
-        shopStatApc?.text         = state.perClick.toString()
-        shopStatAps?.text         = state.perSecond.toString()
+        if (shopHasHadBigBang) shopStatAllTimeTotal.setTextIfChanged(state.allTimeTotalAtoms.add(state.lifetime).toString())
+        shopStatApc.setTextIfChanged(state.perClick.toString())
+        shopStatAps.setTextIfChanged(state.perSecond.toString())
         updateProductionBreakdown(state.breakdown)
 
         val stats = clickerViewModel.getStatsSnapshot()
-        shopStatTotalClicks?.text  = fmt.format(stats.totalClicks)
-        shopStatFrenzies?.text     = "${stats.apcFrenzyCount} / ${stats.apsFrenzyCount}"
-        shopStatMaxApcClicks?.text = if (stats.maxClicksPerApcFrenzy > 0) "${stats.maxClicksPerApcFrenzy}" else "—"
-        shopStatMaxCps?.text       = if (stats.maxCps > 0) "${stats.maxCps.toInt()} /s" else "—"
-        shopStatPlayTime?.text     = formatShopPlayTime(stats.totalPlayTimeMs)
+        shopStatTotalClicks.setTextIfChanged(fmt.format(stats.totalClicks))
+        shopStatFrenzies.setTextIfChanged("${stats.apcFrenzyCount} / ${stats.apsFrenzyCount}")
+        shopStatMaxApcClicks.setTextIfChanged(if (stats.maxClicksPerApcFrenzy > 0) "${stats.maxClicksPerApcFrenzy}" else "—")
+        shopStatMaxCps.setTextIfChanged(
+            if (stats.maxCps > 0) getString(R.string.clicker_rate_per_second, stats.maxCps.toInt()) else "—")
+        shopStatPlayTime.setTextIfChanged(formatShopPlayTime(stats.totalPlayTimeMs))
 
         updateProductionBar(stats)
 
         for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
             val count = state.factoryCounts[type] ?: 0
-            val affordable = !clickerViewModel.factoryCost(type).greaterThan(state.atoms)
-            shopFactoryCountViews[type]?.text  = "×$count"
-            shopFactoryEffectViews[type]?.text = factoryEffectText(type, state.factoryCounts)
-            shopFactoryPriceViews[type]?.text  = clickerViewModel.factoryCost(type).toString()
-            styleShopPurchase(shopFactoryBuyBtns[type], affordable)
+            val cost = clickerViewModel.factoryCost(type)
+            shopFactoryCountViews[type].setTextIfChanged("×$count")
+            shopFactoryEffectViews[type].setTextIfChanged(factoryEffectText(type, state.factoryCounts))
+            shopFactoryPriceViews[type].setTextIfChanged(cost.toString())
+            styleShopPurchase(shopFactoryBuyBtns[type], !cost.greaterThan(state.atoms))
         }
     }
 
@@ -1678,69 +1711,61 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun formatGameStat(played: Int, won: Int): String =
         if (played == 0) "—" else "$won / $played"
 
-    private fun formatBestTime(ms: Long): String {
-        if (ms <= 0L) return "—"
-        val totalSec = ms / 1000L
-        val minutes  = totalSec / 60
-        val secs     = totalSec % 60
-        return if (minutes > 0) "${minutes}m ${secs}s" else "${secs}s"
-    }
-
     private fun updateProductionBreakdown(bd: com.Atom2Universe.app.crypto.clicker.ProductionBreakdown) {
         val gone    = android.view.View.GONE
         val visible = android.view.View.VISIBLE
 
-        bdApcShopBase?.text = bd.apcShopBase.toString()
+        bdApcShopBase.setTextIfChanged(bd.apcShopBase.toString())
 
         val apcFlatVisible = bd.apcElemFlat > 0
         bdApcElemFlatRow?.visibility = if (apcFlatVisible) visible else gone
-        if (apcFlatVisible) bdApcElemFlat?.text = "+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apcElemFlat.toDouble())}"
+        if (apcFlatVisible) bdApcElemFlat.setTextIfChanged("+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apcElemFlat.toDouble())}")
 
         val apcElemVisible = bd.apcElemMult > 0.0
         bdApcElemMultRow?.visibility = if (apcElemVisible) visible else gone
-        if (apcElemVisible) bdApcElemMult?.text = formatBdMult(bd.apcElemMult)
+        if (apcElemVisible) bdApcElemMult.setTextIfChanged(formatBdMult(bd.apcElemMult))
 
         val apcFusionVisible = bd.apcFusionMult > 0.0
         bdApcFusionMultRow?.visibility = if (apcFusionVisible) visible else gone
-        if (apcFusionVisible) bdApcFusionMult?.text = formatBdPct(bd.apcFusionMult)
+        if (apcFusionVisible) bdApcFusionMult.setTextIfChanged(formatBdPct(bd.apcFusionMult))
 
         val apcConvVisible = !bd.apcConvFromAps.isZero()
         bdApcConvRow?.visibility = if (apcConvVisible) visible else gone
-        if (apcConvVisible) bdApcConv?.text = "+${bd.apcConvFromAps}"
+        if (apcConvVisible) bdApcConv.setTextIfChanged("+${bd.apcConvFromAps}")
 
         val apcFactoryVisible = bd.apcFactoryMult > 0.0
         bdApcFactoryMultRow?.visibility = if (apcFactoryVisible) visible else gone
-        if (apcFactoryVisible) bdApcFactoryMult?.text = formatBdPct(bd.apcFactoryMult)
+        if (apcFactoryVisible) bdApcFactoryMult.setTextIfChanged(formatBdPct(bd.apcFactoryMult))
 
         val apcFrenzyVisible = bd.apcFrenzyMult > 1.0
         bdApcFrenzyMultRow?.visibility = if (apcFrenzyVisible) visible else gone
-        if (apcFrenzyVisible) bdApcFrenzyMult?.text = "×${"%.1f".format(bd.apcFrenzyMult)}"
+        if (apcFrenzyVisible) bdApcFrenzyMult.setTextIfChanged("×${"%.1f".format(bd.apcFrenzyMult)}")
 
-        bdApsShopBase?.text = if (bd.apsShopBase.isZero()) "0" else bd.apsShopBase.toString()
+        bdApsShopBase.setTextIfChanged(if (bd.apsShopBase.isZero()) "0" else bd.apsShopBase.toString())
 
         val apsFlatVisible = bd.apsElemFlat > 0
         bdApsElemFlatRow?.visibility = if (apsFlatVisible) visible else gone
-        if (apsFlatVisible) bdApsElemFlat?.text = "+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apsElemFlat.toDouble())}"
+        if (apsFlatVisible) bdApsElemFlat.setTextIfChanged("+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apsElemFlat.toDouble())}")
 
         val apsElemVisible = bd.apsElemMult > 0.0
         bdApsElemMultRow?.visibility = if (apsElemVisible) visible else gone
-        if (apsElemVisible) bdApsElemMult?.text = formatBdMult(bd.apsElemMult)
+        if (apsElemVisible) bdApsElemMult.setTextIfChanged(formatBdMult(bd.apsElemMult))
 
         val apsFusionVisible = bd.apsFusionMult > 0.0
         bdApsFusionMultRow?.visibility = if (apsFusionVisible) visible else gone
-        if (apsFusionVisible) bdApsFusionMult?.text = formatBdPct(bd.apsFusionMult)
+        if (apsFusionVisible) bdApsFusionMult.setTextIfChanged(formatBdPct(bd.apsFusionMult))
 
         val apsConvVisible = !bd.apsConvFromApc.isZero()
         bdApsConvRow?.visibility = if (apsConvVisible) visible else gone
-        if (apsConvVisible) bdApsConv?.text = "+${bd.apsConvFromApc}"
+        if (apsConvVisible) bdApsConv.setTextIfChanged("+${bd.apsConvFromApc}")
 
         val apsFactoryVisible = bd.apsFactoryMult > 0.0
         bdApsFactoryMultRow?.visibility = if (apsFactoryVisible) visible else gone
-        if (apsFactoryVisible) bdApsFactoryMult?.text = formatBdPct(bd.apsFactoryMult)
+        if (apsFactoryVisible) bdApsFactoryMult.setTextIfChanged(formatBdPct(bd.apsFactoryMult))
 
         val apsFrenzyVisible = bd.apsFrenzyMult > 1.0
         bdApsFrenzyMultRow?.visibility = if (apsFrenzyVisible) visible else gone
-        if (apsFrenzyVisible) bdApsFrenzyMult?.text = "×${"%.1f".format(bd.apsFrenzyMult)}"
+        if (apsFrenzyVisible) bdApsFrenzyMult.setTextIfChanged("×${"%.1f".format(bd.apsFrenzyMult)}")
     }
 
     private fun formatBdPct(ratio: Double): String {
@@ -1770,9 +1795,9 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val minutes  = (totalSec % 3600) / 60
         val secs     = totalSec % 60
         return when {
-            hours > 0   -> "${hours}h ${minutes}min"
-            minutes > 0 -> "${minutes}min ${secs}s"
-            else        -> "${secs}s"
+            hours > 0   -> getString(R.string.clicker_duration_h_min, hours, minutes)
+            minutes > 0 -> getString(R.string.clicker_duration_min_s, minutes, secs)
+            else        -> getString(R.string.clicker_duration_s, secs)
         }
     }
 
@@ -1789,16 +1814,19 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             bar ?: return
             val vA = bar.getChildAt(0)
             val vB = bar.getChildAt(1)
-            (vA.layoutParams as LinearLayout.LayoutParams).weight = wA
-            (vB.layoutParams as LinearLayout.LayoutParams).weight = wB
-            vA.layoutParams = vA.layoutParams
-            vB.layoutParams = vB.layoutParams
+            val lpA = vA.layoutParams as LinearLayout.LayoutParams
+            val lpB = vB.layoutParams as LinearLayout.LayoutParams
+            if (lpA.weight == wA && lpB.weight == wB) return
+            lpA.weight = wA
+            lpB.weight = wB
+            vA.layoutParams = lpA
+            vB.layoutParams = lpB
         }
 
         val (prodApcPct, prodApsPct) = pct(stats.lifetimeApcAtoms, stats.lifetimeApsAtoms)
         val hasProd = !stats.lifetimeApcAtoms.add(stats.lifetimeApsAtoms).isZero()
-        shopStatProdApc?.text = fmtPct(prodApcPct, hasProd)
-        shopStatProdAps?.text = fmtPct(prodApsPct, hasProd)
+        shopStatProdApc.setTextIfChanged(fmtPct(prodApcPct, hasProd))
+        shopStatProdAps.setTextIfChanged(fmtPct(prodApsPct, hasProd))
         applyBar(shopProdBar,
             if (hasProd) prodApcPct.toFloat().coerceIn(0f, 100f) else 1f,
             if (hasProd) prodApsPct.toFloat().coerceIn(0f, 100f) else 1f)
@@ -1811,7 +1839,9 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         else -> 1
     }
 
+    // Cours (et taux EUR/USD) téléchargés seulement quand le widget crypto est affiché.
     private fun startRefreshLoop() {
+        if (!MainClickerPreferences.isCryptoWidgetEnabled(this)) return
         if (refreshJob?.isActive == true) return
         refreshJob = lifecycleScope.launch {
             while (isActive) {
@@ -2397,6 +2427,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun onCryptoToggleChanged(enabled: Boolean) {
         MainClickerPreferences.setCryptoWidgetEnabled(this, enabled)
         cryptoWidgetView.visibility = if (enabled) View.VISIBLE else View.GONE
+        if (enabled) {
+            startRefreshLoop()
+            startEurUsdLoop()
+        } else {
+            stopRefreshLoop()
+            stopEurUsdLoop()
+        }
     }
 
     private fun openCryptoChart(asset: String) {
@@ -2485,6 +2522,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun startEurUsdLoop() {
+        if (!MainClickerPreferences.isCryptoWidgetEnabled(this) ||
+            !MainClickerPreferences.isCryptoEurUsdEnabled(this)) return
         if (eurUsdJob?.isActive == true) return
         eurUsdJob = lifecycleScope.launch {
             while (isActive) {
@@ -3171,8 +3210,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             MainClickerPreferences.setCryptoEurUsdEnabled(this, isChecked)
             cryptoWidgetView.setEurUsdEnabled(isChecked)
             if (isChecked) {
+                // La boucle télécharge le taux dès son démarrage.
                 startEurUsdLoop()
-                lifecycleScope.launch { fetchEurUsdRate() }
             } else {
                 stopEurUsdLoop()
             }
@@ -3203,12 +3242,12 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun refreshIntervalShortLabel(interval: MainClickerRefreshInterval): String = when (interval) {
-        MainClickerRefreshInterval.FIVE_SEC -> "5s"
-        MainClickerRefreshInterval.TEN_SEC -> "10s"
-        MainClickerRefreshInterval.THIRTY_SEC -> "30s"
-        MainClickerRefreshInterval.ONE_MIN -> "1 min"
-        MainClickerRefreshInterval.TWO_MIN -> "2 min"
-        MainClickerRefreshInterval.FIVE_MIN -> "5 min"
+        MainClickerRefreshInterval.FIVE_SEC -> getString(R.string.clicker_duration_s, 5)
+        MainClickerRefreshInterval.TEN_SEC -> getString(R.string.clicker_duration_s, 10)
+        MainClickerRefreshInterval.THIRTY_SEC -> getString(R.string.clicker_duration_s, 30)
+        MainClickerRefreshInterval.ONE_MIN -> getString(R.string.clicker_duration_min, 1)
+        MainClickerRefreshInterval.TWO_MIN -> getString(R.string.clicker_duration_min, 2)
+        MainClickerRefreshInterval.FIVE_MIN -> getString(R.string.clicker_duration_min, 5)
     }
 
     // ── Popup widget Terre-Lune (long-press label) ────────────────────────────
@@ -3357,7 +3396,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             }
 
             override fun onResponse(call: Call, response: Response) {
-                continuation.resume(response)
+                // Appel annulé entre-temps : la réponse ne sera jamais lue, on la ferme.
+                continuation.resume(response) { _, unread, _ -> unread.close() }
             }
         })
         continuation.invokeOnCancellation {

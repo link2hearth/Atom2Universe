@@ -59,6 +59,12 @@ class SudokuWidgetView @JvmOverloads constructor(
     private val baseCardColor = com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor)
     private var currentDifficulty = SudokuDifficulty.MEDIUM
     private val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    // Écritures en base l'une après l'autre : une ancienne ne passe jamais après une récente
+    private var saveJob: Job? = null
+    // Chrono de SudokuActivity, recopié tel quel : le widget ne le fait pas tourner
+    private var savedElapsedMs = 0L
+    // Grille résolue (récompense versée) : plus de coup ni d'annulation jusqu'à la suivante
+    private var puzzleSolved = false
 
     // ── Undo / Notes ──────────────────────────────────────────────────────────
     private data class SudokuAction(val row: Int, val col: Int, val oldValue: Int, val newValue: Int)
@@ -83,6 +89,7 @@ class SudokuWidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag du widget (header uniquement) ────────────────────────────────────
@@ -175,6 +182,7 @@ class SudokuWidgetView @JvmOverloads constructor(
             R.id.sudoku_btn_undo, R.id.sudoku_btn_notes, R.id.sudoku_btn_reset
         ).forEach { id -> findViewById<View>(id).setOnTouchListener(dragListener) }
         updateActionButtons()
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     // ── Pinch-zoom : intercepter les gestes 2 doigts avant les enfants ────────
@@ -228,10 +236,12 @@ class SudokuWidgetView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
             MotionEvent.ACTION_CANCEL -> {
                 isDragging = false
                 skipNextDragFrame = false
+                keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -252,16 +262,10 @@ class SudokuWidgetView @JvmOverloads constructor(
             withContext(Dispatchers.Main) {
                 sudokuGridView.setBoard(board)
                 sudokuGridView.clearSelection()
-            }
-            // Sauvegarder la nouvelle partie en base
-            runCatching {
-                val save = SudokuSaveEntity.fromBoard(
-                    board = board,
-                    difficulty = difficulty,
-                    elapsedTimeMs = 0L,
-                    isSolved = false
-                )
-                SudokuDatabase.getInstance(context).sudokuDao().saveSave(save)
+                puzzleSolved = false
+                savedElapsedMs = 0L
+                // Sauvegarder la nouvelle partie en base
+                persistBoard()
             }
         }
     }
@@ -303,7 +307,7 @@ class SudokuWidgetView @JvmOverloads constructor(
 
     // ── Placement de chiffre + sauvegarde immédiate ───────────────────────────
     private fun placeDigit(digit: Int) {
-        if (!sudokuGridView.hasSelection()) return
+        if (puzzleSolved || !sudokuGridView.hasSelection()) return
         val row = sudokuGridView.getSelectedRow()
         val col = sudokuGridView.getSelectedCol()
         if (notesMode && digit in 1..9) {
@@ -330,6 +334,10 @@ class SudokuWidgetView @JvmOverloads constructor(
         if (board.isSolved()) {
             resultText.text = context.getString(R.string.sudoku_result_success)
             resultText.setTextColor(Color.parseColor("#22C55E"))
+            puzzleSolved = true
+            undoStack.clear()
+            updateActionButtons()
+            persistBoard()
             GameStatsRepository(context).recordSudokuWon()
             val reward = when (currentDifficulty) {
                 SudokuDifficulty.EASY   -> 5
@@ -346,7 +354,7 @@ class SudokuWidgetView @JvmOverloads constructor(
 
     // ── Undo / Notes ──────────────────────────────────────────────────────────
     private fun undo() {
-        if (undoStack.isEmpty()) return
+        if (puzzleSolved || undoStack.isEmpty()) return
         val action = undoStack.removeLast()
         sudokuGridView.setShowMistakes(false)
         sudokuGridView.setValueAt(action.row, action.col, action.oldValue)
@@ -365,20 +373,18 @@ class SudokuWidgetView @JvmOverloads constructor(
     }
 
     private fun persistBoard() {
-        val board = sudokuGridView.getBoard()
-        val notes = sudokuGridView.getNotesMasks()
-        val difficulty = currentDifficulty
-        ioScope.launch {
-            runCatching {
-                val save = SudokuSaveEntity.fromBoard(
-                    board = board,
-                    difficulty = difficulty,
-                    elapsedTimeMs = 0L,
-                    isSolved = false,
-                    notes = notes
-                )
-                SudokuDatabase.getInstance(context).sudokuDao().saveSave(save)
-            }
+        // Photographiée ici, sur le fil UI : la grille continue de changer pendant l'écriture
+        val save = SudokuSaveEntity.fromBoard(
+            board = sudokuGridView.getBoard(),
+            difficulty = currentDifficulty,
+            elapsedTimeMs = savedElapsedMs,
+            isSolved = puzzleSolved,
+            notes = sudokuGridView.getNotesMasks()
+        )
+        val previous = saveJob
+        saveJob = ioScope.launch {
+            previous?.join()
+            runCatching { SudokuDatabase.getInstance(context).sudokuDao().saveSave(save) }
         }
     }
 
@@ -406,6 +412,7 @@ class SudokuWidgetView @JvmOverloads constructor(
     // ── Chargement depuis Room DB ─────────────────────────────────────────────
     fun reload(scope: CoroutineScope) {
         scope.launch {
+            saveJob?.join()
             val save = runCatching {
                 SudokuDatabase.getInstance(context).sudokuDao().getSave()
             }.getOrNull()
@@ -413,6 +420,8 @@ class SudokuWidgetView @JvmOverloads constructor(
             if (save != null) currentDifficulty = save.toDifficulty()
             withContext(Dispatchers.Main) {
                 sudokuGridView.setBoard(board)
+                savedElapsedMs = save?.elapsedTimeMs ?: 0L
+                puzzleSolved = save?.isSolved == true
                 if (save != null) {
                     sudokuGridView.setNotesMasks(save.toNotes())
                 }

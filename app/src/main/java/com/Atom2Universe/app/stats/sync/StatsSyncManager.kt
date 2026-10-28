@@ -3,24 +3,42 @@ package com.Atom2Universe.app.stats.sync
 import android.content.Context
 import android.os.SystemClock
 import android.util.Log
+import androidx.core.content.edit
+import com.Atom2Universe.app.music.sync.DriveFileInfo
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.stats.data.DailySummaryBuilder
 import com.Atom2Universe.app.stats.data.StatsDatabase
+import com.Atom2Universe.app.stats.data.UsageSessionDao
 import com.Atom2Universe.app.stats.data.UsageSessionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.UUID
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 /**
  * Gestionnaire de synchronisation des statistiques avec Google Drive.
  * Synchronise les sessions d'utilisation entre tous les appareils.
+ *
+ * Chaque appareil publie ses seules sessions dans son propre fichier ([filenameFor]), que lui seul
+ * écrit. Personne ne réécrit donc les sessions d'un autre : une lecture ratée ou un fichier illisible
+ * ne peut rien effacer, l'import attend simplement la synchro suivante.
  */
 object StatsSyncManager {
 
     private const val TAG = "StatsSyncManager"
-    private const val STATS_SYNC_FILE = "usage_sessions.json"
+
+    /** Début du nom des fichiers par appareil. Public : l'écran Cloud les range dans « Statistiques » par lui. */
+    const val FILE_PREFIX = "usage_sessions_"
+
+    private const val PREFS = "stats_sync"
+    private const val KEY_SENT_COUNT = "sent_count"
+    private const val KEY_SENT_LATEST = "sent_latest"
+
+    /** Devant le nom d'un fichier d'un autre appareil : la date Drive à laquelle il a été fusionné ici. */
+    private const val KEY_MERGED_PREFIX = "merged:"
 
     private lateinit var appContext: Context
     private var isInitialized = false
@@ -37,6 +55,8 @@ object StatsSyncManager {
         }
     }
 
+    fun filenameFor(deviceId: String) = "$FILE_PREFIX$deviceId.json"
+
     /**
      * Initialise le gestionnaire de sync.
      */
@@ -49,7 +69,8 @@ object StatsSyncManager {
 
     /**
      * Synchronise les statistiques avec Google Drive.
-     * Upload les sessions locales et download les sessions des autres appareils.
+     * Importe les sessions des autres appareils dont le fichier a changé, puis publie les nôtres
+     * s'il y en a de nouvelles.
      */
     suspend fun syncStats(): SyncResult = withContext(Dispatchers.IO) {
         if (!isInitialized) {
@@ -76,90 +97,35 @@ object StatsSyncManager {
                 return@withContext SyncResult(false, "No device ID")
             }
 
-            // Créer le client Google Drive
             val driveClient = GoogleDriveAppDataClient(appContext, account)
-
-            // 1. Télécharger les sessions existantes depuis le Drive
-            Log.d(TAG, "Downloading stats from Drive...")
-            val existingJson = timed("stats : download") { driveClient.readJsonFile(STATS_SYNC_FILE) }
-            Log.i(TIMING_TAG, "stats : fichier cloud ${(existingJson?.length ?: 0) / 1024} Ko")
-            val existingSessions = if (existingJson != null) {
-                try {
-                    UsageSessionsSyncFile.fromJson(existingJson).sessions
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error parsing existing stats", e)
-                    emptyList()
-                }
-            } else {
-                emptyList()
-            }
-
-            Log.d(TAG, "Found ${existingSessions.size} existing sessions on Drive")
-
-            // 2. Récupérer uniquement les sessions créées localement (exclure les sessions importées d'autres appareils)
             val statsDb = StatsDatabase.getInstance(appContext)
-            val usageSessionDao = statsDb.usageSessionDao()
 
-            val localSessions = getLocalSessionsSince(usageSessionDao, 0)  // 0 = depuis le début, sessions locales uniquement
+            // 1. Les fichiers des appareils. Sans réponse de Drive, on ne sait même pas si le nôtre
+            //    est là-haut : rien n'est importé ni écrit.
+            val files = timed("stats : liste des fichiers") {
+                driveClient.listFileDetailsChecked("name contains '$FILE_PREFIX'")
+            }?.filter { it.name.startsWith(FILE_PREFIX) }
+                ?: return@withContext SyncResult(false, "Drive did not answer")
 
-            Log.d(TAG, "Found ${localSessions.size} local sessions")
-
-            // 3. Convertir les sessions locales en format sync avec UUID
-            val localSyncSessions = localSessions.map { session ->
-                SyncUsageSession(
-                    id = UUID.randomUUID().toString(),
-                    deviceId = deviceId,
-                    moduleType = session.moduleType,
-                    startTimestamp = session.startTimestamp,
-                    endTimestamp = session.endTimestamp,
-                    durationMs = session.durationMs,
-                    trackTitle = session.trackTitle,
-                    trackArtist = session.trackArtist,
-                    trackAlbum = session.trackAlbum,
-                    trackAlbumArtist = session.trackAlbumArtist,
-                    midiFileName = session.midiFileName,
-                    practiceScore = session.practiceScore,
-                    radioStationName = session.radioStationName,
-                    readingTitle = session.readingTitle
-                )
-            }
-
-            // 4. Merger les sessions (éviter les doublons basés sur timestamp + device)
-            val mergedSessions = mergeSessions(existingSessions, localSyncSessions, deviceId)
-
-            Log.d(TAG, "Merged to ${mergedSessions.size} total sessions")
-
-            // 5. Uploader le fichier mergé vers Drive
-            val syncFile = UsageSessionsSyncFile(
-                version = 1,
-                lastModified = System.currentTimeMillis(),
-                sessions = mergedSessions
-            )
-
-            Log.i(TIMING_TAG, "stats : ${mergedSessions.size} sessions au total")
-            val uploaded = timed("stats : upload") { driveClient.writeJsonFile(STATS_SYNC_FILE, syncFile.toJson()) }
-
-            if (!uploaded) {
-                return@withContext SyncResult(false, "Failed to upload to Drive")
-            }
-
-            // 6. Importer les nouvelles sessions des autres appareils dans la base locale
+            // 2. Les sessions des autres appareils
             val importedCount = timed("stats : import des autres appareils") {
-                importRemoteSessions(mergedSessions, deviceId)
+                importForeignFiles(driveClient, files, deviceId, statsDb)
             }
 
-            // 7. Recalculer les résumés journaliers si des sessions ont été importées
-            if (importedCount > 0) {
-                Log.d(TAG, "Rebuilding daily summaries after importing $importedCount sessions...")
-                val dailySummaryDao = statsDb.dailySummaryDao()
-                val builder = DailySummaryBuilder(usageSessionDao, dailySummaryDao)
-                timed("stats : recalcul des résumés journaliers") { builder.backfillAllSummaries() }
+            // 3. Les nôtres
+            val uploaded = timed("stats : upload") {
+                publishOwnFile(driveClient, files, deviceId, statsDb.usageSessionDao())
+            }
+            if (!uploaded) {
+                return@withContext SyncResult(false, "Failed to upload to Drive", importedCount)
             }
 
             Log.d(TAG, "Stats sync complete: imported $importedCount remote sessions")
 
             SyncResult(true, "Synced successfully", importedCount)
 
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Error syncing stats", e)
             SyncResult(false, "Error: ${e.message}")
@@ -167,95 +133,143 @@ object StatsSyncManager {
     }
 
     /**
-     * Récupère uniquement les sessions créées localement (sourceDeviceId IS NULL).
-     * Exclut les sessions importées d'autres appareils pour éviter de les réexporter sous le mauvais deviceId.
+     * Importe les fichiers des autres appareils, sauf ceux dont la date Drive n'a pas bougé depuis
+     * leur dernière fusion : les relire n'ajouterait rien. Un fichier illisible est sauté et sera
+     * relu la prochaine fois. Seuls les jours qui reçoivent des sessions voient leur résumé recalculé.
+     *
+     * @return le nombre de sessions réellement ajoutées ici
      */
-    private suspend fun getLocalSessionsSince(
-        dao: com.Atom2Universe.app.stats.data.UsageSessionDao,
-        sinceTimestamp: Long
-    ): List<UsageSessionEntity> {
-        return dao.getLocalSessionsSince(sinceTimestamp)
-    }
-
-    /**
-     * Merge les sessions locales et distantes, élimine les doublons.
-     * Deux sessions sont considérées comme doublons si elles ont:
-     * - Le même deviceId
-     * - Des timestamps très proches (< 1 seconde d'écart)
-     */
-    private fun mergeSessions(
-        remote: List<SyncUsageSession>,
-        local: List<SyncUsageSession>,
-        currentDeviceId: String
-    ): List<SyncUsageSession> {
-        val allSessions = (remote + local).toMutableList()
-
-        // Filtrer les doublons du device courant
-        val seenKeys = mutableSetOf<String>()
-        val uniqueSessions = allSessions.filter { session ->
-            val key = if (session.deviceId == currentDeviceId) {
-                // Pour le device courant, utiliser un key basé sur timestamp
-                "${session.deviceId}_${session.startTimestamp / 1000}"
-            } else {
-                // Pour les autres devices, utiliser l'ID unique
-                session.id
-            }
-
-            if (seenKeys.contains(key)) {
-                false
-            } else {
-                seenKeys.add(key)
-                true
-            }
-        }
-
-        // Trier par timestamp décroissant (garder tout l'historique)
-        return uniqueSessions.sortedByDescending { it.endTimestamp }
-    }
-
-    /**
-     * Importe les sessions des autres appareils dans la base locale.
-     * Ne réimporte pas les sessions du device courant.
-     */
-    private suspend fun importRemoteSessions(
-        allSessions: List<SyncUsageSession>,
-        currentDeviceId: String
+    private suspend fun importForeignFiles(
+        client: GoogleDriveAppDataClient,
+        files: List<DriveFileInfo>,
+        deviceId: String,
+        statsDb: StatsDatabase
     ): Int {
-        val statsDb = StatsDatabase.getInstance(appContext)
-        val usageSessionDao = statsDb.usageSessionDao()
-
-        // Filtrer uniquement les sessions des autres appareils
-        val remoteSessions = allSessions.filter { it.deviceId != currentDeviceId }
-
+        val prefs = prefs()
+        val ownFile = filenameFor(deviceId)
+        val dao = statsDb.usageSessionDao()
+        val zone = ZoneId.systemDefault()
+        val touchedDays = HashSet<LocalDate>()
         var importedCount = 0
 
-        remoteSessions.forEach { syncSession ->
-            val entity = UsageSessionEntity(
-                id = 0,  // Auto-generate
-                moduleType = syncSession.moduleType,
-                startTimestamp = syncSession.startTimestamp,
-                endTimestamp = syncSession.endTimestamp,
-                durationMs = syncSession.durationMs,
-                trackTitle = syncSession.trackTitle,
-                trackArtist = syncSession.trackArtist,
-                trackAlbum = syncSession.trackAlbum,
-                trackAlbumArtist = syncSession.trackAlbumArtist,
-                midiFileName = syncSession.midiFileName,
-                practiceScore = syncSession.practiceScore,
-                radioStationName = syncSession.radioStationName,
-                readingTitle = syncSession.readingTitle,
-                sourceDeviceId = syncSession.deviceId  // Marquer l'appareil d'origine pour ne pas réexporter sous le mauvais deviceId
-            )
+        for (file in files) {
+            if (file.name == ownFile) continue
+            val key = KEY_MERGED_PREFIX + file.name
+            if (file.modifiedTime > 0L && prefs.getLong(key, -1L) == file.modifiedTime) continue
 
-            // insertSessionIgnoreConflict retourne -1 si la session existe déjà (contrainte unique moduleType+startTimestamp+endTimestamp)
-            val inserted = usageSessionDao.insertSessionIgnoreConflict(entity)
-            if (inserted != -1L) {
-                importedCount++
+            val content = client.readJsonFileById(file.id, file.name) ?: continue
+            val sessions = try {
+                UsageSessionsSyncFile.fromJson(content).sessions
+            } catch (e: Exception) {
+                Log.e(TAG, "Unreadable ${file.name}, skipped", e)
+                continue
             }
+
+            val entities = sessions.map { it.toImportedEntity() }
+            val ids = dao.insertSessionsIgnoreConflict(entities)
+            entities.forEachIndexed { i, entity ->
+                if (ids.getOrNull(i) != -1L) {
+                    importedCount++
+                    touchedDays += Instant.ofEpochMilli(entity.startTimestamp).atZone(zone).toLocalDate()
+                }
+            }
+            prefs.edit { putLong(key, file.modifiedTime) }
         }
 
+        // Un fichier disparu du cloud n'a plus de date à retenir.
+        val listed = files.mapTo(HashSet()) { KEY_MERGED_PREFIX + it.name }
+        val stale = prefs.all.keys.filter { it.startsWith(KEY_MERGED_PREFIX) && it !in listed }
+        if (stale.isNotEmpty()) prefs.edit { stale.forEach { remove(it) } }
+
+        if (touchedDays.isNotEmpty()) {
+            val builder = DailySummaryBuilder(dao, statsDb.dailySummaryDao())
+            timed("stats : résumés de ${touchedDays.size} jour(s)") {
+                for (day in touchedDays) {
+                    builder.updateSummaryForDay(day.atStartOfDay(zone).toInstant().toEpochMilli())
+                }
+            }
+        }
         return importedCount
     }
+
+    /**
+     * Publie nos sessions locales (sourceDeviceId IS NULL : les importées ne repartent jamais sous notre
+     * nom), seulement s'il y en a de nouvelles depuis le dernier envoi, ou si notre fichier a disparu
+     * du cloud (effacé depuis l'écran Cloud).
+     *
+     * @return false si l'envoi a échoué
+     */
+    private suspend fun publishOwnFile(
+        client: GoogleDriveAppDataClient,
+        files: List<DriveFileInfo>,
+        deviceId: String,
+        dao: UsageSessionDao
+    ): Boolean {
+        val filename = filenameFor(deviceId)
+        val onCloud = files.any { it.name == filename }
+        val summary = dao.getLocalSessionsSummary()
+        val prefs = prefs()
+        if (!onCloud && summary.sessionCount == 0) return true
+        if (onCloud &&
+            prefs.getInt(KEY_SENT_COUNT, -1) == summary.sessionCount &&
+            prefs.getLong(KEY_SENT_LATEST, -1L) == summary.latestEnd
+        ) {
+            Log.d(TAG, "No new local session since last upload (${summary.sessionCount}), skipping")
+            return true
+        }
+
+        val localSessions = dao.getLocalSessionsSince(0)
+        val syncFile = UsageSessionsSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            sessions = localSessions.map { it.toSync(deviceId) }
+        )
+        Log.i(TIMING_TAG, "stats : ${localSessions.size} sessions locales envoyées")
+        if (!client.writeJsonFile(filename, syncFile.toJson())) return false
+
+        prefs.edit {
+            putInt(KEY_SENT_COUNT, localSessions.size)
+            putLong(KEY_SENT_LATEST, localSessions.maxOfOrNull { it.endTimestamp } ?: 0L)
+        }
+        return true
+    }
+
+    private fun UsageSessionEntity.toSync(deviceId: String) = SyncUsageSession(
+        // Stable d'un envoi à l'autre : l'identifiant local suffit, l'appareil est dans le nom du fichier.
+        id = "${deviceId}_$id",
+        deviceId = deviceId,
+        moduleType = moduleType,
+        startTimestamp = startTimestamp,
+        endTimestamp = endTimestamp,
+        durationMs = durationMs,
+        trackTitle = trackTitle,
+        trackArtist = trackArtist,
+        trackAlbum = trackAlbum,
+        trackAlbumArtist = trackAlbumArtist,
+        midiFileName = midiFileName,
+        practiceScore = practiceScore,
+        radioStationName = radioStationName,
+        readingTitle = readingTitle
+    )
+
+    private fun SyncUsageSession.toImportedEntity() = UsageSessionEntity(
+        id = 0,  // Auto-generate
+        moduleType = moduleType,
+        startTimestamp = startTimestamp,
+        endTimestamp = endTimestamp,
+        durationMs = durationMs,
+        trackTitle = trackTitle,
+        trackArtist = trackArtist,
+        trackAlbum = trackAlbum,
+        trackAlbumArtist = trackAlbumArtist,
+        midiFileName = midiFileName,
+        practiceScore = practiceScore,
+        radioStationName = radioStationName,
+        readingTitle = readingTitle,
+        sourceDeviceId = deviceId  // Marquer l'appareil d'origine pour ne pas réexporter sous le mauvais deviceId
+    )
+
+    private fun prefs() = appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /**
      * Résultat d'une synchronisation.

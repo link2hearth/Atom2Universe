@@ -382,13 +382,13 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
                     cleanupNowButton.text = getString(R.string.settings_cleanup_now_button)
 
                     if (report.deletedFiles > 0) {
-                        val message = "✅ ${report.deletedFiles} fichiers supprimés\n" +
-                                "${String.format("%.2f", report.freedSpaceMB)} MB libérés"
+                        val message = getString(R.string.settings_cleanup_snackbar,
+                            report.deletedFiles, String.format("%.1f", report.freedSpaceMB))
                         cleanupStatusText.text = message
 
                         Toast.makeText(
                             this@HubSettingsActivity,
-                            message.replace("\n", ", "),
+                            message,
                             Toast.LENGTH_LONG
                         ).show()
 

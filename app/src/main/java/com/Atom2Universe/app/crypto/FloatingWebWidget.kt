@@ -1,12 +1,18 @@
 package com.Atom2Universe.app.crypto
 
+import android.Manifest
+import android.app.Activity
+import android.app.Application
 import android.content.ContentValues
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
@@ -18,11 +24,11 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -31,10 +37,12 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.R
 import com.google.android.material.card.MaterialCardView
-import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -48,6 +56,10 @@ class FloatingWebWidget @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    companion object {
+        private const val BLANK_URL = "about:blank"
+    }
+
     private val card: MaterialCardView
     private val header: FrameLayout
     private val titleView: TextView
@@ -57,7 +69,27 @@ class FloatingWebWidget @JvmOverloads constructor(
     private val reloadBtn: TextView
     private val urlBar: EditText
     private val progressBar: ProgressBar
-    private val webView: WebView
+    private val webContainer: FrameLayout
+
+    // Créée au premier article ouvert, pas à chaque ouverture du clicker
+    private var webView: WebView? = null
+    // Fermé puis rouvert : l'historique de l'article précédent est effacé au premier chargement
+    private var clearHistoryOnLoad = false
+    // Plantages du moteur de rendu depuis la dernière page demandée (au-delà d'un, on ferme)
+    private var renderCrashes = 0
+
+    // pauseTimers() fige le JavaScript de TOUTES les WebView du processus : relâché dès
+    // qu'une autre activité (paroles, pochettes…) passe au premier plan
+    private var timersPaused = false
+    private val resumeTimersOnOtherActivity = object : Application.ActivityLifecycleCallbacks {
+        override fun onActivityResumed(activity: Activity) { resumeTimersIfPaused() }
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        override fun onActivityStarted(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {}
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {}
+    }
 
     // ── Plein écran ───────────────────────────────────────────────────────────
     private var isExpanded = false
@@ -82,6 +114,9 @@ class FloatingWebWidget @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) {
+                if (!isExpanded) keepFloatingWidgetOnScreen()
+            }
         })
 
     // ── Drag 1 doigt via header ───────────────────────────────────────────────
@@ -104,7 +139,7 @@ class FloatingWebWidget @JvmOverloads constructor(
         reloadBtn   = findViewById(R.id.floating_web_reload)
         urlBar      = findViewById(R.id.floating_web_url_bar)
         progressBar = findViewById(R.id.floating_web_progress)
-        webView     = findViewById(R.id.floating_web_view)
+        webContainer = findViewById(R.id.floating_web_container)
 
         // Coins arrondis pour la barre d'URL
         urlBar.background = GradientDrawable().apply {
@@ -118,10 +153,10 @@ class FloatingWebWidget @JvmOverloads constructor(
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
 
         backBtn.setOnClickListener {
-            if (webView.canGoBack()) webView.goBack()
+            webView?.let { if (it.canGoBack()) it.goBack() }
         }
         reloadBtn.setOnClickListener {
-            webView.reload()
+            webView?.reload()
         }
         urlBar.setOnEditorActionListener { _, actionId, event ->
             val isGo = actionId == EditorInfo.IME_ACTION_GO
@@ -133,7 +168,16 @@ class FloatingWebWidget @JvmOverloads constructor(
             } else false
         }
 
-        with(webView.settings) {
+        keepFloatingWidgetOnScreenOnResize()
+    }
+
+    private fun ensureWebView(): WebView {
+        webView?.let { return it }
+        val view = WebView(context)
+        webContainer.addView(view, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+
+        with(view.settings) {
             javaScriptEnabled    = true
             setSupportZoom(true)
             builtInZoomControls  = true
@@ -143,18 +187,37 @@ class FloatingWebWidget @JvmOverloads constructor(
             domStorageEnabled    = true
         }
 
-        webView.webViewClient = object : WebViewClient() {
+        view.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                if (url == BLANK_URL) return
                 if (!urlBar.isFocused) urlBar.setText(url ?: "")
             }
             override fun onPageFinished(view: WebView?, url: String?) {
+                if (url == BLANK_URL) return
+                if (clearHistoryOnLoad) {
+                    clearHistoryOnLoad = false
+                    view?.clearHistory()
+                }
                 titleView.text = view?.title?.takeIf { it.isNotBlank() } ?: extractDomain(url)
                 urlBar.setText(url ?: "")
-                backBtn.alpha = if (webView.canGoBack()) 1f else 0.4f
+                backBtn.alpha = if (view?.canGoBack() == true) 1f else 0.4f
+            }
+            // Moteur de rendu tué (mémoire) ou planté : sans ce retour à true, l'appli entière plante
+            override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
+                if (view == null || view !== webView) return true
+                val url = view.url?.takeIf { it != BLANK_URL }
+                discardWebView()
+                renderCrashes++
+                if (visibility == VISIBLE && url != null && renderCrashes <= 1) {
+                    ensureWebView().loadUrl(url)
+                } else if (visibility == VISIBLE) {
+                    dismiss()
+                }
+                return true
             }
         }
 
-        webView.webChromeClient = object : WebChromeClient() {
+        view.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 if (newProgress < 100) {
                     progressBar.progress = newProgress
@@ -165,17 +228,31 @@ class FloatingWebWidget @JvmOverloads constructor(
             }
         }
 
-        setupImageLongPress()
+        setupImageLongPress(view)
+        webView = view
+        return view
+    }
+
+    private fun discardWebView() {
+        val view = webView ?: return
+        resumeTimersIfPaused()
+        webView = null
+        webContainer.removeView(view)
+        view.destroy()
     }
 
     // ── Public ────────────────────────────────────────────────────────────────
 
     fun load(url: String) {
+        val view = ensureWebView()
+        if (visibility != VISIBLE) clearHistoryOnLoad = true
+        renderCrashes = 0
         titleView.text = extractDomain(url)
         progressBar.progress = 0
         urlBar.setText(url)
         backBtn.alpha = 0.4f
-        webView.loadUrl(url)
+        view.onResume()
+        view.loadUrl(url)
         visibility = VISIBLE
         bringToFront()
     }
@@ -220,7 +297,7 @@ class FloatingWebWidget @JvmOverloads constructor(
             input.contains(".") && !input.contains(" ") -> "https://$input"
             else -> "https://www.google.com/search?q=${Uri.encode(input)}"
         }
-        webView.loadUrl(url)
+        ensureWebView().loadUrl(url)
         urlBar.clearFocus()
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(urlBar.windowToken, 0)
@@ -237,19 +314,49 @@ class FloatingWebWidget @JvmOverloads constructor(
             card.layoutParams = LayoutParams(cardOriginalWidth, cardOriginalHeight)
             expandBtn.text = "⤢"
         }
-        webView.stopLoading()
+        // Fermé : la page est vidée (plus de JS, de pubs ni de vidéo) et la WebView mise en pause
+        webView?.let {
+            it.stopLoading()
+            it.loadUrl(BLANK_URL)
+            it.onPause()
+        }
         visibility = GONE
     }
 
-    fun onPause()   { webView.onPause() }
-    fun onResume()  { webView.onResume() }
-    fun onDestroy() {
-        (webView.parent as? ViewGroup)?.removeView(webView)
-        webView.destroy()
+    fun onPause() {
+        val view = webView ?: return
+        view.onPause()
+        if (!timersPaused) {
+            view.pauseTimers()
+            timersPaused = true
+            (context.applicationContext as? Application)
+                ?.registerActivityLifecycleCallbacks(resumeTimersOnOtherActivity)
+        }
     }
 
-    fun canGoBack(): Boolean = webView.canGoBack()
-    fun goBack() { webView.goBack() }
+    fun onResume() {
+        val view = webView ?: return
+        resumeTimersIfPaused()
+        if (visibility == VISIBLE) view.onResume()
+    }
+
+    fun onDestroy() {
+        discardWebView()
+        resumeTimersIfPaused()
+    }
+
+    private fun resumeTimersIfPaused() {
+        if (!timersPaused) return
+        timersPaused = false
+        (context.applicationContext as? Application)
+            ?.unregisterActivityLifecycleCallbacks(resumeTimersOnOtherActivity)
+        // Méthode d'instance mais effet global ; pauseTimers() n'a lieu qu'avec une WebView,
+        // et discardWebView() relance les minuteurs avant de la détruire
+        webView?.resumeTimers()
+    }
+
+    fun canGoBack(): Boolean = webView?.canGoBack() == true
+    fun goBack() { webView?.goBack() }
 
     // ── Touch header : drag 1 doigt + pinch 2 doigts ─────────────────────────
 
@@ -301,6 +408,7 @@ class FloatingWebWidget @JvmOverloads constructor(
                 isDragging = false
                 isTwoFingerGesture = false
                 skipNextDragFrame = false
+                if (!isExpanded) keepFloatingWidgetOnScreen()
             }
         }
         return true
@@ -308,14 +416,14 @@ class FloatingWebWidget @JvmOverloads constructor(
 
     // ── Long press sur image → téléchargement ────────────────────────────────
 
-    private fun setupImageLongPress() {
-        webView.setOnLongClickListener {
-            val result = webView.hitTestResult
+    private fun setupImageLongPress(view: WebView) {
+        view.setOnLongClickListener {
+            val result = view.hitTestResult
             val isImage = result.type == WebView.HitTestResult.IMAGE_TYPE ||
                     result.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
             val imageUrl = result.extra
             if (isImage && !imageUrl.isNullOrBlank()) {
-                downloadWebImage(imageUrl)
+                downloadWebImage(view, imageUrl)
                 true // consomme l'event : pas de menu contextuel par défaut
             } else {
                 false
@@ -323,13 +431,25 @@ class FloatingWebWidget @JvmOverloads constructor(
         }
     }
 
-    private fun downloadWebImage(url: String) {
+    private fun downloadWebImage(view: WebView, url: String) {
+        // Android 9 et avant : écrire dans Pictures demande la permission ; on la demande, l'appui
+        // long suivant enregistrera l'image
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+        ) {
+            findActivity()?.let {
+                ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
+            }
+            return
+        }
         // Capturer les infos WebView sur le main thread avant de basculer en background
-        val userAgent = webView.settings.userAgentString
-        val referer   = webView.url
+        val userAgent = view.settings.userAgentString
+        val referer   = view.url
         Thread {
+            var connection: HttpURLConnection? = null
             try {
-                val connection = URL(url).openConnection() as HttpURLConnection
+                connection = URL(url).openConnection() as HttpURLConnection
                 connection.connectTimeout = 15_000
                 connection.readTimeout    = 15_000
                 connection.setRequestProperty("User-Agent", userAgent)
@@ -337,35 +457,42 @@ class FloatingWebWidget @JvmOverloads constructor(
                 val cookies = CookieManager.getInstance().getCookie(url)
                 if (!cookies.isNullOrBlank()) connection.setRequestProperty("Cookie", cookies)
 
-                val rawMime = connection.contentType
-                    ?.substringBefore(';')?.trim()
-                    ?.takeIf { it.contains('/') }
-                val mimeType = if (!rawMime.isNullOrBlank()) rawMime else guessMimeTypeFromUrl(url)
-
-                val bytes = connection.inputStream.use { stream ->
-                    val buf = ByteArrayOutputStream()
-                    stream.copyTo(buf)
-                    buf.toByteArray()
-                }
-                connection.disconnect()
-
-                if (bytes.isEmpty()) {
+                if (connection.responseCode !in 200..299) {
                     postToast(context.getString(R.string.floating_web_image_error_download))
                     return@Thread
                 }
+                // Le dossier des images n'accepte que des types image/* (les CDN renvoient
+                // parfois application/octet-stream) : sinon, déduit de l'URL
+                val rawMime = connection.contentType
+                    ?.substringBefore(';')?.trim()
+                    ?.takeIf { it.startsWith("image/") }
+                val mimeType = rawMime ?: guessMimeTypeFromUrl(url)
 
                 val filename = buildSmartFilename(url, mimeType)
-                val saved = saveToAtom2Universe(bytes, filename, mimeType)
-                if (saved != null) showDownloadToast(filename)
+                // Copié par morceaux vers le fichier : une grosse image ne passe jamais en mémoire
+                val saved = connection.inputStream.use { saveToAtom2Universe(it, filename, mimeType) }
+                if (saved) showDownloadToast(filename)
                 else postToast(context.getString(R.string.floating_web_image_error_save))
 
             } catch (_: Exception) {
                 postToast(context.getString(R.string.floating_web_image_error_download))
+            } finally {
+                connection?.disconnect()
             }
         }.start()
     }
 
-    private fun saveToAtom2Universe(bytes: ByteArray, filename: String, mimeType: String): String? {
+    private fun findActivity(): Activity? {
+        var ctx: Context? = context
+        while (ctx is ContextWrapper) {
+            if (ctx is Activity) return ctx
+            ctx = ctx.baseContext
+        }
+        return null
+    }
+
+    /** Écrit l'image dans Pictures/Atom2Universe ; false (et rien de laissé derrière) si vide ou en échec. */
+    private fun saveToAtom2Universe(input: InputStream, filename: String, mimeType: String): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val resolver = context.contentResolver
             val values = ContentValues().apply {
@@ -378,21 +505,33 @@ class FloatingWebWidget @JvmOverloads constructor(
             val uri = resolver.insert(
                 MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
                 values
-            ) ?: return null
-            resolver.openOutputStream(uri)?.use { it.write(bytes) }
+            ) ?: return false
+            val written = try {
+                resolver.openOutputStream(uri)?.use { input.copyTo(it) } ?: 0L
+            } catch (_: Exception) { 0L }
+            if (written <= 0L) {
+                runCatching { resolver.delete(uri, null, null) }
+                return false
+            }
             values.clear()
             values.put(MediaStore.MediaColumns.IS_PENDING, 0)
             resolver.update(uri, values, null, null)
-            filename
+            true
         } else {
             val picturesDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES
             )
             val dir = File(picturesDir, "Atom2Universe").also { it.mkdirs() }
             val file = File(dir, filename)
-            file.writeBytes(bytes)
+            val written = try {
+                file.outputStream().use { input.copyTo(it) }
+            } catch (_: Exception) { 0L }
+            if (written <= 0L) {
+                file.delete()
+                return false
+            }
             MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), null, null)
-            filename
+            true
         }
     }
 

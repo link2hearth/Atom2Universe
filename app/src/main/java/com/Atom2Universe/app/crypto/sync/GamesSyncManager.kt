@@ -24,6 +24,7 @@ import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient.ReadResult
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -34,6 +35,8 @@ object GamesSyncManager {
     private const val SYNC_FILE = "games_state.json"
     private const val RESTORE_PREFS = "games_sync_state"
     private const val KEY_RESTORE_GENERATION = "restore_generation"
+    private const val KEY_BASE_SEQ = "clicker_base_seq"
+    private const val KEY_SENT_HASH = "clicker_sent_hash"
 
     private lateinit var appContext: Context
     private var isInitialized = false
@@ -49,7 +52,7 @@ object GamesSyncManager {
 
     sealed class SyncResult {
         data object Success : SyncResult()
-        /** Les deux saves existent et diffèrent — l'utilisateur doit choisir. */
+        /** Les deux parties ont bougé depuis le dernier échange — l'utilisateur doit choisir. */
         data class Conflict(val local: GamesSyncFile, val remote: GamesSyncFile) : SyncResult()
         /**
          * Le texte vit dans les ressources : le gestionnaire ne le traduit pas, l'écran
@@ -93,8 +96,11 @@ object GamesSyncManager {
      * Deux règles pour deux sortes de données.
      *
      * - La partie du clicker (atomes, usines, gacha, neutrinos…) forme un tout : mélanger
-     *   deux parties donnerait une partie qui n'a jamais existé. Si elles diffèrent,
-     *   l'utilisateur choisit laquelle garder.
+     *   deux parties donnerait une partie qui n'a jamais existé. Comme pour la ferme, deux
+     *   valeurs gardées ici disent qui a bougé depuis le dernier échange : [KEY_BASE_SEQ], la
+     *   version du cloud sur laquelle cet appareil s'appuie, et [KEY_SENT_HASH], l'empreinte
+     *   de la partie d'ici à ce moment-là. Un seul côté a bougé : on envoie, ou on applique.
+     *   Les deux : l'utilisateur choisit.
      * - Les records et les compteurs, eux, se fusionnent sans question (voir [mergeShared]).
      *
      * Records et compteurs sont réglés AVANT la question du clicker, pour que refuser
@@ -107,45 +113,58 @@ object GamesSyncManager {
             val driveClient = getDriveClient()
                 ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
 
-            mutex.withLock {
-                val remoteRaw = when (val read = readRemote(driveClient)) {
-                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
-                    is RemoteRead.Answered -> read.file
-                }
-                val shared = mergeShared(remoteRaw)
-                val localFile = buildLocalSyncFile().withShared(shared)
-
-                // Pas de partie dans le cloud (jamais synchronisé, ou seule la sync
-                // automatique est passée) → on publie la nôtre, sans question.
-                if (remoteRaw?.clicker == null) {
-                    if (!driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())) {
-                        return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
-                    }
-                    Log.d(TAG, "Aucune partie dans le cloud — partie locale publiée")
-                    return@withLock SyncResult.Success
-                }
-
-                // Les parties sont identiques → on publie records et compteurs à jour
-                if (!conflictExists(localFile, remoteRaw)) {
-                    if (!driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())) {
-                        return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
-                    }
-                    Log.d(TAG, "Parties identiques, records et compteurs publiés")
-                    return@withLock SyncResult.Success
-                }
-
-                // Les parts partagées du cloud sont publiées tout de suite, sans toucher à sa
-                // partie : si l'utilisateur ferme la question sans choisir, rien n'est perdu.
-                val remoteFile = remoteRaw.withShared(shared)
-                driveClient.writeJsonFile(SYNC_FILE, remoteFile.toJson())
-
-                Log.d(TAG, "Conflit détecté — demande utilisateur")
-                SyncResult.Conflict(local = localFile, remote = remoteFile)
-            }
+            mutex.withLock { syncLocked(driveClient) }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sync", e)
             unexpected(e)
         }
+    }
+
+    private suspend fun syncLocked(driveClient: GoogleDriveAppDataClient): SyncResult {
+        val remoteRaw = when (val read = readRemote(driveClient)) {
+            is RemoteRead.Answered -> read.file
+            else -> return blocked(read)
+        }
+        val shared = mergeShared(remoteRaw)
+        val localFile = buildLocalSyncFile().withShared(shared)
+        val localHash = partFingerprint(localFile)
+        val prefs = syncPrefs()
+        val base = prefs.getLong(KEY_BASE_SEQ, 0L)
+
+        // Pas de partie dans le cloud (jamais synchronisé, vidé depuis l'écran Cloud, ou seule
+        // la sync automatique est passée) → on publie la nôtre, sans question.
+        if (remoteRaw?.clicker == null) {
+            Log.d(TAG, "Aucune partie dans le cloud — partie locale publiée")
+            return publish(driveClient, localFile, maxOf(base, remoteRaw?.seq ?: 0L), localHash)
+        }
+        val remoteFile = remoteRaw.withShared(shared)
+
+        // Les parties sont identiques → on note l'échange, et on publie records et compteurs s'ils ont changé
+        if (!conflictExists(localFile, remoteRaw)) {
+            record(remoteRaw.seq, localHash)
+            Log.d(TAG, "Parties identiques")
+            return publishShared(driveClient, remoteFile, remoteRaw)
+        }
+
+        // Jamais rien échangé : rien ne dit lequel des deux côtés continue l'autre.
+        val cloudChanged = !prefs.contains(KEY_BASE_SEQ) || remoteRaw.seq != base
+        val localChanged = localHash != prefs.getString(KEY_SENT_HASH, null)
+
+        if (!cloudChanged && localChanged) {
+            Log.d(TAG, "Seule la partie d'ici a bougé — publiée")
+            return publish(driveClient, localFile, maxOf(base, remoteRaw.seq), localHash)
+        }
+        if (cloudChanged && !localChanged) {
+            Log.d(TAG, "Seule la partie du cloud a bougé — appliquée ici")
+            withContext(NonCancellable) { takeCloud(remoteRaw.seq, remoteFile) }
+            return publishShared(driveClient, remoteFile, remoteRaw)
+        }
+
+        // Les parts partagées du cloud sont publiées tout de suite, sans toucher à sa
+        // partie : si l'utilisateur ferme la question sans choisir, rien n'est perdu.
+        publishShared(driveClient, remoteFile, remoteRaw)
+        Log.d(TAG, "Conflit détecté — demande utilisateur")
+        return SyncResult.Conflict(local = localFile.copy(seq = base), remote = remoteFile)
     }
 
     /**
@@ -163,19 +182,17 @@ object GamesSyncManager {
                 ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
 
             mutex.withLock {
-                // Sans réponse, le fichier vide de secours ci-dessous effacerait la partie
-                // du clicker que le cloud garde peut-être.
+                // Sans réponse, ou devant un fichier illisible, le fichier vide de secours
+                // ci-dessous effacerait la partie du clicker que le cloud garde peut-être.
                 val remoteRaw = when (val read = readRemote(driveClient)) {
-                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
                     is RemoteRead.Answered -> read.file
+                    else -> return@withLock blocked(read)
                 }
                 val shared = mergeShared(remoteRaw)
                 val base = remoteRaw ?: GamesSyncFile(lastModified = System.currentTimeMillis())
-                if (!driveClient.writeJsonFile(SYNC_FILE, base.withShared(shared).toJson())) {
-                    return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
-                }
+                val result = publishShared(driveClient, base.withShared(shared), remoteRaw)
                 Log.d(TAG, "Records et compteurs synchronisés (auto)")
-                SyncResult.Success
+                result
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sync auto", e)
@@ -185,15 +202,19 @@ object GamesSyncManager {
 
     /** Ce que la lecture du cloud a donné. */
     private sealed class RemoteRead {
-        /** Drive a répondu. [file] est null s'il n'y a pas de fichier, ou s'il est illisible. */
+        /** Drive a répondu. [file] est null s'il n'y a pas de fichier. */
         data class Answered(val file: GamesSyncFile?) : RemoteRead()
         /** Drive n'a pas répondu : on ne sait pas ce qu'il y a là-haut. */
         data object Unreachable : RemoteRead()
+        /** Le fichier est là mais illisible : on ne l'écrase pas, il porte peut-être une partie. */
+        data object Unreadable : RemoteRead()
+        /** Écrit par une version plus récente de l'application : le réécrire perdrait ce qu'elle seule connaît. */
+        data object TooNew : RemoteRead()
     }
 
     /**
      * Une lecture ratée n'est pas un cloud vide : la prendre pour tel, c'est publier
-     * par-dessus un fichier que personne n'a regardé. Sur [RemoteRead.Unreachable],
+     * par-dessus un fichier que personne n'a regardé. Hors de [RemoteRead.Answered],
      * les appelants n'écrivent donc rien.
      */
     private suspend fun readRemote(driveClient: GoogleDriveAppDataClient): RemoteRead {
@@ -201,12 +222,23 @@ object GamesSyncManager {
         return when (val read = driveClient.readJsonFileChecked(SYNC_FILE)) {
             ReadResult.Failed -> RemoteRead.Unreachable
             ReadResult.NotFound -> RemoteRead.Answered(null)
-            is ReadResult.Found -> RemoteRead.Answered(
-                try { GamesSyncFile.fromJson(read.content) } catch (e: Exception) {
-                    Log.e(TAG, "Erreur parsing remote", e); null
+            is ReadResult.Found -> {
+                val file = try {
+                    GamesSyncFile.fromJson(read.content)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Erreur parsing remote", e)
+                    return RemoteRead.Unreadable
                 }
-            )
+                if (file.version > GamesSyncFile.CURRENT_VERSION) RemoteRead.TooNew else RemoteRead.Answered(file)
+            }
         }
+    }
+
+    /** Ce qu'on répond quand le cloud ne peut pas être touché. */
+    private fun blocked(read: RemoteRead): SyncResult = when (read) {
+        RemoteRead.Unreadable -> SyncResult.Error(R.string.games_sync_cloud_unreadable)
+        RemoteRead.TooNew -> SyncResult.Error(R.string.games_sync_cloud_too_new)
+        else -> driveUnreachable()
     }
 
     private fun driveUnreachable(): SyncResult {
@@ -218,11 +250,84 @@ object GamesSyncManager {
     private fun unexpected(e: Exception): SyncResult =
         SyncResult.Error(R.string.games_sync_unexpected, e.message ?: e.javaClass.simpleName)
 
+    // ─── Envoi et réception de la partie ──────────────────────────────────────
+
+    /**
+     * Publie [file] sous un numéro neuf. Envoyer et noter qu'on a envoyé ne font qu'un : coupé entre
+     * les deux, l'appareil ne reconnaîtrait plus sa propre partie et se demanderait de choisir entre elle et elle.
+     */
+    private suspend fun publish(
+        driveClient: GoogleDriveAppDataClient,
+        file: GamesSyncFile,
+        after: Long,
+        hash: String
+    ): SyncResult = withContext(NonCancellable) {
+        val next = file.copy(seq = nextSeq(after), lastModified = System.currentTimeMillis())
+        if (!driveClient.writeJsonFile(SYNC_FILE, next.toJson())) {
+            return@withContext SyncResult.Error(R.string.games_sync_upload_failed)
+        }
+        record(next.seq, hash)
+        SyncResult.Success
+    }
+
+    /** Publie le fichier du cloud avec les parts partagées fusionnées, seulement s'il a changé. */
+    private suspend fun publishShared(
+        driveClient: GoogleDriveAppDataClient,
+        file: GamesSyncFile,
+        remoteRaw: GamesSyncFile?
+    ): SyncResult {
+        if (file == remoteRaw) return SyncResult.Success
+        return if (driveClient.writeJsonFile(SYNC_FILE, file.toJson())) SyncResult.Success
+        else SyncResult.Error(R.string.games_sync_upload_failed)
+    }
+
+    /** Applique ici la partie du cloud, et note qu'on s'appuie désormais sur elle. */
+    private suspend fun takeCloud(seq: Long, remoteFile: GamesSyncFile) {
+        applyLocally(remoteFile)
+        // Un clicker resté ouvert en arrière-plan tient encore l'ancienne partie en
+        // mémoire : sans ce signal, sa sauvegarde automatique l'écrirait par-dessus.
+        syncPrefs().edit {
+            putLong(KEY_RESTORE_GENERATION, restoreGeneration(appContext) + 1)
+        }
+        // L'empreinte de la partie telle qu'elle est maintenant ici, relue : c'est elle que les syncs suivantes compareront.
+        record(seq, partFingerprint(buildLocalSyncFile()))
+    }
+
+    private fun record(seq: Long, hash: String) = syncPrefs().edit {
+        putLong(KEY_BASE_SEQ, seq)
+        putString(KEY_SENT_HASH, hash)
+    }
+
+    /**
+     * L'empreinte de la partie seule : ni records, ni compteurs, ni dates, ni ce que le jeu
+     * recalcule lui-même (gains par clic et par seconde, comme dans [conflictExists]).
+     */
+    private fun partFingerprint(file: GamesSyncFile): String {
+        val zero = LayeredNumberData(0, 0, 0.0, 0.0, 0.0)
+        val part = file.copy(
+            seq = 0L, lastModified = 0L, highScores = null, devices = null, resets = null,
+            clicker = file.clicker?.copy(perClick = zero, perSecond = zero),
+            achievements = file.achievements?.sorted()
+        ).toJson()
+        return "${part.length}:${part.hashCode()}"
+    }
+
+    /**
+     * Un numéro qu'aucun appareil n'a encore employé, comme pour la ferme : une valeur d'horloge ne
+     * retombe pas sur un numéro qu'un autre appareil garde pour base après un vidage du cloud.
+     */
+    private fun nextSeq(after: Long): Long = maxOf(after + 1, System.currentTimeMillis())
+
+    private fun syncPrefs() = appContext.getSharedPreferences(RESTORE_PREFS, Context.MODE_PRIVATE)
+
     /**
      * Fusionne les parts partagées du cloud avec celles d'ici, applique le résultat
      * localement, et le renvoie pour publication.
+     *
+     * Sous le verrou de [SharedGameStats] : une suppression faite pendant la fusion serait
+     * sinon écrasée par la liste des suppressions relue juste avant, et le record reviendrait.
      */
-    private suspend fun mergeShared(remoteRaw: GamesSyncFile?): SharedParts {
+    private suspend fun mergeShared(remoteRaw: GamesSyncFile?): SharedParts = SharedGameStats.lock.withLock {
         // 1. Suppressions. Une suppression faite ailleurs et inconnue ici efface la
         //    valeur locale ; une suppression faite ici et inconnue du cloud écarte la
         //    valeur du cloud. On compare motif par motif, la date la plus récente gagne.
@@ -257,18 +362,30 @@ object GamesSyncManager {
                 })
             }
         SharedGameStats.saveOtherDevices(appContext, others)
-        val devices = others + (myId to DeviceCountersData(
+        val mine = DeviceCountersData(
             name      = SharedGameStats.deviceName(appContext),
             updatedAt = System.currentTimeMillis(),
             counters  = SharedGameStats.readLocalCounters(appContext)
-        ))
+        )
+        // Rien de neuf ici : l'entrée déjà publiée reste telle quelle, date comprise, pour que
+        // le fichier ne soit pas renvoyé à chaque sync.
+        val published = remoteRaw?.devices?.get(myId)
+        val devices = others + (myId to
+            if (published != null && published.name == mine.name && published.counters == mine.counters) published else mine)
 
-        return SharedParts(bestScores, devices, mergedResets)
+        SharedParts(bestScores, devices, mergedResets)
     }
 
     // ─── Résolution du conflit par l'utilisateur ──────────────────────────────
 
-    suspend fun resolveConflict(chosen: GamesSyncFile): SyncResult = withContext(Dispatchers.IO) {
+    /**
+     * Applique le choix fait devant un [SyncResult.Conflict].
+     *
+     * @param keepCloud vrai pour garder la partie du cloud, faux pour garder celle d'ici
+     * @param remote la partie du cloud montrée dans la question : si le cloud a bougé depuis,
+     *   la sync repart de zéro (et peut reposer la question)
+     */
+    suspend fun resolveConflict(keepCloud: Boolean, remote: GamesSyncFile): SyncResult = withContext(Dispatchers.IO) {
         try {
             val driveClient = getDriveClient()
                 ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
@@ -280,26 +397,30 @@ object GamesSyncManager {
                 // Sans réponse, on publierait sans les records et compteurs des autres
                 // appareils, qui disparaîtraient du cloud.
                 val remoteRaw = when (val read = readRemote(driveClient)) {
-                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
                     is RemoteRead.Answered -> read.file
+                    else -> return@withLock blocked(read)
                 }
+                if (remoteRaw?.clicker == null) return@withLock syncLocked(driveClient)
+                if (remoteRaw.seq != remote.seq) return@withLock syncLocked(driveClient)
                 val shared = mergeShared(remoteRaw)
-                val finalFile = chosen.withShared(shared)
+                val remoteFile = remoteRaw.withShared(shared)
 
-                // Uploader la save choisie
-                val uploaded = driveClient.writeJsonFile(SYNC_FILE, finalFile.toJson())
-                if (!uploaded) return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
-
-                // Appliquer localement
-                applyLocally(finalFile)
-                // Un clicker resté ouvert en arrière-plan tient encore l'ancienne partie en
-                // mémoire : sans ce signal, sa sauvegarde automatique l'écrirait par-dessus.
-                appContext.getSharedPreferences(RESTORE_PREFS, Context.MODE_PRIVATE).edit {
-                    putLong(KEY_RESTORE_GENERATION, restoreGeneration(appContext) + 1)
+                // D'abord ici, puis là-haut : un envoi raté laisse cet appareil sur le bon choix, et
+                // la sync suivante enverra sans reposer la question.
+                withContext(NonCancellable) {
+                    if (keepCloud) {
+                        takeCloud(remoteRaw.seq, remoteFile)
+                        Log.d(TAG, "Conflit résolu, partie du cloud appliquée")
+                        publishShared(driveClient, remoteFile, remoteRaw)
+                    } else {
+                        // Comme keepLocal de la ferme : on s'appuie sur la version du cloud sans toucher
+                        // à l'empreinte, la partie d'ici reste donc « à envoyer ».
+                        syncPrefs().edit { putLong(KEY_BASE_SEQ, remoteRaw.seq) }
+                        val localFile = buildLocalSyncFile().withShared(shared)
+                        Log.d(TAG, "Conflit résolu, partie d'ici publiée")
+                        publish(driveClient, localFile, remoteRaw.seq, partFingerprint(localFile))
+                    }
                 }
-
-                Log.d(TAG, "Conflit résolu, save appliquée")
-                SyncResult.Success
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur résolution conflit", e)

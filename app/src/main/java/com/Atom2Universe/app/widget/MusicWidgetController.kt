@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.Atom2Universe.app.AudioPlaybackManager
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.service.MidiPlaybackService
 import com.Atom2Universe.app.midi.service.MidiPlaybackState
 import com.Atom2Universe.app.music.MusicPlaybackHolder
@@ -37,7 +38,9 @@ object MusicWidgetController {
         val albumArtUri: String? = null,
         val hasNext: Boolean = false,
         val hasPrevious: Boolean = false,
-        val musicTrack: MusicTrack? = null
+        val musicTrack: MusicTrack? = null,
+        /** Rien ne joue et la dernière source sauvegardée est une station de radio. */
+        val isSavedRadio: Boolean = false
     )
 
     private var appContext: Context? = null
@@ -110,7 +113,7 @@ object MusicWidgetController {
                 val displayTitle = when {
                     !streamTitle.isNullOrBlank() -> streamTitle
                     station?.name?.isNotBlank() == true -> station.name
-                    else -> "Radio"
+                    else -> context.getString(R.string.music_widget_radio_label)
                 }
                 // Artist: stream artist si différent du titre, sinon station name
                 val displayArtist = when {
@@ -132,7 +135,8 @@ object MusicWidgetController {
             ActiveSource.MIDI -> {
                 // MIDI - récupère les infos depuis MidiPlaybackState
                 val track = MidiPlaybackState.getCurrentTrack()
-                val displayTitle = if (!track?.title.isNullOrBlank()) track!!.title else "MIDI"
+                val displayTitle = if (!track?.title.isNullOrBlank()) track!!.title
+                    else context.getString(R.string.music_widget_midi_label)
                 val displayArtist = if (!track?.artist.isNullOrBlank()) track!!.artist else ""
                 WidgetState(
                     source = ActiveSource.MIDI,
@@ -171,11 +175,12 @@ object MusicWidgetController {
                             source = ActiveSource.NONE,
                             isPlaying = false,
                             title = lastStation.name,
-                            artist = "Radio",
+                            artist = context.getString(R.string.music_widget_radio_label),
                             album = "",
                             albumArtUri = null,
                             hasNext = false,
-                            hasPrevious = false
+                            hasPrevious = false,
+                            isSavedRadio = true
                         )
                     } else {
                         WidgetState(

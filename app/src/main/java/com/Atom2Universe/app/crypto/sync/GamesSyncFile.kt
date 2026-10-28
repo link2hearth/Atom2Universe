@@ -483,6 +483,11 @@ fun resetsFromJson(obj: JSONObject?): Map<String, Long> {
 data class GamesSyncFile(
     val version: Int = CURRENT_VERSION,
     val lastModified: Long,
+    /**
+     * Le numéro de la partie du clicker publiée, neuf à chaque envoi. Seulement comparé par égalité
+     * avec celui sur lequel un appareil s'appuie : différent, quelqu'un a publié depuis.
+     */
+    val seq: Long = 0L,
     val clicker: ClickerSyncData? = null,
     val gacha: GachaSyncData? = null,
     val elementTokens: Int = 0,
@@ -503,6 +508,7 @@ data class GamesSyncFile(
     fun toJson(): String = JSONObject().apply {
         put("version", version)
         put("lastModified", lastModified)
+        put("seq", seq)
         clicker?.let { put("clicker", it.toJson()) }
         gacha?.let { put("gacha", it.toJson()) }
         put("elementTokens", elementTokens)
@@ -535,6 +541,7 @@ data class GamesSyncFile(
             return GamesSyncFile(
                 version       = j.optInt("version", 1),
                 lastModified  = j.optLong("lastModified", 0L),
+                seq           = j.optLong("seq", 0L),
                 clicker       = j.optJSONObject("clicker")?.let { ClickerSyncData.fromJson(it) },
                 gacha         = j.optJSONObject("gacha")?.let { GachaSyncData.fromJson(it) },
                 elementTokens = j.optInt("elementTokens", 0),

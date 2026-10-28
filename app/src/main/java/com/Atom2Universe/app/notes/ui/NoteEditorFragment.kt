@@ -34,6 +34,7 @@ import com.Atom2Universe.app.notes.editor.MarkdownEdits.Inline
 import com.Atom2Universe.app.notes.editor.MarkdownSyntax
 import com.Atom2Universe.app.notes.speech.SpeechToTextManager
 import com.Atom2Universe.app.notes.speech.TextToSpeechManager
+import com.Atom2Universe.app.notes.sync.NotesSyncStore
 import com.Atom2Universe.app.notes.viewmodel.NotesViewModel
 import com.Atom2Universe.app.pixelart.ui.LabeledSlider
 import com.Atom2Universe.app.pixelart.ui.SheetItem
@@ -91,6 +92,9 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
     private var loaded = false
     /** Mise à la corbeille depuis l'éditeur : plus rien à enregistrer. */
     private var discarded = false
+    /** La note et ses tags tels qu'ils sont en base : rien n'est réécrit tant qu'ils n'ont pas changé. */
+    private var savedNote: Note? = null
+    private var savedTagIds: Set<Long> = emptySet()
 
     private val stt by lazy { SpeechToTextManager(requireContext()) }
     private var tts: TextToSpeechManager? = null
@@ -145,12 +149,16 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
     private fun load() {
         val args = requireArguments()
         val id = args.getLong(ARG_NOTE_ID, 0L)
+        // Avant de la lire : une synchro qui passerait entre la lecture et ce signal l'écrirait sous nos pieds.
+        if (id > 0) NotesSyncStore.editingNoteId = id
         viewLifecycleOwner.lifecycleScope.launch {
             allTags = vm.getAllTags()
             val existing = if (id > 0) vm.getNoteWithTagsById(id) else null
             if (existing != null) {
                 note = existing.note
                 tagIds = existing.tags.map { it.id }.toSet()
+                savedNote = note
+                savedTagIds = tagIds
             } else {
                 val now = System.currentTimeMillis()
                 note = Note(
@@ -202,16 +210,21 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
             contentPlainText = MarkdownSyntax.toPlainText(content),
             dateModified = if (changed || note.id == 0L) System.currentTimeMillis() else note.dateModified,
         )
+        // Rien de neuf : pas d'écriture, donc pas de synchro programmée pour rien.
+        if (note.id != 0L && note == savedNote && tagIds == savedTagIds) return
         // Une frappe annule la sauvegarde en cours : sans NonCancellable, une insertion déjà faite en base
         // pouvait perdre son identifiant en route, et la sauvegarde suivante recréait la note en double.
         withContext(NonCancellable) {
             if (note.id == 0L) {
                 note = note.copy(id = vm.insertNote(note))
+                NotesSyncStore.editingNoteId = note.id
                 requireArguments().putLong(ARG_NOTE_ID, note.id)
             } else {
                 vm.updateNote(note)
             }
             vm.setTagsForNote(note.id, tagIds.toList())
+            savedNote = note
+            savedTagIds = tagIds
         }
         if (changed) loadBacklinks()
     }
@@ -230,9 +243,13 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
         super.onPause()
         autoSave?.cancel()
         stt.stopListening()
-        if (!loaded || discarded) return
-        // En quittant pour de bon, une note restée vide est effacée au lieu d'être gardée.
         val leaving = isRemoving || requireActivity().isFinishing
+        val heldId = requireArguments().getLong(ARG_NOTE_ID, 0L)
+        if (!loaded || discarded) {
+            if (leaving) releaseNote(heldId)
+            return
+        }
+        // En quittant pour de bon, une note restée vide est effacée au lieu d'être gardée.
         val dropBlank = leaving && isBlank() && tagIds.isEmpty()
         // Hors du fil de l'écran, dans un scope qui survit à l'éditeur et à l'activité :
         // l'écriture va au bout même si l'écran est détruit entre-temps.
@@ -242,7 +259,14 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
                     saveLock.withLock { if (note.id != 0L) vm.deleteForever(note.id) }
                 } else save()
             }
+            // La synchro peut reprendre la note, maintenant que sa dernière version est en base.
+            if (leaving) releaseNote(note.id.takeIf { it != 0L } ?: heldId)
         }
+    }
+
+    /** Rend la note à la synchro, sauf si un autre éditeur l'a déjà prise pour la sienne. */
+    private fun releaseNote(id: Long) {
+        if (id != 0L && NotesSyncStore.editingNoteId == id) NotesSyncStore.editingNoteId = 0L
     }
 
     override fun onDestroyView() {

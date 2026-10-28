@@ -2,6 +2,7 @@ package com.Atom2Universe.app.crypto.clicker
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber
@@ -63,6 +64,12 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     @Volatile private var initCompleted = false
 
+    // Remises à zéro et Big Bang demandés avant la fin du chargement : appliqués ensuite,
+    // sinon l'état chargé du disque les écraserait.
+    private var pendingResetStats = false
+    private var pendingResetClicker = false
+    private var pendingBigBang = false
+
     private var cachedElementBonuses: ElementBonuses? = null
     private var cachedFrenzyChance: Double? = null
 
@@ -98,6 +105,15 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Les widgets et les autres jeux créditent/débitent neutrino_prefs directement :
+    // l'état suit le vrai solde au lieu d'une copie périmée.
+    private val neutrinoListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "balance" || key == null) {
+            val balance = neutrinoRepo.getBalance()
+            if (_state.value.neutrinos != balance) _state.value = _state.value.copy(neutrinos = balance)
+        }
+    }
+
     private var autoSaveJob: Job? = null
     private var ticketCheckJob: Job? = null
     /** Dernier tick de la boucle APS, en mémoire : sert à repérer un gel (Doze) sans relire le disque. */
@@ -108,6 +124,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             .registerOnSharedPreferenceChangeListener(pendingResetListener)
         getApplication<Application>().getSharedPreferences("dev_ops_prefs", android.content.Context.MODE_PRIVATE)
             .registerOnSharedPreferenceChangeListener(devOpsListener)
+        getApplication<Application>().getSharedPreferences("neutrino_prefs", android.content.Context.MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(neutrinoListener)
 
         viewModelScope.launch {
             // Capturer lastOnline avant tout appel suspendu : la boucle de jeu démarre en
@@ -132,12 +150,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             } else loaded
 
             offlineRepo.save(now)
-            val recalcedState = recalcProduction(withGain)
-            _state.value = recalcedState
+            // Les stats d'abord : recalcProduction() s'en sert pour critUnlocked.
             stats = statsRepository.load()
             if (!offlineInitGain.isZero()) {
                 stats = stats.copy(lifetimeApsAtoms = stats.lifetimeApsAtoms.add(offlineInitGain))
             }
+            val recalcedState = recalcProduction(withGain)
+            _state.value = recalcedState
             unlockedAchievementIds.addAll(achievementRepository.loadUnlocked())
             // Débloquer silencieusement les succès acquis hors-ligne (sans animation)
             checkAchievements(recalcedState.lifetime, emitEvents = false)
@@ -156,13 +175,28 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                 elementTokens = elementTokenRepo.getBalance()
             )
 
-            initCompleted = true
+            completeInit()
+        }
+    }
+
+    private fun completeInit() {
+        initCompleted = true
+        if (pendingResetStats || pendingResetClicker) {
+            val resetStats = pendingResetStats
+            val resetClicker = pendingResetClicker
+            pendingResetStats = false
+            pendingResetClicker = false
+            applyPendingReset(resetStats, resetClicker)
+        }
+        if (pendingBigBang) {
+            pendingBigBang = false
+            applyBigBangReset()
         }
     }
 
     fun startGameLoop() {
         if (apsJob?.isActive == true) return
-        gameLoopStartMs = System.currentTimeMillis()
+        gameLoopStartMs = SystemClock.elapsedRealtime()
 
         // Recharger les stats depuis les prefs pour refléter un éventuel reset effectué
         // depuis ClickerStatsActivity pendant que le ViewModel était en arrière-plan.
@@ -193,15 +227,18 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
         lastLiveTickMs = System.currentTimeMillis()
         apsJob = viewModelScope.launch {
-            var lastTickMs = System.currentTimeMillis()
+            // Horloge monotone : un changement d'heure du système ne fige ni ne prolonge
+            // les frénésies.
+            var lastTickMs = SystemClock.elapsedRealtime()
             while (isActive) {
                 delay(100L)
-                val nowMs   = System.currentTimeMillis()
-                lastLiveTickMs = nowMs
+                val nowMs   = SystemClock.elapsedRealtime()
+                lastLiveTickMs = System.currentTimeMillis()
                 // Plafonné à 2s pour éviter de créditer des heures d'un coup après un
                 // gel Doze — les gains hors-ligne longs passent par resumeOfflineGains().
                 val deltaMs = (nowMs - lastTickMs).coerceIn(0L, 2_000L)
                 lastTickMs  = nowMs
+                if (!initCompleted) continue
 
                 val tickResult = frenzyManager.tick(nowMs, deltaMs, getFrenzyChance())
 
@@ -245,6 +282,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         autoSaveJob = viewModelScope.launch {
             while (isActive) {
                 delay(5_000L)
+                if (!initCompleted) continue
                 repository.save(_state.value)
                 persistStats()
                 // Horodatage hors-ligne écrit avec la partie (au lieu de chaque seconde) : après
@@ -267,6 +305,11 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
      * l'autosave ne réécrive pas les vieilles données par-dessus.
      */
     fun applyPendingReset(resetStats: Boolean, resetClicker: Boolean) {
+        if (!initCompleted) {
+            pendingResetStats = pendingResetStats || resetStats
+            pendingResetClicker = pendingResetClicker || resetClicker
+            return
+        }
         if (resetStats) {
             stats = ClickerStats()
         }
@@ -308,10 +351,14 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         )
 
         offlineRepo.save(System.currentTimeMillis())
-        initCompleted = true
+        completeInit()
     }
 
     fun applyBigBangReset() {
+        if (!initCompleted) {
+            pendingBigBang = true
+            return
+        }
         bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
         bigBangRepo.incrementBigBangCount()
 
@@ -325,7 +372,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                 godFingerLevel    = 0,
                 starCoreLevel     = 0,
                 gachaTickets      = s.gachaTickets,
-                neutrinos         = s.neutrinos,
+                neutrinos         = neutrinoRepo.getBalance(),
                 elementTokens     = elementTokenRepo.getBalance(),
                 apcToApsLevel     = s.apcToApsLevel,
                 apsToApcLevel     = s.apsToApcLevel,
@@ -341,11 +388,16 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         autoSaveJob?.cancel();      autoSaveJob      = null
         ticketCheckJob?.cancel();   ticketCheckJob   = null
 
+        // Partie pas encore chargée : rien à enregistrer (on écraserait la sauvegarde par un état vide).
+        if (!initCompleted) {
+            gameLoopStartMs = 0L
+            return
+        }
         offlineRepo.save(System.currentTimeMillis())
 
         if (gameLoopStartMs > 0L) {
             stats = stats.copy(
-                totalPlayTimeMs = stats.totalPlayTimeMs + (System.currentTimeMillis() - gameLoopStartMs)
+                totalPlayTimeMs = stats.totalPlayTimeMs + (SystemClock.elapsedRealtime() - gameLoopStartMs)
             )
             gameLoopStartMs = 0L
         }
@@ -380,7 +432,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun registerClick() {
-        val nowMs = System.currentTimeMillis()
+        if (!initCompleted) return
+        val nowMs = SystemClock.elapsedRealtime()
         val s = _state.value
         val isCrit = s.critUnlocked && (Math.random() < critChance(s))
         val gain = if (isCrit) s.perClick.multiplyNumber(critMultiplier(s)) else s.perClick
@@ -430,7 +483,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     /** Sauvegarde les stats en incluant le temps de jeu courant (sans réinitialiser gameLoopStartMs). */
     private fun persistStats() {
         val playTimeSnapshot = if (gameLoopStartMs > 0L) {
-            stats.copy(totalPlayTimeMs = stats.totalPlayTimeMs + (System.currentTimeMillis() - gameLoopStartMs))
+            stats.copy(totalPlayTimeMs = stats.totalPlayTimeMs + (SystemClock.elapsedRealtime() - gameLoopStartMs))
         } else stats
         statsRepository.save(playTimeSnapshot)
     }
@@ -501,15 +554,15 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         val spent = minOf(count, elementTokenRepo.getBalance())
         if (spent <= 0) return 0
         elementTokenRepo.consumeTokens(spent)
+        neutrinoRepo.addBalance(spent)
 
         val s = _state.value
         val newState = recalcProduction(s.copy(
-            neutrinos     = s.neutrinos + spent,
+            neutrinos     = neutrinoRepo.getBalance(),
             elementTokens = elementTokenRepo.getBalance()
         ))
         _state.value = newState
         viewModelScope.launch { repository.save(newState) }
-        neutrinoRepo.addBalance(spent)
         return spent
     }
 
@@ -522,7 +575,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     /** Retourne les stats actuelles (snapshot avec temps de jeu en cours). */
     fun getStatsSnapshot(): ClickerStats {
         return if (gameLoopStartMs > 0L) {
-            stats.copy(totalPlayTimeMs = stats.totalPlayTimeMs + (System.currentTimeMillis() - gameLoopStartMs))
+            stats.copy(totalPlayTimeMs = stats.totalPlayTimeMs + (SystemClock.elapsedRealtime() - gameLoopStartMs))
         } else stats
     }
 
@@ -573,14 +626,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun buyApcToAps() {
         val s = _state.value
         val cost = apcToApsCost()
-        if (s.neutrinos < cost) return
+        if (!neutrinoRepo.subtractBalance(cost)) return
         val afterPurchase = s.copy(
-            neutrinos = s.neutrinos - cost,
+            neutrinos = neutrinoRepo.getBalance(),
             apcToApsLevel = s.apcToApsLevel + 1
         )
         val newState = recalcProduction(afterPurchase)
         _state.value = newState
-        neutrinoRepo.setBalance(afterPurchase.neutrinos)
         viewModelScope.launch { repository.save(newState) }
     }
 
@@ -589,14 +641,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun buyApsToApc() {
         val s = _state.value
         val cost = apsToApcCost()
-        if (s.neutrinos < cost) return
+        if (!neutrinoRepo.subtractBalance(cost)) return
         val afterPurchase = s.copy(
-            neutrinos = s.neutrinos - cost,
+            neutrinos = neutrinoRepo.getBalance(),
             apsToApcLevel = s.apsToApcLevel + 1
         )
         val newState = recalcProduction(afterPurchase)
         _state.value = newState
-        neutrinoRepo.setBalance(afterPurchase.neutrinos)
         viewModelScope.launch { repository.save(newState) }
     }
 
@@ -606,14 +657,12 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     /** Échange [NEUTRINOS_PER_TICKET] neutrinos contre 1 ticket gacha. */
     fun buyNeutrinoTicket() {
         val s = _state.value
-        val cost = NEUTRINOS_PER_TICKET
-        if (s.neutrinos < cost) return
+        if (!neutrinoRepo.subtractBalance(NEUTRINOS_PER_TICKET)) return
         val newState = s.copy(
-            neutrinos = s.neutrinos - cost,
+            neutrinos = neutrinoRepo.getBalance(),
             gachaTickets = s.gachaTickets + 1
         )
         _state.value = newState
-        neutrinoRepo.setBalance(newState.neutrinos)
         viewModelScope.launch {
             repository.addGachaTickets(1)
             repository.save(newState)
@@ -700,7 +749,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     private fun recalcProduction(
         state: ClickerGameState,
-        nowMs: Long = System.currentTimeMillis()
+        nowMs: Long = SystemClock.elapsedRealtime()
     ): ClickerGameState {
         val elem = getElementBonuses()
 
@@ -797,6 +846,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun getUnlockedAchievementIds(): Set<String> = unlockedAchievementIds.toSet()
 
     fun save() {
+        if (!initCompleted) return
         viewModelScope.launch { withContext(NonCancellable) { repository.save(_state.value) } }
     }
 
@@ -816,17 +866,24 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // La partie est déjà enregistrée par stopGameLoop() (onStop précède toujours onCleared) ;
+    // viewModelScope est annulé ici, une sauvegarde lancée dessus ne partirait jamais.
     override fun onCleared() {
         super.onCleared()
-        getApplication<Application>().getSharedPreferences("pending_reset_flags", android.content.Context.MODE_PRIVATE)
+        val app = getApplication<Application>()
+        app.getSharedPreferences("pending_reset_flags", android.content.Context.MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(pendingResetListener)
+        app.getSharedPreferences("dev_ops_prefs", android.content.Context.MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(devOpsListener)
+        app.getSharedPreferences("neutrino_prefs", android.content.Context.MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(neutrinoListener)
+        if (!initCompleted) return
         offlineRepo.save(System.currentTimeMillis())
         if (gameLoopStartMs > 0L) {
             stats = stats.copy(
-                totalPlayTimeMs = stats.totalPlayTimeMs + (System.currentTimeMillis() - gameLoopStartMs)
+                totalPlayTimeMs = stats.totalPlayTimeMs + (SystemClock.elapsedRealtime() - gameLoopStartMs)
             )
         }
         statsRepository.save(stats)
-        viewModelScope.launch { withContext(NonCancellable) { repository.save(_state.value) } }
     }
 }

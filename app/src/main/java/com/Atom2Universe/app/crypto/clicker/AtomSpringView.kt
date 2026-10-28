@@ -7,9 +7,12 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
+import java.util.concurrent.Executors
 import kotlin.math.*
 
 class AtomSpringView @JvmOverloads constructor(
@@ -29,20 +32,96 @@ class AtomSpringView @JvmOverloads constructor(
 
     private var currentIndex = 0
     private var currentBitmap: Bitmap? = null
+    /** Jeton du dernier décodage demandé : un résultat plus ancien est ignoré. */
+    private var decodeToken = 0
 
-    private fun loadBitmap(index: Int): Bitmap? = try {
-        if (isCustomMode) {
-            context.contentResolver.openInputStream(customImageUris[index])
-                ?.use { BitmapFactory.decodeStream(it) }
-        } else {
-            null
+    companion object {
+        // Un seul fil pour toutes les vues : les photos ne se décodent jamais sur le fil UI.
+        private val decodeExecutor by lazy { Executors.newSingleThreadExecutor() }
+        private val mainHandler = Handler(Looper.getMainLooper())
+
+        /** Délai entre deux images pendant et juste après les clics (~30 i/s), puis au repos (~20 i/s). */
+        private const val ACTIVE_FRAME_MS = 30L
+        private const val IDLE_FRAME_MS = 45L
+        private const val ACTIVE_AFTER_CLICK_MS = 1_500L
+        /** Pas d'intégration du ressort (le mouvement reste exprimé en secondes). */
+        private const val PHYSICS_STEP_S = 1f / 120f
+    }
+
+    /**
+     * Décode une image perso réduite à la taille affichée au plus (côté le plus long),
+     * au lieu de la photo en taille réelle (12 Mpx = 48 Mo).
+     */
+    private fun decodeScaled(resolver: android.content.ContentResolver, uri: Uri, targetPx: Int): Bitmap? = try {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+        val maxDim = maxOf(bounds.outWidth, bounds.outHeight)
+        if (maxDim <= 0) null else {
+            var sample = 1
+            while (maxDim / (sample * 2) >= targetPx) sample *= 2
+            val decoded = resolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample })
+            }
+            val decodedMax = decoded?.let { maxOf(it.width, it.height) } ?: 0
+            if (decoded != null && decodedMax > targetPx) {
+                val scale = targetPx.toFloat() / decodedMax
+                Bitmap.createScaledBitmap(
+                    decoded,
+                    (decoded.width * scale).roundToInt().coerceAtLeast(1),
+                    (decoded.height * scale).roundToInt().coerceAtLeast(1),
+                    true
+                ).also { if (it !== decoded) decoded.recycle() }
+            } else decoded
         }
-    } catch (_: Exception) { null }
+    } catch (_: Exception) { null } catch (_: OutOfMemoryError) { null }
+
+    /** Taille maximale affichée : mode agrandi = 72 % du petit côté de l'écran, sinon 160 dp. */
+    private fun customTargetPx(): Int {
+        val metrics = resources.displayMetrics
+        val bigger = minOf(metrics.widthPixels, metrics.heightPixels) * 0.72f
+        return maxOf(bigger, 160f * metrics.density).roundToInt().coerceAtLeast(1)
+    }
+
+    /**
+     * Charge en arrière-plan la première image décodable à partir de [start]
+     * (puis depuis 0), comme avant mais hors du fil UI.
+     */
+    private fun loadCustomFrom(start: Int) {
+        val uris = customImageUris
+        val token = ++decodeToken
+        val resolver = context.applicationContext.contentResolver
+        val targetPx = customTargetPx()
+        decodeExecutor.execute {
+            var i = start
+            var bmp = decodeScaled(resolver, uris[i], targetPx)
+            while (bmp == null && i < uris.size - 1) {
+                i++
+                bmp = decodeScaled(resolver, uris[i], targetPx)
+            }
+            if (bmp == null) {
+                if (start != 0) bmp = decodeScaled(resolver, uris[0], targetPx)
+                i = 0
+            }
+            val found = i
+            val result = bmp
+            mainHandler.post {
+                if (token != decodeToken || uris !== customImageUris) return@post
+                currentIndex = found
+                currentBitmap = result
+                invalidate()
+            }
+        }
+    }
 
     fun setCustomImageUris(uris: List<Uri>) {
         customImageUris = uris
         currentIndex = currentIndex.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
-        currentBitmap = if (fileCount > 0) loadBitmap(currentIndex) else null
+        if (isCustomMode) {
+            loadCustomFrom(currentIndex)
+        } else {
+            decodeToken++
+            currentBitmap = null
+        }
         invalidate()
     }
 
@@ -63,20 +142,9 @@ class AtomSpringView @JvmOverloads constructor(
             invalidate()
             return
         }
-        val start = index.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
-        var i = start
-        var bmp = loadBitmap(i)
-        while (bmp == null && i < fileCount - 1) {
-            i++
-            bmp = loadBitmap(i)
-        }
-        if (bmp == null) {
-            i = 0
-            bmp = loadBitmap(i)
-        }
-        currentIndex = i
-        currentBitmap = bmp
-        invalidate()
+        // L'image affichée reste en place jusqu'à ce que la suivante soit décodée.
+        currentIndex = index.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
+        loadCustomFrom(currentIndex)
     }
 
     /** Passe au variant suivant, retourne le nouvel index pour le persister. */
@@ -110,25 +178,54 @@ class AtomSpringView @JvmOverloads constructor(
     private val paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
     private val matrix = Matrix()
 
+    private var lastClickMs = 0L
+    /** Vrai tant qu'une image est programmée au rythme lent du repos. */
+    private var idleFrameScheduled = false
+
+    // Cadence plafonnée (30 i/s pendant les clics, 20 i/s au repos) au lieu de chaque
+    // rafraîchissement de l'écran ; le ressort est intégré par petits pas sur le temps
+    // réellement écoulé, donc le mouvement garde la même vitesse.
     private val choreographer = Choreographer.getInstance()
     private val tick = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
-            val delta = if (lastFrameNs == 0L) 0f
-                        else ((frameTimeNanos - lastFrameNs) / 1_000_000_000f).coerceIn(0f, 0.05f)
+            idleFrameScheduled = false
+            val elapsed = if (lastFrameNs == 0L) 0f
+                          else ((frameTimeNanos - lastFrameNs) / 1_000_000_000f).coerceIn(0f, 0.25f)
             lastFrameNs = frameTimeNanos
-            seconds += delta * motionFactor
+            seconds += elapsed * motionFactor
             updateClickStrength()
-            updateSpring(delta, targetStrength)
+            var remaining = elapsed
+            while (remaining > 0f) {
+                val step = minOf(remaining, PHYSICS_STEP_S)
+                updateSpring(step, targetStrength)
+                remaining -= step
+            }
             invalidate()
-            if (isShown && windowVisibility == VISIBLE) choreographer.postFrameCallback(this)
+            if (isShown && windowVisibility == VISIBLE) scheduleNextFrame()
         }
+    }
+
+    private fun isClickActive(): Boolean =
+        System.currentTimeMillis() - lastClickMs < ACTIVE_AFTER_CLICK_MS || intensity > 0.05f
+
+    private fun scheduleNextFrame() {
+        val active = isClickActive()
+        idleFrameScheduled = !active
+        choreographer.postFrameCallbackDelayed(tick, if (active) ACTIVE_FRAME_MS else IDLE_FRAME_MS)
     }
 
     fun registerClick() {
         val now = System.currentTimeMillis()
+        lastClickMs = now
         clickHistory.addLast(now)
         purgeOldClicks(now)
         injectImpulse()
+        // Sortie du repos : l'image suivante part sans attendre le rythme lent.
+        if (idleFrameScheduled && isAttachedToWindow && isShown && windowVisibility == VISIBLE) {
+            choreographer.removeFrameCallback(tick)
+            idleFrameScheduled = false
+            choreographer.postFrameCallback(tick)
+        }
     }
 
     private fun purgeOldClicks(now: Long) {
@@ -260,6 +357,7 @@ class AtomSpringView @JvmOverloads constructor(
 
     private fun resumeAnimation() {
         choreographer.removeFrameCallback(tick)
+        idleFrameScheduled = false
         lastFrameNs = 0L
         if (isAttachedToWindow && isShown && windowVisibility == VISIBLE)
             choreographer.postFrameCallback(tick)

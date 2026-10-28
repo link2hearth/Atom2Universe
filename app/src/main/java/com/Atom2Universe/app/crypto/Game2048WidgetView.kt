@@ -51,6 +51,13 @@ class Game2048WidgetView @JvmOverloads constructor(
     private lateinit var difficultyOverlay: FrameLayout
     private lateinit var quantumToggle: SwitchCompat
 
+    // Nouvelle partie automatique après une victoire ou une défaite
+    private val autoRestart = Runnable {
+        val qTarget = if (game.quantumMode) game.quantumTarget else 0
+        val jokers = if (game.quantumMode) QUANTUM_JOKERS[game.quantumTarget] ?: 0 else 0
+        startNewGame(game.size, game.target, qTarget, jokers)
+    }
+
     // ── Zoom (pinch 2 doigts) ─────────────────────────────────────────────────
     private val minScale = 0.4f
     private val maxScale = 3.0f
@@ -67,6 +74,7 @@ class Game2048WidgetView @JvmOverloads constructor(
                 }
                 return true
             }
+            override fun onScaleEnd(detector: ScaleGestureDetector) { keepFloatingWidgetOnScreen() }
         })
 
     // ── Drag du widget depuis le header ───────────────────────────────────────
@@ -143,6 +151,7 @@ class Game2048WidgetView @JvmOverloads constructor(
 
         // Charger la partie sauvegardée
         reload()
+        keepFloatingWidgetOnScreenOnResize()
     }
 
     // ── Interception du pinch-zoom (2 doigts) avant les enfants ──────────────
@@ -194,6 +203,7 @@ class Game2048WidgetView @JvmOverloads constructor(
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                keepFloatingWidgetOnScreen()
                 isDragging = false
                 skipNextDragFrame = false
             }
@@ -203,12 +213,14 @@ class Game2048WidgetView @JvmOverloads constructor(
 
     // ── Gestion du swipe sur le plateau ───────────────────────────────────────
     private fun handleSwipe(direction: Game2048Logic.Direction) {
-        if (game.gameOver) return
+        // Partie finie (gagnée ou perdue) : on attend la nouvelle partie automatique
+        if (game.gameOver || game.hasWon) return
         val moved = game.move(direction)
         if (!moved) return
 
         boardView.refresh()
         updateHeaderTarget()
+        // hasWon est sauvegardé avec la partie : c'est le drapeau « récompense versée »
         persistState()
 
         if (game.hasWon) {
@@ -216,16 +228,14 @@ class Game2048WidgetView @JvmOverloads constructor(
             NeutrinoRepository(context).addBalance(20)
         }
         if (game.hasWon || game.gameOver) {
-            boardView.postDelayed({
-                val qTarget = if (game.quantumMode) game.quantumTarget else 0
-                val jokers = if (game.quantumMode) QUANTUM_JOKERS[game.quantumTarget] ?: 0 else 0
-                startNewGame(game.size, game.target, qTarget, jokers)
-            }, 1200)
+            boardView.removeCallbacks(autoRestart)
+            boardView.postDelayed(autoRestart, 1200)
         }
     }
 
     // ── Nouvelle partie ───────────────────────────────────────────────────────
     private fun startNewGame(size: Int, target: Int, quantumTarget: Int = 0, jokers: Int = 0, countStat: Boolean = false) {
+        boardView.removeCallbacks(autoRestart)
         difficultyOverlay.visibility = GONE
         val isQuantum = quantumTarget > 0
         game.newGame(size, target, isQuantum, quantumTarget, jokers)
@@ -281,6 +291,11 @@ class Game2048WidgetView @JvmOverloads constructor(
         }
         if (!restored) {
             game.newGame(4, 256)
+        }
+        // Partie terminée dont la relance automatique n'a pas eu lieu (écran quitté entre-temps)
+        if (game.hasWon || game.gameOver) {
+            boardView.removeCallbacks(autoRestart)
+            boardView.postDelayed(autoRestart, 1200)
         }
         // Synchroniser le toggle quantique de l'overlay avec l'état restauré
         quantumToggle.isChecked = game.quantumMode

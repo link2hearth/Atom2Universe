@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.crypto.fusion
 
+import android.os.Handler
+import android.os.Looper
 import com.Atom2Universe.app.crypto.sound.SharedSonivoxDriver
 
 /**
@@ -15,6 +17,9 @@ import com.Atom2Universe.app.crypto.sound.SharedSonivoxDriver
  *
  * Passe par [SharedSonivoxDriver] (comptage de références) : libérer le moteur
  * en quittant la fusion ne doit pas couper le son du clicker sous-jacent.
+ *
+ * Notes et retards sont planifiés sur le fil principal ; [stop] éteint les notes
+ * encore tenues avant de libérer le moteur (sinon elles restent bloquées).
  */
 class FusionSoundEngine {
 
@@ -22,6 +27,10 @@ class FusionSoundEngine {
 
     private var acquired = false
     private var ready = false
+
+    private val handler = Handler(Looper.getMainLooper())
+    // Notes allumées sans leur note-off (canal shl 8 or note)
+    private val soundingNotes = mutableListOf<Int>()
 
     fun start() {
         if (acquired) return
@@ -40,6 +49,11 @@ class FusionSoundEngine {
 
     fun stop() {
         if (!acquired) return
+        handler.removeCallbacksAndMessages(null)
+        for (key in soundingNotes) {
+            SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or (key shr 8)).toByte(), (key and 0xFF).toByte(), 0))
+        }
+        soundingNotes.clear()
         acquired = false
         ready = false
         SharedSonivoxDriver.release()
@@ -116,28 +130,24 @@ class FusionSoundEngine {
     private fun perc(note: Int, vel: Int) =
         SharedSonivoxDriver.queueEvent(byteArrayOf(0x99.toByte(), note.toByte(), vel.toByte()))
 
-    private fun percDelayed(note: Int, vel: Int, delayMs: Long) = Thread {
-        try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-        if (ready) perc(note, vel)
-    }.start()
+    private fun percDelayed(note: Int, vel: Int, delayMs: Long) {
+        handler.postDelayed({ if (ready) perc(note, vel) }, delayMs)
+    }
 
     private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) {
         if (!ready) return
         SharedSonivoxDriver.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
-        Thread {
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
-        }.start()
+        val key = (ch shl 8) or note
+        soundingNotes.add(key)
+        handler.postDelayed({
+            if (soundingNotes.remove(key)) {
+                SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
+            }
+        }, durationMs)
     }
 
     private fun noteDelayed(ch: Int, note: Int, vel: Int, durationMs: Long, delayMs: Long) {
-        Thread {
-            try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-            if (!ready) return@Thread
-            SharedSonivoxDriver.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
-        }.start()
+        handler.postDelayed({ noteOnOff(ch, note, vel, durationMs) }, delayMs)
     }
 
     private fun programChange(ch: Int, prog: Int) =

@@ -20,9 +20,7 @@ class AudioSubHubActivity : BaseHubActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tilesAdapter.setIllustratedListMode(true)
-        val recycler = findViewById<RecyclerView>(R.id.hub_recycler_view)
-        ambience = AudioHubAmbience(recycler)
-        recycler.addItemDecoration(ambience)
+        ambience = AudioHubAmbience(findViewById<RecyclerView>(R.id.hub_recycler_view))
     }
 
     override fun onResume() {

@@ -48,6 +48,13 @@ internal object AppEffects {
         private var content: ViewGroup? = null
         private var active = false
         private val sound = EffectsSoundPlayer(activity)
+        // False while this screen's theme never had ornaments: no card needs a refresh.
+        private var ornamentsSeen = false
+        private var layoutPending = false
+        private val layoutRefresh = Runnable {
+            layoutPending = false
+            refresh()
+        }
 
         override fun onStart(owner: LifecycleOwner) {
             content = activity.findViewById(android.R.id.content)
@@ -68,6 +75,8 @@ internal object AppEffects {
 
         override fun onStop(owner: LifecycleOwner) {
             content?.viewTreeObserver?.takeIf { it.isAlive }?.removeOnGlobalLayoutListener(this)
+            content?.removeCallbacks(layoutRefresh)
+            layoutPending = false
             decorations.values.forEach { it.close() }
             decorations.clear()
             content = null
@@ -80,15 +89,24 @@ internal object AppEffects {
             owner.lifecycle.removeObserver(this)
         }
 
-        override fun onGlobalLayout() = refresh()
+        override fun onGlobalLayout() {
+            // Effects off and a theme without ornaments: nothing to follow after a layout.
+            if (!ornamentsSeen && decorations.isEmpty() && !AppThemeManager.getEffects(activity).wantsTargets()) return
+            // Consecutive layouts share one walk.
+            if (layoutPending) return
+            val root = content ?: return
+            layoutPending = true
+            root.post(layoutRefresh)
+        }
 
         fun refresh() {
             val root = content ?: return
             // Static ornamentation is independent of whether an animated effect pack is enabled.
-            OrnamentStyle.refreshCards(root, activity)
+            if (AppearanceStyle.hasOrnaments(activity)) ornamentsSeen = true
             val settings = AppThemeManager.getEffects(activity)
             val targets = mutableListOf<View>()
-            if (settings.enabled && settings.pack != null) collectTargets(root, targets)
+            val collect = settings.wantsTargets()
+            if (ornamentsSeen || collect) visit(root, ornamentsSeen, if (collect) targets else null)
             val obsolete = decorations.keys.filter { it !in targets }
             obsolete.forEach { decorations.remove(it)?.close() }
             val palette = EffectsPalette.from(activity)
@@ -102,10 +120,14 @@ internal object AppEffects {
             sound.update(settings, active && targets.isNotEmpty() && soundHost)
         }
 
-        private fun collectTargets(view: View, targets: MutableList<View>) {
+        private fun AppEffectsSettings.wantsTargets() = enabled && pack != null
+
+        /** One walk for both: refreshes ornamental cards after a live theme change, collects effect targets. */
+        private fun visit(view: View, cards: Boolean, targets: MutableList<View>?) {
             if (view.visibility != View.VISIBLE) return
-            if (view.getTag(R.id.app_effects_scene) != null) targets += view
-            if (view is ViewGroup) for (i in 0 until view.childCount) collectTargets(view.getChildAt(i), targets)
+            if (cards && view is OrnamentalCard) view.refreshOrnament(activity)
+            if (targets != null && view.getTag(R.id.app_effects_scene) != null) targets += view
+            if (view is ViewGroup) for (i in 0 until view.childCount) visit(view.getChildAt(i), cards, targets)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.crypto
 
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -75,6 +76,7 @@ class CryptoChartActivity : ThemedActivity() {
 
         /** Plafond de bougies accumulées en mémoire par paire+intervalle. */
         private const val MAX_CANDLES = 20_000
+        private const val OLDER_RETRY_DELAY_MS = 10_000L
         private val DEFAULT_WATCHLIST = listOf(ASSET_BTC, ASSET_ETH)
 
         /** Périodes de moyenne mobile proposées dans le menu, façon TradingView. */
@@ -136,6 +138,9 @@ class CryptoChartActivity : ThemedActivity() {
 
     /** Téléchargement de bougies plus anciennes en cours. */
     private var olderJob: Job? = null
+
+    /** Après un échec (hors ligne), pas de nouvel essai avant cet instant (sinon une requête par image). */
+    private var olderRetryAt = 0L
 
     /** Clés (paire+intervalle) dont tout l'historique disponible a déjà été chargé. */
     private val exhaustedHistory = HashSet<String>()
@@ -308,6 +313,8 @@ class CryptoChartActivity : ThemedActivity() {
                 persistDisplayPrefs()
                 updateTimeframeLabel()
                 reload()
+                // La cadence du rafraîchissement dépend de l'intervalle
+                if (refreshJob != null) startAutoRefresh()
             }
             true
         }
@@ -680,7 +687,20 @@ class CryptoChartActivity : ThemedActivity() {
         if (cached != null && System.currentTimeMillis() - cached.fetchedAt < cacheTtlMs(i)) {
             return cached.candles
         }
-        val fresh = withContext(Dispatchers.IO) { fetchCandles(symbol, i) }
+        // Rafraîchissement : seules les bougies apparues depuis la dernière en cache (et
+        // celle-ci, encore en cours) sont retéléchargées, pas les 1000 à chaque fois.
+        val lastCached = cached?.candles?.lastOrNull()
+        val limit = lastCached?.let { last ->
+            ((System.currentTimeMillis() - last.openTime) / i.approxMillis + 2)
+                .coerceIn(2L, CryptoCandleInterval.FETCH_LIMIT.toLong()).toInt()
+        } ?: CryptoCandleInterval.FETCH_LIMIT
+        var fresh = withContext(Dispatchers.IO) { fetchCandles(symbol, i, limit = limit) }
+        if (lastCached != null && fresh.isNotEmpty() && fresh.first().openTime > lastCached.openTime &&
+            limit < CryptoCandleInterval.FETCH_LIMIT
+        ) {
+            // Trou entre le cache et la fenêtre reçue (horloge décalée) : fenêtre complète
+            fresh = withContext(Dispatchers.IO) { fetchCandles(symbol, i) }
+        }
         if (fresh.isEmpty()) throw InvalidSymbolException()
         val merged = if (cached != null && cached.candles.isNotEmpty()) {
             val cutoff = fresh.first().openTime
@@ -705,6 +725,7 @@ class CryptoChartActivity : ThemedActivity() {
         if (key != displayedKey) return
         if (exhaustedHistory.contains(key)) return
         if (olderJob?.isActive == true) return
+        if (SystemClock.elapsedRealtime() < olderRetryAt) return
         val current = candleCache[key]?.candles ?: return
         if (current.isEmpty()) return
         if (current.size >= MAX_CANDLES) {
@@ -733,7 +754,8 @@ class CryptoChartActivity : ThemedActivity() {
             } catch (error: CancellationException) {
                 throw error
             } catch (error: Exception) {
-                // Échec réseau ponctuel : on laisse la main, nouvel essai au prochain bord.
+                // Échec réseau : nouvel essai au prochain passage au bord, après un délai.
+                olderRetryAt = SystemClock.elapsedRealtime() + OLDER_RETRY_DELAY_MS
             }
         }
     }
@@ -753,10 +775,11 @@ class CryptoChartActivity : ThemedActivity() {
     private suspend fun fetchCandles(
         symbol: String,
         interval: CryptoCandleInterval,
-        endTimeMs: Long? = null
+        endTimeMs: Long? = null,
+        limit: Int = CryptoCandleInterval.FETCH_LIMIT
     ): List<Candle> {
         var url = "$BASE_URL/api/v3/klines?symbol=$symbol" +
-            "&interval=${interval.binanceInterval}&limit=${CryptoCandleInterval.FETCH_LIMIT}"
+            "&interval=${interval.binanceInterval}&limit=$limit"
         if (endTimeMs != null) url += "&endTime=$endTimeMs"
         val request = Request.Builder().url(url).build()
         val response = httpClient.newCall(request).await()
@@ -811,7 +834,8 @@ class CryptoChartActivity : ThemedActivity() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                continuation.resume(response)
+                // Coroutine annulée entre-temps : la réponse est fermée au lieu d'être perdue
+                continuation.resume(response) { _, value, _ -> value.close() }
             }
         })
         continuation.invokeOnCancellation {

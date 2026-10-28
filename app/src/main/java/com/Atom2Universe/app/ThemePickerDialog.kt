@@ -41,6 +41,13 @@ class ThemePickerDialog(
     private var spectrum = AppThemeManager.getSelectedSpectrum(context) ?: nearestSpectrum()
     private var updatingUi = false
     private var effectsExpanded = false
+    // While the hue bar is dragged, the hub behind restyles at most every HUB_REFRESH_MS.
+    private var trackingHue = false
+    private var hubRefreshPending = false
+    private val hubRefresh = Runnable {
+        hubRefreshPending = false
+        onChanged()
+    }
 
     private lateinit var content: LinearLayout
     private lateinit var hueBar: SeekBar
@@ -89,8 +96,13 @@ class ThemePickerDialog(
                     spectrum = spectrum.copy(hue = progress)
                     applyChange()
                 }
-                override fun onStartTrackingTouch(bar: SeekBar) = Unit
-                override fun onStopTrackingTouch(bar: SeekBar) = Unit
+                override fun onStartTrackingTouch(bar: SeekBar) {
+                    trackingHue = true
+                }
+                override fun onStopTrackingTouch(bar: SeekBar) {
+                    trackingHue = false
+                    if (hubRefreshPending) refreshHubNow()
+                }
             })
         }
         body.addView(hueBar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)))
@@ -297,9 +309,19 @@ class ThemePickerDialog(
     private fun applyChange() {
         AppThemeManager.setSelection(context, appearance, brightness, tintedSurfaces, effects,
             preset, spectrum, synchronous = false)
-        onChanged()
+        if (!trackingHue) refreshHubNow()
+        else if (!hubRefreshPending) {
+            hubRefreshPending = true
+            content.postDelayed(hubRefresh, HUB_REFRESH_MS)
+        }
         AppThemeManager.refreshContextTheme(context, dialog = true)
         refreshControls()
+    }
+
+    private fun refreshHubNow() {
+        content.removeCallbacks(hubRefresh)
+        hubRefreshPending = false
+        onChanged()
     }
 
     private fun refreshControls() {
@@ -415,5 +437,9 @@ class ThemePickerDialog(
         return (0 until SpectrumThemes.HUES).flatMap { hue ->
             AppThemeManager.spectrumLevelLabels.indices.map { AppThemeManager.Spectrum(hue, it) }
         }.minBy { distance(SpectrumThemes.accent(it.hue, it.level)) }
+    }
+
+    private companion object {
+        const val HUB_REFRESH_MS = 150L
     }
 }

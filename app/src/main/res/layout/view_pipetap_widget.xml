@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:paddingStart="10dp"
-                android:text="⬡ PipeTap"
+                android:text="@string/pipetap_widget_title"
                 android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp" />
 

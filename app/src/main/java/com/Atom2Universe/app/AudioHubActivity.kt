@@ -52,6 +52,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -61,7 +62,6 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         private const val PREFS_NAME = "audio_hub_prefs"
         private const val KEY_TILE_ORDER = "tile_order"
         private const val KEY_VIEW_MODE = "view_mode"
-        private const val KEY_TILE_COLORS = "tile_colors"
         private const val KEY_QUICK_ACCESS = "quick_access"
         private const val KEY_PERMISSION_ASKED = "permission_asked"
         private const val KEY_NOTIFICATION_PERMISSION_ASKED = "notification_permission_asked"
@@ -71,6 +71,9 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         // SavedInstanceState keys for locale change preservation
         private const val STATE_IS_GRID_MODE = "state_is_grid_mode"
         private const val STATE_IS_EDIT_MODE = "state_is_edit_mode"
+
+        // Délai laissé à Android pour recréer l'écran après un changement de langue
+        private const val LANGUAGE_RECREATE_FALLBACK_MS = 1000L
 
         // Tile IDs
         const val TILE_AUDIO = "audio"
@@ -137,6 +140,8 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
 
     // CoroutineScope pour les opérations en arrière-plan
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val signInManager by lazy { GoogleSignInManager(this) }
+    private val updateRepository by lazy { com.Atom2Universe.app.update.AppUpdateRepository(this) }
 
     // All available tiles using generalized HubTile
     private val defaultTiles = listOf(
@@ -387,6 +392,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         playbackController.start()
         SleepTimerManager.addListener(this)
         updateSleepTimerButtonState()
+        if (::tilesAdapter.isInitialized) tilesAdapter.setWobblePaused(false)
     }
 
     override fun onStop() {
@@ -394,6 +400,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         playbackController.removeListener(this)
         playbackController.stop()
         SleepTimerManager.removeListener(this)
+        if (::tilesAdapter.isInitialized) tilesAdapter.setWobblePaused(true)
     }
 
     override fun onResume() {
@@ -406,7 +413,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         refreshAppUpdateButton()
         // Reload tiles to pick up any new quick-access shortcuts set from sub-hubs
         if (::tilesAdapter.isInitialized) {
-            loadTiles()
+            loadTiles(onlyIfChanged = true)
             // Meme pastille que sur la tuile de la ferme, mais posee sur le raccourci Ma Ferme de la
             // tuile Jeux : sans raccourci epingle, rien ne s'affiche, la tuile Jeux ne compte pas.
             tilesAdapter.setQuickAccessNotificationCount(TILE_GAMES, FarmActivity::class.java.name, farmReadyCount)
@@ -422,23 +429,22 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
 
     private fun refreshAppUpdateButton() {
         val button = findViewById<ImageButton>(R.id.app_update_button)
-        val repository = com.Atom2Universe.app.update.AppUpdateRepository(this)
-        fun showAvailable() {
-            button.visibility = if (repository.cachedRelease() != null) View.VISIBLE else View.GONE
-        }
         button.setOnClickListener {
             startActivity(Intent(this, com.Atom2Universe.app.update.AppUpdateActivity::class.java))
         }
-        showAvailable()
+        // La version gardée est un JSON à décoder : hors du fil de l'écran
         activityScope.launch {
-            try {
-                repository.check()
-                showAvailable()
+            val cached = withContext(Dispatchers.IO) { updateRepository.cachedRelease() }
+            button.visibility = if (cached != null) View.VISIBLE else View.GONE
+            val release = try {
+                updateRepository.check()
             } catch (cancelled: kotlinx.coroutines.CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
                 Log.d("AppUpdate", "Background release check unavailable", error)
+                cached
             }
+            button.visibility = if (release != null) View.VISIBLE else View.GONE
         }
     }
 
@@ -712,7 +718,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
      */
     private fun updateCloudButtonState() {
         if (!::cloudButton.isInitialized) return
-        val signedIn = GoogleSignInManager(this).isSignedIn()
+        val signedIn = signInManager.isSignedIn()
         cloudButton.setImageResource(
             if (signedIn) R.drawable.ic_cloud else R.drawable.ic_cloud_off
         )
@@ -733,9 +739,16 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             .setSingleChoiceItems(displayNames, currentIndex) { dialog, which ->
                 val selectedLanguage = languages[which]
                 if (selectedLanguage != currentLanguage) {
-                    LocaleHelper.setLanguage(this, selectedLanguage)
-                    // Also refresh when a vendor ROM ignores the system locale change.
-                    recreate()
+                    if (!LocaleHelper.setLanguage(this, selectedLanguage)) {
+                        recreate()
+                    } else {
+                        // Android recrée l'écran lui-même ; une ROM qui ignore le changement le laisse
+                        // vivant : on le recrée alors (onDestroy annule cette attente).
+                        activityScope.launch {
+                            delay(LANGUAGE_RECREATE_FALLBACK_MS)
+                            recreate()
+                        }
+                    }
                 }
                 dialog.dismiss()
             }
@@ -825,7 +838,8 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         })
     }
 
-    private fun loadTiles() {
+    /** @param onlyIfChanged retour sur le hub : ne recharge les tuiles que si l'ordre ou les raccourcis ont changé */
+    private fun loadTiles(onlyIfChanged: Boolean = false) {
         val savedOrder = loadTileOrder()
         val savedQuickAccess = loadQuickAccess()
 
@@ -848,6 +862,8 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             tilesWithCustomization
         }
 
+        if (onlyIfChanged && orderedTiles.map { it.id to it.quickAccessItems } ==
+            tilesAdapter.getTiles().map { it.id to it.quickAccessItems }) return
         tilesAdapter.setTiles(orderedTiles)
     }
 
@@ -857,27 +873,6 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         }
     }
 
-    private fun showTileEditDialog(tile: HubTile) {
-        // Only one option (color picker), so open it directly
-        showColorPicker(tile)
-    }
-
-    private fun showColorPicker(tile: HubTile) {
-        SimpleColorPickerDialog(
-            context = this,
-            currentColorHex = tile.customColorHex,
-            currentTextColorMode = tile.textColorMode
-        ) { colorHex, textColorMode ->
-            // Update tile
-            tilesAdapter.updateTileColor(tile.id, colorHex, textColorMode)
-
-            // Save
-            val currentColors = loadTileColors().toMutableMap()
-            currentColors[tile.id] = Pair(colorHex, textColorMode)
-            saveTileColors(currentColors)
-        }.show()
-    }
-
     private fun loadQuickAccess(): Map<String, List<QuickAccessItem>> {
         val saved = prefs.getString(KEY_QUICK_ACCESS, null) ?: return emptyMap()
         val result = mutableMapOf<String, MutableList<QuickAccessItem>>()
@@ -885,7 +880,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             val parts = entry.split(":", limit = 4)
             if (parts.size >= 3) {
                 val parentTileId = parts[0]
-                val label = parts[1]
+                val label = shortcutLabel(parts[1])
                 val className = parts[2]
                 val colorHex = parts.getOrNull(3)
                 if (className.isNotEmpty()) {
@@ -895,6 +890,14 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             }
         }
         return result
+    }
+
+    /** "@nom" : titre de la tuile enregistré par son nom de ressource, lu dans la langue du moment. */
+    @android.annotation.SuppressLint("DiscouragedApi")
+    private fun shortcutLabel(saved: String): String {
+        if (!saved.startsWith("@")) return saved
+        val id = resources.getIdentifier(saved.substring(1), "string", packageName)
+        return if (id != 0) getString(id) else saved
     }
 
     private fun loadTileOrder(): List<String> {
@@ -910,32 +913,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         prefs.edit { putString(KEY_TILE_ORDER, order.joinToString(",")) }
     }
 
-    // Format: "tileId:colorHex:textMode;tileId:colorHex:textMode;..."
-    private fun loadTileColors(): Map<String, Pair<String, String>> {
-        val saved = prefs.getString(KEY_TILE_COLORS, null) ?: return emptyMap()
-        return saved.split(";")
-            .filter { it.contains(":") }
-            .mapNotNull { entry ->
-                val parts = entry.split(":")
-                if (parts.size >= 3) {
-                    parts[0] to Pair(parts[1], parts[2])
-                } else if (parts.size == 2) {
-                    parts[0] to Pair(parts[1], "auto")
-                } else null
-            }
-            .toMap()
-    }
-
-    private fun saveTileColors(colors: Map<String, Pair<String, String>>) {
-        val encoded = colors.entries.joinToString(";") { "${it.key}:${it.value.first}:${it.value.second}" }
-        prefs.edit { putString(KEY_TILE_COLORS, encoded) }
-    }
-
-    /**
-     * Lance le nettoyage des fichiers orphelins en arrière-plan.
-     * Ce nettoyage supprime les fichiers non référencés dans les bases de données
-     * pour libérer de l'espace de stockage.
-     */
+    /** Lance en arrière-plan le nettoyage des fichiers jetables (voir [CacheCleanerManager]). */
     private fun launchCacheCleanup() {
         activityScope.launch {
             try {
