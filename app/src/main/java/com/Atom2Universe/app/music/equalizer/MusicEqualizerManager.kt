@@ -201,6 +201,8 @@ object MusicEqualizerManager {
         // Initialize DSP engine - it will apply default (zero) values initially
         dspEngine.initialize(processor)
         isDspAttached = true
+        // Un égaliseur d'Android resté branché doublerait le réglage
+        engine.release()
 
         if (cachedSettings != null && _currentPreset.value != null) {
             applyCurrentPresetToDsp()
@@ -291,14 +293,16 @@ object MusicEqualizerManager {
             return
         }
 
+        // Le DSP fait déjà bandes, basses et virtualiseur : l'égaliseur d'Android sur la même
+        // session appliquerait le réglage une deuxième fois (+6 dB entendus comme +12 dB).
+        if (isDspAttached) {
+            engine.release()
+            return
+        }
+
         val success = engine.initialize(audioSessionId)
         if (success) {
             Log.d(TAG, "Attached to audio session $audioSessionId (standard API)")
-
-            // Re-apply current preset if we have one
-            // Note: Band levels and bass boost now go through DSP engine,
-            // but we still apply to the standard engine as fallback
-            // and for virtualizer support
             _currentPreset.value?.let { resolved ->
                 engine.applyPreset(resolved.preset, _isEnabled.value)
             }
@@ -344,7 +348,7 @@ object MusicEqualizerManager {
                             dspEngine.applyPreset(resolved.preset, _isEnabled.value)
                         }
                         // Apply to standard engine (for virtualizer and fallback)
-                        engine.applyPreset(resolved.preset, _isEnabled.value)
+                        if (!isDspAttached) engine.applyPreset(resolved.preset, _isEnabled.value)
                         notifyPresetChanged(resolved)
                     }
 
@@ -370,7 +374,7 @@ object MusicEqualizerManager {
         }
 
         // Enable/disable standard engine (for virtualizer)
-        engine.setEnabled(enabled)
+        if (!isDspAttached) engine.setEnabled(enabled)
 
         // Save to database
         scope.launch(Dispatchers.IO) {
@@ -523,7 +527,7 @@ object MusicEqualizerManager {
             dspEngine.applyPreset(preset, _isEnabled.value)
         }
         // Apply to standard engine (for virtualizer)
-        engine.applyPreset(preset, _isEnabled.value)
+        if (!isDspAttached) engine.applyPreset(preset, _isEnabled.value)
         _currentPreset.value = ResolvedPreset(preset, OverrideSource.GLOBAL)
 
         // Update in-memory tracking
@@ -545,7 +549,7 @@ object MusicEqualizerManager {
             dspEngine.setBandLevel(bandIndex, level)
         }
         // Apply to standard engine (fallback)
-        engine.setBandLevel(bandIndex, level)
+        if (!isDspAttached) engine.setBandLevel(bandIndex, level)
 
         // Update in-memory tracking
         if (bandIndex in 0 until 10) {
@@ -567,7 +571,7 @@ object MusicEqualizerManager {
             dspEngine.setBandLevel(bandIndex, level)
         }
         // Apply to standard engine (fallback)
-        engine.setBandLevel(bandIndex, level)
+        if (!isDspAttached) engine.setBandLevel(bandIndex, level)
 
         // Update in-memory tracking
         if (bandIndex in 0 until 10) {
@@ -602,7 +606,7 @@ object MusicEqualizerManager {
             dspEngine.setBassBoost(strength)
         }
         // Apply to standard engine (fallback)
-        engine.setBassBoost(strength)
+        if (!isDspAttached) engine.setBassBoost(strength)
 
         // Update in-memory tracking
         currentBassBoost = strength
@@ -620,7 +624,7 @@ object MusicEqualizerManager {
             dspEngine.setBassBoost(strength)
         }
         // Apply to standard engine (fallback)
-        engine.setBassBoost(strength)
+        if (!isDspAttached) engine.setBassBoost(strength)
 
         // Update in-memory tracking
         currentBassBoost = strength
@@ -641,7 +645,7 @@ object MusicEqualizerManager {
             dspEngine.setVirtualizer(strength)
         }
         // Apply to standard engine (usually works on Samsung)
-        engine.setVirtualizer(strength)
+        if (!isDspAttached) engine.setVirtualizer(strength)
 
         // Update in-memory tracking
         currentVirtualizer = strength
@@ -659,7 +663,7 @@ object MusicEqualizerManager {
             dspEngine.setVirtualizer(strength)
         }
         // Apply to standard engine (usually works on Samsung)
-        engine.setVirtualizer(strength)
+        if (!isDspAttached) engine.setVirtualizer(strength)
 
         // Update in-memory tracking
         currentVirtualizer = strength

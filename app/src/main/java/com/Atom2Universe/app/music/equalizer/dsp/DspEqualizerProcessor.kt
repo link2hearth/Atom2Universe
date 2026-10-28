@@ -26,6 +26,9 @@ class DspEqualizerProcessor : AudioProcessor {
     companion object {
         private const val TAG = "DspEqualizerProcessor"
 
+        /** Au-dessus de ce niveau (≈ −0,9 dBFS), le limiteur arrondit les pics. */
+        private const val CLIP_KNEE = 0.9
+
         /** Number of EQ bands */
         const val BAND_COUNT = 10
 
@@ -278,8 +281,8 @@ class DspEqualizerProcessor : AudioProcessor {
             outputBuffer.clear()
         }
 
-        if (!isEnabled) {
-            // Passthrough - copy input to output
+        if (!isEnabled || isFlat()) {
+            // Passthrough - copy input to output (un réglage à plat ne doit rien changer au son)
             outputBuffer.put(inputBuffer)
             outputBuffer.flip()
             return
@@ -371,6 +374,12 @@ class DspEqualizerProcessor : AudioProcessor {
         output.position(output.position() + sampleCount * 4)
     }
 
+    /** Aucun filtre, ni basses, ni virtualiseur, ni pré-gain : le son passe tel quel. */
+    private fun isFlat(): Boolean = lock.withLock {
+        activeFiltersCache.isEmpty() && bassBoostStrength <= 0 &&
+            (virtualizerStrength <= 0 || channelCount != 2) && preGain == 1.0
+    }
+
     private fun rebuildActiveFiltersCache() {
         val list = ArrayList<BiquadFilter>(BAND_COUNT)
         for (i in 0 until BAND_COUNT) {
@@ -408,22 +417,16 @@ class DspEqualizerProcessor : AudioProcessor {
     }
 
     /**
-     * Soft clipping function to prevent harsh digital distortion.
-     * Uses a tanh-based curve for smooth limiting.
+     * Limiteur doux : le son est intact jusqu'à [CLIP_KNEE] (≈ −0,9 dBFS), seuls les vrais pics
+     * sont arrondis vers 1.0 (courbe tanh, pente 1 au genou donc sans cassure).
+     * Le pré-gain retire déjà la marge des bandes montées : ce limiteur ne sert qu'aux pics.
      */
     private fun softClip(sample: Double): Double {
         val absVal = abs(sample)
-        return if (absVal <= 0.5) {
-            sample
-        } else if (absVal <= 1.0) {
-            // Smooth transition
-            val sign = if (sample >= 0) 1.0 else -1.0
-            sign * (0.5 + (absVal - 0.5) * 0.8)
-        } else {
-            // Hard limit with soft knee
-            val sign = if (sample >= 0) 1.0 else -1.0
-            sign * min(1.0, 0.9 + 0.1 * Math.tanh(absVal - 1.0))
-        }
+        if (absVal <= CLIP_KNEE) return sample
+        val sign = if (sample >= 0) 1.0 else -1.0
+        val room = 1.0 - CLIP_KNEE
+        return sign * (CLIP_KNEE + room * Math.tanh((absVal - CLIP_KNEE) / room))
     }
 
     override fun queueEndOfStream() {

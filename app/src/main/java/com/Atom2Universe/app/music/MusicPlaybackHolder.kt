@@ -1155,6 +1155,8 @@ object MusicPlaybackHolder {
 
         player?.release()
         player = null
+        // Effets libérés ; le prochain lecteur rebranche l'égaliseur (getOrCreatePlayer)
+        MusicEqualizerManager.release()
         playlist = emptyList()
         currentIndex = -1
 
