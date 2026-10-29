@@ -42,6 +42,7 @@ class KarballoAdapter {
      * @param startFen position de départ de la partie
      * @param moves coups joués depuis, en notation longue : le moteur voit ainsi les répétitions
      * @param currentFen position actuelle, utilisée seule si les coups ne se rejouent pas
+     * @param limitElo force visée (500..2100) : le moteur fait exprès des erreurs ; null = pleine force
      * @return le coup en notation longue (« e7e5 », « b2b1q »), ou null si annulé ou introuvable
      */
     fun findBestMove(
@@ -49,9 +50,13 @@ class KarballoAdapter {
         moves: List<String>,
         currentFen: String,
         timeLimitMs: Long,
+        limitElo: Int?,
         isCancelled: () -> Boolean
     ): String? {
         loadGame(startFen, moves, currentFen)
+        // L'Elo d'abord : le changer ne recalcule les erreurs que si la limite est déjà active
+        if (limitElo != null) config.elo = limitElo
+        config.isLimitStrength = limitElo != null
         this.isCancelled = isCancelled
         try {
             if (isCancelled()) return null

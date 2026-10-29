@@ -135,8 +135,11 @@ class GluttonView(context: Context) : View(context) {
         cameraX = game.x; cameraY = game.y; invalidate()
     }
 
-    fun start(seed: Long = Random.nextLong(), mode: GluttonGame.Mode = GluttonGame.Mode.VOYAGE) {
-        game = GluttonGame(seed, mode)
+    fun start(seed: Long = Random.nextLong(), mode: GluttonGame.Mode = GluttonGame.Mode.VOYAGE) = start(GluttonGame(seed, mode))
+
+    /** Plays [next]: a new run, or a voyage taken up again. */
+    fun start(next: GluttonGame) {
+        game = next
         particles.forEach { it.life = 0f }; gulps.forEach { it.life = 0f }; labels.forEach { it.life = 0f }; sparks.forEach { it.life = 0f }
         dawn = 0f; bang = -1f
         cameraX = game.x; cameraY = game.y; zoom = 0.0

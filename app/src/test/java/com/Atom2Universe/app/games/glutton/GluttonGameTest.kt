@@ -34,6 +34,27 @@ class GluttonGameTest {
         assertEquals(Theme.SUBURB, GluttonCatalog.house.theme)
     }
 
+    @Test fun aSavedVoyageComesBackWithWhatWasEaten() {
+        val g = GluttonGame(11, Mode.VOYAGE)
+        GluttonRobot.play(g, 240f)
+        assertTrue("the robot should have left the first rings", g.ringReached >= 2)
+        val back = GluttonGame.restore(g.snapshot())!!
+        assertEquals(g.ringReached, back.ringReached)
+        assertEquals(g.area, back.area, 0.0); assertEquals(g.x, back.x, 0.0); assertEquals(g.elapsed, back.elapsed, 0f)
+        assertEquals(g.eaten, back.eaten)
+        assertArrayEquals(g.covered, back.covered)
+        for (i in g.layers.indices) {
+            val a = g.layers[i]; val b = back.layers[i]
+            assertEquals("ring $i", a == null, b == null)
+            if (a == null || b == null) continue
+            assertEquals("ring $i", a.statics.filter { it.active }.map { it.id }, b.statics.filter { it.active }.map { it.id })
+        }
+        assertEquals(g.covers.filter { it.active }.map { it.id }, back.covers.filter { it.active }.map { it.id })
+        assertNull(GluttonGame.restore("1 2 VOYAGE"))
+        advance(back, 2f)
+        assertTrue(back.area.isFinite() && !back.finished)
+    }
+
     @Test fun everyRingIsReproducibleLaidOutAndFed() {
         val a = GluttonWorld(3); val b = GluttonWorld(3)
         a.ensure(20); b.ensure(20)

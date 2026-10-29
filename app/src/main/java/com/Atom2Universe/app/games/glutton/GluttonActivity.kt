@@ -46,6 +46,7 @@ class GluttonActivity : ThemedActivity() {
     private lateinit var primary: MaterialButton
     private lateinit var secondary: MaterialButton
     private lateinit var sameMap: MaterialButton
+    private lateinit var carryOn: MaterialButton
     private lateinit var help: MaterialButton
     private lateinit var burst: MaterialButton
     private lateinit var preferences: LinearLayout
@@ -199,6 +200,8 @@ class GluttonActivity : ThemedActivity() {
             backgroundTintList = ColorStateList.valueOf(GluttonArt.MINT)
         }
         card.addView(primary, LinearLayout.LayoutParams(-1, dp(56)))
+        carryOn = button(R.string.glutton_resume) { carryOnVoyage() }
+        card.addView(carryOn, LinearLayout.LayoutParams(-1, dp(48)))
         sameMap = button(R.string.glutton_same) { startGame(scene.game.seed, scene.game.mode) }
         card.addView(sameMap, LinearLayout.LayoutParams(-1, dp(48)))
         secondary = button(R.string.glutton_again) { startGame(mode = scene.game.mode) }
@@ -235,12 +238,22 @@ class GluttonActivity : ThemedActivity() {
 
     private fun updateViewport() { scene.setViewportInsets(hud.height, footer.height) }
 
-    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), mode: Mode = Mode.VOYAGE) {
-        settle(); hasRun = true; rewardPaid = 0
+    private fun startGame(seed: Long = kotlin.random.Random.nextLong(), mode: Mode = Mode.VOYAGE) = play(GluttonGame(seed, mode), 0)
+
+    /** The voyage saved when the app last left it; a save that cannot be read is dropped. */
+    private fun carryOnVoyage() {
+        val game = prefs.getString(VOYAGE_RUN, null)?.let(GluttonGame::restore)
+        if (game == null) { forgetVoyage(); updateCarryOn(); return }
+        play(game, prefs.getInt(VOYAGE_PAID, 0))
+    }
+
+    private fun play(game: GluttonGame, paid: Int) {
+        val mode = game.mode
+        settle(); hasRun = true; rewardPaid = paid
         displayedSize = ""; displayedSeconds = -1; burstReady = null
         banner.removeCallbacks(hideBanner); banner.visibility = View.GONE
         screen = Screen.PLAY; overlay.visibility = View.GONE; hud.visibility = View.VISIBLE; footer.visibility = View.VISIBLE
-        scene.start(seed, mode)
+        scene.start(game)
         modeLabel.text = getString(R.string.glutton_hud_mode, getString(MODES[mode.ordinal]), recordText(mode))
         keepAwake(true)
     }
@@ -281,6 +294,7 @@ class GluttonActivity : ThemedActivity() {
         })
         secondary.visibility = if (next == Screen.PAUSE) View.VISIBLE else View.GONE
         sameMap.visibility = if (next == Screen.END) View.VISIBLE else View.GONE
+        updateCarryOn()
         result.visibility = if (next == Screen.END) View.VISIBLE else View.GONE
         help.visibility = if (next == Screen.END) View.GONE else View.VISIBLE
         modes.visibility = if (next == Screen.HOME || next == Screen.END) View.VISIBLE else View.GONE
@@ -316,6 +330,11 @@ class GluttonActivity : ThemedActivity() {
         val reward = NeutrinoRewards.glutton(game.diameterMetres)
         val difference = reward - rewardPaid
         if (difference > 0) { NeutrinoRepository(this).addBalance(difference); rewardPaid = reward }
+        // A voyage lasts a quarter of an hour: it is kept until it ends, even if Android closes the app.
+        if (game.mode == Mode.VOYAGE) {
+            if (game.finished) forgetVoyage()
+            else prefs.edit().putString(VOYAGE_RUN, game.snapshot()).putInt(VOYAGE_PAID, rewardPaid).apply()
+        }
         return reward
     }
 
@@ -326,6 +345,11 @@ class GluttonActivity : ThemedActivity() {
         heading.setText(if (game.cleared) R.string.glutton_cleared else if (record) R.string.glutton_new_record else R.string.glutton_end)
         result.text = getString(R.string.glutton_result, sizeText(game.diameterMetres), game.eaten, game.bestCombo, reward) +
             "\n" + getString(R.string.glutton_time_line, timeText(game.elapsed))
+    }
+
+    private fun forgetVoyage() { prefs.edit().remove(VOYAGE_RUN).remove(VOYAGE_PAID).apply() }
+    private fun updateCarryOn() {
+        carryOn.visibility = if ((screen == Screen.HOME || screen == Screen.END) && prefs.contains(VOYAGE_RUN)) View.VISIBLE else View.GONE
     }
 
     private fun updateModes() {
@@ -381,6 +405,8 @@ class GluttonActivity : ThemedActivity() {
         val MODES = intArrayOf(R.string.glutton_mode_voyage, R.string.glutton_mode_fringale)
         const val ASTRONOMICAL_UNIT = 1.496e11
         const val LIGHT_YEAR = 9.461e15
+        private const val VOYAGE_RUN = "voyage_run"
+        private const val VOYAGE_PAID = "voyage_paid"
         @Suppress("unused") val THEMES = Theme.entries
     }
 }

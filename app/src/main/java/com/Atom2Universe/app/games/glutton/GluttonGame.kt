@@ -5,6 +5,8 @@ import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
 import com.Atom2Universe.app.games.glutton.GluttonWorld.Lane
 import com.Atom2Universe.app.games.glutton.GluttonWorld.Orbit
 import com.Atom2Universe.app.games.glutton.GluttonWorld.Ring
+import java.util.Base64
+import java.util.BitSet
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -474,6 +476,44 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         if (finished) return
         finished = true; steer(0.0, 0.0); events += Event(Effect.FINISH, x, y)
     }
+    /**
+     * What it takes to carry on a voyage later: the map is rebuilt from the seed, then whatever was eaten
+     * is taken away again. Movers start over from their own spots; spat-out things are back where they lay.
+     */
+    fun snapshot(): String {
+        val gone = BitSet()
+        for (layer in layers) if (layer != null) {
+            for (item in layer.statics) if (!item.active) gone.set(item.id)
+            for (item in layer.movers) if (!item.active) gone.set(item.id)
+        }
+        for (cover in covers) if (!cover.active) gone.set(cover.id)
+        return listOf(SNAPSHOT_VERSION, seed, mode.name, x, y, area, stomach, elapsed, remaining, bonusTime,
+            eaten, bestCombo, charge, ringReached, Base64.getEncoder().encodeToString(gone.toByteArray())).joinToString(" ")
+    }
+
+    private fun resume(fields: List<String>) {
+        val reached = fields[13].toInt()
+        require(reached in 0..world.rings.lastIndex)
+        // The rings are reached again in order: same layers, same covers laid, same rings forgotten.
+        for (index in 1..reached) reach(index)
+        x = fields[3].toDouble(); y = fields[4].toDouble()
+        area = fields[5].toDouble(); stomach = fields[6].toDouble()
+        elapsed = fields[7].toFloat(); remaining = fields[8].toFloat(); bonusTime = fields[9].toFloat()
+        eaten = fields[10].toInt(); bestCombo = fields[11].toInt(); charge = fields[12].toFloat()
+        require(x.isFinite() && y.isFinite() && area > 0.0 && stomach >= 0.0)
+        val gone = BitSet.valueOf(Base64.getDecoder().decode(fields[14]))
+        for (layer in layers) if (layer != null) {
+            for (item in layer.statics) if (item.active && gone.get(item.id)) {
+                item.active = false; layer.grid.remove(item, item.filedX, item.filedY, item.radius)
+            }
+            for (item in layer.movers) if (gone.get(item.id)) item.active = false
+        }
+        for (cover in covers) if (gone.get(cover.id)) cover.active = false
+        ring = world.ringAt(x, y) ?: world.rings.last()
+        nextMilestone = MILESTONE_FIRST
+        while (10.0.pow(nextMilestone) <= diameterMetres) nextMilestone++
+    }
+
     /** Hint target: the closest thing worth a bite, favouring pieces near your own size. */
     fun nearestFood(): Item? {
         var best: Item? = null; var cost = Double.MAX_VALUE
@@ -502,6 +542,15 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         return best
     }
     companion object {
+        private const val SNAPSHOT_VERSION = 1
+
+        /** The voyage saved by [snapshot], or null if the text cannot be read. */
+        fun restore(text: String): GluttonGame? = runCatching {
+            val fields = text.split(' ')
+            require(fields.size == 15 && fields[0].toInt() == SNAPSHOT_VERSION)
+            GluttonGame(fields[1].toLong(), Mode.valueOf(fields[2])).also { it.resume(fields) }
+        }.getOrNull()
+
         const val STEP = 1.0 / 120.0
         const val MAX_RECENT = 16
         const val KNOCK_LOSS = 3

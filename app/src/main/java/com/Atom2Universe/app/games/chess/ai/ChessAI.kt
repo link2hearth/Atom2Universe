@@ -80,6 +80,7 @@ class ChessAI(
         val moves = game.movesInLongNotation()
         val currentFen = game.toFEN()
         val timeLimitMs = getKarballoTime()
+        val limitElo = if (difficulty == ChessDifficulty.TRAINING) TRAINING_ELO else null
         val startTime = System.currentTimeMillis()
 
         searchJob = scope.launch(Dispatchers.Default) {
@@ -90,8 +91,8 @@ class ChessAI(
                 }
                 val cancelled = { !isActive }
                 // Un échec du moteur : une seconde tentative
-                searchOnce(startFen, moves, currentFen, timeLimitMs, cancelled)
-                    ?: if (isActive) searchOnce(startFen, moves, currentFen, timeLimitMs, cancelled) else null
+                searchOnce(startFen, moves, currentFen, timeLimitMs, limitElo, cancelled)
+                    ?: if (isActive) searchOnce(startFen, moves, currentFen, timeLimitMs, limitElo, cancelled) else null
             }
 
             // Revenir au thread principal pour le callback
@@ -115,9 +116,10 @@ class ChessAI(
         moves: List<String>,
         currentFen: String,
         timeLimitMs: Long,
+        limitElo: Int?,
         cancelled: () -> Boolean
     ): String? = try {
-        karballoAdapter.findBestMove(startFen, moves, currentFen, timeLimitMs, cancelled)
+        karballoAdapter.findBestMove(startFen, moves, currentFen, timeLimitMs, limitElo, cancelled)
     } catch (e: Exception) {
         null
     }
@@ -161,5 +163,10 @@ class ChessAI(
      */
     fun setDifficulty(value: ChessDifficulty) {
         difficulty = value
+    }
+
+    companion object {
+        // Entraînement : Karballo bridé (environ 62 % de chances d'écarter un meilleur coup à chaque nœud)
+        private const val TRAINING_ELO = 1000
     }
 }
