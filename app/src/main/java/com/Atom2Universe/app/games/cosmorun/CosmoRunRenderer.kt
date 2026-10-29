@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.cosmorun
 
 import android.graphics.*
+import android.os.Build
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -15,6 +16,11 @@ class CosmoRunRenderer {
     val scene = CosmoRunScene()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
+    // Toutes les faces d'une couche partent en un seul appel : chaque face en éventail de triangles
+    // (au plus 5 sommets après la découpe, donc 3 triangles), une couleur par sommet.
+    private val triangles = FloatArray(CosmoRunScene.MAX_FACES * 9 * 2)
+    private val colors = IntArray(CosmoRunScene.MAX_FACES * 9)
+    private val flat = Paint().apply { color = Color.WHITE }
     private val stars = FloatArray(240).also { a ->
         val r = Random(71)
         for (i in a.indices) a[i] = r.nextFloat()
@@ -116,6 +122,25 @@ class CosmoRunRenderer {
     }
 
     private fun drawFaces(canvas: Canvas) {
+        // Avant Android 10, l'accélération matérielle ne sait pas tracer drawVertices : chemins.
+        if (canvas.isHardwareAccelerated && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) { drawFacePaths(canvas); return }
+        var n = 0
+        for (face in scene.visible) {
+            // Une face entièrement fondue dans le lointain ne laisse aucune trace : inutile de l'envoyer.
+            val color = face.color
+            if (color ushr 24 == 0) continue
+            val xy = face.xy
+            for (i in 1 until face.count - 1) {
+                triangles[n * 2] = xy[0]; triangles[n * 2 + 1] = xy[1]; colors[n++] = color
+                triangles[n * 2] = xy[i * 2]; triangles[n * 2 + 1] = xy[i * 2 + 1]; colors[n++] = color
+                triangles[n * 2] = xy[i * 2 + 2]; triangles[n * 2 + 1] = xy[i * 2 + 3]; colors[n++] = color
+            }
+        }
+        if (n == 0) return
+        canvas.drawVertices(Canvas.VertexMode.TRIANGLES, n * 2, triangles, 0, null, 0, colors, 0, null, 0, 0, flat)
+    }
+
+    private fun drawFacePaths(canvas: Canvas) {
         paint.style = Paint.Style.FILL
         for (face in scene.visible) {
             // Une face entièrement fondue dans le lointain ne laisse aucune trace : inutile de l'envoyer.

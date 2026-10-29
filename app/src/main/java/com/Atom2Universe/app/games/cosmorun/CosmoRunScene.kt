@@ -27,6 +27,7 @@ class CosmoRunScene {
         private const val PLAYER_RESERVE = 220
         private const val ROOF = CosmoRunGame.CONTAINER_HEIGHT
         private const val SLICE = 3f
+        const val MAX_FACES = 3200
     }
 
     class Face {
@@ -36,8 +37,8 @@ class CosmoRunScene {
         var depth = 0f
         var color = 0
     }
-    private val pool = Array(3200) { Face() }
-    val visible = ArrayList<Face>(3200)
+    private val pool = Array(MAX_FACES) { Face() }
+    val visible = ArrayList<Face>(MAX_FACES)
     private val farFirst = Comparator<Face> { a, b -> b.depth.compareTo(a.depth) }
     private var used = 0
     /** Les décors s'arrêtent avant la fin du pool : le personnage doit toujours pouvoir être émis. */
