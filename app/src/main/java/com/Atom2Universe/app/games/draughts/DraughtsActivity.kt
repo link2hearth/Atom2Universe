@@ -29,6 +29,8 @@ class DraughtsActivity : ThemedActivity(),
     private val game = DraughtsGame()
     private var ai: DraughtsAI? = null
     private var currentDifficulty = DraughtsDifficulty.STANDARD
+    /** La difficulté la plus basse jouée dans cette partie : c'est elle qui paie. */
+    private var rewardDifficulty = DraughtsDifficulty.STANDARD
 
     private lateinit var draughtsView: DraughtsView
     private lateinit var statusText: TextView
@@ -94,17 +96,35 @@ class DraughtsActivity : ThemedActivity(),
         difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
                 val selected = difficulties[position]
-                if (selected != currentDifficulty) {
-                    currentDifficulty = selected
-                    ai?.cancel()
-                    ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
-                    draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
-                    confirmNewGame()
-                }
+                if (selected == currentDifficulty) return
+                // Comme aux échecs : la partie continue avec la nouvelle difficulté, et la plus
+                // basse jouée paie (le mode 2 joueurs ne paie rien). Un coup de l'IA en cours est abandonné.
+                ai?.cancel()
+                stopAnimation()
+                currentDifficulty = selected
+                rewardDifficulty = if (game.moveCount == 0) currentDifficulty
+                    else lowerReward(rewardDifficulty, currentDifficulty)
+                ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
+                draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
+                draughtsView.refresh()
+                updateStatus()
+                if (game.moveCount > 0) saveGame()
+                if (!game.isGameOver && game.currentTurn == DraughtsPieceColor.BLACK && ai != null) requestAIMove()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
+    /** Le mode 2 joueurs compte comme le plus bas : il ne rapporte rien. */
+    private fun rewardRank(difficulty: DraughtsDifficulty): Int = when (difficulty) {
+        DraughtsDifficulty.TWO_PLAYER -> 0
+        DraughtsDifficulty.TRAINING -> 1
+        DraughtsDifficulty.STANDARD -> 2
+        DraughtsDifficulty.EXPERT -> 3
+    }
+
+    private fun lowerReward(a: DraughtsDifficulty, b: DraughtsDifficulty): DraughtsDifficulty =
+        if (rewardRank(b) < rewardRank(a)) b else a
 
     private fun setupNewGameButton() {
         newGameButton.setOnClickListener {
@@ -139,6 +159,7 @@ class DraughtsActivity : ThemedActivity(),
         timerText.text = "00:00"
         clearSave()
         ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
+        rewardDifficulty = currentDifficulty
         draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
         aiThinking = false
         animating = false
@@ -273,8 +294,10 @@ class DraughtsActivity : ThemedActivity(),
             timerHandler.postDelayed(r, ANIM_STEP_MS)
         }
 
-        // Petite pause avant de démarrer
-        timerHandler.postDelayed({ scheduleNextStep() }, 200)
+        // Petite pause avant de démarrer (suivie aussi par animJob, pour que stopAnimation l'arrête)
+        val first = Runnable { scheduleNextStep() }
+        animJob = first
+        timerHandler.postDelayed(first, 200)
     }
 
     private fun stopAnimation() {
@@ -326,17 +349,17 @@ class DraughtsActivity : ThemedActivity(),
         val statsRepo = GameStatsRepository(this)
         statsRepo.recordDraughtsPlayed()
         if (winner == DraughtsPieceColor.WHITE) statsRepo.recordDraughtsWon()
-        if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI()) {
-            val reward = when (currentDifficulty) {
+        val reward = if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI()) {
+            when (rewardDifficulty) {
                 DraughtsDifficulty.TRAINING -> NeutrinoRewards.DRAUGHTS_TRAINING
                 DraughtsDifficulty.STANDARD -> NeutrinoRewards.DRAUGHTS_STANDARD
                 DraughtsDifficulty.EXPERT   -> NeutrinoRewards.DRAUGHTS_EXPERT
-                else -> 0
+                DraughtsDifficulty.TWO_PLAYER -> 0
             }
-            if (reward > 0) NeutrinoRepository(this).addBalance(reward)
-        }
-        if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI() && currentDifficulty.gachaTickets > 0) {
-            showVictoryDialog()
+        } else 0
+        if (reward > 0) {
+            NeutrinoRepository(this).addBalance(reward)
+            showVictoryDialog(reward)
         } else {
             val message = when (winner) {
                 DraughtsPieceColor.WHITE -> getString(R.string.draughts_status_game_over, getString(R.string.draughts_color_white))
@@ -352,13 +375,10 @@ class DraughtsActivity : ThemedActivity(),
         }
     }
 
-    private fun showVictoryDialog() {
-        val tickets = currentDifficulty.gachaTickets
-        val boost = currentDifficulty.boostMultiplier
-        val duration = currentDifficulty.boostDurationSeconds / 60
+    private fun showVictoryDialog(reward: Int) {
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.draughts_victory_title)
-            .setMessage(getString(R.string.draughts_victory_message, tickets, boost, duration))
+            .setMessage(getString(R.string.draughts_victory_message, reward))
             .setPositiveButton(R.string.draughts_new_game) { _, _ -> startNewGame() }
             .setCancelable(false)
             .show()
@@ -386,10 +406,18 @@ class DraughtsActivity : ThemedActivity(),
     // ── Persistance ────────────────────────────────────────────────────────────
 
     private fun saveGame() {
+        val state = game.serialize()
         getSharedPreferences("draughts_save", MODE_PRIVATE).edit {
-            putString("state", game.serialize())
+            putString("state", state)
             putString("difficulty", currentDifficulty.name)
             putLong("elapsed_time", elapsedTimeMs)
+            // Le widget flottant ne réécrit que "state" : ces champs ne valent que pour meta_state
+            putString(KEY_META_STATE, state)
+            putInt(KEY_MOVE_COUNT, game.moveCount)
+            putInt(KEY_QUIET_KING_MOVES, game.quietKingMoves)
+            putBoolean(KEY_OVER, game.isGameOver)
+            putString(KEY_WINNER, game.winner?.name)
+            putString(KEY_REWARD_DIFFICULTY, rewardDifficulty.name)
         }
     }
 
@@ -407,7 +435,16 @@ class DraughtsActivity : ThemedActivity(),
             DraughtsDifficulty.valueOf(diffName ?: DraughtsDifficulty.STANDARD.name)
         } catch (e: Exception) { DraughtsDifficulty.STANDARD }
         difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
-        game.deserialize(state)
+        if (prefs.getString(KEY_META_STATE, null) == state) {
+            val winner = DraughtsPieceColor.values().find { it.name == prefs.getString(KEY_WINNER, null) }
+            game.restore(state, prefs.getInt(KEY_MOVE_COUNT, 0), prefs.getInt(KEY_QUIET_KING_MOVES, 0),
+                prefs.getBoolean(KEY_OVER, false), winner)
+            val savedReward = DraughtsDifficulty.values().find { it.name == prefs.getString(KEY_REWARD_DIFFICULTY, null) }
+            rewardDifficulty = lowerReward(savedReward ?: currentDifficulty, currentDifficulty)
+        } else {
+            game.deserialize(state)
+            rewardDifficulty = currentDifficulty
+        }
         elapsedTimeMs = prefs.getLong("elapsed_time", 0)
         timerText.text = formatTime(elapsedTimeMs)
         ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
@@ -449,5 +486,11 @@ class DraughtsActivity : ThemedActivity(),
 
     companion object {
         private const val ANIM_STEP_MS = 500L
+        private const val KEY_META_STATE = "meta_state"
+        private const val KEY_MOVE_COUNT = "move_count"
+        private const val KEY_QUIET_KING_MOVES = "quiet_king_moves"
+        private const val KEY_OVER = "over"
+        private const val KEY_WINNER = "winner"
+        private const val KEY_REWARD_DIFFICULTY = "reward_difficulty"
     }
 }

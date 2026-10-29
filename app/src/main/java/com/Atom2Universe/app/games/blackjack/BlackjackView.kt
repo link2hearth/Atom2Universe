@@ -119,6 +119,7 @@ class BlackjackView @JvmOverloads constructor(
     private val bustLabel = context.getString(R.string.blackjack_bust)
     private val naturalLabel = context.getString(R.string.blackjack_natural)
     private val dealerLabel = context.getString(R.string.blackjack_dealer)
+    private val youLabel = context.getString(R.string.blackjack_you)
 
     // ── Manga bubbles ────────────────────────────────────────────────────────────
     data class MangaBubble(
@@ -142,6 +143,11 @@ class BlackjackView @JvmOverloads constructor(
     }
 
     private val bubbles = mutableListOf<MangaBubble>()
+
+    // Réutilisés d'une image à l'autre : l'animation tourne à chaque image pendant les tours des IA
+    private val scratchRect = RectF()
+    private val cardRect = RectF()
+    private val tailPath = Path()
 
     // ── Animation ticker ─────────────────────────────────────────────────────────
     private var animRunning = false
@@ -174,40 +180,36 @@ class BlackjackView @JvmOverloads constructor(
 
     // ── Card size functions ───────────────────────────────────────────────────────
 
+    // Chaque fonction rend la largeur d'une carte ; la hauteur vaut largeur × CARD_RATIO.
+
     /** Widget mode : tous les joueurs partagent la largeur. */
-    private fun cardSize(): Pair<Float, Float> {
-        val g = game ?: return Pair(dp(44f), dp(62f))
+    private fun cardWidth(): Float {
+        val g = game ?: return dp(44f)
         val numPlayers = g.players.size.coerceAtLeast(1)
         val available = width.toFloat() - dp(24f)
         val maxPerPlayer = available / numPlayers
-        val cardW = (maxPerPlayer * 0.75f).coerceIn(dp(28f), dp(52f))
-        return Pair(cardW, cardW * 1.42f)
+        return (maxPerPlayer * 0.75f).coerceIn(dp(28f), dp(52f))
     }
 
     /** Plein écran : cartes du croupier. */
-    private fun dealerCardSizeFull(): Pair<Float, Float> {
-        val cardW = (width * 0.19f).coerceIn(dp(44f), dp(72f))
-        return Pair(cardW, cardW * 1.42f)
-    }
+    private fun dealerCardWidthFull(): Float = (width * 0.19f).coerceIn(dp(44f), dp(72f))
 
     /** Plein écran : cartes des IA (partagent la largeur entre elles). */
-    private fun aiCardSizeFull(): Pair<Float, Float> {
-        val g = game ?: return Pair(dp(36f), dp(50f))
+    private fun aiCardWidthFull(): Float {
+        val g = game ?: return dp(36f)
         val numAI = g.aiPlayers.size.coerceAtLeast(1)
         val available = width.toFloat() - dp(16f)
-        val cardW = (available / numAI * 0.60f).coerceIn(dp(26f), dp(46f))
-        return Pair(cardW, cardW * 1.42f)
+        return (available / numAI * 0.60f).coerceIn(dp(26f), dp(46f))
     }
 
     /** Plein écran : cartes du joueur humain — grand format, indépendant des IA. */
-    private fun humanCardSizeFull(): Pair<Float, Float> {
+    private fun humanCardWidthFull(): Float {
         val numHands = (game?.humanPlayer?.hands?.size ?: 1).coerceAtLeast(1)
-        val cardW = when (numHands) {
+        return when (numHands) {
             1 -> (width * 0.24f).coerceIn(dp(58f), dp(92f))
             2 -> (width * 0.20f).coerceIn(dp(46f), dp(78f))
             else -> (width * 0.17f).coerceIn(dp(36f), dp(64f))
         }
-        return Pair(cardW, cardW * 1.42f)
     }
 
     // ── Layout helpers ────────────────────────────────────────────────────────────
@@ -217,10 +219,7 @@ class BlackjackView @JvmOverloads constructor(
         return dp(4f) + areaW * idx + areaW / 2f
     }
 
-    private fun dealerBaselineY(): Float {
-        val (_, dH) = dealerCardSizeFull()
-        return dH + dp(20f)
-    }
+    private fun dealerBaselineY(): Float = dealerCardWidthFull() * CARD_RATIO + dp(20f)
 
     private fun aiBaselineY(): Float = height * 0.60f
 
@@ -239,16 +238,19 @@ class BlackjackView @JvmOverloads constructor(
     /** Pas de tapis vert : l'écran garde le fond du thème, et deux ovales discrets dessinent la table. */
     private fun drawBackground(canvas: Canvas) {
         tableArcPaint.alpha = 36
-        canvas.drawOval(RectF(dp(16f), dp(8f), width - dp(16f), height - dp(8f)), tableArcPaint)
+        scratchRect.set(dp(16f), dp(8f), width - dp(16f), height - dp(8f))
+        canvas.drawOval(scratchRect, tableArcPaint)
         tableArcPaint.alpha = 18
-        canvas.drawOval(RectF(dp(24f), dp(14f), width - dp(24f), height - dp(14f)), tableArcPaint)
+        scratchRect.set(dp(24f), dp(14f), width - dp(24f), height - dp(14f))
+        canvas.drawOval(scratchRect, tableArcPaint)
     }
 
     private fun drawDealerArea(canvas: Canvas, g: BlackjackGame) {
         val dHand = g.dealer.currentHand ?: return
         if (dHand.cards.isEmpty()) return
 
-        val (cardW, cardH) = if (widgetMode) cardSize() else dealerCardSizeFull()
+        val cardW = if (widgetMode) cardWidth() else dealerCardWidthFull()
+        val cardH = cardW * CARD_RATIO
         val cx = width / 2f
         val cardBottom = if (widgetMode) cardH + dp(18f) else dealerBaselineY()
 
@@ -283,7 +285,8 @@ class BlackjackView @JvmOverloads constructor(
 
     // ── Widget / compact mode : tous les joueurs sur une ligne ────────────────────
     private fun drawPlayerAreasCompact(canvas: Canvas, g: BlackjackGame) {
-        val (cardW, cardH) = cardSize()
+        val cardW = cardWidth()
+        val cardH = cardW * CARD_RATIO
         val numPlayers = g.players.size.coerceAtLeast(1)
         val available = width.toFloat() - dp(8f)
         val areaW = available / numPlayers
@@ -296,9 +299,9 @@ class BlackjackView @JvmOverloads constructor(
 
             if (player.isHuman) {
                 val areaX = dp(4f) + areaW * idx
-                val rect = RectF(areaX + dp(2f), cardBottom - cardH - dp(6f),
+                scratchRect.set(areaX + dp(2f), cardBottom - cardH - dp(6f),
                     areaX + areaW - dp(2f), cardBottom + dp(2f))
-                canvas.drawRoundRect(rect, dp(8f), dp(8f), humanHighlightPaint)
+                canvas.drawRoundRect(scratchRect, dp(8f), dp(8f), humanHighlightPaint)
             }
 
             if (isActive) {
@@ -306,9 +309,9 @@ class BlackjackView @JvmOverloads constructor(
                 highlightPaint.alpha = alpha
                 highlightPaint.strokeWidth = dp(2.5f)
                 val areaX = dp(4f) + areaW * idx
-                val rect = RectF(areaX + dp(1f), cardBottom - cardH - dp(7f),
+                scratchRect.set(areaX + dp(1f), cardBottom - cardH - dp(7f),
                     areaX + areaW - dp(1f), cardBottom + dp(3f))
-                canvas.drawRoundRect(rect, dp(10f), dp(10f), highlightPaint)
+                canvas.drawRoundRect(scratchRect, dp(10f), dp(10f), highlightPaint)
                 highlightPaint.alpha = 255
             }
 
@@ -353,7 +356,7 @@ class BlackjackView @JvmOverloads constructor(
                 namePaint.textSize = dp(11f)
                 namePaint.color = if (player.isHuman) palette.ink else palette.text
                 namePaint.typeface = if (player.isHuman) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
-                canvas.drawText(player.name, cx, height - dp(50f), namePaint)
+                canvas.drawText(if (player.isHuman) youLabel else player.name, cx, height - dp(50f), namePaint)
                 namePaint.color = palette.text
                 namePaint.typeface = Typeface.DEFAULT_BOLD
             }
@@ -362,7 +365,8 @@ class BlackjackView @JvmOverloads constructor(
 
     // ── Plein écran : joueur humain (zone du bas) ─────────────────────────────────
     private fun drawHumanZone(canvas: Canvas, g: BlackjackGame) {
-        val (cardW, cardH) = humanCardSizeFull()
+        val cardW = humanCardWidthFull()
+        val cardH = cardW * CARD_RATIO
         val cardBottom = humanBaselineY()
         val cx = width / 2f
         val humanPlayer = g.humanPlayer
@@ -371,15 +375,17 @@ class BlackjackView @JvmOverloads constructor(
         // Fond highlight
         val hLeftEdge = (cx - cardW * 1.3f).coerceAtLeast(dp(4f))
         val hRightEdge = (cx + cardW * 1.3f).coerceAtMost(width - dp(4f))
-        val hRect = RectF(hLeftEdge, cardBottom - cardH - dp(8f), hRightEdge, cardBottom + dp(4f))
-        canvas.drawRoundRect(hRect, dp(12f), dp(12f), humanHighlightPaint)
+        val hTop = cardBottom - cardH - dp(8f)
+        val hBottom = cardBottom + dp(4f)
+        scratchRect.set(hLeftEdge, hTop, hRightEdge, hBottom)
+        canvas.drawRoundRect(scratchRect, dp(12f), dp(12f), humanHighlightPaint)
 
         if (isHumanActive) {
             val alpha = highlightAlpha()
             highlightPaint.alpha = alpha
             highlightPaint.strokeWidth = dp(3f)
-            val gRect = RectF(hRect.left - dp(2f), hRect.top - dp(2f), hRect.right + dp(2f), hRect.bottom + dp(2f))
-            canvas.drawRoundRect(gRect, dp(14f), dp(14f), highlightPaint)
+            scratchRect.set(hLeftEdge - dp(2f), hTop - dp(2f), hRightEdge + dp(2f), hBottom + dp(2f))
+            canvas.drawRoundRect(scratchRect, dp(14f), dp(14f), highlightPaint)
             highlightPaint.alpha = 255
         }
 
@@ -425,14 +431,15 @@ class BlackjackView @JvmOverloads constructor(
         namePaint.textSize = dp(12f)
         namePaint.color = palette.ink
         namePaint.typeface = Typeface.DEFAULT_BOLD
-        canvas.drawText(humanPlayer.name, cx, height - dp(48f), namePaint)
+        canvas.drawText(youLabel, cx, height - dp(48f), namePaint)
         namePaint.color = palette.text
         namePaint.typeface = Typeface.DEFAULT_BOLD
     }
 
     // ── Plein écran : joueurs IA (zone du milieu) ─────────────────────────────────
     private fun drawAIZone(canvas: Canvas, g: BlackjackGame) {
-        val (cardW, cardH) = aiCardSizeFull()
+        val cardW = aiCardWidthFull()
+        val cardH = cardW * CARD_RATIO
         val cardBottom = aiBaselineY()
         val numAI = g.aiPlayers.size
         val areaW = (width.toFloat() - dp(8f)) / numAI
@@ -447,9 +454,9 @@ class BlackjackView @JvmOverloads constructor(
                 highlightPaint.alpha = alpha
                 highlightPaint.strokeWidth = dp(2f)
                 val areaX = dp(4f) + areaW * idx
-                val rect = RectF(areaX + dp(2f), cardBottom - cardH - dp(6f),
+                scratchRect.set(areaX + dp(2f), cardBottom - cardH - dp(6f),
                     areaX + areaW - dp(2f), cardBottom + dp(2f))
-                canvas.drawRoundRect(rect, dp(8f), dp(8f), highlightPaint)
+                canvas.drawRoundRect(scratchRect, dp(8f), dp(8f), highlightPaint)
                 highlightPaint.alpha = 255
             }
 
@@ -513,8 +520,8 @@ class BlackjackView @JvmOverloads constructor(
     ) {
         if (cards.isEmpty()) {
             val x = centerX - cardW / 2f
-            val rect = RectF(x, baseline - cardH, x + cardW, baseline)
-            canvas.drawRoundRect(rect, dp(4f), dp(4f), cardEmptyPaint)
+            cardRect.set(x, baseline - cardH, x + cardW, baseline)
+            canvas.drawRoundRect(cardRect, dp(4f), dp(4f), cardEmptyPaint)
             return
         }
         val overlap = when {
@@ -531,8 +538,8 @@ class BlackjackView @JvmOverloads constructor(
     }
 
     private fun drawCard(canvas: Canvas, card: BlackjackCard, x: Float, y: Float, w: Float, h: Float) {
-        val rect = RectF(x, y, x + w, y + h)
-        if (!card.faceUp) painter.drawBack(canvas, rect) else painter.drawFace(canvas, playingCard(card), rect)
+        cardRect.set(x, y, x + w, y + h)
+        if (!card.faceUp) painter.drawBack(canvas, cardRect) else painter.drawFace(canvas, playingCard(card), cardRect)
     }
 
     private fun playingCard(card: BlackjackCard): PlayingCard = PlayingCard.of(
@@ -554,7 +561,7 @@ class BlackjackView @JvmOverloads constructor(
             val bottomY: Float
             if (widgetMode) {
                 // Mode widget : positions compactes
-                val (_, cardH) = cardSize()
+                val cardH = cardWidth() * CARD_RATIO
                 val numPlayers = g.players.size.coerceAtLeast(1)
                 val cardBottom = height - dp(68f)
                 if (bubble.playerIndex < 0) {
@@ -570,19 +577,19 @@ class BlackjackView @JvmOverloads constructor(
                 when {
                     bubble.playerIndex < 0 -> {
                         // Croupier
-                        val (_, dCardH) = dealerCardSizeFull()
+                        val dCardH = dealerCardWidthFull() * CARD_RATIO
                         centerX = width / 2f + bubble.offsetX
                         bottomY = dealerBaselineY() + dCardH * 0.1f + dp(44f)
                     }
                     bubble.playerIndex < numAI -> {
                         // IA
-                        val (_, aiCardH) = aiCardSizeFull()
+                        val aiCardH = aiCardWidthFull() * CARD_RATIO
                         centerX = playerAreaCenterX(bubble.playerIndex, numAI) + bubble.offsetX
                         bottomY = aiBaselineY() - aiCardH - dp(12f)
                     }
                     else -> {
                         // Humain
-                        val (_, hCardH) = humanCardSizeFull()
+                        val hCardH = humanCardWidthFull() * CARD_RATIO
                         centerX = width / 2f + bubble.offsetX
                         bottomY = humanBaselineY() - hCardH - dp(12f)
                     }
@@ -591,21 +598,20 @@ class BlackjackView @JvmOverloads constructor(
 
             val bW = dp(56f)
             val bH = dp(26f)
-            val bRect = RectF(centerX - bW / 2f, bottomY - bH, centerX + bW / 2f, bottomY)
+            scratchRect.set(centerX - bW / 2f, bottomY - bH, centerX + bW / 2f, bottomY)
 
             bubbleBgPaint.color = palette.withAlpha(palette.accent, alpha)
-            canvas.drawRoundRect(bRect, dp(8f), dp(8f), bubbleBgPaint)
+            canvas.drawRoundRect(scratchRect, dp(8f), dp(8f), bubbleBgPaint)
 
-            val tailPath = Path().apply {
-                moveTo(centerX - dp(5f), bottomY)
-                lineTo(centerX + dp(5f), bottomY)
-                lineTo(centerX, bottomY + dp(9f))
-                close()
-            }
+            tailPath.rewind()
+            tailPath.moveTo(centerX - dp(5f), bottomY)
+            tailPath.lineTo(centerX + dp(5f), bottomY)
+            tailPath.lineTo(centerX, bottomY + dp(9f))
+            tailPath.close()
             canvas.drawPath(tailPath, bubbleBgPaint)
 
             bubbleBorderPaint.color = palette.withAlpha(palette.accentDim, alpha)
-            canvas.drawRoundRect(bRect, dp(8f), dp(8f), bubbleBorderPaint)
+            canvas.drawRoundRect(scratchRect, dp(8f), dp(8f), bubbleBorderPaint)
 
             bubbleTextPaint.textSize = dp(14f)
             bubbleTextPaint.color = palette.withAlpha(palette.onAccent, alpha)
@@ -621,7 +627,7 @@ class BlackjackView @JvmOverloads constructor(
         val dotY: Float
         if (widgetMode) {
             val numPlayers = g.players.size.coerceAtLeast(1)
-            val (_, cardH) = cardSize()
+            val cardH = cardWidth() * CARD_RATIO
             if (activeIdx < 0 || activeIdx >= numPlayers) return
             cx = playerAreaCenterX(activeIdx, numPlayers)
             dotY = height - dp(68f) - cardH - dp(10f)
@@ -629,12 +635,12 @@ class BlackjackView @JvmOverloads constructor(
             if (activeIdx < numAI) {
                 // IA active
                 if (activeIdx < 0 || numAI == 0) return
-                val (_, aiCardH) = aiCardSizeFull()
+                val aiCardH = aiCardWidthFull() * CARD_RATIO
                 cx = playerAreaCenterX(activeIdx, numAI)
                 dotY = aiBaselineY() - aiCardH - dp(10f)
             } else {
                 // Humain actif
-                val (_, hCardH) = humanCardSizeFull()
+                val hCardH = humanCardWidthFull() * CARD_RATIO
                 cx = width / 2f
                 dotY = humanBaselineY() - hCardH - dp(10f)
             }
@@ -649,6 +655,10 @@ class BlackjackView @JvmOverloads constructor(
             thinkingPaint.alpha = (scale * 180 + 75).toInt()
             canvas.drawCircle(dotX, dotY, radius, thinkingPaint)
         }
+    }
+
+    private companion object {
+        const val CARD_RATIO = 1.42f
     }
 
     override fun onDetachedFromWindow() {

@@ -48,16 +48,21 @@ class BlackjackActivity : ThemedActivity() {
     private val statsRepo by lazy { GameStatsRepository(this) }
     private val neutrinoRepo by lazy { NeutrinoRepository(this) }
     private var numAI = 0
+    private var resumeRoundOnReturn = false
 
     // Manga bubble texts by AI action
-    private val bubblesByAction = mapOf(
-        PlayerAction.HIT to listOf("!!", "Hit me!", "★", "Go go!"),
-        PlayerAction.STAND to listOf("✋", "Good enough", "Nope", "I'll stay"),
-        PlayerAction.DOUBLE to listOf("DOUBLE !!", "×2 !!", "All in !", "★★"),
-        PlayerAction.SPLIT to listOf("SPLIT!!", "Two chances!", "!!!")
-    )
-    private val bustBubbles = listOf("×_×", "BUST!!", "orz", "Nooo...")
-    private val bjBubbles = listOf("NATURAL!!", "★★★", "Lucky!!", "BJ !!!")
+    private val bubblesByAction by lazy {
+        mapOf(
+            PlayerAction.HIT to resources.getStringArray(R.array.blackjack_bubbles_hit),
+            PlayerAction.STAND to resources.getStringArray(R.array.blackjack_bubbles_stand),
+            PlayerAction.DOUBLE to resources.getStringArray(R.array.blackjack_bubbles_double),
+            PlayerAction.SPLIT to resources.getStringArray(R.array.blackjack_bubbles_split)
+        )
+    }
+    private val thinkBubbles by lazy { resources.getStringArray(R.array.blackjack_bubbles_think) }
+    private val bustBubbles by lazy { resources.getStringArray(R.array.blackjack_bubbles_bust) }
+    private val bjBubbles by lazy { resources.getStringArray(R.array.blackjack_bubbles_bj) }
+    private val pushBubbles by lazy { resources.getStringArray(R.array.blackjack_bubbles_push) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,6 +158,7 @@ class BlackjackActivity : ThemedActivity() {
     // ── Table ────────────────────────────────────────────────────────────────────
     /** Installe les joueurs et ouvre la phase de mise. */
     private fun startTable() {
+        handler.removeCallbacksAndMessages(null)
         game.setupPlayers(numAI)
         game.humanPlayer.balance = neutrinoRepo.getBalance().coerceAtLeast(0)
         for (ai in game.aiPlayers) ai.balance = 100
@@ -164,9 +170,10 @@ class BlackjackActivity : ThemedActivity() {
 
     /** Le réglage du nombre d'adversaires, derrière l'engrenage : il redémarre la table. */
     private fun showSettingsDialog() {
+        // Pendant une main, l'engrenage ne fait rien : la table ne se redémarre qu'entre deux mains
+        if (game.phase != GamePhase.BETTING && resultOverlay.visibility != View.VISIBLE) return
         var selectedAI = numAI
-        val options = Array(5) { i -> "$i ${getString(R.string.blackjack_ia_short)}" }
-        options[0] = "0 ${getString(R.string.blackjack_ia_short)}"
+        val options = Array(5) { i -> getString(R.string.blackjack_ai_count_option, i) }
 
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(getString(R.string.blackjack_settings_title))
@@ -182,6 +189,8 @@ class BlackjackActivity : ThemedActivity() {
 
     // ── Phase display ────────────────────────────────────────────────────────────
     private fun showBettingPhase() {
+        game.phase = GamePhase.BETTING
+        game.humanPlayer.balance = neutrinoRepo.getBalance().coerceAtLeast(0)
         betBar.visibility = View.VISIBLE
         actionBar.visibility = View.GONE
         waitingBar.visibility = View.GONE
@@ -210,8 +219,12 @@ class BlackjackActivity : ThemedActivity() {
 
     // ── Deal ─────────────────────────────────────────────────────────────────────
     private fun onDealClicked() {
+        if (game.phase != GamePhase.BETTING) return
         statsRepo.recordBlackjackStarted()
-        game.startRound()
+        game.humanPlayer.balance = neutrinoRepo.getBalance().coerceAtLeast(0)
+        // La mise est débitée et enregistrée dès la donne : quitter pendant la main ne la rend pas
+        applyHumanBalanceChange { game.startRound() }
+        updateBalanceDisplay()
         tableView.game = game
         tableView.refresh()
 
@@ -238,24 +251,27 @@ class BlackjackActivity : ThemedActivity() {
         waitingBar.visibility = View.GONE
         actionBar.visibility = View.VISIBLE
         betBar.visibility = View.GONE
-        val hand = game.humanPlayer.currentHand
-        btnDouble.isEnabled = hand?.canDouble == true && game.humanPlayer.balance >= (hand.bet * 2)
-        btnSplit.isEnabled = hand?.canSplit == true && game.humanPlayer.balance >= (hand.bet * 2)
+        btnDouble.isEnabled = game.canAffordDouble(game.humanPlayer)
+        btnSplit.isEnabled = game.canAffordSplit(game.humanPlayer)
         tableView.startAnimating() // for highlight glow
         tableView.refresh()
     }
 
     private fun onHumanAction(action: PlayerAction) {
+        if (!game.isHumanTurn) return
         actionBar.visibility = View.GONE
         tableView.isThinking = false
         tableView.stopAnimating()
 
-        val movedToDealer = when (action) {
-            PlayerAction.HIT -> game.hit()
-            PlayerAction.STAND -> game.stand()
-            PlayerAction.DOUBLE -> game.doubleDown()
-            PlayerAction.SPLIT -> game.split()
+        val movedToDealer = applyHumanBalanceChange {
+            when (action) {
+                PlayerAction.HIT -> game.hit()
+                PlayerAction.STAND -> game.stand()
+                PlayerAction.DOUBLE -> game.doubleDown()
+                PlayerAction.SPLIT -> game.split()
+            }
         }
+        updateBalanceDisplay()
         tableView.refresh()
 
         handler.postDelayed({
@@ -276,12 +292,12 @@ class BlackjackActivity : ThemedActivity() {
         // Show thinking indicator
         tableView.isThinking = true
         waitingBar.visibility = View.VISIBLE
-        waitingText.text = "${player.name}..."
+        waitingText.text = getString(R.string.blackjack_ai_thinking, player.name)
         actionBar.visibility = View.GONE
         betBar.visibility = View.GONE
 
         // Add manga bubble (thinking)
-        val thinkBubble = listOf("...", "Hmm", "★", "?").random()
+        val thinkBubble = thinkBubbles.random()
         tableView.addBubble(thinkBubble, game.activePlayerIndex)
         tableView.refresh()
 
@@ -290,7 +306,7 @@ class BlackjackActivity : ThemedActivity() {
             tableView.isThinking = false
 
             // Action bubble
-            val actionBubble = (bubblesByAction[action] ?: listOf("!")).random()
+            val actionBubble = bubblesByAction.getValue(action).random()
             tableView.addBubble(actionBubble, game.activePlayerIndex)
 
             val movedToDealer = game.executeAIAction()
@@ -330,7 +346,7 @@ class BlackjackActivity : ThemedActivity() {
             val done = game.dealerStep()
             tableView.refresh()
             if (done) {
-                game.calculatePayouts()
+                applyHumanBalanceChange { game.calculatePayouts() }
                 handler.postDelayed({ showResults() }, 400L)
             } else {
                 scheduleDealerStep()
@@ -355,12 +371,9 @@ class BlackjackActivity : ThemedActivity() {
             }
         }
 
-        // Sync neutrino balance (sauf mode gratuit)
+        // Le solde a déjà été réglé au paiement (calculatePayouts)
         val isFreeBet = humanHands.all { it.bet == 0 }
-        if (!isFreeBet && netChange != 0) {
-            neutrinoRepo.setBalance(game.humanPlayer.balance)
-            if (netChange > 0) statsRepo.recordBlackjackWon()
-        }
+        if (!isFreeBet && netChange > 0) statsRepo.recordBlackjackWon()
 
         updateBalanceDisplay()
 
@@ -391,7 +404,7 @@ class BlackjackActivity : ThemedActivity() {
             val bubble = when (aiResult) {
                 PayoutResult.WIN, PayoutResult.WIN_BJ -> bjBubbles.random()
                 PayoutResult.LOSE -> bustBubbles.random()
-                else -> listOf("=", "...", "~").random()
+                else -> pushBubbles.random()
             }
             handler.postDelayed({ tableView.addBubble(bubble, idx) }, idx * 300L)
         }
@@ -402,10 +415,31 @@ class BlackjackActivity : ThemedActivity() {
         showBettingPhase()
     }
 
+    /**
+     * Reporte dans le solde de neutrinos, par différence, ce que [step] a changé au solde du joueur
+     * (mise à la donne, double, séparation, paiement) : les gains faits ailleurs ne sont pas écrasés.
+     */
+    private inline fun <T> applyHumanBalanceChange(step: () -> T): T {
+        val before = game.humanPlayer.balance
+        val result = step()
+        val delta = game.humanPlayer.balance - before
+        if (delta != 0) neutrinoRepo.setBalance(neutrinoRepo.getBalance() + delta)
+        return result
+    }
+
     override fun onPause() {
         super.onPause()
         handler.removeCallbacksAndMessages(null)
-        neutrinoRepo.setBalance(game.humanPlayer.balance)
+        // Une étape de la main attendait son tour : elle sera relancée au retour
+        resumeRoundOnReturn = game.phase != GamePhase.BETTING && resultOverlay.visibility != View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (resumeRoundOnReturn) {
+            resumeRoundOnReturn = false
+            processCurrentTurn()
+        }
     }
 
     override fun onDestroy() {

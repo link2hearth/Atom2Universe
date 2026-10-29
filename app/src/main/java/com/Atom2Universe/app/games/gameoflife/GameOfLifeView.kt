@@ -35,9 +35,9 @@ class GameOfLifeView @JvmOverloads constructor(
     }
 
     // Grille infinie — seules les cellules vivantes sont stockées. Les deux ensembles sont échangés
-    // à chaque génération au lieu d'être recopiés.
-    private var cells = HashSet<Long>(1024)
-    private var nextCells = HashSet<Long>(1024)
+    // à chaque génération au lieu d'être recopiés ; sans boîte, comme le compteur de voisins.
+    private var cells = CellSet()
+    private var nextCells = CellSet()
     private val neighborCounts = NeighborCounter()
 
     // Viewport en coordonnées monde (originX = cellule monde à x=0 écran)
@@ -122,7 +122,9 @@ class GameOfLifeView @JvmOverloads constructor(
     fun step() {
         // Compter les voisins de tous les candidats (cellules vivantes + leurs voisins)
         neighborCounts.clear()
-        for (key in cells) {
+        for (i in 0 until cells.capacity) {
+            val key = cells.keyAt(i)
+            if (key == NeighborCounter.EMPTY) continue
             val x = decodeX(key)
             val y = decodeY(key)
             for (dx in -1..1) for (dy in -1..1) {
@@ -192,7 +194,9 @@ class GameOfLifeView @JvmOverloads constructor(
 
         // Cellules vivantes
         val gap = if (cellSize > 6f) min(1.5f, cellSize * 0.06f) else 0f
-        for (key in cells) {
+        for (i in 0 until cells.capacity) {
+            val key = cells.keyAt(i)
+            if (key == NeighborCounter.EMPTY) continue
             val cx = decodeX(key)
             val cy = decodeY(key)
             if (cx < startC || cx > endC || cy < startR || cy > endR) continue
@@ -336,6 +340,91 @@ internal class NeighborCounter {
 
     private fun slot(key: Long, mask: Int): Int {
         val h = key * -7046029254386353131L // constante de Fibonacci 64 bits
+        return (h xor (h ushr 32)).toInt() and mask
+    }
+}
+
+/**
+ * Ensemble de cellules vivantes sans boxing, sur le modèle de [NeighborCounter] : table à
+ * adressage ouvert (sondage linéaire), retrait par décalage arrière pour garder les chaînes
+ * de sondage intactes. Un HashSet<Long> allouait une boîte par cellule vivante à chaque pas.
+ */
+internal class CellSet {
+    private var keys = LongArray(1 shl 11).also { it.fill(NeighborCounter.EMPTY) }
+
+    var size = 0
+        private set
+    val capacity: Int get() = keys.size
+    fun keyAt(i: Int): Long = keys[i]
+
+    fun clear() {
+        if (size == 0) return
+        keys.fill(NeighborCounter.EMPTY)
+        size = 0
+    }
+
+    fun contains(key: Long): Boolean {
+        val mask = keys.size - 1
+        var i = slot(key, mask)
+        while (true) {
+            val k = keys[i]
+            if (k == key) return true
+            if (k == NeighborCounter.EMPTY) return false
+            i = (i + 1) and mask
+        }
+    }
+
+    fun add(key: Long): Boolean {
+        if ((size + 1) * 2 > keys.size) grow()
+        return insert(key)
+    }
+
+    fun remove(key: Long): Boolean {
+        val mask = keys.size - 1
+        var hole = slot(key, mask)
+        while (true) {
+            val k = keys[hole]
+            if (k == NeighborCounter.EMPTY) return false
+            if (k == key) break
+            hole = (hole + 1) and mask
+        }
+        // Remonte dans le trou chaque clé suivante dont la case d'origine le précède.
+        var j = (hole + 1) and mask
+        while (true) {
+            val k = keys[j]
+            if (k == NeighborCounter.EMPTY) break
+            val home = slot(k, mask)
+            if (((hole - home) and mask) < ((j - home) and mask)) {
+                keys[hole] = k
+                hole = j
+            }
+            j = (j + 1) and mask
+        }
+        keys[hole] = NeighborCounter.EMPTY
+        size--
+        return true
+    }
+
+    private fun insert(key: Long): Boolean {
+        val mask = keys.size - 1
+        var i = slot(key, mask)
+        while (true) {
+            val k = keys[i]
+            if (k == key) return false
+            if (k == NeighborCounter.EMPTY) { keys[i] = key; size++; return true }
+            i = (i + 1) and mask
+        }
+    }
+
+    private fun grow() {
+        val oldKeys = keys
+        keys = LongArray(oldKeys.size * 2).also { it.fill(NeighborCounter.EMPTY) }
+        size = 0
+        for (k in oldKeys) if (k != NeighborCounter.EMPTY) insert(k)
+    }
+
+    private fun slot(key: Long, mask: Int): Int {
+        val h = key * -7046029254386353131L // même mélange que NeighborCounter
         return (h xor (h ushr 32)).toInt() and mask
     }
 }

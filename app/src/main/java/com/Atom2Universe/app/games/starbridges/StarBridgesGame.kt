@@ -299,8 +299,7 @@ class StarBridgesGame {
         var total = 0
         for ((key, count) in bridges) {
             if (count <= 0) continue
-            val dash = key.indexOf('-')
-            if (key.substring(0, dash).toInt() == nodeId || key.substring(dash + 1).toInt() == nodeId) total += count
+            if (endA(key) == nodeId || endB(key) == nodeId) total += count
         }
         return total
     }
@@ -373,6 +372,16 @@ class StarBridgesGame {
     fun endsOf(key: String): Pair<Int, Int> {
         val dash = key.indexOf('-')
         return key.substring(0, dash).toInt() to key.substring(dash + 1).toInt()
+    }
+
+    /** Première et seconde étoile d'une clé « a-b », lues sans rien allouer (le dessin les lit à chaque image). */
+    fun endA(key: String): Int = parseId(key, 0, key.indexOf('-'))
+    fun endB(key: String): Int = parseId(key, key.indexOf('-') + 1, key.length)
+
+    private fun parseId(key: String, from: Int, to: Int): Int {
+        var v = 0
+        for (i in from until to) v = v * 10 + (key[i] - '0')
+        return v
     }
 
     /**

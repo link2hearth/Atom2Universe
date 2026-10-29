@@ -2,14 +2,12 @@ package com.Atom2Universe.app.games.hexrunner
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
-import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 
@@ -30,7 +28,7 @@ class HexRunnerActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hex_runner)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran reste allumé pendant une partie seulement (HexRunnerView.keepScreenOn).
 
         hexView        = findViewById(R.id.hex_runner_view)
         overlayStart   = findViewById(R.id.hex_overlay_start)
@@ -55,13 +53,12 @@ class HexRunnerActivity : ThemedActivity() {
             runOnUiThread {
                 val secs = hexView.game.score / 1000
                 val best = hexView.game.bestScore / 1000
-                tvFinalScore.text = getString(R.string.hex_runner_score_label, formatTime(secs))
-                tvBestScore.text  = getString(R.string.hex_runner_best_label,  formatTime(best))
+                tvFinalScore.text = getString(R.string.hex_runner_score_label, HexRunnerView.formatTime(this, secs))
+                tvBestScore.text  = getString(R.string.hex_runner_best_label,  HexRunnerView.formatTime(this, best))
                 overlayGameOver.visibility = View.VISIBLE
                 gameStatsRepo.recordHexRunnerBestTime(hexView.game.bestScore)
-                // 1 neutrino par tranche de 15 s de jeu (score en ms)
-                val reward = NeutrinoRewards.perTime(hexView.game.score)
-                if (reward > 0) NeutrinoRepository(this).addBalance(reward)
+                // 1 neutrino par tranche de 15 s de jeu ; la part déjà versée en quittant n'est pas repayée.
+                payUnpaidReward()
             }
         }
 
@@ -102,8 +99,20 @@ class HexRunnerActivity : ThemedActivity() {
         })
     }
 
-    private fun formatTime(secs: Long): String {
-        val m = secs / 60; val s = secs % 60
-        return if (m > 0) "%d:%02d".format(m, s) else "$s s"
+    private fun payUnpaidReward() {
+        val reward = hexView.collectUnpaidReward()
+        if (reward > 0) NeutrinoRepository(this).addBalance(reward)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // Partie figée à la perte du focus ; un toucher la relance.
+        if (!hasFocus) hexView.held = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        hexView.held = true
+        payUnpaidReward()
     }
 }

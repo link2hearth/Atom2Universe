@@ -10,9 +10,10 @@ enum class WinType { SYMBOL_MATCH, JOKER_WILD, JOKER_LINE }
 
 class RouletteGame {
 
-    val symbolMatch = 2   // 3 symboles identiques
-    val jokerWild1  = 3   // 2 identiques + 1 joker
-    val jokerWild2  = 4   // 1 symbole + 2 jokers
+    // Espérance ≈ 0,93 × la mise sur les 8 lignes (RouletteGameTest) : la machine garde un peu.
+    val symbolMatch = 1   // 3 symboles identiques
+    val jokerWild1  = 2   // 2 identiques + 1 joker
+    val jokerWild2  = 3   // 1 symbole + 2 jokers
     val jokerLine   = 5   // 3 jokers
 
     val grid: Array<Array<RouletteSymbol>> = Array(3) { Array(3) { RouletteSymbol.SATURN } }
@@ -38,7 +39,7 @@ class RouletteGame {
         add(listOf(Pair(0, 2), Pair(1, 1), Pair(2, 0)))                    // diagonale /
     }
 
-    private fun evaluateLine(cells: List<RouletteSymbol>, coords: List<Pair<Int, Int>>): RouletteWin? {
+    internal fun evaluateLine(cells: List<RouletteSymbol>, coords: List<Pair<Int, Int>>): RouletteWin? {
         if (cells.any { it.isBlackhole }) return null
         val jokerCount = cells.count { it.isJoker }
         val nonJokers  = cells.filter { !it.isJoker }

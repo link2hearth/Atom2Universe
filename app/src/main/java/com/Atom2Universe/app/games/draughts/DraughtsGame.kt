@@ -18,9 +18,14 @@ class DraughtsGame private constructor(initBoard: Boolean) {
     var quietKingMoves = 0
         private set
 
-    /** Positions vues, pour la nulle par triple répétition — seulement sur la vraie partie. */
-    private val positionCounts = HashMap<String, Int>()
-    private var trackRepetition = true
+    /**
+     * Positions vues, pour la nulle par triple répétition — seulement sur la vraie partie :
+     * les copies de la recherche de l'IA n'en ont pas (null).
+     */
+    private val positionCounts: HashMap<String, Int>? = if (initBoard) HashMap() else null
+
+    /** Coups légaux de la position courante, calculés une fois (fin de partie puis recherche). */
+    private var legalMovesCache: List<DraughtsMove>? = null
 
     constructor() : this(true)
 
@@ -37,8 +42,8 @@ class DraughtsGame private constructor(initBoard: Boolean) {
         winner = null
         moveCount = 0
         quietKingMoves = 0
-        positionCounts.clear()
-        if (trackRepetition) positionCounts[serialize()] = 1
+        legalMovesCache = null
+        positionCounts?.let { it.clear(); it[serialize()] = 1 }
     }
 
     fun getPieceAt(pos: DraughtsPos): DraughtsPiece? =
@@ -47,7 +52,8 @@ class DraughtsGame private constructor(initBoard: Boolean) {
     fun getPieceAt(row: Int, col: Int): DraughtsPiece? =
         if (row in 0..9 && col in 0..9) board[row][col] else null
 
-    fun getLegalMoves(): List<DraughtsMove> = getLegalMovesForColor(currentTurn)
+    fun getLegalMoves(): List<DraughtsMove> =
+        legalMovesCache ?: getLegalMovesForColor(currentTurn).also { legalMovesCache = it }
 
     fun getLegalMovesForColor(color: DraughtsPieceColor): List<DraughtsMove> {
         val captures = getAllCaptureMoves(color)
@@ -211,6 +217,7 @@ class DraughtsGame private constructor(initBoard: Boolean) {
 
     fun makeMove(move: DraughtsMove) {
         val piece = board[move.from.row][move.from.col] ?: return
+        legalMovesCache = null
         board[move.from.row][move.from.col] = null
         for (cap in move.captures) board[cap.row][cap.col] = null
         val finalPiece = if (move.isPromotion) piece.promoted() else {
@@ -224,9 +231,10 @@ class DraughtsGame private constructor(initBoard: Boolean) {
         quietKingMoves = if (piece.isKing() && move.captures.isEmpty()) quietKingMoves + 1 else 0
         checkGameOver()
         if (!isGameOver) {
-            val seen = if (trackRepetition) {
+            val counts = positionCounts
+            val seen = if (counts != null) {
                 val key = serialize()
-                ((positionCounts[key] ?: 0) + 1).also { positionCounts[key] = it }
+                ((counts[key] ?: 0) + 1).also { counts[key] = it }
             } else 0
             if (seen >= 3 || quietKingMoves >= 50) {
                 isGameOver = true
@@ -259,8 +267,8 @@ class DraughtsGame private constructor(initBoard: Boolean) {
         copy.winner = winner
         copy.moveCount = moveCount
         copy.quietKingMoves = quietKingMoves
-        // Les copies servent à la recherche de l'IA : pas de registre des positions, trop coûteux.
-        copy.trackRepetition = false
+        copy.legalMovesCache = legalMovesCache
+        // Les copies servent à la recherche de l'IA : pas de registre des positions (DraughtsGame(false)).
         return copy
     }
 
@@ -299,9 +307,20 @@ class DraughtsGame private constructor(initBoard: Boolean) {
         }
         isGameOver = false; winner = null; moveCount = 0
         quietKingMoves = 0
-        positionCounts.clear()
-        if (trackRepetition) positionCounts[serialize()] = 1
+        legalMovesCache = null
+        positionCounts?.let { it.clear(); it[serialize()] = 1 }
         checkGameOver()
+    }
+
+    /** Reprise d'une sauvegarde : la position, puis le compte des coups et l'issue déjà jouée. */
+    fun restore(state: String, moveCount: Int, quietKingMoves: Int, over: Boolean, winner: DraughtsPieceColor?) {
+        deserialize(state)
+        this.moveCount = moveCount
+        this.quietKingMoves = quietKingMoves
+        if (over && !isGameOver) {
+            isGameOver = true
+            this.winner = winner
+        }
     }
 
     companion object {

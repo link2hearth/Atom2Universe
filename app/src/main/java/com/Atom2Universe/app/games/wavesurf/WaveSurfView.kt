@@ -78,6 +78,15 @@ class WaveSurfView @JvmOverloads constructor(
     private val terrainPath = Path()
     private val surfacePath = Path()
     private val stars = Array(45) { Triple(Random.nextFloat(), Random.nextFloat() * 0.55f, 0.7f + Random.nextFloat() * 1.1f) }
+    // Dégradés et tableaux réutilisés d'une image à l'autre (fil de jeu seulement).
+    private var shadedHeight = -1f
+    private val terrainColors = IntArray(8)
+    private val hsv = FloatArray(3)
+    private val gradientColors = IntArray(2)
+    private var haloColor = 0
+    private var haloRadius = -1f
+    private var haloShader: Shader? = null
+    private var bodyShader: Shader? = null
 
     var onStats: ((distM: Float, speedKmh: Float, altitudeM: Float) -> Unit)? = null
 
@@ -111,11 +120,14 @@ class WaveSurfView @JvmOverloads constructor(
     private fun startLoopIfReady() {
         if (!resumed || !surfaceReady || running) return
         running = true
+        // L'écran reste allumé tant que la bille roule (ni pendant les règles, ni en arrière-plan).
+        keepScreenOn = true
         thread = Thread(this, "WaveSurf").apply { start() }
     }
 
     private fun stopLoop() {
         running = false
+        keepScreenOn = false
         renderHandler?.post { Looper.myLooper()?.quit() }
         thread?.join()
         thread = null
@@ -184,6 +196,10 @@ class WaveSurfView @JvmOverloads constructor(
         val callback = object : Choreographer.FrameCallback {
             override fun doFrame(now: Long) {
                 if (!running) return
+                // Dessin plafonné à ~60 i/s : l'image sautée reporte son temps sur la suivante.
+                if (lastNs != 0L && now - lastNs < 15_000_000L) {
+                    choreographer.postFrameCallback(this); return
+                }
                 val frameDt = if (lastNs == 0L) 0f else ((now - lastNs) / 1e9f).coerceIn(0f, 0.1f)
                 lastNs = now
                 pendingSize.getAndSet(null)?.let { size ->
@@ -329,9 +345,15 @@ class WaveSurfView @JvmOverloads constructor(
     }
 
     private fun drawSky(canvas: Canvas) {
-        skyPaint.shader = LinearGradient(0f, 0f, 0f, vh,
-            intArrayOf(Color.rgb(5, 8, 16), Color.rgb(4, 6, 13), Color.rgb(1, 1, 3)),
-            floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP)
+        if (shadedHeight != vh) {
+            // Le ciel et l'ombre du relief ne dépendent que de la hauteur de la surface.
+            shadedHeight = vh
+            skyPaint.shader = LinearGradient(0f, 0f, 0f, vh,
+                intArrayOf(Color.rgb(5, 8, 16), Color.rgb(4, 6, 13), Color.rgb(1, 1, 3)),
+                floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP)
+            terrDark.shader = LinearGradient(0f, 0f, 0f, vh,
+                intArrayOf(Color.TRANSPARENT, Color.argb(175, 0, 0, 0)), null, Shader.TileMode.CLAMP)
+        }
         canvas.drawRect(0f, 0f, vw, vh, skyPaint)
         stars.forEach { (rx, ry, r) ->
             starPaint.color = Color.argb((90 + (rx * 130).toInt()).coerceIn(60, 210), 255, 255, 255)
@@ -350,11 +372,9 @@ class WaveSurfView @JvmOverloads constructor(
             screenX += 4f
         }
         terrainPath.lineTo(vw + 8f, vh); terrainPath.close()
-        val colors = IntArray(8) { getTerrainColor(camX + vw / camS * it / 7f) }
-        terrFill.shader = LinearGradient(0f, 0f, vw, 0f, colors, null, Shader.TileMode.CLAMP)
+        for (i in terrainColors.indices) terrainColors[i] = getTerrainColor(camX + vw / camS * i / 7f)
+        terrFill.shader = LinearGradient(0f, 0f, vw, 0f, terrainColors, null, Shader.TileMode.CLAMP)
         canvas.drawPath(terrainPath, terrFill)
-        terrDark.shader = LinearGradient(0f, 0f, 0f, vh,
-            intArrayOf(Color.TRANSPARENT, Color.argb(175, 0, 0, 0)), null, Shader.TileMode.CLAMP)
         canvas.drawPath(terrainPath, terrDark)
         terrStroke.color = Color.argb(130, 255, 255, 255)
         terrStroke.strokeWidth = resources.displayMetrics.density * 1.2f
@@ -367,25 +387,41 @@ class WaveSurfView @JvmOverloads constructor(
         // Même décalage en glisse et en vol : le centre ne saute pas au décollage.
         val by = (renderY - camY) * camS - r * 0.8f
         val hue = 210f * (1f - (physics.speed / 1500f).coerceIn(0f, 1f))
-        val color = Color.HSVToColor(floatArrayOf(hue, 0.78f, 1f))
+        val color = hsvColor(hue, 0.78f, 1f)
         for (point in trail) {
             val life = (1f - (elapsed - point.time) / TRAIL_AGE).coerceIn(0f, 1f)
             trailPaint.color = Color.argb((life * 100).toInt(), Color.red(color), Color.green(color), Color.blue(color))
             canvas.drawCircle((point.x - camX) * camS, (point.y - camY) * camS - r * 0.8f, r * (0.25f + life * 0.65f), trailPaint)
         }
-        ballPaint.shader = RadialGradient(bx, by, r * 2.2f,
-            intArrayOf(Color.argb(150, Color.red(color), Color.green(color), Color.blue(color)), Color.TRANSPARENT),
-            null, Shader.TileMode.CLAMP)
-        canvas.drawCircle(bx, by, r * 2.2f, ballPaint)
-        ballPaint.shader = RadialGradient(bx - r * 0.25f, by - r * 0.25f, r,
-            intArrayOf(Color.WHITE, color), null, Shader.TileMode.CLAMP)
-        canvas.drawCircle(bx, by, r, ballPaint)
+        // Dégradés posés à l'origine et déplacés avec le canevas : refaits seulement
+        // quand la couleur ou le rayon de la bille changent.
+        if (color != haloColor || r != haloRadius || haloShader == null) {
+            haloColor = color; haloRadius = r
+            gradientColors[0] = Color.argb(150, Color.red(color), Color.green(color), Color.blue(color))
+            gradientColors[1] = Color.TRANSPARENT
+            haloShader = RadialGradient(0f, 0f, r * 2.2f, gradientColors, null, Shader.TileMode.CLAMP)
+            gradientColors[0] = Color.WHITE
+            gradientColors[1] = color
+            bodyShader = RadialGradient(-r * 0.25f, -r * 0.25f, r, gradientColors, null, Shader.TileMode.CLAMP)
+        }
+        canvas.save()
+        canvas.translate(bx, by)
+        ballPaint.shader = haloShader
+        canvas.drawCircle(0f, 0f, r * 2.2f, ballPaint)
+        ballPaint.shader = bodyShader
+        canvas.drawCircle(0f, 0f, r, ballPaint)
+        canvas.restore()
+    }
+
+    private fun hsvColor(hue: Float, saturation: Float, value: Float): Int {
+        hsv[0] = hue; hsv[1] = saturation; hsv[2] = value
+        return Color.HSVToColor(hsv)
     }
 
     private fun getTerrainColor(worldX: Float): Int = when (currentTheme) {
-        ColorTheme.VIVID -> Color.HSVToColor(floatArrayOf((worldX / 28000f * 360f + 36000f) % 360f, 0.82f, 0.74f))
-        ColorTheme.PASTEL -> Color.HSVToColor(floatArrayOf((worldX / 28000f * 360f + 36000f) % 360f, 0.28f, 0.97f))
-        ColorTheme.WEATHERED -> Color.HSVToColor(floatArrayOf((worldX / 40000f * 360f + 36015f) % 360f, 0.4f, 0.5f))
+        ColorTheme.VIVID -> hsvColor((worldX / 28000f * 360f + 36000f) % 360f, 0.82f, 0.74f)
+        ColorTheme.PASTEL -> hsvColor((worldX / 28000f * 360f + 36000f) % 360f, 0.28f, 0.97f)
+        ColorTheme.WEATHERED -> hsvColor((worldX / 40000f * 360f + 36015f) % 360f, 0.4f, 0.5f)
         ColorTheme.GRAYSCALE -> {
             val wave = (sin(worldX / 7000f) * 0.55f + sin(worldX / 2800f + 1.4f) * 0.45f + 1f) / 2f
             val gray = ((0.17f + 0.62f * wave).coerceIn(0.12f, 0.88f) * 255f).toInt()

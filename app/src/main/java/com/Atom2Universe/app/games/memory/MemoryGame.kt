@@ -11,6 +11,8 @@ class MemoryGame {
     var flips: Int = 0
     var matchedPairs: Int = 0
     var elapsedSeconds: Long = 0L
+    /** Neutrinos déjà versés pour cette partie (sauvegardé, pour ne pas repayer à la réouverture). */
+    var rewardClaimed: Boolean = false
 
     val isWon get() = matchedPairs == difficulty.pairCount
     val usesSymbols get() = imageFolder == MemorySymbols.FOLDER
@@ -28,6 +30,7 @@ class MemoryGame {
         flips = 0
         matchedPairs = 0
         elapsedSeconds = 0L
+        rewardClaimed = false
         val needed = diff.pairCount
         val indices = files.indices.toMutableList().shuffled().take(needed)
         cards = (indices + indices)
@@ -54,6 +57,7 @@ class MemoryGame {
         obj.put("flips", flips)
         obj.put("matched", matchedPairs)
         obj.put("elapsed", elapsedSeconds)
+        obj.put("rewardClaimed", rewardClaimed)
         return obj.toString()
     }
 
@@ -73,6 +77,7 @@ class MemoryGame {
         flips = obj.getInt("flips")
         matchedPairs = obj.getInt("matched")
         elapsedSeconds = obj.getLong("elapsed")
+        rewardClaimed = obj.optBoolean("rewardClaimed", false)
         true
     }.getOrDefault(false)
 }

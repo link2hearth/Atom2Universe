@@ -21,6 +21,8 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
@@ -44,6 +46,7 @@ class CirclesActivity : ThemedActivity() {
 
     private val game = CirclesGame()
     private var solutionMap: Map<String, CirclesGame.SolutionEntry>? = null
+    private var solutionJob: Job? = null
     private val diffChips = mutableMapOf<CirclesDifficulty, MaterialButton>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,9 +199,13 @@ class CirclesActivity : ThemedActivity() {
 
     private fun scheduleSolutionMap() {
         solutionMap = null
-        lifecycleScope.launch(Dispatchers.Default) {
-            val map = game.buildSolutionMap()
-            withContext(Dispatchers.Main) { solutionMap = map }
+        solutionJob?.cancel()
+        // Copiées ici : le calcul ne lit jamais la partie en cours sur son fil.
+        val ringCount = game.ringCount
+        val links = game.rotationLinks.copyOf()
+        solutionJob = lifecycleScope.launch(Dispatchers.Default) {
+            val map = CirclesGame.buildSolutionMap(ringCount, links)
+            withContext(Dispatchers.Main) { if (isActive) solutionMap = map }
         }
     }
 
@@ -211,7 +218,7 @@ class CirclesActivity : ThemedActivity() {
     }
 
     private fun rewardText(): String {
-        if (game.hintUsed) return "—"
+        if (game.hintUsed) return getString(R.string.circles_reward_none)
         val n = CirclesGame.getNeutrinos(game.difficulty, game.ringCount)
         return getString(R.string.circles_reward_format, n)
     }
@@ -220,6 +227,7 @@ class CirclesActivity : ThemedActivity() {
 
     private fun showWinOverlay() {
         tvWinMsg.text = getString(R.string.circles_win_message, game.moves)
+        gameView.idlePulse = false
         winOverlay.alpha = 0f
         winOverlay.visibility = View.VISIBLE
         winOverlay.animate().alpha(1f).setDuration(350L).start()
@@ -229,6 +237,7 @@ class CirclesActivity : ThemedActivity() {
         winOverlay.removeCallbacks(showWinRunnable)
         winOverlay.animate().cancel()
         winOverlay.visibility = View.GONE
+        gameView.idlePulse = true
     }
 
     // ── Reward ────────────────────────────────────────────────────────────────────

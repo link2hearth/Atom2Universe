@@ -9,7 +9,7 @@
     <string name="escape_btn_new">Nouveau</string>
     <string name="escape_turns_label_zero">Tour 0</string>
     <string name="escape_turns_label">Tour %1$d</string>
-    <string name="escape_turns_prefix">Tour </string>
+    <string name="escape_turns_prefix">"Tour "</string>
     <string name="escape_orbs_label">Orbes %1$d/%2$d</string>
     <string name="escape_status_generating">Génération du labyrinthe…</string>
     <string name="escape_status_gen_error">Génération échouée. Réessayez.</string>

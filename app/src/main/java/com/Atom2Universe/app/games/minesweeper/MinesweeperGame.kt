@@ -27,9 +27,15 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
     var detonatedCell: Pair<Int, Int>? = null
         private set
     private val safeCells get() = cols * rows - mineCount
+    /** Mines posées d'avance par [applyLayout] : le premier reveal() ne les retire plus. */
+    private var layoutApplied = false
+
+    /** Vrai tant que le premier appui doit encore tirer la disposition des mines. */
+    val needsLayout get() = gameState == GameState.IDLE && !layoutApplied
 
     fun reset() {
         for (r in 0 until rows) for (c in 0 until cols) grid[r][c] = Cell()
+        layoutApplied = false
         gameState = GameState.IDLE
         flagsPlaced = 0
         revealedCount = 0
@@ -43,7 +49,12 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
      * qu'un écran figé.
      */
     private fun placeMines(safeRow: Int, safeCol: Int) {
-        val mines = layoutMines(cols, rows, mineCount, safeRow * cols + safeCol, Random)
+        applyLayout(layoutMines(cols, rows, mineCount, safeRow * cols + safeCol, Random))
+    }
+
+    /** Pose une disposition tirée par [layoutMines] (sur un fil de fond, pour l'écran). */
+    fun applyLayout(mines: BooleanArray) {
+        layoutApplied = true
         for (i in mines.indices) grid[i / cols][i % cols].isMine = mines[i]
         for (r in 0 until rows) for (c in 0 until cols) {
             if (!grid[r][c].isMine) grid[r][c].adjacentMines = countAdjacentMines(r, c)
@@ -64,7 +75,7 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
         val cell = grid[row][col]
         if (cell.state != CellState.HIDDEN) return
         if (gameState == GameState.IDLE) {
-            placeMines(row, col)
+            if (!layoutApplied) placeMines(row, col)
             gameState = GameState.PLAYING
         }
         if (gameState != GameState.PLAYING) return

@@ -17,8 +17,6 @@ internal class WaveSurfTerrain(private val random: Random = Random.Default) {
         val end get() = valleyX + ascentLength
     }
 
-    data class Sample(val height: Float, val gradient: Float, val curvature: Float)
-
     private val waves = mutableListOf<Wave>()
     private var lastProfile = 1
 
@@ -87,7 +85,7 @@ internal class WaveSurfTerrain(private val random: Random = Random.Default) {
 
     private fun waveAt(x: Float): Wave = waves.firstOrNull { x < it.end } ?: waves.last()
 
-    /** Le rendu n'a besoin ni de dérivées ni d'allouer un Sample par point. */
+    /** Le rendu n'a pas besoin des dérivées. */
     fun height(x: Float): Float {
         val wave = waveAt(x)
         return if (x < wave.valleyX) {
@@ -99,25 +97,37 @@ internal class WaveSurfTerrain(private val random: Random = Random.Default) {
         }
     }
 
-    fun sample(x: Float): Sample {
+    // Demi-vague (descente ou montée) trouvée par locate() : la physique lit la pente
+    // plusieurs fois par pas, sans allouer d'objet à chaque lecture.
+    private var segmentLength = 1f
+    private var segmentRise = 0f
+
+    private fun locate(x: Float): Float {
         val wave = waveAt(x)
         val descending = x < wave.valleyX
         val start = if (descending) wave.start else wave.valleyX
-        val length = if (descending) wave.descentLength else wave.ascentLength
+        segmentLength = if (descending) wave.descentLength else wave.ascentLength
         val startY = if (descending) wave.startHeight else wave.valleyHeight
         val endY = if (descending) wave.valleyHeight else wave.endHeight
-        val t = ((x - start) / length).coerceIn(0f, 1f)
-        // Interpolation quintique : hauteur, pente ET courbure continues aux raccords.
+        segmentRise = endY - startY
+        return ((x - start) / segmentLength).coerceIn(0f, 1f)
+    }
+
+    // Interpolation quintique : hauteur, pente ET courbure continues aux raccords.
+    fun gradient(x: Float): Float {
+        val t = locate(x)
+        val first = 30f * t * t * (1f - t) * (1f - t)
+        return segmentRise * first / segmentLength
+    }
+
+    fun curvature(x: Float): Float {
+        val t = locate(x)
         val first = 30f * t * t * (1f - t) * (1f - t)
         val second = 60f * t * (1f - t) * (1f - 2f * t)
-        val gradient = (endY - startY) * first / length
-        val secondDerivative = (endY - startY) * second / (length * length)
+        val gradient = segmentRise * first / segmentLength
+        val secondDerivative = segmentRise * second / (segmentLength * segmentLength)
         val metric = 1f + gradient * gradient
-        return Sample(
-            startY + (endY - startY) * smooth(t),
-            gradient,
-            secondDerivative / (metric * sqrt(metric))
-        )
+        return secondDerivative / (metric * sqrt(metric))
     }
 
     private fun smooth(t: Float) = t * t * t * (10f + t * (-15f + 6f * t))

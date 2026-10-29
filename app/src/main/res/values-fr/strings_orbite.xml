@@ -8,6 +8,7 @@
     <string name="orbite_btn_back">Retour</string>
     <string name="orbite_game_over">Effondrement !</string>
     <string name="orbite_best_label">RECORD %1$s</string>
+    <string name="orbite_best_none">—</string>
     <string name="orbite_final_score">Score %1$d</string>
     <string name="orbite_best_score">Record %1$d</string>
     <string name="orbite_new_best">★ Nouveau record ! ★</string>

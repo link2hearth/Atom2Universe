@@ -51,6 +51,13 @@ class LinkBoardView @JvmOverloads constructor(
     private var lastFrameNanos = 0L
     private var animationSeconds = 0.0
 
+    /** Faux une fois le panneau de fin affiché : plus rien ne bouge derrière lui. */
+    var animating = true
+        set(value) {
+            field = value
+            if (value) scheduleFrame() else stopFrames()
+        }
+
     private val selection = mutableListOf<Int>()
     private var affectedSelection: List<Int> = emptyList()
     private var matchingSelection = -1
@@ -106,10 +113,10 @@ class LinkBoardView @JvmOverloads constructor(
         baked?.recycle(); baked = null; bakedFor = ""
     }
 
-    private fun scheduleFrame() {
-        if (animationVisible && isAttachedToWindow && game != null && !frameScheduled) {
+    private fun scheduleFrame(delayMs: Long = 0L) {
+        if (animating && animationVisible && isAttachedToWindow && game != null && !frameScheduled) {
             frameScheduled = true
-            Choreographer.getInstance().postFrameCallback(this)
+            Choreographer.getInstance().postFrameCallbackDelayed(this, delayMs)
         }
     }
 
@@ -121,15 +128,16 @@ class LinkBoardView @JvmOverloads constructor(
 
     override fun doFrame(frameTimeNanos: Long) {
         frameScheduled = false
-        if (!animationVisible || !isAttachedToWindow) return
-        // Horloge de l'écran, en double précision : ni plafond à 30 Hz, ni arrondis
-        // du temps écoulé depuis le démarrage du téléphone. Une pause ne fait pas sauter les orbites.
+        if (!animating || !animationVisible || !isAttachedToWindow) return
+        // Horloge de l'écran, en double précision : pas d'arrondis du temps écoulé depuis
+        // le démarrage du téléphone. Une pause ne fait pas sauter les orbites.
         if (lastFrameNanos != 0L) {
             animationSeconds += (frameTimeNanos - lastFrameNanos) / 1_000_000_000.0
         }
         lastFrameNanos = frameTimeNanos
         invalidate()
-        scheduleFrame()
+        // Environ 30 images par seconde suffisent aux orbites ; le doigt, lui, redessine aussitôt.
+        scheduleFrame(FRAME_DELAY_MS)
     }
 
     private fun layoutBoard() {
@@ -380,5 +388,7 @@ class LinkBoardView @JvmOverloads constructor(
         private const val FLASH_MS = 450L
         private const val PULSE_MS = 420L
         private const val WAVE_MS = 1100L
+        /** Délai avant l'image suivante : la prochaine image de l'écran tombe vers 33 ms (~30 i/s). */
+        private const val FRAME_DELAY_MS = 28L
     }
 }

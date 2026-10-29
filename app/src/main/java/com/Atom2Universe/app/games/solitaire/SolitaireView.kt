@@ -96,7 +96,20 @@ class SolitaireView @JvmOverloads constructor(
 
     private var isVictoryAnimating = false
     private val animatedCards = mutableListOf<AnimatedCard>()
-    private var nextCardToAnimate = 0
+
+    /**
+     * Copie des fondations pour l'animation de victoire : les cartes s'envolent de cette copie,
+     * jamais des vraies piles de la partie. Affichée à la place des fondations tant que la
+     * partie montrée est encore la partie gagnée (le widget redistribue sans prévenir la vue).
+     */
+    private var victoryPiles: List<MutableList<Card>>? = null
+
+    private fun activeVictoryPiles(): List<MutableList<Card>>? {
+        val piles = victoryPiles ?: return null
+        if (game?.isGameWon() == true) return piles
+        clearVictory()
+        return null
+    }
     private var lastAnimFrameTime = 0L
     private var lastCardSpawnTime = 0L
     private val gravity = 0.8f
@@ -117,10 +130,11 @@ class SolitaireView @JvmOverloads constructor(
             lastAnimFrameTime = currentTime
 
             // Add new card every 300ms if under limit and cards remain
-            val g = game
-            if (g != null && nextCardToAnimate < 52 && animatedCards.size < maxAnimatedCards) {
+            val piles = activeVictoryPiles() ?: return
+            val cardsLeft = piles.any { it.isNotEmpty() }
+            if (cardsLeft && animatedCards.size < maxAnimatedCards) {
                 if (currentTime - lastCardSpawnTime >= cardSpawnInterval) {
-                    addNextAnimatedCard(g, currentTime)
+                    addNextAnimatedCard(piles, currentTime)
                     lastCardSpawnTime = currentTime
                 }
             }
@@ -163,7 +177,7 @@ class SolitaireView @JvmOverloads constructor(
             invalidate()
 
             // Continue if still animating
-            if (animatedCards.isNotEmpty() || nextCardToAnimate < 52) {
+            if (animatedCards.isNotEmpty() || piles.any { it.isNotEmpty() }) {
                 animHandler.postDelayed(this, 16) // ~60fps
             } else {
                 isVictoryAnimating = false
@@ -171,10 +185,10 @@ class SolitaireView @JvmOverloads constructor(
         }
     }
 
-    private fun addNextAnimatedCard(g: SolitaireGame, currentTime: Long) {
+    private fun addNextAnimatedCard(piles: List<MutableList<Card>>, currentTime: Long) {
         // Find next card from foundations
         for (i in 0 until 4) {
-            val foundation = g.foundations[i]
+            val foundation = piles[i]
             if (foundation.isNotEmpty()) {
                 val card = foundation.removeAt(foundation.lastIndex)
                 val startX = getColumnX(3 + i)
@@ -185,19 +199,55 @@ class SolitaireView @JvmOverloads constructor(
                 val vy = (Math.random() * -4 - 2).toFloat() // -6 to -2 (upward)
 
                 animatedCards.add(AnimatedCard(card, startX, startY, vx, vy, currentTime))
-                nextCardToAnimate++
                 return
             }
         }
     }
 
     fun startVictoryAnimation() {
+        val g = game ?: return
+        animHandler.removeCallbacks(animRunnable)
+        victoryPiles = List(4) { g.foundations[it].toMutableList() }
         isVictoryAnimating = true
         animatedCards.clear()
-        nextCardToAnimate = 0
         lastAnimFrameTime = 0L
         lastCardSpawnTime = 0L
         animHandler.post(animRunnable)
+    }
+
+    /** Nouvelle partie : l'animation s'arrête et les vraies fondations reviennent. */
+    fun stopVictoryAnimation() {
+        clearVictory()
+        invalidate()
+    }
+
+    private fun clearVictory() {
+        animHandler.removeCallbacks(animRunnable)
+        isVictoryAnimating = false
+        animatedCards.clear()
+        victoryPiles = null
+    }
+
+    /** Écran caché : l'animation attend, puis reprend là où elle en était. */
+    fun pauseVictoryAnimation() {
+        animHandler.removeCallbacks(animRunnable)
+    }
+
+    fun resumeVictoryAnimation() {
+        if (!isVictoryAnimating) return
+        animHandler.removeCallbacks(animRunnable)
+        lastAnimFrameTime = 0L
+        animHandler.post(animRunnable)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        resumeVictoryAnimation()
+    }
+
+    override fun onDetachedFromWindow() {
+        animHandler.removeCallbacks(animRunnable)
+        super.onDetachedFromWindow()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -328,10 +378,11 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     private fun drawFoundations(canvas: Canvas, game: SolitaireGame) {
+        val victory = activeVictoryPiles()
         for (i in 0 until 4) {
             val x = getColumnX(3 + i)
             val y = topRowY
-            val foundation = game.foundations[i]
+            val foundation = victory?.get(i) ?: game.foundations[i]
 
             if (foundation.isEmpty()) {
                 drawEmptyPile(canvas, x, y, getSuitSymbol(i))
@@ -442,6 +493,8 @@ class SolitaireView @JvmOverloads constructor(
         }, card.rank.value)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        // Partie gagnée : les fondations affichées sont la copie de l'animation, rien ne se joue
+        if (activeVictoryPiles() != null) return true
         val x = event.x
         val y = event.y
 

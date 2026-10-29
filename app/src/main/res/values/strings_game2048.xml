@@ -15,6 +15,8 @@
     <string name="game2048_confirm_message">The current game will be lost. Continue?</string>
     <string name="game2048_quantum_mode">🐱 Quantum Mode</string>
     <string name="game2048_joker_active">🐱 ⚡ ACTIVE</string>
+    <string name="game2048_joker_count">🐱 ×%1$d</string>
+    <string name="game2048_size_format">%1$d×%1$d</string>
     <string name="game2048_difficulty_easy">Easy</string>
     <string name="game2048_difficulty_normal">Normal</string>
     <string name="game2048_difficulty_hard">Hard</string>

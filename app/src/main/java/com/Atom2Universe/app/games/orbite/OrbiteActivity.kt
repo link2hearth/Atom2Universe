@@ -2,7 +2,6 @@ package com.Atom2Universe.app.games.orbite
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.edit
@@ -35,7 +34,7 @@ class OrbiteActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_orbite)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran reste allumé pendant une partie seulement (OrbiteView.keepScreenOn).
 
         gameView        = findViewById(R.id.orbite_view)
         tvScore         = findViewById(R.id.orbite_score)
@@ -76,7 +75,8 @@ class OrbiteActivity : ThemedActivity() {
 
     private fun updateHud(score: Int) {
         tvScore.text = score.toString()
-        tvBest.text = getString(R.string.orbite_best_label, if (best > 0) best.toString() else "—")
+        tvBest.text = getString(R.string.orbite_best_label,
+            if (best > 0) best.toString() else getString(R.string.orbite_best_none))
     }
 
     private fun showGameOver() {
@@ -93,9 +93,10 @@ class OrbiteActivity : ThemedActivity() {
             getString(R.string.orbite_best_score, best)
 
         // Récompense : 1 neutrino par tranche de temps de survie (source unique).
+        // On verse seulement la part pas encore payée en quittant ; l'écran montre le total.
+        payUnpaidReward()
         val reward = NeutrinoRewards.perTime(gameView.game.elapsedMs)
         if (reward > 0) {
-            NeutrinoRepository(this).addBalance(reward)
             tvReward.text = getString(R.string.orbite_reward, reward)
             tvReward.visibility = View.VISIBLE
         } else {
@@ -103,5 +104,22 @@ class OrbiteActivity : ThemedActivity() {
         }
         updateHud(score)
         overlayGameOver.visibility = View.VISIBLE
+    }
+
+    private fun payUnpaidReward() {
+        val reward = gameView.collectUnpaidReward()
+        if (reward > 0) NeutrinoRepository(this).addBalance(reward)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // Partie figée à la perte du focus ; un toucher la relance.
+        if (!hasFocus) gameView.held = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        gameView.held = true
+        payUnpaidReward()
     }
 }

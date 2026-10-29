@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.flappycat
 
 import android.content.Context
 import android.graphics.*
+import android.util.SparseArray
 import com.Atom2Universe.app.R
 import kotlin.math.*
 
@@ -20,9 +21,21 @@ internal class CatArt(private val context: Context) {
     }
     private fun oval(c: Canvas, x: Float, y: Float, rx: Float, ry: Float, color: Int) { c.drawOval(x-rx,y-ry,x+rx,y+ry,paint(color)) }
     private fun line(c: Canvas, x: Float, y: Float, xx: Float, yy: Float, color: Int, width: Float = 2f) { c.drawLine(x,y,xx,yy,paint(color,width)) }
-    private fun polygon(c: Canvas, color: Int, vararg points: Float) {
-        path.reset(); path.moveTo(points[0],points[1]); var i = 2
-        while (i < points.size) { path.lineTo(points[i], points[i+1]); i += 2 }; path.close(); c.drawPath(path,paint(color))
+    private val rounded = Typeface.create("sans-serif-rounded",Typeface.BOLD)
+    private val eyes = floatArrayOf(2f,17f)
+    // Textes formatés gardés tant que leur valeur ne change pas : rien n'est alloué par image.
+    private var scoreFor = -1; private var scoreText = ""
+    private var bestFor = -1; private var bestText = ""
+    private val bodyLines = SparseArray<List<String>>()
+    // Polygones à 3, 4 ou 5 sommets : pas de tableau vararg alloué à chaque appel.
+    private fun polygon(c: Canvas, color: Int, ax: Float, ay: Float, bx: Float, by: Float, cx: Float, cy: Float) {
+        path.reset(); path.moveTo(ax,ay); path.lineTo(bx,by); path.lineTo(cx,cy); path.close(); c.drawPath(path,paint(color))
+    }
+    private fun polygon(c: Canvas, color: Int, ax: Float, ay: Float, bx: Float, by: Float, cx: Float, cy: Float, dx: Float, dy: Float) {
+        path.reset(); path.moveTo(ax,ay); path.lineTo(bx,by); path.lineTo(cx,cy); path.lineTo(dx,dy); path.close(); c.drawPath(path,paint(color))
+    }
+    private fun polygon(c: Canvas, color: Int, ax: Float, ay: Float, bx: Float, by: Float, cx: Float, cy: Float, dx: Float, dy: Float, ex: Float, ey: Float) {
+        path.reset(); path.moveTo(ax,ay); path.lineTo(bx,by); path.lineTo(cx,cy); path.lineTo(dx,dy); path.lineTo(ex,ey); path.close(); c.drawPath(path,paint(color))
     }
     fun background(c: Canvas, distance: Float, time: Float) {
         paint(Color.WHITE); p.shader = sky; c.drawRect(0f,0f,420f,560f,p); p.shader = null
@@ -71,7 +84,7 @@ internal class CatArt(private val context: Context) {
         polygon(c,0xffdb8290.toInt(),15f,-22f,11f,-16f,19f,-12f)
         oval(c,7f,-7f,20f,17f,ink); oval(c,7f,-8f,18f,15f,fur)
         oval(c,11f,0f,12f,7f,cream)
-        for (ex in floatArrayOf(2f,17f)) {
+        for (ex in eyes) {
             oval(c,ex,-9f,5.5f,6.5f,Color.WHITE)
             if (electric) { line(c,ex-3f,-12f,ex+3f,-6f,ink); line(c,ex+3f,-12f,ex-3f,-6f,ink) }
             else { oval(c,ex+1.5f,-8f,2.8f,4f,ink); oval(c,ex+2f,-10f,1f,1.3f,Color.WHITE) }
@@ -118,7 +131,8 @@ internal class CatArt(private val context: Context) {
         c.restore()
     }
     fun cable(c: Canvas, cable: FlappyCatView.Cable, time: Float) {
-        for (top in listOf(true, false)) {
+        for (side in 0..1) {
+            val top = side == 0
             path.reset()
             for (i in 0..16) {
                 val t = i / 16f
@@ -145,7 +159,8 @@ internal class CatArt(private val context: Context) {
         }
     }
     fun pole(c: Canvas, x: Float, gap: Float) {
-        for (top in listOf(true,false)) {
+        for (side in 0..1) {
+            val top = side == 0
             val from = if(top) 78f else gap+94f; val to = if(top) gap-94f else 500f
             line(c,x,from,x,to,ink,10f); line(c,x-2f,from,x-2f,to,0xffdc9980.toInt(),3f)
             val end = if(top) to else from
@@ -154,20 +169,22 @@ internal class CatArt(private val context: Context) {
             line(c,x-8f,end+3f,x+8f,end+3f,0xff76d9d7.toInt(),3f)
         }
         // Repères du passage sûr : ils suivent exactement les limites de collision.
-        for (y in floatArrayOf(gap-77f,gap+77f)) { line(c,x-8f,y,x,y+4f,0x997be0d2.toInt()); line(c,x,y+4f,x+8f,y,0x997be0d2.toInt()) }
+        for (side in 0..1) { val y = if (side == 0) gap-77f else gap+77f; line(c,x-8f,y,x,y+4f,0x997be0d2.toInt()); line(c,x,y+4f,x+8f,y,0x997be0d2.toInt()) }
     }
     fun particles(c: Canvas, sparks: List<FlappyCatView.Spark>) {
         for(s in sparks) { val color = (s.color and 0x00ffffff) or ((min(s.life*2f,1f)*255).toInt() shl 24)
             oval(c,s.x,s.y,2.5f,2.5f,color) }
     }
     private fun text(c: Canvas, text: String, x: Float, y: Float, size: Float, color: Int = cream, center: Boolean = true) {
-        paint(color); p.typeface = Typeface.create("sans-serif-rounded",Typeface.BOLD); p.textAlign = if(center) Paint.Align.CENTER else Paint.Align.LEFT
+        paint(color); p.typeface = rounded; p.textAlign = if(center) Paint.Align.CENTER else Paint.Align.LEFT
         p.textSize = size; c.drawText(text,x,y,p)
     }
     fun hud(c: Canvas, score: Int, best: Int, hearts: Int) {
         c.drawRoundRect(14f,12f,406f,69f,19f,19f,paint(0xcc30334e.toInt()))
-        text(c,context.getString(R.string.cat_score,score),29f,37f,20f,center=false)
-        text(c,context.getString(R.string.cat_best,best),29f,55f,11f,0xffc8bbd5.toInt(),false)
+        if (score != scoreFor) { scoreFor = score; scoreText = context.getString(R.string.cat_score,score) }
+        if (best != bestFor) { bestFor = best; bestText = context.getString(R.string.cat_best,best) }
+        text(c,scoreText,29f,37f,20f,center=false)
+        text(c,bestText,29f,55f,11f,0xffc8bbd5.toInt(),false)
         repeat(3) { i -> val x = 323f+i*27f; val color = if(i < hearts) 0xffff9ea7.toInt() else 0xff655c79.toInt()
             oval(c,x-4f,36f,6f,6f,color); oval(c,x+4f,36f,6f,6f,color); polygon(c,color,x-10f,37f,x+10f,37f,x,49f) }
     }
@@ -175,8 +192,8 @@ internal class CatArt(private val context: Context) {
         c.drawRect(0f,78f,420f,560f,paint(0x44302d50))
         c.drawRoundRect(29f,309f,391f,480f,24f,24f,paint(0xef30334e.toInt()))
         text(c,context.getString(title),210f,342f,26f)
-        val lines = context.getString(body).split('\n')
-        lines.forEachIndexed { i, s -> text(c,s,210f,369f+i*20f,14f,0xffe0d2df.toInt()) }
+        val lines = bodyLines.get(body) ?: context.getString(body).split('\n').also { bodyLines.put(body, it) }
+        for (i in lines.indices) text(c,lines[i],210f,369f+i*20f,14f,0xffe0d2df.toInt())
         if(extra != null) text(c,extra,210f,412f,17f)
         c.drawRoundRect(49f,430f,371f,465f,16f,16f,paint(0xff81dbce.toInt()))
         text(c,context.getString(action),210f,453f,16f,ink)

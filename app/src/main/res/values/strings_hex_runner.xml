@@ -8,6 +8,8 @@
     <string name="hex_runner_game_over">GAME OVER</string>
     <string name="hex_runner_score_label">Time: %1$s</string>
     <string name="hex_runner_best_label">Best: %1$s</string>
+    <string name="hex_runner_time_minutes">%1$d:%2$02d</string>
+    <string name="hex_runner_time_seconds">%1$d s</string>
     <string name="hex_runner_shape_hexagon">HEXAGON</string>
     <string name="hex_runner_shape_octagon">OCTAGON</string>
     <!-- Hub tile -->

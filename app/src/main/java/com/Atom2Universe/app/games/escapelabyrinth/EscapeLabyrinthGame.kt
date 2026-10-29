@@ -127,11 +127,13 @@ object EscapeLabyrinthGame {
 
     // ── Public API ───────────────────────────────────────────────────────────
 
-    fun create(seed: Long, diff: Difficulty): Level? {
+    /** [cancelled] is polled between attempts and inside the solver, outside the try that swallows exceptions. */
+    fun create(seed: Long, diff: Difficulty, cancelled: () -> Boolean = { false }): Level? {
         for (attempt in 0 until MAX_GEN_ATTEMPTS) {
+            if (cancelled()) return null
             try {
                 val rng = Random(seed + attempt.toLong() * 0x9e3779b7L)
-                return generate(seed, diff, rng) ?: continue
+                return generate(seed, diff, rng, cancelled) ?: continue
             } catch (_: Exception) {}
         }
         return null
@@ -241,7 +243,7 @@ object EscapeLabyrinthGame {
 
     // ── Level generation ─────────────────────────────────────────────────────
 
-    private fun generate(seed: Long, diff: Difficulty, rng: Random): Level? {
+    private fun generate(seed: Long, diff: Difficulty, rng: Random, cancelled: () -> Boolean): Level? {
         val size = diff.sizeMin + rng.nextInt(diff.sizeMax - diff.sizeMin + 1)
 
         // Build tile grid and adjacency
@@ -288,7 +290,7 @@ object EscapeLabyrinthGame {
 
         if (guards.size < diff.patrolMin || bonuses.size < diff.bonusMin) return null
         if (cellKey(start.first, start.second) in guardVisionAt(level, 0)) return null
-        val solveTurns = validateLevel(level) ?: return null
+        val solveTurns = validateLevel(level, cancelled) ?: return null
         return Level(seed, diff, size, size, grid, adj, start, exit,
             bonuses, guards, cycle, phases, bonusByCell, solveTurns)
     }
@@ -587,7 +589,7 @@ object EscapeLabyrinthGame {
 
     // ── BFS validation (confirms level is solvable) ──────────────────────────
 
-    private fun validateLevel(level: Level): Int? {
+    private fun validateLevel(level: Level, cancelled: () -> Boolean): Int? {
         val size = level.cellH
         val allMask = (1 shl level.bonuses.size) - 1
         val sr = level.start.first; val sc = level.start.second
@@ -621,9 +623,10 @@ object EscapeLabyrinthGame {
         data class St(val cellIdx: Int, val ph: Int, val mask: Int, val turns: Int)
 
         val startIdx = sr * size + sc
-        val visited = HashSet<Long>(MAX_SOLVE_STATES * 2)
+        val visited = HashSet<Long>(4096)  // grandit à la demande : la plupart des niveaux se résolvent bien avant
         visited.add(stateKey(startIdx, 0, 0))
         val queue = ArrayDeque<St>()
+        var pops = 0
         queue.addLast(St(startIdx, 0, 0, 0))
 
         val drs = intArrayOf(-1, 1, 0, 0)  // N S W E
@@ -633,6 +636,7 @@ object EscapeLabyrinthGame {
             val s = queue.removeFirst()
             if (s.turns > MAX_SOLVE_TURNS) continue
             if (visited.size > MAX_SOLVE_STATES) return null
+            if ((++pops and 0xFFF) == 0 && cancelled()) return null
 
             val r = s.cellIdx / size; val c = s.cellIdx % size
             val nextPh = (s.ph + 1) % level.guardCycle

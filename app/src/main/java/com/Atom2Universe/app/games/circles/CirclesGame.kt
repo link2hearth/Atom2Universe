@@ -8,14 +8,13 @@ import kotlin.math.max
 import kotlin.random.Random
 
 enum class CirclesDifficulty(
-    val label: String,
     val ringCounts: IntArray,
     val shuffleMin: Int,
     val shuffleMax: Int
 ) {
-    EASY("Easy", intArrayOf(3), 6, 12),
-    MEDIUM("Medium", intArrayOf(4), 10, 18),
-    HARD("Hard", intArrayOf(5, 6), 18, 32)
+    EASY(intArrayOf(3), 6, 12),
+    MEDIUM(intArrayOf(4), 10, 18),
+    HARD(intArrayOf(5, 6), 18, 32)
 }
 
 class CirclesGame {
@@ -37,6 +36,47 @@ class CirclesGame {
 
         fun getNeutrinos(difficulty: CirclesDifficulty, ringCount: Int): Int =
             NeutrinoRewards.circles(difficulty.ordinal, ringCount)
+
+        fun solvedRotationsFor(ringCount: Int): IntArray =
+            IntArray(ringCount) { i -> COLOR_OFFSETS.getOrElse(i) { 0 } % SEGMENTS }
+
+        /**
+         * Distances jusqu'à la solution, par parcours en largeur depuis l'état résolu.
+         * Ne lit que ses paramètres (copiés par l'appelant) : tourne sur un fil de fond.
+         */
+        fun buildSolutionMap(ringCount: Int, links: IntArray): Map<String, SolutionEntry> {
+            val start = solvedRotationsFor(ringCount)
+            val queue = ArrayDeque<IntArray>()
+            queue.add(start)
+            val visited = HashMap<String, SolutionEntry>(64)
+            visited[start.toKey()] = SolutionEntry(0, null)
+            while (queue.isNotEmpty()) {
+                val current = queue.removeFirst()
+                val info = visited[current.toKey()]!!
+                for (ri in 0 until ringCount) {
+                    for (dir in intArrayOf(-1, 1)) {
+                        val next = current.copyOf()
+                        rotateWithLink(next, links, ri, dir)
+                        val key = next.toKey()
+                        if (!visited.containsKey(key)) {
+                            visited[key] = SolutionEntry(info.distance + 1, MoveHint(ri, -dir))
+                            queue.add(next)
+                        }
+                    }
+                }
+            }
+            return visited
+        }
+
+        private fun rotateWithLink(rots: IntArray, links: IntArray, index: Int, dir: Int) {
+            rots[index] = (rots[index] + dir + SEGMENTS * 2) % SEGMENTS
+            val linked = links.getOrElse(index) { -1 }
+            if (linked >= 0 && linked != index && linked < rots.size) {
+                rots[linked] = (rots[linked] + dir + SEGMENTS * 2) % SEGMENTS
+            }
+        }
+
+        private fun IntArray.toKey() = joinToString(",")
     }
 
     data class MoveHint(val ringIndex: Int, val direction: Int)
@@ -76,12 +116,11 @@ class CirclesGame {
         hintUsed = false
     }
 
+    /** Même casse-tête : la récompense déjà versée et l'indice utilisé restent acquis. */
     fun restart() {
         rotations = initialRotations.copyOf()
         moves = 0
         solved = checkSolved()
-        rewardClaimed = false
-        hintUsed = false
     }
 
     fun rotateRing(index: Int, direction: Int): IntArray {
@@ -103,35 +142,9 @@ class CirclesGame {
         return true
     }
 
-    fun solvedRotations(): IntArray =
-        IntArray(ringCount) { i -> COLOR_OFFSETS.getOrElse(i) { 0 } % SEGMENTS }
+    fun solvedRotations(): IntArray = solvedRotationsFor(ringCount)
 
-    fun buildSolutionMap(): Map<String, SolutionEntry> {
-        val start = solvedRotations()
-        val startKey = start.toKey()
-        val queue = ArrayDeque<IntArray>()
-        queue.add(start)
-        val visited = HashMap<String, SolutionEntry>(64)
-        visited[startKey] = SolutionEntry(0, null)
-        while (queue.isNotEmpty()) {
-            val current = queue.removeFirst()
-            val info = visited[current.toKey()]!!
-            for (ri in 0 until ringCount) {
-                for (dir in intArrayOf(-1, 1)) {
-                    val next = current.copyOf()
-                    applyRotationToArray(next, ri, dir)
-                    val key = next.toKey()
-                    if (!visited.containsKey(key)) {
-                        visited[key] = SolutionEntry(info.distance + 1, MoveHint(ri, -dir))
-                        queue.add(next)
-                    }
-                }
-            }
-        }
-        return visited
-    }
-
-    fun currentKey(): String = rotations.toKey()
+    fun currentKey(): String = rotations.joinToString(",")
 
     // ── Internal helpers ──────────────────────────────────────────────────────────
 
@@ -143,14 +156,6 @@ class CirclesGame {
             intArrayOf(index, linked)
         } else {
             intArrayOf(index)
-        }
-    }
-
-    private fun applyRotationToArray(rots: IntArray, index: Int, dir: Int) {
-        rots[index] = (rots[index] + dir + SEGMENTS * 2) % SEGMENTS
-        val linked = rotationLinks.getOrElse(index) { -1 }
-        if (linked >= 0 && linked != index && linked < rots.size) {
-            rots[linked] = (rots[linked] + dir + SEGMENTS * 2) % SEGMENTS
         }
     }
 
@@ -195,8 +200,6 @@ class CirclesGame {
         val alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         return String(CharArray(length) { alpha[rng.nextInt(alpha.length)] })
     }
-
-    private fun IntArray.toKey() = joinToString(",")
 
     // ── Serialization ─────────────────────────────────────────────────────────────
 

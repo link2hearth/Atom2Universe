@@ -14,6 +14,7 @@
     <string name="circles_win_title">Résonance !</string>
     <string name="circles_win_message">Synchronisation en %1$d coup(s) !</string>
     <string name="circles_reward_format">+%1$d ν</string>
+    <string name="circles_reward_none">—</string>
     <string name="circles_toast_reward">Circles : +%1$d neutrino(s) !</string>
     <string name="circles_toast_reward_disabled">Circles : pas de récompense — l\'aide a été utilisée.</string>
     <!-- Tuile hub -->

@@ -19,7 +19,6 @@
     <string name="blackjack_result_lose_free">PERDU</string>
     <string name="blackjack_bet_free">GRATUIT</string>
     <string name="blackjack_neutrino_balance">Neutrinos : %1$d</string>
-    <string name="blackjack_ia_short">IA</string>
     <string name="blackjack_bust">DÉPASSÉ</string>
     <string name="blackjack_natural">BJ ♠</string>
     <string name="blackjack_dealer">CROUPIER</string>
@@ -27,4 +26,53 @@
     <string name="blackjack_new_game_confirm">Nouvelle partie ?</string>
     <string name="blackjack_confirm">✓ Confirmer</string>
     <string name="blackjack_cancel">✕ Annuler</string>
+    <string name="blackjack_you">TOI</string>
+    <string name="blackjack_ai_thinking">%1$s…</string>
+    <string name="blackjack_ai_count_option">%1$d IA</string>
+    <string-array name="blackjack_bubbles_think">
+        <item>...</item>
+        <item>Hmm</item>
+        <item>★</item>
+        <item>?</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_hit">
+        <item>!!</item>
+        <item>Carte !</item>
+        <item>★</item>
+        <item>Allez !</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_stand">
+        <item>✋</item>
+        <item>Ça ira</item>
+        <item>Non merci</item>
+        <item>Je reste</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_double">
+        <item>DOUBLE !!</item>
+        <item>×2 !!</item>
+        <item>Tapis !</item>
+        <item>★★</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_split">
+        <item>SÉPARE !!</item>
+        <item>Deux chances !</item>
+        <item>!!!</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_bust">
+        <item>×_×</item>
+        <item>SAUTÉ !!</item>
+        <item>orz</item>
+        <item>Noooon...</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_bj">
+        <item>NATUREL !!</item>
+        <item>★★★</item>
+        <item>Chanceux !!</item>
+        <item>BJ !!!</item>
+    </string-array>
+    <string-array name="blackjack_bubbles_push">
+        <item>=</item>
+        <item>...</item>
+        <item>~</item>
+    </string-array>
 </resources>

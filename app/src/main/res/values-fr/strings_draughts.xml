@@ -23,7 +23,7 @@
     <string name="draughts_confirm_new_title">Nouvelle partie ?</string>
     <string name="draughts_confirm_new_message">La partie en cours sera perdue. Continuer ?</string>
     <string name="draughts_victory_title">Victoire !</string>
-    <string name="draughts_victory_message">Félicitations ! Vous avez battu l\'IA.\n\nRécompenses :\n• %1$d tickets gacha\n• Boost x%2$d pendant %3$d minutes</string>
+    <string name="draughts_victory_message">Félicitations ! Vous avez battu l\'IA.\n\n+%1$d neutrinos</string>
     <string name="draughts_mandatory_capture">Prise obligatoire ! Vous devez capturer une pièce ennemie.</string>
     <string name="draughts_widget_reset_btn">↺</string>
     <string name="draughts_widget_cancel">✕ Annuler</string>

@@ -53,7 +53,10 @@ class EnamelView(context: Context) : View(context) {
     private var messageLife = 0f
     private var message = ""
     private val replay = RectF()
-    private data class Ring(val event: EnamelEvent, var life: Float = .8f)
+    private val medium = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+    private val nextLabel = context.getString(R.string.enamel_next)
+    /** Le texte des points est formaté une fois, à la fusion. */
+    private class Ring(val event: EnamelEvent, val label: String, var life: Float = .8f)
     private val rings = ArrayList<Ring>()
 
     init { isFocusable = true; contentDescription = context.getString(R.string.enamel_controls) }
@@ -96,7 +99,7 @@ class EnamelView(context: Context) : View(context) {
             accumulator += dt
             while (accumulator >= 1f / 120) { game.step(1f / 120); accumulator -= 1f / 120 }
             for (event in game.events) {
-                rings.add(Ring(event))
+                rings.add(Ring(event, context.getString(R.string.enamel_merge_points, event.points, event.chain)))
                 sound?.onMerge(event.tier, event.chain)
                 if (event.finale) sound?.onAnnihilation()
                 if (event.tier > discoveredTier) { discoveredTier = event.tier; sound?.onDiscovery() }
@@ -124,7 +127,7 @@ class EnamelView(context: Context) : View(context) {
             p.style = Paint.Style.FILL; p.alpha = 255
             p.color = EnamelPainter.INK; p.textAlign = Paint.Align.CENTER
             p.typeface = Typeface.DEFAULT_BOLD
-            boardText(canvas, context.getString(R.string.enamel_merge_points, e.points, e.chain), e.x, e.y - .6f - t, .36f)
+            boardText(canvas, ring.label, e.x, e.y - .6f - t, .36f)
         }
         if (game.canLaunch) {
             val radius = EnamelRules.RADII[game.current]
@@ -160,9 +163,9 @@ class EnamelView(context: Context) : View(context) {
         // L'aperçu suivant reste dans la base, libérant le bas pour toute la frise.
         if (!aiming || launchX < 7.6f || launchY < game.height - 1.1f) {
             p.color = EnamelPainter.INK; p.alpha = 155
-            p.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            p.typeface = medium
             p.textAlign = Paint.Align.RIGHT
-            boardText(c, context.getString(R.string.enamel_next), 8.9f, game.height - .39f, .22f)
+            boardText(c, nextLabel, 8.9f, game.height - .39f, .22f)
             art.puck(c, game.next, 9.4f, game.height - .47f, .29f)
         }
         p.alpha = 255
@@ -247,7 +250,7 @@ class EnamelView(context: Context) : View(context) {
 
     private fun text(c: Canvas, text: String, x: Float, y: Float, size: Float, color: Int) {
         p.style = Paint.Style.FILL; p.alpha = 255; p.color = color; p.textSize = size * resources.displayMetrics.scaledDensity
-        p.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL); p.textAlign = Paint.Align.CENTER
+        p.typeface = medium; p.textAlign = Paint.Align.CENTER
         val measured = p.measureText(text)
         if (measured > width - 24 * dp) p.textSize *= (width - 24 * dp) / measured
         c.drawText(text, x, y, p)

@@ -54,22 +54,30 @@ class MinesweeperGridView(context: Context) : View(context) {
     private var effectTime = 1400f
     private var effectRow = 0
     private var effectCol = 0
-    private var changed = emptySet<Int>()
+    // Cases changées par le dernier coup, par indice : pas de boîte ni de Pair par case et par image.
+    private var changed = BooleanArray(0)
     private var previousStates = emptyArray<CellState>()
-    private var pressedCell: Pair<Int, Int>? = null
+    private var pressedCell = -1
+    // Premier appui : la disposition des mines se calcule sur un fil de fond (jusqu'à 0,35 s).
+    private var layingOut = false
+    private var layoutToken = 0
 
     private val gestures = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent) = true
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            val (r, c) = cellAt(e.x, e.y) ?: return false
-            act(r, c, false)
+            val g = game ?: return false
+            val i = cellIndexAt(e.x, e.y)
+            if (i < 0) return false
+            act(i / g.cols, i % g.cols, false)
             performClick()
             return true
         }
         override fun onLongPress(e: MotionEvent) {
-            val (r, c) = cellAt(e.x, e.y) ?: return
-            act(r, c, true)
-            pressedCell = null
+            val g = game ?: return
+            val i = cellIndexAt(e.x, e.y)
+            if (i < 0) return
+            act(i / g.cols, i % g.cols, true)
+            pressedCell = -1
         }
     })
 
@@ -77,14 +85,24 @@ class MinesweeperGridView(context: Context) : View(context) {
 
     private fun act(row: Int, col: Int, flag: Boolean) {
         val g = game ?: return
+        if (layingOut) return
         if (g.gameState == GameState.WON || g.gameState == GameState.LOST) return
-        val before = Array(g.rows * g.cols) { g.grid[it / g.cols][it % g.cols].state }
+        if (!flag && g.needsLayout && g.grid[row][col].state == CellState.HIDDEN) {
+            layOutThenReveal(g, row, col)
+            return
+        }
+        val count = g.rows * g.cols
+        val before = Array(count) { g.grid[it / g.cols][it % g.cols].state }
         val oldState = g.gameState
         if (flag) g.toggleFlag(row, col)
         else if (g.grid[row][col].state == CellState.REVEALED) g.chordReveal(row, col)
         else g.reveal(row, col)
-        val updates = before.indices.filter { before[it] != g.grid[it / g.cols][it % g.cols].state }.toSet()
-        if (updates.isEmpty()) return
+        val updates = BooleanArray(count)
+        var any = false
+        for (i in 0 until count) {
+            if (before[i] != g.grid[i / g.cols][i % g.cols].state) { updates[i] = true; any = true }
+        }
+        if (!any) return
         previousStates = before
         changed = updates
         effectRow = row
@@ -98,6 +116,24 @@ class MinesweeperGridView(context: Context) : View(context) {
             GameState.LOST -> listener?.onGameLost()
             else -> Unit
         }
+    }
+
+    /** Calcule la disposition hors du fil de l'interface, puis rejoue l'appui. */
+    private fun layOutThenReveal(g: MinesweeperGame, row: Int, col: Int) {
+        layingOut = true
+        val token = ++layoutToken
+        val cols = g.cols
+        val rows = g.rows
+        val mines = g.mineCount
+        Thread({
+            val layout = MinesweeperGame.layoutMines(cols, rows, mines, row * cols + col, kotlin.random.Random)
+            post {
+                if (token != layoutToken || game !== g) return@post
+                layingOut = false
+                g.applyLayout(layout)
+                act(row, col, false)
+            }
+        }, "MinesweeperLayout").start()
     }
 
     private fun startEffect() {
@@ -119,8 +155,11 @@ class MinesweeperGridView(context: Context) : View(context) {
         animator?.cancel()
         animator = null
         effectTime = 1400f
-        changed = emptySet()
-        pressedCell = null
+        changed = BooleanArray(0)
+        pressedCell = -1
+        // Une disposition encore en calcul est abandonnée : l'appui sera à refaire.
+        layoutToken++
+        layingOut = false
     }
 
     fun newGame(cols: Int, mines: Int) {
@@ -175,13 +214,15 @@ class MinesweeperGridView(context: Context) : View(context) {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val g = game ?: return false
         if (g.gameState == GameState.WON || g.gameState == GameState.LOST) return false
+        val wasPressed = pressedCell
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> pressedCell = cellAt(event.x, event.y)
-            MotionEvent.ACTION_MOVE -> if (cellAt(event.x, event.y) != pressedCell) pressedCell = null
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> pressedCell = null
+            MotionEvent.ACTION_DOWN -> pressedCell = cellIndexAt(event.x, event.y)
+            MotionEvent.ACTION_MOVE -> if (cellIndexAt(event.x, event.y) != pressedCell) pressedCell = -1
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> pressedCell = -1
         }
         gestures.onTouchEvent(event)
-        invalidate()
+        // Un coup joué se redessine par son effet ; ici, seulement le liseré de la case appuyée.
+        if (pressedCell != wasPressed) invalidate()
         return true
     }
 
@@ -196,7 +237,8 @@ class MinesweeperGridView(context: Context) : View(context) {
             val cell = g.grid[r][c]
             val index = r * g.cols + c
             val delay = min(420f, hypot((r - effectRow).toFloat(), (c - effectCol).toFloat()) * 32f)
-            val progress = if (index in changed) ((effectTime - delay) / 260f).coerceIn(0f, 1f) else 1f
+            val isChanged = index < changed.size && changed[index]
+            val progress = if (isChanged) ((effectTime - delay) / 260f).coerceIn(0f, 1f) else 1f
             val state = if (progress == 0f && index < previousStates.size) previousStates[index] else cell.state
             val x = originX + c * cs
             val y = originY + r * cs
@@ -213,7 +255,7 @@ class MinesweeperGridView(context: Context) : View(context) {
             ink.strokeWidth = resources.displayMetrics.density * .7f
             ink.color = when {
                 state == CellState.FLAGGED -> amber
-                pressedCell == Pair(r, c) -> teal
+                pressedCell == index -> teal
                 hidden -> Color.rgb(43, 79, 96)
                 else -> Color.rgb(20, 51, 65)
             }
@@ -227,7 +269,8 @@ class MinesweeperGridView(context: Context) : View(context) {
                     ink.color = Color.rgb(39, 74, 91)
                     canvas.drawLine(x + cs * .2f, y + cs * .16f, x + cs * .42f, y + cs * .16f, ink)
                 }
-                cell.isMine -> MinesweeperArt.drawMine(canvas, rect, cs, g.detonatedCell == Pair(r, c), ink)
+                cell.isMine -> MinesweeperArt.drawMine(canvas, rect, cs,
+                    g.detonatedCell.let { it != null && it.first == r && it.second == c }, ink)
                 cell.adjacentMines > 0 -> {
                     text.color = numbers[cell.adjacentMines.coerceIn(1, 8)]
                     canvas.drawText(numberLabels[cell.adjacentMines], rect.centerX(), rect.centerY() - (text.ascent() + text.descent()) / 2f, text)
@@ -237,7 +280,7 @@ class MinesweeperGridView(context: Context) : View(context) {
                     canvas.drawCircle(rect.centerX(), rect.centerY(), cs * .025f, ink)
                 }
             }
-            if (index in changed && progress > 0f && progress < 1f) {
+            if (isChanged && progress > 0f && progress < 1f) {
                 ink.color = teal
                 ink.alpha = ((1f - progress) * 70).toInt()
                 canvas.drawRoundRect(rect, cs * .12f, cs * .12f, ink)
@@ -286,12 +329,13 @@ class MinesweeperGridView(context: Context) : View(context) {
         canvas.restoreToCount(save)
     }
 
-    private fun cellAt(x: Float, y: Float): Pair<Int, Int>? {
-        val g = game ?: return null
-        if (cellSize <= 0f || x < originX || y < originY) return null
+    /** Indice de la case sous le doigt (ligne × colonnes + colonne), -1 hors de la grille. */
+    private fun cellIndexAt(x: Float, y: Float): Int {
+        val g = game ?: return -1
+        if (cellSize <= 0f || x < originX || y < originY) return -1
         val c = ((x - originX) / cellSize).toInt()
         val r = ((y - originY) / cellSize).toInt()
-        return if (r in 0 until g.rows && c in 0 until g.cols) Pair(r, c) else null
+        return if (r in 0 until g.rows && c in 0 until g.cols) r * g.cols + c else -1
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {

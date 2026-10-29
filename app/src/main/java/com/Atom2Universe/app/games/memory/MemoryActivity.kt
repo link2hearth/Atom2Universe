@@ -313,6 +313,7 @@ class MemoryActivity : ThemedActivity() {
                 adapter?.notifyItemChanged(position)
                 if (game.isWon) {
                     stopTimer()
+                    claimWinReward()
                     saveGame()
                     handler.postDelayed({ showWinOverlay() }, 350L)
                 }
@@ -332,6 +333,12 @@ class MemoryActivity : ThemedActivity() {
     private fun showWinOverlay() {
         winMessage.text = getString(R.string.memory_win_message, game.flips, formatTime(game.elapsedSeconds))
         winOverlay.visibility = View.VISIBLE
+    }
+
+    /** Paye une seule fois, au moment de la victoire ; le panneau ne fait qu'afficher. */
+    private fun claimWinReward() {
+        if (game.rewardClaimed) return
+        game.rewardClaimed = true
         // Récompense définie dans la source commune, pour toutes les tailles.
         NeutrinoRepository(this).addBalance(NeutrinoRewards.memory(game.difficulty.ordinal))
         saveRecordIfBetter()

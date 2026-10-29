@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.hotpotato
 
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.ImageButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -16,7 +15,7 @@ class HotPotatoActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hot_potato)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran reste allumé seulement pendant une partie : la vue s'en charge (keepScreenOn).
 
         gameView = findViewById(R.id.hot_potato_view)
         findViewById<ImageButton>(R.id.hot_potato_btn_back).setOnClickListener { finish() }

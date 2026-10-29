@@ -107,7 +107,7 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
                     return
                 }
                 if (newDiff != difficulty) {
-                    prefs.saveGame(difficulty, elapsedSecs, gridView.game ?: return)
+                    // Une seule partie sauvegardée : changer de difficulté abandonne la partie en cours.
                     difficulty = newDiff
                     startNewGame()
                 }

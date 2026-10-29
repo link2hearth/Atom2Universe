@@ -27,7 +27,8 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         fun touches(cx: Float, cy: Float): Boolean {
             if (cx + 20f < left.x || cx - 20f > right.x) return false
-            for (top in listOf(true, false)) {
+            for (side in 0..1) {
+                val top = side == 0
                 for (i in 0 until 16) {
                     // Segment dans le repère de l'ellipse du chat, épaisseur du fil comprise.
                     val ax = (x(i / 16f) - cx) / 20f
@@ -86,9 +87,10 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
         active = false
         Choreographer.getInstance().removeFrameCallback(this)
         scheduled = false; lastFrame = 0L; accumulator = 0f
+        keepScreenOn = false
     }
-    /** Ouvre la bulle de r�gles : une partie en cours se met en pause, on reprend d'un tap. */
-    fun pauseForRules() { if (phase == Phase.RUNNING) { phase = Phase.PAUSED; invalidate() } }
+    /** Ouvre la bulle de règles : une partie en cours se met en pause, on reprend d'un tap. */
+    fun pauseForRules() { if (phase == Phase.RUNNING) { phase = Phase.PAUSED; invalidate(); schedule() } }
     fun togglePause() {
         phase = when (phase) { Phase.RUNNING -> Phase.PAUSED; Phase.PAUSED -> Phase.RUNNING; else -> phase }
         accumulator = 0f; invalidate(); schedule()
@@ -98,16 +100,23 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
     private fun schedule() {
         if (active && isAttachedToWindow && !scheduled) { scheduled = true; Choreographer.getInstance().postFrameCallback(this) }
     }
+    // Pause, ou fin de partie une fois le panneau affiché et les étincelles éteintes : rien ne bouge plus.
+    private fun frozen() = phase == Phase.PAUSED || (phase == Phase.OVER && overTime > 1.2f && sparks.isEmpty())
     override fun doFrame(frameTimeNanos: Long) {
         scheduled = false
         if (!active) return
+        // Dessin plafonné à ~60 i/s : l'image sautée reporte son temps sur la suivante.
+        if (lastFrame != 0L && frameTimeNanos - lastFrame < 15_000_000L) { schedule(); return }
         val dt = if (lastFrame == 0L) 0f else ((frameTimeNanos - lastFrame) / 1_000_000_000f).coerceAtMost(.067f)
         lastFrame = frameTimeNanos
         if (phase != Phase.PAUSED) {
             accumulator += dt
             while (accumulator >= step) { update(step); accumulator -= step }
         }
-        invalidate(); schedule()
+        keepScreenOn = phase == Phase.RUNNING
+        invalidate()
+        // Scène figée : la boucle s'arrête, un toucher ou la reprise la relance.
+        if (frozen()) { lastFrame = 0L; accumulator = 0f } else schedule()
     }
     private fun start() {
         hazards.clear(); cables.clear(); sparks.clear(); catY = 280f; velocity = 0f
@@ -124,6 +133,7 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
             Phase.PAUSED -> { phase = Phase.RUNNING; accumulator = 0f }
             Phase.OVER -> if (overTime > .9f) start()
         }
+        schedule()
         return true
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -256,8 +266,14 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
             phase = Phase.OVER; overTime = 0f
             newBest = score > best
             if (newBest) { best = score; prefs.edit { putInt("best_score", best) } }
-            announceForAccessibility(context.getString(R.string.cat_result, score))
+            announceForAccessibility(resultText())
         }
+    }
+    private var resultFor = -1
+    private var result = ""
+    private fun resultText(): String {
+        if (resultFor != score) { resultFor = score; result = context.getString(R.string.cat_result, score) }
+        return result
     }
     private fun burst(x: Float, y: Float, count: Int, color: Int) {
         repeat(min(count, (160 - sparks.size).coerceAtLeast(0))) { val a = Random.nextFloat() * 6.283f; val speed = 30f + Random.nextFloat() * 100f
@@ -285,7 +301,7 @@ class FlappyCatView @JvmOverloads constructor(context: Context, attrs: Attribute
             Phase.READY -> art.panel(canvas, R.string.flappy_cat_title, R.string.cat_intro, R.string.flappy_cat_tap_to_start)
             Phase.PAUSED -> art.panel(canvas, R.string.flappy_cat_paused, R.string.cat_controls, R.string.flappy_cat_tap_to_resume)
             Phase.OVER -> if (overTime > .8f) art.panel(canvas, if (newBest) R.string.flappy_cat_new_best else R.string.cat_ouch,
-                R.string.cat_retry_hint, R.string.flappy_cat_tap_to_retry, context.getString(R.string.cat_result, score))
+                R.string.cat_retry_hint, R.string.flappy_cat_tap_to_retry, resultText())
             else -> {}
         }
         canvas.restore()

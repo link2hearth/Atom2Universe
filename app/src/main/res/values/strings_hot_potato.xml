@@ -8,10 +8,10 @@
     <string name="hot_potato_tap_to_resume">Tap to resume</string>
     <string name="hot_potato_game_over">Game Over</string>
     <string name="hot_potato_paused">Paused</string>
-    <string name="hot_potato_score_label">Score</string>
-    <string name="hot_potato_best_label">BEST</string>
-    <string name="hot_potato_new_best">New record!</string>
-    <string name="hot_potato_perfect">Perfect!</string>
+    <string name="hot_potato_score_format">Score: %1$d</string>
+    <string name="hot_potato_best_format">BEST: %1$d</string>
+    <string name="hot_potato_new_best">★ New record! ★</string>
+    <string name="hot_potato_perfect_points">"Perfect!  +%1$d"</string>
     <string name="hot_potato_raw">Too raw!</string>
     <string name="hot_potato_burnt">Burnt!</string>
 </resources>

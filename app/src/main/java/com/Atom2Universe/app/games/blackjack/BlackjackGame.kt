@@ -68,8 +68,9 @@ class BlackjackGame {
 
     private val shoe = mutableListOf<BlackjackCard>()
 
-    val dealer = BJPlayer(-1, "Dealer", isHuman = false, isDealer = true)
-    val humanPlayer = BJPlayer(0, "YOU", isHuman = true)
+    // Le croupier et le joueur sont nommés à l'écran par des ressources (BlackjackView)
+    val dealer = BJPlayer(-1, "", isHuman = false, isDealer = true)
+    val humanPlayer = BJPlayer(0, "", isHuman = true)
     val aiPlayers = mutableListOf<BJPlayer>()
 
     var phase: GamePhase = GamePhase.BETTING
@@ -109,11 +110,13 @@ class BlackjackGame {
         return shoe.removeAt(0).copy(faceUp = faceUp)
     }
 
+    /** La mise quitte le solde dès la donne ; `balance` ne compte plus que ce qui reste hors de la table. */
     fun startRound() {
         for (p in players) {
             val bet = if (p.isHuman) {
-                if (pendingBet == 0) 0 else pendingBet.coerceIn(1, p.balance.coerceAtLeast(1))
+                pendingBet.coerceIn(0, p.balance.coerceAtLeast(0))
             } else randomAIBet(p)
+            p.balance -= bet
             p.resetForRound(bet)
         }
         dealer.resetForRound(0)
@@ -197,9 +200,9 @@ class BlackjackGame {
     fun doubleDown(): Boolean {
         val player = activePlayer ?: return false
         val hand = player.currentHand ?: return false
-        if (!hand.canDouble) return false
-        val extra = minOf(hand.bet, (player.balance - hand.bet).coerceAtLeast(0))
-        hand.bet += extra
+        if (!canAffordDouble(player)) return false
+        player.balance -= hand.bet
+        hand.bet *= 2
         hand.cards.add(drawCard())
         hand.actionState = if (hand.isBust) ActionState.BUST else ActionState.DOUBLED
         return advanceHand()
@@ -208,7 +211,8 @@ class BlackjackGame {
     fun split(): Boolean {
         val player = activePlayer ?: return false
         val hand = player.currentHand ?: return false
-        if (!hand.canSplit || player.balance < hand.bet * 2) return false
+        if (!canAffordSplit(player)) return false
+        player.balance -= hand.bet
         val newHand = BlackjackHand(hand.bet, fromSplit = true)
         newHand.cards.add(hand.cards.removeAt(1))
         hand.markSplit()
@@ -218,13 +222,24 @@ class BlackjackGame {
         return false
     }
 
+    /** Doubler ou séparer engage une mise de plus : le solde restant doit la couvrir. */
+    fun canAffordDouble(player: BJPlayer): Boolean {
+        val hand = player.currentHand ?: return false
+        return hand.canDouble && player.balance >= hand.bet
+    }
+
+    fun canAffordSplit(player: BJPlayer): Boolean {
+        val hand = player.currentHand ?: return false
+        return hand.canSplit && player.balance >= hand.bet
+    }
+
     // Basic strategy complète (6 decks, dealer stands on soft 17)
     fun getAIAction(player: BJPlayer): PlayerAction {
         val hand = player.currentHand ?: return PlayerAction.STAND
         val dealerUp = dealer.currentHand!!.cards.firstOrNull { it.faceUp }?.value ?: 7
 
-        // Splits — vérifiés en premier
-        if (hand.canSplit) {
+        // Splits — vérifiés en premier (une séparation impossible bouclerait sans fin)
+        if (canAffordSplit(player)) {
             val pairVal = hand.cards[0].value
             val isAce = hand.cards[0].rank == 1
             when {
@@ -274,7 +289,7 @@ class BlackjackGame {
         return when (getAIAction(player)) {
             PlayerAction.HIT -> hit()
             PlayerAction.STAND -> stand()
-            PlayerAction.DOUBLE -> if (activePlayer?.currentHand?.canDouble == true) doubleDown() else hit()
+            PlayerAction.DOUBLE -> if (canAffordDouble(player)) doubleDown() else hit()
             PlayerAction.SPLIT -> { split(); false }
         }
     }
@@ -312,11 +327,12 @@ class BlackjackGame {
                     else -> PayoutResult.PUSH
                 }
                 hand.payoutResult = result
+                // La mise a quitté le solde à la donne : on rend mise + gain, ou la mise seule
                 when (result) {
-                    PayoutResult.WIN -> player.balance += hand.bet
-                    PayoutResult.WIN_BJ -> player.balance += blackjackGain(hand.bet)
-                    PayoutResult.LOSE -> player.balance -= hand.bet
-                    PayoutResult.PUSH -> Unit
+                    PayoutResult.WIN -> player.balance += hand.bet * 2
+                    PayoutResult.WIN_BJ -> player.balance += hand.bet + blackjackGain(hand.bet)
+                    PayoutResult.LOSE -> Unit
+                    PayoutResult.PUSH -> player.balance += hand.bet
                 }
             }
         }

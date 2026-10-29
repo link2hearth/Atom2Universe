@@ -206,10 +206,13 @@ class EnamelGame(private val random: Random = Random.Default) {
         b.vx += impulse * nx * invB; b.vy += impulse * ny * invB
     }
 
+    // Réutilisés à chaque sous-pas de physique.
+    private val used = HashSet<EnamelPuck>()
+    private val born = ArrayList<EnamelPuck>()
+
     private fun mergeContacts() {
         // Une nouvelle pièce attend le sous-pas suivant avant de fusionner à son tour.
-        val used = HashSet<EnamelPuck>()
-        val born = ArrayList<EnamelPuck>()
+        used.clear(); born.clear()
         for (i in pucks.indices) {
             val a = pucks[i]
             if (a in used) continue
@@ -237,6 +240,7 @@ class EnamelGame(private val random: Random = Random.Default) {
                 break
             }
         }
+        if (used.isEmpty()) return
         pucks.removeAll(used); pucks.addAll(born)
     }
 

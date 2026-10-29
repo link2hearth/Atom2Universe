@@ -17,6 +17,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
@@ -45,6 +46,11 @@ class EscapeLabyrinthActivity : ThemedActivity() {
 
     private val prefs by lazy { getSharedPreferences("escape_labyrinth_prefs", MODE_PRIVATE) }
 
+    private companion object {
+        /** La partie en cours : graine;difficulté;ligne;colonne;phase;tour;orbes. */
+        const val KEY_RUN = "run"
+    }
+
     // ── Lifecycle ────────────────────────────────────────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +62,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         setupListeners()
         loadPrefs()
         updateDifficultyButtons()
-        startNewGame()
+        if (!resumeSavedGame()) startNewGame()
     }
 
     override fun onPause() {
@@ -102,7 +108,38 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     }
 
     private fun savePrefs() {
-        prefs.edit().putString("difficulty", currentDifficulty.name).apply()
+        prefs.edit {
+            putString("difficulty", currentDifficulty.name)
+            // Pendant une génération, la partie enregistrée (ou son absence) reste telle quelle.
+            if (!isGenerating) {
+                val lvl = currentLevel; val play = currentPlay
+                if (lvl != null && play != null && !play.completed && !play.caught) {
+                    // Le niveau se régénère à l'identique depuis sa graine : seule la position est gardée.
+                    putString(KEY_RUN, listOf(lvl.seed, lvl.difficulty.name, play.row, play.col, play.guardPhase,
+                        play.turn, play.collectedIds.joinToString(",")).joinToString(";"))
+                } else remove(KEY_RUN)
+            }
+        }
+    }
+
+    /** Reprend la partie laissée en cours ; faux s'il n'y en a pas. */
+    private fun resumeSavedGame(): Boolean {
+        val f = prefs.getString(KEY_RUN, null)?.split(';') ?: return false
+        if (f.size != 7) return false
+        val seed = f[0].toLongOrNull() ?: return false
+        val diff = runCatching { Difficulty.valueOf(f[1]) }.getOrNull() ?: return false
+        val n = (2..5).map { f[it].toIntOrNull() ?: return false }
+        val ids = if (f[6].isEmpty()) emptySet() else f[6].split(',').map { it.toIntOrNull() ?: return false }.toSet()
+        currentDifficulty = diff
+        updateDifficultyButtons()
+        generateLevel(seed, diff) { level ->
+            val play = PlayState(row = n[0], col = n[1], guardPhase = n[2], collectedIds = ids, turn = n[3])
+            val valid = play.row in 0 until level.cellH && play.col in 0 until level.cellW &&
+                play.guardPhase in 0 until level.guardCycle && play.turn >= 0 &&
+                ids.all { id -> id in level.bonuses.indices }
+            if (valid) play else EscapeLabyrinthGame.initialPlay(level)
+        }
+        return true
     }
 
     // ── Difficulty ───────────────────────────────────────────────────────────
@@ -130,17 +167,20 @@ class EscapeLabyrinthActivity : ThemedActivity() {
 
     private fun startNewGame() {
         if (isGenerating) return
+        prefs.edit { remove(KEY_RUN) }
+        generateLevel(Random.nextLong(), currentDifficulty) { EscapeLabyrinthGame.initialPlay(it) }
+    }
+
+    private fun generateLevel(seed: Long, diff: Difficulty, makePlay: (Level) -> PlayState) {
         isGenerating = true
         updateInputAvailability()
         loadingOverlay.visibility = View.VISIBLE
         tvStatus.text = getString(R.string.escape_status_generating)
 
-        val seed = Random.nextLong()
-        val diff = currentDifficulty
-
         lifecycleScope.launch {
             val level = withContext(Dispatchers.Default) {
-                EscapeLabyrinthGame.create(seed, diff)
+                // Quitter l'écran arrête la recherche au lieu de la laisser tourner pour rien.
+                EscapeLabyrinthGame.create(seed, diff) { !isActive }
             }
             isGenerating = false
             loadingOverlay.visibility = View.GONE
@@ -152,10 +192,12 @@ class EscapeLabyrinthActivity : ThemedActivity() {
                 return@launch
             }
             currentLevel = level
-            currentPlay = EscapeLabyrinthGame.initialPlay(level)
+            val play = makePlay(level)
+            currentPlay = play
             refreshView()
             updateInputAvailability()
-            tvStatus.text = getString(R.string.escape_status_ready)
+            if (play.turn == 0) tvStatus.text = getString(R.string.escape_status_ready)
+            else showTurnStatus(play)
         }
     }
 

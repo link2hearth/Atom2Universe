@@ -18,6 +18,12 @@ class PipeTapView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     interface OnTileRotatedListener { fun onTileRotated(solved: Boolean) }
 
+    private companion object {
+        const val TURN_MS = 190L
+        /** Bulles et aiguille au repos : 25 images par seconde suffisent. */
+        const val IDLE_FRAME_MS = 40L
+    }
+
     var game: PipeTapGame? = null
     var listener: OnTileRotatedListener? = null
     var animationsActive = true
@@ -46,11 +52,10 @@ class PipeTapView @JvmOverloads constructor(
             ?: return 0L
         return (lastArrival + fillDuration.toLong() - SystemClock.uptimeMillis()).coerceAtLeast(0L)
     }
-    private val animator = ValueAnimator.ofFloat(0f, 1f).apply {
-        duration = 2400L
-        repeatCount = ValueAnimator.INFINITE
-        addUpdateListener { invalidate() }
-    }
+    // Images à la cadence de l'écran seulement pendant une rotation ou une vague d'eau ;
+    // au repos, bulles et aiguille avancent par un seul rappel retardé.
+    private var live = false
+    private val idleTick = Runnable { invalidate() }
     private val navy = Color.rgb(9, 23, 30)
     private val edge = Color.rgb(47, 73, 82)
     private val metal = Color.rgb(85, 115, 121)
@@ -60,17 +65,19 @@ class PipeTapView @JvmOverloads constructor(
     init { isClickable = true }
 
     private fun updateAnimation() {
-        val run = animationsActive && isAttachedToWindow && isShown &&
+        live = animationsActive && isAttachedToWindow && isShown &&
             windowVisibility == VISIBLE && ValueAnimator.areAnimatorsEnabled() && game != null
-        if (run && !animator.isStarted) animator.start()
-        // cancel() exige un fil à Looper : l'aperçu du hub est dessiné sur un fil d'arrière-plan,
-        // où l'animateur n'a jamais démarré et n'a donc rien à annuler.
-        else if (!run && animator.isStarted) animator.cancel()
+        // L'aperçu du hub est dessiné sur un fil d'arrière-plan, jamais attaché : rien n'y est posté.
+        if (!live && isAttachedToWindow) removeCallbacks(idleTick)
         invalidate()
     }
 
     override fun onAttachedToWindow() { super.onAttachedToWindow(); updateAnimation() }
-    override fun onDetachedFromWindow() { animator.cancel(); super.onDetachedFromWindow() }
+    override fun onDetachedFromWindow() {
+        live = false
+        removeCallbacks(idleTick)
+        super.onDetachedFromWindow()
+    }
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
         updateAnimation()
@@ -113,7 +120,8 @@ class PipeTapView @JvmOverloads constructor(
         geometry()
         if (tile <= 0f || reached.size != g.grid.size * g.grid.size) return
         frameTime = SystemClock.uptimeMillis()
-        val animated = animator.isRunning
+        val animated = live
+        var busy = false
         val phase = if (animated) (frameTime % 2400L) / 2400f else 0f
         val n = g.grid.size
         // Recessed frame, corner fasteners and individual enamel panels.
@@ -135,6 +143,7 @@ class PipeTapView @JvmOverloads constructor(
             val half = tile / 2
             val amount = if (!reached[id]) 0f else if (!animated) 1f
                 else ((frameTime - arrivals[id]) / fillDuration).coerceIn(0f, 1f)
+            if (animated && reached[id] && amount < 1f) busy = true
             fill(if ((x + y) % 2 == 0) Color.rgb(20, 40, 49) else Color.rgb(23, 44, 53))
             round(canvas, cx - half + 1, cy - half + 1, cx + half - 1, cy + half - 1, tile * .09f)
             stroke(edge, density * .6f)
@@ -146,6 +155,7 @@ class PipeTapView @JvmOverloads constructor(
                 board.left + x * tile, board.top + y * tile,
                 board.left + (x + 1) * tile, board.top + (y + 1) * tile
             )
+            if (animated && frameTime - turns[id] < TURN_MS) busy = true
             canvas.rotate(if (animated) rotationOffset(id, frameTime) else 0f, cx, cy)
             val mask = g.grid[y][x]
             // Concentric strokes give the pipes a solid wall and a recessed glass channel.
@@ -213,10 +223,14 @@ class PipeTapView @JvmOverloads constructor(
             }
             canvas.restore()
         }
+        if (animated) {
+            removeCallbacks(idleTick)
+            if (busy) postInvalidateOnAnimation() else postDelayed(idleTick, IDLE_FRAME_MS)
+        }
     }
 
     private fun rotationOffset(id: Int, now: Long): Float {
-        val t = ((now - turns[id]) / 190f).coerceIn(0f, 1f)
+        val t = ((now - turns[id]) / TURN_MS.toFloat()).coerceIn(0f, 1f)
         return turnOffsets[id] * (1f - t) * (1f - t) * (1f - t)
     }
 

@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.wavesurf
 
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
@@ -18,7 +17,6 @@ class WaveSurfActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_wave_surf)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         gameView = findViewById(R.id.wave_surf_view)
         val tvDist = findViewById<TextView>(R.id.wave_surf_hud_distance)

@@ -2,7 +2,6 @@ package com.Atom2Universe.app.games.flappycat
 
 import android.content.Context
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.ImageButton
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.LocaleHelper
@@ -22,7 +21,7 @@ class FlappyCatActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_flappy_cat)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran reste allumé pendant une partie seulement (FlappyCatView.keepScreenOn).
 
         gameView = findViewById(R.id.flappy_cat_view)
         findViewById<ImageButton>(R.id.flappy_cat_btn_back).setOnClickListener { finish() }

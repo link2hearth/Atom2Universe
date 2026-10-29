@@ -9,7 +9,7 @@
     <string name="escape_btn_new">New</string>
     <string name="escape_turns_label_zero">Turn 0</string>
     <string name="escape_turns_label">Turn %1$d</string>
-    <string name="escape_turns_prefix">Turn </string>
+    <string name="escape_turns_prefix">"Turn "</string>
     <string name="escape_orbs_label">Orbs %1$d/%2$d</string>
     <string name="escape_status_generating">Generating maze…</string>
     <string name="escape_status_gen_error">Generation failed. Try again.</string>

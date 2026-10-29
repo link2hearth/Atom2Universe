@@ -37,6 +37,15 @@ class CirclesView @JvmOverloads constructor(
     /** Called after each rotation animation ends. */
     var onRotationEnd: ((solved: Boolean) -> Unit)? = null
 
+    /** Pulsation du noyau au repos ; coupée derrière le panneau de victoire. */
+    var idlePulse = true
+        set(value) {
+            if (field == value) return
+            field = value
+            if (value) invalidate() else removeCallbacks(pulseTick)
+        }
+    private val pulseTick = Runnable { invalidate() }
+
     private val outerRect = RectF()
     private val innerRect = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -178,7 +187,15 @@ class CirclesView @JvmOverloads constructor(
         canvas.restore()
 
         // Le noyau palpite en permanence, mais au ralenti tant que rien ne bouge.
-        if (busy || animActive) postInvalidateOnAnimation() else postInvalidateDelayed(IDLE_FRAME_MS)
+        // Un seul rappel retardé à la fois : un invalidate() extérieur ne dédouble pas la chaîne.
+        removeCallbacks(pulseTick)
+        if (busy || animActive) postInvalidateOnAnimation()
+        else if (idlePulse) postDelayed(pulseTick, IDLE_FRAME_MS)
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(pulseTick)
+        super.onDetachedFromWindow()
     }
 
     private fun ensureLayout(g: CirclesGame) {

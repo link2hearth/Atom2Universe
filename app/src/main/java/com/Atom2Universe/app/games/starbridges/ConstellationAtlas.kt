@@ -6,6 +6,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -170,13 +171,29 @@ class ConstellationAtlas(context: Context) {
         }
 
         val radius = game.size * 0.75f
+        // Les figures sont rangées par carreaux assez grands pour qu'une gêne ne puisse venir
+        // que des neuf carreaux voisins : même place qu'en les testant toutes, sans tout parcourir.
+        val tile = (list.maxOfOrNull { it.radius } ?: 0f) + radius + MARGIN
+        fun tileKey(cx: Int, cy: Int) = (cx.toLong() shl 32) or (cy.toLong() and 0xFFFFFFFFL)
+        val tiles = HashMap<Long, MutableList<AtlasEntry>>()
+        for (e in list) {
+            tiles.getOrPut(tileKey(floor(e.skyX / tile).toInt(), floor(e.skyY / tile).toInt())) { ArrayList() }.add(e)
+        }
+        fun blocked(x: Float, y: Float): Boolean {
+            val cx = floor(x / tile).toInt(); val cy = floor(y / tile).toInt()
+            for (dx in -1..1) for (dy in -1..1) {
+                val near = tiles[tileKey(cx + dx, cy + dy)] ?: continue
+                if (near.any { hypot(it.skyX - x, it.skyY - y) < it.radius + radius + MARGIN }) return true
+            }
+            return false
+        }
         var x = 0f; var y = 0f
         var k = 0
         while (true) {
             val angle = k * 2.39996f
             val dist = 2.2f * sqrt(k.toFloat())
             x = cos(angle) * dist; y = sin(angle) * dist
-            if (list.none { hypot(it.skyX - x, it.skyY - y) < it.radius + radius + MARGIN }) break
+            if (!blocked(x, y)) break
             k++
         }
         val rnd = Random(game.seed.hashCode())

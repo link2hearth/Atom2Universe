@@ -54,7 +54,7 @@ internal class WaveSurfPhysics(val terrain: WaveSurfTerrain = WaveSurfTerrain())
         if (!pressed) {
             // Petit saut de relance après un clic en montée, même sans assez
             // d'élan pour décoller par la seule courbure. Un maintien ne le répète pas.
-            if (grounded && speed < RELAUNCH_SPEED_LIMIT && terrain.sample(x).gradient < -0.10f) {
+            if (grounded && speed < RELAUNCH_SPEED_LIMIT && terrain.gradient(x) < -0.10f) {
                 alignVelocity()
                 vy -= (180f + speed * 0.25f).coerceAtMost(320f)
                 grounded = false
@@ -64,7 +64,7 @@ internal class WaveSurfPhysics(val terrain: WaveSurfTerrain = WaveSurfTerrain())
             return
         }
         if (grounded) {
-            val gradient = terrain.sample(x).gradient
+            val gradient = terrain.gradient(x)
             // La traction verticale reste projetée sur la pente.
             val alongSlope = PRESS_DOWN_IMPULSE * gradient / sqrt(1f + gradient * gradient)
             // Au contact d'une descente, CHAQUE clic donne aussi une vraie poussée
@@ -96,32 +96,33 @@ internal class WaveSurfPhysics(val terrain: WaveSurfTerrain = WaveSurfTerrain())
     }
 
     private fun alignVelocity() {
-        val gradient = terrain.sample(x).gradient
+        val gradient = terrain.gradient(x)
         vx = speed / sqrt(1f + gradient * gradient)
         vy = vx * gradient
     }
 
     private fun advanceGround(dt: Float) {
-        val before = terrain.sample(x)
+        val before = terrain.gradient(x)
         // Point milieu pour avancer le long de la courbe, pas selon sa corde.
-        val midX = x + speed * dt * 0.5f / sqrt(1f + before.gradient * before.gradient)
-        val middle = terrain.sample(midX)
-        x += speed * dt / sqrt(1f + middle.gradient * middle.gradient)
-        val after = terrain.sample(x)
+        val midX = x + speed * dt * 0.5f / sqrt(1f + before * before)
+        val middle = terrain.gradient(midX)
+        x += speed * dt / sqrt(1f + middle * middle)
+        val afterHeight = terrain.height(x)
+        val afterGradient = terrain.gradient(x)
         // Y va vers le bas : descendre ajoute de l'énergie, remonter en consomme.
         // Le bilan de hauteur évite d'inventer de l'élan à chaque raccord de pente.
-        val squaredSpeed = speed * speed + 2f * gravityAcceleration * (after.height - y)
+        val squaredSpeed = speed * speed + 2f * gravityAcceleration * (afterHeight - y)
         // Faibles pertes de glisse. La régulation n'agit qu'à très grande vitesse,
         // pour conserver l'élan gagné en chargeant les longues descentes.
         val overspeed = max(0f, speed - 2200f) / 800f
         speed = max(RECOVERY_SPEED, sqrt(max(0f, squaredSpeed)) * exp(-(0.018f + 0.08f * overspeed * overspeed) * dt))
-        y = after.height
+        y = afterHeight
         alignVelocity()
 
-        val normalForce = GRAVITY / sqrt(1f + after.gradient * after.gradient) - speed * speed * after.curvature
+        val normalForce = GRAVITY / sqrt(1f + afterGradient * afterGradient) - speed * speed * terrain.curvature(x)
         // L'appui plaque la balle au relief. Après relâchement, elle s'envole
         // quand la montée s'arrondit sous elle : aucune phase imposée ni saut ajouté.
-        if (!pressing && after.gradient < 0f && speed > 300f && normalForce < -10f) {
+        if (!pressing && afterGradient < 0f && speed > 300f && normalForce < -10f) {
             grounded = false
             y -= 0.5f
         }
@@ -148,7 +149,7 @@ internal class WaveSurfPhysics(val terrain: WaveSurfTerrain = WaveSurfTerrain())
             x = oldX + vx * hi
             y = terrain.height(x)
             vy = oldVy + gravity * hi
-            val gradient = terrain.sample(x).gradient
+            val gradient = terrain.gradient(x)
             val incomingSpeed = hypot(vx, vy)
             val tangentSpeed = (vx + vy * gradient) / sqrt(1f + gradient * gradient)
             // Une réception dans le sens de la pente conserve presque tout l'élan.

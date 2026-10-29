@@ -101,7 +101,15 @@ class StarBridgesBoardView @JvmOverloads constructor(
         /** Un tour complet des lueurs d'une étoile complète, en millisecondes. */
         const val SPIN_PERIOD = 8000L
         const val SPIN_FRAME_MS = 33L
+        /** Chiffres des étoiles (0 à 8 liens), pour ne pas en reformater à chaque image. */
+        val DIGITS = Array(9) { it.toString() }
     }
+
+    /** Cases occupées par une étoile, recalculées seulement quand la grille change. */
+    private var occupied = BooleanArray(0)
+    private var occupiedFor: List<SbNode>? = null
+    /** Angle des lueurs, figé une fois la figure gagnée et embrasée. */
+    private var frozenSpin = -1.0
 
     // ── Geste en cours ───────────────────────────────────────────────────────────
     private var dragFrom: SbNode? = null
@@ -151,10 +159,13 @@ class StarBridgesBoardView @JvmOverloads constructor(
 
         // Repères de la carte : un point discret à chaque case vide.
         pFill.color = 0x22FFFFFF
-        val occupied = HashSet<Int>()
-        for (n in g.nodes) occupied.add(n.y * g.size + n.x)
+        if (occupiedFor !== g.nodes || occupied.size != g.size * g.size) {
+            occupied = BooleanArray(g.size * g.size)
+            for (n in g.nodes) if (n.x in 0 until g.size && n.y in 0 until g.size) occupied[n.y * g.size + n.x] = true
+            occupiedFor = g.nodes
+        }
         for (y in 0 until g.size) for (x in 0 until g.size) {
-            if (y * g.size + x in occupied) continue
+            if (occupied[y * g.size + x]) continue
             canvas.drawCircle(startX + (x + 0.5f) * cellPx, startY + (y + 0.5f) * cellPx, 1.2f * dp, pFill)
         }
 
@@ -162,7 +173,7 @@ class StarBridgesBoardView @JvmOverloads constructor(
         val lit = ignitionLitCount(now)
         for ((key, count) in g.bridges) {
             if (count <= 0) continue
-            val (a, b) = g.endsOf(key)
+            val a = g.endA(key); val b = g.endB(key)
             val na = g.nodes.firstOrNull { it.id == a } ?: continue
             val nb = g.nodes.firstOrNull { it.id == b } ?: continue
             val order = ignition.indexOf(key)
@@ -196,13 +207,22 @@ class StarBridgesBoardView @JvmOverloads constructor(
 
         // Les étoiles.
         val flicker = (0.55f + 0.45f * sin(now / 90.0)).toFloat()
-        val spin = (now % SPIN_PERIOD) * 2.0 * PI / SPIN_PERIOD
+        // Figure gagnée et embrasement fini : les lueurs s'arrêtent là où elles sont.
+        val settled = g.solved && (ignition.isEmpty() || now - ignitionStart >= ignition.size * ignitionPerLine + 500L)
+        val spin = if (settled) {
+            if (frozenSpin < 0.0) frozenSpin = (now % SPIN_PERIOD) * 2.0 * PI / SPIN_PERIOD
+            frozenSpin
+        } else {
+            frozenSpin = -1.0
+            (now % SPIN_PERIOD) * 2.0 * PI / SPIN_PERIOD
+        }
         var spinning = false
+        var flickering = false
         for (n in g.nodes) {
             val placed = g.bridgeCountFor(n.id)
             val over = placed > n.required
-            if (over) animating = true
-            if (placed == n.required) spinning = true
+            if (over) flickering = true
+            if (placed == n.required && !settled) spinning = true
             val burst = g.solved && ignitionTouched(n, now)
             drawStar(canvas, n, placed, over, flicker, burst || n === dragFrom, spin)
         }
@@ -216,10 +236,13 @@ class StarBridgesBoardView @JvmOverloads constructor(
             }
         }
         if (animating) postInvalidateOnAnimation()
-        // Une rotation lente n'a pas besoin de chaque image de l'écran : sur une tablette à
-        // 120 Hz, redessiner le ciel entier en continu pour des points qui avancent d'un
-        // demi-degré chaufferait pour rien. Trente images par seconde suffisent.
-        else if (spinning) postInvalidateDelayed(SPIN_FRAME_MS)
+        // Une rotation lente ou un clignotement n'ont pas besoin de chaque image de l'écran :
+        // sur une tablette à 120 Hz, redessiner le ciel entier en continu chaufferait pour
+        // rien. Trente images par seconde suffisent.
+        else if (spinning || flickering) {
+            removeCallbacks(slowTick)
+            postDelayed(slowTick, SPIN_FRAME_MS)
+        }
     }
 
     private fun drawLine(canvas: Canvas, a: SbNode, b: SbNode, color: Int, alpha: Int) {
@@ -246,7 +269,7 @@ class StarBridgesBoardView @JvmOverloads constructor(
 
         pFill.color = if (over) blend(color, NightSky.LINE_REJECT, 0.5f * flicker) else color
         canvas.drawCircle(x, y, coreR, pFill)
-        canvas.drawText(n.required.toString(), x, y - (pDigit.descent() + pDigit.ascent()) / 2f, pDigit)
+        canvas.drawText(DIGITS.getOrElse(n.required) { n.required.toString() }, x, y - (pDigit.descent() + pDigit.ascent()) / 2f, pDigit)
 
         // Les lueurs : une par lien demandé, allumées au fil des liens posés. Toutes
         // allumées, elles tournent : l'étoile est complète.
@@ -281,8 +304,7 @@ class StarBridgesBoardView @JvmOverloads constructor(
         val g = game ?: return false
         val elapsed = now - ignitionStart
         ignition.forEachIndexed { i, k ->
-            val (a, b) = g.endsOf(k)
-            if (a == n.id || b == n.id) {
+            if (g.endA(k) == n.id || g.endB(k) == n.id) {
                 val t = elapsed - i * ignitionPerLine
                 if (t in 0..220) return true
             }
@@ -383,6 +405,8 @@ class StarBridgesBoardView @JvmOverloads constructor(
             ignite()
         } else listener?.onBoardChanged()
     }
+
+    private val slowTick = Runnable { invalidate() }
 
     fun refresh() { recompute(); invalidate() }
 }

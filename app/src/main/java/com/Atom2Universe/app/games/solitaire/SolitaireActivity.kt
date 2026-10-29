@@ -214,6 +214,7 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
         elapsedTimeMs = save.elapsedTimeMs
         isGameWon = false
 
+        gameView.stopVictoryAnimation()
         updateMovesDisplay()
         gameView.loadNewCardBack() // Random card back for this session
         gameView.refresh()
@@ -235,6 +236,9 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
     }
 
     private fun startNewGame() {
+        // L'animation de victoire de la partie d'avant s'arrête avant de redistribuer
+        gameView.stopVictoryAnimation()
+        timerHandler.removeCallbacks(autoFinishRunnable)
         history.clear()
         updateUndoButton()
         game.newGame()
@@ -256,6 +260,8 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
     private fun startTimer() {
         startTimeMs = System.currentTimeMillis() - elapsedTimeMs
         isTimerRunning = true
+        // Un seul chrono : sans ce retrait, chaque nouvelle partie en ajoutait un
+        timerHandler.removeCallbacks(timerRunnable)
         timerHandler.post(timerRunnable)
     }
 
@@ -482,13 +488,14 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
         super.onPause()
         stopTimer()
         saveGame()
+        gameView.pauseVictoryAnimation()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!isGameWon && moves > 0) {
-            startTimer()
-        }
+        // Le chrono tourne dès la donne : il reprend même si aucun coup n'a encore été joué
+        if (!isGameWon) startTimer()
+        gameView.resumeVictoryAnimation()
     }
 
     override fun onDestroy() {

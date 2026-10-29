@@ -111,7 +111,8 @@ class RicochetPuzzleActivity : ThemedActivity() {
     }
 
     private fun changed() {
-        val record = store.save(game)
+        // Pendant un tir, seul l'affichage suit : on sauvegarde quand les palets s'arrêtent (victoire comprise).
+        val record = !game.moving && store.save(game)
         updateHud()
         updateScreen()
         if (game.complete && !reported) {

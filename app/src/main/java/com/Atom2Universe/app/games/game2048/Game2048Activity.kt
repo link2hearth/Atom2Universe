@@ -128,7 +128,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
 
     private fun setupSizeSpinner() {
         val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
-            GRID_SIZES.map { "${it}×${it}" })
+            GRID_SIZES.map { getString(R.string.game2048_size_format, it) })
         adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         sizeSpinner.adapter = adapter
         sizeSpinner.setSelection(GRID_SIZES.indexOf(game.size).coerceAtLeast(0))
@@ -210,6 +210,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         qTarget: Int = if (quantumMode) game.quantumTarget else 0,
         jokers: Int = 0
     ) {
+        boardView.removeCallbacks(autoRestart)
         GameStatsRepository(this).recordGame2048Started()
         resultRecorded = false
         ignoreSpinnerChange = true
@@ -267,7 +268,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
             jokerButton.backgroundTintList =
                 android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#7C3AED"))
         } else {
-            jokerButton.text = "🐱 ×${game.jokers}"
+            jokerButton.text = getString(R.string.game2048_joker_count, game.jokers)
             jokerButton.backgroundTintList =
                 android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#1E293B"))
         }
@@ -331,12 +332,18 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         val winTarget = if (quantumMode) game.quantumTarget else game.target
         statusText.text = getString(R.string.game2048_status_win, winTarget)
 
-        NeutrinoRepository(this).addBalance(NeutrinoRewards.GAME2048_WIN)
+        // Payé selon l'objectif choisi : facile / normal / difficile de la taille.
+        val pool = if (game.quantumMode) QUANTUM_TARGET_POOLS[game.size] else TARGET_POOLS[game.size]
+        val targetIndex = pool?.indexOf(if (game.quantumMode) game.quantumTarget else game.target) ?: 0
+        NeutrinoRepository(this).addBalance(NeutrinoRewards.game2048(targetIndex.coerceAtLeast(0)))
 
-        boardView.postDelayed({
-            val qTarget = if (quantumMode) game.quantumTarget else 0
-            startNewGame(game.size, game.target, qTarget, currentJokers(qTarget))
-        }, 1200)
+        boardView.postDelayed(autoRestart, 1200)
+    }
+
+    /** Relance automatique après une victoire ou une défaite ; annulée par une partie lancée à la main. */
+    private val autoRestart = Runnable {
+        val qTarget = if (quantumMode) game.quantumTarget else 0
+        startNewGame(game.size, game.target, qTarget, currentJokers(qTarget))
     }
 
     private fun onGameOver() {
@@ -347,10 +354,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         updateDisplays()
         statusText.text = getString(R.string.game2048_status_over, game.bestTile)
 
-        boardView.postDelayed({
-            val qTarget = if (quantumMode) game.quantumTarget else 0
-            startNewGame(game.size, game.target, qTarget, currentJokers(qTarget))
-        }, 1500)
+        boardView.postDelayed(autoRestart, 1500)
     }
 
     private fun updateDisplays() {

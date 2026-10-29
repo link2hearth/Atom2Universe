@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.edit
+import androidx.lifecycle.Lifecycle
 import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -45,6 +46,8 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     private val handler = Handler(Looper.getMainLooper())
     private var timerStartMs = 0L
     private var timerRunning = false
+    /** Le chrono s'arrête pendant la lecture des règles. */
+    private var readingRules = false
 
     private val sizeChips = mutableMapOf<Int, MaterialButton>()
 
@@ -72,9 +75,7 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
 
         findViewById<ImageButton>(R.id.sb_back_button).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.sb_restart_button).setOnClickListener { restartPuzzle() }
-        findViewById<ImageButton>(R.id.sb_info_button).setOnClickListener {
-            showGameRules(R.string.starbridges_title, R.string.starbridges_rules)
-        }
+        findViewById<ImageButton>(R.id.sb_info_button).setOnClickListener { showRules() }
         findViewById<ImageButton>(R.id.sb_atlas_button).setOnClickListener { openAtlas() }
         findViewById<MaterialButton>(R.id.sb_btn_atlas).setOnClickListener { openAtlas() }
         findViewById<MaterialButton>(R.id.sb_btn_again).setOnClickListener { startNewGame(game.size) }
@@ -103,7 +104,17 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
 
     override fun onResume() {
         super.onResume()
-        if (!game.solved) startTimer()
+        if (!game.solved && !readingRules) startTimer()
+    }
+
+    private fun showRules() {
+        readingRules = true
+        stopTimer()
+        updateTime()
+        showGameRules(R.string.starbridges_title, R.string.starbridges_rules) {
+            readingRules = false
+            if (!game.solved && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) startTimer()
+        }
     }
 
     override fun onDestroy() {

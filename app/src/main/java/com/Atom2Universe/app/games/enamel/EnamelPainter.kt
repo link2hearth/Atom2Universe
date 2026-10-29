@@ -36,6 +36,8 @@ class EnamelPainter {
     }
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
+    /** Émail de chaque rang, à rayon 1 : la toile est mise à l'échelle du palet. */
+    private val enamels = arrayOfNulls<Shader>(COLORS.size)
 
     fun board(c: Canvas, height: Float = EnamelRules.HEIGHT) {
         val base = height - EnamelRules.BASE_DEPTH
@@ -88,9 +90,12 @@ class EnamelPainter {
         p.color = 0x35152B29; p.alpha = alpha * 50 / 255
         c.drawCircle(.045f * r, .14f * r, r * 1.04f, p)
         p.color = INK; p.alpha = alpha; c.drawCircle(0f, .045f * r, r, p)
-        p.shader = RadialGradient(-r * .35f, -r * .5f, r * 1.8f,
+        p.shader = enamels[tier] ?: RadialGradient(-.35f, -.5f, 1.8f,
             intArrayOf(lighten(COLORS[tier]), COLORS[tier], darken(COLORS[tier])), floatArrayOf(0f, .65f, 1f), Shader.TileMode.CLAMP)
-        c.drawCircle(0f, 0f, r * .94f, p); p.shader = null
+            .also { enamels[tier] = it }
+        c.save(); c.scale(r, r)
+        c.drawCircle(0f, 0f, .94f, p); p.shader = null
+        c.restore()
         p.style = Paint.Style.STROKE; p.strokeWidth = r * .035f; p.color = GOLD; p.alpha = alpha
         c.drawCircle(0f, 0f, r * .83f, p)
         // Émail lisse, sans lettre ni chiffre : couleur, taille et filets font l'identité.

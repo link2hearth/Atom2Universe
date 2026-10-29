@@ -15,7 +15,7 @@ class EscapeLabyrinthView @JvmOverloads constructor(
     var level: Level? = null
         set(value) {
             if (field !== value) {
-                terrain = null
+                dropTerrain()
                 previous = null
                 // cancel() exige un fil à Looper : l'aperçu du hub se dessine sur un fil d'arrière-plan.
                 if (animator.isStarted) animator.cancel()
@@ -82,19 +82,30 @@ class EscapeLabyrinthView @JvmOverloads constructor(
         path.close()
         c.drawPath(path, paint(color))
     }
+    /** Halo gradients are kept per colour at radius 1, then scaled into place. */
+    private val glowShaders = HashMap<Int, Shader>()
     private fun glow(c: Canvas, x: Float, y: Float, r: Float, color: Int) {
-        paint(color).shader = RadialGradient(x, y, r,
-            intArrayOf((color and 0x00FFFFFF) or 0x55000000, color and 0x00FFFFFF),
-            null, Shader.TileMode.CLAMP)
-        c.drawCircle(x, y, r, ink)
+        paint(color).shader = glowShaders.getOrPut(color) {
+            RadialGradient(0f, 0f, 1f,
+                intArrayOf((color and 0x00FFFFFF) or 0x55000000, color and 0x00FFFFFF),
+                null, Shader.TileMode.CLAMP)
+        }
+        c.save(); c.translate(x, y); c.scale(r, r)
+        c.drawCircle(0f, 0f, 1f, ink)
+        c.restore()
         ink.shader = null
     }
     private fun cellSize(lvl: Level) = min(width / (lvl.tileW + 1.4f), height / (lvl.tileH + 1.4f))
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) { terrain = null }
+    private fun dropTerrain() {
+        terrain?.recycle()
+        terrain = null
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) { dropTerrain() }
     override fun onDetachedFromWindow() {
         animator.cancel()
-        terrain = null
+        dropTerrain()
         super.onDetachedFromWindow()
     }
     override fun onDraw(canvas: Canvas) {
@@ -248,7 +259,8 @@ class EscapeLabyrinthView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 if (!touching) return true
                 touching = false
-                if (animator.isRunning) return true
+                // A swipe during the step animation is not lost: finish the step, then play it.
+                if (animator.isRunning) animator.end()
                 val dx = event.x - touchX; val dy = event.y - touchY
                 if (hypot(dx, dy) < swipeThreshold) performClick()
                 else if (abs(dx) > abs(dy)) onSwipe?.invoke(0, if (dx > 0) 1 else -1)

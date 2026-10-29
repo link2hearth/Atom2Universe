@@ -16,6 +16,7 @@ import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.pipetap.PipeTapDifficulty
 import com.Atom2Universe.app.games.pipetap.PipeTapGame
 import com.Atom2Universe.app.games.pipetap.PipeTapView
@@ -66,6 +67,9 @@ class PipeTapWidgetView @JvmOverloads constructor(
     private val chipMap = mutableMapOf<PipeTapDifficulty, MaterialButton>()
     private var pendingDifficulty = PipeTapDifficulty.MEDIUM
 
+    // Déclaré avant init : startNewGame() et reload() s'en servent dès la construction.
+    private val stopAnimations = Runnable { if (game.solved) gameView.animationsActive = false }
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_pipetap_widget, this, true)
         gameView     = findViewById(R.id.pipetap_widget_view)
@@ -103,8 +107,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
                     showWinOverlay()
                     if (!game.rewardClaimed) {
                         game.rewardClaimed = true
-                        val reward = (game.difficulty.ordinal + 1) * 2
-                        NeutrinoRepository(context).addBalance(reward)
+                        NeutrinoRepository(context).addBalance(NeutrinoRewards.pipeTap(game.difficulty.ordinal))
                         GameStatsRepository(context).recordPipeTapHardWon()
                     }
                 }
@@ -170,11 +173,16 @@ class PipeTapWidgetView @JvmOverloads constructor(
     private fun showWinOverlay() {
         winMovesText.text = context.getString(R.string.pipetap_moves, game.moves)
         winOverlay.visibility = VISIBLE
+        // Partie gagnée : plus d'animation, une fois la dernière vague d'eau arrivée.
+        gameView.removeCallbacks(stopAnimations)
+        gameView.postDelayed(stopAnimations, gameView.flowSettlingDelay())
     }
 
     private fun startNewGame(diff: PipeTapDifficulty) {
         stopTimer()
         winOverlay.visibility = GONE
+        gameView.removeCallbacks(stopAnimations)
+        gameView.animationsActive = true
         game.newGame(diff)
         gameView.game = game
         gameView.refresh()
@@ -262,8 +270,11 @@ class PipeTapWidgetView @JvmOverloads constructor(
 
     fun reload() {
         stopTimer()
+        gameView.removeCallbacks(stopAnimations)
+        gameView.animationsActive = !game.solved
         if (game.solved) {
-            showWinOverlay()
+            winOverlay.visibility = VISIBLE
+            winMovesText.text = context.getString(R.string.pipetap_moves, game.moves)
         } else {
             winOverlay.visibility = GONE
             startTimer()

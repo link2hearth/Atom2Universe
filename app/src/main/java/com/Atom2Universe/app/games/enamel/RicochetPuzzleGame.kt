@@ -211,8 +211,10 @@ class RicochetPuzzleGame(seed: Int = 1, hard: Boolean = false) {
         }
     }
 
+    private val used = HashSet<PuzzlePuck>()
+
     private fun removePairs() {
-        val used = HashSet<PuzzlePuck>()
+        used.clear()
         for (i in pucks.indices) {
             val a = pucks[i]
             if (a.projectile || a in used) continue
@@ -224,7 +226,7 @@ class RicochetPuzzleGame(seed: Int = 1, hard: Boolean = false) {
                 break
             }
         }
-        pucks.removeAll(used)
+        if (used.isNotEmpty()) pucks.removeAll(used)
     }
 
     fun saveState(): String = listOf(RicochetPuzzleRules.VERSION, seed, if (hard) 1 else 0, shots,

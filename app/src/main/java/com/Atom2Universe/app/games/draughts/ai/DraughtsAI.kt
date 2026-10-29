@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import com.Atom2Universe.app.games.draughts.DraughtsDifficulty
 import com.Atom2Universe.app.games.draughts.DraughtsGame
 import com.Atom2Universe.app.games.draughts.DraughtsMove
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,8 +21,8 @@ class DraughtsAI(
         fun onAIError(@StringRes messageRes: Int)
     }
 
-    private val engine = DraughtsEngine()
     private var searchJob: Job? = null
+    private var searchEngine: DraughtsEngine? = null
 
     private val timeLimitMs = when (difficulty) {
         DraughtsDifficulty.TRAINING -> 1_000L
@@ -31,22 +32,34 @@ class DraughtsAI(
     }
 
     fun findMove(game: DraughtsGame, listener: AIListener, scope: CoroutineScope) {
-        searchJob?.cancel()
+        cancel()
+        // Un moteur neuf par recherche : une ancienne recherche qui finit ne touche pas la nouvelle
+        val engine = DraughtsEngine()
+        searchEngine = engine
+        val position = game.clone()
         searchJob = scope.launch(Dispatchers.Default) {
             try {
                 withContext(Dispatchers.Main) { listener.onAIThinking() }
                 val start = System.currentTimeMillis()
-                val move = engine.findBestMove(game.clone(), difficulty.depth, timeLimitMs)
+                val move = engine.findBestMove(position, difficulty.depth, timeLimitMs)
                 val elapsed = System.currentTimeMillis() - start
                 withContext(Dispatchers.Main) {
                     if (move != null) listener.onAIMoveFound(move, elapsed)
                     else listener.onAIError(R.string.draughts_ai_no_move)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) { listener.onAIError(R.string.games_ai_error) }
             }
         }
     }
 
-    fun cancel() { searchJob?.cancel() }
+    /** Arrête vraiment le calcul : le moteur lit ce drapeau pendant sa recherche. */
+    fun cancel() {
+        searchEngine?.cancelled = true
+        searchEngine = null
+        searchJob?.cancel()
+        searchJob = null
+    }
 }

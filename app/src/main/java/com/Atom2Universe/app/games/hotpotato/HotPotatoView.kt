@@ -122,6 +122,18 @@ class HotPotatoView @JvmOverloads constructor(
      */
     @Volatile private var phaseTapPending = false
 
+    /**
+     * Hors partie l'image ne change pas : le fil de jeu dessine une image puis dort sur
+     * [veille] jusqu'à ce qu'on lui en demande une autre (appui, pause, taille d'écran).
+     */
+    private val veille = Object()
+    private var frameRequested = true      // protégé par [veille]
+    private var screenKeptOn = false       // fil de jeu seulement
+
+    /** Tir relâché par l'interface ; seul le fil de jeu écrit vx/vy, voir [applyShots]. */
+    private class Shot(val potato: Potato, val dragX: Float, val dragY: Float)
+    private val shots = ArrayList<Shot>()
+
     private class Potato(var x: Float, var y: Float) {
         var vx = 0f
         var vy = 0f
@@ -145,7 +157,14 @@ class HotPotatoView @JvmOverloads constructor(
         var life = 0f
     }
 
-    private class HotSpot(var phase: Float, val baseX: Float, val span: Float)
+    private class HotSpot(var phase: Float, val baseX: Float, val span: Float) {
+        /** Lueur centrée sur l'origine, créée une fois : le dessin la déplace. */
+        val glow: Shader = RadialGradient(
+            0f, 0f, span,
+            Color.argb(150, 255, 140, 40), Color.TRANSPARENT,
+            Shader.TileMode.CLAMP
+        )
+    }
 
     private class FloatText(var x: Float, var y: Float, val text: String, val color: Int) {
         var life = 1.1f
@@ -226,6 +245,36 @@ class HotPotatoView @JvmOverloads constructor(
         setShadowLayer(3f, 2f, 2f, Color.parseColor("#AA000000"))
     }
 
+    // ── Objets de dessin réutilisés (rien n'est alloué par image) ─────────────────
+    private val tmpRect = RectF()
+    private val BODY_COLOR = Color.parseColor("#F0E6D2")
+    private var backgroundShader: Shader? = null
+    private var backgroundShaderH = -1f
+    private var plateShader: Shader? = null
+    private var plateShaderTop = -1f
+    private val emberGlow: Shader = RadialGradient(
+        0f, 0f, 16f, 0xFFFFE08A.toInt(), Color.TRANSPARENT, Shader.TileMode.CLAMP
+    )
+    private val creamPath = Path().apply {
+        moveTo(-PR * 0.5f, -PR * 0.7f)
+        cubicTo(-PR * 0.3f, -PR * 1.15f, PR * 0.3f, -PR * 1.15f, PR * 0.5f, -PR * 0.7f)
+        cubicTo(PR * 0.2f, -PR * 0.78f, -PR * 0.2f, -PR * 0.78f, -PR * 0.5f, -PR * 0.7f)
+        close()
+    }
+    private val eyeSides = intArrayOf(-1, 1)
+    private val cookStops = floatArrayOf(0f, 0.6f, 0.72f, 1f, 1.5f)
+    private val cookColors = intArrayOf(
+        0xFFF3E2B0.toInt(),  // crue, pâle
+        0xFFE0B05A.toInt(),  // début de coloration
+        0xFFC8893C.toInt(),  // cuit à point, doré
+        0xFF7A4A28.toInt(),  // trop cuit
+        0xFF35241A.toInt()   // carbonisé
+    )
+    private var hudScore = -1
+    private var hudScoreText = ""
+    private var hudBest = -1
+    private var hudBestText = ""
+
     init {
         holder.addCallback(this)
         isFocusable = true
@@ -253,6 +302,7 @@ class HotPotatoView @JvmOverloads constructor(
         PLATE_TOP = VH - PLATE_THICKNESS
         offX = 0f
         offY = 0f
+        requestFrame()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -264,19 +314,32 @@ class HotPotatoView @JvmOverloads constructor(
     private fun ensureThread() {
         if (hasSurface && resumed && gameThread?.isAlive != true) {
             running = true
+            requestFrame()
             gameThread = Thread(this, "HotPotatoThread").apply { start() }
         }
     }
 
     private fun stopThread() {
         running = false
+        synchronized(veille) { veille.notifyAll() }
         try { gameThread?.join(500) } catch (_: InterruptedException) {}
         gameThread = null
     }
 
+    /** Demande une image au fil de jeu et le réveille s'il dort hors partie. */
+    private fun requestFrame() {
+        synchronized(veille) {
+            frameRequested = true
+            veille.notifyAll()
+        }
+    }
+
     // ── Contrôles publics ─────────────────────────────────────────────────────────
     /** Ouvre la bulle de règles : une partie en cours se met en pause. */
-    fun pauseForRules() { if (phase == Phase.RUNNING) phase = Phase.PAUSED }
+    fun pauseForRules() {
+        if (phase == Phase.RUNNING) phase = Phase.PAUSED
+        requestFrame()
+    }
 
     fun togglePause() {
         phase = when (phase) {
@@ -284,12 +347,14 @@ class HotPotatoView @JvmOverloads constructor(
             Phase.PAUSED -> Phase.RUNNING
             else -> phase
         }
+        requestFrame()
     }
 
     fun pause() {
         if (phase == Phase.RUNNING) phase = Phase.PAUSED
         resumed = false
         stopThread()
+        keepScreenOn = false
     }
 
     fun resume() {
@@ -317,18 +382,55 @@ class HotPotatoView @JvmOverloads constructor(
                 }
             }
 
-            if (phase == Phase.RUNNING) update(dt)
-
-            // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
-            // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
-            // cœur à tourner à vide le temps d'un changement d'écran.
-            val c = lockFrame()
-            if (c != null) {
-                try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            val playing = phase == Phase.RUNNING
+            // L'écran ne reste allumé que pendant une partie en cours.
+            if (playing != screenKeptOn) {
+                screenKeptOn = playing
+                post { keepScreenOn = phase == Phase.RUNNING }
+            }
+            if (playing) {
+                applyShots()
+                update(dt)
+            } else {
+                synchronized(shots) { shots.clear() }
             }
 
-            val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
-            if (remainMs > 0) try { Thread.sleep(remainMs) } catch (_: InterruptedException) {}
+            var wantFrame = playing
+            if (!playing) synchronized(veille) { wantFrame = frameRequested; frameRequested = false }
+            var retry = false
+            if (wantFrame) {
+                // Une toile nulle veut dire que la surface n'est pas prête : on réessaie
+                // après le sommeil normal, sans tourner à vide.
+                val c = lockFrame()
+                if (c != null) {
+                    try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+                } else {
+                    retry = !playing
+                }
+            }
+
+            if (playing || retry) {
+                if (retry) synchronized(veille) { frameRequested = true }
+                val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
+                if (remainMs > 0) try { Thread.sleep(remainMs) } catch (_: InterruptedException) {}
+            } else {
+                // Menu, pause ou fin : l'image est posée, on dort jusqu'au prochain appui.
+                synchronized(veille) {
+                    if (running && !frameRequested && !phaseTapPending && phase != Phase.RUNNING) {
+                        try { veille.wait() } catch (_: InterruptedException) {}
+                    }
+                }
+                lastNano = System.nanoTime()
+            }
+        }
+    }
+
+    /** Joue les tirs relâchés depuis l'interface. **Sur le fil de jeu, et lui seul.** */
+    private fun applyShots() {
+        synchronized(shots) {
+            if (shots.isEmpty()) return
+            for (s in shots) if (s.potato in potatoes) applySling(s.potato, s.dragX, s.dragY)
+            shots.clear()
         }
     }
 
@@ -468,7 +570,7 @@ class HotPotatoView @JvmOverloads constructor(
             val mult = 1f + 0.5f * p.toppings.size
             val pts = (100 * mult).roundToInt()
             score += pts
-            val label = context.getString(R.string.hot_potato_perfect) + "  +$pts"
+            val label = context.getString(R.string.hot_potato_perfect_points, pts)
             addFloat((p.x).coerceIn(40f, VW - 40f), p.y, label, 0xFF66E08A.toInt())
         } else {
             val msg = if (p.cook < COOK_MIN) R.string.hot_potato_raw else R.string.hot_potato_burnt
@@ -562,6 +664,7 @@ class HotPotatoView @JvmOverloads constructor(
     private fun startGame() {
         potatoes.clear(); fallingToppings.clear(); embers.clear()
         hotSpots.clear(); floatTexts.clear()
+        synchronized(shots) { shots.clear() }
         elapsed = 0f; score = 0; strikes = 0; newBest = false
         potatoesSpawned = 0; spawnTimer = 0f; toppingTimer = 2.5f; emberTimer = 0f
         spawnPotato()
@@ -578,6 +681,7 @@ class HotPotatoView @JvmOverloads constructor(
                 if (phase != Phase.RUNNING) {
                     // On note, on ne touche à rien : voir [phaseTapPending].
                     phaseTapPending = true
+                    requestFrame()
                     return true
                 }
                 val idx = event.actionIndex
@@ -609,7 +713,9 @@ class HotPotatoView @JvmOverloads constructor(
                     }
                 }
                 if (a != null && phase == Phase.RUNNING) {
-                    applySling(a.potato, toVx(event.getX(idx)) - a.startX, toVy(event.getY(idx)) - a.startY)
+                    // Le tir est noté ici et joué par le fil de jeu : voir [applyShots].
+                    val shot = Shot(a.potato, toVx(event.getX(idx)) - a.startX, toVy(event.getY(idx)) - a.startY)
+                    synchronized(shots) { shots += shot }
                 }
             }
 
@@ -710,43 +816,52 @@ class HotPotatoView @JvmOverloads constructor(
     private fun buildGameOverMsg(): String {
         val retry = context.getString(R.string.hot_potato_tap_to_retry)
         return if (newBest) {
-            "★ ${context.getString(R.string.hot_potato_new_best)} ★\n$score\n$retry"
+            "${context.getString(R.string.hot_potato_new_best)}\n$score\n$retry"
         } else {
-            "${context.getString(R.string.hot_potato_score_label)}: $score\n$retry"
+            "${context.getString(R.string.hot_potato_score_format, score)}\n$retry"
         }
     }
 
     private fun drawBackground(canvas: Canvas) {
-        fillPaint.shader = LinearGradient(
-            0f, 0f, 0f, VH,
-            intArrayOf(0xFF2A1A10.toInt(), 0xFF4A2C18.toInt(), 0xFF6E3E1E.toInt()),
-            floatArrayOf(0f, 0.6f, 1f), Shader.TileMode.CLAMP
-        )
+        if (backgroundShader == null || backgroundShaderH != VH) {
+            backgroundShaderH = VH
+            backgroundShader = LinearGradient(
+                0f, 0f, 0f, VH,
+                intArrayOf(0xFF2A1A10.toInt(), 0xFF4A2C18.toInt(), 0xFF6E3E1E.toInt()),
+                floatArrayOf(0f, 0.6f, 1f), Shader.TileMode.CLAMP
+            )
+        }
+        fillPaint.shader = backgroundShader
         canvas.drawRect(0f, 0f, VW, VH, fillPaint)
         fillPaint.shader = null
     }
 
     private fun drawPlate(canvas: Canvas) {
-        // Lueur des points chauds (sous la surface)
+        // Lueur des points chauds (sous la surface) : la pulsation passe par l'opacité du pinceau.
+        val baseAlpha = fillPaint.alpha
         for (h in hotSpots) {
             val cx = h.baseX + sin(h.phase) * 90f
             val pulse = 0.6f + 0.4f * sin(h.phase * 3f)
-            fillPaint.shader = RadialGradient(
-                cx, PLATE_TOP, h.span,
-                Color.argb((150 * pulse).toInt(), 255, 140, 40), Color.TRANSPARENT,
-                Shader.TileMode.CLAMP
-            )
-            canvas.drawCircle(cx, PLATE_TOP, h.span, fillPaint)
+            fillPaint.shader = h.glow
+            fillPaint.alpha = (baseAlpha * pulse).toInt()
+            canvas.save()
+            canvas.translate(cx, PLATE_TOP)
+            canvas.drawCircle(0f, 0f, h.span, fillPaint)
+            canvas.restore()
             fillPaint.shader = null
         }
         // Corps de la plaque
         fillPaint.color = 0xFF1C1C22.toInt()
         canvas.drawRect(0f, PLATE_TOP, VW, VH, fillPaint)
         // Surface chauffée (dégradé rouge)
-        fillPaint.shader = LinearGradient(
-            0f, PLATE_TOP, 0f, PLATE_TOP + 14f,
-            0xFFFF7A2A.toInt(), 0xFF1C1C22.toInt(), Shader.TileMode.CLAMP
-        )
+        if (plateShader == null || plateShaderTop != PLATE_TOP) {
+            plateShaderTop = PLATE_TOP
+            plateShader = LinearGradient(
+                0f, PLATE_TOP, 0f, PLATE_TOP + 14f,
+                0xFFFF7A2A.toInt(), 0xFF1C1C22.toInt(), Shader.TileMode.CLAMP
+            )
+        }
+        fillPaint.shader = plateShader
         canvas.drawRect(0f, PLATE_TOP, VW, PLATE_TOP + 14f, fillPaint)
         fillPaint.shader = null
         // Liseré incandescent
@@ -765,14 +880,17 @@ class HotPotatoView @JvmOverloads constructor(
 
         // Ombre douce
         fillPaint.color = 0x33000000
-        canvas.drawOval(RectF(-PR * 1.02f, -PR * 0.86f + 4f, PR * 1.02f, PR * 0.94f + 4f), fillPaint)
+        tmpRect.set(-PR * 1.02f, -PR * 0.86f + 4f, PR * 1.02f, PR * 0.94f + 4f)
+        canvas.drawOval(tmpRect, fillPaint)
 
         // Corps
         fillPaint.color = potatoColor(p.cook)
-        canvas.drawOval(RectF(-PR * 1.02f, -PR * 0.86f, PR * 1.02f, PR * 0.94f), fillPaint)
+        tmpRect.set(-PR * 1.02f, -PR * 0.86f, PR * 1.02f, PR * 0.94f)
+        canvas.drawOval(tmpRect, fillPaint)
         // Reflet
         fillPaint.color = 0x33FFFFFF
-        canvas.drawOval(RectF(-PR * 0.6f, -PR * 0.62f, -PR * 0.05f, -PR * 0.12f), fillPaint)
+        tmpRect.set(-PR * 0.6f, -PR * 0.62f, -PR * 0.05f, -PR * 0.12f)
+        canvas.drawOval(tmpRect, fillPaint)
         // Petites taches
         fillPaint.color = (0x55000000.toInt() or (potatoColor(p.cook) and 0x00FFFFFF))
         canvas.drawCircle(PR * 0.45f, PR * 0.2f, 2.6f, fillPaint)
@@ -789,8 +907,8 @@ class HotPotatoView @JvmOverloads constructor(
     private fun drawToppings(canvas: Canvas, p: Potato) {
         if (Topping.BACON in p.toppings) {
             fillPaint.color = 0xFFB5462E.toInt()
-            val rect = RectF(-PR * 0.85f, -PR * 0.1f, PR * 0.85f, PR * 0.18f)
-            canvas.drawRoundRect(rect, 5f, 5f, fillPaint)
+            tmpRect.set(-PR * 0.85f, -PR * 0.1f, PR * 0.85f, PR * 0.18f)
+            canvas.drawRoundRect(tmpRect, 5f, 5f, fillPaint)
             fillPaint.color = 0xFFE8A38C.toInt()
             canvas.drawRect(-PR * 0.85f, -PR * 0.02f, PR * 0.85f, PR * 0.04f, fillPaint)
         }
@@ -802,12 +920,7 @@ class HotPotatoView @JvmOverloads constructor(
         }
         if (Topping.CREAM in p.toppings) {
             fillPaint.color = 0xFFFFFBF0.toInt()
-            val path = Path()
-            path.moveTo(-PR * 0.5f, -PR * 0.7f)
-            path.cubicTo(-PR * 0.3f, -PR * 1.15f, PR * 0.3f, -PR * 1.15f, PR * 0.5f, -PR * 0.7f)
-            path.cubicTo(PR * 0.2f, -PR * 0.78f, -PR * 0.2f, -PR * 0.78f, -PR * 0.5f, -PR * 0.7f)
-            path.close()
-            canvas.drawPath(path, fillPaint)
+            canvas.drawPath(creamPath, fillPaint)
             canvas.drawCircle(0f, -PR * 0.95f, PR * 0.14f, fillPaint)
         }
     }
@@ -827,7 +940,7 @@ class HotPotatoView @JvmOverloads constructor(
             strokePaint.color = Color.BLACK
             strokePaint.strokeWidth = 2.4f
             strokePaint.strokeCap = Paint.Cap.ROUND
-            for (s in intArrayOf(-1, 1)) {
+            for (s in eyeSides) {
                 val cx = s * eyeDx
                 canvas.drawArc(cx - 6f, eyeY - 6f, cx + 6f, eyeY + 6f, 200f, 140f, false, strokePaint)
             }
@@ -859,7 +972,8 @@ class HotPotatoView @JvmOverloads constructor(
             overcook > 0.35f -> {             // inquiète : bouche ouverte qui grandit
                 fillPaint.color = 0xFF5A1E1E.toInt()
                 val w = PR * (0.16f + 0.18f * overcook)
-                canvas.drawOval(RectF(-w, mouthY - w * 0.7f, w, mouthY + w), fillPaint)
+                tmpRect.set(-w, mouthY - w * 0.7f, w, mouthY + w)
+                canvas.drawOval(tmpRect, fillPaint)
             }
             inBand -> {                       // cuit à point : grand sourire
                 canvas.drawArc(-PR * 0.32f, mouthY - PR * 0.3f, PR * 0.32f, mouthY + PR * 0.18f,
@@ -874,7 +988,7 @@ class HotPotatoView @JvmOverloads constructor(
 
     private fun drawCookRing(canvas: Canvas, p: Potato) {
         val rr = PR * 1.5f
-        val rect = RectF(p.x - rr, p.y - rr, p.x + rr, p.y + rr)
+        val rect = tmpRect.apply { set(p.x - rr, p.y - rr, p.x + rr, p.y + rr) }
         ringBgPaint.strokeWidth = 5f
         canvas.drawArc(rect, 0f, 360f, false, ringBgPaint)
         // Zone cible (verte)
@@ -927,7 +1041,8 @@ class HotPotatoView @JvmOverloads constructor(
             }
             Topping.BACON -> {
                 fillPaint.color = 0xFFB5462E.toInt()
-                canvas.drawRoundRect(RectF(t.x - 11f, t.y - 5f, t.x + 11f, t.y + 5f), 4f, 4f, fillPaint)
+                tmpRect.set(t.x - 11f, t.y - 5f, t.x + 11f, t.y + 5f)
+                canvas.drawRoundRect(tmpRect, 4f, 4f, fillPaint)
                 fillPaint.color = 0xFFE8A38C.toInt()
                 canvas.drawRect(t.x - 11f, t.y - 1f, t.x + 11f, t.y + 1.5f, fillPaint)
             }
@@ -941,11 +1056,11 @@ class HotPotatoView @JvmOverloads constructor(
     }
 
     private fun drawEmber(canvas: Canvas, e: Ember) {
-        fillPaint.shader = RadialGradient(
-            e.x, e.y, 16f,
-            0xFFFFE08A.toInt(), Color.TRANSPARENT, Shader.TileMode.CLAMP
-        )
-        canvas.drawCircle(e.x, e.y, 16f, fillPaint)
+        fillPaint.shader = emberGlow
+        canvas.save()
+        canvas.translate(e.x, e.y)
+        canvas.drawCircle(0f, 0f, 16f, fillPaint)
+        canvas.restore()
         fillPaint.shader = null
         fillPaint.color = 0xFFFF6A2A.toInt()
         canvas.drawCircle(e.x, e.y, 5f, fillPaint)
@@ -958,20 +1073,27 @@ class HotPotatoView @JvmOverloads constructor(
             bodyPaint.textSize = 18f
             canvas.drawText(f.text, f.x, f.y, bodyPaint)
         }
-        bodyPaint.color = Color.parseColor("#F0E6D2")
+        bodyPaint.color = BODY_COLOR
     }
 
     private fun drawHud(canvas: Canvas) {
+        // Textes refaits seulement quand le score ou le record change.
+        if (hudScore != score) { hudScore = score; hudScoreText = score.toString() }
+        if (hudBest != bestScore) {
+            hudBest = bestScore
+            hudBestText = context.getString(R.string.hot_potato_best_format, bestScore)
+        }
         hudPaint.textSize = 24f
-        canvas.drawText("$score", 16f, 34f, hudPaint)
+        canvas.drawText(hudScoreText, 16f, 34f, hudPaint)
         hudPaint.textSize = 13f
-        canvas.drawText("${context.getString(R.string.hot_potato_best_label)}: $bestScore", 16f, 52f, hudPaint)
+        canvas.drawText(hudBestText, 16f, 52f, hudPaint)
         // Strikes (patates restantes)
         val left = MAX_STRIKES - strikes
         for (i in 0 until MAX_STRIKES) {
             val cx = VW - 24f - i * 28f
             fillPaint.color = if (i < left) 0xFFE0B05A.toInt() else 0x33FFFFFF
-            canvas.drawOval(RectF(cx - 11f, 16f, cx + 11f, 38f), fillPaint)
+            tmpRect.set(cx - 11f, 16f, cx + 11f, 38f)
+            canvas.drawOval(tmpRect, fillPaint)
         }
     }
 
@@ -982,7 +1104,7 @@ class HotPotatoView @JvmOverloads constructor(
         canvas.drawText(title, VW / 2f, VH * 0.36f, titlePaint)
         titlePaint.color = Color.WHITE
         bodyPaint.textSize = 17f
-        bodyPaint.color = Color.parseColor("#F0E6D2")
+        bodyPaint.color = BODY_COLOR
         var y = VH * 0.46f
         for (line in message.split("\n")) {
             canvas.drawText(line, VW / 2f, y, bodyPaint)
@@ -992,14 +1114,8 @@ class HotPotatoView @JvmOverloads constructor(
 
     // Couleur de la patate selon la cuisson : crue → dorée → cramée
     private fun potatoColor(cook: Float): Int {
-        val stops = floatArrayOf(0f, 0.6f, 0.72f, 1f, 1.5f)
-        val colors = intArrayOf(
-            0xFFF3E2B0.toInt(),  // crue, pâle
-            0xFFE0B05A.toInt(),  // début de coloration
-            0xFFC8893C.toInt(),  // cuit à point, doré
-            0xFF7A4A28.toInt(),  // trop cuit
-            0xFF35241A.toInt()   // carbonisé
-        )
+        val stops = cookStops
+        val colors = cookColors
         val c = cook.coerceIn(0f, 1.5f)
         var i = 0
         while (i < stops.size - 1 && c > stops[i + 1]) i++

@@ -6,6 +6,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.Semaphore
 import kotlin.math.*
 
 class HexRunnerView @JvmOverloads constructor(
@@ -53,9 +57,23 @@ class HexRunnerView @JvmOverloads constructor(
     @Volatile private var pendingStart = false
     @Volatile private var pendingNumFaces = 6
 
-    /** Vrai pendant la lecture des règles : la partie est figée, l'affichage continue. */
+    /** Vrai pendant la lecture des règles ou après une sortie de l'appli : la partie est figée. */
     @Volatile var held = false
+        set(value) { field = value; wake() }
     private var thread: Thread? = null
+
+    // Le fil de jeu attend ce signal quand rien ne bouge (accueil, fin, partie figée).
+    private val wakeSignal = Semaphore(0)
+    // Gestes notés par le fil UI et appliqués par le fil de jeu (vrai = vers la gauche).
+    private val pendingTurns = ConcurrentLinkedQueue<Boolean>()
+    @Volatile private var playing = false
+    private var keptAwake = false
+    // Neutrinos déjà versés pour la partie en cours (protégé par synchronized(game)).
+    private var paidReward = 0
+    private val vertexCos = FloatArray(16)
+    private val vertexSin = FloatArray(16)
+    private var hudSeconds = -1L
+    private var hudText = ""
 
     private val outgoingRings = ArrayDeque<HexRunnerGame.PassedRingSnapshot>(7)
 
@@ -86,35 +104,49 @@ class HexRunnerView @JvmOverloads constructor(
         thread = Thread(this, "hex-runner").also { it.start() }
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, f: Int, w: Int, h: Int) {}
+    override fun surfaceChanged(holder: SurfaceHolder, f: Int, w: Int, h: Int) { wake() }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         running = false
+        wake()
         thread?.join(2000)
     }
 
     override fun run() {
         var lastNanos = System.nanoTime()
+        var carryNanos = 0L
+        var gameOver = false
         while (running) {
             val now   = System.nanoTime()
-            val dtMs  = ((now - lastNanos) / 1_000_000L).coerceAtMost(50L)
+            // Les fractions de milliseconde sont reportées à l'image suivante.
+            val spentNanos = now - lastNanos + carryNanos
             lastNanos = now
+            var dtMs = spentNanos / 1_000_000L
+            if (dtMs > 50L) { dtMs = 50L; carryNanos = 0L } else carryNanos = spentNanos - dtMs * 1_000_000L
 
-            if (pendingStart) {
-                pendingStart = false
-                gameOverFired = false
-                outgoingRings.clear()
-                game.numFaces = pendingNumFaces
-                game.start()
-            }
-            if (game.isRunning && !held) {
-                game.update(dtMs)
-                colorTime = (colorTime + dtMs * 0.018f) % 360f
-                if (game.isGameOver && !gameOverFired) {
-                    gameOverFired = true
-                    onGameOver?.invoke()
+            synchronized(game) {
+                if (pendingStart) {
+                    pendingStart = false
+                    gameOverFired = false
+                    outgoingRings.clear()
+                    game.numFaces = pendingNumFaces
+                    game.start()
+                    paidReward = 0
+                }
+                while (true) {
+                    val left = pendingTurns.poll() ?: break
+                    if (game.isRunning && !held) { if (left) game.rotateLeft() else game.rotateRight() }
+                }
+                if (game.isRunning && !held) {
+                    game.update(dtMs)
+                    colorTime = (colorTime + dtMs * 0.018f) % 360f
+                    if (game.isGameOver && !gameOverFired) {
+                        gameOverFired = true
+                        gameOver = true
+                    }
                 }
             }
+            if (gameOver) { gameOver = false; onGameOver?.invoke() }
 
             while (game.justPassedRings.isNotEmpty()) {
                 outgoingRings.addFirst(game.justPassedRings.removeFirst())
@@ -123,26 +155,64 @@ class HexRunnerView @JvmOverloads constructor(
 
             val canvas = lockFrame()
             if (canvas != null) try { drawGame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+            updateKeepAwake()
 
-            val frameMs = (System.nanoTime() - now) / 1_000_000L
-            if (frameMs < 16L) Thread.sleep(16L - frameMs)
+            if (idle()) {
+                // Scène figée : le fil dort jusqu'au prochain geste, départ ou retour.
+                waitForWake()
+                lastNanos = System.nanoTime(); carryNanos = 0L
+            } else {
+                val frameMs = (System.nanoTime() - now) / 1_000_000L
+                if (frameMs < 16L) Thread.sleep(16L - frameMs)
+            }
         }
+        if (keptAwake) { keptAwake = false; post { keepScreenOn = false } }
+    }
+
+    private fun idle() = !pendingStart && pendingTurns.isEmpty() && (!game.isRunning || held)
+
+    private fun waitForWake() {
+        wakeSignal.drainPermits()
+        if (running && idle()) try { wakeSignal.acquire() } catch (_: InterruptedException) {}
+    }
+
+    private fun wake() {
+        if (wakeSignal.availablePermits() == 0) wakeSignal.release()
+    }
+
+    /** L'écran reste allumé pendant une partie en cours seulement. */
+    private fun updateKeepAwake() {
+        playing = game.isRunning
+        val awake = game.isRunning && !held
+        if (awake != keptAwake) { keptAwake = awake; post { keepScreenOn = awake } }
     }
 
     fun startGame(numFaces: Int) {
         pendingNumFaces = numFaces
         pendingStart = true
+        held = false
+    }
+
+    /** Neutrinos du temps joué pas encore versés : à la fin de partie et en quittant. */
+    fun collectUnpaidReward(): Int = synchronized(game) {
+        val owed = NeutrinoRewards.perTime(game.score) - paidReward
+        if (owed > 0) { paidReward += owed; owed } else 0
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (!game.isRunning) return true
-        when (e.action) {
-            MotionEvent.ACTION_DOWN -> { lastSwipeX = e.x }
+        when (e.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                lastSwipeX = e.x
+                // Une partie figée par une sortie de l'appli reprend d'un toucher.
+                if (held && playing) held = false
+            }
             MotionEvent.ACTION_MOVE -> {
+                if (!playing || held) return true
                 val dx = e.x - lastSwipeX
                 if (abs(dx) > 50f) {
-                    if (dx < 0) game.rotateLeft() else game.rotateRight()
+                    pendingTurns.add(dx < 0)
                     lastSwipeX = e.x
+                    wake()
                 }
             }
         }
@@ -159,6 +229,12 @@ class HexRunnerView @JvmOverloads constructor(
         val pR     = minOf(cx, cy) * 0.88f
         val minR   = pR * 0.05f
         val angle  = computeHexAngle()
+        // Sommets du polygone : mêmes angles pour tous les anneaux de l'image.
+        val faceDeg = 360.0 / game.numFaces
+        for (v in 0..game.numFaces) {
+            val a = rad((v + 1) * faceDeg + angle)
+            vertexCos[v] = cos(a); vertexSin[v] = sin(a)
+        }
 
         paint.style = Paint.Style.FILL
         paint.color = colCenter
@@ -181,7 +257,7 @@ class HexRunnerView @JvmOverloads constructor(
             val rR = Color.red(ringRgb); val rG = Color.green(ringRgb); val rB = Color.blue(ringRgb)
 
             for (face in 0 until game.numFaces) {
-                buildTrap(face, rInner, rOuter, cx, cy, angle)
+                buildTrap(face, rInner, rOuter, cx, cy)
                 paint.style = Paint.Style.FILL
                 val isGapFace = !ring.solid[face]
                 paint.color = Color.argb(lerp(40f, 230f, proximity).toInt(), rR, rG, rB)
@@ -192,7 +268,7 @@ class HexRunnerView @JvmOverloads constructor(
                 canvas.drawPath(path, paint)
                 if (isGapFace) {
                     val rBandOuter = rInner + (rOuter - rInner) * 0.22f
-                    buildTrap(face, rInner, rBandOuter, cx, cy, angle)
+                    buildTrap(face, rInner, rBandOuter, cx, cy)
                     paint.style = Paint.Style.FILL
                     paint.color = Color.argb(lerp(80f, 240f, proximity).toInt(), 210, 30, 30)
                     canvas.drawPath(path, paint)
@@ -215,7 +291,7 @@ class HexRunnerView @JvmOverloads constructor(
             val ringRgb = Color.HSVToColor(hsvBuf)
             val rR = Color.red(ringRgb); val rG = Color.green(ringRgb); val rB = Color.blue(ringRgb)
             for (face in 0 until game.numFaces) {
-                buildTrap(face, rInner, rOuter, cx, cy, angle)
+                buildTrap(face, rInner, rOuter, cx, cy)
                 paint.style = Paint.Style.FILL
                 paint.color = Color.argb(230, rR, rG, rB)
                 canvas.drawPath(path, paint)
@@ -225,7 +301,7 @@ class HexRunnerView @JvmOverloads constructor(
                 canvas.drawPath(path, paint)
                 if (!snapshot.solid[face]) {
                     val rBandOuter = rInner + (rOuter - rInner) * 0.22f
-                    buildTrap(face, rInner, rBandOuter, cx, cy, angle)
+                    buildTrap(face, rInner, rBandOuter, cx, cy)
                     paint.style = Paint.Style.FILL
                     paint.color = Color.argb(240, 210, 30, 30)
                     canvas.drawPath(path, paint)
@@ -269,43 +345,28 @@ class HexRunnerView @JvmOverloads constructor(
         canvas.drawPath(path, paint)
     }
 
+    /** Trapèze de la face [faceIdx] ; sommets calculés une fois par image dans [drawGame]. */
     private fun buildTrap(
         faceIdx: Int, rInner: Float, rOuter: Float,
-        cx: Float, cy: Float, hexAngleDeg: Double
+        cx: Float, cy: Float
     ) {
-        val faceDeg = 360.0 / game.numFaces
-        val a1 = rad((faceIdx + 1) * faceDeg + hexAngleDeg)
-        val a2 = rad((faceIdx + 2) * faceDeg + hexAngleDeg)
+        val c1 = vertexCos[faceIdx]; val s1 = vertexSin[faceIdx]
+        val c2 = vertexCos[faceIdx + 1]; val s2 = vertexSin[faceIdx + 1]
         path.reset()
-        path.moveTo(cx + rInner * cos(a1), cy + rInner * sin(a1))
-        path.lineTo(cx + rInner * cos(a2), cy + rInner * sin(a2))
-        path.lineTo(cx + rOuter * cos(a2), cy + rOuter * sin(a2))
-        path.lineTo(cx + rOuter * cos(a1), cy + rOuter * sin(a1))
+        path.moveTo(cx + rInner * c1, cy + rInner * s1)
+        path.lineTo(cx + rInner * c2, cy + rInner * s2)
+        path.lineTo(cx + rOuter * c2, cy + rOuter * s2)
+        path.lineTo(cx + rOuter * c1, cy + rOuter * s1)
         path.close()
-    }
-
-    private fun drawPolygonOutline(canvas: Canvas, cx: Float, cy: Float, r: Float, hexAngleDeg: Double) {
-        val faceDeg = 360.0 / game.numFaces
-        path.reset()
-        for (v in 0 until game.numFaces) {
-            val a = rad((v + 1) * faceDeg + hexAngleDeg)
-            if (v == 0) path.moveTo(cx + r * cos(a), cy + r * sin(a))
-            else        path.lineTo(cx + r * cos(a), cy + r * sin(a))
-        }
-        path.close()
-        canvas.drawPath(path, paint)
     }
 
     private fun drawHUD(canvas: Canvas, cx: Float) {
         if (!game.isRunning && !game.isGameOver) return
         scorePaint.textSize = width * 0.06f
         scorePaint.color    = colScore
-        canvas.drawText(formatTime(game.score / 1000), cx, width * 0.10f, scorePaint)
-    }
-
-    private fun formatTime(secs: Long): String {
-        val m = secs / 60; val s = secs % 60
-        return if (m > 0) "%d:%02d".format(m, s) else "$s s"
+        val secs = game.score / 1000
+        if (secs != hudSeconds) { hudSeconds = secs; hudText = formatTime(context, secs) }
+        canvas.drawText(hudText, cx, width * 0.10f, scorePaint)
     }
 
     private fun ringFrac(i: Int, N: Int): Float =
@@ -332,5 +393,14 @@ class HexRunnerView @JvmOverloads constructor(
     private fun easeInOut(t: Float): Double {
         val c = t.toDouble()
         return if (c < 0.5) 2.0 * c * c else -1.0 + (4.0 - 2.0 * c) * c
+    }
+
+    companion object {
+        /** Durée affichée « 1:05 » ou « 42 s », partagée avec l'écran de fin. */
+        fun formatTime(context: Context, secs: Long): String {
+            val m = secs / 60; val s = secs % 60
+            return if (m > 0) context.getString(R.string.hex_runner_time_minutes, m, s)
+            else context.getString(R.string.hex_runner_time_seconds, s)
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.Atom2Universe.app.games.draughts.DraughtsMove
 import com.Atom2Universe.app.games.draughts.DraughtsPieceColor
 import kotlin.math.abs
 
+/** Un moteur par recherche : son état (chrono, nœuds, abandon) n'est jamais partagé. */
 class DraughtsEngine {
 
     companion object {
@@ -17,6 +18,9 @@ class DraughtsEngine {
     private var timeLimitMs = 10_000L
     private var timedOut = false
     private var nodeCount = 0
+
+    /** Levé depuis un autre fil pour abandonner la recherche au plus vite. */
+    @Volatile var cancelled = false
 
     fun findBestMove(game: DraughtsGame, depth: Int, timeLimitMs: Long = 10_000L): DraughtsMove? {
         this.startTimeMs = System.currentTimeMillis()
@@ -120,6 +124,6 @@ class DraughtsEngine {
     // Check time every 2048 nodes to amortize the syscall overhead across the minimax tree.
     private fun isTimedOut(): Boolean {
         if (++nodeCount and 2047 != 0) return false
-        return System.currentTimeMillis() - startTimeMs >= timeLimitMs
+        return cancelled || System.currentTimeMillis() - startTimeMs >= timeLimitMs
     }
 }

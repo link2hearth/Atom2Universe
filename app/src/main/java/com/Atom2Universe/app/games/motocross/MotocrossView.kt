@@ -35,6 +35,8 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var finished = prefs.getBoolean("trial_finished", false)
     private var best = prefs.getInt("trial_best", 0)
     private var running = false
+    // Rappel d'image posté ; il s'arrête une fois la chute ou l'arrivée figée.
+    private var looping = false
     private var lastFrame = 0L
     private var accumulator = 0f
     private var hudClock = 0f
@@ -54,6 +56,23 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val path = Path()
     private var sky: Shader? = null
     private val dp = resources.displayMetrics.density
+    private var checkpointLabels = labelsFor(track)
+    private val finishFlag = context.getString(R.string.motocross_finish_flag)
+    private val controlsHint = context.getString(R.string.motocross_controls_hint)
+    private val crashedTitle = context.getString(R.string.motocross_crashed)
+    private val finishedTitle = context.getString(R.string.motocross_finished)
+    private val nextHint = context.getString(R.string.motocross_next_hint)
+    private val retryHint = context.getString(R.string.motocross_retry_hint)
+    private val transferSign = context.getString(R.string.motocross_transfer_sign)
+    private val loopSign = context.getString(R.string.motocross_loop_sign)
+    private val bridgeSign = context.getString(R.string.motocross_bridge_sign)
+    private val transferHint = context.getString(R.string.motocross_transfer_hint)
+    private val loopHint = context.getString(R.string.motocross_loop_hint)
+    private val bridgeHint = context.getString(R.string.motocross_bridge_hint)
+    private var savedNoticeFor = -1
+    private var savedNotice = ""
+    private var summaryKey = -1L
+    private var summary = ""
 
     init {
         isFocusable = true
@@ -83,16 +102,30 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun resume() {
         if (running) return
-        running = true; lastFrame = 0L; accumulator = 0f
-        Choreographer.getInstance().postFrameCallback(this)
+        running = true; accumulator = 0f
+        wake()
         reportStats()
     }
 
     fun pause() {
-        running = false
+        running = false; looping = false
         Choreographer.getInstance().removeFrameCallback(this)
         clearControls()
         save()
+        updateKeepAwake()
+    }
+
+    /** Relance la boucle après une scène figée (chute ou arrivée). */
+    private fun wake() {
+        if (running && !looping) {
+            looping = true; lastFrame = 0L
+            Choreographer.getInstance().postFrameCallback(this)
+        }
+        updateKeepAwake()
+    }
+
+    private fun updateKeepAwake() {
+        keepScreenOn = running && !bike.crashed && !finished
     }
 
     override fun onDetachedFromWindow() { pause(); super.onDetachedFromWindow() }
@@ -104,7 +137,7 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         } else if (!bike.crashed) faults++
         bike.reset(track.checkpoints[checkpoint], track)
         clearControls(); crashAge = 0f; accumulator = 0f; checkpointNotice = 0f
-        snapCamera(); save(); reportStats(); invalidate()
+        snapCamera(); save(); reportStats(); invalidate(); wake()
     }
 
     fun restartTrack() {
@@ -112,18 +145,23 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         bike.reset(track.checkpoints[0], track)
         clearControls(); accumulator = 0f; crashAge = 0f; checkpointNotice = 0f
         // frontier/paid restent conservés : recommencer ne duplique pas les gains.
-        snapCamera(); save(); reportStats(); invalidate()
+        snapCamera(); save(); reportStats(); invalidate(); wake()
     }
 
     fun newTrack() {
         var seed = Random.nextInt(100000, 1000000)
         if (seed == track.seed) seed = if (seed == 999999) 100000 else seed + 1
         track = MotocrossTrack(seed)
+        checkpointLabels = labelsFor(track)
         checkpoint = 0; elapsed = 0f; faults = 0; frontier = 0f; paid = 0
         finished = false; checkpointNotice = 0f; crashAge = 0f
         clearControls(); accumulator = 0f
         bike.reset(track.checkpoints[0], track)
-        snapCamera(); save(); reportStats(); invalidate()
+        snapCamera(); save(); reportStats(); invalidate(); wake()
+    }
+
+    private fun labelsFor(track: MotocrossTrack) = Array(track.checkpoints.size) {
+        context.getString(R.string.motocross_checkpoint_number, it)
     }
 
     private fun snapCamera() {
@@ -132,20 +170,24 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun doFrame(frameTimeNanos: Long) {
-        if (!running) return
+        if (!running) { looping = false; return }
+        // Dessin plafonné à ~60 i/s : l'image sautée reporte son temps sur la suivante.
+        if (lastFrame != 0L && frameTimeNanos - lastFrame < MIN_FRAME_NANOS) {
+            Choreographer.getInstance().postFrameCallback(this); return
+        }
         val dt = if (lastFrame == 0L) 0f else ((frameTimeNanos - lastFrame) / 1e9f).coerceIn(0f, .066f)
         lastFrame = frameTimeNanos
         accumulator = min(accumulator + dt, .066f)
         checkpointNotice = max(0f, checkpointNotice - dt)
-        if (bike.crashed) crashAge += dt
+        if (bike.crashed || finished) crashAge += dt
         while (accumulator >= STEP) {
             if (!finished && !bike.crashed) {
                 val lean = (if (leanForward) 1f else 0f) - (if (leanBack) 1f else 0f)
                 if (throttle || brake || lean != 0f || elapsed > 0f) elapsed += STEP
                 bike.step(STEP, throttle, brake, lean, track)
                 if (bike.crashed) {
-                    faults++; crashAge = 0f; clearControls(); save()
-                    ViewCompat.setStateDescription(this, context.getString(R.string.motocross_crashed))
+                    faults++; crashAge = 0f; clearControls(); save(); updateKeepAwake()
+                    ViewCompat.setStateDescription(this, crashedTitle)
                 } else updateProgress()
             }
             accumulator -= STEP
@@ -171,7 +213,10 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         hudClock += dt
         if (hudClock >= .1f) { hudClock = 0f; reportStats() }
         invalidate()
-        Choreographer.getInstance().postFrameCallback(this)
+        // Caméra posée : la scène figée n'a plus besoin d'être redessinée.
+        if ((bike.crashed || finished) && crashAge > SETTLE_SECONDS) {
+            looping = false; reportStats()
+        } else Choreographer.getInstance().postFrameCallback(this)
     }
 
     private fun updateProgress() {
@@ -192,8 +237,8 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
             onReward?.invoke(difference)
         }
         if (bike.x >= track.finishX && (bike.rear.grounded || bike.front.grounded)) {
-            finished = true; clearControls(); save(); reportStats()
-            ViewCompat.setStateDescription(this, context.getString(R.string.motocross_finished))
+            finished = true; crashAge = 0f; clearControls(); save(); reportStats(); updateKeepAwake()
+            ViewCompat.setStateDescription(this, finishedTitle)
         }
     }
 
@@ -272,7 +317,7 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 path.lineTo(screenX, screenY)
             }
             path.lineTo(width + stride, height.toFloat()); path.close()
-            fill(intArrayOf(Color.rgb(82, 113, 128), Color.rgb(58, 90, 106), Color.rgb(36, 65, 81))[layer])
+            fill(RIDGES[layer])
             canvas.drawPath(path, ink)
         }
     }
@@ -350,7 +395,8 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
         }
 
-        for ((index, x) in track.checkpoints.withIndex()) {
+        for (index in track.checkpoints.indices) {
+            val x = track.checkpoints[index]
             if (x < left || x > right) continue
             val active = index <= checkpoint
             val color = if (active) MINT else Color.rgb(195, 204, 208)
@@ -358,7 +404,7 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
             fill(color)
             path.reset(); path.moveTo(x, 1.55f); path.lineTo(x + .65f, 1.37f)
             path.lineTo(x, 1.13f); path.close(); canvas.drawPath(path, ink)
-            worldText(canvas, context.getString(R.string.motocross_checkpoint_number, index), x, 1.8f, .25f, color)
+            worldText(canvas, checkpointLabels[index], x, 1.8f, .25f, color)
         }
         if (track.finishX in left..right) {
             val x = track.finishX
@@ -367,10 +413,12 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 fill(if ((row + col) % 2 == 0) WHITE else DARK)
                 canvas.drawRect(x + col * .2f, 2.1f + row * .2f, x + (col + 1) * .2f, 2.3f + row * .2f, ink)
             }
-            worldText(canvas, context.getString(R.string.motocross_finish_flag), x, 3f, .3f, WHITE)
+            worldText(canvas, finishFlag, x, 3f, .3f, WHITE)
         }
         // Repères d'obstacles : nombre de chevrons = difficulté, avant la montée.
-        track.sections.filter { it.start in left..right && it.kind != MotocrossTrack.Kind.REST }.forEach { section ->
+        for (s in track.sections.indices) {
+            val section = track.sections[s]
+            if (section.start !in left..right || section.kind == MotocrossTrack.Kind.REST) continue
             val x = section.start + 2f
             line(canvas, x, 0f, x, .65f, Color.rgb(134, 112, 79), .06f)
             fill(DARK); canvas.drawRoundRect(x - .34f, .55f, x + .34f, .93f, .05f, .05f, ink)
@@ -405,15 +453,17 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 // Le retour est dessiné après la montée, avec un liseré sombre qui
                 // sépare les deux plans au croisement. La physique suit le même ordre.
                 val top = road.topIndex
-                for (range in listOf(0..top, top..road.points.lastIndex)) {
+                for (half in 0..1) {
+                    val from = if (half == 0) 0 else top
+                    val to = if (half == 0) top else road.points.lastIndex
                     path.reset()
-                    for (i in range) {
+                    for (i in from..to) {
                         val p = road.points[i]
-                        if (i == range.first) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
+                        if (i == from) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
                     }
                     ink.style = Paint.Style.STROKE; ink.strokeWidth = .42f; ink.color = DARK
                     canvas.drawPath(path, ink)
-                    ink.strokeWidth = .23f; ink.color = if (range.first == 0) STEEL else MINT
+                    ink.strokeWidth = .23f; ink.color = if (from == 0) STEEL else MINT
                     canvas.drawPath(path, ink)
                     ink.strokeWidth = .045f; ink.color = WHITE
                     canvas.drawPath(path, ink)
@@ -432,7 +482,8 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 continue
             }
             path.reset()
-            for ((i, p) in road.points.withIndex()) {
+            for (i in road.points.indices) {
+                val p = road.points[i]
                 if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
             }
             ink.style = Paint.Style.STROKE; ink.strokeWidth = .16f; ink.color = STEEL
@@ -444,17 +495,18 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 if (p.x in left..right) circle(canvas, p.x, p.y, .04f, DARK)
             }
         }
-        for (section in track.sections) {
-            if (section.kind !in listOf(MotocrossTrack.Kind.BRIDGE, MotocrossTrack.Kind.LOOP, MotocrossTrack.Kind.TRANSFER) ||
-                section.start !in left..right) continue
+        for (s in track.sections.indices) {
+            val section = track.sections[s]
+            val sign = when (section.kind) {
+                MotocrossTrack.Kind.TRANSFER -> transferSign
+                MotocrossTrack.Kind.LOOP -> loopSign
+                MotocrossTrack.Kind.BRIDGE -> bridgeSign
+                else -> continue
+            }
+            if (section.start !in left..right) continue
             val x = section.start + 8f
             line(canvas, x, 0f, x, 2.3f, STEEL, .07f)
-            val sign = when (section.kind) {
-                MotocrossTrack.Kind.TRANSFER -> R.string.motocross_transfer_sign
-                MotocrossTrack.Kind.LOOP -> R.string.motocross_loop_sign
-                else -> R.string.motocross_bridge_sign
-            }
-            worldText(canvas, context.getString(sign), x, 2.6f, .55f, MINT)
+            worldText(canvas, sign, x, 2.6f, .55f, MINT)
         }
     }
 
@@ -490,11 +542,13 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         val progress = ((bike.x - 3f) / courseLength()).coerceIn(0f, 1f)
         canvas.drawRoundRect(margin, 10f * dp, margin + barWidth * progress, 15f * dp, 3f * dp, 3f * dp, ink)
         if (checkpointNotice > 0f && !bike.crashed && !finished) {
-            screenText(canvas, context.getString(R.string.motocross_checkpoint_saved, checkpoint),
-                width / 2f, 43f * dp, 14f * dp, MINT)
+            if (savedNoticeFor != checkpoint) {
+                savedNoticeFor = checkpoint
+                savedNotice = context.getString(R.string.motocross_checkpoint_saved, checkpoint)
+            }
+            screenText(canvas, savedNotice, width / 2f, 43f * dp, 14f * dp, MINT)
         } else if (bike.x < 11f && !bike.crashed && !finished) {
-            screenText(canvas, context.getString(R.string.motocross_controls_hint),
-                width / 2f, 43f * dp, 12f * dp, WHITE)
+            screenText(canvas, controlsHint, width / 2f, 43f * dp, 12f * dp, WHITE)
         } else if (!bike.crashed && !finished) {
             val feature = track.sections.firstOrNull {
                 bike.x >= it.start + 5f && bike.x <= it.start + 48f &&
@@ -503,24 +557,27 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
             if (feature != null) {
                 val hint = when (feature.kind) {
-                    MotocrossTrack.Kind.TRANSFER -> R.string.motocross_transfer_hint
-                    MotocrossTrack.Kind.LOOP -> R.string.motocross_loop_hint
-                    else -> R.string.motocross_bridge_hint
+                    MotocrossTrack.Kind.TRANSFER -> transferHint
+                    MotocrossTrack.Kind.LOOP -> loopHint
+                    else -> bridgeHint
                 }
-                screenText(canvas, context.getString(hint),
-                    width / 2f, 43f * dp, 12f * dp, WHITE)
+                screenText(canvas, hint, width / 2f, 43f * dp, 12f * dp, WHITE)
             }
         }
         if (bike.crashed || finished) {
             fill(Color.argb(180, 10, 20, 32))
             canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), ink)
-            val title = context.getString(if (finished) R.string.motocross_finished else R.string.motocross_crashed)
+            val title = if (finished) finishedTitle else crashedTitle
             val titleSize = min(27f * dp, width / 14f)
             screenText(canvas, title, width / 2f, height * .36f, titleSize, if (finished) MINT else ORANGE)
-            screenText(canvas, context.getString(R.string.motocross_run_summary, elapsed.toInt() / 60,
-                elapsed.toInt() % 60, faults), width / 2f, height * .50f, 16f * dp, WHITE)
-            val hint = context.getString(if (finished) R.string.motocross_next_hint else R.string.motocross_retry_hint)
-            screenText(canvas, hint, width / 2f, height * .65f, 13f * dp, WHITE)
+            val seconds = elapsed.toInt()
+            val key = seconds.toLong() * 100_000L + faults
+            if (key != summaryKey) {
+                summaryKey = key
+                summary = context.getString(R.string.motocross_run_summary, seconds / 60, seconds % 60, faults)
+            }
+            screenText(canvas, summary, width / 2f, height * .50f, 16f * dp, WHITE)
+            screenText(canvas, if (finished) nextHint else retryHint, width / 2f, height * .65f, 13f * dp, WHITE)
         }
     }
 
@@ -533,6 +590,9 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private companion object {
         const val STEP = 1f / 240f
+        const val MIN_FRAME_NANOS = 15_000_000L
+        const val SETTLE_SECONDS = 2f
+        val RIDGES = intArrayOf(Color.rgb(82, 113, 128), Color.rgb(58, 90, 106), Color.rgb(36, 65, 81))
         val DARK = Color.rgb(17, 27, 39)
         val WHITE = Color.rgb(235, 242, 242)
         val STEEL = Color.rgb(151, 174, 187)

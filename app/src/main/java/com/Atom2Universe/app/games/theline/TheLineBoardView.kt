@@ -28,7 +28,7 @@ class TheLineBoardView @JvmOverloads constructor(
 
     var game: TheLineGame? = null
         private set
-    /** Un tracé a changé : c'est le moment de sauvegarder. */
+    /** Un tracé a changé : c'est le moment de sauvegarder (au lever du doigt et à la victoire). */
     var onBoardChanged: (() -> Unit)? = null
     /** La grille vient d'être résolue (avant l'animation du courant). */
     var onSolved: (() -> Unit)? = null
@@ -53,12 +53,24 @@ class TheLineBoardView @JvmOverloads constructor(
     private val tracePath = Path()
     private val powerPath = Path()
 
+    /** Le tracé a bougé depuis la dernière sauvegarde : on sauvegarde au lever du doigt. */
+    private var unsaved = false
+    /** Dernier geste, en temps d'horloge : la borne suivante ne respire que peu après. */
+    private var lastTouchAt = 0L
+    private val visited = HashSet<TLCoord>()
+    private var visitedDirty = true
+    // Une seule image programmée à la fois : les invalidations du doigt ne créent pas de boucles en plus.
+    private val nextFrame = Runnable { invalidate() }
+
     fun loadGame(g: TheLineGame) {
         game = g
         activePath = -1
         solved = g.isComplete()
         powerStart = -1L
         powerDone = solved
+        unsaved = false
+        visitedDirty = true
+        lastTouchAt = SystemClock.uptimeMillis()
         rebake()
         invalidate()
     }
@@ -66,6 +78,7 @@ class TheLineBoardView @JvmOverloads constructor(
     /** Pour une grille reprise déjà résolue : le courant est déjà passé. */
     fun showSolved() {
         solved = true; powerDone = true; powerStart = -1L
+        visitedDirty = true
         invalidate()
     }
 
@@ -75,6 +88,9 @@ class TheLineBoardView @JvmOverloads constructor(
         solved = g.isComplete()
         powerDone = solved; powerStart = -1L
         activePath = -1
+        unsaved = false
+        visitedDirty = true
+        lastTouchAt = SystemClock.uptimeMillis()
         invalidate()
     }
 
@@ -85,6 +101,7 @@ class TheLineBoardView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        removeCallbacks(nextFrame)
         baked?.recycle(); baked = null
     }
 
@@ -152,9 +169,13 @@ class TheLineBoardView @JvmOverloads constructor(
         if (p.mode == TheLineMode.SINGLE) drawTrack(canvas, g, p, power, now)
         else drawWires(canvas, g, power)
 
-        // La borne suivante respire tant que la partie dure : il y a toujours une animation.
-        if (!solved && p.mode == TheLineMode.SINGLE) animating = true
-        if (animating) postInvalidateDelayed(FRAME_MS)
+        // La borne suivante respire pendant la partie, plus lentement que les autres
+        // animations, et s'arrête quelques secondes après le dernier geste.
+        val breathing = !solved && p.mode == TheLineMode.SINGLE && now - lastTouchAt < BREATH_IDLE_MS
+        if (animating || breathing) {
+            removeCallbacks(nextFrame)
+            postDelayed(nextFrame, if (animating) FRAME_MS else BREATH_FRAME_MS)
+        }
     }
 
     private fun buildPath(seq: List<TLCoord>, into: Path, upTo: Float = seq.size.toFloat()) {
@@ -187,7 +208,10 @@ class TheLineBoardView @JvmOverloads constructor(
             CircuitPainter.powered(canvas, powerPath, cell)
         }
 
-        val visited = HashSet<TLCoord>(seq)
+        if (visitedDirty) {
+            visited.clear(); visited.addAll(seq)
+            visitedDirty = false
+        }
         val next = g.nextCheckpoint()
         val last = p.checkpoints.size
         p.checkpoints.forEachIndexed { i, c ->
@@ -258,9 +282,11 @@ class TheLineBoardView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val g = game ?: return false
         if (g.puzzle == null || solved) return false
+        lastTouchAt = SystemClock.uptimeMillis()
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 parent?.requestDisallowInterceptTouchEvent(true)
+                invalidate() // relance la respiration si elle s'était arrêtée
                 val c = cellAt(event.x, event.y) ?: return true
                 activePath = g.begin(c)
                 if (activePath >= 0) changed()
@@ -274,6 +300,7 @@ class TheLineBoardView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 activePath = -1
+                if (unsaved) { unsaved = false; onBoardChanged?.invoke() }
                 return true
             }
         }
@@ -319,9 +346,11 @@ class TheLineBoardView @JvmOverloads constructor(
             activePath = -1
             powerStart = SystemClock.uptimeMillis()
             powerDone = false
+            unsaved = false
             onBoardChanged?.invoke()
             onSolved?.invoke()
-        } else onBoardChanged?.invoke()
+        } else unsaved = true
+        visitedDirty = true
         invalidate()
     }
 
@@ -329,6 +358,8 @@ class TheLineBoardView @JvmOverloads constructor(
         /** Débord de la plaque autour de la grille, en cases. */
         private const val MARGIN = 0.32f
         private const val FRAME_MS = 33L
+        private const val BREATH_FRAME_MS = 66L
+        private const val BREATH_IDLE_MS = 4000L
         private const val REFUSE_MS = 320L
     }
 }

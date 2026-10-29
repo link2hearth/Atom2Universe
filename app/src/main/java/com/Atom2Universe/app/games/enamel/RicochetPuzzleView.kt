@@ -44,6 +44,14 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     private var power = 0f
     private data class Ring(val event: PuzzlePairEvent, var life: Float = .65f)
     private val rings = ArrayList<Ring>()
+    /** Le tir a toujours le même rayon : son dégradé est calculé une fois, centré sur l'origine. */
+    private val projectileShade = RadialGradient(-.15f, -.2f, RicochetPuzzleRules.PROJECTILE_RADIUS * 1.7f,
+        intArrayOf(0xFF81999F.toInt(), 0xFF263E48.toInt(), 0xFF13252C.toInt()), null, Shader.TileMode.CLAMP)
+    // Le mur du mode difficile n'a pas besoin de plus de 60 images par seconde.
+    private val wallTick = Runnable { invalidate() }
+    // Prévenir l'activité hors du dessin, une seule fois par image.
+    private var changePosted = false
+    private val postedChange = Runnable { changePosted = false; onChanged?.invoke() }
 
     init { isFocusable = true; contentDescription = context.getString(R.string.puzzle_controls) }
 
@@ -81,7 +89,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             game.events.forEach { rings.add(Ring(it)); sound?.onMerge(it.color, 1) }
             game.events.clear()
             if (wasMoving && !game.moving && game.complete) sound?.onDiscovery()
-            if (changed || wasMoving != game.moving) onChanged?.invoke()
+            if ((changed || wasMoving != game.moving) && !changePosted) { changePosted = true; post(postedChange) }
         }
         rings.forEach { it.life -= dt }; rings.removeAll { it.life <= 0f }
         c.drawColor(colors.background)
@@ -114,7 +122,8 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
         val unit = (width - 24 * dp) / 6
         for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
             min(11 * dp, unit * .2f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
-        if (active && (game.moving || (game.hard && !game.complete) || rings.isNotEmpty())) postInvalidateOnAnimation()
+        if (active && (game.moving || rings.isNotEmpty())) postInvalidateOnAnimation()
+        else if (active && game.hard && !game.complete) { removeCallbacks(wallTick); postDelayed(wallTick, WALL_FRAME_MS) }
         else last = 0
     }
 
@@ -123,9 +132,10 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
         p.style = Paint.Style.FILL; p.color = 0x50203035
         c.drawCircle(x + .03f, y + .08f, r, p)
         p.color = 0xFFB9CFD4.toInt(); c.drawCircle(x, y, r, p)
-        p.shader = RadialGradient(x - .15f, y - .2f, r * 1.7f,
-            intArrayOf(0xFF81999F.toInt(), 0xFF263E48.toInt(), 0xFF13252C.toInt()), null, Shader.TileMode.CLAMP)
-        c.drawCircle(x, y, r * .88f, p); p.shader = null
+        p.shader = projectileShade
+        c.save(); c.translate(x, y)
+        c.drawCircle(0f, 0f, r * .88f, p); p.shader = null
+        c.restore()
         p.color = 0xFFB9CFD4.toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = .024f
         c.drawCircle(x, y, r * .64f, p); p.style = Paint.Style.FILL
     }
@@ -200,4 +210,9 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     }
 
     override fun performClick(): Boolean { super.performClick(); return true }
+
+    private companion object {
+        /** La prochaine image de l'écran tombe alors vers 17 ms (~60 i/s). */
+        const val WALL_FRAME_MS = 12L
+    }
 }

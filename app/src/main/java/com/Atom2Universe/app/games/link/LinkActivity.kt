@@ -95,6 +95,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
     }
 
     private fun refreshAll() {
+        boardView.animating = true
         boardView.notifyBoardChanged()
         handView.highlighted = -1
         handView.refresh()
@@ -210,6 +211,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
         breakdown.visibility = View.GONE
         overlayButton.setText(R.string.link_next_floor)
         overlay.visibility = View.VISIBLE
+        boardView.animating = false
     }
 
     private fun showRunOver(newBest: Boolean, neutrinos: Int) {
@@ -223,6 +225,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
         fillBreakdown()
         overlayButton.setText(R.string.link_new_run)
         overlay.visibility = View.VISIBLE
+        boardView.animating = false
     }
 
     /** Les points de chaque étage ; les parfaits en or. */

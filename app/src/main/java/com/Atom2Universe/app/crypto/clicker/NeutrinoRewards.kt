@@ -49,7 +49,10 @@ object NeutrinoRewards {
 
     // ── Montant fixe ───────────────────────────────────────────────────────────
     const val SOLITAIRE_WIN = 20
-    const val GAME2048_WIN = 20
+
+    // ── 2048 : objectif facile / normal / difficile de la taille (classique comme quantique) ──
+    private val GAME2048_VALUES = intArrayOf(5, 10, 20)
+    fun game2048(targetIndex: Int) = GAME2048_VALUES[targetIndex.coerceIn(GAME2048_VALUES.indices)]
 
     // ── Memory : EASY..EXPERT = 1..6 ───────────────────────────────────────────
     fun memory(difficultyOrdinal: Int) = difficultyOrdinal + 1
@@ -272,7 +275,7 @@ object NeutrinoRewards {
             Entry(R.string.roulette_title, dash, R.string.neutrino_info_note_betting),
             // Puzzle
             Entry(R.string.jigsaw_title, list(JIGSAW_VALUES.toList()), R.string.neutrino_info_note_difficulty),
-            Entry(R.string.game2048_title, "$GAME2048_WIN", R.string.neutrino_info_note_win),
+            Entry(R.string.game2048_title, list(GAME2048_VALUES.toList()), R.string.neutrino_info_note_difficulty),
             Entry(R.string.sudoku_title, list(SUDOKU_VALUES.toList()), R.string.neutrino_info_note_difficulty),
             Entry(R.string.minesweeper_title, list(MINESWEEPER_VALUES), R.string.neutrino_info_note_difficulty),
             Entry(R.string.color_stack_title, list(COLORSTACK_VALUES.toList()), R.string.neutrino_info_note_difficulty),

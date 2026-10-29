@@ -45,6 +45,7 @@ class RouletteActivity : ThemedActivity() {
     private var balance = 0
     private var selectedBet = 1
     private var spinning = false
+    private var spinPaid = false   // le tirage en cours est déjà réglé
     private var bitmapsReady = false
     private val betLevels = listOf(1, 2, 5, 10, 25)
 
@@ -167,12 +168,19 @@ class RouletteActivity : ThemedActivity() {
     // ── Spin ──────────────────────────────────────────────────────────────────
 
     private fun onSpinClicked() {
-        if (balance < selectedBet) { showStatus(getString(R.string.roulette_status_no_funds)); return }
-        balance -= selectedBet
-        neutrinoRepo.setBalance(balance)
+        // Débit par différence : les gains faits ailleurs entre-temps ne sont pas écrasés
+        if (!neutrinoRepo.subtractBalance(selectedBet)) {
+            balance = neutrinoRepo.getBalance()
+            refreshBalance()
+            updateBetButtons()
+            showStatus(getString(R.string.roulette_status_no_funds))
+            return
+        }
+        balance = neutrinoRepo.getBalance()
         refreshBalance()
 
         spinning = true
+        spinPaid = false
         music.onSpinStarted()
         updateBetButtons()
         clearHighlights()
@@ -240,12 +248,14 @@ class RouletteActivity : ThemedActivity() {
             start()
         }
 
-        if (col == 2) handler.postDelayed({ finalize() }, 450L)
+        if (col == 2) handler.postDelayed({ settleSpin() }, 450L)
     }
 
     // ── Résultat ──────────────────────────────────────────────────────────────
 
-    private fun finalize() {
+    private fun settleSpin(animate: Boolean = true) {
+        if (spinPaid) return
+        spinPaid = true
         val (wins, totalMult) = game.evaluate()
         val winCells = wins.flatMap { it.cells }.toSet()
         for (r in 0..2) for (c in 0..2) {
@@ -259,14 +269,36 @@ class RouletteActivity : ThemedActivity() {
             val stats = getSharedPreferences("roulette_stats", MODE_PRIVATE)
             stats.edit().putInt("wins", stats.getInt("wins", 0) + 1)
                 .putInt("best_payout", maxOf(stats.getInt("best_payout", 0), gain)).apply()
-            music.onWin(totalMult)
-            balance += gain
-            neutrinoRepo.setBalance(balance)
+            if (animate) music.onWin(totalMult)
+            neutrinoRepo.setBalance(neutrinoRepo.getBalance() + gain)
+            balance = neutrinoRepo.getBalance()
             refreshBalance()
             lastWinText.text = getString(R.string.roulette_last_win, selectedBet, totalMult, gain)
-            handler.postDelayed({ showWinOverlay(gain, totalMult, wins.size) }, 400L)
-        } else {
+            if (animate) {
+                handler.postDelayed({ showWinOverlay(gain, totalMult, wins.size) }, 400L)
+                return
+            }
+        } else if (animate) {
             music.onLose()
+        }
+        spinning = false
+        updateBetButtons()
+    }
+
+    /** Pause pendant un tirage : les colonnes s'arrêtent net et le tirage est réglé tout de suite. */
+    private fun settleSpinNow() {
+        handler.removeCallbacksAndMessages(null)
+        for (col in 0..2) {
+            spinRunners[col] = null
+            stopTimeouts[col] = null
+            columnAnimators[col]?.cancel()
+            columnAnimators[col] = null
+        }
+        for (r in 0..2) for (c in 0..2) cellViews[r][c].scaleY = 1f
+        if (!spinPaid) {
+            settleSpin(animate = false)
+        } else if (winOverlay.visibility != View.VISIBLE) {
+            // Gain déjà versé mais fenêtre de victoire pas encore affichée
             spinning = false
             updateBetButtons()
         }
@@ -275,7 +307,7 @@ class RouletteActivity : ThemedActivity() {
     // ── Overlay victoire ──────────────────────────────────────────────────────
 
     private fun showWinOverlay(gain: Int, multiplier: Int, winCount: Int) {
-        winAmountText.text = "+$gain ⚛\n×$multiplier"
+        winAmountText.text = getString(R.string.roulette_win_amount, gain, multiplier)
         confettiView.visibility = View.VISIBLE
         confettiView.launch(multiplier, winCount)
 
@@ -409,14 +441,17 @@ class RouletteActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
+        if (spinning) settleSpinNow()
         for (row in cellViews) for (cell in row) (cell.drawable as? RainbowStarDrawable)?.stop()
         music.stop()
         handler.removeCallbacksAndMessages(null)
-        neutrinoRepo.setBalance(balance)
     }
 
     override fun onResume() {
         super.onResume()
+        balance = neutrinoRepo.getBalance()
+        refreshBalance()
+        updateBetButtons()
         for (row in cellViews) for (cell in row) (cell.drawable as? RainbowStarDrawable)?.start()
         music.start()
     }
@@ -425,6 +460,7 @@ class RouletteActivity : ThemedActivity() {
         super.onDestroy()
         music.stop()
         handler.removeCallbacksAndMessages(null)
+        columnAnimators.forEach { it?.cancel() }
         bitmapCache.values.forEach { if (!it.isRecycled) it.recycle() }
         bitmapCache.clear()
     }

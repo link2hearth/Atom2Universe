@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SwitchCompat
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.game2048.Game2048Logic
 import com.Atom2Universe.app.games.game2048.Game2048View
 import com.google.android.material.card.MaterialCardView
@@ -225,7 +226,7 @@ class Game2048WidgetView @JvmOverloads constructor(
 
         if (game.hasWon) {
             GameStatsRepository(context).recordGame2048Won()
-            NeutrinoRepository(context).addBalance(20)
+            NeutrinoRepository(context).addBalance(NeutrinoRewards.game2048(rewardIndex()))
         }
         if (game.hasWon || game.gameOver) {
             boardView.removeCallbacks(autoRestart)
@@ -234,6 +235,15 @@ class Game2048WidgetView @JvmOverloads constructor(
     }
 
     // ── Nouvelle partie ───────────────────────────────────────────────────────
+    // Palier atteint pour cette taille (0 facile, 1 normal, 2 difficile) : un objectif tiré
+    // au hasard compte pour le plus haut palier qu'il égale ou dépasse.
+    private fun rewardIndex(): Int {
+        val tiers = if (game.quantumMode) listOf(QUANTUM_EASY, QUANTUM_NORMAL, QUANTUM_HARD)
+                    else listOf(TARGETS_EASY, TARGETS_NORMAL, TARGETS_HARD)
+        val goal = if (game.quantumMode) game.quantumTarget else game.target
+        return (tiers.count { tier -> (tier[game.size] ?: Int.MAX_VALUE) <= goal } - 1).coerceIn(0, 2)
+    }
+
     private fun startNewGame(size: Int, target: Int, quantumTarget: Int = 0, jokers: Int = 0, countStat: Boolean = false) {
         boardView.removeCallbacks(autoRestart)
         difficultyOverlay.visibility = GONE

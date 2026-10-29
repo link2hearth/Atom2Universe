@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.motocross
 
 import android.os.Bundle
-import android.view.WindowManager
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -23,7 +22,7 @@ class MotocrossActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_motocross)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran reste allumé pendant une course seulement (MotocrossView.keepScreenOn).
 
         gameView = findViewById(R.id.motocross_view)
         val tvDist  = findViewById<TextView>(R.id.motocross_hud_distance)
@@ -31,11 +30,20 @@ class MotocrossActivity : ThemedActivity() {
         val tvRun = findViewById<TextView>(R.id.motocross_hud_run)
         val tvTrack = findViewById<TextView>(R.id.motocross_hud_track)
 
+        // Chaque texte n'est réécrit que s'il change : un TextView en wrap_content relance la mise en page.
+        var last: MotocrossView.Stats? = null
         gameView.onStats = { stats ->
-            tvDist.text = getString(R.string.motocross_progress, stats.distance, stats.length)
-            tvSpeed.text = getString(R.string.motocross_hud_speed, stats.speed)
-            tvRun.text = getString(R.string.motocross_run_summary, stats.seconds / 60, stats.seconds % 60, stats.faults)
-            tvTrack.text = getString(R.string.motocross_track_info, stats.seed, stats.checkpoint, stats.checkpointCount)
+            val old = last
+            last = stats
+            if (old == null || old.distance != stats.distance || old.length != stats.length)
+                tvDist.text = getString(R.string.motocross_progress, stats.distance, stats.length)
+            if (old == null || old.speed != stats.speed)
+                tvSpeed.text = getString(R.string.motocross_hud_speed, stats.speed)
+            if (old == null || old.seconds != stats.seconds || old.faults != stats.faults)
+                tvRun.text = getString(R.string.motocross_run_summary, stats.seconds / 60, stats.seconds % 60, stats.faults)
+            if (old == null || old.seed != stats.seed || old.checkpoint != stats.checkpoint ||
+                old.checkpointCount != stats.checkpointCount)
+                tvTrack.text = getString(R.string.motocross_track_info, stats.seed, stats.checkpoint, stats.checkpointCount)
         }
 
         val neutrinos = NeutrinoRepository(this)

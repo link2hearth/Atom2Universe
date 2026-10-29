@@ -15,4 +15,5 @@
     <string name="roulette_win_multiple">Combinaisons multiples ! ×%1$d au total</string>
     <string name="roulette_win_overlay_title">GAGNÉ !</string>
     <string name="roulette_win_overlay_tap">Appuyer pour continuer</string>
+    <string name="roulette_win_amount">+%1$d ⚛\n×%2$d</string>
 </resources>

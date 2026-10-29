@@ -10,6 +10,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import java.util.concurrent.Semaphore
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -67,8 +70,21 @@ class OrbiteView @JvmOverloads constructor(
     @Volatile private var pendingStart = false
     private var thread: Thread? = null
 
-    /** Vrai pendant la lecture des règles : la partie est figée, l'affichage continue. */
+    /** Vrai pendant la lecture des règles ou après une sortie de l'appli : la partie est figée. */
     @Volatile var held = false
+        set(value) { field = value; wake() }
+
+    // Le fil de jeu attend ce signal quand rien ne bouge (accueil, fin, partie figée).
+    private val wakeSignal = Semaphore(0)
+    // Touchers et taille notés par le fil UI, appliqués par le fil de jeu.
+    private val pendingReverses = AtomicInteger(0)
+    @Volatile private var pendingWidth = 0
+    @Volatile private var pendingHeight = 0
+    @Volatile private var pendingSize = false
+    @Volatile private var playing = false
+    private var keptAwake = false
+    // Neutrinos déjà versés pour la partie en cours (protégé par synchronized(game)).
+    private var paidReward = 0
 
     var onScoreChanged: ((Int) -> Unit)? = null
     var onGameOver: (() -> Unit)? = null
@@ -107,10 +123,25 @@ class OrbiteView @JvmOverloads constructor(
     private var flashAlpha = 0f
     private var nucleusPulse = 0f
 
+    // Halos posés à l'origine, refaits seulement quand la taille du jeu change :
+    // chaque objet est dessiné en déplaçant (et au besoin en agrandissant) le canevas.
+    private var glowOrbit = -1f
+    private var nucleusGlow: Shader? = null
+    private var asteroidGlow: Shader? = null
+    private var quantumGlow: Shader? = null
+    private var electronGlow: Shader? = null
+
     init { holder.addCallback(this) }
 
     fun startGame() {
         pendingStart = true
+        held = false
+    }
+
+    /** Neutrinos du temps de survie pas encore versés : à la fin de partie et en quittant. */
+    fun collectUnpaidReward(): Int = synchronized(game) {
+        val owed = NeutrinoRewards.perTime(game.elapsedMs) - paidReward
+        if (owed > 0) { paidReward += owed; owed } else 0
     }
 
     // ── Cycle de vie de la surface ──────────────────────────────────────────
@@ -120,12 +151,15 @@ class OrbiteView @JvmOverloads constructor(
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
-        game.configure(w, h)
-        buildStars(w, h)
+        pendingWidth = w
+        pendingHeight = h
+        pendingSize = true
+        wake()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         running = false
+        wake()
         thread?.join(2000)
         thread = null
     }
@@ -146,25 +180,39 @@ class OrbiteView @JvmOverloads constructor(
     // ── Boucle de rendu ─────────────────────────────────────────────────────
     override fun run() {
         var lastNanos = System.nanoTime()
+        var carryNanos = 0L
         while (running) {
             val now = System.nanoTime()
-            val dtMs = ((now - lastNanos) / 1_000_000L).coerceAtMost(50L)
+            // Les fractions de milliseconde sont reportées à l'image suivante.
+            val spentNanos = now - lastNanos + carryNanos
             lastNanos = now
+            var dtMs = spentNanos / 1_000_000L
+            if (dtMs > 50L) { dtMs = 50L; carryNanos = 0L } else carryNanos = spentNanos - dtMs * 1_000_000L
 
-            if (pendingStart) {
-                pendingStart = false
-                gameOverFired = false
-                lastScore = -1
-                particles.clear()
-                trailCount = 0; trailHead = 0
-                flashAlpha = 0f
-                wireCallbacks()
-                game.start()
+            if (pendingSize) {
+                pendingSize = false
+                val w = pendingWidth; val h = pendingHeight
+                game.configure(w, h)
+                buildStars(w, h)
             }
-
-            if (game.isRunning && !held) {
-                game.update(dtMs)
-                pushTrail()
+            synchronized(game) {
+                if (pendingStart) {
+                    pendingStart = false
+                    gameOverFired = false
+                    lastScore = -1
+                    particles.clear()
+                    trailCount = 0; trailHead = 0
+                    flashAlpha = 0f
+                    wireCallbacks()
+                    game.start()
+                    paidReward = 0
+                }
+                val reverses = pendingReverses.getAndSet(0)
+                if (!held) repeat(reverses) { game.reverse() }
+                if (game.isRunning && !held) {
+                    game.update(dtMs)
+                    pushTrail()
+                }
             }
             stepEffects(dtMs)
 
@@ -179,10 +227,38 @@ class OrbiteView @JvmOverloads constructor(
 
             val canvas = lockFrame()
             if (canvas != null) try { drawGame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+            updateKeepAwake()
 
-            val frameMs = (System.nanoTime() - now) / 1_000_000L
-            if (frameMs < 16L) try { Thread.sleep(16L - frameMs) } catch (_: InterruptedException) {}
+            if (idle()) {
+                // Scène figée : le fil dort jusqu'au prochain toucher, départ ou retour.
+                waitForWake()
+                lastNanos = System.nanoTime(); carryNanos = 0L
+            } else {
+                val frameMs = (System.nanoTime() - now) / 1_000_000L
+                if (frameMs < 16L) try { Thread.sleep(16L - frameMs) } catch (_: InterruptedException) {}
+            }
         }
+        if (keptAwake) { keptAwake = false; post { keepScreenOn = false } }
+    }
+
+    // Plus rien ne bouge une fois les particules et l'éclair éteints.
+    private fun idle() = !pendingStart && !pendingSize && pendingReverses.get() == 0 &&
+        (!game.isRunning || held) && particles.isEmpty() && flashAlpha == 0f
+
+    private fun waitForWake() {
+        wakeSignal.drainPermits()
+        if (running && idle()) try { wakeSignal.acquire() } catch (_: InterruptedException) {}
+    }
+
+    private fun wake() {
+        if (wakeSignal.availablePermits() == 0) wakeSignal.release()
+    }
+
+    /** L'écran reste allumé pendant une partie en cours seulement. */
+    private fun updateKeepAwake() {
+        playing = game.isRunning
+        val awake = game.isRunning && !held
+        if (awake != keptAwake) { keptAwake = awake; post { keepScreenOn = awake } }
     }
 
     private fun wireCallbacks() {
@@ -234,7 +310,9 @@ class OrbiteView @JvmOverloads constructor(
     // ── Entrée ──────────────────────────────────────────────────────────────
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            game.reverse()
+            // Une partie figée par une sortie de l'appli reprend d'un toucher, sans inverser.
+            if (held && playing) held = false
+            else if (playing) { pendingReverses.incrementAndGet(); wake() }
             performClick()
             return true
         }
@@ -250,6 +328,7 @@ class OrbiteView @JvmOverloads constructor(
 
         if (game.orbitR <= 0f) return
         val cx = game.cx; val cy = game.cy
+        ensureGlows()
 
         // Anneau orbital.
         paint.style = Paint.Style.STROKE
@@ -280,12 +359,12 @@ class OrbiteView @JvmOverloads constructor(
         val pulse = 1f + 0.06f * sin(nucleusPulse * 3f)
         val r = game.nucleusR * pulse
         // Halo.
-        glowPaint.shader = RadialGradient(
-            cx, cy, r * 2.6f,
-            intArrayOf(Color.argb(150, 255, 160, 70), Color.argb(0, 255, 120, 50)),
-            floatArrayOf(0.35f, 1f), Shader.TileMode.CLAMP
-        )
-        canvas.drawCircle(cx, cy, r * 2.6f, glowPaint)
+        glowPaint.shader = nucleusGlow
+        canvas.save()
+        canvas.translate(cx, cy)
+        canvas.scale(pulse, pulse)
+        canvas.drawCircle(0f, 0f, game.nucleusR * 2.6f, glowPaint)
+        canvas.restore()
         glowPaint.shader = null
         // Cœur.
         paint.color = colNucleus
@@ -317,12 +396,12 @@ class OrbiteView @JvmOverloads constructor(
             canvas.drawLine(ax, ay, tx, ty, paint)
             paint.style = Paint.Style.FILL
             // Halo.
-            glowPaint.shader = RadialGradient(
-                ax, ay, a.radius * 2.2f,
-                intArrayOf(Color.argb(120, 255, 90, 110), Color.argb(0, 255, 90, 110)),
-                null, Shader.TileMode.CLAMP
-            )
-            canvas.drawCircle(ax, ay, a.radius * 2.2f, glowPaint)
+            glowPaint.shader = asteroidGlow
+            canvas.save()
+            canvas.translate(ax, ay)
+            if (a.radius != game.asteroidR) canvas.scale(a.radius / game.asteroidR, a.radius / game.asteroidR)
+            canvas.drawCircle(0f, 0f, game.asteroidR * 2.2f, glowPaint)
+            canvas.restore()
             glowPaint.shader = null
             // Caillou irrégulier (cercle + bosse pseudo-aléatoire stable via seed).
             paint.color = colAsteroid
@@ -346,15 +425,15 @@ class OrbiteView @JvmOverloads constructor(
             val qy = game.cy + sin(q.angle) * game.orbitR
             val pulse = 1f + 0.25f * sin(q.ageMs / 120f)
             val r = game.electronR * 0.8f * pulse
-            glowPaint.shader = RadialGradient(
-                qx, qy, r * 2.6f,
-                intArrayOf(
-                    Color.argb((alpha * 160).toInt(), 124, 255, 203),
-                    Color.argb(0, 124, 255, 203)
-                ),
-                null, Shader.TileMode.CLAMP
-            )
-            canvas.drawCircle(qx, qy, r * 2.6f, glowPaint)
+            // Le fondu passe par l'opacité du pinceau, qui module le dégradé en cache.
+            glowPaint.shader = quantumGlow
+            glowPaint.alpha = (alpha * 255).toInt()
+            canvas.save()
+            canvas.translate(qx, qy)
+            canvas.scale(pulse, pulse)
+            canvas.drawCircle(0f, 0f, game.electronR * 0.8f * 2.6f, glowPaint)
+            canvas.restore()
+            glowPaint.alpha = 255
             glowPaint.shader = null
             paint.color = Color.argb((alpha * 255).toInt(), Color.red(colQuantum), Color.green(colQuantum), Color.blue(colQuantum))
             // Petit losange (quantum d'énergie).
@@ -375,12 +454,11 @@ class OrbiteView @JvmOverloads constructor(
         }
         val ex = game.electronX(); val ey = game.electronY()
         // Halo.
-        glowPaint.shader = RadialGradient(
-            ex, ey, game.electronR * 2.6f,
-            intArrayOf(Color.argb(160, 54, 225, 255), Color.argb(0, 54, 225, 255)),
-            null, Shader.TileMode.CLAMP
-        )
-        canvas.drawCircle(ex, ey, game.electronR * 2.6f, glowPaint)
+        glowPaint.shader = electronGlow
+        canvas.save()
+        canvas.translate(ex, ey)
+        canvas.drawCircle(0f, 0f, game.electronR * 2.6f, glowPaint)
+        canvas.restore()
         glowPaint.shader = null
         paint.color = colElectron
         canvas.drawCircle(ex, ey, game.electronR, paint)
@@ -394,6 +472,31 @@ class OrbiteView @JvmOverloads constructor(
             paint.color = Color.argb((frac * 255).toInt(), Color.red(p.color), Color.green(p.color), Color.blue(p.color))
             canvas.drawCircle(p.x, p.y, p.size * frac, paint)
         }
+    }
+
+    private fun ensureGlows() {
+        if (glowOrbit == game.orbitR) return
+        glowOrbit = game.orbitR
+        nucleusGlow = RadialGradient(
+            0f, 0f, game.nucleusR * 2.6f,
+            intArrayOf(Color.argb(150, 255, 160, 70), Color.argb(0, 255, 120, 50)),
+            floatArrayOf(0.35f, 1f), Shader.TileMode.CLAMP
+        )
+        asteroidGlow = RadialGradient(
+            0f, 0f, game.asteroidR * 2.2f,
+            intArrayOf(Color.argb(120, 255, 90, 110), Color.argb(0, 255, 90, 110)),
+            null, Shader.TileMode.CLAMP
+        )
+        quantumGlow = RadialGradient(
+            0f, 0f, game.electronR * 0.8f * 2.6f,
+            intArrayOf(Color.argb(160, 124, 255, 203), Color.argb(0, 124, 255, 203)),
+            null, Shader.TileMode.CLAMP
+        )
+        electronGlow = RadialGradient(
+            0f, 0f, game.electronR * 2.6f,
+            intArrayOf(Color.argb(160, 54, 225, 255), Color.argb(0, 54, 225, 255)),
+            null, Shader.TileMode.CLAMP
+        )
     }
 
     private fun OrbiteGame.minOrbitStroke() = (minOf(width, height) * 0.006f).coerceAtLeast(2f)
