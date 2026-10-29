@@ -179,15 +179,23 @@ class MusicWidgetProvider : AppWidgetProvider() {
                 val loading = artLoad(context, track, key)
                 val early = withTimeoutOrNull(ART_WAIT_MS) { loading.await() }
                 currentCoroutineContext().ensureActive()
-                appWidgetManager.updateAppWidget(appWidgetId, buildViews(context, state, early))
+                // Pochette pas encore prête : on ne touche pas à l'image affichée (ni vignette
+                // par défaut, ni ancienne pochette remplacée) pour ne pas clignoter.
+                appWidgetManager.updateAppWidget(appWidgetId, buildViews(context, state, early, artPending = early == null))
                 val bitmap = early ?: loading.await()
+                currentCoroutineContext().ensureActive()
                 lastArtKey = key
                 lastArt = bitmap
-                if (early == null && bitmap != null) {
-                    // Title and controls belong to the latest full update.
-                    val artwork = RemoteViews(context.packageName, R.layout.widget_music)
-                    artwork.setImageViewBitmap(R.id.widget_album_art, bitmap)
-                    appWidgetManager.partiallyUpdateAppWidget(appWidgetId, artwork)
+                if (early == null) {
+                    if (bitmap != null) {
+                        // Title and controls belong to the latest full update.
+                        val artwork = RemoteViews(context.packageName, R.layout.widget_music)
+                        artwork.setImageViewBitmap(R.id.widget_album_art, bitmap)
+                        appWidgetManager.partiallyUpdateAppWidget(appWidgetId, artwork)
+                    } else {
+                        // Morceau sans pochette : la vignette par défaut, une seule fois
+                        appWidgetManager.updateAppWidget(appWidgetId, buildViews(context, state, null))
+                    }
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
@@ -228,7 +236,8 @@ class MusicWidgetProvider : AppWidgetProvider() {
     private fun buildViews(
         context: Context,
         state: MusicWidgetController.WidgetState,
-        art: Bitmap?
+        art: Bitmap?,
+        artPending: Boolean = false
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_music)
 
@@ -249,7 +258,7 @@ class MusicWidgetProvider : AppWidgetProvider() {
         when (state.source) {
             MusicWidgetController.ActiveSource.MUSIC -> {
                 views.setViewVisibility(R.id.widget_source_badge, View.GONE)
-                views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_music_note)
+                if (!artPending) views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_music_note)
             }
             MusicWidgetController.ActiveSource.RADIO -> {
                 views.setViewVisibility(R.id.widget_source_badge, View.VISIBLE)
@@ -268,7 +277,7 @@ class MusicWidgetProvider : AppWidgetProvider() {
                     views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_radio)
                 } else {
                     views.setViewVisibility(R.id.widget_source_badge, View.GONE)
-                    views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_music_note)
+                    if (!artPending) views.setImageViewResource(R.id.widget_album_art, R.drawable.ic_music_note)
                 }
             }
         }
