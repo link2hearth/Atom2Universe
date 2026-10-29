@@ -17,7 +17,7 @@
     <string name="stats_minutes_format">%1$d min</string>
     <string name="stats_top_artists">Top artists</string>
     <string name="stats_top_albums">Top albums</string>
-    <string name="stats_top_midi">Most practiced songs</string>
+    <string name="stats_top_midi">Most played songs</string>
     <string name="stats_average_score">Average practice score</string>
     <string name="stats_no_data">No data for this period</string>
     <string name="stats_tab_calendar">Calendar</string>
@@ -28,4 +28,13 @@
     <string name="stats_calendar_tracks_format">%1$d tracks, %2$s</string>
     <string name="stats_calendar_score_format">%1$s (score: %2$.0f%%)</string>
     <string name="stats_calendar_total_format">Total: %1$s</string>
+
+    <string name="stats_score_format">%1$.0f</string>
+    <string name="stats_album_artist_format">%1$s - %2$s</string>
+    <string name="stats_rank_format">%1$d.</string>
+    <string name="stats_calendar_month_year">%1$s %2$d</string>
+    <string name="reading_stats_icon_book">📖</string>
+    <string name="reading_stats_icon_comic">📕</string>
+    <string name="reading_stats_icon_title_format">%1$s %2$s</string>
+    <string name="reading_stats_unknown_title">?</string>
 </resources>

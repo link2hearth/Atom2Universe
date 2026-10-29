@@ -161,51 +161,6 @@
 
         </LinearLayout>
 
-        <!-- Section: Transparence (Alpha) - Visible uniquement pour Pixel Art Editor -->
-        <LinearLayout
-            android:id="@+id/alpha_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notes_color_alpha"
-                android:textSize="12sp"
-                android:textColor="@color/audio_text_secondary" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <SeekBar
-                    android:id="@+id/alpha_slider"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:max="255"
-                    android:progress="255" />
-
-                <TextView
-                    android:id="@+id/alpha_value_text"
-                    android:layout_width="48dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/notes_color_alpha_value_default"
-                    android:textSize="14sp"
-                    android:textColor="@color/audio_text_primary"
-                    android:gravity="end" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
         <!-- Séparateur -->
         <View
             android:layout_width="match_parent"

@@ -105,14 +105,15 @@ internal object AppEffects {
             if (AppearanceStyle.hasOrnaments(activity)) ornamentsSeen = true
             val settings = AppThemeManager.getEffects(activity)
             val targets = mutableListOf<View>()
+            val covered = mutableSetOf<View>()
             val collect = settings.wantsTargets()
-            if (ornamentsSeen || collect) visit(root, ornamentsSeen, if (collect) targets else null)
+            if (ornamentsSeen || collect) visit(root, ornamentsSeen, if (collect) targets else null, covered)
             val obsolete = decorations.keys.filter { it !in targets }
             obsolete.forEach { decorations.remove(it)?.close() }
             val palette = EffectsPalette.from(activity)
             targets.forEach { target ->
                 val decoration = decorations.getOrPut(target) { EffectsDecoration(target) }
-                decoration.update(settings, palette)
+                decoration.update(settings, palette, covered = target in covered)
                 decoration.setActive(active)
             }
             // Bells belong to hubs, never to a recording, practice, drawing or game screen.
@@ -122,12 +123,25 @@ internal object AppEffects {
 
         private fun AppEffectsSettings.wantsTargets() = enabled && pack != null
 
-        /** One walk for both: refreshes ornamental cards after a live theme change, collects effect targets. */
-        private fun visit(view: View, cards: Boolean, targets: MutableList<View>?) {
-            if (view.visibility != View.VISIBLE) return
+        /**
+         * One walk for both: refreshes ornamental cards after a live theme change, collects effect targets.
+         * A scene holding another scene (MIDI player and its pages) goes to [covered]: the inner one hides
+         * its backdrop. Returns true when [view] is or holds a scene.
+         */
+        private fun visit(view: View, cards: Boolean, targets: MutableList<View>?, covered: MutableSet<View>): Boolean {
+            if (view.visibility != View.VISIBLE) return false
             if (cards && view is OrnamentalCard) view.refreshOrnament(activity)
-            if (targets != null && view.getTag(R.id.app_effects_scene) != null) targets += view
-            if (view is ViewGroup) for (i in 0 until view.childCount) visit(view.getChildAt(i), cards, targets)
+            var scene = false
+            if (targets != null && view.getTag(R.id.app_effects_scene) != null) {
+                targets += view
+                scene = true
+            }
+            var holdsScene = false
+            if (view is ViewGroup) for (i in 0 until view.childCount) {
+                if (visit(view.getChildAt(i), cards, targets, covered)) holdsScene = true
+            }
+            if (scene && holdsScene) covered += view
+            return scene || holdsScene
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.games.solitaire.Card
 import com.Atom2Universe.app.games.solitaire.PileType
@@ -329,7 +330,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
             resultText.setTextColor(Color.parseColor("#22C55E"))
             resultOverlay.visibility = VISIBLE
             solitaireView.startVictoryAnimation()
-            NeutrinoRepository(context).addBalance(20)
+            NeutrinoRepository(context).addBalance(NeutrinoRewards.SOLITAIRE_WIN)
             GameStatsRepository(context).recordSolitaireWon()
             queueWrite { SolitaireDatabase.getInstance(context).solitaireDao().deleteSave() }
         }

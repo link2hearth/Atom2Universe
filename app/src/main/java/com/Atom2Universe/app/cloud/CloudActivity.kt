@@ -255,8 +255,11 @@ class CloudActivity : ThemedActivity() {
             // Une sync complète prend facilement une demi-minute : sans l'étape en cours,
             // l'écran semble figé et l'on croit à un plantage.
             // force : le bouton marche dès que le compte est lié, même interrupteur coupé.
-            val result = CloudSyncManager.syncNow(force = true) { step ->
-                runOnUiThread { lastSyncText.setText(stepLabel(step)) }
+            // NonCancellable : quitter l'écran ne coupe pas la sync au milieu d'un envoi.
+            val result = withContext(NonCancellable) {
+                CloudSyncManager.syncNow(force = true) { step ->
+                    runOnUiThread { lastSyncText.setText(stepLabel(step)) }
+                }
             }
             setBusy(false, null)
 
@@ -299,16 +302,15 @@ class CloudActivity : ThemedActivity() {
             return
         }
         scope.launch {
-            isBusy = true
-            btnSyncGames.isEnabled = false
+            // setBusy bloque aussi « Actualiser » et « Tout effacer » pendant la sync
+            setBusy(true, null)
             gamesStatus.visibility = View.VISIBLE
             gamesStatus.setText(R.string.games_sync_in_progress)
 
             // Comme les projets : quitter l'écran ne coupe pas la sync entre l'envoi et ce qu'on en note.
             val result = withContext(NonCancellable) { GamesSyncManager.syncGames() }
 
-            isBusy = false
-            btnSyncGames.isEnabled = true
+            setBusy(false, null)
             showGamesResult(result)
             loadInventory()
         }
@@ -361,8 +363,7 @@ class CloudActivity : ThemedActivity() {
             dialog.dismiss()
             if (isBusy) return
             scope.launch {
-                isBusy = true
-                btnSyncGames.isEnabled = false
+                setBusy(true, null)
                 gamesStatus.visibility = View.VISIBLE
                 gamesStatus.setText(R.string.games_sync_in_progress)
 
@@ -372,8 +373,7 @@ class CloudActivity : ThemedActivity() {
                 // NonCancellable : quitter l'écran ne laisse pas une partie à moitié appliquée.
                 val result = withContext(NonCancellable) { GamesSyncManager.resolveConflict(keepCloud, remote) }
 
-                isBusy = false
-                btnSyncGames.isEnabled = true
+                setBusy(false, null)
                 showGamesResult(result)
                 loadInventory()
             }
@@ -408,7 +408,9 @@ class CloudActivity : ThemedActivity() {
     // ==================== Inventaire ====================
 
     private fun loadInventory() {
-        if (!signInManager.isSignedIn()) return
+        // Pendant une autre opération, sa fin relancera l'inventaire ; sans ce garde,
+        // « Actualiser » remettait isBusy à faux en pleine synchro.
+        if (isBusy || !signInManager.isSignedIn()) return
         scope.launch {
             setBusy(true, R.string.cloud_loading)
             val report = CloudInventory.load(this@CloudActivity)
@@ -619,22 +621,30 @@ class CloudActivity : ThemedActivity() {
     }
 
     private fun confirmDeleteAll() {
+        if (isBusy) return
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.cloud_delete_all)
             .setMessage(R.string.cloud_delete_all_desc)
             .setNegativeButton(R.string.cloud_cancel, null)
             .setPositiveButton(R.string.cloud_delete_continue) { _, _ ->
                 askTypedConfirmation {
+                    // Une synchro partie entre-temps renverrait aussitôt ce qu'on efface
+                    if (isBusy) return@askTypedConfirmation
+                    val report = lastReport
                     scope.launch {
                         setBusy(true, R.string.cloud_loading)
-                        val result = CloudSyncManager.deleteAllCloudData()
+                        // NonCancellable : quitter l'écran ne saute pas l'oubli des projets
+                        val result = withContext(NonCancellable) {
+                            CloudSyncManager.deleteAllCloudData().also { deletion ->
+                                // Les projets créatifs oublient qu'ils étaient sur le cloud : sinon leur
+                                // pastille mentirait, et ils ne sauraient pas qu'il faut les republier.
+                                if (deletion.success && report != null) {
+                                    CloudProjectSync.forgetFiles(this@CloudActivity, report.categories.flatMap { it.files })
+                                }
+                            }
+                        }
                         setBusy(false, null)
                         if (result.success) {
-                            // Les projets créatifs oublient qu'ils étaient sur le cloud : sinon leur
-                            // pastille mentirait, et ils ne sauraient pas qu'il faut les republier.
-                            lastReport?.let { report ->
-                                CloudProjectSync.forgetFiles(this@CloudActivity, report.categories.flatMap { it.files })
-                            }
                             toast(getString(R.string.cloud_deleted, result.deletedFilesCount))
                         } else {
                             toast(getString(R.string.cloud_delete_failed))
@@ -692,8 +702,11 @@ class CloudActivity : ThemedActivity() {
         if (isBusy || files.isEmpty()) return
         scope.launch {
             setBusy(true, R.string.cloud_loading)
-            val deleted = CloudInventory.delete(this@CloudActivity, files)
-            if (touchesListens) CloudSyncManager.forgetUploadedEventsState()
+            val deleted = withContext(NonCancellable) {
+                CloudInventory.delete(this@CloudActivity, files).also {
+                    if (touchesListens) CloudSyncManager.forgetUploadedEventsState()
+                }
+            }
             setBusy(false, null)
 
             if (deleted > 0) toast(getString(R.string.cloud_deleted, deleted))

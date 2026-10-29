@@ -2106,7 +2106,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
                 // Créer une session de stats pour cette practice session
                 val statsSession = com.Atom2Universe.app.stats.data.UsageSessionEntity(
-                    moduleType = com.Atom2Universe.app.stats.data.StatsRepository.MODULE_MIDI,
+                    moduleType = com.Atom2Universe.app.stats.data.StatsRepository.MODULE_MIDI_PRACTICE,
                     startTimestamp = sessionStartTime,
                     endTimestamp = sessionEndTime,
                     durationMs = sessionEndTime - sessionStartTime,

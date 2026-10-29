@@ -23,9 +23,9 @@ class ColorPickerSatValView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val density = resources.displayMetrics.density
     private val selectorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeWidth = 4f
     }
 
     private var hue: Float = 0f
@@ -109,7 +109,7 @@ class ColorPickerSatValView @JvmOverloads constructor(
 
         val w = width.toFloat()
         val h = height.toFloat()
-        val cornerRadius = 8f
+        val cornerRadius = 8f * density
 
         // Update cached shader if hue changed
         updateShaderIfNeeded()
@@ -121,24 +121,28 @@ class ColorPickerSatValView @JvmOverloads constructor(
         // Dessiner le sélecteur (cercle)
         val selectorX = saturation * w
         val selectorY = (1f - value) * h
-        val selectorRadius = 12f
+        val selectorRadius = 10f * density
+        val outerStroke = 3f * density
+        val innerStroke = 1.5f * density
 
         // Cercle externe blanc
         selectorPaint.color = Color.WHITE
         selectorPaint.style = Paint.Style.STROKE
-        selectorPaint.strokeWidth = 4f
+        selectorPaint.strokeWidth = outerStroke
         canvas.drawCircle(selectorX, selectorY, selectorRadius, selectorPaint)
 
-        // Cercle interne noir
+        // Cercle interne noir, collé à l'anneau blanc
         selectorPaint.color = Color.BLACK
-        selectorPaint.strokeWidth = 2f
-        canvas.drawCircle(selectorX, selectorY, selectorRadius - 3f, selectorPaint)
+        selectorPaint.strokeWidth = innerStroke
+        canvas.drawCircle(selectorX, selectorY, selectorRadius - (outerStroke + innerStroke) / 2f, selectorPaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN,
             MotionEvent.ACTION_MOVE -> {
+                // Dans une ScrollView, un glissé vertical doit choisir la couleur, pas faire défiler.
+                if (event.action == MotionEvent.ACTION_DOWN) parent?.requestDisallowInterceptTouchEvent(true)
                 val x = event.x.coerceIn(0f, width.toFloat())
                 val y = event.y.coerceIn(0f, height.toFloat())
 

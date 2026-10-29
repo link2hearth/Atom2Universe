@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.midi.service.MidiPlaybackService
 import com.Atom2Universe.app.sf2creator.data.db.Sf2ProjectDatabase
-import com.Atom2Universe.app.stats.data.StatsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -18,6 +17,8 @@ import java.io.File
  *   sa base exigée : si elle échoue, rien n'est supprimé dans ces dossiers).
  * Tout fichier modifié depuis moins d'une heure est gardé : un export, un partage ou un
  * enregistrement en cours garde son fichier.
+ * Les statistiques ne sont jamais touchées : le calendrier de lecture, le temps des tuiles et
+ * les résumés recalculés après une synchro relisent les séances brutes, même anciennes.
  */
 class CacheCleanerManager(private val context: Context) {
 
@@ -59,12 +60,11 @@ class CacheCleanerManager(private val context: Context) {
         val scannedFiles: Int,
         val deletedFiles: Int,
         val freedSpaceMB: Double,
-        val errors: Int,
-        val deletedStatsRows: Int = 0
+        val errors: Int
     )
 
     /**
-     * Supprime les fichiers jetables (voir la classe) et les sessions de stats de plus d'un an.
+     * Supprime les fichiers jetables (voir la classe).
      *
      * @param dryRun Si true, simule le nettoyage sans supprimer les fichiers
      */
@@ -87,25 +87,13 @@ class CacheCleanerManager(private val context: Context) {
             }
         }
 
-        // Les daily_summaries gardent l'historique complet pour le calendrier :
-        // les sessions brutes de plus d'un an peuvent partir sans perte.
-        val deletedStatsRows = if (dryRun) 0 else try {
-            val statsRepo = StatsRepository(context)
-            statsRepo.ensureDailySummariesPopulated()
-            statsRepo.cleanOldSessions(daysToKeep = 365)
-        } catch (e: Exception) {
-            Log.e(TAG, "Erreur lors du nettoyage des sessions de stats", e)
-            0
-        }
-
         val report = CleanupReport(
             scannedFiles = candidates.size,
             deletedFiles = deletedCount,
             freedSpaceMB = freedSpace / (1024.0 * 1024.0),
-            errors = errorCount,
-            deletedStatsRows = deletedStatsRows
+            errors = errorCount
         )
-        Log.i(TAG, "Nettoyage: ${report.deletedFiles} fichiers, ${freedSpace / 1024} Ko, ${report.errors} erreurs, $deletedStatsRows sessions")
+        Log.i(TAG, "Nettoyage: ${report.deletedFiles} fichiers, ${freedSpace / 1024} Ko, ${report.errors} erreurs")
         report
     }
 

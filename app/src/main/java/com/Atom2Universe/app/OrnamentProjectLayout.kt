@@ -23,6 +23,8 @@ class OrnamentProjectLayout @JvmOverloads constructor(
         val position = (parent as? RecyclerView)?.getChildAdapterPosition(this) ?: RecyclerView.NO_POSITION
         if (position != RecyclerView.NO_POSITION && frame.setVariant(position)) invalidateOutline()
         frame.setBounds(0, 0, width, height)
+        // The frame is painted once, above the thumbnails, not also under them by the background.
+        frame.frameDrawnByHost = true
         val save = canvas.save()
         canvas.clipPath(frame.contour.outer)
         super.draw(canvas)

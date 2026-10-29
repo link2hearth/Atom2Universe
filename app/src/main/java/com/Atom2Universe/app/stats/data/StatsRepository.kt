@@ -1,23 +1,21 @@
 package com.Atom2Universe.app.stats.data
 
 import android.content.Context
-import com.Atom2Universe.app.midi.data.MidiDatabase
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 
 /**
- * Repository pour accéder aux statistiques d'utilisation.
- * Combine les données de StatsDatabase et MidiDatabase (pour les sessions de practice).
+ * Repository pour accéder aux statistiques d'utilisation (StatsDatabase).
+ * L'entraînement MIDI y arrive comme une session MIDI portant son score : il n'est pas relu
+ * dans la base du module MIDI, qui le compterait une seconde fois.
  */
 class StatsRepository(context: Context) {
 
     private val statsDb = StatsDatabase.getInstance(context)
     private val usageSessionDao = statsDb.usageSessionDao()
     private val dailySummaryDao = statsDb.dailySummaryDao()
-
-    private val midiDb = MidiDatabase.getInstance(context)
-    private val practiceSessionDao = midiDb.practiceSessionDao()
 
     private val dailySummaryBuilder = DailySummaryBuilder(usageSessionDao, dailySummaryDao)
 
@@ -28,13 +26,21 @@ class StatsRepository(context: Context) {
         const val MODULE_RADIO = "radio"
         const val MODULE_BOOK = "book"
         const val MODULE_COMIC = "comic"
+
+        /** Écoute et entraînement : la carte MIDI, le top des morceaux et le calendrier les additionnent. */
+        val MIDI_MODULES = listOf(MODULE_MIDI, MODULE_MIDI_PRACTICE)
     }
 
     /**
-     * Enregistre une nouvelle session d'utilisation.
+     * Enregistre une nouvelle session d'utilisation et recalcule le résumé de son jour, dans la
+     * même transaction : deux sessions finies en même temps ne laissent pas un résumé périmé.
      */
-    suspend fun insertSession(session: UsageSessionEntity) = withContext(Dispatchers.IO) {
-        usageSessionDao.insertSession(session)
+    suspend fun insertSession(session: UsageSessionEntity): Long = withContext(Dispatchers.IO) {
+        statsDb.withTransaction {
+            val id = usageSessionDao.insertSession(session)
+            dailySummaryBuilder.updateSummaryForDay(session.startTimestamp)
+            id
+        }
     }
 
     /**
@@ -45,25 +51,10 @@ class StatsRepository(context: Context) {
     }
 
     /**
-     * Récupère la durée totale d'écoute MIDI simple (hors entraînement) pour une période.
+     * Récupère la durée totale MIDI (écoute + entraînement) pour une période.
      */
-    suspend fun getMidiListeningTime(startDate: Long, endDate: Long): Long = withContext(Dispatchers.IO) {
-        usageSessionDao.getTotalDurationByModule(MODULE_MIDI, startDate, endDate)
-    }
-
-    /**
-     * Récupère la durée totale de pratique/entraînement MIDI pour une période.
-     * Combine les sessions MODULE_MIDI_PRACTICE et les résultats de la table practice.
-     */
-    suspend fun getMidiPracticeTime(startDate: Long, endDate: Long): Long = withContext(Dispatchers.IO) {
-        // Sessions d'entraînement trackées par StatsTracker (MODULE_MIDI_PRACTICE uniquement)
-        val practiceSessionTime = usageSessionDao.getTotalDurationByModule(MODULE_MIDI_PRACTICE, startDate, endDate)
-
-        // Résultats détaillés de practice depuis MidiDatabase (scores, exercices)
-        val practiceSessions = practiceSessionDao.getSessionsBetween(startDate, endDate)
-        val practiceTime = practiceSessions.sumOf { it.sessionDurationMs }
-
-        practiceSessionTime + practiceTime
+    suspend fun getMidiTime(startDate: Long, endDate: Long): Long = withContext(Dispatchers.IO) {
+        usageSessionDao.getTotalDurationByModules(MIDI_MODULES, startDate, endDate)
     }
 
     /**
@@ -88,50 +79,17 @@ class StatsRepository(context: Context) {
     }
 
     /**
-     * Récupère le top des fichiers MIDI les plus écoutés/travaillés.
-     * Combine lectures simples, entraînements et résultats de practice.
+     * Récupère le top des fichiers MIDI les plus écoutés/travaillés (écoute et entraînement).
      */
     suspend fun getTopMidiFiles(startDate: Long, endDate: Long, limit: Int = 5): List<MidiFileStats> = withContext(Dispatchers.IO) {
-        // Stats depuis les sessions d'écoute et d'entraînement (les deux types)
-        val listeningStats = usageSessionDao.getTopMidiFiles(startDate, endDate, limit * 2)
-
-        // Stats depuis les sessions de practice (grouper par fichier)
-        val practiceSessions = practiceSessionDao.getSessionsBetween(startDate, endDate)
-        val practiceStats = practiceSessions
-            .groupBy { it.trackFilePath.substringAfterLast("/") }
-            .map { (fileName, sessions) ->
-                MidiFileStats(
-                    midiFileName = fileName,
-                    totalDuration = sessions.sumOf { it.sessionDurationMs }
-                )
-            }
-
-        // Combiner et agréger
-        val combined = (listeningStats + practiceStats)
-            .groupBy { it.midiFileName }
-            .map { (fileName, stats) ->
-                MidiFileStats(
-                    midiFileName = fileName,
-                    totalDuration = stats.sumOf { it.totalDuration }
-                )
-            }
-            .sortedByDescending { it.totalDuration }
-            .take(limit)
-
-        combined
+        usageSessionDao.getTopMidiFiles(startDate, endDate, limit)
     }
 
     /**
-     * Récupère le score moyen de practice pour une période.
-     * Utilise les vraies sessions de practice depuis MidiDatabase.
+     * Récupère le score moyen d'entraînement pour une période (null sans entraînement noté).
      */
     suspend fun getAveragePracticeScore(startDate: Long, endDate: Long): Float? = withContext(Dispatchers.IO) {
-        val sessions = practiceSessionDao.getSessionsBetween(startDate, endDate)
-        if (sessions.isEmpty()) {
-            null
-        } else {
-            sessions.map { it.score.toFloat() }.average().toFloat()
-        }
+        usageSessionDao.getAveragePracticeScore(startDate, endDate)
     }
 
     /**
@@ -139,16 +97,6 @@ class StatsRepository(context: Context) {
      */
     suspend fun getSessionCount(moduleType: String, startDate: Long, endDate: Long): Int = withContext(Dispatchers.IO) {
         usageSessionDao.getSessionCount(moduleType, startDate, endDate)
-    }
-
-    /**
-     * Supprime les sessions plus anciennes qu'un certain nombre de jours.
-     * Par défaut, rétention permanente (Int.MAX_VALUE).
-     */
-    suspend fun cleanOldSessions(daysToKeep: Int = Int.MAX_VALUE): Int = withContext(Dispatchers.IO) {
-        if (daysToKeep == Int.MAX_VALUE) return@withContext 0
-        val cutoffTimestamp = System.currentTimeMillis() - (daysToKeep * 24 * 60 * 60 * 1000L)
-        usageSessionDao.deleteSessionsOlderThan(cutoffTimestamp)
     }
 
     // ===== Lecture (livres + BD) =====
@@ -211,7 +159,7 @@ class StatsRepository(context: Context) {
             .groupBy { (it.readingTitle ?: "") to it.moduleType }
             .map { (key, group) ->
                 ReadingHistoryEntry(
-                    title = key.first.ifBlank { "?" },
+                    title = key.first,
                     isComic = key.second == MODULE_COMIC,
                     durationMs = group.sumOf { it.durationMs }
                 )
@@ -241,7 +189,9 @@ class StatsRepository(context: Context) {
     suspend fun getDayHistory(year: Int, month: Int, day: Int): CalendarDayHistory? = withContext(Dispatchers.IO) {
         val date = java.time.LocalDate.of(year, month, day)
         val epochDay = date.toEpochDay().toInt()
-        val summary = dailySummaryDao.getSummaryForDay(epochDay) ?: return@withContext null
+        // Un jour sans audio n'a rien à montrer (vieux résumés d'un jour de lecture seule)
+        val summary = dailySummaryDao.getSummaryForDay(epochDay)
+            ?.takeIf { it.totalDurationMs > 0 } ?: return@withContext null
 
         val musicEntries = parseMusicDetailsJson(summary.musicDetailsJson)
         val midiEntries = parseMidiDetailsJson(summary.midiDetailsJson)
@@ -259,10 +209,6 @@ class StatsRepository(context: Context) {
             midiEntries = midiEntries,
             radioEntries = radioEntries
         )
-    }
-
-    suspend fun updateDailySummaryForDay(timestampMs: Long) = withContext(Dispatchers.IO) {
-        dailySummaryBuilder.updateSummaryForDay(timestampMs)
     }
 
     suspend fun ensureDailySummariesPopulated() = withContext(Dispatchers.IO) {

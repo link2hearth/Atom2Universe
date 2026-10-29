@@ -423,11 +423,9 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
 
     // ── Astuce ───────────────────────────────────────────────────────────────
 
-    /** Vrai dès qu'une astuce a servi dans la grille en cours : elle ne rapporte plus rien. */
-    private val hintPrefs by lazy { getSharedPreferences("sudoku_hints", MODE_PRIVATE) }
     private var assisted: Boolean
-        get() = hintPrefs.getBoolean("assisted", false)
-        set(value) { hintPrefs.edit().putBoolean("assisted", value).apply() }
+        get() = isAssisted(this)
+        set(value) { setAssisted(this, value) }
 
     /**
      * L'astuce (5 neutrinos, comme dans les puzzles du kit) : un chiffre faux est corrigé, sinon
@@ -599,5 +597,18 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
     override fun onDestroy() {
         super.onDestroy()
         timerHandler.removeCallbacksAndMessages(null)
+    }
+
+    companion object {
+        private const val HINT_PREFS = "sudoku_hints"
+        private const val KEY_ASSISTED = "assisted"
+
+        /** Vrai dès qu'une astuce a servi dans la grille en cours (ici ou dans le widget du clicker) : elle ne rapporte plus rien. */
+        fun isAssisted(context: Context) =
+            context.getSharedPreferences(HINT_PREFS, Context.MODE_PRIVATE).getBoolean(KEY_ASSISTED, false)
+
+        fun setAssisted(context: Context, value: Boolean) {
+            context.getSharedPreferences(HINT_PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ASSISTED, value).apply()
+        }
     }
 }

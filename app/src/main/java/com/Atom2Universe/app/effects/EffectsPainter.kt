@@ -146,9 +146,9 @@ internal class EffectsPainter(private val density: Float) {
             }
         }
         if (!banner && animated) {
-            val phase = time % 11f
-            if (phase in 1.8f..3.2f) {
-                val progress = (phase - 1.8f) / 1.4f
+            val phase = time % METEOR_PERIOD
+            if (phase in METEOR_START..METEOR_END) {
+                val progress = (phase - METEOR_START) / (METEOR_END - METEOR_START)
                 val saveMeteor = canvas.save()
                 canvas.translate(w * (.08f + .9f * progress), h * (.1f + .26f * progress))
                 canvas.rotate(28f)
@@ -295,6 +295,32 @@ internal class EffectsPainter(private val density: Float) {
             canvas.drawOval(oval, paint)
             fill(Color.WHITE, (160 * pulse).toInt())
             canvas.drawCircle(x - density * .4f, y + density * 2.5f, density * .55f, paint)
+        }
+    }
+
+    companion object {
+        private const val METEOR_PERIOD = 11f
+        private const val METEOR_START = 1.8f
+        private const val METEOR_END = 3.2f
+
+        /**
+         * Wait before the next frame, in real milliseconds: slow motion is redrawn rarely but never moves
+         * more than about one pixel per frame. Speeds stay in seconds; only the drawing rate changes.
+         * [fullScene] is false when only banners are decorated (no snow, no shooting star).
+         */
+        fun frameDelayMs(pack: AppEffectPack, light: Boolean, seconds: Float, fullScene: Boolean): Long = when (pack) {
+            // Clouds and sun rays move under 4 px/s, even across a 3000 px wide screen.
+            AppEffectPack.SKY -> if (light) 250L else if (fullScene) nightDelayMs(seconds) else 100L
+            // Falling snow already moves several pixels per frame at 30 images/s; the garland alone pulses slowly.
+            AppEffectPack.CHRISTMAS -> if (fullScene) 33L else 66L
+        }
+
+        /** Twinkling stars only change brightness; the shooting star keeps 30 images/s while it crosses. */
+        private fun nightDelayMs(seconds: Float): Long {
+            val phase = seconds % METEOR_PERIOD
+            if (phase in METEOR_START..METEOR_END) return 33L
+            val untilMeteor = if (phase < METEOR_START) METEOR_START - phase else METEOR_PERIOD - phase + METEOR_START
+            return (untilMeteor * 1000f).toLong().coerceIn(1L, 100L)
         }
     }
 }

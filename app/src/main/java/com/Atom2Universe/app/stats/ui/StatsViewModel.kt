@@ -117,7 +117,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
                 val (startDate, endDate) = getPeriodRange(period)
 
                 val musicTime = repository.getMusicListeningTime(startDate, endDate)
-                val midiTime = repository.getMidiPracticeTime(startDate, endDate)
+                val midiTime = repository.getMidiTime(startDate, endDate)
                 val radioTime = repository.getRadioListeningTime(startDate, endDate)
 
                 val topArtists = repository.getTopArtists(startDate, endDate, 5)
@@ -127,7 +127,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
 
                 val stats = StatsData(
                     musicListeningTimeMs = musicTime,
-                    midiPracticeTimeMs = midiTime,
+                    midiTimeMs = midiTime,
                     radioListeningTimeMs = radioTime,
                     topArtists = topArtists,
                     topAlbums = topAlbums,
@@ -204,7 +204,7 @@ data class CalendarDate(
 
 data class StatsData(
     val musicListeningTimeMs: Long,
-    val midiPracticeTimeMs: Long,
+    val midiTimeMs: Long, // écoute + entraînement
     val radioListeningTimeMs: Long,
     val topArtists: List<ArtistStats>,
     val topAlbums: List<AlbumStats>,
@@ -212,7 +212,7 @@ data class StatsData(
     val averagePracticeScore: Float?
 ) {
     val totalTimeMs: Long
-        get() = musicListeningTimeMs + midiPracticeTimeMs + radioListeningTimeMs
+        get() = musicListeningTimeMs + midiTimeMs + radioListeningTimeMs
 
     fun formatDuration(durationMs: Long): Pair<Int, Int> {
         val totalMinutes = (durationMs / 1000 / 60).toInt()

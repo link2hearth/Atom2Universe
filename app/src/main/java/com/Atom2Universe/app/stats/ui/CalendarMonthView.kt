@@ -38,6 +38,13 @@ class CalendarMonthView @JvmOverloads constructor(
     private val monthTitleText: TextView
     private val gridContainer: LinearLayout
 
+    // Un toucher change le jour ici puis revient du ViewModel : une seule reconstruction par passage
+    private var rebuildPending = false
+    private val rebuildRunnable = Runnable {
+        rebuildPending = false
+        rebuildGrid()
+    }
+
     init {
         orientation = VERTICAL
 
@@ -113,20 +120,30 @@ class CalendarMonthView @JvmOverloads constructor(
     }
 
     fun setMonth(year: Int, month: Int) {
+        if (year == currentYear && month == currentMonth) return
         currentYear = year
         currentMonth = month
         selectedDay = -1
-        rebuildGrid()
+        requestRebuild()
     }
 
     fun setActiveDays(days: List<Int>) {
-        activeDays = days.toSet()
-        rebuildGrid()
+        val newDays = days.toSet()
+        if (newDays == activeDays) return
+        activeDays = newDays
+        requestRebuild()
     }
 
     fun setSelectedDay(day: Int) {
+        if (day == selectedDay) return
         selectedDay = day
-        rebuildGrid()
+        requestRebuild()
+    }
+
+    private fun requestRebuild() {
+        if (rebuildPending) return
+        rebuildPending = true
+        post(rebuildRunnable)
     }
 
     fun setOnDaySelectedListener(listener: (Int) -> Unit) {
@@ -145,7 +162,7 @@ class CalendarMonthView @JvmOverloads constructor(
         currentYear = y
         currentMonth = m
         selectedDay = -1
-        rebuildGrid()
+        requestRebuild()
         onMonthChangedListener?.invoke(y, m)
     }
 
@@ -153,7 +170,7 @@ class CalendarMonthView @JvmOverloads constructor(
         val yearMonth = YearMonth.of(currentYear, currentMonth)
         val monthName = yearMonth.month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
             .replaceFirstChar { it.titlecase(Locale.getDefault()) }
-        monthTitleText.text = "$monthName $currentYear"
+        monthTitleText.text = context.getString(R.string.stats_calendar_month_year, monthName, currentYear)
 
         gridContainer.removeAllViews()
 
@@ -241,8 +258,7 @@ class CalendarMonthView @JvmOverloads constructor(
                     }
 
                     cell.setOnClickListener {
-                        selectedDay = day
-                        rebuildGrid()
+                        setSelectedDay(day)
                         onDaySelectedListener?.invoke(day)
                     }
 

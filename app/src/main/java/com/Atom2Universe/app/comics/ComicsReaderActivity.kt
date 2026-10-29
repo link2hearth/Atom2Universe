@@ -206,14 +206,16 @@ class ComicsReaderActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Un PDF ouvert depuis les livres reste un livre dans les stats (même titre que sa tuile)
+        val module = if (fromBooks) StatsRepository.MODULE_BOOK else StatsRepository.MODULE_COMIC
         comicTitle.takeIf { it.isNotEmpty() }?.let {
-            StatsTracker.startReadingSession(StatsRepository.MODULE_COMIC, it)
+            StatsTracker.startReadingSession(module, it, owner = this)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        StatsTracker.endReadingSession()
+        StatsTracker.endReadingSession(owner = this)
         // Hors du fil de l'écran : saveScope n'est jamais annulé, l'écriture va au bout même si
         // l'activité est détruite. La page est déjà écrite à chaque changement (voir
         // initNavigation), donc la bibliothèque qui se rouvre lit la bonne page même si cette

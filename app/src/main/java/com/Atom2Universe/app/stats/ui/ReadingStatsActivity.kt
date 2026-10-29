@@ -48,6 +48,8 @@ class ReadingStatsActivity : ThemedActivity() {
         initViews()
         setupTabs()
         observeViewModel()
+        // Après une recréation (thème, rotation), le ViewModel garde l'onglet choisi
+        showPeriod(viewModel.selectedPeriod.value)
     }
 
     private fun initViews() {
@@ -76,13 +78,14 @@ class ReadingStatsActivity : ThemedActivity() {
         tabMonth.setOnClickListener { selectPeriod(StatsPeriod.MONTH) }
         tabYear.setOnClickListener { selectPeriod(StatsPeriod.YEAR) }
         tabCalendar.setOnClickListener { selectPeriod(StatsPeriod.CALENDAR) }
-
-        // Semaine sélectionnée par défaut
-        updateTabSelection(StatsPeriod.WEEK)
     }
 
     private fun selectPeriod(period: StatsPeriod) {
         viewModel.selectPeriod(period)
+        showPeriod(period)
+    }
+
+    private fun showPeriod(period: StatsPeriod) {
         updateTabSelection(period)
 
         if (period == StatsPeriod.CALENDAR) {
@@ -92,6 +95,8 @@ class ReadingStatsActivity : ThemedActivity() {
             ensureCalendarInflated()
         } else {
             calendarContentContainer.visibility = View.GONE
+            // Des données identiques ne sont pas réémises : on réaffiche celles qu'on a
+            renderStats(viewModel.statsData.value)
         }
     }
 
@@ -111,6 +116,12 @@ class ReadingStatsActivity : ThemedActivity() {
         calendarMonthView?.setOnMonthChangedListener { year, month ->
             viewModel.setCalendarMonth(year, month)
         }
+
+        // Ce que le ViewModel a déjà chargé (retour sur l'onglet après une recréation)
+        calendarMonthView?.setMonth(viewModel.calendarYear.value, viewModel.calendarMonth.value)
+        calendarMonthView?.setActiveDays(viewModel.activeDays.value)
+        viewModel.selectedDate.value?.let { calendarMonthView?.setSelectedDay(it.day) }
+        displayCalendarHistory(viewModel.calendarHistory.value)
     }
 
     private fun updateTabSelection(period: StatsPeriod) {
@@ -134,11 +145,7 @@ class ReadingStatsActivity : ThemedActivity() {
         lifecycleScope.launch {
             viewModel.statsData.collect { data ->
                 if (viewModel.selectedPeriod.value == StatsPeriod.CALENDAR) return@collect
-                if (data == null || data.isEmpty) {
-                    showEmpty()
-                } else {
-                    showStats(data)
-                }
+                renderStats(data)
             }
         }
 
@@ -178,6 +185,10 @@ class ReadingStatsActivity : ThemedActivity() {
         }
     }
 
+    private fun renderStats(data: ReadingStatsData?) {
+        if (data == null || data.isEmpty) showEmpty() else showStats(data)
+    }
+
     private fun showEmpty() {
         contentContainer.visibility = View.GONE
         emptyView.visibility = View.VISIBLE
@@ -210,9 +221,9 @@ class ReadingStatsActivity : ThemedActivity() {
 
         items.forEachIndexed { index, item ->
             val itemView = layoutInflater.inflate(R.layout.item_stat_entry, topTitlesContainer, false)
-            val icon = if (item.moduleType == StatsRepository.MODULE_COMIC) "📕" else "📖"
-            itemView.findViewById<TextView>(R.id.rank_text).text = "${index + 1}."
-            itemView.findViewById<TextView>(R.id.title_text).text = "$icon ${item.readingTitle}"
+            val icon = getString(if (item.moduleType == StatsRepository.MODULE_COMIC) R.string.reading_stats_icon_comic else R.string.reading_stats_icon_book)
+            itemView.findViewById<TextView>(R.id.rank_text).text = getString(R.string.stats_rank_format, index + 1)
+            itemView.findViewById<TextView>(R.id.title_text).text = getString(R.string.reading_stats_icon_title_format, icon, item.readingTitle)
             itemView.findViewById<TextView>(R.id.duration_text).text = formatDuration(item.totalDuration)
             topTitlesContainer.addView(itemView)
         }
@@ -252,7 +263,7 @@ class ReadingStatsActivity : ThemedActivity() {
         if (bookEntries.isNotEmpty()) {
             addSectionHeader(container, getString(R.string.reading_stats_books_title))
             for (entry in bookEntries.take(10)) {
-                addHistoryItem(container, entry.title, formatDuration(entry.durationMs))
+                addHistoryItem(container, entryTitle(entry.title), formatDuration(entry.durationMs))
             }
         }
 
@@ -261,10 +272,12 @@ class ReadingStatsActivity : ThemedActivity() {
         if (comicEntries.isNotEmpty()) {
             addSectionHeader(container, getString(R.string.reading_stats_comics_title))
             for (entry in comicEntries.take(10)) {
-                addHistoryItem(container, entry.title, formatDuration(entry.durationMs))
+                addHistoryItem(container, entryTitle(entry.title), formatDuration(entry.durationMs))
             }
         }
     }
+
+    private fun entryTitle(title: String): String = title.ifBlank { getString(R.string.reading_stats_unknown_title) }
 
     private fun addSectionHeader(container: LinearLayout, title: String) {
         val sectionView = layoutInflater.inflate(R.layout.item_calendar_history_module_section, container, false)

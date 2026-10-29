@@ -21,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
@@ -115,25 +116,51 @@ class AppUpdateRepository(context: Context) {
             apk.delete()
             prefs.edit { remove("apk_url") }
             val partial = File(directory, "update.part")
+            // Un téléchargement coupé (réseau perdu, écran quitté) de cette même version reprend
+            // là où il s'est arrêté, si le serveur l'accepte.
+            val resumeFrom = if (prefs.getString("part_url", null) == release.url)
+                partial.length().takeIf { it in 1 until release.size } ?: 0L else 0L
+            if (resumeFrom == 0L) partial.delete()
+            prefs.edit { putString("part_url", release.url) }
+            // Vrai tant qu'une coupure laisse un début de fichier sain, à reprendre la prochaine fois
+            var keepPartial = false
             try {
-                client.newCall(Request.Builder().url(release.url).build()).execute().use { response ->
+                val request = Request.Builder().url(release.url).apply {
+                    if (resumeFrom > 0) header("Range", "bytes=$resumeFrom-")
+                }.build()
+                client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful || response.request.url.scheme != "https")
                         throw IOException("Download HTTP ${response.code}")
+                    // Reprise seulement sur une réponse 206 qui repart pile de là ; sinon, tout depuis zéro
+                    val resumed = resumeFrom > 0 && response.code == 206 &&
+                        response.header("Content-Range") == "bytes $resumeFrom-${release.size - 1}/${release.size}"
+                    val start = if (resumed) resumeFrom else 0L
                     val body = response.body ?: throw IOException("Empty APK")
-                    if (directory.usableSpace < release.size + 16L * 1024 * 1024)
+                    if (directory.usableSpace < release.size - start + 16L * 1024 * 1024)
                         throw IOException("Insufficient space")
                     val sha = MessageDigest.getInstance("SHA-256")
+                    val buffer = ByteArray(64 * 1024)
+                    if (resumed) partial.inputStream().use { saved ->
+                        while (true) {
+                            val count = saved.read(buffer)
+                            if (count < 0) break
+                            sha.update(buffer, 0, count)
+                        }
+                    }
+                    keepPartial = true
                     body.byteStream().use { input ->
-                        partial.outputStream().use { output ->
-                            val buffer = ByteArray(64 * 1024)
-                            var total = 0L
+                        FileOutputStream(partial, resumed).use { output ->
+                            var total = start
                             var lastProgress = -1
                             while (true) {
                                 currentCoroutineContext().ensureActive()
                                 val count = input.read(buffer)
                                 if (count < 0) break
                                 total += count
-                                if (total > release.size) throw IOException("Unexpected APK size")
+                                if (total > release.size) {
+                                    keepPartial = false
+                                    throw IOException("Unexpected APK size")
+                                }
                                 output.write(buffer, 0, count)
                                 sha.update(buffer, 0, count)
                                 val percent = (total * 100 / release.size).toInt()
@@ -142,6 +169,8 @@ class AppUpdateRepository(context: Context) {
                             if (total != release.size) throw IOException("Incomplete APK")
                         }
                     }
+                    // Fichier complet : s'il est mauvais, il ne se reprend pas
+                    keepPartial = false
                     if (release.digest.startsWith("sha256:")) {
                         val actual = sha.digest().joinToString("") { "%02x".format(it) }
                         if (!actual.equals(release.digest.removePrefix("sha256:"), ignoreCase = true))
@@ -153,7 +182,10 @@ class AppUpdateRepository(context: Context) {
                 prefs.edit { putString("apk_url", release.url) }
                 apk
             } finally {
-                partial.delete()
+                if (!keepPartial) {
+                    partial.delete()
+                    prefs.edit { remove("part_url") }
+                }
             }
         }
     }

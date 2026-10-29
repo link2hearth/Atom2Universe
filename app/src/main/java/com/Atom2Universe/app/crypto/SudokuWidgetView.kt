@@ -15,8 +15,10 @@ import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.games.sudoku.CellPosition
+import com.Atom2Universe.app.games.sudoku.SudokuActivity
 import com.Atom2Universe.app.games.sudoku.SudokuBoard
 import com.Atom2Universe.app.games.sudoku.SudokuDifficulty
 import com.Atom2Universe.app.games.sudoku.SudokuGame
@@ -27,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.hypot
@@ -61,6 +64,7 @@ class SudokuWidgetView @JvmOverloads constructor(
     private val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     // Écritures en base l'une après l'autre : une ancienne ne passe jamais après une récente
     private var saveJob: Job? = null
+    private var generation: Job? = null
     // Chrono de SudokuActivity, recopié tel quel : le widget ne le fait pas tourner
     private var savedElapsedMs = 0L
     // Grille résolue (récompense versée) : plus de coup ni d'annulation jusqu'à la suivante
@@ -257,12 +261,15 @@ class SudokuWidgetView @JvmOverloads constructor(
         updateActionButtons()
         GameStatsRepository(context).recordSudokuStarted()
 
-        ioScope.launch {
-            val board = SudokuGame.generatePuzzle(difficulty)
+        // Deux choix rapides : seule la dernière grille demandée se calcule
+        generation?.cancel()
+        generation = ioScope.launch(Dispatchers.Default) {
+            val board = SudokuGame.generatePuzzle(difficulty) { ensureActive() }
             withContext(Dispatchers.Main) {
                 sudokuGridView.setBoard(board)
                 sudokuGridView.clearSelection()
                 puzzleSolved = false
+                SudokuActivity.setAssisted(context, false)
                 savedElapsedMs = 0L
                 // Sauvegarder la nouvelle partie en base
                 persistBoard()
@@ -338,13 +345,12 @@ class SudokuWidgetView @JvmOverloads constructor(
             undoStack.clear()
             updateActionButtons()
             persistBoard()
-            GameStatsRepository(context).recordSudokuWon()
-            val reward = when (currentDifficulty) {
-                SudokuDifficulty.EASY   -> 5
-                SudokuDifficulty.MEDIUM -> 10
-                SudokuDifficulty.HARD   -> 20
+            // Une astuce prise dans l'activité sur cette grille : rien à payer (comme dans l'activité)
+            if (!SudokuActivity.isAssisted(context)) {
+                GameStatsRepository(context).recordSudokuWon()
+                NeutrinoRepository(context).addBalance(NeutrinoRewards.sudoku(currentDifficulty.ordinal))
             }
-            NeutrinoRepository(context).addBalance(reward)
+            SudokuActivity.setAssisted(context, false)
         } else {
             resultText.text = context.getString(R.string.sudoku_result_failure)
             resultText.setTextColor(Color.parseColor("#EF4444"))

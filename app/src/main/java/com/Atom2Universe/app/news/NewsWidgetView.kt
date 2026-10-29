@@ -19,12 +19,12 @@ import com.Atom2Universe.app.crypto.VisibleWindowGate
 import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreen
 import com.Atom2Universe.app.crypto.keepFloatingWidgetOnScreenOnResize
 import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.math.abs
 import kotlin.math.hypot
 
@@ -38,6 +38,11 @@ class NewsWidgetView @JvmOverloads constructor(
         private const val ROTATE_INTERVAL_MS = 30_000L
         const val EXTRA_HIGHLIGHT_ID = "news_highlight_id"
 
+        // Dernière lecture réussie, gardée au-delà de la vue : rouvrir le clicker ne relit pas
+        // le RSS avant l'échéance. Fil principal seulement.
+        private var cachedArticles: List<NewsArticle> = emptyList()
+        private var cachedAtMs = 0L
+        private var cachedSourceIds: Set<String> = emptySet()
     }
 
     private val cardView: MaterialCardView
@@ -68,6 +73,8 @@ class NewsWidgetView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private var fetchJob: Job? = null
 
+    /** Articles lus pour le widget, avant le filtre des masqués ; propres au widget. */
+    private var allArticles: List<NewsArticle> = emptyList()
     private var visibleArticles: List<NewsArticle> = emptyList()
     private var currentIndex = 0
 
@@ -235,43 +242,72 @@ class NewsWidgetView @JvmOverloads constructor(
 
     // ── Public ────────────────────────────────────────────────────────────────
 
+    /**
+     * Relit le RSS. Une actualisation de fond ne remet ni « Chargement… » ni le premier
+     * article, et une panne réseau garde les articles déjà affichés.
+     */
     fun refresh() {
         lastFetchAtMs = SystemClock.elapsedRealtime()
+        val startedAtMs = lastFetchAtMs
         fetchJob?.cancel()
         hiddenStack.clear()
         cancelUnhideButtonHide()
         btnUnhide.visibility = GONE
         fetchJob = scope.launch {
-            widgetState = WidgetState.LOADING
-            showStatus(context.getString(R.string.news_widget_loading))
-            updateSelfVisibility()
-            val sources = NewsSource.DEFAULT_SOURCES.filter {
-                it.id in NewsPreferences.getEnabledSourceIds(context)
-            }
+            val enabledIds = NewsPreferences.getEnabledSourceIds(context)
+            val sources = NewsSource.DEFAULT_SOURCES.filter { it.id in enabledIds }
             val banned = NewsPreferences.getBannedWords(context)
             try {
-                withContext(Dispatchers.IO) {
-                    NewsRepository.refresh(sources, bannedWords = banned)
-                }
-                // Lu après le fetch pour inclure les hides effectués pendant le réseau.
-                val hidden = NewsPreferences.getHiddenIds(context).keys
-                visibleArticles = NewsRepository.filterVisible(hidden, banned)
-                currentIndex = 0
+                val fetched = NewsRepository.refresh(sources, bannedWords = banned)
+                cachedArticles = fetched
+                cachedAtMs = startedAtMs
+                cachedSourceIds = enabledIds
+                allArticles = fetched
+                showArticles(keepId = visibleArticles.getOrNull(currentIndex)?.id)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
                 if (visibleArticles.isEmpty()) {
-                    widgetState = WidgetState.EMPTY
+                    widgetState = WidgetState.ERROR
+                    showStatus(context.getString(R.string.news_widget_error))
                     updateSelfVisibility()
                     stopRotation()
-                } else {
-                    showCurrentArticle()
-                    startRotation()
                 }
-            } catch (_: Exception) {
-                widgetState = WidgetState.ERROR
-                showStatus(context.getString(R.string.news_widget_error))
-                updateSelfVisibility()
-                stopRotation()
             }
         }
+    }
+
+    /** Montre la dernière lecture si elle porte sur les mêmes sources ; relit si elle a vieilli. */
+    private fun loadCachedOrRefresh() {
+        val enabledIds = NewsPreferences.getEnabledSourceIds(context)
+        if (cachedAtMs == 0L || enabledIds != cachedSourceIds) {
+            refresh()
+            return
+        }
+        allArticles = cachedArticles
+        showArticles(keepId = null)
+        if (SystemClock.elapsedRealtime() - cachedAtMs >= fetchIntervalMs) {
+            refresh()
+        } else {
+            lastFetchAtMs = cachedAtMs
+        }
+    }
+
+    /** Filtre les masqués (lus maintenant, pour inclure ceux masqués pendant le réseau). */
+    private fun showArticles(keepId: String?) {
+        val hidden = NewsPreferences.getHiddenIds(context).keys
+        val banned = NewsPreferences.getBannedWords(context)
+        visibleArticles = NewsRepository.filterVisible(allArticles, hidden, banned)
+        if (visibleArticles.isEmpty()) {
+            widgetState = WidgetState.EMPTY
+            updateSelfVisibility()
+            stopRotation()
+            return
+        }
+        val kept = if (keepId == null) -1 else visibleArticles.indexOfFirst { it.id == keepId }
+        currentIndex = if (kept >= 0) kept else 0
+        showCurrentArticle()
+        startRotation()
     }
 
     fun stopRotation() {
@@ -287,7 +323,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (toggleEnabled) refresh()
+        if (toggleEnabled) loadCachedOrRefresh()
         gate.update()
     }
 
@@ -335,7 +371,7 @@ class NewsWidgetView @JvmOverloads constructor(
         NewsPreferences.addHiddenId(context, article.id)
         val banned = NewsPreferences.getBannedWords(context)
         val hidden = NewsPreferences.getHiddenIds(context).keys
-        visibleArticles = NewsRepository.filterVisible(hidden, banned)
+        visibleArticles = NewsRepository.filterVisible(allArticles, hidden, banned)
         btnUnhide.visibility = VISIBLE
         scheduleUnhideButtonHide()
         if (visibleArticles.isEmpty()) {
@@ -354,7 +390,7 @@ class NewsWidgetView @JvmOverloads constructor(
         NewsPreferences.removeHiddenId(context, article.id)
         val banned = NewsPreferences.getBannedWords(context)
         val hidden = NewsPreferences.getHiddenIds(context).keys
-        visibleArticles = NewsRepository.filterVisible(hidden, banned)
+        visibleArticles = NewsRepository.filterVisible(allArticles, hidden, banned)
         if (hiddenStack.isNotEmpty()) {
             btnUnhide.visibility = VISIBLE
             scheduleUnhideButtonHide()
@@ -376,7 +412,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     private fun openCurrentArticle() {
         val article = visibleArticles.getOrNull(currentIndex)
-        val url = article?.link
+        val url = article?.link?.takeIf { NewsRepository.isWebLink(it) }
         if (url != null && onOpenUrl != null) {
             onOpenUrl!!.invoke(url)
         } else {

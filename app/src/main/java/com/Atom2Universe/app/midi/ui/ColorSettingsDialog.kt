@@ -230,7 +230,6 @@ class ColorSettingsDialog : DialogFragment() {
             context = requireContext(),
             currentColorHex = colorHex,
             currentTextColorMode = "auto",
-            showAlpha = false,
             showTextMode = false
         ) { newColorHex, _ ->
             lifecycleScope.launch {
@@ -252,7 +251,6 @@ class ColorSettingsDialog : DialogFragment() {
             context = requireContext(),
             currentColorHex = colorHex,
             currentTextColorMode = "auto",
-            showAlpha = false,
             showTextMode = false
         ) { newColorHex, _ ->
             lifecycleScope.launch {

@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.ColorUtils
@@ -30,20 +29,14 @@ import com.google.android.material.textfield.TextInputEditText
 /**
  * Dialog pour sélectionner une couleur avec option de couleur de texte
  * Utilisé pour les groupes et les tags
- * @param showAlpha Si true, affiche un slider pour la transparence (utilisé par Pixel Art Editor)
- * @param showTextMode Si true, affiche les options de couleur de texte (désactivé pour Pixel Art)
- * @param initialAlpha Valeur alpha initiale (0-255), utilisé uniquement si showAlpha = true
- * @param onColorWithAlphaSelected Callback optionnel pour les couleurs avec alpha (reçoit colorInt)
+ * @param showTextMode Si true, affiche les options de couleur de texte
  * @param onColorSelected Callback principal pour les couleurs (trailing lambda compatible)
  */
 class SimpleColorPickerDialog(
     context: Context,
     private val currentColorHex: String?,
     private val currentTextColorMode: String = "auto",
-    private val showAlpha: Boolean = false,
     private val showTextMode: Boolean = true,
-    private val initialAlpha: Int = 255,
-    private val onColorWithAlphaSelected: ((colorInt: Int) -> Unit)? = null,
     private val onColorSelected: (colorHex: String, textColorMode: String) -> Unit
 ) : com.Atom2Universe.app.util.ImmersiveDialog(
     context,
@@ -79,18 +72,11 @@ class SimpleColorPickerDialog(
     private lateinit var favoritesGrid: GridLayout
     private lateinit var addFavoriteBtn: MaterialButton
 
-    // Alpha slider views (only used when showAlpha = true)
-    private var alphaSection: LinearLayout? = null
-    private var alphaSlider: SeekBar? = null
-    private var alphaValueText: TextView? = null
     private var textModeSection: LinearLayout? = null
 
     private val favoritesManager = FavoriteColorsManager(context)
     private var selectedColorHex: String = currentColorHex ?: "#2196F3"
     private var selectedTextColorMode: String = currentTextColorMode
-
-    // Alpha value (0-255, default fully opaque or from initialAlpha)
-    private var currentAlpha: Int = if (showAlpha) initialAlpha else 255
 
     // HSV values
     private var hue: Float = 0f
@@ -115,7 +101,6 @@ class SimpleColorPickerDialog(
         setupQuickColors()
         setupColorPicker()
         setupHexInput()
-        setupAlphaSlider()
         setupTextModeRadios()
         setupButtons()
 
@@ -135,15 +120,7 @@ class SimpleColorPickerDialog(
         favoritesSection = findViewById(R.id.favorites_section)
         favoritesGrid = findViewById(R.id.color_favorites_grid)
         addFavoriteBtn = findViewById(R.id.btn_add_favorite)
-
-        // Alpha slider views (may be null if layout doesn't have them)
-        alphaSection = findViewById(R.id.alpha_section)
-        alphaSlider = findViewById(R.id.alpha_slider)
-        alphaValueText = findViewById(R.id.alpha_value_text)
         textModeSection = findViewById(R.id.text_mode_section)
-
-        // Show/hide alpha section based on showAlpha parameter
-        alphaSection?.visibility = if (showAlpha) View.VISIBLE else View.GONE
 
         // Show/hide text mode section based on showTextMode parameter
         textModeSection?.visibility = if (showTextMode) View.VISIBLE else View.GONE
@@ -340,25 +317,6 @@ class SimpleColorPickerDialog(
         })
     }
 
-    private fun setupAlphaSlider() {
-        if (!showAlpha) return
-
-        alphaSlider?.apply {
-            max = 255
-            progress = currentAlpha
-            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    currentAlpha = progress
-                    alphaValueText?.text = "$progress"
-                    updatePreview()
-                }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-        }
-        alphaValueText?.text = "$currentAlpha"
-    }
-
     private fun setupTextModeRadios() {
         // Set initial selection
         when (selectedTextColorMode) {
@@ -386,23 +344,9 @@ class SimpleColorPickerDialog(
         }
 
         findViewById<MaterialButton>(R.id.btn_confirm).setOnClickListener {
-            if (showAlpha && onColorWithAlphaSelected != null) {
-                // Return color with alpha as Int
-                val colorInt = getSelectedColorWithAlpha()
-                onColorWithAlphaSelected.invoke(colorInt)
-            } else {
-                onColorSelected(selectedColorHex, selectedTextColorMode)
-            }
+            onColorSelected(selectedColorHex, selectedTextColorMode)
             dismiss()
         }
-    }
-
-    /**
-     * Get the selected color as an Int including alpha channel
-     */
-    private fun getSelectedColorWithAlpha(): Int {
-        val baseColor = Color.parseColor(selectedColorHex)
-        return Color.argb(currentAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
     }
 
     private fun setColorFromHex(hex: String) {
@@ -446,13 +390,7 @@ class SimpleColorPickerDialog(
     private fun updatePreview() {
         try {
             val baseColor = Color.parseColor(selectedColorHex)
-            // Apply alpha if enabled
-            val bgColor = if (showAlpha) {
-                Color.argb(currentAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
-            } else {
-                baseColor
-            }
-            previewCard.setCardBackgroundColor(bgColor)
+            previewCard.setCardBackgroundColor(baseColor)
 
             val textColor = getTextColor(baseColor)
             previewText.setTextColor(textColor)

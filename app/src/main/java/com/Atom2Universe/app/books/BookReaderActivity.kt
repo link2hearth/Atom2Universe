@@ -326,6 +326,8 @@ class BookReaderActivity : ThemedActivity() {
     private val bookmarkData = mutableMapOf<Int, String>() // itemIndex → text snippet
     // Titre fourni par la bibliothèque (plus fiable que le nom de fichier), prioritaire quand présent
     private var pendingBookTitle: String? = null
+    // Titre du livre affiché, pour les stats (la toolbar porte le nom de l'appli tant qu'aucun livre n'est ouvert)
+    private var statsTitle: String? = null
     private val readingProgressRepository by lazy { ReadingProgressRepository(this) }
 
     // ── Auto-hide des barres ──────────────────────────────────────────────────
@@ -408,9 +410,13 @@ class BookReaderActivity : ThemedActivity() {
         }
         if (barsActive) showBarsTemporarily()
         // Reprend le suivi du temps de lecture après un retour en avant-plan (le livre est déjà ouvert)
-        toolbar.title?.toString()?.takeIf { it.isNotEmpty() }?.let {
-            StatsTracker.startReadingSession(StatsRepository.MODULE_BOOK, it)
-        }
+        startReadingStats()
+    }
+
+    /** Une séance seulement quand un livre est affiché : pas d'écran vide, pas de fichier refusé. */
+    private fun startReadingStats() {
+        if (currentViewType == ViewType.EMPTY) return
+        statsTitle?.let { StatsTracker.startReadingSession(StatsRepository.MODULE_BOOK, it, owner = this) }
     }
 
     override fun onStart() {
@@ -424,7 +430,8 @@ class BookReaderActivity : ThemedActivity() {
         autoSaveJob?.cancel()
         autoSaveJob = null
         savePosition(finalSave = true)
-        StatsTracker.endReadingSession()
+        // Ne ferme que notre séance : le lecteur de BD ouvert pour un PDF a déjà la sienne
+        StatsTracker.endReadingSession(owner = this)
     }
 
     override fun onDestroy() {
@@ -1058,7 +1065,6 @@ class BookReaderActivity : ThemedActivity() {
             ?: fileName?.substringBeforeLast('.')
             ?: getString(R.string.book_reader_title)
         toolbar.title = title
-        StatsTracker.startReadingSession(StatsRepository.MODULE_BOOK, title)
         currentUri = uri
         currentFileSize = getFileSize(uri)
         loadBookmarks(uri)
@@ -1086,6 +1092,11 @@ class BookReaderActivity : ThemedActivity() {
                 finish()
             }
             else -> loadTxt(uri)
+        }
+        // Le PDF part au lecteur de BD, qui compte lui-même son temps de lecture
+        if (!isPdf(mimeType, fileName)) {
+            statsTitle = title
+            startReadingStats()
         }
     }
 
@@ -1709,6 +1720,10 @@ class BookReaderActivity : ThemedActivity() {
 
     private fun showView(type: ViewType) {
         currentViewType = type
+        if (type == ViewType.EMPTY) {
+            statsTitle = null
+            StatsTracker.endReadingSession(owner = this)
+        }
         emptyState.visibility = if (type == ViewType.EMPTY) View.VISIBLE else View.GONE
         txtRecycler.visibility = if (type == ViewType.TXT || type == ViewType.EPUB) View.VISIBLE else View.GONE
         val hasBook = type != ViewType.EMPTY

@@ -117,10 +117,16 @@ object CoverThumbs {
         val produced = produce() ?: return null
         val thumb = shrinkToThumb(produced)
         if (diskFile != null) {
+            // Écrite à côté puis renommée : une vignette coupée ne doit jamais rester sur disque.
+            // Nom unique : deux chargements de la même couverture peuvent se croiser.
+            val partial = File(diskFile.path + "." + System.nanoTime() + ".part")
             try {
                 diskFile.parentFile?.mkdirs()
-                FileOutputStream(diskFile).use { thumb.compress(Bitmap.CompressFormat.JPEG, 85, it) }
-            } catch (_: Exception) {}
+                val written = FileOutputStream(partial).use { thumb.compress(Bitmap.CompressFormat.JPEG, 85, it) }
+                if (!written || !partial.renameTo(diskFile)) partial.delete()
+            } catch (_: Exception) {
+                partial.delete()
+            }
         }
         memory.put(key, thumb)
         return thumb

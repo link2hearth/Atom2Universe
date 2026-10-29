@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
@@ -14,15 +15,15 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class NewsActivity : com.Atom2Universe.app.ThemedActivity() {
 
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var loadJob: Job? = null
+    /** Articles de cet écran (recherche comprise), avant le filtre des masqués. */
+    private var allArticles: List<NewsArticle> = emptyList()
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var searchInput: EditText
@@ -64,12 +65,14 @@ class NewsActivity : com.Atom2Universe.app.ThemedActivity() {
 
         adapter = NewsAdapter(
             onOpen = { article ->
-                if (article.link != null) {
+                val link = article.link
+                if (link != null && NewsRepository.isWebLink(link)) {
                     val intent = android.content.Intent(
                         android.content.Intent.ACTION_VIEW,
-                        android.net.Uri.parse(article.link)
+                        android.net.Uri.parse(link)
                     )
-                    startActivity(intent)
+                    // Aucun navigateur installé : l'appui ne fait rien.
+                    try { startActivity(intent) } catch (_: android.content.ActivityNotFoundException) {}
                 }
             },
             onHide = { article ->
@@ -152,21 +155,28 @@ class NewsActivity : com.Atom2Universe.app.ThemedActivity() {
 
     private fun loadArticles(force: Boolean) {
         statusView.text = getString(R.string.news_loading)
-        scope.launch {
+        // Une nouvelle recherche remplace la précédente au lieu de s'y ajouter.
+        loadJob?.cancel()
+        loadJob = lifecycleScope.launch {
             val sources  = NewsSource.DEFAULT_SOURCES.filter {
                 it.id in NewsPreferences.getEnabledSourceIds(this@NewsActivity)
             }
             val banned   = NewsPreferences.getBannedWords(this@NewsActivity)
             val query    = NewsPreferences.getLastQuery(this@NewsActivity)
             try {
-                withContext(Dispatchers.IO) {
-                    NewsRepository.refresh(sources, query = query, bannedWords = banned)
-                }
+                allArticles = NewsRepository.refresh(sources, query = query, bannedWords = banned)
                 displayArticles()
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
-                statusView.text = getString(R.string.news_error)
-                emptyState.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
+                // Panne réseau : les articles déjà lus restent ; l'erreur seulement à vide.
+                if (allArticles.isEmpty()) {
+                    statusView.text = getString(R.string.news_error)
+                    emptyState.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    displayArticles()
+                }
             }
         }
     }
@@ -174,7 +184,7 @@ class NewsActivity : com.Atom2Universe.app.ThemedActivity() {
     private fun displayArticles() {
         val hidden   = NewsPreferences.getHiddenIds(this).keys
         val banned   = NewsPreferences.getBannedWords(this)
-        val articles = NewsRepository.filterVisible(hidden, banned)
+        val articles = NewsRepository.filterVisible(allArticles, hidden, banned)
 
         val count = articles.size
         statusView.text = if (count == 0) getString(R.string.news_empty)

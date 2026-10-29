@@ -14,6 +14,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.games.draughts.DraughtsActivity
+import com.Atom2Universe.app.games.draughts.DraughtsActivity.Companion.putGame
 import com.Atom2Universe.app.games.draughts.DraughtsDifficulty
 import com.Atom2Universe.app.games.draughts.DraughtsGame
 import com.Atom2Universe.app.games.draughts.DraughtsMove
@@ -48,6 +51,8 @@ class DraughtsWidgetView @JvmOverloads constructor(
     private val game = DraughtsGame()
     private var ai: DraughtsAI? = null
     private var difficulty = DraughtsDifficulty.STANDARD
+    // Difficulté la plus basse jouée pendant la partie (partagée avec DraughtsActivity) : c'est elle qui paie
+    private var rewardDifficulty = DraughtsDifficulty.STANDARD
     private var aiThinking = false
 
     private val aiScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -178,6 +183,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
         aiThinking = false
 
         game.newGame()
+        rewardDifficulty = difficulty
         ai = if (difficulty.hasAI()) DraughtsAI(difficulty) else null
         boardView.isTwoPlayerMode = (difficulty == DraughtsDifficulty.TWO_PLAYER)
         boardView.selectedPos = null
@@ -188,10 +194,15 @@ class DraughtsWidgetView @JvmOverloads constructor(
         boardView.refresh()
         updatePieceCount()
 
-        context.getSharedPreferences("draughts_save", Context.MODE_PRIVATE).edit()
-            .putString("difficulty", difficulty.name)
-            .remove("state")
-            .apply()
+        // Effacer la partie précédente (chrono de l'activité compris)
+        clearSave()
+    }
+
+    private fun prefs() = context.getSharedPreferences(DraughtsActivity.PREFS, Context.MODE_PRIVATE)
+
+    /** Partie finie ou abandonnée : seule la difficulté reste. */
+    private fun clearSave() {
+        prefs().edit().clear().putString(DraughtsActivity.KEY_DIFFICULTY, difficulty.name).apply()
     }
 
     // ── Chargement de l'état sauvegardé ──────────────────────────────────────
@@ -199,14 +210,17 @@ class DraughtsWidgetView @JvmOverloads constructor(
         ai?.cancel(); ai = null; aiThinking = false
         mainHandler.removeCallbacksAndMessages(null)
 
-        val prefs = context.getSharedPreferences("draughts_save", Context.MODE_PRIVATE)
-        val savedDiff = prefs.getString("difficulty", null)
+        val prefs = prefs()
+        val savedDiff = prefs.getString(DraughtsActivity.KEY_DIFFICULTY, null)
         difficulty = if (savedDiff != null) {
             runCatching { DraughtsDifficulty.valueOf(savedDiff) }.getOrDefault(DraughtsDifficulty.STANDARD)
         } else DraughtsDifficulty.STANDARD
 
-        val state = prefs.getString("state", null)
-        if (state != null) runCatching { game.deserialize(state) }
+        // Comme l'activité ; une partie finie (ici ou dans l'activité) n'est pas gardée jouable
+        rewardDifficulty = runCatching { DraughtsActivity.restoreGame(prefs, game, difficulty) }
+            .getOrElse { game.newGame(); difficulty }
+        if (game.isGameOver) { game.newGame(); rewardDifficulty = difficulty }
+        boardView.clearLastMove()
 
         ai = if (difficulty.hasAI()) DraughtsAI(difficulty) else null
         boardView.isTwoPlayerMode = (difficulty == DraughtsDifficulty.TWO_PLAYER)
@@ -276,9 +290,9 @@ class DraughtsWidgetView @JvmOverloads constructor(
     }
 
     private fun saveState() {
-        context.getSharedPreferences("draughts_save", Context.MODE_PRIVATE).edit()
-            .putString("state", game.serialize())
-            .apply()
+        val editor = prefs().edit()
+        editor.putGame(game, rewardDifficulty)
+        editor.apply()
     }
 
     private fun triggerAI() {
@@ -327,14 +341,11 @@ class DraughtsWidgetView @JvmOverloads constructor(
         resultText.text = label
         resultText.setTextColor(color)
         resultOverlay.visibility = VISIBLE
+        // Une partie finie ne revient jamais comme partie vivante (ni ici, ni dans l'activité)
+        clearSave()
 
         if (playerWon) {
-            val reward = when (difficulty) {
-                DraughtsDifficulty.TRAINING -> 10
-                DraughtsDifficulty.STANDARD -> 20
-                DraughtsDifficulty.EXPERT   -> 50
-                else -> 0
-            }
+            val reward = NeutrinoRewards.draughts(rewardDifficulty)
             if (reward > 0) NeutrinoRepository(context).addBalance(reward)
         }
     }

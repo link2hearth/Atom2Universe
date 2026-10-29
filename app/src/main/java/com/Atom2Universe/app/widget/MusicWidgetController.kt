@@ -164,8 +164,9 @@ object MusicWidgetController {
                         album = currentTrack.album,
                         albumArtUri = currentTrack.albumArtUri,
                         musicTrack = currentTrack.toMusicTrack(),
-                        hasNext = savedQueue.tracks.size > 1,
-                        hasPrevious = savedQueue.tracks.size > 1
+                        // Rien ne joue : suivant/précédent n'auraient aucun effet
+                        hasNext = false,
+                        hasPrevious = false
                     )
                 } else {
                     // Pas de queue musique - vérifier s'il y a une dernière station radio
@@ -337,7 +338,9 @@ object MusicWidgetController {
                 // Service en premier plan, startService suffit
                 context.startService(intent)
             } else {
-                // Service pas en premier plan, utiliser startForegroundService
+                // Service pas en premier plan, utiliser startForegroundService ; le service
+                // passe alors au premier plan avant même de traiter l'action
+                intent.putExtra(MidiPlaybackService.EXTRA_FOREGROUND_REQUIRED, true)
                 context.startForegroundService(intent)
             }
         } catch (e: Exception) {

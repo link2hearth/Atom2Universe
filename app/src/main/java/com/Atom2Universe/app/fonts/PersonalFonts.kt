@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
+import android.util.LruCache
 import androidx.documentfile.provider.DocumentFile
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,8 @@ object PersonalFonts {
     private const val MAX_BYTES = 64L * 1024 * 1024
     private val changes = AtomicLong()
     val revision: Long get() = changes.get()
+    // Recently chosen fonts stay loaded. A file name holds its content hash, so an id never changes content.
+    private val loaded = LruCache<String, Typeface>(8)
 
     data class Entry(val id: String, val label: String)
     data class ImportResult(val added: Int, val existing: Int, val skipped: Int)
@@ -51,6 +54,7 @@ object PersonalFonts {
         val name = id.removePrefix(PREFIX)
         // IDs can be restored from a book or drawing; never treat them as arbitrary file paths.
         if (name != File(name).name || '/' in name || '\\' in name || !supported(name)) return null
+        loaded.get(id)?.let { return it }
         val file = File(directory(context), name)
         if (!file.isFile) return null
         return runCatching {
@@ -59,7 +63,7 @@ object PersonalFonts {
                 val family = android.graphics.fonts.FontFamily.Builder(font).build()
                 Typeface.CustomFallbackBuilder(family).setSystemFallback("sans-serif").build()
             } else Typeface.Builder(file).build()
-        }.getOrNull()
+        }.getOrNull()?.also { loaded.put(id, it) }
     }
 
     suspend fun importFolder(context: Context, uri: Uri): ImportResult = withContext(Dispatchers.IO) {
@@ -147,6 +151,7 @@ object PersonalFonts {
             currentCoroutineContext().ensureActive()
             check(file.delete())
         }
+        loaded.evictAll()
         changes.incrementAndGet()
     }
 }

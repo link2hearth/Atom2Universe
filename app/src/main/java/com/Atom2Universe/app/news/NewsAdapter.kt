@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.news
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +44,7 @@ class NewsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article = items[position]
         holder.title.text = article.title
-        holder.meta.text  = buildMeta(article)
+        holder.meta.text  = buildMeta(holder.itemView.context, article)
 
         val isHighlighted = article.id == highlightedId
         holder.card.setCardBackgroundColor(
@@ -62,20 +63,20 @@ class NewsAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    private fun buildMeta(article: NewsArticle): String {
+    private fun buildMeta(context: Context, article: NewsArticle): String {
         val parts = mutableListOf<String>()
         if (article.sourceName.isNotBlank()) parts += article.sourceName
-        article.pubDateMs?.let { parts += relativeTime(it) }
+        article.pubDateMs?.let { parts += relativeTime(context, it) }
         return parts.joinToString(" · ")
     }
 
-    private fun relativeTime(epochMs: Long): String {
+    private fun relativeTime(context: Context, epochMs: Long): String {
         val diff = System.currentTimeMillis() - epochMs
         return when {
-            diff < 60_000L         -> "à l’instant"
-            diff < 3_600_000L      -> "il y a ${diff / 60_000} min"
-            diff < 86_400_000L     -> "il y a ${diff / 3_600_000} h"
-            else                   -> "il y a ${diff / 86_400_000} j"
+            diff < 60_000L         -> context.getString(R.string.crypto_news_age_now)
+            diff < 3_600_000L      -> context.getString(R.string.crypto_news_age_minutes, (diff / 60_000).toInt())
+            diff < 86_400_000L     -> context.getString(R.string.crypto_news_age_hours, (diff / 3_600_000).toInt())
+            else                   -> context.getString(R.string.crypto_news_age_days, (diff / 86_400_000).toInt())
         }
     }
 }

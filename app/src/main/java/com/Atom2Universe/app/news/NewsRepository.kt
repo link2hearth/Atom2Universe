@@ -6,10 +6,18 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.xmlpull.v1.XmlPullParser
 import android.util.Xml
+import java.io.IOException
 import java.io.StringReader
 import java.net.URLEncoder
 import java.text.Normalizer
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -20,21 +28,20 @@ object NewsRepository {
         .readTimeout(12, TimeUnit.SECONDS)
         .build()
 
-    @Volatile var articles: List<NewsArticle> = emptyList()
-        private set
-
-    @Volatile var lastError: String? = null
-        private set
-
     // ── Public API ────────────────────────────────────────────────────────────
 
+    /**
+     * Rend la liste lue, sans la garder : l'écran Actus et le widget ont chacun la leur
+     * (une recherche dans l'écran ne doit pas changer le widget).
+     * Lève [IOException] si aucune source n'a répondu, pour que l'appelant garde ses articles.
+     */
     suspend fun refresh(
         sources: List<NewsSource>,
         query: String = "",
         bannedWords: List<String> = emptyList()
     ): List<NewsArticle> = withContext(Dispatchers.IO) {
-        lastError = null
         val all = mutableListOf<NewsArticle>()
+        var failures = 0
 
         for (source in sources) {
             val url = if (query.isNotBlank() && source.id == "google_fr") {
@@ -46,22 +53,26 @@ object NewsRepository {
             try {
                 all.addAll(fetchSource(url, source.id, source.name))
             } catch (_: Exception) {
-                // continue with next source
+                failures++ // continue with next source
             }
         }
+        if (sources.isNotEmpty() && failures == sources.size) throw IOException("all sources failed")
 
-        val sorted = all
+        val banned = normalizeWords(bannedWords)
+        all
             .sortedByDescending { it.pubDateMs ?: 0L }
             .take(40)
-            .filter { article -> !isBanned(article, bannedWords) }
-
-        articles = sorted
-        sorted
+            .filter { article -> !isBanned(article, banned) }
     }
 
-    fun filterVisible(hiddenIds: Set<String>, bannedWords: List<String>): List<NewsArticle> =
-        articles.filter { it.id !in hiddenIds }
-            .filter { article -> !isBanned(article, bannedWords) }
+    fun filterVisible(
+        articles: List<NewsArticle>,
+        hiddenIds: Set<String>,
+        bannedWords: List<String>
+    ): List<NewsArticle> {
+        val banned = normalizeWords(bannedWords)
+        return articles.filter { it.id !in hiddenIds && !isBanned(it, banned) }
+    }
 
     // ── Network ───────────────────────────────────────────────────────────────
 
@@ -128,7 +139,7 @@ object NewsRepository {
                                     articles += NewsArticle(
                                         id         = buildId(curTitle!!, curLink),
                                         title      = curTitle!!.trim(),
-                                        link       = curLink,
+                                        link       = curLink?.takeIf { isWebLink(it) },
                                         pubDateMs  = curDate,
                                         sourceId   = sourceId,
                                         sourceName = sourceName
@@ -146,42 +157,60 @@ object NewsRepository {
         return articles
     }
 
+    /** Seuls les liens web s'ouvrent (ni `javascript:`, ni `file:`, ni `intent:`). */
+    fun isWebLink(url: String?): Boolean {
+        if (url.isNullOrBlank()) return false
+        val scheme = url.trim().substringBefore(':', "").lowercase()
+        return scheme == "http" || scheme == "https"
+    }
+
+    private val DIACRITICS = Regex("\\p{InCombiningDiacriticalMarks}")
+
     private fun normalize(s: String): String =
         Normalizer.normalize(s, Normalizer.Form.NFD)
-            .replace(Regex("\\p{InCombiningDiacriticalMarks}"), "")
+            .replace(DIACRITICS, "")
             .lowercase()
 
+    private fun normalizeWords(words: List<String>): List<String> =
+        words.map { normalize(it) }.filter { it.isNotEmpty() }
+
+    /** [bannedWords] déjà passés par [normalizeWords]. */
     private fun isBanned(article: NewsArticle, bannedWords: List<String>): Boolean {
         if (bannedWords.isEmpty()) return false
         val title  = normalize(article.title)
         val source = normalize(article.sourceName)
-        return bannedWords.any { word ->
-            val w = normalize(word)
-            w.isNotEmpty() && (title.contains(w) || source.contains(w))
-        }
+        return bannedWords.any { w -> title.contains(w) || source.contains(w) }
     }
 
     private fun buildId(title: String, link: String?): String =
         "${title.take(60)}_${link.orEmpty().take(80)}".hashCode().toString()
 
-    private val DATE_FORMATS = listOf(
-        "EEE, dd MMM yyyy HH:mm:ss zzz",
-        "EEE, dd MMM yyyy HH:mm:ss Z",
-        "yyyy-MM-dd'T'HH:mm:ss'Z'",
-        "yyyy-MM-dd'T'HH:mm:ssZ",
-        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        "yyyy-MM-dd"
-    )
+    // RFC 822 avec un fuseau nommé (« EST », « CET »…), que java.time ne lit pas.
+    // SimpleDateFormat n'est pas sûr entre fils : l'écran et le widget lisent en même temps.
+    private val RFC822_NAMED_ZONE = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)
+        .apply { isLenient = true }
+
+    // ISO avec un décalage sans deux-points (« +0100 »)
+    private val ISO_COMPACT_OFFSET = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]xx", Locale.ENGLISH)
 
     private fun parseDate(raw: String): Long? {
         val s = raw.trim()
-        for (pattern in DATE_FORMATS) {
-            try {
-                val sdf = SimpleDateFormat(pattern, Locale.ENGLISH)
-                sdf.isLenient = true
-                return sdf.parse(s)?.time
-            } catch (_: Exception) {}
-        }
-        return null
+        if (s.isEmpty()) return null
+        // ISO 8601 : « Z », « +01:00 », fractions de seconde
+        try { return OffsetDateTime.parse(s).toInstant().toEpochMilli() } catch (_: DateTimeParseException) {}
+        // RFC 822 avec décalage numérique ou GMT
+        try {
+            return ZonedDateTime.parse(s, DateTimeFormatter.RFC_1123_DATE_TIME).toInstant().toEpochMilli()
+        } catch (_: DateTimeParseException) {}
+        try { return OffsetDateTime.parse(s, ISO_COMPACT_OFFSET).toInstant().toEpochMilli() } catch (_: DateTimeParseException) {}
+        try {
+            return LocalDateTime.parse(s).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        } catch (_: DateTimeParseException) {}
+        try {
+            return LocalDate.parse(s).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        } catch (_: DateTimeParseException) {}
+        return try {
+            synchronized(RFC822_NAMED_ZONE) { RFC822_NAMED_ZONE.parse(s)?.time }
+        } catch (_: Exception) { null }
     }
 }

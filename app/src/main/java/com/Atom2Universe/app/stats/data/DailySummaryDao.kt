@@ -14,7 +14,7 @@ interface DailySummaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSummaries(summaries: List<DailySummaryEntity>)
 
-    @Query("SELECT dayOfMonth FROM daily_summaries WHERE year = :year AND month = :month")
+    @Query("SELECT dayOfMonth FROM daily_summaries WHERE year = :year AND month = :month AND totalDurationMs > 0")
     suspend fun getActiveDaysInMonth(year: Int, month: Int): List<Int>
 
     @Query("SELECT * FROM daily_summaries WHERE dateEpochDay = :epochDay")

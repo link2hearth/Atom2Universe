@@ -35,6 +35,8 @@ internal class EffectsDecoration(private val root: View) : Runnable, AutoCloseab
     private val slots = mutableListOf(Slot(root, false))
     private var settings = AppEffectsSettings()
     private var palette = EffectsPalette.from(root.context)
+    // True when another scene fills this one: its own backdrop is hidden, only its banners stay decorated.
+    private var covered = false
     private var active = false
     private var queued = false
     private var closed = false
@@ -50,16 +52,21 @@ internal class EffectsDecoration(private val root: View) : Runnable, AutoCloseab
         visit(root)
     }
 
-    fun update(settings: AppEffectsSettings, palette: EffectsPalette) {
+    fun update(settings: AppEffectsSettings, palette: EffectsPalette, covered: Boolean = false) {
         if (closed) return
         this.settings = settings
         this.palette = palette
+        this.covered = covered
         if (!settings.enabled || settings.pack == null) {
             restore()
             setActive(false)
             return
         }
         slots.forEach { slot ->
+            if (covered && !slot.banner && slot.view === root) {
+                restore(slot)
+                return@forEach
+            }
             if (slot.background == null || slot.view.background !== slot.background) {
                 slot.background?.release()
                 val background = SceneBackground(slot.view.background, slot.view.resources.displayMetrics.density,
@@ -95,34 +102,42 @@ internal class EffectsDecoration(private val root: View) : Runnable, AutoCloseab
         if (!queued && root.isShown) {
             lastFrame = SystemClock.uptimeMillis()
             queued = true
-            root.postDelayed(this, 33L)
+            root.postOnAnimationDelayed(this, frameDelay())
         }
     }
+
+    /** Each pack redraws only as often as its motion needs; see [EffectsPainter.frameDelayMs]. */
+    private fun frameDelay(): Long = settings.pack?.let {
+        EffectsPainter.frameDelayMs(it, palette.light, seconds, fullScene = !covered)
+    } ?: 33L
 
     override fun run() {
         queued = false
         if (!active || !root.isShown || !settings.animations || !ValueAnimator.areAnimatorsEnabled()) return
         val now = SystemClock.uptimeMillis()
-        seconds += ((now - lastFrame).coerceIn(0L, 100L) / 1000f)
+        // Real time, so the motion keeps its speed whatever the cadence; a stall over a second is not caught up.
+        seconds += ((now - lastFrame).coerceIn(0L, 1000L) / 1000f)
         lastFrame = now
         slots.forEach {
             it.background?.scene?.update(settings, palette, seconds)
             it.garland?.update(settings, palette, seconds)
         }
         queued = true
-        root.postDelayed(this, 33L)
+        root.postOnAnimationDelayed(this, frameDelay())
     }
 
     private fun restore() {
-        slots.forEach { slot ->
-            slot.background?.let {
-                if (slot.view.background === it) slot.view.background = it.base
-                it.release()
-            }
-            slot.background = null
-            slot.garland?.let { slot.view.overlay.remove(it) }
-            slot.garland = null
+        slots.forEach { restore(it) }
+    }
+
+    private fun restore(slot: Slot) {
+        slot.background?.let {
+            if (slot.view.background === it) slot.view.background = it.base
+            it.release()
         }
+        slot.background = null
+        slot.garland?.let { slot.view.overlay.remove(it) }
+        slot.garland = null
     }
 
     override fun close() {

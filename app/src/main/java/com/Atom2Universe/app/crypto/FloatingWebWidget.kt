@@ -30,6 +30,7 @@ import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -58,6 +59,8 @@ class FloatingWebWidget @JvmOverloads constructor(
 
     companion object {
         private const val BLANK_URL = "about:blank"
+        /** Schémas qu'une page peut ouvrir d'elle-même (cadres `about:`/`blob:` compris). */
+        private val PAGE_SCHEMES = setOf("http", "https", "about", "blob", "data")
     }
 
     private val card: MaterialCardView
@@ -185,9 +188,16 @@ class FloatingWebWidget @JvmOverloads constructor(
             useWideViewPort      = true
             loadWithOverviewMode = true
             domStorageEnabled    = true
+            allowFileAccess      = false
         }
 
         view.webViewClient = object : WebViewClient() {
+            // Un lien de page vers `file:`, `intent:`, `content:`… ne fait rien.
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val scheme = request?.url?.scheme?.lowercase() ?: return true
+                return scheme !in PAGE_SCHEMES
+            }
+
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 if (url == BLANK_URL) return
                 if (!urlBar.isFocused) urlBar.setText(url ?: "")
@@ -244,6 +254,7 @@ class FloatingWebWidget @JvmOverloads constructor(
     // ── Public ────────────────────────────────────────────────────────────────
 
     fun load(url: String) {
+        if (!isWebUrl(url)) return
         val view = ensureWebView()
         if (visibility != VISIBLE) clearHistoryOnLoad = true
         renderCrashes = 0
@@ -626,5 +637,12 @@ class FloatingWebWidget @JvmOverloads constructor(
             val host = java.net.URI(url).host ?: url
             host.removePrefix("www.")
         } catch (_: Exception) { url }
+    }
+
+    /** Seuls http et https s'ouvrent ici (pas de `javascript:` ni de `file:`). */
+    private fun isWebUrl(url: String?): Boolean {
+        if (url.isNullOrBlank()) return false
+        val scheme = url.trim().substringBefore(':', "").lowercase()
+        return scheme == "http" || scheme == "https"
     }
 }

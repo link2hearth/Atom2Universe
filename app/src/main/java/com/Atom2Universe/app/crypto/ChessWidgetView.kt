@@ -15,6 +15,8 @@ import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.games.chess.ChessActivity
 import com.Atom2Universe.app.games.chess.ChessDifficulty
 import com.Atom2Universe.app.games.chess.ChessGame
 import com.Atom2Universe.app.games.chess.ChessView
@@ -55,6 +57,8 @@ class ChessWidgetView @JvmOverloads constructor(
     private val game = ChessGame()
     private var ai: ChessAI? = null
     private var difficulty = ChessDifficulty.STANDARD
+    // Difficulté la plus basse jouée pendant la partie (partagée avec ChessActivity) : c'est elle qui paie
+    private var rewardDifficulty = ChessDifficulty.STANDARD
 
     // Scope pour les recherches IA (annulé quand le widget est détaché)
     private val aiScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -208,6 +212,7 @@ class ChessWidgetView @JvmOverloads constructor(
         difficulty = newDifficulty
 
         game.newGame()
+        rewardDifficulty = difficulty
         GameStatsRepository(context).recordChessStarted()
 
         chessView.isTwoPlayerMode = (difficulty == ChessDifficulty.TWO_PLAYER)
@@ -216,12 +221,16 @@ class ChessWidgetView @JvmOverloads constructor(
         chessView.refresh()
         capturedPiecesView.update(game.capturedPieces)
 
-        // Sauvegarder la nouvelle difficulté et effacer la partie précédente
-        context.getSharedPreferences("chess_save", Context.MODE_PRIVATE).edit()
-            .putString("difficulty", difficulty.name)
-            .remove("fen")
-            .remove("captured_pieces")
-            .apply()
+        // Effacer la partie précédente (chrono de l'activité compris), puis noter la nouvelle
+        clearSave()
+        saveGame()
+    }
+
+    private fun prefs() = context.getSharedPreferences(ChessActivity.PREFS, Context.MODE_PRIVATE)
+
+    /** Partie finie ou abandonnée : seule la difficulté reste. */
+    private fun clearSave() {
+        prefs().edit().clear().putString(ChessActivity.KEY_DIFFICULTY, difficulty.name).apply()
     }
 
     // ── Chargement de la partie et des réglages sauvegardés ──────────────────
@@ -234,24 +243,31 @@ class ChessWidgetView @JvmOverloads constructor(
     private fun loadSavedGame() {
         cancelAI()
 
-        val prefs = context.getSharedPreferences("chess_save", Context.MODE_PRIVATE)
+        val prefs = prefs()
 
         // Lire la difficulté sauvegardée par ChessActivity
-        val savedDiff = prefs.getString("difficulty", null)
+        val savedDiff = prefs.getString(ChessActivity.KEY_DIFFICULTY, null)
         difficulty = if (savedDiff != null) {
             runCatching { ChessDifficulty.valueOf(savedDiff) }.getOrDefault(ChessDifficulty.STANDARD)
         } else {
             ChessDifficulty.STANDARD
         }
 
-        // Restaurer la position FEN
-        val fen = prefs.getString("fen", null)
+        // Rejouer la partie comme ChessActivity (la position seule en secours). Sans sauvegarde,
+        // la partie a fini (ici ou dans l'activité) : on n'en garde pas une copie jouable.
+        val startFen = prefs.getString(ChessActivity.KEY_START_FEN, null)
+        val fen = prefs.getString(ChessActivity.KEY_FEN, null)
         if (fen != null) {
-            runCatching { game.fromFEN(fen) }
+            val moves = prefs.getString(ChessActivity.KEY_MOVES, null).orEmpty().split(" ").filter { it.isNotEmpty() }
+            val replayed = startFen != null && game.replay(startFen, moves) && game.toFEN() == fen
+            if (!replayed) game.fromFEN(fen)
         }
+        if (fen == null || game.isGameOver()) game.newGame()
+        val savedReward = ChessDifficulty.entries.find { it.name == prefs.getString(ChessActivity.KEY_REWARD_DIFFICULTY, null) }
+        rewardDifficulty = (savedReward ?: difficulty).lowerForReward(difficulty)
 
         // Restaurer les pièces capturées
-        val capturedJson = prefs.getString("captured_pieces", "")
+        val capturedJson = if (fen == null) "" else prefs.getString(ChessActivity.KEY_CAPTURED, "")
         game.capturedPieces.clear()
         if (!capturedJson.isNullOrEmpty()) {
             capturedJson.split(",").forEach { pieceStr ->
@@ -271,6 +287,8 @@ class ChessWidgetView @JvmOverloads constructor(
         chessView.isTwoPlayerMode = (difficulty == ChessDifficulty.TWO_PLAYER)
         chessView.game = game
         chessView.setSelectedSquare(null)
+        val lastMove = game.moveHistory.lastOrNull()
+        chessView.setLastMove(lastMove?.from, lastMove?.to)
         chessView.refresh()
 
         capturedPiecesView.update(game.capturedPieces)
@@ -339,19 +357,21 @@ class ChessWidgetView @JvmOverloads constructor(
         chessView.refresh()
         capturedPiecesView.update(game.capturedPieces)
 
-        // Sauvegarder le FEN et les pièces capturées
-        saveCapturedAndFen()
-
+        saveGame()
         checkGameOver()
         triggerAIIfNeeded()
         return true
     }
 
-    private fun saveCapturedAndFen() {
+    /** Même format que ChessActivity : position de départ + coups, et la position seule en secours. */
+    private fun saveGame() {
         val capturedJson = game.capturedPieces.joinToString(",") { "${it.type.notation}${it.color.name}" }
-        context.getSharedPreferences("chess_save", Context.MODE_PRIVATE).edit()
-            .putString("fen", game.toFEN())
-            .putString("captured_pieces", capturedJson)
+        prefs().edit()
+            .putString(ChessActivity.KEY_START_FEN, game.startFen)
+            .putString(ChessActivity.KEY_MOVES, game.movesInLongNotation().joinToString(" "))
+            .putString(ChessActivity.KEY_FEN, game.toFEN())
+            .putString(ChessActivity.KEY_CAPTURED, capturedJson)
+            .putString(ChessActivity.KEY_REWARD_DIFFICULTY, rewardDifficulty.name)
             .apply()
     }
 
@@ -387,7 +407,7 @@ class ChessWidgetView @JvmOverloads constructor(
             chessView.refresh()
             capturedPiecesView.update(game.capturedPieces)
 
-            saveCapturedAndFen()
+            saveGame()
             checkGameOver()
         }, 200)
     }
@@ -409,13 +429,10 @@ class ChessWidgetView @JvmOverloads constructor(
         resultText.setText(label)
         resultText.setTextColor(color)
         resultOverlay.visibility = VISIBLE
+        // Une partie finie ne revient jamais comme partie vivante (ni ici, ni dans l'activité)
+        clearSave()
         if (playerWon) {
-            val reward = when (difficulty) {
-                ChessDifficulty.TRAINING -> 10
-                ChessDifficulty.STANDARD -> 20
-                ChessDifficulty.EXPERT   -> 50
-                else -> 0
-            }
+            val reward = NeutrinoRewards.chess(rewardDifficulty)
             if (reward > 0) NeutrinoRepository(context).addBalance(reward)
             GameStatsRepository(context).recordChessWon()
         }

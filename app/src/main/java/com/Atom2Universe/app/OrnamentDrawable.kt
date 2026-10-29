@@ -33,6 +33,8 @@ class OrnamentDrawable() : Drawable(), Drawable.Callback {
     private var opacity = 255
     private var padding = Rect()
     private var form = 0
+    // Set by a host that draws the frame itself above its children: draw() then paints the fill only.
+    internal var frameDrawnByHost = false
 
     internal constructor(context: Context, fill: Drawable?, variant: Int = 0) : this() {
         configure(context.resources, context.theme, fill, variant)
@@ -116,7 +118,7 @@ class OrnamentDrawable() : Drawable(), Drawable.Callback {
         canvas.clipPath(contour.outer)
         base?.draw(canvas)
         canvas.restoreToCount(save)
-        drawFrame(canvas)
+        if (!frameDrawnByHost) drawFrame(canvas)
     }
 
     internal fun drawFrame(canvas: Canvas) {

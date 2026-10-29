@@ -173,6 +173,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         const val EXTRA_HYBRID_PROGRAMS = "hybrid_programs"
         const val EXTRA_HYBRID_DRUMS_SF2 = "hybrid_drums_sf2"
         const val EXTRA_FLUIDSYNTH_MODE = "fluidsynth_mode"
+        /** Vrai quand l'appelant a utilisé startForegroundService. */
+        const val EXTRA_FOREGROUND_REQUIRED = "foreground_required"
 
         // Custom actions for shuffle/repeat
         const val ACTION_TOGGLE_SHUFFLE = "com.Atom2Universe.app.midi.TOGGLE_SHUFFLE"
@@ -268,6 +270,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Lancé par startForegroundService (widget) : Android exige startForeground() sous
+        // quelques secondes, quel que soit le chemin suivi ensuite (dernière piste, rien de
+        // chargé, fichier illisible). On y passe tout de suite, puis on en ressort si rien ne joue.
+        val foregroundRequired = intent?.getBooleanExtra(EXTRA_FOREGROUND_REQUIRED, false) == true
+        if (foregroundRequired) enterForegroundNow()
+
         // Gère les actions de notification
         when (intent?.action) {
             ACTION_PLAY -> handlePlay()
@@ -309,6 +317,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 handleRefreshAfterPractice()
             }
         }
+        // Mis en file après l'action : jugé une fois l'action faite
+        if (foregroundRequired) onEngine { leaveForegroundIfIdle() }
 
         return START_STICKY
     }
@@ -1125,6 +1135,41 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             }
         } else {
             updateNotification()
+        }
+    }
+
+    /** Premier plan immédiat, même déjà au premier plan (la demande doit être honorée). */
+    private fun enterForegroundNow() {
+        if (destroyed) return
+        mainHandler.removeCallbacks(detachForegroundRunnable)
+        try {
+            val notification = notificationManager.buildNotification(
+                queueManager.getCurrentTrack(),
+                currentPlaybackState,
+                mediaSession.sessionToken
+            )
+            startForeground(MidiNotificationManager.NOTIFICATION_ID, notification)
+            isForegroundService = true
+            notificationDetached = false
+        } catch (e: Exception) {
+            android.util.Log.w(TAG, "startForeground refused", e)
+        }
+    }
+
+    /** Après une commande du widget : ne garde le premier plan que si un morceau est en cours. */
+    private fun leaveForegroundIfIdle() {
+        when (currentPlaybackState) {
+            PlaybackStateCompat.STATE_PLAYING -> Unit
+            PlaybackStateCompat.STATE_PAUSED -> {
+                // Comme après doPause : la pause qui dure quittera le premier plan
+                mainHandler.removeCallbacks(detachForegroundRunnable)
+                mainHandler.postDelayed(detachForegroundRunnable, FOREGROUND_DETACH_DELAY_MS)
+            }
+            else -> if (isForegroundService) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                isForegroundService = false
+                notificationDetached = false
+            }
         }
     }
 

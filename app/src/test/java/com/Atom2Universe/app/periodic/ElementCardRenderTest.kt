@@ -41,7 +41,7 @@ class ElementCardRenderTest {
         val card = IlluminatedCard(fonts)
         val content = IlluminatedCard.Content(
             rarity = rarityOf(z), number = z.toString(), name = NOMS[z] ?: e.name, symbol = e.symbol,
-            mass = "MASSE ATOMIQUE · %.3f".format(e.atomicMass), rarityLabel = rarityOf(z).label.uppercase(),
+            mass = "MASSE ATOMIQUE · %.3f".format(e.atomicMass), rarityLabel = rarityOf(z).name,
             toxic = ElementCardHazards.isToxic(z), radioactive = ElementCardHazards.hasNoStableIsotope(z)
         )
         card.set(content, EngravedScenes.forElement(z))

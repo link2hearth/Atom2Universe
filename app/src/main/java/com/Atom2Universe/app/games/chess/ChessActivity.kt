@@ -117,7 +117,7 @@ class ChessActivity : ThemedActivity(),
                 rewardDifficulty = if (game.moveHistory.isEmpty() && game.startFen == ChessGame.START_FEN) {
                     currentDifficulty
                 } else {
-                    lowerReward(rewardDifficulty, currentDifficulty)
+                    rewardDifficulty.lowerForReward(currentDifficulty)
                 }
                 // Activer le flip des pièces noires en mode 2 joueurs
                 chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
@@ -130,17 +130,6 @@ class ChessActivity : ThemedActivity(),
     }
 
     private fun aiPlays(): Boolean = currentDifficulty.hasAI()
-
-    /** Le mode 2 joueurs compte comme le plus bas : il ne rapporte rien. */
-    private fun rewardRank(difficulty: ChessDifficulty): Int = when (difficulty) {
-        ChessDifficulty.TWO_PLAYER -> 0
-        ChessDifficulty.TRAINING -> 1
-        ChessDifficulty.STANDARD -> 2
-        ChessDifficulty.EXPERT -> 3
-    }
-
-    private fun lowerReward(a: ChessDifficulty, b: ChessDifficulty): ChessDifficulty =
-        if (rewardRank(b) < rewardRank(a)) b else a
 
     /**
      * Configure les listeners
@@ -432,12 +421,7 @@ class ChessActivity : ThemedActivity(),
         if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && aiPlays()) {
             GameStatsRepository(this).recordChessWon()
             Toast.makeText(this, R.string.chess_victory_title, Toast.LENGTH_SHORT).show()
-            val reward = when (rewardDifficulty) {
-                ChessDifficulty.TRAINING -> NeutrinoRewards.CHESS_TRAINING
-                ChessDifficulty.STANDARD -> NeutrinoRewards.CHESS_STANDARD
-                ChessDifficulty.EXPERT   -> NeutrinoRewards.CHESS_EXPERT
-                ChessDifficulty.TWO_PLAYER -> 0
-            }
+            val reward = NeutrinoRewards.chess(rewardDifficulty)
             if (reward > 0) NeutrinoRepository(this).addBalance(reward)
         }
     }
@@ -446,7 +430,7 @@ class ChessActivity : ThemedActivity(),
 
     /**
      * Sauvegarde la partie en cours : position de départ + coups, rejoués au chargement
-     * (répétitions et historique reviennent). « fen » et « captured_pieces » servent au widget.
+     * (répétitions et historique reviennent). Le widget flottant écrit le même format.
      */
     private fun saveGame() {
         // Une partie finie ne revient jamais comme partie vivante
@@ -487,7 +471,7 @@ class ChessActivity : ThemedActivity(),
         difficultySpinner.setSelection(ChessDifficulty.values().indexOf(currentDifficulty))
 
         val moves = prefs.getString(KEY_MOVES, null).orEmpty().split(" ").filter { it.isNotEmpty() }
-        // Le widget peut avoir joué la suite : il n'écrit que la position, qu'on reprend alors seule
+        // Sauvegarde illisible en rejeu : on reprend la position seule
         val replayed = game.replay(startFen, moves) && game.toFEN() == fen
         if (!replayed) game.fromFEN(fen)
         if (game.isGameOver()) {
@@ -496,7 +480,7 @@ class ChessActivity : ThemedActivity(),
         }
 
         val savedReward = ChessDifficulty.values().find { it.name == prefs.getString(KEY_REWARD_DIFFICULTY, null) }
-        rewardDifficulty = lowerReward(savedReward ?: currentDifficulty, currentDifficulty)
+        rewardDifficulty = (savedReward ?: currentDifficulty).lowerForReward(currentDifficulty)
         elapsedTimeMs = prefs.getLong(KEY_ELAPSED, 0)
 
         // Restaurer les pièces capturées
@@ -566,14 +550,14 @@ class ChessActivity : ThemedActivity(),
     }
 
     companion object {
-        // Partagé avec le widget flottant (ChessWidgetView), qui lit et écrit fen, captured_pieces, difficulty
-        private const val PREFS = "chess_save"
-        private const val KEY_START_FEN = "start_fen"
-        private const val KEY_MOVES = "moves"
-        private const val KEY_FEN = "fen"
-        private const val KEY_DIFFICULTY = "difficulty"
-        private const val KEY_REWARD_DIFFICULTY = "reward_difficulty"
-        private const val KEY_ELAPSED = "elapsed_time"
-        private const val KEY_CAPTURED = "captured_pieces"
+        // Partagé avec le widget flottant (ChessWidgetView), qui lit et écrit les mêmes clés
+        const val PREFS = "chess_save"
+        const val KEY_START_FEN = "start_fen"
+        const val KEY_MOVES = "moves"
+        const val KEY_FEN = "fen"
+        const val KEY_DIFFICULTY = "difficulty"
+        const val KEY_REWARD_DIFFICULTY = "reward_difficulty"
+        const val KEY_ELAPSED = "elapsed_time"
+        const val KEY_CAPTURED = "captured_pieces"
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.widget.TooltipCompat
 
@@ -28,6 +29,7 @@ class HoldToExit private constructor(
     /** Vrai si l'appui en cours (ou le dernier) a déclenché la sortie. */
     var fired = false
         private set
+    private var holding = false
 
     private val exit = Runnable {
         fired = true
@@ -39,23 +41,31 @@ class HoldToExit private constructor(
     private fun install() {
         // Sans ça, la bulle « retour » (et sa vibration) surgit vers 1 s et on lâche avant la sortie
         TooltipCompat.setTooltipText(view, null)
+        val slop = ViewConfiguration.get(view.context).scaledTouchSlop
         view.setOnTouchListener { v, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     fired = false
+                    holding = true
                     v.postDelayed(exit, holdMs)
                     v.animate().scaleX(GROW).scaleY(GROW)
                         .setDuration(holdMs)
                         .setInterpolator(LinearInterpolator())
                         .start()
                 }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    v.removeCallbacks(exit)
-                    v.animate().scaleX(1f).scaleY(1f).setDuration(RELEASE_MS).start()
-                }
+                // Le doigt qui glisse hors de la flèche renonce à la sortie, comme le système pour un clic.
+                MotionEvent.ACTION_MOVE -> if (holding && (event.x < -slop || event.y < -slop ||
+                        event.x > v.width + slop || event.y > v.height + slop)) release(v)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> release(v)
             }
             false
         }
+    }
+
+    private fun release(v: View) {
+        holding = false
+        v.removeCallbacks(exit)
+        v.animate().scaleX(1f).scaleY(1f).setDuration(RELEASE_MS).start()
     }
 
     companion object {

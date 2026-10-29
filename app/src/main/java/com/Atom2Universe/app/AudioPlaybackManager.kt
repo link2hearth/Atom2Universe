@@ -134,7 +134,7 @@ object AudioPlaybackManager {
      * Force l'arrêt de toutes les sources (minuteur de sommeil).
      *
      * Seule la dernière source inscrite a un rappel ; une radio relancée par le widget, le hub ou la
-     * notification, ou une musique restaurée par le widget, n'est jamais inscrite. On arrête donc aussi
+     * notification n'est jamais inscrite. On arrête donc aussi
      * directement chaque lecteur qui joue encore.
      */
     fun stopAll(context: Context) {
@@ -149,7 +149,8 @@ object AudioPlaybackManager {
 
         val app = context.applicationContext
         if (MusicPlaybackHolder.isPlaying()) MusicPlaybackHolder.stop(app)
-        if (RadioPlaybackHolder.isPlaybackWanted() || RadioPlaybackHolder.isCurrentlyRecording()) RadioPlaybackHolder.stop(app)
+        // Une radio en pause est arrêtée aussi : sinon sa séance resterait ouverte jusqu'à la prochaine écoute
+        if (RadioPlaybackHolder.getCurrentStation() != null || RadioPlaybackHolder.isCurrentlyRecording()) RadioPlaybackHolder.stop(app)
         if (MidiPlaybackState.isPlaying()) {
             try {
                 app.startService(Intent(app, MidiPlaybackService::class.java).setAction(MidiPlaybackService.ACTION_STOP))

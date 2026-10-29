@@ -535,12 +535,7 @@ object MusicPlaybackHolder {
             startForegroundService(context)
 
             // Démarrer le tracking des statistiques
-            StatsTracker.startMusicSession(
-                trackTitle = track.title,
-                trackArtist = track.artist,
-                trackAlbum = track.album,
-                trackAlbumArtist = track.albumArtist
-            )
+            startStatsSession(track)
 
             // Sauvegarder immédiatement pour que le widget puisse reprendre
             saveQueueState()
@@ -599,6 +594,8 @@ object MusicPlaybackHolder {
             p.playWhenReady = true
             notifyTrackChanged(track)
             startForegroundService(context)
+            startStatsSession(track)
+            registerAsActiveSource(context)
             return
         }
 
@@ -1205,6 +1202,8 @@ object MusicPlaybackHolder {
 
         // Démarrer la lecture
         val track = playlist.getOrNull(currentIndex) ?: return false
+        // Focus refusé (appel en cours…) : la file est prête, rien ne joue, comme resume()
+        if (!AudioFocusManager.requestFocus(audioFocusListener)) return true
         val p = getOrCreatePlayer(context)
 
         val mediaItem = MediaItem.fromUri(track.playbackUri)
@@ -1220,9 +1219,30 @@ object MusicPlaybackHolder {
 
         notifyTrackChanged(track)
         startForegroundService(context)
+        startStatsSession(track)
+        registerAsActiveSource(context)
 
         Log.i(TAG, "Queue restored and playback started: ${tracks.size} tracks, index=$currentIndex")
         return true
+    }
+
+    /** Séance d'écoute ouverte en pause : le temps ne compte qu'une fois la lecture partie. */
+    private fun startStatsSession(track: MusicTrack) {
+        StatsTracker.startMusicSession(
+            trackTitle = track.title,
+            trackArtist = track.artist,
+            trackAlbum = track.album,
+            trackAlbumArtist = track.albumArtist
+        )
+    }
+
+    /**
+     * Lecture relancée hors de l'écran Musique (widget, notification) : sans cette inscription,
+     * le widget croit que rien ne joue et pilote un MIDI en pause ou relit la file du disque.
+     */
+    private fun registerAsActiveSource(context: Context) {
+        val app = context.applicationContext
+        AudioPlaybackManager.registerPlayback(AudioPlaybackManager.AudioSource.MUSIC) { stop(app) }
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.Atom2Universe.app
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,10 +18,6 @@ import com.Atom2Universe.app.util.followImmersiveMode
  * About page showing app information and credits for open source libraries.
  */
 class AboutActivity : ThemedActivity() {
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

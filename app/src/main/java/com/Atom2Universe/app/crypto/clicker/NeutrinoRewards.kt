@@ -3,6 +3,8 @@ package com.Atom2Universe.app.crypto.clicker
 import android.content.Context
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.cards.CardGames
+import com.Atom2Universe.app.games.chess.ChessDifficulty
+import com.Atom2Universe.app.games.draughts.DraughtsDifficulty
 import com.Atom2Universe.app.games.kit.KitGames
 
 /**
@@ -46,6 +48,21 @@ object NeutrinoRewards {
     const val DRAUGHTS_STANDARD = 20
     const val DRAUGHTS_EXPERT = 50
     const val OTHELLO_WIN = 15
+
+    /** Une partie paie selon la difficulté la plus basse jouée (jeu et widget du clicker) ; 2 joueurs = rien. */
+    fun chess(difficulty: ChessDifficulty) = when (difficulty) {
+        ChessDifficulty.TRAINING -> CHESS_TRAINING
+        ChessDifficulty.STANDARD -> CHESS_STANDARD
+        ChessDifficulty.EXPERT -> CHESS_EXPERT
+        ChessDifficulty.TWO_PLAYER -> 0
+    }
+
+    fun draughts(difficulty: DraughtsDifficulty) = when (difficulty) {
+        DraughtsDifficulty.TRAINING -> DRAUGHTS_TRAINING
+        DraughtsDifficulty.STANDARD -> DRAUGHTS_STANDARD
+        DraughtsDifficulty.EXPERT -> DRAUGHTS_EXPERT
+        DraughtsDifficulty.TWO_PLAYER -> 0
+    }
 
     // ── Montant fixe ───────────────────────────────────────────────────────────
     const val SOLITAIRE_WIN = 20
@@ -261,7 +278,7 @@ object NeutrinoRewards {
 
     fun summary(context: Context): List<Entry> {
         fun list(values: List<Int>) = values.joinToString(" / ")
-        val dash = "—"
+        val dash = context.getString(R.string.neutrino_info_value_none)
         return listOf(
             // Plateau
             Entry(R.string.chess_title, "$CHESS_TRAINING / $CHESS_STANDARD / $CHESS_EXPERT", R.string.neutrino_info_note_vs_ai),

@@ -8,7 +8,6 @@
     <string name="notes_color_quick">Couleurs rapides</string>
     <string name="notes_color_custom">Couleur personnalisée</string>
     <string name="notes_color_hue">Teinte</string>
-    <string name="notes_color_alpha">Transparence</string>
     <string name="notes_color_preview_text">Aperçu</string>
     <string name="notes_color_text_mode">Couleur du texte</string>
     <string name="notes_color_text_auto">Auto</string>
@@ -25,7 +24,6 @@
     <string name="notes_color_select_first">Sélectionnez d\'abord une couleur</string>
     <string name="notes_color_hex">Hex :</string>
     <string name="notes_color_hex_hint">#RRGGBB</string>
-    <string name="notes_color_alpha_value_default">255</string>
     <string name="notes_edit_group">Modifier le groupe</string>
     <string name="notes_edit_tag">Modifier le tag</string>
     <string name="notes_menu">Menu</string>

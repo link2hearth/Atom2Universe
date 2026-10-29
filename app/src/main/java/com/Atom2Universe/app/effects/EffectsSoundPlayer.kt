@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import com.Atom2Universe.app.AppEffectPack
 import com.Atom2Universe.app.AppEffectsSettings
 import com.Atom2Universe.app.R
@@ -35,7 +36,10 @@ internal class EffectsSoundPlayer(context: Context) : Runnable {
             if (source === pool) loaded = status == 0
         }
         soundId = soundPool.load(context, R.raw.effect_christmas_bells, 1)
-        handler.postDelayed(this, 1800L)
+        // Coming back to a hub keeps the bells' rhythm instead of ringing again after each return.
+        val sinceRing = SystemClock.elapsedRealtime() - lastRing
+        handler.postDelayed(this, if (lastRing == 0L) FIRST_DELAY_MS
+            else (INTERVAL_MS - sinceRing).coerceAtLeast(FIRST_DELAY_MS))
     }
 
     override fun run() {
@@ -46,8 +50,10 @@ internal class EffectsSoundPlayer(context: Context) : Runnable {
                 audio.getStreamVolume(AudioManager.STREAM_MUSIC) > 0 &&
                 !audio.isMusicActive && audio.activeRecordingConfigurations.isEmpty()
         } catch (_: SecurityException) { false }
-        if (loaded && quiet) soundPool.play(soundId, .12f, .12f, 1, 0, 1f)
-        handler.postDelayed(this, 45000L)
+        if (loaded && quiet && soundPool.play(soundId, .12f, .12f, 1, 0, 1f) != 0) {
+            lastRing = SystemClock.elapsedRealtime()
+        }
+        handler.postDelayed(this, INTERVAL_MS)
     }
 
     fun stop() {
@@ -56,5 +62,12 @@ internal class EffectsSoundPlayer(context: Context) : Runnable {
         pool = null
         loaded = false
         soundId = 0
+    }
+
+    private companion object {
+        const val FIRST_DELAY_MS = 1800L
+        const val INTERVAL_MS = 45000L
+        // Shared by every hub: the last time bells were actually heard in this process.
+        var lastRing = 0L
     }
 }

@@ -14,6 +14,7 @@ import com.Atom2Universe.app.R
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.colorstack.ColorStackGame
 import com.Atom2Universe.app.games.colorstack.ColorStackView
 import kotlin.math.hypot
@@ -225,19 +226,13 @@ class ColorStackWidgetView @JvmOverloads constructor(
         if (game.solved && !victoryRecorded) {
             victoryRecorded = true
             GameStatsRepository(context).recordColorStackWon(game.difficulty.name)
-            when (game.difficulty) {
-                ColorStackGame.Difficulty.HARD -> {
-                    val statsRepo = GameStatsRepository(context)
-                    if (hardGameStartMs > 0L) {
-                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
-                    }
-                    hardGameStartMs = 0L
-                    NeutrinoRepository(context).addBalance(7)
+            if (game.difficulty == ColorStackGame.Difficulty.HARD) {
+                if (hardGameStartMs > 0L) {
+                    GameStatsRepository(context).recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                 }
-                ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addBalance(3)
-                ColorStackGame.Difficulty.EASY -> NeutrinoRepository(context).addBalance(1)
-                else -> Unit
+                hardGameStartMs = 0L
             }
+            NeutrinoRepository(context).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
         }
         persistGame()
     }

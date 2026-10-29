@@ -52,6 +52,8 @@ class StatsActivity : ThemedActivity() {
         initViews()
         setupTabs()
         observeViewModel()
+        // Après une recréation (thème, rotation), le ViewModel garde l'onglet choisi
+        showPeriod(viewModel.selectedPeriod.value)
     }
 
     private fun initViews() {
@@ -90,13 +92,14 @@ class StatsActivity : ThemedActivity() {
         tabMonth.setOnClickListener { selectPeriod(StatsPeriod.MONTH) }
         tabYear.setOnClickListener { selectPeriod(StatsPeriod.YEAR) }
         tabCalendar.setOnClickListener { selectPeriod(StatsPeriod.CALENDAR) }
-
-        // Semaine sélectionnée par défaut
-        updateTabSelection(StatsPeriod.WEEK)
     }
 
     private fun selectPeriod(period: StatsPeriod) {
         viewModel.selectPeriod(period)
+        showPeriod(period)
+    }
+
+    private fun showPeriod(period: StatsPeriod) {
         updateTabSelection(period)
 
         if (period == StatsPeriod.CALENDAR) {
@@ -106,6 +109,8 @@ class StatsActivity : ThemedActivity() {
             ensureCalendarInflated()
         } else {
             calendarContentContainer.visibility = View.GONE
+            // Des données identiques ne sont pas réémises : on réaffiche celles qu'on a
+            renderStats(viewModel.statsData.value)
         }
     }
 
@@ -125,6 +130,12 @@ class StatsActivity : ThemedActivity() {
         calendarMonthView?.setOnMonthChangedListener { year, month ->
             viewModel.setCalendarMonth(year, month)
         }
+
+        // Ce que le ViewModel a déjà chargé (retour sur l'onglet après une recréation)
+        calendarMonthView?.setMonth(viewModel.calendarYear.value, viewModel.calendarMonth.value)
+        calendarMonthView?.setActiveDays(viewModel.activeDays.value)
+        viewModel.selectedDate.value?.let { calendarMonthView?.setSelectedDay(it.day) }
+        displayCalendarHistory(viewModel.calendarHistory.value)
     }
 
     private fun updateTabSelection(period: StatsPeriod) {
@@ -148,11 +159,7 @@ class StatsActivity : ThemedActivity() {
         lifecycleScope.launch {
             viewModel.statsData.collect { data ->
                 if (viewModel.selectedPeriod.value == StatsPeriod.CALENDAR) return@collect
-                if (data == null || data.isEmpty) {
-                    showEmpty()
-                } else {
-                    showStats(data)
-                }
+                renderStats(data)
             }
         }
 
@@ -192,6 +199,10 @@ class StatsActivity : ThemedActivity() {
         }
     }
 
+    private fun renderStats(data: StatsData?) {
+        if (data == null || data.isEmpty) showEmpty() else showStats(data)
+    }
+
     private fun showEmpty() {
         contentContainer.visibility = View.GONE
         emptyView.visibility = View.VISIBLE
@@ -209,7 +220,7 @@ class StatsActivity : ThemedActivity() {
         val (musicHours, musicMinutes) = data.formatDuration(data.musicListeningTimeMs)
         musicTimeText.text = getString(R.string.stats_hours_format, musicHours, musicMinutes)
 
-        val (midiHours, midiMinutes) = data.formatDuration(data.midiPracticeTimeMs)
+        val (midiHours, midiMinutes) = data.formatDuration(data.midiTimeMs)
         midiTimeText.text = getString(R.string.stats_hours_format, midiHours, midiMinutes)
 
         val (radioHours, radioMinutes) = data.formatDuration(data.radioListeningTimeMs)
@@ -217,7 +228,7 @@ class StatsActivity : ThemedActivity() {
 
         // Score moyen
         if (data.averagePracticeScore != null) {
-            averageScoreText.text = String.format("%.0f", data.averagePracticeScore)
+            averageScoreText.text = getString(R.string.stats_score_format, data.averagePracticeScore)
             averageScoreText.visibility = View.VISIBLE
             findViewById<TextView>(R.id.average_score_label).visibility = View.VISIBLE
         } else {
@@ -237,7 +248,11 @@ class StatsActivity : ThemedActivity() {
         displayTopItems(
             topAlbumsContainer,
             data.topAlbums,
-            { "${it.trackAlbum} - ${it.trackAlbumArtist ?: ""}" },
+            { album ->
+                album.trackAlbumArtist?.takeIf { it.isNotBlank() }
+                    ?.let { getString(R.string.stats_album_artist_format, album.trackAlbum, it) }
+                    ?: album.trackAlbum
+            },
             { formatDuration(it.totalDuration) }
         )
 
@@ -351,7 +366,7 @@ class StatsActivity : ThemedActivity() {
             val titleText = itemView.findViewById<TextView>(R.id.title_text)
             val durationText = itemView.findViewById<TextView>(R.id.duration_text)
 
-            rankText.text = "${index + 1}."
+            rankText.text = getString(R.string.stats_rank_format, index + 1)
             titleText.text = getTitle(item)
             durationText.text = getDuration(item)
 

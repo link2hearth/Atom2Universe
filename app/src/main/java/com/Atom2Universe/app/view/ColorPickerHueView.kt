@@ -20,10 +20,10 @@ class ColorPickerHueView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val density = resources.displayMetrics.density
     private val selectorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         style = Paint.Style.STROKE
-        strokeWidth = 4f
     }
 
     private var hue: Float = 0f
@@ -82,7 +82,9 @@ class ColorPickerHueView @JvmOverloads constructor(
 
         // Dessiner le sélecteur
         val selectorX = (hue / 360f) * w
-        val selectorRadius = h / 2 - 2
+        val border = 1.5f * density
+        // La bordure reste entière dans la barre.
+        val selectorRadius = h / 2 - border
 
         // Cercle externe blanc
         selectorPaint.color = Color.WHITE
@@ -92,7 +94,7 @@ class ColorPickerHueView @JvmOverloads constructor(
         // Bordure noire
         selectorPaint.color = Color.BLACK
         selectorPaint.style = Paint.Style.STROKE
-        selectorPaint.strokeWidth = 2f
+        selectorPaint.strokeWidth = border
         canvas.drawCircle(selectorX, h / 2, selectorRadius, selectorPaint)
     }
 
@@ -100,6 +102,8 @@ class ColorPickerHueView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN,
             MotionEvent.ACTION_MOVE -> {
+                // Dans une ScrollView, un glissé doit choisir la teinte, pas faire défiler.
+                if (event.action == MotionEvent.ACTION_DOWN) parent?.requestDisallowInterceptTouchEvent(true)
                 val x = event.x.coerceIn(0f, width.toFloat())
                 hue = (x / width) * 360f
                 onHueChanged?.invoke(hue)

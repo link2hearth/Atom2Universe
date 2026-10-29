@@ -111,13 +111,21 @@ object SharedGameStats {
         return out
     }
 
+    /** Le dernier JSON décodé et son résultat : la page stats lit [total] une soixantaine de fois par affichage. */
+    private class DecodedDevices(val raw: String, val devices: Map<String, DeviceCountersData>)
+
+    @Volatile private var decodedDevices: DecodedDevices? = null
+
     fun otherDevices(context: Context): Map<String, DeviceCountersData> {
         val raw = prefs(context).getString(KEY_OTHER_DEVICES, null) ?: return emptyMap()
-        return try {
+        decodedDevices?.takeIf { it.raw == raw }?.let { return it.devices }
+        val devices = try {
             DeviceCountersData.mapFromJson(JSONObject(raw))
         } catch (e: Exception) {
             emptyMap()
         }
+        decodedDevices = DecodedDevices(raw, devices)
+        return devices
     }
 
     fun saveOtherDevices(context: Context, devices: Map<String, DeviceCountersData>) {

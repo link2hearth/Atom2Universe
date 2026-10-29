@@ -63,12 +63,13 @@ class ClickerStatsActivity : ThemedActivity() {
         findViewById<TextView>(R.id.stat_aps_frenzies_value).text =
             fmt.format(stats.apsFrenzyCount)
 
+        val empty = getString(R.string.game_stat_empty)
         val cps = stats.maxCps.toInt()
         findViewById<TextView>(R.id.stat_max_cps_value).text =
-            if (cps > 0) getString(R.string.clicker_rate_per_second, cps) else "—"
+            if (cps > 0) getString(R.string.clicker_rate_per_second, cps) else empty
 
         findViewById<TextView>(R.id.stat_max_apc_clicks_value).text =
-            if (stats.maxClicksPerApcFrenzy > 0) "${stats.maxClicksPerApcFrenzy}" else "—"
+            if (stats.maxClicksPerApcFrenzy > 0) fmt.format(stats.maxClicksPerApcFrenzy) else empty
 
         findViewById<TextView>(R.id.stat_play_time_value).text =
             formatPlayTime(stats.totalPlayTimeMs)
@@ -193,7 +194,9 @@ class ClickerStatsActivity : ThemedActivity() {
             apsPct = 100.0 - apcPct
         }
 
-        val fmtPct = { v: Double -> if (total.isZero()) "—" else "${"%.1f".format(v)} %" }
+        val fmtPct = { v: Double ->
+            if (total.isZero()) getString(R.string.game_stat_empty) else getString(R.string.game_stat_percent, v)
+        }
         findViewById<TextView>(R.id.stat_production_apc_value).text = fmtPct(apcPct)
         findViewById<TextView>(R.id.stat_production_aps_value).text = fmtPct(apsPct)
 
@@ -211,13 +214,13 @@ class ClickerStatsActivity : ThemedActivity() {
 
     private fun formatElementBonus(flat: Long, mult: Double): String {
         val parts = mutableListOf<String>()
-        if (flat > 0) parts.add("+$flat flat")
-        if (mult > 0.0) parts.add("×${"%.2f".format(1.0 + mult)}")
-        return if (parts.isEmpty()) "—" else parts.joinToString("  ")
+        if (flat > 0) parts.add(getString(R.string.game_stat_bonus_flat, number(flat)))
+        if (mult > 0.0) parts.add(getString(R.string.game_stat_bonus_mult, 1.0 + mult))
+        return if (parts.isEmpty()) getString(R.string.game_stat_empty) else parts.joinToString("  ")
     }
 
     private fun formatPlayTime(ms: Long): String {
-        if (ms <= 0L) return "—"
+        if (ms <= 0L) return getString(R.string.game_stat_empty)
         val totalSec = ms / 1000L
         val hours    = totalSec / 3600
         val minutes  = (totalSec % 3600) / 60
@@ -232,6 +235,8 @@ class ClickerStatsActivity : ThemedActivity() {
     private fun bindGameStats() {
         val gameStats = GameStatsRepository(this).load()
         val fmt = NumberFormat.getNumberInstance(resources.configuration.locales[0])
+        val empty = getString(R.string.game_stat_empty)
+        fun minSec(totalSec: Int) = getString(R.string.game_stat_min_sec, totalSec / 60, totalSec % 60)
 
         fun TextView.setWins(won: Int, played: Int) {
             text = if (played > 0 || won > 0) getString(R.string.game_stat_ratio, fmt.format(won), fmt.format(played)) else getString(R.string.game_stat_empty)
@@ -249,97 +254,96 @@ class ClickerStatsActivity : ThemedActivity() {
         findViewById<TextView>(R.id.stat_colorstack_won_value)
             .setWins(total("colorstack_hard_won"), total("colorstack_hard_played"))
         findViewById<TextView>(R.id.stat_colorstack_time_value).text =
-            if (gameStats.colorStackHardBestMs > 0) formatMs(gameStats.colorStackHardBestMs) else "—"
+            if (gameStats.colorStackHardBestMs > 0) formatMs(gameStats.colorStackHardBestMs) else empty
         val pipeTapWon = total("pipetap_hard_won")
         findViewById<TextView>(R.id.stat_pipetap_won_value).text =
-            if (pipeTapWon > 0) fmt.format(pipeTapWon) else "—"
+            if (pipeTapWon > 0) fmt.format(pipeTapWon) else empty
         findViewById<TextView>(R.id.stat_othello_won_value).setWins(total("othello_won"), total("othello_played"))
 
         // Records depuis SharedPreferences individuels
         val sw = getSharedPreferences("stars_war_save", MODE_PRIVATE)
         val swScore = sw.getInt("best_score", 0)
         val swWave  = sw.getInt("best_wave", 0)
-        findViewById<TextView>(R.id.stat_starswar_score_value).text = if (swScore > 0) fmt.format(swScore) else "—"
-        findViewById<TextView>(R.id.stat_starswar_wave_value).text  = if (swWave > 0) fmt.format(swWave) else "—"
+        findViewById<TextView>(R.id.stat_starswar_score_value).text = if (swScore > 0) fmt.format(swScore) else empty
+        findViewById<TextView>(R.id.stat_starswar_wave_value).text  = if (swWave > 0) fmt.format(swWave) else empty
 
         val rx = getSharedPreferences("reflex_save", MODE_PRIVATE)
         val rxBest = rx.getLong("best_score", 0L)
-        findViewById<TextView>(R.id.stat_reflex_best_value).text = if (rxBest > 0) fmt.format(rxBest) else "—"
+        findViewById<TextView>(R.id.stat_reflex_best_value).text = if (rxBest > 0) fmt.format(rxBest) else empty
 
         val fc = getSharedPreferences("flappy_cat_save", MODE_PRIVATE)
         val fcScore = fc.getInt("best_score", 0)
-        findViewById<TextView>(R.id.stat_flappy_score_value).text = if (fcScore > 0) fmt.format(fcScore) else "—"
+        findViewById<TextView>(R.id.stat_flappy_score_value).text = if (fcScore > 0) fmt.format(fcScore) else empty
 
         val g2048 = getSharedPreferences("game2048_save", MODE_PRIVATE)
         val best2048 = g2048.getInt("best_score", 0)
-        findViewById<TextView>(R.id.stat_2048_best_value).text = if (best2048 > 0) fmt.format(best2048) else "—"
+        findViewById<TextView>(R.id.stat_2048_best_value).text = if (best2048 > 0) fmt.format(best2048) else empty
 
         val ws = getSharedPreferences("wave_surf_save", MODE_PRIVATE)
         val wsSpeed = ws.getInt("best_speed", 0)
         val wsAlt   = ws.getInt("best_altitude", 0)
         findViewById<TextView>(R.id.stat_wavesurf_speed_value).text =
-            if (wsSpeed > 0) "${fmt.format(wsSpeed)} km/h" else "—"
+            if (wsSpeed > 0) getString(R.string.game_stat_speed_kmh, fmt.format(wsSpeed)) else empty
         findViewById<TextView>(R.id.stat_wavesurf_altitude_value).text =
-            if (wsAlt > 0) "${fmt.format(wsAlt)} m" else "—"
+            if (wsAlt > 0) getString(R.string.game_stat_meters, fmt.format(wsAlt)) else empty
 
         val sv = getSharedPreferences("survivor_save", MODE_PRIVATE)
         val svTime  = sv.getFloat("best_time", 0f)
         val svKills = sv.getInt("best_kills", 0)
         val svTimeSec = svTime.toInt()
         findViewById<TextView>(R.id.stat_survivor_time_value).text =
-            if (svTime > 0f) "%d:%02d".format(svTimeSec / 60, svTimeSec % 60) else "—"
+            if (svTime > 0f) minSec(svTimeSec) else empty
         findViewById<TextView>(R.id.stat_survivor_kills_value).text =
-            if (svKills > 0) fmt.format(svKills) else "—"
+            if (svKills > 0) fmt.format(svKills) else empty
 
         val m3 = getSharedPreferences("match3_save", MODE_PRIVATE)
         val m3Score = m3.getInt("best_score", 0)
-        findViewById<TextView>(R.id.stat_match3_best_value).text = if (m3Score > 0) fmt.format(m3Score) else "—"
+        findViewById<TextView>(R.id.stat_match3_best_value).text = if (m3Score > 0) fmt.format(m3Score) else empty
         val m3TimeMs = m3.getLong("best_time_ms", 0L)
         findViewById<TextView>(R.id.stat_match3_best_time_value).text = if (m3TimeMs > 0L) {
-            val secs = (m3TimeMs / 1000).toInt()
-            "%d:%02d".format(secs / 60, secs % 60)
-        } else "—"
+            minSec((m3TimeMs / 1000).toInt())
+        } else empty
 
         val hrBestMs = gameStats.hexRunnerBestMs
         findViewById<TextView>(R.id.stat_hexrunner_best_value).text = if (hrBestMs > 0L) {
             val secs = (hrBestMs / 1000).toInt()
-            if (secs >= 60) "%d:%02d".format(secs / 60, secs % 60) else "$secs s"
-        } else "—"
+            if (secs >= 60) minSec(secs) else getString(R.string.game_stat_seconds_int, secs)
+        } else empty
 
         val hp = getSharedPreferences("hot_potato_save", MODE_PRIVATE)
         val hpScore = hp.getInt("best_score", 0)
-        findViewById<TextView>(R.id.stat_hotpotato_score_value).text = if (hpScore > 0) fmt.format(hpScore) else "—"
+        findViewById<TextView>(R.id.stat_hotpotato_score_value).text = if (hpScore > 0) fmt.format(hpScore) else empty
 
         val ob = getSharedPreferences("orbite_save", MODE_PRIVATE)
         val obBest = ob.getInt("best", 0)
-        findViewById<TextView>(R.id.stat_orbite_score_value).text = if (obBest > 0) fmt.format(obBest) else "—"
+        findViewById<TextView>(R.id.stat_orbite_score_value).text = if (obBest > 0) fmt.format(obBest) else empty
 
         val cr = getSharedPreferences("cosmo_run_save", MODE_PRIVATE)
         val crBest = cr.getInt("best_score", 0)
-        findViewById<TextView>(R.id.stat_cosmorun_score_value).text = if (crBest > 0) fmt.format(crBest) else "—"
+        findViewById<TextView>(R.id.stat_cosmorun_score_value).text = if (crBest > 0) fmt.format(crBest) else empty
 
         val nc = getSharedPreferences("nuclea_save", MODE_PRIVATE)
         val ncWave = nc.getInt("best_wave", 0)
-        findViewById<TextView>(R.id.stat_nuclea_wave_value).text = if (ncWave > 0) fmt.format(ncWave) else "—"
+        findViewById<TextView>(R.id.stat_nuclea_wave_value).text = if (ncWave > 0) fmt.format(ncWave) else empty
 
         val tb = getSharedPreferences(com.Atom2Universe.app.games.trebuchet.TREBUCHET_PREFS, MODE_PRIVATE)
         val tbDistance = tb.getFloat("best_distance", 0f)
         findViewById<TextView>(R.id.stat_trebuchet_distance_value).text =
-            if (tbDistance > 0f) "${fmt.format(tbDistance.toInt())} m" else "—"
+            if (tbDistance > 0f) getString(R.string.game_stat_meters, fmt.format(tbDistance.toInt())) else empty
         val tbSites = SharedGameStats.total(this, "trebuchet_game", "sites_destroyed")
-        findViewById<TextView>(R.id.stat_trebuchet_sites_value).text = if (tbSites > 0) fmt.format(tbSites) else "—"
+        findViewById<TextView>(R.id.stat_trebuchet_sites_value).text = if (tbSites > 0) fmt.format(tbSites) else empty
 
         val rg = getSharedPreferences("roguelike_save", MODE_PRIVATE)
         val rgFloor = rg.getInt("best_floor", 0)
-        findViewById<TextView>(R.id.stat_roguelike_floor_value).text = if (rgFloor > 0) fmt.format(rgFloor) else "—"
+        findViewById<TextView>(R.id.stat_roguelike_floor_value).text = if (rgFloor > 0) fmt.format(rgFloor) else empty
 
         val elSolved = SharedGameStats.total(this, "escape_labyrinth_prefs", "solved")
         val elPerfect = SharedGameStats.total(this, "escape_labyrinth_prefs", "solved_perfect")
-        findViewById<TextView>(R.id.stat_escape_solved_value).text = if (elSolved > 0) fmt.format(elSolved) else "—"
-        findViewById<TextView>(R.id.stat_escape_perfect_value).text = if (elPerfect > 0) fmt.format(elPerfect) else "—"
+        findViewById<TextView>(R.id.stat_escape_solved_value).text = if (elSolved > 0) fmt.format(elSolved) else empty
+        findViewById<TextView>(R.id.stat_escape_perfect_value).text = if (elPerfect > 0) fmt.format(elPerfect) else empty
 
         val sbSolved = SharedGameStats.total(this, "starbridges_save", "solved")
-        findViewById<TextView>(R.id.stat_starbridges_solved_value).text = if (sbSolved > 0) fmt.format(sbSolved) else "—"
+        findViewById<TextView>(R.id.stat_starbridges_solved_value).text = if (sbSolved > 0) fmt.format(sbSolved) else empty
 
         bindAdditionalStats()
         bindMemoryStats()
@@ -355,8 +359,8 @@ class ClickerStatsActivity : ThemedActivity() {
             // Indépendants : chaque ligne peut être supprimée seule, l'autre doit rester.
             val score = meta?.highScore ?: 0L
             val level = meta?.highestLevel ?: 0
-            scoreView.text = if (score > 0) fmt.format(score) else "—"
-            levelView.text = if (level > 0) fmt.format(level) else "—"
+            scoreView.text = if (score > 0) fmt.format(score) else empty
+            levelView.text = if (level > 0) fmt.format(level) else empty
             addExtraStat("particules", getString(R.string.game_stat_combo), number(meta?.bestCombo ?: 0),
                 listOf(SyncedStat(ParticulesRecords.SOURCE, ParticulesRecords.KEY_BEST_COMBO)))
         }
@@ -374,7 +378,7 @@ class ClickerStatsActivity : ThemedActivity() {
             val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
             row.findViewById<TextView>(R.id.row_label).text = getString(R.string.game_stat_grid, diff.cols, diff.rows)
             val parts = mutableListOf<String>()
-            if (time > 0) parts.add("%d:%02d".format(time / 60, time % 60))
+            if (time > 0) parts.add(getString(R.string.game_stat_min_sec, time / 60, time % 60))
             if (moves > 0) parts.add(getString(R.string.stat_moves_format, moves))
             row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ").ifEmpty { getString(R.string.game_stat_empty) }
             onLongPressDelete(row, listOf(

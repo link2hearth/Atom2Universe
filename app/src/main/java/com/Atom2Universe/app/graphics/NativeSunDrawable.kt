@@ -26,6 +26,9 @@ internal class NativeSunDrawable : Drawable(), Animatable {
         interpolator = LinearInterpolator()
         addUpdateListener {
             val now = SystemClock.uptimeMillis()
+            // Le plasma bouge lentement : 30 images/s suffisent, même sur un écran 120 Hz.
+            // L'horloge réelle avance d'autant à chaque image retenue, la vitesse ne change pas.
+            if (now - lastFrame < MIN_FRAME_MS) return@addUpdateListener
             animation.advance(now - lastFrame)
             lastFrame = now
             shader.setFloatUniform("phase", animation.phase)
@@ -82,4 +85,8 @@ internal class NativeSunDrawable : Drawable(), Animatable {
     @Deprecated("Deprecated in Android")
     override fun getOpacity() = PixelFormat.TRANSLUCENT
 
+    private companion object {
+        // Un peu sous 33 ms : quatre images à 120 Hz, trois à 90 Hz ou deux à 60 Hz passent toujours.
+        const val MIN_FRAME_MS = 30L
+    }
 }

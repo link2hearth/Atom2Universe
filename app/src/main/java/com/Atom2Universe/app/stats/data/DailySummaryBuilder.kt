@@ -13,10 +13,18 @@ class DailySummaryBuilder(
 ) {
     companion object {
         private const val TAG = "DailySummaryBuilder"
+
+        /** Le calendrier audio : la lecture (livres, BD) a son propre calendrier, calculé à part. */
+        private val AUDIO_MODULES = setOf(
+            StatsRepository.MODULE_MUSIC,
+            StatsRepository.MODULE_MIDI,
+            StatsRepository.MODULE_MIDI_PRACTICE,
+            StatsRepository.MODULE_RADIO
+        )
     }
 
     suspend fun backfillAllSummaries() {
-        val allSessions = usageSessionDao.getAllSessionsSince(0)
+        val allSessions = usageSessionDao.getAllSessionsSince(0).filter { it.moduleType in AUDIO_MODULES }
         if (allSessions.isEmpty()) {
             Log.d(TAG, "No sessions to backfill")
             return
@@ -39,6 +47,7 @@ class DailySummaryBuilder(
         val dayEndMs = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         val sessions = usageSessionDao.getSessionsBetween(dayStartMs, dayEndMs)
+            .filter { it.moduleType in AUDIO_MODULES }
         if (sessions.isEmpty()) {
             dailySummaryDao.deleteSummaryForDay(epochDay)
             return
@@ -89,7 +98,8 @@ class DailySummaryBuilder(
                 if (artist.isNotBlank()) {
                     val obj = JSONObject()
                     obj.put("a", artist)
-                    obj.put("t", artistSessions.size)
+                    // Une pause de plus de 3 s coupe un morceau en plusieurs lignes : on compte les morceaux
+                    obj.put("t", artistSessions.distinctBy { it.trackTitle to it.trackAlbum }.size)
                     obj.put("d", artistSessions.sumOf { it.durationMs })
                     arr.put(obj)
                 }

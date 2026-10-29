@@ -7,17 +7,16 @@ import com.Atom2Universe.app.periodic.PeriodicElement
 import com.Atom2Universe.app.periodic.getPeriodicElements
 
 enum class GachaRarity(
-    val label: String,
     val colorHex: Long,
     val weight: Int,
     @StringRes val nameRes: Int
 ) {
-    PRIMORDIAL("Primordial",   0xFFCCCCCC,  75, R.string.gacha_rarity_primordial),
-    FUSION("Fusion",           0xFF00BBFF,  10, R.string.gacha_rarity_fusion),
-    SUPERNOVA("Supernova",     0xFFFFCC00,   7, R.string.gacha_rarity_supernova),
-    NEUTRONIQUE("Neutronique", 0xFFFF55FF,   5, R.string.gacha_rarity_neutronique),
-    SPALLATION("Spallation",   0xFF00CC66,   1, R.string.gacha_rarity_spallation),
-    SYNTHETIQUE("Synthétique", 0xFFFF3333,   2, R.string.gacha_rarity_synthetique);
+    PRIMORDIAL(0xFFCCCCCC,  75, R.string.gacha_rarity_primordial),
+    FUSION(0xFF00BBFF,  10, R.string.gacha_rarity_fusion),
+    SUPERNOVA(0xFFFFCC00,   7, R.string.gacha_rarity_supernova),
+    NEUTRONIQUE(0xFFFF55FF,   5, R.string.gacha_rarity_neutronique),
+    SPALLATION(0xFF00CC66,   1, R.string.gacha_rarity_spallation),
+    SYNTHETIQUE(0xFFFF3333,   2, R.string.gacha_rarity_synthetique);
 
     val color: Int get() = colorHex.toInt()
 }

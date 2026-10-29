@@ -1,8 +1,10 @@
 package com.Atom2Universe.app.games.chess
 
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+
 /**
  * Niveaux de difficulté pour le jeu d'échecs
- * (le temps de réflexion de l'IA est dans ChessAI, la récompense dans ChessActivity)
+ * (le temps de réflexion de l'IA est dans ChessAI, la récompense dans NeutrinoRewards)
  */
 enum class ChessDifficulty(
     val labelResId: Int,
@@ -44,4 +46,8 @@ enum class ChessDifficulty(
      * Vérifie si ce mode utilise l'IA
      */
     fun hasAI(): Boolean = this != TWO_PLAYER
+
+    /** La moins payée des deux : changer de difficulté en cours de partie ne fait jamais monter le gain. */
+    fun lowerForReward(other: ChessDifficulty): ChessDifficulty =
+        if (NeutrinoRewards.chess(other) < NeutrinoRewards.chess(this)) other else this
 }

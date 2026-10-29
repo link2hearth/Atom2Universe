@@ -96,4 +96,21 @@
     <string name="game_stat_kit_top">Plus grande taille réussie</string>
     <string name="game_stat_kit_pictures">Images</string>
     <string name="game_stat_kit_pictures_value">%1$d/%2$d</string>
+
+    <string name="game_stat_percent">%1$.1f %%</string>
+    <string name="game_stat_bonus_flat">+%1$s fixe</string>
+    <string name="game_stat_bonus_mult">×%1$.2f</string>
+    <string name="game_stat_speed_kmh">%1$s km/h</string>
+    <string name="game_stat_meters">%1$s m</string>
+    <string name="game_stat_min_sec">%1$d:%2$02d</string>
+    <string name="game_stat_seconds_int">%1$d s</string>
+    <string name="dev_cheat_copies_added">+5 × %1$s</string>
+    <string name="dev_cheat_atomic_number">Z=%1$d</string>
+    <string name="dev_cheat_neutrino_count">"ν  %1$d"</string>
+    <string name="dev_cheat_ticket_count">🏟 %1$d</string>
+    <string name="dev_cheat_amount_thousands">%1$dK</string>
+    <string name="dev_cheat_amount_millions">%1$dM</string>
+    <string name="dev_cheat_amount_billions">%1$dG</string>
+    <string name="dev_cheat_amount">%1$d</string>
+    <string name="dev_cheat_roll_line">"  %1$s  %2$s  [%3$s]"</string>
 </resources>

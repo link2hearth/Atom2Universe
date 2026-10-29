@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.draughts
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -103,7 +104,7 @@ class DraughtsActivity : ThemedActivity(),
                 stopAnimation()
                 currentDifficulty = selected
                 rewardDifficulty = if (game.moveCount == 0) currentDifficulty
-                    else lowerReward(rewardDifficulty, currentDifficulty)
+                    else rewardDifficulty.lowerForReward(currentDifficulty)
                 ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
                 draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
                 draughtsView.refresh()
@@ -114,17 +115,6 @@ class DraughtsActivity : ThemedActivity(),
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-
-    /** Le mode 2 joueurs compte comme le plus bas : il ne rapporte rien. */
-    private fun rewardRank(difficulty: DraughtsDifficulty): Int = when (difficulty) {
-        DraughtsDifficulty.TWO_PLAYER -> 0
-        DraughtsDifficulty.TRAINING -> 1
-        DraughtsDifficulty.STANDARD -> 2
-        DraughtsDifficulty.EXPERT -> 3
-    }
-
-    private fun lowerReward(a: DraughtsDifficulty, b: DraughtsDifficulty): DraughtsDifficulty =
-        if (rewardRank(b) < rewardRank(a)) b else a
 
     private fun setupNewGameButton() {
         newGameButton.setOnClickListener {
@@ -350,12 +340,7 @@ class DraughtsActivity : ThemedActivity(),
         statsRepo.recordDraughtsPlayed()
         if (winner == DraughtsPieceColor.WHITE) statsRepo.recordDraughtsWon()
         val reward = if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI()) {
-            when (rewardDifficulty) {
-                DraughtsDifficulty.TRAINING -> NeutrinoRewards.DRAUGHTS_TRAINING
-                DraughtsDifficulty.STANDARD -> NeutrinoRewards.DRAUGHTS_STANDARD
-                DraughtsDifficulty.EXPERT   -> NeutrinoRewards.DRAUGHTS_EXPERT
-                DraughtsDifficulty.TWO_PLAYER -> 0
-            }
+            NeutrinoRewards.draughts(rewardDifficulty)
         } else 0
         if (reward > 0) {
             NeutrinoRepository(this).addBalance(reward)
@@ -406,46 +391,28 @@ class DraughtsActivity : ThemedActivity(),
     // ── Persistance ────────────────────────────────────────────────────────────
 
     private fun saveGame() {
-        val state = game.serialize()
-        getSharedPreferences("draughts_save", MODE_PRIVATE).edit {
-            putString("state", state)
-            putString("difficulty", currentDifficulty.name)
-            putLong("elapsed_time", elapsedTimeMs)
-            // Le widget flottant ne réécrit que "state" : ces champs ne valent que pour meta_state
-            putString(KEY_META_STATE, state)
-            putInt(KEY_MOVE_COUNT, game.moveCount)
-            putInt(KEY_QUIET_KING_MOVES, game.quietKingMoves)
-            putBoolean(KEY_OVER, game.isGameOver)
-            putString(KEY_WINNER, game.winner?.name)
-            putString(KEY_REWARD_DIFFICULTY, rewardDifficulty.name)
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit {
+            putString(KEY_DIFFICULTY, currentDifficulty.name)
+            putLong(KEY_ELAPSED, elapsedTimeMs)
+            putGame(game, rewardDifficulty)
         }
     }
 
     private fun clearSave() {
-        getSharedPreferences("draughts_save", MODE_PRIVATE).edit { clear() }
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit { clear() }
     }
 
     private fun loadSavedGame() {
-        val prefs = getSharedPreferences("draughts_save", MODE_PRIVATE)
-        val state = prefs.getString("state", null)
-        if (state == null) { startNewGame(); return }
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        if (prefs.getString(KEY_STATE, null) == null) { startNewGame(); return }
 
-        val diffName = prefs.getString("difficulty", DraughtsDifficulty.STANDARD.name)
+        val diffName = prefs.getString(KEY_DIFFICULTY, DraughtsDifficulty.STANDARD.name)
         currentDifficulty = try {
             DraughtsDifficulty.valueOf(diffName ?: DraughtsDifficulty.STANDARD.name)
         } catch (e: Exception) { DraughtsDifficulty.STANDARD }
         difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
-        if (prefs.getString(KEY_META_STATE, null) == state) {
-            val winner = DraughtsPieceColor.values().find { it.name == prefs.getString(KEY_WINNER, null) }
-            game.restore(state, prefs.getInt(KEY_MOVE_COUNT, 0), prefs.getInt(KEY_QUIET_KING_MOVES, 0),
-                prefs.getBoolean(KEY_OVER, false), winner)
-            val savedReward = DraughtsDifficulty.values().find { it.name == prefs.getString(KEY_REWARD_DIFFICULTY, null) }
-            rewardDifficulty = lowerReward(savedReward ?: currentDifficulty, currentDifficulty)
-        } else {
-            game.deserialize(state)
-            rewardDifficulty = currentDifficulty
-        }
-        elapsedTimeMs = prefs.getLong("elapsed_time", 0)
+        rewardDifficulty = restoreGame(prefs, game, currentDifficulty)
+        elapsedTimeMs = prefs.getLong(KEY_ELAPSED, 0)
         timerText.text = formatTime(elapsedTimeMs)
         ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
         draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
@@ -486,11 +453,48 @@ class DraughtsActivity : ThemedActivity(),
 
     companion object {
         private const val ANIM_STEP_MS = 500L
+
+        // Sauvegarde partagée avec le widget flottant (DraughtsWidgetView)
+        const val PREFS = "draughts_save"
+        const val KEY_DIFFICULTY = "difficulty"
+        private const val KEY_STATE = "state"
+        private const val KEY_ELAPSED = "elapsed_time"
+        // Le plateau seul ne garde ni le compte des coups ni la fin : ces champs ne valent que pour meta_state
         private const val KEY_META_STATE = "meta_state"
         private const val KEY_MOVE_COUNT = "move_count"
         private const val KEY_QUIET_KING_MOVES = "quiet_king_moves"
         private const val KEY_OVER = "over"
         private const val KEY_WINNER = "winner"
         private const val KEY_REWARD_DIFFICULTY = "reward_difficulty"
+
+        /** Écrit la partie et la difficulté qui paie ; la difficulté choisie et le chrono restent à l'appelant. */
+        fun SharedPreferences.Editor.putGame(game: DraughtsGame, rewardDifficulty: DraughtsDifficulty) {
+            val state = game.serialize()
+            putString(KEY_STATE, state)
+            putString(KEY_META_STATE, state)
+            putInt(KEY_MOVE_COUNT, game.moveCount)
+            putInt(KEY_QUIET_KING_MOVES, game.quietKingMoves)
+            putBoolean(KEY_OVER, game.isGameOver)
+            putString(KEY_WINNER, game.winner?.name)
+            putString(KEY_REWARD_DIFFICULTY, rewardDifficulty.name)
+        }
+
+        /**
+         * Recharge la partie dans [game] (partie neuve sans sauvegarde) ; rend la difficulté qui paie,
+         * jamais plus haute que [difficulty].
+         */
+        fun restoreGame(prefs: SharedPreferences, game: DraughtsGame, difficulty: DraughtsDifficulty): DraughtsDifficulty {
+            val state = prefs.getString(KEY_STATE, null)
+            if (state == null) { game.newGame(); return difficulty }
+            if (prefs.getString(KEY_META_STATE, null) == state) {
+                val winner = DraughtsPieceColor.entries.find { it.name == prefs.getString(KEY_WINNER, null) }
+                game.restore(state, prefs.getInt(KEY_MOVE_COUNT, 0), prefs.getInt(KEY_QUIET_KING_MOVES, 0),
+                    prefs.getBoolean(KEY_OVER, false), winner)
+                val savedReward = DraughtsDifficulty.entries.find { it.name == prefs.getString(KEY_REWARD_DIFFICULTY, null) }
+                return (savedReward ?: difficulty).lowerForReward(difficulty)
+            }
+            game.deserialize(state)
+            return difficulty
+        }
     }
 }

@@ -480,8 +480,10 @@ object RadioPlaybackHolder {
 
         startForegroundService(context)
 
-        // Démarrer le tracking des statistiques pour la radio
+        // Démarrer le tracking des statistiques pour la radio : seul le temps où le lecteur
+        // joue compte (onIsPlayingChanged). S'il jouait déjà, aucun changement ne sera signalé.
         StatsTracker.startRadioSession(station.name)
+        if (p.isPlaying) StatsTracker.resumeRadioSession()
 
         return true
     }
@@ -655,6 +657,7 @@ object RadioPlaybackHolder {
 
         // Libère le client HTTP partagé
         RadioRepository.releaseClient()
+        StatsTracker.endRadioSession()
     }
 
     /**
@@ -709,6 +712,8 @@ object RadioPlaybackHolder {
             // Vérifier que le holder n'a pas été released avant de traiter l'événement
             val ctx = appContext ?: return
             Log.d(TAG, "onIsPlayingChanged: $isPlaying")
+            // Pause, tampon, coupure réseau : le temps sans son ne compte pas comme écoute
+            if (isPlaying) StatsTracker.resumeRadioSession() else StatsTracker.pauseRadioSession()
             listeners.forEach { it.onPlaybackStateChanged(isPlaying) }
             // Met à jour la notification immédiatement pour les changements d'état Play/Pause
             updateServiceNotification(ctx)

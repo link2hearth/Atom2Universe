@@ -27,6 +27,8 @@ interface UsageSessionDao {
 
     /**
      * Récupère la durée totale d'utilisation pour un module donné dans une période.
+     * Une séance à cheval sur une borne (minuit pour « Aujourd'hui ») compte au prorata de la
+     * part qui tombe dans la période ; les requêtes de période suivantes font de même.
      *
      * @param moduleType Type de module ("music", "midi", "radio")
      * @param startDate Timestamp de début de période
@@ -34,14 +36,28 @@ interface UsageSessionDao {
      * @return Durée totale en millisecondes
      */
     @Query("""
-        SELECT COALESCE(SUM(durationMs), 0)
+        SELECT COALESCE(SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)), 0)
         FROM usage_sessions
         WHERE moduleType = :moduleType
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
     """)
     suspend fun getTotalDurationByModule(
         moduleType: String,
+        startDate: Long,
+        endDate: Long
+    ): Long
+
+    /** Comme [getTotalDurationByModule], pour plusieurs modules à la fois (écoute + entraînement MIDI). */
+    @Query("""
+        SELECT COALESCE(SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)), 0)
+        FROM usage_sessions
+        WHERE moduleType IN (:moduleTypes)
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
+    """)
+    suspend fun getTotalDurationByModules(
+        moduleTypes: List<String>,
         startDate: Long,
         endDate: Long
     ): Long
@@ -55,13 +71,13 @@ interface UsageSessionDao {
      * @return Liste de paires (artiste, durée en ms)
      */
     @Query("""
-        SELECT trackArtist, SUM(durationMs) as totalDuration
+        SELECT trackArtist, SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)) as totalDuration
         FROM usage_sessions
         WHERE moduleType = 'music'
         AND trackArtist IS NOT NULL
         AND trackArtist != ''
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
         GROUP BY trackArtist
         ORDER BY totalDuration DESC
         LIMIT :limit
@@ -81,13 +97,13 @@ interface UsageSessionDao {
      * @return Liste de paires (album, artiste, durée en ms)
      */
     @Query("""
-        SELECT trackAlbum, trackAlbumArtist, SUM(durationMs) as totalDuration
+        SELECT trackAlbum, trackAlbumArtist, SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)) as totalDuration
         FROM usage_sessions
         WHERE moduleType = 'music'
         AND trackAlbum IS NOT NULL
         AND trackAlbum != ''
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
         GROUP BY trackAlbum, trackAlbumArtist
         ORDER BY totalDuration DESC
         LIMIT :limit
@@ -107,13 +123,13 @@ interface UsageSessionDao {
      * @return Liste de paires (nom fichier, durée en ms)
      */
     @Query("""
-        SELECT midiFileName, SUM(durationMs) as totalDuration
+        SELECT midiFileName, SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)) as totalDuration
         FROM usage_sessions
         WHERE moduleType IN ('midi', 'midi_practice')
         AND midiFileName IS NOT NULL
         AND midiFileName != ''
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
         GROUP BY midiFileName
         ORDER BY totalDuration DESC
         LIMIT :limit
@@ -125,7 +141,8 @@ interface UsageSessionDao {
     ): List<MidiFileStats>
 
     /**
-     * Récupère le score moyen de practice pour une période donnée.
+     * Récupère le score moyen d'entraînement pour une période donnée (l'entraînement est
+     * enregistré en session MIDI portant son score).
      *
      * @param startDate Timestamp de début de période
      * @param endDate Timestamp de fin de période
@@ -134,10 +151,10 @@ interface UsageSessionDao {
     @Query("""
         SELECT AVG(practiceScore)
         FROM usage_sessions
-        WHERE moduleType = 'midi_practice'
+        WHERE moduleType IN ('midi', 'midi_practice')
         AND practiceScore IS NOT NULL
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
     """)
     suspend fun getAveragePracticeScore(
         startDate: Long,
@@ -151,21 +168,14 @@ interface UsageSessionDao {
         SELECT COUNT(*)
         FROM usage_sessions
         WHERE moduleType = :moduleType
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
     """)
     suspend fun getSessionCount(
         moduleType: String,
         startDate: Long,
         endDate: Long
     ): Int
-
-    /**
-     * Supprime toutes les sessions plus anciennes qu'un timestamp donné.
-     * Utile pour le nettoyage automatique des anciennes données.
-     */
-    @Query("DELETE FROM usage_sessions WHERE endTimestamp < :timestamp")
-    suspend fun deleteSessionsOlderThan(timestamp: Long): Int
 
     /**
      * Récupère toutes les sessions depuis un timestamp donné (pour les résumés journaliers).
@@ -222,13 +232,13 @@ interface UsageSessionDao {
      * Récupère le top des titres (livres/BD) les plus lus sur une période, tous modules confondus.
      */
     @Query("""
-        SELECT readingTitle, moduleType, SUM(durationMs) as totalDuration
+        SELECT readingTitle, moduleType, SUM(durationMs * (MIN(endTimestamp, :endDate) - MAX(startTimestamp, :startDate)) / MAX(endTimestamp - startTimestamp, 1)) as totalDuration
         FROM usage_sessions
         WHERE moduleType IN (:moduleTypes)
         AND readingTitle IS NOT NULL
         AND readingTitle != ''
-        AND startTimestamp >= :startDate
-        AND endTimestamp <= :endDate
+        AND startTimestamp < :endDate
+        AND endTimestamp > :startDate
         GROUP BY readingTitle, moduleType
         ORDER BY totalDuration DESC
         LIMIT :limit

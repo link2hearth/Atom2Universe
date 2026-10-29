@@ -85,11 +85,14 @@ class DevCheatActivity : ThemedActivity() {
             refreshNeutrinoAmountLabel()
         }
         findViewById<Button>(R.id.dev_neutrinos_mul10).setOnClickListener {
-            neutrinoAmount *= 10L
+            // Le solde est un Int : au-delà, toInt() rendrait un ajout négatif
+            neutrinoAmount = (neutrinoAmount * 10L).coerceAtMost(Int.MAX_VALUE.toLong())
             refreshNeutrinoAmountLabel()
         }
         findViewById<Button>(R.id.dev_neutrinos_add).setOnClickListener {
-            neutrinoRepo.addBalance(neutrinoAmount.toInt())
+            val room = Int.MAX_VALUE.toLong() - maxOf(neutrinoRepo.getBalance(), neutrinoRepo.getLifetimeNeutrinos())
+            val add = neutrinoAmount.coerceAtMost(room).toInt()
+            if (add > 0) neutrinoRepo.addBalance(add)
             getSharedPreferences("dev_ops_prefs", Context.MODE_PRIVATE)
                 .edit { putString("neutrinos_refresh", "1") }
             refreshNeutrinoCount()
@@ -107,7 +110,8 @@ class DevCheatActivity : ThemedActivity() {
             if (num != null && num in 1..118) {
                 repeat(5) { collectionStore.addCopy(num) }
                 val elem = elementsByNumber[num]
-                Toast.makeText(this, "+5 × ${elem?.symbol ?: "Z=$num"}", Toast.LENGTH_SHORT).show()
+                val symbol = elem?.symbol ?: getString(R.string.dev_cheat_atomic_number, num)
+                Toast.makeText(this, getString(R.string.dev_cheat_copies_added, symbol), Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, getString(R.string.dev_element_range_error), Toast.LENGTH_SHORT).show()
             }
@@ -130,7 +134,7 @@ class DevCheatActivity : ThemedActivity() {
             tv.textSize = 11f
             tv.typeface = android.graphics.Typeface.MONOSPACE
             tv.setPadding(0, 3, 0, 3)
-            tv.text = "  ${element.symbol}  ${element.localizedName(this)}  [${rarity.label}]"
+            tv.text = getString(R.string.dev_cheat_roll_line, element.symbol, element.localizedName(this), getString(rarity.nameRes))
             resultsContainer.addView(tv)
         }
     }
@@ -151,13 +155,13 @@ class DevCheatActivity : ThemedActivity() {
     }
 
     private fun refreshNeutrinoCount() {
-        neutrinoCountText.text = "ν  ${neutrinoRepo.getBalance()}"
+        neutrinoCountText.text = getString(R.string.dev_cheat_neutrino_count, neutrinoRepo.getBalance())
     }
 
     private fun refreshTicketCount() {
         lifecycleScope.launch {
             val state = ticketRepo.load()
-            ticketCountText.text = "🏟 ${state.totalTickets}"
+            ticketCountText.text = getString(R.string.dev_cheat_ticket_count, state.totalTickets)
         }
     }
 
@@ -175,9 +179,9 @@ class DevCheatActivity : ThemedActivity() {
     }
 
     private fun formatAmount(n: Long): String = when {
-        n >= 1_000_000_000L -> "${n / 1_000_000_000L}G"
-        n >= 1_000_000L     -> "${n / 1_000_000L}M"
-        n >= 1_000L         -> "${n / 1_000L}K"
-        else                -> "$n"
+        n >= 1_000_000_000L -> getString(R.string.dev_cheat_amount_billions, n / 1_000_000_000L)
+        n >= 1_000_000L     -> getString(R.string.dev_cheat_amount_millions, n / 1_000_000L)
+        n >= 1_000L         -> getString(R.string.dev_cheat_amount_thousands, n / 1_000L)
+        else                -> getString(R.string.dev_cheat_amount, n)
     }
 }
