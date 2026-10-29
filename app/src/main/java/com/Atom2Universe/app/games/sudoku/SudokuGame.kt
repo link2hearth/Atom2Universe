@@ -9,15 +9,18 @@ object SudokuGame {
 
     /**
      * Generates a new Sudoku puzzle with the specified difficulty.
+     * [ensureActive] is called between attempts and between removals: a coroutine passes its own
+     * `ensureActive()` there so that a cancelled generation (a "hard" one can be long) really stops.
      */
-    fun generatePuzzle(difficulty: SudokuDifficulty): SudokuBoard {
+    fun generatePuzzle(difficulty: SudokuDifficulty, ensureActive: () -> Unit = {}): SudokuBoard {
         // On garde la première grille qui demande exactement le niveau voulu ; à défaut, la plus
         // proche. Une grille facile se trouve du premier coup, une difficile en quelques essais.
         var best: Pair<Array<IntArray>, Array<IntArray>>? = null
         var bestLevel = 0
         for (attempt in 0 until MAX_ATTEMPTS) {
+            ensureActive()
             val solution = generateFullSolution()
-            val puzzle = createPuzzleFromSolution(solution, difficulty)
+            val puzzle = createPuzzleFromSolution(solution, difficulty, ensureActive)
             val level = SudokuGrader.grade(flatten(puzzle), difficulty.level)
             if (level > bestLevel) {
                 best = solution to puzzle
@@ -103,7 +106,11 @@ object SudokuGame {
      * avec les techniques du niveau voulu — ce qui garantit aussi une solution unique — et sans
      * passer sous le plancher d'indices de la difficulté.
      */
-    private fun createPuzzleFromSolution(solution: Array<IntArray>, difficulty: SudokuDifficulty): Array<IntArray> {
+    private fun createPuzzleFromSolution(
+        solution: Array<IntArray>,
+        difficulty: SudokuDifficulty,
+        ensureActive: () -> Unit
+    ): Array<IntArray> {
         val puzzle = solution.map { it.copyOf() }.toTypedArray()
         val positions = (0 until 81).shuffled()
         var clues = 81
@@ -114,6 +121,7 @@ object SudokuGame {
             val col = pos % 9
             val backup = puzzle[row][col]
             if (backup == 0) continue
+            ensureActive()
 
             puzzle[row][col] = 0
             if (SudokuGrader.grade(flatten(puzzle), difficulty.level) < 0) {

@@ -124,8 +124,15 @@ object SudokuGrader {
         for ((a, b, inter) in crossings) {
             for (d in 1..9) {
                 val bit = 1 shl d
-                val inA = units[a].filter { values[it] == 0 && cand[it] and bit != 0 }
-                if (inA.isEmpty() || !inA.all { it in inter }) continue
+                // Le chiffre doit encore tenir dans l'unité a, mais seulement sur l'intersection.
+                var inA = false
+                var outside = false
+                for (cell in units[a]) {
+                    if (values[cell] != 0 || cand[cell] and bit == 0) continue
+                    inA = true
+                    if (cell !in inter) { outside = true; break }
+                }
+                if (!inA || outside) continue
                 for (cell in units[b]) {
                     if (cell !in inter && values[cell] == 0 && cand[cell] and bit != 0) {
                         cand[cell] = cand[cell] and bit.inv()
@@ -140,32 +147,45 @@ object SudokuGrader {
     /** Sous-ensembles nus et cachés de taille [k] dans chaque unité. */
     private fun subsets(values: IntArray, cand: IntArray, k: Int): Boolean {
         var progress = false
+        // Tableaux locaux (le correcteur peut tourner sur deux fils à la fois) : rien n'est alloué par combinaison.
+        val empty = IntArray(9)
+        val digits = IntArray(9)
         for (unit in units) {
-            val empty = unit.filter { values[it] == 0 }
-            if (empty.size <= k) continue
+            var emptyCount = 0
+            for (cell in unit) if (values[cell] == 0) empty[emptyCount++] = cell
+            if (emptyCount <= k) continue
             // Nus : k cases dont l'union des candidats compte k chiffres.
-            combinations(empty.size, k) { pick ->
+            combinations(emptyCount, k) { pick ->
                 var union = 0
                 for (i in pick) union = union or cand[empty[i]]
                 if (Integer.bitCount(union) == k) {
-                    val chosen = pick.map { empty[it] }
-                    for (cell in empty) if (cell !in chosen && cand[cell] and union != 0) {
-                        cand[cell] = cand[cell] and union.inv()
-                        progress = true
+                    for (j in 0 until emptyCount) {
+                        val cell = empty[j]
+                        if (j !in pick && cand[cell] and union != 0) {
+                            cand[cell] = cand[cell] and union.inv()
+                            progress = true
+                        }
                     }
                 }
             }
             // Cachés : k chiffres qui ne tiennent que dans les mêmes k cases.
-            val digits = (1..9).filter { d -> empty.any { cand[it] and (1 shl d) != 0 } }
-            if (digits.size <= k) continue
-            combinations(digits.size, k) { pick ->
+            var digitCount = 0
+            for (d in 1..9) {
+                for (j in 0 until emptyCount) if (cand[empty[j]] and (1 shl d) != 0) { digits[digitCount++] = d; break }
+            }
+            if (digitCount <= k) continue
+            combinations(digitCount, k) { pick ->
                 var mask = 0
                 for (i in pick) mask = mask or (1 shl digits[i])
-                val cells = empty.filter { cand[it] and mask != 0 }
-                if (cells.size == k) {
-                    for (cell in cells) if (cand[cell] and mask.inv() and ALL != 0) {
-                        cand[cell] = cand[cell] and mask
-                        progress = true
+                var cells = 0
+                for (j in 0 until emptyCount) if (cand[empty[j]] and mask != 0) cells++
+                if (cells == k) {
+                    for (j in 0 until emptyCount) {
+                        val cell = empty[j]
+                        if (cand[cell] and mask != 0 && cand[cell] and mask.inv() and ALL != 0) {
+                            cand[cell] = cand[cell] and mask
+                            progress = true
+                        }
                     }
                 }
             }
@@ -176,9 +196,13 @@ object SudokuGrader {
     /** X-wing (k = 2) et swordfish (k = 3), sur les lignes puis sur les colonnes. */
     private fun fish(values: IntArray, cand: IntArray, k: Int): Boolean {
         var progress = false
-        for (byRow in listOf(true, false)) for (d in 1..9) {
+        // Lignes candidates : leur numéro et le masque des positions, sans paires ni listes.
+        val lineIds = IntArray(9)
+        val lineMasks = IntArray(9)
+        for (pass in 0..1) for (d in 1..9) {
+            val byRow = pass == 0
             val bit = 1 shl d
-            val lines = ArrayList<Pair<Int, Int>>() // (ligne, masque des positions)
+            var lineCount = 0
             for (line in 0 until 9) {
                 var mask = 0
                 for (i in 0 until 9) {
@@ -186,16 +210,15 @@ object SudokuGrader {
                     if (values[cell] == 0 && cand[cell] and bit != 0) mask = mask or (1 shl i)
                 }
                 val n = Integer.bitCount(mask)
-                if (n in 2..k) lines.add(line to mask)
+                if (n in 2..k) { lineIds[lineCount] = line; lineMasks[lineCount] = mask; lineCount++ }
             }
-            if (lines.size < k) continue
-            combinations(lines.size, k) { pick ->
+            if (lineCount < k) continue
+            combinations(lineCount, k) { pick ->
                 var union = 0
-                for (i in pick) union = union or lines[i].second
+                for (i in pick) union = union or lineMasks[i]
                 if (Integer.bitCount(union) == k) {
-                    val chosen = pick.map { lines[it].first }
                     for (line in 0 until 9) {
-                        if (line in chosen) continue
+                        if (pick.any { lineIds[it] == line }) continue
                         for (i in 0 until 9) {
                             if (union and (1 shl i) == 0) continue
                             val cell = if (byRow) line * 9 + i else i * 9 + line
@@ -213,13 +236,15 @@ object SudokuGrader {
 
     private fun xyWing(values: IntArray, cand: IntArray): Boolean {
         var progress = false
+        val wings = IntArray(20)
         for (pivot in 0 until 81) {
             if (values[pivot] != 0 || Integer.bitCount(cand[pivot]) != 2) continue
-            val wings = peers[pivot].filter {
-                values[it] == 0 && Integer.bitCount(cand[it]) == 2 &&
-                    Integer.bitCount(cand[it] and cand[pivot]) == 1
+            var wingCount = 0
+            for (peer in peers[pivot]) {
+                if (values[peer] == 0 && Integer.bitCount(cand[peer]) == 2 &&
+                    Integer.bitCount(cand[peer] and cand[pivot]) == 1) wings[wingCount++] = peer
             }
-            for (i in wings.indices) for (j in i + 1 until wings.size) {
+            for (i in 0 until wingCount) for (j in i + 1 until wingCount) {
                 val a = wings[i]
                 val b = wings[j]
                 val z = cand[a] and cand[b]

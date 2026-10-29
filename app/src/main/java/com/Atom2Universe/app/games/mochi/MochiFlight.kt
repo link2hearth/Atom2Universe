@@ -45,9 +45,11 @@ internal object MochiFlight {
     /**
      * [minBounce] > 0 : tout obstacle renvoie Mochi avec au moins cette vitesse normale,
      * et un sommet plat le pousse de côté. Il ne peut alors ni se poser ni rester coincé.
+     * [segments] et [hits] peuvent être des listes réutilisées : elles sont vidées puis rendues dans le résultat.
      */
     fun step(state: State, seconds: Float, walls: List<MochiWall>, gravity: Float = 760f,
-        radius: Float = 17f, width: Float = 420f, minBounce: Float = 0f): Result {
+        radius: Float = 17f, width: Float = 420f, minBounce: Float = 0f,
+        segments: ArrayList<Segment> = ArrayList(3), hits: ArrayList<Hit> = ArrayList(2)): Result {
         if (seconds <= 0f || !seconds.isFinite() || !gravity.isFinite() ||
             !state.x.isFinite() || !state.y.isFinite() || !state.vx.isFinite() || !state.vy.isFinite()) {
             return Result(state, emptyList(), emptyList())
@@ -60,8 +62,8 @@ internal object MochiFlight {
         var vy = state.vy.toDouble()
         var acceleration = gravity.toDouble()
         var elapsed = 0.0
-        val segments = ArrayList<Segment>(3)
-        val hits = ArrayList<Hit>(2)
+        segments.clear()
+        hits.clear()
 
         // Résolution défensive d'un départ déjà pénétrant (arrondi des coordonnées
         // ou outils d'édition). Elle retire seulement la vitesse dirigée dans le mur.
@@ -245,11 +247,16 @@ internal object MochiFlight {
         val e = dx * dx + dy * dy - radius * radius
         fun value(t: Double) = (((a * t + b) * t + c) * t + d) * t + e
         if (e <= 1e-7 && d < -1e-7) return 0.0
-        val splits = cubicRoots(4.0 * a, 3.0 * b, 2.0 * c, d)
-            .filter { it > 0.0 && it < duration }.sorted() + duration
+        val roots = cubicRoots(4.0 * a, 3.0 * b, 2.0 * c, d)
+        val splits = DoubleArray(roots.size + 1)
+        var count = 0
+        for (root in roots) if (root > 0.0 && root < duration) splits[count++] = root
+        splits.sort(0, count)
+        splits[count++] = duration
         var lower = 0.0
         var lowValue = e
-        for (upper in splits) {
+        for (k in 0 until count) {
+            val upper = splits[k]
             val highValue = value(upper)
             if (lowValue > 0.0 && highValue <= 0.0) {
                 var lo = lower; var hi = upper

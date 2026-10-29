@@ -200,12 +200,24 @@ class MahjongArt(private val context: Context? = null) {
         MahjongAtlas.treasure(c,2,oval,p,source)
     }
 
+    // The board repaints its backdrop on every animation frame: theme colour and gradient
+    // are built once per size and accent.
+    private val surface by lazy {
+        context?.let { com.Atom2Universe.app.AppearanceStyle.color(it,com.Atom2Universe.app.R.attr.a2uSurfaceColor) } ?: 0xffedf9ff.toInt()
+    }
+    private var backdropShader: Shader? = null
+    private var backdropW = 0f
+    private var backdropH = 0f
+    private var backdropAccent = 0
+
     fun backdrop(c: Canvas, w: Float, h: Float, accent: Int) {
         if (w <= 0 || h <= 0) return
-        val surface=context?.let { com.Atom2Universe.app.AppearanceStyle.color(it,com.Atom2Universe.app.R.attr.a2uSurfaceColor) } ?: 0xffedf9ff.toInt()
         p.style = Paint.Style.FILL
-        p.shader = LinearGradient(0f,0f,w,h,mix(accent,0xffedf9ff.toInt(),.86f),0xffe5e5ff.toInt(),Shader.TileMode.CLAMP)
-        p.shader=RadialGradient(w*.5f,h*.42f,max(w,h)*.8f,mix(surface,accent,.12f),surface,Shader.TileMode.CLAMP)
+        if (backdropShader == null || w != backdropW || h != backdropH || accent != backdropAccent) {
+            backdropShader = RadialGradient(w*.5f,h*.42f,max(w,h)*.8f,mix(surface,accent,.12f),surface,Shader.TileMode.CLAMP)
+            backdropW = w; backdropH = h; backdropAccent = accent
+        }
+        p.shader = backdropShader
         c.drawRoundRect(0f,0f,w,h,w*.045f,w*.045f,p); p.shader = null
         p.color = (accent and 0x00ffffff) or 0x16000000; p.style = Paint.Style.STROKE; p.strokeWidth = max(1f,w*.001f)
         for (i in 0..2) {

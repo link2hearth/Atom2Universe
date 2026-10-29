@@ -6,7 +6,6 @@ import android.os.Looper
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import kotlin.math.abs
@@ -26,13 +25,20 @@ class NucleaActivity : ThemedActivity() {
     private val prefs by lazy { getSharedPreferences("nuclea_save", MODE_PRIVATE) }
 
     private val handler = Handler(Looper.getMainLooper())
+    // Ce que le titre affiche : il n'est réécrit que si l'un de ces chiffres change.
+    private var titleInRun: Boolean? = null
+    private var titleWave = -1
+    private var titleDust = -1L
     private val titleUpdater = object : Runnable {
         override fun run() {
             val g = gameView.game
-            tvTitle.text = when (g.phase) {
-                NucleaPhase.PLAYING, NucleaPhase.PAUSED ->
-                    getString(R.string.nuclea_wave_label, g.wave) + "   ✦ ${g.runDust}"
-                else -> getString(R.string.nuclea_title)
+            val inRun = g.phase == NucleaPhase.PLAYING || g.phase == NucleaPhase.PAUSED
+            val wave = g.wave
+            val dust = g.runDust
+            if (inRun != titleInRun || (inRun && (wave != titleWave || dust != titleDust))) {
+                titleInRun = inRun; titleWave = wave; titleDust = dust
+                tvTitle.text = if (inRun) getString(R.string.nuclea_title_run, wave, dust)
+                               else getString(R.string.nuclea_title)
             }
             handler.postDelayed(this, 500)
         }
@@ -42,7 +48,7 @@ class NucleaActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuclea)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // L'écran allumé, c'est la vue qui le tient, et seulement pendant une partie.
 
         gameView = findViewById(R.id.nuclea_view)
         tvTitle = findViewById(R.id.nuclea_tv_title)
@@ -125,6 +131,8 @@ class NucleaActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
+        // Au retour, la partie attend sur l'écran de pause au lieu de repartir seule.
+        gameView.requestPause()
         gameView.pause()
         sfx.stop()
         handler.removeCallbacks(titleUpdater)

@@ -749,6 +749,8 @@ class NucleaGame(private val ctx: Context) {
     }
 
     private fun damagePlayer(amount: Float, knockX: Float, knockY: Float, instant: Boolean = false) {
+        // Partie finie dans cette image : les coups qui suivent ne comptent plus.
+        if (phase != NucleaPhase.PLAYING) return
         if (!instant) {
             if (iframe > 0f) return
             if (shieldCharges > 0) {
@@ -787,6 +789,8 @@ class NucleaGame(private val ctx: Context) {
     }
 
     private fun endRun() {
+        // Une seule fin par partie : les neutrinos ne sont versés qu'une fois.
+        if (phase != NucleaPhase.PLAYING) return
         captured = false
         if (wave > meta.bestWave) meta.bestWave = wave
         runInProgress = false
@@ -1231,8 +1235,11 @@ class NucleaGame(private val ctx: Context) {
 
     // ─── Collisions atome-atome : fusion, annihilation, rebond ──────────────
 
+    /** Atomes nés d'une fusion pendant la passe de collisions : liste réutilisée à chaque image. */
+    private val newAtoms = ArrayList<Atom>()
+
     private fun resolveCollisions() {
-        val newAtoms = ArrayList<Atom>()
+        newAtoms.clear()
         for (i in atoms.indices) {
             val a = atoms[i]
             if (a.dead) continue
@@ -1285,6 +1292,7 @@ class NucleaGame(private val ctx: Context) {
         }
         atoms.removeAll { it.dead }
         atoms.addAll(newAtoms)
+        newAtoms.clear()
     }
 
     private fun makeFusion(a: Atom, b: Atom): Atom {

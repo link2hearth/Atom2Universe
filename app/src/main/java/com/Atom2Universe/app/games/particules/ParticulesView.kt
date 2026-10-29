@@ -29,16 +29,25 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     )
     var onMetaUpdate: ((MetaSnapshot) -> Unit)? = null
     private var meta = MetaSnapshot()
+    /** Méta relue de la base sur le fil de l'interface, appliquée par le fil de jeu. */
+    @Volatile private var pendingMeta: MetaSnapshot? = null
     fun setMeta(m: MetaSnapshot) {
+        pendingMeta = m
+        reveiller()
+    }
+
+    private fun applyPendingMeta() {
+        val m = pendingMeta ?: return
+        pendingMeta = null
         meta = m
         // Si la surface est prête et qu'aucune partie n'a encore commencé,
         // appliquer les bonus shop aux variables de jeu (sinon ils seraient ignorés
         // pour la première partie de chaque session).
-        if (state == State.READY && W > 0f) {
+        if (state == State.READY) {
             maxLives = BASE_MAX_LIVES + m.shopExtraLives
             lives    = maxLives
             shields  = if (m.shopStartShield > 0) 1 else 0
-            ballBaseSpd = (W + H) / 2f * 0.000456f * (1f - m.shopSlowBall * 0.08f)
+            ballBaseSpd = sizeBaseSpeed(W, H)
             ballSpeed   = ballBaseSpeed()
             syncPaddleWidth()
         }
@@ -48,6 +57,11 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private val TARGET_FPS       = 60L
     private val FRAME_MS         = 1000L / TARGET_FPS
     private val MAX_DELTA_MS     = 32L
+    /** Hors partie (menus, pause, fin, boutique) : vingt images par seconde. */
+    private val IDLE_FRAME_MS    = 50L
+    private val IDLE_MAX_DELTA_MS = 100L
+    /** Au-delà, le bonus multi-balle ne crée plus de balles. */
+    private val MAX_BALLS        = 8
     private val BASE_MAX_LIVES   = 3
     private val MAX_SPARKS       = 280
     private val LASER_INTERVAL   = 420L
@@ -259,6 +273,39 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private val brickPath = Path()
     private val tmpBallRect = RectF()
     private val tmpBrickRect = RectF()
+    private val tmpHitRect = RectF()
+    private val pFlash = Paint().apply { color = 0xFFFFFFFF.toInt() }
+
+    // Textes fixes, lus une fois.
+    private val txtShieldSaved = context.getString(R.string.particules_shield_saved)
+    private val txtSecondChance = context.getString(R.string.particules_second_chance)
+    private val txtPanicReady = context.getString(R.string.particules_panic_ready)
+    private val txtBoss = context.getString(R.string.particules_hud_boss)
+    private val puTexts = PType.values().map { context.getString(puLabelRes(it)) }.toTypedArray()
+
+    // Textes du HUD, reformatés seulement quand le chiffre change.
+    private var hudLevel = -1; private var hudLevelText = ""
+    private var hudScore = -1L; private var hudScoreText = ""
+    private var hudGold = -1L; private var hudGoldText = ""
+    private var hudRelics = -1; private var hudRelicsText = ""
+    private var bannerCombo = -1; private var bannerComboText = ""
+    private var panicTenths = -1; private var panicText = ""
+    private val badgeSecs = LongArray(PType.values().size) { -1L }
+    private val badgeTexts = Array(PType.values().size) { "" }
+
+    // Halos de la nébuleuse : centrés sur l'origine, refaits seulement quand la largeur change.
+    private var nebulaShaderW = -1f
+    private var nebulaShader1: Shader? = null
+    private var nebulaShader2: Shader? = null
+
+    // Lignes des descriptions de reliques, coupées une fois par tirage.
+    private var wrappedFor: List<Relic>? = null
+    private var wrappedWidth = -1f
+    private var wrappedSize = -1f
+    private var wrappedLines: List<List<String>> = emptyList()
+
+    /** Pièces gagnées par la partie qui vient de finir : [gold] est remis à zéro en la versant. */
+    private var goldEarned = 0L
 
     // ── Colors ───────────────────────────────────────────────────
     private val simpleColors = intArrayOf(
@@ -305,15 +352,52 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     override fun surfaceCreated(h: SurfaceHolder) {
-        setup(width.toFloat(), height.toFloat())
+        requestSize(width, height)
         startThread()
     }
     override fun surfaceChanged(h: SurfaceHolder, fmt: Int, w: Int, hi: Int) {
-        setup(w.toFloat(), hi.toFloat())
+        requestSize(w, hi)
     }
     override fun surfaceDestroyed(h: SurfaceHolder) { stopThread() }
 
+    /**
+     * Taille de surface en attente (largeur << 32 | hauteur). Le fil de l'interface la
+     * pose, le fil de jeu l'applique avant l'image suivante : [setup] ne court jamais
+     * pendant que la boucle parcourt les briques.
+     */
+    private val pendingSize = java.util.concurrent.atomic.AtomicLong(0L)
+    /** Vrai dès que [setup] a reçu une vraie taille. */
+    private var sized = false
+
+    private fun requestSize(w: Int, h: Int) {
+        if (w <= 0 || h <= 0) return
+        pendingSize.set((w.toLong() shl 32) or h.toLong())
+        reveiller()
+    }
+
+    private fun applyPendingSize() {
+        val s = pendingSize.getAndSet(0L)
+        if (s != 0L) setup((s ushr 32).toFloat(), (s and 0xFFFFFFFFL).toFloat())
+    }
+
+    /** Vitesse de base de la balle pour cet écran, bonus de boutique et relique compris. */
+    private fun sizeBaseSpeed(w: Float, h: Float): Float {
+        var spd = (w + h) / 2f * 0.000456f * (1f - meta.shopSlowBall * 0.08f)
+        if (RelicId.PRESSURE in ownedRelics) spd *= 0.95f
+        return spd
+    }
+
+    /**
+     * Ne recalcule que ce qui dépend de la taille de l'écran. Un retour d'arrière-plan
+     * à la même taille ne touche à rien ; une rotation remet le monde à l'échelle.
+     */
     private fun setup(w: Float, h: Float) {
+        if (sized && w == W && h == H) return
+        val rescale = sized
+        val oldW = W; val oldH = H
+        val oldTop = brickAreaTop; val oldBottom = brickAreaBottom
+        val oldSpeed = ballSpeed
+        sized = true
         W = w; H = h
         brickAreaTop = h * 0.10f
         brickAreaBottom = if (h > w) h * 0.58f else h * 0.54f
@@ -322,9 +406,9 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddleBaseW = w * 0.18f
         paddleY     = h * 0.87f
         ballR       = maxOf(w * 0.014f, 7f)
-        ballBaseSpd = (w + h) / 2f * 0.000456f
-        if (RelicId.PRESSURE in ownedRelics) ballBaseSpd *= 0.95f
-        ballSpeed   = ballBaseSpd
+        // La montée par niveau et le bonus « balle lente » de la boutique sont gardés.
+        ballBaseSpd = sizeBaseSpeed(w, h)
+        ballSpeed   = ballBaseSpeed()
 
         pHud.textSize     = maxOf(h * 0.030f, 22f)
         pTitle.textSize   = maxOf(h * 0.042f, 28f)
@@ -341,12 +425,47 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
         refreshPaddlePaint()
         paddle.set(w / 2 - paddleBaseW / 2, paddleY, w / 2 + paddleBaseW / 2, paddleY + paddleH)
+        syncPaddleWidth()
         paddleTarget = paddle.centerX()
         paddleLastX  = paddle.centerX()
+        nebulaShaderW = -1f
 
+        if (rescale) rescaleWorld(oldW, oldH, oldTop, oldBottom, if (oldSpeed > 0f) ballSpeed / oldSpeed else 1f)
         if (stars.isEmpty()) seedStars()
-        if (bricks.isEmpty()) generateLevel()
+        // Entre deux niveaux (choix de relique, boutique), le suivant n'est pas encore là.
+        if (bricks.isEmpty() && state != State.LEVEL_CLEAR && state != State.SHOP) generateLevel()
         if (balls.isEmpty()) resetBallOnPaddle()
+    }
+
+    /**
+     * Rotation de l'écran : tout ce qui est posé en pixels suit le nouvel écran, en
+     * proportions. Les briques restent dans leur zone (sinon certaines sortaient de
+     * l'écran et le niveau devenait infinissable), les balles gardent leur vitesse
+     * relative.
+     */
+    private fun rescaleWorld(oldW: Float, oldH: Float, oldTop: Float, oldBottom: Float, speedRatio: Float) {
+        val sx = W / oldW
+        val sy = H / oldH
+        val oldArea = oldBottom - oldTop
+        val ay = if (oldArea > 0f) (brickAreaBottom - brickAreaTop) / oldArea else sy
+        fun areaY(y: Float) = brickAreaTop + (y - oldTop) * ay
+        for (b in bricks) {
+            b.rect.set(b.rect.left * sx, areaY(b.rect.top), b.rect.right * sx, areaY(b.rect.bottom))
+            b.originX *= sx
+            b.originY = areaY(b.originY)
+            b.moveRange *= if (b.movePattern == MovePattern.HORIZONTAL) sx else ay
+        }
+        brickW *= sx; brickH *= ay
+        for (b in balls) {
+            b.x *= sx; b.y *= sy
+            b.vx *= speedRatio; b.vy *= speedRatio
+            b.trailLen = 0; b.trailHead = -1
+        }
+        for (pu in powerUps) { pu.x *= sx; pu.y *= sy; pu.vy *= sx }
+        for (l in lasers) { l.x *= sx; l.y *= sy }
+        for (ft in floatTexts) { ft.x *= sx; ft.y *= sy }
+        for (s in stars) { s.x *= sx; s.y *= sy }
+        sparks.clear(); shockwaves.clear(); paddleGhosts.clear()
     }
 
     private fun seedStars() {
@@ -718,18 +837,26 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     // ── Thread ───────────────────────────────────────────────────
     private fun startThread() {
+        // Un seul fil : si l'ancien n'a pas fini de s'arrêter, il sort de lui-même en
+        // voyant qu'il n'est plus le fil courant.
+        if (thread?.isAlive == true && running) return
         running = true
         thread = Thread({
+            val me = Thread.currentThread()
             var last = System.currentTimeMillis()
-            while (running) {
+            while (running && thread === me) {
                 val now   = System.currentTimeMillis()
-                val delta = minOf(now - last, MAX_DELTA_MS)
+                val raw   = now - last
                 last = now
-                // Les appuis mis de côté se rejouent ici, avant la simulation, sur ce
-                // fil et pas sur celui de l'interface : voir [drainAppuis].
+                // Taille, méta et appuis mis de côté s'appliquent ici, avant la simulation,
+                // sur ce fil et pas sur celui de l'interface : voir [drainAppuis].
+                applyPendingSize()
+                applyPendingMeta()
                 drainAppuis()
-                if (state == State.PLAYING) update(delta)
-                else updateAmbient(delta)
+                // Hors partie la boucle ne tourne qu'à vingt images par seconde : le décor
+                // reçoit le temps réel pour garder sa vitesse. La partie garde son plafond.
+                if (state == State.PLAYING) update(minOf(raw, MAX_DELTA_MS))
+                else updateAmbient(minOf(raw, IDLE_MAX_DELTA_MS))
                 val canvas = lockFrame()
                 if (canvas != null) {
                     try { drawFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
@@ -737,11 +864,21 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 // Une toile nulle veut dire que la surface n'est pas prête. On attend
                 // quand même : sans ça, la boucle repartait aussitôt et occupait un
                 // cœur à tourner à vide le temps d'un changement d'écran.
-                val sleep = FRAME_MS - (System.currentTimeMillis() - now)
-                if (sleep > 0) try { Thread.sleep(sleep) } catch (_: InterruptedException) { break }
+                val enJeu = state == State.PLAYING
+                val sleep = (if (enJeu) FRAME_MS else IDLE_FRAME_MS) - (System.currentTimeMillis() - now)
+                if (sleep > 0) try {
+                    // Hors partie, un appui réveille la boucle tout de suite.
+                    if (enJeu) Thread.sleep(sleep) else synchronized(veille) { veille.wait(sleep) }
+                } catch (_: InterruptedException) { break }
             }
         }, "ParticulesThread").also { it.isDaemon = true }
         thread!!.start()
+    }
+
+    private val veille = Object()
+
+    private fun reveiller() {
+        synchronized(veille) { veille.notifyAll() }
     }
 
     private fun stopThread() {
@@ -873,8 +1010,9 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             }
         }
         if (level % 5 == 0) {
-            bossHpBar = bricks.filter { it.type != BType.INDESTRUCTIBLE && it.hits > 0 }
-                .sumOf { it.hits }.toFloat()
+            var hp = 0
+            for (b in bricks) if (b.type != BType.INDESTRUCTIBLE && b.hits > 0) hp += b.hits
+            bossHpBar = hp.toFloat()
         }
 
         // Balls (iterator for alloc-free removal)
@@ -905,7 +1043,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 }
                 shields > 0 -> {
                     shields--
-                    addFloatText(paddle.centerX(), paddle.top - 30f, "BOUCLIER !", 0xFF4AC5FF.toInt(), 1.2f)
+                    addFloatText(paddle.centerX(), paddle.top - 30f, txtShieldSaved, 0xFF4AC5FF.toInt(), 1.2f)
                     val rad = Math.toRadians(Random.nextDouble(-96.0, -84.0)).toFloat()
                     val spd = ballSpeed * spdMult
                     balls.add(Ball(paddle.centerX(), paddle.top - ballR * 1.5f, cos(rad) * spd, sin(rad) * spd))
@@ -922,7 +1060,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             val l = lIter.next()
             l.y -= lSpd * f
             if (l.y < -20f) { lIter.remove(); continue }
-            val lr = RectF(l.x - 2f, l.y - 12f, l.x + 2f, l.y)
+            val lr = tmpHitRect
+            lr.set(l.x - 2f, l.y - 12f, l.x + 2f, l.y)
             val hit = bricks.firstOrNull { it.hits > 0 && it.type != BType.INDESTRUCTIBLE && RectF.intersects(lr, it.rect) }
             if (hit != null) { damageBrick(hit); lIter.remove() }
         }
@@ -934,7 +1073,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pu.y += pu.vy * f
             pu.wob += f / 180f
             if (pu.y > H + 60f) { pIter.remove(); continue }
-            val pr = RectF(pu.x - 22f, pu.y - 22f, pu.x + 22f, pu.y + 22f)
+            val pr = tmpHitRect
+            pr.set(pu.x - 22f, pu.y - 22f, pu.x + 22f, pu.y + 22f)
             if (RectF.intersects(pr, paddle)) { collectPowerUp(pu.type); pIter.remove() }
         }
 
@@ -1144,7 +1284,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 music?.onCombo(combo)
             }
             if (combo >= 4) addFloatText(brick.rect.centerX(), brick.rect.centerY(),
-                "x${mult} combo ${combo}", brick.baseColor, 1f)
+                context.getString(R.string.particules_combo_float, mult, combo), brick.baseColor, 1f)
 
             when (brick.type) {
                 BType.BONUS -> spawnPowerUp(brick.rect.centerX(), brick.rect.centerY())
@@ -1220,13 +1360,16 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 syncPaddleWidth()
             }
             PType.MULTIBALL -> {
+                // Deux balles de plus par balle en jeu, sans jamais dépasser [MAX_BALLS].
                 val extra = mutableListOf<Ball>()
                 for (b in balls) {
                     if (b.stuck || (b.vx == 0f && b.vy == 0f)) continue
                     val spd = hypot(b.vx, b.vy)
                     val a = atan2(b.vy, b.vx)
-                    extra.add(Ball(b.x, b.y, cos(a + 0.4f) * spd, sin(a + 0.4f) * spd))
-                    extra.add(Ball(b.x, b.y, cos(a - 0.4f) * spd, sin(a - 0.4f) * spd))
+                    if (balls.size + extra.size < MAX_BALLS)
+                        extra.add(Ball(b.x, b.y, cos(a + 0.4f) * spd, sin(a + 0.4f) * spd))
+                    if (balls.size + extra.size < MAX_BALLS)
+                        extra.add(Ball(b.x, b.y, cos(a - 0.4f) * spd, sin(a - 0.4f) * spd))
                 }
                 balls.addAll(extra)
             }
@@ -1241,12 +1384,14 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         }
     }
 
-    private fun labelFor(type: PType) = when (type) {
-        PType.EXTEND -> "PADDLE+"; PType.MULTIBALL -> "MULTI"
-        PType.LASER -> "LASER";    PType.SPEED -> "RAPIDE"
-        PType.SLOW -> "LENT";      PType.FLOOR -> "SOL"
-        PType.PIERCE -> "PERFORE"; PType.FIRE -> "FEU"
-        PType.MAGNET -> "AIMANT";  PType.SHIELD -> "BOUCLIER"
+    private fun labelFor(type: PType) = puTexts[type.ordinal]
+
+    private fun puLabelRes(type: PType) = when (type) {
+        PType.EXTEND -> R.string.particules_pu_extend; PType.MULTIBALL -> R.string.particules_pu_multiball
+        PType.LASER -> R.string.particules_pu_laser;   PType.SPEED -> R.string.particules_pu_speed
+        PType.SLOW -> R.string.particules_pu_slow;     PType.FLOOR -> R.string.particules_pu_floor
+        PType.PIERCE -> R.string.particules_pu_pierce; PType.FIRE -> R.string.particules_pu_fire
+        PType.MAGNET -> R.string.particules_pu_magnet; PType.SHIELD -> R.string.particules_pu_shield
     }
 
     private fun addFloatText(x: Float, y: Float, text: String, color: Int, size: Float) {
@@ -1345,7 +1490,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             if (RelicId.SECOND_CHANCE in ownedRelics && !secondChanceUsed) {
                 secondChanceUsed = true
                 lives = 1
-                addFloatText(W / 2, H / 2, "SECONDE CHANCE !", 0xFFFFE066.toInt(), 1.5f)
+                addFloatText(W / 2, H / 2, txtSecondChance, 0xFFFFE066.toInt(), 1.5f)
                 music?.onLifeLost()
                 state = State.LIFE_LOST
                 resetBallOnPaddle()
@@ -1372,12 +1517,13 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             totalXp = meta.totalXp + xpGain,
             bestCombo = newBestCombo
         )
+        goldEarned = gold
         gold = 0L
         onMetaUpdate?.invoke(meta)
     }
 
     fun pause()    { if (state == State.PLAYING) state = State.PAUSED }
-    fun resume()   { if (state == State.PAUSED)  state = State.PLAYING }
+    fun resume()   { if (state == State.PAUSED)  state = State.PLAYING; reveiller() }
     fun isPaused() = state == State.PAUSED
     fun isPlaying() = state == State.PLAYING
 
@@ -1429,6 +1575,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         synchronized(appuis) {
             if (appuis.size < 32) appuis.add(Appui(ev.actionMasked, ev.x, ev.y))
         }
+        if (state != State.PLAYING) reveiller()
         return true
     }
 
@@ -1563,12 +1710,19 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         val x2 = W * (0.75f - 0.1f * cos(t.toDouble() * 0.5).toFloat())
         val y2 = H * (0.7f + 0.1f * sin(t.toDouble() * 0.8).toFloat())
         val r1 = W * 0.35f; val r2 = W * 0.3f
-        pPath.shader = RadialGradient(x1, y1, r1,
-            0x163CCED6.toInt(), 0x00000000, Shader.TileMode.CLAMP)
-        canvas.drawCircle(x1, y1, r1, pPath)
-        pPath.shader = RadialGradient(x2, y2, r2,
-            0x125677BA.toInt(), 0x00000000, Shader.TileMode.CLAMP)
-        canvas.drawCircle(x2, y2, r2, pPath)
+        if (nebulaShaderW != W) {
+            nebulaShaderW = W
+            nebulaShader1 = RadialGradient(0f, 0f, r1, 0x163CCED6.toInt(), 0x00000000, Shader.TileMode.CLAMP)
+            nebulaShader2 = RadialGradient(0f, 0f, r2, 0x125677BA.toInt(), 0x00000000, Shader.TileMode.CLAMP)
+        }
+        pPath.shader = nebulaShader1
+        canvas.save(); canvas.translate(x1, y1)
+        canvas.drawCircle(0f, 0f, r1, pPath)
+        canvas.restore()
+        pPath.shader = nebulaShader2
+        canvas.save(); canvas.translate(x2, y2)
+        canvas.drawCircle(0f, 0f, r2, pPath)
+        canvas.restore()
         pPath.shader = null
     }
 
@@ -1586,12 +1740,15 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     private fun drawHud(canvas: Canvas) {
         pHud.textAlign = Paint.Align.LEFT; pHud.color = 0xFFFFFFFF.toInt()
-        canvas.drawText(context.getString(R.string.particules_hud_level, level), 18f, pHud.textSize + 6f, pHud)
+        if (level != hudLevel) { hudLevel = level; hudLevelText = context.getString(R.string.particules_hud_level, level) }
+        canvas.drawText(hudLevelText, 18f, pHud.textSize + 6f, pHud)
         pHud.textAlign = Paint.Align.CENTER
-        canvas.drawText(fmtScore(score), W / 2, pHud.textSize + 6f, pHud)
+        if (score != hudScore) { hudScore = score; hudScoreText = fmtScore(score) }
+        canvas.drawText(hudScoreText, W / 2, pHud.textSize + 6f, pHud)
         pHud.textSize *= 0.7f
         pHud.color = 0xFFFFD55A.toInt()
-        canvas.drawText(context.getString(R.string.particules_hud_gold, gold), W / 2, pHud.textSize * 2f + 12f, pHud)
+        if (gold != hudGold) { hudGold = gold; hudGoldText = context.getString(R.string.particules_hud_gold, gold) }
+        canvas.drawText(hudGoldText, W / 2, pHud.textSize * 2f + 12f, pHud)
         pHud.textSize /= 0.7f
         pHud.color = 0xFFFFFFFF.toInt()
 
@@ -1621,7 +1778,11 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pPuLabel.textSize = pHud.textSize * 0.48f
             pPuLabel.textAlign = Paint.Align.LEFT
             pPuLabel.color = 0xFFCCAAFF.toInt()
-            canvas.drawText(context.getString(R.string.particules_hud_relics_count, ownedRelics.size), 18f, pHud.textSize * 1.85f, pPuLabel)
+            if (ownedRelics.size != hudRelics) {
+                hudRelics = ownedRelics.size
+                hudRelicsText = context.getString(R.string.particules_hud_relics_count, hudRelics)
+            }
+            canvas.drawText(hudRelicsText, 18f, pHud.textSize * 1.85f, pPuLabel)
         }
         if (level % 5 == 0 && bossHpBarMax > 0f && state == State.PLAYING) {
             val barW = W * 0.6f; val barH = H * 0.012f
@@ -1639,7 +1800,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pPuLabel.textSize = barH * 1.3f
             pPuLabel.textAlign = Paint.Align.CENTER
             pPuLabel.color = 0xFFFFFFFF.toInt()
-            canvas.drawText(context.getString(R.string.particules_hud_boss), W / 2, barY - 3f, pPuLabel)
+            canvas.drawText(txtBoss, W / 2, barY - 3f, pPuLabel)
         }
     }
 
@@ -1708,8 +1869,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         for (g in paddleGhosts) {
             pBall.color = 0xFF7AF8FF.toInt()
             pBall.alpha = (g.life * 90).toInt().coerceIn(0, 120)
-            val rect = RectF(g.x - g.w / 2, g.y, g.x + g.w / 2, g.y + paddleH)
-            canvas.drawRoundRect(rect, paddleH / 2, paddleH / 2, pBall)
+            canvas.drawRoundRect(g.x - g.w / 2, g.y, g.x + g.w / 2, g.y + paddleH, paddleH / 2, paddleH / 2, pBall)
         }
         pBall.alpha = 255
     }
@@ -1793,8 +1953,12 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pPuLabel.textSize = bh * .6f
             pPuLabel.textAlign = Paint.Align.LEFT
             pPuLabel.color = Color.WHITE
-            canvas.drawText(context.getString(R.string.particules_effect_seconds, timer / 1000),
-                x + bh * 1.05f, y + bh * .73f, pPuLabel)
+            val secs = timer / 1000
+            if (secs != badgeSecs[type.ordinal]) {
+                badgeSecs[type.ordinal] = secs
+                badgeTexts[type.ordinal] = context.getString(R.string.particules_effect_seconds, secs)
+            }
+            canvas.drawText(badgeTexts[type.ordinal], x + bh * 1.05f, y + bh * .73f, pPuLabel)
             x += bw + margin
         }
         badge(timerExtend, PType.EXTEND)
@@ -1812,7 +1976,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         pCombo.color = 0xFFFFE066.toInt()
         pCombo.alpha = (alpha * 230).toInt().coerceIn(0, 255)
         pCombo.textSize = pHud.textSize * 1.4f
-        canvas.drawText(context.getString(R.string.particules_combo, combo), W / 2, pHud.textSize * 2.4f, pCombo)
+        if (combo != bannerCombo) { bannerCombo = combo; bannerComboText = context.getString(R.string.particules_combo, combo) }
+        canvas.drawText(bannerComboText, W / 2, pHud.textSize * 2.4f, pCombo)
         pCombo.alpha = 255
     }
 
@@ -1824,8 +1989,15 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         pCombo.alpha = (180 + pulse * 60).toInt().coerceIn(0, 255)
         pCombo.textSize = pHud.textSize * 1.1f
         val remain = ((fingerBreakReadyAtMs - System.currentTimeMillis()) / 1000f).coerceAtLeast(0f)
-        val msg = if (remain > 0f) "CONTACT ! Recharge… %.1fs".format(remain)
-                  else "CONTACT ! Touche une brique (1 / 5s)"
+        val msg = if (remain > 0f) {
+            // Le texte affiche un dixième de seconde : il n'est refait qu'à chaque dixième.
+            val tenths = ceil(remain * 10f).toInt()
+            if (tenths != panicTenths) {
+                panicTenths = tenths
+                panicText = context.getString(R.string.particules_panic_recharge, remain)
+            }
+            panicText
+        } else txtPanicReady
         canvas.drawText(msg, W / 2, H * 0.18f, pCombo)
         pCombo.alpha = 255
 
@@ -1840,8 +2012,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     private fun drawFlash(canvas: Canvas) {
         if (flashWhite <= 0f) return
-        val p = Paint().apply { color = 0xFFFFFFFF.toInt(); alpha = (flashWhite * 80).toInt().coerceIn(0, 120) }
-        canvas.drawRect(0f, 0f, W, H, p)
+        pFlash.alpha = (flashWhite * 80).toInt().coerceIn(0, 120)
+        canvas.drawRect(0f, 0f, W, H, pFlash)
     }
 
     private fun rarityColor(r: Rarity) = when (r) {
@@ -1898,7 +2070,11 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
             pSub.textSize = maxOf(cardH * 0.065f, 14f)
             pSub.color = 0xFFCCDDEE.toInt()
-            val lines = wrapText(context.getString(r.descRes), pSub, cardW - 20f)
+            if (wrappedFor !== choices || wrappedWidth != cardW || wrappedSize != pSub.textSize) {
+                wrappedFor = choices; wrappedWidth = cardW; wrappedSize = pSub.textSize
+                wrappedLines = choices.map { wrapText(context.getString(it.descRes), pSub, cardW - 20f) }
+            }
+            val lines = wrappedLines[i]
             var yy = choiceRects[i].top + cardH * 0.55f
             for (l in lines.take(4)) {
                 canvas.drawText(l, choiceRects[i].centerX(), yy, pSub)
@@ -2068,7 +2244,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 pSub.color = 0xFFAABBCC.toInt()
                 canvas.drawText(context.getString(R.string.particules_level_reached, level - 1), W / 2, cy + pSub.textSize * 0.7f, pSub)
                 pSub.color = 0xFFFFD55A.toInt()
-                canvas.drawText(context.getString(R.string.particules_gold_earned, gold, meta.totalGold), W / 2, cy + pSub.textSize * 2f, pSub)
+                canvas.drawText(context.getString(R.string.particules_gold_earned, goldEarned, meta.totalGold), W / 2, cy + pSub.textSize * 2f, pSub)
                 if (bestCombo >= 3) {
                     pSub.color = 0xFFFFE066.toInt()
                     canvas.drawText(context.getString(R.string.particules_best_combo, bestCombo), W / 2, cy + pSub.textSize * 3.2f, pSub)

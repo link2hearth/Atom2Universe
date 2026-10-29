@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.match3
 
+import android.os.Handler
+import android.os.Looper
 import org.billthefarmer.mididriver.MidiDriver
 import kotlin.random.Random
 
@@ -9,7 +11,7 @@ import kotlin.random.Random
  * Ch 0 — mélodie principale (Glockenspiel GM 9)
  * Ch 1 — sous-note grave (Marimba GM 12)
  *
- * Appeler [start] dans onAttachedToWindow, [stop] dans onDetachedFromWindow.
+ * Appeler [start] à la reprise de la vue, [stop] à sa mise en pause.
  */
 class Match3SoundEngine {
 
@@ -26,7 +28,8 @@ class Match3SoundEngine {
     }
 
     private var driver: MidiDriver? = null
-    private var ready = false
+    @Volatile private var ready = false
+    private val noteOffs = Handler(Looper.getMainLooper())
 
     fun start() {
         val d = MidiDriver.getInstance {
@@ -86,10 +89,10 @@ class Match3SoundEngine {
     private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) {
         val d = driver ?: return
         d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
-        Thread {
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
+        // Fin de note différée sur le fil principal plutôt qu'un fil par note.
+        noteOffs.postDelayed({
             if (ready) d.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
-        }.start()
+        }, durationMs)
     }
 
     private fun programChange(ch: Int, prog: Int) =

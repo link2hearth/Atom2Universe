@@ -69,6 +69,14 @@ class NucleaView @JvmOverloads constructor(
     @Volatile private var running = false
     private var lastNanos = 0L
 
+    /** Ce que la vue a demandé à l'écran la dernière fois : rester allumé ou non. */
+    private var ecranGarde = false
+
+    private companion object {
+        /** Hors partie : une image toutes les 50 ms, soit vingt par seconde. */
+        const val IDLE_FRAME_MS = 50L
+    }
+
     private var _dp = 1f
     private var _sp = 1f
 
@@ -95,6 +103,15 @@ class NucleaView @JvmOverloads constructor(
     private val C_GREEN     = Color.parseColor("#7EF9C8")
     private val C_AURA      = Color.parseColor("#7EF9C8")
     private val C_STAR_DIM  = Color.parseColor("#3A3A52")
+    private val C_ANTI_BODY = Color.parseColor("#241236")
+    private val C_NEUTRON   = Color.parseColor("#5A5F6E")
+    private val C_STAR_CORE = Color.parseColor("#FFE9B8")
+    private val C_STAR_HEART= Color.parseColor("#FFF7E6")
+    private val C_SHIELD    = Color.parseColor("#44CCFF")
+    private val C_AIM_STICK = Color.parseColor("#A0DCFF")
+    private val C_CAPTURED  = Color.parseColor("#FF8A3C")
+    private val C_AFFORDABLE= Color.parseColor("#7A6AA8")
+    private val C_RESPEC_BG = Color.parseColor("#4A2A2A")
 
     // Corps des atomes : version assombrie de la couleur de tier
     private val tierBody = IntArray(NucleaGame.TIER_COUNT) { darken(NucleaGame.TIER_COLORS[it], 0.55f) }
@@ -150,6 +167,7 @@ class NucleaView @JvmOverloads constructor(
     private val sBlackHoleHint by lazy { ctx.getString(R.string.nuclea_blackhole_hint) }
     private val sCaptured     by lazy { ctx.getString(R.string.nuclea_captured) }
     private val sCaptureHint  by lazy { ctx.getString(R.string.nuclea_capture_hint) }
+    private val sMax          by lazy { ctx.getString(R.string.nuclea_max) }
 
     // ─── Paints ──────────────────────────────────────────────────────────────
 
@@ -185,6 +203,20 @@ class NucleaView @JvmOverloads constructor(
     private val wavePath = Path()
     private val starPath = Path()
     private val jetPath = Path()
+    /** Cadre des arcs (anneaux, jauges), réutilisé pour ne rien allouer par image. */
+    private val arcRect = RectF()
+    private val infoPanelRect = RectF()
+
+    // Textes du HUD, reformatés seulement quand le chiffre change.
+    private var hudWave = -1
+    private var hudWaveText = ""
+    private var hudDust = -1L
+    private var hudDustText = ""
+    private var bannerWave = -1
+    private var bannerWaveText = ""
+    private var massFedShown = -1
+    private var massNeededShown = -1
+    private var massText = ""
 
     // Rects de boutons
     private val btnRect1 = RectF()
@@ -230,14 +262,20 @@ class NucleaView @JvmOverloads constructor(
     override fun surfaceDestroyed(h: SurfaceHolder) { stop() }
 
     fun pause() { running = false; try { thread?.join(300) } catch (_: Exception) {} }
-    fun resume() { if (!running) start() }
+    fun resume() = start()
 
+    /**
+     * Démarre le fil de jeu, **et un seul** : `resume()` puis `surfaceCreated` l'appellent
+     * tous les deux au retour, et deux fils feraient tourner la même partie en parallèle.
+     */
     private fun start() {
-        val old = thread
+        if (thread?.isAlive == true) {
+            if (running) return
+            try { thread?.join(500) } catch (_: InterruptedException) {}
+        }
         running = true
         lastNanos = System.nanoTime()
         thread = Thread(this, "NucleaGame").also { it.start() }
-        old?.interrupt()
     }
 
     private fun stop() {
@@ -251,7 +289,9 @@ class NucleaView @JvmOverloads constructor(
         val me = Thread.currentThread()
         while (running && me === thread) {
             val now = System.nanoTime()
-            val dt = ((now - lastNanos) / 1_000_000_000f).coerceIn(0f, 0.05f)
+            // Plafond large pour les animations : hors partie la boucle ne tourne qu'à
+            // 20 i/s et elles doivent garder leur vitesse. La partie garde son plafond de 0,05 s.
+            val dt = ((now - lastNanos) / 1_000_000_000f).coerceIn(0f, 0.1f)
             lastNanos = now
             animT += dt
 
@@ -274,12 +314,18 @@ class NucleaView @JvmOverloads constructor(
             val my = if (moveId >= 0) jmy else padMy
             val ax = if (aimId >= 0) jax else padAx
             val ay = if (aimId >= 0) jay else padAy
-            game.update(dt, mx, my, ax, ay)
+            game.update(dt.coerceAtMost(0.05f), mx, my, ax, ay)
 
-            if (game.phase != NucleaPhase.PLAYING) {
+            val enJeu = game.phase == NucleaPhase.PLAYING
+            if (!enJeu) {
                 jmx = 0f; jmy = 0f; jax = 0f; jay = 0f
                 moveId = -1; aimId = -1
                 mashCount.set(0)
+            }
+            // L'écran reste allumé pendant une partie, pas dans les menus ni en pause.
+            if (enJeu != ecranGarde) {
+                ecranGarde = enJeu
+                post { keepScreenOn = enJeu }
             }
 
             val canvas = lockFrame()
@@ -287,8 +333,9 @@ class NucleaView @JvmOverloads constructor(
                 try { render(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
             }
 
+            // Menus, pause, fin, constellations : vingt images par seconde suffisent.
             val elapsed = (System.nanoTime() - now) / 1_000_000L
-            val sleep = 16L - elapsed
+            val sleep = (if (enJeu) 16L else IDLE_FRAME_MS) - elapsed
             if (sleep > 0) try { Thread.sleep(sleep) } catch (_: InterruptedException) { break }
         }
     }
@@ -428,6 +475,11 @@ class NucleaView @JvmOverloads constructor(
                 if (pid == moveId) { moveId = -1; jmx = 0f; jmy = 0f }
                 if (pid == aimId) { aimId = -1; jax = 0f; jay = 0f }
             }
+            // Geste annulé (bulle système, appel…) : les deux sticks se relâchent.
+            MotionEvent.ACTION_CANCEL -> {
+                moveId = -1; aimId = -1
+                jmx = 0f; jmy = 0f; jax = 0f; jay = 0f
+            }
         }
     }
 
@@ -537,10 +589,10 @@ class NucleaView @JvmOverloads constructor(
             val r = hz * (1.15f + k * 0.22f)
             pStroke.color = if (k % 2 == 0) C_BH_RING1 else C_BH_RING2
             pStroke.alpha = 150 - k * 35
-            val rect = RectF(bh.x - r, bh.y - r * 0.6f, bh.x + r, bh.y + r * 0.6f)
+            arcRect.set(bh.x - r, bh.y - r * 0.6f, bh.x + r, bh.y + r * 0.6f)
             canvas.save()
             canvas.rotate(ang * 57.3f, bh.x, bh.y)
-            canvas.drawArc(rect, 0f, 230f, false, pStroke)
+            canvas.drawArc(arcRect, 0f, 230f, false, pStroke)
             canvas.restore()
         }
         pStroke.alpha = 255
@@ -589,7 +641,8 @@ class NucleaView @JvmOverloads constructor(
                 canvas.drawPath(jetPath, pFill)
                 pDash.color = Color.argb((90 + flash * 150).toInt(), 255, 110, 60)
                 pDash.strokeWidth = dp(2.5f)
-                for (s in intArrayOf(1, -1)) {
+                for (k in 0..1) {
+                    val s = if (k == 0) 1 else -1
                     canvas.drawLine(bh.x - ux * reach + nxp * s, bh.y - uy * reach + nyp * s,
                         bh.x + ux * reach + nxp * s, bh.y + uy * reach + nyp * s, pDash)
                 }
@@ -601,10 +654,15 @@ class NucleaView @JvmOverloads constructor(
         pStroke.color = Color.argb(70, 255, 255, 255); pStroke.strokeWidth = dp(4f)
         canvas.drawCircle(bh.x, bh.y, gr, pStroke)
         pStroke.color = C_DUST
-        canvas.drawArc(RectF(bh.x - gr, bh.y - gr, bh.x + gr, bh.y + gr), -90f, 360f * frac, false, pStroke)
+        arcRect.set(bh.x - gr, bh.y - gr, bh.x + gr, bh.y + gr)
+        canvas.drawArc(arcRect, -90f, 360f * frac, false, pStroke)
         // Masse restante
         pText.color = C_DUST; pText.textSize = sp(12f)
-        canvas.drawText("${bh.massFed}/${bh.massNeeded}", bh.x, bh.y + gr + sp(14f), pText)
+        if (bh.massFed != massFedShown || bh.massNeeded != massNeededShown) {
+            massFedShown = bh.massFed; massNeededShown = bh.massNeeded
+            massText = ctx().getString(R.string.nuclea_mass_fed, bh.massFed, bh.massNeeded)
+        }
+        canvas.drawText(massText, bh.x, bh.y + gr + sp(14f), pText)
     }
 
     private fun drawFlux(canvas: Canvas) {
@@ -862,7 +920,7 @@ class NucleaView @JvmOverloads constructor(
             pFill.color = Color.argb(haloAlpha, Color.red(col), Color.green(col), Color.blue(col))
             canvas.drawCircle(a.x, a.y, drawR * 1.45f, pFill)
             // Corps
-            pFill.color = if (a.anti) Color.parseColor("#241236") else tierBody[a.tier]
+            pFill.color = if (a.anti) C_ANTI_BODY else tierBody[a.tier]
             canvas.drawCircle(a.x, a.y, drawR, pFill)
             // Anneau
             pStroke.color = col; pStroke.strokeWidth = dp(2f)
@@ -899,7 +957,7 @@ class NucleaView @JvmOverloads constructor(
             pGlow.color = Color.argb((50 + pulse * 50).toInt(),
                 Color.red(col), Color.green(col), Color.blue(col))
             canvas.drawCircle(n.x, n.y, r * 2.2f, pGlow)
-            pFill.color = if (n.hitFlash > 0f) Color.WHITE else Color.parseColor("#5A5F6E")
+            pFill.color = if (n.hitFlash > 0f) Color.WHITE else C_NEUTRON
             canvas.drawCircle(n.x, n.y, r, pFill)
             pStroke.color = col; pStroke.strokeWidth = dp(1.6f)
             canvas.drawCircle(n.x, n.y, r, pStroke)
@@ -977,13 +1035,13 @@ class NucleaView @JvmOverloads constructor(
         // Cœur de proto-étoile : glow chaud
         pGlow.color = Color.argb(120, 255, 220, 140)
         canvas.drawCircle(game.px, game.py, r * 1.9f, pGlow)
-        pFill.color = Color.parseColor("#FFE9B8")
+        pFill.color = C_STAR_CORE
         canvas.drawCircle(game.px, game.py, r, pFill)
-        pFill.color = Color.parseColor("#FFF7E6")
+        pFill.color = C_STAR_HEART
         canvas.drawCircle(game.px, game.py, r * 0.55f, pFill)
         // Boucliers de quarks : anneaux bleus
         if (game.shieldCharges > 0) {
-            pStroke.color = Color.parseColor("#44CCFF"); pStroke.strokeWidth = dp(2f)
+            pStroke.color = C_SHIELD; pStroke.strokeWidth = dp(2f)
             for (k in 0 until game.shieldCharges) {
                 canvas.drawCircle(game.px, game.py, r + dp(5f) + k * dp(4f), pStroke)
             }
@@ -1017,9 +1075,17 @@ class NucleaView @JvmOverloads constructor(
         // Vague + poussière en haut à droite
         pTextL.textAlign = Paint.Align.RIGHT
         pTextL.color = Color.WHITE; pTextL.textSize = sp(14f)
-        canvas.drawText(ctx().getString(R.string.nuclea_wave_label, game.wave), w - dp(10f), hpTop + sp(16f), pTextL)
+        if (game.wave != hudWave) {
+            hudWave = game.wave
+            hudWaveText = ctx().getString(R.string.nuclea_wave_label, hudWave)
+        }
+        canvas.drawText(hudWaveText, w - dp(10f), hpTop + sp(16f), pTextL)
         pTextL.color = C_DUST
-        canvas.drawText("✦ ${game.runDust}", w - dp(10f), hpTop + sp(34f), pTextL)
+        if (game.runDust != hudDust) {
+            hudDust = game.runDust
+            hudDustText = ctx().getString(R.string.nuclea_dust_amount, hudDust)
+        }
+        canvas.drawText(hudDustText, w - dp(10f), hpTop + sp(34f), pTextL)
         pTextL.textAlign = Paint.Align.LEFT
 
         // Combo au centre-haut
@@ -1047,8 +1113,8 @@ class NucleaView @JvmOverloads constructor(
             canvas.drawCircle(px, py, dp(11f), pFill)
             pStroke.color = tint; pStroke.strokeWidth = dp(2f)
             val maxDur = NucleaGame.powerMaxDuration(t)
-            canvas.drawArc(RectF(px - dp(11f), py - dp(11f), px + dp(11f), py + dp(11f)),
-                -90f, 360f * (left / maxDur).coerceIn(0f, 1f), false, pStroke)
+            arcRect.set(px - dp(11f), py - dp(11f), px + dp(11f), py + dp(11f))
+            canvas.drawArc(arcRect, -90f, 360f * (left / maxDur).coerceIn(0f, 1f), false, pStroke)
             pText.color = tint; pText.textSize = sp(11f)
             canvas.drawText(powerLabel(t), px, py + sp(4f), pText)
             px -= dp(28f)
@@ -1070,7 +1136,7 @@ class NucleaView @JvmOverloads constructor(
         if (game.phase != NucleaPhase.PLAYING) return
         if (game.captured) return   // pendant la capture on ne pilote plus, on martèle
         if (moveId >= 0) drawStick(canvas, moveCx, moveCy, moveKx, moveKy, Color.WHITE)
-        if (aimId >= 0) drawStick(canvas, aimCx, aimCy, aimKx, aimKy, Color.parseColor("#A0DCFF"))
+        if (aimId >= 0) drawStick(canvas, aimCx, aimCy, aimKx, aimKy, C_AIM_STICK)
     }
 
     /**
@@ -1093,10 +1159,8 @@ class NucleaView @JvmOverloads constructor(
             val base = animT * 3f + k * 1.256f
             val rr = dp(70f) + dp(40f) * ((animT * 1.6f + k * 0.2f) % 1f)
             pStroke.color = Color.argb((110 - k * 14).coerceAtLeast(20), 255, 138, 60)
-            canvas.drawArc(
-                RectF(game.px - rr, game.py - rr, game.px + rr, game.py + rr),
-                base * 57.3f % 360f, 110f, false, pStroke
-            )
+            arcRect.set(game.px - rr, game.py - rr, game.px + rr, game.py + rr)
+            canvas.drawArc(arcRect, base * 57.3f % 360f, 110f, false, pStroke)
         }
         // Halo qui pulse à chaque appui : le retour visuel du martèlement
         if (kick > 0f) {
@@ -1105,7 +1169,7 @@ class NucleaView @JvmOverloads constructor(
         }
 
         // Titre + consigne
-        pText.color = Color.parseColor("#FF8A3C"); pText.textSize = sp(30f)
+        pText.color = C_CAPTURED; pText.textSize = sp(30f)
         canvas.drawText(sCaptured, w / 2f, h * 0.2f, pText)
         val blink = (sin(animT * 8f) * 0.5f + 0.5f)
         pText.color = Color.argb((160 + blink * 95).toInt(), 255, 255, 255); pText.textSize = sp(15f)
@@ -1173,7 +1237,11 @@ class NucleaView @JvmOverloads constructor(
             val alpha = ((game.waveBanner / 2f) * 230).toInt().coerceIn(0, 230)
             pText.color = Color.argb(alpha, 255, 255, 255)
             pText.textSize = sp(30f)
-            canvas.drawText(ctx().getString(R.string.nuclea_wave_banner, game.wave), w / 2f, h * 0.3f, pText)
+            if (game.wave != bannerWave) {
+                bannerWave = game.wave
+                bannerWaveText = ctx().getString(R.string.nuclea_wave_banner, bannerWave)
+            }
+            canvas.drawText(bannerWaveText, w / 2f, h * 0.3f, pText)
         }
         if (game.bossBanner > 0f) {
             val alpha = ((game.bossBanner / 3f) * 255).toInt().coerceIn(0, 255)
@@ -1320,7 +1388,7 @@ class NucleaView @JvmOverloads constructor(
         val bw = pText.measureText(label + amount) + dp(24f)
         respecBtnRect.set(w - dp(12f) - bw, dp(54f), w - dp(12f), dp(96f))
         if (refund > 0L) {
-            pFill.color = if (confirming) Color.parseColor("#4A2A2A") else C_BTN_BG
+            pFill.color = if (confirming) C_RESPEC_BG else C_BTN_BG
             canvas.drawRoundRect(respecBtnRect, dp(10f), dp(10f), pFill)
             pStroke.color = if (confirming) C_GAMEOVER else C_BTN_BORDER
             pStroke.strokeWidth = dp(1.5f)
@@ -1448,7 +1516,7 @@ class NucleaView @JvmOverloads constructor(
                 pFill.color = when {
                     maxed -> C_GOLD
                     lvl > 0 -> C_DUST
-                    affordable -> Color.parseColor("#7A6AA8")
+                    affordable -> C_AFFORDABLE
                     else -> C_STAR_DIM
                 }
                 canvas.drawPath(starPath, pFill)
@@ -1460,7 +1528,7 @@ class NucleaView @JvmOverloads constructor(
                 pText.textSize = sp(10f)
                 if (maxed) {
                     pText.color = C_GOLD
-                    canvas.drawText("MAX", x, y + dp(34f), pText)
+                    canvas.drawText(sMax, x, y + dp(34f), pText)
                 } else {
                     pText.color = if (affordable) C_GOLD else C_GRAY
                     canvas.drawText("$lvl/${n.maxLvl}  ✦$cost", x, y + dp(34f), pText)
@@ -1484,7 +1552,8 @@ class NucleaView @JvmOverloads constructor(
         val panelH = (if (cols == 3) blockH else 3 * blockH) + dp(46f)
         val panelW = w - dp(24f)
         val top = skyTop + ((skyBottom - skyTop) - panelH).coerceAtLeast(0f) / 2f
-        val panel = RectF(dp(12f), top, dp(12f) + panelW, top + panelH)
+        val panel = infoPanelRect
+        panel.set(dp(12f), top, dp(12f) + panelW, top + panelH)
 
         pFill.color = C_CARD_BG
         canvas.drawRoundRect(panel, dp(14f), dp(14f), pFill)

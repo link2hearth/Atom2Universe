@@ -11,8 +11,24 @@ internal class ParticulesArt {
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
     }
-    private val path = Path()
-    private val glyph = Path()
+    /**
+     * Brick outlines in the unit square, one per shape, built once: the brick is drawn
+     * through a scaled canvas, so the same path serves every brick of that shape.
+     * (A baked bitmap would be resampled at sub-pixel positions and lose the exact
+     * antialiasing, so the vector drawing stays.)
+     */
+    private val outlines = Array(ParticulesView.Shape.values().size) { i ->
+        outline(ParticulesView.Shape.values()[i])
+    }
+    private val armour = Path().apply {
+        moveTo(-.65f, -.65f); lineTo(.65f, -.65f)
+        lineTo(.55f, .25f); lineTo(0f, .8f); lineTo(-.55f, .25f); close()
+    }
+    private val flame = Path().apply {
+        moveTo(0f, -.7f); lineTo(.5f, .1f)
+        cubicTo(.65f, .8f, -.65f, .8f, -.5f, .1f)
+        lineTo(-.2f, -.25f); lineTo(-.12f, .15f); close()
+    }
     private val face = LinearGradient(0f, 0f, 0f, 1f,
         intArrayOf(0xFF49667C.toInt(), 0xFF172E43.toInt(), 0xFF0B1728.toInt()),
         floatArrayOf(0f, .35f, 1f), Shader.TileMode.CLAMP)
@@ -22,12 +38,8 @@ internal class ParticulesArt {
     private fun color(c: Int) { fill.shader = null; fill.color = c }
     private fun stroke(c: Int, w: Float) { line.color = c; line.strokeWidth = w }
 
-    fun brick(c: Canvas, r: RectF, shape: ParticulesView.Shape,
-              type: ParticulesView.BType, tint: Int, hits: Int, maxHits: Int, flash: Float) {
-        val save = c.save()
-        c.translate(r.left, r.top)
-        c.scale(r.width(), r.height())
-        path.rewind()
+    private fun outline(shape: ParticulesView.Shape): Path {
+        val path = Path()
         val cut = when (shape) {
             ParticulesView.Shape.DIAMOND -> .30f
             ParticulesView.Shape.HEX -> .18f
@@ -41,6 +53,15 @@ internal class ParticulesArt {
             path.lineTo(1f - cut, .965f); path.lineTo(cut, .965f)
             path.lineTo(.025f, .72f); path.lineTo(.025f, .28f); path.close()
         }
+        return path
+    }
+
+    fun brick(c: Canvas, r: RectF, shape: ParticulesView.Shape,
+              type: ParticulesView.BType, tint: Int, hits: Int, maxHits: Int, flash: Float) {
+        val save = c.save()
+        c.translate(r.left, r.top)
+        c.scale(r.width(), r.height())
+        val path = outlines[shape.ordinal]
         fill.shader = face; fill.alpha = 255; c.drawPath(path, fill); fill.shader = null
         stroke(tint, .025f); c.drawPath(path, line)
         val clip = c.save(); c.clipPath(path)
@@ -91,9 +112,7 @@ internal class ParticulesArt {
         stroke(tint, .15f); color(tint)
         when (kind) {
             1, 4 -> {
-                glyph.rewind(); glyph.moveTo(-.65f, -.65f); glyph.lineTo(.65f, -.65f)
-                glyph.lineTo(.55f, .25f); glyph.lineTo(0f, .8f); glyph.lineTo(-.55f, .25f); glyph.close()
-                c.drawPath(glyph, line)
+                c.drawPath(armour, line)
                 if (kind == 4) { c.drawRect(-.2f, -.15f, .2f, .3f, fill) }
                 else c.drawLine(-.25f, -.15f, .25f, -.15f, line)
             }
@@ -206,12 +225,7 @@ internal class ParticulesArt {
                 c.drawCircle(0f, 0f, .6f, line)
                 c.drawLine(0f, -.4f, 0f, 0f, line); c.drawLine(0f, 0f, .3f, .15f, line)
             }
-            ParticulesView.PType.FIRE -> {
-                glyph.rewind(); glyph.moveTo(0f, -.7f); glyph.lineTo(.5f, .1f)
-                glyph.cubicTo(.65f, .8f, -.65f, .8f, -.5f, .1f)
-                glyph.lineTo(-.2f, -.25f); glyph.lineTo(-.12f, .15f); glyph.close()
-                c.drawPath(glyph, line)
-            }
+            ParticulesView.PType.FIRE -> c.drawPath(flame, line)
             ParticulesView.PType.PIERCE -> {
                 c.drawLine(-.6f, -.1f, .6f, -.1f, line)
                 c.drawLine(0f, .65f, 0f, -.65f, line)

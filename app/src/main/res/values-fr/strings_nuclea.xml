@@ -55,4 +55,8 @@
     <string name="nuclea_const_orion_bonus">flux à pleine puissance à toute distance</string>
     <string name="nuclea_const_cassiopeia_bonus">une résurrection par partie</string>
     <string name="nuclea_const_lyra_bonus">départ à la vague 3</string>
+    <string name="nuclea_title_run">"Vague %1$d   ✦ %2$d"</string>
+    <string name="nuclea_dust_amount">✦ %1$d</string>
+    <string name="nuclea_mass_fed">%1$d/%2$d</string>
+    <string name="nuclea_max">MAX</string>
 </resources>

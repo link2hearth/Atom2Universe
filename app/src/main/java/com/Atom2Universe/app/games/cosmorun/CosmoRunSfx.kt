@@ -112,19 +112,30 @@ class CosmoRunSfx(private val context: Context) {
     @Synchronized fun setMusic(active: Boolean, chain: Int, dt: Float) {
         val sounds = pool ?: return
         if (!active || !enabled || paused) { stopMusic(); return }
-        val layers = arrayOf(CosmoSound.MUSIC_PAD, CosmoSound.MUSIC_DRUMS, CosmoSound.MUSIC_BASS, CosmoSound.MUSIC_LEAD)
         if (musicStreams[0] == 0) {
-            val ids = layers.map { ids[it]?.takeIf { id -> id in loaded } ?: return }
+            val ids = MUSIC_LAYERS.map { ids[it]?.takeIf { id -> id in loaded } ?: return }
             // Lancées dans la même foulée, à volume nul : seul le volume décide de ce qu'on entend.
-            for (i in layers.indices) { musicStreams[i] = sounds.play(ids[i], 0f, 0f, 3, -1, 1f); musicVolume[i] = 0f }
+            for (i in MUSIC_LAYERS.indices) { musicStreams[i] = sounds.play(ids[i], 0f, 0f, 3, -1, 1f); musicVolume[i] = 0f }
         }
-        val target = floatArrayOf(.2f, if (chain >= 10) .24f else 0f, if (chain >= 20) .2f else 0f, if (chain >= 35) .15f else 0f)
-        for (i in layers.indices) {
+        val step = 1.6f * dt
+        for (i in MUSIC_LAYERS.indices) {
             if (musicStreams[i] == 0) continue
-            val step = 1.6f * dt
-            musicVolume[i] += (target[i] - musicVolume[i]).coerceIn(-step, step)
-            sounds.setVolume(musicStreams[i], musicVolume[i], musicVolume[i])
+            val target = when (i) {
+                0 -> .2f
+                1 -> if (chain >= 10) .24f else 0f
+                2 -> if (chain >= 20) .2f else 0f
+                else -> if (chain >= 35) .15f else 0f
+            }
+            val volume = musicVolume[i] + (target - musicVolume[i]).coerceIn(-step, step)
+            // Volume atteint : rien à envoyer au moteur natif.
+            if (volume == musicVolume[i]) continue
+            musicVolume[i] = volume
+            sounds.setVolume(musicStreams[i], volume, volume)
         }
+    }
+
+    private companion object {
+        val MUSIC_LAYERS = arrayOf(CosmoSound.MUSIC_PAD, CosmoSound.MUSIC_DRUMS, CosmoSound.MUSIC_BASS, CosmoSound.MUSIC_LEAD)
     }
 
     private fun stopMusic() {

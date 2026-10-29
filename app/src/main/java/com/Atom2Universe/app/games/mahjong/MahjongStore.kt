@@ -190,9 +190,12 @@ internal class MahjongStore(val prefs: SharedPreferences) {
     /** Reward and completed run are written in the SAME transaction; animations can be skipped safely. */
     fun finish(run: MahjongSave.Saved): MahjongReward? = synchronized(prefs) {
         if (!run.game.complete) return@synchronized null
-        val stored = load(run.slot) ?: return@synchronized null
-        if (stored.id != run.id) return@synchronized null
-        stored.reward?.let { run.reward = it; return@synchronized it }
+        // The metadata written with each run identifies it: the whole JSON is decoded only
+        // to give back a reward already paid.
+        if (!prefs.contains("run_${run.slot}") || prefs.getString("current_${run.slot}", null) != run.id)
+            return@synchronized null
+        if (prefs.getBoolean("rewarded_${run.slot}", false))
+            return@synchronized load(run.slot)?.reward?.also { run.reward = it }
         val gift = (wins + 1) % 5 == 0
         val receipts = prefs.getStringSet("daily_receipts", emptySet())!!.toMutableSet()
         val dailyBonus = run.daily && receipts.add(run.day.toString())

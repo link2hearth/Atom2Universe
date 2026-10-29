@@ -52,6 +52,8 @@ class SurvivorView @JvmOverloads constructor(
 
     private var thread: Thread? = null
     @Volatile private var running = false
+    /** Une image est due même sur une scène figée : surface neuve ou redimensionnée, reprise. */
+    @Volatile private var redraw = true
     private var lastNanos = 0L
 
     // Densité mise en cache — évite resources.displayMetrics à chaque dp()/sp()
@@ -123,7 +125,6 @@ class SurvivorView @JvmOverloads constructor(
     private val sPaused    by lazy { ctx.getString(R.string.survivor_paused) }
     private val sWave      by lazy { ctx.getString(R.string.survivor_wave) }
     private val sKills     by lazy { ctx.getString(R.string.survivor_kills) }
-    private val sBest      by lazy { ctx.getString(R.string.survivor_best) }
     private val sBoss      by lazy { ctx.getString(R.string.survivor_boss) }
     private val sTitle        by lazy { ctx.getString(R.string.survivor_title) }
     private val sSelectWeapon by lazy { ctx.getString(R.string.survivor_select_weapon) }
@@ -140,7 +141,7 @@ class SurvivorView @JvmOverloads constructor(
     private val pText  = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textAlign = Paint.Align.CENTER }
     private val pTextL = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textAlign = Paint.Align.LEFT }
     private val ellipsisPaint = android.text.TextPaint(Paint.ANTI_ALIAS_FLAG)
-    private val pGlow  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL; maskFilter = BlurMaskFilter(12f, BlurMaskFilter.Blur.NORMAL) }
+    private val pHalo  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
 
     // Chemin réutilisé pour les formes géométriques ennemies
     private val art = SurvivorArt()
@@ -150,15 +151,15 @@ class SurvivorView @JvmOverloads constructor(
 
     // Weapon selection cards
     private val weaponCardRects = Array(7) { RectF() }
-    private data class WpnCard(val type: WeaponType, val labelRes: Int, val descRes: Int, val shortLabel: String, val color: Int)
+    private data class WpnCard(val type: WeaponType, val labelRes: Int, val descRes: Int, val shortRes: Int, val color: Int)
     private val wpnCards by lazy { listOf(
-        WpnCard(WeaponType.PROJECTILE,     R.string.survivor_weapon_projectile,       R.string.survivor_weapon_desc_projectile,      "PROJ", Color.parseColor("#88AAFF")),
-        WpnCard(WeaponType.BOUNCING,       R.string.survivor_weapon_bouncing,          R.string.survivor_weapon_desc_bouncing,        "BNC",  Color.parseColor("#FF9944")),
-        WpnCard(WeaponType.LASER,          R.string.survivor_weapon_laser,             R.string.survivor_weapon_desc_laser,           "LZR",  Color.parseColor("#FF3366")),
-        WpnCard(WeaponType.CHAIN_LIGHTNING,R.string.survivor_weapon_chain_lightning,   R.string.survivor_weapon_desc_chain_lightning, "⚡",   Color.parseColor("#00BBFF")),
-        WpnCard(WeaponType.AURA,           R.string.survivor_weapon_aura,              R.string.survivor_weapon_desc_aura,            "AUR",  Color.parseColor("#4AF0FF")),
-        WpnCard(WeaponType.BOMB,           R.string.survivor_weapon_bomb,              R.string.survivor_weapon_desc_bomb,            "BMB",  Color.parseColor("#FF8800")),
-        WpnCard(WeaponType.ORBITAL,        R.string.survivor_weapon_orbital,           R.string.survivor_weapon_desc_orbital,         "ORB",  Color.parseColor("#AADDFF")),
+        WpnCard(WeaponType.PROJECTILE,     R.string.survivor_weapon_projectile,       R.string.survivor_weapon_desc_projectile,      R.string.survivor_abbr_projectile, Color.parseColor("#88AAFF")),
+        WpnCard(WeaponType.BOUNCING,       R.string.survivor_weapon_bouncing,          R.string.survivor_weapon_desc_bouncing,        R.string.survivor_abbr_bouncing,   Color.parseColor("#FF9944")),
+        WpnCard(WeaponType.LASER,          R.string.survivor_weapon_laser,             R.string.survivor_weapon_desc_laser,           R.string.survivor_abbr_laser,      Color.parseColor("#FF3366")),
+        WpnCard(WeaponType.CHAIN_LIGHTNING,R.string.survivor_weapon_chain_lightning,   R.string.survivor_weapon_desc_chain_lightning, R.string.survivor_abbr_chain,      Color.parseColor("#00BBFF")),
+        WpnCard(WeaponType.AURA,           R.string.survivor_weapon_aura,              R.string.survivor_weapon_desc_aura,            R.string.survivor_abbr_aura,       Color.parseColor("#4AF0FF")),
+        WpnCard(WeaponType.BOMB,           R.string.survivor_weapon_bomb,              R.string.survivor_weapon_desc_bomb,            R.string.survivor_abbr_bomb,       Color.parseColor("#FF8800")),
+        WpnCard(WeaponType.ORBITAL,        R.string.survivor_weapon_orbital,           R.string.survivor_weapon_desc_orbital,         R.string.survivor_abbr_orbital,    Color.parseColor("#AADDFF")),
     ) }
 
     // Boutons empilés des menus (accueil, pause, mort) : au plus trois à la fois
@@ -177,6 +178,7 @@ class SurvivorView @JvmOverloads constructor(
     override fun surfaceChanged(h: SurfaceHolder, fmt: Int, w: Int, h2: Int) {
         game.screenW = SurvivorBalance.WORLD_WIDTH
         game.screenH = h2 * SurvivorBalance.WORLD_WIDTH / w.coerceAtLeast(1)
+        redraw = true
     }
     override fun surfaceDestroyed(h: SurfaceHolder) { stop() }
 
@@ -186,6 +188,7 @@ class SurvivorView @JvmOverloads constructor(
     private fun start() {
         val old = thread
         running = true
+        redraw = true
         lastNanos = System.nanoTime()
         thread = Thread(this, "SurvivorGame").also { it.start() }
         old?.interrupt()
@@ -206,16 +209,18 @@ class SurvivorView @JvmOverloads constructor(
             lastNanos = now
 
             // Traiter les actions demandées depuis le thread UI
-            pendingAction?.let { a -> pendingAction = null; applyAction(a) }
+            val phaseBefore = game.phase
+            var acted = false
+            pendingAction?.let { a -> pendingAction = null; acted = true; applyAction(a) }
             pendingStartWeapon?.let { w ->
-                pendingStartWeapon = null
+                pendingStartWeapon = null; acted = true
                 // Une nouvelle partie remplace l'ancienne : plus rien à reprendre.
                 SurvivorSave.clearRun(context); savedRun = null
                 game.startGame(w)
             }
             val card = pendingCardIndex
             if (card >= 0) {
-                pendingCardIndex = -1
+                pendingCardIndex = -1; acted = true
                 game.pendingUpgrades?.getOrNull(card)?.let { game.applyUpgrade(it) }
             }
 
@@ -235,9 +240,13 @@ class SurvivorView @JvmOverloads constructor(
                 joystickActive = false; joystickTouchId = -1
             }
 
-            val canvas = lockFrame()
-            if (canvas != null) {
-                try { render(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+            // Hors combat, rien ne bouge : une image après chaque changement, puis on attend.
+            if (game.phase == GamePhase.PLAYING || acted || redraw || game.phase != phaseBefore) {
+                val canvas = lockFrame()
+                if (canvas != null) {
+                    redraw = false
+                    try { render(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+                }
             }
 
             val elapsed = (System.nanoTime() - now) / 1_000_000L
@@ -360,12 +369,11 @@ class SurvivorView @JvmOverloads constructor(
         }
     }
 
-    /** Reprend la partie disponible avant le démarrage de la boucle. */
+    /** Ouvre l'accueil avant le démarrage de la boucle : une partie sauvegardée y attend sur sa carte « Reprendre ». */
     fun showHome() {
         SurvivorSave.loadBest(context, game)
         savedRun = SurvivorSave.peekRun(context)
         game.phase = GamePhase.MENU
-        if (savedRun != null && SurvivorSave.loadRun(context, game)) game.resumePlaying()
         prevPhase = GamePhase.MENU
     }
 
@@ -569,14 +577,64 @@ class SurvivorView @JvmOverloads constructor(
         for (i in 0 until game.orbitalCount) {
             val ox = game.orbXY[i * 2]; val oy = game.orbXY[i * 2 + 1]
             val sx = wx(ox); val sy = wy(oy)
-            pGlow.color = Color.argb(60, 170, 221, 255)
-            canvas.drawCircle(sx, sy, SurvivorGame.ORB_R * 2.2f, pGlow)
+            drawHalo(canvas, sx, sy, SurvivorGame.ORB_R * 2.2f, Color.argb(60, 170, 221, 255))
             pFill.color = C_ORB_CORE
             canvas.drawCircle(sx, sy, SurvivorGame.ORB_R, pFill)
             pStroke.color = Color.WHITE; pStroke.strokeWidth = 1.5f; pStroke.alpha = 160
             canvas.drawCircle(sx, sy, SurvivorGame.ORB_R, pStroke)
             pStroke.alpha = 255
         }
+    }
+
+    // ─── Halos ────────────────────────────────────────────────────────────────
+
+    /**
+     * Halo doux autour des orbes et des tirs ennemis. C'était un BlurMaskFilter(12), que le rendu
+     * accéléré ignore avant Android 9 et qui se recalcule à chaque image : le même profil flou est
+     * précalculé une fois par rayon et par teinte dans un dégradé radial.
+     */
+    private class Halo(val radius: Float, val rgb: Int, val outer: Float, val shader: Shader)
+    private val halos = ArrayList<Halo>(4)
+
+    private fun drawHalo(canvas: Canvas, x: Float, y: Float, radius: Float, color: Int) {
+        val rgb = color and 0xFFFFFF
+        val halo = halos.firstOrNull { it.radius == radius && it.rgb == rgb } ?: buildHalo(radius, rgb).also {
+            if (halos.size >= 8) halos.clear()
+            halos += it
+        }
+        pHalo.shader = halo.shader
+        pHalo.alpha = Color.alpha(color)
+        canvas.save(); canvas.translate(x, y)
+        canvas.drawCircle(0f, 0f, halo.outer, pHalo)
+        canvas.restore()
+    }
+
+    private fun buildHalo(radius: Float, rgb: Int): Halo {
+        val outer = radius + HALO_SIGMA * 3f
+        val stops = FloatArray(HALO_STOPS) { it / (HALO_STOPS - 1f) }
+        val colors = IntArray(HALO_STOPS) { i ->
+            val coverage = if (i == HALO_STOPS - 1) 0f else blurredDisk(outer * stops[i], radius, HALO_SIGMA)
+            ((coverage * 255f).roundToInt().coerceIn(0, 255) shl 24) or rgb
+        }
+        return Halo(radius, rgb, outer, RadialGradient(0f, 0f, outer, colors, stops, Shader.TileMode.CLAMP))
+    }
+
+    /** Couverture, à la distance [r] du centre, d'un disque de rayon [a] flouté par une gaussienne d'écart-type [s]. */
+    private fun blurredDisk(r: Float, a: Float, s: Float): Float {
+        val steps = 40
+        val dRho = a / steps.toDouble()
+        val dTheta = PI / steps
+        val twoS2 = 2.0 * s * s
+        var sum = 0.0
+        for (i in 0 until steps) {
+            val rho = (i + 0.5) * dRho
+            for (j in 0 until steps) {
+                val d2 = r * r + rho * rho - 2.0 * r * rho * cos((j + 0.5) * dTheta)
+                sum += rho * exp(-d2 / twoS2)
+            }
+        }
+        // Demi-tour compté deux fois (symétrie), densité 1 / (2π s²).
+        return (sum * dRho * dTheta * 2.0 / (PI * twoS2)).toFloat().coerceIn(0f, 1f)
     }
 
     // ─── Enemy bullets ────────────────────────────────────────────────────────
@@ -588,8 +646,7 @@ class SurvivorView @JvmOverloads constructor(
         val rv    = (180 + (pulse * 75f).toInt()).coerceIn(0, 255)
         for (b in game.enemyBullets) {
             val sx = wx(b.x); val sy = wy(b.y)
-            pGlow.color = Color.argb((alpha * 0.35f).toInt(), 255, 30, 30)
-            canvas.drawCircle(sx, sy, b.radius * 2.2f, pGlow)
+            drawHalo(canvas, sx, sy, b.radius * 2.2f, Color.argb((alpha * 0.35f).toInt(), 255, 30, 30))
             pFill.color = Color.argb(alpha, rv, 30, 30)
             canvas.drawCircle(sx, sy, b.radius, pFill)
         }
@@ -623,6 +680,17 @@ class SurvivorView @JvmOverloads constructor(
     private val xpPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var xpGradientWidth = -1
     private val hudText = Paint(Paint.ANTI_ALIAS_FLAG)
+    // Textes du bandeau, reformatés seulement quand leur valeur change.
+    private var hudLevel = -1
+    private var hudLevelText = ""
+    private var hudHp = -1
+    private var hudMaxHp = -1
+    private var hudHealthText = ""
+    private var hudShield = -1
+    private var hudMaxShield = -1
+    private var hudShieldText = ""
+    private var hudRevives = -1
+    private var hudRevivesText = ""
 
     private fun drawHUD(canvas: Canvas) {
         val p = game.player
@@ -649,7 +717,8 @@ class SurvivorView @JvmOverloads constructor(
         }
         hudText.color = Color.rgb(195, 211, 199)
         hudText.textSize = sp(11f); hudText.textAlign = Paint.Align.CENTER
-        canvas.drawText(context.getString(R.string.survivor_hud_level, p.level), width / 2f, dp(25f), hudText)
+        if (hudLevel != p.level) { hudLevel = p.level; hudLevelText = context.getString(R.string.survivor_hud_level, p.level) }
+        canvas.drawText(hudLevelText, width / 2f, dp(25f), hudText)
 
         val barTop = dp(16f)
         val barBottom = height - dp(8f)
@@ -660,8 +729,12 @@ class SurvivorView @JvmOverloads constructor(
         canvas.drawRoundRect(edge, barBottom - barHeight * p.hpRatio(), edge + barWidth, barBottom, dp(5f), dp(5f), pFill)
         hudText.textSize = sp(10f); hudText.textAlign = Paint.Align.LEFT
         hudText.color = Color.rgb(154, 220, 180)
-        canvas.drawText(context.getString(R.string.survivor_hud_health, p.hp.toInt(), p.maxHp.toInt()),
-            edge + barWidth + dp(6f), height - dp(12f), hudText)
+        val hp = p.hp.toInt(); val maxHp = p.maxHp.toInt()
+        if (hudHp != hp || hudMaxHp != maxHp) {
+            hudHp = hp; hudMaxHp = maxHp
+            hudHealthText = context.getString(R.string.survivor_hud_health, hp, maxHp)
+        }
+        canvas.drawText(hudHealthText, edge + barWidth + dp(6f), height - dp(12f), hudText)
         if (p.maxShield > 0f) {
             val shieldLeft = width - edge - barWidth
             pFill.color = C_SHIELD_BG
@@ -669,12 +742,17 @@ class SurvivorView @JvmOverloads constructor(
             pFill.color = C_SHIELD_FILL
             canvas.drawRoundRect(shieldLeft, barBottom - barHeight * p.shieldRatio(), width - edge, barBottom, dp(5f), dp(5f), pFill)
             hudText.textAlign = Paint.Align.RIGHT; hudText.color = Color.rgb(146, 206, 231)
-            canvas.drawText(context.getString(R.string.survivor_hud_shield, p.shield.toInt(), p.maxShield.toInt()),
-                shieldLeft - dp(6f), height - dp(12f), hudText)
+            val shield = p.shield.toInt(); val maxShield = p.maxShield.toInt()
+            if (hudShield != shield || hudMaxShield != maxShield) {
+                hudShield = shield; hudMaxShield = maxShield
+                hudShieldText = context.getString(R.string.survivor_hud_shield, shield, maxShield)
+            }
+            canvas.drawText(hudShieldText, shieldLeft - dp(6f), height - dp(12f), hudText)
         }
         if (p.revivesLeft > 0) {
             hudText.textAlign = Paint.Align.LEFT; hudText.color = Color.WHITE; hudText.textSize = sp(12f)
-            canvas.drawText("❤".repeat(p.revivesLeft), edge + barWidth + dp(6f), height - dp(30f), hudText)
+            if (hudRevives != p.revivesLeft) { hudRevives = p.revivesLeft; hudRevivesText = "❤".repeat(p.revivesLeft) }
+            canvas.drawText(hudRevivesText, edge + barWidth + dp(6f), height - dp(30f), hudText)
         }
     }    // ─── Joystick ─────────────────────────────────────────────────────────────
 
@@ -752,7 +830,7 @@ class SurvivorView @JvmOverloads constructor(
             pFill.color = Color.argb(180, Color.red(card.color), Color.green(card.color), Color.blue(card.color))
             canvas.drawCircle(iconCx, iconCy, min(dp(19f), cardH * 0.35f), pFill)
             pText.color = Color.WHITE; pText.textSize = sp(10f)
-            canvas.drawText(card.shortLabel, iconCx, iconCy + sp(4f), pText)
+            canvas.drawText(context.getString(card.shortRes), iconCx, iconCy + sp(4f), pText)
 
             pTextL.color = Color.WHITE; pTextL.textSize = min(sp(15f), cardH * 0.25f)
             ellipsisPaint.set(pTextL)
@@ -787,7 +865,7 @@ class SurvivorView @JvmOverloads constructor(
         var y = headY + dp(118f)
         if (game.bestTime > 0f) {
             pText.textSize = sp(13f); pText.color = C_GRAY
-            canvas.drawText("$sBest ${mmss(game.bestTime)}   ${killsText(game.bestKills)}", cx, y, pText)
+            canvas.drawText(bestSummary(), cx, y, pText)
             y += dp(26f)
         }
 
@@ -827,7 +905,7 @@ class SurvivorView @JvmOverloads constructor(
         pTextL.color = Color.WHITE; pTextL.textSize = sp(26f)
         canvas.drawText(mmss(run.survivalTime), textLeft, top + dp(52f), pTextL)
         pTextL.color = C_GRAY; pTextL.textSize = sp(11f)
-        canvas.drawText("${levelText(run.level)}   $sWave ${run.wave}   ${killsText(run.kills)}",
+        canvas.drawText(context.getString(R.string.survivor_run_summary, levelText(run.level), run.wave, killsText(run.kills)),
             textLeft, top + dp(72f), pTextL)
 
         // Les armes portées, en pastilles, à droite de la carte.
@@ -837,7 +915,7 @@ class SurvivorView @JvmOverloads constructor(
             pFill.color = Color.argb(180, Color.red(card.color), Color.green(card.color), Color.blue(card.color))
             canvas.drawCircle(chipCx, top + cardH / 2f, dp(17f), pFill)
             pText.color = Color.WHITE; pText.textSize = sp(9f)
-            canvas.drawText(card.shortLabel, chipCx, top + cardH / 2f + sp(3f), pText)
+            canvas.drawText(context.getString(card.shortRes), chipCx, top + cardH / 2f + sp(3f), pText)
             chipCx -= dp(40f)
         }
         return top + cardH
@@ -882,7 +960,7 @@ class SurvivorView @JvmOverloads constructor(
             pFill.color = Color.argb(180, Color.red(opt.cardColor), Color.green(opt.cardColor), Color.blue(opt.cardColor))
             canvas.drawCircle(iconCx, iconCy, dp(22f), pFill)
             pText.color = Color.WHITE; pText.textSize = sp(11f)
-            canvas.drawText(opt.shortLabel, iconCx, iconCy + sp(4f), pText)
+            canvas.drawText(context.getString(opt.shortRes), iconCx, iconCy + sp(4f), pText)
 
             // Label
             pTextL.color = Color.WHITE; pTextL.textSize = sp(16f)
@@ -955,7 +1033,7 @@ class SurvivorView @JvmOverloads constructor(
             // Un record battu se lit dans la couleur, sans mot de plus.
             pText.color = if (game.survivalTime >= game.bestTime) C_XP_FILL else C_GRAY
             pText.textSize = sp(12f)
-            canvas.drawText("$sBest ${mmss(game.bestTime)}   ${killsText(game.bestKills)}", cx, y, pText)
+            canvas.drawText(bestSummary(), cx, y, pText)
         }
         drawButtonStack(canvas, cx, y + dp(28f), listOf(sRetry, sMenu))
         pText.color = Color.WHITE
@@ -1020,8 +1098,16 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun killsText(n: Int) = context.getString(R.string.survivor_kills_count, n)
 
+    private fun bestSummary() = context.getString(R.string.survivor_best_summary, mmss(game.bestTime), killsText(game.bestKills))
+
     private fun levelText(n: Int) = context.getString(R.string.survivor_level_short, n)
 
     private fun dp(v: Float) = v * _dp
     private fun sp(v: Float) = v * _sp
+
+    private companion object {
+        // Écart-type de l'ancien BlurMaskFilter(12) : Skia prend 0,57735 × rayon + 0,5.
+        const val HALO_SIGMA = 0.57735f * 12f + 0.5f
+        const val HALO_STOPS = 12
+    }
 }

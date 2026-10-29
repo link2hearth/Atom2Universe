@@ -14,6 +14,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.AttributeSet
+import android.util.LongSparseArray
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -81,6 +82,9 @@ class AtomBlocksBoardView @JvmOverloads constructor(
     private val shapePath = Path()
     private val rect = RectF()
     private val boardRect = RectF()
+    /** Block faces reuse their gradient per cell size and color pair instead of creating one per block and frame. */
+    private class GradientCache(val size: Float) { val shaders = LongSparseArray<LinearGradient>() }
+    private val gradientCaches = ArrayList<GradientCache>(4)
     private val slots = Array(3) { RectF() }
     private var cellSize = 0f
     private var selectedSlot = -1
@@ -286,10 +290,16 @@ class AtomBlocksBoardView @JvmOverloads constructor(
         canvas.drawRoundRect(rect, radius, radius, fill)
         rect.bottom -= size * .055f
         fill.color = withAlpha(color, alpha)
-        if (gradients) fill.shader = LinearGradient(rect.left, rect.top, rect.right, rect.bottom,
-            withAlpha(blend(color, Color.WHITE, .15f), alpha), withAlpha(blend(color, Color.BLACK, .09f), alpha), Shader.TileMode.CLAMP)
-        canvas.drawRoundRect(rect, radius, radius, fill)
-        fill.shader = null
+        if (gradients) {
+            // The cached gradient starts at (0, 0): the canvas moves to the block instead of the shader.
+            val width = rect.width(); val height = rect.height()
+            fill.shader = blockGradient(size, width, height,
+                withAlpha(blend(color, Color.WHITE, .15f), alpha), withAlpha(blend(color, Color.BLACK, .09f), alpha))
+            canvas.save(); canvas.translate(rect.left, rect.top)
+            canvas.drawRoundRect(0f, 0f, width, height, radius, radius, fill)
+            canvas.restore()
+            fill.shader = null
+        } else canvas.drawRoundRect(rect, radius, radius, fill)
         // A bevel rather than a flat colored square; remains legible in the light palette.
         line.strokeWidth = max(dp(.5f), size * .025f)
         line.color = withAlpha(Color.WHITE, .31f * alpha)
@@ -299,6 +309,20 @@ class AtomBlocksBoardView @JvmOverloads constructor(
             rect.inset(size * .13f, size * .13f)
             canvas.drawRoundRect(rect, radius * .7f, radius * .7f, line)
         }
+    }
+
+    private fun blockGradient(size: Float, width: Float, height: Float, top: Int, bottom: Int): LinearGradient {
+        val cache = gradientCaches.firstOrNull { it.size == size } ?: GradientCache(size).also {
+            if (gradientCaches.size >= 6) gradientCaches.clear()
+            gradientCaches += it
+        }
+        val key = (top.toLong() shl 32) or (bottom.toLong() and 0xFFFFFFFFL)
+        cache.shaders.get(key)?.let { return it }
+        // Fading blocks get a new pair every frame: keep the cache bounded.
+        if (cache.shaders.size() >= 128) cache.shaders.clear()
+        val shader = LinearGradient(0f, 0f, width, height, top, bottom, Shader.TileMode.CLAMP)
+        cache.shaders.put(key, shader)
+        return shader
     }
 
     private fun drawGem(canvas: Canvas, x: Float, y: Float, size: Float, kind: Int) {

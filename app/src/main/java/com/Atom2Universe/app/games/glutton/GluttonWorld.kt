@@ -2,6 +2,9 @@ package com.Atom2Universe.app.games.glutton
 
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Prop
 import com.Atom2Universe.app.games.glutton.GluttonCatalog.Theme
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -133,6 +136,9 @@ class GluttonWorld(val seed: Long) {
     /** The galactic centre the spiral arms of the Milky Way rings wind around. */
     val galaxyCentre = doubleArrayOf(-1.1e20, .5e20)
 
+    /** The ring being laid out ahead of time (see [prepare]). */
+    private var ahead: Ahead? = null
+
     init { ensure(1) }
 
     fun ringAt(x: Double, y: Double): Ring? {
@@ -145,10 +151,41 @@ class GluttonWorld(val seed: Long) {
         for (ring in rings) {
             if (ring.index > index) break
             if (ring.built) continue
-            GluttonLayout(this, ring, Random(seed * 1_000_003L + ring.index * 7919L)).build()
+            val job = ahead
+            if (job != null && job.ring === ring) { ahead = null; job.collect() } else lay(ring)
             ring.built = true; built += ring
         }
         return built
+    }
+
+    /**
+     * Lays [index] out ahead of time on a background thread, so that reaching the ring before it does not
+     * stall a frame. Same seed, same layout: a ring only reads its own random and what never changes
+     * (the house's exits, the sizes of the rings). It stays unbuilt (and unread) until [ensure] collects it.
+     */
+    fun prepare(index: Int) {
+        if (index !in rings.indices || rings[index].built || ahead != null) return
+        val job = Ahead(rings[index])
+        ahead = job
+        LAYOUT.execute(job)
+    }
+
+    private fun lay(ring: Ring) = GluttonLayout(this, ring, Random(seed * 1_000_003L + ring.index * 7919L)).build()
+
+    /** Whoever claims it first lays the ring out: the background thread, or [ensure] if it got there first. */
+    private inner class Ahead(val ring: Ring) : Runnable {
+        private val claimed = AtomicBoolean()
+        private val done = CountDownLatch(1)
+        @Volatile private var failure: Throwable? = null
+        override fun run() {
+            if (!claimed.compareAndSet(false, true)) return
+            try { lay(ring) } catch (t: Throwable) { failure = t } finally { done.countDown() }
+        }
+        fun collect() {
+            if (claimed.compareAndSet(false, true)) { lay(ring); return }
+            done.await()
+            failure?.let { throw it }
+        }
     }
     /** Every placement of the built rings (tests and the robot's maps). */
     val placements get() = rings.filter { it.built }.flatMap { it.placements }
@@ -156,5 +193,6 @@ class GluttonWorld(val seed: Long) {
     companion object {
         /** The countryside and everything beyond are round rings. */
         const val ROUND_FROM = 3
+        private val LAYOUT = Executors.newSingleThreadExecutor { job -> Thread(job, "glutton-layout").apply { isDaemon = true } }
     }
 }

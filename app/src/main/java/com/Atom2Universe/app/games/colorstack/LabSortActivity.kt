@@ -173,8 +173,8 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
     }
 
     private fun restartGame() {
+        // Même grille : une victoire déjà payée ne repaie pas. Seule une nouvelle grille remet le drapeau.
         game.restart()
-        victoryRecorded = false
         resetBoardState()
         saveGame()
     }

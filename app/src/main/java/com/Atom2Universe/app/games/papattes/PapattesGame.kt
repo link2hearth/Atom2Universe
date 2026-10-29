@@ -54,6 +54,12 @@ class PapattesGame(val stage: Int, val critter: Critter) {
     private var feetDown = 2
     private var fallingSpeed = 0f
     private val tmp = FloatArray(2)
+    /** Torse, tête, puis pied et genou de chaque jambe : les points qui ramassent les graines d'or. */
+    private var pickers = FloatArray(12)
+    /** Segments rangés par début : une abscisse ne regarde que ceux qui peuvent encore l'atteindre. */
+    private val byStart: IntArray = course.segments.indices.sortedBy { course.segments[it].x0 }.toIntArray()
+    private val starts = FloatArray(byStart.size) { course.segments[byStart[it]].x0 }
+    private val longest = (course.segments.maxOfOrNull { it.x1 - it.x0 } ?: 0f) + .01f
 
     init {
         for ((i, s) in course.segments.withIndex()) {
@@ -257,9 +263,8 @@ class PapattesGame(val stage: Int, val critter: Critter) {
     }
 
     private fun touchPlank(x: Float) {
-        val seg = segmentUnder(x) ?: return
-        if (seg.floater != Floater.PLANK) return
-        val i = course.segments.indexOf(seg)
+        val i = segmentIndexUnder(x)
+        if (i < 0 || course.segments[i].floater != Floater.PLANK) return
         if (plankTimer[i] < 0f) plankTimer[i] = 0f
     }
 
@@ -292,16 +297,30 @@ class PapattesGame(val stage: Int, val critter: Critter) {
     }
 
     private fun collect(cx: Float) {
-        val points = ArrayList<FloatArray>(6)
-        walker.torsoCenter(tmp); points += tmp.copyOf()
-        walker.headCenter(tmp); points += tmp.copyOf()
-        for (leg in walker.all) { points += leg.foot().copyOf(); points += leg.kneePoint().copyOf() }
-        for ((i, g) in course.goldSeeds.withIndex()) {
+        val count = 4 + 4 * walker.all.size
+        if (pickers.size < count) pickers = FloatArray(count)
+        val pts = pickers
+        walker.torsoCenter(tmp); pts[0] = tmp[0]; pts[1] = tmp[1]
+        walker.headCenter(tmp); pts[2] = tmp[0]; pts[3] = tmp[1]
+        var n = 4
+        for (leg in walker.all) {
+            // foot() et kneePoint() rendent le même tableau : on recopie aussitôt.
+            var p = leg.foot(); pts[n++] = p[0]; pts[n++] = p[1]
+            p = leg.kneePoint(); pts[n++] = p[0]; pts[n++] = p[1]
+        }
+        val seeds = course.goldSeeds
+        for (i in seeds.indices) {
             if (goldTaken[i]) continue
-            if (points.any { hypot(it[0] - g.x, it[1] - g.y) < GOLD_PICK }) {
-                goldTaken[i] = true
-                lastGold = i
-                events += Event.GOLD
+            val g = seeds[i]
+            var k = 0
+            while (k < n) {
+                if (hypot(pts[k] - g.x, pts[k + 1] - g.y) < GOLD_PICK) {
+                    goldTaken[i] = true
+                    lastGold = i
+                    events += Event.GOLD
+                    break
+                }
+                k += 2
             }
         }
     }
@@ -343,12 +362,28 @@ class PapattesGame(val stage: Int, val critter: Critter) {
 
     /** Le segment fixe (planches tombées exclues) le plus haut sous [x]. */
     private fun segmentUnder(x: Float): Segment? {
-        var best: Segment? = null
+        val i = segmentIndexUnder(x)
+        return if (i < 0) null else course.segments[i]
+    }
+
+    /** Indice de [segmentUnder], −1 s'il n'y a rien ; à égalité de hauteur, le premier segment du parcours. */
+    private fun segmentIndexUnder(x: Float): Int {
+        // Premier début au-delà de x ; les candidats sont avant, tant que le plus long peut encore atteindre x.
+        var lo = 0
+        var hi = starts.size
+        while (lo < hi) {
+            val mid = (lo + hi) ushr 1
+            if (starts[mid] <= x) lo = mid + 1 else hi = mid
+        }
+        var best = -1
         var top = Float.NEGATIVE_INFINITY
-        for ((i, s) in course.segments.withIndex()) {
-            if (x < s.x0 || x > s.x1 || plankFall[i] >= 0f) continue
+        var k = lo - 1
+        while (k >= 0 && starts[k] >= x - longest) {
+            val i = byStart[k--]
+            val s = course.segments[i]
+            if (x > s.x1 || plankFall[i] >= 0f) continue
             val y = s.yAt(x)
-            if (y > top) { top = y; best = s }
+            if (y > top || (y == top && best >= 0 && i < best)) { top = y; best = i }
         }
         return best
     }

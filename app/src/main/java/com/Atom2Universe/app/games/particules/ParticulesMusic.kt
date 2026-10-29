@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.particules
 
+import android.os.Handler
+import android.os.HandlerThread
 import kotlinx.coroutines.*
 import org.billthefarmer.mididriver.MidiDriver
 import kotlin.math.min
@@ -13,8 +15,8 @@ import kotlin.random.Random
  * Ch 2 — événements      (Lead Square GM 80)
  * Ch 9 — percussions GM
  *
- * Appeler [start] dans onCreate, [stop] dans onDestroy.
- * Appeler [pause] / [resumeBackground] dans onPause / onResume.
+ * Appeler [start] puis [resumeBackground] dans onResume, [stop] dans onPause : le synthé
+ * ne calcule rien pendant que le jeu est en arrière-plan.
  */
 class ParticulesMusic(private val scope: CoroutineScope) {
 
@@ -27,16 +29,22 @@ class ParticulesMusic(private val scope: CoroutineScope) {
     }
 
     private var driver: MidiDriver? = null
-    private var ready = false
+    @Volatile private var ready = false
     private var bgJob: Job? = null
     private var currentLevel = 1
+    /** Un seul fil pour toutes les fins de note et les notes différées. */
+    private var timerThread: HandlerThread? = null
+    private var timer: Handler? = null
 
     // ── Cycle de vie ──────────────────────────────────────────────
 
     fun start() {
+        if (driver != null) return
+        timerThread = HandlerThread("ParticulesSfx").also { it.start() }
+        timer = Handler(timerThread!!.looper)
         val d = MidiDriver.getInstance {
             ready = true
-            programChange(0, 11)   // Vibraphone
+            programChange(0, melodyProgram(currentLevel))
             programChange(1, 39)   // Synth Bass 2
             programChange(2, 80)   // Lead Square
             controlChange(0, 7, 82)
@@ -51,6 +59,10 @@ class ParticulesMusic(private val scope: CoroutineScope) {
     fun stop() {
         bgJob?.cancel(); bgJob = null
         ready = false
+        timer?.removeCallbacksAndMessages(null)
+        timerThread?.quitSafely()
+        timerThread = null
+        timer = null
         driver?.stop(); driver = null
     }
 
@@ -68,13 +80,15 @@ class ParticulesMusic(private val scope: CoroutineScope) {
         currentLevel = level
         bgJob?.cancel()
         if (!ready) return
-        // Instrument mélodie s'intensifie avec les niveaux
-        when {
-            level <= 5  -> programChange(0, 11)   // Vibraphone
-            level <= 10 -> programChange(0, 80)   // Lead Square
-            else        -> programChange(0, 81)   // Lead Sawtooth
-        }
+        programChange(0, melodyProgram(level))
         startBgLoop(level)
+    }
+
+    /** Instrument de la mélodie : il s'intensifie avec les niveaux. */
+    private fun melodyProgram(level: Int) = when {
+        level <= 5  -> 11   // Vibraphone
+        level <= 10 -> 80   // Lead Square
+        else        -> 81   // Lead Sawtooth
     }
 
     private fun startBgLoop(level: Int) {
@@ -231,29 +245,24 @@ class ParticulesMusic(private val scope: CoroutineScope) {
     private fun perc(note: Int, vel: Int) =
         driver?.queueEvent(byteArrayOf(0x99.toByte(), note.toByte(), vel.toByte()))
 
-    private fun percDelayed(note: Int, vel: Int, delayMs: Long) = Thread {
-        try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-        if (ready) perc(note, vel)
-    }.start()
-
-    private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) {
-        val d = driver ?: return
-        d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
-        Thread {
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) d.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
-        }.start()
+    private fun percDelayed(note: Int, vel: Int, delayMs: Long) {
+        timer?.postDelayed({ if (ready) perc(note, vel) }, delayMs)
     }
 
+    private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) =
+        noteDelayed(ch, note, vel, durationMs, 0L)
+
+    /** Note-on (tout de suite ou après [delayMs]) puis note-off, posés sur le fil de minuterie. */
     private fun noteDelayed(ch: Int, note: Int, vel: Int, durationMs: Long, delayMs: Long) {
         val d = driver ?: return
-        Thread {
-            try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-            if (!ready) return@Thread
-            d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
+        val t = timer ?: return
+        val on = Runnable {
+            if (ready) d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
+        }
+        if (delayMs > 0) t.postDelayed(on, delayMs) else on.run()
+        t.postDelayed({
             if (ready) d.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
-        }.start()
+        }, delayMs + durationMs)
     }
 
     private fun programChange(ch: Int, prog: Int) =

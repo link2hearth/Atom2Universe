@@ -134,7 +134,10 @@ class BiggerGame(private val random: Random = Random.Default) {
 
     val canDrop get() = !over && cooldown <= 0f
 
-    /** Hauteur du bocal, choisie par la vue selon la place à l'écran. */
+    /**
+     * Hauteur du bocal, choisie par la vue selon la place à l'écran avant le premier lâcher,
+     * puis figée pour toute la partie : tourner l'écran ne doit pas abaisser le bord sous le tas.
+     */
     var jarHeight = Accretion.MIN_HEIGHT
         set(value) { field = value.coerceIn(Accretion.MIN_HEIGHT, Accretion.MAX_HEIGHT) }
 
@@ -355,18 +358,21 @@ class BiggerGame(private val random: Random = Random.Default) {
             sb.append(o.tier).append(',').append(b.x).append(',').append(b.y).append(',').append(b.angle)
                 .append(',').append(b.vx).append(',').append(b.vy).append(',').append(b.omega)
         }
+        // La hauteur du bocal suit la partie : le tas a été empilé sous ce bord-là.
+        sb.append('|').append(jarHeight)
         return sb.toString()
     }
 
     fun restoreState(state: String): Boolean {
         val parts = state.split('|')
-        if (parts.size != 8 || parts[0] != "1") return false
+        if (parts.size !in 8..9 || parts[0] != "1") return false
         return try {
             reset()
             score = parts[1].toInt(); drops = parts[2].toInt(); merges = parts[3].toInt()
             bestTier = parts[4].toInt()
             current = parts[5].toInt().coerceIn(0, Accretion.SPAWN_WEIGHTS.size - 1)
             next = parts[6].toInt().coerceIn(0, Accretion.SPAWN_WEIGHTS.size - 1)
+            if (parts.size == 9) jarHeight = parts[8].toFloat()
             if (parts[7].isNotEmpty()) for (entry in parts[7].split(';')) {
                 val f = entry.split(',')
                 val tier = f[0].toInt()

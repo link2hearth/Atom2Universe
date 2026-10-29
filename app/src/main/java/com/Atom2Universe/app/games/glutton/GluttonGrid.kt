@@ -22,6 +22,13 @@ internal class GluttonGrid<T>(val half: Double, val count: Int = 64) {
         }
     }
 
+    /** Retire [entry] des cases où [add] l'a rangé avec ces mêmes coordonnées. Jamais pendant un [query]. */
+    fun remove(entry: T, x: Double, y: Double, radius: Double) {
+        val c0 = column(x - radius); val c1 = column(x + radius)
+        val r0 = column(y - radius); val r1 = column(y + radius)
+        for (row in r0..r1) for (col in c0..c1) buckets[col + row * count]?.remove(entry)
+    }
+
     fun clear() { buckets.fill(null) }
 
     inline fun query(x0: Double, y0: Double, x1: Double, y1: Double, visit: (T) -> Unit) {

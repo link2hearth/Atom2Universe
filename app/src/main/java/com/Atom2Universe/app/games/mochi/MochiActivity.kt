@@ -44,10 +44,20 @@ class MochiActivity : ThemedActivity() {
     private val ink = 0xFF264E49.toInt()
     private val muted = 0xFF638078.toInt()
     private var displayedScore = -1
+    /** Valeurs déjà écrites dans le bandeau : un texte n'est réécrit que s'il change. */
+    private var shownScore = -1
+    private var shownBest = -1
+    private var shownHeight = -1
+    private var shownCombo = -1
+    private var shownBubbles = -1
+    private var shownPeaches = -1
+    private val bubbleReady by lazy { panel(0xE04A8FA3.toInt(), 0x88CFF6FF.toInt(), 12) }
+    private val bubbleWaiting by lazy { panel(0xD0244A47.toInt(), 0x448BC9A9, 12) }
     private val prefs by lazy { getSharedPreferences("mochi_save", MODE_PRIVATE) }
     private var best = 0
     private var bestAtStart = 0
-    private var paid = false
+    /** Neutrinos déjà versés pour la partie en cours : on ne paie que la différence. */
+    private var rewardPaid = 0
     private var hasRun = false
     private var showingRules = false
 
@@ -57,6 +67,8 @@ class MochiActivity : ThemedActivity() {
         buildUi()
         enableImmersiveMode()
         scene.onChanged = { updateHud() }
+        // Le héros du menu s'anime au rythme du décor derrière lui : une seule image composée à la fois.
+        scene.onDecorFrame = { if (hero.isShown) hero.invalidate() }
         scene.onFinished = {
             val newBest = scene.game.score > bestAtStart
             val reward = settle()
@@ -205,7 +217,6 @@ class MochiActivity : ThemedActivity() {
                 art.body(canvas, 0f, 0f, 1f + kotlin.math.sin(time * 2) * .018f, -5f, time,
                     hurt = screen == Screen.END, shield = scene.game.bubbles > 0, hero = screen == Screen.HOME)
                 canvas.restore()
-                if (isShown && hasWindowFocus()) postInvalidateDelayed(33)
             }
         }
         menuCard.addView(hero, LinearLayout.LayoutParams(-1, dp(170)))
@@ -283,7 +294,7 @@ class MochiActivity : ThemedActivity() {
     private fun startGame(seed: Long = kotlin.random.Random.nextLong()) {
         settle()
         bestAtStart = best
-        paid = false
+        rewardPaid = 0
         hasRun = true
         screen = Screen.PLAY
         hudPanel.visibility = View.VISIBLE
@@ -342,14 +353,25 @@ class MochiActivity : ThemedActivity() {
     private fun updateHud() {
         val g = scene.game
         if (hasRun) best = maxOf(best, g.score)
-        hud.text = counterText(getString(R.string.mochi_score_card, g.score, best), 26)
-        heightChip.text = counterText(getString(R.string.mochi_height_card, g.heightMetres), 22)
+        if (g.score != shownScore || best != shownBest) {
+            shownScore = g.score; shownBest = best
+            hud.text = counterText(getString(R.string.mochi_score_card, g.score, best), 26)
+        }
+        if (g.heightMetres != shownHeight) {
+            shownHeight = g.heightMetres
+            heightChip.text = counterText(getString(R.string.mochi_height_card, g.heightMetres), 22)
+        }
         comboBadge.visibility = if (g.combo > 0) View.VISIBLE else View.GONE
-        comboBadge.text = getString(R.string.mochi_combo_badge, g.combo)
-        bubbleChip.text = if (g.bubbles > 0) getString(R.string.mochi_bubble_ready)
-            else getString(R.string.mochi_peach_meter, g.peaches, MochiGame.PEACHES_PER_BUBBLE)
-        bubbleChip.background = if (g.bubbles > 0) panel(0xE04A8FA3.toInt(), 0x88CFF6FF.toInt(), 12)
-            else panel(0xD0244A47.toInt(), 0x448BC9A9, 12)
+        if (g.combo != shownCombo) {
+            shownCombo = g.combo
+            comboBadge.text = getString(R.string.mochi_combo_badge, g.combo)
+        }
+        if (g.bubbles != shownBubbles || g.peaches != shownPeaches) {
+            shownBubbles = g.bubbles; shownPeaches = g.peaches
+            bubbleChip.text = if (g.bubbles > 0) getString(R.string.mochi_bubble_ready)
+                else getString(R.string.mochi_peach_meter, g.peaches, MochiGame.PEACHES_PER_BUBBLE)
+            bubbleChip.background = if (g.bubbles > 0) bubbleReady else bubbleWaiting
+        }
         if (g.score != displayedScore) {
             if (displayedScore >= 0 && g.score > displayedScore) {
                 hud.animate().cancel(); hud.scaleX = 1.055f; hud.scaleY = 1.055f
@@ -368,9 +390,11 @@ class MochiActivity : ThemedActivity() {
         best = maxOf(best, scene.game.score)
         saveRecord()
         val reward = NeutrinoRewards.mochi(scene.game.score)
-        if (!paid) {
-            paid = true
-            if (reward > 0) NeutrinoRepository(this).addBalance(reward)
+        // Payée par différence : une pause (même suivie d'une fermeture) puis la fin de partie
+        // versent en tout la récompense finale, jamais deux fois ni moins.
+        if (reward > rewardPaid) {
+            NeutrinoRepository(this).addBalance(reward - rewardPaid)
+            rewardPaid = reward
         }
         return reward
     }
@@ -382,7 +406,7 @@ class MochiActivity : ThemedActivity() {
             if (screen == Screen.PLAY) showOverlay(Screen.PAUSE)
             scene.setRunning(false)
             scene.setDecorating(false)
-            saveRecord()
+            settle()
         }
         super.onPause()
     }

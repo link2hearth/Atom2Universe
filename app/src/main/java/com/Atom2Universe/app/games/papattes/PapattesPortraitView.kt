@@ -16,6 +16,8 @@ class PapattesPortraitView(context: Context) : View(context) {
     /** Petit balancement, pour le menu. */
     var animated = false
         set(value) { field = value; invalidate() }
+    /** Une seule image suivante en attente, quel que soit le nombre de dessins demandés par ailleurs. */
+    private val next = Runnable { invalidate() }
 
     override fun onDraw(canvas: Canvas) {
         val c = critter
@@ -27,6 +29,7 @@ class PapattesPortraitView(context: Context) : View(context) {
         pose.standing(c, width / 2f, hipY - bob * scale, scale, PapattesWalker.START_SPREAD + bob * 2f)
         pose.bodyAngle = bob
         art.critter(canvas, c, pose)
-        if (animated && isShown) postInvalidateDelayed(33)
+        removeCallbacks(next)
+        if (animated && isShown) postDelayed(next, 33)
     }
 }

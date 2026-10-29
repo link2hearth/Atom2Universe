@@ -113,6 +113,13 @@ class ReflexGame(seed: Long = System.nanoTime()) {
         const val CHAIN_LENGTH = 3
         const val CHAIN_STEP = 0.42f
 
+        /**
+         * Sous cet avancement de l'anneau, un appui n'est plus « trop tôt » mais un raté :
+         * toucher chaque particule dès sa naissance ne doit pas tenir une partie entière.
+         * Le noyau lourd n'est pas concerné (son premier appui n'est pas jugé).
+         */
+        const val EARLY_MISS_PROGRESS = 0.4f
+
         private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
     }
 
@@ -420,12 +427,31 @@ class ReflexGame(seed: Long = System.nanoTime()) {
                 if (lower) {
                     listener?.onWrongOrder(p)
                     breakCombo()
+                } else if (p.ringProgress(at) < EARLY_MISS_PROGRESS) {
+                    missEarly(p)
                 } else {
                     resolveHit(p, at)
                 }
             }
-            else -> resolveHit(p, at)
+            else -> if (p.ringProgress(at) < EARLY_MISS_PROGRESS) missEarly(p) else resolveHit(p, at)
         }
+    }
+
+    /** Appui alors que l'anneau est encore loin : compté comme une particule ratée. */
+    private fun missEarly(p: Particle) {
+        p.alive = false
+        listener?.onMiss(p)
+        // Comme dans expire() : une chaîne ratée s'effondre entière, pour une seule vie.
+        if (p.kind == ParticleKind.CHAIN) {
+            for (q in particles) {
+                if (q.alive && q.chainId == p.chainId) {
+                    q.alive = false
+                    listener?.onMiss(q)
+                }
+            }
+        }
+        particles.removeAll { !it.alive }
+        loseLife()
     }
 
     private fun grade(p: Particle, at: Float): HitGrade {

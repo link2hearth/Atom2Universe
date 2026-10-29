@@ -43,9 +43,21 @@ class ReflexGameTest {
         assertEquals(1, g.combo)
 
         val p2 = g.nextParticle()
-        g.tap(p2.x, p2.y)   // tout juste né : bien trop tôt
+        // Anneau aux trois cinquièmes : trop tôt, mais pas assez pour être un raté.
+        g.update((p2.ringStart + (p2.hitAt - p2.ringStart) * 0.6f - g.time).coerceAtLeast(0f))
+        g.tap(p2.x, p2.y)
         assertEquals(0, g.combo)
         assertEquals(ReflexGame.START_LIVES, g.lives)
+    }
+
+    @Test
+    fun tappingAtBirthIsAMiss() {
+        val g = newGame()
+        val p = g.nextParticle()
+        g.tap(p.x, p.y)   // tout juste né : l'anneau est encore loin
+        assertTrue(!p.alive)
+        assertEquals(ReflexGame.START_LIVES - 1, g.lives)
+        assertEquals(1, g.misses)
     }
 
     @Test

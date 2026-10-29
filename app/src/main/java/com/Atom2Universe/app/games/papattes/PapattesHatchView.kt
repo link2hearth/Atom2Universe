@@ -48,6 +48,12 @@ class PapattesHatchView(context: Context) : View(context) {
     private val eggRect = RectF()
     private val shifted = RectF()
     private val path = Path()
+    /** Le halo, de rayon 1 et centré sur l'origine : posé par sa matrice, refait seulement quand son opacité change. */
+    private var glowShader: RadialGradient? = null
+    private var glowAlpha = -1
+    private val glowMatrix = android.graphics.Matrix()
+    /** Une seule image suivante en attente, quand l'œuf ne bouge plus qu'à peine. */
+    private val next = Runnable { invalidate() }
     private var lastFrame = 0L
     private var time = 0f
     private var shake = 0f
@@ -165,9 +171,16 @@ class PapattesHatchView(context: Context) : View(context) {
         // Halo chaud derrière l'œuf, qui grandit avec la chaleur.
         val glow = if (phase == Phase.RUB) warmth else 1f
         if (glow > 0f) {
-            fill.shader = RadialGradient(eggRect.centerX(), eggRect.centerY(), eggRect.height() * (.55f + .35f * glow),
-                (((180 * glow).toInt() shl 24) or 0xFFB347), 0x00FFB347, Shader.TileMode.CLAMP)
-            canvas.drawCircle(eggRect.centerX(), eggRect.centerY(), eggRect.height() * (.55f + .35f * glow), fill)
+            val alpha = (180 * glow).toInt()
+            val shader = glowShader?.takeIf { alpha == glowAlpha }
+                ?: RadialGradient(0f, 0f, 1f, ((alpha shl 24) or 0xFFB347), 0x00FFB347, Shader.TileMode.CLAMP)
+                    .also { glowShader = it; glowAlpha = alpha }
+            val radius = eggRect.height() * (.55f + .35f * glow)
+            glowMatrix.setScale(radius, radius)
+            glowMatrix.postTranslate(eggRect.centerX(), eggRect.centerY())
+            shader.setLocalMatrix(glowMatrix)
+            fill.shader = shader
+            canvas.drawCircle(eggRect.centerX(), eggRect.centerY(), radius, fill)
             fill.shader = null
         }
         if (phase != Phase.RUB) drawCritter(canvas)
@@ -188,9 +201,15 @@ class PapattesHatchView(context: Context) : View(context) {
             canvas.drawCircle(s.x, s.y, eggRect.width() * .02f, fill)
         }
         fill.alpha = 255
-        if (isShown && (phase != Phase.DONE || doneTime < 3f || sparks.any { it.life > 0f })) postInvalidateOnAnimation()
-        else if (isShown) postInvalidateDelayed(33)
+        removeCallbacks(next)
+        if (!isShown) return
+        if (phase == Phase.RUB && still()) lastFrame = 0L
+        else if (phase != Phase.DONE || doneTime < 3f || sparks.any { it.life > 0f }) postInvalidateOnAnimation()
+        else postDelayed(next, 33)
     }
+
+    /** L'œuf froid, immobile et sans étincelles ne change plus d'aspect : il attend le doigt. */
+    private fun still() = !rubbing && warmth <= 0f && rubSpeed <= 0f && shake <= 0f && sparks.none { it.life > 0f }
 
     private fun drawCracks(canvas: Canvas, amount: Float) {
         crackPaint.strokeWidth = eggRect.width() * .018f
@@ -276,7 +295,8 @@ class PapattesHatchView(context: Context) : View(context) {
                     phase = Phase.DONE
                     burst(eggRect.centerX(), eggRect.centerY(), 30, 0xFFFFD34D.toInt())
                     performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                    onDone?.invoke()
+                    // Hors du dessin : l'écran met à jour ses textes et ses boutons.
+                    post { onDone?.invoke() }
                 }
             }
             Phase.DONE -> doneTime += dt
@@ -369,6 +389,7 @@ class PapattesHatchView(context: Context) : View(context) {
                     Phase.PEEL -> grabbed?.let { it.dx += dx; it.dy += dy }
                     Phase.DONE -> Unit
                 }
+                postInvalidateOnAnimation()
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 velocity?.addMovement(event)

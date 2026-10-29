@@ -16,6 +16,8 @@ class MochiView(context: Context) : View(context) {
     var game = MochiGame(); private set
     var onChanged: (() -> Unit)? = null
     var onFinished: (() -> Unit)? = null
+    /** Chaque image du décor derrière les menus (environ 30 par seconde), pour animer le menu au même rythme. */
+    var onDecorFrame: (() -> Unit)? = null
     private val art = MochiArt(context)
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val popupTypeface = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
@@ -34,10 +36,19 @@ class MochiView(context: Context) : View(context) {
     private var dragX = 0f
     private var dragY = 0f
     private var preview = MochiGame.Preview.EMPTY
+    /** Temps depuis le dernier calcul de l'arc, et le geste pour lequel il a été calculé. */
+    private var previewAge = PREVIEW_PERIOD
+    private var previewX = 0f
+    private var previewY = 0f
     private var demo = 0f
     private var demoPreview = MochiGame.Preview.EMPTY
+    private var demoAge = PREVIEW_PERIOD
+    private var demoX = 0f
+    private var demoY = 0f
     private var pop = 0f
-    private var lastHud = emptyList<Int>()
+    private val hud = IntArray(8)
+    private val lastHud = IntArray(8)
+    private var hudShown = false
     private var cameraBottom = 0f
     private var impact = 0f
     private var finishDelay = -1f
@@ -82,14 +93,28 @@ class MochiView(context: Context) : View(context) {
             }
             biomeBlend = (biomeBlend + dt * .7f).coerceAtMost(1f)
             if (pointer != -1 && game.phase != MochiGame.Phase.ATTACHED) cancelAim()
-            // Les prises mobiles et les abeilles bougent pendant la visée : l'arc suit à chaque image.
-            preview = if (pointer != -1) game.preview(dragX, dragY) else MochiGame.Preview.EMPTY
+            // L'arc suit le doigt dès qu'il bouge ; doigt immobile, il suit 30 fois par seconde les prises
+            // mobiles et les abeilles, qui vont lentement.
+            if (pointer != -1) {
+                previewAge += dt
+                if (previewAge >= PREVIEW_PERIOD || abs(dragX - previewX) > PREVIEW_MOVE || abs(dragY - previewY) > PREVIEW_MOVE) {
+                    preview = game.preview(dragX, dragY)
+                    previewAge = 0f; previewX = dragX; previewY = dragY
+                }
+            } else preview = MochiGame.Preview.EMPTY
             if (active && game.shots == 0 && pointer == -1 && game.phase == MochiGame.Phase.ATTACHED) {
                 demo += dt
                 val drag = demoDrag()
                 val progress = demoProgress()
-                demoPreview = if (progress > .05f) game.preview(drag.x * progress, drag.y * progress) else MochiGame.Preview.EMPTY
-            } else demoPreview = MochiGame.Preview.EMPTY
+                val pullX = drag.x * progress
+                val pullY = drag.y * progress
+                demoAge += dt
+                if (progress <= .05f) { demoPreview = MochiGame.Preview.EMPTY; demoAge = PREVIEW_PERIOD }
+                else if (demoAge >= PREVIEW_PERIOD || abs(pullX - demoX) > PREVIEW_MOVE || abs(pullY - demoY) > PREVIEW_MOVE) {
+                    demoPreview = game.preview(pullX, pullY)
+                    demoAge = 0f; demoX = pullX; demoY = pullY
+                }
+            } else { demoPreview = MochiGame.Preview.EMPTY; demoAge = PREVIEW_PERIOD }
             pop = (pop - dt * 4f).coerceAtLeast(0f)
             impact = (impact - dt * 3f).coerceAtLeast(0f)
             cameraBottom += (game.bottom - cameraBottom) * (1f - exp(-dt * 12f))
@@ -105,10 +130,11 @@ class MochiView(context: Context) : View(context) {
             popups.removeAll { it.life <= 0 }
             bursts.forEach { it.age += dt }
             bursts.removeAll { it.age >= .65f }
-            val hud = listOf(game.score, game.heightMetres, game.combo, game.shots, game.attachedId,
-                game.phase.ordinal, game.bubbles, game.peaches)
-            if (hud != lastHud) { lastHud = hud; onChanged?.invoke() }
+            hud[0] = game.score; hud[1] = game.heightMetres; hud[2] = game.combo; hud[3] = game.shots
+            hud[4] = game.attachedId; hud[5] = game.phase.ordinal; hud[6] = game.bubbles; hud[7] = game.peaches
+            if (!hudShown || !hud.contentEquals(lastHud)) { hud.copyInto(lastHud); hudShown = true; onChanged?.invoke() }
             invalidate()
+            if (!active) onDecorFrame?.invoke()
             if (active && game.phase == MochiGame.Phase.OVER) {
                 if (finishDelay < 0f) {
                     finishDelay = .8f
@@ -174,7 +200,8 @@ class MochiView(context: Context) : View(context) {
         finishDelay = -1f
         pop = 0f
         demo = 0f
-        lastHud = emptyList()
+        demoAge = PREVIEW_PERIOD
+        hudShown = false
         cancelAim()
         setRunning(true)
         onChanged?.invoke()
@@ -204,6 +231,7 @@ class MochiView(context: Context) : View(context) {
         pointer = -1
         dragX = 0f; dragY = 0f
         preview = MochiGame.Preview.EMPTY
+        previewAge = PREVIEW_PERIOD
         parent?.requestDisallowInterceptTouchEvent(false)
     }
 
@@ -215,6 +243,7 @@ class MochiView(context: Context) : View(context) {
                 pointer = event.getPointerId(0)
                 downX = event.x; downY = event.y
                 dragX = 0f; dragY = 0f
+                previewAge = PREVIEW_PERIOD
                 parent?.requestDisallowInterceptTouchEvent(true)
             }
             MotionEvent.ACTION_MOVE -> {
@@ -282,6 +311,7 @@ class MochiView(context: Context) : View(context) {
         for (wall in game.walls) if (sy(wall.top) < 730f && sy(wall.bottom) > -30f) {
             art.wall(canvas, wall.left, sy(wall.top), wall.right, sy(wall.bottom), wall.material, wall.id)
         }
+        art.trimWalls()
         val shownPreview = if (pointer != -1) preview else demoPreview
         for (flower in game.flowers) {
             if (!flower.alive) continue
@@ -385,5 +415,12 @@ class MochiView(context: Context) : View(context) {
         }
         p.alpha = 255
         if (danger) points.lastOrNull()?.let { art.cross(canvas, it.x, sy(it.y), visualTime) }
+    }
+
+    private companion object {
+        /** Doigt immobile : l'arc se recalcule au plus tous ces temps-là (s). */
+        const val PREVIEW_PERIOD = 1f / 30f
+        /** Un geste qui bouge de plus que ça (unités du jardin) recalcule l'arc tout de suite. */
+        const val PREVIEW_MOVE = 1f
     }
 }

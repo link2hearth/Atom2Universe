@@ -29,14 +29,15 @@ open class SearchEngine(var config: Config) {
     private lateinit var searchParameters: SearchParameters
 
     protected var initialized = false
+    @Volatile
     var isSearching = false
         protected set
 
-    // Think limits
-    private var stop = false
-    private var thinkToTime: Long = 0
-    private var thinkToNodes = 0
-    private var thinkToDepth = 0
+    // Think limits (stop() writes them from another thread)
+    @Volatile private var stop = false
+    @Volatile private var thinkToTime: Long = 0
+    @Volatile private var thinkToNodes = 0
+    @Volatile private var thinkToDepth = 0
 
     val board: Board = Board()
     private var observer: SearchObserver? = null
@@ -858,15 +859,20 @@ open class SearchEngine(var config: Config) {
 
         if (depth <= 6) {
             notifyMoveFound(bestMove, bestMoveScore, alpha, beta)
-        } else if (!panicTime && rootScore < previousRootScore - 100) {
+        } else if (!panicTime && !stop && rootScore < previousRootScore - 100) {
             panicTime = true
             updateSearchParameters(searchParameters)
         }
+
+        // With a fixed move time: stop on a mate, or when half of the time is gone (the next
+        // iteration would not finish anyway)
+        val fixedMoveTime = searchParameters.moveTime != Int.MAX_VALUE && thinkToTime != Long.MAX_VALUE
 
         if (searchParameters.manageTime() && (// Under time restrictions and...
                 abs(rootScore) > VALUE_IS_MATE // Mate found or
                         || time2 + (time2 - time1 shl 1) > thinkToTime) // It will not likely finish the next iteration
 
+                || fixedMoveTime && (abs(rootScore) > VALUE_IS_MATE || (time2 - startTime) * 2 > thinkToTime - startTime)
                 || depth == MAX_DEPTH
                 || depth >= thinkToDepth
                 || abs(rootScore) == Evaluator.MATE) { // Search limit reached
@@ -880,25 +886,28 @@ open class SearchEngine(var config: Config) {
         var ponderMove = Move.NONE
 
         synchronized(searchLock) {
+            // finally: an unexpected exception must not leave the engine "searching" forever
             try {
-                prepareRun()
-                while (true) {
-                    runStepped()
+                try {
+                    prepareRun()
+                    while (true) {
+                        runStepped()
+                    }
+                } catch (ignored: SearchFinishedException) {
                 }
-            } catch (ignored: SearchFinishedException) {
+
+                // Return the board to the initial position
+                board.undoMove(initialPly)
+
+                bestMove = this.bestMove
+                ponderMove = globalPonderMove
+
+                while (searchParameters.isPonder && !stop) {
+                    sleep(10)
+                }
+            } finally {
+                isSearching = false
             }
-
-            // Return the board to the initial position
-            board.undoMove(initialPly)
-
-            bestMove = this.bestMove
-            ponderMove = globalPonderMove
-
-            while (searchParameters.isPonder && !stop) {
-                sleep(10)
-            }
-
-            isSearching = false
         }
 
         observer?.bestMove(bestMove, ponderMove)

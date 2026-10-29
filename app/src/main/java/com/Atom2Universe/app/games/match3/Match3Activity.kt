@@ -27,6 +27,7 @@ import org.json.JSONArray
 class Match3Activity : ThemedActivity() {
     private val prefs by lazy { getSharedPreferences("match3_forge", MODE_PRIVATE) }
     private var forge: ForgeView? = null
+    private var arcade: Match3View? = null
     private var screen = "menu"
     private lateinit var status: TextView
     private lateinit var objective: TextView
@@ -123,7 +124,11 @@ class Match3Activity : ThemedActivity() {
     private fun store() { forge?.let { val key = when {
         it.game.slagEndless -> "slag_run"; it.game.endless -> "endless_run"; else -> "run"
     }; prefs.edit().putString(key, it.stableSave()).putString("last_run", key).apply() } }
-    private fun leave() { timerHandler.removeCallbacks(timerTick); store(); forge?.pause(); forge = null; sensor.disable() }
+    private fun leave() {
+        // pause() first: it finishes a move under way, then store() saves it.
+        timerHandler.removeCallbacks(timerTick); forge?.pause(); store(); forge = null; sensor.disable()
+        arcade?.pause(); arcade = null
+    }
     private fun readGame(value: String): ForgeGame? = runCatching {
         val json = JSONObject(value)
         var cols = json.optInt("cols", 8); var rows = json.optInt("rows", 10)
@@ -352,6 +357,7 @@ class Match3Activity : ThemedActivity() {
         leave(); screen = "arcade"
         setContentView(R.layout.activity_match3)
         val board = findViewById<Match3View>(R.id.match3_view)
+        arcade = board
         val score = findViewById<TextView>(R.id.match3_score)
         val gravityIndicator = findViewById<GravityIndicatorView>(R.id.match3_gravity)
         gravityIndicator.direction = board.gravityDirection
@@ -368,11 +374,12 @@ class Match3Activity : ThemedActivity() {
         findViewById<View>(R.id.match3_info_button).setOnClickListener {
             showGameRules(R.string.match3_title, R.string.match3_rules)
         }
+        board.resume()
     }
 
-    override fun onPause() { timerHandler.removeCallbacks(timerTick); store(); forge?.pause(); sensor.disable(); super.onPause() }
+    override fun onPause() { timerHandler.removeCallbacks(timerTick); forge?.pause(); store(); arcade?.pause(); sensor.disable(); super.onPause() }
     override fun onResume() {
-        super.onResume(); forge?.resume(); if (forge != null && sensor.canDetectOrientation()) sensor.enable()
+        super.onResume(); forge?.resume(); arcade?.resume(); if (forge != null && sensor.canDetectOrientation()) sensor.enable()
         timerHandler.removeCallbacks(timerTick); if (forge != null) timerHandler.post(timerTick)
     }
     override fun onSaveInstanceState(outState: Bundle) {

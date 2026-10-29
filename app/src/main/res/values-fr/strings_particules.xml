@@ -91,4 +91,19 @@
     <string name="particules_relic_panic_trainer_name">Entraînement</string>
     <string name="particules_relic_panic_trainer_desc">Contact doigt activé en 30s</string>
     <string name="particules_effect_seconds">%1$d s</string>
+    <string name="particules_pu_extend">RAQUETTE+</string>
+    <string name="particules_pu_multiball">MULTI</string>
+    <string name="particules_pu_laser">LASER</string>
+    <string name="particules_pu_speed">RAPIDE</string>
+    <string name="particules_pu_slow">LENT</string>
+    <string name="particules_pu_floor">SOL</string>
+    <string name="particules_pu_pierce">PERFORANT</string>
+    <string name="particules_pu_fire">FEU</string>
+    <string name="particules_pu_magnet">AIMANT</string>
+    <string name="particules_pu_shield">BOUCLIER</string>
+    <string name="particules_shield_saved">BOUCLIER !</string>
+    <string name="particules_second_chance">SECONDE CHANCE !</string>
+    <string name="particules_combo_float">x%1$d combo %2$d</string>
+    <string name="particules_panic_recharge">CONTACT ! Recharge… %1$.1fs</string>
+    <string name="particules_panic_ready">CONTACT ! Touche une brique (1 / 5s)</string>
 </resources>

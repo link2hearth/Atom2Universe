@@ -122,17 +122,50 @@ internal class MochiArt(context: Context) {
         c.restore()
     }
 
+    /** Les tracés d'un mur à sa place à l'écran ; refaits seulement quand il bouge (la caméra au repos ne les refait pas). */
+    private class WallShape {
+        var left = Float.NaN; var top = 0f; var right = 0f; var bottom = 0f
+        val strands = arrayOf(Path(), Path())
+        val spikes = ArrayList<Path>()
+        var count = 0
+        var used = true
+    }
+    private val wallShapes = HashMap<Int, WallShape>()
+
     /** Ronces tressées : aucune arête ne ressemble à une plateforme accueillante. */
     fun wall(c: Canvas, left: Float, top: Float, right: Float, bottom: Float, material: MochiWall.Material, id: Int) {
         val soft = material == MochiWall.Material.RUBBER
+        val shape = wallShape(left, top, right, bottom, id)
         p.style = Paint.Style.FILL
         p.color = if (soft) 0xFF254D43.toInt() else 0xFF433E48.toInt()
         c.drawRoundRect(left, top, right, bottom, 5f, 5f, p)
         c.save(); c.clipRect(left, top, right, bottom)
         p.style = Paint.Style.STROKE; p.strokeWidth = 4f; p.strokeCap = Paint.Cap.ROUND
         p.color = if (soft) 0xFF76BD91.toInt() else 0xFF957784.toInt()
+        for (strand in shape.strands) c.drawPath(strand, p)
+        p.style = Paint.Style.FILL
+        p.color = if (soft) 0xFFD1E5A4.toInt() else 0xFFE3B3B1.toInt()
+        for (i in 0 until shape.count) c.drawPath(shape.spikes[i], p)
+        c.restore()
+    }
+
+    /** Oublie les murs qui n'ont pas été dessinés depuis le dernier appel. */
+    fun trimWalls() {
+        val shapes = wallShapes.values.iterator()
+        while (shapes.hasNext()) {
+            val shape = shapes.next()
+            if (!shape.used) shapes.remove() else shape.used = false
+        }
+    }
+
+    private fun wallShape(left: Float, top: Float, right: Float, bottom: Float, id: Int): WallShape {
+        val shape = wallShapes.getOrPut(id) { WallShape() }
+        shape.used = true
+        if (shape.left == left && shape.top == top && shape.right == right && shape.bottom == bottom) return shape
+        shape.left = left; shape.top = top; shape.right = right; shape.bottom = bottom
         if (bottom - top > right - left) {
             for (strand in 0..1) {
+                val path = shape.strands[strand]
                 path.reset()
                 var yy = top
                 while (yy <= bottom + 5f) {
@@ -140,10 +173,10 @@ internal class MochiArt(context: Context) {
                     if (yy == top) path.moveTo(xx, yy) else path.lineTo(xx, yy)
                     yy += 5f
                 }
-                c.drawPath(path, p)
             }
         } else {
             for (strand in 0..1) {
+                val path = shape.strands[strand]
                 path.reset()
                 var xx = left
                 while (xx <= right + 5f) {
@@ -151,25 +184,31 @@ internal class MochiArt(context: Context) {
                     if (xx == left) path.moveTo(xx, yy) else path.lineTo(xx, yy)
                     xx += 5f
                 }
-                c.drawPath(path, p)
             }
         }
-        p.style = Paint.Style.FILL
-        p.color = if (soft) 0xFFD1E5A4.toInt() else 0xFFE3B3B1.toInt()
+        shape.count = 0
         var xx = left + 5f
         while (xx < right) {
-            path.reset(); path.moveTo(xx - 3, top + 8); path.lineTo(xx + 2, top); path.lineTo(xx + 4, top + 8)
+            val path = spike(shape)
+            path.moveTo(xx - 3, top + 8); path.lineTo(xx + 2, top); path.lineTo(xx + 4, top + 8)
             path.moveTo(xx - 3, bottom - 8); path.lineTo(xx + 2, bottom); path.lineTo(xx + 4, bottom - 8)
-            c.drawPath(path, p); xx += 15f
+            xx += 15f
         }
         var yy = top + 6f
         while (yy < bottom) {
-            path.reset(); path.moveTo(left + 8, yy - 3); path.lineTo(left, yy + 2); path.lineTo(left + 8, yy + 4)
+            val path = spike(shape)
+            path.moveTo(left + 8, yy - 3); path.lineTo(left, yy + 2); path.lineTo(left + 8, yy + 4)
             path.moveTo(right - 8, yy - 3); path.lineTo(right, yy + 2); path.lineTo(right - 8, yy + 4)
-            c.drawPath(path, p); yy += 15f
+            yy += 15f
         }
-        c.restore()
+        return shape
     }
+
+    private fun spike(shape: WallShape): Path {
+        if (shape.count == shape.spikes.size) shape.spikes += Path()
+        return shape.spikes[shape.count++].also { it.reset() }
+    }
+
     fun body(c: Canvas, x: Float, y: Float, stretch: Float, tilt: Float, time: Float,
         hurt: Boolean = false, shield: Boolean = false, gaze: Float = 0f, hero: Boolean = false, size: Float = 69f) {
         c.save(); c.translate(x, y)

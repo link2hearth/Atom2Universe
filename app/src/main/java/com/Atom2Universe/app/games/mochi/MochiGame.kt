@@ -101,6 +101,10 @@ class MochiGame(val seed: Long = Random.nextLong()) {
     private var departure = 0
     private var departureY = START_Y
     private var highestFlower = 0
+    private val flightSegments = ArrayList<MochiFlight.Segment>(3)
+    private val flightHits = ArrayList<MochiFlight.Hit>(2)
+    private var reachedX = 0f
+    private var reachedY = 0f
     /** La fleur de départ attend le premier tir ; elle ne fane qu'une fois revisitée. */
     private var frontier = Flower(0, x, y, true)
 
@@ -146,22 +150,38 @@ class MochiGame(val seed: Long = Random.nextLong()) {
         for (i in 1..PREVIEW_STEPS) {
             val future = time + i * STEP
             val trace = traceFlight(state, future, attachedId, i * STEP, max(20f, previewBottom - RADIUS))
-            val segments = travelled(trace)
-            val endpoint = segments.lastOrNull()?.let { Point(it.bx, it.by) } ?: Point(state.x, state.y)
+            reached(trace, state)
+            val endX = reachedX
+            val endY = reachedY
             state = trace.motion.state
-            previewBottom = max(previewBottom, min(endpoint.y - 330f, y - 70f))
-            if (i % PREVIEW_EVERY == 0) points += endpoint
+            previewBottom = max(previewBottom, min(endY - 330f, y - 70f))
+            if (i % PREVIEW_EVERY == 0) points += Point(endX, endY)
             when {
                 trace.landing != null -> { outcome = Outcome.LAND; flowerId = trace.landing.flower.id }
                 trace.danger != null -> outcome = Outcome.DANGER
                 trace.fallen -> outcome = Outcome.FALL
             }
             if (outcome != Outcome.NONE) {
+                val endpoint = Point(endX, endY)
                 if (points.lastOrNull() != endpoint) points += endpoint
                 break
             }
         }
         return Preview(points, outcome, flowerId)
+    }
+
+    /** Le bout de [travelled] dans [reachedX], [reachedY], sans fabriquer la liste : le guide trace des centaines de pas. */
+    private fun reached(trace: Trace, start: MochiFlight.State) {
+        var last: MochiFlight.Segment? = null
+        for (segment in trace.motion.segments) {
+            if (segment.startFraction > trace.limit) break
+            last = segment
+        }
+        if (last == null) { reachedX = start.x; reachedY = start.y; return }
+        if (last.endFraction <= trace.limit) { reachedX = last.bx; reachedY = last.by; return }
+        val t = ((trace.limit - last.startFraction) / (last.endFraction - last.startFraction)).coerceIn(0f, 1f)
+        reachedX = last.ax + (last.bx - last.ax) * t
+        reachedY = last.ay + (last.by - last.ay) * t
     }
 
     fun update(seconds: Float) {
@@ -178,18 +198,23 @@ class MochiGame(val seed: Long = Random.nextLong()) {
     /** Accroche à la fleur entière, quelle que soit la direction du vol. */
     private fun landingBetween(ax: Float, ay: Float, bx: Float, by: Float, atTime: Float,
         origin: Int, elapsed: Float, duration: Float = STEP): Landing? {
-        return flowers.asSequence().filter {
-            it.alive && (it.id != origin || elapsed > .25f)
-        }.mapNotNull { flower ->
-            flowerContact(flower, ax, ay, bx, by, atTime - duration, atTime, catchRadiusFor(flower))
-                ?.let { Landing(flower, it.fraction, it.error) }
-        }.minByOrNull { it.fraction }
+        var best: Landing? = null
+        for (flower in flowers) {
+            if (!flower.alive || (flower.id == origin && !(elapsed > .25f))) continue
+            val contact = flowerContact(flower, ax, ay, bx, by, atTime - duration, atTime, catchRadiusFor(flower)) ?: continue
+            if (best == null || contact.fraction < best.fraction) best = Landing(flower, contact.fraction, contact.error)
+        }
+        return best
     }
 
-    /** Contacts dans l'ordre du vol, y compris de part et d'autre d'un ricochet. */
+    /**
+     * Contacts dans l'ordre du vol, y compris de part et d'autre d'un ricochet.
+     * Les segments du résultat vivent dans des listes réutilisées : valables jusqu'au tracé suivant.
+     */
     private fun traceFlight(state: MochiFlight.State, atTime: Float, origin: Int, elapsed: Float,
         floor: Float = max(20f, bottom - RADIUS)): Trace {
-        val motion = MochiFlight.step(state, STEP, walls, minBounce = MIN_BOUNCE)
+        val motion = MochiFlight.step(state, STEP, walls, minBounce = MIN_BOUNCE,
+            segments = flightSegments, hits = flightHits)
         var limit = 1f
         var landing: Landing? = null
         var danger: Hazard? = null
@@ -407,8 +432,14 @@ class MochiGame(val seed: Long = Random.nextLong()) {
         }
     }
 
+    /**
+     * Accroché, Mochi a déjà de quoi faire tout le vol suivant : la caméra n'y monte pas plus haut
+     * que sa prise moins 70. Le jardin se prépare donc à l'arrivée, pas en plein vol ; même graine,
+     * mêmes sections, car le générateur ne lit rien de ce qui change en dessous.
+     */
     private fun extend() {
-        while (frontier.y < bottom + HEIGHT + 200f) {
+        val reach = if (phase == Phase.ATTACHED) max(bottom, y - 70f) else bottom
+        while (frontier.y < reach + HEIGHT + 200f) {
             val section = garden.next(frontier, walls, flowers)
             frontier = section.next
             flowers += section.next

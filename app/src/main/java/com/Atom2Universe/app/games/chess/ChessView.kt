@@ -109,6 +109,10 @@ class ChessView @JvmOverloads constructor(
         alpha = 180
     }
 
+    private val dragShadowPaint = Paint().apply {
+        alpha = 100
+    }
+
     private val coordinateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#888888")
         textAlign = Paint.Align.CENTER
@@ -285,10 +289,7 @@ class ChessView @JvmOverloads constructor(
         val y = dragY - pieceSize / 2
 
         // Ombre légère pour la pièce draggée
-        val shadowPaint = Paint().apply {
-            alpha = 100
-        }
-        canvas.drawBitmap(bitmap, x + 4, y + 4, shadowPaint)
+        canvas.drawBitmap(bitmap, x + 4, y + 4, dragShadowPaint)
         canvas.drawBitmap(bitmap, x, y, null)
     }
 
@@ -329,8 +330,7 @@ class ChessView @JvmOverloads constructor(
     private fun scalePieceBitmaps() {
         if (squareSize <= 0) return
 
-        // Libérer les anciens bitmaps
-        scaledPieceBitmaps.values.forEach { it.recycle() }
+        // Pas de recycle() : la barre des prises affiche encore les anciens bitmaps
         scaledPieceBitmaps.clear()
 
         // Sprites à 70% de la taille de la case
@@ -408,6 +408,9 @@ class ChessView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 touchStartX = event.x
                 touchStartY = event.y
+                // Une pièce touchée lors d'un tap précédent ne doit pas se mettre à glisser
+                draggedPiece = null
+                draggedFrom = null
 
                 val square = getTouchedSquare(event.x, event.y)
                 if (square != null) {
@@ -442,7 +445,17 @@ class ChessView @JvmOverloads constructor(
                 return true
             }
 
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+            // Geste annulé (le parent a repris le toucher) : ni coup ni tap
+            MotionEvent.ACTION_CANCEL -> {
+                val wasDragging = isDragging
+                isDragging = false
+                draggedPiece = null
+                draggedFrom = null
+                if (wasDragging) invalidate()
+                return true
+            }
+
+            MotionEvent.ACTION_UP -> {
                 if (isDragging) {
                     // Gérer le drop
                     val dropSquare = getTouchedSquare(event.x, event.y)

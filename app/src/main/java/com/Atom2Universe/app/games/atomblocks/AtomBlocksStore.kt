@@ -3,10 +3,17 @@ package com.Atom2Universe.app.games.atomblocks
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.Executors
 
-/** Independent checkpoints per mode/level; a daily puzzle never expires. */
+/** Independent checkpoints per mode/level; only the most recently played daily puzzles are kept. */
 internal class AtomBlocksStore(context: Context) {
     val prefs = context.getSharedPreferences("atom_blocks", Context.MODE_PRIVATE)
+
+    companion object {
+        private const val DAILY_KEPT = 30
+        // One writer for every instance: a recreated activity must read what the old one queued.
+        private val writer = Executors.newSingleThreadExecutor { Thread(it, "AtomBlocksSave").apply { isDaemon = true } }
+    }
 
     fun key(mode: AtomBlocksEngine.Mode, level: Int, seed: Long) = when (mode) {
         AtomBlocksEngine.Mode.ADVENTURE -> "adventure_$level"
@@ -14,21 +21,43 @@ internal class AtomBlocksStore(context: Context) {
         else -> mode.name.lowercase(java.util.Locale.ROOT)
     }
 
-    fun save(game: AtomBlocksEngine) {
+    fun save(game: AtomBlocksEngine) = write(game.snapshot())
+
+    /** The copy is taken now; encoding the 200 undo frames happens off the UI thread. */
+    fun saveLater(game: AtomBlocksEngine) {
         val snapshot = game.snapshot()
-        val key = key(game.mode, game.level, game.seed)
-        prefs.edit().putString("save_$key", encode(snapshot).toString())
+        writer.execute { write(snapshot) }
+    }
+
+    /** Waits for queued saves, so a read never sees an older checkpoint. */
+    fun flush() { runCatching { writer.submit(Runnable {}).get() } }
+
+    private fun write(snapshot: AtomBlocksEngine.Snapshot) {
+        val key = key(snapshot.mode, snapshot.level, snapshot.seed)
+        val editor = prefs.edit().putString("save_$key", encode(snapshot).toString())
             .putString("last", key)
-            .putInt("best_${game.mode.name}", maxOf(best(game.mode), game.score))
-            .apply()
-        if (game.won) prefs.edit().putBoolean("complete_$key", true).apply()
+            .putInt("best_${snapshot.mode.name}", maxOf(best(snapshot.mode), snapshot.state.score))
+        if (snapshot.state.won) editor.putBoolean("complete_$key", true)
+        if (snapshot.mode == AtomBlocksEngine.Mode.DAILY) forgetOldDailies(editor, key)
+        editor.apply()
+    }
+
+    private fun forgetOldDailies(editor: android.content.SharedPreferences.Editor, current: String) {
+        val recent = prefs.getString("daily_recent", null)?.split(',')?.filter { it.isNotEmpty() && it != current }.orEmpty()
+        val kept = (listOf(current) + recent).take(DAILY_KEPT)
+        editor.putString("daily_recent", kept.joinToString(","))
+        for (name in prefs.all.keys) {
+            if (!name.startsWith("save_daily_") && !name.startsWith("complete_daily_")) continue
+            if (name.substringAfter('_') !in kept) editor.remove(name)
+        }
     }
 
     fun best(mode: AtomBlocksEngine.Mode) = prefs.getInt("best_${mode.name}", 0)
     fun completed(level: Int) = prefs.getBoolean("complete_adventure_$level", false)
-    fun lastKey(): String? = prefs.getString("last", null)
+    fun lastKey(): String? { flush(); return prefs.getString("last", null) }
 
     fun load(key: String, game: AtomBlocksEngine): Boolean {
+        flush()
         val value = prefs.getString("save_$key", null) ?: return false
         return runCatching { game.restore(decode(JSONObject(value))) }.getOrDefault(false)
     }

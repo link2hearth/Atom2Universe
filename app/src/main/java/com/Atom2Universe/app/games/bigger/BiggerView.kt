@@ -175,6 +175,15 @@ class BiggerView @JvmOverloads constructor(
     }
     private val btnRect = RectF()
 
+    // Dégradés du bocal et du bord, refaits seulement quand le bocal bouge à l'écran.
+    private var jarShader: Shader? = null
+    private var jarShaderTop = 0f
+    private var jarShaderBottom = 0f
+    private var rimShader: Shader? = null
+    private var rimShaderY = 0f
+    private var overScoreText = ""
+    private var overRewardText = ""
+
     // Textes du score, reformatés seulement quand le chiffre change.
     private var shownScore = -1
     private var shownBest = -1
@@ -226,6 +235,13 @@ class BiggerView @JvmOverloads constructor(
             game.reset()
             clearEffects()
             bestAtStart = bestScore
+            // Nouvelle partie : le bocal reprend la hauteur de l'écran actuel, et les images
+            // se recuisent seulement si l'échelle a changé.
+            if (viewW > 0 && !geometryDirty) {
+                val old = scale
+                layoutJar()
+                if (scale != old) geometryDirty = true
+            }
         }
     }
 
@@ -240,7 +256,7 @@ class BiggerView @JvmOverloads constructor(
     override fun run() {
         while (running) {
             val now = System.nanoTime()
-            val dt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.05f)
+            val dt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.1f)
             lastNanos = now
             val enJeu = synchronized(game) {
                 if (pendingDrop && game.canDrop) {
@@ -274,8 +290,9 @@ class BiggerView @JvmOverloads constructor(
             }
             // L'échéance de l'image, comptée depuis son début : soixante par seconde, comme le
             // trébuchet. Le `sleep(4)` d'avant laissait la boucle suivre la file d'affichage,
-            // soit cent vingt fois par seconde sur la tablette.
-            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            // soit cent vingt fois par seconde sur la tablette. L'écran de fin ne bouge presque
+            // plus : vingt images par seconde lui suffisent.
+            val reste = (if (enJeu) FRAME_NANOS else IDLE_FRAME_NANOS) - (System.nanoTime() - now)
             if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
         }
     }
@@ -289,6 +306,9 @@ class BiggerView @JvmOverloads constructor(
 
         /** Une image toutes les 16,7 ms, soit soixante par seconde. */
         const val FRAME_NANOS = 1_000_000_000L / 60L
+
+        /** Hors partie (écran de fin) : vingt images par seconde. */
+        const val IDLE_FRAME_NANOS = 1_000_000_000L / 20L
     }
 
     // ── Entrées ──────────────────────────────────────────────────────────────
@@ -350,6 +370,8 @@ class BiggerView @JvmOverloads constructor(
                     overReward = NeutrinoRewards.bigger(game.score)
                     overRecord = game.score > bestAtStart
                     overBestTier = game.bestTier
+                    overScoreText = context.getString(R.string.bigger_score, game.score)
+                    overRewardText = context.getString(R.string.bigger_over_neutrinos, overReward)
                     onRunEnded?.invoke(game.score, game.bestTier)
                 }
             }
@@ -406,17 +428,29 @@ class BiggerView @JvmOverloads constructor(
 
     // ── Géométrie et images cuites ───────────────────────────────────────────
 
-    private fun rebuildGeometry() {
-        geometryDirty = false
+    /**
+     * Échelle et place du bocal. Avant le premier lâcher, sa hauteur suit l'écran ; ensuite
+     * elle est figée, et c'est l'échelle qui s'adapte pour le montrer en entier.
+     */
+    private fun layoutJar() {
         val w = viewW.toFloat(); val h = viewH.toFloat()
         floorY = h - stripH - 6f * dp
         val usable = floorY - topPad
-        // La largeur fixe l'échelle ; si l'écran est trop court même pour le plus petit
-        // bocal, c'est la hauteur qui la fixe.
-        scale = min((w - 2f * margin) / Accretion.WIDTH, usable / (Accretion.MIN_HEIGHT + Accretion.DROP_ZONE))
+        val byWidth = (w - 2f * margin) / Accretion.WIDTH
+        if (game.drops == 0) {
+            // La largeur fixe l'échelle ; si l'écran est trop court même pour le plus petit
+            // bocal, c'est la hauteur qui la fixe. Le bocal monte jusqu'où l'écran le permet.
+            val s = min(byWidth, usable / (Accretion.MIN_HEIGHT + Accretion.DROP_ZONE))
+            game.jarHeight = usable / s - Accretion.DROP_ZONE
+        }
+        scale = min(byWidth, usable / (game.jarHeight + Accretion.DROP_ZONE))
         jarLeft = (w - Accretion.WIDTH * scale) / 2f
-        // Le bocal monte jusqu'où l'écran le permet.
-        game.jarHeight = usable / scale - Accretion.DROP_ZONE
+    }
+
+    private fun rebuildGeometry() {
+        geometryDirty = false
+        val w = viewW.toFloat(); val h = viewH.toFloat()
+        layoutJar()
         iconR = min(12f * dp, (w - 2f * margin) / Accretion.TIER_COUNT * 0.38f)
 
         startBaking()
@@ -550,7 +584,11 @@ class BiggerView @JvmOverloads constructor(
     private fun drawJar(canvas: Canvas) {
         val l = sx(0f); val r = sx(Accretion.WIDTH)
         val top = sy(game.jarHeight); val bottom = sy(0f)
-        pFill.shader = LinearGradient(0f, top, 0f, bottom, 0x0A8C9CFF, 0x228C9CFF, Shader.TileMode.CLAMP)
+        if (jarShader == null || top != jarShaderTop || bottom != jarShaderBottom) {
+            jarShader = LinearGradient(0f, top, 0f, bottom, 0x0A8C9CFF, 0x228C9CFF, Shader.TileMode.CLAMP)
+            jarShaderTop = top; jarShaderBottom = bottom
+        }
+        pFill.shader = jarShader
         canvas.drawRect(l, top, r, bottom, pFill)
         pFill.shader = null
         pJar.color = 0x806C7BD6.toInt()
@@ -591,10 +629,18 @@ class BiggerView @JvmOverloads constructor(
         pRim.color = if (d > 0f) Color.argb(alpha, 255, 80, 60) else Color.argb(70, 255, 120, 110)
         canvas.drawLine(sx(0f), y, sx(Accretion.WIDTH), y, pRim)
         if (d > 0f) {
-            pFill.shader = LinearGradient(0f, y, 0f, y + 26f * dp,
-                Color.argb((d * 110 * beat).toInt(), 255, 60, 40), 0, Shader.TileMode.CLAMP)
+            // Dégradé opaque cuit une fois ; l'opacité du pinceau donne le battement.
+            if (rimShader == null || y != rimShaderY) {
+                rimShader = LinearGradient(0f, y, 0f, y + 26f * dp,
+                    Color.argb(255, 255, 60, 40), 0, Shader.TileMode.CLAMP)
+                rimShaderY = y
+            }
+            pFill.shader = rimShader
+            val keep = pFill.alpha
+            pFill.alpha = (d * 110 * beat).toInt().coerceIn(0, 255) * keep / 255
             canvas.drawRect(sx(0f), y, sx(Accretion.WIDTH), y + 26f * dp, pFill)
             pFill.shader = null
+            pFill.alpha = keep
         }
     }
 
@@ -687,7 +733,7 @@ class BiggerView @JvmOverloads constructor(
         canvas.drawText(txtOverTitle, cx, y, pText)
         y += 48f * dp
         pText.textSize = 40f * dp; pText.color = Color.WHITE
-        canvas.drawText(context.getString(R.string.bigger_score, game.score), cx, y, pText)
+        canvas.drawText(overScoreText, cx, y, pText)
         if (overRecord) {
             y += 28f * dp
             pText.textSize = 15f * dp; pText.color = 0xFFFFD27A.toInt()
@@ -703,7 +749,7 @@ class BiggerView @JvmOverloads constructor(
         if (overReward > 0) {
             y += 30f * dp
             pText.textSize = 15f * dp; pText.color = 0xFF7FE0FF.toInt()
-            canvas.drawText(context.getString(R.string.bigger_over_neutrinos, overReward), cx, y, pText)
+            canvas.drawText(overRewardText, cx, y, pText)
         }
         val bw = 170f * dp; val bh = 46f * dp
         y += 34f * dp

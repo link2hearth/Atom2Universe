@@ -2,7 +2,6 @@ package com.Atom2Universe.app.games.reflex
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.activity.addCallback
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -35,7 +34,6 @@ class ReflexActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reflex)
         enableImmersiveMode()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         gameView = findViewById(R.id.reflex_view)
         gameView.sound = sfx

@@ -77,6 +77,11 @@ class GluttonView(context: Context) : View(context) {
     /** Seconds since the last crumb of the universe went down (-1 = not yet): implosion, flash, Big Bang. */
     private var bang = -1f
     private val visible = ArrayList<GluttonGame.Item>(512)
+    /** Tris sans emballer les Double à chaque comparaison (milliers d'objets par image). */
+    private val biggestFirst = Comparator<GluttonGame.Item> { a, b -> b.radius.compareTo(a.radius) }
+    private val backToFront = Comparator<GluttonGame.Item> { a, b -> (a.y + a.radius * .5).compareTo(b.y + b.radius * .5) }
+    /** Les tirets d'un marquage, en un seul appel de dessin. */
+    private val dashLines = FloatArray(MAX_DASHES * 4)
     private var particleCursor = 0
     private var gulpCursor = 0
     private var labelCursor = 0
@@ -454,7 +459,20 @@ class GluttonView(context: Context) : View(context) {
     private fun drawWorld(c: Canvas, left: Double, top: Double, right: Double, bottom: Double) {
         val world = game.world
         val house = world.rings[0]
+        // Le plus petit anneau qui couvre tout l'écran le repeint en entier, d'un fond opaque : ceux de
+        // dehors seraient peints pour rien. Pendant une secousse l'image glisse et découvre les bords : tout est peint.
+        var hiding = Int.MAX_VALUE
+        if (impact <= 0f) {
+            val farX = max(abs(left), abs(right)); val farY = max(abs(top), abs(bottom))
+            for (index in world.rings.indices) {
+                val ring = world.rings[index]
+                if (!ring.built || game.covered[index] || ring.half * zoom < 1.5) continue
+                if ((if (ring.round) hypot(farX, farY) else max(farX, farY)) > ring.half) continue
+                hiding = index; break
+            }
+        }
         for (index in world.rings.indices.reversed()) {
+            if (index > hiding) continue
             val ring = world.rings[index]
             if (!ring.built) continue
             if (ring.half < left || -ring.half > right || ring.half < top || -ring.half > bottom) continue
@@ -585,13 +603,18 @@ class GluttonView(context: Context) : View(context) {
         val until = if (horizontal) min(max(m.x0, m.x1), right) else min(max(m.y0, m.y1), bottom)
         var s = floor(from / (dash * 2)) * dash * 2
         var count = 0
-        while (s < until && count++ < 200) {
+        var lines = 0
+        while (s < until && count++ < MAX_DASHES) {
             val a = max(s, from); val b = min(s + dash, until)
             if (b > a) {
-                if (horizontal) c.drawLine(sx(a), sy(m.y0), sx(b), sy(m.y0), p) else c.drawLine(sx(m.x0), sy(a), sx(m.x0), sy(b), p)
+                val i = lines * 4
+                if (horizontal) { dashLines[i] = sx(a); dashLines[i + 1] = sy(m.y0); dashLines[i + 2] = sx(b); dashLines[i + 3] = sy(m.y0) }
+                else { dashLines[i] = sx(m.x0); dashLines[i + 1] = sy(a); dashLines[i + 2] = sx(m.x0); dashLines[i + 3] = sy(b) }
+                lines++
             }
             s += dash * 2
         }
+        if (lines > 0) c.drawLines(dashLines, 0, lines * 4, p)
     }
 
     /** Everything a pixel or more across, covers first, then from the back to the front of the scene. */
@@ -615,7 +638,7 @@ class GluttonView(context: Context) : View(context) {
             if (cover.x + cover.radius * 1.5 < left || cover.x - cover.radius * 1.5 > right || cover.y + cover.radius * 1.5 < top || cover.y - cover.radius * 1.5 > bottom) continue
             drawItem(c, cover, r)
         }
-        if (game.ring.theme.ordinal >= Theme.PLANETS.ordinal) visible.sortByDescending { it.radius } else visible.sortBy { it.y + it.radius * .5 }
+        visible.sortWith(if (game.ring.theme.ordinal >= Theme.PLANETS.ordinal) biggestFirst else backToFront)
         for (item in visible) {
             if (item.x + item.radius * 1.5 < left - margin || item.x - item.radius * 1.5 > right + margin || item.y + item.radius * 1.5 < top - margin || item.y - item.radius * 1.5 > bottom + margin) continue
             drawItem(c, item, r)
@@ -805,6 +828,8 @@ class GluttonView(context: Context) : View(context) {
         /** The screen's short side shows this many gobbler radii: you take a thirteenth of it. */
         const val VIEW_SPAN = 26.0
         const val MAP_DOTS = 160
+        /** Tirets dessinés au plus par marquage. */
+        const val MAX_DASHES = 200
         /** Ground textures fade into their average colour between these tile sizes, in pixels. */
         const val FADE_FROM = 12.0
         const val FADE_TO = 40.0

@@ -123,7 +123,8 @@ class StarsWarView @JvmOverloads constructor(
         val path: Int = PATH_LINE
     )
 
-    private data class Enemy(
+    // Classes ordinaires : deux ennemis ou deux balles aux mêmes valeurs restent distincts (égalité par identité).
+    private class Enemy(
         var x: Float, var y: Float,
         val typeIdx: Int,         // 0-7 normal, 8-9 boss
         var hp: Int, val maxHp: Int,
@@ -141,9 +142,11 @@ class StarsWarView @JvmOverloads constructor(
         val formX: Float = 0f,
         val formY: Float = 0f,
         val entryDur: Float = 0f
-    )
+    ) {
+        var killed = false
+    }
 
-    private data class Bullet(
+    private class Bullet(
         var x: Float, var y: Float,
         var pierceLeft: Int = 0,
         var dx: Float = 0f,
@@ -151,10 +154,14 @@ class StarsWarView @JvmOverloads constructor(
         val isMissile: Boolean = false,
         val dmg: Int = -1,       // -1 = utilise bulletDmg
         val isDrone: Boolean = false
-    )
-    private data class Rocket(var x: Float, var y: Float, var angle: Float = 0f)
+    ) {
+        var spent = false
+        /** Ennemis déjà traversés : une balle perforante ne frappe chaque cible qu'une fois. */
+        var pierced: ArrayList<Enemy>? = null
+    }
+    private class Rocket(var x: Float, var y: Float, var angle: Float = 0f)
     private data class Drone(var angle: Float, var fireCooldown: Float)
-    private data class Meteor(var x: Float, var y: Float, val radius: Float, val speed: Float, val dx: Float = 0f)
+    private class Meteor(var x: Float, var y: Float, val radius: Float, val speed: Float, val dx: Float = 0f)
     private data class PendingSpawn(
         val typeIdx: Int, val path: Int,
         val formX: Float, val formY: Float,
@@ -228,6 +235,8 @@ class StarsWarView @JvmOverloads constructor(
     @Volatile private var pendingSecondFinger = 0
     private var gameThread: Thread? = null
     @Volatile private var running = false
+    /** Une image est due même sur une scène figée (surface neuve ou redimensionnée, reprise). */
+    @Volatile private var redraw = true
 
     // ── Player state ──────────────────────────────────────────────────────────
     private var playerX = VW / 2f
@@ -370,6 +379,7 @@ class StarsWarView @JvmOverloads constructor(
     // ── Surface callbacks ─────────────────────────────────────────────────────
     override fun surfaceCreated(holder: SurfaceHolder) {
         running = true
+        redraw = true
         if (gameThread?.isAlive != true) {
             gameThread = Thread(this, "StarsWarThread").apply { start() }
         }
@@ -385,6 +395,7 @@ class StarsWarView @JvmOverloads constructor(
             scaleX = width / VW; scaleY = scaleX
             offX = 0f; offY = (height - VH * scaleY) / 2f
         }
+        redraw = true
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -411,6 +422,7 @@ class StarsWarView @JvmOverloads constructor(
 
     fun resume() {
         running = true
+        redraw = true
         if (gameThread?.isAlive != true) {
             gameThread = Thread(this, "StarsWarThread").apply { start() }
         }
@@ -470,17 +482,19 @@ class StarsWarView @JvmOverloads constructor(
             // Les gestes notés par l'interface se jouent ici, et **hors** du `when`
             // ci-dessous : le choix d'amélioration se fait en phase UPGRADE, où aucun
             // `update` ne tourne. Voir [pendingUpgradeTap].
+            val phaseBefore = phase
+            var touched = false
             if (pendingUpgradeTap) {
-                pendingUpgradeTap = false
+                pendingUpgradeTap = false; touched = true
                 if (phase == Phase.UPGRADE) handleUpgradeTap(pendingUpgradeX, pendingUpgradeY)
             }
-            if (pendingPauseToggle) { pendingPauseToggle = false; applyPauseToggle() }
+            if (pendingPauseToggle) { pendingPauseToggle = false; touched = true; applyPauseToggle() }
             if (pendingPower != 0) {
-                val action = pendingPower; pendingPower = 0
+                val action = pendingPower; pendingPower = 0; touched = true
                 usePower(action == 2)
             }
             if (pendingSecondFinger != 0) {
-                val action = pendingSecondFinger; pendingSecondFinger = 0
+                val action = pendingSecondFinger; pendingSecondFinger = 0; touched = true
                 usePower(action == 2)
             }
             if (phase != Phase.PAUSED) {
@@ -502,12 +516,20 @@ class StarsWarView @JvmOverloads constructor(
             // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
             // cœur à tourner à vide le temps d'un changement d'écran.
             publishControls()
-            val c = lockFrame()
-            if (c != null) {
-                try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            // En pause, la scène est figée : une image après chaque changement, puis on attend.
+            val still = phase == Phase.PAUSED
+            if (!still || touched || redraw || phase != phaseBefore) {
+                val c = lockFrame()
+                if (c != null) {
+                    redraw = false
+                    try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+                }
             }
 
-            val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
+            // Accueil, atelier et fin de partie ne bougent que doucement : 30 images/s suffisent.
+            val menu = phase == Phase.READY || phase == Phase.UPGRADE || phase == Phase.GAME_OVER
+            val frameMs = if (menu) 33L else 16L
+            val remainMs = frameMs - (System.nanoTime() - now) / 1_000_000L
             if (remainMs > 0) Thread.sleep(remainMs)
         }
     }
@@ -619,18 +641,19 @@ class StarsWarView @JvmOverloads constructor(
         for (s in stars) { s.y += s.speed * dt; if (s.y > VH) s.y = -s.radius * 2f }
 
         // Player fire
+        // Le retard d'une image est reporté sur le tir suivant : la cadence ne dépend pas de l'écran.
         playerFireTimer -= dt
-        if (playerFireTimer <= 0f) {
+        while (playerFireTimer <= 0f) {
             fireBullets()
-            playerFireTimer = PLAYER_FIRE_RATE_BASE * fireRateMult
+            playerFireTimer += PLAYER_FIRE_RATE_BASE * fireRateMult
         }
 
         // Rocket fire
         if (hasRocket) {
             rocketFireTimer -= dt
-            if (rocketFireTimer <= 0f) {
+            while (rocketFireTimer <= 0f) {
                 rockets += Rocket(playerX, playerY - PLAYER_SIZE / 2f)
-                rocketFireTimer = rocketFireRate
+                rocketFireTimer += rocketFireRate
             }
         }
 
@@ -746,7 +769,6 @@ class StarsWarView @JvmOverloads constructor(
         }
 
         // Move enemies + combat
-        val dead = mutableListOf<Enemy>()
         for (enemy in enemies) {
             enemy.elapsed += dt
             enemy.hitFlash = (enemy.hitFlash - dt).coerceAtLeast(0f)
@@ -810,16 +832,18 @@ class StarsWarView @JvmOverloads constructor(
             if (circleOverlap(enemy.x, enemy.y, hitR, playerX, playerY, PLAYER_HITBOX_R)) hitPlayer()
 
             // Bullet-enemy collision (handle pierce)
-            val toRemovePb = mutableListOf<Bullet>()
             for (pb in playerBullets) {
-                if (circleOverlap(pb.x, pb.y, PBULLET_W / 2f, enemy.x, enemy.y, hitR)) {
-                    enemy.hitFlash = .16f
-                    art.hit(pb.x, pb.y)
-                    enemy.hp -= if (pb.dmg >= 0) pb.dmg else bulletDmg
-                    if (pb.pierceLeft > 0) pb.pierceLeft-- else toRemovePb += pb
-                }
+                if (pb.spent || !circleOverlap(pb.x, pb.y, PBULLET_W / 2f, enemy.x, enemy.y, hitR)) continue
+                val pierced = pb.pierced
+                if (pierced != null && pierced.any { it === enemy }) continue
+                enemy.hitFlash = .16f
+                art.hit(pb.x, pb.y)
+                enemy.hp -= if (pb.dmg >= 0) pb.dmg else bulletDmg
+                if (pb.pierceLeft > 0) {
+                    pb.pierceLeft--
+                    (pierced ?: ArrayList<Enemy>(4).also { pb.pierced = it }).add(enemy)
+                } else pb.spent = true
             }
-            playerBullets.removeAll(toRemovePb)
 
             if (enemy.hp <= 0) {
                 score += enemyDefs.getOrNull(enemy.typeIdx)?.score
@@ -830,16 +854,18 @@ class StarsWarView @JvmOverloads constructor(
                     enemy.isBoss
                 )
                 waveEnemiesKilled++
-                dead += enemy
+                enemy.killed = true
                 art.burst(enemy.x, enemy.y, if (enemy.isBoss) SpaceFightArt.GOLD else SpaceFightArt.LILAC, enemy.isBoss)
                 if (enemy.isBoss) onBossDestroyed?.invoke() else onEnemyDestroyed?.invoke()
                 recoverEnergy()
             }
         }
+        playerBullets.removeAll { it.spent }
         // Rockets : mouvement + collision
         if (rockets.isNotEmpty()) {
-            val deadRockets = mutableListOf<Rocket>()
-            for (rocket in rockets) {
+            val rocketIter = rockets.iterator()
+            while (rocketIter.hasNext()) {
+                val rocket = rocketIter.next()
                 val target = enemies.minByOrNull { e ->
                     val dx = e.x - rocket.x; val dy = e.y - rocket.y; dx * dx + dy * dy
                 }
@@ -853,10 +879,10 @@ class StarsWarView @JvmOverloads constructor(
                     rocket.y -= ROCKET_SPEED * dt
                 }
                 if (rocket.y < -60f || rocket.x < -60f || rocket.x > VW + 60f) {
-                    deadRockets += rocket; continue
+                    rocketIter.remove(); continue
                 }
                 for (enemy in enemies) {
-                    if (enemy in dead) continue
+                    if (enemy.killed) continue
                     val eSize = if (enemy.isBoss) BOSS_SIZE else enemySizes.getOrElse(enemy.typeIdx) { ENEMY_SIZE_DEFAULT }
                     val hitR = eSize * (if (enemy.isBoss) 0.40f else 0.42f)
                     if (circleOverlap(rocket.x, rocket.y, ROCKET_R, enemy.x, enemy.y, hitR)) {
@@ -867,19 +893,18 @@ class StarsWarView @JvmOverloads constructor(
                             val pts = enemyDefs.getOrNull(enemy.typeIdx)?.score ?: if (enemy.isBoss) 500 + waveNumber * 50 else 80
                             score += pts
                             scorePopups += ScorePopup(enemy.x, enemy.y, 0.9f, s(R.string.sw_gain, pts), enemy.isBoss)
-                            waveEnemiesKilled++; dead += enemy
+                            waveEnemiesKilled++; enemy.killed = true
                             art.burst(enemy.x, enemy.y, if (enemy.isBoss) SpaceFightArt.GOLD else SpaceFightArt.LILAC, enemy.isBoss)
                             if (enemy.isBoss) onBossDestroyed?.invoke() else onEnemyDestroyed?.invoke()
                             recoverEnergy()
                         }
-                        deadRockets += rocket; break
+                        rocketIter.remove(); break
                     }
                 }
             }
-            rockets.removeAll(deadRockets)
         }
 
-        enemies.removeAll(dead)
+        enemies.removeAll { it.killed }
         // LINE/SIN : reviennent en haut si sortent par le bas — formation : restent dans leur slot
         for (e in enemies) {
             if (e.path >= PATH_ENTRY_L) continue
@@ -970,11 +995,12 @@ class StarsWarView @JvmOverloads constructor(
         }
 
         // Mouvement météores + collision joueur (pas de dégâts, perte du double reward)
-        val dead = mutableListOf<Meteor>()
-        for (m in meteors) {
+        val meteorIter = meteors.iterator()
+        while (meteorIter.hasNext()) {
+            val m = meteorIter.next()
             m.x += m.dx * m.speed * dt
             m.y += m.speed * dt
-            if (m.y > VH + m.radius * 2) { dead += m; continue }
+            if (m.y > VH + m.radius * 2) { meteorIter.remove(); continue }
             if (playerDamageTimer <= 0f && circleOverlap(m.x, m.y, m.radius * 0.75f, playerX, playerY, PLAYER_HITBOX_R)) {
                 pendingUpgradePicks = 1
                 art.playerHit(playerX, playerY, true)
@@ -982,7 +1008,6 @@ class StarsWarView @JvmOverloads constructor(
                 playerBlinkTimer = 0f
             }
         }
-        meteors.removeAll(dead)
 
         // Invincibilité joueur
         if (playerDamageTimer > 0f) {
@@ -1312,12 +1337,14 @@ class StarsWarView @JvmOverloads constructor(
         uiPaint.textAlign = align
         uiPaint.textSize = size
         val measured = uiPaint.measureText(value)
-        if (measured > maxWidth) uiPaint.textSize = (size * maxWidth / measured).coerceAtLeast(11f)
         // Les noms traduits très longs sont coupés proprement, les descriptions sont
         // réparties sur plusieurs lignes par wrappedText.
-        val fitted = if (uiPaint.measureText(value) <= maxWidth) value else
-            android.text.TextUtils.ellipsize(value, uiPaint, maxWidth, android.text.TextUtils.TruncateAt.END)
-        c.drawText(fitted.toString(), x, y, uiPaint)
+        val fitted = if (measured <= maxWidth) value else {
+            uiPaint.textSize = (size * maxWidth / measured).coerceAtLeast(11f)
+            if (uiPaint.measureText(value) <= maxWidth) value else
+                android.text.TextUtils.ellipsize(value, uiPaint, maxWidth, android.text.TextUtils.TruncateAt.END).toString()
+        }
+        c.drawText(fitted, x, y, uiPaint)
     }
 
     private fun wrappedText(c: Canvas, value: String, x: Float, y: Float, width: Float,
@@ -1343,6 +1370,19 @@ class StarsWarView @JvmOverloads constructor(
                 lines++
             }
         }
+    }
+
+    // Textes du bandeau : reformatés seulement quand leur valeur change.
+    private var hudScore = -1
+    private var hudScoreText = ""
+    private var hudWave = -1
+    private var hudWaveText = ""
+    private var hudSeconds = -1
+    private var hudSecondsText = ""
+    private val smallNumbers = arrayOfNulls<String>(128)
+    private fun smallNumber(value: Int): String {
+        if (value !in smallNumbers.indices) return s(R.string.sw_number, value)
+        return smallNumbers[value] ?: s(R.string.sw_number, value).also { smallNumbers[value] = it }
     }
 
     private fun sectorName(): String = s(when (((waveNumber.coerceAtLeast(1) - 1) / 5) % 3) {
@@ -1438,9 +1478,11 @@ class StarsWarView @JvmOverloads constructor(
     private fun drawHud(c: Canvas) {
         art.panel(c, 0f, 0f, VW, 53f, SpaceFightArt.alpha(SpaceFightArt.INK, 215), 0f, Color.TRANSPARENT)
         text(c, s(R.string.sw_score_label), 18f, 18f, 11f, SpaceFightArt.MUTED, maxWidth = 112f)
-        text(c, s(R.string.sw_number, score), 18f, 40f, 22f, maxWidth = 112f)
+        if (hudScore != score) { hudScore = score; hudScoreText = s(R.string.sw_number, score) }
+        text(c, hudScoreText, 18f, 40f, 22f, maxWidth = 112f)
         text(c, sectorName(), VW / 2f, 18f, 11f, SpaceFightArt.MUTED, Paint.Align.CENTER, 205f)
-        text(c, s(R.string.sw_hud_wave, waveNumber), VW / 2f, 40f, 18f, SpaceFightArt.IVORY, Paint.Align.CENTER, 180f)
+        if (hudWave != waveNumber) { hudWave = waveNumber; hudWaveText = s(R.string.sw_hud_wave, waveNumber) }
+        text(c, hudWaveText, VW / 2f, 40f, 18f, SpaceFightArt.IVORY, Paint.Align.CENTER, 180f)
         drawHull(c)
         var slot = 0
         for (upg in upgradePool) {
@@ -1448,7 +1490,7 @@ class StarsWarView @JvmOverloads constructor(
             if (count <= 0) continue
             val x = 22f + slot * 30f
             art.upgrade(c, upg.id, x, VH - 22f, 18f)
-            text(c, s(R.string.sw_number, count), x, VH - 5f, 10f, SpaceFightArt.MUTED, Paint.Align.CENTER, 28f)
+            text(c, smallNumber(count), x, VH - 5f, 10f, SpaceFightArt.MUTED, Paint.Align.CENTER, 28f)
             slot++
         }
     }
@@ -1456,7 +1498,9 @@ class StarsWarView @JvmOverloads constructor(
     private fun drawMeteorHud(c: Canvas) {
         art.panel(c, 0f, 0f, VW, 71f, SpaceFightArt.alpha(SpaceFightArt.INK, 220), 0f, Color.TRANSPARENT)
         text(c, s(R.string.sw_meteor_title), 18f, 27f, 20f, SpaceFightArt.IVORY, maxWidth = 328f)
-        text(c, s(R.string.sw_seconds, ceil(meteorPhaseTimer).toInt()), VW - 18f, 27f, 18f, SpaceFightArt.MINT, Paint.Align.RIGHT, 86f)
+        val seconds = ceil(meteorPhaseTimer).toInt()
+        if (hudSeconds != seconds) { hudSeconds = seconds; hudSecondsText = s(R.string.sw_seconds, seconds) }
+        text(c, hudSecondsText, VW - 18f, 27f, 18f, SpaceFightArt.MINT, Paint.Align.RIGHT, 86f)
         val ratio = (meteorPhaseTimer / METEOR_PHASE_DURATION).coerceIn(0f, 1f)
         art.panel(c, 18f, 42f, VW - 18f, 47f, SpaceFightArt.EDGE, 2f, Color.TRANSPARENT)
         art.panel(c, 18f, 42f, 18f + (VW - 36f) * ratio, 47f, SpaceFightArt.MINT, 2f, Color.TRANSPARENT)

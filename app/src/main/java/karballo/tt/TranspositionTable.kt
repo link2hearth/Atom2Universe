@@ -132,10 +132,10 @@ class TranspositionTable(sizeMb: Int) {
                 break
             }
 
-            // Calculates a value with this TT entry importance
-            val entryImportance = if (nodeType == TYPE_EXACT_SCORE) 10 else 0 // Bonus for the PV entries
-            -generationDelta // The older the generation, the less importance
-            +depthAnalyzed // The more depth, the more importance
+            // Calculates a value with this TT entry importance (the getters read the stored entry i)
+            val entryImportance = (if (this.nodeType == TYPE_EXACT_SCORE) 10 else 0) - // Bonus for the PV entries
+                    generationDelta + // The older the generation, the less importance
+                    this.depthAnalyzed // The more depth, the more importance
 
             // We will replace the less important entry
             if (entryImportance < replaceImportance) {
@@ -157,7 +157,7 @@ class TranspositionTable(sizeMb: Int) {
      */
     private val generationDelta: Int
         get() {
-            val entryGeneration = (info.ushr(32) and 0xff).toByte()
+            val entryGeneration = (info.ushr(32) and 0xff).toInt()
             return if (generation >= entryGeneration) generation - entryGeneration else 256 + generation - entryGeneration
         }
 

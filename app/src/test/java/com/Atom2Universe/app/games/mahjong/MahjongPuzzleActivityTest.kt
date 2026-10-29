@@ -22,6 +22,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowDialog
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -103,6 +104,7 @@ class MahjongPuzzleActivityTest {
             assertEquals(move.y, game.tiles[move.id].y)
             assertEquals(5, game.tiles[2].x)
             assertEquals(initialMoves + 1, game.moves)
+            flushDelayedSave()
             assertEquals(game.snapshot(), MahjongStore(prefs).load("SLIDE")!!.game.snapshot())
 
             action(activity, R.string.mj_undo)
@@ -186,6 +188,7 @@ class MahjongPuzzleActivityTest {
             assertEquals(2, game.selected)
             assertEquals(MahjongCell(5, 2), game.focusOrigin)
             assertEquals(4, game.remaining)
+            flushDelayedSave()
             assertEquals(game.snapshot(), MahjongStore(prefs).load("SLIDE")!!.game.snapshot())
 
             shortSwipe(current, 2, 0, -1)
@@ -388,6 +391,9 @@ class MahjongPuzzleActivityTest {
             controller.pause().stop().destroy()
         }
     }
+
+    /** Moves are saved at most every 1.5 s (and at once when leaving the board). */
+    private fun flushDelayedSave() = shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1600))
 
     private fun layout(activity: MahjongActivity) {
         val density = activity.resources.displayMetrics.density

@@ -35,8 +35,8 @@ class ParticulesActivity : ThemedActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_particules)
 
+        // Le synthé démarre en onResume et s'arrête en onPause.
         music = ParticulesMusic(lifecycleScope)
-        music.start()
 
         gameView = ParticulesView(this)
         gameView.music = music
@@ -121,12 +121,14 @@ class ParticulesActivity : ThemedActivity() {
     override fun onPause() {
         super.onPause()
         gameView.pause()
-        music.pause()
+        // Le synthé (Oboe) ne doit pas calculer en arrière-plan.
+        music.stop()
         pauseButton.setImageResource(R.drawable.ic_play)
     }
 
     override fun onResume() {
         super.onResume()
+        music.start()
         music.resumeBackground()
     }
 

@@ -2,7 +2,7 @@ package com.Atom2Universe.app.games.starswar
 
 import android.os.SystemClock
 import kotlinx.coroutines.*
-import org.billthefarmer.mididriver.MidiDriver
+import com.Atom2Universe.app.crypto.sound.SharedSonivoxDriver
 
 /** Trois compositions originales. Appels sur le thread principal ; SFX indépendants. */
 class StarsWarProceduralMusic(private val scope: CoroutineScope) {
@@ -50,7 +50,8 @@ class StarsWarProceduralMusic(private val scope: CoroutineScope) {
         )
         private fun songIndex(wave: Int) = ((wave.coerceAtLeast(1) - 1) / 5) % SONGS.size
     }
-    private var driver: MidiDriver? = null
+    // Le moteur Sonivox est unique : on le réserve et le rend sans jamais l'arrêter pour les autres modules.
+    private var acquired = false
     private var ready = false
     private var musicJob: Job? = null
     private var currentWave = 1
@@ -58,25 +59,24 @@ class StarsWarProceduralMusic(private val scope: CoroutineScope) {
     private var bar = 0
 
     fun start(wave: Int = currentWave) {
-        if (driver != null) return
+        if (acquired) return
         currentWave = wave
-        val d = MidiDriver.getInstance()
-        driver = d
-        d.setOnMidiStartListener {
+        acquired = true
+        SharedSonivoxDriver.acquire {
             ready = true
             initChannels()
             if (!paused) launchMusic()
         }
-        d.start()
     }
     fun stop() {
         musicJob?.cancel()
         musicJob = null
         silence(true)
         ready = false
-        driver?.setOnMidiStartListener(null)
-        driver?.stop()
-        driver = null
+        if (acquired) {
+            acquired = false
+            SharedSonivoxDriver.release()
+        }
     }
     fun setPaused(value: Boolean) {
         if (paused == value) return
@@ -151,7 +151,9 @@ class StarsWarProceduralMusic(private val scope: CoroutineScope) {
         }
         silence(false)
     }
-    private fun send(vararg bytes: Int) { driver?.queueEvent(bytes.map { it.toByte() }.toByteArray()) }
+    private fun send(vararg bytes: Int) {
+        if (acquired) SharedSonivoxDriver.queueEvent(ByteArray(bytes.size) { bytes[it].toByte() })
+    }
     private fun on(ch: Int, note: Int, velocity: Int) = send(0x90 or ch, note, velocity)
     private fun off(ch: Int, note: Int) = send(0x80 or ch, note, 0)
     private fun cc(ch: Int, controller: Int, value: Int) = send(0xB0 or ch, controller, value)

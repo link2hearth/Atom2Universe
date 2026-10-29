@@ -44,6 +44,8 @@ class Match3View @JvmOverloads constructor(
         private const val TIMER_PER_MATCH = 1f   // secondes gagnées par match
         private const val TIMER_MIN_MAX  = 1f    // plancher du timerMax
         private const val COLOR_CYCLE_MS = 20_000L // fenêtre diversité couleurs
+        private const val TIMER_TICK_MS  = 50L    // cadence du chrono au repos
+        private const val MAX_TICK_MS    = 100L   // écart plafonné entre deux relevés du chrono
     }
 
     // gridCols/gridRows sont fixes — la grille ne change jamais
@@ -132,14 +134,21 @@ class Match3View @JvmOverloads constructor(
     private var timerMax   = TIMER_START
     private var timerValue = TIMER_START
     private var timerLastTick = 0L
-    private var gameStartUptimeMs = 0L
+    // Temps de jeu réel : n'avance que entre resume() et pause(), jamais en arrière-plan.
     private var gameElapsedMs = 0L
     private var neutrinosEarned = 0
     private var gameOver = false
+    private var running = false
+    private val timerTick = object : Runnable {
+        override fun run() {
+            tickTimer(SystemClock.uptimeMillis())
+            if (running && !gameOver) handler.postDelayed(this, TIMER_TICK_MS)
+        }
+    }
 
     // Cycle de 20 sec : toutes les couleurs doivent être matchées, sinon timerMax -1
     private val matchedColorsInCycle = mutableSetOf<Int>()
-    private var cycleStartTime = 0L
+    private var cycleElapsedMs = 0L
 
     var onTimerChanged: ((value: Float, max: Float) -> Unit)? = null
     var onGameOver: (() -> Unit)? = null
@@ -191,10 +200,25 @@ class Match3View @JvmOverloads constructor(
         initGrid()
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    /** Appelé par l'activité au premier plan : capteur, son et chrono. */
+    fun resume() {
+        if (running) return
+        running = true
         if (orientationListener.canDetectOrientation()) orientationListener.enable()
         soundEngine.start()
+        // Le relevé repart de zéro : le temps passé en arrière-plan ne compte pas.
+        timerLastTick = 0L
+        handler.removeCallbacks(timerTick)
+        handler.post(timerTick)
+    }
+
+    fun pause() {
+        if (!running) return
+        tickTimer(SystemClock.uptimeMillis())
+        running = false
+        handler.removeCallbacks(timerTick)
+        orientationListener.disable()
+        soundEngine.stop()
     }
 
     // ── Chargement ────────────────────────────────────────────────────────────
@@ -220,30 +244,35 @@ class Match3View @JvmOverloads constructor(
         paintRing.strokeWidth = tileSize * 0.07f
     }
 
+    // ── Chrono ────────────────────────────────────────────────────────────────
+    // Avancé par timerTick (au repos) et par onDraw (pendant les animations) ;
+    // les deux partagent timerLastTick, donc rien n'est compté deux fois.
+    private fun tickTimer(now: Long) {
+        if (!running || gameOver) return
+        if (timerLastTick > 0L) {
+            val deltaMs = (now - timerLastTick).coerceIn(0L, MAX_TICK_MS)
+            gameElapsedMs += deltaMs
+            timerValue = (timerValue - deltaMs / 1000f).coerceAtLeast(0f)
+            if (timerValue <= 0f) triggerGameOver()
+            onTimerChanged?.invoke(timerValue, timerMax)
+            // Pénalité diversité couleurs : toutes les 20 sec sans tout matcher → timerMax -1
+            cycleElapsedMs += deltaMs
+            if (cycleElapsedMs >= COLOR_CYCLE_MS) {
+                if (matchedColorsInCycle.size < GEM_COUNT) {
+                    timerMax = (timerMax - TIMER_MIN_MAX).coerceAtLeast(TIMER_MIN_MAX)
+                    timerValue = timerValue.coerceAtMost(timerMax)
+                }
+                matchedColorsInCycle.clear()
+                cycleElapsedMs = 0L
+            }
+        }
+        timerLastTick = now
+    }
+
     // ── Dessin ────────────────────────────────────────────────────────────────
     override fun onDraw(canvas: Canvas) {
         val now = SystemClock.uptimeMillis()
-
-        // ── Tick timer ────────────────────────────────────────────────────────
-        if (!gameOver) {
-            if (timerLastTick > 0L) {
-                val delta = (now - timerLastTick) / 1000f
-                timerValue = (timerValue - delta).coerceAtLeast(0f)
-                if (timerValue <= 0f) triggerGameOver()
-                onTimerChanged?.invoke(timerValue, timerMax)
-                // Pénalité diversité couleurs : toutes les 20 sec sans tout matcher → timerMax -1
-                if (cycleStartTime > 0L && now - cycleStartTime >= COLOR_CYCLE_MS) {
-                    if (matchedColorsInCycle.size < GEM_COUNT) {
-                        timerMax = (timerMax - TIMER_MIN_MAX).coerceAtLeast(TIMER_MIN_MAX)
-                        timerValue = timerValue.coerceAtMost(timerMax)
-                    }
-                    matchedColorsInCycle.clear()
-                    cycleStartTime = now
-                }
-            }
-            timerLastTick = now
-            if (cycleStartTime == 0L) { cycleStartTime = now; gameStartUptimeMs = now }
-        }
+        tickTimer(now)
 
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintBg)
 
@@ -320,12 +349,8 @@ class Match3View @JvmOverloads constructor(
         if (gameOver) drawGameOverOverlay(canvas)
 
         val lifting = dragRow != -1 && !swipeTriggered && (now - dragPressTime) < DRAG_SCALE_MS.toLong()
-        if (hasAnim || anim != null || bonusBurst != null || lifting) {
-            postInvalidateOnAnimation()
-        } else if (!gameOver && timerValue > 0f) {
-            // Au repos seul le sablier évolue : inutile de repeindre les 160 gemmes à 60 Hz.
-            postInvalidateDelayed(50L)
-        }
+        // Au repos rien ne bouge dans la grille : le chrono est la ProgressBar de l'activité.
+        if (hasAnim || anim != null || bonusBurst != null || lifting) postInvalidateOnAnimation()
     }
 
     private fun tileX(col: Int) = gridLeft + col * tileSize
@@ -595,15 +620,16 @@ class Match3View @JvmOverloads constructor(
         timerMax   = TIMER_START
         timerValue = TIMER_START
         timerLastTick = 0L
-        gameStartUptimeMs = 0L
         gameElapsedMs = 0L
         neutrinosEarned = 0
-        cycleStartTime = 0L
+        cycleElapsedMs = 0L
         matchedColorsInCycle.clear()
         gameOver = false
         for (r in 0 until gridRows) cleared[r].fill(false)
         initGrid()
         onScoreChanged?.invoke(0)
+        onTimerChanged?.invoke(timerValue, timerMax)
+        if (running) handler.post(timerTick)
         invalidate()
     }
 
@@ -615,7 +641,6 @@ class Match3View @JvmOverloads constructor(
         swapAnimator?.removeAllListeners(); swapAnimator?.cancel(); swapAnimator = null; swapAnim = null
         handler.removeCallbacksAndMessages(null)
         val prefs = context.getSharedPreferences("match3_save", Context.MODE_PRIVATE)
-        gameElapsedMs = if (gameStartUptimeMs > 0L) SystemClock.uptimeMillis() - gameStartUptimeMs else 0L
         neutrinosEarned = NeutrinoRewards.perTime(gameElapsedMs)
         if (neutrinosEarned > 0) NeutrinoRepository(context).addBalance(neutrinosEarned)
         val elapsedMs = gameElapsedMs
@@ -638,7 +663,7 @@ class Match3View @JvmOverloads constructor(
             width / 2f, height / 2f + tileSize * 0.9f, paintGameOver)
         if (gameElapsedMs > 0L) {
             val secs = (gameElapsedMs / 1000).toInt()
-            val timeStr = "%d:%02d".format(secs / 60, secs % 60)
+            val timeStr = context.getString(R.string.match3_clock_format, secs / 60, secs % 60)
             canvas.drawText(context.getString(R.string.match3_time, timeStr),
                 width / 2f, height / 2f + tileSize * 1.7f, paintGameOver)
         }
@@ -650,9 +675,8 @@ class Match3View @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        pause()
         handler.removeCallbacksAndMessages(null)
         swapAnimator?.removeAllListeners(); swapAnimator?.cancel()
-        orientationListener.disable()
-        soundEngine.stop()
     }
 }

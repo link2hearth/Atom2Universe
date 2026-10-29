@@ -106,9 +106,12 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
     private var burstEvent = false
     private val laneSpot = DoubleArray(4)
     private val laid = HashSet<Item>()
+    /** Choses immobiles à ranger ailleurs (aspirées) ou à sortir de la grille (avalées), après la recherche en cours. */
+    private val regrid = ArrayList<Item>()
 
     init {
         for (ring in world.rings) if (ring.built) addLayer(ring)
+        world.prepare(2)
         invulnerable = 1f
         nextMilestone = MILESTONE_FIRST
         while (10.0.pow(nextMilestone) <= diameterMetres) nextMilestone++
@@ -266,12 +269,25 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
             for (i in layer.movers.indices) fall(layer.movers[i])
         }
         for (i in loose.indices) fall(loose[i])
+        flushRegrid()
+    }
+
+    /** Une chose immobile déplacée change de cases ; une chose avalée quitte la grille. */
+    private fun flushRegrid() {
+        for (i in regrid.indices) {
+            val item = regrid[i]
+            val grid = layers[item.ring.index]?.grid ?: continue
+            grid.remove(item, item.filedX, item.filedY, item.radius)
+            if (item.active) { grid.add(item, item.x, item.y, item.radius); item.filedX = item.x; item.filedY = item.y }
+        }
+        regrid.clear()
     }
 
     /** A new ring: build the next one, lay the covers over what is now behind you, forget what is far too small to matter. */
     private fun reach(index: Int) {
         ringReached = index; events += Event(Effect.RING, x, y, value = index)
         for (ring in world.ensure(index + 1)) addLayer(ring)
+        world.prepare(index + 2)
         for (cover in covers) {
             if (cover.ring.index > index || !laid.add(cover)) continue
             cover.active = true
@@ -295,11 +311,10 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
             if (d <= mouth + pullSpeed) consume(item)
             else {
                 item.x += dx / d * pullSpeed; item.y += dy / d * pullSpeed
-                if (!item.moves && hypot(item.x - item.filedX, item.y - item.filedY) > item.radius * .5) {
-                    layers[item.ring.index]?.grid?.add(item, item.x, item.y, item.radius); item.filedX = item.x; item.filedY = item.y
-                }
+                if (!item.moves && hypot(item.x - item.filedX, item.y - item.filedY) > item.radius * .5) regrid += item
             }
         }
+        flushRegrid()
         for (cover in covers) if (cover.active && canEat(cover) && hypot(cover.x - x, cover.y - y) < r + cover.radius * .3) consume(cover)
     }
 
@@ -424,11 +439,12 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
         if (by.prop.motion == Motion.CHASE) by.rest = 6f
         repeat(min(KNOCK_LOSS, recent.size)) {
             val lost = recent.removeLast()
+            val item = lost.item
+            // Une bouchée qu'on ne pourrait plus ravoir (un couvercle, une chose d'un anneau oublié) reste avalée.
+            if (item.cover || layers[item.ring.index] == null) return@repeat
             val fromStomach = min(stomach, lost.gain)
             stomach -= fromStomach
             area = max(area - (lost.gain - fromStomach), START_RADIUS * START_RADIUS)
-            val item = lost.item
-            if (item.cover) return@repeat
             val a = random.nextDouble() * 2 * PI
             item.active = true; item.cooldown = 1.1f
             item.x = x + cos(a) * (r * 1.3 + item.radius); item.y = y + sin(a) * (r * 1.3 + item.radius)
@@ -441,6 +457,7 @@ class GluttonGame(val seed: Long = Random.nextLong(), val mode: Mode = Mode.VOYA
 
     private fun consume(item: Item) {
         item.active = false; item.cooldown = 0f
+        if (!item.moves && !item.cover) regrid += item
         if (item.prop.bonus) {
             if (mode == Mode.FRINGALE) { remaining = min(remaining + HOURGLASS, FRINGALE_MAX); bonusTime += HOURGLASS }
             charge = 1f; events += Event(Effect.BONUS, item.x, item.y, item); return

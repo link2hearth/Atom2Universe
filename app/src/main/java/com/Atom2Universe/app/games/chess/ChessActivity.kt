@@ -8,7 +8,6 @@ import android.os.Looper
 import android.view.View
 import com.Atom2Universe.app.LocaleHelper
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import com.Atom2Universe.app.ThemedActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
@@ -18,6 +17,7 @@ import com.Atom2Universe.app.games.chess.ai.ChessAI
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
+import androidx.core.view.doOnLayout
 
 /**
  * Activité principale du jeu d'échecs
@@ -41,8 +41,13 @@ class ChessActivity : ThemedActivity(),
 
     // Logique du jeu
     private val game = ChessGame()
+    // Créée au premier coup de l'IA puis gardée (avec sa table) pour toute l'activité
     private var ai: ChessAI? = null
     private var currentDifficulty = ChessDifficulty.STANDARD
+    // La difficulté la plus basse utilisée pendant la partie : c'est elle qui fixe la récompense
+    private var rewardDifficulty = ChessDifficulty.STANDARD
+    // Coup de l'IA qui attend son petit délai avant d'être joué
+    private var pendingAIMove: Runnable? = null
 
     // Timer
     private var elapsedTimeMs: Long = 0
@@ -70,6 +75,8 @@ class ChessActivity : ThemedActivity(),
 
         // Charger la partie sauvegardée ou démarrer une nouvelle partie
         loadSavedGame()
+        // Les images des pièces n'existent qu'une fois l'échiquier mesuré
+        chessView.doOnLayout { updateCapturedPieces() }
     }
 
     /**
@@ -104,20 +111,36 @@ class ChessActivity : ThemedActivity(),
         difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (currentDifficulty == difficulties[position]) return
-                ai?.cancel()
+                cancelAI()
                 currentDifficulty = difficulties[position]
-                ai = if (currentDifficulty.hasAI()) {
-                    ChessAI(game, currentDifficulty, this@ChessActivity)
+                // Aucun coup joué : la nouvelle difficulté fait foi ; sinon la plus basse reste
+                rewardDifficulty = if (game.moveHistory.isEmpty() && game.startFen == ChessGame.START_FEN) {
+                    currentDifficulty
                 } else {
-                    null
+                    lowerReward(rewardDifficulty, currentDifficulty)
                 }
                 // Activer le flip des pièces noires en mode 2 joueurs
                 chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
-                if (!game.isGameOver() && game.currentTurn == PieceColor.BLACK && ai != null) requestAIMove()
+                updateCapturedPieces()
+                updateStatus()
+                if (!game.isGameOver() && game.currentTurn == PieceColor.BLACK && aiPlays()) requestAIMove()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
+    private fun aiPlays(): Boolean = currentDifficulty.hasAI()
+
+    /** Le mode 2 joueurs compte comme le plus bas : il ne rapporte rien. */
+    private fun rewardRank(difficulty: ChessDifficulty): Int = when (difficulty) {
+        ChessDifficulty.TWO_PLAYER -> 0
+        ChessDifficulty.TRAINING -> 1
+        ChessDifficulty.STANDARD -> 2
+        ChessDifficulty.EXPERT -> 3
+    }
+
+    private fun lowerReward(a: ChessDifficulty, b: ChessDifficulty): ChessDifficulty =
+        if (rewardRank(b) < rewardRank(a)) b else a
 
     /**
      * Configure les listeners
@@ -134,15 +157,14 @@ class ChessActivity : ThemedActivity(),
      * Démarre une nouvelle partie
      */
     private fun startNewGame() {
+        // L'ancienne recherche ne doit ni continuer ni jouer son coup dans la nouvelle partie
+        cancelAI()
+        ai?.clearTranspositionTable()
         game.newGame()
+        rewardDifficulty = currentDifficulty
         GameStatsRepository(this).recordChessStarted()
+        stopTimer()
         elapsedTimeMs = 0
-
-        ai = if (currentDifficulty.hasAI()) {
-            ChessAI(game, currentDifficulty, this)
-        } else {
-            null
-        }
 
         chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
         chessView.setSelectedSquare(null)
@@ -153,6 +175,7 @@ class ChessActivity : ThemedActivity(),
         deleteSave()
 
         startTimer()
+        updateTimerDisplay()
         updateStatus()
         updateCapturedPieces()
     }
@@ -217,7 +240,7 @@ class ChessActivity : ThemedActivity(),
             game.drawReason == ChessGame.DrawReason.FIFTY_MOVES -> getString(R.string.chess_status_draw_fifty)
             game.drawReason == ChessGame.DrawReason.MATERIAL -> getString(R.string.chess_status_draw_material)
             game.isInCheck -> getString(R.string.chess_status_check)
-            game.currentTurn == PieceColor.BLACK && ai != null ->
+            game.currentTurn == PieceColor.BLACK && aiPlays() ->
                 getString(R.string.chess_status_ai_thinking)
             game.currentTurn == PieceColor.WHITE ->
                 getString(R.string.chess_status_your_turn)
@@ -256,7 +279,7 @@ class ChessActivity : ThemedActivity(),
 
     override fun onSquareClicked(square: Square) {
         if (game.isGameOver()) return
-        if (game.currentTurn == PieceColor.BLACK && ai != null) return // Tour de l'IA
+        if (game.currentTurn == PieceColor.BLACK && aiPlays()) return // Tour de l'IA
 
         val piece = game.getPieceAt(square)
 
@@ -276,7 +299,7 @@ class ChessActivity : ThemedActivity(),
 
     override fun onPieceDragged(from: Square, to: Square): Boolean {
         if (game.isGameOver()) return false
-        if (game.currentTurn == PieceColor.BLACK && ai != null) return false
+        if (game.currentTurn == PieceColor.BLACK && aiPlays()) return false
 
         return attemptMove(from, to)
     }
@@ -334,7 +357,8 @@ class ChessActivity : ThemedActivity(),
      * Exécute un coup
      */
     private fun executeMove(move: Move) {
-        game.makeMove(move)
+        // Coup illégal dans la position actuelle : rien ne se passe
+        if (!game.makeMove(move)) return
         chessView.setLastMove(move.from, move.to)
         chessView.setSelectedSquare(null)
         chessView.refresh()
@@ -342,13 +366,12 @@ class ChessActivity : ThemedActivity(),
         updateStatus()
         updateCapturedPieces()
 
-        // Sauvegarder la partie après chaque coup
-        saveGame()
-
         if (game.isGameOver()) {
             onGameOver()
-        } else if (game.currentTurn == PieceColor.BLACK && ai != null) {
-            requestAIMove()
+        } else {
+            // Sauvegarder la partie après chaque coup
+            saveGame()
+            if (game.currentTurn == PieceColor.BLACK && aiPlays()) requestAIMove()
         }
     }
 
@@ -357,35 +380,43 @@ class ChessActivity : ThemedActivity(),
      */
     private fun requestAIMove() {
         updateStatus() // Afficher "IA réfléchit..."
-        ai?.findMove(this, lifecycleScope)
+        val engine = ai ?: ChessAI(game, currentDifficulty).also { ai = it }
+        engine.setDifficulty(currentDifficulty)
+        engine.findMove(this, lifecycleScope)
+    }
+
+    /**
+     * Arrête la recherche de l'IA et oublie un coup trouvé pas encore joué
+     */
+    private fun cancelAI() {
+        ai?.cancel()
+        pendingAIMove?.let { timerHandler.removeCallbacks(it) }
+        pendingAIMove = null
     }
 
     // ========== ChessAI.AIListener ==========
 
     override fun onAIThinking() {
-        runOnUiThread {
-            updateStatus()
-        }
+        updateStatus()
     }
 
     override fun onAIMoveFound(move: Move, thinkTimeMs: Long) {
+        pendingAIMove?.let { timerHandler.removeCallbacks(it) }
+        val revision = game.revision
         // Délai léger pour que le coup ne soit pas instantané
-        timerHandler.postDelayed({
-            // Auto-promotion à dame pour l'IA
-            if (move.piece.type == PieceType.PAWN &&
-                (move.to.row == 0 || move.to.row == 7) &&
-                move.promotionType == null) {
-                executeMove(move.copy(promotionType = PieceType.QUEEN))
-            } else {
-                executeMove(move)
-            }
-        }, 200)
+        val play = Runnable {
+            pendingAIMove = null
+            // Partie changée entre-temps (nouvelle partie, mode 2 joueurs) : coup oublié
+            if (game.revision != revision || game.isGameOver() ||
+                game.currentTurn != PieceColor.BLACK || !aiPlays()) return@Runnable
+            executeMove(move)
+        }
+        pendingAIMove = play
+        timerHandler.postDelayed(play, 200)
     }
 
     override fun onAIError(messageRes: Int) {
-        runOnUiThread {
-            Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
-        }
+        Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -398,14 +429,14 @@ class ChessActivity : ThemedActivity(),
         deleteSave()
 
         // Victoire du joueur contre l'IA
-        if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && ai != null) {
+        if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && aiPlays()) {
             GameStatsRepository(this).recordChessWon()
             Toast.makeText(this, R.string.chess_victory_title, Toast.LENGTH_SHORT).show()
-            val reward = when (currentDifficulty) {
+            val reward = when (rewardDifficulty) {
                 ChessDifficulty.TRAINING -> NeutrinoRewards.CHESS_TRAINING
                 ChessDifficulty.STANDARD -> NeutrinoRewards.CHESS_STANDARD
                 ChessDifficulty.EXPERT   -> NeutrinoRewards.CHESS_EXPERT
-                else -> 0
+                ChessDifficulty.TWO_PLAYER -> 0
             }
             if (reward > 0) NeutrinoRepository(this).addBalance(reward)
         }
@@ -414,20 +445,25 @@ class ChessActivity : ThemedActivity(),
     // ========== Sauvegarde ==========
 
     /**
-     * Sauvegarde la partie en cours
+     * Sauvegarde la partie en cours : position de départ + coups, rejoués au chargement
+     * (répétitions et historique reviennent). « fen » et « captured_pieces » servent au widget.
      */
     private fun saveGame() {
-        val prefs = getSharedPreferences("chess_save", MODE_PRIVATE)
+        // Une partie finie ne revient jamais comme partie vivante
+        if (game.isGameOver()) return
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
         prefs.edit {
-            putString("fen", game.toFEN())
-            putString("difficulty", currentDifficulty.name)
-            putLong("elapsed_time", elapsedTimeMs)
-            putBoolean("is_game_over", game.isGameOver())
+            putString(KEY_START_FEN, game.startFen)
+            putString(KEY_MOVES, game.movesInLongNotation().joinToString(" "))
+            putString(KEY_FEN, game.toFEN())
+            putString(KEY_DIFFICULTY, currentDifficulty.name)
+            putString(KEY_REWARD_DIFFICULTY, rewardDifficulty.name)
+            putLong(KEY_ELAPSED, elapsedTimeMs)
 
             val capturedPiecesJson = game.capturedPieces.joinToString(",") { piece ->
                 "${piece.type.notation}${piece.color.name}"
             }
-            putString("captured_pieces", capturedPiecesJson)
+            putString(KEY_CAPTURED, capturedPiecesJson)
         }
     }
 
@@ -435,30 +471,38 @@ class ChessActivity : ThemedActivity(),
      * Charge la partie sauvegardée si elle existe
      */
     private fun loadSavedGame() {
-        val prefs = getSharedPreferences("chess_save", MODE_PRIVATE)
-        val fen = prefs.getString("fen", null)
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        val startFen = prefs.getString(KEY_START_FEN, null)
+        val fen = prefs.getString(KEY_FEN, null)
 
-        // Pas de sauvegarde, démarrer une nouvelle partie
-        if (fen == null) {
+        // Pas de sauvegarde (ou illisible), démarrer une nouvelle partie
+        if (startFen == null || fen == null || fen.split(" ").size < 4) {
             startNewGame()
             return
         }
 
         // Restaurer la partie
-        val difficultyName = prefs.getString("difficulty", ChessDifficulty.STANDARD.name)
-        val savedDifficulty = ChessDifficulty.values().find { it.name == difficultyName }
+        currentDifficulty = ChessDifficulty.values().find { it.name == prefs.getString(KEY_DIFFICULTY, null) }
             ?: ChessDifficulty.STANDARD
-
-        currentDifficulty = savedDifficulty
         difficultySpinner.setSelection(ChessDifficulty.values().indexOf(currentDifficulty))
 
-        game.fromFEN(fen)
-        elapsedTimeMs = prefs.getLong("elapsed_time", 0)
+        val moves = prefs.getString(KEY_MOVES, null).orEmpty().split(" ").filter { it.isNotEmpty() }
+        // Le widget peut avoir joué la suite : il n'écrit que la position, qu'on reprend alors seule
+        val replayed = game.replay(startFen, moves) && game.toFEN() == fen
+        if (!replayed) game.fromFEN(fen)
+        if (game.isGameOver()) {
+            startNewGame()
+            return
+        }
+
+        val savedReward = ChessDifficulty.values().find { it.name == prefs.getString(KEY_REWARD_DIFFICULTY, null) }
+        rewardDifficulty = lowerReward(savedReward ?: currentDifficulty, currentDifficulty)
+        elapsedTimeMs = prefs.getLong(KEY_ELAPSED, 0)
 
         // Restaurer les pièces capturées
-        val capturedPiecesJson = prefs.getString("captured_pieces", "")
+        game.capturedPieces.clear()
+        val capturedPiecesJson = prefs.getString(KEY_CAPTURED, "")
         if (!capturedPiecesJson.isNullOrEmpty()) {
-            game.capturedPieces.clear()
             capturedPiecesJson.split(",").forEach { pieceStr ->
                 if (pieceStr.isNotEmpty()) {
                     val notation = pieceStr.substring(0, 1)
@@ -472,20 +516,14 @@ class ChessActivity : ThemedActivity(),
             }
         }
 
-        ai = if (currentDifficulty.hasAI()) {
-            ChessAI(game, currentDifficulty, this@ChessActivity)
-        } else {
-            null
-        }
-
         chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
         chessView.setSelectedSquare(null)
-        chessView.setLastMove(null, null)
+        val lastMove = game.moveHistory.lastOrNull()
+        chessView.setLastMove(lastMove?.from, lastMove?.to)
         chessView.refresh()
 
-        if (!game.isGameOver()) {
-            startTimer()
-        }
+        startTimer()
+        updateTimerDisplay()
         updateStatus()
         updateCapturedPieces()
     }
@@ -494,7 +532,7 @@ class ChessActivity : ThemedActivity(),
      * Supprime la sauvegarde
      */
     private fun deleteSave() {
-        getSharedPreferences("chess_save", MODE_PRIVATE).edit { clear() }
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit { clear() }
     }
 
     // ========== Lifecycle ==========
@@ -502,8 +540,7 @@ class ChessActivity : ThemedActivity(),
     override fun onPause() {
         super.onPause()
         stopTimer()
-        ai?.cancel()
-        timerHandler.removeCallbacksAndMessages(null)
+        cancelAI()
         saveGame()
     }
 
@@ -511,14 +548,14 @@ class ChessActivity : ThemedActivity(),
         super.onResume()
         if (!game.isGameOver()) {
             startTimer()
-            if (game.currentTurn == PieceColor.BLACK && ai != null) requestAIMove()
+            if (game.currentTurn == PieceColor.BLACK && aiPlays()) requestAIMove()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         timerHandler.removeCallbacksAndMessages(null)
-        ai?.cancel()
+        cancelAI()
     }
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
@@ -526,5 +563,17 @@ class ChessActivity : ThemedActivity(),
         // Rafraîchir l'affichage après le changement d'orientation
         chessView.refresh()
         updateCapturedPieces()
+    }
+
+    companion object {
+        // Partagé avec le widget flottant (ChessWidgetView), qui lit et écrit fen, captured_pieces, difficulty
+        private const val PREFS = "chess_save"
+        private const val KEY_START_FEN = "start_fen"
+        private const val KEY_MOVES = "moves"
+        private const val KEY_FEN = "fen"
+        private const val KEY_DIFFICULTY = "difficulty"
+        private const val KEY_REWARD_DIFFICULTY = "reward_difficulty"
+        private const val KEY_ELAPSED = "elapsed_time"
+        private const val KEY_CAPTURED = "captured_pieces"
     }
 }

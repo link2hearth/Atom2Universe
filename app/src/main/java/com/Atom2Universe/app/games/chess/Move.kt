@@ -10,101 +10,20 @@ data class Move(
     val capturedPiece: Piece? = null,
     val promotionType: PieceType? = null,
     val isCastling: Boolean = false,
-    val isEnPassant: Boolean = false,
-    val isCheck: Boolean = false,
-    val isCheckmate: Boolean = false
+    val isEnPassant: Boolean = false
 ) {
     /**
-     * Notation algébrique du coup (ex: "e2e4", "Nf3", "O-O")
-     */
-    fun toAlgebraic(): String {
-        // Roque
-        if (isCastling) {
-            return if (to.col > from.col) "O-O" else "O-O-O"
-        }
-
-        val pieceSymbol = when (piece.type) {
-            PieceType.PAWN -> ""
-            PieceType.KNIGHT -> "N"
-            PieceType.BISHOP -> "B"
-            PieceType.ROOK -> "R"
-            PieceType.QUEEN -> "Q"
-            PieceType.KING -> "K"
-        }
-
-        val capture = if (capturedPiece != null) "x" else ""
-        val promotion = if (promotionType != null) {
-            "=" + when (promotionType) {
-                PieceType.QUEEN -> "Q"
-                PieceType.ROOK -> "R"
-                PieceType.BISHOP -> "B"
-                PieceType.KNIGHT -> "N"
-                else -> ""
-            }
-        } else ""
-
-        val checkSymbol = when {
-            isCheckmate -> "#"
-            isCheck -> "+"
-            else -> ""
-        }
-
-        return "$pieceSymbol${from.toAlgebraic()}$capture${to.toAlgebraic()}$promotion$checkSymbol"
-    }
-
-    /**
-     * Notation longue (ex: "e2e4")
+     * Notation longue (ex: "e2e4", "e7e8q")
      */
     fun toLongNotation(): String {
-        val promotion = if (promotionType != null) {
-            when (promotionType) {
-                PieceType.QUEEN -> "q"
-                PieceType.ROOK -> "r"
-                PieceType.BISHOP -> "b"
-                PieceType.KNIGHT -> "n"
-                else -> ""
-            }
-        } else ""
-        return "${from.toAlgebraic()}${to.toAlgebraic()}$promotion"
-    }
-
-    /**
-     * Notation courte pour affichage (ex: "e4", "Nf3")
-     */
-    fun toShortNotation(): String {
-        if (isCastling) {
-            return if (to.col > from.col) "O-O" else "O-O-O"
-        }
-
-        val pieceSymbol = when (piece.type) {
-            PieceType.PAWN -> if (capturedPiece != null) from.toAlgebraic()[0].toString() else ""
-            PieceType.KNIGHT -> "N"
-            PieceType.BISHOP -> "B"
-            PieceType.ROOK -> "R"
-            PieceType.QUEEN -> "Q"
-            PieceType.KING -> "K"
-        }
-
-        val capture = if (capturedPiece != null) "x" else ""
-        val destination = to.toAlgebraic()
-
-        val promotion = if (promotionType != null) {
-            "=" + when (promotionType) {
-                PieceType.QUEEN -> "Q"
-                PieceType.ROOK -> "R"
-                PieceType.BISHOP -> "B"
-                PieceType.KNIGHT -> "N"
-                else -> ""
-            }
-        } else ""
-
-        val checkSymbol = when {
-            isCheckmate -> "#"
-            isCheck -> "+"
+        val promotion = when (promotionType) {
+            PieceType.QUEEN -> "q"
+            PieceType.ROOK -> "r"
+            PieceType.BISHOP -> "b"
+            PieceType.KNIGHT -> "n"
             else -> ""
         }
-
-        return "$pieceSymbol$capture$destination$promotion$checkSymbol"
+        return "${from.toAlgebraic()}${to.toAlgebraic()}$promotion"
     }
 
     override fun equals(other: Any?): Boolean {

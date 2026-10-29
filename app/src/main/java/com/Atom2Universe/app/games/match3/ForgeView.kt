@@ -33,6 +33,8 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
     private data class PendingSwap(val a: Int, val b: Int, val typeA: Int, val typeB: Int)
     private var pendingSwap: PendingSwap? = null
     private var animation: ValueAnimator? = null
+    private var animationEnd: (() -> Unit)? = null
+    private var instant = false
     private var progress = 0f
     private var popping = emptySet<Int>()
     private var burst: ForgeGame.Burst? = null
@@ -92,8 +94,12 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
     }
 
     fun pause() {
+        pendingSwap = null
+        val finish = animationEnd
+        animation?.removeAllListeners(); animation?.cancel(); animation = null; animationEnd = null
+        // A move under way finishes without animation: pausing must not undo it.
+        if (busy && finish != null) { instant = true; try { finish() } finally { instant = false } }
         val elapsed = elapsedTimeMs()
-        animation?.removeAllListeners(); animation?.cancel(); animation = null
         if (busy) game.restore(JSONObject(stable))
         game.elapsedMs = elapsed; activeSince = 0L
         stable = JSONObject(stable).put("elapsedMs", elapsed).toString()
@@ -225,11 +231,13 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
     }
 
     private fun animate(duration: Long, after: () -> Unit) {
+        if (instant) { progress = 1f; after(); return }
         progress = 0f
+        animationEnd = after
         animation = ValueAnimator.ofFloat(0f, 1f).apply {
             this.duration = duration
             addUpdateListener { progress = it.animatedValue as Float; invalidate() }
-            addListener(object : AnimatorListenerAdapter() { override fun onAnimationEnd(animation: Animator) { after() } })
+            addListener(object : AnimatorListenerAdapter() { override fun onAnimationEnd(animation: Animator) { animationEnd = null; after() } })
             start()
         }
     }
@@ -257,8 +265,9 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
         if (matches.isEmpty()) { settle(); return }
         val effect = game.burst()
         burst = effect; popping = effect.cleared
-        sound.playMatch(game.cells[matches.first()], combo++)
-        if (effect.bombs.isNotEmpty() || effect.beams.isNotEmpty()) {
+        val step = combo++
+        if (!instant) sound.playMatch(game.cells[matches.first()], step)
+        if (!instant && (effect.bombs.isNotEmpty() || effect.beams.isNotEmpty())) {
             sound.playForgeBurst(effect.bombs.isNotEmpty())
             performHapticFeedback(if (effect.bombs.isNotEmpty()) HapticFeedbackConstants.LONG_PRESS else HapticFeedbackConstants.KEYBOARD_TAP)
         }
@@ -276,8 +285,10 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
             sources = null
             delivered = game.exitingCores()
             if (game.deliver()) {
-                sound.playMatch(ForgeGame.CORE, 3)
-                performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                if (!instant) {
+                    sound.playMatch(ForgeGame.CORE, 3)
+                    performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                }
                 animate(220) { delivered = emptySet(); fall() }
             } else resolve(game.matches())
         }

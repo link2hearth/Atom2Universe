@@ -40,6 +40,11 @@ class MahjongActivity : ThemedActivity() {
     private var dialog: AlertDialog? = null
     private val handler = Handler(Looper.getMainLooper())
     private val workHandler = Handler(Looper.getMainLooper())
+    // Each save rewrites the whole preferences file: moves are saved at most every 1.5 s,
+    // and any exit (menu, other board, onPause) saves at once.
+    private val saveHandler = Handler(Looper.getMainLooper())
+    private var savePending = false
+    private val delayedSave = Runnable { savePending = false; run?.let(store::save) }
     private val worker = ThreadPoolExecutor(1,1,0L,TimeUnit.MILLISECONDS,LinkedBlockingQueue<Runnable>()) { task ->
         Thread({ android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND); task.run() },"Mahjong puzzles")
     }
@@ -430,7 +435,7 @@ class MahjongActivity : ThemedActivity() {
         boardControls=controls
         undoButton=toolButton(MahjongIcon.UNDO,R.string.mj_undo) {
             cancelHint()
-            if(!boardBusy && current.game.undo()) { board?.refresh(); updateHud(); save() }
+            if(!boardBusy && current.game.undo()) { board?.refresh(); updateHud(); saveSoon() }
         }
         val hint=toolButton(MahjongIcon.HINT,R.string.mj_hint) { requestHint(show=true) }
         shuffleButton=toolButton(MahjongIcon.SHUFFLE,R.string.mj_shuffle) { shuffleBoard() }
@@ -464,6 +469,8 @@ class MahjongActivity : ThemedActivity() {
         }
         if(current.game.complete) {
             store.finish(current)
+            // finish() has just written the completed run: a pending move save is obsolete.
+            saveHandler.removeCallbacks(delayedSave); savePending=false
             handler.removeCallbacksAndMessages(null)
             if(effects) handler.postDelayed({ if(run===current && screen=="board" && !isFinishing && !isDestroyed) showReward() },650)
             else showReward()
@@ -476,7 +483,7 @@ class MahjongActivity : ThemedActivity() {
             if(result==MahjongGame.Result.MATCHED || result==MahjongGame.Result.MOVED ||
                 result==MahjongGame.Result.MISMATCH || result==MahjongGame.Result.TRAY_FULL ||
                 (result==MahjongGame.Result.SELECTED && current.game.mode==MahjongMode.TRIPLE) ||
-                (current.game.mode==MahjongMode.SLIDE && result!=MahjongGame.Result.IGNORED)) save()
+                (current.game.mode==MahjongMode.SLIDE && result!=MahjongGame.Result.IGNORED)) saveSoon()
         }
     }
 
@@ -685,7 +692,14 @@ class MahjongActivity : ThemedActivity() {
         }
         dialog=AlertDialog.Builder(this).setTitle(R.string.mj_settings).setView(body).setPositiveButton(R.string.close,null).show()
     }
-    private fun save() { run?.let(store::save) }
+    private fun save() {
+        if(savePending) { saveHandler.removeCallbacks(delayedSave); savePending=false }
+        run?.let(store::save)
+    }
+    private fun saveSoon() {
+        if(savePending) return
+        savePending=true; saveHandler.postDelayed(delayedSave,1500)
+    }
     private fun releaseBoard() {
         boardRevision++; boardTask?.cancel(true); boardTask=null; cancelHint()
         workHandler.removeCallbacksAndMessages(null)

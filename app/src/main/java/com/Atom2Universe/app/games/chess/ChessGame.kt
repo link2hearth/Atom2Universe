@@ -20,6 +20,8 @@ class ChessGame {
             1 to -1, 1 to 0, 1 to 1
         )
         private val PAWN_COL_OFFSETS = intArrayOf(-1, 1)
+
+        const val START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     }
 
     // Plateau 8×8 (row 0 = rang 8, row 7 = rang 1)
@@ -64,6 +66,14 @@ class ChessGame {
     /** Combien de fois chaque position (pièces, trait, roques, prise en passant possible) a été vue. */
     private val positionCounts = HashMap<String, Int>()
 
+    /** Position d'où part [moveHistory] : la rejouer avec ses coups redonne la partie entière. */
+    var startFen: String = START_FEN
+        private set
+
+    /** Change à chaque coup ou nouvelle position : un coup calculé pour une autre version est périmé. */
+    var revision = 0
+        private set
+
     init {
         newGame()
     }
@@ -72,6 +82,8 @@ class ChessGame {
      * Initialise une nouvelle partie
      */
     fun newGame() {
+        revision++
+        startFen = START_FEN
         setupStartingPosition()
         currentTurn = PieceColor.WHITE
         moveHistory.clear()
@@ -620,13 +632,14 @@ class ChessGame {
      * Exécute un coup
      * @return true si le coup est légal et a été exécuté
      */
-    fun makeMove(move: Move): Boolean {
-        // Vérifier que le coup est légal
-        val legalMoves = getLegalMoves(move.from)
-        if (!legalMoves.contains(move)) return false
+    fun makeMove(requested: Move): Boolean {
+        // Jouer le coup légal correspondant (même départ, arrivée, promotion) : la pièce prise,
+        // le roque et la prise en passant viennent de la position, pas du coup reçu
+        val move = getLegalMoves(requested.from).find { it == requested } ?: return false
 
         // Récupérer la pièce
         val piece = board[move.from.row][move.from.col] ?: return false
+        revision++
 
         // Exécuter le coup
         board[move.to.row][move.to.col] = if (move.promotionType != null) {
@@ -786,6 +799,9 @@ class ChessGame {
     fun fromFEN(fen: String) {
         val parts = fen.split(" ")
         if (parts.size < 4) return
+        revision++
+        startFen = fen
+        moveHistory.clear()
 
         // Vider le plateau
         for (row in 0..7) {
@@ -855,86 +871,33 @@ class ChessGame {
         return if (rights.isEmpty()) "-" else rights.toString()
     }
 
-    /**
-     * Crée une copie profonde du jeu par copie directe des champs.
-     * Piece est immutable (data class), on peut partager les références de cases.
-     */
-    fun clone(): ChessGame {
-        val copy = ChessGame()
-        for (row in 0..7) {
-            for (col in 0..7) {
-                copy.board[row][col] = board[row][col]
-            }
-        }
-        copy.currentTurn             = currentTurn
-        copy.enPassantTarget         = enPassantTarget
-        copy.whiteKingMoved          = whiteKingMoved
-        copy.blackKingMoved          = blackKingMoved
-        copy.whiteRookKingsideMoved  = whiteRookKingsideMoved
-        copy.whiteRookQueensideMoved = whiteRookQueensideMoved
-        copy.blackRookKingsideMoved  = blackRookKingsideMoved
-        copy.blackRookQueensideMoved = blackRookQueensideMoved
-        copy.isInCheck               = isInCheck
-        copy.isCheckmate             = isCheckmate
-        copy.isStalemate             = isStalemate
-        copy.drawReason              = drawReason
-        copy.halfmoveClock           = halfmoveClock
-        copy.positionCounts.clear();  copy.positionCounts.putAll(positionCounts)
-        copy.moveHistory.clear();    copy.moveHistory.addAll(moveHistory)
-        copy.capturedPieces.clear(); copy.capturedPieces.addAll(capturedPieces)
-        return copy
-    }
+    /** Les coups joués depuis [startFen], en notation longue (« e2e4 », « e7e8q »). */
+    fun movesInLongNotation(): List<String> = moveHistory.map { it.toLongNotation() }
 
-    /**
-     * Clone léger pour la recherche IA : ne copie pas moveHistory ni capturedPieces.
-     * isCheckmate et isStalemate ne sont pas copiés car l'IA les détermine via getAllLegalMoves.
-     */
-    internal fun cloneForSearch(): ChessGame {
-        val copy = ChessGame()
-        for (row in 0..7) {
-            for (col in 0..7) {
-                copy.board[row][col] = board[row][col]
-            }
-        }
-        copy.currentTurn             = currentTurn
-        copy.enPassantTarget         = enPassantTarget
-        copy.whiteKingMoved          = whiteKingMoved
-        copy.blackKingMoved          = blackKingMoved
-        copy.whiteRookKingsideMoved  = whiteRookKingsideMoved
-        copy.whiteRookQueensideMoved = whiteRookQueensideMoved
-        copy.blackRookKingsideMoved  = blackRookKingsideMoved
-        copy.blackRookQueensideMoved = blackRookQueensideMoved
-        copy.isInCheck               = isInCheck
-        return copy
-    }
-
-    /**
-     * Exécute un coup sans re-valider la légalité ni mettre à jour moveHistory/capturedPieces.
-     * Réservé à la recherche IA : le coup doit venir d'getAllLegalMoves (déjà légal).
-     * isInCheck est mis à jour ; isCheckmate/isStalemate sont laissés à false car l'IA
-     * détecte le mat/pat via getAllLegalMoves().isEmpty().
-     */
-    internal fun makeMoveUnchecked(move: Move) {
-        val piece = board[move.from.row][move.from.col] ?: return
-
-        board[move.to.row][move.to.col] = if (move.promotionType != null) {
-            Piece(move.promotionType, piece.color)
-        } else {
-            piece
-        }
-        board[move.from.row][move.from.col] = null
-
-        if (move.isCastling) executeCastling(move)
-        if (move.isEnPassant) board[move.from.row][move.to.col] = null
-
-        enPassantTarget = if (piece.type == PieceType.PAWN && abs(move.to.row - move.from.row) == 2) {
-            Square((move.from.row + move.to.row) / 2, move.from.col)
+    /** Le coup légal écrit en notation longue, ou null s'il n'est pas jouable ici. */
+    fun legalMoveFromLongNotation(notation: String): Move? {
+        if (notation.length !in 4..5) return null
+        val from = Square.fromAlgebraic(notation.substring(0, 2)) ?: return null
+        val to = Square.fromAlgebraic(notation.substring(2, 4)) ?: return null
+        val promotion = if (notation.length == 5) {
+            PieceType.entries.find { it != PieceType.PAWN && it != PieceType.KING && it.notation == notation.substring(4) }
+                ?: return null
         } else null
+        return getLegalMoves(from).find { it.to == to && it.promotionType == promotion }
+    }
 
-        updateCastlingRights(move)
-        currentTurn = currentTurn.opposite()
-        isInCheck = isKingInCheck(currentTurn)
-        isCheckmate = false
-        isStalemate = false
+    /**
+     * Rejoue une partie depuis sa position de départ : répétitions, historique et prises reviennent.
+     * @return false si un coup n'est pas légal (la partie est alors dans un état partiel)
+     */
+    fun replay(fen: String, moves: List<String>): Boolean {
+        if (fen.split(" ").size < 4) return false
+        fromFEN(fen)
+        capturedPieces.clear()
+        for (notation in moves) {
+            val move = legalMoveFromLongNotation(notation) ?: return false
+            if (!makeMove(move)) return false
+        }
+        return true
     }
 }

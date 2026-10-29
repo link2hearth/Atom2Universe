@@ -23,6 +23,8 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.sudoku.data.SudokuDatabase
 import com.Atom2Universe.app.games.sudoku.data.SudokuSaveEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -57,6 +59,8 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
     private var startTimeMs: Long = 0
     private var isTimerRunning = false
     private var isPuzzleSolved = false
+    /** Génération en cours : une nouvelle demande l'annule, la sortie de l'écran aussi. */
+    private var generation: Job? = null
 
     // Selected number for "number first" mode (0 = no number selected)
     private var selectedNumber: Int = 0
@@ -221,9 +225,10 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
         setStatus(getString(R.string.sudoku_status_generating), isError = false)
         statusText.visibility = View.VISIBLE
 
-        lifecycleScope.launch {
+        generation?.cancel()
+        generation = lifecycleScope.launch {
             val board = withContext(Dispatchers.Default) {
-                SudokuGame.generatePuzzle(currentDifficulty)
+                SudokuGame.generatePuzzle(currentDifficulty) { ensureActive() }
             }
 
             gridView.setBoard(board)

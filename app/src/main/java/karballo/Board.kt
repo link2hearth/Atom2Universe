@@ -334,6 +334,16 @@ class Board {
         set(fen) = setFenMove(fen, null)
 
     /**
+     * Loads a position and forgets the previous game, even when the pieces did not change
+     * (setFenMove keeps the old history in that case, castling and passant flags included)
+     */
+    fun resetFen(fen: String) {
+        moveNumber = 0
+        whites = 0L
+        setFenMove(fen, null)
+    }
+
+    /**
      * Sets fen without destroying move history. If lastMove = null destroy the move history
      */
     fun setFenMove(fen: String, lastMove: String?) {
@@ -912,14 +922,19 @@ class Board {
             if (fiftyMovesRule >= 100) {
                 return true
             }
+            // Only positions with the same side to move since the last capture or pawn move can
+            // repeat (the other ones have another turn or another material in their key)
             var repetitions = 0
-            for (i in 0..moveNumber - 1 - 1) {
+            val oldest = max(0, moveNumber - fiftyMovesRule)
+            var i = moveNumber - 2
+            while (i >= oldest) {
                 if (keyHistory[i][0] == key[0] && keyHistory[i][1] == key[1]) {
                     repetitions++
+                    if (repetitions >= 2) {
+                        return true
+                    }
                 }
-                if (repetitions >= 2) {
-                    return true
-                }
+                i -= 2
             }
             return pawns == 0L && rooks == 0L && queens == 0L && (bishops == 0L && knights == 0L
                     || knights == 0L && BitboardUtils.popCount(bishops) == 1

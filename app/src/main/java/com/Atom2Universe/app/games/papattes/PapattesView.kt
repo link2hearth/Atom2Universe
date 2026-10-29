@@ -53,7 +53,11 @@ class PapattesView(context: Context) : View(context) {
     private var shake = 0f
     private var lastFalls = -1
     private var backdrop: Bitmap? = null
-    private var terrain: Terrain? = null
+    /** Le sol par fenêtres qui se chevauchent (une seule sert à chaque image), et en entier en secours. */
+    private var terrains: List<Terrain> = emptyList()
+    private var wholeTerrain: Terrain? = null
+    private var terrainStart = 0f
+    private var scallops = FloatArray(0)
     private var groundGradient: LinearGradient? = null
     private var gradientColors: IntArray? = null
     /** Écrasement du chapeau des champignons après un rebond, de 1 à 0. */
@@ -74,7 +78,7 @@ class PapattesView(context: Context) : View(context) {
         val g = PapattesGame(stage, critter)
         game = g
         backdrop = sprites.backdrop(g.course.biome)
-        terrain = buildTerrain(g.course)
+        buildTerrains(g.course)
         g.walker.torsoCenter(tmp)
         camX = tmp[0]
         camY = g.course.surfaceAt(tmp[0]).takeIf { it.isFinite() } ?: 0f
@@ -319,17 +323,68 @@ class PapattesView(context: Context) : View(context) {
     /**
      * Le sol d'une étape, calculé une fois en mètres (y vers le bas) : un seul contour aux angles
      * arrondis, qui plonge en cuvette sous chaque trou d'eau ; le dessus (pour la bande d'herbe ou
-     * de neige), les festons et les touffes d'herbe.
+     * de neige) et les touffes d'herbe. Valable pour les abscisses de [from] à [until].
      */
-    private class Terrain(val fill: Path, val tops: Path, val iceTops: Path, val scallops: FloatArray, val tufts: Path)
+    private class Terrain(val fill: Path, val tops: Path, val iceTops: Path, val tufts: Path, val from: Float, val until: Float)
 
-    private fun buildTerrain(course: PapattesCourse): Terrain {
+    /**
+     * Remplir, découper et tracer tout le sol d'une étape à chaque image coûte cher : on le découpe en
+     * fenêtres de 2 × [WINDOW] mètres, décalées de [WINDOW]. Chacune reprend les segments qui touchent
+     * la fenêtre élargie de [WINDOW_PAD], plus un voisin de chaque côté : ses angles intérieurs sont
+     * arrondis exactement comme dans le sol entier, et ses bouts tombent loin hors de l'écran.
+     */
+    private fun buildTerrains(course: PapattesCourse) {
         val solids = course.segments.filter { !it.floating }.sortedBy { it.x0 }
+        scallops = buildScallops(solids)
+        wholeTerrain = buildTerrain(course, solids, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY)
+        terrainStart = solids.first().x0
+        val list = ArrayList<Terrain>()
+        var start = terrainStart
+        while (true) {
+            val end = start + 2 * WINDOW
+            var a = solids.indexOfFirst { it.x1 >= start - WINDOW_PAD }
+            var b = solids.indexOfLast { it.x0 <= end + WINDOW_PAD }
+            if (a < 0 || b < a) break
+            a = maxOf(0, a - 1)
+            b = minOf(solids.lastIndex, b + 1)
+            list += buildTerrain(course, solids.subList(a, b + 1),
+                if (a == 0) Float.NEGATIVE_INFINITY else start, if (b == solids.lastIndex) Float.POSITIVE_INFINITY else end)
+            if (b == solids.lastIndex) break
+            start += WINDOW
+        }
+        terrains = list
+    }
+
+    /** La fenêtre de sol qui couvre les abscisses de [from] à [until]. */
+    private fun terrainFor(from: Float, until: Float): Terrain? {
+        if (terrains.isNotEmpty()) {
+            val k = ((from - terrainStart) / WINDOW).toInt().coerceIn(0, terrains.lastIndex)
+            val t = terrains[k]
+            if (from >= t.from && until <= t.until) return t
+        }
+        return wholeTerrain
+    }
+
+    /** Les festons du bord : x, y, rayon, glace (1) ou non (0). */
+    private fun buildScallops(solids: List<Segment>): FloatArray {
+        val scallops = ArrayList<Float>()
+        for (s in solids) {
+            var x = ceil(s.x0 / SCALLOP_STEP) * SCALLOP_STEP
+            while (x < s.x1) {
+                val big = ((x / SCALLOP_STEP).toInt() and 1) == 0
+                scallops += x; scallops += -s.yAt(x) + BAND; scallops += BAND * .55f * (if (big) 1f else .75f)
+                scallops += if (s.surface == Surface.ICE) 1f else 0f
+                x += SCALLOP_STEP
+            }
+        }
+        return scallops.toFloatArray()
+    }
+
+    private fun buildTerrain(course: PapattesCourse, solids: List<Segment>, from: Float, until: Float): Terrain {
         val outline = Path()
         val tops = Path()
         val ice = Path()
         val tufts = Path()
-        val scallops = ArrayList<Float>()
         var prev: Segment? = null
         for (s in solids) {
             val p = prev
@@ -351,13 +406,6 @@ class PapattesView(context: Context) : View(context) {
             outline.lineTo(s.x1, -s.y1)
             tops.lineTo(s.x1, -s.y1)
             if (s.surface == Surface.ICE) { ice.moveTo(s.x0, -s.y0); ice.lineTo(s.x1, -s.y1) }
-            var x = ceil(s.x0 / SCALLOP_STEP) * SCALLOP_STEP
-            while (x < s.x1) {
-                val big = ((x / SCALLOP_STEP).toInt() and 1) == 0
-                scallops += x; scallops += -s.yAt(x) + BAND; scallops += BAND * .55f * (if (big) 1f else .75f)
-                scallops += if (s.surface == Surface.ICE) 1f else 0f
-                x += SCALLOP_STEP
-            }
             // Des touffes d'herbe çà et là, jamais sur la glace ni sur la neige.
             if (s.surface == Surface.GRASS || s.surface == Surface.MUD) {
                 var tx = ceil(s.x0 / TUFT_STEP) * TUFT_STEP
@@ -386,7 +434,7 @@ class PapattesView(context: Context) : View(context) {
         val roundedTops = Path()
         @Suppress("DEPRECATION") rounding.getFillPath(tops, roundedTops)
         return Terrain(if (rounded.isEmpty) outline else rounded, if (roundedTops.isEmpty) tops else roundedTops, ice,
-            scallops.toFloatArray(), tufts)
+            tufts, from, until)
     }
 
     /** Rondins et planches, posés sur l'eau des cuvettes. */
@@ -403,7 +451,8 @@ class PapattesView(context: Context) : View(context) {
 
     /** Le sol en aplats : un dégradé par biome, coiffé d'une bande (herbe, mousse, neige) au bord festonné. */
     private fun drawGround(canvas: Canvas, g: PapattesGame) {
-        val terrain = terrain ?: return
+        // Ce que montre l'écran, de bord à bord (secousse comprise), avec un peu de marge.
+        val terrain = terrainFor(camX - (originX + 4f) / ppm, camX + (width - originX + 4f) / ppm) ?: return
         val colors = groundColors(g.course.biome)
         if (colors !== gradientColors) {
             groundGradient = LinearGradient(0f, 0f, 0f, 1f, colors[0], colors[1], Shader.TileMode.CLAMP)
@@ -432,7 +481,7 @@ class PapattesView(context: Context) : View(context) {
         groundPaint.color = 0xFFDDF3FF.toInt()
         canvas.drawPath(terrain.iceTops, groundPaint)
         groundPaint.style = Paint.Style.FILL
-        val sc = terrain.scallops
+        val sc = scallops
         var i = 0
         while (i < sc.size) {
             if (sc[i] > camX - 12f && sc[i] < camX + 12f) {
@@ -717,6 +766,9 @@ class PapattesView(context: Context) : View(context) {
         private const val TUFT_STEP = .55f
         /** Le bas du sol, assez loin pour sortir de l'écran. */
         private const val DEEP = 40f
+        /** Décalage des fenêtres de sol (chacune large du double), et marge prise de chaque côté, en mètres. */
+        private const val WINDOW = 8f
+        private const val WINDOW_PAD = 1f
         private val MEADOW_GROUND = intArrayOf(0xFF8BC85C.toInt(), 0xFF4F9447.toInt(), 0xFFC8F08A.toInt(), 0xFFA6DD6C.toInt(), 0xFF6DB54A.toInt())
         private val MARSH_GROUND = intArrayOf(0xFF7FA867.toInt(), 0xFF3F6B4C.toInt(), 0xFFC2DE8C.toInt(), 0xFF9CC46E.toInt(), 0xFF6F8F45.toInt())
         private val ICE_GROUND = intArrayOf(0xFFE4F2FB.toInt(), 0xFFA9CBE6.toInt(), 0xFFFFFFFF.toInt(), 0xFFF4FAFF.toInt(), 0xFFFFFFFF.toInt())

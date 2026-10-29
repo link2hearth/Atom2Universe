@@ -287,7 +287,7 @@ class ChessWidgetView @JvmOverloads constructor(
         if (!difficulty.hasAI()) return null
         ai?.let { if (it.getDifficulty() == difficulty) return it }
         ai?.cancel()
-        return ChessAI(game, difficulty, context).also { ai = it }
+        return ChessAI(game, difficulty).also { ai = it }
     }
 
     // Widget masqué : on rend la mémoire de l'IA

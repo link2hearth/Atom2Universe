@@ -432,7 +432,7 @@ class AtomBlocksActivity : ThemedActivity() {
             .setPositiveButton(R.string.ab_close, null).show()
     }
 
-    private fun save() { if (sessionLoaded) store.save(game) }
+    private fun save() { if (sessionLoaded) store.saveLater(game) }
     override fun onResume() {
         super.onResume(); resumed = true
         if (playing) {
@@ -445,6 +445,7 @@ class AtomBlocksActivity : ThemedActivity() {
         if (::board.isInitialized) board.clearSelection()
         save(); audio.pause(); super.onPause()
     }
-    override fun onSaveInstanceState(outState: Bundle) { outState.putBoolean("playing", playing); save(); super.onSaveInstanceState(outState) }
+    // onPause has already saved the game: only the screen is remembered here.
+    override fun onSaveInstanceState(outState: Bundle) { outState.putBoolean("playing", playing); super.onSaveInstanceState(outState) }
     override fun onDestroy() { hintWorker.shutdownNow(); handler.removeCallbacksAndMessages(null); audio.release(); super.onDestroy() }
 }

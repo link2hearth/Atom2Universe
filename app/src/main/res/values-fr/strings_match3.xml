@@ -6,6 +6,7 @@
     <string name="match3_new_game">Nouveau</string>
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Temps : %1$s</string>
+    <string name="match3_clock_format">%1$d:%2$02d</string>
     <string name="match3_neutrinos">⚛ +%1$d neutrinos</string>
     <string name="forge_back">Retour aux jeux</string>
     <string name="forge_eyebrow">L\'ATELIER • EXPÉDITION</string>

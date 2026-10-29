@@ -49,6 +49,8 @@ class CosmoRunView @JvmOverloads constructor(context: Context, attrs: AttributeS
     private var gestureDone = false
     private var pointerId = -1
     private val gesture = CosmoRunGesture(24f * resources.displayMetrics.density)
+    private val demoTick = Runnable { invalidate() }
+    private companion object { const val DEMO_FRAME_MS = 33L }
 
     init {
         isFocusableInTouchMode = true
@@ -117,7 +119,7 @@ class CosmoRunView @JvmOverloads constructor(context: Context, attrs: AttributeS
         invalidate()
     }
     fun resume() { active = true; lastNs = 0L; sfx.start(); sfx.resume(); postInvalidateOnAnimation() }
-    fun pause() { active = false; lastNs = 0L; pointerId = -1; sfx.pause() }
+    fun pause() { active = false; lastNs = 0L; pointerId = -1; removeCallbacks(demoTick); sfx.pause() }
     override fun onDetachedFromWindow() { pause(); sfx.release(); super.onDetachedFromWindow() }
 
     override fun onDraw(canvas: Canvas) {
@@ -159,7 +161,11 @@ class CosmoRunView @JvmOverloads constructor(context: Context, attrs: AttributeS
         hudTimer += dt
         if (hudTimer >= .1f) { hudTimer = 0f; onHud?.invoke() }
         if (game.isGameOver && !notified) { notified = true; onGameOver?.invoke() }
-        if (active && !paused && !game.isGameOver) postInvalidateOnAnimation()
+        if (active && !paused && !game.isGameOver) {
+            // La démo du hangar n'a pas besoin des 120 Hz de la course : 30 images/s suffisent.
+            if (game.isRunning) postInvalidateOnAnimation()
+            else { removeCallbacks(demoTick); postOnAnimationDelayed(demoTick, DEMO_FRAME_MS) }
+        }
     }
 
     /** Liseré rouge tant que le Gardien est sur les talons : il pulse, puis s'éteint avec lui. */

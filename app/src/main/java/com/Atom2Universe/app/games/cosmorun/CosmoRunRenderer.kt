@@ -116,11 +116,14 @@ class CosmoRunRenderer {
     }
 
     private fun drawFaces(canvas: Canvas) {
-                for (face in scene.visible) {
+        paint.style = Paint.Style.FILL
+        for (face in scene.visible) {
+            // Une face entièrement fondue dans le lointain ne laisse aucune trace : inutile de l'envoyer.
+            if (face.color ushr 24 == 0) continue
             path.rewind(); path.moveTo(face.xy[0], face.xy[1])
             for (i in 1 until face.count) path.lineTo(face.xy[i * 2], face.xy[i * 2 + 1])
             path.close()
-            paint.color = face.color; paint.style = Paint.Style.FILL
+            paint.color = face.color
             canvas.drawPath(path, paint)
         }
     }

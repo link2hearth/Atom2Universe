@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.nuclea
 
+import android.os.Handler
+import android.os.HandlerThread
 import android.util.Log
 import org.billthefarmer.mididriver.MidiDriver
 
@@ -11,7 +13,9 @@ import org.billthefarmer.mididriver.MidiDriver
 class NucleaSoundEngine {
 
     private var driver: MidiDriver? = null
-    private var ready = false
+    @Volatile private var ready = false
+    private var timerThread: HandlerThread? = null
+    private var timer: Handler? = null
 
     private var bounceCooldown = 0L
     private var pickupCooldown = 0L
@@ -28,6 +32,8 @@ class NucleaSoundEngine {
     }
 
     fun start() {
+        timerThread = HandlerThread("NucleaSfx").also { it.start() }
+        timer = Handler(timerThread!!.looper)
         val d = MidiDriver.getInstance {
             ready = true
             programChange(0, 9)    // ch0 : glockenspiel — blips cristallins
@@ -42,6 +48,10 @@ class NucleaSoundEngine {
 
     fun stop() {
         ready = false
+        timer?.removeCallbacksAndMessages(null)
+        timerThread?.quitSafely()
+        timerThread = null
+        timer = null
         driver?.stop()
         driver = null
     }
@@ -193,27 +203,24 @@ class NucleaSoundEngine {
         driver?.queueEvent(byteArrayOf(CH9, pitch.toByte(), velocity.toByte()))
     }
 
-    private fun noteOnOff(ch: Byte, pitch: Int, velocity: Int, durationMs: Long) {
-        if (!ready) return
-        val chOff = (ch.toInt() and 0x0F or 0x80).toByte()
-        driver?.queueEvent(byteArrayOf(ch, pitch.toByte(), velocity.toByte()))
-        Thread {
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) driver?.queueEvent(byteArrayOf(chOff, pitch.toByte(), 0))
-        }.start()
-    }
+    private fun noteOnOff(ch: Byte, pitch: Int, velocity: Int, durationMs: Long) =
+        note(ch, pitch, velocity, durationMs, 0L)
 
-    private fun noteDelayed(ch: Byte, pitch: Int, velocity: Int, delayMs: Long) {
+    private fun noteDelayed(ch: Byte, pitch: Int, velocity: Int, delayMs: Long) =
+        note(ch, pitch, velocity, 160L, delayMs)
+
+    /** Note-on (tout de suite ou après [delayMs]) puis note-off, posés sur un seul fil de minuterie. */
+    private fun note(ch: Byte, pitch: Int, velocity: Int, durationMs: Long, delayMs: Long) {
         if (!ready) return
-        Thread {
-            try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-            if (ready) {
-                driver?.queueEvent(byteArrayOf(ch, pitch.toByte(), velocity.toByte()))
-                try { Thread.sleep(160) } catch (_: InterruptedException) {}
-                val chOff = (ch.toInt() and 0x0F or 0x80).toByte()
-                if (ready) driver?.queueEvent(byteArrayOf(chOff, pitch.toByte(), 0))
-            }
-        }.start()
+        val t = timer ?: return
+        val off = (ch.toInt() and 0x0F or 0x80).toByte()
+        val on = Runnable {
+            if (ready) driver?.queueEvent(byteArrayOf(ch, pitch.toByte(), velocity.toByte()))
+        }
+        if (delayMs > 0) t.postDelayed(on, delayMs) else on.run()
+        t.postDelayed({
+            if (ready) driver?.queueEvent(byteArrayOf(off, pitch.toByte(), 0))
+        }, delayMs + durationMs)
     }
 
     private fun programChange(ch: Int, prog: Int) {

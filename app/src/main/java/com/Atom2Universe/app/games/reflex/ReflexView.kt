@@ -57,6 +57,12 @@ class ReflexView @JvmOverloads constructor(
     private var lastNanos = 0L
     /** Voir NucleaView.lockFrame : un refus du canevas matériel vaut pour toujours. */
     private var hardwareCanvas = true
+    /** Un effet (étincelles, ondes, éclairs…) est encore en cours : l'image reste à 60 par seconde. */
+    private var effectsAlive = false
+    /** Dernier état demandé pour l'écran allumé (fil de jeu). */
+    private var screenKeptOn = false
+    /** L'écran reste allumé pendant une partie seulement, pas au menu, en pause ou à la fin. */
+    private val syncScreenOn = Runnable { keepScreenOn = running && game.phase == ReflexPhase.PLAYING }
 
     // Appuis notés par le fil de l'interface : x, y, heure de l'appui.
     private val tapLock = Any()
@@ -211,6 +217,8 @@ class ReflexView @JvmOverloads constructor(
     fun pause() {
         stop()
         if (game.phase == ReflexPhase.PLAYING) game.phase = ReflexPhase.PAUSED
+        screenKeptOn = false
+        keepScreenOn = false
     }
 
     /** Ouvre la bulle de règles : une partie en cours se met en pause. */
@@ -257,13 +265,17 @@ class ReflexView @JvmOverloads constructor(
         val me = Thread.currentThread()
         while (running && me === thread) {
             val now = System.nanoTime()
-            val dt = ((now - lastNanos) / 1_000_000_000f).coerceIn(0f, 0.05f)
+            val seconds = (now - lastNanos) / 1_000_000_000f
+            val dt = seconds.coerceIn(0f, 0.05f)
             lastNanos = now
 
             if (pendingBack) { pendingBack = false; handleBack() }
             consumeTaps()
             game.update(dt)
-            updateEffects(dt)
+            val playing = game.phase == ReflexPhase.PLAYING
+            // Hors partie l'image est plus espacée : le plafond s'élargit pour que les décors gardent leur vitesse.
+            updateEffects(if (playing) dt else seconds.coerceIn(0f, 0.1f))
+            if (playing != screenKeptOn) { screenKeptOn = playing; post(syncScreenOn) }
 
             val canvas = lockFrame()
             if (canvas != null) {
@@ -271,8 +283,10 @@ class ReflexView @JvmOverloads constructor(
             }
 
             // 60 images par seconde suffisent : le jugement se fait sur l'heure du doigt.
+            // Menu, pause et fin de partie, une fois les effets éteints : 20 images par seconde.
+            val frameMs = if (playing || effectsAlive) 16L else 50L
             val elapsed = (System.nanoTime() - now) / 1_000_000L
-            val sleep = 16L - elapsed
+            val sleep = frameMs - elapsed
             if (sleep > 0) try { Thread.sleep(sleep) } catch (_: InterruptedException) { break }
         }
     }
@@ -512,20 +526,22 @@ class ReflexView @JvmOverloads constructor(
 
     private fun updateEffects(dt: Float) {
         animT += dt
+        var alive = false
         val drag = exp(-3.2f * dt)
         for (i in 0 until maxSparks) {
             if (sLife[i] <= 0f) continue
             sLife[i] -= dt
             svx[i] *= drag; svy[i] *= drag
             sx[i] += svx[i] * dt; sy[i] += svy[i] * dt
+            alive = true
         }
         for (i in 0 until maxWaves) if (wDur[i] > 0f) {
             wt[i] += dt
-            if (wt[i] >= wDur[i]) wDur[i] = 0f
+            if (wt[i] >= wDur[i]) wDur[i] = 0f else alive = true
         }
         for (i in 0 until maxTexts) if (tStr[i] != null) {
             tt[i] += dt
-            if (tt[i] >= tDur[i]) tStr[i] = null
+            if (tt[i] >= tDur[i]) tStr[i] = null else alive = true
         }
         shake *= exp(-9f * dt)
         redFlash = (redFlash - dt * 2.2f).coerceAtLeast(0f)
@@ -542,6 +558,8 @@ class ReflexView @JvmOverloads constructor(
         // Le score affiché rattrape le vrai à vitesse constante en secondes.
         shownScore += (game.score - shownScore) * (1f - exp(-12f * dt))
         if (abs(game.score - shownScore) < 1f) shownScore = game.score.toFloat()
+        effectsAlive = alive || shake > 0.3f || redFlash > 0f || whiteFlash > 0f || comboPop > 0f ||
+            lifePop != 0f || brokenChainT > 0f || unlockKind != null || shownScore != game.score.toFloat()
         // Le collisionneur tourne plus vite avec la difficulté, et s'emballe en surchauffe.
         val spin = 0.25f + game.difficulty() * 0.9f + (if (game.isOverheating) 2.5f else 0f)
         collider += spin * dt

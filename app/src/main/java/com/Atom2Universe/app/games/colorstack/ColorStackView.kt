@@ -84,6 +84,11 @@ class ColorStackView @JvmOverloads constructor(
 
     private val colRect = RectF()
     private val tokenRect = RectF()
+    private val shineRect = RectF()
+    // Couleurs de la palette lues une fois (par colorId), pas à chaque jeton dessiné.
+    private val paletteColors = IntArray(ColorStackGame.COLOR_PALETTE.size).also { colors ->
+        for ((id, hex) in ColorStackGame.COLOR_PALETTE) if (id in colors.indices) colors[id] = Color.parseColor(hex)
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -158,11 +163,14 @@ class ColorStackView @JvmOverloads constructor(
                 tokenRect.set(colLeft + tokenPadH, tTop, colRight - tokenPadH, tBot)
 
                 // Couleur du jeton
-                tokenPaint.color = Color.parseColor(col[ti].colorHex)
+                val token = col[ti]
+                tokenPaint.color = if (token.colorId in paletteColors.indices &&
+                    ColorStackGame.COLOR_PALETTE[token.colorId].second == token.colorHex
+                ) paletteColors[token.colorId] else Color.parseColor(token.colorHex)
                 canvas.drawRoundRect(tokenRect, tokenCorner, tokenCorner, tokenPaint)
 
                 // Reflet léger sur chaque jeton
-                val shineRect = RectF(tokenRect.left, tokenRect.top, tokenRect.right,
+                shineRect.set(tokenRect.left, tokenRect.top, tokenRect.right,
                     tokenRect.top + (tokenRect.bottom - tokenRect.top) * 0.4f)
                 canvas.drawRoundRect(shineRect, tokenCorner, tokenCorner, shinePaint)
 

@@ -88,8 +88,16 @@ class SProjectile(
     val isCrit: Boolean,
     val isFork: Boolean = false,
     val isOrbital: Boolean = false,
-    val hitSet: MutableSet<SEnemy> = mutableSetOf()
-)
+    /** Ennemis déjà touchés, créée au premier impact seulement (comparaison par identité). */
+    var hits: ArrayList<SEnemy>? = null
+) {
+    fun hasHit(e: SEnemy): Boolean {
+        val h = hits ?: return false
+        for (i in h.indices) if (h[i] === e) return true
+        return false
+    }
+    fun markHit(e: SEnemy) { (hits ?: ArrayList<SEnemy>(4).also { hits = it }).add(e) }
+}
 
 class SLaser(
     val x1: Float, val y1: Float,
@@ -111,8 +119,16 @@ class SBouncingProj(
     var vx: Float, var vy: Float,
     val damage: Float, val radius: Float,
     var bouncesLeft: Int, val isCrit: Boolean,
-    val hitSet: MutableSet<SEnemy> = mutableSetOf()
-)
+    /** Ennemis déjà touchés, créée au premier impact seulement (comparaison par identité). */
+    var hits: ArrayList<SEnemy>? = null
+) {
+    fun hasHit(e: SEnemy): Boolean {
+        val h = hits ?: return false
+        for (i in h.indices) if (h[i] === e) return true
+        return false
+    }
+    fun markHit(e: SEnemy) { (hits ?: ArrayList<SEnemy>(4).also { hits = it }).add(e) }
+}
 
 class SBomb(
     var x: Float, var y: Float,
@@ -166,7 +182,7 @@ data class UpgradeOption(
     val weaponType: WeaponType? = null,
     val labelRes: Int,
     val descRes: Int,
-    val shortLabel: String,
+    val shortRes: Int,
     val maxLevel: Int,
     val cardColor: Int
 )
@@ -287,64 +303,64 @@ class SurvivorGame(private val ctx: Context) {
 
     private val catalog: List<UpgradeOption> by lazy {
         listOf(
-            UpgradeOption("speed",                null,                    R.string.survivor_upg_speed,                    R.string.survivor_upg_speed_desc,                    "SPD", 10,         Color.parseColor("#4488FF")),
-            UpgradeOption("maxHp",                null,                    R.string.survivor_upg_max_hp,                   R.string.survivor_upg_max_hp_desc,                   "HP+", Int.MAX_VALUE, Color.parseColor("#44FF88")),
-            UpgradeOption("lifeSteal",            null,                    R.string.survivor_upg_life_steal,               R.string.survivor_upg_life_steal_desc,               "VMP", 10,         Color.parseColor("#FF4488")),
-            UpgradeOption("regen",                null,                    R.string.survivor_upg_regen,                    R.string.survivor_upg_regen_desc,                    "REG", 15,         Color.parseColor("#44FFAA")),
-            UpgradeOption("armor",                null,                    R.string.survivor_upg_armor,                    R.string.survivor_upg_armor_desc,                    "ARM", 10,         Color.parseColor("#AAAAFF")),
-            UpgradeOption("crit",                 null,                    R.string.survivor_upg_crit,                     R.string.survivor_upg_crit_desc,                     "CRT", 10,         Color.parseColor("#FFFF44")),
-            UpgradeOption("crit_mult",            null,                    R.string.survivor_upg_crit_mult,                R.string.survivor_upg_crit_mult_desc,                "C×+", Int.MAX_VALUE, Color.parseColor("#FFEE44")),
-            UpgradeOption("revive",               null,                    R.string.survivor_upg_revive,                   R.string.survivor_upg_revive_desc,                   "REV", 3,          Color.parseColor("#FFFFFF")),
-            UpgradeOption("xpBonus",              null,                    R.string.survivor_upg_xp_bonus,                 R.string.survivor_upg_xp_bonus_desc,                 "XP+", 20,         Color.parseColor("#AA44FF")),
-            UpgradeOption("shield",               null,                    R.string.survivor_upg_shield,                   R.string.survivor_upg_shield_desc,                   "SHD", 10,         Color.parseColor("#44CCFF")),
-            UpgradeOption("thorns",               null,                    R.string.survivor_upg_thorns,                   R.string.survivor_upg_thorns_desc,                   "THN", 10,         Color.parseColor("#88FF44")),
-            UpgradeOption("explosion_on_kill",    null,                    R.string.survivor_upg_explosion_on_kill,        R.string.survivor_upg_explosion_on_kill_desc,        "EXP", 8,          Color.parseColor("#FF8800")),
-            UpgradeOption("unlock_laser",         null,                    R.string.survivor_upg_unlock_laser,             R.string.survivor_upg_unlock_laser_desc,             "LZR", 1,          Color.parseColor("#FF3366")),
-            UpgradeOption("unlock_orbital",       null,                    R.string.survivor_upg_unlock_orbital,           R.string.survivor_upg_unlock_orbital_desc,           "ORB", 1,          Color.parseColor("#AADDFF")),
-            UpgradeOption("unlock_aura",          null,                    R.string.survivor_upg_unlock_aura,              R.string.survivor_upg_unlock_aura_desc,              "AUR", 1,          Color.parseColor("#4AF0FF")),
-            UpgradeOption("unlock_chain_lightning",null,                   R.string.survivor_upg_unlock_chain_lightning,   R.string.survivor_upg_unlock_chain_lightning_desc,   "⚡LT", 1,          Color.parseColor("#00BBFF")),
-            UpgradeOption("unlock_bouncing",      null,                    R.string.survivor_upg_unlock_bouncing,          R.string.survivor_upg_unlock_bouncing_desc,          "BNC", 1,          Color.parseColor("#FF8844")),
-            UpgradeOption("unlock_bomb",          null,                    R.string.survivor_upg_unlock_bomb,              R.string.survivor_upg_unlock_bomb_desc,              "BMB", 1,          Color.parseColor("#FF8800")),
-            UpgradeOption("proj_count",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_count,              R.string.survivor_upg_proj_count_desc,               "+1P", 10,         Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_dmg",             WeaponType.PROJECTILE,   R.string.survivor_upg_proj_dmg,                R.string.survivor_upg_proj_dmg_desc,                 "DMG", 20,         Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_rate",            WeaponType.PROJECTILE,   R.string.survivor_upg_proj_rate,               R.string.survivor_upg_proj_rate_desc,                "CDN", 15,         Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_speed",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_speed,              R.string.survivor_upg_proj_speed_desc,               "VIT", 10,         Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_pen",             WeaponType.PROJECTILE,   R.string.survivor_upg_proj_pen,                R.string.survivor_upg_proj_pen_desc,                 "PEN", 5,          Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_range",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_range,              R.string.survivor_upg_proj_range_desc,               "PRT", 8,          Color.parseColor("#88AAFF")),
-            UpgradeOption("proj_fork",            WeaponType.PROJECTILE,   R.string.survivor_upg_proj_fork,               R.string.survivor_upg_proj_fork_desc,                "FRK", 5,          Color.parseColor("#88AAFF")),
-            UpgradeOption("poison",               WeaponType.PROJECTILE,   R.string.survivor_upg_poison,                  R.string.survivor_upg_poison_desc,                   "PSN", 10,         Color.parseColor("#44FF88")),
-            UpgradeOption("laser_range",          WeaponType.LASER,        R.string.survivor_upg_laser_range,             R.string.survivor_upg_laser_range_desc,              "PRT", 15,         Color.parseColor("#FF6688")),
-            UpgradeOption("laser_dmg",            WeaponType.LASER,        R.string.survivor_upg_laser_dmg,               R.string.survivor_upg_laser_dmg_desc,                "DMG", 20,         Color.parseColor("#FF6688")),
-            UpgradeOption("laser_burn",           WeaponType.LASER,        R.string.survivor_upg_laser_burn,              R.string.survivor_upg_laser_burn_desc,               "BRN", 10,         Color.parseColor("#FF6688")),
-            UpgradeOption("laser_rate",           WeaponType.LASER,        R.string.survivor_upg_laser_rate,              R.string.survivor_upg_laser_rate_desc,               "CDN", 10,         Color.parseColor("#FF6688")),
-            UpgradeOption("laser_multi",          WeaponType.LASER,        R.string.survivor_upg_laser_multi,             R.string.survivor_upg_laser_multi_desc,              "MLT", 3,          Color.parseColor("#FF6688")),
-            UpgradeOption("aura_radius",          WeaponType.AURA,         R.string.survivor_upg_aura_radius,             R.string.survivor_upg_aura_radius_desc,              "RAY", 20,         Color.parseColor("#4AF0FF")),
-            UpgradeOption("aura_dmg",             WeaponType.AURA,         R.string.survivor_upg_aura_dmg,                R.string.survivor_upg_aura_dmg_desc,                 "DMG", 20,         Color.parseColor("#4AF0FF")),
-            UpgradeOption("aura_slow",            WeaponType.AURA,         R.string.survivor_upg_aura_slow,               R.string.survivor_upg_aura_slow_desc,                "SLO", 10,         Color.parseColor("#4AF0FF")),
-            UpgradeOption("aura_tick",            WeaponType.AURA,         R.string.survivor_upg_aura_tick,               R.string.survivor_upg_aura_tick_desc,                "FRQ", 12,         Color.parseColor("#4AF0FF")),
-            UpgradeOption("chain_dmg",            WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_dmg,            R.string.survivor_upg_chain_dmg_desc,                "DMG", 20,         Color.parseColor("#00BBFF")),
-            UpgradeOption("chain_bounces",        WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_bounces,        R.string.survivor_upg_chain_bounces_desc,            "+CH", 8,          Color.parseColor("#00BBFF")),
-            UpgradeOption("chain_rate",           WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_rate,           R.string.survivor_upg_chain_rate_desc,               "CDN", 10,         Color.parseColor("#00BBFF")),
-            UpgradeOption("chain_range",          WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_range,          R.string.survivor_upg_chain_range_desc,              "PRT", 10,         Color.parseColor("#00BBFF")),
-            UpgradeOption("chain_split",          WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_split,          R.string.survivor_upg_chain_split_desc,              "SPL", 5,          Color.parseColor("#00EEFF")),
-            UpgradeOption("orbital_count",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_count,           R.string.survivor_upg_orbital_count_desc,            "+OR", 18,         Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_dmg",          WeaponType.ORBITAL,      R.string.survivor_upg_orbital_dmg,             R.string.survivor_upg_orbital_dmg_desc,              "DMG", 20,         Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_speed",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_speed,           R.string.survivor_upg_orbital_speed_desc,            "VIT", 10,         Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_rate",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_rate,            R.string.survivor_upg_orbital_rate_desc,             "FRQ", 12,         Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_multi",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_multi,           R.string.survivor_upg_orbital_multi_desc,            "+1P", 5,          Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_frag",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_frag,            R.string.survivor_upg_orbital_frag_desc,             "FRK", 3,          Color.parseColor("#AADDFF")),
-            UpgradeOption("orbital_poison",       WeaponType.ORBITAL,      R.string.survivor_upg_orbital_poison,          R.string.survivor_upg_orbital_poison_desc,           "PSN", 10,         Color.parseColor("#44FF88")),
-            UpgradeOption("orbital_burn",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_burn,            R.string.survivor_upg_orbital_burn_desc,             "BRN", 10,         Color.parseColor("#FF6600")),
-            UpgradeOption("bounce_count",         WeaponType.BOUNCING,     R.string.survivor_upg_bounce_count,            R.string.survivor_upg_bounce_count_desc,             "REB", 15,         Color.parseColor("#FF9944")),
-            UpgradeOption("bounce_dmg",           WeaponType.BOUNCING,     R.string.survivor_upg_bounce_dmg,              R.string.survivor_upg_bounce_dmg_desc,               "DMG", 20,         Color.parseColor("#FF9944")),
-            UpgradeOption("bounce_speed",         WeaponType.BOUNCING,     R.string.survivor_upg_bounce_speed,            R.string.survivor_upg_bounce_speed_desc,             "VIT", 10,         Color.parseColor("#FF9944")),
-            UpgradeOption("bounce_rate",          WeaponType.BOUNCING,     R.string.survivor_upg_bounce_rate,             R.string.survivor_upg_bounce_rate_desc,              "CDN", 12,         Color.parseColor("#FF9944")),
-            UpgradeOption("bomb_radius",          WeaponType.BOMB,         R.string.survivor_upg_bomb_radius,             R.string.survivor_upg_bomb_radius_desc,              "RAY", 15,         Color.parseColor("#FFAA00")),
-            UpgradeOption("bomb_dmg",             WeaponType.BOMB,         R.string.survivor_upg_bomb_dmg,                R.string.survivor_upg_bomb_dmg_desc,                 "DMG", 20,         Color.parseColor("#FFAA00")),
-            UpgradeOption("bomb_rate",            WeaponType.BOMB,         R.string.survivor_upg_bomb_rate,               R.string.survivor_upg_bomb_rate_desc,               "CDN", 10,         Color.parseColor("#FFAA00")),
-            UpgradeOption("bomb_multi",           WeaponType.BOMB,         R.string.survivor_upg_bomb_multi,              R.string.survivor_upg_bomb_multi_desc,               "+1B", 4,          Color.parseColor("#FFAA00")),
-            UpgradeOption("bomb_residue",         WeaponType.BOMB,         R.string.survivor_upg_bomb_residue,            R.string.survivor_upg_bomb_residue_desc,             "RSD", 1,          Color.parseColor("#CC6600")),
-            UpgradeOption("bomb_residue_duration",WeaponType.BOMB,         R.string.survivor_upg_bomb_residue_duration,   R.string.survivor_upg_bomb_residue_duration_desc,    "DUR", 10,         Color.parseColor("#CC6600")),
+            UpgradeOption("speed",                null,                    R.string.survivor_upg_speed,                    R.string.survivor_upg_speed_desc,                    R.string.survivor_abbr_speed, 10,         Color.parseColor("#4488FF")),
+            UpgradeOption("maxHp",                null,                    R.string.survivor_upg_max_hp,                   R.string.survivor_upg_max_hp_desc,                   R.string.survivor_abbr_max_hp, Int.MAX_VALUE, Color.parseColor("#44FF88")),
+            UpgradeOption("lifeSteal",            null,                    R.string.survivor_upg_life_steal,               R.string.survivor_upg_life_steal_desc,               R.string.survivor_abbr_life_steal, 10,         Color.parseColor("#FF4488")),
+            UpgradeOption("regen",                null,                    R.string.survivor_upg_regen,                    R.string.survivor_upg_regen_desc,                    R.string.survivor_abbr_regen, 15,         Color.parseColor("#44FFAA")),
+            UpgradeOption("armor",                null,                    R.string.survivor_upg_armor,                    R.string.survivor_upg_armor_desc,                    R.string.survivor_abbr_armor, 10,         Color.parseColor("#AAAAFF")),
+            UpgradeOption("crit",                 null,                    R.string.survivor_upg_crit,                     R.string.survivor_upg_crit_desc,                     R.string.survivor_abbr_crit, 10,         Color.parseColor("#FFFF44")),
+            UpgradeOption("crit_mult",            null,                    R.string.survivor_upg_crit_mult,                R.string.survivor_upg_crit_mult_desc,                R.string.survivor_abbr_crit_mult, Int.MAX_VALUE, Color.parseColor("#FFEE44")),
+            UpgradeOption("revive",               null,                    R.string.survivor_upg_revive,                   R.string.survivor_upg_revive_desc,                   R.string.survivor_abbr_revive, 3,          Color.parseColor("#FFFFFF")),
+            UpgradeOption("xpBonus",              null,                    R.string.survivor_upg_xp_bonus,                 R.string.survivor_upg_xp_bonus_desc,                 R.string.survivor_abbr_xp_bonus, 20,         Color.parseColor("#AA44FF")),
+            UpgradeOption("shield",               null,                    R.string.survivor_upg_shield,                   R.string.survivor_upg_shield_desc,                   R.string.survivor_abbr_shield, 10,         Color.parseColor("#44CCFF")),
+            UpgradeOption("thorns",               null,                    R.string.survivor_upg_thorns,                   R.string.survivor_upg_thorns_desc,                   R.string.survivor_abbr_thorns, 10,         Color.parseColor("#88FF44")),
+            UpgradeOption("explosion_on_kill",    null,                    R.string.survivor_upg_explosion_on_kill,        R.string.survivor_upg_explosion_on_kill_desc,        R.string.survivor_abbr_explosion, 8,          Color.parseColor("#FF8800")),
+            UpgradeOption("unlock_laser",         null,                    R.string.survivor_upg_unlock_laser,             R.string.survivor_upg_unlock_laser_desc,             R.string.survivor_abbr_laser, 1,          Color.parseColor("#FF3366")),
+            UpgradeOption("unlock_orbital",       null,                    R.string.survivor_upg_unlock_orbital,           R.string.survivor_upg_unlock_orbital_desc,           R.string.survivor_abbr_orbital, 1,          Color.parseColor("#AADDFF")),
+            UpgradeOption("unlock_aura",          null,                    R.string.survivor_upg_unlock_aura,              R.string.survivor_upg_unlock_aura_desc,              R.string.survivor_abbr_aura, 1,          Color.parseColor("#4AF0FF")),
+            UpgradeOption("unlock_chain_lightning",null,                   R.string.survivor_upg_unlock_chain_lightning,   R.string.survivor_upg_unlock_chain_lightning_desc,   R.string.survivor_abbr_unlock_chain, 1,          Color.parseColor("#00BBFF")),
+            UpgradeOption("unlock_bouncing",      null,                    R.string.survivor_upg_unlock_bouncing,          R.string.survivor_upg_unlock_bouncing_desc,          R.string.survivor_abbr_bouncing, 1,          Color.parseColor("#FF8844")),
+            UpgradeOption("unlock_bomb",          null,                    R.string.survivor_upg_unlock_bomb,              R.string.survivor_upg_unlock_bomb_desc,              R.string.survivor_abbr_bomb, 1,          Color.parseColor("#FF8800")),
+            UpgradeOption("proj_count",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_count,              R.string.survivor_upg_proj_count_desc,               R.string.survivor_abbr_plus_one_shot, 10,         Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_dmg",             WeaponType.PROJECTILE,   R.string.survivor_upg_proj_dmg,                R.string.survivor_upg_proj_dmg_desc,                 R.string.survivor_abbr_damage, 20,         Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_rate",            WeaponType.PROJECTILE,   R.string.survivor_upg_proj_rate,               R.string.survivor_upg_proj_rate_desc,                R.string.survivor_abbr_rate, 15,         Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_speed",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_speed,              R.string.survivor_upg_proj_speed_desc,               R.string.survivor_abbr_velocity, 10,         Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_pen",             WeaponType.PROJECTILE,   R.string.survivor_upg_proj_pen,                R.string.survivor_upg_proj_pen_desc,                 R.string.survivor_abbr_penetration, 5,          Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_range",           WeaponType.PROJECTILE,   R.string.survivor_upg_proj_range,              R.string.survivor_upg_proj_range_desc,               R.string.survivor_abbr_range, 8,          Color.parseColor("#88AAFF")),
+            UpgradeOption("proj_fork",            WeaponType.PROJECTILE,   R.string.survivor_upg_proj_fork,               R.string.survivor_upg_proj_fork_desc,                R.string.survivor_abbr_fork, 5,          Color.parseColor("#88AAFF")),
+            UpgradeOption("poison",               WeaponType.PROJECTILE,   R.string.survivor_upg_poison,                  R.string.survivor_upg_poison_desc,                   R.string.survivor_abbr_poison, 10,         Color.parseColor("#44FF88")),
+            UpgradeOption("laser_range",          WeaponType.LASER,        R.string.survivor_upg_laser_range,             R.string.survivor_upg_laser_range_desc,              R.string.survivor_abbr_range, 15,         Color.parseColor("#FF6688")),
+            UpgradeOption("laser_dmg",            WeaponType.LASER,        R.string.survivor_upg_laser_dmg,               R.string.survivor_upg_laser_dmg_desc,                R.string.survivor_abbr_damage, 20,         Color.parseColor("#FF6688")),
+            UpgradeOption("laser_burn",           WeaponType.LASER,        R.string.survivor_upg_laser_burn,              R.string.survivor_upg_laser_burn_desc,               R.string.survivor_abbr_burn, 10,         Color.parseColor("#FF6688")),
+            UpgradeOption("laser_rate",           WeaponType.LASER,        R.string.survivor_upg_laser_rate,              R.string.survivor_upg_laser_rate_desc,               R.string.survivor_abbr_rate, 10,         Color.parseColor("#FF6688")),
+            UpgradeOption("laser_multi",          WeaponType.LASER,        R.string.survivor_upg_laser_multi,             R.string.survivor_upg_laser_multi_desc,              R.string.survivor_abbr_multi, 3,          Color.parseColor("#FF6688")),
+            UpgradeOption("aura_radius",          WeaponType.AURA,         R.string.survivor_upg_aura_radius,             R.string.survivor_upg_aura_radius_desc,              R.string.survivor_abbr_radius, 20,         Color.parseColor("#4AF0FF")),
+            UpgradeOption("aura_dmg",             WeaponType.AURA,         R.string.survivor_upg_aura_dmg,                R.string.survivor_upg_aura_dmg_desc,                 R.string.survivor_abbr_damage, 20,         Color.parseColor("#4AF0FF")),
+            UpgradeOption("aura_slow",            WeaponType.AURA,         R.string.survivor_upg_aura_slow,               R.string.survivor_upg_aura_slow_desc,                R.string.survivor_abbr_slow, 10,         Color.parseColor("#4AF0FF")),
+            UpgradeOption("aura_tick",            WeaponType.AURA,         R.string.survivor_upg_aura_tick,               R.string.survivor_upg_aura_tick_desc,                R.string.survivor_abbr_frequency, 12,         Color.parseColor("#4AF0FF")),
+            UpgradeOption("chain_dmg",            WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_dmg,            R.string.survivor_upg_chain_dmg_desc,                R.string.survivor_abbr_damage, 20,         Color.parseColor("#00BBFF")),
+            UpgradeOption("chain_bounces",        WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_bounces,        R.string.survivor_upg_chain_bounces_desc,            R.string.survivor_abbr_plus_chain, 8,          Color.parseColor("#00BBFF")),
+            UpgradeOption("chain_rate",           WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_rate,           R.string.survivor_upg_chain_rate_desc,               R.string.survivor_abbr_rate, 10,         Color.parseColor("#00BBFF")),
+            UpgradeOption("chain_range",          WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_range,          R.string.survivor_upg_chain_range_desc,              R.string.survivor_abbr_range, 10,         Color.parseColor("#00BBFF")),
+            UpgradeOption("chain_split",          WeaponType.CHAIN_LIGHTNING, R.string.survivor_upg_chain_split,          R.string.survivor_upg_chain_split_desc,              R.string.survivor_abbr_split, 5,          Color.parseColor("#00EEFF")),
+            UpgradeOption("orbital_count",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_count,           R.string.survivor_upg_orbital_count_desc,            R.string.survivor_abbr_plus_orbital, 18,         Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_dmg",          WeaponType.ORBITAL,      R.string.survivor_upg_orbital_dmg,             R.string.survivor_upg_orbital_dmg_desc,              R.string.survivor_abbr_damage, 20,         Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_speed",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_speed,           R.string.survivor_upg_orbital_speed_desc,            R.string.survivor_abbr_velocity, 10,         Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_rate",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_rate,            R.string.survivor_upg_orbital_rate_desc,             R.string.survivor_abbr_frequency, 12,         Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_multi",        WeaponType.ORBITAL,      R.string.survivor_upg_orbital_multi,           R.string.survivor_upg_orbital_multi_desc,            R.string.survivor_abbr_plus_one_shot, 5,          Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_frag",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_frag,            R.string.survivor_upg_orbital_frag_desc,             R.string.survivor_abbr_fork, 3,          Color.parseColor("#AADDFF")),
+            UpgradeOption("orbital_poison",       WeaponType.ORBITAL,      R.string.survivor_upg_orbital_poison,          R.string.survivor_upg_orbital_poison_desc,           R.string.survivor_abbr_poison, 10,         Color.parseColor("#44FF88")),
+            UpgradeOption("orbital_burn",         WeaponType.ORBITAL,      R.string.survivor_upg_orbital_burn,            R.string.survivor_upg_orbital_burn_desc,             R.string.survivor_abbr_burn, 10,         Color.parseColor("#FF6600")),
+            UpgradeOption("bounce_count",         WeaponType.BOUNCING,     R.string.survivor_upg_bounce_count,            R.string.survivor_upg_bounce_count_desc,             R.string.survivor_abbr_bouncing, 15,         Color.parseColor("#FF9944")),
+            UpgradeOption("bounce_dmg",           WeaponType.BOUNCING,     R.string.survivor_upg_bounce_dmg,              R.string.survivor_upg_bounce_dmg_desc,               R.string.survivor_abbr_damage, 20,         Color.parseColor("#FF9944")),
+            UpgradeOption("bounce_speed",         WeaponType.BOUNCING,     R.string.survivor_upg_bounce_speed,            R.string.survivor_upg_bounce_speed_desc,             R.string.survivor_abbr_velocity, 10,         Color.parseColor("#FF9944")),
+            UpgradeOption("bounce_rate",          WeaponType.BOUNCING,     R.string.survivor_upg_bounce_rate,             R.string.survivor_upg_bounce_rate_desc,              R.string.survivor_abbr_rate, 12,         Color.parseColor("#FF9944")),
+            UpgradeOption("bomb_radius",          WeaponType.BOMB,         R.string.survivor_upg_bomb_radius,             R.string.survivor_upg_bomb_radius_desc,              R.string.survivor_abbr_radius, 15,         Color.parseColor("#FFAA00")),
+            UpgradeOption("bomb_dmg",             WeaponType.BOMB,         R.string.survivor_upg_bomb_dmg,                R.string.survivor_upg_bomb_dmg_desc,                 R.string.survivor_abbr_damage, 20,         Color.parseColor("#FFAA00")),
+            UpgradeOption("bomb_rate",            WeaponType.BOMB,         R.string.survivor_upg_bomb_rate,               R.string.survivor_upg_bomb_rate_desc,               R.string.survivor_abbr_rate, 10,         Color.parseColor("#FFAA00")),
+            UpgradeOption("bomb_multi",           WeaponType.BOMB,         R.string.survivor_upg_bomb_multi,              R.string.survivor_upg_bomb_multi_desc,               R.string.survivor_abbr_plus_bomb, 4,          Color.parseColor("#FFAA00")),
+            UpgradeOption("bomb_residue",         WeaponType.BOMB,         R.string.survivor_upg_bomb_residue,            R.string.survivor_upg_bomb_residue_desc,             R.string.survivor_abbr_residue, 1,          Color.parseColor("#CC6600")),
+            UpgradeOption("bomb_residue_duration",WeaponType.BOMB,         R.string.survivor_upg_bomb_residue_duration,   R.string.survivor_upg_bomb_residue_duration_desc,    R.string.survivor_abbr_duration, 10,         Color.parseColor("#CC6600")),
         ).map { it.copy(maxLevel = SurvivorBalance.upgradeCaps[it.id] ?: it.maxLevel) }
     }
 
@@ -1175,11 +1191,13 @@ class SurvivorGame(private val ctx: Context) {
             p.x += p.vx * dt; p.y += p.vy * dt; p.lifetime -= dt
             if (p.lifetime <= 0f) { dead.add(p); continue }
             for (e in enemySnapshot) {
+                // Un ennemi tué a ses PV à zéro : ce test couvre aussi ceux de toKill.
                 if (e.hp <= 0f) continue
-                if (e in toKill || e in p.hitSet) continue
+                // La distance d'abord : elle écarte presque tout, la liste des touchés ensuite.
                 val dx = e.x - p.x; val dy = e.y - p.y
                 if (dx * dx + dy * dy < (e.radius + p.radius) * (e.radius + p.radius)) {
-                    p.hitSet.add(e)
+                    if (p.hasHit(e)) continue
+                    p.markHit(e)
                     if (!p.isOrbital && poisonLevel > 0) {
                         e.poisonDmg = (e.poisonDmg + poisonDmgBase).coerceAtMost(poisonDmgBase * 3f)
                         e.poisonTimer = 3f
@@ -1215,8 +1233,8 @@ class SurvivorGame(private val ctx: Context) {
         val nx = p.vx / spd; val ny = p.vy / spd
         val forkDmg = p.damage * 0.35f; val forkLt = 0.7f
         val c = cos(0.44f); val s = sin(0.44f)
-        projectiles.add(SProjectile(p.x, p.y, (nx*c - ny*s)*spd,  (nx*s + ny*c)*spd,  forkDmg, PROJ_R*0.7f, forkLt, 0, p.isCrit, true, p.isOrbital, p.hitSet.toMutableSet()))
-        projectiles.add(SProjectile(p.x, p.y, (nx*c + ny*s)*spd, (-nx*s + ny*c)*spd, forkDmg, PROJ_R*0.7f, forkLt, 0, p.isCrit, true, p.isOrbital, p.hitSet.toMutableSet()))
+        projectiles.add(SProjectile(p.x, p.y, (nx*c - ny*s)*spd,  (nx*s + ny*c)*spd,  forkDmg, PROJ_R*0.7f, forkLt, 0, p.isCrit, true, p.isOrbital, p.hits?.let { ArrayList(it) }))
+        projectiles.add(SProjectile(p.x, p.y, (nx*c + ny*s)*spd, (-nx*s + ny*c)*spd, forkDmg, PROJ_R*0.7f, forkLt, 0, p.isCrit, true, p.isOrbital, p.hits?.let { ArrayList(it) }))
     }
 
     private fun applyBurn(enemy: SEnemy, damage: Float) {
@@ -1244,16 +1262,17 @@ class SurvivorGame(private val ctx: Context) {
             val dx = b.x - player.x; val dy = b.y - player.y
             if (dx * dx + dy * dy > 4f * SPAWN_DIST * SPAWN_DIST) { dead.add(b); continue }
             for (e in enemySnapshot) {
-                if (e.hp <= 0f || e in b.hitSet || e in toKill) continue
+                if (e.hp <= 0f) continue
                 val ex = e.x - b.x; val ey = e.y - b.y
                 if (ex * ex + ey * ey < (e.radius + b.radius) * (e.radius + b.radius)) {
-                    b.hitSet.add(e)
+                    if (b.hasHit(e)) continue
+                    b.markHit(e)
                     if (hitEnemy(e, b.damage, b.isCrit)) toKill.add(e)
                     if (b.bouncesLeft > 0) {
                         b.bouncesLeft--
                         var bestNext: SEnemy? = null; var bestDist = Float.MAX_VALUE
                         for (ne in enemies) {
-                            if (ne.hp <= 0f || ne in b.hitSet || ne in toKill) continue
+                            if (ne.hp <= 0f || b.hasHit(ne)) continue
                             val dSq = (ne.x - b.x).let { it * it } + (ne.y - b.y).let { it * it }
                             if (dSq < bestDist) { bestNext = ne; bestDist = dSq }
                         }
@@ -1344,11 +1363,14 @@ class SurvivorGame(private val ctx: Context) {
     // ─── Particles ────────────────────────────────────────────────────────────
 
     private fun updateParticles(dt: Float) {
+        // Freinage réglé à 60 images/s, rapporté au temps écoulé.
+        val drag = 0.92f.pow(dt * 60f)
+        val shrink = 0.97f.pow(dt * 60f)
         val iter = particles.iterator()
         while (iter.hasNext()) {
             val p = iter.next()
             p.x += p.vx * dt; p.y += p.vy * dt
-            p.vx *= 0.92f; p.vy *= 0.92f; p.r *= 0.97f; p.life -= dt
+            p.vx *= drag; p.vy *= drag; p.r *= shrink; p.life -= dt
             if (p.life <= 0f || p.r < 0.5f) iter.remove()
         }
     }

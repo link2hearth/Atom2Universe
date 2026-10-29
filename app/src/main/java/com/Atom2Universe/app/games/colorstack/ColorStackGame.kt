@@ -59,6 +59,8 @@ class ColorStackGame {
         private const val PREFER_DIFFERENT_COLOR_WEIGHT = 2.5
         private const val PREFER_SAME_COLOR_WEIGHT = 1.0
         private const val MIN_MOVE_POOL = 6
+        /** États examinés au plus pour prouver qu'un mélange se résout (il en faut d'ordinaire moins de 300). */
+        private const val SOLVER_BUDGET = 20_000
     }
 
     var board: MutableList<ArrayDeque<Token>> = mutableListOf()
@@ -90,14 +92,18 @@ class ColorStackGame {
         moves = 0
         history.clear()
 
+        // Le mélange libre peut (rarement) donner un plateau sans issue : on ne garde qu'un
+        // mélange dont la résolution est prouvée par une recherche bornée.
         var result: MutableList<ArrayDeque<Token>>? = null
         repeat(MAX_SCRAMBLE_ATTEMPTS) {
             if (result != null) return@repeat
             val solved = generateSolvedBoard()
-            result = scrambleBoard(solved)
+            result = scrambleBoard(solved)?.takeIf { isSolvable(it) }
         }
 
-        board = result ?: fallbackScramble(generateSolvedBoard())
+        board = result
+            ?: fallbackScramble(generateSolvedBoard()).takeIf { isSolvable(it) }
+            ?: reverseScramble(generateSolvedBoard())
         initialBoard = board.map { it.toList() }
     }
 
@@ -373,6 +379,83 @@ class ColorStackGame {
         }
         ensureEmptyColumns(work)
         return work
+    }
+
+    /**
+     * Dernier recours, soluble par construction : la partie jouée à l'envers. On ne reprend qu'un
+     * jeton posé sur sa couleur (ou au fond), si bien que chaque coup inverse est un coup permis.
+     */
+    private fun reverseScramble(solvedBoard: MutableList<ArrayDeque<Token>>): MutableList<ArrayDeque<Token>> {
+        val work = deepCopy(solvedBoard)
+        val cap = effectiveCapacity
+        var lastMove: Pair<Int, Int>? = null
+        val moves = ArrayList<Pair<Int, Int>>()
+        for (step in 0 until config.scrambleMoves) {
+            moves.clear()
+            for (si in work.indices) {
+                val src = work[si]
+                if (src.isEmpty()) continue
+                if (src.size > 1 && src[src.size - 2].colorId != src.last().colorId) continue
+                for (di in work.indices) {
+                    if (di == si || work[di].size >= cap) continue
+                    if (lastMove != null && lastMove.first == di && lastMove.second == si) continue
+                    moves.add(si to di)
+                }
+            }
+            if (moves.isEmpty()) break
+            val move = moves[Random.nextInt(moves.size)]
+            work[move.second].addLast(work[move.first].removeAt(work[move.first].lastIndex))
+            lastMove = move
+        }
+        return work
+    }
+
+    /**
+     * Vrai si une suite de coups permis (un jeton sur sa couleur ou dans une colonne vide) mène à la
+     * solution. Recherche en profondeur, colonnes codées en base 8 (couleur + 1 par jeton) ; l'ordre des
+     * colonnes ne change rien, d'où la clé triée. Faux aussi si le budget est dépassé : on remélange.
+     */
+    private fun isSolvable(start: List<ArrayDeque<Token>>): Boolean {
+        val cap = effectiveCapacity
+        fun size(code: Int): Int { var n = 0; var c = code; while (c != 0) { n++; c /= 8 }; return n }
+        fun pure(code: Int): Boolean { val top = code % 8; var c = code; while (c != 0) { if (c % 8 != top) return false; c /= 8 }; return true }
+        fun done(state: IntArray) = state.all { it == 0 || (size(it) == config.capacity && pure(it)) }
+
+        val first = IntArray(start.size) { ci -> start[ci].fold(0) { code, t -> code * 8 + t.colorId + 1 } }
+        val stack = ArrayDeque<IntArray>().apply { addLast(first) }
+        val seen = HashSet<String>()
+        var nodes = 0
+        while (stack.isNotEmpty()) {
+            val state = stack.removeAt(stack.lastIndex)
+            if (!seen.add(state.sorted().joinToString(","))) continue
+            if (++nodes > SOLVER_BUDGET) return false
+            if (done(state)) return true
+            // Coups les plus prometteurs empilés en dernier, donc essayés d'abord.
+            val moves = ArrayList<IntArray>()
+            for (a in state.indices) {
+                val from = state[a]
+                if (from == 0) continue
+                val color = from % 8
+                val fromPure = pure(from)
+                for (d in state.indices) {
+                    if (d == a) continue
+                    val to = state[d]
+                    if (size(to) >= cap) continue
+                    if (to != 0 && to % 8 != color) continue
+                    if (to == 0 && fromPure) continue // vider une colonne unie dans une vide ne sert à rien
+                    val priority = (if (to != 0) 2 else 0) + (if (to != 0 && pure(to)) 2 else 0)
+                    moves.add(intArrayOf(priority, a, d))
+                }
+            }
+            moves.sortBy { it[0] }
+            for (m in moves) {
+                val next = state.copyOf()
+                next[m[2]] = state[m[2]] * 8 + state[m[1]] % 8
+                next[m[1]] = state[m[1]] / 8
+                stack.addLast(next)
+            }
+        }
+        return false
     }
 
     private fun deepCopy(src: MutableList<ArrayDeque<Token>>): MutableList<ArrayDeque<Token>> =
