@@ -292,7 +292,7 @@ class ParentesTreeView(context:Context):View(context) {
     private fun drawLabel(canvas:Canvas,m:Mark) {
         if(m.label.isEmpty()) return
         val essential=m===selectedMark || m.priority==0
-        if(radial && m.species && zoom < .38f && marks.size>40 && !essential) return
+        if(radial && m.species && zoom < .3f && marks.size>40 && !essential) return
         if(radial && m.priority==3 && zoom < .65f && !essential) return
         val x=m.x*zoom+tx; val y=m.y*zoom+ty
         if(y < -text.textSize || y > height+text.textSize) return
@@ -303,15 +303,30 @@ class ParentesTreeView(context:Context):View(context) {
         val detail=zoom>=.65f
         val label=if(detail)m.label else m.short(text,room)
         val length=if(detail)m.width else min(m.width,room)
-        val anchor=if(radial && m.x<0)x-length-9f*density else x+9f*density
-        val left=if(detail)anchor else anchor.coerceIn(6f*density,max(6f*density,width-length-6f*density))
+        val outward=radial && m.x<0
+        val anchor=if(outward)x-length-9f*density else x+9f*density
+        var left=if(detail)anchor else anchor.coerceIn(6f*density,max(6f*density,width-length-6f*density))
         if(left+length<0 || left>width || (!detail && (x<0 || x>width)))return
         val top=y-(text.descent()-text.ascent())*.5f-3*density
-        m.bounds.set(left-3*density,top,left+length+3*density,top+text.descent()-text.ascent()+6*density)
-        if(m.bounds.top<0 || m.bounds.bottom>height || drawnLabels.any { RectF.intersects(it,m.bounds) }) {
-            m.bounds.setEmpty(); return
+        val bottom=top+text.descent()-text.ascent()+6*density
+        if(top<0 || bottom>height) { m.bounds.setEmpty(); return }
+        // Staggered names: a name that would cover another is pushed outward past it, in steps,
+        // so neighbouring tips read as a staircase instead of hiding each other.
+        var rank=0
+        while(true) {
+            m.bounds.set(left-3*density,top,left+length+3*density,bottom)
+            val blocking=drawnLabels.firstOrNull { RectF.intersects(it,m.bounds) } ?: break
+            if(rank>=STAGGER_RANKS) { m.bounds.setEmpty(); return }
+            left=if(outward) blocking.left-9f*density-length else blocking.right+9f*density
+            rank++
+            if(left+length<0 || left>width) { m.bounds.setEmpty(); return }
         }
         drawnLabels.add(m.bounds)
+        // A pushed name keeps a thin leader back to its dot.
+        if(rank>0) {
+            edge.color=m.color; edge.alpha=150; edge.strokeWidth=density; edge.pathEffect=null
+            canvas.drawLine(x,y,if(outward) m.bounds.right else m.bounds.left,y,edge)
+        }
         // Quiet backing keeps letters readable over branches without turning labels into buttons.
         paper.alpha=235
         canvas.drawRoundRect(m.bounds,4f*density,4f*density,paper)
@@ -408,5 +423,7 @@ class ParentesTreeView(context:Context):View(context) {
         const val NAMED=1
         const val NAMED_DETAIL=2
         const val PLAIN=3
+        /** Au plus tant de rangs d'escalier pour une étiquette poussée hors de ses voisines. */
+        const val STAGGER_RANKS=4
     }
 }

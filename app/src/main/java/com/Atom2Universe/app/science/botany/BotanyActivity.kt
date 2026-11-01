@@ -61,6 +61,7 @@ class BotanyActivity : ThemedActivity() {
     private var search = ""
     private var sort = PlantSort.NAME
     private var filtersOpen = false
+    private var collectionsOpen = false
     private lateinit var content: LinearLayout
     private lateinit var scroll: ScrollView
     private lateinit var pane: FrameLayout
@@ -126,6 +127,7 @@ class BotanyActivity : ThemedActivity() {
         search = savedInstanceState?.getString("search") ?: prefs.getString("search", "").orEmpty()
         sort = PlantSort.entries.firstOrNull { it.name == (savedInstanceState?.getString("sort") ?: prefs.getString("sort", null)) } ?: PlantSort.NAME
         filtersOpen = savedInstanceState?.getBoolean("filters") ?: prefs.getBoolean("filters", false)
+        collectionsOpen = savedInstanceState?.getBoolean("collections") ?: prefs.getBoolean("collections", false)
         for (f in facets) {
             val ids = savedInstanceState?.getStringArrayList("facet_${f.key}")?.toSet() ?: prefs.getStringSet("facet_${f.key}", emptySet()).orEmpty()
             selected[f.key] = ids.filterTo(mutableSetOf()) { id -> f.options.any { it.first == id } && catalog.species.any { id in f.present(it) } }
@@ -232,11 +234,23 @@ class BotanyActivity : ThemedActivity() {
         val controls = mutableListOf<Pair<TextView, Pair<String, String>>>()
         val toggle = ui.action(getString(R.string.bot_filters)) {}
         val filterPanel = ui.column().apply { visibility = if (filtersOpen) View.VISIBLE else View.GONE }
+        // Les collections se replient sous une flèche : elles prennent beaucoup de place et servent peu souvent.
+        val collectionsToggle = ui.action(getString(R.string.bot_collections)) {}
+        val collectionPanel = ui.column().apply { visibility = if (collectionsOpen) View.VISIBLE else View.GONE }
+        fun arrows() {
+            toggle.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, if (filtersOpen) R.drawable.ic_expand_less else R.drawable.ic_expand_more, 0)
+            collectionsToggle.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, if (collectionsOpen) R.drawable.ic_expand_less else R.drawable.ic_expand_more, 0)
+            listOf(toggle, collectionsToggle).forEach {
+                it.compoundDrawableTintList = android.content.res.ColorStateList.valueOf(palette.secondary); it.compoundDrawablePadding = ui.dp(6)
+            }
+        }
         var pendingRefresh: Runnable? = null
         fun refresh() {
             pendingRefresh?.let { list.removeCallbacks(it) }; pendingRefresh = null
             controls.forEach { (chip, key) -> ui.styleChip(chip, key.second in selected[key.first].orEmpty()) }
-            val count = selected.values.sumOf { it.size }
+            val collections = selected["collection"].orEmpty().size
+            collectionsToggle.text = if (collections == 0) getString(R.string.bot_collections) else getString(R.string.bot_collections_count, collections)
+            val count = selected.values.sumOf { it.size } - collections
             toggle.text = if (count == 0) getString(R.string.bot_filters) else getString(R.string.bot_filters_count, count)
             val q = query()
             val found = PlantQuery.sorted(catalog.species.filter { q.matches(it, searchIndex[it.id].orEmpty(), normalized = true) }, sort, resources.configuration.locales[0],
@@ -254,24 +268,26 @@ class BotanyActivity : ThemedActivity() {
             pendingRefresh = Runnable { if (list.adapter === rowsAdapter) refresh() }.also { list.postDelayed(it, 140) }
         }
         header.addView(searchBox.view, ui.full(4))
-        header.addView(ui.text(getString(R.string.bot_collections), 13f, bold = true), ui.full(12))
-        header.addView(ui.flow(catalog.collections.map { collection ->
-            ui.chip(getString(collection.title), collection.id in selected["collection"].orEmpty()) { flip("collection", collection.id); refresh() }
-                .also { controls += it to ("collection" to collection.id) }
-        }), ui.full(6))
-        header.addView(ui.note(getString(R.string.bot_collection_help)), ui.full(4))
         header.addView(ui.flow(catalog.sections.map { section ->
             ui.chip(getString(section.title), section.id in selected["section"].orEmpty()) { flip("section", section.id); refresh() }
                 .also { controls += it to ("section" to section.id) }
         }), ui.full(10))
-        header.addView(ui.note(getString(R.string.bot_port_note)), ui.full(4))
-        val options = ui.line()
-        options.addView(toggle, LinearLayout.LayoutParams(-2, -2))
-        options.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
-        options.addView(ui.action(getString(R.string.bot_reset)) {
+        // Une seule ligne de commandes (qui passe à la ligne sur un téléphone) : collections et critères se
+        // déplient dessous, « Tout effacer » en dernier.
+        header.addView(ui.flow(listOf(collectionsToggle, toggle, ui.action(getString(R.string.bot_reset)) {
             selected.values.forEach { it.clear() }; search = ""; searchBox.edit.setText(""); refresh()
-        }, LinearLayout.LayoutParams(-2, -2))
-        header.addView(options, ui.full(10))
+        })), ui.full(10))
+        collectionPanel.addView(ui.flow(catalog.collections.map { collection ->
+            ui.chip(getString(collection.title), collection.id in selected["collection"].orEmpty()) { flip("collection", collection.id); refresh() }
+                .also { controls += it to ("collection" to collection.id) }
+        }), ui.full(8))
+        collectionPanel.addView(ui.note(getString(R.string.bot_collection_help)), ui.full(4))
+        header.addView(collectionPanel, ui.full(0))
+        collectionsToggle.setOnClickListener {
+            collectionsOpen = !collectionsOpen
+            collectionPanel.visibility = if (collectionsOpen) View.VISIBLE else View.GONE
+            arrows()
+        }
         var filtersBuilt = false
         fun buildFilters() {
             if (filtersBuilt) return
@@ -304,9 +320,11 @@ class BotanyActivity : ThemedActivity() {
             filtersOpen = !filtersOpen
             if (filtersOpen) buildFilters()
             filterPanel.visibility = if (filtersOpen) View.VISIBLE else View.GONE
+            arrows()
         }
         if (filtersOpen) buildFilters()
         header.addView(filterPanel, ui.full(0))
+        arrows()
         val sortRow = ui.line()
         sortRow.addView(ui.text(getString(R.string.bot_sort), 13f), LinearLayout.LayoutParams(-2, -2))
         val sortTitles = listOf(R.string.bot_sort_name, R.string.bot_sort_latin, R.string.bot_sort_family, R.string.bot_sort_height, R.string.bot_sort_flowering)
@@ -845,7 +863,7 @@ class BotanyActivity : ThemedActivity() {
         out.putString("life_search", lifeSearch); out.putString("life_family", lifeFamily); out.putString("life_branch", lifeBranch)
         out.putBoolean("life_latin_sort", lifeLatinSort); out.putInt("life_limit", lifeLimit)
         out.putString("tab", tab.name); out.putString("search", search); out.putString("sort", sort.name)
-        out.putBoolean("filters", filtersOpen); out.putString("sheet", current)
+        out.putBoolean("filters", filtersOpen); out.putBoolean("collections", collectionsOpen); out.putString("sheet", current)
         out.putStringArrayList("history", ArrayList(history)); out.putStringArrayList("expanded", ArrayList(expanded)); out.putInt("scroll", scroll.scrollY)
         if (tab == Tab.EXPLORE) out.putParcelable("list", list.layoutManager?.onSaveInstanceState())
         selected.forEach { (key, value) -> out.putStringArrayList("facet_$key", ArrayList(value)) }
@@ -854,7 +872,7 @@ class BotanyActivity : ThemedActivity() {
         super.onPause()
         prefs.edit().apply {
             putString("tab", tab.name); putString("search", search); putString("sort", sort.name)
-            putBoolean("filters", filtersOpen); putStringSet("expanded", expanded.toSet())
+            putBoolean("filters", filtersOpen); putBoolean("collections", collectionsOpen); putStringSet("expanded", expanded.toSet())
             selected.forEach { (key, value) -> putStringSet("facet_$key", value.toSet()) }
         }.apply()
     }

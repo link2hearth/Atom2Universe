@@ -406,4 +406,5 @@
 <string name="bot_collection_tropical_america_desc">Quelques espèces tropicales américaines, du Mexique et de l’Amérique centrale au nord des Andes et au bouclier des Guyanes.</string>
 <string name="bot_source_cambridge">Jardin botanique de l’Université de Cambridge</string>
 <plurals name="bot_species_count"><item quantity="one">%1$d espèce</item><item quantity="other">%1$d espèces</item></plurals>
+<string name="bot_collections_count">Collections · %1$d</string>
 </resources>

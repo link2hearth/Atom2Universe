@@ -406,4 +406,5 @@
 <string name="bot_collection_tropical_america_desc">Selected tropical American species, from Mexico and Central America to the northern Andes and Guiana Shield.</string>
 <string name="bot_source_cambridge">University of Cambridge Botanic Garden</string>
 <plurals name="bot_species_count"><item quantity="one">%1$d species</item><item quantity="other">%1$d species</item></plurals>
+<string name="bot_collections_count">Collections · %1$d</string>
 </resources>
