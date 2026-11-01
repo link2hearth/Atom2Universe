@@ -100,7 +100,7 @@ def check_reconstructions(records, gltf, accessor, provenance):
             for key in ('bladderNeckCentre', 'urethralMeatus'):
                 anchor = np.array(registration['anchors'][key]) + registration['translation']
                 if enveloped:
-                    anchor = FEMALE_WARP[-1].apply(anchor[None])[0][0]
+                    anchor = FEMALE_WARP[-1].anchor(key, anchor)
                 assert np.linalg.norm(v - anchor, axis=1).min() < .007, key
         triangles += len(f)
     # Reshaped into the mannequin, the midline is wherever its trunk centre lies: compare each pair.

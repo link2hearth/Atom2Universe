@@ -218,8 +218,12 @@ def build_warp(source_folder, items):
 
 
 def apply(source_folder, items):
-    """Return reshaped items (mannequin skin replacing the HRA skin) and a provenance report."""
+    """Return reshaped items (mannequin skin replacing the HRA skin), a provenance report and the transforms."""
+    from female_skin_detail import smooth_seams, sculpt_vulva, place_external_genitals
     warp, (man_v, man_f), registration = build_warp(source_folder, items)
+    man_v, seams = smooth_seams(man_v, man_f)
+    crotch_centre, _ = warp.t.trunk.at(np.array([warp.t.crotch + 0.02]))
+    man_v, vulva_anchors, vulva = sculpt_vulva(man_v, man_f, float(crotch_centre[0, 0]), warp.t.crotch)
     result, clamped = [], []
     for record, v, f in items:
         if record['layer'] == 'skin':
@@ -235,6 +239,7 @@ def apply(source_folder, items):
                 wikiEn=SKIN_NOTE[2], wikiFr=SKIN_NOTE[3], layer='skin', region='body', category='female_skin',
                 groupEn='Skin', groupFr='Peau', color=[.76, .55, .42], standard=False, boneCount=0)
     result.append((skin, man_v, man_f))
+    result, genitals, anchor_transform = place_external_genitals(result, vulva_anchors)
     names = ['sole', 'crotch', 'armpit', 'neck', 'top']
     report = {'method': ('Per-slice polar remapping of every HRA structure into the mannequin skin: angle and normalised radius '
                          'around the trunk or leg centre are preserved; heights are mapped through five landmarks. '
@@ -243,5 +248,20 @@ def apply(source_folder, items):
               'landmarksMetres': {'hra': dict(zip(names, warp.ls.round(4).tolist())),
                                   'mannequin': dict(zip(names, warp.lt.round(4).tolist()))},
               'breastSurfaceClampedInsideSkin': clamped, 'sliceStepMetres': STEP, 'angularBins': ANGLES,
-              'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
-    return result, report, warp
+              'swimsuitSeams': seams, 'sculptedVulva': vulva, 'externalGenitalPlacement': genitals,
+              'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+              'detailSha256': hashlib.sha256(Path(__file__).with_name('female_skin_detail.py').read_bytes()).hexdigest()}
+    return result, report, Transforms(warp, anchor_transform)
+
+
+class Transforms:
+    """What the validator needs: the body warp and the reconstruction anchor mapping."""
+
+    def __init__(self, warp, anchor_transform):
+        self.warp, self.anchor_transform = warp, anchor_transform
+
+    def apply(self, points, clamp=False):
+        return self.warp.apply(points, clamp)
+
+    def anchor(self, key, point):
+        return self.anchor_transform(key, self.warp.apply(np.asarray(point, dtype=np.float64)[None])[0][0])
