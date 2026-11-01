@@ -3,4 +3,11 @@
     <string name="science_back_to_previous_module">Revenir au module précédent</string>
     <string name="science_return_to_module_start">Revenir au début du module</string>
     <string name="science_navigation_help">Après avoir suivi un lien depuis un autre module, touche la flèche retour pour y revenir directement. Un appui long sur la flèche ramène au début du module actuel.</string>
+    <string name="science_help">Aide</string>
+    <string name="science_search">Rechercher</string>
+    <string name="science_clear_search">Effacer la recherche</string>
+    <string name="science_module_tree">Arbre du vivant</string>
+    <string name="science_module_plants">Plantes</string>
+    <string name="science_module_fungi">Champignons</string>
+    <string name="science_see_also">À voir aussi</string>
 </resources>

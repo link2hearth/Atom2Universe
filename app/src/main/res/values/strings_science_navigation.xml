@@ -3,4 +3,11 @@
     <string name="science_back_to_previous_module">Back to the previous module</string>
     <string name="science_return_to_module_start">Return to the start of this module</string>
     <string name="science_navigation_help">After following a link from another module, tap the back arrow to return there directly. Hold the arrow to return to the start of the current module.</string>
+    <string name="science_help">Help</string>
+    <string name="science_search">Search</string>
+    <string name="science_clear_search">Clear search</string>
+    <string name="science_module_tree">Tree of life</string>
+    <string name="science_module_plants">Plants</string>
+    <string name="science_module_fungi">Mushrooms</string>
+    <string name="science_see_also">See also</string>
 </resources>

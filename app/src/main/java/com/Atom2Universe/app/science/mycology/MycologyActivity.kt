@@ -2,39 +2,28 @@ package com.Atom2Universe.app.science.mycology
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Paint
-import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.HorizontalScrollView
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.science.FitFrame
 import com.Atom2Universe.app.science.ScienceFiche
+import com.Atom2Universe.app.science.ScienceModule
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceUi
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.parentes.ParentesRepository
-import com.google.android.material.chip.ChipGroup
 import java.text.Collator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,11 +32,11 @@ import kotlin.math.min
 
 /**
  * L'atlas des champignons : des sosies comparés côte à côte (d'après les confusions réellement observées
- * en France), la liste des espèces, et celles dont le classement a changé. Chaque fiche montre le champignon
- * en trois vues dessinées en code. Les sources n'apparaissent que dans « À propos ».
+ * en France), une grille d'espèces, et celles dont le classement a changé. Chaque fiche montre le champignon
+ * en trois vues dessinées en code, puis ses chapitres. Les sources n'apparaissent que dans « À propos ».
  */
 class MycologyActivity : ThemedActivity() {
-    private enum class Tab { LOOKALIKES, SPECIES, CHANGED }
+    private enum class Tab(val title: Int) { LOOKALIKES(R.string.myco_tab_lookalikes), SPECIES(R.string.myco_tab_species), CHANGED(R.string.myco_tab_changed) }
 
     private sealed class Sheet {
         data class Species(val id: String) : Sheet()
@@ -56,11 +45,12 @@ class MycologyActivity : ThemedActivity() {
     }
 
     private val palette by lazy { SciencePalette(this) }
+    private val ui by lazy { ScienceUi(this, palette) }
+    private val hue by lazy { ScienceModule.MYCOLOGY.color(palette) }
     private val prefs by lazy { getSharedPreferences("mycology", MODE_PRIVATE) }
-    private val density by lazy { resources.displayMetrics.density }
     private lateinit var content: LinearLayout
     private lateinit var scroll: ScrollView
-    private lateinit var tabsRow: LinearLayout
+    private lateinit var tabs: ScienceUi.TabRow
     private var tab = Tab.LOOKALIKES
     // Les choix de l'écran Espèces : plusieurs statuts, plusieurs critères, gardés d'une ouverture à l'autre.
     private val statuses = HashSet<FungusStatus>()
@@ -76,7 +66,7 @@ class MycologyActivity : ThemedActivity() {
     private var current: Sheet? = null
     private var lifeIndex: MycologyLifeIndex? = null
     private var lifeRepo: ParentesRepository? = null
-    /** La place de la classification dans la fiche ouverte, remplie sur place quand l'arbre arrive. */
+    /** La place des liens de la fiche ouverte, remplie sur place quand l'arbre arrive. */
     private var treeSlot: Pair<String, LinearLayout>? = null
     private val history = ArrayList<Sheet>()
 
@@ -101,7 +91,7 @@ class MycologyActivity : ThemedActivity() {
         scroll.post { scroll.scrollTo(0, y) }
     }
 
-    /** L'arbre se charge à part : le bouton « Retrouver dans l'arbre » apparaît dès qu'il est prêt, sans refaire la fiche. */
+    /** L'arbre se charge à part : le lien « Arbre du vivant » apparaît dès qu'il est prêt, sans refaire la fiche. */
     private fun loadTree() {
         val latin = FungusCatalog.species.associate { it.id to getString(it.latin) }
         lifecycleScope.launch {
@@ -119,58 +109,39 @@ class MycologyActivity : ThemedActivity() {
     // ------------------------------------------------------------------ écran principal
 
     private fun buildUi() {
-        val root = column().apply { setBackgroundColor(palette.background) }
-        val toolbar = row()
-        toolbar.addView(icon(R.drawable.ic_arrow_back_24, R.string.myco_back) { finish() }.apply {
-            ScienceNavigation.bindHomeAction(this) {
-                fiche.dismiss()
-                tab = Tab.LOOKALIKES
-                render()
-                scroll.scrollTo(0, 0)
-                announceForAccessibility(getString(R.string.science_return_to_module_start))
-            }
-        }, LinearLayout.LayoutParams(dp(48), dp(48)))
-        toolbar.addView(label(getString(R.string.myco_title), 20f, true), LinearLayout.LayoutParams(0, -2, 1f))
-        toolbar.addView(pill(getString(R.string.myco_urgent), 0xFFC62828.toInt()).apply { setOnClickListener { showUrgent() } },
-            LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(4) })
-        toolbar.addView(icon(R.drawable.ic_more_vert_24, R.string.myco_about) { open(Sheet.About) }, LinearLayout.LayoutParams(dp(48), dp(48)))
-        root.addView(toolbar)
+        val header = ui.header(getString(R.string.myco_title), ScienceModule.MYCOLOGY, onBack = { finish() }, onHome = {
+            fiche.dismiss()
+            tab = Tab.LOOKALIKES
+            render()
+            scroll.scrollTo(0, 0)
+            scroll.announceForAccessibility(getString(R.string.science_return_to_module_start))
+        }, actions = listOf(ScienceUi.HeaderAction(R.drawable.ic_sci_help, R.string.myco_about) { open(Sheet.About) }))
 
-        val warning = row().apply {
-            background = palette.shape(ColorUtils.blendARGB(palette.surface, 0xFFC62828.toInt(), 0.10f), 12f)
-            setPadding(dp(10), dp(8), dp(12), dp(8))
+        val column = ui.column()
+        // L'avertissement et le numéro d'urgence restent visibles : c'est une question de sécurité.
+        val warning = ui.line().apply {
+            background = palette.shape(ColorUtils.blendARGB(palette.surface, DANGER, 0.10f), 12f)
+            setPadding(ui.dp(10), ui.dp(6), ui.dp(8), ui.dp(6))
         }
-        warning.addView(ImageButton(this).apply {
-            setImageResource(R.drawable.ic_info); setColorFilter(0xFFC62828.toInt()); background = null; isClickable = false
-        }, LinearLayout.LayoutParams(dp(28), dp(28)))
-        warning.addView(label(getString(R.string.myco_warning), 12.5f), LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(6) })
-        root.addView(warning, LinearLayout.LayoutParams(-1, -2).apply { setMargins(dp(16), dp(4), dp(16), dp(6)) })
+        warning.addView(ImageView(this).apply { setImageResource(R.drawable.ic_info); imageTintList = android.content.res.ColorStateList.valueOf(DANGER) },
+            LinearLayout.LayoutParams(ui.dp(22), ui.dp(22)))
+        warning.addView(ui.text(getString(R.string.myco_warning), 12.5f), LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = ui.dp(8); marginEnd = ui.dp(8) })
+        warning.addView(ui.pill(getString(R.string.myco_urgent), DANGER).apply { isClickable = true; isFocusable = true; setOnClickListener { showUrgent() } })
+        column.addView(warning, LinearLayout.LayoutParams(-1, -2).apply { setMargins(ui.dp(16), ui.dp(4), ui.dp(16), ui.dp(4)) })
 
-        tabsRow = row().apply { setPadding(dp(12), 0, dp(12), dp(6)) }
-        root.addView(tabsRow)
-
-        content = column().apply { setPadding(dp(16), dp(6), dp(16), dp(24)) }
-        scroll = ScrollView(this).apply { isFillViewport = true; addView(content) }
-        val centered = FrameLayout(this).apply { addView(scroll, FrameLayout.LayoutParams(-1, -1, Gravity.CENTER_HORIZONTAL)) }
-        root.addView(centered, LinearLayout.LayoutParams(-1, 0, 1f))
-        setContentView(root)
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            val safe = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(safe.left, safe.top, safe.right, safe.bottom)
-            centered.post { scroll.layoutParams = (scroll.layoutParams as FrameLayout.LayoutParams).apply { width = min(centered.width, dp(840)) } }
-            insets
+        tabs = ui.tabs(Tab.entries.map { getString(it.title) }, tab.ordinal) { index ->
+            val next = Tab.entries[index]
+            if (tab != next) { tab = next; tabs.select(index); render(); scroll.scrollTo(0, 0) }
         }
-        ViewCompat.requestApplyInsets(root)
+        column.addView(tabs.view)
+        content = ui.column().apply { setPadding(ui.dp(16), ui.dp(6), ui.dp(16), ui.dp(24)) }
+        scroll = ScrollView(this).apply { isFillViewport = true; clipToPadding = false; addView(content) }
+        column.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
+        setContentView(ui.screen(header, column, maxWidthDp = 1100))
     }
 
     private fun render() {
-        tabsRow.removeAllViews()
         content.removeAllViews()
-        listOf(Tab.LOOKALIKES to R.string.myco_tab_lookalikes, Tab.SPECIES to R.string.myco_tab_species, Tab.CHANGED to R.string.myco_tab_changed)
-            .forEach { (t, title) ->
-                tabsRow.addView(button(title, tab == t) { if (tab != t) { tab = t; render(); scroll.scrollTo(0, 0) } },
-                    LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(4); marginEnd = dp(4) })
-            }
         when (tab) {
             Tab.LOOKALIKES -> renderLookalikes()
             Tab.SPECIES -> renderSpecies()
@@ -178,35 +149,29 @@ class MycologyActivity : ThemedActivity() {
         }
     }
 
-    private fun contentWidth() = min(resources.displayMetrics.widthPixels, dp(840)) - dp(32)
+    private fun contentWidth() = min(resources.displayMetrics.widthPixels, ui.dp(1100)) - ui.dp(32)
 
     private fun renderLookalikes() {
         FungusCatalog.groups.forEach { group ->
             val members = group.members.mapNotNull { FungusCatalog.get(it) }
-            val card = column().apply {
-                background = ripple(palette.shape(palette.raised, 16f))
-                setPadding(dp(12), dp(10), dp(12), dp(12))
-                isClickable = true; isFocusable = true
-                contentDescription = getString(group.title)
-                setOnClickListener { open(Sheet.Group(group.id)) }
-            }
-            val head = row()
-            head.addView(label(getString(group.title), 17f, true), LinearLayout.LayoutParams(0, -2, 1f))
-            head.addView(pill(getString(group.evidence), palette.outline, small = true))
+            val card = ui.card { open(Sheet.Group(group.id)) }.apply { contentDescription = getString(group.title) }
+            val head = ui.line()
+            head.addView(ui.text(getString(group.title), 17f, bold = true), LinearLayout.LayoutParams(0, -2, 1f))
+            head.addView(ui.pill(getString(group.evidence), palette.outline, small = true))
             card.addView(head)
-            val plates = row().apply { gravity = Gravity.TOP }
+            val plates = ui.line().apply { gravity = Gravity.TOP }
             val looks = members.map { it.look }
             members.forEach { sp ->
-                val cell = column().apply { gravity = Gravity.CENTER_HORIZONTAL }
-                cell.addView(plate(sp.look, PlateMode.SIDE, compact = true, shared = looks), LinearLayout.LayoutParams(-1, dp(150)))
-                cell.addView(label(getString(sp.name), 11.5f).apply {
+                val cell = ui.column().apply { gravity = Gravity.CENTER_HORIZONTAL }
+                cell.addView(plate(sp.look, PlateMode.SIDE, compact = true, shared = looks), LinearLayout.LayoutParams(-1, ui.dp(150)))
+                cell.addView(ui.text(getString(sp.name), 12f).apply {
                     gravity = Gravity.CENTER; maxLines = 2; ellipsize = TextUtils.TruncateAt.END
-                }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(2) })
-                cell.addView(statusChip(sp.status, small = true), LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(3) })
-                plates.addView(cell, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(2); marginEnd = dp(2) })
+                }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = ui.dp(2) })
+                cell.addView(statusChip(sp.status, small = true), LinearLayout.LayoutParams(-2, -2).apply { topMargin = ui.dp(3) })
+                plates.addView(cell, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = ui.dp(2); marginEnd = ui.dp(2) })
             }
-            card.addView(plates, full())
-            content.addView(card, full())
+            card.addView(plates, ui.full())
+            content.addView(card, ui.full())
         }
     }
 
@@ -217,37 +182,32 @@ class MycologyActivity : ThemedActivity() {
 
     /**
      * L'écran Espèces : les statuts (plusieurs à la fois, « Tous » les efface), puis des critères pour retrouver
-     * un champignon d'après ce qu'on a vu. Un bouton qu'on touche change la liste sans reconstruire l'écran,
-     * donc sans faire sauter le défilement.
+     * un champignon d'après ce qu'on a vu, et la grille des tuiles. Une puce touchée change la grille sans
+     * reconstruire l'écran, donc sans faire sauter le défilement.
      */
     private fun renderSpecies() {
-        val results = column()
-        val statusButtons = ArrayList<Pair<FungusStatus?, Button>>()
-        val criterionButtons = ArrayList<Pair<String, Button>>()
-        val toggle = button("") {}
-        val clear = button(R.string.myco_criteria_clear) {}
-        val panel = column().apply { visibility = if (criteriaOpen) View.VISIBLE else View.GONE }
+        val results = ui.column()
+        val statusChips = ArrayList<Pair<FungusStatus?, TextView>>()
+        val criterionChips = ArrayList<Pair<String, TextView>>()
+        val toggle = ui.action("") {}
+        val clear = ui.action(getString(R.string.myco_criteria_clear)) {}
+        val panel = ui.column().apply { visibility = if (criteriaOpen) View.VISIBLE else View.GONE }
 
         fun refresh() {
-            statusButtons.forEach { (status, b) -> style(b, if (status == null) statuses.isEmpty() else status in statuses) }
-            criterionButtons.forEach { (id, b) -> style(b, id in criteria) }
+            statusChips.forEach { (status, chip) -> ui.styleChip(chip, if (status == null) statuses.isEmpty() else status in statuses) }
+            criterionChips.forEach { (id, chip) -> ui.styleChip(chip, id in criteria) }
             val base = if (criteria.isEmpty()) getString(R.string.myco_criteria) else getString(R.string.myco_criteria_count, criteria.size)
             toggle.text = base + if (criteriaOpen) " ▴" else " ▾"
-            style(toggle, criteria.isNotEmpty())
             clear.visibility = if (criteria.isEmpty()) View.GONE else View.VISIBLE
             fillResults(results)
         }
 
-        val chips = row()
-        (listOf<FungusStatus?>(null) + FungusStatus.entries).forEach { status ->
-            val b = button(status?.label ?: R.string.myco_filter_all) {
+        content.addView(ui.chipRow((listOf<FungusStatus?>(null) + FungusStatus.entries).map { status ->
+            ui.chip(getString(status?.label ?: R.string.myco_filter_all), false) {
                 if (status == null) statuses.clear() else if (!statuses.remove(status)) statuses.add(status)
                 refresh()
-            }.apply { textSize = 13f; minHeight = dp(40) }
-            statusButtons.add(status to b)
-            chips.addView(b, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(6) })
-        }
-        content.addView(HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(chips) }, full())
+            }.also { statusChips.add(status to it) }
+        }), ui.full(4))
 
         toggle.setOnClickListener {
             criteriaOpen = !criteriaOpen
@@ -255,28 +215,24 @@ class MycologyActivity : ThemedActivity() {
             refresh()
         }
         clear.setOnClickListener { criteria.clear(); refresh() }
-        val head = row()
-        head.addView(toggle.apply { textSize = 13f; minHeight = dp(40) }, LinearLayout.LayoutParams(-2, -2))
+        val head = ui.line()
+        head.addView(toggle, LinearLayout.LayoutParams(-2, -2))
         head.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
-        head.addView(clear.apply { textSize = 13f; minHeight = dp(40) }, LinearLayout.LayoutParams(-2, -2))
-        content.addView(head, full(6))
+        head.addView(clear, LinearLayout.LayoutParams(-2, -2))
+        content.addView(head, ui.full(10))
 
         for (group in CriterionGroup.entries) {
             val offered = FungusCriteria.offered[group] ?: continue
-            panel.addView(label(getString(group.title), 12f, true).apply { setTextColor(palette.secondary) }, full(8))
-            val flow = ChipGroup(this).apply { chipSpacingHorizontal = dp(6); chipSpacingVertical = dp(4) }
-            for (c in offered) {
-                val b = button(getString(c.label, *c.labelArgs.toTypedArray())) {
+            panel.addView(ui.text(getString(group.title), 12f, secondary = true, bold = true), ui.full(10))
+            panel.addView(ui.flow(offered.map { c ->
+                ui.chip(getString(c.label, *c.labelArgs.toTypedArray()), false) {
                     if (!criteria.remove(c.id)) criteria.add(c.id)
                     refresh()
-                }.apply { textSize = 13f; minHeight = dp(38); minimumHeight = dp(38); minWidth = 0; minimumWidth = 0 }
-                criterionButtons.add(c.id to b)
-                flow.addView(b)
-            }
-            panel.addView(flow, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(2) })
+                }.also { criterionChips.add(c.id to it) }
+            }), ui.full(4))
         }
-        content.addView(panel, full(0))
-        content.addView(results, full(0))
+        content.addView(panel, ui.full(0))
+        content.addView(results, ui.full(6))
         refresh()
     }
 
@@ -286,56 +242,42 @@ class MycologyActivity : ThemedActivity() {
             (statuses.isEmpty() || it.status in statuses) &&
                 (criteria.isEmpty() || (it.diagram == FungusDiagramKind.MUSHROOM && FungusCriteria.matches(it.look, criteria)))
         }
-        results.addView(label(resources.getQuantityString(R.plurals.myco_species_count, list.size, list.size), 12f).apply { setTextColor(palette.secondary) }, full())
-        list.forEach { sp ->
-            val rowView = row().apply {
-                background = ripple(palette.shape(palette.raised, 14f))
-                setPadding(dp(8), dp(8), dp(12), dp(8))
-                isClickable = true; isFocusable = true
-                setOnClickListener { open(Sheet.Species(sp.id)) }
-            }
+        results.addView(ui.note(resources.getQuantityString(R.plurals.myco_species_count, list.size, list.size)), ui.full())
+        val tiles = list.map { sp ->
+            val tile = ui.tile(1.1f) { open(Sheet.Species(sp.id)) }
             val thumb: View = if (sp.diagram == FungusDiagramKind.MUSHROOM) plate(sp.look, PlateMode.SIDE, compact = true)
                 else FungusDiagramView(this, sp.diagram, sp.id)
-            rowView.addView(thumb, LinearLayout.LayoutParams(dp(68), dp(88)))
-            val col = column()
-            col.addView(label(getString(sp.name), 16f, true))
-            col.addView(label(getString(sp.latin), 12.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
-            val badges = row().apply { setPadding(0, dp(4), 0, 0) }
-            badges.addView(statusChip(sp.status))
-            if (sp.saleBanned) badges.addView(pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt(), small = true),
-                LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(6) })
-            col.addView(badges)
-            rowView.addView(col, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
-            results.addView(rowView, full())
+            tile.image.addView(thumb, FrameLayout.LayoutParams(-1, -1))
+            tile.title.text = getString(sp.name)
+            tile.subtitle.text = getString(sp.latin)
+            tile.badge(statusChip(sp.status, small = true))
+            if (sp.saleBanned) tile.badge(ui.pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt(), small = true))
+            tile.view.contentDescription = getString(sp.name)
+            tile.view
         }
+        results.addView(ui.grid(tiles, ui.columns(contentWidth())), ui.full(6))
     }
 
     private fun renderChanged() {
         FungusCatalog.changes.forEach { change ->
             val sp = FungusCatalog.get(change.speciesId) ?: return@forEach
-            val card = row().apply {
-                background = ripple(palette.shape(palette.raised, 16f))
-                setPadding(dp(10), dp(10), dp(12), dp(12))
-                isClickable = true; isFocusable = true
-                setOnClickListener { open(Sheet.Species(sp.id)) }
-            }
-            card.addView(plate(sp.look, PlateMode.SIDE, compact = true), LinearLayout.LayoutParams(dp(84), dp(112)))
-            val col = column()
-            col.addView(label(getString(sp.name), 17f, true))
-            col.addView(label(getString(sp.latin), 12.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
-            val states = row().apply { setPadding(0, dp(6), 0, dp(4)) }
+            val card = ui.card { open(Sheet.Species(sp.id)) }
+            val line = ui.line().apply { gravity = Gravity.TOP }
+            line.addView(plate(sp.look, PlateMode.SIDE, compact = true), LinearLayout.LayoutParams(ui.dp(84), ui.dp(112)))
+            val col = ui.column()
+            col.addView(ui.text(getString(sp.name), 17f, bold = true))
+            col.addView(ui.latin(getString(sp.latin), 12.5f))
+            val states = ui.line().apply { setPadding(0, ui.dp(6), 0, ui.dp(4)) }
             // L'ancien statut est barré et estompé : il n'a plus cours.
-            states.addView(statusChip(change.before).apply {
-                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                alpha = .55f
-            })
-            states.addView(label("→", 16f, true), LinearLayout.LayoutParams(-2, -2).apply { setMargins(dp(8), 0, dp(8), 0) })
+            states.addView(statusChip(change.before).apply { paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG; alpha = .55f })
+            states.addView(ui.text("→", 16f, bold = true), LinearLayout.LayoutParams(-2, -2).apply { setMargins(ui.dp(8), 0, ui.dp(8), 0) })
             states.addView(statusChip(change.now))
             col.addView(states)
-            col.addView(label(change.years.joinToString(" · "), 12.5f, true).apply { setTextColor(palette.ink(palette.accent)) })
-            col.addView(label(getString(change.story), 13.5f), LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
-            card.addView(col, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
-            content.addView(card, full())
+            col.addView(ui.text(change.years.joinToString(" · "), 12.5f, bold = true).apply { setTextColor(palette.ink(hue)) })
+            col.addView(ui.text(getString(change.story), 13.5f), ui.full(4))
+            line.addView(col, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = ui.dp(12) })
+            card.addView(line)
+            content.addView(card, ui.full())
         }
     }
 
@@ -389,194 +331,168 @@ class MycologyActivity : ThemedActivity() {
     }
 
     /**
-     * Une espèce en trois morceaux : le titre, le dessin avec ses boutons, le texte. Sur un écran large le dessin
-     * a toute la hauteur à gauche et ne bouge pas ; sinon les trois se suivent dans une colonne qui défile.
+     * Une espèce en trois morceaux : l'identité et les liens, le dessin avec ses vues, puis les chapitres. Sur un
+     * écran large le dessin a toute la hauteur à gauche et ne bouge pas ; sinon tout se suit dans une colonne.
      */
     private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?, article: MycologyArticle?, herbarium: Boolean) {
-        val top = column()
-        top.addView(label(getString(sp.latin), 14.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
-        top.addView(label(getString(sp.altNames), 13f).apply { setTextColor(palette.secondary) })
-        val badges = row().apply { setPadding(0, dp(8), 0, dp(4)) }
-        badges.addView(statusChip(sp.status, big = true))
-        if (sp.saleBanned) badges.addView(pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt()), LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(8) })
-        top.addView(badges)
+        val top = ui.column()
+        val badges = mutableListOf<View>(statusChip(sp.status))
+        if (sp.saleBanned) badges.add(ui.pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt()))
+        top.addView(ui.identity(getString(sp.latin), badges))
+        getString(sp.altNames).takeIf { it.isNotBlank() }?.let { top.addView(ui.note(it), ui.full(4)) }
+        val slot = ui.column()
+        top.addView(slot)
+        if (lifeIndex != null) classification(slot, sp.id) else treeSlot = sp.id to slot
 
-        val media = column()
-        val drawing = column()
-        val frame = if (sp.diagram == FungusDiagramKind.MUSHROOM) {
+        val media = ui.column()
+        val drawing = ui.column()
+        val frame: View = if (sp.diagram == FungusDiagramKind.MUSHROOM) {
             val plateView = plate(sp.look, mode, compact = false)
             plateView.showMarks = marks
-            drawing.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), full(0))
-            FitFrame(this, 1.1f, dp(480)).apply { addView(plateView, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER)) }
+            drawing.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), ui.full(0))
+            ui.hero(plateView, 1.1f, 480)
         } else {
-            drawing.addView(label(getString(R.string.myco_supplement_illustration), 12f).apply { setTextColor(palette.secondary) }, full(4))
-            FitFrame(this, 1.1f, dp(480)).apply {
-                addView(FungusDiagramView(this@MycologyActivity, sp.diagram, sp.id), FrameLayout.LayoutParams(-1, -1, Gravity.CENTER))
-            }
+            drawing.addView(ui.note(getString(R.string.myco_supplement_illustration)), ui.full(4))
+            ui.hero(FungusDiagramView(this, sp.diagram, sp.id), 1.1f, 480)
         }
-        drawing.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }
-            else LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+        drawing.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = ui.dp(8) } else ui.full())
         if (herbarium) {
             val image = ImageView(this).apply {
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 contentDescription = getString(R.string.myco_herbarium_accessibility, getString(sp.name))
-                setBackgroundColor(0xFFFFFFFF.toInt())
             }
-            val toggle = button(R.string.myco_show_drawing) {}
+            val photo = ui.hero(image, 1.1f, 480)
+            val toggle = ui.action(getString(R.string.myco_show_drawing)) {}
             var showingDrawing = false
             toggle.setOnClickListener {
                 showingDrawing = !showingDrawing
-                image.visibility = if (showingDrawing) View.GONE else View.VISIBLE
+                photo.visibility = if (showingDrawing) View.GONE else View.VISIBLE
                 drawing.visibility = if (showingDrawing) View.VISIBLE else View.GONE
-                toggle.setText(if (showingDrawing) R.string.myco_show_herbarium else R.string.myco_show_drawing)
+                toggle.text = getString(if (showingDrawing) R.string.myco_show_herbarium else R.string.myco_show_drawing)
             }
-            media.addView(toggle, full(0))
-            media.addView(image, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
-                else LinearLayout.LayoutParams(-1, dp(380)))
+            media.addView(toggle, ui.wrap(0))
+            media.addView(photo, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = ui.dp(8) } else ui.full())
             drawing.visibility = View.GONE
-            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
-                else LinearLayout.LayoutParams(-1, -2))
+            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else LinearLayout.LayoutParams(-1, -2))
             lifecycleScope.launch {
                 runCatching { withContext(Dispatchers.IO) { FungusHerbarium.decode(applicationContext, sp.id) } }
                     .onSuccess { image.setImageBitmap(it) }
             }
         } else {
-            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
-                else LinearLayout.LayoutParams(-1, -2))
+            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else LinearLayout.LayoutParams(-1, -2))
         }
 
-        val body = column()
-        if (article?.verified == false) {
-            body.addView(label(getString(R.string.myco_article_pending), 12.5f).apply { setTextColor(palette.secondary) }, full(8))
-        }
+        val body = ui.column()
+        if (article?.verified == false) body.addView(ui.note(getString(R.string.myco_article_pending)), ui.full(8))
         if (article != null && article.sections.isNotEmpty()) {
-            article.sections.forEach { section ->
-                body.addView(label(section.title, 16f, true), full(12))
-                body.addView(label(section.text, 15f), full(4))
-            }
+            article.sections.forEach { section -> body.addView(ui.chapter(section.title, hue, ui.paragraph(section.text)), ui.full(12)) }
         } else {
-            body.addView(label(getString(R.string.myco_sec_traits), 16f, true), full(8))
+            val traits = ui.column()
             (article?.traits?.takeIf { it.isNotEmpty() } ?: resources.getStringArray(sp.traits).toList())
-                .forEach { body.addView(bullet(it), full(4)) }
+                .forEach { traits.addView(bullet(it), ui.full(4)) }
+            body.addView(ui.chapter(getString(R.string.myco_sec_traits), hue, traits), ui.full(12))
         }
-
-        val note = row().apply { setPadding(0, dp(2), 0, dp(2)) }
-        note.addView(View(this).apply { setBackgroundColor(sp.status.color) }, LinearLayout.LayoutParams(dp(4), -1))
-        val noteBody = column().apply { setPadding(dp(12), dp(6), 0, dp(6)) }
-        noteBody.addView(label(getString(R.string.myco_sec_danger), 13f, true).apply { setTextColor(palette.ink(sp.status.color)) })
-        noteBody.addView(label(article?.safetyNote?.takeIf { it.isNotBlank() } ?: getString(sp.note), 15f))
-        note.addView(noteBody, LinearLayout.LayoutParams(0, -2, 1f))
-        body.addView(note, full(16))
-
-        if (sp.history != 0) {
-            val card = column().apply {
-                background = palette.shape(ColorUtils.blendARGB(palette.surface, palette.accent, 0.08f), 14f)
-                setPadding(dp(14), dp(10), dp(14), dp(12))
-            }
-            card.addView(label(getString(R.string.myco_sec_history), 14f, true).apply { setTextColor(palette.ink(palette.accent)) })
-            card.addView(label(getString(sp.history), 14.5f), full(4))
-            body.addView(card, full(16))
-        }
+        // Le chapitre du danger prend la couleur du statut.
+        body.addView(ui.chapter(getString(R.string.myco_sec_danger), sp.status.color,
+            ui.paragraph(article?.safetyNote?.takeIf { it.isNotBlank() } ?: getString(sp.note))), ui.full(12))
+        if (sp.history != 0) body.addView(ui.chapter(getString(R.string.myco_sec_history), palette.accent, ui.paragraph(getString(sp.history))), ui.full(12))
 
         val groups = FungusCatalog.groupsOf(sp.id)
         if (groups.isNotEmpty()) {
-            body.addView(label(getString(R.string.myco_sec_lookalikes), 16f, true), full(20))
+            body.addView(ui.section(getString(R.string.myco_sec_lookalikes)), ui.full(22))
             groups.forEach { group ->
-                val chips = row()
-                group.members.filter { it != sp.id }.mapNotNull { FungusCatalog.get(it) }.forEach { other ->
-                    chips.addView(button(other.name) { open(Sheet.Species(other.id)) }.apply {
-                        textSize = 13f; minHeight = dp(40)
-                        background = ripple(GradientDrawable().apply {
-                            setColor(palette.raised); cornerRadius = dp(18).toFloat(); setStroke(dp(2), other.status.color)
-                        })
-                    }, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(6) })
-                }
-                body.addView(HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(chips) }, full(6))
-                body.addView(button(group.title) { open(Sheet.Group(group.id)) }, full(6))
+                val others = group.members.filter { it != sp.id }.mapNotNull { FungusCatalog.get(it) }
+                body.addView(tileStrip(others), ui.full(8))
+                body.addView(ui.action(getString(group.title)) { open(Sheet.Group(group.id)) }, ui.wrap(8))
             }
         }
-        val slot = column()
-        body.addView(slot, full(0))
-        if (lifeIndex != null) classification(slot, sp.id) else treeSlot = sp.id to slot
+        article?.related?.filter { FungusCatalog.get(it) != null && groups.none { g -> it in g.members } }?.takeIf { it.isNotEmpty() }?.let { ids ->
+            body.addView(ui.section(getString(R.string.science_see_also)), ui.full(22))
+            body.addView(tileStrip(ids.mapNotNull { FungusCatalog.get(it) }), ui.full(8))
+        }
         if (article != null && article.sources.isNotEmpty()) {
-            body.addView(label(getString(R.string.myco_sec_references), 16f, true), full(20))
-            article.sources.forEach { source ->
-                body.addView(label(source.title, 13.5f).apply {
-                    setTextColor(palette.accent)
-                    paintFlags = paintFlags or Paint.UNDERLINE_TEXT_FLAG
-                    isClickable = true
-                    isFocusable = true
-                    setOnClickListener { openUrl(source.url) }
-                }, full(6))
-            }
-        }
-        article?.related?.filter { FungusCatalog.get(it) != null }?.takeIf { it.isNotEmpty() }?.let { ids ->
-            body.addView(label(getString(R.string.myco_sec_lookalikes), 16f, true), full(20))
-            ids.forEach { id ->
-                FungusCatalog.get(id)?.let { related ->
-                    body.addView(button(related.name) { open(Sheet.Species(id)) }, full(4))
-                }
-            }
+            val sources = ui.column()
+            article.sources.forEach { source -> sources.addView(ui.link(source.title, source.url), ui.full(2)) }
+            body.addView(ui.chapter(getString(R.string.myco_sec_references), palette.secondary, sources), ui.full(16))
         }
         fiche.show(getString(sp.name), top, media, body, onBack)
+    }
+
+    /** D'autres champignons en tuiles qu'on fait défiler de côté ; chacune ouvre sa fiche. */
+    private fun tileStrip(species: List<FungusSpecies>): View {
+        val row = ui.line().apply { gravity = Gravity.TOP }
+        species.forEach { other ->
+            val tile = ui.tile(1.1f) { open(Sheet.Species(other.id)) }
+            val thumb: View = if (other.diagram == FungusDiagramKind.MUSHROOM) plate(other.look, PlateMode.SIDE, compact = true)
+                else FungusDiagramView(this, other.diagram, other.id)
+            tile.image.addView(thumb, FrameLayout.LayoutParams(-1, -1))
+            tile.title.text = getString(other.name)
+            tile.subtitle.text = getString(other.latin)
+            tile.badge(statusChip(other.status, small = true))
+            tile.view.contentDescription = getString(other.name)
+            row.addView(tile.view, LinearLayout.LayoutParams(ui.dp(150), -2).apply { marginEnd = ui.dp(10) })
+        }
+        return ui.scrollRow(row)
     }
 
     private fun classification(slot: LinearLayout, speciesId: String) {
         val node = lifeIndex?.forSpecies(speciesId) ?: return
         val repo = lifeRepo ?: return
-        slot.addView(label(getString(R.string.myco_sec_classification), 16f, true), full(20))
-        slot.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
-            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }, 14.5f), full(4))
-        slot.addView(button(R.string.myco_open_tree) {
+        slot.addView(ui.chipRow(listOf(ui.moduleChip(ScienceModule.TREE, {
             if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
             else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
-        }, full(8))
+        }))), ui.full(12))
+        slot.addView(ui.note(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
+            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }), ui.full(6))
     }
 
     // ------------------------------------------------------------------ un groupe de sosies
 
     private fun groupBody(group: FungusGroup): LinearLayout {
-        val body = column()
-        body.addView(pill(getString(group.evidence), palette.outline, small = true), LinearLayout.LayoutParams(-2, -2))
+        val body = ui.column()
+        body.addView(ui.pill(getString(group.evidence), palette.outline, small = true), LinearLayout.LayoutParams(-2, -2))
         val members = group.members.mapNotNull { FungusCatalog.get(it) }
         val looks = members.map { it.look }
-        val avail = min(resources.displayMetrics.widthPixels, dp(680)) - dp(40)
-        val cellW = (avail / members.size).coerceIn(dp(150), dp(300))
+        val avail = min(resources.displayMetrics.widthPixels, ui.dp(680)) - ui.dp(40)
+        val cellW = (avail / members.size).coerceIn(ui.dp(150), ui.dp(300))
         val plates = ArrayList<FungusPlateView>()
-        val row = row().apply { gravity = Gravity.TOP }
+        val row = ui.line().apply { gravity = Gravity.TOP }
         members.forEach { sp ->
-            val col = column().apply { isClickable = true; setOnClickListener { open(Sheet.Species(sp.id)) } }
+            val col = ui.column().apply { isClickable = true; setOnClickListener { open(Sheet.Species(sp.id)) } }
             val view = plate(sp.look, mode, compact = false, shared = looks)
             view.showMarks = false
             plates.add(view)
-            col.addView(view, LinearLayout.LayoutParams(cellW, (cellW * 1.3f).toInt()))
-            col.addView(label(getString(sp.name), 14f, true).apply { gravity = Gravity.CENTER_HORIZONTAL }, LinearLayout.LayoutParams(cellW, -2).apply { topMargin = dp(4) })
-            col.addView(statusChip(sp.status), LinearLayout.LayoutParams(-2, -2).apply { gravity = Gravity.CENTER_HORIZONTAL; topMargin = dp(2) })
-            row.addView(col, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
+            col.addView(ui.hero(view, 1.3f, 300), LinearLayout.LayoutParams(cellW, -2))
+            col.addView(ui.text(getString(sp.name), 14f, bold = true).apply { gravity = Gravity.CENTER_HORIZONTAL }, LinearLayout.LayoutParams(cellW, -2).apply { topMargin = ui.dp(4) })
+            col.addView(statusChip(sp.status), LinearLayout.LayoutParams(-2, -2).apply { gravity = Gravity.CENTER_HORIZONTAL; topMargin = ui.dp(2) })
+            row.addView(col, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = ui.dp(8) })
         }
-        body.addView(modeBar(plates, if (members.all { topView(it.look) }) R.string.myco_view_top else R.string.myco_view_under, withMarks = false), full(10))
-        body.addView(HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(row) }, full(8))
-        body.addView(label(getString(R.string.myco_sec_differences), 16f, true), full(18))
-        resources.getStringArray(group.points).forEach { body.addView(bullet(it), full(4)) }
+        body.addView(modeBar(plates, if (members.all { topView(it.look) }) R.string.myco_view_top else R.string.myco_view_under, withMarks = false), ui.full(10))
+        body.addView(ui.scrollRow(row), ui.full(8))
+        val points = ui.column()
+        resources.getStringArray(group.points).forEach { points.addView(bullet(it), ui.full(4)) }
+        body.addView(ui.chapter(getString(R.string.myco_sec_differences), hue, points), ui.full(18))
         return body
     }
 
     // ------------------------------------------------------------------ À propos, sources, urgence
 
     private fun aboutBody(): LinearLayout {
-        val body = column()
+        val body = ui.column()
+        val intro = ui.column()
         listOf(R.string.myco_about_intro, R.string.myco_about_lookalikes, R.string.myco_about_method,
             R.string.myco_about_drawings, R.string.myco_about_supplement)
-            .forEachIndexed { index, text -> body.addView(label(getString(text), 15f), full(if (index == 0) 0 else 10)) }
-        body.addView(label(getString(R.string.myco_about_rules_title), 16f, true), full(16))
-        body.addView(label(getString(R.string.myco_about_rules), 14.5f), full(6))
-        body.addView(button(R.string.myco_urgent) { showUrgent() }, full(14))
+            .forEachIndexed { index, text -> intro.addView(ui.paragraph(getString(text)), ui.full(if (index == 0) 0 else 10)) }
+        body.addView(intro)
+        body.addView(ui.chapter(getString(R.string.myco_about_rules_title), hue, ui.paragraph(getString(R.string.myco_about_rules))), ui.full(16))
+        body.addView(ui.action(getString(R.string.myco_urgent)) { showUrgent() }, ui.wrap(14))
+        body.addView(ui.paragraph(getString(R.string.science_navigation_help)), ui.full(16))
 
-        body.addView(label(getString(R.string.myco_about_sources), 18f, true), full(22))
+        body.addView(ui.section(getString(R.string.myco_about_sources)), ui.full(22))
         val sources = MycologySources.load(this)
         if (sources.isEmpty()) {
-            body.addView(label(getString(R.string.myco_sources_error), 14f), full(6))
+            body.addView(ui.text(getString(R.string.myco_sources_error), 14f), ui.full(6))
         } else {
             listOf(
                 MycologySources.Kind.OFFICIAL to R.string.myco_sources_official,
@@ -585,22 +501,14 @@ class MycologyActivity : ThemedActivity() {
                 MycologySources.Kind.ENCYCLOPEDIA to R.string.myco_sources_encyclopedia,
                 MycologySources.Kind.TAXONOMY to R.string.myco_sources_taxonomy
             ).forEach { (kind, title) ->
-                body.addView(label(getString(title), 15f, true).apply { setTextColor(palette.ink(palette.accent)) }, full(14))
-                sources.filter { it.kind == kind }.forEach { body.addView(sourceLink(it), full(6)) }
-                if (kind == MycologySources.Kind.ENCYCLOPEDIA) {
-                    body.addView(label(getString(R.string.myco_sources_secondary), 12.5f).apply { setTextColor(palette.secondary) }, full(8))
-                }
+                val list = ui.column()
+                sources.filter { it.kind == kind }.forEach { list.addView(ui.link(it.citation, it.url), ui.full(4)) }
+                if (kind == MycologySources.Kind.ENCYCLOPEDIA) list.addView(ui.note(getString(R.string.myco_sources_secondary)), ui.full(8))
+                body.addView(ui.chapter(getString(title), palette.secondary, list), ui.full(12))
             }
-            body.addView(button(R.string.myco_sources_by_species) { showSpeciesSources() }, full(16))
+            body.addView(ui.action(getString(R.string.myco_sources_by_species)) { showSpeciesSources() }, ui.wrap(16))
         }
         return body
-    }
-
-    private fun sourceLink(source: MycologySources.Source) = label(source.citation, 13.5f).apply {
-        setTextColor(palette.ink(palette.accent))
-        paintFlags = paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
-        isClickable = true
-        setOnClickListener { openUrl(source.url) }
     }
 
     private fun showSpeciesSources() {
@@ -608,17 +516,17 @@ class MycologyActivity : ThemedActivity() {
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.myco_sources_by_species)
             .setItems(list.map { getString(it.name) }.toTypedArray()) { _, index ->
                 val sp = list[index]
-                val body = column().apply { setPadding(dp(20), dp(8), dp(20), dp(8)) }
-                body.addView(label(getString(sp.latin), 14f).apply { setTypeface(typeface, Typeface.ITALIC) })
-                MycologySources.forSpecies(this, sp.id).forEach { body.addView(sourceLink(it), full(8)) }
+                val body = ui.column().apply { setPadding(ui.dp(20), ui.dp(8), ui.dp(20), ui.dp(8)) }
+                body.addView(ui.latin(getString(sp.latin), 14f))
+                MycologySources.forSpecies(this, sp.id).forEach { body.addView(ui.link(it.citation, it.url), ui.full(8)) }
                 com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(sp.name).setView(ScrollView(this).apply { addView(body) })
                     .setPositiveButton(R.string.myco_close, null).show()
             }.setNegativeButton(R.string.myco_close, null).show()
     }
 
     private fun showUrgent() {
-        val body = column().apply { setPadding(dp(20), dp(8), dp(20), dp(8)) }
-        body.addView(label(getString(R.string.myco_urgent_hint), 14f).apply { setTextColor(palette.secondary) })
+        val body = ui.column().apply { setPadding(ui.dp(20), ui.dp(8), ui.dp(20), ui.dp(8)) }
+        body.addView(ui.note(getString(R.string.myco_urgent_hint)))
         listOf(
             R.string.myco_urgent_fr to R.string.myco_tel_fr,
             R.string.myco_urgent_fr_vital to R.string.myco_tel_fr_vital,
@@ -627,14 +535,14 @@ class MycologyActivity : ThemedActivity() {
             R.string.myco_urgent_eu to R.string.myco_tel_eu
         ).forEach { (name, tel) ->
             val number = getString(tel)
-            val line = row().apply {
-                setPadding(0, dp(12), 0, dp(12)); isClickable = true; isFocusable = true
-                background = ripple(null)
+            val line = ui.line().apply {
+                setPadding(0, ui.dp(12), 0, ui.dp(12)); isClickable = true; isFocusable = true
+                background = ui.ripple(null)
                 setOnClickListener { dial(number) }
             }
-            line.addView(label(getString(name), 15f), LinearLayout.LayoutParams(0, -2, 1f))
-            line.addView(label(number, 19f, true).apply { setTextColor(palette.ink(palette.accent)) })
-            body.addView(line, full(2))
+            line.addView(ui.text(getString(name)), LinearLayout.LayoutParams(0, -2, 1f))
+            line.addView(ui.text(number, 19f, bold = true).apply { setTextColor(palette.ink(palette.accent)) })
+            body.addView(line, ui.full(2))
         }
         com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.myco_urgent_title).setView(ScrollView(this).apply { addView(body) })
             .setPositiveButton(R.string.myco_close, null).show()
@@ -645,11 +553,6 @@ class MycologyActivity : ThemedActivity() {
         catch (_: ActivityNotFoundException) { /* pas de téléphone : rien ne se passe */ }
     }
 
-    private fun openUrl(url: String) {
-        try { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
-        catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.myco_sources_no_browser, Toast.LENGTH_SHORT).show() }
-    }
-
     // ------------------------------------------------------------------ morceaux d'interface
 
     private fun plate(look: FungusLook, plateMode: PlateMode, compact: Boolean, shared: List<FungusLook>? = null) =
@@ -657,86 +560,38 @@ class MycologyActivity : ThemedActivity() {
             it.look = look; it.mode = plateMode; it.compact = compact; it.sharedScaleWith = shared
         }
 
-    private fun modeBar(plates: List<FungusPlateView>, underLabel: Int, withMarks: Boolean = true): LinearLayout {
-        val bar = row()
-        val buttons = ArrayList<Pair<PlateMode, Button>>()
+    /** Les trois vues d'une planche (et les repères) en puces : la vue choisie vaut pour toutes les planches. */
+    private fun modeBar(plates: List<FungusPlateView>, underLabel: Int, withMarks: Boolean = true): View {
+        val chips = ArrayList<Pair<PlateMode, TextView>>()
+        val views = ArrayList<View>()
         PlateMode.entries.forEach { m ->
-            val b = button(if (m == PlateMode.UNDER) underLabel else m.label, m == mode) {}
-            buttons.add(m to b)
-            b.setOnClickListener {
+            val chip = ui.chip(getString(if (m == PlateMode.UNDER) underLabel else m.label), m == mode) {}
+            chip.setOnClickListener {
                 mode = m
                 plates.forEach { p -> p.mode = m }
-                buttons.forEach { (mm, bb) -> style(bb, mm == mode) }
+                chips.forEach { (mm, c) -> ui.styleChip(c, mm == mode) }
             }
-            bar.addView(b, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
+            chips.add(m to chip); views.add(chip)
         }
         if (withMarks) {
-            val marksButton = button(R.string.myco_marks, marks) {}
-            marksButton.setOnClickListener {
+            val marksChip = ui.chip(getString(R.string.myco_marks), marks) {}
+            marksChip.setOnClickListener {
                 marks = !marks
                 plates.forEach { p -> p.showMarks = marks }
-                style(marksButton, marks)
+                ui.styleChip(marksChip, marks)
             }
-            bar.addView(marksButton, LinearLayout.LayoutParams(0, -2, 1.1f))
+            views.add(marksChip)
         }
-        return bar
+        return ui.chipRow(views)
     }
 
-    private fun statusChip(status: FungusStatus, small: Boolean = false, big: Boolean = false) =
-        pill(getString(status.label), status.color, small, big)
+    private fun statusChip(status: FungusStatus, small: Boolean = false) = ui.pill(getString(status.label), status.color, small)
 
-    private fun pill(text: String, color: Int, small: Boolean = false, big: Boolean = false) = TextView(this).apply {
-        this.text = text
-        textSize = if (small) 10.5f else if (big) 14f else 12.5f
-        // Une pastille peut être translucide (le contour du thème) : le contraste se calcule sur ce qu'on voit vraiment.
-        val seen = ColorUtils.compositeColors(color, ColorUtils.setAlphaComponent(palette.raised, 255))
-        setTextColor(SciencePalette.contrastingText(seen))
-        typeface = Typeface.create("sans-serif", Typeface.BOLD)
-        gravity = Gravity.CENTER
-        val h = if (big) 6 else 3
-        setPadding(dp(if (big) 12 else 8), dp(h), dp(if (big) 12 else 8), dp(h))
-        background = GradientDrawable().apply { setColor(color); cornerRadius = dp(14).toFloat() }
-    }
-
-    private fun bullet(text: String) = row().apply {
+    private fun bullet(text: String) = ui.line().apply {
         gravity = Gravity.TOP
-        addView(label("•", 15f).apply { setTextColor(palette.secondary) }, LinearLayout.LayoutParams(dp(16), -2))
-        addView(label(text, 15f), LinearLayout.LayoutParams(0, -2, 1f))
+        addView(ui.text("•", 15f, secondary = true), LinearLayout.LayoutParams(ui.dp(16), -2))
+        addView(ui.text(text), LinearLayout.LayoutParams(0, -2, 1f))
     }
-
-    private fun label(text: String, size: Float, bold: Boolean = false) = TextView(this).apply {
-        this.text = text; textSize = size; setTextColor(palette.text)
-        if (bold) typeface = Typeface.create("sans-serif", Typeface.BOLD)
-        setLineSpacing(dp(3).toFloat(), 1f)
-    }
-
-    private fun button(title: Int, selected: Boolean = false, action: () -> Unit) = button(getString(title), selected, action)
-
-    private fun button(title: String, selected: Boolean = false, action: () -> Unit) = Button(this).apply {
-        text = title; isAllCaps = false; textSize = 14f; minHeight = dp(46); minimumHeight = dp(46)
-        setPadding(dp(10), dp(6), dp(10), dp(6)); setOnClickListener { action() }
-        style(this, selected)
-    }
-
-    private fun style(button: Button, selected: Boolean) {
-        button.background = ripple(palette.control(selected))
-        button.setTextColor(if (selected) palette.onAccent else palette.text)
-        button.isSelected = selected
-    }
-
-    private fun icon(drawable: Int, title: Int, action: () -> Unit) = ImageButton(this).apply {
-        setImageResource(drawable); setColorFilter(palette.text)
-        background = RippleDrawable(ColorStateList.valueOf(ColorUtils.setAlphaComponent(palette.accent, 55)), null, palette.shape(android.graphics.Color.WHITE, 24f))
-        contentDescription = getString(title); setOnClickListener { action() }
-    }
-
-    private fun ripple(shape: android.graphics.drawable.Drawable?) =
-        RippleDrawable(ColorStateList.valueOf(ColorUtils.setAlphaComponent(palette.accent, 55)), shape, null)
-
-    private fun column() = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-    private fun row() = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-    private fun full(top: Int = 8) = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(top) }
-    private fun dp(value: Int) = (value * density).toInt()
 
     // ------------------------------------------------------------------ cycle de vie
 
@@ -764,5 +619,6 @@ class MycologyActivity : ThemedActivity() {
     companion object {
         const val EXTRA_LIFE_NODE = "mycology_life_node"
         const val EXTRA_SPECIES_ID = "mycology_species_id"
+        private const val DANGER = 0xFFC62828.toInt()
     }
 }

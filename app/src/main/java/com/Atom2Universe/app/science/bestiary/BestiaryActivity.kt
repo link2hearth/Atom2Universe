@@ -1,28 +1,27 @@
 package com.Atom2Universe.app.science.bestiary
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.science.FitFrame
+import com.Atom2Universe.app.science.GridGap
 import com.Atom2Universe.app.science.ScienceFiche
+import com.Atom2Universe.app.science.ScienceModule
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceUi
 import com.Atom2Universe.app.science.parentes.LifeTree
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.parentes.ParentesRepository
@@ -33,31 +32,39 @@ import kotlinx.coroutines.withContext
 import org.json.JSONException
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.math.max
 
+/**
+ * Le bestiaire : une grille de tuiles illustrées qu'on filtre par groupe ou par nom, et la fiche de chaque animal
+ * en chapitres, avec le lien vers l'arbre du vivant en tête et d'autres animaux du même groupe en bas. Les fiches
+ * s'enchaînent dans la même fenêtre, la flèche revient à la précédente.
+ */
 class BestiaryActivity : ThemedActivity() {
     private val palette by lazy { SciencePalette(this) }
+    private val ui by lazy { ScienceUi(this, palette) }
+    private val hue by lazy { ScienceModule.BESTIARY.color(palette) }
     private var repository: ParentesRepository? = null
     private var index: BestiaryLifeIndex? = null
     private var entries: List<BestiaryEntry>? = null
     private var selected: String? = null
+    private val history = ArrayList<String>()
     private var pendingNode: String? = null
     private var query = ""
     private var group = ""
-    private var listPosition = 0
-    private var listTop = 0
     private var keepScroll = true
     private var opening: Job? = null
-    // Classification block of the open profile, filled when the tree finishes loading.
+    // La place des liens de la fiche ouverte, remplie quand l'arbre finit de se charger.
     private var pendingClassification: Pair<String, LinearLayout>? = null
-    private lateinit var list: ListView
+    private lateinit var grid: RecyclerView
+    private lateinit var layout: GridLayoutManager
     private lateinit var count: TextView
     private lateinit var treeStatus: LinearLayout
-    private lateinit var groups: LinearLayout
-    private val adapter = EntryAdapter()
+    private val groupChips = ArrayList<Pair<String, TextView>>()
+    private val adapter = TileAdapter()
     private val searchHandler = Handler(Looper.getMainLooper())
     private val applySearch = Runnable { renderList() }
     private val fiche by lazy {
-        ScienceFiche(this, palette, R.string.be_back, R.string.be_close) { selected = null; pendingClassification = null }
+        ScienceFiche(this, palette, R.string.be_back, R.string.be_close) { selected = null; history.clear(); pendingClassification = null }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +76,11 @@ class BestiaryActivity : ThemedActivity() {
         query = savedInstanceState?.getString("query").orEmpty()
         group = savedInstanceState?.getString("group").orEmpty()
         selected = if (savedInstanceState != null) savedInstanceState.getString("species") else intent.getStringExtra(EXTRA_SPECIES_ID)
+        savedInstanceState?.getStringArrayList("history")?.let { history.addAll(it) }
         pendingNode = if (savedInstanceState != null) savedInstanceState.getString("node") else intent.getStringExtra(EXTRA_LIFE_NODE)
-        listPosition = savedInstanceState?.getInt("listPosition") ?: 0
-        listTop = savedInstanceState?.getInt("listTop") ?: 0
         buildUi()
+        savedInstanceState?.let { androidx.core.os.BundleCompat.getParcelable(it, "grid", android.os.Parcelable::class.java) }
+            ?.let { layout.onRestoreInstanceState(it) }
         loadEntries()
         loadTree()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -85,69 +93,63 @@ class BestiaryActivity : ThemedActivity() {
         setIntent(intent)
         pendingNode = intent.getStringExtra(EXTRA_LIFE_NODE)
         intent.getStringExtra(EXTRA_SPECIES_ID)?.let { id ->
-            if (entries == null) selected = id else AnimalCatalog.byId[id]?.let(::open)
+            if (entries == null) selected = id else AnimalCatalog.byId[id]?.let { history.clear(); open(it, push = false) }
         }
         applyLink()
     }
 
+    // ------------------------------------------------------------------ l'écran
+
     private fun buildUi() {
-        val root = column().apply { setBackgroundColor(palette.background); setPadding(dp(16), dp(8), dp(16), 0) }
-        val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        val back = ImageButton(this).apply {
-            setImageResource(R.drawable.ic_arrow_back_24); setColorFilter(palette.text); background = null
-            contentDescription = getString(R.string.be_back); setOnClickListener { finish() }
-        }
-        ScienceNavigation.bindHomeAction(back) {
+        val header = ui.header(getString(R.string.be_title), ScienceModule.BESTIARY, onBack = { finish() }, onHome = {
             fiche.dismiss(); query = ""; group = ""; pendingNode = null; keepScroll = false
             intent.removeExtra(EXTRA_SPECIES_ID); intent.removeExtra(EXTRA_LIFE_NODE)
             recreate()
-        }
-        header.addView(back, LinearLayout.LayoutParams(dp(48), dp(48)))
-        header.addView(label(getString(R.string.be_title), 26f, true))
-        root.addView(header)
-        root.addView(label(getString(R.string.be_intro), 14f))
-        root.addView(EditText(this).apply {
-            setTextColor(palette.text); setHintTextColor(palette.secondary)
-            hint = getString(R.string.be_search); setSingleLine(); setText(query)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    query = s.toString()
-                    searchHandler.removeCallbacks(applySearch); searchHandler.postDelayed(applySearch, SEARCH_DELAY_MS)
-                }
-                override fun afterTextChanged(s: Editable?) = Unit
-            })
-        }, full())
-        groups = LinearLayout(this)
-        root.addView(HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(groups) })
-        count = label("", 13f)
-        root.addView(count, full())
-        treeStatus = column()
-        root.addView(treeStatus)
-        list = ListView(this).apply { divider = null; setBackgroundColor(palette.background) }
-        list.adapter = adapter
-        list.setOnItemClickListener { _, _, position, _ -> open(adapter.items[position].animal) }
-        root.addView(list, LinearLayout.LayoutParams(-1, 0, 1f))
-        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
-            val safe = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
-            v.setPadding(dp(16) + safe.left, dp(8) + safe.top, dp(16) + safe.right, safe.bottom)
-            insets
-        }
-        setContentView(root)
-        renderGroups()
-    }
+        }, actions = listOf(ScienceUi.HeaderAction(R.drawable.ic_sci_help, R.string.science_help) { help() }))
 
-    private fun renderGroups() {
-        groups.removeAllViews()
+        val content = ui.column()
+        val controls = ui.column().apply { setPadding(ui.dp(16), ui.dp(6), ui.dp(16), 0) }
+        controls.addView(ui.searchField(getString(R.string.be_search), query) { text ->
+            query = text
+            searchHandler.removeCallbacks(applySearch); searchHandler.postDelayed(applySearch, SEARCH_DELAY_MS)
+        }.view, ui.full(0))
+        groupChips.clear()
         (listOf("" to R.string.be_all) + GROUPS.map { it to groupTitle(it) }).forEach { (id, title) ->
-            groups.addView(button(getString(title)) { group = id; renderGroups(); renderList() }.apply {
-                background = palette.control(group == id); setTextColor(if (group == id) palette.onAccent else palette.text)
-                isSelected = group == id
-            }, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(6) })
+            groupChips += id to ui.chip(getString(title), group == id) {
+                if (group != id) { group = id; restyleGroups(); renderList() }
+            }
         }
+        controls.addView(ui.chipRow(groupChips.map { it.second }), ui.full(10))
+        count = ui.note("")
+        controls.addView(count, ui.full(10))
+        treeStatus = ui.column()
+        controls.addView(treeStatus)
+        content.addView(controls)
+
+        // La grille : autant de colonnes que la largeur le permet, des tuiles d'au moins 160 dp.
+        val gap = ui.dp(10)
+        layout = GridLayoutManager(this, 2)
+        grid = RecyclerView(this).apply {
+            layoutManager = layout
+            adapter = this@BestiaryActivity.adapter
+            itemAnimator = null
+            clipToPadding = false
+            setPadding(ui.dp(16) - gap / 2, ui.dp(4), ui.dp(16) - gap / 2, ui.dp(16))
+            addItemDecoration(GridGap(gap))
+            addOnLayoutChangeListener { v, left, _, right, _, oldLeft, _, oldRight, _ ->
+                if (right - left != oldRight - oldLeft) {
+                    val columns = max(2, (right - left - v.paddingLeft - v.paddingRight) / ui.dp(168))
+                    if (columns != layout.spanCount) { layout.spanCount = columns; this@BestiaryActivity.adapter.notifyDataSetChanged() }
+                }
+            }
+        }
+        content.addView(grid, LinearLayout.LayoutParams(-1, 0, 1f))
+        setContentView(ui.screen(header, content, maxWidthDp = 1100))
     }
 
-    private fun renderList(position: Int = 0, top: Int = 0) {
+    private fun restyleGroups() { groupChips.forEach { (id, chip) -> ui.styleChip(chip, group == id) } }
+
+    private fun renderList() {
         searchHandler.removeCallbacks(applySearch)
         val all = entries ?: return
         val terms = LifeTree.normalize(query).split(SPACES).filter { it.isNotBlank() }
@@ -157,47 +159,53 @@ class BestiaryActivity : ThemedActivity() {
         count.text = getString(if (shown.isEmpty()) R.string.be_empty else R.string.be_count, shown.size, all.size)
         adapter.items = shown
         adapter.notifyDataSetChanged()
-        list.setSelectionFromTop(position, top)
     }
 
-    private inner class EntryAdapter : BaseAdapter() {
+    /** Chaque tuile montre la planche, le nom et le nom latin ; la grille réutilise les vues. */
+    private inner class TileAdapter : RecyclerView.Adapter<TileAdapter.Holder>() {
         var items: List<BestiaryEntry> = emptyList()
-        override fun getCount() = items.size
-        override fun getItem(position: Int) = items[position]
-        override fun getItemId(position: Int) = position.toLong()
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        inner class Holder(val tile: ScienceUi.Tile, val plate: AnimalPlateView) : RecyclerView.ViewHolder(tile.view)
+        override fun getItemCount() = items.size
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+            val tile = ui.tile(.75f)
+            val plate = AnimalPlateView(this@BestiaryActivity, thumbnail = true).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+            tile.image.addView(plate, FrameLayout.LayoutParams(-1, -1))
+            tile.view.layoutParams = RecyclerView.LayoutParams(-1, -2)
+            tile.view.isClickable = true; tile.view.isFocusable = true
+            return Holder(tile, plate)
+        }
+        override fun onBindViewHolder(holder: Holder, position: Int) {
             val entry = items[position]
-            return (convertView as? LinearLayout ?: LinearLayout(this@BestiaryActivity).apply {
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(dp(8), dp(8), dp(16), dp(8)); minimumHeight = dp(96)
-                background = palette.shape(palette.surface)
-                addView(AnimalPlateView(this@BestiaryActivity, thumbnail = true).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO },
-                    LinearLayout.LayoutParams(dp(104), dp(80)))
-                addView(column().apply { addView(label("", 18f, true)); addView(label("", 14f)) },
-                    LinearLayout.LayoutParams(0, -2, 1f))
-            }).apply {
-                (getChildAt(0) as AnimalPlateView).variant = entry.animal.id
-                (getChildAt(1) as LinearLayout).apply {
-                    (getChildAt(0) as TextView).text = entry.name
-                    (getChildAt(1) as TextView).text = entry.animal.scientific
-                }
-            }
+            holder.plate.variant = entry.animal.id
+            holder.tile.title.text = entry.name
+            holder.tile.subtitle.text = entry.animal.scientific
+            holder.tile.view.setOnClickListener { open(entry.animal) }
         }
     }
+
+    private fun help() {
+        val body = ui.column()
+        body.addView(ui.paragraph(getString(R.string.be_intro)), ui.full(4))
+        body.addView(ui.paragraph(getString(R.string.be_plate_note)), ui.full(14))
+        body.addView(ui.paragraph(getString(R.string.science_navigation_help)), ui.full(14))
+        fiche.show(getString(R.string.be_title), null, null, body)
+    }
+
+    // ------------------------------------------------------------------ les données
 
     private fun loadEntries() {
         val locale = resources.configuration.locales[0]
         lifecycleScope.launch {
             entries = withContext(Dispatchers.Default) { AnimalCatalog.entries(locale) }
-            renderList(listPosition, listTop)
-            selected?.let { AnimalCatalog.byId[it]?.let(::open) }
+            renderList()
+            selected?.let { AnimalCatalog.byId[it]?.let { animal -> open(animal, push = false) } }
             applyLink()
         }
     }
 
     private fun loadTree() {
         treeStatus.removeAllViews()
-        treeStatus.addView(label(getString(R.string.be_tree_loading), 12f))
+        treeStatus.addView(ui.note(getString(R.string.be_tree_loading)), ui.full(4))
         lifecycleScope.launch {
             val loaded = try {
                 withContext(Dispatchers.Default) {
@@ -211,7 +219,7 @@ class BestiaryActivity : ThemedActivity() {
             }
             treeStatus.removeAllViews()
             if (loaded == null) {
-                treeStatus.addView(button(getString(R.string.be_tree_retry)) { loadTree() })
+                treeStatus.addView(ui.action(getString(R.string.be_tree_retry)) { loadTree() }, ui.wrap(4))
                 return@launch
             }
             repository = loaded.first
@@ -228,10 +236,15 @@ class BestiaryActivity : ThemedActivity() {
         pendingNode = null
         val animal = loaded.forNode(node)?.let { AnimalCatalog.byId[it] }
         if (animal == null) Toast.makeText(this, R.string.be_unavailable, Toast.LENGTH_LONG).show()
-        else if (animal.id != selected) open(animal)
+        else if (animal.id != selected) { history.clear(); open(animal, push = false) }
     }
 
-    private fun open(animal: AnimalSpecies) {
+    // ------------------------------------------------------------------ la fiche
+
+    /** Ouvre la fiche ; avec [push], la fiche ouverte jusque-là s'ajoute à l'historique de la flèche. */
+    private fun open(animal: AnimalSpecies, push: Boolean = true) {
+        val previous = selected
+        if (push && previous != null && previous != animal.id) history.add(previous)
         selected = animal.id
         opening?.cancel()
         val language = language()
@@ -245,30 +258,38 @@ class BestiaryActivity : ThemedActivity() {
                     null
                 }
             }
-            show(animal, profile)
+            if (selected == animal.id) show(animal, profile)
         }
+    }
+
+    private fun back() {
+        val previous = history.removeLastOrNull()?.let { AnimalCatalog.byId[it] } ?: return
+        open(previous, push = false)
     }
 
     private fun show(animal: AnimalSpecies, profile: EncyclopediaProfile?) {
         val name = AnimalCatalog.name(animal, language())
         val profileSections = profile?.sections
-        val top = column().apply {
-            addView(label(animal.scientific, 18f).apply { setTypeface(typeface, Typeface.ITALIC) })
-            addView(label(getString(groupTitle(animal.group)), 13f))
-        }
-        val media = column()
+        // En tête : le nom latin, le groupe, puis les liens (remplis quand l'arbre est prêt).
+        val top = ui.column()
+        top.addView(ui.identity(animal.scientific, listOf(ui.pill(getString(groupTitle(animal.group)), palette.categorySurface(hue)))))
+        val links = ui.column()
+        top.addView(links)
+        pendingClassification = null
+        if (index != null) addClassification(links, animal.id) else pendingClassification = animal.id to links
+
         val plate = AnimalPlateView(this).apply {
             variant = animal.id
             contentDescription = profileSections?.get("identification")?.let {
                 getString(R.string.be_plate_accessibility, name, it)
             } ?: getString(R.string.be_plate_accessibility_name, name)
         }
-        media.addView(FitFrame(this, .78f, dp(640)).apply { addView(plate, android.widget.FrameLayout.LayoutParams(-1, -1, Gravity.CENTER)) },
-            if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else full())
-        media.addView(label(getString(R.string.be_plate_note), 12f), full())
-        val body = column()
+        val media = ui.column()
+        media.addView(ui.hero(plate, .75f), if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else ui.full())
+
+        val body = ui.column()
         if (profileSections == null) {
-            body.addView(label(getString(R.string.be_encyclopedia_coming), 15f), full())
+            body.addView(ui.text(getString(R.string.be_encyclopedia_coming)), ui.full())
         } else {
             listOf(
                 R.string.be_overview to profileSections["overview"],
@@ -281,40 +302,59 @@ class BestiaryActivity : ThemedActivity() {
                 R.string.be_conservation to profileSections["conservation"]
             ).forEach { (title, text) ->
                 if (text == null) return@forEach
-                body.addView(label(getString(title), 18f, true).apply { ViewCompat.setAccessibilityHeading(this, true) }, full(18))
-                body.addView(label(text).apply { setTextIsSelectable(true) }, full(4))
+                body.addView(ui.chapter(getString(title), hue, ui.paragraph(text)), ui.full(12))
             }
         }
-        val classification = column()
-        body.addView(classification, LinearLayout.LayoutParams(-1, -2))
-        pendingClassification = null
-        if (index != null) addClassification(classification, animal.id) else pendingClassification = animal.id to classification
+        sameGroup(animal)?.let { body.addView(it, ui.full(20)) }
         val references = profile?.references.orEmpty()
         if (references.isNotEmpty()) {
-            body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
-            body.addView(label(getString(R.string.be_source_note), 12f), full(4))
-            references.forEach { reference ->
-                body.addView(button(reference.title) {
-                    try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
-                    catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
-                }, full())
-                body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
-            }
+            val sources = ui.column()
+            sources.addView(ui.note(getString(R.string.be_source_note)))
+            references.forEach { reference -> sources.addView(ui.link(reference.title, reference.url), ui.full(2)) }
+            body.addView(ui.chapter(getString(R.string.be_sources), palette.secondary, sources), ui.full(12))
         }
-        fiche.show(name, top, media, body)
+        fiche.show(name, top, media, body, if (history.isEmpty()) null else ::back)
     }
 
+    /** D'autres animaux du même groupe, voisins dans l'ordre alphabétique, en tuiles qu'on fait défiler de côté. */
+    private fun sameGroup(animal: AnimalSpecies): View? {
+        val all = entries ?: return null
+        val peers = all.filter { it.animal.group == animal.group }
+        val at = peers.indexOfFirst { it.animal.id == animal.id }
+        if (peers.size < 2 || at < 0) return null
+        val picked = (1..SEE_ALSO).mapNotNull { offset ->
+            val index = (at + if (offset % 2 == 1) (offset + 1) / 2 else -(offset / 2)).mod(peers.size)
+            peers[index].takeIf { it.animal.id != animal.id }
+        }.distinctBy { it.animal.id }
+        val row = ui.line().apply { gravity = android.view.Gravity.TOP }
+        picked.forEach { entry ->
+            val tile = ui.tile(.75f) { open(entry.animal) }
+            tile.image.addView(AnimalPlateView(this, thumbnail = true).apply {
+                variant = entry.animal.id; importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            }, FrameLayout.LayoutParams(-1, -1))
+            tile.title.text = entry.name; tile.subtitle.text = entry.animal.scientific
+            tile.view.contentDescription = entry.name
+            row.addView(tile.view, LinearLayout.LayoutParams(ui.dp(150), -2).apply { marginEnd = ui.dp(10) })
+        }
+        val block = ui.column()
+        block.addView(ui.section(getString(R.string.science_see_also)))
+        block.addView(ui.scrollRow(row), ui.full(8))
+        return block
+    }
+
+    /** Le lien vers l'arbre du vivant et la lignée de l'animal, en tête de sa fiche. */
     private fun addClassification(block: LinearLayout, animalId: String) {
         val node = index?.forSpecies(animalId) ?: return
         val repo = repository ?: return
-        block.addView(label(getString(R.string.be_classification), 18f, true), full(18))
-        block.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
-            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }), full(4))
-        block.addView(button(getString(R.string.be_open_tree)) {
-            if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
-            else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
-                .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
-        }, full())
+        block.addView(ui.chipRow(listOf(ui.moduleChip(ScienceModule.TREE, { openTree(node) }))), ui.full(12))
+        block.addView(ui.note(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
+            .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }), ui.full(6))
+    }
+
+    private fun openTree(node: String) {
+        if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
+        else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+            .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
     }
 
     private fun language() = resources.configuration.locales[0].language
@@ -327,34 +367,23 @@ class BestiaryActivity : ThemedActivity() {
         "fish" -> R.string.be_fish
         else -> R.string.be_invertebrates
     }
-    private fun column() = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-    private fun label(value: String, size: Float = 15f, bold: Boolean = false) = TextView(this).apply {
-        text = value; textSize = size; setTextColor(palette.text); if (bold) setTypeface(typeface, Typeface.BOLD)
-    }
-    private fun button(value: String, action: () -> Unit) = Button(this).apply {
-        text = value; isAllCaps = false; minHeight = dp(48); background = palette.control()
-        setTextColor(palette.text); setOnClickListener { action() }
-    }
-    private fun full(top: Int = 8) = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(top) }
-    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("query", query); outState.putString("group", group)
         outState.putString("species", selected); outState.putString("node", pendingNode)
-        if (!keepScroll) return
-        if (entries != null && ::list.isInitialized) {
-            listPosition = list.firstVisiblePosition
-            listTop = list.getChildAt(0)?.top ?: 0
-        }
-        outState.putInt("listPosition", listPosition); outState.putInt("listTop", listTop)
+        outState.putStringArrayList("history", ArrayList(history))
+        if (keepScroll && ::layout.isInitialized) outState.putParcelable("grid", layout.onSaveInstanceState())
     }
     override fun onDestroy() { searchHandler.removeCallbacks(applySearch); fiche.dismiss(); super.onDestroy() }
+
     companion object {
         const val EXTRA_LIFE_NODE = "bestiary_life_node"
         const val EXTRA_SPECIES_ID = "bestiary_species_id"
         private const val SEARCH_DELAY_MS = 150L
+        private const val SEE_ALSO = 8
         private val SPACES = Regex("\\s+")
-        // Order of the group filters as first shown in the catalogue.
+        // L'ordre des groupes tel qu'il est montré depuis le début du catalogue.
         private val GROUPS = listOf("birds", "fish", "invertebrates", "mammals", "amphibians", "reptiles")
     }
 }

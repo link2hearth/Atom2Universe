@@ -1,44 +1,53 @@
 package com.Atom2Universe.app.science.parentes
 
-import android.graphics.Typeface
 import android.content.Intent
-import com.Atom2Universe.app.science.botany.BotanyActivity
-import com.Atom2Universe.app.science.botany.BotanyLifeIndex
-import com.Atom2Universe.app.science.bestiary.AnimalEncyclopediaRepository
-import com.Atom2Universe.app.science.bestiary.BestiaryActivity
-import com.Atom2Universe.app.science.bestiary.BestiaryLifeIndex
-import com.Atom2Universe.app.science.mycology.FungusCatalog
-import com.Atom2Universe.app.science.mycology.MycologyActivity
-import com.Atom2Universe.app.science.mycology.MycologyLifeIndex
-import androidx.activity.result.contract.ActivityResultContracts
-import kotlinx.coroutines.Job
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.science.SciencePalette
-import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.PlantGroupKnowledge
+import com.Atom2Universe.app.science.ScienceFiche
+import com.Atom2Universe.app.science.ScienceModule
+import com.Atom2Universe.app.science.ScienceNavigation
+import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceUi
+import com.Atom2Universe.app.science.bestiary.AnimalEncyclopediaRepository
+import com.Atom2Universe.app.science.bestiary.BestiaryActivity
+import com.Atom2Universe.app.science.bestiary.BestiaryLifeIndex
+import com.Atom2Universe.app.science.botany.BotanyActivity
+import com.Atom2Universe.app.science.botany.BotanyLifeIndex
+import com.Atom2Universe.app.science.mycology.FungusCatalog
+import com.Atom2Universe.app.science.mycology.MycologyActivity
+import com.Atom2Universe.app.science.mycology.MycologyLifeIndex
 import com.Atom2Universe.app.science.timeline.CosmicTimelineActivity
 import com.Atom2Universe.app.science.timeline.LifeDate
 import com.Atom2Universe.app.science.timeline.LifeTimeline
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Parentés : la carte de l'arbre du vivant, qu'on explore de branche en branche ou dans laquelle on compare deux
+ * espèces. Tout ce qui se lit (détails d'un nœud, recherche, liste, explications) s'ouvre dans la fiche commune
+ * des modules de science, avec ses liens vers le bestiaire, les plantes, les champignons et la chronologie.
+ */
 class ParentesActivity : ThemedActivity() {
     private val palette by lazy { SciencePalette(this) }
+    private val ui by lazy { ScienceUi(this, palette) }
+    private val hue by lazy { ScienceModule.TREE.color(palette) }
     private var repository: ParentesRepository? = null
     private val repo get() = requireNotNull(repository)
     private var bestiaryIndex: BestiaryLifeIndex? = null
@@ -55,9 +64,7 @@ class ParentesActivity : ThemedActivity() {
     private var scene: TreeScene? = null
     private var renderJob: Job? = null
     private var overviewPrepared: ParentesTreeView.Prepared? = null
-    private lateinit var root: LinearLayout
-    private lateinit var back: ImageButton
-    private lateinit var controls: LinearLayout
+    private lateinit var header: ScienceUi.Header
     private lateinit var breadcrumb: LinearLayout
     private lateinit var selectors: LinearLayout
     private lateinit var chart: ParentesTreeView
@@ -65,6 +72,7 @@ class ParentesActivity : ThemedActivity() {
     private lateinit var cardScroll: ScrollView
     private lateinit var status: TextView
     private lateinit var loading: LinearLayout
+    private lateinit var modes: ScienceUi.TabRow
     private val storyLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val a = result.data?.getStringExtra("first")
@@ -76,7 +84,11 @@ class ParentesActivity : ThemedActivity() {
             }
         }
     }
-    private var activeDialog: AlertDialog? = null
+    // La fiche : une seule fenêtre pour les détails, la recherche, la liste et les explications, avec son historique.
+    private val fiche by lazy { ScienceFiche(this, palette, R.string.pt_back, R.string.pt_close) { currentSheet = null; sheetHistory.clear() } }
+    private var currentSheet: (() -> Unit)? = null
+    private val sheetHistory = ArrayList<() -> Unit>()
+    private var searchJob: Job? = null
     private val wide get() = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +116,7 @@ class ParentesActivity : ThemedActivity() {
         lifecycleScope.launch {
             val loaded = withContext(Dispatchers.Default) { runCatching {
                 val atlas = ParentesRepository.load(applicationContext)
-                // Catalog cross-indexes are built here too, not on the UI thread.
+                // Les index des catalogues se construisent ici aussi, hors du fil de l'interface.
                 Triple(atlas, BestiaryLifeIndex.of(atlas.tree),
                     MycologyLifeIndex(atlas.tree, FungusCatalog.species.associate { it.id to getString(it.latin) }))
             } }
@@ -125,7 +137,7 @@ class ParentesActivity : ThemedActivity() {
                 android.util.Log.e("ParentesLoad", "Atlas load failed", error)
                 status.text = getString(R.string.pt_error)
                 loading.removeAllViews()
-                loading.addView(button(getString(R.string.pt_story_retry)) {
+                loading.addView(ui.action(getString(R.string.pt_story_retry)) {
                     loading.removeAllViews(); loading.addView(ProgressBar(this@ParentesActivity)); loadAtlas()
                 })
             }
@@ -155,128 +167,97 @@ class ParentesActivity : ThemedActivity() {
         if (id !in repo.tree.nodes || (dating != null && (dating.nodeId != id || !LifeTimeline.matches(repo.tree, dating)))) {
             Toast.makeText(this, R.string.ct_life_link_unavailable, Toast.LENGTH_LONG).show(); return
         }
-        activeDialog?.dismiss()
+        fiche.dismiss()
         if (a != null && b != null && a != b && repo.tree.nodes[a]?.species == true &&
             repo.tree.nodes[b]?.species == true && repo.tree.lca(a, b) == id) {
             first = a; second = b; comparing = true; render()
         } else reveal(id)
     }
 
+    // ------------------------------------------------------------------ l'écran
+
     private fun buildUi() {
-        root = column().apply { setBackgroundColor(palette.background) }
-        val heading = row()
-        back = icon(R.drawable.ic_arrow_back_24, R.string.pt_back) { navigateBack() }
-        ScienceNavigation.bindHomeAction(back, ::returnToStart)
+        header = ui.header(getString(R.string.pt_short_title), ScienceModule.TREE, onBack = { navigateBack() }, onHome = ::returnToStart,
+            actions = listOf(
+                ScienceUi.HeaderAction(R.drawable.ic_search, R.string.pt_search_tree) { if (repository != null) picker(false) { reveal(it) } },
+                ScienceUi.HeaderAction(R.drawable.ic_view_list, R.string.pt_list) { if (repository != null) accessibleList() },
+                ScienceUi.HeaderAction(R.drawable.ic_sci_help, R.string.pt_read_title) { showReading() }
+            ), subtitle = getString(R.string.pt_tree_subtitle))
         updateBackDescription()
-        heading.addView(back)
-        val titles = column().apply { setPadding(dp(4),0,0,0) }
-        titles.addView(label(getString(R.string.pt_short_title),24f,true))
-        titles.addView(label(getString(R.string.pt_tree_subtitle),12f).apply { setTextColor(palette.secondary) })
-        heading.addView(titles,LinearLayout.LayoutParams(0,-2,1f))
-        heading.addView(icon(R.drawable.ic_pt_trail, R.string.pt_read_title) { showReading() })
-        heading.addView(icon(R.drawable.ic_view_list,R.string.pt_list) { if(repository!=null) accessibleList() })
-        root.addView(heading)
-        val mapColumn = if(wide) column().apply { setPadding(0,0,dp(8),0) } else root
-        val toolsColumn = if(wide) column().apply { setPadding(dp(8),0,0,0) } else root
-        if(wide) {
-            root.addView(row().apply {
-                gravity=Gravity.TOP
-                addView(mapColumn,LinearLayout.LayoutParams(0,-1,1f))
-                addView(toolsColumn,LinearLayout.LayoutParams(dp(260),-1))
-            },LinearLayout.LayoutParams(-1,0,1f))
+        val column = ui.column().apply { setPadding(ui.dp(12), 0, ui.dp(12), ui.dp(6)) }
+        val mapColumn = if (wide) ui.column().apply { setPadding(0, 0, ui.dp(8), 0) } else column
+        val toolsColumn = if (wide) ui.column().apply { setPadding(ui.dp(8), 0, 0, 0) } else column
+        if (wide) {
+            column.addView(ui.line().apply {
+                gravity = Gravity.TOP
+                addView(mapColumn, LinearLayout.LayoutParams(0, -1, 1f))
+                addView(toolsColumn, LinearLayout.LayoutParams(ui.dp(300), -1))
+            }, LinearLayout.LayoutParams(-1, 0, 1f))
         }
-        toolsColumn.addView(button(getString(R.string.pt_search_tree)) {
-            if(repository!=null) picker(false) { reveal(it) }
-        }.apply {
-            gravity=Gravity.START or Gravity.CENTER_VERTICAL
-            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_search,0,0,0)
-            compoundDrawableTintList=android.content.res.ColorStateList.valueOf(palette.secondary)
-            compoundDrawablePadding=dp(12)
-            setTextColor(palette.secondary)
-        },LinearLayout.LayoutParams(-1,-2).apply { topMargin=dp(8); bottomMargin=dp(4) })
-        breadcrumb = row()
+        breadcrumb = ui.line().apply { setPadding(0, ui.dp(2), 0, ui.dp(2)) }
         mapColumn.addView(breadcrumb)
-        selectors = column()
+        selectors = ui.column()
         toolsColumn.addView(selectors)
         val mapArea = FrameLayout(this)
         chart = ParentesTreeView(this).apply { onSelect = { id ->
-            if (!comparing && repo.tree.isBrowsable(id) && id!=focus) explore(id)
+            if (!comparing && repo.tree.isBrowsable(id) && id != focus) explore(id)
             else select(id)
         } }
-        mapArea.addView(chart,FrameLayout.LayoutParams(-1,-1))
-        loading = column().apply {
+        mapArea.addView(chart, FrameLayout.LayoutParams(-1, -1))
+        loading = ui.column().apply {
             gravity = Gravity.CENTER
             addView(ProgressBar(this@ParentesActivity))
-            addView(label(getString(R.string.pt_story_loading_map), 15f))
+            addView(ui.text(getString(R.string.pt_story_loading_map)))
         }
-        mapArea.addView(loading,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))
-        val camera=column().apply { setPadding(0,0,0,0); background=palette.shape(palette.surface,20f) }
-        camera.addView(icon(R.drawable.ic_ae_zoom_in,R.string.pt_zoom_in) { chart.zoomBy(1.6f) })
-        camera.addView(icon(R.drawable.ic_ae_zoom_out,R.string.pt_zoom_out) { chart.zoomBy(1f/1.6f) })
-        camera.addView(icon(R.drawable.ic_ae_zoom_fit,R.string.pt_fit) { chart.fit() })
-        mapArea.addView(camera,FrameLayout.LayoutParams(dp(48),-2,Gravity.BOTTOM or Gravity.END).apply { bottomMargin=dp(8) })
-        mapColumn.addView(mapArea,LinearLayout.LayoutParams(-1,0,1f))
-        card=column().apply { background=palette.shape(palette.surface) }
-        cardScroll=ScrollView(this).apply { addView(card); visibility=View.GONE }
-        toolsColumn.addView(cardScroll,if(wide) LinearLayout.LayoutParams(-1,0,1f) else LinearLayout.LayoutParams(-1,-2))
-        if(wide) toolsColumn.addView(View(this),LinearLayout.LayoutParams(-1,0,0.001f))
-        status=label(getString(R.string.pt_loading),12f).apply { gravity=Gravity.CENTER; setTextColor(palette.secondary) }
+        mapArea.addView(loading, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER))
+        val camera = ui.column().apply { background = palette.shape(palette.surface, 24f) }
+        camera.addView(ui.icon(R.drawable.ic_ae_zoom_in, R.string.pt_zoom_in) { chart.zoomBy(1.6f) }, LinearLayout.LayoutParams(ui.dp(48), ui.dp(48)))
+        camera.addView(ui.icon(R.drawable.ic_ae_zoom_out, R.string.pt_zoom_out) { chart.zoomBy(1f / 1.6f) }, LinearLayout.LayoutParams(ui.dp(48), ui.dp(48)))
+        camera.addView(ui.icon(R.drawable.ic_ae_zoom_fit, R.string.pt_fit) { chart.fit() }, LinearLayout.LayoutParams(ui.dp(48), ui.dp(48)))
+        mapArea.addView(camera, FrameLayout.LayoutParams(ui.dp(48), -2, Gravity.BOTTOM or Gravity.END).apply { bottomMargin = ui.dp(8); rightMargin = ui.dp(4) })
+        mapColumn.addView(mapArea, LinearLayout.LayoutParams(-1, 0, 1f))
+        card = ui.card()
+        cardScroll = ScrollView(this).apply { addView(card); visibility = View.GONE }
+        toolsColumn.addView(cardScroll, (if (wide) LinearLayout.LayoutParams(-1, 0, 1f) else LinearLayout.LayoutParams(-1, -2)).apply { topMargin = ui.dp(6) })
+        if (wide) toolsColumn.addView(View(this), LinearLayout.LayoutParams(-1, 0, 0.001f))
+        status = ui.note(getString(R.string.pt_loading)).apply { gravity = Gravity.CENTER; setPadding(0, ui.dp(4), 0, ui.dp(2)) }
         toolsColumn.addView(status)
-        controls=row().apply { background=palette.shape(palette.surface,20f) }
-        toolsColumn.addView(controls,LinearLayout.LayoutParams(-1,-2))
-        setContentView(root)
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view,insets ->
-            val bars=insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(bars.left+dp(12),bars.top+dp(4),bars.right+dp(12),bars.bottom+dp(6))
-            insets
+        modes = ui.tabs(listOf(getString(R.string.pt_explore_tab), getString(R.string.pt_compare), getString(R.string.pt_trails_tab)), 0) { index ->
+            if (repository == null) return@tabs
+            when (index) {
+                0 -> explore(repo.tree.root)
+                1 -> { comparing = true; render() }
+                else -> storyLauncher.launch(Intent(this, ParentesStoryActivity::class.java))
+            }
         }
-        ViewCompat.requestApplyInsets(root)
+        toolsColumn.addView(modes.view, LinearLayout.LayoutParams(-1, -2))
+        setContentView(ui.screen(header, column, maxWidthDp = 1400))
     }
 
-    private fun buildControls() {
-        controls.removeAllViews()
-        fun tab(title:Int,drawable:Int,active:Boolean,action:()->Unit) {
-            controls.addView(button(getString(title),action).apply {
-                setCompoundDrawablesRelativeWithIntrinsicBounds(0,drawable,0,0)
-                compoundDrawableTintList=android.content.res.ColorStateList.valueOf(if(active) palette.ink(palette.accent) else palette.secondary)
-                compoundDrawablePadding=dp(3)
-                setTextColor(if(active) palette.ink(palette.accent) else palette.secondary)
-                background=if(active) palette.shape(palette.raised,14f) else null
-                isSelected=active
-                ViewCompat.setStateDescription(this,if(active) getString(R.string.pt_active_mode) else null)
-            },LinearLayout.LayoutParams(0,-2,1f).apply { setMargins(dp(4),dp(4),dp(4),dp(4)) })
-        }
-        tab(R.string.pt_explore_tab,R.drawable.ic_pt_tree,!comparing) { explore(repo.tree.root) }
-        tab(R.string.pt_compare,R.drawable.ic_pt_compare,comparing) { comparing=true; render() }
-        tab(R.string.pt_trails_tab,R.drawable.ic_pt_trail,false) {
-            storyLauncher.launch(Intent(this, ParentesStoryActivity::class.java))
-        }
-    }
-
-    /** Panels follow at once; the drawing is prepared off the UI thread and swapped in, then [after] runs. */
-    private fun render(after:(()->Unit)?=null) {
-        val atlas=repo
-        val compare=comparing; val target=focus; val a=first; val b=second
-        selected=if(compare) atlas.tree.lca(a,b) else target
-        chart.selected=selected
+    /** Les panneaux suivent tout de suite ; le dessin se prépare hors du fil de l'interface, puis [after] s'exécute. */
+    private fun render(after: (() -> Unit)? = null) {
+        val atlas = repo
+        val compare = comparing; val target = focus; val a = first; val b = second
+        selected = if (compare) atlas.tree.lca(a, b) else target
+        chart.selected = selected
         refreshNavigation()
-        buildControls()
+        modes.select(if (compare) 1 else 0)
         showSummary()
-        val cached=if(!compare && target==atlas.tree.root) overviewPrepared else null
+        val cached = if (!compare && target == atlas.tree.root) overviewPrepared else null
         renderJob?.cancel()
-        renderJob=lifecycleScope.launch {
-            val prepared=cached ?: withContext(Dispatchers.Default) {
-                val current=if(compare) atlas.tree.compare(a,b) else if(target==atlas.tree.root) atlas.overview else atlas.tree.atlas(target)
-                chart.prepare(current,atlas.tree,atlas.groups.keys,if(current===atlas.overview) atlas.overviewPositions else null) { id ->
+        renderJob = lifecycleScope.launch {
+            val prepared = cached ?: withContext(Dispatchers.Default) {
+                val current = if (compare) atlas.tree.compare(a, b) else if (target == atlas.tree.root) atlas.overview else atlas.tree.atlas(target)
+                chart.prepare(current, atlas.tree, atlas.groups.keys, if (current === atlas.overview) atlas.overviewPositions else null) { id ->
                     when {
-                        compare && id==current.common && atlas.tree.nodes.getValue(id).scientific.isEmpty() -> getString(R.string.pt_common_node)
-                        atlas.tree.nodes.getValue(id).species || atlas.tree.isBrowsable(id) || compare -> atlas.name(this@ParentesActivity,id)
+                        compare && id == current.common && atlas.tree.nodes.getValue(id).scientific.isEmpty() -> getString(R.string.pt_common_node)
+                        atlas.tree.nodes.getValue(id).species || atlas.tree.isBrowsable(id) || compare -> atlas.name(this@ParentesActivity, id)
                         else -> ""
                     }
                 }
             }
-            if(prepared.scene===atlas.overview) overviewPrepared=prepared
-            scene=prepared.scene
+            if (prepared.scene === atlas.overview) overviewPrepared = prepared
+            scene = prepared.scene
             chart.show(prepared)
             after?.invoke()
         }
@@ -285,254 +266,264 @@ class ParentesActivity : ThemedActivity() {
     private fun refreshNavigation() {
         breadcrumb.removeAllViews()
         selectors.removeAllViews()
-        if(comparing) {
-            for((id,isFirst) in listOf(first to true,second to false)) {
-                selectors.addView(button(getString(if(isFirst) R.string.pt_a else R.string.pt_b,repo.name(this,id))) {
-                    picker(true) { if(isFirst) first=it else second=it; render() }
-                }.apply { gravity=Gravity.START or Gravity.CENTER_VERTICAL },LinearLayout.LayoutParams(-1,-2))
+        if (comparing) {
+            for ((id, isFirst) in listOf(first to true, second to false)) {
+                selectors.addView(ui.action(getString(if (isFirst) R.string.pt_a else R.string.pt_b, repo.name(this, id))) {
+                    picker(true) { if (isFirst) first = it else second = it; render() }
+                }, ui.wrap(4))
             }
         } else {
-            if(focus!=repo.tree.root) breadcrumb.addView(icon(R.drawable.ic_chevron_left,R.string.pt_parent) {
+            if (focus != repo.tree.root) breadcrumb.addView(ui.icon(R.drawable.ic_chevron_left, R.string.pt_parent) {
                 explore(repo.tree.displayParent(focus) ?: repo.tree.root)
-            })
-            breadcrumb.addView(label(repo.name(this,focus),15f,true).apply {
-                maxLines=2; setOnClickListener { detailsDialog(focus) }
-                contentDescription=getString(R.string.pt_node_action,repo.name(this@ParentesActivity,focus))
-                isFocusable=true
-            },LinearLayout.LayoutParams(0,dp(48),1f))
-            breadcrumb.addView(label(getString(R.string.pt_tip_count,repo.tree.descendants(focus).size),12f).apply { setTextColor(palette.secondary) })
+            }, LinearLayout.LayoutParams(ui.dp(40), ui.dp(40)))
+            breadcrumb.addView(ui.text(repo.name(this, focus), 16f, bold = true).apply {
+                maxLines = 2; setOnClickListener { details(focus) }
+                contentDescription = getString(R.string.pt_node_action, repo.name(this@ParentesActivity, focus))
+                isClickable = true; isFocusable = true; background = ui.ripple(null)
+                setPadding(ui.dp(6), ui.dp(6), ui.dp(6), ui.dp(6))
+            }, LinearLayout.LayoutParams(0, -2, 1f))
+            breadcrumb.addView(ui.note(getString(R.string.pt_tip_count, repo.tree.descendants(focus).size)), LinearLayout.LayoutParams(-2, -2).apply { marginEnd = ui.dp(8) })
             LifeTimeline.forNode(repo.tree, focus)?.let { date ->
-                breadcrumb.addView(button(getString(R.string.ct_view_timeline_short)) { openTimeline(date) })
+                breadcrumb.addView(ui.moduleChip(ScienceModule.TIMELINE, { openTimeline(date) }))
             }
         }
-        status.text=getString(if(comparing) R.string.pt_comparison_hint else R.string.pt_map_hint)
+        status.text = getString(if (comparing) R.string.pt_comparison_hint else R.string.pt_map_hint)
     }
 
-    private fun explore(id:String,after:(()->Unit)?=null) {
-        comparing=false; focus=id; selected=id
+    private fun explore(id: String, after: (() -> Unit)? = null) {
+        comparing = false; focus = id; selected = id
         render(after)
     }
-    private fun reveal(id:String) {
-        if(repo.tree.nodes.getValue(id).species) {
+    private fun reveal(id: String) {
+        if (repo.tree.nodes.getValue(id).species) {
             explore(repo.tree.displayParent(id) ?: repo.tree.root) { chart.post { chart.reveal(id) } }
             select(id)
         } else explore(id)
     }
-    private fun select(id:String) { selected=id; chart.selected=id; showSummary() }
+    private fun select(id: String) { selected = id; chart.selected = id; showSummary() }
     private fun navigateBack() {
         when {
+            fiche.isShowing -> fiche.dismiss()
             ScienceNavigation.isModuleLink(intent) -> finish()
-            repository==null -> finish()
+            repository == null -> finish()
             comparing -> explore(repo.tree.root)
-            selected!=focus -> select(focus)
-            focus!=repo.tree.root -> explore(repo.tree.displayParent(focus) ?: repo.tree.root)
+            selected != focus -> select(focus)
+            focus != repo.tree.root -> explore(repo.tree.displayParent(focus) ?: repo.tree.root)
             else -> finish()
         }
     }
 
     private fun updateBackDescription() {
-        back.contentDescription = getString(if (ScienceNavigation.isModuleLink(intent))
+        header.back.contentDescription = getString(if (ScienceNavigation.isModuleLink(intent))
             R.string.science_back_to_previous_module else R.string.pt_back)
     }
 
     private fun returnToStart() {
-        activeDialog?.dismiss()
+        fiche.dismiss()
         pendingNode = null; pendingFirst = null; pendingSecond = null; pendingDate = null
         comparing = false
-        // Also cancel a pending deep link if the atlas is still loading.
+        // Un lien en attente est aussi annulé si l'atlas se charge encore.
         if (repository == null) {
             focus = ""; selected = ""
         } else {
             explore(repo.tree.root)
-            back.announceForAccessibility(getString(R.string.science_return_to_module_start))
+            header.back.announceForAccessibility(getString(R.string.science_return_to_module_start))
         }
     }
 
+    /** Le résumé du nœud choisi, sous la carte : son nom, une ligne, et les liens vers les autres modules. */
     private fun showSummary() {
         card.removeAllViews()
-        val show=comparing || selected!=focus
-        cardScroll.visibility=if(show) View.VISIBLE else View.GONE
-        if(!show) return
-        // A bounded, scrollable preview leaves the drawing in charge, including in landscape.
-        if(!wide) cardScroll.layoutParams.height=dp(132)
-        if(comparing && selected==repo.tree.lca(first,second)) {
-            card.addView(label(getString(when {
-                first==second -> R.string.pt_same
-                else -> R.string.pt_common_summary
-            }),14f,true))
-            card.addView(button(getString(R.string.pt_details)) { comparisonDetails() })
-            if (first != second) LifeTimeline.forNode(repo.tree, selected)?.let { date ->
-                card.addView(button(getString(R.string.ct_view_timeline)) { openTimeline(date) })
-            }
+        val show = comparing || selected != focus
+        cardScroll.visibility = if (show) View.VISIBLE else View.GONE
+        if (!show) return
+        // Un aperçu borné, qui défile, laisse la place au dessin, y compris en paysage.
+        if (!wide) cardScroll.layoutParams.height = ui.dp(150)
+        if (comparing && selected == repo.tree.lca(first, second)) {
+            card.addView(ui.text(getString(if (first == second) R.string.pt_same else R.string.pt_common_summary), 14f, bold = true))
+            val links = mutableListOf<View>(ui.action(getString(R.string.pt_details)) { comparisonDetails() })
+            if (first != second) LifeTimeline.forNode(repo.tree, selected)?.let { date -> links += ui.moduleChip(ScienceModule.TIMELINE, { openTimeline(date) }) }
+            card.addView(ui.chipRow(links), ui.full(8))
         } else {
-            val heading=row()
-            heading.addView(label(repo.name(this,selected),18f,true),LinearLayout.LayoutParams(0,-2,1f))
-            heading.addView(button(getString(R.string.pt_details)) { detailsDialog(selected) })
+            val heading = ui.line()
+            heading.addView(ui.text(repo.name(this, selected), 17f, bold = true), LinearLayout.LayoutParams(0, -2, 1f))
+            heading.addView(ui.action(getString(R.string.pt_details)) { details(selected) })
             card.addView(heading)
-            card.addView(label(if(repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected),14f))
-            botanyButton(selected)?.let{card.addView(it)}
-            bestiaryButton(selected)?.let{card.addView(it)}
-            mycologyButton(selected)?.let{card.addView(it)}
+            card.addView(ui.text(if (repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected), 14f).apply {
+                maxLines = 3; ellipsize = android.text.TextUtils.TruncateAt.END
+            }, ui.full(4))
+            val links = moduleLinks(selected)
+            if (links.isNotEmpty()) card.addView(ui.chipRow(links), ui.full(8))
         }
-        cardScroll.post { cardScroll.scrollTo(0,0) }
+        cardScroll.post { cardScroll.scrollTo(0, 0) }
     }
 
-    private fun showReading() {
-        val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)) }
-        body.addView(label(getString(R.string.science_navigation_help), 15f))
+    // ------------------------------------------------------------------ les fiches
+
+    /** Montre une fiche ; celle d'avant va dans l'historique de la flèche, sauf quand on y revient ([push] faux). */
+    private fun present(push: Boolean = true, build: (onBack: (() -> Unit)?) -> Unit) {
+        val previous = currentSheet
+        if (push && previous != null) sheetHistory.add(previous)
+        val self: () -> Unit = { present(false, build) }
+        currentSheet = self
+        build(if (sheetHistory.isEmpty()) null else ({ sheetHistory.removeAt(sheetHistory.lastIndex)() }))
+    }
+
+    private fun showReading(): Unit = present { back ->
+        val body = ui.column()
+        body.addView(ui.paragraph(getString(R.string.science_navigation_help)), ui.full(4))
         ParentesReading.sections.forEach { section ->
-            body.addView(label(getString(section.title), 18f, true))
-            body.addView(label(getString(section.body), 15f).apply { setTextIsSelectable(true) })
+            val text = ui.column()
+            text.addView(ui.paragraph(getString(section.body)))
+            text.addView(ui.link(android.net.Uri.parse(section.url).host.orEmpty(), section.url), ui.full(6))
+            body.addView(ui.chapter(getString(section.title), hue, text), ui.full(12))
         }
-        activeDialog?.dismiss()
-        activeDialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_read_title)
-            .setView(ScrollView(this).apply { addView(body) }).setPositiveButton(R.string.pt_close, null).show()
+        fiche.show(getString(R.string.pt_read_title), null, null, body, back)
     }
 
-    private fun accessibleList() {
-        val body=column()
-        body.addView(button(getString(R.string.pt_catalogue,repo.tree.species.size)) { picker(true) { reveal(it) } })
-        body.addView(label(getString(R.string.pt_list_intro)))
-        val entries=scene?.parents.orEmpty().keys.filter {
+    private fun accessibleList(): Unit = present { back ->
+        val body = ui.column()
+        body.addView(ui.action(getString(R.string.pt_catalogue, repo.tree.species.size)) { picker(true) { reveal(it) } }, ui.wrap(0))
+        body.addView(ui.note(getString(R.string.pt_list_intro)), ui.full(10))
+        val entries = scene?.parents.orEmpty().keys.filter {
             repo.tree.nodes.getValue(it).species || repo.tree.isBrowsable(it) || comparing
         }
-        val list=ListView(this).apply {
-            adapter=object:ArrayAdapter<String>(this@ParentesActivity,android.R.layout.simple_list_item_1,entries) {
-                override fun getView(position:Int,convertView:View?,parent:ViewGroup):View {
-                    val id=getItem(position)!!
-                    val ancestor=repo.tree.displayParent(id)
-                    return (convertView as? TextView ?: label("",16f)).apply {
-                        text=if(ancestor==null) repo.name(this@ParentesActivity,id) else getString(R.string.pt_branch_format,repo.name(this@ParentesActivity,ancestor),repo.name(this@ParentesActivity,id))
-                        minHeight=dp(56); gravity=Gravity.CENTER_VERTICAL
-                    }
-                }
-            }
-            setOnItemClickListener { _,_,position,_ -> activeDialog?.dismiss(); select(entries[position]); detailsDialog(entries[position]) }
+        entries.forEach { id ->
+            val ancestor = repo.tree.displayParent(id)
+            body.addView(nodeRow(if (ancestor == null) repo.name(this, id) else getString(R.string.pt_branch_format, repo.name(this, ancestor), repo.name(this, id)), null) {
+                select(id); details(id)
+            }, ui.full(2))
         }
-        body.addView(list,LinearLayout.LayoutParams(-1,dp(minOf(360,resources.configuration.screenHeightDp/2))))
-        activeDialog?.dismiss()
-        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_list).setView(body).setPositiveButton(R.string.pt_close,null).show()
+        fiche.show(getString(R.string.pt_list), null, null, body, back)
+    }
+
+    /** Une ligne de liste cliquable : un nom, et un nom latin en dessous s'il y en a un. */
+    private fun nodeRow(name: String, latin: String?, onClick: () -> Unit): View {
+        val line = ui.line().apply {
+            background = ui.ripple(null); isClickable = true; isFocusable = true
+            setPadding(ui.dp(6), ui.dp(10), ui.dp(6), ui.dp(10)); setOnClickListener { onClick() }
+        }
+        val texts = ui.column()
+        texts.addView(ui.text(name, 15f, bold = true))
+        latin?.takeIf { it.isNotBlank() && it != name }?.let { texts.addView(ui.latin(it, 13f), ui.full(1)) }
+        line.addView(texts, LinearLayout.LayoutParams(0, -2, 1f))
+        return line
     }
 
     private fun article(id: String): String {
-        PlantGroupKnowledge.description(this,repo.tree.nodes.getValue(id).scientific)?.let { return it }
-        repo.groups[id]?.let { return repo.text(this,it.key+"_body") }
-        repo.notes[id]?.let { return repo.text(this,it.key) }
+        PlantGroupKnowledge.description(this, repo.tree.nodes.getValue(id).scientific)?.let { return it }
+        repo.groups[id]?.let { return repo.text(this, it.key + "_body") }
+        repo.notes[id]?.let { return repo.text(this, it.key) }
         val n = repo.tree.nodes.getValue(id)
         if (!n.species) return getString(R.string.pt_node_body)
         val group = repo.tree.ancestors(id).firstOrNull { it in repo.groups } ?: repo.tree.root
-        return getString(R.string.pt_species_body,repo.name(this,group))
+        return getString(R.string.pt_species_body, repo.name(this, group))
     }
 
-    private fun detailsDialog(id: String) {
-        val body = column()
+    /** La fiche d'un nœud : son identité et ses liens, puis ses chapitres et ce qu'on peut en faire sur la carte. */
+    private fun details(id: String): Unit = present { back ->
         val node = repo.tree.nodes.getValue(id)
-        if (node.scientific.isNotEmpty()) body.addView(label(node.scientific,16f,true))
-        body.addView(label(article(id)))
+        val top = ui.column()
+        top.addView(ui.identity(node.scientific.takeIf { it.isNotEmpty() }, links = moduleLinks(id) + datingLinks(id)))
+        val body = ui.column()
+        val description = ui.column()
+        description.addView(ui.paragraph(article(id)))
         bestiaryIndex?.forNode(id)?.let { profile ->
-            // The animal's description is the overview of its encyclopedia profile, read off the UI thread.
-            val description = label("").apply { visibility = View.GONE }
-            body.addView(description)
+            // La description de l'animal est le portrait de sa fiche encyclopédique, lu hors du fil de l'interface.
+            val overview = ui.paragraph("").apply { visibility = View.GONE }
+            description.addView(overview, ui.full(8))
             val language = resources.configuration.locales[0].language
             lifecycleScope.launch {
-                val overview = withContext(Dispatchers.IO) {
+                val text = withContext(Dispatchers.IO) {
                     try { AnimalEncyclopediaRepository.load(applicationContext, profile, language).sections["overview"] }
                     catch (_: java.io.IOException) { null } catch (_: org.json.JSONException) { null }
                 }
-                if (!overview.isNullOrBlank()) { description.text = overview; description.visibility = View.VISIBLE }
+                if (!text.isNullOrBlank()) { overview.text = text; overview.visibility = View.VISIBLE }
             }
         }
-        PlantGroupKnowledge.append(this,body,palette,node.scientific,includeDescription=false)
+        body.addView(ui.chapter(repo.name(this, id), hue, description), ui.full(4))
+        val knowledge = ui.column()
+        PlantGroupKnowledge.append(this, knowledge, palette, node.scientific, includeDescription = false)
+        if (knowledge.childCount > 0) body.addView(knowledge, ui.full(8))
+
         val lineage = repo.tree.ancestors(id).drop(1).filter { it in repo.groups }.reversed()
-        body.addView(label(getString(R.string.pt_position,lineage.joinToString(getString(R.string.pt_separator)) { repo.name(this,it) })))
-        repo.tree.displayParent(id)?.let { parent ->
-            body.addView(button(getString(R.string.pt_parent)) { activeDialog?.dismiss(); explore(parent) })
-        }
-        if (!node.species) {
-            body.addView(button(getString(R.string.pt_open)) { activeDialog?.dismiss(); explore(id) })
-            val members = repo.tree.descendants(id)
-            body.addView(label(getString(R.string.pt_count,members.size)))
-            body.addView(button(getString(R.string.pt_members)) {
-                picker(true,members.map { it.id }.toSet()) { detailsDialog(it) }
-            })
-        } else {
-            val actions = row()
-            actions.addView(button(getString(R.string.pt_choose_a)) { activeDialog?.dismiss(); first=id; comparing=true; render() })
-            actions.addView(button(getString(R.string.pt_choose_b)) { activeDialog?.dismiss(); second=id; comparing=true; render() })
-            body.addView(horizontal(actions))
+        val position = ui.column()
+        if (lineage.isNotEmpty()) position.addView(ui.flow(lineage.map { ancestor -> ui.chip(repo.name(this, ancestor), false) { details(ancestor) } }))
+        val notes = mutableListOf(getString(if (node.support.any { '@' in it }) R.string.pt_support_study else R.string.pt_support_taxonomy))
+        if (node.conflicts.isNotEmpty()) notes += getString(R.string.pt_conflicts)
+        if (repo.tree.children[id].orEmpty().size > 2) notes += getString(R.string.pt_polytomy)
+        if (!node.species) notes += getString(R.string.pt_count, repo.tree.descendants(id).size)
+        position.addView(ui.note(notes.joinToString("\n")), ui.full(10))
+        body.addView(ui.chapter(getString(R.string.pt_position_title), hue, position), ui.full(12))
+
+        if (node.species) {
             val group = repo.tree.ancestors(id).firstOrNull { it in repo.groups }
-            group?.let { body.addView(label(repo.text(this,repo.groups.getValue(it).key+"_body"))) }
+            group?.let { body.addView(ui.chapter(repo.name(this, it), hue, ui.paragraph(repo.text(this, repo.groups.getValue(it).key + "_body"))), ui.full(12)) }
         }
-        body.addView(label(getString(if (node.support.any { '@' in it }) R.string.pt_support_study else R.string.pt_support_taxonomy)))
-        if (node.conflicts.isNotEmpty()) body.addView(label(getString(R.string.pt_conflicts)))
-        if (repo.tree.children[id].orEmpty().size > 2) body.addView(label(getString(R.string.pt_polytomy)))
-        botanyButton(id)?.let{body.addView(it)}
-        bestiaryButton(id)?.let{body.addView(it)}
-        mycologyButton(id)?.let{body.addView(it)}
-        addDatingLink(body, id)
-        dialog(repo.name(this,id),body)
+        // Ce qu'on peut faire sur la carte : y aller, remonter, voir les membres, choisir pour la comparaison.
+        val actions = mutableListOf<View>()
+        repo.tree.displayParent(id)?.let { parent -> actions += ui.action(getString(R.string.pt_parent), R.drawable.ic_chevron_left) { fiche.dismiss(); explore(parent) } }
+        if (!node.species) {
+            actions += ui.action(getString(R.string.pt_open), R.drawable.ic_pt_tree) { fiche.dismiss(); explore(id) }
+            actions += ui.action(getString(R.string.pt_members)) { picker(true, repo.tree.descendants(id).map { it.id }.toSet()) { details(it) } }
+        } else {
+            actions += ui.action(getString(R.string.pt_choose_a), R.drawable.ic_pt_compare) { fiche.dismiss(); first = id; comparing = true; render() }
+            actions += ui.action(getString(R.string.pt_choose_b), R.drawable.ic_pt_compare) { fiche.dismiss(); second = id; comparing = true; render() }
+        }
+        body.addView(ui.flow(actions), ui.full(18))
+        fiche.show(repo.name(this, id), top, null, body, back)
     }
 
-    private fun bestiaryButton(id: String): View? {
-        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "bestiary")) return null
-        val species = bestiaryIndex?.forNode(id) ?: return null
-        return button(getString(R.string.be_open_profile)) {
-            startActivity(Intent(this, BestiaryActivity::class.java)
-                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
-                .putExtra(BestiaryActivity.EXTRA_SPECIES_ID, species)
-                .putExtra(BestiaryActivity.EXTRA_LIFE_NODE, id))
-        }
-    }
-
-    private fun mycologyButton(id: String): View? {
-        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "mycology")) return null
-        val species = mycologyIndex?.forNode(id) ?: return null
-        return button(getString(R.string.myco_open_profile)) {
-            startActivity(Intent(this, MycologyActivity::class.java)
-                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
-                .putExtra(MycologyActivity.EXTRA_SPECIES_ID, species)
-                .putExtra(MycologyActivity.EXTRA_LIFE_NODE, id))
-        }
-    }
-
-    private fun botanyButton(id:String):View? {
-        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "botany")) return null
-        if(repo.tree.nodes[id]?.species!=true || BotanyLifeIndex.GREEN_ROOT !in repo.tree.ancestors(id))return null
-        return button(getString(R.string.bot_life_open_atlas)) {
-            startActivity(Intent(this,BotanyActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE,true)
-                .putExtra(BotanyActivity.EXTRA_LIFE_NODE,id))
-        }
-    }
-
-    private fun comparisonDetails() {
-        val common = repo.tree.lca(first,second)
-        val body = column()
-        body.addView(label(getString(R.string.pt_comparison_limits)))
-        body.addView(button(repo.name(this,common)) { detailsDialog(common) })
-        if (first != second) addDatingLink(body, common)
-        for ((id,title) in listOf(first to R.string.pt_path_a,second to R.string.pt_path_b)) {
-            body.addView(button(getString(title)) {
-                val path = column()
-                repo.tree.pathTo(id,common).forEach { n ->
-                    path.addView(button(getString(R.string.pt_path_item,repo.name(this,n),n)) { detailsDialog(n) })
-                }
-                dialog(getString(title),path)
+    /** Les liens vers les fiches illustrées des autres modules pour ce nœud. */
+    private fun moduleLinks(id: String): List<View> {
+        val links = mutableListOf<View>()
+        if (com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "bestiary")) bestiaryIndex?.forNode(id)?.let { species ->
+            links += ui.moduleChip(ScienceModule.BESTIARY, {
+                startActivity(Intent(this, BestiaryActivity::class.java)
+                    .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                    .putExtra(BestiaryActivity.EXTRA_SPECIES_ID, species)
+                    .putExtra(BestiaryActivity.EXTRA_LIFE_NODE, id))
             })
         }
-        dialog(getString(R.string.pt_compare),body)
+        if (com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "botany") &&
+            repo.tree.nodes[id]?.species == true && BotanyLifeIndex.GREEN_ROOT in repo.tree.ancestors(id)) {
+            links += ui.moduleChip(ScienceModule.BOTANY, {
+                startActivity(Intent(this, BotanyActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                    .putExtra(BotanyActivity.EXTRA_LIFE_NODE, id))
+            })
+        }
+        if (com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "mycology")) mycologyIndex?.forNode(id)?.let { species ->
+            links += ui.moduleChip(ScienceModule.MYCOLOGY, {
+                startActivity(Intent(this, MycologyActivity::class.java)
+                    .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                    .putExtra(MycologyActivity.EXTRA_SPECIES_ID, species)
+                    .putExtra(MycologyActivity.EXTRA_LIFE_NODE, id))
+            })
+        }
+        return links
     }
 
-    private fun addDatingLink(body: LinearLayout, id: String) {
+    /** Le lien vers la chronologie : la date du nœud, sinon celle de son plus proche ancêtre daté. */
+    private fun datingLinks(id: String): List<View> {
         val exact = LifeTimeline.forNode(repo.tree, id)
-        if (exact != null) {
-            body.addView(label(exact.dateLabel(this), 14f, true))
-            body.addView(button(getString(R.string.ct_view_timeline)) { openTimeline(exact) })
-        } else {
-            LifeTimeline.nearestAncestor(repo.tree, id)?.let { ancestor ->
-                body.addView(label(getString(R.string.ct_life_ancestor_context, getString(ancestor.title)), 13f))
-                body.addView(button(getString(R.string.ct_life_open_ancestor, getString(ancestor.title))) { openTimeline(ancestor) })
-            }
+        if (exact != null) return listOf(ui.moduleChip(ScienceModule.TIMELINE, { openTimeline(exact) }, exact.dateLabel(this)))
+        val ancestor = LifeTimeline.nearestAncestor(repo.tree, id) ?: return emptyList()
+        return listOf(ui.moduleChip(ScienceModule.TIMELINE, { openTimeline(ancestor) }, getString(R.string.ct_life_open_ancestor, getString(ancestor.title))))
+    }
+
+    private fun comparisonDetails(): Unit = present { back ->
+        val common = repo.tree.lca(first, second)
+        val top = ui.column()
+        top.addView(ui.identity(null, links = if (first != second) datingLinks(common) else emptyList()))
+        val body = ui.column()
+        body.addView(ui.note(getString(R.string.pt_comparison_limits)), ui.full(4))
+        body.addView(ui.chapter(getString(R.string.pt_common_node), hue, ui.flow(listOf(ui.chip(repo.name(this, common), false) { details(common) }))), ui.full(12))
+        for ((id, title) in listOf(first to R.string.pt_path_a, second to R.string.pt_path_b)) {
+            val path = ui.column()
+            repo.tree.pathTo(id, common).forEach { n -> path.addView(nodeRow(repo.name(this, n), repo.tree.nodes.getValue(n).scientific) { details(n) }, ui.full(2)) }
+            body.addView(ui.chapter(getString(title), hue, path), ui.full(12))
         }
+        fiche.show(getString(R.string.pt_compare), top, null, body, back)
     }
 
     private fun openTimeline(date: LifeDate) {
@@ -545,103 +536,56 @@ class ParentesActivity : ThemedActivity() {
         startActivity(target)
     }
 
-    private fun picker(speciesOnly: Boolean, within: Set<String>? = null, chosen: (String) -> Unit) {
-        val body = column()
-        val search = EditText(this).apply {
-            hint=getString(R.string.pt_search_hint); setTextColor(palette.text); setHintTextColor(palette.secondary)
-            isSingleLine=true; minHeight=dp(48)
-            inputType=android.text.InputType.TYPE_CLASS_TEXT
-        }
-        body.addView(search)
-        val empty=label(getString(R.string.pt_none))
-        body.addView(empty)
-        val list=ListView(this)
-        body.addView(list,LinearLayout.LayoutParams(-1,dp(minOf(320,resources.configuration.screenHeightDp/2))))
-        var results=emptyList<LifeNode>()
-        var searchJob: Job? = null
-        fun update(query:String) {
+    /** La recherche d'un nœud : un champ, et la liste des résultats dans la fiche ; choisir ferme la fiche. */
+    private fun picker(speciesOnly: Boolean, within: Set<String>? = null, chosen: (String) -> Unit): Unit = present { back ->
+        val body = ui.column()
+        val empty = ui.note(getString(R.string.pt_none))
+        val results = ui.column()
+        var found = emptyList<LifeNode>()
+        fun update(query: String) {
             searchJob?.cancel()
-            list.isEnabled = false
             empty.text = getString(R.string.pt_story_loading_search)
             empty.visibility = View.VISIBLE
             searchJob = lifecycleScope.launch {
-                results = withContext(Dispatchers.Default) {
+                found = withContext(Dispatchers.Default) {
                     val collator = java.text.Collator.getInstance(resources.configuration.locales[0])
-                    val found = repo.search(query,speciesOnly).filter { within==null || it.id in within }
+                    val hits = repo.search(query, speciesOnly).filter { within == null || it.id in within }
                     ensureActive()
-                    val named = found.map { it to collator.getCollationKey(repo.name(this@ParentesActivity,it.id)) }
+                    val named = hits.map { it to collator.getCollationKey(repo.name(this@ParentesActivity, it.id)) }
                     ensureActive()
                     named.sortedBy { it.second }.map { it.first }
                 }
-                list.isEnabled = true
-                empty.text = getString(R.string.pt_none)
-                list.adapter=object:ArrayAdapter<LifeNode>(this@ParentesActivity,android.R.layout.simple_list_item_1,results) {
-                    override fun getView(position:Int,convertView:View?,parent:ViewGroup):View {
-                        val n=getItem(position)!!
-                        return (convertView as? TextView ?: label("",16f)).apply {
-                            text=getString(R.string.pt_path_item,repo.name(this@ParentesActivity,n.id),n.scientific)
-                            minHeight=dp(64); gravity=Gravity.CENTER_VERTICAL
-                        }
-                    }
+                results.removeAllViews()
+                found.take(RESULTS).forEach { n ->
+                    results.addView(nodeRow(repo.name(this@ParentesActivity, n.id), n.scientific) { fiche.dismiss(); chosen(n.id) }, ui.full(2))
                 }
-                empty.visibility=if(results.isEmpty()) View.VISIBLE else View.GONE
+                if (found.size > RESULTS) results.addView(ui.note(getString(R.string.pt_tip_count, found.size)), ui.full(8))
+                empty.text = getString(R.string.pt_none)
+                empty.visibility = if (found.isEmpty()) View.VISIBLE else View.GONE
             }
         }
-        search.addTextChangedListener(object:TextWatcher {
-            override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int) {}
-            override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int) { update(s.toString()) }
-            override fun afterTextChanged(s:Editable?) {}
-        })
-        list.setOnItemClickListener { _,_,position,_ -> activeDialog?.dismiss(); chosen(results[position].id) }
+        body.addView(ui.searchField(getString(R.string.pt_search_hint), "") { update(it) }.view, ui.full(4))
+        body.addView(empty, ui.full(10))
+        body.addView(results, ui.full(4))
         update("")
-        activeDialog?.dismiss()
-        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(if(speciesOnly) R.string.pt_choose else R.string.pt_search)
-            .setView(body).setNegativeButton(R.string.pt_close,null).create().also {
-                it.setOnDismissListener { searchJob?.cancel() }; it.show()
-            }
+        fiche.show(getString(if (speciesOnly) R.string.pt_choose else R.string.pt_search), null, null, body, back)
     }
 
-    private fun dialog(title:String,body:LinearLayout) {
-        activeDialog?.dismiss()
-        val scroll=ScrollView(this).apply { addView(body) }
-        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(title).setView(scroll).setPositiveButton(R.string.pt_close,null).create().also { it.show() }
-    }
-    private fun column()=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(dp(8),dp(6),dp(8),dp(6)) }
-    private fun row()=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; gravity=Gravity.CENTER_VERTICAL }
-    private fun horizontal(row:LinearLayout)=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; addView(row) }
-    private fun label(value:String,size:Float=15f,bold:Boolean=false)=TextView(this).apply {
-        text=value; textSize=size; setTextColor(palette.text); setPadding(dp(4),dp(3),dp(4),dp(3))
-        if(bold) setTypeface(typeface,Typeface.BOLD)
-    }
-    private fun button(value:String,action:()->Unit)=androidx.appcompat.widget.AppCompatButton(this).apply {
-        text=value; textSize=14f; isAllCaps=false; minHeight=dp(48); minimumHeight=dp(48)
-        setPadding(dp(12),dp(8),dp(12),dp(8)); setTextColor(palette.text)
-        background=palette.shape(palette.raised,12f); setOnClickListener { action() }
-        layoutParams=LinearLayout.LayoutParams(-2,-2).apply { setMargins(dp(2),dp(3),dp(2),dp(3)) }
-    }
-    private fun icon(drawable:Int,description:Int,action:()->Unit)=androidx.appcompat.widget.AppCompatImageButton(this).apply {
-        setImageResource(drawable); imageTintList=android.content.res.ColorStateList.valueOf(palette.text)
-        contentDescription=getString(description); setPadding(dp(12),dp(12),dp(12),dp(12))
-        val selectable=android.util.TypedValue()
-        theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless,selectable,true)
-        setBackgroundResource(selectable.resourceId)
-        layoutParams=LinearLayout.LayoutParams(dp(48),dp(48))
-        setOnClickListener { action() }
-    }
-    private fun dp(value:Int)=(value*resources.displayMetrics.density).toInt()
-    override fun onSaveInstanceState(outState:Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("focus",focus); outState.putString("selected",selected)
-        outState.putString("first",first); outState.putString("second",second)
-        outState.putBoolean("comparing",comparing)
-        outState.putString("pending_node",pendingNode); outState.putString("pending_first",pendingFirst)
-        outState.putString("pending_second",pendingSecond); outState.putString("pending_date",pendingDate)
+        outState.putString("focus", focus); outState.putString("selected", selected)
+        outState.putString("first", first); outState.putString("second", second)
+        outState.putBoolean("comparing", comparing)
+        outState.putString("pending_node", pendingNode); outState.putString("pending_first", pendingFirst)
+        outState.putString("pending_second", pendingSecond); outState.putString("pending_date", pendingDate)
     }
-    override fun onDestroy() { activeDialog?.dismiss(); super.onDestroy() }
+    override fun onDestroy() { searchJob?.cancel(); fiche.dismiss(); super.onDestroy() }
 
     companion object {
         const val EXTRA_NODE_ID = "life_node_id"
         const val EXTRA_FIRST_ID = "life_comparison_first"
         const val EXTRA_SECOND_ID = "life_comparison_second"
+        /** Au plus tant de résultats de recherche affichés d'un coup. */
+        private const val RESULTS = 200
     }
 }
