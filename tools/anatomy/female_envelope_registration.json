@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "kind": "Slim adult female mannequin generated with Tripo AI from a text description, supplied by the project owner",
+  "file": "mannequin.obj",
+  "sha256": "df7e6a40bc4b874ae546033954d36911bb4ce4a0972e06a90cb6eae75a0cf687",
+  "archive": "Documents NON commit du projet/Atom2Universe/anatomie_femme/medical mannequin 3d model.zip",
+  "archiveSha256": "8d4f2bf5f5b7aa86fd0183f230efd96db3fdc3a2fae67327532166e487e57bec",
+  "heightMetres": 1.65,
+  "pose": "Standing A-pose, arms slightly away from the body, legs slightly apart, plain fitted swimsuit modelled as faint seams",
+  "axes": {"x": "subject left", "y": "superior", "z": "anterior"},
+  "normalisation": "Uniform scale to heightMetres, soles at y = 0, bounding box centred in x and z",
+  "limitations": [
+    "Generated silhouette, not a scanned person; proportions are an illustrative average.",
+    "No modelled nipples, vulva or hair; the atlas reconstructions and the HRA breast surfaces sit under this skin.",
+    "The arms contain no structures: the Human Reference Atlas supplies none."
+  ]
+}

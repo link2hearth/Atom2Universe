@@ -5,6 +5,7 @@
  * node tools/anatomy/optimize_mobile.mjs --write         # then publish validated assets
  * node tools/anatomy/optimize_mobile.mjs --validate      # validate current packaged assets
  * node tools/anatomy/optimize_mobile.mjs --decode input.glb output.glb
+ * --atlas=female restricts a run to one atlas (the others need their local originals otherwise)
  *
  * Originals, decoded previews and measurements stay in app/build/anatomy-source/mobile.
  * Never simplify a previously simplified atlas. Re-running uses the hash-checked original,
@@ -32,7 +33,8 @@ const args = process.argv.slice(2);
 if (args[0] === '--decode') {
   assert.equal(args.length, 3); fs.writeFileSync(args[2], decodedGlb(fs.readFileSync(args[1]))); process.exit(0);
 }
-assert(args.every(a => ['--write', '--validate'].includes(a)));
+const atlasArg = args.find(a => a.startsWith('--atlas='));
+assert(args.every(a => ['--write', '--validate'].includes(a) || a.startsWith('--atlas=')));
 const encoder = await draco.createEncoderModule({});
 await MeshoptSimplifier.ready;
 
@@ -272,7 +274,8 @@ async function optimize(atlas) {
   return { directory, stage, catalog, oldParts: current.catalog.modelParts };
 }
 
-const atlases = ['male', 'female', 'ear'];
+const atlases = atlasArg ? [atlasArg.slice('--atlas='.length)] : ['male', 'female', 'ear'];
+assert(atlases.every(a => ['male', 'female', 'ear'].includes(a)));
 if (args.includes('--validate')) {
   for (const atlas of atlases) await validate(path.join(ASSETS, atlas === 'male' ? '' : atlas), atlas);
 } else {

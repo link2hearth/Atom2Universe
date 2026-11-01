@@ -34,17 +34,31 @@ def xml_string(value):
     return escape(value).replace("'", "\\'").replace('"', '\\"')
 
 
+def female_pipeline(source):
+    """HRA selection, perineal reconstructions, male stomach/oesophagus, then the mannequin envelope."""
+    items, provenance = importlib.import_module('female_content').build(source)
+    additions, report = importlib.import_module('female_supplement_content').build(source, items)
+    items += additions
+    provenance['reconstructedSupplement'] = report
+    provenance['modifications'] += (' Separate original educational reconstructions supplement the missing external genital '
+        'and urethral structures; these are labelled as reconstructions and are not HRA segmentations.')
+    transferred, transfer_report = importlib.import_module('male_transfer_content').build(source, items)
+    items += transferred
+    provenance['maleTransfer'] = transfer_report
+    items, envelope_report, warp = importlib.import_module('female_envelope').apply(source, items)
+    provenance['envelope'] = envelope_report
+    provenance['modifications'] += (' The stomach and oesophagus, absent from the HRA, are transferred from the male BodyParts3D '
+        'atlas and placed on shared organs and vertebrae. Every structure is then reshaped into a slim mannequin silhouette '
+        'supplied by the project owner, and the HRA skin is replaced by the mannequin skin. Triangles are unchanged; '
+        'positions are no longer the HRA source coordinates.')
+    return items, provenance, warp
+
+
 def build(atlas):
-    provider = importlib.import_module(atlas + '_content')
-    items, provenance = provider.build(SOURCE)
     if atlas == 'female':
-        supplement = importlib.import_module('female_supplement_content')
-        additions, report = supplement.build(SOURCE, items)
-        items += additions
-        provenance['reconstructedSupplement'] = report
-        provenance['modifications'] += (' Separate original educational reconstructions supplement the missing external genital '
-            'and urethral structures; these are labelled as reconstructions and are not HRA segmentations. '
-            'The retained HRA surface coordinates and triangles are unchanged.')
+        items, provenance, _ = female_pipeline(SOURCE)
+    else:
+        items, provenance = importlib.import_module(atlas + '_content').build(SOURCE)
     assert items and provenance['license']
     output = ASSETS / atlas
     output.mkdir(exist_ok=True)

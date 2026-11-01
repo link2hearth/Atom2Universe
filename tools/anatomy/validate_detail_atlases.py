@@ -7,36 +7,31 @@ import numpy as np
 from validate_atlas import ROOT, ASSETS, read_glb
 
 
+FEMALE_WARP = []
+
+
 def check_source_geometry(atlas, records, gltf, accessor):
     """Independently compare final buffers with the original source surfaces."""
     source = ROOT / 'app/build/anatomy-source'
     expected = {}
     registration = json.loads((ROOT / 'tools/anatomy' / (atlas + '_registration.json')).read_text(encoding='utf8'))
     if atlas == 'female':
-        from female_content import read_source  # Parser only; no provider build/selection logic.
-        raw_gltf, raw_accessor = read_source(source / 'female/HRA-female.glb')
-        translation = np.array(registration['translation'])
-        used = set()
+        # Deterministic rebuild from the pinned sources: selection, reconstructions, transfer and envelope.
+        from build_detail_atlases import female_pipeline
+        items, _, warp = female_pipeline(source)
+        FEMALE_WARP.append(warp)
+        for record, v, f in items:
+            expected[record['id']] = np.asarray(v, dtype=np.float32), np.asarray(f)
+        assert len(expected) == len(records)
         for record in records:
             if record.get('reconstructed'):
                 assert record['source'] == 'atom2universe-reconstruction'
-                continue
-            assert record['source'] == 'hra-female-v1.5'
-            vertices, faces, offset = [], [], 0
-            for identity in record['sourceOntology']:
-                index = identity['sourceNode']
-                assert index not in used
-                used.add(index)
-                node = raw_gltf['nodes'][index]
-                assert node['name'] == identity['sourceObject']
-                for p in raw_gltf['meshes'][node['mesh']]['primitives']:
-                    v = raw_accessor(p['attributes']['POSITION']).astype(np.float64)
-                    f = raw_accessor(p['indices']).reshape(-1, 3)
-                    vertices.append((v + translation).astype(np.float32))
-                    faces.append(f + offset)
-                    offset += len(v)
-            expected[record['id']] = np.concatenate(vertices), np.concatenate(faces)
-        assert len(expected) == 169 and len(used) == 398
+            elif record.get('transferred'):
+                assert record['source'] == 'bodyparts3d-4.0-via-male-atlas'
+            elif record['layer'] == 'skin':
+                assert record['source'] == 'tripo-mannequin'
+            else:
+                assert record['source'] == 'hra-female-v1.5' and record.get('reshaped'), record['id']
     else:
         from ear_content import read_ply
         rotation = np.array(registration['displayRotation'])
@@ -55,9 +50,7 @@ def check_source_geometry(atlas, records, gltf, accessor):
                 v, f = read_ply(path)
             expected[record['id']] = ((v - center) @ rotation / 1000.).astype(np.float32), f
     for node in gltf['nodes']:
-        if node['name'] not in expected:
-            assert atlas == 'female' and node['name'].startswith('A2U_FEMALE_')
-            continue
+        assert node['name'] in expected, node['name']
         p = gltf['meshes'][node['mesh']]['primitives'][0]
         v, f = expected[node['name']]
         assert np.array_equal(accessor(p['attributes']['POSITION']), v), node['name']
@@ -78,6 +71,7 @@ def check_reconstructions(records, gltf, accessor, provenance):
                 'labium_majus_left', 'labium_majus_right', 'labium_minus_left', 'labium_minus_right', 'female_urethra'}
     assert {r['sourceObject'] for r in selected.values()} >= expected
     triangles = 0
+    sides = {}
     for node in gltf['nodes']:
         if node['name'] not in selected:
             continue
@@ -97,13 +91,22 @@ def check_reconstructions(records, gltf, accessor, provenance):
         # The urethra has a through lumen; the other teaching surfaces are closed solids.
         assert len(v) - len(unique) + len(f) == (0 if record['sourceObject'] == 'female_urethra' else 2)
         assert max(np.ptp(v, axis=0)) < .15
+        enveloped = 'envelope' in provenance
         if record['sourceObject'].endswith(('_left', '_right')):
-            assert (v[:, 0].mean() > registration['midlineX']) == record['sourceObject'].endswith('_left')
-        if record['sourceObject'] == 'female_urethra':
+            sides[record['sourceObject']] = float(v[:, 0].mean())
+            if not enveloped:
+                assert (v[:, 0].mean() > registration['midlineX']) == record['sourceObject'].endswith('_left')
+        if record['sourceObject'] == 'female_urethra' and (not enveloped or FEMALE_WARP):
             for key in ('bladderNeckCentre', 'urethralMeatus'):
                 anchor = np.array(registration['anchors'][key]) + registration['translation']
+                if enveloped:
+                    anchor = FEMALE_WARP[-1].apply(anchor[None])[0][0]
                 assert np.linalg.norm(v - anchor, axis=1).min() < .007, key
         triangles += len(f)
+    # Reshaped into the mannequin, the midline is wherever its trunk centre lies: compare each pair.
+    for name, x in sides.items():
+        if name.endswith('_left'):
+            assert x > sides[name[:-5] + '_right'], name
     # The reconstruction report records the imported source. Mobile derivatives
     # keep the topology checks above but deliberately contain fewer triangles.
     if 'mobileOptimization' not in provenance:
