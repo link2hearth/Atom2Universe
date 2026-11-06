@@ -377,6 +377,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private var settingsDialogFolderView: TextView? = null
     private var lastReloadReason: MainClickerShuffleManager.ReloadReason = MainClickerShuffleManager.ReloadReason.NO_FOLDER
     private var backgroundRequestToken = 0
+    private var displayedBackgroundUri: Uri? = null
+    private var imageOptionsUpdate: ((Uri?) -> Unit)? = null
     private var backgroundDisplayEnabled = true
     private var keepScreenOnEnabled = false
     private var widgetOpacityPercent = 100
@@ -2130,6 +2132,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun startBackgroundLoop() {
+        if (imageOptionsUpdate != null) return
         if (!backgroundDisplayEnabled) return
         if (slideshowIntervalMs <= 0L) return
         if (shuffleManager.imageCount() == 0) return
@@ -2227,11 +2230,14 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         advanceOnFailure: Boolean = true
     ) {
         val requestToken = ++backgroundRequestToken
+        imageOptionsUpdate?.invoke(null)
         lifecycleScope.launch {
             val bitmap = decodeBackgroundBitmap(uri)
             if (requestToken != backgroundRequestToken) return@launch
             if (bitmap != null) {
                 backgroundImageView.setImageBitmap(bitmap)
+                displayedBackgroundUri = uri
+                imageOptionsUpdate?.invoke(uri)
                 shuffleManager.persistPlaybackState()
             } else {
                 handleBackgroundDecodeFailure(uri, advanceOnFailure, requestToken)
@@ -2918,23 +2924,48 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     // ── Dialog options image (long press) ────────────────────────────────────
 
     private fun showImageOptionsDialog(uri: Uri) {
+        if (imageOptionsUpdate != null) return
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.dialog_image_options, null)
 
-        view.findViewById<TextView>(R.id.image_options_path).text = uriToDisplayPath(uri)
-
+        val pathView = view.findViewById<TextView>(R.id.image_options_path)
         val btnFavorite = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_favorite)
         val btnRemove = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_remove_slideshow)
         val btnDelete = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_delete_device)
+        var selectedUri: Uri? = null
+        var favoriteJob: Job? = null
 
-        lifecycleScope.launch {
-            val isFav = withContext(Dispatchers.IO) { backgroundRepository.isFavorite(uri) }
-            btnFavorite.text = getString(
-                if (isFav) R.string.crypto_image_remove_favorite else R.string.crypto_image_add_favorite
-            )
+        fun updateSelection(currentUri: Uri?) {
+            selectedUri = currentUri
+            favoriteJob?.cancel()
+            pathView.text = currentUri?.let { uriToDisplayPath(it) }.orEmpty()
+            btnFavorite.isEnabled = false
+            btnRemove.isEnabled = currentUri != null
+            btnDelete.isEnabled = currentUri != null
+            if (currentUri == null) return
+            favoriteJob = lifecycleScope.launch {
+                val isFav = withContext(Dispatchers.IO) { backgroundRepository.isFavorite(currentUri) }
+                btnFavorite.text = getString(
+                    if (isFav) R.string.crypto_image_remove_favorite else R.string.crypto_image_add_favorite
+                )
+                btnFavorite.isEnabled = true
+            }
+        }
+
+        stopBackgroundLoop()
+        imageOptionsUpdate = ::updateSelection
+        updateSelection(uri.takeIf { it == displayedBackgroundUri })
+
+        view.findViewById<View>(R.id.image_options_previous).setOnClickListener {
+            showPreviousBackgroundImage(restartTimer = true, notifyIfMissing = false)
+        }
+        view.findViewById<View>(R.id.image_options_next).setOnClickListener {
+            showNextBackgroundImage(restartTimer = true, notifyIfMissing = false)
         }
 
         btnFavorite.setOnClickListener {
+            val uri = selectedUri ?: return@setOnClickListener
+            btnFavorite.isEnabled = false
             lifecycleScope.launch {
                 val isFav = withContext(Dispatchers.IO) { backgroundRepository.isFavorite(uri) }
                 withContext(Dispatchers.IO) {
@@ -2949,6 +2980,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         }
 
         btnRemove.setOnClickListener {
+            val uri = selectedUri ?: return@setOnClickListener
             dialog.dismiss()
             lifecycleScope.launch {
                 shuffleManager.removeInvalidUri(uri)
@@ -2960,6 +2992,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         }
 
         btnDelete.setOnClickListener {
+            val uri = selectedUri ?: return@setOnClickListener
             dialog.dismiss()
             com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(R.string.crypto_image_delete_confirm_title)
@@ -2989,6 +3022,11 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 .show()
         }
 
+        dialog.setOnDismissListener {
+            favoriteJob?.cancel()
+            imageOptionsUpdate = null
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) startBackgroundLoop()
+        }
         dialog.setContentView(view)
         dialog.show()
     }

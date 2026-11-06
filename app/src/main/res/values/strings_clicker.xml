@@ -141,6 +141,8 @@
     <string name="crypto_slideshow_duration_value">%1$d min</string>
     <string name="crypto_slideshow_duration_1h">1h</string>
     <string name="crypto_image_add_favorite">Add to favorites</string>
+    <string name="crypto_image_previous">Previous image</string>
+    <string name="crypto_image_next">Next image</string>
     <string name="crypto_image_remove_favorite">Remove from favorites</string>
     <string name="crypto_image_remove_slideshow">Remove from slideshow</string>
     <string name="crypto_image_delete_device">Delete from device</string>

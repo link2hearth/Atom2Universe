@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.ViewConfiguration
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
@@ -36,6 +37,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     companion object {
         private const val ROTATE_INTERVAL_MS = 30_000L
+        private const val HIDE_ALL_HOLD_MS = 2_000L
         const val EXTRA_HIGHLIGHT_ID = "news_highlight_id"
 
         // Dernière lecture réussie, gardée au-delà de la vue : rouvrir le clicker ne relit pas
@@ -73,6 +75,19 @@ class NewsWidgetView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private var fetchJob: Job? = null
 
+    private val hideTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private val hideAllRunnable = Runnable {
+        if (btnHide.isPressed && isShown && windowVisibility == VISIBLE) {
+            cancelHidePress()
+            btnHide.performLongClick()
+        }
+    }
+
+    private fun cancelHidePress() {
+        handler.removeCallbacks(hideAllRunnable)
+        btnHide.isPressed = false
+    }
+
     /** Articles lus pour le widget, avant le filtre des masqués ; propres au widget. */
     private var allArticles: List<NewsArticle> = emptyList()
     private var visibleArticles: List<NewsArticle> = emptyList()
@@ -84,6 +99,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     private fun updateSelfVisibility() {
         visibility = if (toggleEnabled && widgetState != WidgetState.EMPTY) VISIBLE else GONE
+        if (visibility != VISIBLE) cancelHidePress()
     }
 
     fun setToggleEnabled(enabled: Boolean) {
@@ -92,6 +108,7 @@ class NewsWidgetView @JvmOverloads constructor(
         if (enabled) {
             startPeriodicFetch()
         } else {
+            cancelHidePress()
             stopPeriodicFetch()
             stopRotation()
         }
@@ -230,6 +247,29 @@ class NewsWidgetView @JvmOverloads constructor(
             hideAllArticles()
             true
         }
+        // Consomme le toucher pour remplacer le délai d'appui long du système.
+        btnHide.setOnTouchListener { view, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    cancelHidePress()
+                    view.isPressed = true
+                    handler.postDelayed(hideAllRunnable, HIDE_ALL_HOLD_MS)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (event.x < -hideTouchSlop || event.x >= view.width + hideTouchSlop ||
+                        event.y < -hideTouchSlop || event.y >= view.height + hideTouchSlop) {
+                        cancelHidePress()
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    val clicked = view.isPressed
+                    cancelHidePress()
+                    if (clicked) view.performClick()
+                }
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_DOWN -> cancelHidePress()
+            }
+            true
+        }
         btnOpen.setOnClickListener { openCurrentArticle() }
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
         keepFloatingWidgetOnScreenOnResize()
@@ -333,10 +373,12 @@ class NewsWidgetView @JvmOverloads constructor(
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
+        if (visibility != VISIBLE) cancelHidePress()
         if (isAttachedToWindow) gate.update()
     }
 
     override fun onDetachedFromWindow() {
+        cancelHidePress()
         gate.detach()
         fetchJob?.cancel()
         super.onDetachedFromWindow()
@@ -468,6 +510,7 @@ class NewsWidgetView @JvmOverloads constructor(
     // ── Touch : dispatch ─────────────────────────────────────────────────────
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.pointerCount > 1) cancelHidePress()
         scaleDetector.onTouchEvent(event)
         if (scaleDetector.isInProgress) return true
         swipeDetector.onTouchEvent(event)
