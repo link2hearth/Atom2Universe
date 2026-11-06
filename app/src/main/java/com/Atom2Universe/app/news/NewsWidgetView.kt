@@ -226,6 +226,10 @@ class NewsWidgetView @JvmOverloads constructor(
 
         btnUnhide.setOnClickListener { unhideLastArticle() }
         btnHide.setOnClickListener { hideCurrentArticle() }
+        btnHide.setOnLongClickListener {
+            hideAllArticles()
+            true
+        }
         btnOpen.setOnClickListener { openCurrentArticle() }
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
         keepFloatingWidgetOnScreenOnResize()
@@ -383,6 +387,15 @@ class NewsWidgetView @JvmOverloads constructor(
         currentIndex = currentIndex.coerceAtMost(visibleArticles.size - 1)
         showCurrentArticle()
         startRotation()
+    }
+
+    private fun hideAllArticles() {
+        if (visibleArticles.isEmpty()) return
+        NewsPreferences.addHiddenIds(context, visibleArticles.map { it.id })
+        hiddenStack.clear()
+        cancelUnhideButtonHide()
+        btnUnhide.visibility = GONE
+        showArticles(keepId = null)
     }
 
     private fun unhideLastArticle() {

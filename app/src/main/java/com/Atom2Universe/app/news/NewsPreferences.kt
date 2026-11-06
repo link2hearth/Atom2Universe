@@ -60,8 +60,13 @@ object NewsPreferences {
     }
 
     fun addHiddenId(context: Context, id: String) {
+        addHiddenIds(context, listOf(id))
+    }
+
+    fun addHiddenIds(context: Context, ids: Collection<String>) {
         val map = getHiddenIds(context).toMutableMap()
-        map[id] = System.currentTimeMillis()
+        val now = System.currentTimeMillis()
+        ids.forEach { map[it] = now }
         saveHiddenIds(context, map)
     }
 
