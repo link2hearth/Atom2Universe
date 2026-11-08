@@ -36,9 +36,14 @@ class PianoRollView(context: Context) : View(context) {
     /** Les hauteurs MIDI affichées, de la plus grave à la plus aiguë. */
     var rows: IntArray = IntArray(0)
         set(value) {
+            val changed = field.size != value.size
             field = value
+            if (changed) requestLayout()
             invalidate()
         }
+
+    /** Place à garder sous la vue (pour le clavier) : le piano roll prend sa hauteur naturelle, sans dépasser le reste. */
+    var reserveBelow: Int = 0
     var stepCount: Int = 16
         set(value) {
             field = value
@@ -80,17 +85,25 @@ class PianoRollView(context: Context) : View(context) {
     }
     private val rect = RectF()
 
-    private val keyW get() = dp(60f)
-    private val topBar get() = dp(20f)
+    private val keyW get() = dp(72f)
+    private val topBar get() = dp(24f)
     private val groupGap = dp(5f)
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
-    private fun rowH(): Float = if (rows.isEmpty()) 0f else (height - topBar) / rows.size
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        val w = MeasureSpec.getSize(widthSpec)
+        val available = (MeasureSpec.getSize(heightSpec) - reserveBelow).coerceAtLeast(0)
+        val natural = (topBar + rows.size * dp(40f)).toInt()
+        setMeasuredDimension(w, if (MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED) natural else min(natural, available))
+    }
+
+    /** Hauteur d'une rangée : au plus 40 dp (on n'étire pas), moins s'il y en a beaucoup. */
+    private fun rowH(): Float = if (rows.isEmpty()) 0f else min(dp(40f), (height - topBar) / rows.size)
 
     private fun cellW(): Float {
         val groups = max(1, stepCount / 4)
-        return (width - keyW - dp(6f) - groupGap * (groups - 1)) / stepCount
+        return min(dp(64f), (width - keyW - dp(6f) - groupGap * (groups - 1)) / stepCount)
     }
 
     private fun cellLeft(step: Int): Float = keyW + dp(6f) + step * cellW() + (step / 4) * groupGap
@@ -117,14 +130,32 @@ class PianoRollView(context: Context) : View(context) {
                 else -> rowOut
             }
 
-            // Touche
+            // Vraie touche de piano : une blanche pleine largeur, une noire plus courte, sombre
+            val pc = ((pitch % 12) + 12) % 12
+            val black = pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10
+            val dim = if (inScale) 1f else 0.45f
+            val pressedNow = pitch == pressedPitch
             rect.set(0f, top + pad, keyW, top + rh - pad)
-            fill.color = base
-            canvas.drawRoundRect(rect, dp(5f), dp(5f), fill)
-            val name = noteNames[((pitch % 12) + 12) % 12] + (pitch / 12 - 1)
-            label.color = if (isRoot) accent else labelColor
-            label.isFakeBoldText = isRoot
-            canvas.drawText(name, dp(8f), top + rh / 2f + label.textSize / 3f, label)
+            fill.color = if (black) 0xFF24242B.toInt() else 0xFF14141A.toInt()
+            canvas.drawRoundRect(rect, dp(4f), dp(4f), fill)
+            val keyRight = if (black) keyW * 0.62f else keyW - dp(1f)
+            rect.set(0f, top + pad, keyRight, top + rh - pad)
+            fill.color = when {
+                pressedNow -> accent
+                black -> if (inScale) 0xFF3A3A44.toInt() else 0xFF2C2C33.toInt()
+                else -> if (inScale) 0xFFF1F1F6.toInt() else 0xFF8A8A94.toInt()
+            }
+            canvas.drawRoundRect(rect, dp(4f), dp(4f), fill)
+            if (isRoot && !black) {
+                fill.color = accent
+                canvas.drawCircle(keyW - dp(10f), top + rh / 2f, dp(3.5f), fill)
+            }
+            if (pc == 0) {
+                val name = noteNames[pc] + (pitch / 12 - 1)
+                label.color = if (pressedNow) 0xFFFFFFFF.toInt() else 0xFF45454F.toInt()
+                label.isFakeBoldText = true
+                canvas.drawText(name, dp(8f), top + rh / 2f + label.textSize / 3f, label)
+            }
 
             // Cases
             for (s in 0 until stepCount) {
@@ -175,6 +206,8 @@ class PianoRollView(context: Context) : View(context) {
     private class Ghost(val step: Int, val length: Int, val pitch: Int)
 
     private var ghost: Ghost? = null
+    /** La touche qu'un doigt tient dans la colonne des touches (elle s'allume). */
+    private var pressedPitch = -1
     private var downStep = -1
     private var downPitch = -1
     private var downNote: Note? = null
@@ -216,7 +249,11 @@ class PianoRollView(context: Context) : View(context) {
                 ghost = null
                 val pitch = pitchAt(event.y)
                 if (event.x < keyW) {
-                    if (pitch >= 0) listener?.onPreview(pitch)
+                    if (pitch >= 0) {
+                        pressedPitch = pitch
+                        listener?.onPreview(pitch)
+                        invalidate()
+                    }
                     downStep = -1
                     return true
                 }
@@ -240,7 +277,18 @@ class PianoRollView(context: Context) : View(context) {
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (downStep < 0) return true
+                if (downStep < 0) {
+                    // Glisser le doigt sur les touches fait entendre chaque note
+                    if (pressedPitch >= 0 && event.x < keyW) {
+                        val p = pitchAt(event.y)
+                        if (p >= 0 && p != pressedPitch) {
+                            pressedPitch = p
+                            listener?.onPreview(p)
+                            invalidate()
+                        }
+                    }
+                    return true
+                }
                 val step = stepAt(event.x)
                 if (step < 0) return true
                 val note = downNote
@@ -264,6 +312,7 @@ class PianoRollView(context: Context) : View(context) {
             }
 
             MotionEvent.ACTION_UP -> {
+                pressedPitch = -1
                 val note = downNote
                 val g = ghost
                 ghost = null
@@ -278,6 +327,7 @@ class PianoRollView(context: Context) : View(context) {
             }
 
             MotionEvent.ACTION_CANCEL -> {
+                pressedPitch = -1
                 ghost = null
                 downStep = -1
                 downNote = null

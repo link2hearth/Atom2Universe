@@ -15,7 +15,6 @@
     <string name="studio_fx_reverb">Envoi réverbération</string>
     <string name="studio_fx_echo">Envoi écho</string>
     <string name="studio_xy_title">Pad de jeu</string>
-    <string name="studio_xy_hint">Glisse vers la gauche pour étouffer tout le morceau, vers le haut pour ajouter de la réverbération. Lâche : tout revient.</string>
     <string name="studio_gesture_record">Enregistrer mon geste</string>
     <string name="studio_gesture_clear">Effacer le geste</string>
 
@@ -63,8 +62,6 @@
         <item>La#</item>
         <item>Si</item>
     </string-array>
-    <string name="studio_key_caption">Tonalité</string>
-    <string name="studio_scale_caption">Gamme</string>
     <string name="studio_lock">Sur la gamme</string>
     <string name="studio_octave">Octave</string>
     <string name="studio_scale_minor_pent">Pentatonique mineure</string>
@@ -167,10 +164,17 @@ Motifs A à D : quatre boucles différentes. Morceau : les joue l’une après l
     <string name="studio_add_sf2">Instrument du soundfont</string>
     <string name="studio_track_remove">Retirer</string>
     <string name="studio_track_remove_glyph">✕</string>
-    <string name="studio_track_caption">Piste</string>
     <string name="studio_no_track">Aucune</string>
     <string name="studio_no_melody">Pas encore de piste avec des notes. Ajoute un synthé ou un instrument du soundfont depuis Pistes.</string>
     <string name="studio_no_soundfont">Importe d’abord un soundfont (SF2) dans le lecteur MIDI.</string>
     <string name="studio_sf2_pick">Choisir un instrument</string>
     <string name="studio_sf2_default_name">Soundfont</string>
+    <string name="studio_settings">Réglages</string>
+    <string name="studio_edit_menu">Motif</string>
+    <string name="studio_track_label">Piste : %1$s</string>
+    <string name="studio_key_label">Tonalité : %1$s</string>
+    <string name="studio_scale_label">Gamme : %1$s</string>
+    <string name="studio_sound_label">Son : %1$s</string>
+    <string name="studio_arp_label">Arpège : %1$s</string>
+    <string name="studio_arp_rate">Vitesse</string>
 </resources>

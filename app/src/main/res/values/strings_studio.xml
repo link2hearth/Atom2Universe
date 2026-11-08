@@ -15,7 +15,6 @@
     <string name="studio_fx_reverb">Reverb send</string>
     <string name="studio_fx_echo">Echo send</string>
     <string name="studio_xy_title">Performance pad</string>
-    <string name="studio_xy_hint">Slide left to muffle the whole mix, up to add reverb. Let go and it comes back.</string>
     <string name="studio_gesture_record">Record my gesture</string>
     <string name="studio_gesture_clear">Clear gesture</string>
 
@@ -63,8 +62,6 @@
         <item>A#</item>
         <item>B</item>
     </string-array>
-    <string name="studio_key_caption">Key</string>
-    <string name="studio_scale_caption">Scale</string>
     <string name="studio_lock">Locked to scale</string>
     <string name="studio_octave">Octave</string>
     <string name="studio_scale_minor_pent">Minor pentatonic</string>
@@ -167,10 +164,17 @@ Patterns A to D hold four different loops. Song plays them one after another. Ex
     <string name="studio_add_sf2">Soundfont instrument</string>
     <string name="studio_track_remove">Remove</string>
     <string name="studio_track_remove_glyph">✕</string>
-    <string name="studio_track_caption">Track</string>
     <string name="studio_no_track">None</string>
     <string name="studio_no_melody">No track with notes yet. Add a synth or a soundfont instrument from Tracks.</string>
     <string name="studio_no_soundfont">Import a soundfont (SF2) in the MIDI player first.</string>
     <string name="studio_sf2_pick">Choose an instrument</string>
     <string name="studio_sf2_default_name">Soundfont</string>
+    <string name="studio_settings">Settings</string>
+    <string name="studio_edit_menu">Pattern</string>
+    <string name="studio_track_label">Track: %1$s</string>
+    <string name="studio_key_label">Key: %1$s</string>
+    <string name="studio_scale_label">Scale: %1$s</string>
+    <string name="studio_sound_label">Sound: %1$s</string>
+    <string name="studio_arp_label">Arpeggio: %1$s</string>
+    <string name="studio_arp_rate">Speed</string>
 </resources>
