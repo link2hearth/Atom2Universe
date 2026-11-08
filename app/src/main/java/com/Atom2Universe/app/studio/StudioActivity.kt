@@ -34,6 +34,9 @@ import android.content.Intent
 import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.XyPadView
 import android.widget.HorizontalScrollView
+import android.widget.ImageButton
+import android.widget.PopupWindow
+import android.util.TypedValue
 import android.widget.FrameLayout
 import com.Atom2Universe.app.midi.input.MidiConnectionStatus
 import com.Atom2Universe.app.midi.input.MidiInputController
@@ -105,7 +108,6 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var spaceBar: SeekBar
     private lateinit var echoBar: SeekBar
     private lateinit var styleButton: MaterialButton
-    private lateinit var undoButton: MaterialButton
 
     // Notes
     private lateinit var roll: PianoRollView
@@ -229,6 +231,17 @@ class StudioActivity : AudioThemedActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
+        titleRow.addView(ImageButton(this).apply {
+            setImageResource(R.drawable.ic_arrow_back_24)
+            val tv = TypedValue()
+            theme.resolveAttribute(android.R.attr.textColorPrimary, tv, true)
+            if (tv.resourceId != 0) setColorFilter(getColorStateList(tv.resourceId).defaultColor)
+            val ripple = TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)
+            if (ripple.resourceId != 0) setBackgroundResource(ripple.resourceId) else background = null
+            contentDescription = getString(R.string.studio_back)
+            setOnClickListener { finish() }
+        }, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginEnd = dp(4) })
         titleRow.addView(TextView(this).apply {
             setText(R.string.studio_title)
             textSize = 22f
@@ -323,11 +336,11 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         transport.addView(patternGroup, wrap())
-        transport.addView(outlined(R.string.studio_pattern_copy).apply { setOnClickListener { showCopyDialog() } }, wrap())
-        songButton = outlined(R.string.studio_song).apply { setOnClickListener { showSongDialog() } }
+        transport.addView(outlined(R.string.studio_pattern_copy).apply { setOnClickListener { showCopyMenu(it) } }, wrap())
+        songButton = outlined(R.string.studio_song).apply { setOnClickListener { showSongPanel(it) } }
         transport.addView(songButton, wrap())
         songDefaultColor = songButton.textColors.defaultColor
-        transport.addView(outlined(R.string.studio_export).apply { setOnClickListener { showExportDialog() } }, wrap())
+        transport.addView(outlined(R.string.studio_output).apply { setOnClickListener { showOutputMenu(it) } }, wrap())
         root.addView(transport)
 
         // Mesures du moteur (cachées par défaut)
@@ -367,19 +380,9 @@ class StudioActivity : AudioThemedActivity() {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
         val row = flowRow(topMargin = dp(2))
-        styleButton = outlined(null).also { it.setOnClickListener { pickStyle() } }
+        styleButton = outlined(null).also { it.setOnClickListener { v -> pickStyle(v) } }
         row.addView(styleButton, wrap())
-        row.addView(outlined(R.string.studio_random).also {
-            it.setOnClickListener { session.randomize(System.nanoTime()); changed() }
-        }, wrap())
-        row.addView(outlined(R.string.studio_clear).also {
-            it.setOnClickListener { session.clear(); changed() }
-        }, wrap())
-        undoButton = outlined(R.string.studio_undo).also {
-            it.setOnClickListener { session.undo(); changed() }
-        }
-        row.addView(undoButton, wrap())
-        row.addView(outlined(R.string.studio_sample).also { it.setOnClickListener { showSampleDialog() } }, wrap())
+        row.addView(square(R.string.studio_more).also { it.setOnClickListener { v -> showEditMenu(v) } })
         spaceBar = slider(max = 100) { v -> session.setSpace(v / 100f); scheduleSave() }
         row.addView(labeled(R.string.studio_space, spaceBar, 120), wrap())
         echoBar = slider(max = 100) { v -> session.setEcho(v / 100f); scheduleSave() }
@@ -497,7 +500,7 @@ class StudioActivity : AudioThemedActivity() {
             strip.addView(outlined(R.string.studio_fx).apply {
                 textSize = 13f
                 setPadding(dp(4), 0, dp(4), 0)
-                setOnClickListener { showFxDialog(lane, names[lane]) }
+                setOnClickListener { showFxPanel(it, lane, names[lane]) }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
 
             strips.addView(strip, LinearLayout.LayoutParams(dp(92), ViewGroup.LayoutParams.MATCH_PARENT).apply { marginEnd = dp(6) })
@@ -588,10 +591,10 @@ class StudioActivity : AudioThemedActivity() {
     ).map { getString(it) }
 
     /** Les effets d'une piste : distorsion, lo-fi, filtre et envois vers la réverbération et l'écho. */
-    private fun showFxDialog(lane: Int, title: String) {
+    private fun showFxPanel(anchor: View, lane: Int, title: String) {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(24), dp(8), dp(24), 0)
+            setPadding(dp(16), dp(12), dp(16), dp(12))
         }
         fun add(labelRes: Int, read: (TrackMix) -> Float, toT: (Float) -> Float, fromT: (Float) -> Float, write: (TrackMix, Float) -> TrackMix) {
             box.addView(TextView(this).apply { setText(labelRes); textSize = 13f; alpha = 0.75f; setPadding(0, dp(10), 0, 0) })
@@ -620,12 +623,12 @@ class StudioActivity : AudioThemedActivity() {
         add(R.string.studio_fx_filter, { it.filter }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(filter = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
         add(R.string.studio_fx_reverb, { it.reverbSend }, { it }, { it }, { m, v -> m.copy(reverbSend = v) })
         add(R.string.studio_fx_echo, { it.delaySend }, { it }, { it }, { m, v -> m.copy(delaySend = v) })
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setView(box)
-            .setPositiveButton(android.R.string.ok, null)
-            .setOnDismissListener { refreshNotesControls() }
-            .show()
+        box.addView(TextView(this).apply {
+            text = title
+            textSize = 16f
+            setTypeface(typeface, Typeface.BOLD)
+        }, 0)
+        panel(anchor, box, 340).setOnDismissListener { refreshNotesControls() }
     }
 
     private fun refreshGestureButtons() {
@@ -651,10 +654,10 @@ class StudioActivity : AudioThemedActivity() {
         // Tonalité, gamme, verrouillage, octave
         val row1 = flowRow(topMargin = dp(2))
         row1.addView(caption(R.string.studio_key_caption), wrap())
-        keyButton = outlined(null).also { it.setOnClickListener { pickKey() } }
+        keyButton = outlined(null).also { it.setOnClickListener { v -> pickKey(v) } }
         row1.addView(keyButton, wrap(end = dp(4)))
         row1.addView(caption(R.string.studio_scale_caption), wrap())
-        scaleButton = outlined(null).also { it.setOnClickListener { pickScale() } }
+        scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
         row1.addView(scaleButton, wrap(end = dp(4)))
         lockSwitch = SwitchCompat(this).apply {
             setText(R.string.studio_lock)
@@ -756,7 +759,7 @@ class StudioActivity : AudioThemedActivity() {
         // Arpégiateur : les notes tenues sont jouées une à une, en boucle, au rythme choisi
         val arpRow = flowRow(topMargin = dp(2))
         arpRow.addView(caption(R.string.studio_arp_caption), wrap())
-        arpButton = outlined(null).also { it.setOnClickListener { pickArp() } }
+        arpButton = outlined(null).also { it.setOnClickListener { v -> pickArp(v) } }
         arpRow.addView(arpButton, wrap(end = dp(4)))
         arpRateGroup = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
@@ -896,51 +899,73 @@ class StudioActivity : AudioThemedActivity() {
     /** Une note d'essai après un réglage du son : la tonique, dans l'octave du piano roll. */
     private fun previewKeyNote() = previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450)
 
-    private fun pickStyle() {
-        val names = Styles.ALL.map { getString(styleName(it.id)) }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_style_pick)
-            .setItems(names) { _, which ->
-                session.applyStyle(Styles.ALL[which])
-                changed()
-            }
-            .show()
+    private fun pickStyle(anchor: View) {
+        dropdown(anchor, Styles.ALL.map { getString(styleName(it.id)) }) { which ->
+            session.applyStyle(Styles.ALL[which])
+            changed()
+        }
     }
 
-    private fun pickKey() {
-        val names = resources.getStringArray(R.array.studio_key_names)
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_key_pick)
-            .setItems(names) { _, which ->
-                session.setKey(which)
-                rollBase = autoBase()
-                changed()
-            }
-            .show()
+    private fun pickKey(anchor: View) {
+        dropdown(anchor, resources.getStringArray(R.array.studio_key_names).toList()) { which ->
+            session.setKey(which)
+            rollBase = autoBase()
+            changed()
+        }
     }
 
-    private fun pickScale() {
-        val names = Scales.ALL.map { getString(scaleName(it.id)) }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_scale_pick)
-            .setItems(names) { _, which ->
-                session.setScale(Scales.ALL[which].id)
-                changed()
-            }
-            .show()
+    private fun pickScale(anchor: View) {
+        dropdown(anchor, Scales.ALL.map { getString(scaleName(it.id)) }) { which ->
+            session.setScale(Scales.ALL[which].id)
+            changed()
+        }
     }
 
-    private fun pickArp() {
+    private fun pickArp(anchor: View) {
         val modes = listOf(Arp.OFF, Arp.UP, Arp.DOWN, Arp.UP_DOWN, Arp.RANDOM)
-        val names = modes.map { getString(arpName(it)) }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_arp_pick)
-            .setItems(names) { _, which ->
-                session.setArpMode(modes[which])
-                refreshNotesControls()
-                scheduleSave()
+        dropdown(anchor, modes.map { getString(arpName(it)) }) { which ->
+            session.setArpMode(modes[which])
+            refreshNotesControls()
+            scheduleSave()
+        }
+    }
+
+    /** Le menu « ⋯ » : les actions qui changent tout le motif en cours. */
+    private fun showEditMenu(anchor: View) {
+        val labels = listOf(getString(R.string.studio_random), getString(R.string.studio_clear), getString(R.string.studio_undo))
+        dropdown(anchor, labels, enabled = { it != 2 || session.canUndo }) { which ->
+            when (which) {
+                0 -> session.randomize(System.nanoTime())
+                1 -> session.clear()
+                else -> session.undo()
             }
-            .show()
+            changed()
+        }
+    }
+
+    /** Le menu « Sortie » : fichiers à emporter, et son venu du micro. */
+    private fun showOutputMenu(anchor: View) {
+        val seconds = StudioExporter.seconds(session.project).roundToInt()
+        val labels = listOf(
+            getString(R.string.studio_export_wav_duration, seconds),
+            getString(R.string.studio_export_midi),
+            getString(R.string.studio_export_editor),
+            getString(R.string.studio_sample),
+        )
+        dropdown(anchor, labels) { which ->
+            if (which == 3) showSamplePanel(anchor) else runExport(which)
+        }
+    }
+
+    private fun showCopyMenu(anchor: View) {
+        val names = resources.getStringArray(R.array.studio_pattern_names)
+        val from = session.project.current
+        val targets = (0 until StudioProject.SLOTS).filter { it != from }
+        dropdown(anchor, targets.map { names[it] }) { which ->
+            session.copyPattern(from, targets[which])
+            refreshPatterns()
+            scheduleSave()
+        }
     }
 
     private fun arpName(mode: Int): Int = when (mode) {
@@ -1065,11 +1090,11 @@ class StudioActivity : AudioThemedActivity() {
         }
     }
 
-    private fun showSampleDialog() {
+    private fun showSamplePanel(anchor: View) {
         val perc = engine.instruments[Inst.PERC] as com.Atom2Universe.app.studio.dsp.Perc
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(24), dp(12), dp(24), 0)
+            setPadding(dp(16), dp(12), dp(16), dp(12))
         }
         val status = TextView(this).apply { textSize = 15f }
         fun showDefaultStatus() = status.setText(if (perc.hasSample) R.string.studio_sample_mine else R.string.studio_sample_default)
@@ -1108,28 +1133,15 @@ class StudioActivity : AudioThemedActivity() {
             }
         })
         box.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_sample_title)
-            .setView(box)
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
+        box.addView(TextView(this).apply {
+            setText(R.string.studio_sample_title)
+            textSize = 16f
+            setTypeface(typeface, Typeface.BOLD)
+        }, 0)
+        panel(anchor, box, 380)
     }
 
     // ---- Export ---------------------------------------------------------------------------------------------------
-
-    private fun showExportDialog() {
-        val seconds = StudioExporter.seconds(session.project).roundToInt()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.studio_export_title, seconds))
-            .setItems(
-                arrayOf(
-                    getString(R.string.studio_export_wav),
-                    getString(R.string.studio_export_midi),
-                    getString(R.string.studio_export_editor),
-                ),
-            ) { _, which -> runExport(which) }
-            .show()
-    }
 
     /** Rend le fichier hors ligne (plus vite que le temps réel) avec une barre de progression, puis dit où il est. */
     private fun runExport(kind: Int) {
@@ -1196,26 +1208,12 @@ class StudioActivity : AudioThemedActivity() {
         songButton.setTextColor(if (p.songMode) 0xFFFFC857.toInt() else songDefaultColor)
     }
 
-    private fun showCopyDialog() {
-        val names = resources.getStringArray(R.array.studio_pattern_names)
-        val from = session.project.current
-        val targets = (0 until StudioProject.SLOTS).filter { it != from }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_copy_to_title)
-            .setItems(targets.map { names[it] }.toTypedArray()) { _, which ->
-                session.copyPattern(from, targets[which])
-                refreshPatterns()
-                scheduleSave()
-            }
-            .show()
-    }
-
     /** Le morceau : la suite des motifs ; on l'écrit avec des boutons « + A » … et on le lance avec un interrupteur. */
-    private fun showSongDialog() {
+    private fun showSongPanel(anchor: View) {
         val names = resources.getStringArray(R.array.studio_pattern_names)
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(24), dp(8), dp(24), 0)
+            setPadding(dp(16), dp(12), dp(16), dp(12))
         }
         val chainText = TextView(this).apply { textSize = 22f; setPadding(0, dp(8), 0, dp(12)) }
         val playSwitch = androidx.appcompat.widget.SwitchCompat(this).apply { setText(R.string.studio_song_play) }
@@ -1249,11 +1247,12 @@ class StudioActivity : AudioThemedActivity() {
         }
         box.addView(playSwitch, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
         refresh()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.studio_song_title)
-            .setView(box)
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
+        box.addView(TextView(this).apply {
+            setText(R.string.studio_song_title)
+            textSize = 14f
+            alpha = 0.75f
+        }, 0)
+        panel(anchor, box, 420)
     }
 
     private fun refreshTransport() {
@@ -1268,7 +1267,6 @@ class StudioActivity : AudioThemedActivity() {
         spaceBar.progress = (p.space * 100).roundToInt()
         echoBar.progress = (p.echo * 100).roundToInt()
         styleButton.text = getString(R.string.studio_style_label, getString(styleName(p.styleId)))
-        undoButton.isEnabled = session.canUndo
         refreshPatterns()
         bufferButton.text = getString(R.string.studio_buffer_label, bufferBlocks)
         val wanted = if (p.stepCount == 32) step32Id else step16Id
@@ -1376,6 +1374,36 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     // ---- Petits outils de vues ---------------------------------------------------------------------
+
+    /** Un menu court qui s'ouvre juste sous le bouton touché (pas de fenêtre qui voile la page). */
+    private fun dropdown(anchor: View, labels: List<String>, enabled: (Int) -> Boolean = { true }, onPick: (Int) -> Unit) {
+        val menu = androidx.appcompat.widget.PopupMenu(this, anchor)
+        labels.forEachIndexed { i, label -> menu.menu.add(0, i, i, label).isEnabled = enabled(i) }
+        menu.setOnMenuItemClickListener {
+            onPick(it.itemId)
+            true
+        }
+        menu.show()
+    }
+
+    /** Un petit panneau flottant sous le bouton : on règle, puis on touche à côté pour le refermer. */
+    private fun panel(anchor: View, content: View, widthDp: Int): PopupWindow {
+        val dark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val frame = FrameLayout(this).apply {
+            background = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(14).toFloat()
+                setColor(if (dark) 0xFF2B2B33.toInt() else 0xFFFFFFFF.toInt())
+                setStroke(dp(1), if (dark) 0xFF4A4A54.toInt() else 0xFFCFCFD6.toInt())
+            }
+            addView(content, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }
+        val popup = PopupWindow(frame, dp(widthDp), ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        popup.isOutsideTouchable = true
+        popup.elevation = dp(12).toFloat()
+        popup.showAsDropDown(anchor, 0, dp(4))
+        return popup
+    }
 
     /** Un bouton à contour, texte sans espacement exagéré entre les lettres. */
     private fun outlined(textRes: Int?): MaterialButton =

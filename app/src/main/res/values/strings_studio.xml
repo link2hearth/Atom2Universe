@@ -29,7 +29,6 @@
     <string name="studio_echo">Echo</string>
 
     <string name="studio_style_label">Style: %1$s</string>
-    <string name="studio_style_pick">Choose a style</string>
     <string name="studio_style_house">House</string>
     <string name="studio_style_techno">Techno</string>
     <string name="studio_style_hiphop">Hip-hop</string>
@@ -68,8 +67,6 @@
     <string name="studio_scale_caption">Scale</string>
     <string name="studio_lock">Locked to scale</string>
     <string name="studio_octave">Octave</string>
-    <string name="studio_key_pick">Choose a key</string>
-    <string name="studio_scale_pick">Choose a scale</string>
     <string name="studio_scale_minor_pent">Minor pentatonic</string>
     <string name="studio_scale_major_pent">Major pentatonic</string>
     <string name="studio_scale_minor">Minor</string>
@@ -110,7 +107,6 @@
     <string name="studio_wave_sine">Sine</string>
 
     <string name="studio_arp_caption">Arpeggio</string>
-    <string name="studio_arp_pick">Choose an arpeggio</string>
     <string name="studio_arp_off">Off</string>
     <string name="studio_arp_up">Up</string>
     <string name="studio_arp_down">Down</string>
@@ -132,7 +128,6 @@
         <item>D</item>
     </string-array>
     <string name="studio_pattern_copy">Copy to…</string>
-    <string name="studio_copy_to_title">Copy this pattern to</string>
     <string name="studio_song">Song</string>
     <string name="studio_song_title">Song: patterns played one after another</string>
     <string name="studio_song_empty">Add patterns below</string>
@@ -141,9 +136,6 @@
     <string name="studio_song_clear">Clear</string>
     <string name="studio_song_play">Play the song</string>
     <string name="studio_chain_join">" → "</string>
-    <string name="studio_export">Export</string>
-    <string name="studio_export_title">Export (about %1$d s)</string>
-    <string name="studio_export_wav">Audio file (WAV)</string>
     <string name="studio_export_midi">MIDI file</string>
     <string name="studio_export_editor">Send to the audio editor</string>
     <string name="studio_export_working">Exporting…</string>
@@ -162,4 +154,8 @@
     <string name="studio_sample_record">Record (2 s)</string>
     <string name="studio_sample_play">Listen</string>
     <string name="studio_sample_remove">Remove</string>
+    <string name="studio_back">Back</string>
+    <string name="studio_more">⋯</string>
+    <string name="studio_output">Output</string>
+    <string name="studio_export_wav_duration">WAV audio file · %1$d s</string>
 </resources>

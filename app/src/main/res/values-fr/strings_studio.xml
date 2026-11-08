@@ -29,7 +29,6 @@
     <string name="studio_echo">Écho</string>
 
     <string name="studio_style_label">Style : %1$s</string>
-    <string name="studio_style_pick">Choisir un style</string>
     <string name="studio_style_house">House</string>
     <string name="studio_style_techno">Techno</string>
     <string name="studio_style_hiphop">Hip-hop</string>
@@ -68,8 +67,6 @@
     <string name="studio_scale_caption">Gamme</string>
     <string name="studio_lock">Sur la gamme</string>
     <string name="studio_octave">Octave</string>
-    <string name="studio_key_pick">Choisir une tonalité</string>
-    <string name="studio_scale_pick">Choisir une gamme</string>
     <string name="studio_scale_minor_pent">Pentatonique mineure</string>
     <string name="studio_scale_major_pent">Pentatonique majeure</string>
     <string name="studio_scale_minor">Mineure</string>
@@ -110,7 +107,6 @@
     <string name="studio_wave_sine">Sinus</string>
 
     <string name="studio_arp_caption">Arpège</string>
-    <string name="studio_arp_pick">Choisir un arpège</string>
     <string name="studio_arp_off">Désactivé</string>
     <string name="studio_arp_up">Montant</string>
     <string name="studio_arp_down">Descendant</string>
@@ -132,7 +128,6 @@
         <item>D</item>
     </string-array>
     <string name="studio_pattern_copy">Copier vers…</string>
-    <string name="studio_copy_to_title">Copier ce motif vers</string>
     <string name="studio_song">Morceau</string>
     <string name="studio_song_title">Morceau : les motifs joués l\'un après l\'autre</string>
     <string name="studio_song_empty">Ajoute des motifs ci-dessous</string>
@@ -141,9 +136,6 @@
     <string name="studio_song_clear">Vider</string>
     <string name="studio_song_play">Jouer le morceau</string>
     <string name="studio_chain_join">" → "</string>
-    <string name="studio_export">Exporter</string>
-    <string name="studio_export_title">Exporter (environ %1$d s)</string>
-    <string name="studio_export_wav">Fichier audio (WAV)</string>
     <string name="studio_export_midi">Fichier MIDI</string>
     <string name="studio_export_editor">Envoyer à l\'éditeur audio</string>
     <string name="studio_export_working">Export en cours…</string>
@@ -162,4 +154,8 @@
     <string name="studio_sample_record">Enregistrer (2 s)</string>
     <string name="studio_sample_play">Écouter</string>
     <string name="studio_sample_remove">Retirer</string>
+    <string name="studio_back">Retour</string>
+    <string name="studio_more">⋯</string>
+    <string name="studio_output">Sortie</string>
+    <string name="studio_export_wav_duration">Fichier audio WAV · %1$d s</string>
 </resources>
