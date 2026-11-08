@@ -27,7 +27,6 @@
     <string name="studio_space">Space</string>
     <string name="studio_echo">Echo</string>
 
-    <string name="studio_style_label">Style: %1$s</string>
     <string name="studio_style_house">House</string>
     <string name="studio_style_techno">Techno</string>
     <string name="studio_style_hiphop">Hip-hop</string>
@@ -177,4 +176,22 @@ Patterns A to D hold four different loops. Song plays them one after another. Ex
     <string name="studio_sound_label">Sound: %1$s</string>
     <string name="studio_arp_label">Arpeggio: %1$s</string>
     <string name="studio_arp_rate">Speed</string>
+    <string name="studio_new">New</string>
+    <string name="studio_new_title">New song</string>
+    <string name="studio_name_hint">Name</string>
+    <string name="studio_start_from">Start from</string>
+    <string name="studio_style_blank">Empty</string>
+    <string name="studio_create">Create</string>
+    <string name="studio_open">Open</string>
+    <string name="studio_rename">Rename</string>
+    <string name="studio_duplicate">Duplicate</string>
+    <string name="studio_delete">Delete</string>
+    <string name="studio_delete_message">Delete “%1$s”? This cannot be undone.</string>
+    <string name="studio_library_empty">No songs yet. Tap New to start one.</string>
+    <string name="studio_default_name">Song %1$d</string>
+    <string name="studio_copy_of">%1$s (copy)</string>
+    <string name="studio_card_info">%1$d BPM · %2$s · %3$s</string>
+    <string name="studio_style_trap">Trap</string>
+    <string name="studio_just_now">Just now</string>
+    <string name="studio_manage_tracks">Hide or remove tracks</string>
 </resources>

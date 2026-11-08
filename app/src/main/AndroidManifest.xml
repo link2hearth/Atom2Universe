@@ -213,6 +213,11 @@
 
         <!-- Studio : création musicale électro (banc d'essai du moteur pour l'instant) -->
         <activity
+            android:name=".studio.StudioLibraryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+
+        <activity
             android:name=".studio.StudioActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

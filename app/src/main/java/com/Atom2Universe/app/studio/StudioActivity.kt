@@ -17,7 +17,12 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.studio.data.StudioProject
-import com.Atom2Universe.app.studio.data.StudioProjectStore
+import com.Atom2Universe.app.studio.data.StudioLibrary
+import com.Atom2Universe.app.pixelart.ui.SheetItem
+import com.Atom2Universe.app.pixelart.ui.actionSheet
+import com.Atom2Universe.app.pixelart.ui.bottomSheet
+import com.Atom2Universe.app.pixelart.ui.promptText
+import java.io.File
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.data.LiveRecorder
@@ -61,6 +66,9 @@ import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+/** Le morceau que l'écran du Studio ouvre (donné par la bibliothèque). */
+const val EXTRA_PROJECT_ID = "studio_project_id"
+
 /**
  * Le Studio : l'onglet Rythme (grille de pads, styles, Hasard, effets) et l'onglet Notes (piano roll, tonalité et
  * gamme, choix du son et réglages du synthé). Toucher le titre montre ou cache les mesures du moteur.
@@ -76,7 +84,10 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var engine: StudioEngine
     private lateinit var output: StudioAudioOutput
     private lateinit var session: StudioSession
-    private lateinit var store: StudioProjectStore
+    private lateinit var library: StudioLibrary
+    private var projectId = ""
+    private var projectName = ""
+    private lateinit var titleView: TextView
 
     /** Le soundfont de l'appli, quand il est ouvert (la première piste soundfont l'ouvre). */
     private var sf2: Sf2Bridge? = null
@@ -88,6 +99,9 @@ class StudioActivity : AudioThemedActivity() {
     private var gridIds: List<Int> = emptyList()
     private var trackSignature = ""
     private lateinit var mixerStrips: LinearLayout
+    private lateinit var mixerBody: LinearLayout
+    private lateinit var mixerStripView: View
+    private lateinit var mixerPadBox: View
     private lateinit var notesContent: LinearLayout
     private lateinit var notesEmpty: TextView
     private lateinit var trackButton: MaterialButton
@@ -122,7 +136,6 @@ class StudioActivity : AudioThemedActivity() {
 
     // Rythme
     private lateinit var grid: StepGridView
-    private lateinit var styleButton: MaterialButton
 
     // Notes
     private lateinit var roll: PianoRollView
@@ -150,7 +163,7 @@ class StudioActivity : AudioThemedActivity() {
     private var rollBase = 24
     private var onNotesTab = false
 
-    private val saveRunnable = Runnable { store.save(session.project) }
+    private val saveRunnable = Runnable { library.save(projectId, session.project) }
 
     private val frameTick = object : Runnable {
         override fun run() {
@@ -188,9 +201,16 @@ class StudioActivity : AudioThemedActivity() {
         enableImmersiveMode()
 
         engine = StudioEngine(StudioAudioOutput.preferredSampleRate(this))
-        store = StudioProjectStore(this)
+        library = StudioLibrary(File(filesDir, "studio/songs"))
+        val entry = intent.getStringExtra(EXTRA_PROJECT_ID)?.let { library.load(it) }
+        if (entry == null) {
+            finish()
+            return
+        }
+        projectId = entry.id
+        projectName = entry.name
         SampleTools.load(this)?.let { (data, rate) -> engine.setPercSample(data, rate) }
-        val loaded = store.load() ?: StudioProject.fromStyle(Styles.HOUSE)
+        val loaded = entry.project
         // Un projet qui a des pistes soundfont ouvre le soundfont avant que le moteur fabrique leurs instruments
         if (loaded.tracks.any { it.kind == TrackKind.SF2 }) {
             sf2 = Sf2Bridge.open(this)
@@ -222,7 +242,7 @@ class StudioActivity : AudioThemedActivity() {
         grid.removeCallbacks(frameTick)
         handler.removeCallbacks(saveRunnable)
         stopLive()
-        store.save(session.project)
+        library.save(projectId, session.project)
         engine.stop()
         playing = false
         refreshTransport()
@@ -255,16 +275,30 @@ class StudioActivity : AudioThemedActivity() {
             contentDescription = getString(R.string.studio_back)
             setOnClickListener { finish() }
         }, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginEnd = dp(4) })
-        titleRow.addView(TextView(this).apply {
-            setText(R.string.studio_title)
+        titleView = TextView(this).apply {
+            text = projectName
             textSize = 22f
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
             setTypeface(typeface, Typeface.BOLD)
+            // Toucher le nom le change ; un appui long montre ou cache les mesures du moteur
             setOnClickListener {
+                promptText(R.string.studio_rename, projectName, android.R.string.ok) { name ->
+                    if (name.isNotEmpty()) {
+                        projectName = name
+                        library.rename(projectId, name)
+                        text = name
+                    }
+                }
+            }
+            setOnLongClickListener {
                 stats.visibility = if (stats.visibility == View.VISIBLE) View.GONE else View.VISIBLE
                 output.resetMax()
                 refreshStats()
+                true
             }
-        }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        }
+        titleRow.addView(titleView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         tabsGroup = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
@@ -319,7 +353,7 @@ class StudioActivity : AudioThemedActivity() {
             isSingleSelection = true
             isSelectionRequired = true
             for (k in 0 until StudioProject.SLOTS) {
-                val b = outlined(null).apply { id = patternIds[k]; text = names[k]; minWidth = dp(44); setPadding(dp(8), 0, dp(8), 0) }
+                val b = outlined(null).apply { id = patternIds[k]; text = names[k]; minWidth = dp(44); minimumWidth = dp(44); setPadding(dp(8), 0, dp(8), 0) }
                 addView(b)
             }
             addOnButtonCheckedListener { _, id, checked ->
@@ -380,14 +414,12 @@ class StudioActivity : AudioThemedActivity() {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
         val row = flowRow(topMargin = dp(2))
-        styleButton = outlined(null).also { it.setOnClickListener { v -> pickStyle(v) } }
-        row.addView(styleButton, wrap(end = dp(8)))
-        row.addView(outlined(R.string.studio_tracks).also { it.setOnClickListener { v -> showTracksPanel(v) } }, wrap(end = dp(8)))
         row.addView(outlined(R.string.studio_edit_menu).also { it.setOnClickListener { v -> showEditMenu(v) } }, wrap())
         pane.addView(row)
 
         grid = StepGridView(this).apply {
             stepCount = session.project.stepCount
+            addLabel = getString(R.string.studio_tracks_add)
             isOn = { lane, step -> gridIds.getOrNull(lane)?.let { session.isOn(it, step) } ?: false }
             velocity = { lane, step -> gridIds.getOrNull(lane)?.let { session.velocity(it, step) } ?: 0f }
             isMuted = { lane -> gridIds.getOrNull(lane)?.let { session.isMuted(it) } ?: false }
@@ -410,6 +442,8 @@ class StudioActivity : AudioThemedActivity() {
                     gridIds.getOrNull(lane)?.let { session.setMuted(it, !session.isMuted(it)) }
                     scheduleSave()
                 }
+
+                override fun onAddTrack() = showAddTrackSheet()
 
                 override fun onMoveLane(from: Int, to: Int) {
                     val id = gridIds.getOrNull(from) ?: return
@@ -470,7 +504,7 @@ class StudioActivity : AudioThemedActivity() {
             setTypeface(typeface, Typeface.BOLD)
             setPadding(0, 0, 0, dp(6))
         })
-        xyBox.addView(pad, LinearLayout.LayoutParams(dp(220), dp(220)))
+        xyBox.addView(pad, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         val gestureRow = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
         gestureRecordButton = outlined(R.string.studio_gesture_record).apply {
             isCheckable = true
@@ -493,19 +527,45 @@ class StudioActivity : AudioThemedActivity() {
         }
         gestureRow.addView(gestureRecordButton)
         gestureRow.addView(gestureClearButton)
-        xyBox.addView(gestureRow, LinearLayout.LayoutParams(dp(360), ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+        xyBox.addView(gestureRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
 
-        if (resources.configuration.screenWidthDp >= 1100) {
-            // Large écran : les tranches à gauche, le pad à droite
-            val body = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            body.addView(strip, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            body.addView(xyBox, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(24); marginEnd = dp(16) })
-            pane.addView(body, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-        } else {
-            pane.addView(strip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-            pane.addView(xyBox, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(16) })
-        }
+        // Les tranches et le pad : côte à côte sur un écran large, l'un sous l'autre sinon (voir applyMixerLayout)
+        mixerStripView = strip
+        mixerPadBox = xyBox
+        mixerBody = LinearLayout(this)
+        mixerBody.addView(strip)
+        mixerBody.addView(xyBox)
+        applyMixerLayout()
+        pane.addView(mixerBody, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(12) })
         return pane
+    }
+
+    /**
+     * Range les tranches du mixeur et le pad selon la largeur de l'écran *maintenant* : l'activité n'est pas recréée à la
+     * rotation, donc ce choix se refait à chaque changement de configuration.
+     */
+    private fun applyMixerLayout() {
+        val wide = resources.configuration.screenWidthDp >= 1100
+        mixerBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+        // Les tranches gardent leur taille ; le pad de jeu, lui, prend toute la place qui reste
+        mixerStripView.layoutParams =
+            if (wide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        mixerPadBox.layoutParams =
+            if (wide) LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f).apply {
+                marginStart = dp(24)
+                marginEnd = dp(16)
+                bottomMargin = dp(12)
+            } else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply {
+                topMargin = dp(16)
+                bottomMargin = dp(12)
+            }
+        mixerBody.requestLayout()
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::mixerBody.isInitialized) applyMixerLayout()
     }
 
     /** Les tranches du mixeur : une par piste visible (nom, volume, panoramique, muet, solo, effets). */
@@ -595,7 +655,7 @@ class StudioActivity : AudioThemedActivity() {
                 setOnClickListener { showFxPanel(it, lane, title) }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
 
-            mixerStrips.addView(strip, LinearLayout.LayoutParams(dp(96), ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = dp(8) })
+            mixerStrips.addView(strip, LinearLayout.LayoutParams(dp(90), ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = dp(8) })
         }
         refreshMixer()
     }
@@ -1043,13 +1103,6 @@ class StudioActivity : AudioThemedActivity() {
         if (t.melodic) previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450, track = id) else engine.trigger(id, 60, 1f)
     }
 
-    private fun pickStyle(anchor: View) {
-        dropdown(anchor, Styles.ALL.map { getString(styleName(it.id)) }) { which ->
-            session.applyStyle(Styles.ALL[which])
-            changed()
-        }
-    }
-
     private fun pickKey(anchor: View) {
         dropdown(anchor, resources.getStringArray(R.array.studio_key_names).toList()) { which ->
             session.setKey(which)
@@ -1387,7 +1440,6 @@ class StudioActivity : AudioThemedActivity() {
         refreshTracks()
         refreshTransport()
         refreshTempo()
-        styleButton.text = getString(R.string.studio_style_label, getString(styleName(p.styleId)))
         refreshPatterns()
         bufferButton.text = getString(R.string.studio_buffer_label, bufferBlocks)
         refreshRoll()
@@ -1444,11 +1496,7 @@ class StudioActivity : AudioThemedActivity() {
         else -> Track.SF2_MIX
     }
 
-    private fun trackColor(t: Track): Int = when {
-        t.kind == TrackKind.DRUM -> LANE_COLORS[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)]
-        t.id == Inst.SYNTH -> LANE_COLORS[Inst.SYNTH]
-        else -> EXTRA_COLORS[t.id % EXTRA_COLORS.size]
-    }
+    private fun trackColor(t: Track): Int = StudioColors.of(t)
 
     private fun sf2ProgramName(t: Track): String =
         sf2?.programs?.firstOrNull { it.bank == t.bank && it.program == t.program }?.name?.trim()?.takeIf { it.isNotEmpty() }
@@ -1554,77 +1602,71 @@ class StudioActivity : AudioThemedActivity() {
         changed()
     }
 
-    /** Le panneau des pistes : montrer ou cacher chacune, la retirer, en ajouter une. */
-    private fun showTracksPanel(anchor: View) {
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(12), dp(16), dp(12))
-        }
-        val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        fun fill() {
-            list.removeAllViews()
-            for (t in session.project.tracks) {
-                val row = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.CENTER_VERTICAL
-                }
-                row.addView(View(this).apply {
-                    background = android.graphics.drawable.GradientDrawable().apply {
-                        shape = android.graphics.drawable.GradientDrawable.OVAL
-                        setColor(trackColor(t))
+    /** La feuille « ajouter une piste » (touchée sur la rangée vide de la grille) : ce qu'on veut ajouter, ou gérer les pistes. */
+    private fun showAddTrackSheet() {
+        val add = R.drawable.ic_px_add
+        actionSheet(getString(R.string.studio_tracks), listOf(
+            SheetItem(add, getString(R.string.studio_add_drum)) {
+                actionSheet(getString(R.string.studio_add_drum), DRUM_NAMES.mapIndexed { voice, name ->
+                    SheetItem(add, getString(name)) { addTrack(TrackKind.DRUM, voice) }
+                }).show()
+            },
+            SheetItem(add, getString(R.string.studio_add_synth)) { addTrack(TrackKind.SYNTH) },
+            SheetItem(add, getString(R.string.studio_add_sf2)) {
+                withSf2 { bridge -> pickProgram(bridge) { bank, program -> addTrack(TrackKind.SF2, bank = bank, program = program) } }
+            },
+            SheetItem(R.drawable.ic_px_more, getString(R.string.studio_manage_tracks)) { showTracksSheet() },
+        )).show()
+    }
+
+    /** La feuille pour montrer ou cacher chaque piste, ou la retirer. */
+    private fun showTracksSheet() {
+        bottomSheet(getString(R.string.studio_manage_tracks)) { root, _ ->
+            val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            fun fill() {
+                list.removeAllViews()
+                for (t in session.project.tracks) {
+                    val row = LinearLayout(this).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
                     }
-                }, LinearLayout.LayoutParams(dp(14), dp(14)).apply { marginEnd = dp(10) })
-                val name = TextView(this).apply {
-                    text = trackName(t)
-                    textSize = 16f
-                    alpha = if (t.hidden) 0.5f else 1f
-                }
-                row.addView(name, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                row.addView(SwitchCompat(this).apply {
-                    isChecked = !t.hidden
-                    setOnCheckedChangeListener { _, on ->
-                        session.setHidden(t.id, !on)
-                        name.alpha = if (on) 1f else 0.5f
-                        changed()
-                    }
-                })
-                row.addView(TextView(this).apply {
-                    text = getString(R.string.studio_track_remove_glyph)
-                    contentDescription = getString(R.string.studio_track_remove)
-                    textSize = 18f
-                    setPadding(dp(16), dp(8), dp(4), dp(8))
-                    setOnClickListener {
-                        session.removeTrack(t.id)
-                        changed()
-                        fill()
-                    }
-                })
-                list.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
-            }
-        }
-        fill()
-        box.addView(list)
-        box.addView(outlined(R.string.studio_tracks_add).apply {
-            setOnClickListener { v ->
-                val kinds = listOf(getString(R.string.studio_add_drum), getString(R.string.studio_add_synth), getString(R.string.studio_add_sf2))
-                dropdown(v, kinds) { which ->
-                    when (which) {
-                        0 -> dropdown(v, DRUM_NAMES.map { getString(it) }) { voice -> addTrack(TrackKind.DRUM, voice); fill() }
-                        1 -> { addTrack(TrackKind.SYNTH); fill() }
-                        else -> withSf2 { bridge ->
-                            pickProgram(bridge) { bank, program -> addTrack(TrackKind.SF2, bank = bank, program = program); fill() }
+                    row.addView(View(this).apply {
+                        background = android.graphics.drawable.GradientDrawable().apply {
+                            shape = android.graphics.drawable.GradientDrawable.OVAL
+                            setColor(trackColor(t))
                         }
+                    }, LinearLayout.LayoutParams(dp(14), dp(14)).apply { marginEnd = dp(10) })
+                    val name = TextView(this).apply {
+                        text = trackName(t)
+                        textSize = 16f
+                        alpha = if (t.hidden) 0.5f else 1f
                     }
+                    row.addView(name, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                    row.addView(SwitchCompat(this).apply {
+                        isChecked = !t.hidden
+                        setOnCheckedChangeListener { _, on ->
+                            session.setHidden(t.id, !on)
+                            name.alpha = if (on) 1f else 0.5f
+                            changed()
+                        }
+                    })
+                    row.addView(TextView(this).apply {
+                        text = getString(R.string.studio_track_remove_glyph)
+                        contentDescription = getString(R.string.studio_track_remove)
+                        textSize = 18f
+                        setPadding(dp(16), dp(8), dp(4), dp(8))
+                        setOnClickListener {
+                            session.removeTrack(t.id)
+                            changed()
+                            fill()
+                        }
+                    })
+                    list.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)))
                 }
             }
-        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_tracks)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-            setPadding(0, 0, 0, dp(8))
-        }, 0)
-        panel(anchor, box, 340)
+            fill()
+            root.addView(list)
+        }.show()
     }
 
     private fun refreshStats() {
@@ -1646,15 +1688,6 @@ class StudioActivity : AudioThemedActivity() {
             engine.activeVoices,
             getString(if (s.lowLatency) R.string.studio_yes else R.string.studio_no),
         )
-    }
-
-    private fun styleName(id: String): Int = when (id) {
-        "techno" -> R.string.studio_style_techno
-        "hiphop" -> R.string.studio_style_hiphop
-        "lofi" -> R.string.studio_style_lofi
-        "electro" -> R.string.studio_style_electro
-        "ambient" -> R.string.studio_style_ambient
-        else -> R.string.studio_style_house
     }
 
     private fun scaleName(id: String): Int = when (id) {
@@ -1833,16 +1866,8 @@ class StudioActivity : AudioThemedActivity() {
             R.string.studio_lane_perc,
         )
 
-        /** Couleurs des pistes ajoutées (synthés et instruments de soundfont). */
-        val EXTRA_COLORS = intArrayOf(
-            0xFF8E44AD.toInt(), 0xFFD35400.toInt(), 0xFF16A085.toInt(), 0xFF2980B9.toInt(),
-            0xFFC0392B.toInt(), 0xFF27AE60.toInt(), 0xFFB7950B.toInt(), 0xFF7F8C8D.toInt(),
-        )
-
-        /** Une couleur par ligne : grosse caisse verte, caisse claire rouge, clap orange, charleston jaune, etc. */
-        val LANE_COLORS = intArrayOf(
-            0xFF2ECC71.toInt(), 0xFFE74C3C.toInt(), 0xFFF39C12.toInt(), 0xFFF1C40F.toInt(),
-            0xFF3498DB.toInt(), 0xFFE91E8C.toInt(), 0xFF9B59B6.toInt(), 0xFF1ABC9C.toInt(),
-        )
+        /** Les couleurs des pistes, partagées avec la bibliothèque. */
+        val EXTRA_COLORS = StudioColors.EXTRA
+        val LANE_COLORS = StudioColors.LANE
     }
 }

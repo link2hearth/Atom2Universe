@@ -3,6 +3,7 @@ package com.Atom2Universe.app.studio.ui
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Handler
@@ -45,6 +46,9 @@ class StepGridView(context: Context) : View(context) {
 
         /** La ligne [from] est glissée à la place de la ligne [to] (rangs dans la liste affichée). */
         fun onMoveLane(from: Int, to: Int)
+
+        /** Un toucher sur la rangée vide du bas : l'utilisateur veut ajouter une piste. */
+        fun onAddTrack()
     }
 
     var listener: Listener? = null
@@ -57,6 +61,16 @@ class StepGridView(context: Context) : View(context) {
             invalidate()
         }
     var laneColors: IntArray = IntArray(0)
+
+    /** Le texte de la rangée vide posée sous les pistes (ajouter une piste) ; `null` : pas de rangée. */
+    var addLabel: String? = null
+        set(value) {
+            field = value
+            clampScroll()
+            invalidate()
+        }
+
+    private fun rowCount(): Int = laneNames.size + if (addLabel != null) 1 else 0
     var stepCount: Int = 16
         set(value) {
             field = value
@@ -133,7 +147,7 @@ class StepGridView(context: Context) : View(context) {
 
     private fun maxScrollX(): Float = max(0f, contentW() - (width - (min(dp(HEADER_DP), width * 0.3f) + dp(8f))))
 
-    private fun maxScrollY(): Float = max(0f, dp(TOPBAR_DP) + laneNames.size * dp(ROW_DP) - height)
+    private fun maxScrollY(): Float = max(0f, dp(TOPBAR_DP) + rowCount() * dp(ROW_DP) - height)
 
     private fun clampScroll() {
         scrollX = scrollX.coerceIn(0f, maxScrollX())
@@ -204,6 +218,7 @@ class StepGridView(context: Context) : View(context) {
             if (top + rowH < scrollY + topBar || top > scrollY + height) continue
             drawLane(canvas, lane, top, 1f)
         }
+        addLabel?.let { drawAddRow(canvas, topBar + laneNames.size * rowH, it) }
         if (dragged >= 0) {
             // La ligne soulevée suit le doigt, par-dessus les autres
             val top = dragY + scrollY - rowH / 2f
@@ -213,6 +228,19 @@ class StepGridView(context: Context) : View(context) {
             drawLane(canvas, dragged, top, 0.95f)
         }
         canvas.restore()
+    }
+
+    /** La rangée vide du bas : un cadre en pointillés avec « + Ajouter une piste ». */
+    private fun drawAddRow(canvas: Canvas, top: Float, label: String) {
+        ring.color = numberColor
+        ring.strokeWidth = dp(2f)
+        ring.pathEffect = DashPathEffect(floatArrayOf(dp(8f), dp(6f)), 0f)
+        rect.set(dp(2f), top + pad, width - dp(2f), top + rowH - pad)
+        canvas.drawRoundRect(rect, dp(10f), dp(10f), ring)
+        ring.pathEffect = null
+        val w = text.measureText(label)
+        text.color = numberColor
+        canvas.drawText(label, (headerW - w) / 2f + dp(8f), top + rowH / 2f + text.textSize / 3f, text)
     }
 
     /** Barre du haut : numéros des pas, repère de lecture, et une petite jauge qui dit où l'on est dans la grille. */
@@ -319,7 +347,7 @@ class StepGridView(context: Context) : View(context) {
     private fun laneAt(y: Float): Int {
         if (y < topBar || rowH <= 0f) return -1
         val l = ((y - topBar + scrollY) / rowH).toInt()
-        return if (l in laneNames.indices) l else -1
+        return if (l in 0 until rowCount()) l else -1
     }
 
     /** Le pas sous [x] (les petits espaces entre groupes comptent pour le pas le plus proche), ou -1. */
@@ -344,7 +372,7 @@ class StepGridView(context: Context) : View(context) {
 
     // ---- Toucher ------------------------------------------------------------------------------------------
 
-    private enum class Zone { NONE, TOPBAR, HEADER, PAD }
+    private enum class Zone { NONE, TOPBAR, HEADER, PAD, ADD }
 
     private val handler = Handler(Looper.getMainLooper())
     private val slop = ViewConfiguration.get(context).scaledTouchSlop
@@ -416,7 +444,7 @@ class StepGridView(context: Context) : View(context) {
     }
 
     private fun applyPaint(lane: Int, step: Int) {
-        if (lane < 0 || step < 0 || (lane == lastLane && step == lastStep)) return
+        if (lane < 0 || lane >= laneNames.size || step < 0 || (lane == lastLane && step == lastStep)) return
         lastLane = lane
         lastStep = step
         if (isOn(lane, step) != paintValue) {
@@ -464,13 +492,15 @@ class StepGridView(context: Context) : View(context) {
                 lastStep = -1
                 dragFrom = -1
                 parent?.requestDisallowInterceptTouchEvent(true)
+                val rowAtDown = laneAt(event.y)
                 zone = when {
                     event.y < topBar -> Zone.TOPBAR
+                    addLabel != null && rowAtDown == laneNames.size -> Zone.ADD
                     event.x < headerW -> Zone.HEADER
                     else -> Zone.PAD
                 }
                 when (zone) {
-                    Zone.TOPBAR -> return true
+                    Zone.TOPBAR, Zone.ADD -> return true
                     Zone.HEADER -> {
                         headerLane = laneAt(event.y)
                         if (headerLane >= 0) handler.postDelayed(headerLongPress, ViewConfiguration.getLongPressTimeout().toLong())
@@ -511,7 +541,7 @@ class StepGridView(context: Context) : View(context) {
                         }
                         return true
                     }
-                    Zone.HEADER -> {
+                    Zone.HEADER, Zone.ADD -> {
                         if (!scrollingY && abs(dy) > slop && abs(dy) > abs(dx) && maxScrollY() > 0f) {
                             scrollingY = true
                             handler.removeCallbacks(headerLongPress)
@@ -574,7 +604,9 @@ class StepGridView(context: Context) : View(context) {
                     return true
                 }
                 endScroll(false)
-                if (zone == Zone.HEADER && headerLane >= 0 && laneAt(event.y) == headerLane && event.x < headerW) {
+                if (zone == Zone.ADD && laneAt(event.y) == laneNames.size && abs(event.y - downY) <= slop) {
+                    listener?.onAddTrack()
+                } else if (zone == Zone.HEADER && headerLane >= 0 && laneAt(event.y) == headerLane && event.x < headerW) {
                     listener?.onMuteToggle(headerLane)
                     invalidate()
                 } else if (zone == Zone.PAD && downLane >= 0 && !painting && !longPressed) {

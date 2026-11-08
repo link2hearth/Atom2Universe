@@ -27,7 +27,6 @@
     <string name="studio_space">Espace</string>
     <string name="studio_echo">Écho</string>
 
-    <string name="studio_style_label">Style : %1$s</string>
     <string name="studio_style_house">House</string>
     <string name="studio_style_techno">Techno</string>
     <string name="studio_style_hiphop">Hip-hop</string>
@@ -177,4 +176,22 @@ Motifs A à D : quatre boucles différentes. Morceau : les joue l’une après l
     <string name="studio_sound_label">Son : %1$s</string>
     <string name="studio_arp_label">Arpège : %1$s</string>
     <string name="studio_arp_rate">Vitesse</string>
+    <string name="studio_new">Nouveau</string>
+    <string name="studio_new_title">Nouveau morceau</string>
+    <string name="studio_name_hint">Nom</string>
+    <string name="studio_start_from">Partir de</string>
+    <string name="studio_style_blank">Vide</string>
+    <string name="studio_create">Créer</string>
+    <string name="studio_open">Ouvrir</string>
+    <string name="studio_rename">Renommer</string>
+    <string name="studio_duplicate">Dupliquer</string>
+    <string name="studio_delete">Supprimer</string>
+    <string name="studio_delete_message">Supprimer « %1$s » ? Impossible de revenir en arrière.</string>
+    <string name="studio_library_empty">Aucun morceau pour l’instant. Touche Nouveau pour en commencer un.</string>
+    <string name="studio_default_name">Morceau %1$d</string>
+    <string name="studio_copy_of">%1$s (copie)</string>
+    <string name="studio_card_info">%1$d BPM · %2$s · %3$s</string>
+    <string name="studio_style_trap">Trap</string>
+    <string name="studio_just_now">À l’instant</string>
+    <string name="studio_manage_tracks">Cacher ou retirer des pistes</string>
 </resources>

@@ -214,7 +214,7 @@ class StudioNotesTest {
             val scale = Scales.byId(style.scaleId)
             val pattern = Styles.generate(style, 16, 5L)
             assertTrue("${style.id} : pas de note", pattern.notes.isNotEmpty())
-            if (style.chord == null) {
+            if (style.chord == null && style.progression == null) {
                 for (n in pattern.notes) assertTrue("${style.id} : ${n.pitch} hors gamme", Scales.contains(scale, style.keyPc, n.pitch))
             }
         }

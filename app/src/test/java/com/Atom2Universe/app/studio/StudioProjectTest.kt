@@ -146,9 +146,9 @@ class StudioProjectTest {
 
         session.applyStyle(Styles.HIPHOP)
         assertEquals("hiphop", session.project.styleId)
-        assertEquals(88, session.project.bpm)
-        assertEquals(88f, engine.bpm, 0f)
-        assertEquals(0.22f, engine.swing, 1e-6f)
+        assertEquals(Styles.HIPHOP.bpm, session.project.bpm)
+        assertEquals(Styles.HIPHOP.bpm.toFloat(), engine.bpm, 0f)
+        assertEquals(Styles.HIPHOP.swing, engine.swing, 1e-6f)
 
         val bpm = session.project.bpm
         session.randomize(99L)

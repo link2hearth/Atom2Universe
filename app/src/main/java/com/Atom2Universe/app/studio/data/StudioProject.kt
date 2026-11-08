@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.studio.data
 
-import android.content.Context
 import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.engine.Inst
@@ -90,6 +89,22 @@ class StudioProject(
 
         /** Longueur maximale du morceau. */
         const val MAX_CHAIN = 16
+
+        /** Un morceau vide : les huit pistes de départ, aucun pas, aucune note. */
+        fun blank(stepCount: Int = 16): StudioProject {
+            val base = Styles.HOUSE
+            return StudioProject(
+                styleId = base.id,
+                bpm = 120,
+                swing = 0f,
+                tracks = Track.defaults(SynthPresets.byId(base.patchId), 0.25f),
+                space = base.space,
+                echo = base.echo,
+                keyPc = base.keyPc,
+                scaleId = base.scaleId,
+                patterns = List(SLOTS) { Styles.emptyPattern(stepCount) },
+            )
+        }
 
         fun fromStyle(style: Style, stepCount: Int = 16, seed: Long = style.id.hashCode().toLong()) = StudioProject(
             styleId = style.id,
@@ -322,21 +337,6 @@ object StudioProjectCodec {
         } catch (_: JSONException) {
             null
         }
-    }
-}
-
-/** Garde le projet en cours entre deux ouvertures (un seul emplacement pour l'instant). */
-class StudioProjectStore(context: Context) {
-    private val prefs = context.applicationContext.getSharedPreferences("studio_prefs", Context.MODE_PRIVATE)
-
-    fun load(): StudioProject? = StudioProjectCodec.decode(prefs.getString(KEY, null))
-
-    fun save(project: StudioProject) {
-        prefs.edit().putString(KEY, StudioProjectCodec.encode(project)).apply()
-    }
-
-    private companion object {
-        const val KEY = "current_project"
     }
 }
 
@@ -801,10 +801,7 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         undoSnapshot = project
         // Les notes suivent la tonalité et la gamme choisies, pas celles du style d'origine.
         val generated = Styles.generate(
-            Style(
-                style.id, style.bpm, style.swing, style.patchId, style.space, style.echo, style.drums, style.synthSteps,
-                24 + project.keyPc + (style.synthRoot / 12 * 12 - 24), style.synthLength, project.scaleId, style.chord,
-            ),
+            style.inKey(24 + project.keyPc + (style.synthRoot / 12 * 12 - 24), project.scaleId),
             project.stepCount, seed,
         )
         // Le geste enregistré reste : c'est un réglage de jeu, comme le mixage.
